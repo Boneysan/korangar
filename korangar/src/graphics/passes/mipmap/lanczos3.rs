@@ -13,7 +13,7 @@ pub struct Lanczos3Drawer {
 }
 
 impl Lanczos3Drawer {
-    pub fn new(device: &Device, shader_compiler: &ShaderCompiler) -> Self {
+    pub fn new(device: &Device, shader_compiler: &ShaderCompiler, format: TextureFormat) -> Self {
         let shader_module = shader_compiler.create_shader_module("mipmap", "lanczos3");
 
         let pass_bind_group_layouts = MipMapRenderPassContext::bind_group_layout(device);
@@ -41,7 +41,7 @@ impl Lanczos3Drawer {
                 entry_point: Some("fs_main"),
                 compilation_options: PipelineCompilationOptions::default(),
                 targets: &[Some(ColorTargetState {
-                    format: TextureFormat::Rgba8UnormSrgb,
+                    format,
                     blend: None,
                     write_mask: ColorWrites::default(),
                 })],

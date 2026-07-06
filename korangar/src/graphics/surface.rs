@@ -56,9 +56,16 @@ impl Surface {
         let window_width = window_width.max(1);
         let window_height = window_height.max(1);
 
-        let mut config = surface.get_default_config(adapter, window_width, window_height).unwrap();
-
-        let surfaces_formats: Vec<TextureFormat> = surface.get_capabilities(adapter).formats;
+        let adapter_info = adapter.get_info();
+        let surface_capabilities = surface.get_capabilities(adapter);
+        let surfaces_formats: Vec<TextureFormat> = surface_capabilities.formats;
+        let mut config = surface.get_default_config(adapter, window_width, window_height).unwrap_or_else(|| {
+            panic!(
+                "failed to create a default surface configuration for adapter '{}' ({:?}, {}). Supported surface formats: {:?}. Try \
+                 running with WINIT_UNIX_BACKEND=x11 or WGPU_BACKEND=gl.",
+                adapter_info.name, adapter_info.device_type, adapter_info.backend, surfaces_formats
+            )
+        });
 
         #[cfg(feature = "debug")]
         {

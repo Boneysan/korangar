@@ -87,19 +87,20 @@ use state::theme::{CursorThemePathExt, IndicatorThemePathExt, InterfaceThemePath
 use state::{ChatMessage, ClientState, ClientStatePathExt, client_state, this_entity, this_player};
 #[cfg(feature = "debug")]
 use wgpu::Device;
-use wgpu::util::initialize_adapter_from_env_or_default;
 use wgpu::wgt::{Dx12SwapchainKind, Dx12UseFrameLatencyWaitableObject};
 use wgpu::{
-    BackendOptions, Backends, DeviceDescriptor, Dx12BackendOptions, Dx12Compiler, ExperimentalFeatures, ForceShaderModelToken,
-    GlBackendOptions, GlDebugFns, GlFenceBehavior, Gles3MinorVersion, Instance, InstanceDescriptor, InstanceFlags, MemoryBudgetThresholds,
-    MemoryHints, NoopBackendOptions, Queue, Trace,
+    Adapter, AdapterInfo, BackendOptions, Backends, DeviceDescriptor, DeviceType, Dx12BackendOptions, Dx12Compiler, ExperimentalFeatures,
+    ForceShaderModelToken, GlBackendOptions, GlDebugFns, GlFenceBehavior, Gles3MinorVersion, Instance, InstanceDescriptor, InstanceFlags,
+    MemoryBudgetThresholds, MemoryHints, NoopBackendOptions, PowerPreference, Queue, RequestAdapterOptions, Trace,
 };
 use winit::application::ApplicationHandler;
 use winit::dpi::{LogicalSize, PhysicalSize};
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::PhysicalKey;
-use winit::window::{Icon, Window, WindowId};
+#[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
+use winit::platform::x11::EventLoopBuilderExtX11;
+use winit::window::{Icon, Window, WindowAttributes, WindowId};
 
 use crate::graphics::*;
 use crate::input::{InputEvent, InputReport, InputSystem};
@@ -175,6 +176,123 @@ fn initialize_shutdown_signal() {
         SHUTDOWN_SIGNAL.store(true, Ordering::SeqCst);
     })
     .expect("Error setting Ctrl-C handler");
+}
+
+#[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
+fn is_vmware_virtual_platform() -> bool {
+    std::fs::read_to_string("/sys/class/dmi/id/product_name").is_ok_and(|product_name| product_name.to_lowercase().contains("vmware"))
+}
+
+fn create_window_attributes() -> WindowAttributes {
+    let reader = ImageReader::with_format(Cursor::new(ICON_DATA), ImageFormat::Png);
+    let image_buffer = reader.decode().unwrap().to_rgba8();
+    let image_data = image_buffer.as_bytes().to_vec();
+
+    assert_eq!(image_buffer.width(), image_buffer.height(), "icon must be square");
+    let icon = Icon::from_rgba(image_data, image_buffer.width(), image_buffer.height()).unwrap();
+
+    Window::default_attributes()
+        .with_inner_size(LogicalSize {
+            width: INITIAL_SCREEN_SIZE.width,
+            height: INITIAL_SCREEN_SIZE.height,
+        })
+        .with_title(CLIENT_NAME)
+        .with_window_icon(Some(icon))
+        .with_visible(false)
+}
+
+async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, compatible_surface: Option<&wgpu::Surface<'_>>) -> Adapter {
+    if let Ok(desired_adapter_name) = std::env::var("WGPU_ADAPTER_NAME") {
+        let desired_adapter_name = desired_adapter_name.to_lowercase();
+        let adapters = instance.enumerate_adapters(backends).await;
+
+        if let Some(adapter) = adapters.into_iter().find(|adapter| {
+            adapter.get_info().name.to_lowercase().contains(&desired_adapter_name) && supports_surface(adapter, compatible_surface)
+        }) {
+            let adapter_info = adapter.get_info();
+
+            if !is_software_adapter(&adapter_info) || allow_software_rendering() {
+                return adapter;
+            }
+
+            panic!(
+                "WGPU_ADAPTER_NAME matched software adapter '{}'. Unset WGPU_ADAPTER_NAME or set KORANGAR_ALLOW_SOFTWARE_RENDERING=1 to \
+                 allow CPU rendering.",
+                adapter_info.name
+            );
+        }
+
+        panic!("WGPU_ADAPTER_NAME was set, but no matching graphics adapter was found");
+    }
+
+    let adapters = instance.enumerate_adapters(backends).await;
+    if let Some(adapter) = adapters
+        .iter()
+        .filter(|adapter| supports_surface(adapter, compatible_surface))
+        .filter(|adapter| !is_software_adapter(&adapter.get_info()))
+        .max_by_key(|adapter| adapter_score(&adapter.get_info()))
+        .cloned()
+    {
+        return adapter;
+    }
+
+    if allow_software_rendering() {
+        return instance
+            .request_adapter(&RequestAdapterOptions {
+                power_preference: PowerPreference::HighPerformance,
+                force_fallback_adapter: false,
+                compatible_surface,
+            })
+            .await
+            .expect("failed to find any graphics adapter");
+    }
+
+    let available_adapters = adapters
+        .iter()
+        .map(|adapter| {
+            let info = adapter.get_info();
+            format!("{} ({:?}, {}, {})", info.name, info.device_type, info.backend, info.driver)
+        })
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    panic!(
+        "no hardware graphics adapter was found. Available adapters: [{}]. Make sure the VM exposes the GPU through Vulkan/OpenGL, or set \
+         KORANGAR_ALLOW_SOFTWARE_RENDERING=1 to allow CPU rendering.",
+        available_adapters
+    );
+}
+
+fn supports_surface(adapter: &Adapter, compatible_surface: Option<&wgpu::Surface<'_>>) -> bool {
+    let Some(surface) = compatible_surface else {
+        return true;
+    };
+
+    adapter.is_surface_supported(surface) && !surface.get_capabilities(adapter).formats.is_empty()
+}
+
+fn allow_software_rendering() -> bool {
+    std::env::var("KORANGAR_ALLOW_SOFTWARE_RENDERING").is_ok_and(|value| matches!(value.as_str(), "1" | "true" | "TRUE" | "yes" | "YES"))
+}
+
+fn is_software_adapter(adapter_info: &AdapterInfo) -> bool {
+    let adapter_name = adapter_info.name.to_lowercase();
+
+    adapter_info.device_type == DeviceType::Cpu
+        || adapter_name.contains("llvmpipe")
+        || adapter_name.contains("lavapipe")
+        || adapter_name.contains("softpipe")
+        || adapter_name.contains("swiftshader")
+}
+
+fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
+    match adapter_info.device_type {
+        DeviceType::DiscreteGpu => 5,
+        DeviceType::IntegratedGpu => 4,
+        DeviceType::VirtualGpu => 3,
+        DeviceType::Other => 2,
+        DeviceType::Cpu => 0,
+    }
 }
 
 pub struct Client {
@@ -285,7 +403,7 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn init(sync_cache: bool) -> Option<Self> {
+    pub fn init(sync_cache: bool, event_loop: Option<&EventLoop<()>>) -> Option<Self> {
         // We start a frame so that functions trying to start a measurement don't panic.
         #[cfg(feature = "debug")]
         let _measurement = threads::Main::start_frame();
@@ -330,9 +448,15 @@ impl Client {
             let graphics_settings = GraphicsSettings::new();
         });
 
+        time_phase!("create initial window", {
+            #[allow(deprecated)]
+            let window = event_loop.map(|event_loop| Arc::new(event_loop.create_window(create_window_attributes()).unwrap()));
+        });
+
         time_phase!("create adapter", {
+            let backends = Backends::all().with_env();
             let instance = Instance::new(InstanceDescriptor {
-                backends: Backends::all().with_env(),
+                backends,
                 flags: InstanceFlags::from_build_config().with_env(),
                 memory_budget_thresholds: MemoryBudgetThresholds::default(),
                 backend_options: BackendOptions {
@@ -354,7 +478,8 @@ impl Client {
                 display: None,
             });
 
-            let adapter = pollster::block_on(async { initialize_adapter_from_env_or_default(&instance, None).await.unwrap() });
+            let compatible_surface = window.as_ref().map(|window| instance.create_surface(window.clone()).unwrap());
+            let adapter = pollster::block_on(async { initialize_hardware_adapter(&instance, backends, compatible_surface.as_ref()).await });
 
             #[cfg(feature = "debug")]
             {
@@ -528,6 +653,12 @@ impl Client {
                 picker_value,
                 directional_shadow_partitions: directional_shadow_partitions.clone(),
             });
+
+            if let Some(window) = window.as_ref() {
+                let backend_name = graphics_engine.get_backend_name();
+                window.set_title(&format!("{CLIENT_NAME} ({})", str::to_uppercase(&backend_name)));
+                window.set_cursor_visible(false);
+            }
         });
 
         time_phase!("initialize interface", {
@@ -724,15 +855,25 @@ impl Client {
             queue,
             #[cfg(feature = "debug")]
             device,
-            window: None,
+            window,
 
             map: Some(map),
             client_state,
         })
     }
 
-    pub fn run(&mut self) {
-        let event_loop = EventLoop::new().unwrap();
+    pub fn create_event_loop() -> EventLoop<()> {
+        let mut event_loop_builder = EventLoop::builder();
+
+        #[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
+        if is_vmware_virtual_platform() && std::env::var_os("DISPLAY").is_some() {
+            event_loop_builder.with_x11();
+        }
+
+        event_loop_builder.build().unwrap()
+    }
+
+    pub fn run(&mut self, event_loop: EventLoop<()>) {
         event_loop.set_control_flow(ControlFlow::Poll);
         let _ = event_loop.run_app(self);
     }
@@ -3459,22 +3600,7 @@ impl ApplicationHandler for Client {
         // graphics backend after the first resume event is received.
         if self.window.is_none() {
             time_phase!("create window", {
-                let reader = ImageReader::with_format(Cursor::new(ICON_DATA), ImageFormat::Png);
-                let image_buffer = reader.decode().unwrap().to_rgba8();
-                let image_data = image_buffer.as_bytes().to_vec();
-
-                assert_eq!(image_buffer.width(), image_buffer.height(), "icon must be square");
-                let icon = Icon::from_rgba(image_data, image_buffer.width(), image_buffer.height()).unwrap();
-
-                let window_attributes = Window::default_attributes()
-                    .with_inner_size(LogicalSize {
-                        width: INITIAL_SCREEN_SIZE.width,
-                        height: INITIAL_SCREEN_SIZE.height,
-                    })
-                    .with_title(CLIENT_NAME)
-                    .with_window_icon(Some(icon))
-                    .with_visible(false);
-                let window = Arc::new(event_loop.create_window(window_attributes).unwrap());
+                let window = Arc::new(event_loop.create_window(create_window_attributes()).unwrap());
 
                 let backend_name = self.graphics_engine.get_backend_name();
                 window.set_title(&format!("{CLIENT_NAME} ({})", str::to_uppercase(&backend_name)));

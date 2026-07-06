@@ -45,7 +45,8 @@ pub struct TextureLoader {
     queue: Queue,
     game_file_loader: Arc<GameFileLoader>,
     mip_map_render_context: MipMapRenderPassContext,
-    lanczos3_drawer: Lanczos3Drawer,
+    lanczos3_srgb_drawer: Lanczos3Drawer,
+    lanczos3_unorm_drawer: Lanczos3Drawer,
     block_compressor: Mutex<GpuBlockCompressor>,
     cache: Mutex<SimpleCache<(String, ImageType), Arc<Texture>>>,
     bindless_support: BindlessSupport,
@@ -61,7 +62,8 @@ impl TextureLoader {
         capabilities: &Capabilities,
         game_file_loader: Arc<GameFileLoader>,
     ) -> Self {
-        let lanczos3_drawer = Lanczos3Drawer::new(&device, shader_compiler);
+        let lanczos3_srgb_drawer = Lanczos3Drawer::new(&device, shader_compiler, TextureFormat::Rgba8UnormSrgb);
+        let lanczos3_unorm_drawer = Lanczos3Drawer::new(&device, shader_compiler, TextureFormat::Rgba8Unorm);
         let block_compressor = Mutex::new(GpuBlockCompressor::new(device.clone(), queue.clone()));
         let mip_map_render_context = MipMapRenderPassContext::new(&device, &queue);
 
@@ -70,7 +72,8 @@ impl TextureLoader {
             queue,
             game_file_loader,
             mip_map_render_context,
-            lanczos3_drawer,
+            lanczos3_srgb_drawer,
+            lanczos3_unorm_drawer,
             block_compressor,
             cache: Mutex::new(SimpleCache::new(
                 NonZeroU32::new(MAX_CACHE_COUNT).unwrap(),
@@ -240,7 +243,7 @@ impl TextureLoader {
                     self.mip_map_render_context
                         .create_pass(&self.device, &mut encoder, &mip_views[index], &mip_views[index + 1]);
 
-                self.lanczos3_drawer.draw(&mut pass);
+                self.lanczos3_srgb_drawer.draw(&mut pass);
             }
 
             self.queue.submit(Some(encoder.finish()));
@@ -268,9 +271,9 @@ impl TextureLoader {
                 mip_level_count,
                 sample_count: 1,
                 dimension: TextureDimension::D2,
-                format: TextureFormat::Rgba8UnormSrgb,
+                format: TextureFormat::Rgba8Unorm,
                 usage: TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST | TextureUsages::RENDER_ATTACHMENT,
-                view_formats: &[TextureFormat::Rgba8Unorm],
+                view_formats: &[],
             },
             // Doesn't matter
             true,
@@ -306,7 +309,7 @@ impl TextureLoader {
 
             let view = temp_texture.get_texture().create_view(&TextureViewDescriptor {
                 label: Some(&format!("mip {level} view")),
-                format: Some(TextureFormat::Rgba8UnormSrgb),
+                format: Some(TextureFormat::Rgba8Unorm),
                 dimension: Some(TextureViewDimension::D2),
                 usage: None,
                 aspect: TextureAspect::All,
@@ -327,7 +330,7 @@ impl TextureLoader {
             let mut pass =
                 self.mip_map_render_context
                     .create_pass(&self.device, &mut compression_encoder, &mip_views[index], &mip_views[index + 1]);
-            self.lanczos3_drawer.draw(&mut pass);
+            self.lanczos3_unorm_drawer.draw(&mut pass);
         }
 
         let output_buffer = self.device.create_buffer(&BufferDescriptor {
