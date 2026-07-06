@@ -383,11 +383,14 @@ packet class, sweep this list and `ragnarok-packets` first (risk 9, §11).
       <display>HerculesRO (local)</display>
       <address>127.0.0.1</address>   <!-- or 192.168.20.60 from Windows -->
       <port>6900</port>
-      <version>20220406</version>
+      <version>55</version>
+      <packet_version>20220406</packet_version>
       <langtype>1</langtype>
   </connection>
   ```
-  This matches the current `korangar/archive/data/sclientinfo.xml` schema.
+  This matches the current `korangar/archive/data/sclientinfo.xml` schema. The
+  `packet_version` field is Korangar-specific; keep `<version>` as the small
+  official client service version.
 
 ### 7.2 Deployment scenarios
 | Scenario | Client location | Server address | Notes |
@@ -420,6 +423,8 @@ Architectural implications retained here:
 - **Phase 2 feature work:** each roadmap item that touches network state should
   graduate into a focused implementation spec under `docs/specs/`, following
   [specs/buff-bar-slice.md](specs/buff-bar-slice.md).
+- **Executable plans:** near-term milestone plans live under
+  [plans/](plans/), starting with [plans/M0-connectivity.md](plans/M0-connectivity.md).
 
 ## 9. DM Interface
 

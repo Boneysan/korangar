@@ -14,6 +14,9 @@ protocol contract stay in [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md).
 ## 8. Feature Roadmap
 
 ### Phase 0 — Baseline connectivity
+
+Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
+
 - [ ] Rebuild Hercules with `PACKETVER=20220406` to resolve the protocol mismatch
       ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §5).
 - [ ] **Disable packet obfuscation:** set `packet_obfuscation: 0` in
@@ -30,6 +33,8 @@ protocol contract stay in [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md).
 - [ ] Verify combat, NPC dialogue, warps, inventory, storage against Hercules.
 - [ ] Catalog Korangar's missing features (it is pre-alpha) that block play; file issues.
 - [ ] **Promote noop packet handlers → real handlers** per the prioritized backlog in **§8.3** (start with the three MVP rows: status/buffs, skill-damage feedback, stats).
+- [ ] Close the party/whisper framing risk before the first group session
+      ([plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md)).
 
 ### Phase 2 — Customization
 
@@ -168,6 +173,7 @@ protocol contract stay in [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md).
   - **Contextual tutorial overlays** for the group's first sessions.
 
 - [ ] **Custom content pipeline** ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §6.2): define packing/sync process.
+  - Implementation plan: [plans/asset-pipeline.md](plans/asset-pipeline.md)
 
 - [ ] **DM Tooling Expansions** *(see [DM_INTERFACE.md](DM_INTERFACE.md) for the full DM interface)*:
   - DM Free-Cam/Spectator mode to detach camera for scene surveying.

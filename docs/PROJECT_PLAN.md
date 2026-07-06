@@ -8,6 +8,7 @@
 | **Architecture** | [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) — architecture & technical decisions |
 | **Feature roadmap** | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) — UI/product roadmap and packet-handler backlog |
 | **DM interface design** | [DM_INTERFACE.md](DM_INTERFACE.md) — native tabletop tooling |
+| **Implementation plans** | [plans/README.md](plans/README.md) — near-term executable plans |
 
 **Mission:** Replace the official RO client (`H:\RO\client`) with a Korangar-based
 client for the HerculesRO private server, reaching feature parity for everything
@@ -234,6 +235,9 @@ Sizes: **S** ≤ ½ day · **M** ≤ 2 days · **L** ≤ 1 week · **XL** > 1 we
 Feature tasks in E4–E6 all follow the same slice: *packets (`ragnarok-packets`) → events (`korangar-networking`) → state (`korangar/src/state`) → UI window (`korangar/src/interface`) → verify vs Hercules*.
 
 ### E1 — Connectivity & environment *(→ M0)*
+
+Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
+
 | ID | Task | Size | Depends on |
 |---|---|---|---|
 | E1.1 | **Record packet version decision** (see §5-D1 and SOFTWARE_DESIGN §5) | S | — |
@@ -246,6 +250,9 @@ Feature tasks in E4–E6 all follow the same slice: *packets (`ragnarok-packets`
 | E1.8 | **M0 demo**: login → char create → walk Prontera; record findings | S | E1.2–E1.7 |
 
 ### E2 — Asset & data pipeline *(→ M1)*
+
+Implementation plan: [plans/asset-pipeline.md](plans/asset-pipeline.md)
+
 | ID | Task | Size | Depends on |
 |---|---|---|---|
 | E2.1 | Audit which `System/` lub data Korangar needs vs. what it derives from GRFs (item names/descriptions, skill info) | M | E1.8 |
@@ -265,6 +272,9 @@ Feature tasks in E4–E6 all follow the same slice: *packets (`ragnarok-packets`
 | E3.6 | **M1 demo**: novice → first job, 2-hour stability session | M | E3.2 |
 
 ### E4 — Multiplayer core (Tier 1 features) *(→ M2)*
+
+Protocol-safety starter plan: [plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md)
+
 | ID | Task | Size | Depends on |
 |---|---|---|---|
 | E4.1 | Whisper / private messages (+chat channel routing UI) | M | M1 |
