@@ -83,6 +83,14 @@ impl TimeSynchronization {
     }
 }
 
+#[cfg(feature = "debug")]
+fn log_packet_bytes(label: &str, bytes: &[u8]) {
+    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+        let hex: String = bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
+        eprintln!("[packet-log] {label} {} bytes: {hex}", bytes.len());
+    }
+}
+
 pub struct NetworkingSystem<Callback> {
     command_sender: UnboundedSender<ServerConnectCommand>,
     time_synchronization: Arc<Mutex<TimeSynchronization>>,
@@ -381,11 +389,7 @@ where
                     ping_factory(&time_synchronization).packet_to_bytes(&mut byte_writer).unwrap();
 
                     #[cfg(feature = "debug")]
-                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        let bytes = byte_writer.as_slice();
-                        let hex: String = bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
-                        eprintln!("[packet-log] keepalive {} bytes: {hex}", bytes.len());
-                    }
+                    log_packet_bytes("keepalive", byte_writer.as_slice());
 
                     stream.write_all(byte_writer.as_slice()).await.map_err(|_| NetworkTaskError::ConnectionClosed)?;
                     byte_writer.clear();
@@ -522,10 +526,7 @@ where
         let login_bytes = byte_writer.into_inner();
 
         #[cfg(feature = "debug")]
-        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            let hex: String = login_bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
-            eprintln!("[packet-log] map-enter {} bytes: {hex}", login_bytes.len());
-        }
+        log_packet_bytes("map-enter", &login_bytes);
 
         action_sender.send(login_bytes).expect("action receiver instantly dropped");
 
@@ -599,10 +600,7 @@ where
                 let bytes = byte_writer.into_inner();
 
                 #[cfg(feature = "debug")]
-                if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                    let hex: String = bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
-                    eprintln!("[packet-log] map-send {} bytes: {hex}", bytes.len());
-                }
+                log_packet_bytes("map-send", &bytes);
 
                 action_sender.send(bytes).map_err(|_| NotConnectedError)
             }
