@@ -13,3 +13,5 @@ lands.
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.
 
+Use [docs/protocol](../protocol/) for Hercules-derived packet references and
+packet audit lookup workflows.

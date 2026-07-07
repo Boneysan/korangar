@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Draft implementation plan |
 | **Milestone** | Phase 1 protocol safety, prerequisite for M2 group play |
-| **Parent** | [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §5.3–§5.4, [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.3 |
+| **Parent** | [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §5.3–§5.4, [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.3, [hercules-20220406.md](../protocol/hercules-20220406.md) |
 | **Depends on** | M0 connectivity and packet inspector working |
 
 ## 1. Scope
@@ -38,6 +38,8 @@ Known missing areas:
 - Party member position updates.
 - Party chat (`0x0108` / `0x0109`).
 - Invite, leave, kick, leader, and option updates not already covered.
+- 20220406 main roster/member packets are `0x0AE5` / `0x0AE4`; older
+  `0x00FB` roster notes are not correct for this server build.
 
 Already mentioned in the noop backlog:
 - `PartyInvitePacket`
@@ -47,7 +49,8 @@ Already mentioned in the noop backlog:
 
 Known missing areas:
 - Client → server whisper send: `0x0096`.
-- Server → client whisper receive/result: `0x0097` / `0x0098`.
+- Server → client whisper receive/result: `0x09DE` / `0x0098` for
+  `PACKETVER=20220406`.
 - `/r` reply state and whisper history are UI follow-ups.
 
 DM dependency:
@@ -76,6 +79,8 @@ DM dependency:
    - Repeat for whisper send/receive.
 
 2. Cross-check Hercules packet definitions.
+   - Start from [hercules-20220406.md](../protocol/hercules-20220406.md), then
+     verify against the local Hercules source.
    - Find `PACKETVER=20220406` packet layouts in Hercules packet DB/source.
    - Record opcode, length, direction, and field layout for each party/whisper
      packet observed.
