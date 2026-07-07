@@ -19,6 +19,17 @@ parsed and ignored so the audit can continue to later map traffic. The client
 is still receiving NPC/entity traffic inconsistently, so the remaining work is
 the packet-gap audit rather than the original login/map-entry desync.
 
+**2026-07-07 live-client continuation:** MariaDB/Hercules were running and the
+user logged into Korangar against the local server. Live testing in Izlude found
+three client issues now addressed in this commit: server-side warp trigger NPCs
+no longer render as broken shadow/`!` entities, RO `<NAVI><INFO>` dialogue
+markup is stripped to readable labels until clickable quest breadcrumbs are
+implemented, and the skill tree has a clearer "Rank up skills" flow with visible
+`+` rank controls. Skill names/tabs now fall back to ASCII labels when Korean
+client Lua strings would render as square boxes. Follow-up: restart the live
+Korangar process after pulling, and regenerate `korangar/lua_files.7z` if the
+local archive list changes.
+
 This is a working handover note, not a permanent design doc. Delete it once
 the packet work lands and the findings are folded into
 [packet-gap-party-whisper.md](packet-gap-party-whisper.md) and CLAUDE.md.

@@ -196,27 +196,36 @@ where
     }
 }
 
-pub struct SkillSlot<A, B, C> {
+pub struct SkillSlot<A, B, C, D> {
     learnable_skill_path: A,
     learned_skill_path: B,
     window_state_path: C,
+    available_skill_points_path: D,
     click_handler: SkillSlotClickHandler<A, B, C>,
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
     level_display: LevelDisplay,
 }
 
-impl<A, B, C> SkillSlot<A, B, C>
+impl<A, B, C, D> SkillSlot<A, B, C, D>
 where
     A: Copy,
     B: Copy,
     C: Copy,
+    D: Copy,
 {
-    pub fn new(learnable_skill_path: A, learned_skill_path: B, window_state_path: C, source: SkillSource) -> Self {
+    pub fn new(
+        learnable_skill_path: A,
+        learned_skill_path: B,
+        window_state_path: C,
+        available_skill_points_path: D,
+        source: SkillSource,
+    ) -> Self {
         Self {
             learnable_skill_path,
             learned_skill_path,
             window_state_path,
+            available_skill_points_path,
             click_handler: SkillSlotClickHandler::new(learnable_skill_path, learned_skill_path, window_state_path, source),
             choose_lower_handler: ChooseLowerClickHandler::new(learned_skill_path, window_state_path),
             choose_higher_handler: ChooseHigherClickHandler::new(learned_skill_path, window_state_path),
@@ -225,11 +234,12 @@ where
     }
 }
 
-impl<A, B, C> Element<ClientState> for SkillSlot<A, B, C>
+impl<A, B, C, D> Element<ClientState> for SkillSlot<A, B, C, D>
 where
     A: Path<ClientState, LearnableSkill, false>,
     B: Path<ClientState, LearnedSkill, false>,
     C: Path<ClientState, SkillTreeWindowState>,
+    D: Path<ClientState, u32>,
 {
     type LayoutInfo = BaseLayoutInfo;
 
@@ -285,6 +295,7 @@ where
     ) {
         // TODO: Should this also be part of the theme?
         const SLOT_SIZE: f32 = 40.0;
+        const RANK_UP_SIZE: f32 = 18.0;
         const ARROW_SIZE: f32 = 10.0;
         const ARROW_SPACING: f32 = 25.0;
 
@@ -296,16 +307,32 @@ where
         );
 
         if let Some(skill) = state.try_get(&self.learnable_skill_path) {
-            let is_hovered = sprite_area.check().run(layout);
             let highlighted_skill = *state.get(&self.window_state_path.highlighted_skill());
             let learned_skill = state.try_get(&self.learned_skill_path);
 
-            let pending_skill_points = state
-                .get(&self.window_state_path.pending_skill_points())
+            let pending_skill_points_path = self.window_state_path.pending_skill_points();
+            let pending_skill_points_list = state.get(&pending_skill_points_path);
+            let pending_skill_points = pending_skill_points_list
                 .iter()
                 .filter(|skill_id| **skill_id == skill.skill_id)
                 .count() as u16;
             let has_pending_points = pending_skill_points > 0;
+            let remaining_skill_points =
+                (*state.get(&self.available_skill_points_path) as usize).saturating_sub(pending_skill_points_list.len());
+            let current_skill_level = learned_skill.map(|skill| skill.skill_level.0).unwrap_or_default() + pending_skill_points;
+            let can_rank_up = *state.get(&self.window_state_path.currently_skilling())
+                && remaining_skill_points > 0
+                && skill.acquisition == SkillAcquisition::Job
+                && learned_skill.is_none_or(|learned_skill| learned_skill.upgradable)
+                && current_skill_level < skill.maximum_level.0;
+            let rank_up_area = layout_info.area.interior(
+                RANK_UP_SIZE,
+                RANK_UP_SIZE,
+                HorizontalAlignment::Right { offset: 4.0, border: 0.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+            );
+            let is_rank_up_hovered = can_rank_up && rank_up_area.check().run(layout);
+            let is_hovered = sprite_area.check().run(layout);
 
             let required_skill_level = highlighted_skill.and_then(|skill_id| skill.required_for_skills.get(&skill_id));
             let should_be_highlighted = required_skill_level.is_some();
@@ -446,6 +473,39 @@ where
                 && let Some(sprite) = &skill.sprite
             {
                 layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, color, 1.3);
+            }
+
+            if can_rank_up {
+                let rank_up_color = match is_rank_up_hovered {
+                    true => *state.get(&client_theme().skill_tree().pending_points_color()),
+                    false => *state.get(&client_theme().skill_tree().points_color()),
+                };
+
+                layout.add_rectangle(
+                    rank_up_area,
+                    *state.get(&client_theme().skill_tree().slot_corner_diameter()),
+                    *state.get(&client_theme().skill_tree().slot_background_color()),
+                    rank_up_color,
+                    *state.get(&client_theme().skill_tree().slot_outline()),
+                );
+
+                layout.add_text(
+                    rank_up_area,
+                    "+",
+                    *state.get(&client_theme().skill_tree().points_font_size()),
+                    rank_up_color,
+                    *state.get(&client_theme().skill_tree().highlight_color()),
+                    HorizontalAlignment::Center { offset: 0.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+
+                if is_rank_up_hovered {
+                    layout.register_click_handler(MouseButton::Left, &self.click_handler);
+
+                    struct RankUpTooltip;
+                    layout.add_tooltip("Queue skill rank", RankUpTooltip.tooltip_id());
+                }
             }
 
             if is_hovered {

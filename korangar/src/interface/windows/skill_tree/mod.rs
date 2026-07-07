@@ -86,6 +86,7 @@ where
                                 self.layout_path.tabs().index(index).skills().manually_asserted(),
                                 self.skills_path,
                                 self.window_state_path,
+                                self.available_skill_points_path,
                             )
                         )
                     }

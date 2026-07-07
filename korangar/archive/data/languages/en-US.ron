@@ -67,5 +67,5 @@
     reset_skill_points_button_text: "Reset",
     cancel_skill_points_button_text: "Cancel",
     apply_skill_points_button_text: "Apply",
-    distribute_skill_points_button_text: "Distribute",
+    distribute_skill_points_button_text: "Rank up skills",
 )

@@ -121,3 +121,7 @@ fn fix_encoding(broken: String) -> String {
         Some(char) => char.to_string(),
     }
 }
+
+fn needs_ascii_fallback(value: &str) -> bool {
+    value.chars().any(|character| !character.is_ascii())
+}

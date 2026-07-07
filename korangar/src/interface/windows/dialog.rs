@@ -42,6 +42,74 @@ impl DialogElement {
     }
 }
 
+fn normalize_dialog_text(text: String) -> String {
+    if !text.contains('<') {
+        return text;
+    }
+
+    let mut output = String::with_capacity(text.len());
+    let mut remaining = text.as_str();
+
+    while let Some(tag_start) = remaining.find('<') {
+        output.push_str(&remaining[..tag_start]);
+
+        let tag_and_after = &remaining[tag_start..];
+        let Some(tag_end) = tag_and_after.find('>') else {
+            output.push_str(tag_and_after);
+            return output;
+        };
+
+        let tag_name = tag_and_after[1..tag_end]
+            .split_whitespace()
+            .next()
+            .unwrap_or_default()
+            .to_ascii_uppercase();
+
+        if tag_name == "INFO" {
+            let after_tag = &tag_and_after[tag_end + 1..];
+            let after_tag_uppercase = after_tag.to_ascii_uppercase();
+
+            remaining = match after_tag_uppercase.find("</INFO>") {
+                Some(info_end) => &after_tag[info_end + "</INFO>".len()..],
+                None => after_tag,
+            };
+        } else if matches!(
+            tag_name.as_str(),
+            "NAVI" | "/NAVI" | "/INFO" | "URL" | "/URL" | "ITEM" | "/ITEM"
+        ) {
+            remaining = &tag_and_after[tag_end + 1..];
+        } else {
+            output.push('<');
+            remaining = &tag_and_after[1..];
+        }
+    }
+
+    output.push_str(remaining);
+    output
+}
+
+#[cfg(test)]
+mod tests {
+    use super::normalize_dialog_text;
+
+    #[test]
+    fn normalize_dialog_text_strips_navigation_markup() {
+        let text = "If you need more help with the map, press <NAVI>[Hun]<INFO>izlude,122,207,</INFO></NAVI> here";
+
+        assert_eq!(
+            normalize_dialog_text(text.to_owned()),
+            "If you need more help with the map, press [Hun] here"
+        );
+    }
+
+    #[test]
+    fn normalize_dialog_text_leaves_unknown_angle_text() {
+        let text = "Use < and > when explaining ranges.";
+
+        assert_eq!(normalize_dialog_text(text.to_owned()), text);
+    }
+}
+
 /// Internal state of the dialog window.
 #[derive(RustState, StateElement)]
 pub struct DialogWindowState {
@@ -70,6 +138,8 @@ impl DialogWindowState {
             self.elements.clear();
             self.clear_next = false;
         }
+
+        let text = normalize_dialog_text(text);
 
         self.elements.push(DialogElement::new(
             text! {

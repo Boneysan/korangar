@@ -160,6 +160,17 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 
 - [ ] **Navigation & quests:**
   - **Cross-Map Quest Guiding & Breadcrumbs:** A macro-level pathfinding system using a world graph of warp portals. When tracking a quest on another map, a ground-level glowing trail (breadcrumb ribbon) and minimap edge-arrows will guide you seamlessly through multiple maps and warp portals directly to the objective.
+  - **Clickable NPC navigation links:** Parse RO dialogue navigation markup such as
+    `<NAVI>[Hun]<INFO>izlude,122,207,</INFO></NAVI>` into clickable quest
+    breadcrumbs. Same-map links should walk or mark the target directly; cross-map
+    links should feed the breadcrumb route system above.
+    - Parse dialog text into structured segments: plain text, navigation label,
+      destination map, and destination tile.
+    - Render navigation labels as clickable dialog UI. Start with a small generated
+      button beside/below the sentence; later replace it with true inline clickable
+      text.
+    - Add visual feedback when a navigation link is activated: walk indicator,
+      ground marker, minimap marker, and eventually world-map support.
   - **Navigational Aids:** 3D floating markers over NPCs (`!` / `?`), minimap objective radiuses, and custom map waypoints.
   - **Enhanced minimap/world map:** zoom, tracking filters, shared party pings.
 

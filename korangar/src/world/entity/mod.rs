@@ -366,7 +366,10 @@ fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: Job
         ],
         EntityType::Npc => vec![format!("npc\\{}", library.get::<JobIdentity>(job_id).to_string())],
         EntityType::Monster => vec![format!("몬스터\\{}", library.get::<JobIdentity>(job_id).to_string())],
-        EntityType::Warp | EntityType::Hidden => vec![format!("npc\\{}", library.get::<JobIdentity>(job_id).to_string())], // TODO: change
+        // Warp and hidden NPCs are server-side trigger entities, not visible actors.
+        // Trying to load their job identity, such as WARPNPC, renders the missing
+        // sprite fallback as a misleading shadow marker.
+        EntityType::Warp | EntityType::Hidden => Vec::new(),
     }
 }
 

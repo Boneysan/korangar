@@ -100,29 +100,32 @@ where
     }
 }
 
-pub(super) struct SkillTreeTab<A, B, C> {
+pub(super) struct SkillTreeTab<A, B, C, D> {
     layout_path: A,
     skills_path: B,
     window_state_path: C,
+    available_skill_points_path: D,
     row_elements: Vec<ElementBox<ClientState>>,
 }
 
-impl<A, B, C> SkillTreeTab<A, B, C> {
-    pub fn new(layout_path: A, skills_path: B, window_state_path: C) -> Self {
+impl<A, B, C, D> SkillTreeTab<A, B, C, D> {
+    pub fn new(layout_path: A, skills_path: B, window_state_path: C, available_skill_points_path: D) -> Self {
         Self {
             layout_path,
             skills_path,
             window_state_path,
+            available_skill_points_path,
             row_elements: Vec::new(),
         }
     }
 }
 
-impl<A, B, C> Element<ClientState> for SkillTreeTab<A, B, C>
+impl<A, B, C, D> Element<ClientState> for SkillTreeTab<A, B, C, D>
 where
     A: Path<ClientState, HashMap<usize, LearnableSkill>>,
     B: Path<ClientState, Vec<LearnedSkill>>,
     C: Path<ClientState, SkillTreeWindowState>,
+    D: Path<ClientState, u32>,
 {
     type LayoutInfo = ();
 
@@ -155,6 +158,7 @@ where
                                     learnable_skill_path,
                                     learned_skill_path,
                                     self.window_state_path,
+                                    self.available_skill_points_path,
                                     SkillSource::SkillTree,
                                 )
                             }),

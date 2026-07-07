@@ -2,7 +2,7 @@ use hashbrown::HashMap;
 use mlua::Lua;
 use ragnarok_packets::{JobId, SkillId};
 
-use super::{HashMapExt, Library, Table, fix_encoding};
+use super::{HashMapExt, Library, Table, fix_encoding, needs_ascii_fallback};
 use crate::loaders::GameFileLoader;
 use crate::world::library::LuaExt;
 
@@ -89,7 +89,11 @@ fn evaluate_job(
             let name = skill_tab_names
                 .get(tab_index)
                 .map(fix_encoding)
-                .unwrap_or_else(|_| "<unnamed>".to_owned());
+                .unwrap_or_else(|_| skill_tab_base_name(tab_index));
+            let name = match needs_ascii_fallback(&name) {
+                true => skill_tab_base_name(tab_index),
+                false => name,
+            };
             let skills = hash_map.compact();
 
             SkillTabLayout { name, skills }
@@ -99,6 +103,18 @@ fn evaluate_job(
 
     lookup_cache.insert(job_id, skill_tree_layout.clone());
     Ok(skill_tree_layout)
+}
+
+fn skill_tab_base_name(tab_index: usize) -> String {
+    match tab_index {
+        0 => "Novice",
+        1 => "First",
+        2 => "Second",
+        3 => "Third",
+        4 => "Fourth",
+        _ => "<unnamed>",
+    }
+    .to_owned()
 }
 
 impl Table for SkillTreeLayout {

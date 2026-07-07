@@ -104,6 +104,10 @@ impl AsyncLoader {
         entity_type: EntityType,
         entity_part_files: Vec<String>,
     ) -> Option<Arc<AnimationData>> {
+        if entity_part_files.is_empty() {
+            return None;
+        }
+
         match self.animation_loader.get(&entity_part_files) {
             Some(animation_data) => Some(animation_data),
             None => {

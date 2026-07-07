@@ -67,5 +67,5 @@
     reset_skill_points_button_text: "Zurücksetzen",
     cancel_skill_points_button_text: "Abbrechen",
     apply_skill_points_button_text: "Anwenden",
-    distribute_skill_points_button_text: "Verteilen",
+    distribute_skill_points_button_text: "Fertigkeiten steigern",
 )
