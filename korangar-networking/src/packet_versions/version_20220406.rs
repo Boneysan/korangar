@@ -192,6 +192,8 @@ where
         color: MessageColor::Server,
     })?;
     packet_handler.register_noop::<MessageTablePacket>()?;
+    packet_handler.register_noop::<MessageTableColorPacket>()?;
+    packet_handler.register_noop::<OpenUiPacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
         // Drop the alpha channel because it might be 0.
         let color = MessageColor::Rgb {
@@ -222,6 +224,7 @@ where
         }
     })?;
     packet_handler.register_noop::<EntityStopMovePacket>()?;
+    packet_handler.register_noop::<ChangeDirectionPacket>()?;
     packet_handler.register(|packet: PlayerMovePacket| {
         let PlayerMovePacket {
             starting_timestamp,
@@ -436,6 +439,7 @@ where
     packet_handler.register_noop::<MapTypePacket>()?;
     packet_handler.register_noop::<EquipmentEffectPacket>()?;
     packet_handler.register_noop::<PersonalInformationPacket>()?;
+    packet_handler.register_noop::<NotifyActorInitPacket>()?;
     packet_handler.register(|packet: UpdateSkillTreePacket| {
         let UpdateSkillTreePacket { skill_information } = packet;
         NetworkEvent::SkillTree { skill_information }
@@ -503,10 +507,13 @@ where
     packet_handler.register_noop::<DisplayPlayerHealEffect>()?;
     packet_handler.register_noop::<StatusChangePacket>()?;
     packet_handler.register_noop::<QuestNotificationPacket1>()?;
+    packet_handler.register_noop::<QuestNotificationPacket4>()?;
     packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
+    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
     packet_handler.register_noop::<QuestRemovedPacket>()?;
     packet_handler.register_noop::<QuestListPacket>()?;
+    packet_handler.register_noop::<QuestListPacket4>()?;
     packet_handler.register(|packet: VisualEffectPacket| {
         let VisualEffectPacket { entity_id, effect } = packet;
 
@@ -746,6 +753,7 @@ where
         },
     })?;
     packet_handler.register_noop::<UseSkillSuccessPacket>()?;
+    packet_handler.register_noop::<UseSkillAckPacket>()?;
     packet_handler.register_noop::<ToUseSkillSuccessPacket>()?;
     packet_handler.register(|packet: NotifySkillUnitPacket| {
         let NotifySkillUnitPacket {
@@ -846,6 +854,11 @@ where
         }
     })?;
     packet_handler.register(|packet: RemoveSkillPacket| NetworkEvent::RemoveSkill { skill_id: packet.skill_id })?;
+
+    // Consume any remaining server packet whose length is known (from Hercules'
+    // own tables) but that has no dedicated handler yet, instead of desyncing
+    // the read buffer. Registered last so it never shadows a real handler.
+    packet_handler.register_length_fallbacks(super::lengths_20220406::PACKET_LENGTHS);
 
     Ok(())
 }

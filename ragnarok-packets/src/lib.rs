@@ -705,6 +705,15 @@ pub struct EntityStopMovePacket {
     pub position: TilePosition,
 }
 
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x009C)]
+pub struct ChangeDirectionPacket {
+    pub entity_id: EntityId,
+    pub head_direction: u16,
+    pub direction: u8,
+}
+
 /// Sent by the map server to the client.
 /// Informs the client that the player is pathing towards a new position.
 /// Provides the initial position and destination of the movement, as well as a
@@ -784,6 +793,22 @@ pub struct ServerMessagePacket {
 #[header(0x0291)]
 pub struct MessageTablePacket {
     pub message_id: u16,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x09CD)]
+pub struct MessageTableColorPacket {
+    pub message_id: u16,
+    pub message_color: u32,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AE2)]
+pub struct OpenUiPacket {
+    pub ui_type: u8,
+    pub data: i32,
 }
 
 /// Sent by the client to the map server when the user hovers over an entity.
@@ -3266,10 +3291,29 @@ pub struct PersonalInformationPacket {
     pub details: Vec<PersonalInformationDetail>,
 }
 
+#[derive(Debug, Clone, Default, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B1B)]
+pub struct NotifyActorInitPacket {}
+
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ObjectiveDetails1 {
     pub hunt_identification: u32,
+    pub objective_type: u32,
+    pub mob_id: u32,
+    pub minimum_level: u16,
+    pub maximum_level: u16,
+    pub mob_count: u16,
+    #[length(24)]
+    pub mob_name: String,
+}
+
+#[derive(Debug, Clone, ByteConvertable)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct QuestAddObjectiveDetails4 {
+    pub hunt_identification: u32,
+    pub hunt_identification2: u32,
     pub objective_type: u32,
     pub mob_id: u32,
     pub minimum_level: u16,
@@ -3293,11 +3337,34 @@ pub struct QuestNotificationPacket1 {
     pub objective_details: [ObjectiveDetails1; 3],
 }
 
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B0C)]
+pub struct QuestNotificationPacket4 {
+    pub quest_id: u32,
+    pub active: u8,
+    pub start_time: u32,
+    pub expire_time: u32,
+    pub objective_count: u16,
+    /// Hercules sends a fixed-size packet with room for three objectives.
+    pub objective_details: [QuestAddObjectiveDetails4; 3],
+}
+
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct HuntingObjective {
     pub quest_id: u32,
     pub mob_id: u32,
+    pub total_count: u16,
+    pub current_count: u16,
+}
+
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct HuntingObjective4 {
+    pub quest_id: u32,
+    pub hunt_identification: u32,
+    pub hunt_identification2: u32,
     pub total_count: u16,
     pub current_count: u16,
 }
@@ -3323,6 +3390,16 @@ pub struct HuntingQuestUpdateObjectivePacket {
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AFE)]
+#[variable_length]
+pub struct HuntingQuestUpdateObjectivePacket4 {
+    pub objective_count: u16,
+    #[repeating_remaining]
+    pub objective_details: Vec<HuntingObjective4>,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x02B4)]
 pub struct QuestRemovedPacket {
     pub quest_id: u32,
@@ -3332,6 +3409,21 @@ pub struct QuestRemovedPacket {
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct QuestDetails {
     pub hunt_identification: u32,
+    pub objective_type: u32,
+    pub mob_id: u32,
+    pub minimum_level: u16,
+    pub maximum_level: u16,
+    pub kill_count: u16,
+    pub total_count: u16,
+    #[length(24)]
+    pub mob_name: String,
+}
+
+#[derive(Debug, Clone, ByteConvertable)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct QuestDetails4 {
+    pub hunt_identification: u32,
+    pub hunt_identification2: u32,
     pub objective_type: u32,
     pub mob_id: u32,
     pub minimum_level: u16,
@@ -3355,6 +3447,19 @@ pub struct Quest {
     pub objective_details: Vec<QuestDetails>,
 }
 
+#[derive(Debug, Clone, ByteConvertable)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct Quest4 {
+    pub quest_id: u32,
+    pub active: u8,
+    pub remaining_time: u32,
+    pub expire_time: u32,
+    #[new_derive]
+    pub objective_count: u16,
+    #[repeating(objective_count)]
+    pub objective_details: Vec<QuestDetails4>,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x09F8)]
@@ -3364,6 +3469,17 @@ pub struct QuestListPacket {
     pub quest_count: u32,
     #[repeating(quest_count)]
     pub quests: Vec<Quest>,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AFF)]
+#[variable_length]
+pub struct QuestListPacket4 {
+    #[new_derive]
+    pub quest_count: u32,
+    #[repeating(quest_count)]
+    pub quests: Vec<Quest4>,
 }
 
 #[derive(Debug, Clone, ByteConvertable)]
@@ -3890,6 +4006,20 @@ pub struct UseSkillSuccessPacket {
     pub element: u32,
     pub delay_time: u32,
     pub disposable: u8,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B1A)]
+pub struct UseSkillAckPacket {
+    pub source_entity: EntityId,
+    pub destination_entity: EntityId,
+    pub position: TilePosition,
+    pub skill_id: SkillId,
+    pub element: u32,
+    pub delay_time: u32,
+    pub disposable: u8,
+    pub attack_motion_time: u32,
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -4608,6 +4738,31 @@ mod tests {
     }
 
     #[test]
+    fn open_ui_packet_matches_20220406_layout() {
+        let packet = read_packet::<OpenUiPacket>(&[0xE2, 0x0A, 0x05, 0x00, 0x00, 0x00, 0x00]);
+
+        assert_eq!(packet.ui_type, 5);
+        assert_eq!(packet.data, 0);
+    }
+
+    #[test]
+    fn message_table_color_packet_matches_20220406_layout() {
+        let packet = read_packet::<MessageTableColorPacket>(&[0xCD, 0x09, 0x92, 0x0D, 0xFF, 0x00, 0x00, 0x00]);
+
+        assert_eq!(packet.message_id, 0x0D92);
+        assert_eq!(packet.message_color, 0x0000_00FF);
+    }
+
+    #[test]
+    fn change_direction_packet_matches_20220406_layout() {
+        let packet = read_packet::<ChangeDirectionPacket>(&[0x9C, 0x00, 0x6D, 0xC4, 0x8E, 0x06, 0x00, 0x00, 0x02]);
+
+        assert_eq!(packet.entity_id, EntityId(0x068E_C46D));
+        assert_eq!(packet.head_direction, 0);
+        assert_eq!(packet.direction, 2);
+    }
+
+    #[test]
     fn equipment_effect_packet_consumes_variable_length_header() {
         let packet = read_packet::<EquipmentEffectPacket>(&[0x3B, 0x0A, 0x09, 0x00, 0x84, 0x84, 0x1E, 0x00, 0x01]);
 
@@ -4633,10 +4788,99 @@ mod tests {
     }
 
     #[test]
+    fn quest_notification_packet4_matches_20220406_layout() {
+        // 0x0B0C is questAddType / ZC_ADD_QUEST_EX on 20220406: a fixed 155-byte
+        // frame carrying a header plus room for MAX_QUEST_OBJECTIVES (3) objectives.
+        let mut bytes = vec![0x0C, 0x0B];
+        bytes.extend([0x64, 0x00, 0x00, 0x00]); // quest_id = 100
+        bytes.push(0x01); // active
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // start_time
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // expire_time
+        bytes.extend([0x01, 0x00]); // objective_count = 1
+
+        // Objective 0: Poring hunt.
+        bytes.extend([0x64, 0x00, 0x00, 0x00]); // hunt_identification = 100
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // hunt_identification2 = 0
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // objective_type = 0
+        bytes.extend([0xEA, 0x03, 0x00, 0x00]); // mob_id = 1002
+        bytes.extend([0x00, 0x00]); // minimum_level
+        bytes.extend([0x00, 0x00]); // maximum_level
+        bytes.extend([0x05, 0x00]); // mob_count = 5
+        let mut mob_name = b"Poring".to_vec();
+        mob_name.resize(24, 0x00);
+        bytes.extend(mob_name);
+
+        // Objectives 1 and 2 are zero-filled but still present (fixed-size frame).
+        bytes.extend([0x00; 46 * 2]);
+
+        assert_eq!(bytes.len(), 155);
+
+        let packet = read_packet::<QuestNotificationPacket4>(&bytes);
+
+        assert_eq!(packet.quest_id, 100);
+        assert_eq!(packet.active, 1);
+        assert_eq!(packet.objective_count, 1);
+        assert_eq!(packet.objective_details[0].hunt_identification, 100);
+        assert_eq!(packet.objective_details[0].mob_id, 1002);
+        assert_eq!(packet.objective_details[0].mob_count, 5);
+        assert_eq!(packet.objective_details[0].mob_name, "Poring");
+    }
+
+    #[test]
+    fn quest_list_packet4_matches_20220406_live_capture() {
+        // Mirrors the 2026-07-07 live Hercules capture of 0x0AFF (ZC_ALL_QUEST_LIST4):
+        // a 23-byte frame with quest_count = 1 and a single quest carrying zero
+        // objectives. Header(2) + length(2) + count(4) + one 15-byte quest = 23.
+        let mut bytes = vec![0xFF, 0x0A]; // header
+        bytes.extend([0x17, 0x00]); // packet length = 23 (consumed by #[variable_length])
+        bytes.extend([0x01, 0x00, 0x00, 0x00]); // quest_count = 1
+
+        // Quest 0 with no objectives.
+        bytes.extend([0x64, 0x00, 0x00, 0x00]); // quest_id = 100
+        bytes.push(0x01); // active
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // remaining_time
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // expire_time
+        bytes.extend([0x00, 0x00]); // objective_count = 0
+
+        assert_eq!(bytes.len(), 23);
+
+        let packet = read_packet::<QuestListPacket4>(&bytes);
+
+        assert_eq!(packet.quest_count, 1);
+        assert_eq!(packet.quests.len(), 1);
+        assert_eq!(packet.quests[0].quest_id, 100);
+        assert_eq!(packet.quests[0].active, 1);
+        assert_eq!(packet.quests[0].objective_count, 0);
+        assert!(packet.quests[0].objective_details.is_empty());
+    }
+
+    #[test]
+    fn notify_actor_init_packet_matches_20220406_layout() {
+        read_packet::<NotifyActorInitPacket>(&[0x1B, 0x0B]);
+    }
+
+    #[test]
     fn use_skill_at_id_packet_matches_20220406_opcode() {
         assert_eq!(
             packet_bytes(UseSkillAtIdPacket::new(SkillLevel(5), SkillId(0x1234), EntityId(0x0102_0304))),
             [0x38, 0x04, 0x05, 0x00, 0x34, 0x12, 0x04, 0x03, 0x02, 0x01]
         );
+    }
+
+    #[test]
+    fn use_skill_ack_packet_matches_20220406_layout() {
+        let packet = read_packet::<UseSkillAckPacket>(&[
+            0x1A, 0x0B, 0x6D, 0xC4, 0x8E, 0x06, 0x84, 0x84, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0xB8, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ]);
+
+        assert_eq!(packet.source_entity, EntityId(0x068E_C46D));
+        assert_eq!(packet.destination_entity, EntityId(0x001E_8484));
+        assert_eq!(packet.position, TilePosition { x: 0, y: 0 });
+        assert_eq!(packet.skill_id, SkillId(0x00B8));
+        assert_eq!(packet.element, 1);
+        assert_eq!(packet.delay_time, 0);
+        assert_eq!(packet.disposable, 0);
+        assert_eq!(packet.attack_motion_time, 0);
     }
 }
