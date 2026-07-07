@@ -14,7 +14,7 @@ struct ComputeInput {
 
 [[vk::binding(0, 0)]] var global_uniforms: ConstantBuffer<GlobalUniforms>;
 [[vk::binding(0, 1)]] var directional_light: ConstantBuffer<DirectionalLightUniforms>;
-[[vk::binding(1, 1)]] var depth_texture: DepthTexture2DMS;
+[[vk::binding(1, 1)]] var depth_texture: Texture2DMS<float>;
 [[vk::binding(2, 1)]] var partition_data: RWStructuredBuffer<Partition>;
 [[vk::binding(4, 1)]] var bounds_data: RWStructuredBuffer<Bounds>;
 

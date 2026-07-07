@@ -1260,7 +1260,10 @@ impl GlobalContext {
                     BindGroupLayoutEntry {
                         binding: 1,
                         visibility: ShaderStages::FRAGMENT,
-                        ty: BindingType::Sampler(SamplerBindingType::Filtering),
+                        // NonFiltering (the nearest sampler uses no filtering
+                        // anywhere) so it can pair with unfilterable-float
+                        // textures like the raw depth views.
+                        ty: BindingType::Sampler(SamplerBindingType::NonFiltering),
                         count: None,
                     },
                     BindGroupLayoutEntry {
@@ -1423,6 +1426,33 @@ impl GlobalContext {
                         },
                         count: None,
                     },
+                    // The directional shadow map again (same view as binding 1),
+                    // typed as a plain float texture. The PCSS blocker search
+                    // reads raw depth while the PCF filter uses comparison
+                    // sampling, and the GL backend cannot express one texture
+                    // paired with both sampler kinds.
+                    BindGroupLayoutEntry {
+                        binding: 9,
+                        visibility: ShaderStages::FRAGMENT,
+                        ty: BindingType::Texture {
+                            sample_type: TextureSampleType::Float { filterable: false },
+                            view_dimension: TextureViewDimension::D2Array,
+                            multisampled: false,
+                        },
+                        count: None,
+                    },
+                    // The point shadow maps again (same view as binding 5), for
+                    // the raw depth reads of the manual point light shadow test.
+                    BindGroupLayoutEntry {
+                        binding: 10,
+                        visibility: ShaderStages::FRAGMENT,
+                        ty: BindingType::Texture {
+                            sample_type: TextureSampleType::Float { filterable: false },
+                            view_dimension: TextureViewDimension::CubeArray,
+                            multisampled: false,
+                        },
+                        count: None,
+                    },
                 ],
             })
         })
@@ -1456,7 +1486,10 @@ impl GlobalContext {
                         binding: 1,
                         visibility: ShaderStages::COMPUTE,
                         ty: BindingType::Texture {
-                            sample_type: TextureSampleType::Depth,
+                            // Read via `Load` in the shader, typed as a plain
+                            // float texture because the GL backend cannot read
+                            // a depth-classed texture without a comparison.
+                            sample_type: TextureSampleType::Float { filterable: false },
                             view_dimension: TextureViewDimension::D2,
                             multisampled: msaa.multisampling_activated(),
                         },
@@ -1536,7 +1569,9 @@ impl GlobalContext {
                         binding: 2,
                         visibility: ShaderStages::FRAGMENT,
                         ty: BindingType::Texture {
-                            sample_type: TextureSampleType::Depth,
+                            // Raw-read only; plain float type for GL, which
+                            // cannot read depth-classed textures uncompared.
+                            sample_type: TextureSampleType::Float { filterable: false },
                             view_dimension: TextureViewDimension::D2Array,
                             multisampled: false,
                         },
@@ -1556,7 +1591,7 @@ impl GlobalContext {
                         binding: 4,
                         visibility: ShaderStages::FRAGMENT,
                         ty: BindingType::Texture {
-                            sample_type: TextureSampleType::Depth,
+                            sample_type: TextureSampleType::Float { filterable: false },
                             view_dimension: TextureViewDimension::CubeArray,
                             multisampled: false,
                         },
@@ -1566,7 +1601,7 @@ impl GlobalContext {
                         binding: 5,
                         visibility: ShaderStages::FRAGMENT,
                         ty: BindingType::Texture {
-                            sample_type: TextureSampleType::Depth,
+                            sample_type: TextureSampleType::Float { filterable: false },
                             view_dimension: TextureViewDimension::D2,
                             multisampled: msaa.multisampling_activated(),
                         },
@@ -1701,6 +1736,14 @@ impl GlobalContext {
                 BindGroupEntry {
                     binding: 8,
                     resource: BindingResource::TextureView(directional_shadow_translucence_texture.get_texture_view()),
+                },
+                BindGroupEntry {
+                    binding: 9,
+                    resource: BindingResource::TextureView(directional_shadow_map_texture.get_texture_view()),
+                },
+                BindGroupEntry {
+                    binding: 10,
+                    resource: BindingResource::TextureView(point_shadow_maps_texture.get_texture_view()),
                 },
             ],
         })

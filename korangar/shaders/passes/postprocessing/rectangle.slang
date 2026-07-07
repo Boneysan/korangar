@@ -37,8 +37,13 @@ func fs_main(input: PostprocessingVertexOutput) -> float4 {
             break;
         }
         case 2: {
-            // Sprite (nearest filtering)
-            color *= texture.Sample(nearest_sampler, input.texture_coordinates);
+            // Sprite (nearest filtering). Emulated by snapping to the texel
+            // center and sampling with the linear sampler, because the GL
+            // backend cannot express one texture paired with multiple samplers.
+            var texture_size: float2;
+            texture.GetDimensions(texture_size.x, texture_size.y);
+            let snapped_coordinates = (floor(input.texture_coordinates * texture_size) + 0.5) / texture_size;
+            color *= texture.Sample(linear_sampler, snapped_coordinates);
             break;
         }
         case 3: {

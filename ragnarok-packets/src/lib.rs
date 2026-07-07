@@ -535,10 +535,9 @@ pub struct MapServerLoginPacket {
     pub account_id: AccountId,
     pub character_id: CharacterId,
     pub login_id1: u32,
+    pub login_id2: u32,
     pub client_tick: ClientTick,
     pub sex: Sex,
-    #[new_default]
-    pub unknown: [u8; 4],
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -667,7 +666,7 @@ pub struct MapServerPingPacket {}
 /// Attempts to path the player towards the provided position.
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x0881)]
+#[header(0x035F)]
 pub struct RequestPlayerMovePacket {
     pub position: WorldPosition,
 }
@@ -3235,6 +3234,38 @@ pub struct StatusChangePacket {
     pub value: [u32; 3],
 }
 
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0A3B)]
+#[variable_length]
+pub struct EquipmentEffectPacket {
+    pub entity_id: EntityId,
+    pub status: u8,
+    #[repeating_remaining]
+    pub effects: Vec<u16>,
+}
+
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct PersonalInformationDetail {
+    pub information_type: u8,
+    pub exp: i32,
+    pub death: i32,
+    pub drop: i32,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x097B)]
+#[variable_length]
+pub struct PersonalInformationPacket {
+    pub total_exp: i32,
+    pub total_death: i32,
+    pub total_drop: i32,
+    #[repeating_remaining]
+    pub details: Vec<PersonalInformationDetail>,
+}
+
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ObjectiveDetails1 {
@@ -4503,4 +4534,109 @@ pub struct UpdateSkillPacket {
 #[header(0x0441)]
 pub struct RemoveSkillPacket {
     pub skill_id: SkillId,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn packet_bytes(packet: impl PacketExt) -> Vec<u8> {
+        let mut byte_writer = ByteWriter::new();
+        let written = packet.packet_to_bytes(&mut byte_writer).unwrap();
+
+        assert_eq!(written, byte_writer.len());
+
+        byte_writer.into_inner()
+    }
+
+    fn read_packet<T: PacketExt>(bytes: &[u8]) -> T {
+        let mut byte_reader = ByteReader::without_metadata(bytes);
+        T::packet_from_bytes(&mut byte_reader).unwrap()
+    }
+
+    #[test]
+    fn map_server_login_packet_matches_20220406_layout() {
+        let packet = MapServerLoginPacket::new(
+            AccountId(2_000_004),
+            CharacterId(150_004),
+            0x287C_D2C1,
+            0x1122_3344,
+            ClientTick(100),
+            Sex::Male,
+        );
+
+        assert_eq!(packet_bytes(packet), [
+            0x36, 0x04, 0x84, 0x84, 0x1E, 0x00, 0xF4, 0x49, 0x02, 0x00, 0xC1, 0xD2, 0x7C, 0x28, 0x44, 0x33, 0x22, 0x11, 0x64, 0x00, 0x00,
+            0x00, 0x01,
+        ]);
+    }
+
+    #[test]
+    fn request_player_move_packet_matches_20220406_opcode() {
+        assert_eq!(
+            packet_bytes(RequestPlayerMovePacket::new(WorldPosition::new(100, 200, Direction::North))),
+            [0x5F, 0x03, 0x19, 0x0C, 0x84]
+        );
+    }
+
+    #[test]
+    fn request_action_packet_matches_20220406_opcode() {
+        assert_eq!(packet_bytes(RequestActionPacket::new(EntityId(0x0102_0304), Action::Attack)), [
+            0x37, 0x04, 0x04, 0x03, 0x02, 0x01, 0x00
+        ]);
+    }
+
+    #[test]
+    fn item_pickup_request_packet_matches_20220406_opcode() {
+        assert_eq!(packet_bytes(ItemPickupRequestPacket::new(EntityId(0x0102_0304))), [
+            0x62, 0x03, 0x04, 0x03, 0x02, 0x01
+        ]);
+    }
+
+    #[test]
+    fn request_details_packet_matches_20220406_opcode() {
+        assert_eq!(packet_bytes(RequestDetailsPacket::new(EntityId(0x0102_0304))), [
+            0x68, 0x03, 0x04, 0x03, 0x02, 0x01
+        ]);
+    }
+
+    #[test]
+    fn request_server_tick_packet_matches_20220406_opcode() {
+        assert_eq!(packet_bytes(RequestServerTickPacket::new(ClientTick(100))), [
+            0x60, 0x03, 0x64, 0x00, 0x00, 0x00
+        ]);
+    }
+
+    #[test]
+    fn equipment_effect_packet_consumes_variable_length_header() {
+        let packet = read_packet::<EquipmentEffectPacket>(&[0x3B, 0x0A, 0x09, 0x00, 0x84, 0x84, 0x1E, 0x00, 0x01]);
+
+        assert_eq!(packet.entity_id, EntityId(0x001E_8484));
+        assert_eq!(packet.status, 1);
+        assert!(packet.effects.is_empty());
+    }
+
+    #[test]
+    fn personal_information_packet_consumes_modifier_rows() {
+        let packet = read_packet::<PersonalInformationPacket>(&[
+            0x7B, 0x09, 0x44, 0x00, 0xA0, 0x86, 0x01, 0x00, 0xE8, 0x03, 0x00, 0x00, 0xA0, 0x86, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xA0, 0x86, 0x01, 0x00, 0xE8, 0x03, 0x00,
+            0x00, 0xA0, 0x86, 0x01, 0x00,
+        ]);
+
+        assert_eq!(packet.total_exp, 100_000);
+        assert_eq!(packet.total_death, 1_000);
+        assert_eq!(packet.total_drop, 100_000);
+        assert_eq!(packet.details.len(), 4);
+        assert_eq!(packet.details[3].information_type, 2);
+    }
+
+    #[test]
+    fn use_skill_at_id_packet_matches_20220406_opcode() {
+        assert_eq!(
+            packet_bytes(UseSkillAtIdPacket::new(SkillLevel(5), SkillId(0x1234), EntityId(0x0102_0304))),
+            [0x38, 0x04, 0x05, 0x00, 0x34, 0x12, 0x04, 0x03, 0x02, 0x01]
+        );
+    }
 }

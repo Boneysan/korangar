@@ -181,11 +181,22 @@ impl GraphicsEngine {
         limit_framerate: LimitFramerate,
         shadow_resolution: ShadowResolution,
         texture_sampler_type: TextureSamplerType,
-        msaa: Msaa,
+        mut msaa: Msaa,
         ssaa: Ssaa,
         screen_space_anti_aliasing: ScreenSpaceAntiAliasing,
         high_quality_interface: bool,
     ) {
+        // A saved setting can request an MSAA level the adapter doesn't
+        // support (for example a settings file written on another backend).
+        if !self.capabilities.get_supported_msaa().contains(&msaa) {
+            #[cfg(feature = "debug")]
+            print_debug!(
+                "[{}] MSAA level {msaa:?} not supported by this adapter; falling back to off",
+                "warning".yellow()
+            );
+            msaa = Msaa::Off;
+        }
+
         self.set_limit_framerate(limit_framerate);
 
         if self.surface.is_none() {
@@ -836,7 +847,6 @@ impl GraphicsEngine {
         // Queue all staging belt writes.
         self.staging_belt.finish();
 
-        self.queue_async_reads();
         self.wait_and_submit_frame(
             prepare_command_buffer,
             interface_command_buffer,
@@ -848,6 +858,7 @@ impl GraphicsEngine {
             sdsm_command_buffer,
             post_processing_command_buffer,
         );
+        self.queue_async_reads();
 
         // Schedule the presentation of the frame.
         // We do not call `Windows::pre_present_notify()` here, since it will force a

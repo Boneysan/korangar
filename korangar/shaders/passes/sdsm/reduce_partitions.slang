@@ -11,7 +11,7 @@ struct ComputeInput {
     uint local_invocation_index : SV_GroupIndex;
 }
 
-[[vk::binding(1, 1)]] var depth_texture: DepthTexture2D;
+[[vk::binding(1, 1)]] var depth_texture: Texture2D<float>;
 [[vk::binding(2, 1)]] var partition_data: RWStructuredBuffer<Partition>;
 [[vk::binding(3, 1)]] var interval_data: RWStructuredBuffer<Interval>;
 

@@ -140,8 +140,10 @@ public func get_pcf_shadow(
 
     switch (shadow_detail) {
         case 1: {
-            let samples = shadow_maps.GatherCmp(shadow_map_sampler, float3(shadow_coords.xy, partition_index), depth);
-            return (samples.x + samples.y + samples.z + samples.w) / 4.0;
+            // Hardware bilinear PCF. `SampleCmp` instead of `GatherCmp` with a
+            // manual average, because naga translates `GatherCmp` to invalid
+            // GLSL on the GL backend.
+            return shadow_maps.SampleCmp(shadow_map_sampler, float3(shadow_coords.xy, partition_index), depth);
         }
         default: {
             var gaussian_offset: int;
@@ -167,9 +169,10 @@ public func get_pcf_shadow(
                     let distance_squared = float(x * x + y * y);
                     let weight = exp(-distance_squared * weight_factor);
 
-                    let samples = shadow_maps.GatherCmp(shadow_map_sampler, float3(shadow_coords.xy + offset, partition_index), depth);
-                    shadow += (samples.x + samples.y + samples.z + samples.w) * weight;
-                    total_weight += 4.0 * weight;
+                    // Hardware bilinear PCF, see the `SampleCmp` note above.
+                    let sample = shadow_maps.SampleCmp(shadow_map_sampler, float3(shadow_coords.xy + offset, partition_index), depth);
+                    shadow += sample * weight;
+                    total_weight += weight;
                 }
             }
 
@@ -185,6 +188,11 @@ public func get_pcf_pcss_shadow(
     global_uniforms: GlobalUniforms,
     directional_light_partitions: StructuredBuffer<DirectionalLightPartition>,
     shadow_maps: DepthTexture2DArray,
+    // The same texture as `shadow_maps`, but bound separately. The blocker
+    // search needs raw depth reads while the PCF filter needs comparison
+    // sampling, and the GL backend cannot express one texture paired with
+    // both a comparison and a regular sampler.
+    shadow_maps_unfiltered: Texture2DArray<float>,
     shadow_map_sampler: SamplerComparisonState,
     linear_sampler: SamplerState,
     kernel_uniforms: ConstantBuffer<KernelUniforms>
@@ -195,7 +203,7 @@ public func get_pcf_pcss_shadow(
     let world_space_texel_size = directional_light_partitions[partition_index].world_space_texel_size;
     let light_size_uv = LIGHT_WORLD_SIZE / (world_space_texel_size * shadow_map_size.x);
 
-    let blocker = find_blocker(partition_index, shadow_coords.xy, shadow_coords.z, light_size_uv, global_uniforms.shadow_detail, shadow_maps, linear_sampler, kernel_uniforms);
+    let blocker = find_blocker(partition_index, shadow_coords.xy, shadow_coords.z, light_size_uv, global_uniforms.shadow_detail, shadow_maps_unfiltered, kernel_uniforms);
     let average_blocker_depth = blocker.x;
     let blocker_count = blocker.y;
 
@@ -218,12 +226,16 @@ public func find_blocker(
     receiver_depth: float,
     light_size_uv: float,
     shadow_detail: uint,
-    shadow_maps: DepthTexture2DArray,
-    linear_sampler: SamplerState,
+    shadow_maps: Texture2DArray<float>,
     kernel_uniforms: ConstantBuffer<KernelUniforms>
 ) -> float2 {
     var blocker_sum = 0.0;
     var blocker_count = 0.0;
+
+    uint blocker_map_width, blocker_map_height, blocker_map_elements;
+    shadow_maps.GetDimensions(blocker_map_width, blocker_map_height, blocker_map_elements);
+    let blocker_map_size = float2(float(blocker_map_width), float(blocker_map_height));
+    let blocker_max_texel = int2(int(blocker_map_width) - 1, int(blocker_map_height) - 1);
 
     switch (shadow_detail) {
         case 1:
@@ -232,7 +244,8 @@ public func find_blocker(
             for (var i = 0; i < 16; i++) {
                 let packed = kernel_uniforms.sample_points_16[i / 2];
                 let offset = (i % 2 == 0 ? packed.xy : packed.zw) * light_size_uv;
-                let shadow_depth = shadow_maps.Sample(linear_sampler, float3(uv + offset, partition_index));
+                let texel = clamp(int2((uv + offset) * blocker_map_size), int2(0, 0), blocker_max_texel);
+                let shadow_depth = shadow_maps.Load(int4(texel, int(partition_index), 0));
 
                 if(receiver_depth < shadow_depth) {
                     blocker_sum += shadow_depth;
@@ -246,7 +259,8 @@ public func find_blocker(
             for (var i = 0; i < 32; i++) {
                 let packed = kernel_uniforms.sample_points_32[i / 2];
                 let offset = (i % 2 == 0 ? packed.xy : packed.zw) * light_size_uv;
-                let shadow_depth = shadow_maps.Sample(linear_sampler, float3(uv + offset, partition_index));
+                let texel = clamp(int2((uv + offset) * blocker_map_size), int2(0, 0), blocker_max_texel);
+                let shadow_depth = shadow_maps.Load(int4(texel, int(partition_index), 0));
 
                 if(receiver_depth < shadow_depth) {
                     blocker_sum += shadow_depth;
@@ -260,7 +274,8 @@ public func find_blocker(
             for (var i = 0; i < 64; i++) {
                 let packed = kernel_uniforms.sample_points_64[i / 2];
                 let offset = (i % 2 == 0 ? packed.xy : packed.zw) * light_size_uv;
-                let shadow_depth = shadow_maps.Sample(linear_sampler, float3(uv + offset, partition_index));
+                let texel = clamp(int2((uv + offset) * blocker_map_size), int2(0, 0), blocker_max_texel);
+                let shadow_depth = shadow_maps.Load(int4(texel, int(partition_index), 0));
 
                 if(receiver_depth < shadow_depth) {
                     blocker_sum += shadow_depth;

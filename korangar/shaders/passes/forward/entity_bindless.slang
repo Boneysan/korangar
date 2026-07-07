@@ -22,10 +22,13 @@ struct ForwardEntityBindlessVertexOutput {
 };
 
 [[vk::binding(0, 0)]] var global_uniforms: ConstantBuffer<GlobalUniforms>;
+[[vk::binding(1, 0)]] var nearest_sampler: SamplerState;
 [[vk::binding(2, 0)]] var linear_sampler: SamplerState;
 [[vk::binding(4, 0)]] var shadow_map_sampler: SamplerComparisonState;
 [[vk::binding(0, 1)]] var directional_light: ConstantBuffer<DirectionalLightUniforms>;
 [[vk::binding(1, 1)]] var shadow_maps: DepthTexture2DArray;
+[[vk::binding(9, 1)]] var shadow_maps_unfiltered: Texture2DArray<float>;
+[[vk::binding(10, 1)]] var point_shadow_maps_unfiltered: TextureCubeArray<float>;
 [[vk::binding(2, 1)]] var point_lights: StructuredBuffer<PointLight>;
 [[vk::binding(3, 1)]] var light_count_texture: Texture2D<uint>;
 [[vk::binding(4, 1)]] var tile_light_indices: StructuredBuffer<TileLightIndices>;
@@ -204,7 +207,7 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
                 break;
             }
             case 2: {
-                visibility = get_pcf_pcss_shadow(partition_index, shadow_coords, global_uniforms, directional_light_partitions, shadow_maps, shadow_map_sampler, linear_sampler, kernel_uniforms);
+                visibility = get_pcf_pcss_shadow(partition_index, shadow_coords, global_uniforms, directional_light_partitions, shadow_maps, shadow_maps_unfiltered, shadow_map_sampler, linear_sampler, kernel_uniforms);
                 break;
             }
         }
@@ -225,8 +228,7 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
                 let point_bias = 1.2;
                 let distance_to_light = depth::linearToNonLinear(light_distance - point_bias);
 
-                let closest_distance = point_shadow_maps.Sample(
-                    linear_sampler,
+                let closest_distance = point_shadow_maps_unfiltered.Sample(nearest_sampler,
                     float4(light_direction_point, light.texture_index - 1)
                 );
 

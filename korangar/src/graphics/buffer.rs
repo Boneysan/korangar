@@ -4,7 +4,7 @@ use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
 use std::num::NonZeroU64;
 use std::ops::RangeBounds;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use bytemuck::{Pod, Zeroable, bytes_of, cast_slice};
@@ -23,6 +23,7 @@ pub struct Buffer<T: ?Sized> {
     capacity: u64,
     usage: BufferUsages,
     buffer: Arc<wgpu::Buffer>,
+    read_pending: Arc<AtomicBool>,
     _marker: PhantomData<T>,
 }
 
@@ -48,6 +49,7 @@ impl<T: Sized + Pod + Zeroable> Buffer<T> {
             capacity,
             usage,
             buffer,
+            read_pending: Arc::new(AtomicBool::new(false)),
             _marker: PhantomData,
         }
     }
@@ -68,6 +70,7 @@ impl<T: Sized + Pod + Zeroable> Buffer<T> {
             capacity: size,
             usage,
             buffer,
+            read_pending: Arc::new(AtomicBool::new(false)),
             _marker: PhantomData,
         };
         buffer.write_exact(queue, data);
@@ -188,7 +191,12 @@ impl Buffer<u64> {
     pub fn queue_read_u64(&self, output: Arc<AtomicU64>) {
         const VALUE_SIZE: usize = size_of::<u64>();
 
+        if self.read_pending.swap(true, Ordering::AcqRel) {
+            return;
+        }
+
         let captured_buffer = Arc::clone(&self.buffer);
+        let read_pending = Arc::clone(&self.read_pending);
         self.buffer.slice(..).map_async(wgpu::MapMode::Read, move |result| {
             match result {
                 Ok(_) => {
@@ -210,6 +218,8 @@ impl Buffer<u64> {
                     print_debug!("[{}] failed to map picker buffer: {:?}", "error".red(), _error);
                 }
             }
+
+            read_pending.store(false, Ordering::Release);
         });
     }
 }
@@ -220,7 +230,12 @@ impl Buffer<Partition> {
     pub fn queue_read_partitions(&self, output: Arc<Mutex<[DirectionalShadowPartition; PARTITION_COUNT]>>) {
         const VALUE_SIZE: usize = size_of::<[Partition; PARTITION_COUNT]>();
 
+        if self.read_pending.swap(true, Ordering::AcqRel) {
+            return;
+        }
+
         let captured_buffer = Arc::clone(&self.buffer);
+        let read_pending = Arc::clone(&self.read_pending);
         self.buffer.slice(..).map_async(wgpu::MapMode::Read, move |result| {
             match result {
                 Ok(_) => {
@@ -254,6 +269,8 @@ impl Buffer<Partition> {
                     print_debug!("[{}] failed to map partitions data buffer: {:?}", "error".red(), _error);
                 }
             }
+
+            read_pending.store(false, Ordering::Release);
         });
     }
 }

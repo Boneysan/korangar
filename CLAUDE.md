@@ -23,6 +23,20 @@ Caveats of the GL backend: `TEXTURE_BINDING_ARRAY`, `PARTIALLY_BOUND_BINDING_ARR
 and non-uniform indexing are unsupported; Korangar detects this and uses fallback
 paths. Fine for UI/feature work — do not use WSL for performance judgments.
 
+GL support required client-side fixes (2026-07-06, all in-tree now; native
+Vulkan/DX12/Metal behavior preserved):
+
+- wgpu needs the winit display handle at instance creation (`display:` in
+  `InstanceDescriptor`) or EGL cannot create a presentable surface.
+- GLSL cannot bind one texture to multiple samplers, read a depth texture
+  without a comparison, or (via naga) translate `GatherCmp` — shaders use
+  texel-snapped linear sampling, separate non-shadow bindings (9/10 in the
+  forward pass group) for raw depth reads, and `SampleCmp`-based PCF instead.
+- **MSAA resolve silently produces black frames** on GL (the black-screen
+  symptom: UI visible, world black). `Capabilities` reports only `Msaa::Off`
+  on GL and `GraphicsEngine::on_resume` clamps saved settings accordingly.
+- Runtime BC7 texture compression works on GL; no special handling.
+
 ## Audio in WSL
 
 Works via ALSA → PulseAudio → WSLg (`PULSE_SERVER=unix:/mnt/wslg/PulseServer`).

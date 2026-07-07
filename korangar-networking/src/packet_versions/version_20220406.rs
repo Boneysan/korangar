@@ -434,6 +434,8 @@ where
     })?;
     packet_handler.register_noop::<EquippableSwitchItemListPacket>()?;
     packet_handler.register_noop::<MapTypePacket>()?;
+    packet_handler.register_noop::<EquipmentEffectPacket>()?;
+    packet_handler.register_noop::<PersonalInformationPacket>()?;
     packet_handler.register(|packet: UpdateSkillTreePacket| {
         let UpdateSkillTreePacket { skill_information } = packet;
         NetworkEvent::SkillTree { skill_information }

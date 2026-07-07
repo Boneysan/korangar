@@ -379,6 +379,14 @@ where
                 // Send a keep-alive packet to the server.
                 _ = interval.tick() => {
                     ping_factory(&time_synchronization).packet_to_bytes(&mut byte_writer).unwrap();
+
+                    #[cfg(feature = "debug")]
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        let bytes = byte_writer.as_slice();
+                        let hex: String = bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
+                        eprintln!("[packet-log] keepalive {} bytes: {hex}", bytes.len());
+                    }
+
                     stream.write_all(byte_writer.as_slice()).await.map_err(|_| NetworkTaskError::ConnectionClosed)?;
                     byte_writer.clear();
                 }
@@ -500,6 +508,7 @@ where
             login_server_login_data.account_id,
             character_server_login_data.character_id,
             login_server_login_data.login_id1,
+            login_server_login_data.login_id2,
             // Always passing 100 seems to work fine for now, but it might cause
             // issues when connecting to something other than rAthena.
             ClientTick(100),
@@ -510,9 +519,15 @@ where
 
         let mut byte_writer = ByteWriter::with_encoding(UTF_8);
         login_packet.packet_to_bytes(&mut byte_writer).unwrap();
-        action_sender
-            .send(byte_writer.into_inner())
-            .expect("action receiver instantly dropped");
+        let login_bytes = byte_writer.into_inner();
+
+        #[cfg(feature = "debug")]
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            let hex: String = login_bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
+            eprintln!("[packet-log] map-enter {} bytes: {hex}", login_bytes.len());
+        }
+
+        action_sender.send(login_bytes).expect("action receiver instantly dropped");
 
         self.map_server_connection = ServerConnection::Connected {
             action_sender,
@@ -581,7 +596,15 @@ where
                 // FIX: Don't unwrap.
                 let mut byte_writer = ByteWriter::with_encoding(UTF_8);
                 packet.packet_to_bytes(&mut byte_writer).unwrap();
-                action_sender.send(byte_writer.into_inner()).map_err(|_| NotConnectedError)
+                let bytes = byte_writer.into_inner();
+
+                #[cfg(feature = "debug")]
+                if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                    let hex: String = bytes.iter().map(|byte| format!("{byte:02x} ")).collect();
+                    eprintln!("[packet-log] map-send {} bytes: {hex}", bytes.len());
+                }
+
+                action_sender.send(bytes).map_err(|_| NotConnectedError)
             }
             _ => Err(NotConnectedError),
         }

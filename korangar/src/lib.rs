@@ -474,8 +474,9 @@ impl Client {
                     },
                     noop: NoopBackendOptions { enable: false },
                 },
-                // On Vulkan, Metal and Dx12, this is currently unused.
-                display: None,
+                // Required by the GL backend to create a presentable EGL
+                // context; unused on Vulkan, Metal and Dx12.
+                display: Some(Box::new(event_loop.owned_display_handle())),
             });
 
             let compatible_surface = window.as_ref().map(|window| instance.create_surface(window.clone()).unwrap());
@@ -1357,7 +1358,19 @@ impl Client {
 
                         let entity_id = npc.get_entity_id();
                         let entity_type = npc.get_entity_type();
+                        let job_id = npc.get_job_id();
                         let entity_part_files = npc.get_entity_part_files(&self.library);
+
+                        #[cfg(feature = "debug")]
+                        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                            print_debug!(
+                                "[packet-log] add-entity id={:?} job_id={:?} type={:?} parts={:?}",
+                                entity_id,
+                                job_id,
+                                entity_type,
+                                entity_part_files
+                            );
+                        }
 
                         let entities = self.client_state.follow_mut(client_state().entities());
 

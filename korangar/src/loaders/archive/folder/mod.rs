@@ -27,6 +27,9 @@ impl FolderArchive {
     /// Load the file mapping of a given directory.
     fn load_mapping(directory: &PathBuf) -> HashMap<String, PathBuf> {
         WalkDir::new(directory)
+            // Follow symlinks so directories like `archive/BGM` can point at
+            // an existing game client installation.
+            .follow_links(true)
             .into_iter()
             .filter_map(|entry| entry.ok())
             .filter(|entry| entry.file_type().is_file())

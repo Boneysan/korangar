@@ -195,6 +195,13 @@ impl Capabilities {
 fn determine_supported_msaa(adapter: &Adapter, texture_formats: &[TextureFormat]) -> Vec<Msaa> {
     let mut supported_msaa = vec![Msaa::Off];
 
+    // On the GL backend the multisample resolve of the forward pass silently
+    // produces black output (observed on Mesa's d3d12 driver under WSL2), so
+    // MSAA is not offered there.
+    if adapter.get_info().backend == wgpu::Backend::Gl {
+        return supported_msaa;
+    }
+
     let msaa_levels = [
         (TextureFormatFeatureFlags::MULTISAMPLE_X2, Msaa::X2),
         (TextureFormatFeatureFlags::MULTISAMPLE_X4, Msaa::X4),

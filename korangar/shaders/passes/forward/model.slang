@@ -32,6 +32,8 @@ struct ModelVertexOutput {
 [[vk::binding(4, 0)]] var shadow_map_sampler: SamplerComparisonState;
 [[vk::binding(0, 1)]] var directional_light: ConstantBuffer<DirectionalLightUniforms>;
 [[vk::binding(1, 1)]] var shadow_maps: DepthTexture2DArray;
+[[vk::binding(9, 1)]] var shadow_maps_unfiltered: Texture2DArray<float>;
+[[vk::binding(10, 1)]] var point_shadow_maps_unfiltered: TextureCubeArray<float>;
 [[vk::binding(2, 1)]] var point_lights: StructuredBuffer<PointLight>;
 [[vk::binding(3, 1)]] var light_count_texture: Texture2D<uint>;
 [[vk::binding(4, 1)]] var tile_light_indices: StructuredBuffer<TileLightIndices>;
@@ -91,7 +93,13 @@ func fragment(input: ModelVertexOutput) -> float4 {
         alpha_channel = diffuse_color.a;
     } else {
         diffuse_color = texture.Sample(texture_sampler, input.texture_coordinates);
-        alpha_channel = texture.SampleLevel(nearest_sampler, input.texture_coordinates, 0.0).a;
+        // Unfiltered alpha fetch, emulated by snapping to the texel center so
+        // that `texture` is only paired with a single sampler — the GL backend
+        // cannot express one texture used with multiple samplers.
+        var texture_dimensions: float2;
+        texture.GetDimensions(texture_dimensions.x, texture_dimensions.y);
+        let snapped_coordinates = (floor(input.texture_coordinates * texture_dimensions) + 0.5) / texture_dimensions;
+        alpha_channel = texture.SampleLevel(texture_sampler, snapped_coordinates, 0.0).a;
     }
 
     var fragment_color = float4(0.0);
@@ -174,7 +182,7 @@ func fragment(input: ModelVertexOutput) -> float4 {
                 break;
             }
             case 2: {
-                visibility = get_pcf_pcss_shadow(partition_index, shadow_coords, global_uniforms, directional_light_partitions, shadow_maps, shadow_map_sampler, linear_sampler, kernel_uniforms);
+                visibility = get_pcf_pcss_shadow(partition_index, shadow_coords, global_uniforms, directional_light_partitions, shadow_maps, shadow_maps_unfiltered, shadow_map_sampler, linear_sampler, kernel_uniforms);
                 break;
             }
         }
@@ -196,8 +204,7 @@ func fragment(input: ModelVertexOutput) -> float4 {
             if (light.texture_index != 0) {
                 let bias = 1.2;
                 let distance_to_light = depth::linearToNonLinear(light_distance - bias);
-                let closest_distance = point_shadow_maps.Sample(
-                    linear_sampler,
+                let closest_distance = point_shadow_maps_unfiltered.Sample(nearest_sampler,
                     float4(light_direction, light.texture_index - 1)
                 );
 

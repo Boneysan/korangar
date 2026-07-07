@@ -27,10 +27,10 @@ static const var TILE_SIZE: uint = 16;
 [[vk::binding(1, 0)]] var nearest_sampler: SamplerState;
 [[vk::binding(0, 1)]] var debug_uniforms: ConstantBuffer<DebugUniforms>;
 [[vk::binding(1, 1)]] var picker_texture: Texture2D<uint2>;
-[[vk::binding(2, 1)]] var directional_shadow_maps: DepthTexture2DArray;
+[[vk::binding(2, 1)]] var directional_shadow_maps: Texture2DArray<float>;
 [[vk::binding(3, 1)]] var light_count_texture: Texture2D<uint>;
-[[vk::binding(4, 1)]] var point_shadow_maps: DepthTextureCubeArray;
-[[vk::binding(5, 1)]] var depth_texture: DepthTexture2D;
+[[vk::binding(4, 1)]] var point_shadow_maps: TextureCubeArray<float>;
+[[vk::binding(5, 1)]] var depth_texture: Texture2D<float>;
 [[vk::binding(6, 1)]] var partition_data: StructuredBuffer<Partition>;
 [[vk::binding(0, 2)]] var font_map: Texture2D;
 
