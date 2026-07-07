@@ -87,6 +87,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     - **Transmogrification / Fashion Slots:** a "Costume" tab where dropping an item overrides the visible sprite/model of that slot without affecting stats (pure client-side visual override during entity draw).
   - **Skill tree** — extend `interface/windows/skill_tree/` (already has tabs +
     drag-to-hotbar via `DropSkillWrapper`) with search/filter and a build planner.
+    *Interaction design:* Point allocation is done via explicit, immediate-feedback upgrade buttons next to each skill. Skill usage heavily favors modern drag-and-drop from the tree to the Action Bars over legacy double-click casting.
   - **NPC dialogue** — modernize `dialog.rs` (~258 lines): readable panel, portrait,
     highlighted/numbered choices. Doubles as the presentation home for [DM_INTERFACE.md](DM_INTERFACE.md)'s
     scene-director narration (`@dmsay` / `@dmcutscene` / `@dmspotlight`).
@@ -158,7 +159,8 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Command palette:** searchable overlay exposing client actions and the many `@dm…`/`@roll` commands ([DM_INTERFACE.md](DM_INTERFACE.md) §9.1) without memorization.
 
 - [ ] **Navigation & quests:**
-  - **Navigational & Quest Aids:** 3D floating markers over NPCs (`!` / `?`), ground-level directional pathfinding/arrows, minimap objective radiuses, and custom map waypoints.
+  - **Cross-Map Quest Guiding & Breadcrumbs:** A macro-level pathfinding system using a world graph of warp portals. When tracking a quest on another map, a ground-level glowing trail (breadcrumb ribbon) and minimap edge-arrows will guide you seamlessly through multiple maps and warp portals directly to the objective.
+  - **Navigational Aids:** 3D floating markers over NPCs (`!` / `?`), minimap objective radiuses, and custom map waypoints.
   - **Enhanced minimap/world map:** zoom, tracking filters, shared party pings.
 
 - [ ] **Input & accessibility:**
@@ -178,6 +180,13 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 - [ ] **DM Tooling Expansions** *(see [DM_INTERFACE.md](DM_INTERFACE.md) for the full DM interface)*:
   - DM Free-Cam/Spectator mode to detach camera for scene surveying.
   - Context-aware map ping system for DMs and players (e.g., "Danger", "Move here").
+
+- [ ] **Tabletop & Action Mechanics (Modernization)**:
+  - **Integrated Skill Check Dialogue:** NPC dialogue options automatically detect skill checks (e.g., `[Charisma DC 15]`) and trigger the dice-roll UI inline, rather than requiring separate chat commands.
+  - **Active Dodge Roll / Dash (Long-term Extension):** Pushing the engine toward a true Action RPG. A dedicated evasion keybind (`Spacebar`) providing a brief movement burst and i-frames to actively avoid hazard telegraphs. *Note: Requires heavy custom C-plugin work on the Hercules server to handle coordinate snapping and i-frames without rubber-banding.*
+  - **Campfire / Short Rest System:** A deployable physical campfire where the party can sit to rapidly recover HP/SP, serving as a roleplay anchor.
+  - **Dynamic Bestiary Journal:** A monster manual that unlocks exact HP, weaknesses, and lore for a creature only after fighting it or passing a DM Lore check.
+  - **Action Camera (WASD Movement):** A toggle to lock the camera third-person, mapping movement to WASD and auto-attacks to left-click, completely removing the point-and-click requirement.
 
 ### 8.1 Server-side dependencies
 

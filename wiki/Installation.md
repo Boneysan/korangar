@@ -31,6 +31,10 @@ winget install --id KhronosGroup.VulkanSDK -e --source winget
 There is a `flake.nix` in the repository that exposes a dev shell with all dependencies for testing and running Korangar
 on Linux and MacOS.
 
+### 🐧 WSL (Windows Subsystem for Linux)
+
+If you are developing or running Korangar inside WSL, you will need specific configurations for hardware rendering and audio to work correctly. Please read the [WSL Setup Guide](WSL.md) for detailed instructions.
+
 # Compiling
 
 You can compile Korangar by running:

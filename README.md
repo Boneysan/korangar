@@ -7,7 +7,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Discord](https://img.shields.io/discord/1010572689536204931?label=discord)](https://discord.gg/2CqRZsvKja)
 
-Korangar is a next-gen Ragnarok Online client written in Rust. It features real-time lighting with drop shadows. It adds a completely new and very customizable user interface and removes limitations of the official client, such as the fixed aspect ratio. It also supports Linux, Windows and MacOS!
+Korangar is a next-gen Ragnarok Online client written in Rust. It features real-time lighting with drop shadows, a completely new user interface, and removes limitations of the official client.
+
+> [!IMPORTANT]
+> **This specific fork** is a specialized version of Korangar being built as a **Native Tabletop Tooling** engine for a custom D&D-style campaign ("Seal Cascade"). It extends the base engine with DM-specific tools, such as animated dice cards, an initiative tracker, a campaign board, and custom UI elements for running live sessions.
+> 
+> **For more details, see our custom design docs:**
+> - [DM Interface & Native Tabletop Tooling](docs/DM_INTERFACE.md)
+> - [Software Design & Architecture](docs/SOFTWARE_DESIGN.md)
+> - [Feature Roadmap](docs/FEATURE_ROADMAP.md)
+> - [Project Plan](docs/PROJECT_PLAN.md)
 
 ##### Screenshot of the current state
 ![geffen](.github/geffen.png)

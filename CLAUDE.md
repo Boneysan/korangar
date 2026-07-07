@@ -55,3 +55,13 @@ Native Windows toolchain development is blocked by BitDefender flagging build
 tooling. The intended path for native-performance testing and distribution is
 cross-compiling from WSL with `cargo-xwin` (target `x86_64-pc-windows-msvc`)
 and running the `.exe` on the Windows side (not yet set up).
+
+## Architecture & Development Rules
+
+When writing code or adding features, agents must adhere to these project-specific constraints:
+
+1. **Tabletop Scope**: This fork is the "Seal Cascade" D&D campaign engine. When designing UI or features, prioritize the tabletop/DM tools outlined in `docs/DM_INTERFACE.md` over generic RO MMO features (like auction houses or matchmaking).
+2. **Packet Registration is Mandatory**: Due to Korangar's framing-by-deserialization design, **every packet** the server sends must be defined in `ragnarok-packets` and registered in `korangar-networking/src/packet_versions/version_20220406.rs`. An unregistered packet causes a silent framing desync and drops the rest of the read buffer. Use `register_noop` if the packet doesn't need handling yet, but the byte layout must be defined.
+3. **Packet Obfuscation**: The server (`Hercules_RO`) is configured with `packet_obfuscation: 0`. **Do not** attempt to implement packet obfuscation in the Korangar networking layer.
+4. **Rebaseability**: Keep custom UI features isolated in `korangar/src/interface/windows/dm/` (and state in `korangar/src/dm/`) as much as possible to ensure the fork remains rebaseable against upstream Korangar.
+5. **No Upstream IP**: Per `wiki/Contributing.md`, do not include code taken directly from or inspired by GRAVITY's intellectual property.

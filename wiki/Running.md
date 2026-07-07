@@ -25,5 +25,8 @@ If everything starts correctly, you should see a window prompting you for a user
 ### 🫀 Creating a character
 After logging in, you will be able to create a new character. If the character creation fails, it might be because you are using invalid characters in the name (e.g. `_`).
 
+# Controls & UI
+Once you are in the game, you can customize your HUD, manage your skills, and interact with the world using modernized controls. Please read the [User Interface & Controls](User_Interface.md) guide to learn how the drag-and-drop systems, action bars, and skill tree work.
+
 # Troubleshooting
 If the client keeps crashing or you have any other problems, please consult the wiki page on [Troubleshooting](Troubleshooting.md).
