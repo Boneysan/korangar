@@ -87,7 +87,7 @@ use state::theme::{CursorThemePathExt, IndicatorThemePathExt, InterfaceThemePath
 use state::{ChatMessage, ClientState, ClientStatePathExt, client_state, this_entity, this_player};
 #[cfg(feature = "debug")]
 use wgpu::Device;
-use wgpu::wgt::{Dx12SwapchainKind, Dx12UseFrameLatencyWaitableObject};
+use wgpu::wgt::{Dx12SwapchainKind, Dx12UseFrameLatencyWaitableObject, WgpuHasDisplayHandle};
 use wgpu::{
     Adapter, AdapterInfo, BackendOptions, Backends, DeviceDescriptor, DeviceType, Dx12BackendOptions, Dx12Compiler, ExperimentalFeatures,
     ForceShaderModelToken, GlBackendOptions, GlDebugFns, GlFenceBehavior, Gles3MinorVersion, Instance, InstanceDescriptor, InstanceFlags,
@@ -476,7 +476,7 @@ impl Client {
                 },
                 // Required by the GL backend to create a presentable EGL
                 // context; unused on Vulkan, Metal and Dx12.
-                display: Some(Box::new(event_loop.owned_display_handle())),
+                display: event_loop.map(|event_loop| Box::new(event_loop.owned_display_handle()) as Box<dyn WgpuHasDisplayHandle>),
             });
 
             let compatible_surface = window.as_ref().map(|window| instance.create_surface(window.clone()).unwrap());
