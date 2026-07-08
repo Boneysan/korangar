@@ -135,6 +135,37 @@ Recommendation:
    - Do not invent a broad converter before knowing what Korangar consumes.
    - Start with the smallest failing data class from M1 verification.
 
+## 4a. Client-Data Usage Audit (2026-07-08)
+
+What Korangar actually consumes from the archives, from `korangar/src/world/library/`
+(all loaded through the regenerated-on-demand `lua_files.7z` cache — **delete
+`korangar/lua_files.7z` whenever the archive list changes**, it only rebuilds
+when missing):
+
+| File (GRF path under `data\luafiles514\lua files\`) | Status | Consumer |
+|---|---|---|
+| `datainfo\iteminfo.lub` | **used** | `ItemInfo` (names, resources, descriptions) |
+| `datainfo\jobidentity.lub` | **used** | `JobIdentity`, `IsBabyJob` |
+| `datainfo\npcidentity.lub` | **used** | `JobIdentity` |
+| `skillinfoz\jobinheritlist.lub` | **used** | skill info/requirements/tree |
+| `skillinfoz\skillid.lub` | **used** | skill info/requirements/tree |
+| `skillinfoz\skillinfolist.lub` | **used** | `SkillListInformation`, requirements |
+| `skillinfoz\skilltreeview.lub` | **used** | `SkillTreeLayout` |
+| `mapskydata\mapskydata.lub` | **used** (optional) | `MapSkyData` |
+| `OngoingQuestInfoList*.lub` | **ignored** | nothing — no quest journal loader exists |
+| `System/` (itemInfo.lua etc.) | **ignored** | Korangar reads GRF lub paths, not `System/` |
+
+Quest markers over NPCs come from packets (`AddQuestEffect`), not client data.
+A native quest journal (campaign IDs 20000–20234) is new E7 work; the
+`OngoingQuestInfoList_True_EN.lub` copy in `korangar/` is reference material
+for that, not something the client reads today.
+
+Archive registration state (2026-07-08): all four GRFs copied to WSL ext4 and
+listed in `client/game_archives.ron` (`data`, `rdata`, `renewal2021`,
+`resources2021`, `archive/`); verified loading at startup. The regenerated
+`lua_files.7z` shrank from 3.0 MB to 1.1 MB because the 2021 archives shadow
+older duplicates.
+
 ## 5. Verification
 
 Asset pipeline passes for M1 when:
