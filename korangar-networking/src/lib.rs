@@ -159,8 +159,12 @@ where
                             packet_version,
                         } => {
                             if let Some(handle) = login_server_task_handle.take() {
-                                // TODO: Maybe add a timeout here? Maybe handle Result?
-                                let _ = handle.await.unwrap();
+                                // Abort instead of awaiting: a stale task that missed its
+                                // shutdown signal would otherwise block this loop forever,
+                                // freezing all networking (observed with a lingering login
+                                // connection after a rejected login).
+                                handle.abort();
+                                let _ = handle.await;
                             }
 
                             let packet_handler = Self::create_login_server_packet_handler(packet_callback.clone(), packet_version).unwrap();
@@ -184,8 +188,9 @@ where
                             packet_version,
                         } => {
                             if let Some(handle) = character_server_task_handle.take() {
-                                // TODO: Maybe add a timeout here? Maybe handle Result?
-                                let _ = handle.await.unwrap();
+                                // See the login handler above: never block on a stale task.
+                                handle.abort();
+                                let _ = handle.await;
                             }
 
                             let packet_handler =
@@ -210,8 +215,9 @@ where
                             packet_version,
                         } => {
                             if let Some(handle) = map_server_task_handle.take() {
-                                // TODO: Maybe add a timeout here? Maybe handle Result?
-                                let _ = handle.await.unwrap();
+                                // See the login handler above: never block on a stale task.
+                                handle.abort();
+                                let _ = handle.await;
                             }
 
                             let packet_handler = Self::create_map_server_packet_handler(packet_callback.clone(), packet_version).unwrap();
@@ -427,9 +433,9 @@ where
 
         let mut byte_writer = ByteWriter::with_encoding(UTF_8);
         login_packet.packet_to_bytes(&mut byte_writer).unwrap();
-        action_sender
-            .send(byte_writer.into_inner())
-            .expect("action receiver instantly dropped");
+        // If the receiver is already gone the connection attempt failed
+        // instantly; the closed event channel will produce a disconnect event.
+        let _ = action_sender.send(byte_writer.into_inner());
 
         self.login_server_connection = ServerConnection::Connected {
             action_sender,
@@ -473,9 +479,9 @@ where
 
         let mut byte_writer = ByteWriter::with_encoding(UTF_8);
         login_packet.packet_to_bytes(&mut byte_writer).unwrap();
-        action_sender
-            .send(byte_writer.into_inner())
-            .expect("action receiver instantly dropped");
+        // If the receiver is already gone the connection attempt failed
+        // instantly; the closed event channel will produce a disconnect event.
+        let _ = action_sender.send(byte_writer.into_inner());
 
         self.character_server_connection = ServerConnection::Connected {
             action_sender,
@@ -528,7 +534,9 @@ where
         #[cfg(feature = "debug")]
         log_packet_bytes("map-enter", &login_bytes);
 
-        action_sender.send(login_bytes).expect("action receiver instantly dropped");
+        // If the receiver is already gone the connection attempt failed
+        // instantly; the closed event channel will produce a disconnect event.
+        let _ = action_sender.send(login_bytes);
 
         self.map_server_connection = ServerConnection::Connected {
             action_sender,

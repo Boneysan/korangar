@@ -414,6 +414,7 @@ pub struct MapServerUnavailablePacket {
 
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[numeric_type(u32)]
 pub enum LoginFailedReason2 {
     UnregisteredId,
     IncorrectPassword,
@@ -426,11 +427,14 @@ pub enum LoginFailedReason2 {
     CompanyAccountLimitReached,
 }
 
+/// Hercules `AC_REFUSE_LOGIN_R2`: 26 bytes total, a 4-byte error code
+/// followed by a 20-byte block date string.
 #[derive(Debug, Clone, Packet, ServerPacket, LoginServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x083E)]
 pub struct LoginFailedPacket2 {
     pub reason: LoginFailedReason2,
+    pub block_date: [u8; 20],
 }
 
 #[derive(Debug, Clone, ByteConvertable)]

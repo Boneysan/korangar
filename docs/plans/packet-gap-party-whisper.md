@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Implemented; live two-client validation still pending |
+| **Status** | Implemented and live-validated (2026-07-08, two clients) |
 | **Milestone** | Phase 1 protocol safety, prerequisite for M2 group play |
 | **Parent** | [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §5.3–§5.4, [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.3, [hercules-20220406.md](../protocol/hercules-20220406.md) |
 | **Depends on** | M0 connectivity and packet inspector working |
@@ -123,6 +123,31 @@ DM dependency:
    - Change HP on one character.
    - Send party chat.
    - Send and receive a whisper.
+
+### Live validation result (2026-07-08)
+
+Two Korangar clients (`test` in izlude, `test2` in int_land — deliberately
+cross-map) against local Hercules 20220406:
+
+- `/party create SealCascade` → "Party successfully created.", row in `party`
+  table, both chars got `party_id`.
+- `/party invite test2` by name worked cross-map; invitee saw
+  "Party invite from SealCascade. Use /party accept or /party reject."
+- `/party accept` → leader saw "test2 accepted the party invite."
+- `[Party]` chat delivered in both directions, cross-map.
+- Whispers delivered in both directions, cross-map.
+
+Issues found and fixed during validation:
+- Server rejections arrive as `ZC_MSG` (`0x0291`) with a msgstringtable id and
+  are currently consumed by the length fallback, so failures (e.g. party
+  create blocked by `basic_skill_check`) are **silent** in the client. Promote
+  `0x0291` to a real handler + chat message (tracked in FEATURE_ROADMAP §8.3).
+- `basic_skill_check: false` is now set on the server so party/trade/sit are
+  not gated behind Novice Basic Skill for the campaign.
+- `LoginFailedPacket2` (`0x083E`) was modeled as 3 bytes but Hercules sends 26
+  (u32 error code + 20-byte block date); fixed, plus two networking-thread
+  robustness fixes (stale-task abort, no panic on instant connect failure)
+  found while reproducing login failures.
 
 ## 6. Acceptance Criteria
 
