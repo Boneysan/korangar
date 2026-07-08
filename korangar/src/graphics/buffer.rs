@@ -183,6 +183,12 @@ impl<T: Sized + Pod + Zeroable> Buffer<T> {
     pub fn count(&self) -> u32 {
         (self.size.load(Ordering::Acquire) / size_of::<T>() as u64) as u32
     }
+
+    /// Returns `true` while a queued read-back of this buffer has not yet
+    /// completed, meaning the buffer may still be mapped.
+    pub fn is_read_pending(&self) -> bool {
+        self.read_pending.load(Ordering::Acquire)
+    }
 }
 
 impl Buffer<u64> {

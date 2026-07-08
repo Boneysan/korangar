@@ -936,17 +936,46 @@ impl GraphicsEngine {
             submission_index: None,
             timeout: Some(Duration::from_secs(10)),
         });
-        self.queue.submit([
-            prepare_command_buffer,
-            interface_command_buffer,
-            picker_command_buffer,
-            directional_shadow_command_buffer,
-            point_shadow_command_buffer,
-            light_culling_command_buffer,
-            forward_command_buffer,
-            sdsm_command_buffer,
-            post_processing_command_buffer,
-        ]);
+
+        // The map_async callbacks queued in `queue_async_reads` are not guaranteed
+        // to have fired during the wait above (observed on the GL backend during
+        // long frames, e.g. while a map is loading). Submitting a command buffer
+        // that copies into a still-mapped read-back buffer is a validation error,
+        // so give the callbacks a short grace period and, if a mapping is still
+        // outstanding, drop the affected command buffer for this frame. The only
+        // effect is a one-frame-stale picker value or shadow partition.
+        let mut submit_picker = true;
+        let mut submit_sdsm = true;
+        if let Some(engine_context) = self.engine_context.as_ref() {
+            let global_context = &engine_context.global_context;
+            let deadline = Instant::now() + Duration::from_millis(100);
+
+            while (global_context.picker_value_buffer.is_read_pending() || global_context.partition_value_buffer.is_read_pending())
+                && Instant::now() < deadline
+            {
+                let _ = self.device.poll(PollType::Poll);
+                std::thread::yield_now();
+            }
+
+            submit_picker = !global_context.picker_value_buffer.is_read_pending();
+            submit_sdsm = !global_context.partition_value_buffer.is_read_pending();
+        }
+
+        self.queue.submit(
+            [
+                Some(prepare_command_buffer),
+                Some(interface_command_buffer),
+                submit_picker.then_some(picker_command_buffer),
+                Some(directional_shadow_command_buffer),
+                Some(point_shadow_command_buffer),
+                Some(light_culling_command_buffer),
+                Some(forward_command_buffer),
+                submit_sdsm.then_some(sdsm_command_buffer),
+                Some(post_processing_command_buffer),
+            ]
+            .into_iter()
+            .flatten(),
+        );
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
