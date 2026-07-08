@@ -130,6 +130,12 @@ Recommendation:
 6. Wire BGM.
    - Decide copy vs reference for `/mnt/h/RO/client/BGM/`.
    - Verify BGM loads on at least the login map and Prontera.
+   - **Decided (2026-07-08):** BGM stays a machine-local symlink
+     (`korangar/bgm` → `/mnt/h/RO/client/BGM`), covered by the existing
+     `korangar/[Bb][Gg][Mm]` `.gitignore` entry. Music files are read from the
+     working directory, not the GRFs, and `FolderArchive` follows symlinks, so
+     each machine just points `korangar/bgm` (or `BGM`) at its client install.
+     No config option unless a non-symlink platform need appears.
 
 7. Write the first sync script only after the audit.
    - Do not invent a broad converter before knowing what Korangar consumes.

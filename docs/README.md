@@ -80,7 +80,6 @@ These are concrete, code-level guides ready for implementation:
 
 ### Other / Historical
 - [protocol/2026-07-07-handoff.md](protocol/2026-07-07-handoff.md) — Packet audit handoff note.
-- [plans/SESSION-HANDOVER.md](plans/SESSION-HANDOVER.md) — Session context transfer notes.
 
 ## For Agents (Claude, Grok, etc.)
 

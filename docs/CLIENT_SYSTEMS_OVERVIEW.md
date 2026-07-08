@@ -39,7 +39,7 @@ Below is an audit of major systems with current state, key files/entry points, a
 ## 1. Graphics / Rendering (Well-started)
 **Purpose:** Multi-pass forward renderer with real-time lighting, shadows (SDSM + point), tiled light culling, effects, map/ground/models/entities.
 **Why important for DM:** In-world visuals (hazard telegraphs, markers, effects for scenes/cutscenes, entity rendering for initiative/downed states).
-**Current docs:** `GRAPHICS_PIPELINE.md` (high-level passes, bind groups, deep-dive on lighting/shadows, uniforms, night maps, improvement paths). Some notes in SESSION-HANDOVER.md (GL quirks).
+**Current docs:** `GRAPHICS_PIPELINE.md` (high-level passes, bind groups, deep-dive on lighting/shadows, uniforms, night maps, improvement paths). GL backend quirks are covered in the root `CLAUDE.md`.
 **Key files:**
 - `src/graphics/` (engine.rs, mod.rs, passes/ for light_culling/forward/directional_shadow/point_shadow/sdsm/postprocessing, instruction.rs).
 - `src/lib.rs` (render_geometry, render passes dispatch, uniforms).
