@@ -1367,7 +1367,6 @@ impl Client {
 
                         let entity_id = npc.get_entity_id();
                         let entity_type = npc.get_entity_type();
-                        let job_id = npc.get_job_id();
                         let entity_part_files = npc.get_entity_part_files(&self.library);
 
                         #[cfg(feature = "debug")]
@@ -1375,7 +1374,7 @@ impl Client {
                             print_debug!(
                                 "[packet-log] add-entity id={:?} job_id={:?} type={:?} parts={:?}",
                                 entity_id,
-                                job_id,
+                                npc.get_job_id(),
                                 entity_type,
                                 entity_part_files
                             );
@@ -4267,13 +4266,8 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
-        self.particle_holder.render(
-            self.bottom_interface_renderer,
-            self.current_camera,
-            self.screen_size,
-            self.scaling,
-            self.client_state.follow(client_state().entities()),
-        );
+        self.particle_holder
+            .render(self.bottom_interface_renderer, self.current_camera, self.screen_size, self.scaling);
 
         self.effect_holder.render(self.effect_renderer, self.current_camera);
 

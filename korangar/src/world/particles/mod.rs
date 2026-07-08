@@ -12,7 +12,7 @@ use crate::graphics::{Color, ScreenClip, ScreenPosition, ScreenSize, Texture};
 use crate::loaders::{FontSize, ImageType, Scaling, TextureLoader};
 use crate::renderer::{GameInterfaceRenderer, SpriteRenderer};
 use crate::world::Camera;
-use crate::{Entity, Map};
+use crate::Map;
 
 pub trait Particle {
     fn update(&mut self, delta_time: f32) -> bool;
@@ -245,14 +245,7 @@ impl ParticleHolder {
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile("render particles"))]
-    pub fn render(
-        &self,
-        renderer: &GameInterfaceRenderer,
-        camera: &dyn Camera,
-        window_size: ScreenSize,
-        scaling: Scaling,
-        entities: &[Entity],
-    ) {
+    pub fn render(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize, scaling: Scaling) {
         self.particles
             .iter()
             .for_each(|particle| particle.render(renderer, camera, window_size));
