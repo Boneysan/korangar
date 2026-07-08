@@ -138,12 +138,18 @@ cross-map) against local Hercules 20220406:
 - Whispers delivered in both directions, cross-map.
 
 Issues found and fixed during validation:
-- Server rejections arrive as `ZC_MSG` (`0x0291`) with a msgstringtable id and
-  are currently consumed by the length fallback, so failures (e.g. party
-  create blocked by `basic_skill_check`) are **silent** in the client. Promote
-  `0x0291` to a real handler + chat message (tracked in FEATURE_ROADMAP §8.3).
+- Server rejections were **silent** in the client. The party-create rejection
+  under `basic_skill_check` actually arrives as a skill-fail
+  (`ZC_ACK_TOUSESKILL` `0x0110`, skill 1 / cause 0), and other rejections use
+  `ZC_MSG` (`0x0291`, msgstringtable id). Both are now promoted to chat-line
+  messages (plus `0x09CD` `ZC_MSG_COLOR`); see `message_table_text` /
+  `skill_failed_text` in `version_20220406.rs`.
 - `basic_skill_check: false` is now set on the server so party/trade/sit are
-  not gated behind Novice Basic Skill for the campaign.
+  not gated behind Novice Basic Skill for the campaign
+  (`Hercules_RO/conf/import/battle.conf`).
+- `127.0.0.1` is allow-listed in `Hercules_RO/conf/import/socket.conf`: local
+  clients reconnecting after a server restart repeatedly tripped the DDoS
+  guard, which then blocked logins *and* the map↔char inter-server link.
 - `LoginFailedPacket2` (`0x083E`) was modeled as 3 bytes but Hercules sends 26
   (u32 error code + 20-byte block date); fixed, plus two networking-thread
   robustness fixes (stale-task abort, no panic on instant connect failure)

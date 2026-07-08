@@ -311,17 +311,17 @@ should be confirmed against `ragnarok-packets` before implementing.
 | Priority | Feature area → unlocks | noop packets to promote |
 |---|---|---|
 | **MVP** | Buffs/debuffs (timed) → buff bars (§8 Combat) | `StatusChangePacket`, `StatusChangeSequencePacket` — see [specs/buff-bar-slice.md](specs/buff-bar-slice.md). **Note:** `StateChangePacket` is *not* a buff packet (option-flags, moved to World/map below). |
-| **MVP** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | `DisplaySkillEffectAndDamagePacket`, `DisplaySkillCooldownPacket`, `DisplaySpecialEffectPacket`, `DisplayPlayerHealEffect`, `UseSkillSuccessPacket`, `ToUseSkillSuccessPacket`, `NotifyGroundSkillPacket` |
+| **MVP** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | `DisplaySkillEffectAndDamagePacket`, `DisplaySkillCooldownPacket`, `DisplaySpecialEffectPacket`, `DisplayPlayerHealEffect`, `UseSkillSuccessPacket`, `NotifyGroundSkillPacket` (`ToUseSkillSuccessPacket`'s failure path is already promoted to chat messages — see the server-feedback row) |
 | **MVP** | Stats → character sheet, stat window (§8 Core windows) | `ParameterChangePacket`, `RequestStatUpResponsePacket`, `CriticalWeightUpdatePacket`, `UpdateAttackRangePacket` |
 | **High** | Quests → campaign journal ([DM_INTERFACE.md](DM_INTERFACE.md)), quest tracker (§8 Nav) | `QuestListPacket`, `QuestNotificationPacket1`, `QuestRemovedPacket`, `HuntingQuestNotificationPacket`, `HuntingQuestUpdateObjectivePacket`, `NavigateToMonsterPacket`, `MarkMinimapPositionPacket` |
 | **High** | Party/social → party frames (§8), friend list | Party roster/HP/position/chat/whisper packets are promoted **and live-validated two-client cross-map (2026-07-08)**; remaining work is party-frame UI and `FriendOnlineStatusPacket`. |
-| **High** | Server feedback → visible rejection messages | `ZC_MSG` `0x0291` (msgstringtable id) is currently only length-fallback-consumed, so server rejections (e.g. party create refused) are **silent**. Model it and surface at least a generic chat-line failure message. |
+| ~~High~~ **Done 2026-07-08** | Server feedback → visible rejection messages | `MessageTablePacket` (`ZC_MSG` `0x0291`), `MessageTableColorPacket` (`0x09CD`), and the failure path of `ToUseSkillSuccessPacket` (`ZC_ACK_TOUSESKILL` `0x0110`, which Hercules also uses for gameplay rejections like party-create without Basic Skill) now surface chat-line messages. Known msgstringtable/cause ids get real text (`message_table_text` / `skill_failed_text` in `version_20220406.rs`); unknown ids get a generic visible line. |
 | **High** | Progression toasts → notification system (§8 Info) | `AchievementListPacket`, `AchievementUpdatePacket`, `DisplayGainedExperiencePacket` |
 | **Med** | Equipment view → character sheet, equip-swap (§8 Core windows) | `UpdateShowEquipPacket`, `EquippableSwitchItemListPacket`, `EquipAmmunitionPacket`, `AmmunitionActionPacket` |
 | **Med** | Char-select screen polish | `CharacterListPacket`, `CharacterSlotPagePacket`, `CharacterBanListPacket`, `LoginPincodePacket` |
 | **Med** | World/map + entity option-state (sit/cloak/PK/effect visuals) | `StateChangePacket` (option-flags, *not* buffs), `ChangeMapCellPacket`, `MapTypePacket`, `EntityStopMovePacket`, `DisplayEmotionPacket`, `DisplayImagePacket` |
 | **Low** | Clan/reputation (mostly N/A for a friends group) | `ClanInfoPacket`, `ClanOnlineCountPacket`, `ReputationPacket` |
-| **Low** | Config/misc | `UpdateConfigurationPacket`, `MessageTablePacket`, `ConnectionRefusedPacket` |
+| **Low** | Config/misc | `UpdateConfigurationPacket`, `ConnectionRefusedPacket` (`MessageTablePacket` promoted 2026-07-08, see server-feedback row) |
 | **Out of scope** | Economy/mail (§8 scope note) — keep as noop | `OpenMarketPacket`, `NewMailStatusPacket` |
 | **Keep noop** | Opaque, header-only framing placeholders | `Packet0b18` (registered in two handlers), `Packet8302` |
 

@@ -191,8 +191,14 @@ where
         text: packet.message,
         color: MessageColor::Server,
     })?;
-    packet_handler.register_noop::<MessageTablePacket>()?;
-    packet_handler.register_noop::<MessageTableColorPacket>()?;
+    packet_handler.register(|packet: MessageTablePacket| NetworkEvent::ChatMessage {
+        text: message_table_text(packet.message_id),
+        color: MessageColor::Error,
+    })?;
+    packet_handler.register(|packet: MessageTableColorPacket| NetworkEvent::ChatMessage {
+        text: message_table_text(packet.message_id),
+        color: MessageColor::Server,
+    })?;
     packet_handler.register_noop::<OpenUiPacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
         // Drop the alpha channel because it might be 0.
@@ -762,7 +768,19 @@ where
     })?;
     packet_handler.register_noop::<UseSkillSuccessPacket>()?;
     packet_handler.register_noop::<UseSkillAckPacket>()?;
-    packet_handler.register_noop::<ToUseSkillSuccessPacket>()?;
+    // ZC_ACK_TOUSESKILL is only sent by Hercules on skill *failure* (flag 0),
+    // including gameplay rejections like "party creation requires Basic Skill
+    // 7". Without this the rejection is completely silent.
+    packet_handler.register(|packet: ToUseSkillSuccessPacket| {
+        if packet.flag != 0 {
+            return None;
+        }
+
+        Some(NetworkEvent::ChatMessage {
+            text: skill_failed_text(&packet),
+            color: MessageColor::Error,
+        })
+    })?;
     packet_handler.register(|packet: NotifySkillUnitPacket| {
         let NotifySkillUnitPacket {
             entity_id,
@@ -913,4 +931,35 @@ where
     packet_handler.register_length_fallbacks(super::lengths_20220406::PACKET_LENGTHS);
 
     Ok(())
+}
+
+/// Text for `ZC_MSG` / `ZC_MSG_COLOR` message ids (zero-based
+/// msgstringtable.txt indices, see Hercules `src/common/msgtable.h`). Only the
+/// ids the campaign is likely to hit are mapped; everything else gets a
+/// generic-but-visible line so server rejections are never silent.
+fn message_table_text(message_id: u16) -> String {
+    match message_id {
+        164 => "You need to learn the basic skills first.".to_owned(),
+        _ => format!("Server message #{message_id} (see msgstringtable)."),
+    }
+}
+
+/// Text for `ZC_ACK_TOUSESKILL` failures (Hercules `useskill_fail_cause`).
+/// Hercules also reuses this packet for gameplay rejections, e.g. party
+/// creation without Basic Skill 7 arrives as skill 1 / cause 0.
+fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
+    match packet.cause {
+        0 if packet.skill_id.0 == 1 => "You need to learn the basic skills first.".to_owned(),
+        0 => "Skill level is not high enough.".to_owned(),
+        1 => "Not enough SP.".to_owned(),
+        2 => "Not enough HP.".to_owned(),
+        3 => "Required item or material is missing.".to_owned(),
+        4 => "Skill is still on cooldown.".to_owned(),
+        5 => "Not enough Zeny.".to_owned(),
+        6 => "This skill cannot be used with this weapon.".to_owned(),
+        7 => "Red Gemstone required.".to_owned(),
+        8 => "Blue Gemstone required.".to_owned(),
+        9 => "You are overweight.".to_owned(),
+        cause => format!("Skill failed (reason {cause})."),
+    }
 }
