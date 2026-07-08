@@ -761,6 +761,58 @@ where
         }
     }
 
+    pub fn send_party_chat_message(&mut self, player_name: &str, text: &str) -> Result<(), NotConnectedError> {
+        let message = format!("{} : {}", player_name, text);
+
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(PartyChatMessagePacket::new(message)),
+        }
+    }
+
+    pub fn send_whisper_message(&mut self, target_name: &str, text: &str) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(WhisperSendPacket::new(target_name.to_owned(), text.to_owned()))
+            }
+        }
+    }
+
+    pub fn create_party(&mut self, party_name: &str) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(CreatePartyPacket::new(party_name.to_owned(), 0, 0)),
+        }
+    }
+
+    pub fn invite_to_party(&mut self, character_name: &str) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(PartyInviteRequestPacket::new(character_name.to_owned())),
+        }
+    }
+
+    pub fn accept_party_invite(&mut self, party_id: PartyId) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(PartyInviteResponsePacket::new(party_id, 1)),
+        }
+    }
+
+    pub fn reject_party_invite(&mut self, party_id: PartyId) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(PartyInviteResponsePacket::new(party_id, 0)),
+        }
+    }
+
+    pub fn leave_party(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(LeavePartyPacket::new()),
+        }
+    }
+
+    pub fn set_party_invitation_block(&mut self, blocked: bool) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(SetPartyInvitationStatePacket::new(blocked as u8)),
+        }
+    }
+
     pub fn start_dialog(&mut self, npc_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(StartDialogPacket::new(npc_id)),

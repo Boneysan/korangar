@@ -104,7 +104,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     legacy RO encoding isn't a dated tell.
 
 - [ ] **Party & session cohesion** *(ties into [DM_INTERFACE.md](DM_INTERFACE.md))*:
-  - **Party/raid frames:** health/SP bars, class/role icons, **AFK/idle indicator**, range and out-of-line-of-sight indicators, click-to-target. Shares rendering with [DM_INTERFACE.md](DM_INTERFACE.md)'s initiative tracker and downed overlay. ⚠️ **Protocol-blocked:** the party packet family is undefined in `ragnarok-packets` ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §5.4) — this widget needs the wire format built first, so despite being in the MVP cut it is **greenfield**, not extend-work.
+  - **Party/raid frames:** health/SP bars, class/role icons, **AFK/idle indicator**, range and out-of-line-of-sight indicators, click-to-target. Shares rendering with [DM_INTERFACE.md](DM_INTERFACE.md)'s initiative tracker and downed overlay. Protocol foundation exists now (`ragnarok-packets` + `NetworkEvent` + hidden `party_state`); the visible frame UI is still greenfield and needs live two-character validation first.
   - **Structured combat log** with event filtering — consumes the `[DMJ]` structured echo ([DM_INTERFACE.md](DM_INTERFACE.md) §9.3); doubles as the DM's verification surface for checks and damage.
   - **End-of-Encounter Recap:** when the DM finishes an encounter, pop up a quick "Encounter Summary" tab showing who took the most damage, who healed the most, and MVP actions.
 
@@ -314,7 +314,7 @@ should be confirmed against `ragnarok-packets` before implementing.
 | **MVP** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | `DisplaySkillEffectAndDamagePacket`, `DisplaySkillCooldownPacket`, `DisplaySpecialEffectPacket`, `DisplayPlayerHealEffect`, `UseSkillSuccessPacket`, `ToUseSkillSuccessPacket`, `NotifyGroundSkillPacket` |
 | **MVP** | Stats → character sheet, stat window (§8 Core windows) | `ParameterChangePacket`, `RequestStatUpResponsePacket`, `CriticalWeightUpdatePacket`, `UpdateAttackRangePacket` |
 | **High** | Quests → campaign journal ([DM_INTERFACE.md](DM_INTERFACE.md)), quest tracker (§8 Nav) | `QuestListPacket`, `QuestNotificationPacket1`, `QuestRemovedPacket`, `HuntingQuestNotificationPacket`, `HuntingQuestUpdateObjectivePacket`, `NavigateToMonsterPacket`, `MarkMinimapPositionPacket` |
-| **High** | Party/social → party frames (§8), friend list | `PartyInvitePacket`, `UpdatePartyInvitationStatePacket`, `FriendOnlineStatusPacket` |
+| **High** | Party/social → party frames (§8), friend list | Party roster/HP/position/chat/whisper packets are promoted; remaining work is party-frame UI, live validation, and `FriendOnlineStatusPacket`. |
 | **High** | Progression toasts → notification system (§8 Info) | `AchievementListPacket`, `AchievementUpdatePacket`, `DisplayGainedExperiencePacket` |
 | **Med** | Equipment view → character sheet, equip-swap (§8 Core windows) | `UpdateShowEquipPacket`, `EquippableSwitchItemListPacket`, `EquipAmmunitionPacket`, `AmmunitionActionPacket` |
 | **Med** | Char-select screen polish | `CharacterListPacket`, `CharacterSlotPagePacket`, `CharacterBanListPacket`, `LoginPincodePacket` |

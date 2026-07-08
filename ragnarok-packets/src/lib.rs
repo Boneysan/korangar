@@ -1968,6 +1968,13 @@ pub struct UpdatePartyInvitationStatePacket {
     pub allowed: u8, // always 0 on rAthena
 }
 
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02C8)]
+pub struct SetPartyInvitationStatePacket {
+    pub refuse_invite: u8,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x02DA)]
@@ -4371,6 +4378,194 @@ pub struct PartyInvitePacket {
     pub party_name: String,
 }
 
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00FA)]
+pub struct CreatePartyResultPacket {
+    pub result: u8,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01E8)]
+pub struct CreatePartyPacket {
+    #[length(24)]
+    pub party_name: String,
+    pub share_pickup: u8,
+    pub share_loot: u8,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02C4)]
+pub struct PartyInviteRequestPacket {
+    #[length(24)]
+    pub character_name: String,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02C7)]
+pub struct PartyInviteResponsePacket {
+    pub party_id: PartyId,
+    pub accepted: u8,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0100)]
+pub struct LeavePartyPacket {}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02C5)]
+pub struct PartyInviteResultPacket {
+    #[length(24)]
+    pub character_name: String,
+    pub result: u32,
+}
+
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct PartyMember {
+    pub account_id: AccountId,
+    pub character_id: CharacterId,
+    #[length(24)]
+    pub player_name: String,
+    #[length(16)]
+    pub map_name: String,
+    pub leader: u8,
+    pub offline: u8,
+    pub job_id: JobId,
+    pub base_level: u16,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AE5)]
+#[variable_length]
+pub struct PartyListPacket {
+    #[length(24)]
+    pub party_name: String,
+    #[repeating_remaining]
+    pub members: Vec<PartyMember>,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AE4)]
+pub struct PartyMemberInfoPacket {
+    pub account_id: AccountId,
+    pub character_id: CharacterId,
+    pub leader: u32,
+    pub job_id: JobId,
+    pub base_level: u16,
+    pub position: TilePosition,
+    pub offline: u8,
+    #[length(24)]
+    pub party_name: String,
+    #[length(24)]
+    pub player_name: String,
+    #[length(16)]
+    pub map_name: String,
+    pub share_pickup: u8,
+    pub share_loot: u8,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0107)]
+pub struct PartyMemberPositionPacket {
+    pub account_id: AccountId,
+    pub position: TilePosition,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x080E)]
+pub struct PartyMemberHealthPacket {
+    pub account_id: AccountId,
+    pub health_points: u32,
+    pub maximum_health_points: u32,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0ABD)]
+pub struct PartyMemberJobAndLevelPacket {
+    pub account_id: AccountId,
+    pub job_id: JobId,
+    pub base_level: u16,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0105)]
+pub struct PartyMemberRemovedPacket {
+    pub account_id: AccountId,
+    #[length(24)]
+    pub character_name: String,
+    pub result: u8,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0108)]
+#[variable_length]
+pub struct PartyChatMessagePacket {
+    #[length_remaining_off_by_one]
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0109)]
+#[variable_length]
+pub struct NotifyPartyChatMessagePacket {
+    pub account_id: AccountId,
+    #[length_remaining]
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0096)]
+#[variable_length]
+pub struct WhisperSendPacket {
+    #[length(24)]
+    pub target_name: String,
+    #[length_remaining_off_by_one]
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x09DE)]
+#[variable_length]
+pub struct WhisperMessagePacket {
+    pub sender_character_id: CharacterId,
+    #[length(24)]
+    pub sender_name: String,
+    pub is_admin: u8,
+    #[length_remaining]
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0098)]
+pub struct WhisperResultPacket {
+    pub result: u8,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x09DF)]
+pub struct WhisperResult2Packet {
+    pub result: u8,
+    pub character_id: CharacterId,
+}
+
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ReputationEntry {
@@ -4684,6 +4879,12 @@ mod tests {
         T::packet_from_bytes(&mut byte_reader).unwrap()
     }
 
+    fn fixed_string(value: &str, length: usize) -> Vec<u8> {
+        let mut bytes = value.as_bytes().to_vec();
+        bytes.resize(length, 0);
+        bytes
+    }
+
     #[test]
     fn map_server_login_packet_matches_20220406_layout() {
         let packet = MapServerLoginPacket::new(
@@ -4760,6 +4961,152 @@ mod tests {
         assert_eq!(packet.entity_id, EntityId(0x068E_C46D));
         assert_eq!(packet.head_direction, 0);
         assert_eq!(packet.direction, 2);
+    }
+
+    #[test]
+    fn party_member_info_packet_matches_20220406_layout() {
+        let mut bytes = vec![0xE4, 0x0A];
+        bytes.extend([0x04, 0x03, 0x02, 0x01]); // AID
+        bytes.extend([0x08, 0x07, 0x06, 0x05]); // GID
+        bytes.extend([0x00, 0x00, 0x00, 0x00]); // leader
+        bytes.extend([0xA1, 0x0F]); // class
+        bytes.extend([0x63, 0x00]); // base level
+        bytes.extend([0x78, 0x00]); // x
+        bytes.extend([0x8C, 0x00]); // y
+        bytes.push(0x00); // online
+        bytes.extend(fixed_string("Seal Party", 24));
+        bytes.extend(fixed_string("Alice", 24));
+        bytes.extend(fixed_string("prontera", 16));
+        bytes.push(0x01); // share pickup
+        bytes.push(0x00); // share loot
+
+        assert_eq!(bytes.len(), 89);
+
+        let packet = read_packet::<PartyMemberInfoPacket>(&bytes);
+
+        assert_eq!(packet.account_id, AccountId(0x0102_0304));
+        assert_eq!(packet.character_id, CharacterId(0x0506_0708));
+        assert_eq!(packet.leader, 0);
+        assert_eq!(packet.job_id, JobId(4001));
+        assert_eq!(packet.base_level, 99);
+        assert_eq!(packet.position, TilePosition { x: 120, y: 140 });
+        assert_eq!(packet.party_name, "Seal Party");
+        assert_eq!(packet.player_name, "Alice");
+        assert_eq!(packet.map_name, "prontera");
+        assert_eq!(packet.share_pickup, 1);
+        assert_eq!(packet.share_loot, 0);
+    }
+
+    #[test]
+    fn party_list_packet_consumes_modern_member_rows() {
+        let mut bytes = vec![0xE5, 0x0A];
+        bytes.extend([0x88, 0x00]); // 28-byte header + 2 * 54-byte members.
+        bytes.extend(fixed_string("Seal Party", 24));
+
+        bytes.extend([0x04, 0x03, 0x02, 0x01]);
+        bytes.extend([0x08, 0x07, 0x06, 0x05]);
+        bytes.extend(fixed_string("Alice", 24));
+        bytes.extend(fixed_string("prontera", 16));
+        bytes.push(0x00);
+        bytes.push(0x00);
+        bytes.extend([0xA1, 0x0F]);
+        bytes.extend([0x63, 0x00]);
+
+        bytes.extend([0x14, 0x13, 0x12, 0x11]);
+        bytes.extend([0x18, 0x17, 0x16, 0x15]);
+        bytes.extend(fixed_string("Bob", 24));
+        bytes.extend(fixed_string("izlude", 16));
+        bytes.push(0x01);
+        bytes.push(0x00);
+        bytes.extend([0x02, 0x00]);
+        bytes.extend([0x2D, 0x00]);
+
+        assert_eq!(bytes.len(), 136);
+
+        let packet = read_packet::<PartyListPacket>(&bytes);
+
+        assert_eq!(packet.party_name, "Seal Party");
+        assert_eq!(packet.members.len(), 2);
+        assert_eq!(packet.members[0].account_id, AccountId(0x0102_0304));
+        assert_eq!(packet.members[0].character_id, CharacterId(0x0506_0708));
+        assert_eq!(packet.members[0].player_name, "Alice");
+        assert_eq!(packet.members[0].map_name, "prontera");
+        assert_eq!(packet.members[0].leader, 0);
+        assert_eq!(packet.members[0].job_id, JobId(4001));
+        assert_eq!(packet.members[0].base_level, 99);
+        assert_eq!(packet.members[1].account_id, AccountId(0x1112_1314));
+        assert_eq!(packet.members[1].character_id, CharacterId(0x1516_1718));
+        assert_eq!(packet.members[1].player_name, "Bob");
+        assert_eq!(packet.members[1].map_name, "izlude");
+        assert_eq!(packet.members[1].leader, 1);
+        assert_eq!(packet.members[1].job_id, JobId(2));
+        assert_eq!(packet.members[1].base_level, 45);
+    }
+
+    #[test]
+    fn party_update_packets_match_20220406_layouts() {
+        let position = read_packet::<PartyMemberPositionPacket>(&[0x07, 0x01, 0x04, 0x03, 0x02, 0x01, 0x78, 0x00, 0x8C, 0x00]);
+        assert_eq!(position.account_id, AccountId(0x0102_0304));
+        assert_eq!(position.position, TilePosition { x: 120, y: 140 });
+
+        let health =
+            read_packet::<PartyMemberHealthPacket>(&[0x0E, 0x08, 0x04, 0x03, 0x02, 0x01, 0xE8, 0x03, 0x00, 0x00, 0xD0, 0x07, 0x00, 0x00]);
+        assert_eq!(health.account_id, AccountId(0x0102_0304));
+        assert_eq!(health.health_points, 1000);
+        assert_eq!(health.maximum_health_points, 2000);
+
+        let job = read_packet::<PartyMemberJobAndLevelPacket>(&[0xBD, 0x0A, 0x04, 0x03, 0x02, 0x01, 0xA1, 0x0F, 0x63, 0x00]);
+        assert_eq!(job.account_id, AccountId(0x0102_0304));
+        assert_eq!(job.job_id, JobId(4001));
+        assert_eq!(job.base_level, 99);
+    }
+
+    #[test]
+    fn party_chat_and_whisper_packets_match_20220406_layouts() {
+        let party_chat = read_packet::<NotifyPartyChatMessagePacket>(&[
+            0x09, 0x01, 0x15, 0x00, 0x04, 0x03, 0x02, 0x01, b'A', b'l', b'i', b'c', b'e', b' ', b':', b' ', b'h', b'e', b'l', b'l', b'o',
+        ]);
+        assert_eq!(party_chat.account_id, AccountId(0x0102_0304));
+        assert_eq!(party_chat.message, "Alice : hello");
+
+        let mut whisper_bytes = vec![0xDE, 0x09, 0x27, 0x00];
+        whisper_bytes.extend([0x08, 0x07, 0x06, 0x05]);
+        whisper_bytes.extend(fixed_string("Alice", 24));
+        whisper_bytes.push(0x00);
+        whisper_bytes.extend(b"secret");
+        let whisper = read_packet::<WhisperMessagePacket>(&whisper_bytes);
+        assert_eq!(whisper.sender_character_id, CharacterId(0x0506_0708));
+        assert_eq!(whisper.sender_name, "Alice");
+        assert_eq!(whisper.is_admin, 0);
+        assert_eq!(whisper.message, "secret");
+
+        let whisper_result = read_packet::<WhisperResult2Packet>(&[0xDF, 0x09, 0x00, 0x08, 0x07, 0x06, 0x05]);
+        assert_eq!(whisper_result.result, 0);
+        assert_eq!(whisper_result.character_id, CharacterId(0x0506_0708));
+
+        assert_eq!(packet_bytes(WhisperSendPacket::new("Bob".to_owned(), "hello".to_owned())), [
+            0x96, 0x00, 0x22, 0x00, b'B', b'o', b'b', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, b'h', b'e', b'l', b'l', b'o', 0x00,
+        ]);
+    }
+
+    #[test]
+    fn outgoing_party_management_packets_match_20220406_layouts() {
+        assert_eq!(packet_bytes(CreatePartyPacket::new("Seal Party".to_owned(), 0, 0)), [
+            0xE8, 0x01, b'S', b'e', b'a', b'l', b' ', b'P', b'a', b'r', b't', b'y', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ]);
+
+        assert_eq!(packet_bytes(PartyInviteRequestPacket::new("Bob".to_owned())), [
+            0xC4, 0x02, b'B', b'o', b'b', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00,
+        ]);
+
+        assert_eq!(packet_bytes(PartyInviteResponsePacket::new(PartyId(0x0102_0304), 1)), [
+            0xC7, 0x02, 0x04, 0x03, 0x02, 0x01, 0x01,
+        ]);
+        assert_eq!(packet_bytes(LeavePartyPacket::new()), [0x00, 0x01]);
+        assert_eq!(packet_bytes(SetPartyInvitationStatePacket::new(1)), [0xC8, 0x02, 0x01]);
     }
 
     #[test]

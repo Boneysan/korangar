@@ -69,8 +69,8 @@ use networking::{PacketHistory, PacketHistoryCallback};
 #[cfg(not(feature = "debug"))]
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::{
-    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, HotbarSlot, SellItemsResult,
-    SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, HotbarSlot, PartyId,
+    SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -1157,6 +1157,8 @@ impl Client {
                     }
                 }
                 NetworkEvent::MapServerDisconnected { reason } => {
+                    self.client_state.follow_mut(client_state().party_state()).clear();
+
                     if reason != DisconnectReason::ClosedByClient {
                         // TODO: Make this an on-screen popup.
                         #[cfg(feature = "debug")]
@@ -1266,6 +1268,7 @@ impl Client {
                 }
                 NetworkEvent::CharacterSelected { login_data, .. } => {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                    self.client_state.follow_mut(client_state().party_state()).clear();
 
                     let saved_login_data = self.saved_login_data.as_ref().unwrap();
                     self.networking_system.disconnect_from_character_server();
@@ -1327,8 +1330,7 @@ impl Client {
                         client_state().hotbar().skills(),
                         client_state().skill_tree().skills(),
                     ));
-                    self.interface
-                        .open_window(StatusBarWindow::new(client_state().status_effects()));
+                    self.interface.open_window(StatusBarWindow::new(client_state().status_effects()));
 
                     // Put the dialog system in a well-defined state.
                     self.client_state.follow_mut(client_state().dialog_window()).end();
@@ -1365,7 +1367,7 @@ impl Client {
 
                         let entity_id = npc.get_entity_id();
                         let entity_type = npc.get_entity_type();
-                        let _job_id = npc.get_job_id();
+                        let job_id = npc.get_job_id();
                         let entity_part_files = npc.get_entity_part_files(&self.library);
 
                         #[cfg(feature = "debug")]
@@ -1694,7 +1696,8 @@ impl Client {
                     duration_ms,
                     remaining_ms,
                 } => {
-                    // Only track status effects on the local player for this slice (see buff-bar-slice.md).
+                    // Only track status effects on the local player for this slice (see
+                    // buff-bar-slice.md).
                     let local_id = self
                         .client_state
                         .follow(client_state().entities())
@@ -1860,6 +1863,7 @@ impl Client {
                     }
                 }
                 NetworkEvent::LoggedOut => {
+                    self.client_state.follow_mut(client_state().party_state()).clear();
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
@@ -1872,6 +1876,115 @@ impl Client {
                 }
                 NetworkEvent::FriendAdded { friend } => {
                     self.client_state.follow_mut(client_state().friend_list()).push(friend);
+                }
+                NetworkEvent::CreatePartyResult { result } => {
+                    let message = match result {
+                        0 => "Party successfully created.",
+                        1 => "Party creation failed: that party name already exists.",
+                        2 => "Party creation failed: you are already in a party.",
+                        3 => "Party creation failed: parties are disabled on this map.",
+                        _ => "Party creation failed.",
+                    };
+
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message.to_owned(), MessageColor::Information));
+                }
+                NetworkEvent::PartyInvite { party_id, party_name } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_pending_invite(party_id);
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Party invite from {party_name}. Use /party accept or /party reject."),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::PartyInviteResult { character_name, result } => {
+                    let message = match result {
+                        0 => format!("{character_name} is already in a party."),
+                        1 => format!("{character_name} rejected the party invite."),
+                        2 => format!("{character_name} accepted the party invite."),
+                        3 => "The party is full.".to_owned(),
+                        5 => format!("{character_name} is blocking party invites."),
+                        7 => format!("{character_name} is not online or does not exist."),
+                        _ => format!("Party invite for {character_name} failed ({result})."),
+                    };
+
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message, MessageColor::Information));
+                }
+                NetworkEvent::PartyInvitationState { .. } => {}
+                NetworkEvent::PartyList { party_name, members } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_roster(party_name, members);
+                }
+                NetworkEvent::PartyMemberAdded { member } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .add_or_update_member(member);
+                }
+                NetworkEvent::PartyMemberPosition { account_id, position } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .update_position(account_id, position);
+                }
+                NetworkEvent::PartyMemberHealth {
+                    account_id,
+                    health_points,
+                    maximum_health_points,
+                } => {
+                    self.client_state.follow_mut(client_state().party_state()).update_health(
+                        account_id,
+                        health_points,
+                        maximum_health_points,
+                    );
+                }
+                NetworkEvent::PartyMemberJobAndLevel {
+                    account_id,
+                    job_id,
+                    base_level,
+                } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .update_job_and_level(account_id, job_id, base_level);
+                }
+                NetworkEvent::PartyMemberRemoved {
+                    account_id,
+                    character_name,
+                    result,
+                } => {
+                    self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("{character_name} left the party ({result})."),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::PartyChatMessage { text, .. } => {
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("[Party] {text}"), MessageColor::Information));
+                }
+                NetworkEvent::WhisperReceived { sender_name, message, .. } => {
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("[Whisper] {sender_name}: {message}"),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::WhisperResult { result } => {
+                    if result != 0 {
+                        let message = match result {
+                            1 => "Whisper failed: the character is not online.",
+                            2 => "Whisper failed: you are ignored by the target.",
+                            3 => "Whisper failed: the target is ignoring all whispers.",
+                            _ => "Whisper failed: the character is not online.",
+                        };
+
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new(message.to_owned(), MessageColor::Information));
+                    }
                 }
                 NetworkEvent::VisualEffect { effect_path, entity_id } => {
                     let effect = self.effect_loader.get_or_load(effect_path, &self.texture_loader).unwrap();
@@ -2435,6 +2548,101 @@ impl Client {
                     if text.as_str() == "/nc" {
                         let auto_attack = self.client_state.follow_mut(client_state().game_settings().auto_attack());
                         *auto_attack = !*auto_attack;
+                        continue;
+                    }
+
+                    if let Some(message) = text.strip_prefix("/p ") {
+                        let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                        let _ = self.networking_system.send_party_chat_message(&player_name, message);
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/w ").or_else(|| text.strip_prefix("/whisper ")) {
+                        if let Some((target_name, message)) = rest.trim().split_once(' ')
+                            && !target_name.is_empty()
+                            && !message.trim().is_empty()
+                        {
+                            let _ = self.networking_system.send_whisper_message(target_name, message.trim());
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /w <name> <message>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/party ") {
+                        let rest = rest.trim();
+                        let (command, arguments) = rest.split_once(' ').unwrap_or((rest, ""));
+                        let arguments = arguments.trim();
+
+                        match command {
+                            "create" if !arguments.is_empty() => {
+                                let _ = self.networking_system.create_party(arguments);
+                            }
+                            "invite" if !arguments.is_empty() => {
+                                let _ = self.networking_system.invite_to_party(arguments);
+                            }
+                            "accept" => {
+                                let party_id = if arguments.is_empty() {
+                                    self.client_state.follow(client_state().party_state()).pending_invite_id()
+                                } else {
+                                    arguments.parse::<u32>().ok().map(PartyId)
+                                };
+
+                                match party_id {
+                                    Some(party_id) => {
+                                        self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
+                                        let _ = self.networking_system.accept_party_invite(party_id);
+                                    }
+                                    None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "Usage: /party accept <party id>, or accept while an invite is pending.".to_owned(),
+                                        MessageColor::Information,
+                                    )),
+                                }
+                            }
+                            "reject" => {
+                                let party_id = if arguments.is_empty() {
+                                    self.client_state.follow(client_state().party_state()).pending_invite_id()
+                                } else {
+                                    arguments.parse::<u32>().ok().map(PartyId)
+                                };
+
+                                match party_id {
+                                    Some(party_id) => {
+                                        self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
+                                        let _ = self.networking_system.reject_party_invite(party_id);
+                                    }
+                                    None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "Usage: /party reject <party id>, or reject while an invite is pending.".to_owned(),
+                                        MessageColor::Information,
+                                    )),
+                                }
+                            }
+                            "leave" => {
+                                let _ = self.networking_system.leave_party();
+                            }
+                            "block" => match arguments {
+                                "on" | "true" | "1" => {
+                                    let _ = self.networking_system.set_party_invitation_block(true);
+                                }
+                                "off" | "false" | "0" => {
+                                    let _ = self.networking_system.set_party_invitation_block(false);
+                                }
+                                _ => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                    "Usage: /party block <on|off>".to_owned(),
+                                    MessageColor::Information,
+                                )),
+                            },
+                            _ => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /party create <name>, /party invite <name>, /party accept <id>, /party reject <id>, /party leave, \
+                                 /party block <on|off>"
+                                    .to_owned(),
+                                MessageColor::Information,
+                            )),
+                        }
+
                         continue;
                     }
 

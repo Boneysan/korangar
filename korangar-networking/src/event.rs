@@ -242,6 +242,59 @@ pub enum NetworkEvent {
         account_id: AccountId,
         character_id: CharacterId,
     },
+    CreatePartyResult {
+        result: u8,
+    },
+    PartyInvite {
+        party_id: PartyId,
+        party_name: String,
+    },
+    PartyInviteResult {
+        character_name: String,
+        result: u32,
+    },
+    PartyInvitationState {
+        deny_party_invites: bool,
+    },
+    PartyList {
+        party_name: String,
+        members: Vec<PartyMember>,
+    },
+    PartyMemberAdded {
+        member: PartyMemberInfoPacket,
+    },
+    PartyMemberPosition {
+        account_id: AccountId,
+        position: TilePosition,
+    },
+    PartyMemberHealth {
+        account_id: AccountId,
+        health_points: usize,
+        maximum_health_points: usize,
+    },
+    PartyMemberJobAndLevel {
+        account_id: AccountId,
+        job_id: JobId,
+        base_level: u16,
+    },
+    PartyMemberRemoved {
+        account_id: AccountId,
+        character_name: String,
+        result: u8,
+    },
+    PartyChatMessage {
+        account_id: AccountId,
+        text: String,
+    },
+    WhisperReceived {
+        sender_character_id: CharacterId,
+        sender_name: String,
+        is_admin: bool,
+        message: String,
+    },
+    WhisperResult {
+        result: u8,
+    },
     SetHotkeyData {
         tab: HotbarTab,
         hotkeys: Vec<HotkeyState>,

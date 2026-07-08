@@ -15,6 +15,30 @@
 
 **Verification target**: Form/join party on Hercules (PACKETVER 20190605 / client 20220406), see no unknown packets in inspector, receive roster + HP updates + position + party chat.
 
+## 0. Implementation Status — 2026-07-08
+
+Implemented in this slice:
+- Incoming party packets: `0x0AE5`, `0x0AE4`, `0x0107`, `0x080E`,
+  `0x0ABD`, `0x0105`, `0x02C6`, `0x02C5`, `0x02C9`, `0x0109`.
+- Outgoing party packets: `0x01E8`, `0x02C4`, `0x02C7`, `0x0100`,
+  `0x02C8`, `0x0108`.
+- Whisper packets: outgoing `0x0096`, incoming `0x09DE`, result acks
+  `0x0098` and modern `0x09DF`.
+- `NetworkEvent` variants for roster, member add/remove, HP, position,
+  job/level, party chat, invite feedback, and whisper.
+- Hidden `ClientState::party_state` holding roster, pending invite, member
+  position, HP, job/level, online, leader, and share flags.
+- Temporary slash-command driving surface:
+  `/party create`, `/party invite`, `/party accept`, `/party reject`,
+  `/party leave`, `/party block`, `/p`, and `/w`.
+- Packet byte-layout tests in `ragnarok-packets`.
+
+Still pending:
+- Live two-character Hercules validation.
+- Real party frame UI.
+- Whisper reply/history UI.
+- Party leader/kick/options UI beyond the currently available protocol methods.
+
 ## 1. Packet Layouts (from Hercules_RO for 20220406 main)
 
 Use these for `ragnarok-packets` structs. Lengths from `packets2022_len_main.h` (or generated lengths_20220406.rs).
@@ -73,8 +97,16 @@ struct PACKET_ZC_GROUP_LIST {
 ```
 
 ### Invite / State
-- `PartyInvitePacket` (0x02C6) — already defined (party_id + party_name). Currently noop.
-- `UpdatePartyInvitationStatePacket` (0x02C9) — already defined, noop.
+- `PartyInvitePacket` (`0x02C6`) — incoming invite prompt, now emits
+  `NetworkEvent::PartyInvite`.
+- `PartyInviteResultPacket` (`0x02C5`) — outgoing invite result feedback.
+- `UpdatePartyInvitationStatePacket` (`0x02C9`) — server invite-block state.
+- `CreatePartyResultPacket` (`0x00FA`) — create-party result feedback.
+- `CreatePartyPacket` (`0x01E8`) — create party with item share flags.
+- `PartyInviteRequestPacket` (`0x02C4`) — invite by character name.
+- `PartyInviteResponsePacket` (`0x02C7`) — accept/reject invite.
+- `LeavePartyPacket` (`0x0100`) — leave party.
+- `SetPartyInvitationStatePacket` (`0x02C8`) — block/unblock party invites.
 
 ### Older fallbacks (for compatibility)
 There are conditional aliases (0x0A43 etc.), but for our server focus on 0x0AE* + 0x02C6.
@@ -95,13 +127,15 @@ struct PACKET_ZC_WHISPER {
 } __attribute__((packed));
 ```
 
-Result ack: `0x0098` (small result code).
+Result ack: legacy `0x0098` (small result code) and modern `0x09DF`
+(result plus character id). Hercules aliases `wisendType` to `0x09DF` for
+modern clients even though `0x0098` remains in the generated length tables.
 
 See hercules-20220406.md for lookup.
 
-## 2. Proposed Additions to ragnarok-packets
+## 2. Implemented Additions to ragnarok-packets
 
-Add to `ragnarok-packets/src/lib.rs` (near other social packets):
+Added to `ragnarok-packets/src/lib.rs` (near other social packets):
 
 ```rust
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]

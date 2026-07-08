@@ -475,7 +475,9 @@ where
             luck_stat_points_cost,
         }
     })?;
-    packet_handler.register_noop::<UpdatePartyInvitationStatePacket>()?;
+    packet_handler.register(|packet: UpdatePartyInvitationStatePacket| NetworkEvent::PartyInvitationState {
+        deny_party_invites: packet.allowed != 0,
+    })?;
     packet_handler.register_noop::<UpdateShowEquipPacket>()?;
     packet_handler.register_noop::<UpdateConfigurationPacket>()?;
     packet_handler.register_noop::<NavigateToMonsterPacket>()?;
@@ -810,7 +812,51 @@ where
         account_id: packet.account_id,
         character_id: packet.character_id,
     })?;
-    packet_handler.register_noop::<PartyInvitePacket>()?;
+    packet_handler.register(|packet: PartyInvitePacket| NetworkEvent::PartyInvite {
+        party_id: packet.party_id,
+        party_name: packet.party_name,
+    })?;
+    packet_handler.register(|packet: CreatePartyResultPacket| NetworkEvent::CreatePartyResult { result: packet.result })?;
+    packet_handler.register(|packet: PartyInviteResultPacket| NetworkEvent::PartyInviteResult {
+        character_name: packet.character_name,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: PartyListPacket| NetworkEvent::PartyList {
+        party_name: packet.party_name,
+        members: packet.members,
+    })?;
+    packet_handler.register(|packet: PartyMemberInfoPacket| NetworkEvent::PartyMemberAdded { member: packet })?;
+    packet_handler.register(|packet: PartyMemberPositionPacket| NetworkEvent::PartyMemberPosition {
+        account_id: packet.account_id,
+        position: packet.position,
+    })?;
+    packet_handler.register(|packet: PartyMemberHealthPacket| NetworkEvent::PartyMemberHealth {
+        account_id: packet.account_id,
+        health_points: packet.health_points as usize,
+        maximum_health_points: packet.maximum_health_points as usize,
+    })?;
+    packet_handler.register(|packet: PartyMemberJobAndLevelPacket| NetworkEvent::PartyMemberJobAndLevel {
+        account_id: packet.account_id,
+        job_id: packet.job_id,
+        base_level: packet.base_level,
+    })?;
+    packet_handler.register(|packet: PartyMemberRemovedPacket| NetworkEvent::PartyMemberRemoved {
+        account_id: packet.account_id,
+        character_name: packet.character_name,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: NotifyPartyChatMessagePacket| NetworkEvent::PartyChatMessage {
+        account_id: packet.account_id,
+        text: packet.message,
+    })?;
+    packet_handler.register(|packet: WhisperMessagePacket| NetworkEvent::WhisperReceived {
+        sender_character_id: packet.sender_character_id,
+        sender_name: packet.sender_name,
+        is_admin: packet.is_admin != 0,
+        message: packet.message,
+    })?;
+    packet_handler.register(|packet: WhisperResultPacket| NetworkEvent::WhisperResult { result: packet.result })?;
+    packet_handler.register(|packet: WhisperResult2Packet| NetworkEvent::WhisperResult { result: packet.result })?;
     packet_handler.register_noop::<StatusChangeSequencePacket>()?;
     packet_handler.register_noop::<ReputationPacket>()?;
     packet_handler.register_noop::<ClanInfoPacket>()?;

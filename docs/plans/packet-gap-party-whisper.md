@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft implementation plan |
+| **Status** | Implemented; live two-client validation still pending |
 | **Milestone** | Phase 1 protocol safety, prerequisite for M2 group play |
 | **Parent** | [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §5.3–§5.4, [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.3, [hercules-20220406.md](../protocol/hercules-20220406.md) |
 | **Depends on** | M0 connectivity and packet inspector working |
@@ -12,46 +12,57 @@
 Define and register missing party and whisper packet families so Korangar can
 frame traffic safely before the first real party session.
 
-This plan is primarily protocol safety:
-- Define packet structs in `ragnarok-packets`.
-- Register handlers or noops in `version_20220406.rs`.
-- Add minimal events only where needed for verification.
-- Build real party/whisper UI later.
+This plan started as protocol safety and now tracks the remaining live
+validation:
+- Packet structs are defined in `ragnarok-packets`.
+- Dedicated handlers are registered in `version_20220406.rs`.
+- Minimal events and client `PartyState` are available for verification and
+  future party frames.
+- Slash commands exist for create/invite/accept/reject/leave, party chat, and
+  whisper.
+- Real party/whisper UI remains later work.
 
 ## 2. Why This Comes Early
 
-Korangar frames incoming packets by deserializing the registered packet type. If
-Hercules sends an unregistered packet header, the client cannot know its length
-and drops the rest of that TCP read. Party traffic is a live risk because the DM
-campaign is party-locked through `$dm_active_party`.
+Korangar frames incoming packets by deserializing the registered packet type.
+Generated length fallbacks now protect the stream from unknown known-length
+packets, but modeled party packets are still needed for state, UI, and DM tools.
+Party traffic matters because the DM campaign is party-locked through
+`$dm_active_party`.
 
 Minimum target: every party/whisper packet emitted by a normal Hercules group
-session is at least defined and noop-registered.
+session is modeled or safely framed, with the core roster/chat/whisper packets
+promoted to real events.
 
 ## 3. Packet Families
 
 ### Party
 
-Known missing areas:
+Implemented areas:
 - Party roster/list.
-- Party member HP/SP updates.
+- Party member HP updates.
 - Party member position updates.
+- Party member job/level updates.
 - Party chat (`0x0108` / `0x0109`).
-- Invite, leave, kick, leader, and option updates not already covered.
+- Create, invite, accept/reject, leave, and invite-block commands.
 - 20220406 main roster/member packets are `0x0AE5` / `0x0AE4`; older
   `0x00FB` roster notes are not correct for this server build.
 
-Already mentioned in the noop backlog:
-- `PartyInvitePacket`
-- `UpdatePartyInvitationStatePacket`
+Still later:
+- Real party frames.
+- Party leader change and kick UI.
+- SP updates if the server/client variant emits them; 2022 main HP packet does
+  not include SP.
 
 ### Whisper
 
-Known missing areas:
+Implemented areas:
 - Client → server whisper send: `0x0096`.
-- Server → client whisper receive/result: `0x09DE` / `0x0098` for
-  `PACKETVER=20220406`.
-- `/r` reply state and whisper history are UI follow-ups.
+- Server → client whisper receive: `0x09DE`.
+- Server → client whisper result: legacy `0x0098` and modern `0x09DF`.
+
+Still later:
+- `/r` reply state and whisper history.
 
 DM dependency:
 - Verify whether `@dmsecret` sends true whispers or `dispbottom`; if true
@@ -101,9 +112,9 @@ DM dependency:
    - Add real handlers only for data required by immediate verification.
    - Ensure unknown-packet logs no longer appear for ordinary party/whisper flows.
 
-6. Add minimal outgoing sends if needed.
-   - Whisper send can be a simple networking method before chat UI is polished.
-   - Party create/invite can wait unless needed for reproducible verification.
+6. Add minimal outgoing sends.
+   - Done for whisper, party chat, create, invite, accept/reject, leave, and
+     invite-block toggle.
 
 7. Verify against Hercules.
    - Two accounts online.

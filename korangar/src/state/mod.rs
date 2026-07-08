@@ -4,6 +4,7 @@ pub mod character_slots;
 pub mod hotbar;
 pub mod inventory;
 pub mod localization;
+pub mod party;
 pub mod skills;
 pub mod status_effects;
 pub mod theme;
@@ -55,6 +56,7 @@ use crate::settings::{
 use crate::state::character_slots::CharacterSlots;
 use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
+use crate::state::party::PartyState;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
 use crate::state::theme::WorldTheme;
@@ -155,6 +157,9 @@ pub struct ClientState {
     chat_messages: Vec<ChatMessage>,
     /// List of all friends.
     friend_list: Vec<Friend>,
+    /// Current party roster and pending party invitation state.
+    #[hidden_element]
+    party_state: PartyState,
     /// List of items offered in the shop.
     // TODO: Unhide this
     #[hidden_element]
@@ -323,6 +328,7 @@ impl ClientState {
         time_phase!("create friend list state", {
             let friend_list = Vec::default();
             let friend_list_window = FriendListWindowState::default();
+            let party_state = PartyState::default();
         });
 
         time_phase!("create player resources", {
@@ -398,6 +404,7 @@ impl ClientState {
             ground_items: Vec::new(),
             chat_messages,
             friend_list,
+            party_state,
             shop_items,
             buy_cart,
             sell_items,
