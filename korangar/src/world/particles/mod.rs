@@ -167,12 +167,21 @@ impl QuestIcon {
 
         let position = entity_position + icon_offset;
         let effect_id = quest_effect.effect as usize;
-        let texture = texture_loader
-            .get_or_load(
-                &format!("유저인터페이스\\minimap\\quest_{}_{}.bmp", effect_id, 1), /* 1 - 3 */
-                ImageType::Color,
-            )
-            .unwrap();
+        let texture = match texture_loader.get_or_load(
+            &format!("유저인터페이스\\minimap\\quest_{}_{}.bmp", effect_id, 1), /* 1 - 3 */
+            ImageType::Color,
+        ) {
+            Ok(t) => t,
+            Err(_) => {
+                #[cfg(feature = "debug")]
+                korangar_debug::logging::print_debug!(
+                    "[{}] failed to load quest marker texture for effect {}",
+                    "warning".yellow(),
+                    effect_id
+                );
+                return None;
+            }
+        };
         let color = match quest_effect.color {
             QuestColor::Yellow => Color::rgb_u8(200, 200, 30),
             QuestColor::Orange => Color::rgb_u8(200, 100, 30),
@@ -248,9 +257,15 @@ impl ParticleHolder {
             .iter()
             .for_each(|particle| particle.render(renderer, camera, window_size));
 
-        entities
-            .iter()
-            .filter_map(|entity| self.quest_icons.get(&entity.get_entity_id()))
+        // Render quest icons for all active effects. We use the positions from the
+        // QuestEffectPacket (not requiring the base entity to be present in the
+        // current entities list). This matches official client behavior for guide
+        // markers / instruction spots (e.g. "!" at teleport areas or quest points),
+        // which can appear even for special entities (warps) or when the main sprite
+        // isn't loaded. The black outline / visibility comes from the quest_*.bmp
+        // assets themselves.
+        self.quest_icons
+            .values()
             .for_each(|quest_icon| quest_icon.render(renderer, camera, window_size, scaling.get_factor()));
     }
 }

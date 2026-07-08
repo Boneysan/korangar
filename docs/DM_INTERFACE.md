@@ -6,6 +6,7 @@
 | **Architecture** | [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) |
 | **Feature roadmap** | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) |
 | **Work plan** | [PROJECT_PLAN.md](PROJECT_PLAN.md) E7 |
+| **Implementation guide** | [DM_CLIENT_IMPLEMENTATION.md](DM_CLIENT_IMPLEMENTATION.md) — code layout, Phase A transport, state, parser, visuals, first slices |
 
 This document owns the custom DM/player tabletop interface for the Seal Cascade
 campaign engine. The base client architecture and protocol strategy stay in

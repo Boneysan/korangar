@@ -8,6 +8,7 @@
 | **Architecture** | [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) — architecture & technical decisions |
 | **Feature roadmap** | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) — UI/product roadmap and packet-handler backlog |
 | **DM interface design** | [DM_INTERFACE.md](DM_INTERFACE.md) — native tabletop tooling |
+| **DM client implementation** | [DM_CLIENT_IMPLEMENTATION.md](DM_CLIENT_IMPLEMENTATION.md) — concrete architecture, flows, state model, packet usage, extension patterns |
 | **Implementation plans** | [plans/README.md](plans/README.md) — near-term executable plans |
 
 **Mission:** Replace the official RO client (`H:\RO\client`) with a Korangar-based
@@ -73,6 +74,7 @@ the server actually supports, then exceeding the official client with custom fea
 ### 1.3 `~/GitHub/korangar` — the client codebase
 
 - Rust nightly workspace; wgpu rendering; builds on Linux/Windows/macOS.
+- **DM client docs**: See new `DM_CLIENT_IMPLEMENTATION.md` for architecture to execute E7. Core DM code (dm/ + windows/dm/) not started yet; all E7 is still in planning + recent packet/world deep dives.
 - Speaks exactly **one packet version: 20220406** (`korangar-networking`).
 - Loads `data.grf` + `rdata.grf` from `korangar/korangar/`; additional archives configurable; overrides in `korangar/archive/data/`; server list in `archive/data/sclientinfo.xml`.
 - Built-in dev tools behind `debug` feature: packet inspector, profiler, theme/frame inspectors, command window.

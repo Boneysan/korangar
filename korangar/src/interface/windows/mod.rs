@@ -37,6 +37,7 @@ mod sell_cart;
 mod server_selection;
 mod skill_tree;
 mod stats;
+mod status_bar;
 #[cfg(feature = "debug")]
 mod theme_inspector;
 
@@ -64,6 +65,7 @@ pub use self::game_settings::GameSettingsWindow;
 pub use self::graphics_settings::GraphicsSettingsWindow;
 pub use self::hotbar::HotbarWindow;
 pub use self::interface_settings::InterfaceSettingsWindow;
+pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 #[cfg(feature = "debug")]
@@ -101,6 +103,7 @@ pub enum WindowClass {
     Hotbar,
     Inventory,
     Equipment,
+    StatusBar,
     SkillTree,
     Stats,
     FriendList,

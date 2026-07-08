@@ -13,6 +13,7 @@ Korangar is a next-gen Ragnarok Online client written in Rust. It features real-
 > **This specific fork** is a specialized version of Korangar being built as a **Native Tabletop Tooling** engine for a custom D&D-style campaign ("Seal Cascade"). It extends the base engine with DM-specific tools, such as animated dice cards, an initiative tracker, a campaign board, and custom UI elements for running live sessions.
 > 
 > **For more details, see our custom design docs:**
+> - [Documentation Hub](docs/README.md) — Complete index of all technical documentation
 > - [DM Interface & Native Tabletop Tooling](docs/DM_INTERFACE.md)
 > - [Software Design & Architecture](docs/SOFTWARE_DESIGN.md)
 > - [Feature Roadmap](docs/FEATURE_ROADMAP.md)

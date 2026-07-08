@@ -159,6 +159,14 @@ pub enum NetworkEvent {
         entity_id: EntityId,
         heal_amount: usize,
     },
+    /// A timed status effect (buff or debuff) changed on an entity.
+    StatusChange {
+        entity_id: EntityId,
+        index: u16,
+        gained: bool,
+        duration_ms: u32,
+        remaining_ms: u32,
+    },
     UpdateStat {
         stat_type: StatType,
     },

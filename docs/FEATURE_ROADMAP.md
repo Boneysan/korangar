@@ -6,6 +6,7 @@
 | **Architecture** | [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) |
 | **Work plan** | [PROJECT_PLAN.md](PROJECT_PLAN.md) |
 | **DM tooling design** | [DM_INTERFACE.md](DM_INTERFACE.md) |
+| **DM client implementation** | [DM_CLIENT_IMPLEMENTATION.md](DM_CLIENT_IMPLEMENTATION.md) |
 
 This document owns the feature roadmap, UI/UX principles, and packet-handler
 promotion backlog for the Korangar-based HerculesRO client. The architecture and
@@ -65,6 +66,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - Scalable UI framework (resolution independence for 1440p/4K), with per-element UI scale.
   - Modern typography and window management (snapping, docking, locking).
   - **HUD edit mode:** a layout editor to drag/scale/lock every HUD element, with per-character saved profiles (cf. WoW Edit Mode / FFXIV HUD Layout). Generalizes the snapping/docking work above and is the substrate every widget below sits on — **build this first.**
+  - Targeted spec: [specs/hud-edit-mode.md](specs/hud-edit-mode.md)
 
 - [ ] **Combat feedback & readability:**
   - Modern action bars with keybind overlays and smooth cooldown animations.
@@ -164,6 +166,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     `<NAVI>[Hun]<INFO>izlude,122,207,</INFO></NAVI>` into clickable quest
     breadcrumbs. Same-map links should walk or mark the target directly; cross-map
     links should feed the breadcrumb route system above.
+  - Targeted spec: [specs/navigation-quest-guiding.md](specs/navigation-quest-guiding.md)
     - Parse dialog text into structured segments: plain text, navigation label,
       destination map, and destination tile.
     - Render navigation labels as clickable dialog UI. Start with a small generated
@@ -196,8 +199,9 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Integrated Skill Check Dialogue:** NPC dialogue options automatically detect skill checks (e.g., `[Charisma DC 15]`) and trigger the dice-roll UI inline, rather than requiring separate chat commands.
   - **Active Dodge Roll / Dash (Long-term Extension):** Pushing the engine toward a true Action RPG. A dedicated evasion keybind (`Spacebar`) providing a brief movement burst and i-frames to actively avoid hazard telegraphs. *Note: Requires heavy custom C-plugin work on the Hercules server to handle coordinate snapping and i-frames without rubber-banding.*
   - **Campfire / Short Rest System:** A deployable physical campfire where the party can sit to rapidly recover HP/SP, serving as a roleplay anchor.
-  - **Dynamic Bestiary Journal:** A monster manual that unlocks exact HP, weaknesses, and lore for a creature only after fighting it or passing a DM Lore check.
+  - **Dynamic Bestiary Journal:** A monster manual that unlocks exact HP, weaknesses, and lore for a creature only after fighting it or passing a DM Lore check. See `specs/bestiary-journal.md`.
   - **Action Camera (WASD Movement):** A toggle to lock the camera third-person, mapping movement to WASD and auto-attacks to left-click, completely removing the point-and-click requirement.
+  - Detailed architecture in [plans/modern-mechanics.md](plans/modern-mechanics.md) §1 (plus related sections for dodge, gamepad, etc.).
 
 ### 8.1 Server-side dependencies
 

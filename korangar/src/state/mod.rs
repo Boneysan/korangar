@@ -5,6 +5,7 @@ pub mod hotbar;
 pub mod inventory;
 pub mod localization;
 pub mod skills;
+pub mod status_effects;
 pub mod theme;
 
 use std::cell::Cell;
@@ -55,6 +56,7 @@ use crate::state::character_slots::CharacterSlots;
 use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
 use crate::state::skills::SkillTree;
+use crate::state::status_effects::StatusEffects;
 use crate::state::theme::WorldTheme;
 #[cfg(feature = "debug")]
 use crate::world::Object;
@@ -178,6 +180,9 @@ pub struct ClientState {
     inventory: Inventory,
     /// Player skill tree.
     skill_tree: SkillTree,
+    /// Active status effects (buffs / debuffs) for the local player.
+    #[hidden_element]
+    status_effects: StatusEffects,
 
     /// List of all available character servers.
     character_servers: Vec<CharacterServerInformation>,
@@ -331,6 +336,7 @@ impl ClientState {
             let hotbar = Hotbar::default();
             let inventory = Inventory::default();
             let skill_tree = SkillTree::default();
+            let status_effects = StatusEffects::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
 
@@ -400,6 +406,7 @@ impl ClientState {
             hotbar,
             inventory,
             skill_tree,
+            status_effects,
             character_servers,
             character_slots,
             currently_deleting,

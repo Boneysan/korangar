@@ -71,6 +71,8 @@ official Windows client for day-to-day play and development.
 
 ## 3. Client Architecture (Korangar)
 
+See also [docs/CLIENT_SYSTEMS_OVERVIEW.md](CLIENT_SYSTEMS_OVERVIEW.md) and the full technical reference [docs/PACKET_EVENTS_CATALOG.md](PACKET_EVENTS_CATALOG.md) (NetworkEvent catalogue, every producing packet + verbatim handlers/structs, flows into world/particles/state/UI, DM chat + quest effect integration, extension guide).
+
 Korangar is a Cargo workspace. Crates prefixed `ragnarok-` are engine-independent
 libraries; crates prefixed `korangar-` implement the client.
 
@@ -90,7 +92,7 @@ libraries; crates prefixed `korangar-` implement the client.
 
 ### 3.1 Key runtime facts
 - Requires **Rust nightly** (`rust-toolchain.toml`) and `slangc` for shader compilation.
-- Rendering via wgpu (Vulkan on Linux/WSL, Metal/DX12 elsewhere).
+- Rendering via wgpu (Vulkan on Linux/WSL, Metal/DX12 elsewhere). See [docs/GRAPHICS_PIPELINE.md](GRAPHICS_PIPELINE.md) for a full overview of the multi-pass architecture, bind groups, light culling, shadows, and the forward lighting pipeline.
 - Assets: Korangar expects `data.grf` and `rdata.grf` in `korangar/korangar/`
   by default; this project also needs `renewal2021.grf` and `resources2021.grf`
   registered in the archive settings. Built-in overrides live in
@@ -145,6 +147,7 @@ obtained (WARP supports it). See [PROJECT_PLAN.md](PROJECT_PLAN.md) D1/D5.
 **Decision:** Confirmed Option A (2026-07-05). Rebuilding Hercules with `--enable-packetver=20220406` is the path of least resistance since Korangar strictly implements `20220406`.
 
 **Additional protocol notes:**
+- The complete packet-to-`NetworkEvent` surface (including chat family used for DM commands and `QuestEffectPacket` for hazards) is catalogued in `docs/PACKET_EVENTS_CATALOG.md`.
 - **Disable packet obfuscation** — Korangar does not implement it, so it must be
   off or the map-server connection fails. **Currently `packet_obfuscation: 2`
   (always on) in `conf/map/battle/client.conf`, with no override** — set

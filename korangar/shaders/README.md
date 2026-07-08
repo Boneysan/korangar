@@ -7,3 +7,5 @@ runtime. These shaders are compiled with `slangc` by the `build.rs` script:
   in the root of modules, but can be split into sub-folder / sub-files using `__include` inside the main module file.
 - `passes`: The actual shader files that will be compiled to SPIR-V file and loaded by WGPU at runtime. Each of our
   passes has its own sub-folder, with all shaders of the pipelines in their own file.
+
+See the top-level [docs/GRAPHICS_PIPELINE.md](../docs/GRAPHICS_PIPELINE.md) for the full rendering architecture (passes, bind groups, light culling, SDSM, forward lighting evaluation, etc.).

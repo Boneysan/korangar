@@ -505,7 +505,13 @@ where
         heal_amount: packet.heal_amount as usize,
     })?;
     packet_handler.register_noop::<DisplayPlayerHealEffect>()?;
-    packet_handler.register_noop::<StatusChangePacket>()?;
+    packet_handler.register(|packet: StatusChangePacket| NetworkEvent::StatusChange {
+        entity_id: packet.entity_id,
+        index: packet.index,
+        gained: packet.state == 1,
+        duration_ms: packet.duration_in_milliseconds,
+        remaining_ms: packet.remaining_in_milliseconds,
+    })?;
     packet_handler.register_noop::<QuestNotificationPacket1>()?;
     packet_handler.register_noop::<QuestNotificationPacket4>()?;
     packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;

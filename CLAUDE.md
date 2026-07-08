@@ -1,7 +1,15 @@
 # Korangar — agent notes
 
 Rust Ragnarok Online client (wgpu 29 + winit). This fork's goal is a usable
-custom UI for a friends group + DM campaign; see `docs/` for design docs.
+custom UI for a friends group + DM campaign.
+
+**Start here for all documentation:**
+- [docs/README.md](docs/README.md) — Master index/hub with categories, search guidance, and links to everything.
+- Then `docs/CLIENT_SYSTEMS_OVERVIEW.md` and `docs/SOFTWARE_DESIGN.md` for architecture.
+
+See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
+
+**DM Data Assets (key for upcoming E7 work)**: See new `docs/DM_DATA_GUIDE.md` for how bestiary.json, items.json, cards.json integrate with bestiary journal, encounters, rewards, loot tables. Codex should use these for data-driven DM features.
 
 ## Running on this machine (WSL2)
 

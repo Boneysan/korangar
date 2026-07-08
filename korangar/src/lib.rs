@@ -919,6 +919,11 @@ impl Client {
         // highlighted.
         *self.client_state.follow_mut(client_state().skill_tree_window().highlighted_skill()) = None;
 
+        // Tick status effect timers so tiles expire.
+        self.client_state
+            .follow_mut(client_state().status_effects())
+            .tick(std::time::Instant::now());
+
         // Apply the game state after all the UI work + rendering is done.
         if let Err(_errors) = self.client_state.apply() {
             #[cfg(feature = "debug")]
@@ -1322,6 +1327,8 @@ impl Client {
                         client_state().hotbar().skills(),
                         client_state().skill_tree().skills(),
                     ));
+                    self.interface
+                        .open_window(StatusBarWindow::new(client_state().status_effects()));
 
                     // Put the dialog system in a well-defined state.
                     self.client_state.follow_mut(client_state().dialog_window()).end();
@@ -1358,7 +1365,7 @@ impl Client {
 
                         let entity_id = npc.get_entity_id();
                         let entity_type = npc.get_entity_type();
-                        let job_id = npc.get_job_id();
+                        let _job_id = npc.get_job_id();
                         let entity_part_files = npc.get_entity_part_files(&self.library);
 
                         #[cfg(feature = "debug")]
@@ -1557,6 +1564,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).truncate(1);
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    self.client_state.follow_mut(client_state().status_effects()).clear();
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
 
                     // Close any remaining dialogs.
@@ -1677,6 +1685,28 @@ impl Client {
                     {
                         self.particle_holder
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), heal_amount.to_string())));
+                    }
+                }
+                NetworkEvent::StatusChange {
+                    entity_id,
+                    index,
+                    gained,
+                    duration_ms,
+                    remaining_ms,
+                } => {
+                    // Only track status effects on the local player for this slice (see buff-bar-slice.md).
+                    let local_id = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .first()
+                        .map(|e| e.get_entity_id());
+                    if Some(entity_id) == local_id {
+                        let effects = self.client_state.follow_mut(client_state().status_effects());
+                        if gained {
+                            effects.apply(index, duration_ms, remaining_ms);
+                        } else {
+                            effects.remove(index);
+                        }
                     }
                 }
                 NetworkEvent::UpdateEntityHealth {
