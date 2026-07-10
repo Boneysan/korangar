@@ -5,11 +5,11 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
-use ragnarok_packets::{Friend, FriendPathExt};
 use rust_state::{ManuallyAssertExt, Path, RustState, State, VecIndexExt};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
+use crate::state::friends::{FriendEntry, FriendEntryPathExt};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
@@ -35,7 +35,7 @@ impl<A> FriendList<A> {
 
 impl<A> Element<ClientState> for FriendList<A>
 where
-    A: Path<ClientState, Vec<Friend>>,
+    A: Path<ClientState, Vec<FriendEntry>>,
 {
     type LayoutInfo = ();
 
@@ -58,14 +58,16 @@ where
                 Ordering::Greater => {
                     for index in self.elements.len()..friend_list.len() {
                         let friend_path = self.friend_list_path.index(index).manually_asserted();
-                        let name_path = friend_path.name();
+                        let label_path = friend_path.display_label();
 
                         self.elements.push(ErasedElement::new(collapsible! {
-                            text: name_path,
+                            text: label_path,
                             children: button! {
                                 text: client_state().localization().remove_button_text(),
                                 event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                    let &Friend { account_id, character_id, .. } = state.get(&friend_path);
+                                    let friend = state.get(&friend_path);
+                                    let account_id = friend.account_id();
+                                    let character_id = friend.character_id();
 
                                     queue.queue(
                                         InputEvent::RemoveFriend { account_id, character_id }
@@ -121,7 +123,7 @@ impl<A, B> FriendListWindow<A, B> {
 impl<A, B> CustomWindow<ClientState> for FriendListWindow<A, B>
 where
     A: Path<ClientState, FriendListWindowState>,
-    B: Path<ClientState, Vec<Friend>>,
+    B: Path<ClientState, Vec<FriendEntry>>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::FriendList)

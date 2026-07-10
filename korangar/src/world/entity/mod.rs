@@ -38,8 +38,9 @@ use crate::world::{
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
+use crate::Color;
 #[cfg(feature = "debug")]
-use crate::{Buffer, Color, ModelVertex};
+use crate::{Buffer, ModelVertex};
 
 const MALE_HAIR_LOOKUP: &[usize] = &[2, 2, 1, 7, 5, 4, 3, 6, 8, 9, 10, 12, 11];
 const FEMALE_HAIR_LOOKUP: &[usize] = &[2, 2, 4, 7, 1, 5, 3, 6, 12, 10, 9, 11, 8];
@@ -949,6 +950,10 @@ pub struct Player {
     pub next_base_experience: u64,
     /// Job experience required for the next job level.
     pub next_job_experience: u64,
+    /// When set, a cast bar is drawn until this server client-tick.
+    pub cast_ends_at: Option<ClientTick>,
+    /// Total cast duration in milliseconds (for bar fill ratio).
+    pub cast_total_ms: u32,
 }
 
 impl Player {
@@ -1013,7 +1018,35 @@ impl Player {
             job_experience: 0,
             next_base_experience: 0,
             next_job_experience: 0,
+            cast_ends_at: None,
+            cast_total_ms: 0,
         }
+    }
+
+    pub fn start_cast(&mut self, cast_ms: u32, now: ClientTick) {
+        if cast_ms == 0 {
+            self.cast_ends_at = None;
+            self.cast_total_ms = 0;
+            return;
+        }
+        self.cast_total_ms = cast_ms;
+        self.cast_ends_at = Some(ClientTick(now.0.saturating_add(cast_ms)));
+    }
+
+    pub fn clear_cast(&mut self) {
+        self.cast_ends_at = None;
+        self.cast_total_ms = 0;
+    }
+
+    /// Remaining cast time progress as `(remaining, total)` for the cast bar.
+    pub fn cast_bar(&self, now: ClientTick) -> Option<(f32, f32)> {
+        let ends = self.cast_ends_at?;
+        let total = self.cast_total_ms.max(1) as f32;
+        if ends.0 <= now.0 {
+            return None;
+        }
+        let remaining = (ends.0 - now.0) as f32;
+        Some((remaining, total))
     }
 
     pub fn get_common(&self) -> &Common {
@@ -1089,7 +1122,14 @@ impl Player {
         self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
     }
 
-    pub fn render_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    pub fn render_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        client_tick: ClientTick,
+    ) {
         let clip_space_position = camera.view_projection_matrix() * self.common.world_position.to_homogeneous();
         let screen_position = camera.clip_to_screen_space(clip_space_position);
         let final_position = ScreenPosition {
@@ -1099,8 +1139,16 @@ impl Player {
 
         let bar_width = theme.status_bar.player_bar_width;
         let gap = theme.status_bar.gap;
-        let total_height =
-            theme.status_bar.health_height + theme.status_bar.spell_point_height + theme.status_bar.activity_point_height + gap * 2.0;
+        let cast_height = if self.cast_bar(client_tick).is_some() {
+            theme.status_bar.activity_point_height
+        } else {
+            0.0
+        };
+        let total_height = theme.status_bar.health_height
+            + theme.status_bar.spell_point_height
+            + theme.status_bar.activity_point_height
+            + cast_height
+            + gap * (if cast_height > 0.0 { 3.0 } else { 2.0 });
 
         let mut offset = 0.0;
 
@@ -1149,6 +1197,22 @@ impl Player {
             self.maximum_activity_points as f32,
             self.activity_points as f32,
         );
+
+        if let Some((remaining, total)) = self.cast_bar(client_tick) {
+            offset += gap + theme.status_bar.activity_point_height;
+            // Fill grows as cast completes (elapsed = total - remaining).
+            let elapsed = (total - remaining).max(0.0);
+            renderer.render_bar(
+                final_position + ScreenPosition::only_top(offset),
+                ScreenSize {
+                    width: bar_width,
+                    height: theme.status_bar.activity_point_height,
+                },
+                Color::rgb_u8(255, 210, 60),
+                total,
+                elapsed,
+            );
+        }
     }
 
     pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
@@ -1239,6 +1303,45 @@ impl Npc {
                 height: theme.status_bar.enemy_health_height,
             },
             theme.status_bar.enemy_health_color,
+            self.common.maximum_health_points as f32,
+            self.common.health_points as f32,
+        );
+    }
+
+    /// Ally / party-member HP bar (other player entities appear as `Npc` with `EntityType::Player`).
+    pub fn render_ally_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+        if self.common.entity_type != EntityType::Player {
+            return;
+        }
+        if self.common.maximum_health_points == 0 {
+            return;
+        }
+
+        let clip_space_position = camera.view_projection_matrix() * self.common.world_position.to_homogeneous();
+        let screen_position = camera.clip_to_screen_space(clip_space_position);
+        let final_position = ScreenPosition {
+            left: screen_position.x * window_size.width,
+            top: screen_position.y * window_size.height + 5.0,
+        };
+
+        let bar_width = theme.status_bar.enemy_bar_width;
+
+        renderer.render_rectangle(
+            final_position - theme.status_bar.border_size - ScreenSize::only_width(bar_width / 2.0),
+            ScreenSize {
+                width: bar_width,
+                height: theme.status_bar.enemy_health_height,
+            } + (theme.status_bar.border_size * 2.0),
+            theme.status_bar.background_color,
+        );
+
+        renderer.render_bar(
+            final_position,
+            ScreenSize {
+                width: bar_width,
+                height: theme.status_bar.enemy_health_height,
+            },
+            Color::rgb_u8(80, 220, 120),
             self.common.maximum_health_points as f32,
             self.common.health_points as f32,
         );
@@ -1483,10 +1586,24 @@ impl Entity {
         self.get_common().render_marker(renderer, camera, marker_identifier, hovered);
     }
 
-    pub fn render_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    pub fn render_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        client_tick: ClientTick,
+    ) {
         match self {
-            Self::Player(player) => player.render_status(renderer, camera, theme, window_size),
+            Self::Player(player) => player.render_status(renderer, camera, theme, window_size, client_tick),
             Self::Npc(npc) => npc.render_status(renderer, camera, theme, window_size),
+        }
+    }
+
+    pub fn render_ally_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+        match self {
+            Self::Player(_) => {}
+            Self::Npc(npc) => npc.render_ally_status(renderer, camera, theme, window_size),
         }
     }
 }

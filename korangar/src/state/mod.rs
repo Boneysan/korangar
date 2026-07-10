@@ -4,6 +4,7 @@ pub mod character_slots;
 pub mod hotbar;
 pub mod inventory;
 pub mod localization;
+pub mod friends;
 pub mod party;
 pub mod skill_cooldowns;
 pub mod skills;
@@ -30,7 +31,7 @@ use korangar_networking::{MessageColor, SellItem, ShopItem};
 use localization::Localization;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::{EffectSource, LightSource, MapData, SoundSource};
-use ragnarok_packets::{CharacterId, CharacterServerInformation, EntityId, Friend};
+use ragnarok_packets::{CharacterId, CharacterServerInformation, EntityId};
 #[cfg(feature = "debug")]
 use rust_state::{ManuallyAssertExt, VecIndexExt};
 use rust_state::{Path, PathExt, RustState, Selector};
@@ -58,6 +59,7 @@ use crate::settings::{
 use crate::state::character_slots::CharacterSlots;
 use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
+use crate::state::friends::FriendEntry;
 use crate::state::party::PartyState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
@@ -159,8 +161,8 @@ pub struct ClientState {
 
     /// List of all received chat messages.
     chat_messages: Vec<ChatMessage>,
-    /// List of all friends.
-    friend_list: Vec<Friend>,
+    /// List of all friends (with online presence).
+    friend_list: Vec<FriendEntry>,
     /// Current party roster and pending party invitation state.
     #[hidden_element]
     party_state: PartyState,

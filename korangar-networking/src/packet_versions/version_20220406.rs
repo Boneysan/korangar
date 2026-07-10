@@ -222,7 +222,10 @@ where
             color,
         }
     })?;
-    packet_handler.register_noop::<DisplayEmotionPacket>()?;
+    packet_handler.register(|packet: DisplayEmotionPacket| NetworkEvent::DisplayEmotion {
+        entity_id: packet.entity_id,
+        emotion: packet.emotion,
+    })?;
     packet_handler.register(|packet: EntityMovePacket| {
         let EntityMovePacket {
             entity_id,
@@ -831,8 +834,20 @@ where
             color: MessageColor::Error,
         },
     })?;
-    packet_handler.register_noop::<UseSkillSuccessPacket>()?;
-    packet_handler.register_noop::<UseSkillAckPacket>()?;
+    packet_handler.register(|packet: UseSkillSuccessPacket| {
+        (packet.delay_time > 0).then_some(NetworkEvent::SkillCast {
+            source_entity_id: packet.source_entity,
+            skill_id: packet.skill_id,
+            cast_ms: packet.delay_time,
+        })
+    })?;
+    packet_handler.register(|packet: UseSkillAckPacket| {
+        (packet.delay_time > 0).then_some(NetworkEvent::SkillCast {
+            source_entity_id: packet.source_entity,
+            skill_id: packet.skill_id,
+            cast_ms: packet.delay_time,
+        })
+    })?;
     // ZC_ACK_TOUSESKILL is only sent by Hercules on skill *failure* (flag 0),
     // including gameplay rejections like "party creation requires Basic Skill
     // 7". Without this the rejection is completely silent.
@@ -868,7 +883,12 @@ where
     packet_handler.register(|packet: FriendListPacket| NetworkEvent::SetFriendList {
         friend_list: packet.friend_list,
     })?;
-    packet_handler.register_noop::<FriendOnlineStatusPacket>()?;
+    packet_handler.register(|packet: FriendOnlineStatusPacket| NetworkEvent::FriendOnlineStatus {
+        account_id: packet.account_id,
+        character_id: packet.character_id,
+        online: matches!(packet.state, OnlineState::Online),
+        name: packet.name,
+    })?;
     packet_handler.register(|packet: FriendRequestPacket| NetworkEvent::FriendRequest {
         requestee: packet.requestee,
     })?;

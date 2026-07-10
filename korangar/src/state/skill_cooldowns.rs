@@ -4,12 +4,25 @@ use korangar_interface::element::StateElement;
 use ragnarok_packets::{ClientTick, SkillId};
 use rust_state::RustState;
 
-#[derive(Clone, Debug, Default, RustState, StateElement)]
+#[derive(Clone, Debug, RustState, StateElement)]
 pub struct SkillCooldowns {
     /// skill_id → server client-tick when the skill is usable again.
     #[hidden_element]
     entries: Vec<(SkillId, ClientTick)>,
+    /// Last server tick used by [`Self::tick`] (for UI that cannot pass a tick).
+    #[hidden_element]
+    last_now: ClientTick,
     display_text: String,
+}
+
+impl Default for SkillCooldowns {
+    fn default() -> Self {
+        Self {
+            entries: Vec::new(),
+            last_now: ClientTick(0),
+            display_text: String::new(),
+        }
+    }
 }
 
 impl SkillCooldowns {
@@ -19,7 +32,7 @@ impl SkillCooldowns {
         } else {
             self.entries.push((skill_id, until));
         }
-        self.rebuild_display();
+        self.rebuild_display_with_now(self.last_now);
     }
 
     pub fn clear(&mut self) {
@@ -29,11 +42,10 @@ impl SkillCooldowns {
 
     /// Drop expired cooldowns and refresh the HUD line.
     pub fn tick(&mut self, now: ClientTick) {
+        self.last_now = now;
         let before = self.entries.len();
         self.entries.retain(|(_, until)| until.0 > now.0);
-        if self.entries.len() != before {
-            self.rebuild_display_with_now(now);
-        } else if !self.entries.is_empty() {
+        if self.entries.len() != before || !self.entries.is_empty() {
             self.rebuild_display_with_now(now);
         }
     }
@@ -43,6 +55,12 @@ impl SkillCooldowns {
             .iter()
             .find(|(id, _)| *id == skill_id)
             .and_then(|(_, until)| until.0.checked_sub(now.0))
+            .filter(|ms| *ms > 0)
+    }
+
+    /// Remaining ms using the tick from the last [`Self::tick`] call.
+    pub fn remaining_ms_ui(&self, skill_id: SkillId) -> Option<u32> {
+        self.remaining_ms(skill_id, self.last_now)
     }
 
     pub fn display_text(&self) -> &str {
@@ -51,20 +69,6 @@ impl SkillCooldowns {
 
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
-    }
-
-    fn rebuild_display(&mut self) {
-        if self.entries.is_empty() {
-            self.display_text.clear();
-            return;
-        }
-        // Absolute ticks until we know "now"; tick() refreshes with deltas.
-        let parts: Vec<_> = self
-            .entries
-            .iter()
-            .map(|(id, until)| format!("skill {} until {}", id.0, until.0))
-            .collect();
-        self.display_text = format!("CD: {}", parts.join(" | "));
     }
 
     fn rebuild_display_with_now(&mut self, now: ClientTick) {
@@ -76,7 +80,7 @@ impl SkillCooldowns {
             .entries
             .iter()
             .filter_map(|(id, until)| {
-                let remain = until.0.checked_sub(now.0)?;
+                let remain = until.0.checked_sub(now.0).filter(|ms| *ms > 0)?;
                 Some(format!("#{} {:.1}s", id.0, remain as f32 / 1000.0))
             })
             .collect();
@@ -107,6 +111,7 @@ mod tests {
         cds.tick(ClientTick(1000));
         assert!(cds.display_text().contains("#28"));
         assert!(cds.display_text().contains("4.0s"));
+        assert_eq!(cds.remaining_ms_ui(SkillId(28)), Some(4000));
 
         cds.tick(ClientTick(5000));
         assert!(cds.is_empty());

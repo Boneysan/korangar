@@ -381,6 +381,25 @@ pub enum NetworkEvent {
         experience_type: ExperienceType,
         experience_source: ExperienceSource,
     },
+    /// Friend online / offline presence (`ZC_FRIENDS_STATE` 0x0206).
+    FriendOnlineStatus {
+        account_id: AccountId,
+        character_id: CharacterId,
+        online: bool,
+        name: String,
+    },
+    /// Entity emote balloon (`ZC_EMOTION` 0x00C0).
+    DisplayEmotion {
+        entity_id: EntityId,
+        emotion: u8,
+    },
+    /// Skill cast bar / wind-up (`ZC_USESKILL_ACK` / success 0x0B1A / 0x07FB).
+    SkillCast {
+        source_entity_id: EntityId,
+        skill_id: SkillId,
+        /// Cast duration in milliseconds (`delay_time`).
+        cast_ms: u32,
+    },
 }
 
 /// New-type so we can implement some `From` traits. This will help when

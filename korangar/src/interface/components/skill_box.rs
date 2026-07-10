@@ -14,7 +14,7 @@ use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
 use crate::state::skills::{LearnableSkill, LearnedSkill};
 use crate::state::theme::{GlobalThemePathExt, InterfaceThemePathExt, SkillTreeThemePathExt};
-use crate::state::{ClientState, client_theme};
+use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
 
 struct LevelDisplay {
     maximum_level: SkillLevel,
@@ -36,6 +36,37 @@ impl LevelDisplay {
             self.string = Some(new_maximum_level.0.to_string());
             self.maximum_level = new_maximum_level;
         }
+    }
+}
+
+/// Cached remaining cooldown label for layout (needs a stable `&str` lifetime).
+#[derive(Default)]
+struct CooldownDisplay {
+    /// Whole tenths of a second so we do not reformat every frame for tiny drift.
+    last_tenths: Option<u32>,
+    string: Option<String>,
+}
+
+impl CooldownDisplay {
+    fn update(&mut self, remaining_ms: Option<u32>) {
+        let Some(ms) = remaining_ms else {
+            self.last_tenths = None;
+            self.string = None;
+            return;
+        };
+        let tenths = (ms / 100).max(1);
+        if self.last_tenths != Some(tenths) {
+            self.last_tenths = Some(tenths);
+            self.string = Some(if tenths >= 10 {
+                format!("{}.{}", tenths / 10, tenths % 10)
+            } else {
+                format!("0.{}", tenths)
+            });
+        }
+    }
+
+    fn as_str(&self) -> Option<&str> {
+        self.string.as_deref()
     }
 }
 
@@ -93,6 +124,7 @@ pub struct SkillBox<A, B> {
     learned_skill_path: B,
     handler: SkillBoxHandler<A>,
     level_display: LevelDisplay,
+    cooldown_display: CooldownDisplay,
     source: SkillSource,
 }
 
@@ -110,6 +142,7 @@ where
             learned_skill_path,
             handler: SkillBoxHandler::new(learnable_skill_path, source),
             level_display: LevelDisplay::default(),
+            cooldown_display: CooldownDisplay::default(),
             source,
         }
     }
@@ -133,6 +166,12 @@ where
 
             if let Some(learnable_skill) = state.try_get(&self.learnable_skill_path) {
                 self.level_display.update(learnable_skill.maximum_level);
+                let remaining = state
+                    .get(&client_state().skill_cooldowns())
+                    .remaining_ms_ui(learnable_skill.skill_id);
+                self.cooldown_display.update(remaining);
+            } else {
+                self.cooldown_display.update(None);
             }
 
             Self::LayoutInfo { area }
@@ -197,18 +236,43 @@ where
         }
 
         if let Some(learnable_skill) = state.try_get(&self.learnable_skill_path) {
-            let color = match state
-                .try_get(&self.learned_skill_path)
-                .is_some_and(|learned_skill| learned_skill.skill_level.0 >= learnable_skill.maximum_level.0)
-            {
-                true => Color::WHITE,
-                false => *state.get(&client_theme().skill_tree().unlearned_skill_color()),
+            let on_cooldown = self.cooldown_display.as_str().is_some();
+
+            let color = match (
+                on_cooldown,
+                state
+                    .try_get(&self.learned_skill_path)
+                    .is_some_and(|learned_skill| learned_skill.skill_level.0 >= learnable_skill.maximum_level.0),
+            ) {
+                (true, _) => Color::rgb_u8(90, 90, 90),
+                (false, true) => Color::WHITE,
+                (false, false) => *state.get(&client_theme().skill_tree().unlearned_skill_color()),
             };
 
             if let Some(actions) = &learnable_skill.actions
                 && let Some(sprite) = &learnable_skill.sprite
             {
                 layout.add_sprite(layout_info.area, actions, sprite, &learnable_skill.animation_state, color, 1.0);
+            }
+
+            if let Some(cd_text) = self.cooldown_display.as_str() {
+                layout.add_rectangle(
+                    layout_info.area,
+                    CornerDiameter::uniform(20.0),
+                    Color::rgba_u8(0, 0, 0, 140),
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+                layout.add_text(
+                    layout_info.area,
+                    cd_text,
+                    FontSize(14.0),
+                    Color::rgb_u8(255, 220, 100),
+                    Color::rgb_u8(255, 160, 60),
+                    HorizontalAlignment::Center { offset: 0.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
             }
 
             if is_hovered {

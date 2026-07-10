@@ -1632,6 +1632,9 @@ impl Client {
                     self.client_state.follow_mut(client_state().ground_items()).clear();
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
+                    if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        player.clear_cast();
+                    }
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
 
                     // Close any remaining dialogs.
@@ -1967,12 +1970,30 @@ impl Client {
                     self.interface.open_window(FriendRequestWindow::new(requestee));
                 }
                 NetworkEvent::FriendRemoved { account_id, character_id } => {
-                    self.client_state
-                        .follow_mut(client_state().friend_list())
-                        .retain(|friend| !(friend.account_id == account_id && friend.character_id == character_id));
+                    self.client_state.follow_mut(client_state().friend_list()).retain(|friend| {
+                        !(friend.account_id() == account_id && friend.character_id() == character_id)
+                    });
                 }
                 NetworkEvent::FriendAdded { friend } => {
-                    self.client_state.follow_mut(client_state().friend_list()).push(friend);
+                    self.client_state
+                        .follow_mut(client_state().friend_list())
+                        .push(crate::state::friends::FriendEntry::from_friend(friend, true));
+                }
+                NetworkEvent::FriendOnlineStatus {
+                    character_id,
+                    online,
+                    name,
+                    ..
+                } => {
+                    let list = self.client_state.follow_mut(client_state().friend_list());
+                    if let Some(entry) = list.iter_mut().find(|f| f.character_id() == character_id) {
+                        entry.set_online(online);
+                    }
+                    let status = if online { "online" } else { "offline" };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Friend {name} is now {status}."),
+                        MessageColor::Information,
+                    ));
                 }
                 NetworkEvent::CreatePartyResult { result } => {
                     let message = match result {
@@ -2210,7 +2231,35 @@ impl Client {
                     self.effect_holder.remove_unit(entity_id);
                 }
                 NetworkEvent::SetFriendList { friend_list } => {
-                    *self.client_state.follow_mut(client_state().friend_list()) = friend_list;
+                    *self.client_state.follow_mut(client_state().friend_list()) = friend_list
+                        .into_iter()
+                        .map(|friend| crate::state::friends::FriendEntry::from_friend(friend, false))
+                        .collect();
+                }
+                NetworkEvent::DisplayEmotion { entity_id, emotion } => {
+                    let name = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                        .and_then(|entity| entity.get_details())
+                        .map(|n| n.split('#').next().unwrap_or("Someone").to_owned())
+                        .unwrap_or_else(|| "Someone".to_owned());
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("{name} uses emotion {emotion}."),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::SkillCast {
+                    source_entity_id,
+                    cast_ms,
+                    ..
+                } => {
+                    if let Some(player) = self.client_state.try_follow_mut(this_player())
+                        && player.get_common().entity_id == source_entity_id
+                    {
+                        player.start_cast(cast_ms, client_tick);
+                    }
                 }
                 NetworkEvent::SetHotkeyData { tab, hotkeys } => {
                     // FIX: Since we only have one hotbar at the moment, we ignore
@@ -2866,6 +2915,18 @@ impl Client {
                     // Sit/stand toggle — works from chat when Insert is awkward under WSL.
                     if matches!(text.as_str(), "/sit" | "/stand") {
                         toggle_sit = true;
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/emotion ").or_else(|| text.strip_prefix("/e ")) {
+                        if let Ok(emotion) = rest.trim().parse::<u8>() {
+                            let _ = self.networking_system.request_emotion(emotion);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /emotion <id>  (or /e <id>)".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
                         continue;
                     }
 
@@ -4678,7 +4739,32 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 self.current_camera,
                 self.client_state.follow(client_state().world_theme()),
                 self.screen_size,
+                self.client_tick,
             );
+        }
+
+        // Always-on green HP bars for party members visible on this map.
+        {
+            let party = self.client_state.follow(client_state().party_state());
+            let party_account_ids: Vec<_> = party
+                .members()
+                .iter()
+                .filter(|m| m.online())
+                .map(|m| m.account_id().0)
+                .collect();
+            if !party_account_ids.is_empty() {
+                let theme = self.client_state.follow(client_state().world_theme());
+                for entity in self.client_state.follow(client_state().entities()).iter().skip(1) {
+                    if party_account_ids.contains(&entity.get_entity_id().0) {
+                        entity.render_ally_status(
+                            self.middle_interface_renderer,
+                            self.current_camera,
+                            theme,
+                            self.screen_size,
+                        );
+                    }
+                }
+            }
         }
 
         if let Some(BufferedAction::AttackEntity { entity_id }) = self.buffered_action
@@ -4693,6 +4779,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 self.current_camera,
                 self.client_state.follow(client_state().world_theme()),
                 self.screen_size,
+                self.client_tick,
             );
         }
 
@@ -4729,6 +4816,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                                 self.current_camera,
                                 self.client_state.follow(client_state().world_theme()),
                                 self.screen_size,
+                                self.client_tick,
                             );
                         }
 
