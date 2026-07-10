@@ -939,6 +939,16 @@ pub struct Player {
     pub critical_weight_percent: u32,
     /// Melee attack range from `ZC_ATTACK_RANGE` (tiles).
     pub attack_range: AttackRange,
+    /// Wallet zeny from `ZC_STATUS` / `StatType::Zeny`.
+    pub zeny: u32,
+    /// Current base experience points.
+    pub base_experience: u64,
+    /// Current job experience points.
+    pub job_experience: u64,
+    /// Base experience required for the next base level.
+    pub next_base_experience: u64,
+    /// Job experience required for the next job level.
+    pub next_job_experience: u64,
 }
 
 impl Player {
@@ -998,6 +1008,11 @@ impl Player {
             // Official default natural-heal weight rate is 50%.
             critical_weight_percent: 50,
             attack_range: AttackRange(1),
+            zeny: 0,
+            base_experience: 0,
+            job_experience: 0,
+            next_base_experience: 0,
+            next_job_experience: 0,
         }
     }
 
@@ -1055,7 +1070,11 @@ impl Player {
             StatType::SkillPoints(skill_points) => self.skill_points = skill_points,
             StatType::Weight(value) => self.weight = value,
             StatType::MaximumWeight(value) => self.maximum_weight = value,
-            // Zeny / experience are tracked elsewhere for now (character overview later).
+            StatType::Zeny(value) => self.zeny = value,
+            StatType::BaseExperience(value) => self.base_experience = value,
+            StatType::JobExperience(value) => self.job_experience = value,
+            StatType::NextBaseExperience(value) => self.next_base_experience = value,
+            StatType::NextJobExperience(value) => self.next_job_experience = value,
             _ => {}
         }
     }

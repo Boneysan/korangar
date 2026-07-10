@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use korangar_interface::element::StateElement;
+use ragnarok_packets::{ClientTick, ColorRGBA, MarkerType};
 use rust_state::RustState;
 
 use crate::graphics::Texture;
@@ -16,6 +17,20 @@ pub struct MinimapPoi {
     #[allow(dead_code)]
     pub name: String,
     pub texture: Option<Arc<Texture>>,
+}
+
+/// Compass / NPC mark from `ZC_COMPASS` / `MarkMinimapPosition` (0x0144).
+#[derive(Clone, Debug)]
+pub struct DynamicMinimapMarker {
+    pub id: u8,
+    pub x: f32,
+    pub y: f32,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
+    /// When set, the marker is removed once `client_tick` reaches this value.
+    pub expires_at: Option<ClientTick>,
 }
 
 /// Client-side minimap data for the current map.
@@ -42,6 +57,9 @@ pub struct MinimapState {
     /// Towninfo facility markers for the current map.
     #[hidden_element]
     pois: Vec<MinimapPoi>,
+    /// Compass / quest-style dynamic markers (0x0144).
+    #[hidden_element]
+    dynamic_markers: Vec<DynamicMinimapMarker>,
 }
 
 impl MinimapState {
@@ -52,6 +70,7 @@ impl MinimapState {
         self.texture = None;
         self.player_marker = None;
         self.pois.clear();
+        self.dynamic_markers.clear();
     }
 
     pub fn set_map(
@@ -69,6 +88,8 @@ impl MinimapState {
         self.texture = texture;
         self.player_marker = player_marker;
         self.pois = pois;
+        // Compass marks are map-local.
+        self.dynamic_markers.clear();
     }
 
     pub fn map_name(&self) -> &str {
@@ -93,5 +114,140 @@ impl MinimapState {
 
     pub fn pois(&self) -> &[MinimapPoi] {
         &self.pois
+    }
+
+    pub fn dynamic_markers(&self) -> &[DynamicMinimapMarker] {
+        &self.dynamic_markers
+    }
+
+    /// Apply a `MarkMinimapPosition` (0x0144) packet.
+    pub fn apply_mark(
+        &mut self,
+        marker_type: MarkerType,
+        position: (u32, u32),
+        id: u8,
+        color: ColorRGBA,
+        now: ClientTick,
+    ) {
+        match marker_type {
+            MarkerType::RemoveMark => {
+                self.dynamic_markers.retain(|m| m.id != id);
+            }
+            MarkerType::DisplayFor15Seconds => {
+                self.upsert_marker(DynamicMinimapMarker {
+                    id,
+                    x: position.0 as f32,
+                    y: position.1 as f32,
+                    red: color.red,
+                    green: color.green,
+                    blue: color.blue,
+                    alpha: color.alpha,
+                    expires_at: Some(ClientTick(now.0.saturating_add(15_000))),
+                });
+            }
+            MarkerType::DisplayUntilLeave => {
+                self.upsert_marker(DynamicMinimapMarker {
+                    id,
+                    x: position.0 as f32,
+                    y: position.1 as f32,
+                    red: color.red,
+                    green: color.green,
+                    blue: color.blue,
+                    alpha: color.alpha,
+                    expires_at: None,
+                });
+            }
+        }
+    }
+
+    fn upsert_marker(&mut self, marker: DynamicMinimapMarker) {
+        if let Some(existing) = self.dynamic_markers.iter_mut().find(|m| m.id == marker.id) {
+            *existing = marker;
+        } else {
+            self.dynamic_markers.push(marker);
+        }
+    }
+
+    /// Drop timed compass markers that have expired.
+    pub fn tick_markers(&mut self, now: ClientTick) {
+        self.dynamic_markers
+            .retain(|m| m.expires_at.map(|until| until.0 > now.0).unwrap_or(true));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn timed_mark_expires() {
+        let mut state = MinimapState::default();
+        state.apply_mark(
+            MarkerType::DisplayFor15Seconds,
+            (10, 20),
+            1,
+            ColorRGBA {
+                red: 255,
+                green: 0,
+                blue: 0,
+                alpha: 255,
+            },
+            ClientTick(0),
+        );
+        assert_eq!(state.dynamic_markers().len(), 1);
+        state.tick_markers(ClientTick(14_999));
+        assert_eq!(state.dynamic_markers().len(), 1);
+        state.tick_markers(ClientTick(15_000));
+        assert!(state.dynamic_markers().is_empty());
+    }
+
+    #[test]
+    fn remove_mark_by_id() {
+        let mut state = MinimapState::default();
+        state.apply_mark(
+            MarkerType::DisplayUntilLeave,
+            (5, 5),
+            3,
+            ColorRGBA {
+                red: 0,
+                green: 255,
+                blue: 0,
+                alpha: 255,
+            },
+            ClientTick(0),
+        );
+        state.apply_mark(
+            MarkerType::RemoveMark,
+            (0, 0),
+            3,
+            ColorRGBA {
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: 0,
+            },
+            ClientTick(0),
+        );
+        assert!(state.dynamic_markers().is_empty());
+    }
+
+    #[test]
+    fn set_map_clears_dynamic_markers() {
+        let mut state = MinimapState::default();
+        state.apply_mark(
+            MarkerType::DisplayUntilLeave,
+            (1, 1),
+            1,
+            ColorRGBA {
+                red: 1,
+                green: 1,
+                blue: 1,
+                alpha: 255,
+            },
+            ClientTick(0),
+        );
+        state.set_map("izlude".into(), 100, 100, None, None, Vec::new());
+        assert!(state.dynamic_markers().is_empty());
+        assert_eq!(state.map_name(), "izlude");
     }
 }

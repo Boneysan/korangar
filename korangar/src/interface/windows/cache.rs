@@ -112,6 +112,10 @@ impl WindowCache {
             WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 210.0),
             // Buff bar top-center.
             WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 48.0),
+            // Zeny / EXP / cooldown strip under the minimap.
+            WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
+            // Party roster left of center.
+            WindowClass::Party => state(AnchorPoint::CenterLeft, MARGIN, -40.0, 320.0, 240.0),
             // Dialogs / shops slightly right of center so they don't cover chat.
             WindowClass::Dialog => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -160.0, 400.0, 280.0),
             WindowClass::Buy => state(AnchorPoint::CenterRight, -(440.0 + MARGIN), -200.0, 420.0, 360.0),
@@ -159,6 +163,8 @@ impl WindowCache {
             WindowClass::FriendList,
             WindowClass::Minimap,
             WindowClass::StatusBar,
+            WindowClass::Hud,
+            WindowClass::Party,
             WindowClass::Dialog,
             WindowClass::Buy,
             WindowClass::BuyCart,

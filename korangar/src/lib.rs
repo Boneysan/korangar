@@ -69,8 +69,8 @@ use networking::{PacketHistory, PacketHistoryCallback};
 #[cfg(not(feature = "debug"))]
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::{
-    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, HotbarSlot, PartyId,
-    SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, ExperienceType, HotbarSlot,
+    PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -308,6 +308,19 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .trim_end_matches(".rsw")
         .trim_end_matches(".RSW")
         .to_lowercase()
+}
+
+#[cfg(test)]
+mod normalize_map_base_name_tests {
+    use super::normalize_map_base_name;
+
+    #[test]
+    fn strips_gat_and_path() {
+        assert_eq!(normalize_map_base_name("data\\izlude_in.gat"), "izlude_in");
+        assert_eq!(normalize_map_base_name("prt_in.GAT"), "prt_in");
+        assert_eq!(normalize_map_base_name("izlude"), "izlude");
+        assert_eq!(normalize_map_base_name("maps/payon.rsw"), "payon");
+    }
 }
 
 pub struct Client {
@@ -1076,6 +1089,13 @@ impl Client {
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn handle_network_events(&mut self, client_tick: ClientTick) {
+        // Keep HUD cooldown line and timed compass marks in sync with server tick.
+        self.client_state
+            .follow_mut(client_state().skill_cooldowns())
+            .tick(client_tick);
+        self.client_state
+            .follow_mut(client_state().minimap())
+            .tick_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
         for event in self.network_event_buffer.drain() {
@@ -1364,6 +1384,12 @@ impl Client {
                         client_state().skill_tree().skills(),
                     ));
                     self.interface.open_window(StatusBarWindow::new(client_state().status_effects()));
+                    self.interface.open_window(HudWindow::new(
+                        this_player().manually_asserted(),
+                        client_state().skill_cooldowns(),
+                    ));
+                    self.interface
+                        .open_window(PartyWindow::new(client_state().party_state()));
                     // Minimap is filled when the map resource finishes loading; open a placeholder
                     // only if the player wants it visible (Game Settings / Map button / Alt+M).
                     let show_minimap = *self.client_state.follow(client_state().game_settings().show_minimap());
@@ -1605,6 +1631,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
                     self.client_state.follow_mut(client_state().status_effects()).clear();
+                    self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
 
                     // Close any remaining dialogs.
@@ -2035,6 +2062,45 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(format!("[Party] {text}"), MessageColor::Information));
+                }
+                NetworkEvent::MarkMinimap {
+                    marker_type,
+                    position,
+                    id,
+                    color,
+                    ..
+                } => {
+                    self.client_state.follow_mut(client_state().minimap()).apply_mark(
+                        marker_type,
+                        (position.x, position.y),
+                        id,
+                        color,
+                        client_tick,
+                    );
+                }
+                NetworkEvent::SkillCooldown { skill_id, until } => {
+                    self.client_state
+                        .follow_mut(client_state().skill_cooldowns())
+                        .set(skill_id, until);
+                }
+                NetworkEvent::GainedExperience {
+                    amount,
+                    experience_type,
+                    experience_source,
+                    ..
+                } => {
+                    let kind = match experience_type {
+                        ExperienceType::BaseExperience => "Base",
+                        ExperienceType::JobExperience => "Job",
+                    };
+                    let source = match experience_source {
+                        ragnarok_packets::ExperienceSource::Regular => "",
+                        ragnarok_packets::ExperienceSource::Quest => " (quest)",
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Gained {amount} {kind} EXP{source}"),
+                        MessageColor::Information,
+                    ));
                 }
                 NetworkEvent::WhisperReceived { sender_name, message, .. } => {
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -2648,6 +2714,27 @@ impl Client {
                             false => self.interface.open_window(FriendListWindow::new(
                                 client_state().friend_list_window(),
                                 client_state().friend_list(),
+                            )),
+                        }
+                    }
+                }
+                InputEvent::TogglePartyWindow => {
+                    if self.client_state.try_follow(this_entity()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::Party) {
+                            true => self.interface.close_window_with_class(WindowClass::Party),
+                            false => self
+                                .interface
+                                .open_window(PartyWindow::new(client_state().party_state())),
+                        }
+                    }
+                }
+                InputEvent::ToggleHudWindow => {
+                    if self.client_state.try_follow(this_entity()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::Hud) {
+                            true => self.interface.close_window_with_class(WindowClass::Hud),
+                            false => self.interface.open_window(HudWindow::new(
+                                this_player().manually_asserted(),
+                                client_state().skill_cooldowns(),
                             )),
                         }
                     }

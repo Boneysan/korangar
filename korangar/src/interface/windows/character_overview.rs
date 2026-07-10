@@ -113,6 +113,14 @@ where
                     event: InputEvent::ToggleFriendListWindow,
                 },
                 button! {
+                    text: "Party",
+                    event: InputEvent::TogglePartyWindow,
+                },
+                button! {
+                    text: "HUD",
+                    event: InputEvent::ToggleHudWindow,
+                },
+                button! {
                     text: client_state().localization().minimap_button_text(),
                     event: InputEvent::ToggleMinimapWindow,
                 },

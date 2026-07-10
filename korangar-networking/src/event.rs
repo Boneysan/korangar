@@ -361,6 +361,26 @@ pub enum NetworkEvent {
     RemoveSkill {
         skill_id: SkillId,
     },
+    /// Compass / minimap mark (`ZC_COMPASS` / `MarkMinimapPosition` 0x0144).
+    MarkMinimap {
+        npc_id: EntityId,
+        marker_type: MarkerType,
+        position: LargeTilePosition,
+        id: u8,
+        color: ColorRGBA,
+    },
+    /// Skill post-delay cooldown (`ZC_SKILL_POSTDELAY` 0x043D).
+    SkillCooldown {
+        skill_id: SkillId,
+        until: ClientTick,
+    },
+    /// Floating experience gain notification (`ZC_NOTIFY_EXP` 0x0ACC).
+    GainedExperience {
+        account_id: AccountId,
+        amount: u64,
+        experience_type: ExperienceType,
+        experience_source: ExperienceSource,
+    },
 }
 
 /// New-type so we can implement some `From` traits. This will help when

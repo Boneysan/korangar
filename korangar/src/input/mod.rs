@@ -273,6 +273,16 @@ impl InputSystem {
             events.push(InputEvent::ToggleEquipmentWindow);
         }
 
+        // Party roster (classic RO uses Alt+Z for friends; we use Alt+P for party).
+        if alt_down && self.get_key(KeyCode::KeyP).pressed() {
+            events.push(InputEvent::TogglePartyWindow);
+        }
+
+        // Zeny / EXP HUD.
+        if alt_down && self.get_key(KeyCode::KeyH).pressed() {
+            events.push(InputEvent::ToggleHudWindow);
+        }
+
         // Official RO keeps a corner minimap; we toggle with Alt+M (Ctrl+M is the
         // debug warp list).
         if alt_down && self.get_key(KeyCode::KeyM).pressed() {

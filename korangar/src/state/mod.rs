@@ -5,6 +5,7 @@ pub mod hotbar;
 pub mod inventory;
 pub mod localization;
 pub mod party;
+pub mod skill_cooldowns;
 pub mod skills;
 pub mod minimap;
 pub mod status_effects;
@@ -58,6 +59,7 @@ use crate::state::character_slots::CharacterSlots;
 use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
 use crate::state::party::PartyState;
+use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::minimap::MinimapState;
 use crate::state::status_effects::StatusEffects;
@@ -190,6 +192,9 @@ pub struct ClientState {
     /// Active status effects (buffs / debuffs) for the local player.
     #[hidden_element]
     status_effects: StatusEffects,
+    /// Skill post-delay cooldowns for the local player (`ZC_SKILL_POSTDELAY`).
+    #[hidden_element]
+    skill_cooldowns: SkillCooldowns,
     /// Current-map minimap texture and dimensions.
     #[hidden_element]
     minimap: MinimapState,
@@ -348,6 +353,7 @@ impl ClientState {
             let inventory = Inventory::default();
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
+            let skill_cooldowns = SkillCooldowns::default();
             let minimap = MinimapState::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
@@ -420,6 +426,7 @@ impl ClientState {
             inventory,
             skill_tree,
             status_effects,
+            skill_cooldowns,
             minimap,
             character_servers,
             character_slots,

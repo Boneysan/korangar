@@ -23,11 +23,27 @@ const PLAYER_MARKER_SIZE: f32 = 14.0;
 const POI_ICON_SIZE: f32 = 12.0;
 const COORDS_HEIGHT: f32 = 18.0;
 
-/// Map area layout plus optional live player tile (so the blip tracks movement).
+/// A blip drawn after the map texture (must use textures so it sits on top).
+#[derive(Clone, Copy)]
+struct MinimapBlip {
+    x: f32,
+    y: f32,
+    /// Tint applied to the player_marker texture (or solid color fallback).
+    red: u8,
+    green: u8,
+    blue: u8,
+    alpha: u8,
+    /// Scale relative to the default player marker size.
+    size_scale: f32,
+}
+
+/// Map area layout plus live blips (player, party, compass).
 struct MinimapViewLayout {
     area: Area,
     /// Player tile when available; used for the moving position dot.
     player_tile: Option<(u16, u16)>,
+    /// Party members on this map + compass markers (drawn with tinted blips).
+    extra_blips: Vec<MinimapBlip>,
 }
 
 /// Draws the current-map minimap image, Towninfo POIs, and a live player blip.
@@ -52,13 +68,65 @@ impl Element<ClientState> for MinimapView {
             let available = resolver.push_available_area();
             let side = available.width.clamp(MIN_MINIMAP_SIZE, MAX_MINIMAP_SIZE);
             let area = resolver.with_height(side);
-            let player_tile = state
-                .try_follow(this_entity())
-                .map(|player| {
-                    let t = player.get_tile_position();
-                    (t.x, t.y)
+            let player_tile = state.try_follow(this_entity()).map(|player| {
+                let t = player.get_tile_position();
+                (t.x, t.y)
+            });
+
+            let minimap_path = client_state().minimap();
+            let minimap = state.get(&minimap_path);
+            let current_map = minimap.map_name();
+
+            let mut extra_blips = Vec::new();
+
+            // Party members on the same map with a known tile position.
+            let party_path = client_state().party_state();
+            let party = state.get(&party_path);
+            for member in party.members() {
+                if !member.online() {
+                    continue;
+                }
+                let Some(pos) = member.position() else {
+                    continue;
+                };
+                let member_map = member
+                    .map_name()
+                    .trim_end_matches(".gat")
+                    .trim_end_matches(".GAT")
+                    .to_lowercase();
+                if !member_map.is_empty() && member_map != current_map {
+                    continue;
+                }
+                extra_blips.push(MinimapBlip {
+                    x: pos.x as f32,
+                    y: pos.y as f32,
+                    // Soft green — distinct from the red player blip.
+                    red: 80,
+                    green: 220,
+                    blue: 120,
+                    alpha: 255,
+                    size_scale: 0.85,
                 });
-            MinimapViewLayout { area, player_tile }
+            }
+
+            // Compass / NPC marks (0x0144).
+            for mark in minimap.dynamic_markers() {
+                extra_blips.push(MinimapBlip {
+                    x: mark.x,
+                    y: mark.y,
+                    red: mark.red,
+                    green: mark.green,
+                    blue: mark.blue,
+                    alpha: mark.alpha.max(200),
+                    size_scale: 1.05,
+                });
+            }
+
+            MinimapViewLayout {
+                area,
+                player_tile,
+                extra_blips,
+            }
         })
     }
 
@@ -126,6 +194,30 @@ impl Element<ClientState> for MinimapView {
                         let (r, g, b) = poi.kind.fallback_color_rgb();
                         Color::rgb_u8(r, g, b)
                     },
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+            }
+        }
+
+        // Party / compass blips first, then local player on top.
+        for blip in &layout_info.extra_blips {
+            let (cx, cy) = tile_to_minimap(blip.x, blip.y, map_w, map_h, area);
+            let size = player_size * blip.size_scale;
+            let marker = Area {
+                left: cx - size / 2.0,
+                top: cy - size / 2.0,
+                width: size,
+                height: size,
+            };
+            let tint = Color::rgba_u8(blip.red, blip.green, blip.blue, blip.alpha);
+            if let Some(texture) = minimap.player_marker() {
+                layout.add_texture(marker, texture.clone(), tint, false);
+            } else {
+                layout.add_rectangle(
+                    marker,
+                    CornerDiameter::uniform(size / 2.0),
+                    tint,
                     Color::rgba_u8(0, 0, 0, 0),
                     ShadowPadding::uniform(0.0),
                 );

@@ -19,10 +19,12 @@ mod friend_request;
 mod game_settings;
 mod graphics_settings;
 mod hotbar;
+mod hud;
 mod interface_settings;
 mod inventory;
 mod login;
 mod minimap;
+mod party;
 #[cfg(feature = "debug")]
 mod maps;
 mod menu;
@@ -65,11 +67,13 @@ pub use self::friend_request::FriendRequestWindow;
 pub use self::game_settings::GameSettingsWindow;
 pub use self::graphics_settings::GraphicsSettingsWindow;
 pub use self::hotbar::HotbarWindow;
+pub use self::hud::HudWindow;
 pub use self::interface_settings::InterfaceSettingsWindow;
 pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 pub use self::minimap::MinimapWindow;
+pub use self::party::PartyWindow;
 #[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
@@ -103,6 +107,7 @@ pub enum WindowClass {
     InterfaceSettings,
     GraphicsSettings,
     Hotbar,
+    Hud,
     Inventory,
     Equipment,
     StatusBar,
@@ -113,6 +118,7 @@ pub enum WindowClass {
     Login,
     Menu,
     Minimap,
+    Party,
     Respawn,
     SelectServer,
     Sell,

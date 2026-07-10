@@ -510,7 +510,13 @@ where
     packet_handler.register_noop::<UpdateShowEquipPacket>()?;
     packet_handler.register_noop::<UpdateConfigurationPacket>()?;
     packet_handler.register_noop::<NavigateToMonsterPacket>()?;
-    packet_handler.register_noop::<MarkMinimapPositionPacket>()?;
+    packet_handler.register(|packet: MarkMinimapPositionPacket| NetworkEvent::MarkMinimap {
+        npc_id: packet.npc_id,
+        marker_type: packet.marker_type,
+        position: packet.position,
+        id: packet.id,
+        color: packet.color,
+    })?;
     packet_handler.register(|packet: NextButtonPacket| {
         let NextButtonPacket { npc_id } = packet;
 
@@ -535,8 +541,10 @@ where
         npc_id: packet.npc_id,
     })?;
     packet_handler.register_noop::<DisplaySpecialEffectPacket>()?;
-    // Cooldown bar animation is a later hotbar polish item; framing is enough for M1.
-    packet_handler.register_noop::<DisplaySkillCooldownPacket>()?;
+    packet_handler.register(|packet: DisplaySkillCooldownPacket| NetworkEvent::SkillCooldown {
+        skill_id: packet.skill_id,
+        until: packet.until,
+    })?;
     packet_handler.register(|packet: DisplaySkillEffectAndDamagePacket| {
         // Skill damage reuses the same floating-number path as basic attacks.
         // `damage == 0` is treated as a miss (e.g. skill type "no damage" end).
@@ -592,7 +600,12 @@ where
 
         NetworkEvent::VisualEffect { effect_path, entity_id }
     })?;
-    packet_handler.register_noop::<DisplayGainedExperiencePacket>()?;
+    packet_handler.register(|packet: DisplayGainedExperiencePacket| NetworkEvent::GainedExperience {
+        account_id: packet.account_id,
+        amount: packet.amount,
+        experience_type: packet.experience_type,
+        experience_source: packet.experience_source,
+    })?;
     packet_handler.register_noop::<DisplayImagePacket>()?;
     packet_handler.register_noop::<StateChangePacket>()?;
 
