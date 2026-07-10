@@ -6,6 +6,7 @@ pub mod inventory;
 pub mod localization;
 pub mod party;
 pub mod skills;
+pub mod minimap;
 pub mod status_effects;
 pub mod theme;
 
@@ -58,6 +59,7 @@ use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
 use crate::state::party::PartyState;
 use crate::state::skills::SkillTree;
+use crate::state::minimap::MinimapState;
 use crate::state::status_effects::StatusEffects;
 use crate::state::theme::WorldTheme;
 #[cfg(feature = "debug")]
@@ -188,6 +190,9 @@ pub struct ClientState {
     /// Active status effects (buffs / debuffs) for the local player.
     #[hidden_element]
     status_effects: StatusEffects,
+    /// Current-map minimap texture and dimensions.
+    #[hidden_element]
+    minimap: MinimapState,
 
     /// List of all available character servers.
     character_servers: Vec<CharacterServerInformation>,
@@ -343,6 +348,7 @@ impl ClientState {
             let inventory = Inventory::default();
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
+            let minimap = MinimapState::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
 
@@ -414,6 +420,7 @@ impl ClientState {
             inventory,
             skill_tree,
             status_effects,
+            minimap,
             character_servers,
             character_slots,
             currently_deleting,

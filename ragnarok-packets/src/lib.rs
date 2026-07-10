@@ -3793,6 +3793,46 @@ pub struct ChooseDialogOptionPacket {
     pub option: i8,
 }
 
+/// Server → client: open the NPC numeric input dialog (`ZC_OPEN_EDITDLG`).
+/// 0142 <npc id>.L
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0142)]
+pub struct NpcOpenNumberInputPacket {
+    pub npc_id: EntityId,
+}
+
+/// Client → server: numeric value from the NPC input dialog (`CZ_INPUT_EDITDLG`).
+/// 0143 <npc id>.L <value>.L
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0143)]
+pub struct NpcNumberInputPacket {
+    pub npc_id: EntityId,
+    pub value: i32,
+}
+
+/// Server → client: open the NPC string input dialog (`ZC_OPEN_EDITDLGSTR`).
+/// 01d4 <npc id>.L
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01D4)]
+pub struct NpcOpenStringInputPacket {
+    pub npc_id: EntityId,
+}
+
+/// Client → server: string value from the NPC input dialog (`CZ_INPUT_EDITDLGSTR`).
+/// 01d5 <packet len>.W <npc id>.L <string>.?B
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01D5)]
+#[variable_length]
+pub struct NpcStringInputPacket {
+    pub npc_id: EntityId,
+    #[length_remaining_off_by_one]
+    pub text: String,
+}
+
 bitflags::bitflags! {
     #[derive(Clone, Copy, Debug, PartialEq, Eq)]
     #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
@@ -5233,5 +5273,38 @@ mod tests {
         assert_eq!(packet.delay_time, 0);
         assert_eq!(packet.disposable, 0);
         assert_eq!(packet.attack_motion_time, 0);
+    }
+
+    #[test]
+    fn npc_number_input_packets_match_hercules_layout() {
+        // ZC_OPEN_EDITDLG 0x0142: header + npc_id
+        assert_eq!(
+            packet_bytes(NpcOpenNumberInputPacket::new(EntityId(0x0102_0304))),
+            [0x42, 0x01, 0x04, 0x03, 0x02, 0x01]
+        );
+
+        // CZ_INPUT_EDITDLG 0x0143: header + npc_id + value
+        assert_eq!(
+            packet_bytes(NpcNumberInputPacket::new(EntityId(0x0102_0304), 42)),
+            [0x43, 0x01, 0x04, 0x03, 0x02, 0x01, 0x2A, 0x00, 0x00, 0x00]
+        );
+    }
+
+    #[test]
+    fn npc_string_input_packets_match_hercules_layout() {
+        // ZC_OPEN_EDITDLGSTR 0x01D4: header + npc_id
+        assert_eq!(
+            packet_bytes(NpcOpenStringInputPacket::new(EntityId(0x0102_0304))),
+            [0xD4, 0x01, 0x04, 0x03, 0x02, 0x01]
+        );
+
+        // CZ_INPUT_EDITDLGSTR 0x01D5: header + length + npc_id + null-terminated text
+        // "Hi" = 2 chars + null → payload after header: len(2) + id(4) + text(3) = 9, total 11
+        let bytes = packet_bytes(NpcStringInputPacket::new(EntityId(0x0102_0304), "Hi".to_owned()));
+        assert_eq!(&bytes[0..2], &[0xD5, 0x01]);
+        let len = u16::from_le_bytes([bytes[2], bytes[3]]) as usize;
+        assert_eq!(len, bytes.len());
+        assert_eq!(&bytes[4..8], &[0x04, 0x03, 0x02, 0x01]);
+        assert_eq!(&bytes[8..], b"Hi\0");
     }
 }

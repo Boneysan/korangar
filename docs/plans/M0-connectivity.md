@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress |
+| **Status** | Complete (2026-07-08) — login → char create → map walk validated live |
 | **Milestone** | M0 — Korangar logs into Hercules_RO, creates a character, walks around Prontera |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E1, [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §5–§7 |
 | **Non-goal** | Fixing playability gaps beyond the first login/char/map loop |

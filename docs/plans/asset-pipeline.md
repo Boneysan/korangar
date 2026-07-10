@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft implementation plan |
+| **Status** | Mostly complete (2026-07-08) — GRFs registered, Lua audit done, BGM decision recorded. Remaining: copy vs symlink for base GRFs if 9P is slow; custom-item name verification live |
 | **Milestone** | E2 → M1 |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E2, [SOFTWARE_DESIGN.md](../SOFTWARE_DESIGN.md) §6 |
 | **Depends on** | M0 connectivity |

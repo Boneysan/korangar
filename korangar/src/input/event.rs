@@ -129,6 +129,10 @@ pub enum InputEvent {
         /// Text of the message.
         text: String,
     },
+    /// Toggle sit / stand (official client: Insert).
+    ToggleSit,
+    /// Toggle the in-game minimap window (official-style map corner).
+    ToggleMinimapWindow,
     /// Action for the "Next"-button in a dialog.
     NextDialog {
         /// Id of the NPC the player is in a dialog with.
@@ -145,6 +149,16 @@ pub enum InputEvent {
         npc_id: EntityId,
         /// Id of the option.
         option: i8,
+    },
+    /// Submit a number from the NPC input dialog.
+    SubmitDialogNumber {
+        npc_id: EntityId,
+        value: i32,
+    },
+    /// Submit a string from the NPC input dialog.
+    SubmitDialogString {
+        npc_id: EntityId,
+        text: String,
     },
     /// Move an item in the user interface.
     MoveItem {

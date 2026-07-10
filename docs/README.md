@@ -65,6 +65,7 @@ This directory contains all design documents, technical deep dives, implementati
 | [plans/M0-connectivity.md](plans/M0-connectivity.md) | Connectivity milestone plan. |
 | [plans/asset-pipeline.md](plans/asset-pipeline.md) | GRF and custom asset loading strategy. |
 | [plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md) | Critical party/whisper packet safety plan. |
+| [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | E3.1 live P0 verification checklist (M1). |
 | [plans/modern-mechanics.md](plans/modern-mechanics.md) | Technical sketches for future action RPG / tabletop mechanics (WASD camera, skill checks, gamepad, etc.). |
 | [specs/](specs/) | Targeted implementation specs (see below). |
 

@@ -1,0 +1,269 @@
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
+use korangar_interface::element::Element;
+use korangar_interface::layout::area::Area;
+use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
+use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
+use korangar_interface::window::{CustomWindow, Window};
+use rust_state::State;
+
+use super::WindowClass;
+use crate::graphics::{Color, CornerDiameter, ShadowPadding};
+use crate::loaders::{FontSize, OverflowBehavior};
+use crate::renderer::LayoutExt;
+use crate::state::theme::InterfaceThemeType;
+use crate::state::{ClientState, ClientStatePathExt, client_state, this_entity};
+
+/// Default footprint (classic RO corner minimap is roughly this size).
+const DEFAULT_MINIMAP_SIZE: f32 = 160.0;
+const MIN_MINIMAP_SIZE: f32 = 96.0;
+const MAX_MINIMAP_SIZE: f32 = 400.0;
+/// Player blip size at the default minimap scale (must stay readable).
+const PLAYER_MARKER_SIZE: f32 = 14.0;
+/// Official information icons are small; keep them readable when resized.
+const POI_ICON_SIZE: f32 = 12.0;
+const COORDS_HEIGHT: f32 = 18.0;
+
+/// Map area layout plus optional live player tile (so the blip tracks movement).
+struct MinimapViewLayout {
+    area: Area,
+    /// Player tile when available; used for the moving position dot.
+    player_tile: Option<(u16, u16)>,
+}
+
+/// Draws the current-map minimap image, Towninfo POIs, and a live player blip.
+///
+/// Height tracks the window width so the map stays square when resized.
+///
+/// Important: UI **textures** are flushed after all **rectangles**. Drawing the
+/// player as a rectangle would put it under the map bitmap and make it
+/// invisible — the blip must be a texture instruction (or similar custom).
+struct MinimapView;
+
+impl Element<ClientState> for MinimapView {
+    type LayoutInfo = MinimapViewLayout;
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        _: ElementStoreMut<'_>,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            let available = resolver.push_available_area();
+            let side = available.width.clamp(MIN_MINIMAP_SIZE, MAX_MINIMAP_SIZE);
+            let area = resolver.with_height(side);
+            let player_tile = state
+                .try_follow(this_entity())
+                .map(|player| {
+                    let t = player.get_tile_position();
+                    (t.x, t.y)
+                });
+            MinimapViewLayout { area, player_tile }
+        })
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        _: ElementStore<'a>,
+        layout_info: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        let minimap_path = client_state().minimap();
+        let minimap = state.get(&minimap_path);
+        let area = layout_info.area;
+
+        // Background so missing textures are still visible.
+        layout.add_rectangle(
+            area,
+            CornerDiameter::uniform(4.0),
+            Color::rgb_u8(20, 24, 32),
+            Color::rgba_u8(0, 0, 0, 0),
+            ShadowPadding::uniform(0.0),
+        );
+
+        if let Some(texture) = minimap.texture() {
+            layout.add_texture(area, texture.clone(), Color::WHITE, false);
+        } else {
+            layout.add_text(
+                area,
+                "No map",
+                FontSize(12.0),
+                Color::rgb_u8(180, 180, 180),
+                Color::rgb_u8(255, 160, 60),
+                HorizontalAlignment::Center { offset: 0.0, border: 4.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+                OverflowBehavior::Shrink,
+            );
+        }
+
+        let map_w = minimap.map_width().max(1) as f32;
+        let map_h = minimap.map_height().max(1) as f32;
+        let poi_size = (area.width / DEFAULT_MINIMAP_SIZE * POI_ICON_SIZE).clamp(8.0, 20.0);
+        let player_size = (area.width / DEFAULT_MINIMAP_SIZE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
+
+        // Towninfo facility POIs (shops, kafra, guides, …).
+        for poi in minimap.pois() {
+            let (cx, cy) = tile_to_minimap(poi.x as f32, poi.y as f32, map_w, map_h, area);
+            let icon_area = Area {
+                left: cx - poi_size / 2.0,
+                top: cy - poi_size / 2.0,
+                width: poi_size,
+                height: poi_size,
+            };
+
+            if let Some(texture) = poi.texture.as_ref() {
+                layout.add_texture(icon_area, texture.clone(), Color::WHITE, false);
+            } else {
+                // Fallback color swatch — still a texture path is preferred; this
+                // rectangle sits under POI textures but is fine without icons.
+                layout.add_rectangle(
+                    icon_area,
+                    CornerDiameter::uniform(2.0),
+                    {
+                        let (r, g, b) = poi.kind.fallback_color_rgb();
+                        Color::rgb_u8(r, g, b)
+                    },
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+            }
+        }
+
+        // Live player blip — must be a texture so it draws above the map bitmap.
+        if let Some((tx, ty)) = layout_info.player_tile {
+            let (cx, cy) = tile_to_minimap(tx as f32, ty as f32, map_w, map_h, area);
+            let marker = Area {
+                left: cx - player_size / 2.0,
+                top: cy - player_size / 2.0,
+                width: player_size,
+                height: player_size,
+            };
+
+            if let Some(texture) = minimap.player_marker() {
+                // Soft shadow under the blip (texture tint) for contrast on bright maps.
+                let shadow = Area {
+                    left: marker.left + 1.0,
+                    top: marker.top + 1.0,
+                    width: marker.width,
+                    height: marker.height,
+                };
+                layout.add_texture(shadow, texture.clone(), Color::rgba_u8(0, 0, 0, 140), false);
+                layout.add_texture(marker, texture.clone(), Color::WHITE, false);
+            } else {
+                // Last-resort: bright crosshair via two thin rectangles. These still
+                // render under the map, so prefer the player texture; keep for debug
+                // when assets are missing (map may also be missing then).
+                let hx = Area {
+                    left: cx - player_size / 2.0,
+                    top: cy - 1.5,
+                    width: player_size,
+                    height: 3.0,
+                };
+                let hy = Area {
+                    left: cx - 1.5,
+                    top: cy - player_size / 2.0,
+                    width: 3.0,
+                    height: player_size,
+                };
+                layout.add_rectangle(
+                    hx,
+                    CornerDiameter::uniform(0.0),
+                    Color::rgb_u8(255, 40, 40),
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+                layout.add_rectangle(
+                    hy,
+                    CornerDiameter::uniform(0.0),
+                    Color::rgb_u8(255, 40, 40),
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+            }
+        }
+    }
+}
+
+/// RO: tile (0,0) is south-west; minimap image has north at the top.
+fn tile_to_minimap(tile_x: f32, tile_y: f32, map_w: f32, map_h: f32, area: Area) -> (f32, f32) {
+    let nx = (tile_x + 0.5) / map_w;
+    let ny = 1.0 - (tile_y + 0.5) / map_h;
+    let cx = area.left + nx.clamp(0.0, 1.0) * area.width;
+    let cy = area.top + ny.clamp(0.0, 1.0) * area.height;
+    (cx, cy)
+}
+
+/// Coordinate readout under the map image.
+struct MinimapCoords;
+
+impl Element<ClientState> for MinimapCoords {
+    type LayoutInfo = (Area, String);
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        _: ElementStoreMut<'_>,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            let area = resolver.with_height(COORDS_HEIGHT);
+            let minimap_path = client_state().minimap();
+            let minimap = state.get(&minimap_path);
+            let text = match state.try_follow(this_entity()) {
+                Some(player) => {
+                    let p = player.get_tile_position();
+                    format!("{}  {},{}", minimap.map_name(), p.x, p.y)
+                }
+                None => minimap.map_name().to_owned(),
+            };
+            (area, text)
+        })
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        _: &'a State<ClientState>,
+        _: ElementStore<'a>,
+        layout_info: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        layout.add_text(
+            layout_info.0,
+            &layout_info.1,
+            FontSize(11.0),
+            Color::rgb_u8(220, 220, 220),
+            Color::rgb_u8(255, 160, 60),
+            HorizontalAlignment::Center { offset: 0.0, border: 2.0 },
+            VerticalAlignment::Center { offset: 0.0 },
+            OverflowBehavior::Shrink,
+        );
+    }
+}
+
+pub struct MinimapWindow;
+
+impl CustomWindow<ClientState> for MinimapWindow {
+    fn window_class() -> Option<WindowClass> {
+        Some(WindowClass::Minimap)
+    }
+
+    fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
+        use korangar_interface::prelude::*;
+
+        window! {
+            title: "Map",
+            class: Self::window_class(),
+            theme: InterfaceThemeType::InGame,
+            closable: true,
+            resizable: true,
+            // Horizontal resize drives the square map size; vertical follows content.
+            minimum_width: MIN_MINIMAP_SIZE + 16.0,
+            maximum_width: MAX_MINIMAP_SIZE + 16.0,
+            elements: (
+                MinimapView,
+                MinimapCoords,
+            ),
+        }
+    }
+}

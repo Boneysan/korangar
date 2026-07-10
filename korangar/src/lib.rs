@@ -97,7 +97,7 @@ use winit::application::ApplicationHandler;
 use winit::dpi::{LogicalSize, PhysicalSize};
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::keyboard::PhysicalKey;
+use winit::keyboard::{KeyCode, PhysicalKey};
 #[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
 use winit::platform::x11::EventLoopBuilderExtX11;
 use winit::window::{Icon, Window, WindowAttributes, WindowId};
@@ -1220,14 +1220,32 @@ impl Client {
                         self.interface.close_window_with_class(WindowClass::Respawn);
                     }
                 }
-                NetworkEvent::PlayerStandUp { entity_id } => {
-                    if let Some(entity) = self
+                NetworkEvent::PlayerSitDown { entity_id } => {
+                    let found = self
                         .client_state
                         .follow_mut(client_state().entities())
                         .iter_mut()
                         .find(|entity| entity.get_entity_id() == entity_id)
-                    {
-                        entity.set_idle(client_tick);
+                        .map(|entity| {
+                            entity.set_sit(client_tick);
+                        })
+                        .is_some();
+                    if !found && let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+                        player.set_sit(client_tick);
+                    }
+                }
+                NetworkEvent::PlayerStandUp { entity_id } => {
+                    let found = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                        .map(|entity| {
+                            entity.set_idle(client_tick);
+                        })
+                        .is_some();
+                    if !found && let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+                        player.set_idle(client_tick);
                     }
                 }
                 NetworkEvent::AccountId { .. } => {}
@@ -1331,6 +1349,12 @@ impl Client {
                         client_state().skill_tree().skills(),
                     ));
                     self.interface.open_window(StatusBarWindow::new(client_state().status_effects()));
+                    // Minimap is filled when the map resource finishes loading; open a placeholder
+                    // only if the player wants it visible (Game Settings / Map button / Alt+M).
+                    let show_minimap = *self.client_state.follow(client_state().game_settings().show_minimap());
+                    if show_minimap && !self.interface.is_window_with_class_open(WindowClass::Minimap) {
+                        self.interface.open_window(MinimapWindow);
+                    }
 
                     // Put the dialog system in a well-defined state.
                     self.client_state.follow_mut(client_state().dialog_window()).end();
@@ -1581,6 +1605,12 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, color));
                 }
+                NetworkEvent::MessageTable { message_id, color } => {
+                    let text = self.library.message_string(message_id);
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, color));
+                }
                 NetworkEvent::UpdateEntityDetails { entity_id, name } => {
                     let entity = self
                         .client_state
@@ -1731,6 +1761,16 @@ impl Client {
                         player.update_stat(stat_type);
                     }
                 }
+                NetworkEvent::CriticalWeightPercent { percent } => {
+                    if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        player.critical_weight_percent = percent;
+                    }
+                }
+                NetworkEvent::UpdateAttackRange { attack_range } => {
+                    if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        player.attack_range = attack_range;
+                    }
+                }
                 NetworkEvent::OpenDialog { text, npc_id } => {
                     self.client_state
                         .follow_mut(client_state().dialog_window())
@@ -1767,6 +1807,22 @@ impl Client {
                         // Some NPCs start the dialog with this packet so we need to make sure it's initialized.
                         .initialize(npc_id)
                         .add_choice_buttons(choices);
+
+                    self.interface.open_window(DialogWindow::new(client_state().dialog_window()));
+                }
+                NetworkEvent::NpcRequestNumberInput { npc_id } => {
+                    self.client_state
+                        .follow_mut(client_state().dialog_window())
+                        .initialize(npc_id)
+                        .add_number_input();
+
+                    self.interface.open_window(DialogWindow::new(client_state().dialog_window()));
+                }
+                NetworkEvent::NpcRequestStringInput { npc_id } => {
+                    self.client_state
+                        .follow_mut(client_state().dialog_window())
+                        .initialize(npc_id)
+                        .add_string_input();
 
                     self.interface.open_window(DialogWindow::new(client_state().dialog_window()));
                 }
@@ -2111,6 +2167,13 @@ impl Client {
                     self.client_state.follow_mut(client_state().dialog_window()).end();
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
+                    if items.is_empty() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Shop list was empty (no items from server).".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    }
+
                     *self.client_state.follow_mut(client_state().shop_items()) = items
                         .into_iter()
                         .map(|item| self.async_loader.request_shop_item_metadata_load(item))
@@ -2147,13 +2210,12 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
                     let inventory_items = self.client_state.follow(client_state().inventory().items());
-                    let sell_items = items
+                    let sell_items: Vec<_> = items
                         .into_iter()
-                        .map(|item| {
+                        .filter_map(|item| {
                             let inventory_item = inventory_items
                                 .iter()
-                                .find(|inventory_item| inventory_item.index == item.inventory_index)
-                                .expect("item not in inventory");
+                                .find(|inventory_item| inventory_item.index == item.inventory_index)?;
 
                             let name = inventory_item.metadata.name.clone();
                             let texture = inventory_item.metadata.texture.clone();
@@ -2162,14 +2224,21 @@ impl Client {
                                 korangar_networking::InventoryItemDetails::Equippable { .. } => 1,
                             };
 
-                            SellItem {
+                            Some(SellItem {
                                 metadata: (ResourceMetadata { name, texture }, quantity),
                                 inventory_index: item.inventory_index,
                                 price: item.price,
                                 overcharge_price: item.overcharge_price,
-                            }
+                            })
                         })
                         .collect();
+
+                    if sell_items.is_empty() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Nothing sellable in this shop (quest-bound items cannot be sold).".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    }
 
                     *self.client_state.follow_mut(client_state().sell_items()) = sell_items;
 
@@ -2247,6 +2316,88 @@ impl Client {
         }
     }
 
+    /// Load the official minimap bitmap and Towninfo facility POIs for a map.
+    fn refresh_minimap(&mut self, map_file_name: &str, map_width: u16, map_height: u16) {
+        let base = map_file_name
+            .trim_end_matches(".gat")
+            .trim_end_matches(".GAT")
+            .trim_end_matches(".rsw")
+            .trim_end_matches(".RSW");
+        // Official path under data\texture\
+        let path = format!("유저인터페이스\\map\\{base}.bmp");
+        let texture = self.texture_loader.get_or_load(&path, ImageType::Color).ok();
+        // Player blip must be a texture (UI rectangles flush before textures and
+        // would sit under the map bitmap).
+        let player_marker = self
+            .texture_loader
+            .get_or_load("유저인터페이스\\minimap\\player_1.bmp", ImageType::Color)
+            .ok();
+
+        let pois = self
+            .library
+            .town_pois(base)
+            .iter()
+            .map(|poi| {
+                let icon = self
+                    .texture_loader
+                    .get_or_load(poi.kind.icon_texture_path(), ImageType::Color)
+                    .ok();
+                crate::state::minimap::MinimapPoi {
+                    x: poi.x,
+                    y: poi.y,
+                    kind: poi.kind,
+                    name: poi.name.clone(),
+                    texture: icon,
+                }
+            })
+            .collect();
+
+        self.client_state.follow_mut(client_state().minimap()).set_map(
+            base.to_owned(),
+            map_width,
+            map_height,
+            texture,
+            player_marker,
+            pois,
+        );
+
+        // Only auto-open when the player wants the minimap visible.
+        let show = *self.client_state.follow(client_state().game_settings().show_minimap());
+        if show && !self.interface.is_window_with_class_open(WindowClass::Minimap) {
+            self.interface.open_window(MinimapWindow);
+        } else if !show && self.interface.is_window_with_class_open(WindowClass::Minimap) {
+            self.interface.close_window_with_class(WindowClass::Minimap);
+        }
+    }
+
+    /// Toggle sit/stand for the local player (Insert / Home / `/sit`).
+    fn toggle_sit(&mut self, client_tick: ClientTick) {
+        if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+            if player.is_sitting() {
+                match self.networking_system.player_stand() {
+                    Ok(()) => player.set_idle(client_tick),
+                    Err(_) => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Stand failed: not connected to map server.".to_owned(),
+                        MessageColor::Error,
+                    )),
+                }
+            } else {
+                match self.networking_system.player_sit() {
+                    Ok(()) => player.set_sit(client_tick),
+                    Err(_) => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Sit failed: not connected to map server.".to_owned(),
+                        MessageColor::Error,
+                    )),
+                }
+            }
+        } else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Sit failed: no player entity.".to_owned(),
+                MessageColor::Error,
+            ));
+        }
+    }
+
     /// Returns whether or not the interface is focused.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
@@ -2257,6 +2408,18 @@ impl Client {
         #[cfg(feature = "debug")] delta_time: f32,
     ) -> bool {
         self.interface.process_events(&mut self.input_event_buffer);
+
+        // Closing the minimap with the window X must clear the persisted preference,
+        // otherwise the next map load would force it open again.
+        if self.map.is_some()
+            && self.client_state.try_follow(this_player()).is_some()
+            && *self.client_state.follow(client_state().game_settings().show_minimap())
+            && !self.interface.is_window_with_class_open(WindowClass::Minimap)
+        {
+            *self
+                .client_state
+                .follow_mut(client_state().game_settings().show_minimap()) = false;
+        }
 
         let interface_has_focus = self.interface.has_focus();
 
@@ -2274,8 +2437,14 @@ impl Client {
                 #[cfg(feature = "debug")]
                 *self.client_state.follow(client_state().render_options().use_debug_camera()),
             );
+        } else {
+            // Sit / hotbar still work while a UI widget is focused (e.g. chat box).
+            // Menu shortcuts stay gated so they don't fire while typing.
+            self.input_system
+                .handle_game_action_keys(&mut self.input_event_buffer);
         }
 
+        let mut toggle_sit = false;
         for event in self.input_event_buffer.drain(..) {
             match event {
                 InputEvent::LogIn {
@@ -2357,7 +2526,10 @@ impl Client {
                     if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Inventory) {
                             true => self.interface.close_window_with_class(WindowClass::Inventory),
-                            false => self.interface.open_window(InventoryWindow::new(client_state().inventory().items())),
+                            false => self.interface.open_window(InventoryWindow::new(
+                                client_state().inventory().items(),
+                                this_player().manually_asserted(),
+                            )),
                         }
                     }
                 }
@@ -2550,6 +2722,12 @@ impl Client {
                         continue;
                     }
 
+                    // Sit/stand toggle — works from chat when Insert is awkward under WSL.
+                    if matches!(text.as_str(), "/sit" | "/stand") {
+                        toggle_sit = true;
+                        continue;
+                    }
+
                     if let Some(message) = text.strip_prefix("/p ") {
                         let player_name = self.client_state.follow(client_state().player_name()).to_owned();
                         let _ = self.networking_system.send_party_chat_message(&player_name, message);
@@ -2649,7 +2827,28 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &text);
                 }
+                InputEvent::ToggleSit => {
+                    toggle_sit = true;
+                }
+                InputEvent::ToggleMinimapWindow => {
+                    // Only while actually in-game (not character select / main menu map).
+                    if self.map.is_some() && self.client_state.try_follow(this_player()).is_some() {
+                        let open = self.interface.is_window_with_class_open(WindowClass::Minimap);
+                        *self
+                            .client_state
+                            .follow_mut(client_state().game_settings().show_minimap()) = !open;
+                        match open {
+                            true => self.interface.close_window_with_class(WindowClass::Minimap),
+                            false => self.interface.open_window(MinimapWindow),
+                        }
+                    }
+                }
                 InputEvent::NextDialog { npc_id } => {
+                    // Drop the Next button immediately so double-clicks cannot
+                    // send a second packet while the server is mid-script.
+                    self.client_state
+                        .follow_mut(client_state().dialog_window())
+                        .clear_transient_controls();
                     let _ = self.networking_system.next_dialog(npc_id);
                 }
                 InputEvent::CloseDialog { npc_id } => {
@@ -2658,11 +2857,27 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::Dialog);
                 }
                 InputEvent::ChooseDialogOption { npc_id, option } => {
+                    // Remove choice buttons *before* the network round-trip.
+                    // Stale buttons that fire after the server left `select()`
+                    // cause Hercules to GM-kick: "Invalid menu selection ...
+                    // valid range is [1..0]".
+                    self.client_state
+                        .follow_mut(client_state().dialog_window())
+                        .clear_transient_controls();
                     let _ = self.networking_system.choose_dialog_option(npc_id, option);
 
                     if option == -1 {
+                        self.client_state.follow_mut(client_state().dialog_window()).end();
                         self.interface.close_window_with_class(WindowClass::Dialog);
                     }
+                }
+                InputEvent::SubmitDialogNumber { npc_id, value } => {
+                    let _ = self.networking_system.submit_dialog_number(npc_id, value);
+                    self.client_state.follow_mut(client_state().dialog_window()).finish_input();
+                }
+                InputEvent::SubmitDialogString { npc_id, text } => {
+                    let _ = self.networking_system.submit_dialog_string(npc_id, text);
+                    self.client_state.follow_mut(client_state().dialog_window()).finish_input();
                 }
                 InputEvent::MoveItem { source, destination, item } => match (source, destination) {
                     (ItemSource::Inventory, ItemSource::Equipment { position }) => {
@@ -3021,7 +3236,30 @@ impl Client {
             }
         }
 
+        if toggle_sit {
+            self.toggle_sit(client_tick);
+        }
+
+        // If the player closed the dialog with the window X, notify the server.
+        // Without this the map-server keeps npc_id set and every other NPC click
+        // returns MSG_BUSY (message 1923 / 0x783).
+        self.reconcile_dialog_window_closed();
+
         interface_has_focus
+    }
+
+    /// When the dialog window is gone but client state still thinks a conversation
+    /// is active, send `CloseDialog` and clear local state.
+    fn reconcile_dialog_window_closed(&mut self) {
+        let dialog_open = self.interface.is_window_with_class_open(WindowClass::Dialog);
+        let active = self.client_state.follow(client_state().dialog_window()).is_active();
+        if active && !dialog_open {
+            let npc_id = self.client_state.follow(client_state().dialog_window()).npc_id();
+            if npc_id.0 != 0 {
+                let _ = self.networking_system.close_dialog(npc_id);
+            }
+            self.client_state.follow_mut(client_state().dialog_window()).end();
+        }
     }
 
     #[cfg(feature = "debug")]
@@ -3056,7 +3294,10 @@ impl Client {
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn update_loaded_resources(&mut self, client_tick: ClientTick) {
-        for completed in self.async_loader.take_completed() {
+        // Collect first so later steps can mutably borrow `self` (the iterator
+        // from `take_completed` otherwise keeps `async_loader` borrowed).
+        let completed_loads: Vec<_> = self.async_loader.take_completed().collect();
+        for completed in completed_loads {
             match completed {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
                     if let Some(entity) = self
@@ -3093,7 +3334,7 @@ impl Client {
                         .follow_mut(client_state().inventory())
                         .update_item_sprite(item_id, texture);
                 }
-                (LoaderId::Map(..), LoadableResource::Map { map, position }) => {
+                (LoaderId::Map(map_file_name), LoadableResource::Map { map, position }) => {
                     match self.client_state.try_follow(this_player()).is_none() {
                         true => {
                             // Load of main menu map
@@ -3109,6 +3350,7 @@ impl Client {
 
                             self.start_camera.set_focus_point(START_CAMERA_FOCUS_POINT);
                             self.directional_shadow_camera.set_level_bound(map.get_level_bound());
+                            self.client_state.follow_mut(client_state().minimap()).clear();
                         }
                         false => {
                             // Normal map switch
@@ -3127,6 +3369,9 @@ impl Client {
                             }
 
                             self.directional_shadow_camera.set_level_bound(map.get_level_bound());
+                            let (map_w, map_h) = (map.width(), map.height());
+                            let map_name = map_file_name.clone();
+                            self.refresh_minimap(&map_name, map_w, map_h);
                             let _ = self.networking_system.map_loaded();
                         }
                     }
@@ -3936,8 +4181,20 @@ impl ApplicationHandler for Client {
             WindowEvent::MouseInput { button, state, .. } => self.input_system.update_mouse_buttons(button, state),
             WindowEvent::MouseWheel { delta, .. } => self.input_system.update_mouse_wheel(delta),
             WindowEvent::KeyboardInput { event, .. } => {
-                if let PhysicalKey::Code(keycode) = event.physical_key {
-                    self.input_system.update_keyboard(keycode, event.state);
+                match event.physical_key {
+                    PhysicalKey::Code(keycode) => {
+                        self.input_system.update_keyboard(keycode, event.state);
+                    }
+                    // Under WSLg / some layouts, Insert can arrive as Unidentified physical
+                    // with a Named logical key. Synthesise the KeyCode so sit still works.
+                    PhysicalKey::Unidentified(_) => {
+                        use winit::keyboard::{Key, NamedKey};
+                        if matches!(event.logical_key, Key::Named(NamedKey::Insert)) {
+                            self.input_system.update_keyboard(KeyCode::Insert, event.state);
+                        } else if matches!(event.logical_key, Key::Named(NamedKey::Home)) {
+                            self.input_system.update_keyboard(KeyCode::Home, event.state);
+                        }
+                    }
                 }
 
                 // TODO: NHA We should also support IME in the long term (winit::event::Ime)

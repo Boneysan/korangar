@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | Living document |
 | **Owner / PM** | boneysan |
-| **Last updated** | 2026-07-05 |
+| **Last updated** | 2026-07-10 |
 | **Architecture** | [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) — architecture & technical decisions |
 | **Feature roadmap** | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) — UI/product roadmap and packet-handler backlog |
 | **DM interface design** | [DM_INTERFACE.md](DM_INTERFACE.md) — native tabletop tooling |
@@ -100,7 +100,7 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 |---|---|---|---|
 | Click-to-move, pathing | ✅ | P0 | |
 | Basic attack / attack move | 🔶 | P0 | `AttackFailed` handling exists; verify melee+ranged vs Hercules |
-| Sit / stand | ✅ | P0 | |
+| Sit / stand | ✅ | P0 | Insert toggles sit/stand (2026-07-10); F1–F10 hotbar like official |
 | Item pickup (ground items) | ✅ | P0 | |
 | Stats window, stat point allocation | ✅ | P0 | |
 | Skill tree, skill points, skill use (self/target/ground) | ✅ | P0 | Skill units (ground AoE) handled |
@@ -108,8 +108,8 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Death → respawn / resurrect | ✅ | P0 | |
 | Job change visuals, hair/appearance change | 🔶 | P1 | Events exist; verify sprite swaps for all jobs in our DB |
 | Experience/level-up display, job exp | 🔶 | P0 | Verify |
-| Weight limit / overweight indicators | ❌ | P1 | |
-| Status effect icons (buffs/debuffs) | ❌ | P1 | Large icon set; server sends status packets |
+| Weight limit / overweight indicators | ✅ | P1 | Inventory footer; soft/hard overweight coloring (2026-07-09) |
+| Status effect icons (buffs/debuffs) | 🔶 | P1 | MVP text status bar + timers (2026-07-09); real SC icons still missing |
 | Elemental/size/race damage display conventions | 🔶 | P2 | Damage numbers exist |
 | Mounts (Peco, Dragon, Mado, cash mounts) | ❌ | P2 | Sprite + state handling |
 | Falcon / Warg / Cart display | ❌ | P2 | Needed for Hunter/Merchant lines |
@@ -142,12 +142,12 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Feature | Korangar | Pri | Notes |
 |---|---|---|---|
 | Public chat | ✅ | P0 | |
-| Whisper / private messages | ❌ | **P1** | |
+| Whisper / private messages | 🔶 | **P1** | Protocol + slash commands live-validated; `/r` history UI later |
 | Party chat / Guild chat channels | ❌ | P1 | Depends on party/guild |
 | Chat rooms (in-map chat bubbles/rooms) | ❌ | P3 | Legacy feature |
 | Emotes (`/emotion`, Alt+numbers) | ❌ | P1 | Sprite-based, well-documented packets |
 | Friends list (add/remove/requests) | ✅ | P1 | Implemented |
-| **Party**: create, invite, leave, kick, exp/item share, party HP bars, party options | ❌ | **P1** | Highest-value missing social feature |
+| **Party**: create, invite, leave, kick, exp/item share, party HP bars, party options | 🔶 | **P1** | Protocol + slash commands live-validated (2026-07-08); party frame UI still greenfield |
 | Party booking / party finder | ❌ | P3 | |
 | **Guild**: create, invite, positions, notice, skills, emblem, expel, alliance/antagonist | ❌ | P2 | Emblems may touch api-server (`conf/import/emblems.conf` exists) |
 | Guild war / WoE participation (castle UI, emperium) | ❌ | P2 | After guild core |
@@ -177,14 +177,14 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Feature | Korangar | Pri | Notes |
 |---|---|---|---|
 | NPC dialog: next/close/menu choices | ✅ | P0 | |
-| NPC input: number entry, text entry | 🔶 | P0 | Verify both input packet types — many quests/services need them |
+| NPC input: number entry, text entry | ✅ | P0 | Packets + dialog UI 2026-07-09; confirm live in E3.1 |
 | Warps, map changes, airship | ✅ | P0 | `ChangeMap` |
 | Kafra services (storage/save/teleport/cart) | 🔶 | P1 | Dialog-driven; storage window itself is ❌ (2.3) |
 | Instances / memorial dungeons (UI + countdown) | ❌ | P3 | Server-driven; base entry may work via dialog |
 | Quest log / journal (accept/track quests) | ❌ | P2 | Quest effects (map markers) ✅; journal window missing |
 | Achievements & titles | ❌ | P3 | |
 | Navigation system (cross-map route guidance) | ❌ | P3 | `NavigationData/` available; Korangar could ship a better native version |
-| World map / minimap | 🔶 | P1 | `maps` window exists — verify minimap markers (party/guild/quest) |
+| World map / minimap | 🔶 | P1 | In-game minimap (2026-07-10): map bmp, player blip, Towninfo POIs, open/close; party/quest/compass markers still open |
 
 ### 2.8 UI / UX / client system
 | Feature | Korangar | Pri | Notes |
@@ -197,7 +197,7 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Replay recording/playback | ❌ | P3 | Korangar has `packet_inspector`; a native replay would be a custom feature |
 | BGM + sound effects | ✅ | P0 | `korangar-audio`; point at `H:\RO\client\BGM` |
 | Video cutscenes | ✅ | P3 | `korangar-video` |
-| Localization (msgstringtable) | 🔶 | P2 | Korangar has own strings; decide translation source (§5-I4) |
+| Localization (msgstringtable) | 🔶 | P2 | `ZC_MSG` ids resolve via `data/msgstringtable.txt` (2026-07-10); UI strings still Korangar `languages/*.ron` (§5-I4) |
 | Item/skill names, descriptions, icons (itemInfo.lua etc.) | 🔶 | **P1** | Must reflect our DB incl. campaign customs; verify Korangar's data source (E2.1) |
 | Settings/window-layout persistence (savedata/) | ✅ | P0 | Korangar has its own settings system |
 | Tip of the day / guild tips | ❌ | P3 | `tipOfTheDay.txt` available |
@@ -268,9 +268,9 @@ Implementation plan: [plans/asset-pipeline.md](plans/asset-pipeline.md)
 |---|---|---|---|
 | E3.1 | Systematically test every ✅/🔶 P0 row in §2 against Hercules_RO; file a defect list | M | E1.8 |
 | E3.2 | Fix defects found (budget) | L | E3.1 |
-| E3.3 | Verify NPC input (number/text) with real quest scripts | S | E3.1 |
+| E3.3 | NPC number/text input — **implemented 2026-07-09** (0x0142/0143/01D4/01D5 + dialog UI); live verify in E3.1 | S | E3.1 |
 | E3.4 | Verify job change/appearance across our job DB | M | E3.1 |
-| E3.5 | Add weight/overweight display | S | E3.1 |
+| E3.5 | Add weight/overweight display — **done 2026-07-09** (inventory footer + soft/hard color) | S | E3.1 |
 | E3.6 | **M1 demo**: novice → first job, 2-hour stability session | M | E3.2 |
 
 ### E4 — Multiplayer core (Tier 1 features) *(→ M2)*

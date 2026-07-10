@@ -67,6 +67,37 @@
 - Phase 2: Full cross-map paths, ribbons, party-shared pings.
 - Ties directly to campaign journal (E7.3).
 
+## Minimap — shipped vs follow-up
+
+### Shipped (2026-07-10)
+
+| Feature | Notes |
+|---------|--------|
+| Minimap window | Alt+M / Character Overview **Map** / Esc menu / Game Settings `show_minimap` (persisted) |
+| Map bitmap + coords | `유저인터페이스\map\{map}.bmp`; live tile readout |
+| Player blip | Texture `minimap\player_1.bmp` (must be texture — UI rects draw under map) |
+| Towninfo facility POIs | `System/Towninfo_EN.lub` → shops, kafra, guides, inn, smith, style; icons under `information\*.bmp` |
+
+### Follow-up — dynamic markers (queued with breadcrumbs)
+
+**Status**: Explicit later task. Do **not** build as a one-off before M1 P0 verification.
+
+| Marker | Source |
+|--------|--------|
+| Quest / NAVI objective | Active navigation target + quest packets |
+| Server `ZC_COMPASS` marks | Promote `MarkMinimapPositionPacket` (0x0144) from noop |
+| Party members | Existing `PartyState` positions (same map only first) |
+| DM / party pings | Shared transport from Phase A `[DMJ]` or later packets |
+
+Implementation sketch:
+
+1. `MinimapState` gains `markers: Vec<MinimapMarker { kind, tile, color, label? }>`.
+2. Network handlers update markers (quest, compass, party).
+3. `MinimapView` draws icons (reuse `유저인터페이스\minimap\quest_*.bmp` where possible).
+4. Breadcrumb path can be a polyline overlay on the same square map area.
+
+Depends on: packet promotions for quests/compass, breadcrumb path data.
+
 ## Risks
 
 - Performance: Pathing across many maps; precompute where possible.

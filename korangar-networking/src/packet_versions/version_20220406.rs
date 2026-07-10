@@ -191,13 +191,23 @@ where
         text: packet.message,
         color: MessageColor::Server,
     })?;
-    packet_handler.register(|packet: MessageTablePacket| NetworkEvent::ChatMessage {
-        text: message_table_text(packet.message_id),
+    packet_handler.register(|packet: MessageTablePacket| NetworkEvent::MessageTable {
+        message_id: packet.message_id,
         color: MessageColor::Error,
     })?;
-    packet_handler.register(|packet: MessageTableColorPacket| NetworkEvent::ChatMessage {
-        text: message_table_text(packet.message_id),
-        color: MessageColor::Server,
+    packet_handler.register(|packet: MessageTableColorPacket| {
+        // Hercules packs RGB in the low 24 bits (0x00RRGGBB on many clients;
+        // attendance “not event” uses COLOR_RED).
+        let c = packet.message_color;
+        let color = MessageColor::Rgb {
+            red: ((c >> 16) & 0xFF) as u8,
+            green: ((c >> 8) & 0xFF) as u8,
+            blue: (c & 0xFF) as u8,
+        };
+        NetworkEvent::MessageTable {
+            message_id: packet.message_id,
+            color,
+        }
     })?;
     packet_handler.register_noop::<OpenUiPacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
@@ -323,11 +333,15 @@ where
         let UpdateStatPacket3 { stat_type } = packet;
         NetworkEvent::UpdateStat { stat_type }
     })?;
-    packet_handler.register_noop::<UpdateAttackRangePacket>()?;
+    packet_handler.register(|packet: UpdateAttackRangePacket| NetworkEvent::UpdateAttackRange {
+        attack_range: packet.attack_range,
+    })?;
     packet_handler.register_noop::<NewMailStatusPacket>()?;
     packet_handler.register_noop::<AchievementUpdatePacket>()?;
     packet_handler.register_noop::<AchievementListPacket>()?;
-    packet_handler.register_noop::<CriticalWeightUpdatePacket>()?;
+    packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent {
+        percent: packet.weight,
+    })?;
     packet_handler.register(|packet: SpriteChangePacket| match packet.sprite_type {
         SpriteChangeType::Base => Some(NetworkEvent::ChangeJob {
             account_id: packet.account_id,
@@ -505,14 +519,37 @@ where
 
         NetworkEvent::AddChoiceButtons { choices, npc_id }
     })?;
+    packet_handler.register(|packet: NpcOpenNumberInputPacket| NetworkEvent::NpcRequestNumberInput {
+        npc_id: packet.npc_id,
+    })?;
+    packet_handler.register(|packet: NpcOpenStringInputPacket| NetworkEvent::NpcRequestStringInput {
+        npc_id: packet.npc_id,
+    })?;
     packet_handler.register_noop::<DisplaySpecialEffectPacket>()?;
+    // Cooldown bar animation is a later hotbar polish item; framing is enough for M1.
     packet_handler.register_noop::<DisplaySkillCooldownPacket>()?;
-    packet_handler.register_noop::<DisplaySkillEffectAndDamagePacket>()?;
+    packet_handler.register(|packet: DisplaySkillEffectAndDamagePacket| {
+        // Skill damage reuses the same floating-number path as basic attacks.
+        // `damage == 0` is treated as a miss (e.g. skill type "no damage" end).
+        Some(NetworkEvent::DamageEffect {
+            source_entity_id: packet.source_entity_id,
+            destination_entity_id: packet.destination_entity_id,
+            damage_amount: (packet.damage > 0).then_some(packet.damage as usize),
+            attack_duration: packet.destination_delay.max(packet.soruce_delay),
+            // skill_type 8 is the multi-hit critical family on official clients.
+            is_critical: packet.skill_type == 8,
+        })
+    })?;
     packet_handler.register(|packet: DisplaySkillEffectNoDamagePacket| NetworkEvent::HealEffect {
         entity_id: packet.destination_entity_id,
         heal_amount: packet.heal_amount as usize,
     })?;
-    packet_handler.register_noop::<DisplayPlayerHealEffect>()?;
+    // Always targets the receiving client; entity_id 0 falls back to local player
+    // in the lib.rs HealEffect arm.
+    packet_handler.register(|packet: DisplayPlayerHealEffect| NetworkEvent::HealEffect {
+        entity_id: EntityId(0),
+        heal_amount: packet.heal_amount as usize,
+    })?;
     packet_handler.register(|packet: StatusChangePacket| NetworkEvent::StatusChange {
         entity_id: packet.entity_id,
         index: packet.index,
@@ -697,6 +734,9 @@ where
             entity_id: packet.source_entity_id,
             item_entity_id: packet.destination_entity_id,
         }),
+        DamageType::SitDown => Some(NetworkEvent::PlayerSitDown {
+            entity_id: packet.destination_entity_id,
+        }),
         DamageType::StandUp => Some(NetworkEvent::PlayerStandUp {
             entity_id: packet.destination_entity_id,
         }),
@@ -720,6 +760,9 @@ where
         DamageType::PickUpItem => Some(NetworkEvent::EntityPickUpItem {
             entity_id: packet.source_entity_id,
             item_entity_id: packet.destination_entity_id,
+        }),
+        DamageType::SitDown => Some(NetworkEvent::PlayerSitDown {
+            entity_id: packet.destination_entity_id,
         }),
         DamageType::StandUp => Some(NetworkEvent::PlayerStandUp {
             entity_id: packet.destination_entity_id,
@@ -900,10 +943,46 @@ where
         NetworkEvent::OpenShop { items }
     })?;
     packet_handler.register(|packet: BuyShopItemsResultPacket| NetworkEvent::BuyingCompleted { result: packet.result })?;
-    packet_handler.register_noop::<ParameterChangePacket>()?;
+    // ZC_LONGPAR_CHANGE (0x00B1) — legacy long-parameter updates (exp/zeny as u32).
+    // Modern 20220406 traffic prefers 0x0ACB (UpdateStatPacket2); keep this for any
+    // remaining senders and for completeness of the §8.3 stats MVP row.
+    packet_handler.register(|packet: ParameterChangePacket| {
+        let ParameterChangePacket { variable_id, value } = packet;
+        let stat_type = match variable_id {
+            1 => StatType::BaseExperience(u64::from(value)),
+            2 => StatType::JobExperience(u64::from(value)),
+            20 => StatType::Zeny(value),
+            22 => StatType::NextBaseExperience(u64::from(value)),
+            23 => StatType::NextJobExperience(u64::from(value)),
+            24 => StatType::Weight(value),
+            25 => StatType::MaximumWeight(value),
+            0 => StatType::MovementSpeed(value),
+            3 => StatType::Karma(value),
+            4 => StatType::Manner(value),
+            5 => StatType::HealthPoints(value),
+            6 => StatType::MaximumHealthPoints(value),
+            7 => StatType::SpellPoints(value),
+            8 => StatType::MaximumSpellPoints(value),
+            9 => StatType::StatPoints(value),
+            11 => StatType::BaseLevel(value),
+            12 => StatType::SkillPoints(value),
+            _ => return None,
+        };
+        Some(NetworkEvent::UpdateStat { stat_type })
+    })?;
     packet_handler.register(|packet: SellListPacket| NetworkEvent::SellItemList { items: packet.items })?;
     packet_handler.register(|packet: SellItemsResultPacket| NetworkEvent::SellingCompleted { result: packet.result })?;
-    packet_handler.register_noop::<RequestStatUpResponsePacket>()?;
+    packet_handler.register(|packet: RequestStatUpResponsePacket| {
+        // Success path is already reflected by subsequent UpdateStat packets.
+        // Surface failures so stat allocation is not silent.
+        match packet.success {
+            RequestStatUpResult::Success => None,
+            RequestStatUpResult::Failure => Some(NetworkEvent::ChatMessage {
+                text: "Failed to increase that stat.".to_owned(),
+                color: MessageColor::Error,
+            }),
+        }
+    })?;
     packet_handler.register_noop::<EquipAmmunitionPacket>()?;
     packet_handler.register_noop::<AmmunitionActionPacket>()?;
     packet_handler.register(|packet: UpdateSkillPacket| {
@@ -931,17 +1010,6 @@ where
     packet_handler.register_length_fallbacks(super::lengths_20220406::PACKET_LENGTHS);
 
     Ok(())
-}
-
-/// Text for `ZC_MSG` / `ZC_MSG_COLOR` message ids (zero-based
-/// msgstringtable.txt indices, see Hercules `src/common/msgtable.h`). Only the
-/// ids the campaign is likely to hit are mapped; everything else gets a
-/// generic-but-visible line so server rejections are never silent.
-fn message_table_text(message_id: u16) -> String {
-    match message_id {
-        164 => "You need to learn the basic skills first.".to_owned(),
-        _ => format!("Server message #{message_id} (see msgstringtable)."),
-    }
 }
 
 /// Text for `ZC_ACK_TOUSESKILL` failures (Hercules `useskill_fail_cause`).

@@ -75,6 +75,9 @@ pub enum NetworkEvent {
         entity_id: EntityId,
     },
     /// Make a player stand up.
+    PlayerSitDown {
+        entity_id: EntityId,
+    },
     PlayerStandUp {
         entity_id: EntityId,
     },
@@ -130,6 +133,12 @@ pub enum NetworkEvent {
         text: String,
         color: MessageColor,
     },
+    /// Official msgstringtable lookup (`ZC_MSG` / `ZC_MSG_COLOR`). The client
+    /// resolves `message_id` via `data\msgstringtable.txt`.
+    MessageTable {
+        message_id: u16,
+        color: MessageColor,
+    },
     CharacterSlotSwitched,
     CharacterSlotSwitchFailed,
     /// Update entity details. Mostly received when the client sends
@@ -170,6 +179,14 @@ pub enum NetworkEvent {
     UpdateStat {
         stat_type: StatType,
     },
+    /// Soft overweight threshold percent from `ZC_OVERWEIGHT_PERCENT` (0x0ADE).
+    CriticalWeightPercent {
+        percent: u32,
+    },
+    /// Melee attack range from `ZC_ATTACK_RANGE` (0x013A).
+    UpdateAttackRange {
+        attack_range: AttackRange,
+    },
     OpenDialog {
         text: String,
         npc_id: EntityId,
@@ -182,6 +199,14 @@ pub enum NetworkEvent {
     },
     AddChoiceButtons {
         choices: Vec<String>,
+        npc_id: EntityId,
+    },
+    /// NPC requested a numeric input box (`ZC_OPEN_EDITDLG` 0x0142).
+    NpcRequestNumberInput {
+        npc_id: EntityId,
+    },
+    /// NPC requested a string input box (`ZC_OPEN_EDITDLGSTR` 0x01D4).
+    NpcRequestStringInput {
         npc_id: EntityId,
     },
     AddQuestEffect {

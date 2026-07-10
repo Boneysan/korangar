@@ -10,7 +10,7 @@ use korangar_interface::element::StateElement;
 use korangar_interface::window::{StateWindow, Window};
 use korangar_networking::EntityData;
 use ragnarok_packets::{
-    AccountId, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, JobId, Sex, StatType, TilePosition,
+    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, JobId, Sex, StatType, TilePosition,
     WorldPosition,
 };
 use rust_state::{Path, RustState, VecItem};
@@ -930,6 +930,15 @@ pub struct Player {
     pub luck_stat_points_cost: u8,
     pub attack_speed: u32,
     pub skill_points: u32,
+    /// Current inventory weight in 0.1 units (display as `/10`).
+    pub weight: u32,
+    /// Maximum inventory weight in 0.1 units (display as `/10`).
+    pub maximum_weight: u32,
+    /// Server critical-weight percent for natural-heal cutoff (typically 50).
+    /// Used for inventory weight coloring thresholds.
+    pub critical_weight_percent: u32,
+    /// Melee attack range from `ZC_ATTACK_RANGE` (tiles).
+    pub attack_range: AttackRange,
 }
 
 impl Player {
@@ -984,6 +993,11 @@ impl Player {
             luck_stat_points_cost: 0,
             attack_speed: 0,
             skill_points: 0,
+            weight: 0,
+            maximum_weight: 0,
+            // Official default natural-heal weight rate is 50%.
+            critical_weight_percent: 50,
+            attack_range: AttackRange(1),
         }
     }
 
@@ -1039,8 +1053,21 @@ impl Player {
             StatType::LuckStatPointCost(cost) => self.luck_stat_points_cost = cost,
             StatType::AttackSpeed(attack_speed) => self.attack_speed = attack_speed,
             StatType::SkillPoints(skill_points) => self.skill_points = skill_points,
+            StatType::Weight(value) => self.weight = value,
+            StatType::MaximumWeight(value) => self.maximum_weight = value,
+            // Zeny / experience are tracked elsewhere for now (character overview later).
             _ => {}
         }
+    }
+
+    /// Soft overweight starts at the server's critical-weight percent (usually 50%).
+    pub fn is_overweight(&self) -> bool {
+        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * self.critical_weight_percent
+    }
+
+    /// Hard overweight at 90% of max weight (cannot attack / use skills in RO).
+    pub fn is_hard_overweight(&self) -> bool {
+        self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
     }
 
     pub fn render_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
@@ -1339,6 +1366,15 @@ impl Entity {
     pub fn set_idle(&mut self, client_tick: ClientTick) {
         let entity_type = self.get_entity_type();
         self.get_common_mut().animation_state.idle(entity_type, client_tick);
+    }
+
+    pub fn set_sit(&mut self, client_tick: ClientTick) {
+        let entity_type = self.get_entity_type();
+        self.get_common_mut().animation_state.sit(entity_type, client_tick);
+    }
+
+    pub fn is_sitting(&self) -> bool {
+        self.get_common().animation_state.is_sitting()
     }
 
     pub fn set_pickup(&mut self, client_tick: ClientTick) {

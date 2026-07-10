@@ -2,12 +2,12 @@ use std::collections::HashMap;
 
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
-use korangar_interface::window::Anchor;
+use korangar_interface::window::{Anchor, AnchorPoint};
 use ron::ser::PrettyConfig;
 use serde::{Deserialize, Serialize};
 
 use super::WindowClass;
-use crate::graphics::ScreenSize;
+use crate::graphics::{ScreenPosition, ScreenSize};
 use crate::state::ClientState;
 
 #[derive(Serialize, Deserialize)]
@@ -58,7 +58,7 @@ impl WindowCache {
 
 impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     fn create() -> Self {
-        Self::load().unwrap_or_else(|| {
+        let mut cache = Self::load().unwrap_or_else(|| {
             #[cfg(feature = "debug")]
             print_debug!(
                 "failed to load window cache from {}. creating empty cache",
@@ -66,7 +66,32 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
             );
 
             Default::default()
-        })
+        });
+
+        // Official RO places the minimap in the top-right. Seed a default only when
+        // the user has never moved/resized this window (no cache entry yet).
+        if !cache.entries.contains_key(&WindowClass::Minimap) {
+            const DEFAULT_WIDTH: f32 = 176.0;
+            const DEFAULT_HEIGHT: f32 = 210.0;
+            const MARGIN: f32 = 12.0;
+            // TopRight position: screen_w + offset.left  → inset by width + margin
+            let anchor = Anchor::with_point(
+                AnchorPoint::TopRight,
+                ScreenPosition {
+                    left: -(DEFAULT_WIDTH + MARGIN),
+                    top: MARGIN,
+                },
+            );
+            cache.entries.insert(
+                WindowClass::Minimap,
+                WindowState::new(anchor, ScreenSize {
+                    width: DEFAULT_WIDTH,
+                    height: DEFAULT_HEIGHT,
+                }),
+            );
+        }
+
+        cache
     }
 
     fn get_window_state(&self, class: WindowClass) -> Option<(Anchor<ClientState>, ScreenSize)> {

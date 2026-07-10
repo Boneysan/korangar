@@ -755,6 +755,24 @@ where
         }
     }
 
+    /// Sit down. Target entity id is unused for sit/stand on Hercules; send 0.
+    pub fn player_sit(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::SitDown))
+            }
+        }
+    }
+
+    /// Stand up from a sit. Target entity id is unused for sit/stand on Hercules.
+    pub fn player_stand(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::StandUp))
+            }
+        }
+    }
+
     pub fn pick_up_item(&mut self, entity_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(ItemPickupRequestPacket::new(entity_id)),
@@ -842,6 +860,18 @@ where
     pub fn choose_dialog_option(&mut self, npc_id: EntityId, option: i8) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(ChooseDialogOptionPacket::new(npc_id, option)),
+        }
+    }
+
+    pub fn submit_dialog_number(&mut self, npc_id: EntityId, value: i32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(NpcNumberInputPacket::new(npc_id, value)),
+        }
+    }
+
+    pub fn submit_dialog_string(&mut self, npc_id: EntityId, text: String) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(NpcStringInputPacket::new(npc_id, text)),
         }
     }
 

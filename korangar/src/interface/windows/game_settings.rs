@@ -1,6 +1,7 @@
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::Path;
 
+use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::settings::{GameSettings, GameSettingsPathExt};
 use crate::state::localization::LocalizationPathExt;
@@ -39,6 +40,11 @@ where
                     text: client_state().localization().auto_attack_button_text(),
                     state: self.game_settings_path.auto_attack(),
                     event: Toggle(self.game_settings_path.auto_attack()),
+                },
+                state_button! {
+                    text: client_state().localization().show_minimap_button_text(),
+                    state: self.game_settings_path.show_minimap(),
+                    event: InputEvent::ToggleMinimapWindow,
                 },
             ),
         }

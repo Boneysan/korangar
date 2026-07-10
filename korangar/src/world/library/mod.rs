@@ -4,9 +4,11 @@ mod item_name;
 mod item_resource;
 mod job_identity;
 mod map_sky_data;
+mod msgstringtable;
 mod skill_information;
 mod skill_requirements;
 mod skill_tree;
+mod towninfo;
 
 use std::hash::Hash;
 
@@ -22,6 +24,8 @@ pub use self::item_resource::{ItemResource, ItemResourceKey};
 pub use self::job_identity::JobIdentity;
 pub use self::map_sky_data::MapSkyData;
 pub use self::skill_tree::SkillTreeLayout;
+pub use self::msgstringtable::MsgStringTable;
+pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
 use crate::loaders::GameFileLoader;
 pub use crate::world::library::skill_information::SkillListInformation;
 pub use crate::world::library::skill_requirements::{SkillListKey, SkillListRequirements};
@@ -34,6 +38,8 @@ pub struct Library {
     skill_requirements_table: <SkillListRequirements as Table>::Storage,
     skill_tree_table: <SkillTreeLayout as Table>::Storage,
     baby_job_table: <IsBabyJob as Table>::Storage,
+    towninfo_table: TownInfoTable,
+    msgstringtable: MsgStringTable,
 }
 
 impl Library {
@@ -45,6 +51,8 @@ impl Library {
         let skill_requirements_table = SkillListRequirements::load(game_file_loader)?;
         let skill_tree_table = SkillTreeLayout::load(game_file_loader)?;
         let baby_job_table = IsBabyJob::load(game_file_loader)?;
+        let towninfo_table = TownInfoTable::load(game_file_loader);
+        let msgstringtable = MsgStringTable::load(game_file_loader);
 
         Ok(Self {
             job_identity_table,
@@ -54,12 +62,26 @@ impl Library {
             skill_requirements_table,
             skill_tree_table,
             baby_job_table,
+            towninfo_table,
+            msgstringtable,
         })
     }
 
     #[inline(always)]
     pub fn get<T: Table>(&self, key: T::Key<'_>) -> &T {
         T::get(self, key)
+    }
+
+    /// Facility POIs (shops, kafra, guides, …) for a map base name.
+    #[inline]
+    pub fn town_pois(&self, map_name: &str) -> &[TownPoi] {
+        self.towninfo_table.pois_for_map(map_name)
+    }
+
+    /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.
+    #[inline]
+    pub fn message_string(&self, message_id: u16) -> String {
+        self.msgstringtable.resolve(message_id)
     }
 }
 

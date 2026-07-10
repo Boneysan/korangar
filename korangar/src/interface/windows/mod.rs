@@ -22,6 +22,7 @@ mod hotbar;
 mod interface_settings;
 mod inventory;
 mod login;
+mod minimap;
 #[cfg(feature = "debug")]
 mod maps;
 mod menu;
@@ -68,6 +69,7 @@ pub use self::interface_settings::InterfaceSettingsWindow;
 pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
+pub use self::minimap::MinimapWindow;
 #[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
@@ -110,6 +112,7 @@ pub enum WindowClass {
     FriendRequest,
     Login,
     Menu,
+    Minimap,
     Respawn,
     SelectServer,
     Sell,

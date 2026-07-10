@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Ready to build |
+| **Status** | Core implemented (2026-07-09) — text bar + timers; icons still deferred |
 | **Parent** | [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8 Combat feedback · §8.2 MVP cut · §8.3 MVP row (status/buffs) |
 | **Why first** | Smallest end-to-end slice that touches every layer — packet → event → state → widget → per-frame tick. It's the **template** for every other §8.3 noop→handler promotion. |
 | **Verified against** | `korangar-networking`, `ragnarok-packets`, `korangar/src/{state,interface,lib.rs}` (2026-07-05) |

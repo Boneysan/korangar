@@ -235,6 +235,14 @@ impl Map {
         self.background_music_track_name.as_deref()
     }
 
+    pub fn width(&self) -> u16 {
+        self.width
+    }
+
+    pub fn height(&self) -> u16 {
+        self.height
+    }
+
     pub fn get_texture_set(&self) -> &Arc<TextureSet> {
         &self.texture_set
     }

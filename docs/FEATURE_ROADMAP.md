@@ -18,23 +18,28 @@ protocol contract stay in [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md).
 
 Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 
-- [ ] Rebuild Hercules with `PACKETVER=20220406` to resolve the protocol mismatch
+- [x] Rebuild Hercules with `PACKETVER=20220406` to resolve the protocol mismatch
       ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §5).
-- [ ] **Disable packet obfuscation:** set `packet_obfuscation: 0` in
-      `conf/import/battle.conf` (currently forced on at `2`;
-      [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §5.1) — Korangar can't connect otherwise.
-- [ ] Symlink or copy `data.grf`, `rdata.grf`, `renewal2021.grf`, and
+- [x] **Disable packet obfuscation:** set `packet_obfuscation: 0` in
+      `conf/import/battle.conf`
+      ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §5.1) — Korangar can't connect otherwise.
+- [x] Symlink or copy `data.grf`, `rdata.grf`, `renewal2021.grf`, and
       `resources2021.grf` from `/mnt/h/RO/client/` to the Korangar client directory
-      ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §6.2).
-- [ ] Update `korangar/archive/data/sclientinfo.xml` to point to `127.0.0.1` and ensure it can connect locally.
+      ([SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md) §6.2). *(base GRFs still symlinked; 2021 GRFs copied to WSL)*
+- [x] Update `korangar/archive/data/sclientinfo.xml` to point to `127.0.0.1` and ensure it can connect locally.
 - [ ] (Optional for LAN) Populate `conf/import/char-server.conf` and `map-server.conf` on Hercules with `char_ip`/`map_ip`.
-- [ ] Login → char create → walk around Prontera. **This is the milestone demo.**
+- [x] Login → char create → walk around Prontera. **This is the milestone demo.**
 
 ### Phase 1 — Playability parity
 - [ ] Verify combat, NPC dialogue, warps, inventory, storage against Hercules.
 - [ ] Catalog Korangar's missing features (it is pre-alpha) that block play; file issues.
-- [ ] **Promote noop packet handlers → real handlers** per the prioritized backlog in **§8.3** (start with the three MVP rows: status/buffs, skill-damage feedback, stats).
-- [ ] Close the party/whisper framing risk before the first group session
+- [x] **Promote noop packet handlers → real handlers** per the prioritized backlog in **§8.3** (start with the three MVP rows: status/buffs, skill-damage feedback, stats).
+      *MVP rows promoted 2026-07-08/09: buffs (`StatusChangePacket`), skill damage
+      (`DisplaySkillEffectAndDamagePacket` + player heal), stats (weight /
+      `CriticalWeightUpdatePacket` / `ParameterChangePacket` / attack range /
+      stat-up response). Remaining within those rows: cooldown bar UI,
+      special-effect visuals, `StatusChangeSequencePacket`, zeny/exp display.*
+- [x] Close the party/whisper framing risk before the first group session
       ([plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md)).
 
 ### Phase 2 — Customization
@@ -176,6 +181,13 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
       ground marker, minimap marker, and eventually world-map support.
   - **Navigational Aids:** 3D floating markers over NPCs (`!` / `?`), minimap objective radiuses, and custom map waypoints.
   - **Enhanced minimap/world map:** zoom, tracking filters, shared party pings.
+    *Base minimap (2026-07-10): **Alt+M** / Map button / Game Settings toggle
+    (persisted `show_minimap`), resizable, top-right default, live player blip
+    (`minimap\player_1.bmp`), Towninfo facility POIs (shops/kafra/guides via
+    `System/Towninfo_EN.lub`). Hotbar shows **F1–F10** under slots.
+    **Still deferred:** quest/compass/party markers — see
+    [specs/navigation-quest-guiding.md](specs/navigation-quest-guiding.md)
+    § "Follow-up — Minimap markers".*
 
 - [ ] **Input & accessibility:**
   - Full **keybind remap screen** with profiles (import/export).
@@ -310,12 +322,12 @@ should be confirmed against `ragnarok-packets` before implementing.
 
 | Priority | Feature area → unlocks | noop packets to promote |
 |---|---|---|
-| **MVP** | Buffs/debuffs (timed) → buff bars (§8 Combat) | `StatusChangePacket`, `StatusChangeSequencePacket` — see [specs/buff-bar-slice.md](specs/buff-bar-slice.md). **Note:** `StateChangePacket` is *not* a buff packet (option-flags, moved to World/map below). |
-| **MVP** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | `DisplaySkillEffectAndDamagePacket`, `DisplaySkillCooldownPacket`, `DisplaySpecialEffectPacket`, `DisplayPlayerHealEffect`, `UseSkillSuccessPacket`, `NotifyGroundSkillPacket` (`ToUseSkillSuccessPacket`'s failure path is already promoted to chat messages — see the server-feedback row) |
-| **MVP** | Stats → character sheet, stat window (§8 Core windows) | `ParameterChangePacket`, `RequestStatUpResponsePacket`, `CriticalWeightUpdatePacket`, `UpdateAttackRangePacket` |
+| ~~**MVP**~~ **Done 2026-07-09** (core) | Buffs/debuffs (timed) → buff bars (§8 Combat) | `StatusChangePacket` promoted + `StatusEffects` state + MVP status bar window. Remaining: `StatusChangeSequencePacket`, real SC icons. See [specs/buff-bar-slice.md](specs/buff-bar-slice.md). **Note:** `StateChangePacket` is *not* a buff packet (option-flags, moved to World/map below). |
+| ~~**MVP**~~ **Partial 2026-07-09** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | **Done:** `DisplaySkillEffectAndDamagePacket` → floating numbers; `DisplayPlayerHealEffect` → heal numbers. **Still noop:** `DisplaySkillCooldownPacket` (hotbar polish), `DisplaySpecialEffectPacket`, `UseSkillSuccessPacket` (cast bars), `NotifyGroundSkillPacket`. Failure path of `ToUseSkillSuccessPacket` already promoted (server-feedback row). |
+| ~~**MVP**~~ **Partial 2026-07-09** | Stats → character sheet, stat window (§8 Core windows) | **Done:** weight via `UpdateStat` + inventory footer (E3.5); `CriticalWeightUpdatePacket`; `ParameterChangePacket` → `UpdateStat`; `UpdateAttackRangePacket`; `RequestStatUpResponsePacket` failure → chat. **Still open:** zeny/exp HUD, full character-sheet stat breakdown. |
 | **High** | Quests → campaign journal ([DM_INTERFACE.md](DM_INTERFACE.md)), quest tracker (§8 Nav) | `QuestListPacket`, `QuestNotificationPacket1`, `QuestRemovedPacket`, `HuntingQuestNotificationPacket`, `HuntingQuestUpdateObjectivePacket`, `NavigateToMonsterPacket`, `MarkMinimapPositionPacket` |
 | **High** | Party/social → party frames (§8), friend list | Party roster/HP/position/chat/whisper packets are promoted **and live-validated two-client cross-map (2026-07-08)**; remaining work is party-frame UI and `FriendOnlineStatusPacket`. |
-| ~~High~~ **Done 2026-07-08** | Server feedback → visible rejection messages | `MessageTablePacket` (`ZC_MSG` `0x0291`), `MessageTableColorPacket` (`0x09CD`), and the failure path of `ToUseSkillSuccessPacket` (`ZC_ACK_TOUSESKILL` `0x0110`, which Hercules also uses for gameplay rejections like party-create without Basic Skill) now surface chat-line messages. Known msgstringtable/cause ids get real text (`message_table_text` / `skill_failed_text` in `version_20220406.rs`); unknown ids get a generic visible line. |
+| ~~High~~ **Done 2026-07-08** (+ table 2026-07-10) | Server feedback → visible rejection messages | `MessageTablePacket` / `MessageTableColorPacket` → `NetworkEvent::MessageTable`; client resolves via `MsgStringTable` (`archive/data/msgstringtable.txt`, 0-based). Fixes boot id 3474 (`MSG_CHECK_ATTENDANCE_NOT_EVENT`). Skill-fail path still uses `skill_failed_text` in `version_20220406.rs`. |
 | **High** | Progression toasts → notification system (§8 Info) | `AchievementListPacket`, `AchievementUpdatePacket`, `DisplayGainedExperiencePacket` |
 | **Med** | Equipment view → character sheet, equip-swap (§8 Core windows) | `UpdateShowEquipPacket`, `EquippableSwitchItemListPacket`, `EquipAmmunitionPacket`, `AmmunitionActionPacket` |
 | **Med** | Char-select screen polish | `CharacterListPacket`, `CharacterSlotPagePacket`, `CharacterBanListPacket`, `LoginPincodePacket` |

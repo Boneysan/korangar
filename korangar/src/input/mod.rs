@@ -117,11 +117,6 @@ impl InputSystem {
         }
     }
 
-    pub fn update_keyboard(&mut self, key_code: KeyCode, state: ElementState) {
-        let pressed = matches!(state, ElementState::Pressed);
-        self.keys[key_code as usize].set_down(pressed);
-    }
-
     pub fn buffer_character(&mut self, character: char) {
         self.input_buffer.push(character);
     }
@@ -196,6 +191,54 @@ impl InputSystem {
         &self.keys[key_code as usize]
     }
 
+    /// Mark a physical (or synthesised logical) key as down/up. Safe no-op for
+    /// keys that fall outside the KeyCode discriminant range used as array index.
+    pub fn update_keyboard(&mut self, key_code: KeyCode, state: ElementState) {
+        let index = key_code as usize;
+        if index < self.keys.len() {
+            let pressed = matches!(state, ElementState::Pressed);
+            self.keys[index].set_down(pressed);
+        }
+    }
+
+    /// Game-action keys that should work even while a text box or window has focus.
+    /// Official RO: Insert = sit/stand; F1–F10 = hotbar.
+    pub fn handle_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
+        self.push_game_action_keys(events);
+    }
+
+    fn push_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
+        // Official RO: Insert toggles sit / stand.
+        // Also accept Home as a WSL/laptop-friendly fallback (Insert is often awkward).
+        if self.get_key(KeyCode::Insert).pressed() || self.get_key(KeyCode::Home).pressed() {
+            events.push(InputEvent::ToggleSit);
+        }
+
+        // Official RO maps the main hotbar to F1–F9 (F10 for slot 10).
+        // Our hotbar has 10 slots (0–9) → F1–F10.
+        const HOTBAR_KEYS: [KeyCode; 10] = [
+            KeyCode::F1,
+            KeyCode::F2,
+            KeyCode::F3,
+            KeyCode::F4,
+            KeyCode::F5,
+            KeyCode::F6,
+            KeyCode::F7,
+            KeyCode::F8,
+            KeyCode::F9,
+            KeyCode::F10,
+        ];
+        for (index, key) in HOTBAR_KEYS.into_iter().enumerate() {
+            let slot = HotbarSlot(index as u16);
+            if self.get_key(key).pressed() {
+                events.push(InputEvent::CastSkill { slot });
+            }
+            if self.get_key(key).released() {
+                events.push(InputEvent::StopSkill { slot });
+            }
+        }
+    }
+
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn handle_keyboard_input(
         &mut self,
@@ -203,8 +246,8 @@ impl InputSystem {
         #[cfg(feature = "debug")] process_mouse: bool,
         #[cfg(feature = "debug")] use_debug_camera: bool,
     ) {
-        let alt_down = self.get_key(KeyCode::AltLeft).down();
-        let control_down = self.get_key(KeyCode::ControlLeft).down();
+        let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+        let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
 
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::ToggleMenuWindow);
@@ -228,6 +271,12 @@ impl InputSystem {
 
         if alt_down && self.get_key(KeyCode::KeyQ).pressed() {
             events.push(InputEvent::ToggleEquipmentWindow);
+        }
+
+        // Official RO keeps a corner minimap; we toggle with Alt+M (Ctrl+M is the
+        // debug warp list).
+        if alt_down && self.get_key(KeyCode::KeyM).pressed() {
+            events.push(InputEvent::ToggleMinimapWindow);
         }
 
         if control_down && self.get_key(KeyCode::KeyS).pressed() {
@@ -254,29 +303,9 @@ impl InputSystem {
             events.push(InputEvent::CloseTopWindow);
         }
 
-        if self.get_key(KeyCode::KeyJ).pressed() {
-            events.push(InputEvent::CastSkill { slot: HotbarSlot(0) });
-        }
-
-        if self.get_key(KeyCode::KeyJ).released() {
-            events.push(InputEvent::StopSkill { slot: HotbarSlot(0) });
-        }
-
-        if self.get_key(KeyCode::KeyL).pressed() {
-            events.push(InputEvent::CastSkill { slot: HotbarSlot(1) });
-        }
-
-        if self.get_key(KeyCode::KeyL).released() {
-            events.push(InputEvent::StopSkill { slot: HotbarSlot(1) });
-        }
-
-        if self.get_key(KeyCode::KeyU).pressed() {
-            events.push(InputEvent::CastSkill { slot: HotbarSlot(2) });
-        }
-
-        if self.get_key(KeyCode::KeyU).released() {
-            events.push(InputEvent::StopSkill { slot: HotbarSlot(2) });
-        }
+        // Sit + hotbar always work (also when a UI element has focus — see
+        // `handle_game_action_keys`).
+        self.push_game_action_keys(events);
 
         #[cfg(feature = "debug")]
         if control_down && self.get_key(KeyCode::KeyM).pressed() {

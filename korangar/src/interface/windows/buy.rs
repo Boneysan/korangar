@@ -380,6 +380,7 @@ where
             title: "Buy",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
+            closable: true,
             resizable: true,
             elements: (
                 scroll_view! {

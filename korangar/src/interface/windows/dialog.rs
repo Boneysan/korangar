@@ -1,5 +1,6 @@
 use std::cell::UnsafeCell;
 
+use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::ElementStoreMut;
 use korangar_interface::element::{Element, ElementBox, ErasedElement, StateElement};
 use korangar_interface::layout::{Resolvers, with_single_resolver};
@@ -9,15 +10,21 @@ use rust_state::{Path, RustState, State};
 
 use super::WindowClass;
 use crate::input::InputEvent;
+use crate::loaders::OverflowBehavior;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 
+const MAXIMUM_DIALOG_INPUT_LENGTH: usize = 70;
+
+/// ZST focus id for the dialog input text box.
+struct DialogInputTextBox;
+
 /// A small wrapper struct that serves two purposes:
 /// - Making the elements nicer to construct by putting the [`UnsafeCell::new`]
 ///   and [`Box::new`] behind a function call.
-/// - Storing information about which elements are next buttons since we need to
-///   be able to remove those individually.
+/// - Storing which elements are next / choice / input widgets so we can remove
+///   them when the dialog advances (stale choice buttons get GM-kicked by Hercules).
 #[derive(RustState, StateElement)]
 pub struct DialogElement {
     /// Stores the UI element.
@@ -26,6 +33,8 @@ pub struct DialogElement {
     #[hidden_element]
     element: UnsafeCell<ElementBox<ClientState>>,
     is_next_button: bool,
+    is_input_widget: bool,
+    is_choice_button: bool,
 }
 
 impl DialogElement {
@@ -38,7 +47,39 @@ impl DialogElement {
         Self {
             element: UnsafeCell::new(ErasedElement::new(element)),
             is_next_button,
+            is_input_widget: false,
+            is_choice_button: false,
         }
+    }
+
+    #[inline(always)]
+    fn new_input<E>(element: E) -> Self
+    where
+        E: Element<ClientState> + 'static,
+    {
+        Self {
+            element: UnsafeCell::new(ErasedElement::new(element)),
+            is_next_button: false,
+            is_input_widget: true,
+            is_choice_button: false,
+        }
+    }
+
+    #[inline(always)]
+    fn new_choice<E>(element: E) -> Self
+    where
+        E: Element<ClientState> + 'static,
+    {
+        Self {
+            element: UnsafeCell::new(ErasedElement::new(element)),
+            is_next_button: false,
+            is_input_widget: false,
+            is_choice_button: true,
+        }
+    }
+
+    fn is_transient(&self) -> bool {
+        self.is_next_button || self.is_input_widget || self.is_choice_button
     }
 }
 
@@ -120,6 +161,11 @@ pub struct DialogWindowState {
     /// Whether or not the elements should be cleared the next time
     /// [`start`](Self::start) is called.
     clear_next: bool,
+    /// Buffer for the active NPC number/string input box.
+    input_text: String,
+    /// True while a conversation is open (server holds `npc_id` on the player).
+    /// Closing the window without telling the server leaves the player "busy".
+    active: bool,
 }
 
 impl DialogWindowState {
@@ -127,16 +173,36 @@ impl DialogWindowState {
     /// id when sending packets to the server.
     pub fn initialize(&mut self, npc_id: EntityId) -> &mut Self {
         self.npc_id = npc_id;
+        self.active = true;
         self
+    }
+
+    /// Whether a conversation is in progress (window may or may not still be open).
+    pub fn is_active(&self) -> bool {
+        self.active
+    }
+
+    pub fn npc_id(&self) -> EntityId {
+        self.npc_id
+    }
+
+    /// Drop next / choice / input controls (keep history text).
+    pub fn clear_transient_controls(&mut self) {
+        self.elements.retain(|element| !element.is_transient());
     }
 
     /// Add text to the dialog.
     pub fn add_text(&mut self, text: String) {
         use korangar_interface::prelude::*;
 
+        // New script page: clear after Next, and always drop stale choice buttons.
+        // Leaving old `select()` buttons around makes Hercules GM-kick the player
+        // for "Invalid menu selection ... valid range is [1..0]".
         if self.clear_next {
             self.elements.clear();
             self.clear_next = false;
+        } else {
+            self.clear_transient_controls();
         }
 
         let text = normalize_dialog_text(text);
@@ -155,6 +221,9 @@ impl DialogWindowState {
     /// [`start`](Self::start) is called.
     pub fn add_next_button(&mut self) {
         use korangar_interface::prelude::*;
+
+        // Only one Next at a time; drop leftover choices from a prior select.
+        self.clear_transient_controls();
 
         let npc_id = self.npc_id;
 
@@ -179,7 +248,7 @@ impl DialogWindowState {
     pub fn add_close_button(&mut self) {
         use korangar_interface::prelude::*;
 
-        self.elements.retain(|element| !element.is_next_button);
+        self.clear_transient_controls();
 
         let npc_id = self.npc_id;
 
@@ -202,21 +271,97 @@ impl DialogWindowState {
     pub fn add_choice_buttons(&mut self, choices: Vec<String>) {
         use korangar_interface::prelude::*;
 
-        self.elements.retain(|element| !element.is_next_button);
+        self.clear_transient_controls();
+
+        // Empty menu must not render clickable placeholders — Hercules treats any
+        // selection while `npc_menu == 0` as a hack and GM-kicks the player.
+        if choices.is_empty() {
+            return;
+        }
 
         let npc_id = self.npc_id;
 
         choices.into_iter().enumerate().for_each(|(index, text)| {
-            self.elements.push(DialogElement::new(
-                button! {
-                    text: text,
-                    event: move |_: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                        queue.queue(InputEvent::ChooseDialogOption { npc_id, option: index as i8 + 1 });
-                    },
+            self.elements.push(DialogElement::new_choice(button! {
+                text: text,
+                event: move |_: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                    queue.queue(InputEvent::ChooseDialogOption {
+                        npc_id,
+                        option: index as i8 + 1,
+                    });
                 },
-                false,
-            ))
+            }))
         });
+    }
+
+    /// Show a numeric input box (server `input` / `ZC_OPEN_EDITDLG`).
+    ///
+    /// Keeps existing dialog text; removes next/input widgets so only one
+    /// input control is active.
+    pub fn add_number_input(&mut self) {
+        use korangar_interface::prelude::*;
+
+        self.clear_transient_controls();
+        self.input_text.clear();
+        self.clear_next = false;
+
+        let npc_id = self.npc_id;
+        let input_path = client_state().dialog_window().input_text();
+
+        let submit = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+            let text = state.get(&input_path);
+            let value = text.trim().parse::<i32>().unwrap_or(0);
+            queue.queue(InputEvent::SubmitDialogNumber { npc_id, value });
+        };
+
+        self.elements.push(DialogElement::new_input(text_box! {
+            ghost_text: client_state().localization().dialog_number_input_ghost(),
+            state: input_path,
+            input_handler: DefaultHandler::<_, _, MAXIMUM_DIALOG_INPUT_LENGTH>::new(input_path, submit),
+            focus_id: DialogInputTextBox,
+            overflow_behavior: OverflowBehavior::Shrink,
+        }));
+
+        self.elements.push(DialogElement::new_input(button! {
+            text: client_state().localization().dialog_input_ok_text(),
+            event: submit,
+        }));
+    }
+
+    /// Show a string input box (server `input` string / `ZC_OPEN_EDITDLGSTR`).
+    pub fn add_string_input(&mut self) {
+        use korangar_interface::prelude::*;
+
+        self.clear_transient_controls();
+        self.input_text.clear();
+        self.clear_next = false;
+
+        let npc_id = self.npc_id;
+        let input_path = client_state().dialog_window().input_text();
+
+        let submit = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+            let text = state.get(&input_path).clone();
+            queue.queue(InputEvent::SubmitDialogString { npc_id, text });
+        };
+
+        self.elements.push(DialogElement::new_input(text_box! {
+            ghost_text: client_state().localization().dialog_string_input_ghost(),
+            state: input_path,
+            input_handler: DefaultHandler::<_, _, MAXIMUM_DIALOG_INPUT_LENGTH>::new(input_path, submit),
+            focus_id: DialogInputTextBox,
+            overflow_behavior: OverflowBehavior::Shrink,
+        }));
+
+        self.elements.push(DialogElement::new_input(button! {
+            text: client_state().localization().dialog_input_ok_text(),
+            event: submit,
+        }));
+    }
+
+    /// Drop the input widgets after a successful submit (mes text stays).
+    pub fn finish_input(&mut self) {
+        self.elements.retain(|element| !element.is_input_widget);
+        self.input_text.clear();
     }
 
     /// End the dialog.
@@ -225,6 +370,9 @@ impl DialogWindowState {
     pub fn end(&mut self) {
         self.elements.clear();
         self.clear_next = false;
+        self.input_text.clear();
+        self.active = false;
+        self.npc_id = EntityId(0);
     }
 }
 
@@ -235,6 +383,8 @@ impl Default for DialogWindowState {
             // Arguably not very clean but avoids using an Option.
             npc_id: EntityId(0),
             clear_next: false,
+            input_text: String::new(),
+            active: false,
         }
     }
 }
@@ -318,6 +468,9 @@ where
             title: client_state().localization().dialog_window_title(),
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
+            // Allow canceling out of long/looping NPC scripts. Closing without
+            // notifying the server would leave the player "busy" (ZC_MSG 1923).
+            closable: true,
             elements: (
                 InnerElement {
                     dialog_elements_path: self.window_state_path.elements(),

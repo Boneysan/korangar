@@ -5,14 +5,25 @@ use ron::ser::PrettyConfig;
 use rust_state::RustState;
 use serde::{Deserialize, Serialize};
 
+fn default_true() -> bool {
+    true
+}
+
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
 pub struct GameSettings {
     pub auto_attack: bool,
+    /// Whether the in-game minimap should be shown (Alt+M / Map button).
+    /// Persisted so closing it stays closed across map changes and restarts.
+    #[serde(default = "default_true")]
+    pub show_minimap: bool,
 }
 
 impl Default for GameSettings {
     fn default() -> Self {
-        Self { auto_attack: true }
+        Self {
+            auto_attack: true,
+            show_minimap: true,
+        }
     }
 }
 

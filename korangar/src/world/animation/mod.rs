@@ -141,6 +141,15 @@ impl AnimationState {
         self.looping = false;
     }
 
+    pub fn sit(&mut self, entity_type: EntityType, client_tick: ClientTick) {
+        self.action_type = AnimationActionType::Sit;
+        self.action_base_offset = self.action_type.action_base_offset(entity_type);
+        self.start_time = client_tick;
+        self.duration = None;
+        self.factor = None;
+        self.looping = true;
+    }
+
     pub fn is_attack(&self) -> bool {
         matches!(
             self.action_type,
@@ -154,6 +163,10 @@ impl AnimationState {
 
     pub fn is_walking(&self) -> bool {
         self.action_type == AnimationActionType::Walk
+    }
+
+    pub fn is_sitting(&self) -> bool {
+        self.action_type == AnimationActionType::Sit
     }
 
     pub fn is_dead(&self) -> bool {

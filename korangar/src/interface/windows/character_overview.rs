@@ -113,6 +113,10 @@ where
                     event: InputEvent::ToggleFriendListWindow,
                 },
                 button! {
+                    text: client_state().localization().minimap_button_text(),
+                    event: InputEvent::ToggleMinimapWindow,
+                },
+                button! {
                     text: client_state().localization().menu_button_text(),
                     event: InputEvent::ToggleMenuWindow,
                 },
