@@ -113,20 +113,10 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Structured combat log** with event filtering — consumes the `[DMJ]` structured echo ([DM_INTERFACE.md](DM_INTERFACE.md) §9.3); doubles as the DM's verification surface for checks and damage.
   - **End-of-Encounter Recap:** when the DM finishes an encounter, pop up a quick "Encounter Summary" tab showing who took the most damage, who healed the most, and MVP actions.
 
-- [ ] **Player trade** *(in scope — see scope note; distinct from brokering)*:
-  - **Secure trade window:** drag items in, a zeny field, and **both-confirm**; on
-    confirm the offer **locks and any last-second change is highlighted** — P13
-    error-prevention applied (the classic RO trade-scam guard; still worth it among
-    friends to catch honest mistakes). Main path for passing DM-distributed loot
-    around ([DM_INTERFACE.md](DM_INTERFACE.md)).
-  - **Build note — this is greenfield protocol work, not "extend."** Unlike the
-    Core windows, trade is *unimplemented* in Korangar: the `0x00E4`–`0x00F0` trade
-    packet family isn't defined in `ragnarok-packets`, so the client can't even
-    *frame* an incoming trade request today (§5.3). Work: define the trade packets →
-    register handlers in `version_20220406.rs` → add send methods in
-    `korangar-networking/src/lib.rs` → build the window. **Hercules supports player
-    trade natively**, so it's *client-only*. **Sits post-MVP** (§8.2/§8.3 MVP is
-    combat-legibility first); the scope-note fix lands now, the window after.
+- [x] **Player trade (protocol MVP, 2026-07-10)** *(in scope — distinct from brokering)*:
+  - Packets + request/accept windows, lock/commit/cancel, `/trade` commands shipped.
+  - **Still open:** drag-item grid, zeny field UI polish, last-second change highlight
+    (P13 trade-scam guard), two-client live validation.
 
 - [ ] **Group play & session conveniences** *(client-only or already server-supported — cheap, high value for game nights)*:
   - **Auto-reconnect:** on a dropped connection, re-run login → char → map with

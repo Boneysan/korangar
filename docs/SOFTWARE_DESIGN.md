@@ -344,12 +344,12 @@ Verified by opcode + name sweep (2026-07-05).
 |---|---|---|---|
 | **Party data** | group-list/roster, member HP & position updates, party chat (`0x0108`/`0x0109`), leave/kick/leader | **Live desync risk today**: the campaign runs party-locked (`$dm_active_party`); forming a party makes Hercules send these every session. Also means **party frames (MVP cut) are greenfield protocol work**, not extend-work. | **Phase 1 — define + register (noop at minimum) before the first party session** |
 | **Whisper** | `0x0096` (C→S), `0x0097`/`0x0098` (S→C) | Blocks `/r` reply + history; **may break [DM_INTERFACE.md](DM_INTERFACE.md) `@dmsecret`** — verify whether `dm_voice.txt` sends real whispers or `dispbottom` | Phase 1 verify; define with party work |
-| **Storage actions** | open/move-item/close (C→S) | Storage *contents* likely already framable — `RegularItemListPacket` (`0x0B09`) carries `inventory_type` (unified item lists) — but the client can't act on storage | Phase 2, with the Inventory & storage feature |
-| **Trade** | `0x00E4`–`0x00F0` family | Already documented in [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) Player trade | Post-MVP |
+| **Storage actions** | open/move-item/close (C→S) | **Shipped 2026-07-10** — invType storage lists + `0x0364`/`0x0365`/`0x00F7` C→S + window (`/store` `/retrieve`) | Polish: full item grid |
+| **Trade** | `0x00E4`–`0x00F0` / `0x01F4`–`0x01F5` / `0x0A96` | **Shipped 2026-07-10** — request/accept, add item/zeny, lock/commit/cancel + windows | Polish: drag UX, partner name on initiate |
 
-**Non-gap confirmed:** cast bars are covered — `UseSkillSuccessPacket` (`0x07FB`,
-carries `delay_time`) is defined and noop-registered
-([FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) §8.3 MVP row).
+**Non-gap confirmed:** cast bars — `UseSkillSuccess`/`UseSkillAck` (`0x07FB`/`0x0B1A`)
+promoted to a local cast progress bar (2026-07-10). Identify list/result + use-item
+(`0x0177`/`0x0179`/`0x0439`/`0x0A35`) also modeled.
 
 **Rule:** before any feature or server-script change that makes Hercules emit a new
 packet class, sweep this list and `ragnarok-packets` first (risk 9, §11).
@@ -477,6 +477,7 @@ The protocol-level contract remains:
 | 2026-07-05 | Added §5.3 Transport & framing (threading/channels, framing-by-deserialization, the "every packet must be registered" correctness rule, account-id first-read, 10 s keepalive + time sync, MTU cap, disconnect paths + reconnect gap); resolved the §3.2 reconnect/error gap |
 | 2026-07-05 | Added §8.3 Packet-handler backlog — all 51 `register_noop` packets from `version_20220406.rs` grouped and prioritized (MVP/High/Med/Low/out-of-scope) against Phase 2 features; wired into Phase 1 checklist |
 | 2026-07-05 | Clarified scope note (direct 1-on-1 trade in scope, distinct from out-of-scope brokering); added Phase 2 Player-trade feature (secure trade window, post-MVP) — flagged as greenfield protocol work since the `0x00E4`–`0x00F0` trade packets aren't defined in `ragnarok-packets`; fixed §10 test line |
+| 2026-07-10 | Trade + kafra storage + identify packets modeled and client-wired (MVP windows + chat cmds); cast bar promoted; EN shop names confirmed live (tool dealer) |
 | 2026-07-05 | Wrote `docs/specs/buff-bar-slice.md` — first end-to-end implementation spec (StatusChangePacket → NetworkEvent → StatusEffects state → StatusBarWindow + per-frame tick), grounded in the real `korangar-interface` window/state pattern; serves as the template for §8.3 promotions |
 | 2026-07-05 | Corrected §8.3: `StateChangePacket` is entity option-flags (sit/cloak/PK/effect), not a timed buff — moved from the MVP buff row to the World/map row; MVP buff row now `StatusChangePacket` + `StatusChangeSequencePacket` only, linked to the slice spec |
 | 2026-07-05 | Added Phase 2 groups: Group play & session conveniences (auto-reconnect, auto-follow, auto-loot toggle, fast-travel/return, whisper reply+history, death recap; chat-bubbles flagged verify-only) and Shared party coordination (ready check, raid/target markers, assist targeting) — the latter flagged as riding one shared-state transport with map ping (§9.3); promoted §5.3 reconnect gap to a planned feature |

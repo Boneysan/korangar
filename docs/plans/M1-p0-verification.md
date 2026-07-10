@@ -8,8 +8,10 @@
 | **Depends on** | M0 complete |
 
 **Recent client UX (not a substitute for this checklist):** minimap + Towninfo POIs,
-player blip, open/close preference, hotbar F1–F10 labels, msgstringtable for `ZC_MSG`,
-sit (Insert), dialog input/close fixes. Still run every P0 row live.
+player blip, party/compass marks, open/close preference, hotbar F1–F10 + CD overlay,
+HUD (zeny/EXP), msgstringtable for `ZC_MSG`, sit (Insert), dialog input/close,
+shops + **EN itemInfo names** (tool dealer checked 2026-07-10), identify/trade/storage
+protocol MVPs. Still run every P0 row live.
 
 ## 1. Scope
 
@@ -61,6 +63,9 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [ ] Inventory open / use / equip / unequip / drop
 - [ ] NPC shop buy
 - [ ] NPC shop sell
+- [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
+- [ ] Item identify (magnifier / double-click unidentified) — protocol landed; verify live
+- [ ] Kafra storage open / store / retrieve / close — protocol landed; verify live
 
 ### Social (P0)
 - [ ] Public chat send + receive

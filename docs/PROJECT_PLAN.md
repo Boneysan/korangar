@@ -107,7 +107,7 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Hotbar / hotkeys (incl. server-stored hotkeys) | ✅ | P0 | `SetHotkeyData` |
 | Death → respawn / resurrect | ✅ | P0 | |
 | Job change visuals, hair/appearance change | 🔶 | P1 | Events exist; verify sprite swaps for all jobs in our DB |
-| Experience/level-up display, job exp | 🔶 | P0 | Verify |
+| Experience/level-up display, job exp | 🔶 | P0 | HUD shows base/job EXP + zeny (2026-07-10); live gain toast via `0x0ACC`; verify bars feel complete |
 | Weight limit / overweight indicators | ✅ | P1 | Inventory footer; soft/hard overweight coloring (2026-07-09) |
 | Status effect icons (buffs/debuffs) | 🔶 | P1 | MVP text status bar + timers (2026-07-09); real SC icons still missing |
 | Elemental/size/race damage display conventions | 🔶 | P2 | Damage numbers exist |
@@ -117,11 +117,11 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 ### 2.3 Items & economy
 | Feature | Korangar | Pri | Notes |
 |---|---|---|---|
-| Inventory (use/equip/drop), equipment window | ✅ | P0 | |
-| NPC buy / sell | ✅ | P0 | Full cart flow implemented |
-| Item identification (magnifier) | ❌ | P1 | |
-| Player↔player trade | ❌ | **P1** | Core multiplayer economy |
-| Kafra storage | ❌ | **P1** | |
+| Inventory (use/equip/drop), equipment window | ✅ | P0 | Double-click use (consumables) / equip |
+| NPC buy / sell | ✅ | P0 | Full cart flow; shop `0x0B77` wire + EN names (tool dealer live-checked 2026-07-10) |
+| Item identification (magnifier) | 🔶 | P1 | Protocol + dialog + one-click/use-item path (2026-07-10); polish identify list UI |
+| Player↔player trade | 🔶 | **P1** | Packets + request/window/lock/commit + `/trade` cmds (2026-07-10); drag grid polish later |
+| Kafra storage | 🔶 | **P1** | List via invType + store/retrieve/close C→S (2026-07-10); item grid polish later |
 | Guild storage | ❌ | P2 | After guilds |
 | Cart inventory | ❌ | P2 | Merchant line |
 | Vending (open shop, buy from shops) | ❌ | P2 | Merchant line; big packet surface |
@@ -145,9 +145,9 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Whisper / private messages | 🔶 | **P1** | Protocol + slash commands live-validated; `/r` history UI later |
 | Party chat / Guild chat channels | ❌ | P1 | Depends on party/guild |
 | Chat rooms (in-map chat bubbles/rooms) | ❌ | P3 | Legacy feature |
-| Emotes (`/emotion`, Alt+numbers) | ❌ | P1 | Sprite-based, well-documented packets |
-| Friends list (add/remove/requests) | ✅ | P1 | Implemented |
-| **Party**: create, invite, leave, kick, exp/item share, party HP bars, party options | 🔶 | **P1** | Protocol + slash commands live-validated (2026-07-08); party frame UI still greenfield |
+| Emotes (`/emotion`, Alt+numbers) | 🔶 | P1 | Receive + `/emotion`/`/e` send (2026-07-10); balloon sprites still open |
+| Friends list (add/remove/requests) | ✅ | P1 | Online/offline presence (`0x0206`) + list glyphs (2026-07-10) |
+| **Party**: create, invite, leave, kick, exp/item share, party HP bars, party options | 🔶 | **P1** | Protocol + slash cmds live-validated; roster window + minimap blips + world ally HP bars (2026-07-10) |
 | Party booking / party finder | ❌ | P3 | |
 | **Guild**: create, invite, positions, notice, skills, emblem, expel, alliance/antagonist | ❌ | P2 | Emblems may touch api-server (`conf/import/emblems.conf` exists) |
 | Guild war / WoE participation (castle UI, emperium) | ❌ | P2 | After guild core |
@@ -179,12 +179,12 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | NPC dialog: next/close/menu choices | ✅ | P0 | |
 | NPC input: number entry, text entry | ✅ | P0 | Packets + dialog UI 2026-07-09; confirm live in E3.1 |
 | Warps, map changes, airship | ✅ | P0 | `ChangeMap` |
-| Kafra services (storage/save/teleport/cart) | 🔶 | P1 | Dialog-driven; storage window itself is ❌ (2.3) |
+| Kafra services (storage/save/teleport/cart) | 🔶 | P1 | Dialog-driven; storage window + C→S move/close (2026-07-10); cart still open |
 | Instances / memorial dungeons (UI + countdown) | ❌ | P3 | Server-driven; base entry may work via dialog |
 | Quest log / journal (accept/track quests) | ❌ | P2 | Quest effects (map markers) ✅; journal window missing |
 | Achievements & titles | ❌ | P3 | |
 | Navigation system (cross-map route guidance) | ❌ | P3 | `NavigationData/` available; Korangar could ship a better native version |
-| World map / minimap | 🔶 | P1 | In-game minimap (2026-07-10): map bmp, player blip, Towninfo POIs, open/close; party/quest/compass markers still open |
+| World map / minimap | 🔶 | P1 | Map bmp, player blip, Towninfo POIs, party blips, compass `0x0144` (2026-07-10); quest log markers still open |
 
 ### 2.8 UI / UX / client system
 | Feature | Korangar | Pri | Notes |
@@ -198,7 +198,7 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | BGM + sound effects | ✅ | P0 | `korangar-audio`; point at `H:\RO\client\BGM` |
 | Video cutscenes | ✅ | P3 | `korangar-video` |
 | Localization (msgstringtable) | 🔶 | P2 | `ZC_MSG` ids resolve via `data/msgstringtable.txt` (2026-07-10); UI strings still Korangar `languages/*.ron` (§5-I4) |
-| Item/skill names, descriptions, icons (itemInfo.lua etc.) | 🔶 | **P1** | Must reflect our DB incl. campaign customs; verify Korangar's data source (E2.1) |
+| Item/skill names, descriptions, icons (itemInfo.lua etc.) | 🔶 | **P1** | EN overlay via `itemInfo_EN` (shops live: tool dealer EN names 2026-07-10); campaign customs still need table coverage (E2.1) |
 | Settings/window-layout persistence (savedata/) | ✅ | P0 | Korangar has its own settings system |
 | Tip of the day / guild tips | ❌ | P3 | `tipOfTheDay.txt` available |
 | Official patcher/launcher | ❌ | P2 | Replace with own updater (E8) |
@@ -214,8 +214,9 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 | Item mall / barter shops | 🔶 | P2 | Barter uses extended shop packets — verify vs 20220406 |
 
 **Summary:** Korangar covers the P0 single-player core loop nearly completely.
-The dominant gaps are **multiplayer social/economy systems** (trade, storage,
-whisper, party → guild → vending) and the **long tail of renewal-era subsystem UIs**.
+Trade, storage, party roster, and identify are **protocol-live (2026-07-10)** but still
+need live two-client polish and richer grids. Dominant remaining gaps: **guild /
+vending**, **SC icons**, **quest journal**, and the long tail of renewal subsystem UIs.
 
 ---
 
@@ -280,13 +281,13 @@ Protocol-safety starter plan: [plans/packet-gap-party-whisper.md](plans/packet-g
 | ID | Task | Size | Depends on |
 |---|---|---|---|
 | E4.1 | Whisper / private messages (+chat channel routing UI) | M | M1 |
-| E4.2 | Emotes | S | M1 |
-| E4.3 | Player↔player trade (request/confirm/item+zeny/cancel) | L | M1 |
-| E4.4 | Kafra storage window (open/store/retrieve/close) | M | M1 |
-| E4.5 | Party: create/invite/leave/kick/options/exp share/party HP overlay | L | M1 |
-| E4.6 | Status effect icons (buff/debuff bar) | M | M1 |
-| E4.7 | Item identification (magnifier) | S | M1 |
-| E4.8 | Minimap markers (party members, quest) | M | E4.5 |
+| E4.2 | Emotes | S | M1 — receive + `/emotion` shipped; sprites later |
+| E4.3 | Player↔player trade (request/confirm/item+zeny/cancel) | L | M1 — protocol + MVP UI 2026-07-10; polish drag/zeny UX |
+| E4.4 | Kafra storage window (open/store/retrieve/close) | M | M1 — protocol + window 2026-07-10; item grid polish |
+| E4.5 | Party: create/invite/leave/kick/options/exp share/party HP overlay | L | M1 — roster + minimap + ally HP 2026-07-10; options UI later |
+| E4.6 | Status effect icons (buff/debuff bar) | M | M1 — text bar live; real icons open |
+| E4.7 | Item identification (magnifier) | S | M1 — protocol + dialog 2026-07-10; list UI polish |
+| E4.8 | Minimap markers (party members, quest) | M | Party+compass done 2026-07-10; quest markers open |
 | E4.9 | **M2 demo**: two-client session script | S | E4.1–E4.5 |
 
 ### E5 — Guild & economy (Tier 2) *(→ M3)*
