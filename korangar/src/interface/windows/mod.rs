@@ -20,11 +20,14 @@ mod game_settings;
 mod graphics_settings;
 mod hotbar;
 mod hud;
+mod identify;
 mod interface_settings;
 mod inventory;
 mod login;
 mod minimap;
 mod party;
+mod storage;
+mod trade;
 #[cfg(feature = "debug")]
 mod maps;
 mod menu;
@@ -68,12 +71,15 @@ pub use self::game_settings::GameSettingsWindow;
 pub use self::graphics_settings::GraphicsSettingsWindow;
 pub use self::hotbar::HotbarWindow;
 pub use self::hud::HudWindow;
+pub use self::identify::IdentifyWindow;
 pub use self::interface_settings::InterfaceSettingsWindow;
 pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 pub use self::minimap::MinimapWindow;
 pub use self::party::PartyWindow;
+pub use self::storage::StorageWindow;
+pub use self::trade::{TradeRequestWindow, TradeWindow};
 #[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
@@ -119,6 +125,10 @@ pub enum WindowClass {
     Menu,
     Minimap,
     Party,
+    Storage,
+    Trade,
+    TradeRequest,
+    Identify,
     Respawn,
     SelectServer,
     Sell,

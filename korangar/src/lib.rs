@@ -1882,6 +1882,197 @@ impl Client {
                         .follow_mut(client_state().inventory())
                         .fill(&self.async_loader, items);
                 }
+                NetworkEvent::SetStorage { items } => {
+                    self.client_state
+                        .follow_mut(client_state().storage())
+                        .set_list(&self.async_loader, items);
+                    if !self.interface.is_window_with_class_open(WindowClass::Storage) {
+                        self.interface
+                            .open_window(StorageWindow::new(client_state().storage()));
+                    }
+                }
+                NetworkEvent::StorageAmount { amount, max_amount } => {
+                    self.client_state
+                        .follow_mut(client_state().storage())
+                        .set_amount(amount, max_amount);
+                }
+                NetworkEvent::StorageItemAdded { item } => {
+                    self.client_state
+                        .follow_mut(client_state().storage())
+                        .add_item(&self.async_loader, item);
+                }
+                NetworkEvent::StorageItemRemoved { index, amount } => {
+                    self.client_state
+                        .follow_mut(client_state().storage())
+                        .remove_item(index, amount);
+                }
+                NetworkEvent::StorageClosed => {
+                    self.client_state.follow_mut(client_state().storage()).close();
+                    self.interface.close_window_with_class(WindowClass::Storage);
+                }
+                NetworkEvent::ItemIdentifyList { indices } => {
+                    self.client_state.follow_mut(client_state().identify_state()).set_list(indices);
+                    if !self.interface.is_window_with_class_open(WindowClass::Identify) {
+                        self.interface
+                            .open_window(IdentifyWindow::new(client_state().identify_state()));
+                    }
+                }
+                NetworkEvent::ItemIdentified {
+                    inventory_index,
+                    success,
+                } => {
+                    if success {
+                        self.client_state
+                            .follow_mut(client_state().inventory())
+                            .mark_identified(inventory_index);
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Item identified.".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    } else {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Identify cancelled or failed.".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    }
+                    self.client_state.follow_mut(client_state().identify_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Identify);
+                }
+                NetworkEvent::TradeRequest {
+                    name,
+                    character_id,
+                    base_level,
+                } => {
+                    self.client_state
+                        .follow_mut(client_state().trade_state())
+                        .set_pending(name.clone(), character_id, base_level);
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Trade request from {name} (Lv{base_level})."),
+                        MessageColor::Information,
+                    ));
+                    if !self.interface.is_window_with_class_open(WindowClass::TradeRequest) {
+                        self.interface.open_window(TradeRequestWindow);
+                    }
+                }
+                NetworkEvent::TradeStart {
+                    result,
+                    character_id,
+                    base_level,
+                } => match result {
+                    3 => {
+                        let name = self
+                            .client_state
+                            .follow(client_state().trade_state())
+                            .pending_name()
+                            .to_owned();
+                        let name = if name.is_empty() {
+                            "Partner".to_owned()
+                        } else {
+                            name
+                        };
+                        self.client_state.follow_mut(client_state().trade_state()).open_with_partner(
+                            name,
+                            character_id,
+                            base_level,
+                        );
+                        self.interface.close_window_with_class(WindowClass::TradeRequest);
+                        if !self.interface.is_window_with_class_open(WindowClass::Trade) {
+                            self.interface
+                                .open_window(TradeWindow::new(client_state().trade_state()));
+                        }
+                    }
+                    0 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Trade failed: character is too far.".to_owned(),
+                        MessageColor::Error,
+                    )),
+                    1 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Trade failed: character not found.".to_owned(),
+                        MessageColor::Error,
+                    )),
+                    4 => {
+                        self.client_state.follow_mut(client_state().trade_state()).clear();
+                        self.interface.close_window_with_class(WindowClass::TradeRequest);
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Trade rejected.".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    }
+                    5 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Trade failed: target is busy.".to_owned(),
+                        MessageColor::Error,
+                    )),
+                    _ => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Trade failed (result {result})."),
+                        MessageColor::Error,
+                    )),
+                },
+                NetworkEvent::TradePartnerItem {
+                    item_id,
+                    amount,
+                    identified,
+                    refine,
+                    ..
+                } => {
+                    self.client_state.follow_mut(client_state().trade_state()).add_partner_item(
+                        item_id,
+                        amount,
+                        identified,
+                        refine,
+                    );
+                }
+                NetworkEvent::TradeAddItemResult {
+                    inventory_index,
+                    result,
+                } => {
+                    if result == 0 {
+                        let ours = self
+                            .client_state
+                            .follow(client_state().inventory().items())
+                            .iter()
+                            .find(|i| i.index == inventory_index)
+                            .map(|item| {
+                                let amount = match &item.details {
+                                    korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+                                    _ => 1,
+                                };
+                                (item.item_id, amount, format!("item {} x{amount}", item.item_id.0))
+                            });
+                        if let Some((item_id, amount, label)) = ours {
+                            self.client_state
+                                .follow_mut(client_state().trade_state())
+                                .note_our_item(item_id, amount, label);
+                        }
+                    } else {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Could not add item to trade (result {result})."),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
+                NetworkEvent::TradeLocked { who } => {
+                    self.client_state.follow_mut(client_state().trade_state()).lock_side(who);
+                }
+                NetworkEvent::TradeCancelled => {
+                    self.client_state.follow_mut(client_state().trade_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Trade);
+                    self.interface.close_window_with_class(WindowClass::TradeRequest);
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Trade cancelled.".to_owned(),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::TradeCompleted { success } => {
+                    self.client_state.follow_mut(client_state().trade_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Trade);
+                    let msg = if success {
+                        "Trade completed.".to_owned()
+                    } else {
+                        "Trade failed.".to_owned()
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(msg, MessageColor::Information));
+                }
                 NetworkEvent::IventoryItemAdded { item } => {
                     self.client_state
                         .follow_mut(client_state().inventory())
@@ -2930,6 +3121,111 @@ impl Client {
                         continue;
                     }
 
+                    if let Some(rest) = text.strip_prefix("/identify ") {
+                        if let Ok(index) = rest.trim().parse::<u16>() {
+                            let _ = self
+                                .networking_system
+                                .request_item_identify(ragnarok_packets::InventoryIndex(index));
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /identify <inventory_index>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/store ") {
+                        let mut parts = rest.trim().split_whitespace();
+                        if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
+                            let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
+                            let _ = self
+                                .networking_system
+                                .move_item_to_storage(ragnarok_packets::InventoryIndex(index), amount);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /store <inventory_index> [amount]".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/retrieve ") {
+                        let mut parts = rest.trim().split_whitespace();
+                        if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
+                            let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
+                            let _ = self
+                                .networking_system
+                                .move_item_from_storage(ragnarok_packets::InventoryIndex(index), amount);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /retrieve <storage_index> [amount]".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/trade ") {
+                        let rest = rest.trim();
+                        let (command, arguments) = rest.split_once(' ').unwrap_or((rest, ""));
+                        let arguments = arguments.trim();
+                        match command {
+                            "request" if !arguments.is_empty() => {
+                                if let Ok(aid) = arguments.parse::<u32>() {
+                                    let _ = self.networking_system.request_trade(ragnarok_packets::AccountId(aid));
+                                } else {
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "Usage: /trade request <account_id>".to_owned(),
+                                        MessageColor::Information,
+                                    ));
+                                }
+                            }
+                            "add" => {
+                                let mut parts = arguments.split_whitespace();
+                                if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
+                                    let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
+                                    let _ = self
+                                        .networking_system
+                                        .trade_add_item(ragnarok_packets::InventoryIndex(index), amount);
+                                } else {
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "Usage: /trade add <inventory_index> [amount]".to_owned(),
+                                        MessageColor::Information,
+                                    ));
+                                }
+                            }
+                            "zeny" => {
+                                if let Ok(amount) = arguments.parse::<u32>() {
+                                    let _ = self.networking_system.trade_add_zeny(amount);
+                                    self.client_state.follow_mut(client_state().trade_state()).set_our_zeny(amount);
+                                } else {
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "Usage: /trade zeny <amount>".to_owned(),
+                                        MessageColor::Information,
+                                    ));
+                                }
+                            }
+                            "ok" => {
+                                let _ = self.networking_system.trade_ok();
+                            }
+                            "commit" => {
+                                let _ = self.networking_system.trade_commit();
+                            }
+                            "cancel" => {
+                                let _ = self.networking_system.trade_cancel();
+                            }
+                            _ => {
+                                self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                    "Usage: /trade request|add|zeny|ok|commit|cancel …".to_owned(),
+                                    MessageColor::Information,
+                                ));
+                            }
+                        }
+                        continue;
+                    }
+
                     if let Some(message) = text.strip_prefix("/p ") {
                         let player_name = self.client_state.follow(client_state().player_name()).to_owned();
                         let _ = self.networking_system.send_party_chat_message(&player_name, message);
@@ -3088,8 +3384,58 @@ impl Client {
                     (ItemSource::Equipment { .. }, ItemSource::Inventory) => {
                         let _ = self.networking_system.request_item_unequip(item.index);
                     }
+                    (ItemSource::Inventory, ItemSource::Storage) => {
+                        let amount = match &item.details {
+                            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+                            _ => 1,
+                        };
+                        let _ = self.networking_system.move_item_to_storage(item.index, amount);
+                    }
+                    (ItemSource::Storage, ItemSource::Inventory) => {
+                        let amount = match &item.details {
+                            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+                            _ => 1,
+                        };
+                        let _ = self.networking_system.move_item_from_storage(item.index, amount);
+                    }
                     _ => {}
                 },
+                InputEvent::UseItem { inventory_index } => {
+                    if let Some(account_id) = self.saved_login_data.as_ref().map(|d| d.account_id) {
+                        let _ = self.networking_system.use_item(inventory_index, account_id);
+                    }
+                }
+                InputEvent::IdentifyItem { inventory_index } => {
+                    let _ = self.networking_system.one_click_item_identify(inventory_index);
+                }
+                InputEvent::IdentifyCancel => {
+                    let _ = self.networking_system.cancel_item_identify();
+                    self.client_state.follow_mut(client_state().identify_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Identify);
+                }
+                InputEvent::TradeAccept => {
+                    let _ = self.networking_system.accept_trade();
+                    self.interface.close_window_with_class(WindowClass::TradeRequest);
+                }
+                InputEvent::TradeReject => {
+                    let _ = self.networking_system.reject_trade();
+                    self.client_state.follow_mut(client_state().trade_state()).clear_pending();
+                    self.interface.close_window_with_class(WindowClass::TradeRequest);
+                }
+                InputEvent::TradeOk => {
+                    let _ = self.networking_system.trade_ok();
+                }
+                InputEvent::TradeCommit => {
+                    let _ = self.networking_system.trade_commit();
+                }
+                InputEvent::TradeCancel => {
+                    let _ = self.networking_system.trade_cancel();
+                    self.client_state.follow_mut(client_state().trade_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Trade);
+                }
+                InputEvent::CloseStorage => {
+                    let _ = self.networking_system.close_storage();
+                }
                 InputEvent::MoveSkill {
                     source,
                     destination,

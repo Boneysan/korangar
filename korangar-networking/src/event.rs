@@ -400,6 +400,64 @@ pub enum NetworkEvent {
         /// Cast duration in milliseconds (`delay_time`).
         cast_ms: u32,
     },
+    /// Magnifier / identify skill: list of inventory indices (`ZC_ITEMIDENTIFY_LIST`).
+    ItemIdentifyList {
+        indices: Vec<InventoryIndex>,
+    },
+    /// Identify result (`ZC_ACK_ITEMIDENTIFY`).
+    ItemIdentified {
+        inventory_index: InventoryIndex,
+        success: bool,
+    },
+    /// Incoming trade request (`ZC_REQ_EXCHANGE_ITEM2`).
+    TradeRequest {
+        name: String,
+        character_id: CharacterId,
+        base_level: u16,
+    },
+    /// Trade window open / request result (`ZC_ACK_EXCHANGE_ITEM2`).
+    TradeStart {
+        result: u8,
+        character_id: CharacterId,
+        base_level: u16,
+    },
+    /// Partner added an item to the trade.
+    TradePartnerItem {
+        item_id: ItemId,
+        item_type: u8,
+        amount: u32,
+        identified: bool,
+        refine: u8,
+    },
+    /// Our add-item to trade result.
+    TradeAddItemResult {
+        inventory_index: InventoryIndex,
+        result: u8,
+    },
+    /// One side locked the trade (`who`: 0 self, 1 partner).
+    TradeLocked {
+        who: u8,
+    },
+    TradeCancelled,
+    TradeCompleted {
+        success: bool,
+    },
+    /// Full storage item list (via inventory_type = STORAGE).
+    SetStorage {
+        items: Vec<InventoryItem<NoMetadata>>,
+    },
+    StorageAmount {
+        amount: u16,
+        max_amount: u16,
+    },
+    StorageItemAdded {
+        item: InventoryItem<NoMetadata>,
+    },
+    StorageItemRemoved {
+        index: InventoryIndex,
+        amount: u32,
+    },
+    StorageClosed,
 }
 
 /// New-type so we can implement some `From` traits. This will help when

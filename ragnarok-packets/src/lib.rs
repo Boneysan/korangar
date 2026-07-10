@@ -3963,6 +3963,241 @@ pub struct RequestUnequipItemStatusPacket {
     pub result: RequestUnequipItemStatus,
 }
 
+// --- Use item / identify / trade / storage (PACKETVER 20220406 / Hercules) ---
+
+/// Use an inventory item (`CZ_USE_ITEM2` 0x0439).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0439)]
+pub struct UseItemPacket {
+    pub inventory_index: InventoryIndex,
+    pub account_id: AccountId,
+}
+
+/// List of inventory indices that can be identified (`ZC_ITEMIDENTIFY_LIST` 0x0177).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0177)]
+#[variable_length]
+pub struct ItemIdentifyListPacket {
+    #[repeating_remaining]
+    pub indices: Vec<InventoryIndex>,
+}
+
+/// Player selected an item to identify, or cancelled (`CZ_REQ_ITEMIDENTIFY` 0x0178).
+/// Use `index == -1` to cancel the dialog.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0178)]
+pub struct RequestItemIdentifyPacket {
+    pub index: i16,
+}
+
+/// Result of an identify request (`ZC_ACK_ITEMIDENTIFY` 0x0179).
+/// `result == 0` means success.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0179)]
+pub struct ItemIdentifyResultPacket {
+    pub inventory_index: InventoryIndex,
+    pub result: u8,
+}
+
+/// One-click identify with a magnifier (`CZ_REQ_ONECLICK_ITEMIDENTIFY` 0x0A35).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0A35)]
+pub struct OneClickItemIdentifyPacket {
+    pub inventory_index: InventoryIndex,
+}
+
+/// Incoming trade request (`ZC_REQ_EXCHANGE_ITEM2` 0x01F4).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01F4)]
+pub struct TradeRequestPacket {
+    #[length(24)]
+    pub name: String,
+    pub character_id: CharacterId,
+    pub base_level: u16,
+}
+
+/// Request to trade with another player (`CZ_REQ_EXCHANGE_ITEM` 0x00E4).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00E4)]
+pub struct RequestTradePacket {
+    pub account_id: AccountId,
+}
+
+/// Accept (3) or reject (4) a trade request (`CZ_ACK_EXCHANGE_ITEM` 0x00E6).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00E6)]
+pub struct TradeAckPacket {
+    pub result: u8,
+}
+
+/// Trade request reply / trade window open (`ZC_ACK_EXCHANGE_ITEM2` 0x01F5).
+/// result: 0 too far, 1 no char, 2 fail, 3 accept, 4 cancel, 5 busy.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01F5)]
+pub struct TradeStartPacket {
+    pub result: u8,
+    pub character_id: CharacterId,
+    pub base_level: u16,
+}
+
+/// Add item or zeny to the trade (`CZ_ADD_EXCHANGE_ITEM` 0x00E8).
+/// `inventory_index == 0` means zeny; amount is the zeny value.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00E8)]
+pub struct TradeAddItemPacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Other player's item added to the trade (`ZC_ADD_EXCHANGE_ITEM` 0x0A96).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0A96)]
+pub struct TradeAddItemNotifyPacket {
+    pub item_id: ItemId,
+    pub item_type: u8,
+    pub amount: u32,
+    pub identified: u8,
+    pub damaged: u8,
+    pub refine: u8,
+    pub slot: [u32; 4],
+    pub option_data: [ItemOptions; 5],
+    pub location: u32,
+    pub look: u16,
+}
+
+/// Result of adding our item to the trade (`ZC_ACK_ADD_EXCHANGE_ITEM` 0x00EA).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00EA)]
+pub struct TradeAddItemResultPacket {
+    pub inventory_index: InventoryIndex,
+    pub result: u8,
+}
+
+/// Lock / conclude one side of the trade (`CZ_CONCLUDE_EXCHANGE_ITEM` 0x00EB).
+#[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00EB)]
+pub struct TradeOkPacket {}
+
+/// One side locked their trade offer (`ZC_CONCLUDE_EXCHANGE_ITEM` 0x00EC).
+/// `who`: 0 = self, 1 = other.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00EC)]
+pub struct TradeLockPacket {
+    pub who: u8,
+}
+
+/// Cancel trade (`CZ_CANCEL_EXCHANGE_ITEM` 0x00ED).
+#[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00ED)]
+pub struct TradeCancelPacket {}
+
+/// Trade cancelled (`ZC_CANCEL_EXCHANGE_ITEM` 0x00EE).
+#[derive(Debug, Clone, Default, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00EE)]
+pub struct TradeCancelledPacket {}
+
+/// Commit trade (`CZ_EXEC_EXCHANGE_ITEM` 0x00EF).
+#[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00EF)]
+pub struct TradeCommitPacket {}
+
+/// Trade finished (`ZC_EXEC_EXCHANGE_ITEM` 0x00F0). `result`: 0 success, 1 failure.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00F0)]
+pub struct TradeCompletedPacket {
+    pub result: u8,
+}
+
+/// Move inventory item into storage (`CZ_MOVE_ITEM_FROM_BODY_TO_STORE2` 0x0364).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0364)]
+pub struct MoveItemToStoragePacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Move storage item into inventory (`CZ_MOVE_ITEM_FROM_STORE_TO_BODY2` 0x0365).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0365)]
+pub struct MoveItemFromStoragePacket {
+    pub storage_index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Close storage (`CZ_CLOSE_STORE` 0x00F7).
+#[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00F7)]
+pub struct CloseStoragePacket {}
+
+/// Storage capacity (`ZC_NOTIFY_STOREITEM_COUNTINFO` 0x00F2).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00F2)]
+pub struct StorageAmountPacket {
+    pub amount: u16,
+    pub max_amount: u16,
+}
+
+/// Item added to storage (`ZC_ADD_ITEM_TO_STORE` 0x0A0A).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0A0A)]
+pub struct StorageItemAddedPacket {
+    pub index: InventoryIndex,
+    pub amount: u32,
+    pub item_id: ItemId,
+    pub item_type: u8,
+    pub identified: u8,
+    pub damaged: u8,
+    pub refine: u8,
+    pub slot: [u32; 4],
+    pub option_data: [ItemOptions; 5],
+}
+
+/// Item removed from storage (`ZC_DELETE_ITEM_FROM_STORE` 0x00F6).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00F6)]
+pub struct StorageItemRemovedPacket {
+    pub index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Storage closed (`ZC_CLOSE_STORE` 0x00F8).
+#[derive(Debug, Clone, Default, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00F8)]
+pub struct StorageClosedPacket {}
+
+/// Inventory list type on unified item-list packets (`ZC_INVENTORY_START` invType).
+pub mod inventory_type {
+    pub const INVENTORY: u8 = 0;
+    pub const CART: u8 = 1;
+    pub const STORAGE: u8 = 2;
+    pub const GUILD_STORAGE: u8 = 3;
+}
+
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub enum RestartType {

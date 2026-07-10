@@ -82,6 +82,22 @@ where
 
         match self.source {
             ItemSource::Inventory => {
+                // Unidentified: one-click identify (magnifier must be in inventory).
+                if !item.is_identified() {
+                    queue.queue(InputEvent::IdentifyItem {
+                        inventory_index: item.index,
+                    });
+                    return;
+                }
+
+                if let InventoryItemDetails::Regular { .. } = &item.details {
+                    // Consumables / etc.: use item (magnifier opens identify list).
+                    queue.queue(InputEvent::UseItem {
+                        inventory_index: item.index,
+                    });
+                    return;
+                }
+
                 if let InventoryItemDetails::Equippable {
                     equip_position,
                     equipped_position,
@@ -111,6 +127,13 @@ where
             ItemSource::Equipment { position } => {
                 queue.queue(InputEvent::MoveItem {
                     source: ItemSource::Equipment { position },
+                    destination: ItemSource::Inventory,
+                    item,
+                });
+            }
+            ItemSource::Storage => {
+                queue.queue(InputEvent::MoveItem {
+                    source: ItemSource::Storage,
                     destination: ItemSource::Inventory,
                     item,
                 });

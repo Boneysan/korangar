@@ -137,6 +137,28 @@ pub enum InputEvent {
     ToggleSit,
     /// Toggle the in-game minimap window (official-style map corner).
     ToggleMinimapWindow,
+    /// Use a consumable / trigger item use (`CZ_USE_ITEM2`).
+    UseItem {
+        inventory_index: ragnarok_packets::InventoryIndex,
+    },
+    /// One-click identify with a magnifier.
+    IdentifyItem {
+        inventory_index: ragnarok_packets::InventoryIndex,
+    },
+    /// Cancel identify dialog.
+    IdentifyCancel,
+    /// Accept pending trade request.
+    TradeAccept,
+    /// Reject pending trade request.
+    TradeReject,
+    /// Lock our trade offer.
+    TradeOk,
+    /// Commit trade (both sides must have locked).
+    TradeCommit,
+    /// Cancel active trade.
+    TradeCancel,
+    /// Close kafra storage.
+    CloseStorage,
     /// Action for the "Next"-button in a dialog.
     NextDialog {
         /// Id of the NPC the player is in a dialog with.

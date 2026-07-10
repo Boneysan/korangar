@@ -5,11 +5,14 @@ pub mod hotbar;
 pub mod inventory;
 pub mod localization;
 pub mod friends;
+pub mod identify;
 pub mod party;
 pub mod skill_cooldowns;
 pub mod skills;
 pub mod minimap;
 pub mod status_effects;
+pub mod storage;
+pub mod trade;
 pub mod theme;
 
 use std::cell::Cell;
@@ -60,11 +63,14 @@ use crate::state::character_slots::CharacterSlots;
 use crate::state::hotbar::Hotbar;
 use crate::state::inventory::Inventory;
 use crate::state::friends::FriendEntry;
+use crate::state::identify::IdentifyState;
 use crate::state::party::PartyState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::minimap::MinimapState;
 use crate::state::status_effects::StatusEffects;
+use crate::state::storage::StorageState;
+use crate::state::trade::TradeState;
 use crate::state::theme::WorldTheme;
 #[cfg(feature = "debug")]
 use crate::world::Object;
@@ -189,6 +195,15 @@ pub struct ClientState {
     hotbar: Hotbar,
     /// Player inventory.
     inventory: Inventory,
+    /// Kafra storage contents (when open).
+    #[hidden_element]
+    storage: StorageState,
+    /// Active or pending player trade.
+    #[hidden_element]
+    trade_state: TradeState,
+    /// Magnifier / identify selection dialog.
+    #[hidden_element]
+    identify_state: IdentifyState,
     /// Player skill tree.
     skill_tree: SkillTree,
     /// Active status effects (buffs / debuffs) for the local player.
@@ -353,6 +368,9 @@ impl ClientState {
             let player_name = String::new();
             let hotbar = Hotbar::default();
             let inventory = Inventory::default();
+            let storage = StorageState::default();
+            let trade_state = TradeState::default();
+            let identify_state = IdentifyState::default();
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
@@ -426,6 +444,9 @@ impl ClientState {
             player_name,
             hotbar,
             inventory,
+            storage,
+            trade_state,
+            identify_state,
             skill_tree,
             status_effects,
             skill_cooldowns,

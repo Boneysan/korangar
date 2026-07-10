@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use korangar_interface::element::StateElement;
 use korangar_networking::{InventoryItem, InventoryItemDetails, NoMetadata};
-use ragnarok_packets::{EquipPosition, InventoryIndex, ItemId};
+use ragnarok_packets::{EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, RegularItemFlags};
 use rust_state::RustState;
 
 use crate::graphics::Texture;
@@ -74,5 +74,24 @@ impl Inventory {
         };
 
         *equipped_position = new_equipped_position;
+    }
+
+    /// Mark an inventory item as identified after a successful identify.
+    pub fn mark_identified(&mut self, index: InventoryIndex) {
+        let Some(item) = self.items.iter_mut().find(|item| item.index == index) else {
+            return;
+        };
+        match &mut item.details {
+            InventoryItemDetails::Regular { flags, .. } => {
+                *flags |= RegularItemFlags::IDENTIFIED;
+            }
+            InventoryItemDetails::Equippable { flags, .. } => {
+                *flags |= EquippableItemFlags::IDENTIFIED;
+            }
+        }
+    }
+
+    pub fn items(&self) -> &[InventoryItem<ResourceMetadata>] {
+        &self.items
     }
 }

@@ -154,14 +154,9 @@ pub fn register_map_server_packets<Callback>(
 where
     Callback: PacketCallback,
 {
-    // This is a bit of a workaround for the way that the inventory is
-    // sent. There is a single packet to start the inventory list,
-    // followed by an arbitary number of item packets, and in the
-    // end a sinle packet to mark the list as complete.
-    //
-    // This variable provides some transient storage shared by all the inventory
-    // handlers.
-    let inventory_items: Rc<RefCell<Option<Vec<InventoryItem<NoMetadata>>>>> = Rc::new(RefCell::new(None));
+    // Inventory / storage lists share the same Start → item* → End framing.
+    // Transient buffer holds (inventory_type, items) until End.
+    let inventory_items: Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>> = Rc::new(RefCell::new(None));
 
     packet_handler.register(|_: MapServerPingPacket| NoNetworkEvents)?;
     packet_handler.register(|packet: BroadcastMessagePacket| NetworkEvent::ChatMessage {
@@ -368,8 +363,8 @@ where
     packet_handler.register({
         let inventory_items = inventory_items.clone();
 
-        move |_: InventoyStartPacket| {
-            *inventory_items.borrow_mut() = Some(Vec::new());
+        move |packet: InventoyStartPacket| {
+            *inventory_items.borrow_mut() = Some((packet.inventory_type, Vec::new()));
             NoNetworkEvents
         }
     })?;
@@ -381,6 +376,7 @@ where
                 .borrow_mut()
                 .as_mut()
                 .expect("Unexpected inventory packet")
+                .1
                 .extend(packet.item_information.into_iter().map(|item_information| {
                     let RegularItemInformation {
                         index,
@@ -418,6 +414,7 @@ where
                 .borrow_mut()
                 .as_mut()
                 .expect("Unexpected inventory packet")
+                .1
                 .extend(packet.item_information.into_iter().map(|item| {
                     let EquippableItemInformation {
                         index,
@@ -462,9 +459,12 @@ where
     packet_handler.register({
         let inventory_items = inventory_items.clone();
 
-        move |_: InventoyEndPacket| {
-            let items = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
-            NetworkEvent::SetInventory { items }
+        move |packet: InventoyEndPacket| {
+            let (inv_type, items) = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
+            match inv_type {
+                inventory_type::STORAGE | inventory_type::GUILD_STORAGE => NetworkEvent::SetStorage { items },
+                _ => NetworkEvent::SetInventory { items },
+            }
         }
     })?;
     packet_handler.register_noop::<EquippableSwitchItemListPacket>()?;
@@ -1053,6 +1053,95 @@ where
         }
     })?;
     packet_handler.register(|packet: RemoveSkillPacket| NetworkEvent::RemoveSkill { skill_id: packet.skill_id })?;
+
+    // Identify
+    packet_handler.register(|packet: ItemIdentifyListPacket| NetworkEvent::ItemIdentifyList {
+        indices: packet.indices,
+    })?;
+    packet_handler.register(|packet: ItemIdentifyResultPacket| NetworkEvent::ItemIdentified {
+        inventory_index: packet.inventory_index,
+        success: packet.result == 0,
+    })?;
+
+    // Trade
+    packet_handler.register(|packet: TradeRequestPacket| NetworkEvent::TradeRequest {
+        name: packet.name,
+        character_id: packet.character_id,
+        base_level: packet.base_level,
+    })?;
+    packet_handler.register(|packet: TradeStartPacket| NetworkEvent::TradeStart {
+        result: packet.result,
+        character_id: packet.character_id,
+        base_level: packet.base_level,
+    })?;
+    packet_handler.register(|packet: TradeAddItemNotifyPacket| NetworkEvent::TradePartnerItem {
+        item_id: packet.item_id,
+        item_type: packet.item_type,
+        amount: packet.amount,
+        identified: packet.identified != 0,
+        refine: packet.refine,
+    })?;
+    packet_handler.register(|packet: TradeAddItemResultPacket| NetworkEvent::TradeAddItemResult {
+        inventory_index: packet.inventory_index,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: TradeLockPacket| NetworkEvent::TradeLocked { who: packet.who })?;
+    packet_handler.register(|_: TradeCancelledPacket| NetworkEvent::TradeCancelled)?;
+    packet_handler.register(|packet: TradeCompletedPacket| NetworkEvent::TradeCompleted {
+        success: packet.result == 0,
+    })?;
+
+    // Storage
+    packet_handler.register(|packet: StorageAmountPacket| NetworkEvent::StorageAmount {
+        amount: packet.amount,
+        max_amount: packet.max_amount,
+    })?;
+    packet_handler.register(|packet: StorageItemAddedPacket| {
+        let mut flags = RegularItemFlags::empty();
+        flags.set(RegularItemFlags::IDENTIFIED, packet.identified != 0);
+        let mut equip_flags = EquippableItemFlags::empty();
+        equip_flags.set(EquippableItemFlags::IDENTIFIED, packet.identified != 0);
+        equip_flags.set(EquippableItemFlags::IS_BROKEN, packet.damaged != 0);
+
+        // Stackable types use Regular; non-stackable use Equippable-ish details.
+        let details = if packet.item_type == 4 || packet.item_type == 5 || packet.item_type == 7 || packet.item_type == 8 {
+            // Armor / weapon / bothside / ammo-like equippables (Hercules type enum).
+            InventoryItemDetails::Equippable {
+                equip_position: EquipPosition::empty(),
+                equipped_position: EquipPosition::empty(),
+                bind_on_equip_type: 0,
+                w_item_sprite_number: 0,
+                option_count: 0,
+                option_data: packet.option_data,
+                refinement_level: packet.refine,
+                enchantment_level: 0,
+                flags: equip_flags,
+            }
+        } else {
+            InventoryItemDetails::Regular {
+                amount: packet.amount.min(u32::from(u16::MAX)) as u16,
+                equipped_position: EquipPosition::empty(),
+                flags,
+            }
+        };
+
+        NetworkEvent::StorageItemAdded {
+            item: InventoryItem {
+                index: packet.index,
+                metadata: NoMetadata,
+                item_id: packet.item_id,
+                item_type: packet.item_type,
+                slot: packet.slot,
+                hire_expiration_date: 0,
+                details,
+            },
+        }
+    })?;
+    packet_handler.register(|packet: StorageItemRemovedPacket| NetworkEvent::StorageItemRemoved {
+        index: packet.index,
+        amount: packet.amount,
+    })?;
+    packet_handler.register(|_: StorageClosedPacket| NetworkEvent::StorageClosed)?;
 
     // Consume any remaining server packet whose length is known (from Hercules'
     // own tables) but that has no dedicated handler yet, instead of desyncing

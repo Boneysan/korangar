@@ -887,6 +887,104 @@ where
         }
     }
 
+    pub fn use_item(&mut self, inventory_index: InventoryIndex, account_id: AccountId) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(UseItemPacket::new(inventory_index, account_id)),
+        }
+    }
+
+    pub fn request_item_identify(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(RequestItemIdentifyPacket::new(inventory_index.0 as i16))
+            }
+        }
+    }
+
+    pub fn cancel_item_identify(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestItemIdentifyPacket::new(-1)),
+        }
+    }
+
+    pub fn one_click_item_identify(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(OneClickItemIdentifyPacket::new(inventory_index)),
+        }
+    }
+
+    pub fn request_trade(&mut self, account_id: AccountId) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestTradePacket::new(account_id)),
+        }
+    }
+
+    pub fn accept_trade(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAckPacket::new(3)),
+        }
+    }
+
+    pub fn reject_trade(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAckPacket::new(4)),
+        }
+    }
+
+    pub fn trade_add_item(&mut self, inventory_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAddItemPacket::new(inventory_index, amount)),
+        }
+    }
+
+    pub fn trade_add_zeny(&mut self, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(TradeAddItemPacket::new(InventoryIndex(0), amount))
+            }
+        }
+    }
+
+    pub fn trade_ok(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeOkPacket::default()),
+        }
+    }
+
+    pub fn trade_cancel(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeCancelPacket::default()),
+        }
+    }
+
+    pub fn trade_commit(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeCommitPacket::default()),
+        }
+    }
+
+    pub fn move_item_to_storage(&mut self, inventory_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(MoveItemToStoragePacket::new(inventory_index, amount))
+            }
+        }
+    }
+
+    pub fn move_item_from_storage(&mut self, storage_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(MoveItemFromStoragePacket::new(storage_index, amount))
+            }
+        }
+    }
+
+    pub fn close_storage(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(CloseStoragePacket::default()),
+        }
+    }
+
     pub fn cast_skill(&mut self, skill_id: SkillId, skill_level: SkillLevel, entity_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(UseSkillAtIdPacket::new(skill_level, skill_id, entity_id)),
