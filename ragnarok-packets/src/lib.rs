@@ -4745,6 +4745,7 @@ pub struct SelectBuyOrSellPacket {
 
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[numeric_type(u8)]
 pub enum BuyItemResult {
     #[numeric_value(0)]
     Successful,
@@ -4768,11 +4769,14 @@ pub enum BuyItemResult {
     NotEnoughGoods,
 }
 
+/// One line of `CZ_PC_PURCHASE_ITEMLIST` (0x00C8) for PACKETVER ≥ 20181121.
+///
+/// Wire layout: `amount` (u16) + `itemId` (u32). Older clients used u16 item ids.
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct BuyItemInformation {
     pub amount: u16,
-    pub item_id: u16,
+    pub item_id: ItemId,
 }
 
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
@@ -4782,6 +4786,14 @@ pub struct BuyItemInformation {
 pub struct BuyItemsPacket {
     #[repeating_remaining]
     pub items: Vec<BuyItemInformation>,
+}
+
+/// `ZC_PC_PURCHASE_RESULT` (0x00CA) — NPC shop purchase outcome (not market 0x0B4E).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00CA)]
+pub struct BuyItemsResultPacket {
+    pub result: BuyItemResult,
 }
 
 #[derive(Debug, Clone, FixedByteSize, ByteConvertable)]
@@ -5306,5 +5318,35 @@ mod tests {
         assert_eq!(len, bytes.len());
         assert_eq!(&bytes[4..8], &[0x04, 0x03, 0x02, 0x01]);
         assert_eq!(&bytes[8..], b"Hi\0");
+    }
+}
+
+#[cfg(test)]
+mod shop_item_list_tests {
+    use super::*;
+    use ragnarok_bytes::{ByteReader, FixedByteSize};
+
+    #[test]
+    fn shop_item_information_size_is_19() {
+        assert_eq!(ShopItemInformation::size_in_bytes(), 19);
+    }
+
+    #[test]
+    fn parse_shop_item_list_0xb77_one_item() {
+        // header 0x0b77, len 23 (4 + 19), one red potion style entry
+        let bytes = [
+            0x77, 0x0b, 0x17, 0x00,
+            0xf5, 0x01, 0x00, 0x00, // item 501
+            0x32, 0x00, 0x00, 0x00, // price 50
+            0x32, 0x00, 0x00, 0x00, // discount 50
+            0x00,                   // type
+            0x00, 0x00,             // view
+            0x00, 0x00, 0x00, 0x00, // location
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let packet = ShopItemListPacket::packet_from_bytes(&mut reader).expect("parse");
+        assert_eq!(packet.items.len(), 1);
+        assert_eq!(packet.items[0].item_id.0, 501);
+        assert_eq!(packet.items[0].price.0, 50);
     }
 }

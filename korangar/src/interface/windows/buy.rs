@@ -252,7 +252,8 @@ where
                         ) -> u32 {
                             match amount {
                                 ItemQuantity::Fixed(count) => count,
-                                ItemQuantity::Infinite => todo!(),
+                                // NPC shops report infinite stock; +N buttons pass Fixed amounts.
+                                ItemQuantity::Infinite => 1,
                             }
                         }
 

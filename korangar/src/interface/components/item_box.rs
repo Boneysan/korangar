@@ -59,6 +59,66 @@ where
     }
 }
 
+/// Double-click: equip from inventory, or unequip from the equipment window.
+struct ItemBoxDoubleClickHandler<P> {
+    item_path: P,
+    source: ItemSource,
+}
+
+impl<P> ItemBoxDoubleClickHandler<P> {
+    fn new(item_path: P, source: ItemSource) -> Self {
+        Self { item_path, source }
+    }
+}
+
+impl<P> ClickHandler<ClientState> for ItemBoxDoubleClickHandler<P>
+where
+    P: Path<ClientState, InventoryItem<ResourceMetadata>, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(item) = state.try_get(&self.item_path).cloned() else {
+            return;
+        };
+
+        match self.source {
+            ItemSource::Inventory => {
+                if let InventoryItemDetails::Equippable {
+                    equip_position,
+                    equipped_position,
+                    ..
+                } = &item.details
+                {
+                    if equipped_position.is_empty() {
+                        // Equip to the item's first valid slot (drag still works for multi-slot).
+                        queue.queue(InputEvent::MoveItem {
+                            source: ItemSource::Inventory,
+                            destination: ItemSource::Equipment {
+                                position: *equip_position,
+                            },
+                            item,
+                        });
+                    } else {
+                        queue.queue(InputEvent::MoveItem {
+                            source: ItemSource::Equipment {
+                                position: *equipped_position,
+                            },
+                            destination: ItemSource::Inventory,
+                            item,
+                        });
+                    }
+                }
+            }
+            ItemSource::Equipment { position } => {
+                queue.queue(InputEvent::MoveItem {
+                    source: ItemSource::Equipment { position },
+                    destination: ItemSource::Inventory,
+                    item,
+                });
+            }
+        }
+    }
+}
+
 impl<P> DropHandler<ClientState> for ItemBoxHandler<P>
 where
     P: Path<ClientState, InventoryItem<ResourceMetadata>, false>,
@@ -80,6 +140,7 @@ where
 pub struct ItemBox<A> {
     item_path: A,
     handler: ItemBoxHandler<A>,
+    double_click_handler: ItemBoxDoubleClickHandler<A>,
     amount_display: AmountDisplay,
 }
 
@@ -94,6 +155,7 @@ where
         Self {
             item_path,
             handler: ItemBoxHandler::new(item_path, source),
+            double_click_handler: ItemBoxDoubleClickHandler::new(item_path, source),
             amount_display: AmountDisplay::default(),
         }
     }
@@ -177,7 +239,9 @@ where
             layout.add_texture(texture_area, texture.clone(), Color::WHITE, false);
 
             if is_hovered {
+                // Drag to equip/unequip (or rearrange). Double-click for quick equip/unequip.
                 layout.register_click_handler(MouseButton::Left, &self.handler);
+                layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
             }
 
             if matches!(item.details, InventoryItemDetails::Regular { .. }) {

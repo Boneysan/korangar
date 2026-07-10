@@ -359,18 +359,12 @@ where
 
         let window_class = window.get_class();
 
+        // Prefer cached layout (or app-provided edge defaults via get_window_state).
+        // Do not register a center placeholder with size 0×MAX — that poisons the
+        // cache and re-centers windows every launch.
         let (anchor, size) = match window_class.and_then(|window_class| self.window_cache.get_window_state(window_class)) {
             Some(saved_state) => saved_state,
-            None => {
-                let anchor = Anchor::default();
-                let size = App::Size::new(0.0, f32::MAX);
-
-                if let Some(window_class) = window_class {
-                    self.window_cache.register_window(window_class, anchor, size);
-                }
-
-                (anchor, size)
-            }
+            None => (Anchor::default(), App::Size::new(0.0, f32::MAX)),
         };
 
         self.windows.push(WindowWrapper {
@@ -575,6 +569,25 @@ where
                 &this.text_layouter,
                 this.window_size,
             );
+
+            // After the first real layout, remember size (and settled anchor) so the
+            // next open restores outer-edge / user placement instead of re-centering.
+            if let Some(window_class) = wrapper.window.get_class() {
+                let laid_out = App::Size::new(
+                    wrapper.display_information.real_area.width,
+                    wrapper.display_information.display_height,
+                );
+                if laid_out.width() >= 16.0 && laid_out.height() >= 16.0 && laid_out.height() < 10_000.0 {
+                    let size_changed = (wrapper.data.size.width() - laid_out.width()).abs() > 0.5
+                        || (wrapper.data.size.height() - laid_out.height()).abs() > 0.5
+                        || wrapper.data.size.width() < 1.0
+                        || wrapper.data.size.height() > 10_000.0;
+                    if size_changed {
+                        wrapper.data.size = laid_out;
+                        this.window_cache.register_window(window_class, wrapper.data.anchor, laid_out);
+                    }
+                }
+            }
         });
 
         let mut hovered_window = None;

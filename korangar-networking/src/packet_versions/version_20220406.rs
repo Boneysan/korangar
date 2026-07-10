@@ -258,7 +258,16 @@ where
     packet_handler.register(|packet: ChangeMapPacket| {
         let ChangeMapPacket { map_name, position } = packet;
 
-        let map_name = map_name.replace(".gat", "");
+        // 16-byte fixed field is already null-trimmed by FromBytes; still strip
+        // extension variants so loaders/minimap use a clean base name.
+        let map_name = map_name
+            .trim()
+            .trim_end_matches('\0')
+            .trim_end_matches(".gat")
+            .trim_end_matches(".GAT")
+            .trim_end_matches(".rsw")
+            .trim_end_matches(".RSW")
+            .to_owned();
 
         NetworkEvent::ChangeMap { map_name, position }
     })?;
@@ -941,6 +950,14 @@ where
             .collect();
 
         NetworkEvent::OpenShop { items }
+    })?;
+    // NPC shop purchase result (0x00CA). Market shops use 0x0B4E separately.
+    packet_handler.register(|packet: BuyItemsResultPacket| {
+        let result = match packet.result {
+            BuyItemResult::Successful | BuyItemResult::ExchangeWellDone => BuyShopItemsResult::Success,
+            _ => BuyShopItemsResult::Error,
+        };
+        NetworkEvent::BuyingCompleted { result }
     })?;
     packet_handler.register(|packet: BuyShopItemsResultPacket| NetworkEvent::BuyingCompleted { result: packet.result })?;
     // ZC_LONGPAR_CHANGE (0x00B1) — legacy long-parameter updates (exp/zeny as u32).

@@ -295,6 +295,21 @@ fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
     }
 }
 
+/// Strip extensions / padding from a server or loader map name (`izlude_in.gat` → `izlude_in`).
+fn normalize_map_base_name(map_file_name: &str) -> String {
+    map_file_name
+        .split(['\\', '/'])
+        .next_back()
+        .unwrap_or(map_file_name)
+        .trim()
+        .trim_end_matches('\0')
+        .trim_end_matches(".gat")
+        .trim_end_matches(".GAT")
+        .trim_end_matches(".rsw")
+        .trim_end_matches(".RSW")
+        .to_lowercase()
+}
+
 pub struct Client {
     game_file_loader: Arc<GameFileLoader>,
     #[cfg(feature = "debug")]
@@ -2167,9 +2182,15 @@ impl Client {
                     self.client_state.follow_mut(client_state().dialog_window()).end();
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
-                    if items.is_empty() {
+                    let count = items.len();
+                    if count == 0 {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             "Shop list was empty (no items from server).".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    } else {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Shop: {count} items for sale."),
                             MessageColor::Information,
                         ));
                     }
@@ -2317,15 +2338,15 @@ impl Client {
     }
 
     /// Load the official minimap bitmap and Towninfo facility POIs for a map.
+    ///
+    /// Uses `file_exists` before loading so a missing BMP is not replaced by the
+    /// generic "missing" texture (which would look like a broken map).
     fn refresh_minimap(&mut self, map_file_name: &str, map_width: u16, map_height: u16) {
-        let base = map_file_name
-            .trim_end_matches(".gat")
-            .trim_end_matches(".GAT")
-            .trim_end_matches(".rsw")
-            .trim_end_matches(".RSW");
-        // Official path under data\texture\
-        let path = format!("유저인터페이스\\map\\{base}.bmp");
-        let texture = self.texture_loader.get_or_load(&path, ImageType::Color).ok();
+        let base = normalize_map_base_name(map_file_name);
+
+        // Official path under data\texture\유저인터페이스\map\{map}.bmp
+        // (~857 maps in data.grf including indoor maps like izlude_in, prt_in).
+        let texture = Self::find_minimap_texture(&self.game_file_loader, &self.texture_loader, &base);
         // Player blip must be a texture (UI rectangles flush before textures and
         // would sit under the map bitmap).
         let player_marker = self
@@ -2335,7 +2356,7 @@ impl Client {
 
         let pois = self
             .library
-            .town_pois(base)
+            .town_pois(&base)
             .iter()
             .map(|poi| {
                 let icon = self
@@ -2353,7 +2374,7 @@ impl Client {
             .collect();
 
         self.client_state.follow_mut(client_state().minimap()).set_map(
-            base.to_owned(),
+            base,
             map_width,
             map_height,
             texture,
@@ -2368,6 +2389,39 @@ impl Client {
         } else if !show && self.interface.is_window_with_class_open(WindowClass::Minimap) {
             self.interface.close_window_with_class(WindowClass::Minimap);
         }
+    }
+
+    /// Resolve minimap BMP only when the archive actually contains it.
+    ///
+    /// `TextureLoader::get_or_load` falls back to a placeholder on miss, so we
+    /// must call `file_exists` first or every map "succeeds" with the wrong image.
+    fn find_minimap_texture(
+        game_file_loader: &GameFileLoader,
+        texture_loader: &TextureLoader,
+        base: &str,
+    ) -> Option<std::sync::Arc<crate::graphics::Texture>> {
+        let candidates = [
+            format!("유저인터페이스\\map\\{base}.bmp"),
+            format!("유저인터페이스\\map\\{}.bmp", base.to_lowercase()),
+            // Some custom/old clients use a flat map folder.
+            format!("map\\{base}.bmp"),
+            format!("map\\{}.bmp", base.to_lowercase()),
+        ];
+
+        for relative in candidates {
+            let full = format!("data\\texture\\{relative}");
+            if !game_file_loader.file_exists(&full) {
+                // GRF paths are stored lowercased; also try lowercased full path.
+                let lower = full.to_lowercase();
+                if !game_file_loader.file_exists(&lower) {
+                    continue;
+                }
+            }
+            if let Ok(texture) = texture_loader.get_or_load(&relative, ImageType::Color) {
+                return Some(texture);
+            }
+        }
+        None
     }
 
     /// Toggle sit/stand for the local player (Insert / Home / `/sit`).

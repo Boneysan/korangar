@@ -85,9 +85,11 @@ impl Element<ClientState> for MinimapView {
         if let Some(texture) = minimap.texture() {
             layout.add_texture(area, texture.clone(), Color::WHITE, false);
         } else {
+            // No BMP in archives for this map (custom map, or asset not in GRF).
+            // Map base name still appears in the coordinate line under the window.
             layout.add_text(
                 area,
-                "No map",
+                "No minimap BMP",
                 FontSize(12.0),
                 Color::rgb_u8(180, 180, 180),
                 Color::rgb_u8(255, 160, 60),

@@ -968,16 +968,18 @@ where
     }
 
     pub fn purchase_items(&mut self, items: Vec<ShopItem<u32>>) -> Result<(), NotConnectedError> {
+        // Regular NPC shops use CZ_PC_PURCHASE_ITEMLIST (0x00C8), not the NPC market
+        // packet 0x09D6 (that is only for `callshop` market UIs).
         let item_information = items
             .into_iter()
-            .map(|item| BuyShopItemInformation {
+            .map(|item| BuyItemInformation {
+                amount: item.metadata.min(u16::MAX as u32) as u16,
                 item_id: item.item_id,
-                amount: item.metadata,
             })
             .collect();
 
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => self.send_map_server_packet(BuyShopItemsPacket::new(item_information)),
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(BuyItemsPacket::new(item_information)),
         }
     }
 
