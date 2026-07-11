@@ -52,7 +52,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10
 - [x] Basic melee attack + damage numbers — Poring live test: sword cursor, approach, hit/miss and damage numbers, moving-target chase; no freeze/disconnect
 - [ ] Skill damage numbers (if character has a damaging skill)
-- [ ] 🔶 Item pickup from ground — pickup interaction works, but ground labels are unreadable (`[][][]`); see M1-001
+- [x] Item pickup from ground — labels English live-verified macOS 2026-07-10 (M1-001); re-check pickup path if needed
 - [ ] Stats window + stat allocation (success path)
 - [ ] Skill tree opens; skill use (self / target / ground if available)
 - [ ] Hotbar use
@@ -60,7 +60,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color)
 
 ### Items & economy (P0)
-- [ ] ❌ Inventory open / use / equip / unequip / drop — item identification and drop/split interaction incomplete; see M1-002/M1-003
+- [x] Inventory open / use / equip / unequip / drop — open, tooltips, drop, drag, reorder, split live-verified macOS 2026-07-10 (M1-001–003)
 - [ ] NPC shop buy
 - [ ] NPC shop sell
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
@@ -110,9 +110,9 @@ prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
 
 | ID | Area | Severity | Notes | Status |
 |---|---|---|---|---|
-| M1-001 | Ground items | P0 | Poring drops render as `[][][]` on hover. Root cause: startup loaded only Korean `iteminfo.lub`; external English-table link was broken. Durable fix implemented: 13,182 English names generated from Hercules-backed `docs/items.json` are compiled into the client, with no external-root dependency. Awaiting rebuilt-client live verification. | Fix implemented; verify live |
-| M1-002 | Inventory UX | P0 | Hovering inventory items shows no identifying text/tooltip. `ResourceMetadata.name` is populated, but `ItemBox::lay_out` renders only texture/amount and registers no tooltip. | Diagnosed |
-| M1-003 | Inventory actions | P0 | Dragging out cannot drop: drag destinations exist only for inventory/equipment/storage, no ground target or drop packet is modeled. No right-click handler/menu exists for drop/split actions. | Diagnosed |
+| M1-001 | Ground items | P0 | Poring drops rendered as `[][][]` on hover. Root cause: startup loaded only Korean `iteminfo.lub`; external English-table link was broken. Durable fix: 13,182 English names from Hercules-backed `docs/items.json` compiled into the client. | ✅ Live-verified macOS 2026-07-10 (ground items show English) |
+| M1-002 | Inventory UX | P0 | Hovering inventory items showed no identifying text/tooltip. `ResourceMetadata.name` was already populated; `ItemBox::lay_out` only rendered texture/amount. Fix: register `layout.add_tooltip(&item.metadata.name, …)` on hover (same pattern as `SkillBox`). Applies to inventory, equipment, and storage slots that share `ItemBox`. Framework tooltip delay is ~1s. | ✅ Live-verified macOS 2026-07-10 (hover ~1s shows EN name) |
+| M1-003 | Inventory actions | P0 | Drop, drag-to-equip, ground drop, in-inventory reorder, and split (partial drop: half / off 1 / drop all) via right-click menu. `CZ_ITEM_THROW2` 0x0363 + 0x00AF ack; end-of-frame UI event flush for drag. | ✅ Live-verified macOS 2026-07-10 |
 
 ## 5.1 Live session notes
 

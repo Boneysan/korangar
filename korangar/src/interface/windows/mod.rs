@@ -23,6 +23,7 @@ mod hud;
 mod identify;
 mod interface_settings;
 mod inventory;
+mod item_actions;
 mod login;
 mod minimap;
 mod party;
@@ -75,6 +76,7 @@ pub use self::identify::IdentifyWindow;
 pub use self::interface_settings::InterfaceSettingsWindow;
 pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
+pub use self::item_actions::{ItemActionsWindow, inventory_item_amount};
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 pub use self::minimap::MinimapWindow;
 pub use self::party::PartyWindow;
@@ -115,6 +117,7 @@ pub enum WindowClass {
     Hotbar,
     Hud,
     Inventory,
+    ItemActions,
     Equipment,
     StatusBar,
     SkillTree,

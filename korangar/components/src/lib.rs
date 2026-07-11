@@ -6,6 +6,7 @@ pub fn item_box(token_stream: TokenStream) -> TokenStream {
     create_component_macro!(crate::interface::components::item_box::ItemBox, {
         item_path: !,
         source: !,
+        display_slot: { 0usize },
     });
 
     macro_impl(token_stream.into()).into()

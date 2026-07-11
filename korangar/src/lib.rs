@@ -58,7 +58,7 @@ use korangar_debug::logging::{Colorize, print_debug};
 use korangar_debug::profile_block;
 #[cfg(feature = "debug")]
 use korangar_debug::profiling::Profiler;
-use korangar_interface::Interface;
+use korangar_interface::{Interface, MouseMode};
 use korangar_interface::layout::MouseButton;
 use korangar_networking::{
     DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
@@ -2783,6 +2783,83 @@ impl Client {
         }
     }
 
+    /// Handle inventory-related input events that were queued during the UI pass
+    /// (after the main start-of-frame event drain). Leaves unrelated events in the buffer.
+    fn flush_inventory_input_events(&mut self) {
+        let mut remaining = Vec::new();
+
+        for event in self.input_event_buffer.drain(..) {
+            match event {
+                InputEvent::DropItem {
+                    inventory_index,
+                    amount,
+                } => {
+                    if amount == 0 {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Nothing to drop.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Not connected to map server.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
+                InputEvent::ReorderInventory { from_index, to_slot } => {
+                    self.client_state
+                        .follow_mut(client_state().inventory())
+                        .reorder_display(from_index, to_slot);
+                }
+                InputEvent::MoveItem {
+                    source,
+                    destination,
+                    item,
+                } => match (source, destination) {
+                    (ItemSource::Inventory, ItemSource::Equipment { position }) => {
+                        let _ = self.networking_system.request_item_equip(item.index, position);
+                    }
+                    (ItemSource::Equipment { .. }, ItemSource::Inventory) => {
+                        let _ = self.networking_system.request_item_unequip(item.index);
+                    }
+                    (ItemSource::Inventory, ItemSource::Storage) => {
+                        let amount = match &item.details {
+                            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+                            _ => 1,
+                        };
+                        let _ = self.networking_system.move_item_to_storage(item.index, amount);
+                    }
+                    (ItemSource::Storage, ItemSource::Inventory) => {
+                        let amount = match &item.details {
+                            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+                            _ => 1,
+                        };
+                        let _ = self.networking_system.move_item_from_storage(item.index, amount);
+                    }
+                    _ => {}
+                },
+                InputEvent::OpenItemActions { item } => {
+                    self.interface.close_window_with_class(WindowClass::ItemActions);
+                    self.interface.open_window(ItemActionsWindow::new(item));
+                }
+                InputEvent::CloseItemActions => {
+                    self.interface.close_window_with_class(WindowClass::ItemActions);
+                }
+                InputEvent::UseItem { inventory_index } => {
+                    if let Some(account_id) = self.saved_login_data.as_ref().map(|d| d.account_id) {
+                        let _ = self.networking_system.use_item(inventory_index, account_id);
+                    }
+                }
+                InputEvent::IdentifyItem { inventory_index } => {
+                    let _ = self.networking_system.one_click_item_identify(inventory_index);
+                }
+                other => remaining.push(other),
+            }
+        }
+
+        self.input_event_buffer = remaining;
+    }
+
     /// Returns whether or not the interface is focused.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
@@ -3444,6 +3521,34 @@ impl Client {
                     if let Some(account_id) = self.saved_login_data.as_ref().map(|d| d.account_id) {
                         let _ = self.networking_system.use_item(inventory_index, account_id);
                     }
+                }
+                InputEvent::DropItem {
+                    inventory_index,
+                    amount,
+                } => {
+                    if amount == 0 {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Nothing to drop.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Not connected to map server.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
+                InputEvent::ReorderInventory { from_index, to_slot } => {
+                    self.client_state
+                        .follow_mut(client_state().inventory())
+                        .reorder_display(from_index, to_slot);
+                }
+                InputEvent::OpenItemActions { item } => {
+                    self.interface.close_window_with_class(WindowClass::ItemActions);
+                    self.interface.open_window(ItemActionsWindow::new(item));
+                }
+                InputEvent::CloseItemActions => {
+                    self.interface.close_window_with_class(WindowClass::ItemActions);
                 }
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
@@ -4378,7 +4483,7 @@ impl Client {
         let mut indicator_instruction = None;
         let mut water_instruction = None;
 
-        let mouse_mode = self.interface.get_mouse_mode();
+        let mouse_mode = self.interface.get_mouse_mode().clone();
         let is_mouse_mode_default = mouse_mode.is_default();
         let last_walking_destination = mouse_mode.walk_destination();
 
@@ -4430,6 +4535,7 @@ impl Client {
 
             if let Some(mouse_button) = input_report.mouse_click {
                 if is_interface_hovered {
+                    // Starts item/skill drag via SetMouseMode (applied immediately inside click).
                     interface_frame.click(&self.client_state, mouse_button);
                 } else {
                     interface_frame.unfocus();
@@ -4483,6 +4589,27 @@ impl Client {
             }
 
             if input_report.mouse_button_released {
+                // Drag inventory item onto the world (not a UI drop target) → drop to ground.
+                // `mouse_mode` is from after process_events, so a press on the previous frame
+                // has already become MoveItem.
+                if !is_interface_hovered
+                    && let MouseMode::Custom {
+                        mode: MouseInputMode::MoveItem {
+                            source: ItemSource::Inventory,
+                            item,
+                        },
+                    } = &mouse_mode
+                {
+                    let amount = inventory_item_amount(item);
+                    if amount > 0 {
+                        self.input_event_buffer.push(InputEvent::DropItem {
+                            inventory_index: item.index,
+                            amount,
+                        });
+                    }
+                }
+
+                // Equip/storage transfers via drop handlers; queues Default mouse mode.
                 interface_frame.drop(&self.client_state);
             }
 
@@ -4596,6 +4723,12 @@ impl Client {
         );
 
         drop(interface_frame);
+
+        // UI click/drop handlers queue Application events (MoveItem, DropItem, OpenItemActions)
+        // and SetMouseMode *after* the start-of-frame process_user_events. Flush them now so
+        // inventory drag→equip and drop-to-ground take effect without waiting an extra frame.
+        self.interface.process_events(&mut self.input_event_buffer);
+        self.flush_inventory_input_events();
 
         self.render_ui_overlays(
             &input_report,

@@ -3,6 +3,7 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{BaseLayoutInfo, Element};
 use korangar_interface::event::{ClickHandler, DropHandler, Event, EventQueue};
 use korangar_interface::layout::area::Area;
+use korangar_interface::layout::tooltip::TooltipExt;
 use korangar_interface::layout::{MouseButton, Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_networking::{InventoryItem, InventoryItemDetails};
@@ -34,11 +35,17 @@ impl AmountDisplay {
 struct ItemBoxHandler<P> {
     item_path: P,
     source: ItemSource,
+    /// Grid index for inventory reorder (row-major). Unused for equipment/storage.
+    display_slot: usize,
 }
 
 impl<P> ItemBoxHandler<P> {
-    fn new(item_path: P, source: ItemSource) -> Self {
-        Self { item_path, source }
+    fn new(item_path: P, source: ItemSource, display_slot: usize) -> Self {
+        Self {
+            item_path,
+            source,
+            display_slot,
+        }
     }
 }
 
@@ -68,6 +75,35 @@ struct ItemBoxDoubleClickHandler<P> {
 impl<P> ItemBoxDoubleClickHandler<P> {
     fn new(item_path: P, source: ItemSource) -> Self {
         Self { item_path, source }
+    }
+}
+
+/// Right-click inventory items: open the item actions popup (use/equip/drop).
+struct ItemBoxRightClickHandler<P> {
+    item_path: P,
+    source: ItemSource,
+}
+
+impl<P> ItemBoxRightClickHandler<P> {
+    fn new(item_path: P, source: ItemSource) -> Self {
+        Self { item_path, source }
+    }
+}
+
+impl<P> ClickHandler<ClientState> for ItemBoxRightClickHandler<P>
+where
+    P: Path<ClientState, InventoryItem<ResourceMetadata>, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        if self.source != ItemSource::Inventory {
+            return;
+        }
+
+        let Some(item) = state.try_get(&self.item_path).cloned() else {
+            return;
+        };
+
+        queue.queue(InputEvent::OpenItemActions { item });
     }
 }
 
@@ -151,6 +187,15 @@ where
             mode: MouseInputMode::MoveItem { source, item },
         } = mouse_mode
         {
+            // Drag within inventory: reorder the local display grid (server indices unchanged).
+            if *source == ItemSource::Inventory && self.source == ItemSource::Inventory {
+                queue.queue(InputEvent::ReorderInventory {
+                    from_index: item.index,
+                    to_slot: self.display_slot,
+                });
+                return;
+            }
+
             queue.queue(InputEvent::MoveItem {
                 source: *source,
                 destination: self.source,
@@ -164,6 +209,7 @@ pub struct ItemBox<A> {
     item_path: A,
     handler: ItemBoxHandler<A>,
     double_click_handler: ItemBoxDoubleClickHandler<A>,
+    right_click_handler: ItemBoxRightClickHandler<A>,
     amount_display: AmountDisplay,
 }
 
@@ -174,11 +220,12 @@ where
     /// This function is supposed to be called from a component macro
     /// and not intended to be called manually.
     #[inline(always)]
-    pub fn component_new(item_path: A, source: ItemSource) -> Self {
+    pub fn component_new(item_path: A, source: ItemSource, display_slot: usize) -> Self {
         Self {
             item_path,
-            handler: ItemBoxHandler::new(item_path, source),
+            handler: ItemBoxHandler::new(item_path, source, display_slot),
             double_click_handler: ItemBoxDoubleClickHandler::new(item_path, source),
+            right_click_handler: ItemBoxRightClickHandler::new(item_path, source),
             amount_display: AmountDisplay::default(),
         }
     }
@@ -248,41 +295,52 @@ where
             layout.register_drop_handler(&self.handler);
         }
 
-        if let Some(item) = state.try_get(&self.item_path)
-            && let Some(texture) = item.metadata.texture.as_ref()
-        {
-            let texture_size = layout_info.area.width.min(layout_info.area.height);
-            let texture_area = Area {
-                left: layout_info.area.left + (layout_info.area.width - texture_size) / 2.0,
-                top: layout_info.area.top + (layout_info.area.height - texture_size) / 2.0,
-                width: texture_size,
-                height: texture_size,
-            };
-
-            layout.add_texture(texture_area, texture.clone(), Color::WHITE, false);
-
-            if is_hovered {
-                // Drag to equip/unequip (or rearrange). Double-click for quick equip/unequip.
-                layout.register_click_handler(MouseButton::Left, &self.handler);
-                layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
+        if let Some(item) = state.try_get(&self.item_path) {
+            // Hover tooltip for inventory, equipment, and storage slots. Name is
+            // resolved when metadata is loaded (bundled Hercules EN overlay).
+            if is_hovered && !item.metadata.name.is_empty() {
+                struct ItemBoxTooltip;
+                layout.add_tooltip(&item.metadata.name, ItemBoxTooltip.tooltip_id());
             }
 
-            if matches!(item.details, InventoryItemDetails::Regular { .. }) {
-                layout.add_text(
-                    layout_info.area,
-                    self.amount_display.string.as_ref().unwrap(),
-                    // TODO: Put this in the theme
-                    FontSize(12.0),
-                    // TODO: Put this in the theme
-                    Color::rgb_u8(255, 200, 255),
-                    // TODO: Put this in the theme
-                    Color::rgb_u8(255, 160, 60),
-                    // TODO: Put this in the theme
-                    HorizontalAlignment::Right { offset: 3.0, border: 3.0 },
-                    // TODO: Put this in the theme
-                    VerticalAlignment::Bottom { offset: 3.0 },
-                    OverflowBehavior::Shrink,
-                );
+            if let Some(texture) = item.metadata.texture.as_ref() {
+                let texture_size = layout_info.area.width.min(layout_info.area.height);
+                let texture_area = Area {
+                    left: layout_info.area.left + (layout_info.area.width - texture_size) / 2.0,
+                    top: layout_info.area.top + (layout_info.area.height - texture_size) / 2.0,
+                    width: texture_size,
+                    height: texture_size,
+                };
+
+                layout.add_texture(texture_area, texture.clone(), Color::WHITE, false);
+
+                if is_hovered {
+                    // Drag to equip/unequip (or rearrange). Double-click for quick equip/unequip.
+                    // Right-click opens drop/use actions for inventory items.
+                    layout.register_click_handler(MouseButton::Left, &self.handler);
+                    layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
+                    if matches!(self.right_click_handler.source, ItemSource::Inventory) {
+                        layout.register_click_handler(MouseButton::Right, &self.right_click_handler);
+                    }
+                }
+
+                if matches!(item.details, InventoryItemDetails::Regular { .. }) {
+                    layout.add_text(
+                        layout_info.area,
+                        self.amount_display.string.as_ref().unwrap(),
+                        // TODO: Put this in the theme
+                        FontSize(12.0),
+                        // TODO: Put this in the theme
+                        Color::rgb_u8(255, 200, 255),
+                        // TODO: Put this in the theme
+                        Color::rgb_u8(255, 160, 60),
+                        // TODO: Put this in the theme
+                        HorizontalAlignment::Right { offset: 3.0, border: 3.0 },
+                        // TODO: Put this in the theme
+                        VerticalAlignment::Bottom { offset: 3.0 },
+                        OverflowBehavior::Shrink,
+                    );
+                }
             }
         }
     }

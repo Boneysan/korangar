@@ -1763,6 +1763,28 @@ pub struct ItemPickupRequestPacket {
     pub entity_id: EntityId,
 }
 
+/// Drop an inventory item onto the ground (`CZ_ITEM_THROW2` 0x0363 at PACKETVER 20220406).
+/// Wire layout: `<index>.W <amount>.W` (InventoryIndex serializes as index + 2).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0363)]
+pub struct DropItemPacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u16,
+}
+
+/// Server ack that an inventory item was dropped (`ZC_ITEM_THROW_ACK` 0x00AF).
+/// Modern Hercules also sends `ZC_DELETE_ITEM_FROM_BODY` (0x07FA) on success; this
+/// packet still arrives and must be consumed so the stream stays aligned.
+/// `amount == 0` means the drop was rejected / ignored.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00AF)]
+pub struct DropItemAckPacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u16,
+}
+
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x00F3)]
@@ -5393,6 +5415,15 @@ mod tests {
         assert_eq!(packet_bytes(ItemPickupRequestPacket::new(EntityId(0x0102_0304))), [
             0x62, 0x03, 0x04, 0x03, 0x02, 0x01
         ]);
+    }
+
+    #[test]
+    fn drop_item_packet_matches_20220406_layout() {
+        // Header 0x0363, inventory index 0 serializes as 2, amount 5.
+        assert_eq!(
+            packet_bytes(DropItemPacket::new(InventoryIndex(0), 5)),
+            [0x63, 0x03, 0x02, 0x00, 0x05, 0x00]
+        );
     }
 
     #[test]

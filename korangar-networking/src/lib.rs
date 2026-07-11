@@ -893,6 +893,13 @@ where
         }
     }
 
+    /// Drop `amount` of an inventory item onto the ground (`CZ_ITEM_THROW2` 0x0363).
+    pub fn drop_item(&mut self, inventory_index: InventoryIndex, amount: u16) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(DropItemPacket::new(inventory_index, amount)),
+        }
+    }
+
     pub fn request_item_identify(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => {

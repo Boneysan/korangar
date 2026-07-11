@@ -102,11 +102,13 @@ where
                     split! {
                         gaps: theme().window().gaps(),
                         children: std::array::from_fn::<_, INVENTORY_COLUMNS, _>(|column| {
-                            let path = self.items_path.index(row * INVENTORY_COLUMNS + column);
+                            let slot = row * INVENTORY_COLUMNS + column;
+                            let path = self.items_path.index(slot);
 
                             item_box! {
                                 item_path: path,
                                 source: ItemSource::Inventory,
+                                display_slot: slot,
                             }
                         }),
                     }

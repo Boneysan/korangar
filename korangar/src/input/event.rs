@@ -145,6 +145,23 @@ pub enum InputEvent {
     UseItem {
         inventory_index: ragnarok_packets::InventoryIndex,
     },
+    /// Drop an inventory item onto the ground (`CZ_ITEM_THROW2`).
+    DropItem {
+        inventory_index: ragnarok_packets::InventoryIndex,
+        amount: u16,
+    },
+    /// Reorder inventory display by dragging an item onto another grid slot.
+    /// Server inventory indices are unchanged; this is client layout only.
+    ReorderInventory {
+        from_index: ragnarok_packets::InventoryIndex,
+        to_slot: usize,
+    },
+    /// Open the inventory item actions popup (right-click menu).
+    OpenItemActions {
+        item: InventoryItem<ResourceMetadata>,
+    },
+    /// Close the inventory item actions popup.
+    CloseItemActions,
     /// One-click identify with a magnifier.
     IdentifyItem {
         inventory_index: ragnarok_packets::InventoryIndex,

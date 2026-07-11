@@ -120,6 +120,7 @@ impl WindowCache {
             WindowClass::Trade => state(AnchorPoint::Center, -20.0, -80.0, 400.0, 360.0),
             WindowClass::TradeRequest => state(AnchorPoint::Center, 0.0, -40.0, 320.0, 160.0),
             WindowClass::Identify => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
+            WindowClass::ItemActions => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 220.0),
             // Dialogs / shops slightly right of center so they don't cover chat.
             WindowClass::Dialog => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -160.0, 400.0, 280.0),
             WindowClass::Buy => state(AnchorPoint::CenterRight, -(440.0 + MARGIN), -200.0, 420.0, 360.0),

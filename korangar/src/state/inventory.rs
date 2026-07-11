@@ -49,11 +49,10 @@ impl Inventory {
     }
 
     pub fn remove_item(&mut self, index: InventoryIndex, remove_amount: u16) {
-        let position = self
-            .items
-            .iter()
-            .position(|item| item.index == index)
-            .expect("item not in inventory");
+        let Some(position) = self.items.iter().position(|item| item.index == index) else {
+            // Already removed (e.g. both 0x07FA and 0x00AF arrived for a drop).
+            return;
+        };
 
         if let InventoryItemDetails::Regular { amount, .. } = &mut self.items[position].details
             && *amount > remove_amount
@@ -63,6 +62,24 @@ impl Inventory {
         }
 
         self.items.remove(position);
+    }
+
+    /// Move an item in the local inventory display order (grid drag-and-drop).
+    ///
+    /// Hercules does not expose a free inventory rearrange packet; this only
+    /// changes how the client lays items out until the next full inventory sync.
+    pub fn reorder_display(&mut self, from_index: InventoryIndex, to_slot: usize) {
+        let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
+            return;
+        };
+
+        if from == to_slot {
+            return;
+        }
+
+        let item = self.items.remove(from);
+        let insert_at = to_slot.min(self.items.len());
+        self.items.insert(insert_at, item);
     }
 
     pub fn update_equipped_position(&mut self, index: InventoryIndex, new_equipped_position: EquipPosition) {

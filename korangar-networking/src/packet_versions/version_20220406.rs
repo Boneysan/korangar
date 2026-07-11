@@ -737,6 +737,24 @@ where
         index: packet.index,
         amount: packet.amount,
     })?;
+    // ZC_ITEM_THROW_ACK (0x00AF). Success usually also sends 0x07FA; amount 0 means rejected.
+    packet_handler.register(|packet: DropItemAckPacket| -> NetworkEventList {
+        if packet.amount == 0 {
+            NetworkEvent::ChatMessage {
+                text: "You can't drop that item.".to_owned(),
+                color: MessageColor::Error,
+            }
+            .into()
+        } else {
+            // Fallback inventory sync if 0x07FA was not processed (safe if already removed).
+            NetworkEvent::InventoryItemRemoved {
+                reason: RemoveItemReason::Normal,
+                index: packet.inventory_index,
+                amount: packet.amount,
+            }
+            .into()
+        }
+    })?;
     packet_handler.register(|packet: ServerTickPacket| NetworkEvent::UpdateClientTick {
         client_tick: packet.client_tick,
         received_at: Instant::now(),
