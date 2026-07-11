@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Status** | Ready to run (servers available) — **next priority after 2026-07-10 UX slice** |
+| **Status** | In progress — macOS live pass started 2026-07-10 |
 | **Milestone** | M1 — Playable solo |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E3 |
 | **Depends on** | M0 complete |
 
 **Recent client UX (not a substitute for this checklist):** minimap + Towninfo POIs,
-player blip, party/compass marks, open/close preference, hotbar F1–F10 + CD overlay,
-HUD (zeny/EXP), msgstringtable for `ZC_MSG`, sit (Insert), dialog input/close,
+player blip, party/compass marks, open/close preference, hotbar F1–F9 + CD overlay,
+HUD (zeny/EXP), msgstringtable for `ZC_MSG`, sit (Insert; Home compatibility alias), dialog input/close,
 shops + **EN itemInfo names** (tool dealer checked 2026-07-10), identify/trade/storage
 protocol MVPs. Still run every P0 row live.
 
@@ -39,20 +39,20 @@ in-client packet inspector (`debug` feature).
 Mark each item ✅ / ❌ / 🔶 and note the defect.
 
 ### Account & session (P0)
-- [ ] Login with valid credentials
+- [x] Login with valid credentials — macOS 2026-07-10 (`korangar`; `loginlog` rcode 100)
 - [ ] Login failure shows a visible message (bad password / already online)
-- [ ] Character select lists existing chars
+- [x] Character select lists existing chars — `test` displayed and selectable on macOS
 - [ ] Character create works
 - [ ] Character delete (if used) fails safely
-- [ ] Map load after select (no black world / freeze)
+- [x] Map load after select (no black world / freeze) — entered `int_land`; map TCP connection established
 - [ ] Clean logout / disconnect
 
 ### Core gameplay (P0)
-- [ ] Click-to-move, pathing (~10 tiles)
-- [ ] Sit / stand
-- [ ] Basic melee attack + damage numbers
+- [x] Click-to-move, pathing (~10 tiles) — full route live-verified on macOS 2026-07-10
+- [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10
+- [x] Basic melee attack + damage numbers — Poring live test: sword cursor, approach, hit/miss and damage numbers, moving-target chase; no freeze/disconnect
 - [ ] Skill damage numbers (if character has a damaging skill)
-- [ ] Item pickup from ground
+- [ ] 🔶 Item pickup from ground — pickup interaction works, but ground labels are unreadable (`[][][]`); see M1-001
 - [ ] Stats window + stat allocation (success path)
 - [ ] Skill tree opens; skill use (self / target / ground if available)
 - [ ] Hotbar use
@@ -60,7 +60,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color)
 
 ### Items & economy (P0)
-- [ ] Inventory open / use / equip / unequip / drop
+- [ ] ❌ Inventory open / use / equip / unequip / drop — item identification and drop/split interaction incomplete; see M1-002/M1-003
 - [ ] NPC shop buy
 - [ ] NPC shop sell
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
@@ -110,7 +110,24 @@ prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
 
 | ID | Area | Severity | Notes | Status |
 |---|---|---|---|---|
-| | | | | |
+| M1-001 | Ground items | P0 | Poring drops render as `[][][]` on hover. Root cause: startup loaded only Korean `iteminfo.lub`; external English-table link was broken. Durable fix implemented: 13,182 English names generated from Hercules-backed `docs/items.json` are compiled into the client, with no external-root dependency. Awaiting rebuilt-client live verification. | Fix implemented; verify live |
+| M1-002 | Inventory UX | P0 | Hovering inventory items shows no identifying text/tooltip. `ResourceMetadata.name` is populated, but `ItemBox::lay_out` renders only texture/amount and registers no tooltip. | Diagnosed |
+| M1-003 | Inventory actions | P0 | Dragging out cannot drop: drag destinations exist only for inventory/equipment/storage, no ground target or drop packet is modeled. No right-click handler/menu exists for drop/split actions. | Diagnosed |
+
+## 5.1 Live session notes
+
+- **2026-07-10, macOS:** Hercules login/char/map/api built with PACKETVER
+  20220406. Login, existing-character selection, `int_land` load, movement, and
+  Home sit/stand passed. Client remained connected to map port 5121.
+- Click-to-move completed a route of at least ten tiles without stopping,
+  teleporting, or disconnecting.
+- Basic melee combat passed against a Poring: hover changed to the sword cursor,
+  click approached and attacked, hit/miss and damage numbers rendered, and the
+  player chased the moving target without freezing or disconnecting.
+- Poring-drop testing found unreadable ground labels plus missing inventory
+  tooltips and drop/split actions (M1-001 through M1-003).
+- Original Insert sit/stand still needs a keyboard that exposes Insert; Home is
+  the verified macOS/laptop compatibility path.
 
 ## 6. Exit criteria (E3.1 done)
 

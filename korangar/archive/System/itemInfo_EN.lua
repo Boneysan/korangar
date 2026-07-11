@@ -1,1 +1,0 @@
-../../System/itemInfo_EN.lua

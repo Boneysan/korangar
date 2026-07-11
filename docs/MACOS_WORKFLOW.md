@@ -68,6 +68,11 @@ cargo build --release --bin korangar
 
 (or `cargo run --release --bin korangar` from `korangar/korangar/`.)
 
+English item names are compiled into Korangar from the Hercules-derived
+`docs/items.json` table. No external `System/itemInfo_EN.lua`, environment
+variable, or platform-specific symlink is required. GRFs still provide the item
+icon/resource paths.
+
 Verify hardware rendering in the startup log:
 ```
 using adapter Apple M5 Max (metal)

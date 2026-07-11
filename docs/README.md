@@ -84,6 +84,7 @@ These are concrete, code-level guides ready for implementation:
 
 ### Other / Historical
 - [protocol/2026-07-07-handoff.md](protocol/2026-07-07-handoff.md) — Packet audit handoff note.
+- [2026-07-10-handover.md](2026-07-10-handover.md) — Client/server bring-up handover covering connectivity, controls, and the bundled English item-name path.
 
 ## For Agents (Claude, Grok, etc.)
 

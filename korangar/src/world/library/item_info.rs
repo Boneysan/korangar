@@ -2,10 +2,9 @@
 //!
 //! All UI that shows item names (inventory, equipment, NPC shops buy/sell,
 //! pickup chat, etc.) goes through [`ItemName`] → this table. We prefer
-//! English `System/itemInfo_EN.lua` and overlay it on the GRF Korean table so
-//! every shop/NPC path gets English labels while keeping icon paths working.
-
-use std::path::PathBuf;
+//! English names generated from the Hercules item DB are overlaid on the GRF
+//! table so every shop/NPC path gets readable labels while icon paths continue
+//! to come from the installed game resources.
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
@@ -14,6 +13,8 @@ use ragnarok_packets::ItemId;
 
 use super::{HashMapExt, ItemName, ItemResource, Library, Table, fix_encoding};
 use crate::loaders::GameFileLoader;
+
+const HERCULES_ITEM_NAMES: &str = include_str!("hercules_item_names.tsv");
 
 #[derive(Debug, Clone)]
 pub struct ItemInfo {
@@ -29,29 +30,17 @@ impl Table for ItemInfo {
 
     fn load(game_file_loader: &GameFileLoader) -> mlua::Result<Self::Storage> {
         // 1) Full base table (often Korean GRF) for complete id coverage + icon paths.
-        // 2) Overlay English display names from System/itemInfo_EN.lua (and similar).
+        // 2) Overlay bundled English display names generated from Hercules data.
         // Every shop/inventory/sell path uses this single table via ItemName.
         let mut map = HashMap::new();
         let mut sources_used = Vec::new();
 
-        for (label, data, role) in iteminfo_candidates(game_file_loader) {
+        for (label, data) in iteminfo_candidates(game_file_loader) {
             match parse_iteminfo_table(&data) {
                 Ok(parsed) if !parsed.is_empty() => {
-                    match role {
-                        SourceRole::Base => {
-                            if map.is_empty() {
-                                map = parsed;
-                                sources_used.push(format!("{label} (base, {} items)", map.len()));
-                            }
-                        }
-                        SourceRole::EnglishOverlay => {
-                            let before = map.len();
-                            overlay_english_names(&mut map, parsed);
-                            sources_used.push(format!(
-                                "{label} (EN overlay, table was {before}, now {} items)",
-                                map.len()
-                            ));
-                        }
+                    if map.is_empty() {
+                        map = parsed;
+                        sources_used.push(format!("{label} (base, {} items)", map.len()));
                     }
                 }
                 Ok(_) => {
@@ -76,6 +65,9 @@ impl Table for ItemInfo {
             }
         }
 
+        let bundled_count = overlay_bundled_english_names(&mut map);
+        sources_used.push(format!("bundled Hercules names (EN overlay, {bundled_count} items)"));
+
         // If we only got English (no Korean base), that's fine — EN file is large.
         // If we only got Korean, names may be Hangul (font tofu without KR glyphs).
         #[cfg(feature = "debug")]
@@ -96,7 +88,6 @@ impl Table for ItemInfo {
         } else {
             eprintln!("[itemInfo] WARNING: no itemInfo loaded — names will be NOTFOUND");
         }
-
         Ok(map.compact())
     }
 
@@ -115,15 +106,8 @@ impl Table for ItemInfo {
     }
 }
 
-#[derive(Clone, Copy)]
-enum SourceRole {
-    /// Full table (names + resources).
-    Base,
-    /// Prefer these display names; keep existing resources when present.
-    EnglishOverlay,
-}
-
 /// Copy English display names onto the base table; insert missing rows fully.
+#[cfg(test)]
 fn overlay_english_names(base: &mut HashMap<ItemId, ItemInfo>, english: HashMap<ItemId, ItemInfo>) {
     for (id, en) in english {
         match base.get_mut(&id) {
@@ -149,6 +133,39 @@ fn overlay_english_names(base: &mut HashMap<ItemId, ItemInfo>, english: HashMap<
     }
 }
 
+fn overlay_bundled_english_names(base: &mut HashMap<ItemId, ItemInfo>) -> usize {
+    let mut count = 0;
+
+    for line in HERCULES_ITEM_NAMES.lines() {
+        let Some((id, name)) = line.split_once('\t') else {
+            continue;
+        };
+        let Ok(id) = id.parse::<u32>() else {
+            continue;
+        };
+        let item_id = ItemId(id);
+
+        if let Some(item) = base.get_mut(&item_id) {
+            item.identified_name = ItemName::from_option(Some(name.to_owned()));
+            item.unidentified_name = ItemName::from_option(Some(name.to_owned()));
+        } else {
+            base.insert(
+                item_id,
+                ItemInfo {
+                    identified_name: ItemName::from_option(Some(name.to_owned())),
+                    unidentified_name: ItemName::from_option(Some(name.to_owned())),
+                    identified_resource: ItemResource::not_found_value(),
+                    unidentified_resource: ItemResource::not_found_value(),
+                },
+            );
+        }
+        count += 1;
+    }
+
+    count
+}
+
+#[cfg(test)]
 fn looks_like_english_name(name: &str) -> bool {
     if name.is_empty() || name == "NOTFOUND" {
         return false;
@@ -200,77 +217,8 @@ fn decode_item_string(value: String) -> String {
     fix_encoding(value)
 }
 
-/// Search several roots so we find System/ whether cwd is repo root or `korangar/`.
-fn read_from_search_paths(relative: &str) -> Option<(String, Vec<u8>)> {
-    let mut roots: Vec<PathBuf> = vec![
-        PathBuf::from("."),
-        PathBuf::from("korangar"),
-        PathBuf::from(".."),
-    ];
-    if let Ok(cwd) = std::env::current_dir() {
-        roots.push(cwd.clone());
-        roots.push(cwd.join("korangar"));
-        if let Some(parent) = cwd.parent() {
-            roots.push(parent.to_path_buf());
-        }
-    }
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            roots.push(dir.to_path_buf());
-            roots.push(dir.join("korangar"));
-            if let Some(parent) = dir.parent() {
-                roots.push(parent.to_path_buf());
-                roots.push(parent.join("korangar"));
-            }
-        }
-    }
-
-    for root in roots {
-        let path = root.join(relative);
-        if let Ok(data) = std::fs::read(&path) {
-            return Some((path.display().to_string(), data));
-        }
-        // Also try with backslashes normalized
-        let path = root.join(relative.replace('\\', "/"));
-        if let Ok(data) = std::fs::read(&path) {
-            return Some((path.display().to_string(), data));
-        }
-    }
-    None
-}
-
-fn iteminfo_candidates(game_file_loader: &GameFileLoader) -> Vec<(String, Vec<u8>, SourceRole)> {
+fn iteminfo_candidates(game_file_loader: &GameFileLoader) -> Vec<(String, Vec<u8>)> {
     let mut out = Vec::new();
-
-    // --- English sources (overlay role) ---
-    const EN_FS: &[&str] = &[
-        "System/itemInfo_EN.lua",
-        "System/itemInfo_EN.lub",
-        "System/itemInfo.lua",
-        "archive/System/itemInfo_EN.lua",
-        "korangar/System/itemInfo_EN.lua",
-        "korangar/archive/System/itemInfo_EN.lua",
-    ];
-    for rel in EN_FS {
-        if let Some((label, data)) = read_from_search_paths(rel) {
-            out.push((label, data, SourceRole::EnglishOverlay));
-            break; // one EN file is enough
-        }
-    }
-
-    const EN_GAME: &[&str] = &[
-        "System\\itemInfo_EN.lua",
-        "system\\itemInfo_EN.lua",
-        "system\\iteminfo_en.lua",
-        "System\\itemInfo.lua",
-        "data\\luafiles514\\lua files\\datainfo\\iteminfo_en.lub",
-    ];
-    for path in EN_GAME {
-        if let Ok(data) = game_file_loader.get(path) {
-            out.push(((*path).to_owned(), data, SourceRole::EnglishOverlay));
-            break;
-        }
-    }
 
     // --- Base sources (full tables; Korean GRF is the usual complete set) ---
     const BASE_GAME: &[&str] = &[
@@ -280,16 +228,10 @@ fn iteminfo_candidates(game_file_loader: &GameFileLoader) -> Vec<(String, Vec<u8
     ];
     for path in BASE_GAME {
         if let Ok(data) = game_file_loader.get(path) {
-            out.push(((*path).to_owned(), data, SourceRole::Base));
+            out.push(((*path).to_owned(), data));
             break;
         }
     }
-
-    // Ensure base is processed before overlay when both present: reorder.
-    out.sort_by_key(|(_, _, role)| match role {
-        SourceRole::Base => 0u8,
-        SourceRole::EnglishOverlay => 1u8,
-    });
 
     out
 }
@@ -350,18 +292,10 @@ tbl = { [501] = {
     }
 
     #[test]
-    fn parse_system_iteminfo_en_if_present() {
-        let data = read_from_search_paths("System/itemInfo_EN.lua")
-            .or_else(|| read_from_search_paths("korangar/System/itemInfo_EN.lua"));
-        let Some((_, data)) = data else {
-            eprintln!("skip: itemInfo_EN.lua not found");
-            return;
-        };
-        let map = parse_iteminfo_table(&data).expect("EN itemInfo should parse");
-        assert!(map.len() > 1000);
-        assert_eq!(
-            map.get(&ItemId(501)).expect("501").identified_name.to_string(),
-            "Red Potion"
-        );
+    fn bundled_hercules_names_are_complete_and_human_readable() {
+        let mut map = HashMap::new();
+        let count = overlay_bundled_english_names(&mut map);
+        assert_eq!(count, 13_182);
+        assert_eq!(map.get(&ItemId(501)).expect("501").identified_name.to_string(), "Red Potion");
     }
 }

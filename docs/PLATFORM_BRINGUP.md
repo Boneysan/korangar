@@ -64,6 +64,23 @@ cd korangar && ./tools/generate_packet_lengths.sh <HERCULES_DIR> 20220406 main
 ```
 (The script needs a C compiler; it uses `cc -E`, works with clang and gcc.)
 
+### English item names [all platforms]
+
+English item names are bundled into the client as a compact generated table
+derived from `docs/items.json` (itself generated from the Hercules item DB).
+The GRF item table remains the source for icon/resource paths. There is no
+runtime dependency on an original-client `System/itemInfo_EN.lua` file.
+
+```sh
+# Regenerate after updating docs/items.json:
+jq -r '.[] | "\(.Id)\t\(.Name | gsub("_"; " "))"' docs/items.json \
+  > korangar/src/world/library/hercules_item_names.tsv
+```
+
+On startup, confirm the `[itemInfo]` line lists the GRF base table plus
+`bundled Hercules names (EN overlay, 13182 items)`. Do not restore the former
+`archive/System/itemInfo_EN.lua` external symlink.
+
 ## 1. Server first, and verify it independently [all platforms]
 
 Bring up MariaDB + Hercules and confirm health *before* touching the client,
