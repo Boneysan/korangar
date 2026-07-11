@@ -492,26 +492,29 @@ where
 
         let corner_diameter = *state.get(&self.corner_diameter);
 
+        // Generous hit targets — a 6px strip is nearly impossible on retina / trackpads.
+        const EDGE_HIT: f32 = 14.0;
+        const CORNER_HIT: f32 = 20.0;
         let horizontal_resize_area = Area {
-            left: layout_info.area.left + layout_info.area.width - 3.0,
+            left: layout_info.area.left + layout_info.area.width - EDGE_HIT,
             top: layout_info.area.top + 20.0,
-            width: 6.0,
-            height: layout_info.area.height - 40.0,
+            width: EDGE_HIT,
+            height: (layout_info.area.height - 40.0).max(EDGE_HIT),
         };
         let vertical_resize_area = Area {
             left: layout_info.area.left + 20.0,
-            top: layout_info.area.top + layout_info.area.height - 3.0,
-            width: layout_info.area.width - 40.0,
-            height: 6.0,
+            top: layout_info.area.top + layout_info.area.height - EDGE_HIT,
+            width: (layout_info.area.width - 40.0).max(EDGE_HIT),
+            height: EDGE_HIT,
         };
 
         let radius = corner_diameter.bottom_right() / 2.0;
         let corner_offset = radius - (radius.powi(2) / 2.0).sqrt();
         let resize_area = Area {
-            left: layout_info.area.left + layout_info.area.width - corner_offset - 6.0,
-            top: layout_info.area.top + layout_info.area.height - corner_offset - 6.0,
-            width: 12.0,
-            height: 12.0,
+            left: layout_info.area.left + layout_info.area.width - corner_offset - CORNER_HIT / 2.0,
+            top: layout_info.area.top + layout_info.area.height - corner_offset - CORNER_HIT / 2.0,
+            width: CORNER_HIT,
+            height: CORNER_HIT,
         };
         let horizontal_resize_hovered = horizontal_resize_area.check().run(layout);
         let vertical_resize_hovered = vertical_resize_area.check().run(layout);

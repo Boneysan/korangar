@@ -41,13 +41,20 @@ pub struct DynamicMinimapMarker {
 /// The local player uses `minimap\player_*.bmp` so the marker is drawn as a
 /// texture (rectangles are rendered under all UI textures and would be covered
 /// by the map bitmap).
-#[derive(Default, RustState, StateElement)]
+/// Default square map size (classic RO corner minimap).
+pub const DEFAULT_MINIMAP_SIDE: f32 = 160.0;
+pub const MIN_MINIMAP_SIDE: f32 = 96.0;
+pub const MAX_MINIMAP_SIDE: f32 = 400.0;
+
+#[derive(RustState, StateElement)]
 pub struct MinimapState {
     /// Base map name without extension (e.g. `izlude`).
     map_name: String,
     /// GAT dimensions in tiles.
     map_width: u16,
     map_height: u16,
+    /// User-controlled square map size (window width tracks this; scroll/buttons zoom).
+    display_side: f32,
     /// Minimap bitmap when available.
     #[hidden_element]
     texture: Option<Arc<Texture>>,
@@ -62,11 +69,27 @@ pub struct MinimapState {
     dynamic_markers: Vec<DynamicMinimapMarker>,
 }
 
+impl Default for MinimapState {
+    fn default() -> Self {
+        Self {
+            map_name: String::new(),
+            map_width: 0,
+            map_height: 0,
+            display_side: DEFAULT_MINIMAP_SIDE,
+            texture: None,
+            player_marker: None,
+            pois: Vec::new(),
+            dynamic_markers: Vec::new(),
+        }
+    }
+}
+
 impl MinimapState {
     pub fn clear(&mut self) {
         self.map_name.clear();
         self.map_width = 0;
         self.map_height = 0;
+        // Keep display_side — user zoom preference across map changes.
         self.texture = None;
         self.player_marker = None;
         self.pois.clear();
@@ -90,6 +113,19 @@ impl MinimapState {
         self.pois = pois;
         // Compass marks are map-local.
         self.dynamic_markers.clear();
+    }
+
+    pub fn display_side(&self) -> f32 {
+        self.display_side.clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE)
+    }
+
+    pub fn set_display_side(&mut self, side: f32) {
+        self.display_side = side.clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE);
+    }
+
+    /// Zoom by a multiplicative factor (e.g. 1.1 / 0.9) or additive pixels.
+    pub fn zoom_by(&mut self, delta_pixels: f32) {
+        self.set_display_side(self.display_side + delta_pixels);
     }
 
     pub fn map_name(&self) -> &str {
@@ -249,5 +285,14 @@ mod tests {
         state.set_map("izlude".into(), 100, 100, None, None, Vec::new());
         assert!(state.dynamic_markers().is_empty());
         assert_eq!(state.map_name(), "izlude");
+    }
+
+    #[test]
+    fn zoom_clamps_display_side() {
+        let mut state = MinimapState::default();
+        state.zoom_by(10_000.0);
+        assert!((state.display_side() - MAX_MINIMAP_SIDE).abs() < 0.01);
+        state.zoom_by(-10_000.0);
+        assert!((state.display_side() - MIN_MINIMAP_SIDE).abs() < 0.01);
     }
 }

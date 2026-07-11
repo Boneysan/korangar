@@ -102,22 +102,22 @@ impl TownInfoTable {
 
         match parse_towninfo(&data) {
             Ok(table) => {
+                let maps = table.by_map.len();
+                let pois: usize = table.by_map.values().map(Vec::len).sum();
+                eprintln!("[towninfo] parsed {maps} maps, {pois} POIs");
                 #[cfg(feature = "debug")]
                 {
                     use korangar_debug::logging::print_debug;
-                    print_debug!(
-                        "loaded Towninfo: {} maps, {} POIs",
-                        table.by_map.len(),
-                        table.by_map.values().map(Vec::len).sum::<usize>()
-                    );
+                    print_debug!("loaded Towninfo: {maps} maps, {pois} POIs");
                 }
                 table
             }
-            Err(_error) => {
+            Err(error) => {
+                eprintln!("[towninfo] parse failed: {error:?}");
                 #[cfg(feature = "debug")]
                 {
                     use korangar_debug::logging::{Colorize, print_debug};
-                    print_debug!("[{}] failed to parse Towninfo: {:?}", "warning".yellow(), _error);
+                    print_debug!("[{}] failed to parse Towninfo: {:?}", "warning".yellow(), error);
                 }
                 Self::default()
             }
@@ -147,25 +147,83 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
     ];
     for path in GAME_PATHS {
         if let Ok(data) = game_file_loader.get(path) {
+            eprintln!("[towninfo] loaded from game archive: {path}");
             return Some(data);
         }
     }
 
-    // Official client layout: `System/` next to the working directory (cwd is
-    // `korangar/` after startup). Supports plain text `.lub` / `.lua` as well as
-    // bytecode (mlua handles both).
-    const FS_PATHS: &[&str] = &[
+    // Plain files are usually *outside* GRFs (official client keeps them next to
+    // the executable under System/). Search several roots — cwd is often the
+    // nested `korangar/korangar/` crate dir when launching with cargo.
+    const RELATIVE_NAMES: &[&str] = &[
         "System/Towninfo_EN.lub",
         "System/Towninfo.lub",
         "System/Towninfo_EN.lua",
         "System/Towninfo.lua",
+        "client/System/Towninfo_EN.lub",
+        "client/System/Towninfo.lub",
     ];
-    for path in FS_PATHS {
-        if let Ok(data) = std::fs::read(path) {
-            return Some(data);
+
+    let mut roots: Vec<std::path::PathBuf> = Vec::new();
+
+    if let Ok(root) = std::env::var("KORANGAR_CLIENT_ROOT") {
+        roots.push(std::path::PathBuf::from(root));
+    }
+    if let Ok(system_dir) = std::env::var("KORANGAR_SYSTEM_DIR") {
+        roots.push(std::path::PathBuf::from(system_dir));
+    }
+
+    if let Ok(cwd) = std::env::current_dir() {
+        roots.push(cwd.clone());
+        // Walk a few parents (crate → repo → sibling RO client trees).
+        let mut walk = cwd;
+        for _ in 0..6 {
+            if let Some(parent) = walk.parent() {
+                walk = parent.to_path_buf();
+                roots.push(walk.clone());
+                roots.push(walk.join("RO/client"));
+                roots.push(walk.join("client"));
+            } else {
+                break;
+            }
         }
     }
 
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            roots.push(dir.to_path_buf());
+            if let Some(parent) = dir.parent() {
+                roots.push(parent.to_path_buf());
+            }
+        }
+    }
+
+    // Dedup while preserving order.
+    let mut seen = std::collections::HashSet::new();
+    roots.retain(|r| seen.insert(r.clone()));
+
+    for root in &roots {
+        for name in RELATIVE_NAMES {
+            let path = root.join(name);
+            if let Ok(data) = std::fs::read(&path) {
+                eprintln!("[towninfo] loaded from {}", path.display());
+                return Some(data);
+            }
+        }
+        // Also allow root *being* the System directory itself.
+        for file in ["Towninfo_EN.lub", "Towninfo.lub", "Towninfo_EN.lua", "Towninfo.lua"] {
+            let path = root.join(file);
+            if let Ok(data) = std::fs::read(&path) {
+                eprintln!("[towninfo] loaded from {}", path.display());
+                return Some(data);
+            }
+        }
+    }
+
+    eprintln!(
+        "[towninfo] not found — minimap facility POIs disabled \
+         (looked in GRF System\\ and on disk under cwd/parents/KORANGAR_CLIENT_ROOT)"
+    );
     None
 }
 

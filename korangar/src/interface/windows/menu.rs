@@ -47,6 +47,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     text: client_state().localization().audio_settings_button_text(),
                     event: InputEvent::ToggleAudioSettingsWindow,
                 },
+                button! {
+                    text: "GM / DM Commands",
+                    tooltip: "Levels, zeny, heal, spawn, and Seal Cascade DM mode (^000001Ctrl+O^000000)",
+                    event: InputEvent::ToggleCommandsWindow,
+                },
                 #[cfg(feature = "debug")]
                 button! {
                     text: "Render options",
@@ -76,14 +81,6 @@ impl CustomWindow<ClientState> for MenuWindow {
                     text: "Maps",
                     tooltip: "List of maps used for testing (^000001only available in debug mode^000000)",
                     event: InputEvent::ToggleMapsWindow,
-                    foreground_color: client_theme().debug_button().foreground_color(),
-                    hovered_background_color: client_theme().debug_button().hovered_background_color(),
-                },
-                #[cfg(feature = "debug")]
-                button! {
-                    text: "Commands",
-                    tooltip: "List of commands used for testing (^000001only available in debug mode^000000)",
-                    event: InputEvent::ToggleCommandsWindow,
                     foreground_color: client_theme().debug_button().foreground_color(),
                     hovered_background_color: client_theme().debug_button().hovered_background_color(),
                 },

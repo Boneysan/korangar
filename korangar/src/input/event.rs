@@ -141,6 +141,10 @@ pub enum InputEvent {
     ToggleSit,
     /// Toggle the in-game minimap window (official-style map corner).
     ToggleMinimapWindow,
+    /// Grow the minimap square (button / scroll).
+    MinimapZoomIn,
+    /// Shrink the minimap square (button / scroll).
+    MinimapZoomOut,
     /// Use a consumable / trigger item use (`CZ_USE_ITEM2`).
     UseItem {
         inventory_index: ragnarok_packets::InventoryIndex,
@@ -329,8 +333,7 @@ pub enum InputEvent {
     /// Open or close the maps window. Only works while playing.
     #[cfg(feature = "debug")]
     ToggleMapsWindow,
-    /// Open or close the commands window. Only works while playing.
-    #[cfg(feature = "debug")]
+    /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]

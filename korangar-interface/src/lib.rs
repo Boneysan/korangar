@@ -332,9 +332,25 @@ where
                         ResizeMode::Both => (delta.width(), delta.height()),
                     };
 
+                    // Base on stored size (not last frame's laid-out area) so content-driven
+                    // windows don't fight the drag and snap back every frame.
+                    let scale = interface_scaling.max(0.01);
+                    // For roughly-square windows, prefer the larger axis delta so a single
+                    // edge drag grows both dimensions evenly.
+                    let mut dw = delta_width / scale;
+                    let mut dh = delta_height / scale;
+                    if matches!(resize_mode, ResizeMode::Horizontal) {
+                        dh = dw;
+                    } else if matches!(resize_mode, ResizeMode::Vertical) {
+                        dw = dh;
+                    } else {
+                        let dominant = if dw.abs() >= dh.abs() { dw } else { dh };
+                        dw = dominant;
+                        dh = dominant;
+                    }
                     wrapper.data.size = App::Size::new(
-                        wrapper.display_information.real_area.width + delta_width / interface_scaling,
-                        wrapper.display_information.real_area.height + delta_height / interface_scaling,
+                        (wrapper.data.size.width() + dw).max(32.0),
+                        (wrapper.data.size.height() + dh).max(32.0),
                     );
 
                     if let Some(window_class) = wrapper.window.get_class() {
@@ -350,6 +366,26 @@ where
         self.windows
             .iter()
             .any(|wrapper| wrapper.window.get_class().is_some_and(|class| class == window_class))
+    }
+
+    /// Resize an open window by class and persist the size in the window cache.
+    pub fn set_window_size_for_class(&mut self, window_class: App::WindowClass, size: App::Size) {
+        if let Some(wrapper) = self
+            .windows
+            .iter_mut()
+            .find(|wrapper| wrapper.window.get_class().is_some_and(|class| class == window_class))
+        {
+            wrapper.data.size = size;
+            self.window_cache.update_size(window_class, size);
+        }
+    }
+
+    /// Current stored size of an open window, if any.
+    pub fn window_size_for_class(&self, window_class: App::WindowClass) -> Option<App::Size> {
+        self.windows
+            .iter()
+            .find(|wrapper| wrapper.window.get_class().is_some_and(|class| class == window_class))
+            .map(|wrapper| wrapper.data.size)
     }
 
     fn open_new_window(&mut self, window: impl Window<App> + 'static) {

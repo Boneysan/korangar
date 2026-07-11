@@ -1,5 +1,6 @@
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::Element;
+use korangar_interface::event::{EventQueue, ScrollHandler};
 use korangar_interface::layout::area::Area;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
@@ -8,20 +9,21 @@ use rust_state::State;
 
 use super::WindowClass;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
+use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
+use crate::state::minimap::{DEFAULT_MINIMAP_SIDE, MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state, this_entity};
 
-/// Default footprint (classic RO corner minimap is roughly this size).
-const DEFAULT_MINIMAP_SIZE: f32 = 160.0;
-const MIN_MINIMAP_SIZE: f32 = 96.0;
-const MAX_MINIMAP_SIZE: f32 = 400.0;
 /// Player blip size at the default minimap scale (must stay readable).
 const PLAYER_MARKER_SIZE: f32 = 14.0;
 /// Official information icons are small; keep them readable when resized.
 const POI_ICON_SIZE: f32 = 12.0;
 const COORDS_HEIGHT: f32 = 18.0;
+const ZOOM_ROW_HEIGHT: f32 = 28.0;
+/// Scroll wheel sensitivity (pixels of map side per scroll unit).
+const SCROLL_ZOOM_STEP: f32 = 18.0;
 
 /// A blip drawn after the map texture (must use textures so it sits on top).
 #[derive(Clone, Copy)]
@@ -48,12 +50,32 @@ struct MinimapViewLayout {
 
 /// Draws the current-map minimap image, Towninfo POIs, and a live player blip.
 ///
-/// Height tracks the window width so the map stays square when resized.
+/// Size comes from [`MinimapState::display_side`] (zoom buttons, scroll, or
+/// window resize). The map area is always square.
 ///
 /// Important: UI **textures** are flushed after all **rectangles**. Drawing the
 /// player as a rectangle would put it under the map bitmap and make it
 /// invisible — the blip must be a texture instruction (or similar custom).
 struct MinimapView;
+
+struct MinimapScrollZoom;
+
+impl ScrollHandler<ClientState> for MinimapScrollZoom {
+    fn handle_scroll(&self, state: &State<ClientState>, _: &mut EventQueue<ClientState>, delta: f32) -> bool {
+        // Positive delta = scroll up = zoom in on most platforms.
+        let step = if delta > 0.0 {
+            SCROLL_ZOOM_STEP
+        } else if delta < 0.0 {
+            -SCROLL_ZOOM_STEP
+        } else {
+            return true;
+        };
+        state.update_value_with(client_state().minimap(), move |minimap| {
+            minimap.zoom_by(step);
+        });
+        true
+    }
+}
 
 impl Element<ClientState> for MinimapView {
     type LayoutInfo = MinimapViewLayout;
@@ -65,15 +87,15 @@ impl Element<ClientState> for MinimapView {
         resolvers: &mut dyn Resolvers<ClientState>,
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
-            let available = resolver.push_available_area();
-            let side = available.width.clamp(MIN_MINIMAP_SIZE, MAX_MINIMAP_SIZE);
+            let minimap_path = client_state().minimap();
+            // User zoom (buttons / scroll) or last edge-resize — always square.
+            let side = state.get(&minimap_path).display_side();
             let area = resolver.with_height(side);
             let player_tile = state.try_follow(this_entity()).map(|player| {
                 let t = player.get_tile_position();
                 (t.x, t.y)
             });
 
-            let minimap_path = client_state().minimap();
             let minimap = state.get(&minimap_path);
             let current_map = minimap.map_name();
 
@@ -139,7 +161,20 @@ impl Element<ClientState> for MinimapView {
     ) {
         let minimap_path = client_state().minimap();
         let minimap = state.get(&minimap_path);
-        let area = layout_info.area;
+        let row = layout_info.area;
+        // Center a square map area inside the row (row may be wider after chrome).
+        let side = row.height.min(row.width).clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE);
+        let area = Area {
+            left: row.left + (row.width - side) / 2.0,
+            top: row.top,
+            width: side,
+            height: side,
+        };
+
+        // Scroll-wheel zoom while the cursor is over the map.
+        if area.check().run(layout) {
+            layout.register_scroll_handler(&MinimapScrollZoom);
+        }
 
         // Background so missing textures are still visible.
         layout.add_rectangle(
@@ -169,10 +204,11 @@ impl Element<ClientState> for MinimapView {
 
         let map_w = minimap.map_width().max(1) as f32;
         let map_h = minimap.map_height().max(1) as f32;
-        let poi_size = (area.width / DEFAULT_MINIMAP_SIZE * POI_ICON_SIZE).clamp(8.0, 20.0);
-        let player_size = (area.width / DEFAULT_MINIMAP_SIZE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
+        let poi_size = (side / DEFAULT_MINIMAP_SIDE * POI_ICON_SIZE).clamp(8.0, 20.0);
+        let player_size = (side / DEFAULT_MINIMAP_SIDE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
 
         // Towninfo facility POIs (shops, kafra, guides, …).
+        // Must be textures — rectangles flush under the map bitmap and disappear.
         for poi in minimap.pois() {
             let (cx, cy) = tile_to_minimap(poi.x as f32, poi.y as f32, map_w, map_h, area);
             let icon_area = Area {
@@ -184,19 +220,10 @@ impl Element<ClientState> for MinimapView {
 
             if let Some(texture) = poi.texture.as_ref() {
                 layout.add_texture(icon_area, texture.clone(), Color::WHITE, false);
-            } else {
-                // Fallback color swatch — still a texture path is preferred; this
-                // rectangle sits under POI textures but is fine without icons.
-                layout.add_rectangle(
-                    icon_area,
-                    CornerDiameter::uniform(2.0),
-                    {
-                        let (r, g, b) = poi.kind.fallback_color_rgb();
-                        Color::rgb_u8(r, g, b)
-                    },
-                    Color::rgba_u8(0, 0, 0, 0),
-                    ShadowPadding::uniform(0.0),
-                );
+            } else if let Some(texture) = minimap.player_marker() {
+                // Missing facility icon: tinted blip so POIs stay visible.
+                let (r, g, b) = poi.kind.fallback_color_rgb();
+                layout.add_texture(icon_area, texture.clone(), Color::rgb_u8(r, g, b), false);
             }
         }
 
@@ -345,18 +372,39 @@ impl CustomWindow<ClientState> for MinimapWindow {
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
 
+        // Border + title chrome roughly; content is square map + coords + zoom row.
+        const CHROME_W: f32 = 24.0;
+        const CHROME_H: f32 = 56.0;
+
         window! {
             title: "Map",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
             resizable: true,
-            // Horizontal resize drives the square map size; vertical follows content.
-            minimum_width: MIN_MINIMAP_SIZE + 16.0,
-            maximum_width: MAX_MINIMAP_SIZE + 16.0,
+            // Drag the right edge or bottom-right corner, or use − / + / scroll.
+            minimum_width: MIN_MINIMAP_SIDE + CHROME_W,
+            maximum_width: MAX_MINIMAP_SIDE + CHROME_W,
+            minimum_height: MIN_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
+            maximum_height: MAX_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
             elements: (
                 MinimapView,
                 MinimapCoords,
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "−",
+                            tooltip: "Zoom out (or scroll down on the map)",
+                            event: InputEvent::MinimapZoomOut,
+                        },
+                        button! {
+                            text: "+",
+                            tooltip: "Zoom in (or scroll up on the map)",
+                            event: InputEvent::MinimapZoomIn,
+                        },
+                    ),
+                },
             ),
         }
     }

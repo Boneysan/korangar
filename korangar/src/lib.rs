@@ -2668,6 +2668,26 @@ impl Client {
         }
     }
 
+    /// Keep the Map window chrome in sync with [`MinimapState::display_side`].
+    fn sync_minimap_window_size(&mut self) {
+        use crate::state::minimap::{MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
+
+        const CHROME_W: f32 = 24.0;
+        const CHROME_H: f32 = 56.0;
+        const COORDS_HEIGHT: f32 = 18.0;
+        const ZOOM_ROW_HEIGHT: f32 = 28.0;
+
+        let side = self
+            .client_state
+            .follow(client_state().minimap())
+            .display_side()
+            .clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE);
+        let width = side + CHROME_W;
+        let height = side + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H;
+        self.interface
+            .set_window_size_for_class(WindowClass::Minimap, ScreenSize { width, height });
+    }
+
     /// Load the official minimap bitmap and Towninfo facility POIs for a map.
     ///
     /// Uses `file_exists` before loading so a missing BMP is not replaced by the
@@ -2685,9 +2705,8 @@ impl Client {
             .get_or_load("유저인터페이스\\minimap\\player_1.bmp", ImageType::Color)
             .ok();
 
-        let pois = self
-            .library
-            .town_pois(&base)
+        let town_pois = self.library.town_pois(&base);
+        let pois: Vec<_> = town_pois
             .iter()
             .map(|poi| {
                 let icon = self
@@ -2703,6 +2722,12 @@ impl Client {
                 }
             })
             .collect();
+
+        eprintln!(
+            "[minimap] map={base} size={map_width}x{map_height} bmp={} pois={}",
+            texture.is_some(),
+            pois.len()
+        );
 
         self.client_state.follow_mut(client_state().minimap()).set_map(
             base,
@@ -2907,6 +2932,7 @@ impl Client {
         }
 
         let mut toggle_sit = false;
+        let mut sync_minimap = false;
         for event in self.input_event_buffer.drain(..) {
             match event {
                 InputEvent::LogIn {
@@ -3445,6 +3471,14 @@ impl Client {
                 InputEvent::ToggleSit => {
                     toggle_sit = true;
                 }
+                InputEvent::MinimapZoomIn => {
+                    self.client_state.follow_mut(client_state().minimap()).zoom_by(24.0);
+                    sync_minimap = true;
+                }
+                InputEvent::MinimapZoomOut => {
+                    self.client_state.follow_mut(client_state().minimap()).zoom_by(-24.0);
+                    sync_minimap = true;
+                }
                 InputEvent::ToggleMinimapWindow => {
                     // Only while actually in-game (not character select / main menu map).
                     if self.map.is_some() && self.client_state.try_follow(this_player()).is_some() {
@@ -3872,7 +3906,6 @@ impl Client {
                         }
                     }
                 }
-                #[cfg(feature = "debug")]
                 InputEvent::ToggleCommandsWindow => {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Commands) {
@@ -3931,6 +3964,10 @@ impl Client {
 
         if toggle_sit {
             self.toggle_sit(client_tick);
+        }
+
+        if sync_minimap {
+            self.sync_minimap_window_size();
         }
 
         // If the player closed the dialog with the window X, notify the server.
@@ -4278,6 +4315,22 @@ impl Client {
         if let Some(delta) = input_report.drag {
             // TODO: The scaling should be removed here.
             self.interface.handle_drag(delta, scaling.get_factor());
+
+            // Edge-resize of the Map window should update the minimap zoom level.
+            if matches!(
+                self.interface.get_mouse_mode(),
+                korangar_interface::MouseMode::ResizingWindow { .. }
+            ) && self.interface.is_window_with_class_open(WindowClass::Minimap)
+            {
+                use crate::state::minimap::{MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
+                const CHROME_W: f32 = 24.0;
+                if let Some(size) = self.interface.window_size_for_class(WindowClass::Minimap) {
+                    let side = (size.width - CHROME_W).clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE);
+                    self.client_state
+                        .follow_mut(client_state().minimap())
+                        .set_display_side(side);
+                }
+            }
         }
 
         #[cfg(feature = "debug")]

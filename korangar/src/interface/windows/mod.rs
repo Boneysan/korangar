@@ -7,7 +7,6 @@ mod character_creation;
 mod character_overview;
 mod character_selection;
 mod chat;
-#[cfg(feature = "debug")]
 mod commands;
 mod dialog;
 mod equipment;
@@ -59,7 +58,6 @@ pub use self::character_creation::CharacterCreationWindow;
 pub use self::character_overview::CharacterOverviewWindow;
 pub use self::character_selection::CharacterSelectionWindow;
 pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
-#[cfg(feature = "debug")]
 pub use self::commands::CommandsWindow;
 pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::equipment::EquipmentWindow;
@@ -136,6 +134,8 @@ pub enum WindowClass {
     SelectServer,
     Sell,
     SellCart,
+    /// GM / DM command panel (levels, zeny, heal, campaign mode). Available in all builds.
+    Commands,
     #[cfg(feature = "debug")]
     Maps,
     #[cfg(feature = "debug")]
@@ -144,8 +144,6 @@ pub enum WindowClass {
     PacketInspector,
     #[cfg(feature = "debug")]
     RenderOptions,
-    #[cfg(feature = "debug")]
-    Commands,
     #[cfg(feature = "debug")]
     ThemeInspector,
     #[cfg(feature = "debug")]

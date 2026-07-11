@@ -135,6 +135,7 @@ impl WindowCache {
             | WindowClass::AudioSettings => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -160.0, 360.0, 400.0),
             WindowClass::Respawn => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 140.0),
             WindowClass::FriendRequest => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
+            WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 420.0, 520.0),
             // Login / char select stay centered (menu flow).
             WindowClass::Login | WindowClass::SelectServer | WindowClass::CharacterSelection | WindowClass::CharacterCreation => {
                 return None;
@@ -144,7 +145,6 @@ impl WindowCache {
             | WindowClass::ClientStateInspector
             | WindowClass::PacketInspector
             | WindowClass::RenderOptions
-            | WindowClass::Commands
             | WindowClass::ThemeInspector
             | WindowClass::Profiler
             | WindowClass::CacheStatistics => state(AnchorPoint::TopLeft, MARGIN, 80.0, 400.0, 400.0),

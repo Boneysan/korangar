@@ -352,7 +352,6 @@ impl InputSystem {
             events.push(InputEvent::ToggleProfilerWindow);
         }
 
-        #[cfg(feature = "debug")]
         if control_down && self.get_key(KeyCode::KeyO).pressed() {
             events.push(InputEvent::ToggleCommandsWindow);
         }
