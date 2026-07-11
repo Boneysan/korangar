@@ -52,6 +52,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     tooltip: "Levels, zeny, heal, spawn, and Seal Cascade DM mode (^000001Ctrl+O^000000)",
                     event: InputEvent::ToggleCommandsWindow,
                 },
+                button! {
+                    text: "Dice Roller",
+                    tooltip: "Roll dice via @roll — standard dice, common combos, and custom NdX+mod (^000001Ctrl+D^000000)",
+                    event: InputEvent::ToggleDiceWindow,
+                },
                 #[cfg(feature = "debug")]
                 button! {
                     text: "Render options",

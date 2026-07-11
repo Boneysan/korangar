@@ -49,8 +49,8 @@ use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
-    ChatWindowState, DialogWindowState, FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, SkillTreeWindowState,
-    WindowCache, WindowClass,
+    ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState, LoginWindowState,
+    LoginWindowStatePathExt, SkillTreeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -151,6 +151,10 @@ pub struct ClientState {
     login_window: LoginWindowState,
     /// Internal state of the chat window.
     chat_window: ChatWindowState,
+    /// Internal state of the dice roller window.
+    dice_window: DiceWindowState,
+    /// Internal state of the GM / DM command panel.
+    commands_window: CommandsWindowState,
     /// Internal state of the friend list window.
     friend_list_window: FriendListWindowState,
     /// Internal state of the dialog window.
@@ -338,6 +342,8 @@ impl ClientState {
             let chat_messages = vec![ChatMessage::new(welcome_string, MessageColor::Server)];
 
             let chat_window = ChatWindowState::default();
+            let dice_window = DiceWindowState::default();
+            let commands_window = CommandsWindowState::default();
         });
 
         time_phase!("create character server resources", {
@@ -428,6 +434,8 @@ impl ClientState {
             client_info,
             login_window,
             chat_window,
+            dice_window,
+            commands_window,
             friend_list_window,
             dialog_window,
             skill_tree_window,

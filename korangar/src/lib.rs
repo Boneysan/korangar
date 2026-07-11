@@ -3947,7 +3947,15 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Commands) {
                             true => self.interface.close_window_with_class(WindowClass::Commands),
-                            false => self.interface.open_window(CommandsWindow),
+                            false => self.interface.open_window(CommandsWindow::new(client_state().commands_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleDiceWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::Dice) {
+                            true => self.interface.close_window_with_class(WindowClass::Dice),
+                            false => self.interface.open_window(DiceWindow::new(client_state().dice_window())),
                         }
                     }
                 }

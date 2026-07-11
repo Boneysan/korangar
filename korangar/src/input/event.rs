@@ -335,6 +335,7 @@ pub enum InputEvent {
     ToggleMapsWindow,
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
+    ToggleDiceWindow,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]
     ToggleThemeInspectorWindow,

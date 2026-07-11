@@ -9,6 +9,7 @@ mod character_selection;
 mod chat;
 mod commands;
 mod dialog;
+mod dice;
 mod equipment;
 mod error;
 #[cfg(feature = "debug")]
@@ -58,8 +59,9 @@ pub use self::character_creation::CharacterCreationWindow;
 pub use self::character_overview::CharacterOverviewWindow;
 pub use self::character_selection::CharacterSelectionWindow;
 pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
-pub use self::commands::CommandsWindow;
+pub use self::commands::{CommandsWindow, CommandsWindowState};
 pub use self::dialog::{DialogWindow, DialogWindowState};
+pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::equipment::EquipmentWindow;
 pub use self::error::ErrorWindow;
 #[cfg(feature = "debug")]
@@ -136,6 +138,8 @@ pub enum WindowClass {
     SellCart,
     /// GM / DM command panel (levels, zeny, heal, campaign mode). Available in all builds.
     Commands,
+    /// Dice roller (sends `@roll`). Available to all players in all builds.
+    Dice,
     #[cfg(feature = "debug")]
     Maps,
     #[cfg(feature = "debug")]

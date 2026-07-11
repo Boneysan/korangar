@@ -70,6 +70,40 @@ Atcommands are not rebroadcast as public chat, so without this (and without
 `InputEvent::SendMessage { text: "@dm mode on".to_string() }` etc.  
 Menu: **GM / DM Commands** (`Ctrl+O`).
 
+**Tabbed layout (2026-07-11).** The panel is split into 6 tabs — **DM · Beats ·
+Character · Items · Combat · Travel** — because a DM needs many live controls.
+The **Beats** tab (index 1) has one button per arc (1–19) grouped by act; each
+sends `@dmbeat <arc>`, which the server (`dm_console.txt` `OnBeat`) parses to jump
+straight into that arc's beat submenu. Adding/removing a tab means renumbering the
+`selected_tab` indices in both the header buttons and the `either!` chain.
+Implementation:
+
+- `CommandsWindowState { selected_tab: u8 }` (new) — the window is now
+  `CommandsWindow<A>` holding a path to it, opened in `lib.rs` via
+  `CommandsWindow::new(client_state().commands_window())`. Wired into
+  `ClientState` (`commands_window` field + `::default()` + struct assembly) and
+  re-exported from `windows/mod.rs`.
+- Header = a `split!` of 5 `button!`s; each `event` closure calls
+  `state.update_value(selected_tab, index)`, and each is `disabled` (greyed = the
+  active indicator) via `ComputedSelector` when `selected_tab == index`.
+- Body = a nested `either!` chain (heterogeneous branches, `korangar-interface`
+  `components/either.rs`) keyed on the same `ComputedSelector`; each tab body is a
+  `fragment!` (vertical group) holding that tab's `text!`/`split!` rows.
+
+To add a tab: bump the header buttons, extend the `either!` chain, and give the
+new fragment its rows. To add a button to a tab: edit that fragment only.
+
+**Ctrl+O must work while the chat box is focused.** A DM types an `@dm`
+command (which leaves the chat box focused — Enter submits but does not
+unfocus), then reaches for the panel. `process_user_events` only runs the full
+`handle_keyboard_input` (menu shortcuts) when the interface is **not** focused,
+so the Ctrl+O binding lives in `input/mod.rs` → `push_game_action_keys` (the
+sit/hotbar path that runs in **both** focus branches), **not** in
+`handle_keyboard_input` — keeping it in both would double-toggle when chat is
+unfocused (open+close = nothing). Ctrl+O emits no printable char, so it does
+not leak `o` into chat. Full write-up: Symptom D in
+`Hercules/planning/dm-mode-troubleshooting.md`.
+
 Chat format sent on the wire:
 
 ```text

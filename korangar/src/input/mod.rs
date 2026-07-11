@@ -214,6 +214,21 @@ impl InputSystem {
             events.push(InputEvent::ToggleSit);
         }
 
+        // GM/DM Commands panel (Ctrl+O) lives here rather than in
+        // handle_keyboard_input so it works even while the chat box is focused —
+        // a DM typically types an `@dm` command, then reaches for the panel.
+        // Ctrl+O produces no printable character, so it does not leak into chat.
+        let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+        if control_down && self.get_key(KeyCode::KeyO).pressed() {
+            events.push(InputEvent::ToggleCommandsWindow);
+        }
+
+        // Dice roller (Ctrl+D). Also in the always-works path so players can roll
+        // while the chat box is focused (same rationale as Ctrl+O).
+        if control_down && self.get_key(KeyCode::KeyD).pressed() {
+            events.push(InputEvent::ToggleDiceWindow);
+        }
+
         // F10 belongs to chat-window height in the original client, not the hotbar.
         const HOTBAR_KEYS: [KeyCode; 9] = [
             KeyCode::F1,
@@ -352,9 +367,8 @@ impl InputSystem {
             events.push(InputEvent::ToggleProfilerWindow);
         }
 
-        if control_down && self.get_key(KeyCode::KeyO).pressed() {
-            events.push(InputEvent::ToggleCommandsWindow);
-        }
+        // Ctrl+O (GM/DM Commands) is handled in push_game_action_keys so it also
+        // works while the chat box is focused; keeping it here too would double-toggle.
 
         #[cfg(feature = "debug")]
         if control_down && self.get_key(KeyCode::KeyN).pressed() {
