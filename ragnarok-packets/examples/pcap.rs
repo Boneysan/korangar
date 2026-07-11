@@ -215,6 +215,7 @@ fn main() {
         Broadcast2MessagePacket,
         OverheadMessagePacket,
         ServerMessagePacket,
+        DisplayBottomMessagePacket,
         EntityMessagePacket,
         DisplayEmotionPacket,
         EntityMovePacket,

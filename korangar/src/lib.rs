@@ -1098,6 +1098,9 @@ impl Client {
             .tick_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
+        // Deferred: cannot call &mut self helpers while draining network_event_buffer.
+        let mut open_storage_ui = false;
+
         for event in self.network_event_buffer.drain() {
             match event {
                 NetworkEvent::LoginServerConnected {
@@ -1911,15 +1914,15 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().storage())
                         .set_list(&self.async_loader, items);
-                    if !self.interface.is_window_with_class_open(WindowClass::Storage) {
-                        self.interface
-                            .open_window(StorageWindow::new(client_state().storage()));
-                    }
+                    open_storage_ui = true;
                 }
                 NetworkEvent::StorageAmount { amount, max_amount } => {
                     self.client_state
                         .follow_mut(client_state().storage())
                         .set_amount(amount, max_amount);
+                    // Hercules always sends capacity after the list; also opens
+                    // storage when the item list is empty (Start/End only).
+                    open_storage_ui = true;
                 }
                 NetworkEvent::StorageItemAdded { item } => {
                     self.client_state
@@ -2666,6 +2669,10 @@ impl Client {
                 }
             }
         }
+
+        if open_storage_ui {
+            self.open_storage_window_if_needed();
+        }
     }
 
     /// Keep the Map window chrome in sync with [`MinimapState::display_side`].
@@ -2686,6 +2693,27 @@ impl Client {
         let height = side + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H;
         self.interface
             .set_window_size_for_class(WindowClass::Minimap, ScreenSize { width, height });
+    }
+
+    /// Open the storage UI (and inventory for drag source) when Kafra/`@storage` opens.
+    fn open_storage_window_if_needed(&mut self) {
+        use crate::state::storage::StorageStatePathExt;
+
+        if !self.interface.is_window_with_class_open(WindowClass::Storage) {
+            self.interface.open_window(StorageWindow::new(
+                client_state().storage().items(),
+                client_state().storage(),
+            ));
+        }
+        // Inventory is the drag source for store/retrieve.
+        if !self.interface.is_window_with_class_open(WindowClass::Inventory)
+            && self.client_state.try_follow(this_entity()).is_some()
+        {
+            self.interface.open_window(InventoryWindow::new(
+                client_state().inventory().items(),
+                this_player().manually_asserted(),
+            ));
+        }
     }
 
     /// Load the official minimap bitmap and Towninfo facility POIs for a map.
@@ -3462,6 +3490,15 @@ impl Client {
                         }
 
                         continue;
+                    }
+
+                    // Atcommands (@dm, @blvl, …) never rebroadcast as public chat, so echo
+                    // the request locally; server feedback arrives via 0x017F (dispbottom).
+                    if text.starts_with('@') {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("→ {text}"),
+                            MessageColor::Information,
+                        ));
                     }
 
                     let _ = self

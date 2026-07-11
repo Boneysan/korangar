@@ -65,18 +65,18 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [ ] NPC shop sell
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
 - [ ] Item identify (magnifier / double-click unidentified) — protocol landed; verify live
-- [ ] Kafra storage open / store / retrieve / close — protocol landed; verify live
+- [x] Kafra storage open / store / retrieve / close — UI grid live 2026-07-11 (stock Kafra uses `close2` then `openstorage`: click dialog **Close** first; see [storage-window.md](../storage-window.md))
 
 ### Social (P0)
 - [ ] Public chat send + receive
 
 ### NPC & world (P0)
-- [ ] NPC dialog: mes + next + close
-- [ ] NPC dialog: menu choices
+- [x] NPC dialog: mes + next + close — live via Kafra 2026-07-11
+- [x] NPC dialog: menu choices — live via Kafra teleport 2026-07-11
 - [ ] **NPC number input** (E3.3) — e.g. scripts that call `input .@n`
 - [ ] **NPC string input** (E3.3) — e.g. scripts that call `input .@s$`
-- [ ] Warp / map change
-- [ ] Kafra **save point** (dialog-only; storage window is E4.4)
+- [x] Warp / map change — Kafra teleport live-verified 2026-07-11
+- [x] Kafra **save point** (dialog-only; storage window is E4.4) — live-verified 2026-07-11
 
 ### Status / feedback (recent work)
 - [ ] Buff bar shows timed status (Blessing / `@useskill` / consumable)
@@ -116,6 +116,12 @@ prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
 
 ## 5.1 Live session notes
 
+- **2026-07-11, macOS:** Kafra teleport (dialog + menu + warp) and Kafra **save
+  point** live-verified. DM mode on/off + `[DM]` chat feedback fixed earlier same
+  session (`0x017F` + `dm_console` `@` bridge). Kafra **storage** grid opens after
+  dialog Close (`close2` → `openstorage`); drag/store path wired.
+- **Also same day:** client `DisplayBottomMessagePacket` (0x017F) for `dispbottom`;
+  local `→ @cmd` echo; storage window grid + `0x0B44` item-added.
 - **2026-07-10, macOS:** Hercules login/char/map/api built with PACKETVER
   20220406. Login, existing-character selection, `int_land` load, movement, and
   Home sit/stand passed. Client remained connected to map port 5121.

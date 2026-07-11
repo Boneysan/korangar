@@ -952,6 +952,20 @@ pub struct ServerMessagePacket {
     pub message: String,
 }
 
+/// Self-only / guild-style display message (`ZC_GUILD_CHAT` 0x017F).
+///
+/// Hercules uses this for `dispbottom` / `clif_disp_onlyself` (atcommand
+/// feedback, DM console replies, script notifications). Layout matches
+/// `ServerMessagePacket`: `<header>.W <len>.W <message>.?B` with NUL.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x017F)]
+#[variable_length]
+pub struct DisplayBottomMessagePacket {
+    #[length_remaining]
+    pub message: String,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0291)]
@@ -4341,10 +4355,14 @@ pub struct StorageAmountPacket {
     pub max_amount: u16,
 }
 
-/// Item added to storage (`ZC_ADD_ITEM_TO_STORE` 0x0A0A).
+/// Item added to storage (`ZC_ADD_ITEM_TO_STORE`).
+///
+/// PACKETVER main ≥ 20200916 uses header **0x0B44** with slot/options before
+/// refine/grade (see Hercules `PACKET_ZC_ADD_ITEM_TO_STORE`). Older clients used
+/// 0x0A0A with refine before slot — wrong for our 20220406 stack.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x0A0A)]
+#[header(0x0B44)]
 pub struct StorageItemAddedPacket {
     pub index: InventoryIndex,
     pub amount: u32,
@@ -4352,9 +4370,10 @@ pub struct StorageItemAddedPacket {
     pub item_type: u8,
     pub identified: u8,
     pub damaged: u8,
-    pub refine: u8,
     pub slot: [u32; 4],
     pub option_data: [ItemOptions; 5],
+    pub refine: u8,
+    pub grade: u8,
 }
 
 /// Item removed from storage (`ZC_DELETE_ITEM_FROM_STORE` 0x00F6).

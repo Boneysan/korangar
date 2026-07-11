@@ -85,6 +85,8 @@ These are concrete, code-level guides ready for implementation:
 ### Other / Historical
 - [protocol/2026-07-07-handoff.md](protocol/2026-07-07-handoff.md) — Packet audit handoff note.
 - [2026-07-10-handover.md](2026-07-10-handover.md) — Client/server bring-up handover covering connectivity, controls, and the bundled English item-name path.
+- [dm-atcommand-feedback.md](dm-atcommand-feedback.md) — `dispbottom` / `@dm` chat via packet `0x017F`; pair with Hercules `planning/dm-mode-troubleshooting.md`.
+- [storage-window.md](storage-window.md) — Kafra storage grid, drag packets, `close2` then `openstorage` UX.
 
 ## For Agents (Claude, Grok, etc.)
 

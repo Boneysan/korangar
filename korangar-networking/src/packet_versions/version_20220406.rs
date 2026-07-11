@@ -223,6 +223,11 @@ where
         text: packet.message,
         color: MessageColor::Server,
     })?;
+    // Hercules `dispbottom` / `clif_disp_onlyself` (atcommands, @dm*, script feedback).
+    packet_handler.register(|packet: DisplayBottomMessagePacket| NetworkEvent::ChatMessage {
+        text: packet.message,
+        color: MessageColor::Server,
+    })?;
     packet_handler.register(|packet: MessageTablePacket| NetworkEvent::MessageTable {
         message_id: packet.message_id,
         color: MessageColor::Error,
@@ -1169,7 +1174,7 @@ where
                 option_count: 0,
                 option_data: packet.option_data,
                 refinement_level: packet.refine,
-                enchantment_level: 0,
+                enchantment_level: packet.grade,
                 flags: equip_flags,
             }
         } else {
