@@ -305,8 +305,14 @@ pub struct CharacterListPacket {
     pub vip_slot_count: u8,
     #[new_default]
     pub unknown: [u8; 20],
+    /// Per-character entries. Kept as raw bytes because the entry layout
+    /// depends on the server's PACKETVER (155 bytes on our Hercules
+    /// 20190605, 175 bytes on >= 20201007) and this packet is only ever
+    /// consumed as a noop — the client requests the list explicitly via
+    /// [RequestCharacterListPacket] instead. Parsing typed entries here
+    /// would corrupt the stream on the "wrong" server generation.
     #[repeating_remaining]
-    pub character_information: Vec<CharacterInformation>,
+    pub character_information: Vec<u8>,
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, CharacterServer)]
@@ -437,6 +443,20 @@ pub struct LoginFailedPacket2 {
     pub block_date: [u8; 20],
 }
 
+/// Hercules `AC_REFUSE_LOGIN_R3`: identical 26-byte layout to
+/// [LoginFailedPacket2], but sent under a different header by servers built
+/// with PACKETVER >= 20180627 (see `lclif_send_auth_failed` in
+/// Hercules `src/login/lclif.c`). Without this packet a rejected login
+/// (wrong password / unknown account) is consumed silently and the client
+/// appears to do nothing.
+#[derive(Debug, Clone, Packet, ServerPacket, LoginServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B02)]
+pub struct LoginFailedPacket3 {
+    pub reason: LoginFailedReason2,
+    pub block_date: [u8; 20],
+}
+
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub enum CharacterSelectionFailedReason {
@@ -532,6 +552,15 @@ pub struct CharacterServerLoginPacket {
 /// Sent by the client to the map server after after successfully selecting a
 /// character. Attempts to log into the map server using the provided
 /// information.
+///
+/// This is the 23-byte `CZ_ENTER` layout of PACKETVER >= 20211103 servers
+/// (which includes our reference Hercules build at 20220406). Servers built
+/// below that (e.g. a default Hercules build, 20190605) expect a 19-byte
+/// variant WITHOUT `login_id2` — sending this packet to one desyncs the map
+/// connection immediately (the server consumes 19 bytes and parses the 4
+/// leftover bytes as a garbage header). Build the server with
+/// `./configure --enable-packetver=20220406`; see
+/// `docs/PLATFORM_BRINGUP.md`.
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0436)]
@@ -631,6 +660,113 @@ impl rust_state::VecItem for CharacterInformation {
     }
 }
 
+/// The 155-byte per-character entry layout used by servers built with
+/// PACKETVER < 20201007 (like our Hercules at 20190605): health points are
+/// 32-bit and spell points 16-bit, where [CharacterInformation] models the
+/// newer 64-bit variants. Field order is otherwise identical — verified
+/// against `char_mmo_char_tobuf` in Hercules `src/char/char.c`.
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct CharacterInformationLegacy {
+    pub character_id: CharacterId,
+    pub experience: i64,
+    pub money: i32,
+    pub job_experience: i64,
+    pub job_level: i32,
+    pub body_state: i32,
+    pub health_state: i32,
+    pub effect_state: i32,
+    pub virtue: i32,
+    pub honor: i32,
+    pub stat_points: i16,
+    pub health_points: i32,
+    pub maximum_health_points: i32,
+    pub spell_points: i16,
+    pub maximum_spell_points: i16,
+    pub movement_speed: i16,
+    pub job_id: JobId,
+    pub head: i16,
+    pub body: i16,
+    pub weapon: i16,
+    pub base_level: i16,
+    pub sp_point: i16,
+    pub accessory: i16,
+    pub shield: i16,
+    pub accessory2: i16,
+    pub accessory3: i16,
+    pub head_palette: i16,
+    pub body_palette: i16,
+    #[length(24)]
+    pub name: String,
+    pub strength: u8,
+    pub agility: u8,
+    pub vitality: u8,
+    pub intelligence: u8,
+    pub dexterity: u8,
+    pub luck: u8,
+    pub character_number: u8,
+    pub hair_color: u8,
+    pub b_is_changed_char: i16,
+    #[length(16)]
+    pub map_name: String,
+    pub deletion_reverse_date: i32,
+    pub robe_palette: i32,
+    pub character_slot_change_count: i32,
+    pub character_name_change_count: i32,
+    pub sex: Sex,
+}
+
+impl From<CharacterInformationLegacy> for CharacterInformation {
+    fn from(legacy: CharacterInformationLegacy) -> Self {
+        Self {
+            character_id: legacy.character_id,
+            experience: legacy.experience,
+            money: legacy.money,
+            job_experience: legacy.job_experience,
+            job_level: legacy.job_level,
+            body_state: legacy.body_state,
+            health_state: legacy.health_state,
+            effect_state: legacy.effect_state,
+            virtue: legacy.virtue,
+            honor: legacy.honor,
+            stat_points: legacy.stat_points,
+            health_points: i64::from(legacy.health_points),
+            maximum_health_points: i64::from(legacy.maximum_health_points),
+            spell_points: i64::from(legacy.spell_points),
+            maximum_spell_points: i64::from(legacy.maximum_spell_points),
+            movement_speed: legacy.movement_speed,
+            job_id: legacy.job_id,
+            head: legacy.head,
+            body: legacy.body,
+            weapon: legacy.weapon,
+            base_level: legacy.base_level,
+            sp_point: legacy.sp_point,
+            accessory: legacy.accessory,
+            shield: legacy.shield,
+            accessory2: legacy.accessory2,
+            accessory3: legacy.accessory3,
+            head_palette: legacy.head_palette,
+            body_palette: legacy.body_palette,
+            name: legacy.name,
+            strength: legacy.strength,
+            agility: legacy.agility,
+            vitality: legacy.vitality,
+            intelligence: legacy.intelligence,
+            dexterity: legacy.dexterity,
+            luck: legacy.luck,
+            character_number: legacy.character_number,
+            hair_color: legacy.hair_color,
+            b_is_changed_char: legacy.b_is_changed_char,
+            map_name: legacy.map_name,
+            deletion_reverse_date: legacy.deletion_reverse_date,
+            robe_palette: legacy.robe_palette,
+            character_slot_change_count: legacy.character_slot_change_count,
+            character_name_change_count: legacy.character_name_change_count,
+            sex: legacy.sex,
+        }
+    }
+}
+
 /// Sent by the character server as a response to [CreateCharacterPacket]
 /// succeeding. Provides all character information of the newly created
 /// character.
@@ -639,6 +775,17 @@ impl rust_state::VecItem for CharacterInformation {
 #[header(0x0B6F)]
 pub struct CreateCharacterSuccessPacket {
     pub character_information: CharacterInformation,
+}
+
+/// `HC_ACCEPT_MAKECHAR` as sent by servers built with PACKETVER < 20201007
+/// (like our Hercules at 20190605): same meaning as
+/// [CreateCharacterSuccessPacket], but a different header and the 155-byte
+/// legacy entry layout.
+#[derive(Debug, Clone, Packet, ServerPacket, CharacterServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x006D)]
+pub struct CreateCharacterLegacySuccessPacket {
+    pub character_information: CharacterInformationLegacy,
 }
 
 /// Sent by the client to the character server.
@@ -657,6 +804,19 @@ pub struct RequestCharacterListPacket {}
 pub struct RequestCharacterListSuccessPacket {
     #[repeating_remaining]
     pub character_information: Vec<CharacterInformation>,
+}
+
+/// `HC_ACK_CHARINFO_PER_PAGE` as sent by servers built with
+/// PACKETVER < 20201007 (like our Hercules at 20190605): same meaning as
+/// [RequestCharacterListSuccessPacket], but a different header and the
+/// 155-byte legacy entry layout.
+#[derive(Debug, Clone, Packet, ServerPacket, CharacterServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x099D)]
+#[variable_length]
+pub struct RequestCharacterListLegacySuccessPacket {
+    #[repeating_remaining]
+    pub character_information: Vec<CharacterInformationLegacy>,
 }
 
 /// Sent by the map server to the client.
@@ -5185,7 +5345,19 @@ mod tests {
     }
 
     #[test]
+    fn character_information_sizes_match_hercules_layouts() {
+        // Verified against `char_mmo_char_tobuf` in Hercules src/char/char.c:
+        // 155 bytes at PACKETVER 20190605 (32-bit hp, 16-bit sp),
+        // 175 bytes at PACKETVER >= 20201007 (64-bit hp and sp).
+        assert_eq!(<CharacterInformationLegacy as FixedByteSize>::size_in_bytes(), 155);
+        assert_eq!(<CharacterInformation as FixedByteSize>::size_in_bytes(), 175);
+    }
+
+    #[test]
     fn map_server_login_packet_matches_20220406_layout() {
+        // 23-byte CZ_ENTER with login_id2 — requires the server to be built
+        // with --enable-packetver=20220406 (a default Hercules build at
+        // 20190605 expects 19 bytes and desyncs on this packet).
         let packet = MapServerLoginPacket::new(
             AccountId(2_000_004),
             CharacterId(150_004),

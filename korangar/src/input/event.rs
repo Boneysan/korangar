@@ -57,6 +57,8 @@ pub enum InputEvent {
     ResetCameraRotation,
     /// Open or close the menu window. Only works while playing.
     ToggleMenuWindow,
+    /// Open or close the basic character information window.
+    ToggleCharacterOverviewWindow,
     /// Open or close the inventory window. Only works while playing.
     ToggleInventoryWindow,
     /// Open or close the equipment window. Only works while playing.
@@ -81,6 +83,8 @@ pub enum InputEvent {
     ToggleHudWindow,
     /// Close the most recently opened or clicked closable window.
     CloseTopWindow,
+    /// Close all ordinary windows while retaining basic info and chat (F11).
+    CloseAllOrdinaryWindows,
     /// Toggle if the user interface should be rendered or not.
     ToggleShowInterface,
     /// Select a character to start playing.

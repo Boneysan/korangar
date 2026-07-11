@@ -26,7 +26,7 @@
 set -euo pipefail
 
 HERCULES_DIR="${1:-$HOME/GitHub/Hercules_RO}"
-PACKETVER="${2:-20190605}"
+PACKETVER="${2:-20220406}"
 VARIANT="${3:-main}"
 
 SRC_DIR="$HERCULES_DIR/src"
@@ -48,14 +48,20 @@ case "$VARIANT" in
     *) echo "error: unknown VARIANT '$VARIANT'" >&2; exit 1 ;;
 esac
 
-STUB="$(mktemp --suffix=.c)"
+# GNU mktemp has --suffix, BSD/macOS mktemp does not — create the file
+# portably and rename it to get the .c extension cpp wants.
+STUB_BASE="$(mktemp "${TMPDIR:-/tmp}/packet_lengths.XXXXXX")"
+STUB="$STUB_BASE.c"
+mv "$STUB_BASE" "$STUB"
 trap 'rm -f "$STUB"' EXIT
 
 # `packetLen` is a table-building macro in Hercules; redefine it to emit a clean
 # marker line so we can scrape (id, len) pairs out of the preprocessor output.
 printf '#define packetLen(id, len) PKTLEN id len\n#include "common/packets_len.h"\n' > "$STUB"
 
-TABLE="$(cpp -nostdinc -P -DPACKETVER="$PACKETVER" $VARIANT_DEFINE -I "$SRC_DIR" "$STUB" \
+# `cc -E` instead of `cpp`: macOS's `cpp` is a wrapper that mangles arguments;
+# this form works with both clang (macOS) and gcc (Linux/WSL).
+TABLE="$(cc -E -x c -nostdinc -P -DPACKETVER="$PACKETVER" $VARIANT_DEFINE -I "$SRC_DIR" "$STUB" \
     | awk '/^PKTLEN/ { print $2, $3 }')"
 
 COUNT="$(printf '%s\n' "$TABLE" | grep -c . || true)"

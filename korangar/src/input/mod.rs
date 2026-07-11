@@ -202,7 +202,7 @@ impl InputSystem {
     }
 
     /// Game-action keys that should work even while a text box or window has focus.
-    /// Official RO: Insert = sit/stand; F1–F10 = hotbar.
+    /// Official RO: Insert = sit/stand; F1–F9 = hotbar.
     pub fn handle_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
         self.push_game_action_keys(events);
     }
@@ -214,9 +214,8 @@ impl InputSystem {
             events.push(InputEvent::ToggleSit);
         }
 
-        // Official RO maps the main hotbar to F1–F9 (F10 for slot 10).
-        // Our hotbar has 10 slots (0–9) → F1–F10.
-        const HOTBAR_KEYS: [KeyCode; 10] = [
+        // F10 belongs to chat-window height in the original client, not the hotbar.
+        const HOTBAR_KEYS: [KeyCode; 9] = [
             KeyCode::F1,
             KeyCode::F2,
             KeyCode::F3,
@@ -226,7 +225,6 @@ impl InputSystem {
             KeyCode::F7,
             KeyCode::F8,
             KeyCode::F9,
-            KeyCode::F10,
         ];
         for (index, key) in HOTBAR_KEYS.into_iter().enumerate() {
             let slot = HotbarSlot(index as u16);
@@ -248,6 +246,7 @@ impl InputSystem {
     ) {
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+        let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
 
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::ToggleMenuWindow);
@@ -255,6 +254,10 @@ impl InputSystem {
 
         if alt_down && self.get_key(KeyCode::KeyE).pressed() {
             events.push(InputEvent::ToggleInventoryWindow);
+        }
+
+        if alt_down && self.get_key(KeyCode::KeyV).pressed() {
+            events.push(InputEvent::ToggleCharacterOverviewWindow);
         }
 
         if alt_down && self.get_key(KeyCode::KeyS).pressed() {
@@ -266,27 +269,39 @@ impl InputSystem {
         }
 
         if alt_down && self.get_key(KeyCode::KeyZ).pressed() {
-            events.push(InputEvent::ToggleFriendListWindow);
+            events.push(InputEvent::TogglePartyWindow);
         }
 
         if alt_down && self.get_key(KeyCode::KeyQ).pressed() {
             events.push(InputEvent::ToggleEquipmentWindow);
         }
 
-        // Party roster (classic RO uses Alt+Z for friends; we use Alt+P for party).
+        // Compatibility alias retained for the earlier fork binding.
         if alt_down && self.get_key(KeyCode::KeyP).pressed() {
             events.push(InputEvent::TogglePartyWindow);
         }
 
-        // Zeny / EXP HUD.
+        // Alt+H is the original friend-list binding. Keep the custom HUD on
+        // Alt+Shift+H so it does not replace official behavior.
         if alt_down && self.get_key(KeyCode::KeyH).pressed() {
-            events.push(InputEvent::ToggleHudWindow);
+            match shift_down {
+                true => events.push(InputEvent::ToggleHudWindow),
+                false => events.push(InputEvent::ToggleFriendListWindow),
+            }
         }
 
-        // Official RO keeps a corner minimap; we toggle with Alt+M (Ctrl+M is the
-        // debug warp list).
-        if alt_down && self.get_key(KeyCode::KeyM).pressed() {
+        // The original client uses Ctrl+Tab to cycle minimap display modes. Until
+        // opacity modes land, this cycles between visible and hidden.
+        if control_down && self.get_key(KeyCode::Tab).pressed() {
             events.push(InputEvent::ToggleMinimapWindow);
+        }
+
+        if alt_down && self.get_key(KeyCode::KeyO).pressed() {
+            events.push(InputEvent::ToggleAudioSettingsWindow);
+        }
+
+        if self.get_key(KeyCode::F11).pressed() {
+            events.push(InputEvent::CloseAllOrdinaryWindows);
         }
 
         if control_down && self.get_key(KeyCode::KeyS).pressed() {

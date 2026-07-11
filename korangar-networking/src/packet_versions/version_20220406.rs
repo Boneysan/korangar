@@ -35,31 +35,52 @@ where
                 UnifiedLoginFailedReason::AlreadyLoggedIn,
                 "Someone has already logged in with this id",
             ),
-            LoginFailedReason::AlreadyOnline => (UnifiedLoginFailedReason::AlreadyOnline, "Already online"),
-        };
-
-        NetworkEvent::LoginServerConnectionFailed { reason, message }
-    })?;
-    packet_handler.register(|packet: LoginFailedPacket2| {
-        let (reason, message) = match packet.reason {
-            LoginFailedReason2::UnregisteredId => (UnifiedLoginFailedReason::UnregisteredId, "Unregistered id"),
-            LoginFailedReason2::IncorrectPassword => (UnifiedLoginFailedReason::IncorrectPassword, "Incorrect password"),
-            LoginFailedReason2::IdExpired => (UnifiedLoginFailedReason::IdExpired, "Id has expired"),
-            LoginFailedReason2::RejectedFromServer => (UnifiedLoginFailedReason::RejectedFromServer, "Rejected from server"),
-            LoginFailedReason2::BlockedByGMTeam => (UnifiedLoginFailedReason::BlockedByGMTeam, "Blocked by gm team"),
-            LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, "Game outdated"),
-            LoginFailedReason2::LoginProhibitedUntil => (UnifiedLoginFailedReason::LoginProhibitedUntil, "Login prohibited until"),
-            LoginFailedReason2::ServerFull => (UnifiedLoginFailedReason::ServerFull, "Server is full"),
-            LoginFailedReason2::CompanyAccountLimitReached => (
-                UnifiedLoginFailedReason::CompanyAccountLimitReached,
-                "Company account limit reached",
+            // A stale session (e.g. a failed map handoff) leaves the account
+            // flagged online; this login attempt has asked the server to
+            // clear it, so a retry is expected to succeed.
+            LoginFailedReason::AlreadyOnline => (
+                UnifiedLoginFailedReason::AlreadyOnline,
+                "Account was still flagged online - the server is clearing it, try logging in again",
             ),
         };
 
         NetworkEvent::LoginServerConnectionFailed { reason, message }
     })?;
+    packet_handler.register(|packet: LoginFailedPacket2| {
+        let (reason, message) = unify_login_failed_reason2(packet.reason);
+        NetworkEvent::LoginServerConnectionFailed { reason, message }
+    })?;
+    // Servers built with PACKETVER >= 20180627 (like our Hercules) send the
+    // same refusal under the AC_REFUSE_LOGIN_R3 header instead.
+    packet_handler.register(|packet: LoginFailedPacket3| {
+        let (reason, message) = unify_login_failed_reason2(packet.reason);
+        NetworkEvent::LoginServerConnectionFailed { reason, message }
+    })?;
+
+    // Safety net: consume any known-length packet without a dedicated handler
+    // instead of desyncing the read buffer (0x0B02 used to be exactly such a
+    // packet — a rejected login was silently swallowed). Registered last so it
+    // never shadows a real handler.
+    packet_handler.register_length_fallbacks(super::lengths_20220406::PACKET_LENGTHS);
 
     Ok(())
+}
+
+fn unify_login_failed_reason2(reason: LoginFailedReason2) -> (UnifiedLoginFailedReason, &'static str) {
+    match reason {
+        LoginFailedReason2::UnregisteredId => (UnifiedLoginFailedReason::UnregisteredId, "Incorrect username or password"),
+        LoginFailedReason2::IncorrectPassword => (UnifiedLoginFailedReason::IncorrectPassword, "Incorrect username or password"),
+        LoginFailedReason2::IdExpired => (UnifiedLoginFailedReason::IdExpired, "Id has expired"),
+        LoginFailedReason2::RejectedFromServer => (UnifiedLoginFailedReason::RejectedFromServer, "Rejected from server"),
+        LoginFailedReason2::BlockedByGMTeam => (UnifiedLoginFailedReason::BlockedByGMTeam, "Blocked by gm team"),
+        LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, "Game outdated"),
+        LoginFailedReason2::LoginProhibitedUntil => (UnifiedLoginFailedReason::LoginProhibitedUntil, "Login prohibited until"),
+        LoginFailedReason2::ServerFull => (UnifiedLoginFailedReason::ServerFull, "Server is full"),
+        LoginFailedReason2::CompanyAccountLimitReached => (
+            UnifiedLoginFailedReason::CompanyAccountLimitReached,
+            "Company account limit reached",
+        ),
+    }
 }
 
 pub fn register_character_server_packets<Callback>(
@@ -85,6 +106,11 @@ where
     )?;
     packet_handler.register(|packet: RequestCharacterListSuccessPacket| NetworkEvent::CharacterList {
         characters: packet.character_information,
+    })?;
+    // Servers built with PACKETVER < 20201007 (like our Hercules at 20190605)
+    // send the character list under the older header with 155-byte entries.
+    packet_handler.register(|packet: RequestCharacterListLegacySuccessPacket| NetworkEvent::CharacterList {
+        characters: packet.character_information.into_iter().map(Into::into).collect(),
     })?;
     packet_handler.register_noop::<CharacterListPacket>()?;
     packet_handler.register_noop::<CharacterSlotPagePacket>()?;
@@ -119,6 +145,10 @@ where
     packet_handler.register(|packet: CreateCharacterSuccessPacket| NetworkEvent::CharacterCreated {
         character_information: packet.character_information,
     })?;
+    // PACKETVER < 20201007 variant (see RequestCharacterListLegacySuccessPacket).
+    packet_handler.register(|packet: CreateCharacterLegacySuccessPacket| NetworkEvent::CharacterCreated {
+        character_information: packet.character_information.into(),
+    })?;
     packet_handler.register(|packet: CharacterCreationFailedPacket| {
         let reason = packet.reason;
         let message = match reason {
@@ -144,6 +174,13 @@ where
         SwitchCharacterSlotResponseStatus::Success => NetworkEvent::CharacterSlotSwitched,
         SwitchCharacterSlotResponseStatus::Error => NetworkEvent::CharacterSlotSwitchFailed,
     })?;
+
+    // Safety net: consume any known-length packet without a dedicated handler
+    // instead of desyncing the read buffer (0x099D used to be exactly such a
+    // packet — the character list from our PACKETVER 20190605 server was
+    // dropped and the character selection screen hung forever). Registered
+    // last so it never shadows a real handler.
+    packet_handler.register_length_fallbacks(super::lengths_20220406::PACKET_LENGTHS);
 
     Ok(())
 }
@@ -459,7 +496,7 @@ where
     packet_handler.register({
         let inventory_items = inventory_items.clone();
 
-        move |packet: InventoyEndPacket| {
+        move |_packet: InventoyEndPacket| {
             let (inv_type, items) = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
             match inv_type {
                 inventory_type::STORAGE | inventory_type::GUILD_STORAGE => NetworkEvent::SetStorage { items },

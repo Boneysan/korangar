@@ -42,25 +42,33 @@ to a real, semantic handler is purely additive.
 tools/generate_packet_lengths.sh [HERCULES_DIR] [PACKETVER] [VARIANT]
 ```
 
-Defaults: `~/GitHub/Hercules_RO`, `20190605`, `main`. The `PACKETVER`/`VARIANT`
+Defaults: `~/GitHub/Hercules_RO`, `20220406`, `main`. The `PACKETVER`/`VARIANT`
 **must** match how the server is built — the wire lengths come from the server's
-compiled version, not the client's. Verify with:
+compiled version, not the client's. `src/common/mmo.h` only shows the *default*
+(20190605, behind `#ifndef`); a `--enable-packetver` build overrides it via
+`-DPACKETVER=...` in the Makefiles, so verify with:
 
 ```
-grep -n 'define PACKETVER' <HERCULES_DIR>/src/common/mmo.h
+grep -o 'DPACKETVER=[0-9]*' <HERCULES_DIR>/Makefile | head -1
 ```
 
-This server build uses `PACKETVER 20190605`, `main` variant (no
-`ENABLE_PACKETVER_RE/ZERO/SAK/AD`). `20190605 >= 20181017`, so it is in the same
-modern branch as the 20220406 client for the quest packet family and agrees on
-those lengths.
+The server **must** be built `--enable-packetver=20220406`, `main` variant (no
+`ENABLE_PACKETVER_RE/ZERO/SAK/AD`) to match the client — see
+`docs/PLATFORM_BRINGUP.md` item 0 for why a default 20190605 build fails.
+(History note: this table was originally scraped at 20190605, which matched
+that era's claim about the server build; it was regenerated at 20220406 on
+2026-07-10 — 1595 packets — when the server-version confusion was resolved.
+The script now also runs on macOS: portable `mktemp`, `cc -E` instead of
+GNU `cpp`.)
 
 ## Scope & caveats
 
-- Registered on the **map** connection only — that is where gameplay packets
-  (and desyncs) occur. The login/character flows are short and fully modeled;
-  extend to them by calling `register_length_fallbacks` in their registration
-  functions if ever needed.
+- Registered on **all three** connections (login, character, map) since
+  2026-07-10. The login/character flows were originally believed to be "short
+  and fully modeled", which proved false twice on the same day: the login
+  refusal `AC_REFUSE_LOGIN_R3` (0x0B02) and the character list
+  `HC_ACK_CHARINFO_PER_PAGE` (0x099D) are both PACKETVER-dependent headers the
+  20220406-oriented models missed, and each silently dropped the buffer.
 - Fallbacks only fix **framing**, never **meaning**. A packet consumed by a
   fallback produces no `NetworkEvent`; model it explicitly when you need its
   contents.

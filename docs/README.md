@@ -32,10 +32,13 @@ This directory contains all design documents, technical deep dives, implementati
 | [PACKET_EVENTS_CATALOG.md](PACKET_EVENTS_CATALOG.md) | Complete catalogue of `NetworkEvent`s, every producing packet, handlers, data flows, and DM usage. |
 | [LOADERS_ASSET_PIPELINE_INTERNALS.md](LOADERS_ASSET_PIPELINE_INTERNALS.md) | Detailed loaders, async system, archive backends, and Library. |
 | [INPUT_CAMERA_SYSTEMS.md](INPUT_CAMERA_SYSTEMS.md) | Input handling, MouseInputMode, full camera trait + implementations, picking, pathing. |
+| [ORIGINAL_CLIENT_CONTROLS.md](ORIGINAL_CLIENT_CONTROLS.md) | Compatibility matrix and implementation order for matching original RO mouse, keyboard, chat, window, and interaction controls. |
 | [KORANGAR_INTERFACE_INTERNALS.md](KORANGAR_INTERFACE_INTERNALS.md) | Deep internals of layout resolver, element system, macros, and extension points. |
 | [MAIN_LOOP_RENDERER_PERFORMANCE.md](MAIN_LOOP_RENDERER_PERFORMANCE.md) | End-to-end frame, renderer separation, timing, and performance characteristics. |
 | [DEBUG_AUDIO_VIDEO_SUBSYSTEMS.md](DEBUG_AUDIO_VIDEO_SUBSYSTEMS.md) | Audio engine, video playback, and the full set of debug tools (packet inspector, state inspector, profilers). |
 | [RO_OFFICIAL_CLIENT_STRUCTURE.md](RO_OFFICIAL_CLIENT_STRUCTURE.md) | Mapping of the real RO client (assets, packets, Lua data) at H:\RO for reference. |
+| [MACOS_WORKFLOW.md](MACOS_WORKFLOW.md) | Running the Hercules server + client natively on macOS: setup, process management, and a fixed startup panic (AppKit `drawRect:` race). |
+| [PLATFORM_BRINGUP.md](PLATFORM_BRINGUP.md) | Cross-platform bring-up runbook (Windows/Linux/WSL/macOS): server-first verification, account bootstrap, `loginlog` debugging, known client bugs (login wedge, render-loop kick), backend expectations per platform. |
 
 ### DM / Tabletop Campaign Tools (Primary Focus)
 | Document | Purpose |
@@ -102,3 +105,4 @@ When creating new documentation:
 This hub is the single source of truth for "where is the documentation?" Questions about the project should be answerable by starting here + targeted `rg` searches. 
 
 Last major update: Documentation expansion for packets, DM implementation, and future plans (2026).
+#

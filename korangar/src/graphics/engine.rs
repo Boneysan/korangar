@@ -754,6 +754,16 @@ impl GraphicsEngine {
         self.adapter.get_info().backend.to_string()
     }
 
+    /// Whether the surface (and with it the rest of the render state) has
+    /// been set up yet. On macOS, AppKit can synchronously trigger a
+    /// `drawRect:` (surfaced by winit as `WindowEvent::RedrawRequested`)
+    /// while still inside `create_window`, i.e. before `on_resume` has had a
+    /// chance to create the surface. Callers must skip rendering that frame
+    /// instead of unwrapping the surface.
+    pub fn is_ready_to_render(&self) -> bool {
+        self.surface.is_some()
+    }
+
     pub fn get_present_mode_info(&self) -> PresentModeInfo {
         self.surface.as_ref().unwrap().present_mode_info()
     }

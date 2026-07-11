@@ -45,6 +45,18 @@ Vulkan/DX12/Metal behavior preserved):
   on GL and `GraphicsEngine::on_resume` clamps saved settings accordingly.
 - Runtime BC7 texture compression works on GL; no special handling.
 
+## Running on macOS
+
+See `docs/MACOS_WORKFLOW.md` for the full workflow (starting the Hercules
+server via `athena-start`, building/running the client, process management)
+and `docs/PLATFORM_BRINGUP.md` for the cross-platform bring-up runbook
+(account bootstrap, `loginlog` debugging, known client bugs — read it before
+standing up Windows/Linux/WSL).
+Short version: no special env vars needed (wgpu picks Metal natively) —
+`cargo run --release --bin korangar` from `korangar/korangar/`. That doc
+also covers a startup panic (`engine.rs:766` unwrap on `None` surface, from
+AppKit calling `drawRect:` before `resumed()` finishes) that's fixed in-tree.
+
 ## Audio in WSL
 
 Works via ALSA → PulseAudio → WSLg (`PULSE_SERVER=unix:/mnt/wslg/PulseServer`).
@@ -69,7 +81,7 @@ and running the `.exe` on the Windows side (not yet set up).
 When writing code or adding features, agents must adhere to these project-specific constraints:
 
 1. **Tabletop Scope**: This fork is the "Seal Cascade" D&D campaign engine. When designing UI or features, prioritize the tabletop/DM tools outlined in `docs/DM_INTERFACE.md` over generic RO MMO features (like auction houses or matchmaking).
-2. **Packet Registration**: Due to Korangar's framing-by-deserialization design, an unregistered packet header would desync the read buffer. **Framing is now handled automatically**: `register_length_fallbacks` (called last in `register_map_server_packets`) consumes any known-length server packet that lacks a dedicated handler, using a table auto-generated from Hercules' own length tables (`tools/generate_packet_lengths.sh` → `lengths_20220406.rs`). See `docs/protocol/packet-length-fallbacks.md`. This means the server is **PACKETVER 20190605** (main), not 20220406 — regenerate the table if that changes. You only need to define/register a packet in `ragnarok-packets` + `version_20220406.rs` when the client actually needs its **contents** (a fallback-consumed packet produces no `NetworkEvent`); use `register_noop` for a modeled-but-unhandled packet.
+2. **Packet Registration**: Due to Korangar's framing-by-deserialization design, an unregistered packet header would desync the read buffer. **Framing is now handled automatically**: `register_length_fallbacks` (called last in each of the three `register_*_server_packets` functions — login, character, and map) consumes any known-length server packet that lacks a dedicated handler, using a table auto-generated from Hercules' own length tables (`tools/generate_packet_lengths.sh` → `lengths_20220406.rs`). See `docs/protocol/packet-length-fallbacks.md`. The server **must be built with `--enable-packetver=20220406`** (a default Hercules build is 20190605 and is wire-incompatible at the map handoff — see `docs/PLATFORM_BRINGUP.md` item 0; an earlier version of this note wrongly said the server was 20190605). Regenerate the table if the server's PACKETVER ever changes. You only need to define/register a packet in `ragnarok-packets` + `version_20220406.rs` when the client actually needs its **contents** (a fallback-consumed packet produces no `NetworkEvent`); use `register_noop` for a modeled-but-unhandled packet.
 3. **Packet Obfuscation**: The server (`Hercules_RO`) is configured with `packet_obfuscation: 0`. **Do not** attempt to implement packet obfuscation in the Korangar networking layer.
 4. **Rebaseability**: Keep custom UI features isolated in `korangar/src/interface/windows/dm/` (and state in `korangar/src/dm/`) as much as possible to ensure the fork remains rebaseable against upstream Korangar.
 5. **No Upstream IP**: Per `wiki/Contributing.md`, do not include code taken directly from or inspired by GRAVITY's intellectual property.

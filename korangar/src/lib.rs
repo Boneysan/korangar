@@ -1165,6 +1165,28 @@ impl Client {
                 }
                 NetworkEvent::CharacterServerConnectionFailed { message, .. } => {
                     self.networking_system.disconnect_from_character_server();
+
+                    // The login auth token is single-use and expires 30 seconds after
+                    // login (Hercules AUTH_TIMEOUT), so a rejected character server
+                    // connection can never succeed by retrying from the server
+                    // selection screen. Drop the dead session and return to the login
+                    // window so the user can simply log in again.
+                    self.networking_system.disconnect_from_login_server();
+                    self.saved_login_data = None;
+                    self.saved_character_server = None;
+
+                    #[cfg(not(feature = "debug"))]
+                    self.interface.close_all_windows();
+
+                    #[cfg(feature = "debug")]
+                    self.interface.close_all_windows_except(DEBUG_WINDOWS);
+
+                    self.interface.open_window(LoginWindow::new(
+                        client_state().login_window(),
+                        client_state().login_settings(),
+                        client_state().client_info(),
+                    ));
+
                     self.interface.open_window(ErrorWindow::new(message.to_owned()));
                 }
                 NetworkEvent::CharacterServerDisconnected { reason } => {
@@ -1173,11 +1195,14 @@ impl Client {
                         #[cfg(feature = "debug")]
                         print_debug!("Disconnection from the character server with error");
 
-                        let login_data = self.saved_login_data.as_ref().unwrap();
-                        let server = self.saved_character_server.clone().unwrap();
-                        self.networking_system
-                            .connect_to_character_server(self.saved_packet_version, login_data, server);
-                    } else if !self.networking_system.is_map_server_connected() {
+                        // The saved session is cleared when we intentionally return to
+                        // the login screen (e.g. after the character server rejected
+                        // us) — don't try to revive a dead session then.
+                        if let (Some(login_data), Some(server)) = (self.saved_login_data.as_ref(), self.saved_character_server.clone()) {
+                            self.networking_system
+                                .connect_to_character_server(self.saved_packet_version, login_data, server);
+                        }
+                    } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
                         #[cfg(not(feature = "debug"))]
                         self.interface.close_all_windows();
 
@@ -2882,6 +2907,18 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleCharacterOverviewWindow => {
+                    if self.client_state.try_follow(this_entity()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::CharacterOverview) {
+                            true => self.interface.close_window_with_class(WindowClass::CharacterOverview),
+                            false => self.interface.open_window(CharacterOverviewWindow::new(
+                                client_state().player_name(),
+                                this_player().manually_asserted().base_level(),
+                                this_player().manually_asserted().job_level(),
+                            )),
+                        }
+                    }
+                }
                 InputEvent::ToggleInventoryWindow => {
                     if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Inventory) {
@@ -2980,6 +3017,9 @@ impl Client {
                     }
                 }
                 InputEvent::CloseTopWindow => self.interface.close_top_window(&self.client_state),
+                InputEvent::CloseAllOrdinaryWindows => {
+                    self.interface.close_all_windows_except(&[WindowClass::CharacterOverview, WindowClass::Chat]);
+                }
                 InputEvent::ToggleShowInterface => self.show_interface = !self.show_interface,
                 InputEvent::SelectCharacter { slot } => {
                     let _ = self.networking_system.select_character(slot);
@@ -4687,6 +4727,11 @@ impl ApplicationHandler for Client {
                 );
 
             window.set_visible(true);
+
+            // Kick off the self-sustaining redraw loop. Without this, if the only
+            // OS-initiated `RedrawRequested` arrived before the surface existed (and
+            // was skipped by the guard in `window_event`), nothing would ever render.
+            window.request_redraw();
         }
 
         if *self.client_state.follow(client_state().audio_settings().mute_on_focus_loss()) {
@@ -4755,6 +4800,18 @@ impl ApplicationHandler for Client {
                 }
             }
             WindowEvent::RedrawRequested => {
+                // Guard against a spurious `drawRect:` reentering before `resumed` has
+                // finished setting up the surface (observed on macOS/AppKit). Keep
+                // requesting redraws while we wait — the render loop is otherwise
+                // self-sustained by the `request_redraw` below, so silently dropping
+                // this event would leave the window permanently blank.
+                if !self.graphics_engine.is_ready_to_render() {
+                    if let Some(window) = self.window.as_ref() {
+                        window.request_redraw();
+                    }
+                    return;
+                }
+
                 #[cfg(feature = "debug")]
                 let _measurement = threads::Main::start_frame();
 
