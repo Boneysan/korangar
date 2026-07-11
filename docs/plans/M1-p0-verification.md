@@ -56,7 +56,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [ ] Stats window + stat allocation (success path)
 - [ ] Skill tree opens; skill use (self / target / ground if available)
 - [ ] Hotbar use
-- [ ] Death → respawn window
+- [x] Death → respawn window — killed on `moc_fild22`; Respawn returned to the saved Payon point on macOS 2026-07-11
 - [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color)
 
 ### Items & economy (P0)
@@ -113,9 +113,41 @@ prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
 | M1-001 | Ground items | P0 | Poring drops rendered as `[][][]` on hover. Root cause: startup loaded only Korean `iteminfo.lub`; external English-table link was broken. Durable fix: 13,182 English names from Hercules-backed `docs/items.json` compiled into the client. | ✅ Live-verified macOS 2026-07-10 (ground items show English) |
 | M1-002 | Inventory UX | P0 | Hovering inventory items showed no identifying text/tooltip. `ResourceMetadata.name` was already populated; `ItemBox::lay_out` only rendered texture/amount. Fix: register `layout.add_tooltip(&item.metadata.name, …)` on hover (same pattern as `SkillBox`). Applies to inventory, equipment, and storage slots that share `ItemBox`. Framework tooltip delay is ~1s. | ✅ Live-verified macOS 2026-07-10 (hover ~1s shows EN name) |
 | M1-003 | Inventory actions | P0 | Drop, drag-to-equip, ground drop, in-inventory reorder, and split (partial drop: half / off 1 / drop all) via right-click menu. `CZ_ITEM_THROW2` 0x0363 + 0x00AF ack; end-of-frame UI event flush for drag. | ✅ Live-verified macOS 2026-07-10 |
+| M1-004 | Campaign map placement | P0 | Arc 19 warped players and placed its encounter at non-walkable void cells `moc_fild22,150,150` / `155,150`, producing black surroundings, no destination marker, and no movement. Deep audit proved the map, lighting, terrain, and pathing data valid. Moved the rift/boss/hazards to walkable `(170,140)` and the choice NPC to `(175,140)`. | ✅ Live-verified macOS 2026-07-11 |
 
 ## 5.1 Live session notes
 
+- **2026-07-11, macOS:** release build and full `cargo test --all-features`
+  baseline passed (271 unit tests plus 2 compile-fail doc tests). The GM/DM
+  panel opened with Ctrl+O, all six tabs (DM, Beats, Character, Items, Combat,
+  Travel) rendered and switched correctly, and Ctrl+O continued to work while
+  chat retained keyboard focus.
+- **2026-07-11 map asset audit:** compared all 1,156 maps enabled by Hercules
+  with `data.grf` + `rdata.grf`. 274 lack at least one same-named core `.rsw`,
+  `.gnd`, or `.gat` asset. `moc_fild22` has all three, narrowing M1-004 to a
+  deeper load/render issue rather than absent core map data.
+- **2026-07-11 campaign coordinate audit:** decrypted and parsed each available
+  RSW plus its referenced GND/GAT. `moc_fild22` has 62,367 walkable cells, but
+  the Arc 19 points `(150,150)` and `(155,150)` were both void cells. Moving
+  onto nearby ground restored the destination marker. The automated scan of
+  all 60 static `DM_WarpParty` calls found 21 additional non-walkable targets
+  for follow-up.
+- **2026-07-11 campaign teleport remediation:** the audit was expanded across
+  all Hercules static `warp`, warp-portal, and `DM_WarpParty` destinations. It
+  discovered 5,677 destinations total: 371 cannot be checked with the current
+  GRFs and 79 were non-walkable in available maps. The 21 actionable campaign
+  destinations were moved to their nearest walkable cells; the focused scan
+  now passes all 59 statically analyzable DM party warps with zero unsafe
+  destinations. Dynamic GM-entered coordinates remain runtime-validated.
+  The complete unresolved stock/legacy and missing-asset inventory is preserved
+  in [teleport-audit-2026-07-11.md](../reports/teleport-audit-2026-07-11.md).
+- **2026-07-11 Arc 19 coordinate recheck:** after `@reloadscript`, warping to
+  `moc_fild22,170,140` showed visible ground, normal movement, and the
+  destination marker. The Central Choice appeared on the ground at `(175,140)`
+  and was interactable. M1-004 closed.
+- **2026-07-11 death/respawn:** a high-level enemy killed `test` on
+  `moc_fild22`; the respawn window appeared and Respawn returned the character
+  to the previously saved Payon point.
 - **2026-07-11, macOS:** Kafra teleport (dialog + menu + warp) and Kafra **save
   point** live-verified. DM mode on/off + `[DM]` chat feedback fixed earlier same
   session (`0x017F` + `dm_console` `@` bridge). Kafra **storage** grid opens after

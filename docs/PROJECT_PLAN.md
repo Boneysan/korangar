@@ -10,6 +10,7 @@
 | **DM interface design** | [DM_INTERFACE.md](DM_INTERFACE.md) — native tabletop tooling |
 | **DM client implementation** | [DM_CLIENT_IMPLEMENTATION.md](DM_CLIENT_IMPLEMENTATION.md) — concrete architecture, flows, state model, packet usage, extension patterns |
 | **Implementation plans** | [plans/README.md](plans/README.md) — near-term executable plans |
+| **Map/teleport audit** | [MAP_TELEPORT_AUDIT.md](MAP_TELEPORT_AUDIT.md) — GRF map parsing, safe-destination checks, and unresolved backlog |
 
 **Mission:** Replace the official RO client (`H:\RO\client`) with a Korangar-based
 client for the HerculesRO private server, reaching feature parity for everything
@@ -350,6 +351,7 @@ the DM console lands alongside M2/M3.
 | E9.2 | Packet round-trip unit tests for every packet added in E4–E6 |
 | E9.3 | Disposable-server integration harness (`athena-start` wrapper) |
 | E9.4 | Packet captures from the official 2019 exe as ground truth when implementing Tier 1–2 packets |
+| E9.5 | Run the [map/teleport safety audit](MAP_TELEPORT_AUDIT.md) after map-list, GRF, warper, instance, or campaign-coordinate changes |
 
 ---
 
