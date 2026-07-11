@@ -62,6 +62,13 @@ impl Table for JobIdentity {
             }
         }
 
+        // Hercules' special GUILD_FLAG view (722) is used by the five WoE
+        // castle flags around Prontera's fountain. The bundled identity table
+        // points it at a sprite absent from our GRFs, producing Korangar's
+        // silhouette fallback. We do not render live guild emblems yet, but
+        // the bundled eagle flag is an honest, present placeholder.
+        result.insert(JobId(722), JobIdentity(Cow::Borrowed("1_flag_eagle")));
+
         Ok(result.compact())
     }
 

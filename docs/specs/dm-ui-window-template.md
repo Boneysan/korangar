@@ -174,8 +174,17 @@ Reuse `particle_holder` ideas or pure interface elements that animate on `dm_sta
 ## 9. Verification
 
 - Window opens cleanly on a DM account.
+- Browsing or previewing performs no server mutation.
+- Visible communication and state-changing actions are visually distinct;
+  branch/destructive actions preview consequences and require confirmation.
 - Buttons emit correctly formatted chat (visible in packet inspector as GlobalMessagePacket).
 - `[DMJ]` results update state and appear in the window (and optionally as nice chat entries).
+- Loading/pending, empty, rejected, stale/reconnected, and worst-case overflow
+  states are legible rather than blank or unbounded.
+- Keyboard focus never leaks WASD/hotbar/chat input into gameplay or another
+  field; pointer targets remain practical at laptop and high-DPI scales.
+- Meaning is not carried by color alone, and reduced-motion mode preserves all
+  information.
 - Rebase test: upstream change to `windows/mod.rs` or `ClientState` should only require small merge in the DM files.
 - No impact on non-DM play sessions.
 

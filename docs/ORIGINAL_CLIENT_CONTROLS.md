@@ -1,13 +1,18 @@
 # Original Client Control Compatibility
 
 Behavioral baseline: [iRO Wiki — Basic Game Control](https://irowiki.org/wiki/Basic_Game_Control)
-(page revision dated 2025-01-10). The goal is original-client capability;
-custom campaign controls must use non-conflicting bindings.
+(page revision dated 2025-01-10). The goal is to retain original-client
+capability while permitting optional modern controls and major usability
+improvements. Compatibility is a fallback, not a prohibition on redesign.
 
 ## Compatibility rules
 
-- Normal RO play is mouse-driven. Do not add WASD character movement.
+- Preserve mouse-driven movement. Optional WASD character movement is allowed
+  through `Click`, `WASD`, and `Both` modes; it must not move the player while a
+  text field owns keyboard focus.
 - Preserve original shortcuts before assigning custom or debug shortcuts.
+- Major control improvements are allowed when configurable, documented, and
+  tested without silently stealing an official binding.
 - A shortcut must behave consistently on macOS, Windows, Linux, and WSL.
 - Text entry owns ordinary keys while focused; global gameplay keys are limited
   to bindings that the original client intentionally keeps active.
@@ -46,6 +51,7 @@ the audit of controls previously added under WSL:
 | Capability | Original control | Current status |
 |---|---|---|
 | Move / continuous move | Left click / hold | Implemented |
+| Optional WASD movement | W/A/S/D | Planned; click movement remains available |
 | NPC / monster interaction | Left click | Implemented |
 | Camera rotate | Hold right mouse and drag | Implemented |
 | Camera zoom | Mouse wheel | Implemented |

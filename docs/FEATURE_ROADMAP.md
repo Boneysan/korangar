@@ -12,6 +12,34 @@ This document owns the feature roadmap, UI/UX principles, and packet-handler
 promotion backlog for the Korangar-based HerculesRO client. The architecture and
 protocol contract stay in [SOFTWARE_DESIGN.md](SOFTWARE_DESIGN.md).
 
+## Modernization Charter
+
+This fork is authorized to make substantial improvements to controls, UI,
+rendering, campaign presentation, accessibility, and DM/player workflows. The
+official Ragnarok client is a compatibility baseline and content reference, not
+a design ceiling. New systems may replace awkward official-client interaction
+patterns when they produce a clearer and more enjoyable private game-night
+experience.
+
+Large improvements should follow these guardrails:
+
+- Preserve Hercules as the authority for movement, combat, inventory, quests,
+  permissions, and persistent state.
+- Preserve a compatible fallback for core play where practical (for example,
+  click-to-move remains available when WASD ships).
+- Put disruptive behavior behind explicit settings and choose safe defaults.
+- Do not reuse official shortcuts silently; use the compatibility matrix and a
+  future remapping screen.
+- Introduce protocol changes only after existing packets/scripts prove
+  insufficient, and version both ends together when a custom packet is needed.
+- Deliver large ideas as vertical slices with unit/protocol checks and live
+  Hercules acceptance tests before expanding them across the product.
+- Keep campaign and DM guidance data-driven so content does not become trapped
+  inside client UI code.
+- Update the roadmap and focused implementation spec as each slice lands.
+
+In short: ambitious redesign is in scope; unbounded regressions are not.
+
 ## 8. Feature Roadmap
 
 ### Phase 0 — Baseline connectivity
@@ -180,6 +208,21 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     § "Follow-up — Minimap markers".*
 
 - [ ] **Input & accessibility:**
+  - **WASD character movement (P1 modernization):** support camera-relative
+    keyboard movement alongside the existing click-to-move controls. Ship the
+    keyboard-navigation MVP independently of the later third-person Action
+    Camera so it can be tested and used sooner.
+    - Modes: `Click`, `WASD`, or `Both`; default to `Both` for this project.
+    - Disable character movement while chat, NPC input, or another text field
+      has keyboard focus.
+    - Support held movement and W+A/W+D/S+A/S+D diagonals using the existing
+      walkable-tile pathfinder and server-authoritative movement packets.
+    - Rotate directions relative to camera yaw; click-to-move remains intact.
+    - Throttle/reuse destinations so held keys do not flood the map server.
+    - Keep debug/free-camera WASD isolated to debug-camera mode.
+    - Live acceptance: obstacles and corners, rapid reversals, diagonals, map
+      changes, NPC interaction, combat chasing, latency, and a 30-minute mixed
+      WASD/click session without rubber-banding or disconnects.
   - Full **keybind remap screen** with profiles (import/export).
   - **Gamepad/controller support** + virtual cursor.
     - **Radial Menus / Quick Wheels:** holding a bumper/button opens a modern radial wheel to quickly select potions, mounts, or out-of-combat tools without cluttering the main action bars.
@@ -197,12 +240,113 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - DM Free-Cam/Spectator mode to detach camera for scene surveying.
   - Context-aware map ping system for DMs and players (e.g., "Danger", "Move here").
 
+- [ ] **Aspirational Lighting & Atmosphere Modernization**
+  ([GRAPHICS_PIPELINE.md](GRAPHICS_PIPELINE.md)):
+  - **Artistic map profiles:** non-destructive overrides layered over RSW
+    ambient/directional data for brightness, ambient balance, sun color, fog,
+    saturation, and shadow softness.
+  - **Campaign scene lighting:** Hercules/DM Beats can trigger interpolated
+    dimming, seal colors, hazard pulses, boss blackouts, local lights, and
+    victory restoration. Map change, cleanup, and reconnect always restore or
+    reconstruct authoritative scene state.
+  - **Lighting regression suite:** capture representative outdoor, forest,
+    interior, dungeon, night, sprite-heavy, and many-light scenes before deeper
+    renderer changes.
+  - **HDR scene pipeline:** move world rendering to a linear floating-point
+    target, remove premature light saturation, then add exposure and tone
+    mapping. Keep UI compositing color-stable after scene presentation.
+  - **Emissive + restrained bloom:** support opt-in emissive overlays for
+    torches, portals, spells, runes, seals, hazards, and custom assets. Bloom is
+    sourced from HDR/emissive intensity, never indiscriminately from UI.
+  - **Contact-depth experiment:** evaluate subtle SSAO/contact shadows across
+    RO sprites and low-poly maps; ship only if it improves depth without dirty
+    halos or flattening painted art.
+  - **Unified quality presets:** Low/Medium/High/Ultra cover existing shadow
+    mode/detail/resolution plus shadowed-light budget and any future AO/bloom;
+    choose backend-aware defaults.
+  - **Optional custom material overlays:** legacy GRF content remains diffuse;
+    custom campaign assets may opt into emissive/normal/roughness data through
+    a documented packaging convention.
+  - **Later generalization:** weather and time-of-day reuse the proven scene
+    interpolation system after campaign lighting ships.
+  - **Evidence gates:** the existing sRGB pipeline gets regression-tested, not
+    presumed broken; shadow-priority changes require observed popping (basic
+    hysteresis already exists); clustered lighting, full PBR, or IBL require a
+    measured scene need before implementation.
+
+- [ ] **Aspirational Modern Graphics Program**
+  ([GRAPHICS_PIPELINE.md](GRAPHICS_PIPELINE.md),
+  [WORLD_MAPS_ENTITIES.md](WORLD_MAPS_ENTITIES.md)):
+  - **Compatibility rule:** every enhancement extends the current wgpu forward
+    renderer and remains compatible with legacy RSW/GND/RSM/SPR/ACT/GRF data.
+    New metadata and textures are optional overlays; missing overlays preserve
+    current rendering.
+  - **Atmosphere and depth:** finish `mapskydata.lub` sky/fog behavior, add
+    height/distance fog and optional local volumes, and let campaign/weather
+    profiles interpolate them through existing global/pass uniforms.
+  - **Water modernization:** complete newer GND water support, then add
+    depth-aware color, shoreline foam, reflection/refraction approximations,
+    and quality-scaled distortion using the existing water forward drawer.
+  - **Particles and effects:** improve batching, soft-particle depth fades,
+    optional lighting/emissive response, deterministic quality budgets, and
+    campaign-authored effect presets without replacing ACT/STR compatibility.
+  - **Anti-aliasing and temporal stability:** retain MSAA/SSAA/FXAA; investigate
+    SMAA and a carefully scoped temporal option only after motion-vector and
+    sprite-ghosting tests. Add sharpening/upscaling as optional post-process
+    passes, not as mandatory rendering paths.
+  - **Outlines and selection readability:** depth/ID-buffer-aware hover,
+    target, ally, hostile, interactable, and DM-selection outlines. Never rely
+    on outline color alone; reuse the existing picker and forward data.
+  - **Sprite/entity lighting modernization:** preserve `SPR`/`ACT` art while
+    offering Classic, Soft/wrapped, and Enhanced lighting modes; validate light
+    direction, luminance preservation, category-specific curvature, readable
+    ambient floors, contact grounding, optional emissive overlays, and
+    coverage-aware shadows. See `GRAPHICS_PIPELINE.md` “Sprite And Entity
+    Lighting” for the current shader model and staged test plan.
+  - **Decals and telegraphs:** projected or ground-aligned rings, cones, paths,
+    footprints, spell marks, and hazard areas using bounded batched geometry or
+    a focused decal pass. Gameplay remains server-authoritative.
+  - **Camera presentation:** smooth optional follow, obstruction handling,
+    cinematic rails/blends, depth-of-field only for deliberate cutscenes, and
+    reduced-motion alternatives. Preserve the classic player camera.
+  - **Animation presentation:** interpolate server-authoritative movement and
+    facing, improve frame pacing and effect attachment, and add optional
+    secondary presentation without changing SPR/ACT timing semantics used by
+    gameplay.
+  - **Environment motion:** quality-scaled wind response for foliage/cloth-like
+    custom assets, rain/snow/ash layers, lightning, and surface reactions. Use
+    existing model/particle instructions plus small new uniforms/passes.
+  - **Texture quality:** preserve pixel-art modes while offering anisotropic
+    filtering, high-quality mip generation, optional upscale/restoration
+    overlays, and streaming/cache budgets. Never silently AI-replace original
+    art or require enlarged assets.
+  - **Transparency and effects polish:** build on existing WBOIT; audit sorting,
+    additive effects, particles, water, and translucent shadows before adding
+    specialized paths.
+  - **Performance and scalability:** GPU/CPU timings per pass, representative
+    benchmark maps, dynamic quality only when predictable, memory budgets, LOD
+    and distance culling for map objects/effects, and backend-aware presets.
+  - **Photo/debug tools:** screenshot supersampling, clean-HUD capture, lighting
+    and pass toggles, frame captures, comparison screenshots, and visual
+    regression baselines.
+  - **Accessibility:** reduced flashes, reduced particles, reduced camera motion,
+    effect-opacity controls, readable telegraph alternatives, and photosensitivity
+    limits apply to every new visual system.
+  - **Engine-feasibility gate:** prefer new uniforms, resources, compute jobs,
+    or focused render/post passes within the existing instruction/context/drawer
+    architecture. Do not plan ray tracing, virtualized geometry, a mandatory
+    deferred renderer, or an engine replacement unless a future measured need
+    justifies a separate architectural decision.
+
 - [ ] **Tabletop & Action Mechanics (Modernization)**:
   - **Integrated Skill Check Dialogue:** NPC dialogue options automatically detect skill checks (e.g., `[Charisma DC 15]`) and trigger the dice-roll UI inline, rather than requiring separate chat commands.
   - **Active Dodge Roll / Dash (Long-term Extension):** Pushing the engine toward a true Action RPG. A dedicated evasion keybind (`Spacebar`) providing a brief movement burst and i-frames to actively avoid hazard telegraphs. *Note: Requires heavy custom C-plugin work on the Hercules server to handle coordinate snapping and i-frames without rubber-banding.*
   - **Campfire / Short Rest System:** A deployable physical campfire where the party can sit to rapidly recover HP/SP, serving as a roleplay anchor.
   - **Dynamic Bestiary Journal:** A monster manual that unlocks exact HP, weaknesses, and lore for a creature only after fighting it or passing a DM Lore check. See `specs/bestiary-journal.md`.
-  - **Action Camera (WASD Movement):** A toggle to lock the camera third-person, mapping movement to WASD and auto-attacks to left-click, completely removing the point-and-click requirement.
+  - **Action Camera (WASD extension):** After the keyboard-navigation MVP is
+    stable, add optional third-person mouse-look, cursor locking, center-screen
+    targeting, and left-click attacks. This is an extension, not a prerequisite
+    for basic WASD character movement.
   - Detailed architecture in [plans/modern-mechanics.md](plans/modern-mechanics.md) §1 (plus related sections for dodge, gamepad, etc.).
 
 ### 8.1 Server-side dependencies
@@ -294,12 +438,69 @@ value is showing the *right* thing, in the *right* place, *only when it matters*
 - **P14. Test with the table.** Usability-test with the actual friends group and
   iterate; on a private server *the group is the QA pool*. (→ §10.)
 
-Accessibility and flexibility (colorblind-safe palettes, scalable text, gamepad
-support, toggle-able HUD via edit mode) are realized directly by the §8 feature
-groups rather than restated as principles here.
+**G — Accessibility, control, and comprehension:**
+- **P15. Never encode meaning with color alone.** Pair color with an icon,
+  label, shape, pattern, or motion-safe change. Test critical states in
+  grayscale and with common color-vision simulations.
+- **P16. Text and targets must remain usable.** Support scalable text/UI,
+  readable contrast, line wrapping, and generous pointer targets. A 4K display,
+  Retina scaling, a controller cursor, and a small laptop must not turn the same
+  control into four different difficulty levels.
+- **P17. Every primary flow has keyboard and pointer paths.** Focus order is
+  visible and predictable; Escape backs out; Enter confirms only when safe;
+  gameplay input never leaks through a focused text field or modal.
+- **P18. Motion, audio, and effects reinforce rather than carry meaning.** Offer
+  reduced motion/screen shake and independent UI/audio feedback controls.
+
+**H — State, latency, and disclosure:**
+- **P19. Make system state obvious.** Windows distinguish loading, empty,
+  unavailable, stale, success, and error states. Never use a blank panel as an
+  error message.
+- **P20. Use progressive disclosure.** Show the common action first; place
+  advanced options, raw IDs, recovery tools, and dangerous DM controls behind
+  deliberate expansion. Complexity is available without being constantly
+  visible.
+- **P21. Acknowledge immediately, reconcile authoritatively.** Client actions
+  may show pressed/pending feedback immediately, but Hercules confirmation owns
+  the final state. Rejections explain what happened and how to recover; pending
+  controls cannot be double-submitted accidentally.
+- **P22. Preserve context.** Reopening a window restores useful tab, scroll,
+  filter, size, and position state. Map changes and reconnects must not silently
+  discard unfinished text or present stale server state as current.
+
+**I — DM and campaign safety:**
+- **P23. Separate preview, communication, and mutation.** Reading a Handbook
+  cue is inert; sending narration is visible but does not advance state;
+  committing a Beat previews the quests/flags/encounters it changes.
+- **P24. Design for interruption and recovery.** A DM can inspect current state,
+  identify the last committed beat, retry safe communication, and repair or
+  roll back progression through explicit recovery tools.
+- **P25. Protect player information.** GM-only notes, hidden rolls, unrevealed
+  branches, server addresses, and private messages never appear in player
+  surfaces, screenshots, tooltips, or public chat by accident.
 
 **Review trick:** overpaint the entire UI in one ugly bright color and ask "is the
 game still legible and playable?" Use during Phase 2 UI review to catch clutter.
+
+#### UI definition of done
+
+A new or substantially redesigned UI slice is not complete until it has:
+
+- A named primary user, task, entry point, success state, and recovery path.
+- Screens/states for normal, loading/pending, empty, disabled, rejected/error,
+  overflow/worst-case, and reconnect/map-change behavior where applicable.
+- Clear hierarchy at default scale and usable layout at the smallest supported
+  window plus 1440p/4K scaling.
+- Pointer and keyboard operation with correct focus ownership; controller
+  operation when the feature claims controller support.
+- No color-only meaning, clipped critical text, hidden destructive consequence,
+  or gameplay input leaking through focused UI.
+- Immediate local feedback followed by authoritative server reconciliation for
+  network mutations.
+- Reused design-system components/tokens rather than one-off spacing, colors,
+  typography, or button behavior.
+- A live test with representative content and at least one actual table member;
+  record the finding in the relevant plan/spec.
 
 ### 8.3 Packet-handler backlog (noop → real) — the Phase 1 gap catalog
 

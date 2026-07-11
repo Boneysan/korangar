@@ -23,7 +23,8 @@ pub struct CommandsWindowState {
 /// Requires a GM account (group 99 Admin already has `all_commands`; group 5
 /// Dungeon Master has campaign `@dm*` plus limited live-control commands).
 ///
-/// Organized into tabs (DM · Beats · Character · Items · Combat · Travel) because
+/// Organized into tabs (DM · Beats · Character · Items · Combat · Travel) plus
+/// a Handbook launcher because
 /// a DM needs a lot of live controls; the header buttons switch `selected_tab`
 /// and an `either!` chain swaps the body.
 pub struct CommandsWindow<A> {
@@ -75,6 +76,11 @@ where
                             tooltip: "Jump straight into an arc's beat director",
                             disabled: is_tab(1),
                             event: select_tab(1),
+                        },
+                        button! {
+                            text: "Handbook",
+                            tooltip: "Open the private Seal Cascade GM role-playing guide [^000001@dmguide^000000]",
+                            event: InputEvent::SendMessage { text: "@dmguide".to_string() },
                         },
                         button! {
                             text: "Character",

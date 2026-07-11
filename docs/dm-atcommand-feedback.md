@@ -72,6 +72,9 @@ Menu: **GM / DM Commands** (`Ctrl+O`).
 
 **Tabbed layout (2026-07-11).** The panel is split into 6 tabs — **DM · Beats ·
 Character · Items · Combat · Travel** — because a DM needs many live controls.
+The header also includes a **Handbook** launcher. It sends `@dmguide`, opening a
+private server-driven cue-card menu; browsing is inert, while explicitly
+labelled `SEND` actions share prepared narration with the current map.
 The **Beats** tab (index 1) has one button per arc (1–19) grouped by act; each
 sends `@dmbeat <arc>`, which the server (`dm_console.txt` `OnBeat`) parses to jump
 straight into that arc's beat submenu. Adding/removing a tab means renumbering the

@@ -419,6 +419,9 @@ The detailed roadmap moved to [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md). This SDD
 keeps only the architectural contract and cross-cutting risks.
 
 Architectural implications retained here:
+- **Modernization authority:** major client redesigns are in scope under the
+  guardrails in `FEATURE_ROADMAP.md`; official-client behavior is a supported
+  baseline rather than the maximum permitted UX.
 - **Phase 0 blockers:** packetver alignment, packet obfuscation disabled server-side,
   local GRF/archive configuration, and `sclientinfo.xml` connection setup.
 - **Phase 1 protocol work:** unregistered packet families in §5.4 must be defined

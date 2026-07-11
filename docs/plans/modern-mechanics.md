@@ -2,7 +2,31 @@
 
 This document provides the technical engineering specifications for integrating modern Action RPG and Tabletop mechanics into the Korangar Rust client and the Hercules C server.
 
-## 1. Action Camera (WASD Movement)
+## 1. WASD Movement And Action Camera
+
+**Status:** Planned. Basic WASD navigation is the first deliverable; locked
+third-person Action Camera follows after its movement behavior passes live
+Hercules testing.
+
+### 1A. Keyboard Navigation MVP
+
+**Architecture:** Client-side input translation using the existing pathfinder
+and `RequestPlayerMovePacket` flow.
+
+- Add `Click`, `WASD`, and `Both` movement settings (`Both` is the project
+  default).
+- Read W/A/S/D only when gameplay owns keyboard focus. Never move while chat,
+  NPC number/string input, or another text box is focused.
+- Combine held keys into eight camera-relative directions and select a nearby
+  walkable destination through existing collision/pathing code.
+- Preserve click-to-move, NPC interaction, item pickup, and combat chase.
+- Coalesce held input and throttle destination packets; start with the 200 ms
+  bound below, then tune from live packet traces.
+- Keep free/debug camera controls separate and add a visible setting/tool-tip
+  so the two modes are not ambiguous.
+
+### 1B. Optional Action Camera
+
 **Architecture:** Client-Side Input Translation (`korangar/src/input/` & `korangar/src/camera/`)
 
 - **State Management:** Add a `CameraMode::Action` variant to `korangar::graphics::Camera`. When active, `winit` cursor gets locked (`CursorGrabMode::Confined` / `CursorGrabMode::Locked`) and set to invisible.

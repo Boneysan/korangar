@@ -391,6 +391,259 @@ If you're improving lighting:
 3. Look at how `GlobalUniforms` and the tile buffer are bound.
 4. Test changes with the light culling debug buffer visible.
 
+### Aspirational implementation order (Seal Cascade fork)
+
+The project roadmap authorizes major lighting improvements, but they should land
+in dependency order:
+
+1. Add non-destructive artistic profiles over existing RSW lighting.
+2. Add interpolated, recoverable campaign scene-light overrides.
+3. Establish representative screenshot/performance regression scenes.
+4. Move the world scene to a linear floating-point HDR target; add exposure and
+   tone mapping before bloom.
+5. Add opt-in emissive materials and restrained HDR-driven bloom.
+6. Prototype subtle contact shadows/SSAO and reject it if sprite halos or dirty
+   painted textures outweigh the depth benefit.
+7. Unify lighting/shadow/AO/bloom settings into backend-aware quality presets.
+8. Generalize scene transitions into weather and time-of-day only after the
+   campaign controls are stable.
+
+Do not assume the existing sRGB path is incorrect; it already uses sRGB texture
+formats and surface-aware presentation. Do not prioritize full PBR, IBL,
+clustered lighting, or shadow-selection rewrites without captured evidence that
+the current diffuse/tiled/hysteresis design is the limiting factor.
+
+### Broader modern-graphics extension map
+
+The aspirational graphics program remains feasible in this engine because it
+maps onto existing systems rather than requiring replacement:
+
+| Improvement | Current extension point |
+|---|---|
+| Sky, distance/height fog, weather grading | `MapSkyData`, global uniforms, forward/post passes |
+| Better water | `WaterWaveDrawer`, `WaterInstruction`, forward wave shader |
+| Soft/lit/emissive particles | particle renderer, depth texture, point-light manager |
+| SMAA/upscaling/sharpening | existing post-processing and screen-blit pass chain |
+| Selection/target outlines | picker ID/depth buffers plus a focused post/forward pass |
+| Decals and hazard telegraphs | bounded render instructions and a focused forward/decal drawer |
+| Cinematic camera and obstruction | existing camera abstraction, picker/collision data |
+| Movement/animation smoothing | entity presentation state after authoritative network updates |
+| Wind and precipitation | model vertex uniforms plus particle/effect systems |
+| Optional texture/material overlays | `GameFileLoader`, texture cache, bindless resource sets |
+| Transparency polish | existing WBOIT accumulation/revealage path |
+| LOD/culling and budgets | map KD-tree/frustum culling, instruction collection, pass timings |
+| Screenshot/regression tools | offscreen targets, SSAA, debug render options |
+
+Each slice must retain classic assets and settings as a fallback, define Low to
+Ultra cost, include a reduced-motion/effects option where relevant, and pass
+comparison scenes before becoming a default. The preferred architectural shape
+is a small data/state addition plus a new or extended context/drawer/pass—not a
+parallel renderer.
+
+## Sprite And Entity Lighting
+
+RO `SPR`/`ACT` entities are not rendered as unlit overlays. Players, monsters,
+NPCs, equipment parts, and ground-item sprites participate in the forward
+lighting pipeline through `shaders/passes/forward/entity*.slang`.
+
+### Current behavior
+
+Sprites currently:
+
+- receive map ambient and directional lighting;
+- receive cascaded directional-shadow visibility;
+- receive tile-culled dynamic point lights and point-shadow visibility;
+- apply per-entity color and alpha modulation;
+- split opaque and transparent pixels, with transparent output using WBOIT;
+- cast alpha-tested directional and point-light shadows through the dedicated
+  entity shadow drawers.
+
+Because legacy sprite art has no geometry normals, normal maps, or material
+properties, the vertex shader synthesizes a camera-relative normal across the
+billboard width. Camera code also supplies per-frame-part depth and curvature.
+The shader offsets fragment depth as if the upright card had shallow volume.
+This improves body/hair/equipment overlap, depth testing, lighting variation,
+and shadow placement without changing `SPR`/`ACT` assets.
+
+### Strengths
+
+- Sprites inhabit the same ambient, sun, spell, torch, and shadow environment
+  as map geometry.
+- The curved-normal/depth approximation adds dimension while retaining complete
+  legacy asset compatibility.
+- Both bindless and non-bindless shader paths implement the same model.
+- Sprite transparency participates in the existing order-independent
+  transparency system.
+
+### Known limitations and validation needs
+
+- **Synthetic shape:** every painted surface on a sprite shares the same broad
+  billboard-curvature assumption. Faces, cloth, armor, and weapons can appear
+  cylindrical or change implausibly as the camera rotates.
+- **Double shading:** RO art already contains painted highlights and shadows.
+  Strong Lambert lighting can darken faces, distort class colors, or reduce
+  pixel-art readability.
+- **Limited range:** ambient + directional + point contributions are saturated
+  before multiplying sprite color, and point-light intensity is currently a
+  fixed shader constant (`10.0`). Multiple bright lights can clip detail rather
+  than produce a graded response. The planned HDR pipeline removes the range
+  limitation but does not replace sprite-specific tuning.
+- **Cutout shadows:** sprite shadow passes are primarily alpha-tested; partial
+  transparency does not produce nuanced volumetric/translucent shadowing.
+- **Grounding:** a billboard can still appear detached at its feet even while
+  receiving and casting technically correct shadows.
+- **Point-light convention audit:** the entity shader constructs its point-light
+  vector as adjusted surface position minus light position. Do not change the
+  sign by inspection alone because synthesized normal conventions may compensate.
+  Capture controlled front/back/left/right/above tests for both sprites and map
+  models, then correct only if the illuminated side is observably inconsistent.
+- **Worst-case scenes:** validate pale and dark costumes, faces, translucent
+  wings, multi-part equipment, large bosses, ground items, nighttime maps, and
+  multiple colored spell lights.
+
+### Design goal
+
+Do not pursue physically realistic sprite materials as the default. The target
+is to ground sprites in the scene while preserving authored colors, faces,
+silhouettes, animation timing, and pixel-art readability.
+
+### Aspirational sprite-lighting plan
+
+1. **Regression rig:** fixed camera and sprite/model subjects with controllable
+   front/back/left/right/above directional and point lights; screenshot and GPU
+   baselines across primary backends.
+2. **Lighting modes:** expose `Classic` (ambient/map tint), `Soft` (wrapped or
+   half-Lambert), and `Enhanced` (full current response), plus advanced custom
+   tuning. Preserve an unambiguous legacy fallback.
+3. **Soft default evaluation:** test whether wrapped diffuse response preserves
+   painted detail better than the current full Lambert response before changing
+   defaults.
+4. **Luminance-preserving response:** allow colored scene light to tint and
+   ground sprites without crushing or clipping the artwork's authored value
+   structure.
+5. **Configurable curvature:** tune synthesized normals separately for players,
+   NPCs, ordinary monsters, large bosses, and ground items if captured scenes
+   show one curve cannot serve all categories.
+6. **Readable ambient floor:** provide a sprite-specific minimum/readability
+   control for dark scenes. Essential characters and combat silhouettes remain
+   visible without flattening the environment.
+7. **Contact grounding:** prototype a subtle foot/contact shadow or sprite-safe
+   contact-depth treatment before adopting heavy scene-wide AO.
+8. **Optional emissive overlays:** custom assets may add eyes, runes, weapons,
+   ghosts, seals, or boss-phase emission. Legacy sprites require no new maps.
+9. **Coverage-aware shadows:** evaluate stable dithering/coverage for soft sprite
+   edges and reject it if animation noise outweighs the benefit.
+10. **Lighting-independent outlines:** target/ally/hostile/interactable/DM
+    selection outlines use picker/depth information and icon/shape cues so
+    gameplay remains readable in dark or color-limited scenes.
+
+All modes must define reduced-effects behavior, avoid color-only meaning, work
+with opaque and WBOIT sprite pixels, and remain mechanically identical. Server
+authority, `SPR`/`ACT` timing, and entity coordinates are unchanged.
+
+### Feasibility tiers
+
+The current wgpu/Slang forward renderer is sufficient for the modernization
+program. These tiers describe implementation risk, not product priority.
+
+**High feasibility — incremental extensions:**
+
+- artistic map profiles and campaign lighting;
+- height/distance fog and color grading;
+- optional emissive overlays;
+- picker/depth-based hover and target outlines;
+- batched ground telegraphs (rings, cones, paths);
+- weather particles, effect budgets, and reduced-effects controls;
+- clean-HUD and supersampled screenshots;
+- sharpening, quality presets, and pass/GPU diagnostics.
+
+**Medium feasibility — focused renderer projects:**
+
+- floating-point HDR scene targets, exposure, and tone mapping;
+- HDR-driven bloom;
+- subtle SSAO/contact shadows;
+- depth-aware water and soft particles;
+- SMAA and optional spatial upscaling;
+- projected decals;
+- camera obstruction handling;
+- authoritative movement/animation presentation interpolation;
+- wind-reactive optional assets, LOD, dynamic resolution, and weather surface
+  reactions.
+
+**Experimental or evidence-gated:**
+
+- temporal AA (motion vectors, jitter, history, disocclusion, sprite ghosting);
+- screen-space reflections;
+- full dynamic day/night across legacy maps;
+- volumetric fog/light shafts;
+- full PBR conversion and IBL;
+- clustered lighting, deferred rendering, ray tracing, virtualized geometry, or
+  engine replacement.
+
+The final group is technically possible in varying degrees but offers poor
+value until captured scenes demonstrate a limitation that the current
+diffuse/tiled/forward architecture cannot solve more simply.
+
+### Dependency order
+
+```text
+Artistic profiles
+    -> Campaign lighting and fog
+        -> Weather and time transitions
+
+HDR scene target
+    -> Exposure and tone mapping
+        -> Emissive materials
+        -> Bloom
+
+Reliable scene depth
+    -> Contact shadows / SSAO
+    -> Soft particles
+    -> Improved water
+    -> Depth-aware outlines and obstruction presentation
+
+Stable authoritative presentation state
+    -> Movement interpolation
+    -> Animation smoothing
+    -> Cinematic camera tools
+```
+
+Do not implement a dependent effect first with temporary color/depth/state
+assumptions that will be discarded by its prerequisite.
+
+### Cross-backend requirements
+
+Vulkan, Metal, and DX12 are the primary modernization targets. OpenGL fallback
+is the limiting backend and must receive a safe reduced path rather than block
+all progress.
+
+Every graphics slice must define:
+
+- adapter/capability checks and backend-aware defaults;
+- a cheap fallback or clean disable path;
+- bounded textures, buffers, passes, and per-frame work;
+- behavior without bindless resources where applicable;
+- Slang translation validation on supported backends;
+- Low/Medium/High/Ultra cost and visible-quality expectations;
+- stable UI compositing and mechanically complete reduced-effects behavior.
+
+Examples: HDR can fall back to the current SDR path; AO can disable; bloom can
+use smaller buffers; shadowed-light count can shrink; telegraphs retain simple
+geometry even when richer decals/effects are unavailable.
+
+### Realistic delivery shape
+
+- **Small-to-medium slices:** artistic profiles, basic campaign lighting, fog,
+  outlines, screenshots, diagnostics, and unified presets.
+- **Medium renderer projects:** HDR/tone mapping, emissive+bloom, AO, improved
+  particles, water, decals, and presentation interpolation.
+- **Long experiments:** TAA, volumetrics, sophisticated reflections, or broad
+  weather/time simulation.
+
+Engineering time, art direction, legacy-asset behavior, and cross-backend
+validation are the practical constraints. The engine architecture itself is not
+a blocker.
+
 This document will be updated as the pipeline evolves. The best "source of truth" remains the code + the Slang shaders themselves.
 
 ---
