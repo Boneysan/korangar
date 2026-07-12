@@ -146,6 +146,10 @@ pub enum NetworkEvent {
     RefinableWeaponList {
         weapons: Vec<RefinableWeaponInformation>,
     },
+    WeaponRefineResult {
+        result: i32,
+        item_id: ItemId,
+    },
     /// Player was moved to a new position on a different map or the current map
     ChangeMap {
         map_name: String,
@@ -198,7 +202,12 @@ pub enum NetworkEvent {
     },
     AutoRunSkill {
         skill_id: SkillId,
+        skill_type: SkillType,
         skill_level: SkillLevel,
+        spell_point_cost: u16,
+        attack_range: AttackRange,
+        skill_name: String,
+        upgradable: bool,
     },
     /// A timed status effect (buff or debuff) changed on an entity.
     StatusChange {

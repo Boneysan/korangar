@@ -1884,6 +1884,16 @@ pub struct WarpListPacket {
     pub destinations: Vec<WarpDestination>,
 }
 
+/// Select a destination offered by [`WarpListPacket`] (`CZ_SELECT_WARPPOINT`).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x011B)]
+pub struct SelectWarpDestinationPacket {
+    pub skill_id: SkillId,
+    #[length(16)]
+    pub map_name: String,
+}
+
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct RefinableWeaponInformation {
@@ -1901,6 +1911,24 @@ pub struct RefinableWeaponInformation {
 pub struct RefinableWeaponListPacket {
     #[repeating_remaining]
     pub weapons: Vec<RefinableWeaponInformation>,
+}
+
+/// Select an inventory weapon offered by [`RefinableWeaponListPacket`].
+/// The index is the server wire index (the client's normalized index + 2).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0222)]
+pub struct RequestWeaponRefinePacket {
+    pub inventory_index: u32,
+}
+
+/// Result of a Whitesmith Weapon Refine selection (`ZC_ACK_WEAPONREFINE`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0223)]
+pub struct WeaponRefineResultPacket {
+    pub result: i32,
+    pub item_id: ItemId,
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -6025,6 +6053,22 @@ mod tests {
         let weapons = read_packet::<RefinableWeaponListPacket>(&weapons);
         assert_eq!(weapons.weapons[0].item_id, ItemId(1101));
         assert_eq!(weapons.weapons[0].refinement_level, 7);
+    }
+
+    #[test]
+    fn warp_and_weapon_refine_selection_packets_match_hercules_layouts() {
+        assert_eq!(
+            packet_bytes(SelectWarpDestinationPacket::new(SkillId(26), "payon.gat".to_owned())),
+            [&[0x1B, 0x01, 0x1A, 0x00][..], &fixed_string("payon.gat", 16)[..]].concat()
+        );
+        assert_eq!(
+            packet_bytes(RequestWeaponRefinePacket::new(7)),
+            [0x22, 0x02, 0x07, 0x00, 0x00, 0x00]
+        );
+
+        let result = read_packet::<WeaponRefineResultPacket>(&[0x23, 0x02, 0, 0, 0, 0, 0x4D, 0x04, 0, 0]);
+        assert_eq!(result.result, 0);
+        assert_eq!(result.item_id, ItemId(1101));
     }
 }
 

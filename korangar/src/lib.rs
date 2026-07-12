@@ -1526,6 +1526,8 @@ impl Client {
 
                                 // If the player is us, we need to open the respawn window.
                                 if entity_id == self.client_state.follow(client_state().entities())[0].get_entity_id() {
+                                    self.interface.close_window_with_class(WindowClass::WarpSelection);
+                                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
                                     self.interface.open_window(RespawnWindow);
                                 }
                             }
@@ -1687,6 +1689,8 @@ impl Client {
 
                     // Close any remaining dialogs.
                     self.interface.close_window_with_class(WindowClass::Dialog);
+                    self.interface.close_window_with_class(WindowClass::WarpSelection);
+                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
 
                     self.async_loader.request_map_load(map_name, Some(position));
                 }
@@ -2687,14 +2691,110 @@ impl Client {
                         .follow_mut(client_state().skill_tree_window().chosen_skill_level())
                         .remove(&skill_id);
                 }
-                // These packets are now modeled for protocol correctness and
-                // headless coverage; dedicated client UI/automation is not
-                // required to keep world state coherent.
-                NetworkEvent::MonsterInformation { .. }
-                | NetworkEvent::WarpList { .. }
-                | NetworkEvent::SkillCooldownList { .. }
-                | NetworkEvent::RefinableWeaponList { .. }
-                | NetworkEvent::AutoRunSkill { .. } => {}
+                NetworkEvent::SkillCooldownList { cooldowns } => {
+                    self.client_state
+                        .follow_mut(client_state().skill_cooldowns())
+                        .replace_from_server(cooldowns, client_tick);
+                }
+                NetworkEvent::AutoRunSkill {
+                    skill_id,
+                    skill_type,
+                    skill_level,
+                    spell_point_cost,
+                    attack_range,
+                    skill_name,
+                    upgradable,
+                } => {
+                    self.client_state.follow_mut(client_state().skill_tree()).upsert_skill(LearnedSkill::new(
+                        ragnarok_packets::SkillInformation {
+                            skill_id,
+                            skill_type,
+                            skill_level,
+                            spell_point_cost,
+                            attack_range,
+                            skill_name,
+                            upgradable: u8::from(upgradable),
+                        },
+                    ));
+                }
+                NetworkEvent::MonsterInformation {
+                    job_id,
+                    level,
+                    size,
+                    health_points,
+                    defense,
+                    race,
+                    magic_defense,
+                    element,
+                    elemental_effectiveness,
+                } => {
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!(
+                            "Monster #{} — Lv. {}, HP {}, DEF {}, MDEF {}, size {}, race {}, element {}; effectiveness {:?}",
+                            job_id.0, level, health_points, defense, magic_defense, size, race, element, elemental_effectiveness
+                        ),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::WarpList { skill_id, destinations } => {
+                    self.interface.close_window_with_class(WindowClass::WarpSelection);
+                    if destinations.is_empty() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "The warp skill returned no destinations.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else {
+                        self.interface.open_window(WarpSelectionWindow::new(skill_id, destinations));
+                    }
+                }
+                NetworkEvent::RefinableWeaponList { weapons } => {
+                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
+                    if weapons.is_empty() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "No weapons are eligible for Weapon Refine.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else {
+                        let weapons = weapons
+                            .into_iter()
+                            .map(|weapon| {
+                                let name = self
+                                    .library
+                                    .get::<ItemName>(ItemNameKey {
+                                        item_id: weapon.item_id,
+                                        is_identified: true,
+                                    })
+                                    .to_string();
+                                (weapon, name)
+                            })
+                            .collect();
+                        self.interface.open_window(WeaponRefineWindow::new(weapons));
+                    }
+                }
+                NetworkEvent::WeaponRefineResult { result, item_id } => {
+                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
+                    let item_name = self
+                        .library
+                        .get::<ItemName>(ItemNameKey {
+                            item_id,
+                            is_identified: true,
+                        })
+                        .to_string();
+                    let item_name = match item_name.as_str() {
+                        "NOTFOUND" => format!("item #{}", item_id.0),
+                        _ => item_name,
+                    };
+                    let (message, color) = match result {
+                        0 => (format!("Weapon refine succeeded for {item_name}."), MessageColor::Information),
+                        1 => (format!("Weapon refine failed for {item_name}."), MessageColor::Error),
+                        2 => ("Weapon Refine skill level is too low.".to_owned(), MessageColor::Error),
+                        3 => ("Required refining material is missing.".to_owned(), MessageColor::Error),
+                        _ => (format!("Weapon refine returned result {result} for {item_name}."), MessageColor::Error),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message, color));
+                }
             }
         }
 
@@ -3657,6 +3757,32 @@ impl Client {
                     self.client_state.follow_mut(client_state().identify_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Identify);
                 }
+                InputEvent::SelectWarpDestination { skill_id, map_name } => {
+                    self.interface.close_window_with_class(WindowClass::WarpSelection);
+                    if self.networking_system.select_warp_destination(skill_id, map_name).is_err() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Could not select warp destination: not connected to the map server.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
+                InputEvent::CancelWarpSelection { skill_id } => {
+                    self.interface.close_window_with_class(WindowClass::WarpSelection);
+                    let _ = self.networking_system.cancel_warp_selection(skill_id);
+                }
+                InputEvent::RefineWeapon { inventory_index } => {
+                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
+                    if self.networking_system.request_weapon_refine(inventory_index).is_err() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Could not request weapon refine: not connected to the map server.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
+                InputEvent::CancelWeaponRefine => {
+                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
+                    let _ = self.networking_system.cancel_weapon_refine();
+                }
                 InputEvent::TradeAccept => {
                     let _ = self.networking_system.accept_trade();
                     self.interface.close_window_with_class(WindowClass::TradeRequest);
@@ -3704,6 +3830,19 @@ impl Client {
                     }
                     _ => {}
                 },
+                InputEvent::AssignSkillToHotbar { skill } => {
+                    let slot = self.client_state.follow(client_state().hotbar()).first_empty_slot();
+                    match slot {
+                        Some(slot) => self
+                            .client_state
+                            .follow_mut(client_state().hotbar())
+                            .update_slot(&mut self.networking_system, slot, skill),
+                        None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "The hotbar is full. Clear a slot or drag the skill onto a slot to replace it.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                    }
+                }
                 InputEvent::CastSkill { slot } => {
                     if let Some(learnable_skill) = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).as_ref()
                         && let Some(learned_skill) =

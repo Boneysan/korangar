@@ -160,6 +160,14 @@ pub struct SkillTree {
 }
 
 impl SkillTree {
+    pub fn upsert_skill(&mut self, skill: LearnedSkill) {
+        if let Some(existing) = self.skills.iter_mut().find(|existing| existing.skill_id == skill.skill_id) {
+            *existing = skill;
+        } else {
+            self.skills.push(skill);
+        }
+    }
+
     pub fn update_skill(
         &mut self,
         skill_id: SkillId,

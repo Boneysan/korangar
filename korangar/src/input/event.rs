@@ -172,6 +172,19 @@ pub enum InputEvent {
     },
     /// Cancel identify dialog.
     IdentifyCancel,
+    /// Choose one of the destinations supplied by a warp skill.
+    SelectWarpDestination {
+        skill_id: SkillId,
+        map_name: String,
+    },
+    CancelWarpSelection {
+        skill_id: SkillId,
+    },
+    /// Choose a weapon supplied by the Weapon Refine skill.
+    RefineWeapon {
+        inventory_index: ragnarok_packets::InventoryIndex,
+    },
+    CancelWeaponRefine,
     /// Accept pending trade request.
     TradeAccept,
     /// Reject pending trade request.
@@ -227,6 +240,10 @@ pub enum InputEvent {
         /// Destination of the move.
         destination: SkillSource,
         /// Skill to move.
+        skill: LearnableSkill,
+    },
+    /// Assign a skill to the first free hotbar slot (skill-tree right click).
+    AssignSkillToHotbar {
         skill: LearnableSkill,
     },
     /// Cast a skill.

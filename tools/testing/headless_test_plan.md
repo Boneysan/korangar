@@ -299,15 +299,15 @@ needed to route the fix:
 
 | Phase | Status | Priority |
 |---|---|---|
-| 1 Session lifecycle | ✅ core implemented (smoke) — create/delete/slot-switch pending | done-ish |
-| 2 GM channel | not started | **P0 — everything depends on it** |
-| 3 Movement/world | not started | P0 |
-| 4 Combat melee | not started | P1 |
-| 5 Skill sweep | not started | **P1 — biggest bug-finding payoff** |
-| 6 Items/economy | not started | P1 |
-| 7 NPC dialogue | not started | P2 |
+| 1 Session lifecycle | ✅ core implemented (smoke) — create/delete/slot-switch pending | follow-up |
+| 2 GM channel | ✅ implemented and green | done |
+| 3 Movement/world | ✅ implemented and green | done |
+| 4 Combat melee | ✅ implemented and green | done |
+| 5 Skill sweep | ✅ 39 job sweeps implemented and green | done |
+| 6 Items/economy | ✅ implemented and green | done |
+| 7 NPC dialogue | ✅ implemented and green | done |
 | 8 Multi-client social | not started (needs 2nd account) | P2 |
 | 9 DM campaign suite | not started | **P1 — fork-critical, resumes paused DM testing** |
-| 10 Coverage ledger | not started | P0 (cheap: add the callback early, data accrues from every run) |
+| 10 Coverage ledger | ✅ implemented | done |
 
 Suggested build order: **2 → 10 (callback) → 3 → 4 → 5 → 9 → 6 → 7 → 8**.

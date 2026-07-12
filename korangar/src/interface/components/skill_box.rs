@@ -90,6 +90,31 @@ where
         // skill.
         let skill = state.try_get(&self.skill_path).unwrap().clone();
 
+        match self.source {
+            SkillSource::SkillTree => queue.queue(Event::SetMouseMode {
+                mouse_mode: MouseMode::Custom {
+                    mode: MouseInputMode::MoveSkill {
+                        skill,
+                        source: self.source,
+                    },
+                },
+            }),
+            SkillSource::Hotbar { slot } => queue.queue(InputEvent::CastSkill { slot }),
+        }
+    }
+}
+
+struct MoveSkillBoxHandler<A> {
+    skill_path: A,
+    source: SkillSource,
+}
+
+impl<A> ClickHandler<ClientState> for MoveSkillBoxHandler<A>
+where
+    A: Path<ClientState, LearnableSkill, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let skill = state.try_get(&self.skill_path).unwrap().clone();
         queue.queue(Event::SetMouseMode {
             mouse_mode: MouseMode::Custom {
                 mode: MouseInputMode::MoveSkill {
@@ -123,6 +148,7 @@ pub struct SkillBox<A, B> {
     learnable_skill_path: A,
     learned_skill_path: B,
     handler: SkillBoxHandler<A>,
+    move_handler: MoveSkillBoxHandler<A>,
     level_display: LevelDisplay,
     cooldown_display: CooldownDisplay,
     source: SkillSource,
@@ -141,6 +167,10 @@ where
             learnable_skill_path,
             learned_skill_path,
             handler: SkillBoxHandler::new(learnable_skill_path, source),
+            move_handler: MoveSkillBoxHandler {
+                skill_path: learnable_skill_path,
+                source,
+            },
             level_display: LevelDisplay::default(),
             cooldown_display: CooldownDisplay::default(),
             source,
@@ -252,7 +282,9 @@ where
             if let Some(actions) = &learnable_skill.actions
                 && let Some(sprite) = &learnable_skill.sprite
             {
-                layout.add_sprite(layout_info.area, actions, sprite, &learnable_skill.animation_state, color, 1.0);
+                layout.with_clip(layout_info.area, |layout| {
+                    layout.add_sprite(layout_info.area, actions, sprite, &learnable_skill.animation_state, color, 1.0);
+                });
             }
 
             if let Some(cd_text) = self.cooldown_display.as_str() {
@@ -277,6 +309,9 @@ where
 
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &self.handler);
+                if matches!(self.source, SkillSource::Hotbar { .. }) {
+                    layout.register_click_handler(MouseButton::Right, &self.move_handler);
+                }
 
                 struct SkillBoxTooltip;
                 layout.add_tooltip(&learnable_skill.skill_name, SkillBoxTooltip.tooltip_id());

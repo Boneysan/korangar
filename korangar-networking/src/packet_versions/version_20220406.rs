@@ -527,7 +527,22 @@ where
     })?;
     packet_handler.register(|packet: AutoRunSkillPacket| NetworkEvent::AutoRunSkill {
         skill_id: packet.skill_id,
+        skill_type: match packet.skill_type {
+            0 => SkillType::Passive,
+            1 => SkillType::Attack,
+            2 => SkillType::Ground,
+            4 => SkillType::SelfCast,
+            16 => SkillType::Support,
+            32 => SkillType::Trap,
+            _ => SkillType::SelfCast,
+        },
         skill_level: packet.skill_level,
+        spell_point_cost: packet.skill_sp,
+        attack_range: AttackRange(packet.skill_range),
+        skill_name: String::from_utf8_lossy(&packet.skill_name)
+            .trim_end_matches('\0')
+            .to_owned(),
+        upgradable: packet.up_flag != 0,
     })?;
     packet_handler.register(|packet: UpdateHotkeysPacket| NetworkEvent::SetHotkeyData {
         tab: packet.tab,
@@ -863,6 +878,10 @@ where
     })?;
     packet_handler.register(|packet: RefinableWeaponListPacket| NetworkEvent::RefinableWeaponList {
         weapons: packet.weapons,
+    })?;
+    packet_handler.register(|packet: WeaponRefineResultPacket| NetworkEvent::WeaponRefineResult {
+        result: packet.result,
+        item_id: packet.item_id,
     })?;
     packet_handler.register(|packet: DamagePacket1| match packet.damage_type {
         DamageType::Damage => Some(NetworkEvent::DamageEffect {

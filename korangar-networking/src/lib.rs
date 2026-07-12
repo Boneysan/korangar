@@ -36,6 +36,10 @@ pub use self::packet_versions::SupportedPacketVersion;
 pub use self::server::{
     CharacterServerLoginData, LoginServerLoginData, NotConnectedError, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
+
+const fn weapon_refine_wire_index(inventory_index: InventoryIndex) -> u32 {
+    inventory_index.0 as u32 + 2
+}
 use crate::server::NetworkTaskError;
 
 /// Buffer for networking events. This struct exists to reduce heap allocations
@@ -743,6 +747,30 @@ where
         }
     }
 
+    pub fn select_warp_destination(&mut self, skill_id: SkillId, map_name: String) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(SelectWarpDestinationPacket::new(skill_id, map_name)),
+        }
+    }
+
+    pub fn cancel_warp_selection(&mut self, skill_id: SkillId) -> Result<(), NotConnectedError> {
+        self.select_warp_destination(skill_id, String::new())
+    }
+
+    pub fn request_weapon_refine(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(RequestWeaponRefinePacket::new(weapon_refine_wire_index(inventory_index)))
+            }
+        }
+    }
+
+    pub fn cancel_weapon_refine(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestWeaponRefinePacket::new(0)),
+        }
+    }
+
     pub fn entity_details(&mut self, entity_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestDetailsPacket::new(entity_id)),
@@ -1118,6 +1146,12 @@ mod packet_handlers {
     use ragnarok_packets::handler::NoPacketCallback;
 
     use crate::{NetworkingSystem, SupportedPacketVersion};
+
+    #[test]
+    fn weapon_refine_restores_server_inventory_offset() {
+        assert_eq!(crate::weapon_refine_wire_index(ragnarok_packets::InventoryIndex(0)), 2);
+        assert_eq!(crate::weapon_refine_wire_index(ragnarok_packets::InventoryIndex(17)), 19);
+    }
 
     #[test]
     fn login_server() {

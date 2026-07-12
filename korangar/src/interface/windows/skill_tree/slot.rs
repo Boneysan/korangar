@@ -92,10 +92,6 @@ where
         } else {
             let learned_skill = state.try_get(&self.learned_skill_path);
 
-            if learned_skill.is_some_and(|skill| !skill.upgradable) {
-                return;
-            }
-
             if let Some(cast_level) = state
                 .get(&self.window_state_path.chosen_skill_level())
                 .get(&learnable_skill.skill_id)
@@ -114,6 +110,32 @@ where
                 },
             });
         }
+    }
+}
+
+struct AssignToHotbarClickHandler<A, B, C> {
+    learnable_skill_path: A,
+    learned_skill_path: B,
+    window_state_path: C,
+}
+
+impl<A, B, C> ClickHandler<ClientState> for AssignToHotbarClickHandler<A, B, C>
+where
+    A: Path<ClientState, LearnableSkill, false>,
+    B: Path<ClientState, LearnedSkill, false>,
+    C: Path<ClientState, SkillTreeWindowState>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(learned_skill) = state.try_get(&self.learned_skill_path) else {
+            return;
+        };
+        let mut skill = state.try_get(&self.learnable_skill_path).unwrap().clone();
+        skill.maximum_level = state
+            .get(&self.window_state_path.chosen_skill_level())
+            .get(&skill.skill_id)
+            .copied()
+            .unwrap_or(learned_skill.skill_level);
+        queue.queue(InputEvent::AssignSkillToHotbar { skill });
     }
 }
 
@@ -202,6 +224,7 @@ pub struct SkillSlot<A, B, C, D> {
     window_state_path: C,
     available_skill_points_path: D,
     click_handler: SkillSlotClickHandler<A, B, C>,
+    assign_to_hotbar_handler: AssignToHotbarClickHandler<A, B, C>,
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
     level_display: LevelDisplay,
@@ -227,6 +250,11 @@ where
             window_state_path,
             available_skill_points_path,
             click_handler: SkillSlotClickHandler::new(learnable_skill_path, learned_skill_path, window_state_path, source),
+            assign_to_hotbar_handler: AssignToHotbarClickHandler {
+                learnable_skill_path,
+                learned_skill_path,
+                window_state_path,
+            },
             choose_lower_handler: ChooseLowerClickHandler::new(learned_skill_path, window_state_path),
             choose_higher_handler: ChooseHigherClickHandler::new(learned_skill_path, window_state_path),
             level_display: LevelDisplay::default(),
@@ -472,7 +500,9 @@ where
             if let Some(actions) = &skill.actions
                 && let Some(sprite) = &skill.sprite
             {
-                layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, color, 1.3);
+                layout.with_clip(sprite_area, |layout| {
+                    layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, color, 1.3);
+                });
             }
 
             if can_rank_up {
@@ -510,6 +540,9 @@ where
 
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &self.click_handler);
+                if learned_skill.is_some() {
+                    layout.register_click_handler(MouseButton::Right, &self.assign_to_hotbar_handler);
+                }
 
                 struct SkillSlotTooltip;
                 layout.add_tooltip(&skill.skill_name, SkillSlotTooltip.tooltip_id());

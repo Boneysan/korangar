@@ -1,7 +1,7 @@
 //! Skill cooldown deadlines from `ZC_SKILL_POSTDELAY` (0x043D).
 
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{ClientTick, SkillId};
+use ragnarok_packets::{ClientTick, SkillCooldownInformation, SkillId};
 use rust_state::RustState;
 
 #[derive(Clone, Debug, RustState, StateElement)]
@@ -38,6 +38,17 @@ impl SkillCooldowns {
     pub fn clear(&mut self) {
         self.entries.clear();
         self.display_text.clear();
+    }
+
+    /// Replace the cooldown snapshot restored by the server after a map load.
+    pub fn replace_from_server(&mut self, cooldowns: Vec<SkillCooldownInformation>, now: ClientTick) {
+        self.last_now = now;
+        self.entries = cooldowns
+            .into_iter()
+            .filter(|cooldown| cooldown.remaining_ms > 0)
+            .map(|cooldown| (cooldown.skill_id, ClientTick(now.0.saturating_add(cooldown.remaining_ms))))
+            .collect();
+        self.rebuild_display_with_now(now);
     }
 
     /// Drop expired cooldowns and refresh the HUD line.
@@ -125,5 +136,21 @@ mod tests {
         cds.set(SkillId(28), ClientTick(9000));
         assert_eq!(cds.remaining_ms(SkillId(28), ClientTick(0)), Some(9000));
         assert_eq!(cds.entries.len(), 1);
+    }
+
+    #[test]
+    fn restored_snapshot_replaces_existing_cooldowns() {
+        let mut cds = SkillCooldowns::default();
+        cds.set(SkillId(1), ClientTick(9999));
+        cds.replace_from_server(
+            vec![SkillCooldownInformation {
+                skill_id: SkillId(28),
+                total_ms: 5000,
+                remaining_ms: 3000,
+            }],
+            ClientTick(1000),
+        );
+        assert_eq!(cds.remaining_ms(SkillId(1), ClientTick(1000)), None);
+        assert_eq!(cds.remaining_ms(SkillId(28), ClientTick(1000)), Some(3000));
     }
 }

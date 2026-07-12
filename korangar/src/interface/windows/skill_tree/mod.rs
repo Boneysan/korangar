@@ -70,8 +70,11 @@ where
             title: client_state().localization().skill_tree_window_title(),
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
+            resizable: true,
             minimum_width: 550.0,
-            maximum_width: 800.0,
+            maximum_width: 1200.0,
+            minimum_height: 360.0,
+            maximum_height: 900.0,
             closable: true,
             elements: (
                 split! {

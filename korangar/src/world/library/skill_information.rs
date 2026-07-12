@@ -118,6 +118,12 @@ fn skill_name_from_identifier(identifier: &str) -> Option<String> {
         ["FIREWALL"] => "Fire Wall".to_owned(),
         ["FROSTDIVER"] => "Frost Diver".to_owned(),
         ["THUNDERSTORM"] => "Thunderstorm".to_owned(),
+        ["ORIDEOCON"] => "Oridecon Research".to_owned(),
+        ["HILTBINDING"] => "Hilt Binding".to_owned(),
+        ["SKINTEMPER"] => "Skin Tempering".to_owned(),
+        ["MELTDOWN"] => "Shattering Strike".to_owned(),
+        ["WEAPONREFINE"] => "Upgrade Weapon".to_owned(),
+        ["OVERTHRUSTMAX"] => "Maximum Power Thrust".to_owned(),
         _ => words.into_iter().map(format_identifier_word).collect::<Vec<_>>().join(" "),
     };
 
@@ -158,5 +164,9 @@ mod tests {
         assert_eq!(skill_name_from_identifier("AL_INCAGI").as_deref(), Some("Increase AGI"));
         assert_eq!(skill_name_from_identifier("NV_FIRSTAID").as_deref(), Some("First Aid"));
         assert_eq!(skill_name_from_identifier("SU_BASIC_SKILL").as_deref(), Some("Basic Skill"));
+        assert_eq!(skill_name_from_identifier("BS_HILTBINDING").as_deref(), Some("Hilt Binding"));
+        assert_eq!(skill_name_from_identifier("WS_WEAPONREFINE").as_deref(), Some("Upgrade Weapon"));
+        assert_eq!(skill_name_from_identifier("WS_MELTDOWN").as_deref(), Some("Shattering Strike"));
+        assert_eq!(skill_name_from_identifier("WS_OVERTHRUSTMAX").as_deref(), Some("Maximum Power Thrust"));
     }
 }

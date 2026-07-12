@@ -41,10 +41,13 @@ mod render_options;
 mod respawn;
 mod sell;
 mod sell_cart;
+mod selection_list;
 mod server_selection;
 mod skill_tree;
 mod stats;
 mod status_bar;
+mod warp_selection;
+mod weapon_refine;
 #[cfg(feature = "debug")]
 mod theme_inspector;
 
@@ -82,6 +85,8 @@ pub use self::minimap::MinimapWindow;
 pub use self::party::PartyWindow;
 pub use self::storage::StorageWindow;
 pub use self::trade::{TradeRequestWindow, TradeWindow};
+pub use self::warp_selection::WarpSelectionWindow;
+pub use self::weapon_refine::WeaponRefineWindow;
 #[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
@@ -136,6 +141,8 @@ pub enum WindowClass {
     SelectServer,
     Sell,
     SellCart,
+    WarpSelection,
+    WeaponRefine,
     /// GM / DM command panel (levels, zeny, heal, campaign mode). Available in all builds.
     Commands,
     /// Dice roller (sends `@roll`). Available to all players in all builds.

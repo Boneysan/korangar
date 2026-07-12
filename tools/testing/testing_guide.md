@@ -155,3 +155,4 @@ Perform the following functional checks during feature updates (see [M1-p0-verif
 - [x] **Combat & Status**: Melee attack against Porings (displays correct damage numbers, chaser tracking), skill damage numbers, hotbar casting, buff/debuff bar timeouts.
 - [x] **Economy**: Inventory drag & drop, item split, NPC shop buying/selling in English (utilizes compilation of 13k+ names from [items.json](../../docs/items.json)), item identification (Magnifiers), and Kafra storage grids.
 - [x] **NPC Interaction**: Dialogue options, warp transitions, and dialogue numeric/string inputs.
+- [x] **Skill menus**: Teleport destination selection/cancel and Whitesmith Upgrade Weapon selection were live-verified on macOS 2026-07-12; refine failure, success acknowledgement, and the refinement visual effect rendered correctly.

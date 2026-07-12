@@ -12,6 +12,10 @@ pub struct Hotbar {
 }
 
 impl Hotbar {
+    pub fn first_empty_slot(&self) -> Option<HotbarSlot> {
+        self.skills.iter().position(Option::is_none).map(|index| HotbarSlot(index as u16))
+    }
+
     /// Set the slot without notifying the map server.
     pub fn set_slot(&mut self, slot: HotbarSlot, skill: LearnableSkill) {
         self.skills[slot.0 as usize] = Some(skill);
