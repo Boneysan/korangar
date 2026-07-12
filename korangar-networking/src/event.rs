@@ -118,6 +118,34 @@ pub enum NetworkEvent {
         destination: WorldPosition,
         starting_timestamp: ClientTick,
     },
+    /// An entity moved instantly on the current map (`ZC_HIGHJUMP`).
+    EntitySlide {
+        entity_id: EntityId,
+        position: TilePosition,
+    },
+    /// Monster stats returned by Wizard Sense/Estimation.
+    MonsterInformation {
+        job_id: JobId,
+        level: u16,
+        size: u16,
+        health_points: u32,
+        defense: u16,
+        race: u16,
+        magic_defense: u16,
+        element: u16,
+        elemental_effectiveness: [u8; 9],
+    },
+    /// Available destinations for Teleport/Warp Portal.
+    WarpList {
+        skill_id: SkillId,
+        destinations: Vec<String>,
+    },
+    SkillCooldownList {
+        cooldowns: Vec<SkillCooldownInformation>,
+    },
+    RefinableWeaponList {
+        weapons: Vec<RefinableWeaponInformation>,
+    },
     /// Player was moved to a new position on a different map or the current map
     ChangeMap {
         map_name: String,
@@ -167,6 +195,10 @@ pub enum NetworkEvent {
     HealEffect {
         entity_id: EntityId,
         heal_amount: usize,
+    },
+    AutoRunSkill {
+        skill_id: SkillId,
+        skill_level: SkillLevel,
     },
     /// A timed status effect (buff or debuff) changed on an entity.
     StatusChange {
@@ -400,7 +432,8 @@ pub enum NetworkEvent {
         /// Cast duration in milliseconds (`delay_time`).
         cast_ms: u32,
     },
-    /// Magnifier / identify skill: list of inventory indices (`ZC_ITEMIDENTIFY_LIST`).
+    /// Magnifier / identify skill: list of inventory indices
+    /// (`ZC_ITEMIDENTIFY_LIST`).
     ItemIdentifyList {
         indices: Vec<InventoryIndex>,
     },

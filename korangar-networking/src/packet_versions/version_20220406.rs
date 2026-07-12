@@ -223,7 +223,8 @@ where
         text: packet.message,
         color: MessageColor::Server,
     })?;
-    // Hercules `dispbottom` / `clif_disp_onlyself` (atcommands, @dm*, script feedback).
+    // Hercules `dispbottom` / `clif_disp_onlyself` (atcommands, @dm*, script
+    // feedback).
     packet_handler.register(|packet: DisplayBottomMessagePacket| NetworkEvent::ChatMessage {
         text: packet.message,
         color: MessageColor::Server,
@@ -388,9 +389,7 @@ where
     packet_handler.register_noop::<NewMailStatusPacket>()?;
     packet_handler.register_noop::<AchievementUpdatePacket>()?;
     packet_handler.register_noop::<AchievementListPacket>()?;
-    packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent {
-        percent: packet.weight,
-    })?;
+    packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent { percent: packet.weight })?;
     packet_handler.register(|packet: SpriteChangePacket| match packet.sprite_type {
         SpriteChangeType::Base => Some(NetworkEvent::ChangeJob {
             account_id: packet.account_id,
@@ -414,37 +413,41 @@ where
         let inventory_items = inventory_items.clone();
 
         move |packet: RegularItemListPacket| {
-            inventory_items
-                .borrow_mut()
-                .as_mut()
-                .expect("Unexpected inventory packet")
-                .1
-                .extend(packet.item_information.into_iter().map(|item_information| {
-                    let RegularItemInformation {
-                        index,
-                        item_id,
-                        item_type,
+            let mut borrowed = inventory_items.borrow_mut();
+            let (inv_type, items) = borrowed.as_mut().expect("Unexpected inventory packet");
+            let is_storage = matches!(*inv_type, inventory_type::STORAGE | inventory_type::GUILD_STORAGE);
+
+            items.extend(packet.item_information.into_iter().map(|item_information| {
+                let RegularItemInformation {
+                    index,
+                    item_id,
+                    item_type,
+                    amount,
+                    equipped_position,
+                    slot,
+                    hire_expiration_date,
+                    flags,
+                } = item_information;
+
+                let actual_index = match is_storage {
+                    true => InventoryIndex(index.0.saturating_sub(1)),
+                    false => InventoryIndex(index.0.saturating_sub(2)),
+                };
+
+                InventoryItem {
+                    index: actual_index,
+                    metadata: NoMetadata,
+                    item_id,
+                    item_type,
+                    slot,
+                    hire_expiration_date,
+                    details: InventoryItemDetails::Regular {
                         amount,
                         equipped_position,
-                        slot,
-                        hire_expiration_date,
                         flags,
-                    } = item_information;
-
-                    InventoryItem {
-                        index,
-                        metadata: NoMetadata,
-                        item_id,
-                        item_type,
-                        slot,
-                        hire_expiration_date,
-                        details: InventoryItemDetails::Regular {
-                            amount,
-                            equipped_position,
-                            flags,
-                        },
-                    }
-                }));
+                    },
+                }
+            }));
             NoNetworkEvents
         }
     })?;
@@ -452,20 +455,43 @@ where
         let inventory_items = inventory_items.clone();
 
         move |packet: EquippableItemListPacket| {
-            inventory_items
-                .borrow_mut()
-                .as_mut()
-                .expect("Unexpected inventory packet")
-                .1
-                .extend(packet.item_information.into_iter().map(|item| {
-                    let EquippableItemInformation {
-                        index,
-                        item_id,
-                        item_type,
+            let mut borrowed = inventory_items.borrow_mut();
+            let (inv_type, items) = borrowed.as_mut().expect("Unexpected inventory packet");
+            let is_storage = matches!(*inv_type, inventory_type::STORAGE | inventory_type::GUILD_STORAGE);
+
+            items.extend(packet.item_information.into_iter().map(|item| {
+                let EquippableItemInformation {
+                    index,
+                    item_id,
+                    item_type,
+                    equip_position,
+                    equipped_position,
+                    slot,
+                    hire_expiration_date,
+                    bind_on_equip_type,
+                    w_item_sprite_number,
+                    option_count,
+                    option_data,
+                    refinement_level,
+                    enchantment_level,
+                    flags,
+                } = item;
+
+                let actual_index = match is_storage {
+                    true => InventoryIndex(index.0.saturating_sub(1)),
+                    false => InventoryIndex(index.0.saturating_sub(2)),
+                };
+
+                InventoryItem {
+                    index: actual_index,
+                    metadata: NoMetadata,
+                    item_id,
+                    item_type,
+                    slot,
+                    hire_expiration_date,
+                    details: InventoryItemDetails::Equippable {
                         equip_position,
                         equipped_position,
-                        slot,
-                        hire_expiration_date,
                         bind_on_equip_type,
                         w_item_sprite_number,
                         option_count,
@@ -473,28 +499,9 @@ where
                         refinement_level,
                         enchantment_level,
                         flags,
-                    } = item;
-
-                    InventoryItem {
-                        index,
-                        metadata: NoMetadata,
-                        item_id,
-                        item_type,
-                        slot,
-                        hire_expiration_date,
-                        details: InventoryItemDetails::Equippable {
-                            equip_position,
-                            equipped_position,
-                            bind_on_equip_type,
-                            w_item_sprite_number,
-                            option_count,
-                            option_data,
-                            refinement_level,
-                            enchantment_level,
-                            flags,
-                        },
-                    }
-                }));
+                    },
+                }
+            }));
             NoNetworkEvents
         }
     })?;
@@ -517,6 +524,10 @@ where
     packet_handler.register(|packet: UpdateSkillTreePacket| {
         let UpdateSkillTreePacket { skill_information } = packet;
         NetworkEvent::SkillTree { skill_information }
+    })?;
+    packet_handler.register(|packet: AutoRunSkillPacket| NetworkEvent::AutoRunSkill {
+        skill_id: packet.skill_id,
+        skill_level: packet.skill_level,
     })?;
     packet_handler.register(|packet: UpdateHotkeysPacket| NetworkEvent::SetHotkeyData {
         tab: packet.tab,
@@ -579,12 +590,8 @@ where
 
         NetworkEvent::AddChoiceButtons { choices, npc_id }
     })?;
-    packet_handler.register(|packet: NpcOpenNumberInputPacket| NetworkEvent::NpcRequestNumberInput {
-        npc_id: packet.npc_id,
-    })?;
-    packet_handler.register(|packet: NpcOpenStringInputPacket| NetworkEvent::NpcRequestStringInput {
-        npc_id: packet.npc_id,
-    })?;
+    packet_handler.register(|packet: NpcOpenNumberInputPacket| NetworkEvent::NpcRequestNumberInput { npc_id: packet.npc_id })?;
+    packet_handler.register(|packet: NpcOpenStringInputPacket| NetworkEvent::NpcRequestStringInput { npc_id: packet.npc_id })?;
     packet_handler.register_noop::<DisplaySpecialEffectPacket>()?;
     packet_handler.register(|packet: DisplaySkillCooldownPacket| NetworkEvent::SkillCooldown {
         skill_id: packet.skill_id,
@@ -617,6 +624,13 @@ where
         index: packet.index,
         gained: packet.state == 1,
         duration_ms: packet.duration_in_milliseconds,
+        remaining_ms: packet.remaining_in_milliseconds,
+    })?;
+    packet_handler.register(|packet: StatusChange2Packet| NetworkEvent::StatusChange {
+        entity_id: packet.entity_id,
+        index: packet.index,
+        gained: packet.state == 1,
+        duration_ms: packet.remaining_in_milliseconds,
         remaining_ms: packet.remaining_in_milliseconds,
     })?;
     packet_handler.register_noop::<QuestNotificationPacket1>()?;
@@ -742,7 +756,20 @@ where
         index: packet.index,
         amount: packet.amount,
     })?;
-    // ZC_ITEM_THROW_ACK (0x00AF). Success usually also sends 0x07FA; amount 0 means rejected.
+    packet_handler.register(|packet: UseItemAckPacket| -> NetworkEventList {
+        if packet.result != 0 && packet.amount == 0 {
+            NetworkEvent::InventoryItemRemoved {
+                reason: RemoveItemReason::Normal,
+                index: packet.index,
+                amount: 1,
+            }
+            .into()
+        } else {
+            NetworkEventList::default()
+        }
+    })?;
+    // ZC_ITEM_THROW_ACK (0x00AF). Success usually also sends 0x07FA; amount 0 means
+    // rejected.
     packet_handler.register(|packet: DropItemAckPacket| -> NetworkEventList {
         if packet.amount == 0 {
             NetworkEvent::ChatMessage {
@@ -751,7 +778,8 @@ where
             }
             .into()
         } else {
-            // Fallback inventory sync if 0x07FA was not processed (safe if already removed).
+            // Fallback inventory sync if 0x07FA was not processed (safe if already
+            // removed).
             NetworkEvent::InventoryItemRemoved {
                 reason: RemoveItemReason::Normal,
                 index: packet.inventory_index,
@@ -800,6 +828,42 @@ where
             attack_range,
         }
     })?;
+    packet_handler.register(|packet: EntitySlidePacket| NetworkEvent::EntitySlide {
+        entity_id: packet.entity_id,
+        position: packet.position,
+    })?;
+    packet_handler.register(|packet: MonsterInformationPacket| NetworkEvent::MonsterInformation {
+        job_id: packet.job_id,
+        level: packet.level,
+        size: packet.size,
+        health_points: packet.health_points,
+        defense: packet.defense,
+        race: packet.race,
+        magic_defense: packet.magic_defense,
+        element: packet.element,
+        elemental_effectiveness: packet.elemental_effectiveness,
+    })?;
+    packet_handler.register(|packet: WarpListPacket| NetworkEvent::WarpList {
+        skill_id: packet.skill_id,
+        destinations: packet
+            .destinations
+            .into_iter()
+            .map(|destination| {
+                let end = destination
+                    .map_name
+                    .iter()
+                    .position(|byte| *byte == 0)
+                    .unwrap_or(destination.map_name.len());
+                String::from_utf8_lossy(&destination.map_name[..end]).into_owned()
+            })
+            .collect(),
+    })?;
+    packet_handler.register(|packet: SkillCooldownListPacket| NetworkEvent::SkillCooldownList {
+        cooldowns: packet.cooldowns,
+    })?;
+    packet_handler.register(|packet: RefinableWeaponListPacket| NetworkEvent::RefinableWeaponList {
+        weapons: packet.weapons,
+    })?;
     packet_handler.register(|packet: DamagePacket1| match packet.damage_type {
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
@@ -819,11 +883,13 @@ where
             entity_id: packet.source_entity_id,
             item_entity_id: packet.destination_entity_id,
         }),
+        // Hercules' clif_sitting/clif_standing put the acting entity in the
+        // SOURCE field (destination is zeroed) — see clif.c `WBUFL(buf,2) = bl->id`.
         DamageType::SitDown => Some(NetworkEvent::PlayerSitDown {
-            entity_id: packet.destination_entity_id,
+            entity_id: packet.source_entity_id,
         }),
         DamageType::StandUp => Some(NetworkEvent::PlayerStandUp {
-            entity_id: packet.destination_entity_id,
+            entity_id: packet.source_entity_id,
         }),
         _ => None,
     })?;
@@ -846,11 +912,13 @@ where
             entity_id: packet.source_entity_id,
             item_entity_id: packet.destination_entity_id,
         }),
+        // Hercules' clif_sitting/clif_standing put the acting entity in the
+        // SOURCE field (destination is zeroed) — see clif.c `WBUFL(buf,2) = bl->id`.
         DamageType::SitDown => Some(NetworkEvent::PlayerSitDown {
-            entity_id: packet.destination_entity_id,
+            entity_id: packet.source_entity_id,
         }),
         DamageType::StandUp => Some(NetworkEvent::PlayerStandUp {
-            entity_id: packet.destination_entity_id,
+            entity_id: packet.source_entity_id,
         }),
         _ => None,
     })?;
@@ -1115,9 +1183,7 @@ where
     packet_handler.register(|packet: RemoveSkillPacket| NetworkEvent::RemoveSkill { skill_id: packet.skill_id })?;
 
     // Identify
-    packet_handler.register(|packet: ItemIdentifyListPacket| NetworkEvent::ItemIdentifyList {
-        indices: packet.indices,
-    })?;
+    packet_handler.register(|packet: ItemIdentifyListPacket| NetworkEvent::ItemIdentifyList { indices: packet.indices })?;
     packet_handler.register(|packet: ItemIdentifyResultPacket| NetworkEvent::ItemIdentified {
         inventory_index: packet.inventory_index,
         success: packet.result == 0,
@@ -1187,7 +1253,7 @@ where
 
         NetworkEvent::StorageItemAdded {
             item: InventoryItem {
-                index: packet.index,
+                index: InventoryIndex(packet.index.0),
                 metadata: NoMetadata,
                 item_id: packet.item_id,
                 item_type: packet.item_type,
@@ -1198,7 +1264,7 @@ where
         }
     })?;
     packet_handler.register(|packet: StorageItemRemovedPacket| NetworkEvent::StorageItemRemoved {
-        index: packet.index,
+        index: InventoryIndex(packet.index.0),
         amount: packet.amount,
     })?;
     packet_handler.register(|_: StorageClosedPacket| NetworkEvent::StorageClosed)?;

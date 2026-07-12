@@ -1,6 +1,6 @@
 use ragnarok_packets::*;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct EntityData {
     pub entity_id: EntityId,
     pub movement_speed: u16,

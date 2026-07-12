@@ -219,6 +219,28 @@ impl ToBytes for InventoryIndex {
     }
 }
 
+/// Storage index is always actual index + 1.
+#[derive(Clone, Copy, Debug, FixedByteSize, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct StorageIndex(pub u16);
+
+impl FromBytes for StorageIndex {
+    fn from_bytes(byte_reader: &mut ByteReader) -> ConversionResult<Self> {
+        u16::from_bytes(byte_reader).map(|raw| Self(raw.saturating_sub(1)))
+    }
+}
+
+impl ToBytes for StorageIndex {
+    fn to_bytes(&self, byte_writer: &mut ByteWriter) -> ConversionResult<usize> {
+        u16::to_bytes(&(self.0 + 1), byte_writer)
+    }
+}
+
+/// Raw index without any server-side offset.
+#[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct RawIndex(pub u16);
+
 #[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ItemId(pub u32);
@@ -1166,7 +1188,7 @@ impl ToBytes for RegularItemFlags {
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct RegularItemInformation {
-    pub index: InventoryIndex,
+    pub index: RawIndex,
     pub item_id: ItemId,
     pub item_type: u8,
     pub amount: u16,
@@ -1217,7 +1239,7 @@ impl ToBytes for EquippableItemFlags {
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct EquippableItemInformation {
-    pub index: InventoryIndex,
+    pub index: RawIndex,
     pub item_id: ItemId,
     pub item_type: u8,
     pub equip_position: EquipPosition,
@@ -1777,8 +1799,9 @@ pub struct ItemPickupRequestPacket {
     pub entity_id: EntityId,
 }
 
-/// Drop an inventory item onto the ground (`CZ_ITEM_THROW2` 0x0363 at PACKETVER 20220406).
-/// Wire layout: `<index>.W <amount>.W` (InventoryIndex serializes as index + 2).
+/// Drop an inventory item onto the ground (`CZ_ITEM_THROW2` 0x0363 at PACKETVER
+/// 20220406). Wire layout: `<index>.W <amount>.W` (InventoryIndex serializes as
+/// index + 2).
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0363)]
@@ -1788,8 +1811,8 @@ pub struct DropItemPacket {
 }
 
 /// Server ack that an inventory item was dropped (`ZC_ITEM_THROW_ACK` 0x00AF).
-/// Modern Hercules also sends `ZC_DELETE_ITEM_FROM_BODY` (0x07FA) on success; this
-/// packet still arrives and must be consumed so the stream stays aligned.
+/// Modern Hercules also sends `ZC_DELETE_ITEM_FROM_BODY` (0x07FA) on success;
+/// this packet still arrives and must be consumed so the stream stays aligned.
 /// `amount == 0` means the drop was rejected / ignored.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
@@ -1816,6 +1839,68 @@ pub struct RequestPlayerAttackFailedPacket {
     pub target_position: TilePosition,
     pub player_position: TilePosition,
     pub attack_range: AttackRange,
+}
+
+/// Instant same-map relocation (`ZC_HIGHJUMP`). Hercules also uses this
+/// packet for combat slide/knockback effects such as Bowling Bash.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01FF)]
+pub struct EntitySlidePacket {
+    pub entity_id: EntityId,
+    pub position: TilePosition,
+}
+
+/// Monster information shown by Wizard Sense/Estimation (`ZC_MONSTER_INFO`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x018C)]
+pub struct MonsterInformationPacket {
+    pub job_id: JobId,
+    pub level: u16,
+    pub size: u16,
+    pub health_points: u32,
+    pub defense: u16,
+    pub race: u16,
+    pub magic_defense: u16,
+    pub element: u16,
+    pub elemental_effectiveness: [u8; 9],
+}
+
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct WarpDestination {
+    pub map_name: [u8; 16],
+}
+
+/// Available destinations for Teleport/Warp Portal (`ZC_WARPLIST`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0ABE)]
+#[variable_length]
+pub struct WarpListPacket {
+    pub skill_id: SkillId,
+    #[repeating_remaining]
+    pub destinations: Vec<WarpDestination>,
+}
+
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct RefinableWeaponInformation {
+    pub inventory_index: InventoryIndex,
+    pub item_id: ItemId,
+    pub refinement_level: u8,
+    pub cards: [ItemId; 4],
+}
+
+/// Inventory weapons eligible for Whitesmith Weapon Refine.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0221)]
+#[variable_length]
+pub struct RefinableWeaponListPacket {
+    #[repeating_remaining]
+    pub weapons: Vec<RefinableWeaponInformation>,
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -2167,6 +2252,19 @@ pub struct SetHotkeyData2Packet {
     pub tab: HotbarTab,
     pub slot: HotbarSlot,
     pub hotkey_data: HotkeyData,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0147)]
+pub struct AutoRunSkillPacket {
+    pub skill_id: SkillId,
+    pub skill_type: u32,
+    pub skill_level: SkillLevel,
+    pub skill_sp: u16,
+    pub skill_range: u16,
+    pub skill_name: [u8; 24],
+    pub up_flag: u8,
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -3417,6 +3515,24 @@ pub struct DisplaySkillCooldownPacket {
     pub until: ClientTick,
 }
 
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct SkillCooldownInformation {
+    pub skill_id: SkillId,
+    pub total_ms: u32,
+    pub remaining_ms: u32,
+}
+
+/// Cooldowns restored when entering a map (`ZC_SKILL_POSTDELAY_LIST`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0985)]
+#[variable_length]
+pub struct SkillCooldownListPacket {
+    #[repeating_remaining]
+    pub cooldowns: Vec<SkillCooldownInformation>,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x01DE)]
@@ -3470,6 +3586,18 @@ pub struct StatusChangePacket {
     pub entity_id: EntityId,
     pub state: u8,
     pub duration_in_milliseconds: u32,
+    pub remaining_in_milliseconds: u32,
+    pub value: [u32; 3],
+}
+
+/// Status update without the `Total` duration field (`ZC_STATUS_CHANGE2`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x043F)]
+pub struct StatusChange2Packet {
+    pub index: u16,
+    pub entity_id: EntityId,
+    pub state: u8,
     pub remaining_in_milliseconds: u32,
     pub value: [u32; 3],
 }
@@ -3901,6 +4029,17 @@ pub struct RemoveItemFromInventoryPacket {
     pub amount: u16,
 }
 
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01C8)]
+pub struct UseItemAckPacket {
+    pub index: InventoryIndex,
+    pub item_id: ItemId,
+    pub entity_id: EntityId,
+    pub amount: i16,
+    pub result: u8,
+}
+
 // TODO: improve names
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
@@ -4006,8 +4145,8 @@ pub struct NpcOpenNumberInputPacket {
     pub npc_id: EntityId,
 }
 
-/// Client → server: numeric value from the NPC input dialog (`CZ_INPUT_EDITDLG`).
-/// 0143 <npc id>.L <value>.L
+/// Client → server: numeric value from the NPC input dialog
+/// (`CZ_INPUT_EDITDLG`). 0143 <npc id>.L <value>.L
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0143)]
@@ -4025,8 +4164,8 @@ pub struct NpcOpenStringInputPacket {
     pub npc_id: EntityId,
 }
 
-/// Client → server: string value from the NPC input dialog (`CZ_INPUT_EDITDLGSTR`).
-/// 01d5 <packet len>.W <npc id>.L <string>.?B
+/// Client → server: string value from the NPC input dialog
+/// (`CZ_INPUT_EDITDLGSTR`). 01d5 <packet len>.W <npc id>.L <string>.?B
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x01D5)]
@@ -4170,7 +4309,8 @@ pub struct UseItemPacket {
     pub account_id: AccountId,
 }
 
-/// List of inventory indices that can be identified (`ZC_ITEMIDENTIFY_LIST` 0x0177).
+/// List of inventory indices that can be identified (`ZC_ITEMIDENTIFY_LIST`
+/// 0x0177).
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0177)]
@@ -4180,8 +4320,8 @@ pub struct ItemIdentifyListPacket {
     pub indices: Vec<InventoryIndex>,
 }
 
-/// Player selected an item to identify, or cancelled (`CZ_REQ_ITEMIDENTIFY` 0x0178).
-/// Use `index == -1` to cancel the dialog.
+/// Player selected an item to identify, or cancelled (`CZ_REQ_ITEMIDENTIFY`
+/// 0x0178). Use `index == -1` to cancel the dialog.
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0178)]
@@ -4314,7 +4454,8 @@ pub struct TradeCancelledPacket {}
 #[header(0x00EF)]
 pub struct TradeCommitPacket {}
 
-/// Trade finished (`ZC_EXEC_EXCHANGE_ITEM` 0x00F0). `result`: 0 success, 1 failure.
+/// Trade finished (`ZC_EXEC_EXCHANGE_ITEM` 0x00F0). `result`: 0 success, 1
+/// failure.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x00F0)]
@@ -4322,7 +4463,8 @@ pub struct TradeCompletedPacket {
     pub result: u8,
 }
 
-/// Move inventory item into storage (`CZ_MOVE_ITEM_FROM_BODY_TO_STORE2` 0x0364).
+/// Move inventory item into storage (`CZ_MOVE_ITEM_FROM_BODY_TO_STORE2`
+/// 0x0364).
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0364)]
@@ -4331,19 +4473,20 @@ pub struct MoveItemToStoragePacket {
     pub amount: u32,
 }
 
-/// Move storage item into inventory (`CZ_MOVE_ITEM_FROM_STORE_TO_BODY2` 0x0365).
+/// Move storage item into inventory (`CZ_MOVE_ITEM_FROM_STORE_TO_BODY2`
+/// 0x0365).
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0365)]
 pub struct MoveItemFromStoragePacket {
-    pub storage_index: InventoryIndex,
+    pub storage_index: StorageIndex,
     pub amount: u32,
 }
 
 /// Close storage (`CZ_CLOSE_STORE` 0x00F7).
 #[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x00F7)]
+#[header(0x0193)]
 pub struct CloseStoragePacket {}
 
 /// Storage capacity (`ZC_NOTIFY_STOREITEM_COUNTINFO` 0x00F2).
@@ -4358,13 +4501,13 @@ pub struct StorageAmountPacket {
 /// Item added to storage (`ZC_ADD_ITEM_TO_STORE`).
 ///
 /// PACKETVER main ≥ 20200916 uses header **0x0B44** with slot/options before
-/// refine/grade (see Hercules `PACKET_ZC_ADD_ITEM_TO_STORE`). Older clients used
-/// 0x0A0A with refine before slot — wrong for our 20220406 stack.
+/// refine/grade (see Hercules `PACKET_ZC_ADD_ITEM_TO_STORE`). Older clients
+/// used 0x0A0A with refine before slot — wrong for our 20220406 stack.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0B44)]
 pub struct StorageItemAddedPacket {
-    pub index: InventoryIndex,
+    pub index: StorageIndex,
     pub amount: u32,
     pub item_id: ItemId,
     pub item_type: u8,
@@ -4381,7 +4524,7 @@ pub struct StorageItemAddedPacket {
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x00F6)]
 pub struct StorageItemRemovedPacket {
-    pub index: InventoryIndex,
+    pub index: StorageIndex,
     pub amount: u32,
 }
 
@@ -4391,7 +4534,8 @@ pub struct StorageItemRemovedPacket {
 #[header(0x00F8)]
 pub struct StorageClosedPacket {}
 
-/// Inventory list type on unified item-list packets (`ZC_INVENTORY_START` invType).
+/// Inventory list type on unified item-list packets (`ZC_INVENTORY_START`
+/// invType).
 pub mod inventory_type {
     pub const INVENTORY: u8 = 0;
     pub const CART: u8 = 1;
@@ -5215,7 +5359,8 @@ pub enum BuyItemResult {
 
 /// One line of `CZ_PC_PURCHASE_ITEMLIST` (0x00C8) for PACKETVER ≥ 20181121.
 ///
-/// Wire layout: `amount` (u16) + `itemId` (u32). Older clients used u16 item ids.
+/// Wire layout: `amount` (u16) + `itemId` (u32). Older clients used u16 item
+/// ids.
 #[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct BuyItemInformation {
@@ -5232,7 +5377,8 @@ pub struct BuyItemsPacket {
     pub items: Vec<BuyItemInformation>,
 }
 
-/// `ZC_PC_PURCHASE_RESULT` (0x00CA) — NPC shop purchase outcome (not market 0x0B4E).
+/// `ZC_PC_PURCHASE_RESULT` (0x00CA) — NPC shop purchase outcome (not market
+/// 0x0B4E).
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x00CA)]
@@ -5439,10 +5585,9 @@ mod tests {
     #[test]
     fn drop_item_packet_matches_20220406_layout() {
         // Header 0x0363, inventory index 0 serializes as 2, amount 5.
-        assert_eq!(
-            packet_bytes(DropItemPacket::new(InventoryIndex(0), 5)),
-            [0x63, 0x03, 0x02, 0x00, 0x05, 0x00]
-        );
+        assert_eq!(packet_bytes(DropItemPacket::new(InventoryIndex(0), 5)), [
+            0x63, 0x03, 0x02, 0x00, 0x05, 0x00
+        ]);
     }
 
     #[test]
@@ -5755,28 +5900,26 @@ mod tests {
     #[test]
     fn npc_number_input_packets_match_hercules_layout() {
         // ZC_OPEN_EDITDLG 0x0142: header + npc_id
-        assert_eq!(
-            packet_bytes(NpcOpenNumberInputPacket::new(EntityId(0x0102_0304))),
-            [0x42, 0x01, 0x04, 0x03, 0x02, 0x01]
-        );
+        assert_eq!(packet_bytes(NpcOpenNumberInputPacket::new(EntityId(0x0102_0304))), [
+            0x42, 0x01, 0x04, 0x03, 0x02, 0x01
+        ]);
 
         // CZ_INPUT_EDITDLG 0x0143: header + npc_id + value
-        assert_eq!(
-            packet_bytes(NpcNumberInputPacket::new(EntityId(0x0102_0304), 42)),
-            [0x43, 0x01, 0x04, 0x03, 0x02, 0x01, 0x2A, 0x00, 0x00, 0x00]
-        );
+        assert_eq!(packet_bytes(NpcNumberInputPacket::new(EntityId(0x0102_0304), 42)), [
+            0x43, 0x01, 0x04, 0x03, 0x02, 0x01, 0x2A, 0x00, 0x00, 0x00
+        ]);
     }
 
     #[test]
     fn npc_string_input_packets_match_hercules_layout() {
         // ZC_OPEN_EDITDLGSTR 0x01D4: header + npc_id
-        assert_eq!(
-            packet_bytes(NpcOpenStringInputPacket::new(EntityId(0x0102_0304))),
-            [0xD4, 0x01, 0x04, 0x03, 0x02, 0x01]
-        );
+        assert_eq!(packet_bytes(NpcOpenStringInputPacket::new(EntityId(0x0102_0304))), [
+            0xD4, 0x01, 0x04, 0x03, 0x02, 0x01
+        ]);
 
         // CZ_INPUT_EDITDLGSTR 0x01D5: header + length + npc_id + null-terminated text
-        // "Hi" = 2 chars + null → payload after header: len(2) + id(4) + text(3) = 9, total 11
+        // "Hi" = 2 chars + null → payload after header: len(2) + id(4) + text(3) = 9,
+        // total 11
         let bytes = packet_bytes(NpcStringInputPacket::new(EntityId(0x0102_0304), "Hi".to_owned()));
         assert_eq!(&bytes[0..2], &[0xD5, 0x01]);
         let len = u16::from_le_bytes([bytes[2], bytes[3]]) as usize;
@@ -5784,12 +5927,112 @@ mod tests {
         assert_eq!(&bytes[4..8], &[0x04, 0x03, 0x02, 0x01]);
         assert_eq!(&bytes[8..], b"Hi\0");
     }
+
+    #[test]
+    fn friend_list_packet_matches_20220406_layout() {
+        // Friend list packet 0x0201 is variable length.
+        // It carries a header, a length field (2 bytes), and repeating Friend rows.
+        let mut bytes = vec![0x01, 0x02]; // header 0x0201
+        bytes.extend([0x44, 0x00]); // total length: 4 (header+len) + 2 * 32 (Friend rows) = 68 bytes = 0x0044
+
+        // Friend 1
+        bytes.extend([0x04, 0x03, 0x02, 0x01]); // AID
+        bytes.extend([0x08, 0x07, 0x06, 0x05]); // GID
+        bytes.extend(fixed_string("FriendOne", 24)); // name
+
+        // Friend 2
+        bytes.extend([0x14, 0x13, 0x12, 0x11]); // AID
+        bytes.extend([0x18, 0x17, 0x16, 0x15]); // GID
+        bytes.extend(fixed_string("FriendTwo", 24)); // name
+
+        assert_eq!(bytes.len(), 68);
+
+        let packet = read_packet::<FriendListPacket>(&bytes);
+        assert_eq!(packet.friend_list.len(), 2);
+
+        assert_eq!(packet.friend_list[0].account_id, AccountId(0x0102_0304));
+        assert_eq!(packet.friend_list[0].character_id, CharacterId(0x0506_0708));
+        assert_eq!(packet.friend_list[0].name, "FriendOne");
+
+        assert_eq!(packet.friend_list[1].account_id, AccountId(0x1112_1314));
+        assert_eq!(packet.friend_list[1].character_id, CharacterId(0x1516_1718));
+        assert_eq!(packet.friend_list[1].name, "FriendTwo");
+    }
+
+    #[test]
+    fn add_friend_packet_matches_20220406_layout() {
+        // CZ_ADD_FRIEND 0x0202: header + name (24 bytes)
+        assert_eq!(
+            packet_bytes(AddFriendPacket { name: "Alice".to_owned() }),
+            [&[0x02, 0x02][..], &fixed_string("Alice", 24)[..]].concat()
+        );
+    }
+
+    #[test]
+    fn remove_friend_packet_matches_20220406_layout() {
+        // CZ_REMOVE_FRIEND 0x0203: header + account_id (4 bytes) + character_id (4
+        // bytes)
+        assert_eq!(
+            packet_bytes(RemoveFriendPacket {
+                account_id: AccountId(0x0102_0304),
+                character_id: CharacterId(0x0506_0708),
+            }),
+            [0x03, 0x02, 0x04, 0x03, 0x02, 0x01, 0x08, 0x07, 0x06, 0x05]
+        );
+    }
+
+    #[test]
+    fn headless_fallback_packets_match_hercules_20220406_layouts() {
+        let slide = read_packet::<EntitySlidePacket>(&[0xFF, 0x01, 0x04, 0x03, 0x02, 0x01, 120, 0, 140, 0]);
+        assert_eq!(slide.entity_id, EntityId(0x0102_0304));
+        assert_eq!(slide.position, TilePosition { x: 120, y: 140 });
+
+        let mut monster = vec![0x8C, 0x01];
+        monster.extend([0xEA, 0x03, 10, 0, 1, 0]); // Poring, level 10, medium
+        monster.extend(500u32.to_le_bytes());
+        monster.extend([20, 0, 3, 0, 15, 0, 2, 0]);
+        monster.extend([100, 100, 100, 100, 100, 100, 100, 100, 100]);
+        let monster = read_packet::<MonsterInformationPacket>(&monster);
+        assert_eq!(monster.job_id, JobId(1002));
+        assert_eq!(monster.health_points, 500);
+
+        let mut warps = vec![0xBE, 0x0A, 0x16, 0x00, 0x1A, 0x00];
+        warps.extend(fixed_string("payon.gat", 16));
+        let warps = read_packet::<WarpListPacket>(&warps);
+        assert_eq!(warps.skill_id, SkillId(26));
+        assert_eq!(warps.destinations[0].map_name, fixed_string("payon.gat", 16).as_slice());
+
+        let cooldowns = read_packet::<SkillCooldownListPacket>(&[
+            0x85, 0x09, 0x0E, 0x00, 89, 0, 0xE8, 0x03, 0, 0, 0xF4, 0x01, 0, 0,
+        ]);
+        assert_eq!(cooldowns.cooldowns[0].skill_id, SkillId(89));
+        assert_eq!(cooldowns.cooldowns[0].remaining_ms, 500);
+
+        let status = read_packet::<StatusChange2Packet>(&[
+            0x3F, 0x04, 10, 0, 0x04, 0x03, 0x02, 0x01, 1, 0xE8, 0x03, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3,
+            0, 0, 0,
+        ]);
+        assert_eq!(status.entity_id, EntityId(0x0102_0304));
+        assert_eq!(status.remaining_in_milliseconds, 1000);
+
+        let mut weapons = vec![0x21, 0x02, 0x1B, 0x00];
+        weapons.extend([2, 0]); // server inventory index
+        weapons.extend(1101u32.to_le_bytes());
+        weapons.push(7);
+        for card in [4001u32, 4002, 4003, 4004] {
+            weapons.extend(card.to_le_bytes());
+        }
+        let weapons = read_packet::<RefinableWeaponListPacket>(&weapons);
+        assert_eq!(weapons.weapons[0].item_id, ItemId(1101));
+        assert_eq!(weapons.weapons[0].refinement_level, 7);
+    }
 }
 
 #[cfg(test)]
 mod shop_item_list_tests {
-    use super::*;
     use ragnarok_bytes::{ByteReader, FixedByteSize};
+
+    use super::*;
 
     #[test]
     fn shop_item_information_size_is_19() {
@@ -5800,12 +6043,11 @@ mod shop_item_list_tests {
     fn parse_shop_item_list_0xb77_one_item() {
         // header 0x0b77, len 23 (4 + 19), one red potion style entry
         let bytes = [
-            0x77, 0x0b, 0x17, 0x00,
-            0xf5, 0x01, 0x00, 0x00, // item 501
+            0x77, 0x0B, 0x17, 0x00, 0xF5, 0x01, 0x00, 0x00, // item 501
             0x32, 0x00, 0x00, 0x00, // price 50
             0x32, 0x00, 0x00, 0x00, // discount 50
-            0x00,                   // type
-            0x00, 0x00,             // view
+            0x00, // type
+            0x00, 0x00, // view
             0x00, 0x00, 0x00, 0x00, // location
         ];
         let mut reader = ByteReader::without_metadata(&bytes);

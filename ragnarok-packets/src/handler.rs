@@ -184,7 +184,12 @@ where
                         (length as usize).saturating_sub(2)
                     };
 
-                    let bytes = byte_reader.slice::<()>(payload_length)?.to_vec();
+                    // Prepend the header so `unknown_packet` consumers can identify
+                    // the packet, matching the unregistered-header path in
+                    // `process_one` (which passes bytes starting at the header).
+                    let mut bytes = Vec::with_capacity(payload_length + 2);
+                    bytes.extend_from_slice(&header.0.to_le_bytes());
+                    bytes.extend_from_slice(byte_reader.slice::<()>(payload_length)?);
                     packet_callback.unknown_packet(bytes);
 
                     Ok(Output::default())
@@ -239,6 +244,35 @@ mod length_fallback_tests {
         let mut handler = PacketHandler::<(), NoPacketCallback>::default();
         handler.register_length_fallbacks(lengths);
         handler
+    }
+
+    #[test]
+    fn fallback_reports_unknown_packet_with_header() {
+        use std::cell::RefCell;
+        use std::rc::Rc;
+
+        #[derive(Clone, Default)]
+        struct RecordingCallback {
+            unknown: Rc<RefCell<Vec<Vec<u8>>>>,
+        }
+
+        impl super::PacketCallback for RecordingCallback {
+            fn unknown_packet(&self, bytes: Vec<u8>) {
+                self.unknown.borrow_mut().push(bytes);
+            }
+        }
+
+        let callback = RecordingCallback::default();
+        let mut handler = PacketHandler::<(), RecordingCallback>::with_callback(callback.clone());
+        handler.register_length_fallbacks(&[(0x1234, 5)]);
+
+        let bytes = [0x34, 0x12, 0xAA, 0xBB, 0xCC];
+        let mut reader = ByteReader::without_metadata(&bytes);
+
+        assert!(matches!(handler.process_one(&mut reader), HandlerResult::Ok(())));
+        // The callback sees the full packet, header included, matching the
+        // unregistered-header path in `process_one`.
+        assert_eq!(callback.unknown.borrow().as_slice(), &[vec![0x34, 0x12, 0xAA, 0xBB, 0xCC]]);
     }
 
     #[test]

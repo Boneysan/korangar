@@ -1628,6 +1628,26 @@ impl Client {
                         entity.generate_pathing_mesh(&self.device, &self.queue, self.graphics_engine.bindless_support(), map);
                     }
                 }
+                NetworkEvent::EntitySlide { entity_id, position } => {
+                    if let Some(map) = &self.map {
+                        let is_player = self
+                            .client_state
+                            .try_follow(this_entity())
+                            .is_some_and(|player| player.get_entity_id() == entity_id);
+                        if is_player {
+                            if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+                                player.set_position(map, position, client_tick);
+                            }
+                        } else if let Some(entity) = self
+                            .client_state
+                            .follow_mut(client_state().entities())
+                            .iter_mut()
+                            .find(|entity| entity.get_entity_id() == entity_id)
+                        {
+                            entity.set_position(map, position, client_tick);
+                        }
+                    }
+                }
                 NetworkEvent::PlayerMove {
                     origin,
                     destination,
@@ -2667,6 +2687,14 @@ impl Client {
                         .follow_mut(client_state().skill_tree_window().chosen_skill_level())
                         .remove(&skill_id);
                 }
+                // These packets are now modeled for protocol correctness and
+                // headless coverage; dedicated client UI/automation is not
+                // required to keep world state coherent.
+                NetworkEvent::MonsterInformation { .. }
+                | NetworkEvent::WarpList { .. }
+                | NetworkEvent::SkillCooldownList { .. }
+                | NetworkEvent::RefinableWeaponList { .. }
+                | NetworkEvent::AutoRunSkill { .. } => {}
             }
         }
 

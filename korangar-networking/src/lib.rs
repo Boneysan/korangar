@@ -758,18 +758,15 @@ where
     /// Sit down. Target entity id is unused for sit/stand on Hercules; send 0.
     pub fn player_sit(&mut self) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::SitDown))
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::SitDown)),
         }
     }
 
-    /// Stand up from a sit. Target entity id is unused for sit/stand on Hercules.
+    /// Stand up from a sit. Target entity id is unused for sit/stand on
+    /// Hercules.
     pub fn player_stand(&mut self) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::StandUp))
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestActionPacket::new(EntityId(0), Action::StandUp)),
         }
     }
 
@@ -893,7 +890,8 @@ where
         }
     }
 
-    /// Drop `amount` of an inventory item onto the ground (`CZ_ITEM_THROW2` 0x0363).
+    /// Drop `amount` of an inventory item onto the ground (`CZ_ITEM_THROW2`
+    /// 0x0363).
     pub fn drop_item(&mut self, inventory_index: InventoryIndex, amount: u16) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(DropItemPacket::new(inventory_index, amount)),
@@ -903,7 +901,7 @@ where
     pub fn request_item_identify(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(RequestItemIdentifyPacket::new(inventory_index.0 as i16))
+                self.send_map_server_packet(RequestItemIdentifyPacket::new((inventory_index.0 + 2) as i16))
             }
         }
     }
@@ -946,9 +944,7 @@ where
 
     pub fn trade_add_zeny(&mut self, amount: u32) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(TradeAddItemPacket::new(InventoryIndex(0), amount))
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAddItemPacket::new(InventoryIndex(0), amount)),
         }
     }
 
@@ -972,16 +968,14 @@ where
 
     pub fn move_item_to_storage(&mut self, inventory_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(MoveItemToStoragePacket::new(inventory_index, amount))
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(MoveItemToStoragePacket::new(inventory_index, amount)),
         }
     }
 
     pub fn move_item_from_storage(&mut self, storage_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(MoveItemFromStoragePacket::new(storage_index, amount))
+                self.send_map_server_packet(MoveItemFromStoragePacket::new(StorageIndex(storage_index.0), amount))
             }
         }
     }
@@ -1141,5 +1135,42 @@ mod packet_handlers {
     fn map_server() {
         let result = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406);
         assert!(result.is_ok());
+    }
+
+    /// Hercules' clif_sitting/clif_standing (0x008A `ZC_NOTIFY_ACT`) carry the
+    /// acting entity in the SOURCE field with the destination zeroed. The
+    /// sit/stand events must be keyed off the source or every sit/stand is
+    /// attributed to entity 0. (Found by the headless tester; HF-001.)
+    #[test]
+    fn sit_ack_uses_source_entity() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x008A | source 0x001E8480 (2000000) | destination 0 |
+        // tick 0 | attack_duration 0 | damage_delay 0 | damage 0 | hits 0 |
+        // damage_type 2 (SitDown) | damage2 0
+        let mut bytes = vec![0x8A, 0x00];
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(&[0; 20]);
+        bytes.push(2);
+        bytes.extend_from_slice(&[0; 2]);
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("sit packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::PlayerSitDown { entity_id }] if entity_id.0 == 2000000
+            ),
+            "expected PlayerSitDown for entity 2000000, got {:?}",
+            events.0
+        );
     }
 }
