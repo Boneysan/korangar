@@ -165,6 +165,52 @@ pub fn audit_skill_assets() -> Result<(usize, Vec<MissingSkillAsset>), String> {
     missing.sort_by_key(|asset| asset.skill_id.0);
     Ok((total, missing))
 }
+
+#[derive(Debug)]
+pub struct MissingEntitySprite {
+    pub job_id: ragnarok_packets::JobId,
+    pub folder: &'static str,
+    pub sprite_name: String,
+    pub missing_sprite: bool,
+    pub missing_actions: bool,
+}
+
+pub fn audit_entity_sprites() -> Result<(usize, Vec<MissingEntitySprite>), String> {
+    let game_file_loader = GameFileLoader::default();
+    game_file_loader.load_archives_from_settings();
+    game_file_loader.load_patched_lua_files();
+    let library = Library::new(&game_file_loader).map_err(|error| error.to_string())?;
+
+    let mut total = 0;
+    let mut missing = Vec::new();
+    for (job_id, sprite_name) in library.job_identity_entries() {
+        let folder = match EntityType::from(job_id) {
+            EntityType::Monster => "몬스터",
+            EntityType::Npc => "npc",
+            // Players compose body/head sprites through a different scheme,
+            // and warp/hidden trigger entities render no sprite at all.
+            _ => continue,
+        };
+        total += 1;
+        let sprite_path = format!("data\\sprite\\{folder}\\{sprite_name}.spr").to_lowercase();
+        let actions_path = format!("data\\sprite\\{folder}\\{sprite_name}.act").to_lowercase();
+        let missing_sprite = !game_file_loader.file_exists(&sprite_path);
+        let missing_actions = !game_file_loader.file_exists(&actions_path);
+        if missing_sprite || missing_actions {
+            missing.push(MissingEntitySprite {
+                job_id,
+                folder,
+                sprite_name,
+                missing_sprite,
+                missing_actions,
+            });
+        }
+    }
+
+    missing.sort_by_key(|entry| entry.job_id.0);
+    Ok((total, missing))
+}
+
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
@@ -337,6 +383,96 @@ fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
     }
 }
 
+/// Human-readable emote descriptions by wire ID, ordered to match Hercules'
+/// emote constants (`Hercules/doc/constants_re.md` "Emotes"). Displayed in
+/// chat until emote bubbles are rendered above entities.
+fn emotion_name(emotion: u8) -> Option<&'static str> {
+    const EMOTION_NAMES: [&str; 81] = [
+        "surprised!",
+        "huh?",
+        "delighted",
+        "in love",
+        "sweating",
+        "aha!",
+        "annoyed",
+        "angry!",
+        "money eyes",
+        "speechless...",
+        "scissors",
+        "rock",
+        "paper",
+        "Korea flag",
+        "big hearts",
+        "thanks!",
+        "wailing",
+        "sorry",
+        "smirking",
+        "cold sweat",
+        "pondering",
+        "thumbs up",
+        "no way",
+        "shocked!",
+        "oh?",
+        "nope",
+        "help!",
+        "go!",
+        "sobbing",
+        "giggling",
+        "blows a kiss",
+        "kissing",
+        "hmph!",
+        "okay",
+        "zipped lips",
+        "Indonesia flag",
+        "buzzing",
+        "hungry",
+        "awesome!",
+        "meh",
+        "shy",
+        "pat pat",
+        "low SP",
+        "drooling",
+        "come here",
+        "yawning",
+        "congrats!",
+        "low HP",
+        "Philippines flag",
+        "Malaysia flag",
+        "Singapore flag",
+        "Brazil flag",
+        "camera flash",
+        "spinning",
+        "sighing",
+        "dumbfounded",
+        "shouting",
+        "despair (OTL)",
+        "rolls a 1",
+        "rolls a 2",
+        "rolls a 3",
+        "rolls a 4",
+        "rolls a 5",
+        "rolls a 6",
+        "India flag",
+        "love!",
+        "Russia flag",
+        "innocent",
+        "phone",
+        "mail",
+        "China flag",
+        "1 signal bar",
+        "2 signal bars",
+        "3 signal bars",
+        "humming",
+        "spaced out",
+        "oops!",
+        "spits",
+        "grr!",
+        "panic!",
+        "whispering",
+    ];
+    EMOTION_NAMES.get(emotion as usize).copied()
+}
+
 /// Strip extensions / padding from a server or loader map name (`izlude_in.gat`
 /// → `izlude_in`).
 fn normalize_map_base_name(map_file_name: &str) -> String {
@@ -438,6 +574,7 @@ pub struct Client {
     saved_packet_version: SupportedPacketVersion,
 
     particle_holder: ParticleHolder,
+    emote_bubbles: EmoteBubbles,
     point_light_manager: PointLightManager,
     effect_holder: EffectHolder,
     path_finder: PathFinder,
@@ -775,6 +912,7 @@ impl Client {
             let input_event_buffer = Vec::new();
 
             let particle_holder = ParticleHolder::default();
+            let emote_bubbles = EmoteBubbles::default();
             let point_light_manager = PointLightManager::new();
             let effect_holder = EffectHolder::default();
             let path_finder = PathFinder::default();
@@ -905,6 +1043,7 @@ impl Client {
             saved_username,
             saved_packet_version,
             particle_holder,
+            emote_bubbles,
             point_light_manager,
             effect_holder,
             path_finder,
@@ -1712,6 +1851,7 @@ impl Client {
                 NetworkEvent::ChangeMap { map_name, position } => {
                     self.map = None;
                     self.particle_holder.clear();
+                    self.emote_bubbles.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
@@ -2499,6 +2639,29 @@ impl Client {
                         .collect();
                 }
                 NetworkEvent::DisplayEmotion { entity_id, emotion } => {
+                    if emote_debug_enabled() {
+                        eprintln!(
+                            "[emote] DisplayEmotion entity={} emotion={} data_loaded={}",
+                            entity_id.0,
+                            emotion,
+                            self.emote_bubbles.has_animation_data()
+                        );
+                    }
+                    self.emote_bubbles.show(entity_id, emotion, client_tick);
+
+                    // The shared emotion sprite sheet loads lazily on the first
+                    // emote; until the async load completes the chat line below
+                    // is the only feedback.
+                    if !self.emote_bubbles.has_animation_data()
+                        && let Some(animation_data) = self.async_loader.request_animation_data_load(
+                            EMOTE_ANIMATION_ENTITY_ID,
+                            EntityType::Npc,
+                            vec![EMOTE_SPRITE_FILE.to_string()],
+                        )
+                    {
+                        self.emote_bubbles.set_animation_data(animation_data);
+                    }
+
                     let name = self
                         .client_state
                         .follow(client_state().entities())
@@ -2507,10 +2670,13 @@ impl Client {
                         .and_then(|entity| entity.get_details())
                         .map(|n| n.split('#').next().unwrap_or("Someone").to_owned())
                         .unwrap_or_else(|| "Someone".to_owned());
-                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("{name} uses emotion {emotion}."),
-                        MessageColor::Information,
-                    ));
+                    let text = match emotion_name(emotion) {
+                        Some(emote) => format!("{name}: {emote}"),
+                        None => format!("{name} uses emotion {emotion}."),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Information));
                 }
                 NetworkEvent::SkillCast {
                     source_entity_id, cast_ms, ..
@@ -4288,7 +4454,9 @@ impl Client {
         for completed in completed_loads {
             match completed {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
-                    if let Some(entity) = self
+                    if entity_id == EMOTE_ANIMATION_ENTITY_ID {
+                        self.emote_bubbles.set_animation_data(animation_data);
+                    } else if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
                         .iter_mut()
@@ -4717,6 +4885,7 @@ impl Client {
 
         // Update particles.
         self.particle_holder.update(delta_time as f32);
+        self.emote_bubbles.update(client_tick);
         self.effect_holder
             .update(self.client_state.follow(client_state().entities()), delta_time as f32);
 
@@ -4734,6 +4903,7 @@ impl Client {
         let update_shadow_camera_measurement = Profiler::start_measurement("update directional shadow camera");
 
         let lighting_mode = *self.client_state.follow(client_state().graphics_settings().lighting_mode());
+        let sprite_lighting_mode = *self.client_state.follow(client_state().graphics_settings().sprite_lighting_mode());
         let shadow_resolution = *self.client_state.follow(client_state().graphics_settings().shadow_resolution());
         let shadow_method = *self.client_state.follow(client_state().graphics_settings().shadow_method());
         let shadow_detail = *self.client_state.follow(client_state().graphics_settings().shadow_detail());
@@ -4992,6 +5162,7 @@ impl Client {
                 indicator_instruction: &mut indicator_instruction,
                 water_instruction: &mut water_instruction,
                 particle_holder: &mut self.particle_holder,
+                emote_bubbles: &self.emote_bubbles,
                 effect_holder: &mut self.effect_holder,
                 effect_renderer: &mut self.effect_renderer,
                 bottom_interface_renderer: &self.bottom_interface_renderer,
@@ -5060,6 +5231,7 @@ impl Client {
             animation_timer_ms,
             ambient_light_color: map.ambient_light_color(),
             enhanced_lighting: lighting_mode == LightingMode::Enhanced,
+            sprite_lighting_mode,
             shadow_method,
             shadow_detail,
             use_sdsm,
@@ -5332,6 +5504,7 @@ struct MapRenderContext<'a, 'm: 'a> {
     indicator_instruction: &'a mut Option<IndicatorInstruction>,
     water_instruction: &'a mut Option<WaterInstruction<'m>>,
     particle_holder: &'a mut ParticleHolder,
+    emote_bubbles: &'a EmoteBubbles,
     effect_holder: &'a mut EffectHolder,
     effect_renderer: &'a mut EffectRenderer,
     bottom_interface_renderer: &'a GameInterfaceRenderer,
@@ -5524,6 +5697,10 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_entities))]
         self.map
             .render_dead_entities(self.entity_instructions, dead_entities, entity_camera, self.client_tick);
+
+        #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_entities))]
+        self.emote_bubbles
+            .render(self.entity_instructions, entities, entity_camera, self.client_tick);
 
         #[cfg(feature = "debug")]
         if self.render_options.show_entities_debug {

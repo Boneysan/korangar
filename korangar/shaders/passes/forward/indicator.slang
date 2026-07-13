@@ -143,7 +143,7 @@ func fs_main(input: IndicatorVertexOutput) -> float4 {
             visibility_point = float(distance_to_light > closest_distance);
         }
 
-        let intensity = 10.0;
+        let intensity = POINT_LIGHT_INTENSITY;
         let attenuation = calculate_attenuation(light_distance, light.range);
         point_light_contribution += (light.color.rgb * intensity) * light_percent_point * attenuation * visibility_point;
     }

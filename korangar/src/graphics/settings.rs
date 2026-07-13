@@ -160,6 +160,51 @@ impl From<ShadowMethod> for u32 {
     }
 }
 
+/// How sprites (players, monsters, NPCs) respond to light direction. Sprite
+/// normals are synthesized from the camera, so a full Lambert response makes
+/// sprite brightness follow camera orbit. Only relevant when the lighting
+/// mode is `Enhanced`.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, StateElement)]
+pub enum SpriteLightingMode {
+    /// No directional response; sprites take the full scene light.
+    Classic,
+    /// Wrapped diffuse; bounded directional response that stays readable
+    /// from every camera angle.
+    Soft,
+    /// Full Lambert response against the synthesized normal.
+    Enhanced,
+}
+
+impl Default for SpriteLightingMode {
+    fn default() -> Self {
+        Self::Soft
+    }
+}
+
+impl DropDownItem<SpriteLightingMode> for SpriteLightingMode {
+    fn text(&self) -> &str {
+        match self {
+            Self::Classic => "Classic",
+            Self::Soft => "Soft",
+            Self::Enhanced => "Enhanced",
+        }
+    }
+
+    fn value(&self) -> SpriteLightingMode {
+        *self
+    }
+}
+
+impl From<SpriteLightingMode> for u32 {
+    fn from(value: SpriteLightingMode) -> Self {
+        match value {
+            SpriteLightingMode::Classic => 0,
+            SpriteLightingMode::Soft => 1,
+            SpriteLightingMode::Enhanced => 2,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum Msaa {
     Off,

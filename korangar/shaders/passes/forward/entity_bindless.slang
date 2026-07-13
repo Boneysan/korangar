@@ -163,7 +163,7 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
         var light_percent = 1.0;
 
         if (global_uniforms.enhanced_lighting != 0) {
-            light_percent = max(dot(light_direction, normal), 0.0);
+            light_percent = sprite_light_percent(global_uniforms.sprite_lighting, dot(light_direction, normal));
         }
 
         // Shadow calculation
@@ -220,7 +220,7 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
             let light_index = tile_light_indices[tile_index].indices[index];
             let light = point_lights[light_index];
             let light_direction_point = normalize(adjusted_world_position.xyz - light.position.xyz);
-            let light_percent_point = max(dot(light_direction_point, input.normal), 0.0);
+            let light_percent_point = sprite_light_percent(global_uniforms.sprite_lighting, dot(light_direction_point, input.normal));
             let light_distance = length(light.position.xyz - adjusted_world_position.xyz);
             var visibility_point = 1.0;
 
@@ -235,7 +235,7 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
                 visibility_point = float(distance_to_light > closest_distance);
             }
 
-            let intensity = 10.0;
+            let intensity = POINT_LIGHT_INTENSITY;
             let attenuation = calculate_attenuation(light_distance, light.range);
             point_light_contribution += (light.color.rgb * intensity) * light_percent_point * attenuation * visibility_point;
         }

@@ -85,6 +85,13 @@ impl Library {
         self.msgstringtable.resolve(message_id)
     }
 
+    pub(crate) fn job_identity_entries(&self) -> Vec<(ragnarok_packets::JobId, String)> {
+        self.job_identity_table
+            .iter()
+            .map(|(job_id, identity)| (*job_id, identity.to_string()))
+            .collect()
+    }
+
     pub(crate) fn skill_asset_entries(&self) -> Vec<(ragnarok_packets::SkillId, &str, &str)> {
         let visible_skill_ids = self
             .skill_tree_table

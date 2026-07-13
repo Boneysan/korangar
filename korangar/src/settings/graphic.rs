@@ -7,12 +7,15 @@ use rust_state::RustState;
 use serde::{Deserialize, Serialize};
 
 use crate::graphics::{
-    LimitFramerate, Msaa, PresentModeInfo, ScreenSpaceAntiAliasing, ShadowDetail, ShadowMethod, ShadowResolution, Ssaa, TextureSamplerType,
+    LimitFramerate, Msaa, PresentModeInfo, ScreenSpaceAntiAliasing, ShadowDetail, ShadowMethod, ShadowResolution, SpriteLightingMode, Ssaa,
+    TextureSamplerType,
 };
 
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
 pub struct GraphicsSettings {
     pub lighting_mode: LightingMode,
+    #[serde(default)]
+    pub sprite_lighting_mode: SpriteLightingMode,
     pub vsync: bool,
     pub limit_framerate: LimitFramerate,
     pub triple_buffering: bool,
@@ -31,6 +34,7 @@ impl Default for GraphicsSettings {
     fn default() -> Self {
         Self {
             lighting_mode: LightingMode::Enhanced,
+            sprite_lighting_mode: SpriteLightingMode::default(),
             vsync: true,
             limit_framerate: LimitFramerate::Unlimited,
             triple_buffering: true,
@@ -116,6 +120,7 @@ impl DropDownItem<LightingMode> for LightingMode {
 #[derive(RustState, StateElement)]
 pub struct GraphicsSettingsCapabilities {
     lighting_modes: Vec<LightingMode>,
+    sprite_lighting_modes: Vec<SpriteLightingMode>,
     texture_filtering_options: Vec<TextureSamplerType>,
     limit_framerate_options: Vec<LimitFramerate>,
     supported_msaa: Vec<Msaa>,
@@ -131,6 +136,7 @@ impl Default for GraphicsSettingsCapabilities {
     fn default() -> Self {
         Self {
             lighting_modes: vec![LightingMode::Classic, LightingMode::Enhanced],
+            sprite_lighting_modes: vec![SpriteLightingMode::Classic, SpriteLightingMode::Soft, SpriteLightingMode::Enhanced],
             texture_filtering_options: vec![
                 TextureSamplerType::Nearest,
                 TextureSamplerType::Linear,

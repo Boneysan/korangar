@@ -97,6 +97,8 @@ pub(crate) struct GlobalUniforms {
     shadow_method: u32,
     shadow_detail: u32,
     use_sdsm: u32,
+    sprite_lighting: u32,
+    padding: [u32; 3],
 }
 
 #[derive(Copy, Clone, Pod, Zeroable)]
@@ -476,6 +478,8 @@ impl Prepare for GlobalContext {
             shadow_method: instructions.uniforms.shadow_method.into(),
             shadow_detail: instructions.uniforms.shadow_detail.into(),
             use_sdsm: instructions.uniforms.use_sdsm as u32,
+            sprite_lighting: instructions.uniforms.sprite_lighting_mode.into(),
+            padding: [0; 3],
         };
 
         self.directional_light_uniforms = DirectionalLightUniforms {

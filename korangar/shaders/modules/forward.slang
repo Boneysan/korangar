@@ -88,6 +88,25 @@ public static const var SDSM_CONSTANT_DEPTH_BIAS: float = 0.0001;
 public static const var PPSM_CONSTANT_DEPTH_BIAS: float = 0.0005;
 public static const var EPSILON: float = 1.0e-7;
 public static const var BANDLIMITED_PI_HALF: float = 0.5 * 3.14159265359;
+public static const var SPRITE_LIGHT_WRAP_SCALE: float = 0.35;
+public static const var SPRITE_LIGHT_WRAP_BIAS: float = 0.65;
+public static const var POINT_LIGHT_INTENSITY: float = 14.0;
+
+// Sprite normals are synthesized from the camera direction, so a full Lambert
+// response makes a sprite's brightness swing with camera orbit rather than
+// with the scene. The wrapped response bounds that swing while keeping some
+// directional variation; Classic removes it entirely.
+[ForceInline]
+public func sprite_light_percent(sprite_lighting: uint, normal_dot_light: float) -> float {
+    switch (sprite_lighting) {
+        case 0: // Classic: no directional response.
+            return 1.0;
+        case 1: // Soft: wrapped diffuse.
+            return clamp(normal_dot_light * SPRITE_LIGHT_WRAP_SCALE + SPRITE_LIGHT_WRAP_BIAS, 0.0, 1.0);
+        default: // Enhanced: full Lambert.
+            return max(normal_dot_light, 0.0);
+    }
+}
 
 [ForceInline]
 public func get_shadow_offsets(normal: float3, light_direction: float3) -> float2 {

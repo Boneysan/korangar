@@ -2,6 +2,7 @@ use std::borrow::Cow;
 use std::fmt::{Display, Formatter};
 
 use hashbrown::HashMap;
+use korangar_loaders::FileLoader;
 use mlua::Lua;
 use ragnarok_packets::JobId;
 
@@ -59,6 +60,30 @@ impl Table for JobIdentity {
                 let cleaned_key = cleaned_key.replace("CHONCHON", "chocho");
 
                 result.insert(JobId(value), JobIdentity(cleaned_key.into()));
+            }
+        }
+
+        // The identity constants only match the sprite file name where Gravity
+        // kept them in sync; classic monsters diverge (JT_SOLDIER_SKELETON's
+        // sprite is skel_soldier.spr). jobname.lub is the table the original
+        // client resolves sprite resource names through, so prefer its entry
+        // wherever one exists. It references the jobtbl globals loaded above,
+        // which is why it executes in the same Lua state.
+        if let Ok(data) = game_file_loader.get("data\\luafiles514\\lua files\\datainfo\\jobname.lub")
+            && state.load(&data).exec().is_ok()
+            && let Ok(job_names) = globals.get::<mlua::Table>("JobNameTable")
+        {
+            for (key, value) in job_names.pairs::<u16, mlua::String>().flatten() {
+                let bytes = value.as_bytes();
+                let name = match std::str::from_utf8(&bytes) {
+                    Ok(text) => text.to_owned(),
+                    // Sprite file names for classic monsters are EUC-KR.
+                    Err(_) => match encoding_rs::EUC_KR.decode_without_bom_handling_and_without_replacement(&bytes) {
+                        Some(text) => text.to_string(),
+                        None => continue,
+                    },
+                };
+                result.insert(JobId(key), JobIdentity(name.into()));
             }
         }
 

@@ -47,6 +47,18 @@ where
                     }
                 )
             },
+            split! {
+                children: (
+                    text! {
+                        text: "Sprite lighting",
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    },
+                    drop_down! {
+                        selected: self.settings_path.sprite_lighting_mode(),
+                        options: self.capabilities_path.sprite_lighting_modes(),
+                    }
+                )
+            },
             state_button! {
                 text: "Triple buffering",
                 state: self.settings_path.triple_buffering(),

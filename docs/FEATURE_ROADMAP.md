@@ -109,6 +109,19 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Buff/debuff bars** with duration timers, sorting, and right-click-to-cancel. *First slice specced: [specs/buff-bar-slice.md](specs/buff-bar-slice.md) — the template build for §8.3 promotions.*
   - **Cast bars** (self + target) with interrupt/uninterruptible indicators.
   - **Target / target-of-target / focus frames.**
+  - **Mob skill-cast flavor lines:** no-damage skill casts from mobs/NPCs are
+    currently invisible (the heal-number filter added 2026-07-13 intentionally
+    suppresses them). `DisplaySkillEffectNoDamagePacket` carries caster + skill
+    ID, so surface a flavor line ("The Whisper shimmers and fades away…") in
+    chat or as overhead text — great DM-table atmosphere for AI casts like
+    Cloaking, Hallucination, or buffs.
+  - **Emote bubbles** *(implemented 2026-07-13)*: `DisplayEmotion` events play
+    the matching `이팩트\emotion.spr`/`.act` action as a billboard at the
+    entity (`world/emote.rs`, `AnimationData::render_action_frame`), playing
+    once with the wire emote ID as the ACT action index. The chat line
+    ("Sage Worm: hmph!") is retained as a log. Remaining polish: verify the
+    ID→action alignment across the full emote range (dice, flags), and
+    per-entity-height anchoring if tall bosses overlap their bubble.
 
 - [ ] **Core windows — RO daily-drivers** *(extend existing Korangar windows, not build from scratch; surveyed 2026-07-05)*:
   - **Inventory & storage** — extend `inventory.rs` (today a bare ~58-line grid) with

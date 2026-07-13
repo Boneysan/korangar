@@ -323,6 +323,47 @@ impl AnimationData {
         (texture_size, texture_position)
     }
 
+    /// Total play time of one action in milliseconds, ignoring animation
+    /// state factors. Used for one-shot playback like emote bubbles.
+    pub fn action_duration_ms(&self, action_index: usize) -> u32 {
+        let delay = self.delays[action_index % self.delays.len()];
+        let animation = &self.animations[action_index % self.animations.len()];
+        (animation.frames.len() as f32 * delay * 50.0) as u32
+    }
+
+    /// Renders a single action selected by raw index with no direction
+    /// handling, playing once and holding the last frame. Emote bubbles use
+    /// the wire emote ID as the action index into `emotion.act`. Returns
+    /// false if the action has no renderable frames.
+    pub fn render_action_frame(
+        &self,
+        instructions: &mut Vec<EntityInstruction>,
+        camera: &dyn Camera,
+        entity_id: EntityId,
+        entity_position: Point3<f32>,
+        action_index: usize,
+        time_ms: u32,
+    ) -> bool {
+        if self.animations.is_empty() || self.delays.is_empty() {
+            return false;
+        }
+
+        let delay = self.delays[action_index % self.delays.len()];
+        let animation = &self.animations[action_index % self.animations.len()];
+
+        if animation.frames.is_empty() {
+            return false;
+        }
+
+        let frame_time_ms = delay * 50.0;
+        let frame_index = ((time_ms as f32 / frame_time_ms) as usize).min(animation.frames.len() - 1);
+        let frame = &animation.frames[frame_index];
+
+        let world_matrix = self.calculate_world_matrix(camera, frame, entity_position, 1.0);
+        self.push_frame_instructions(instructions, camera, frame, world_matrix, entity_id, false, 1.0);
+        true
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn render(
         &self,
@@ -338,7 +379,20 @@ impl AnimationData {
     ) {
         let frame = self.get_frame(animation_state, camera, direction);
         let world_matrix = self.calculate_world_matrix(camera, frame, entity_position, scale);
+        self.push_frame_instructions(instructions, camera, frame, world_matrix, entity_id, add_to_picker, fade_alpha);
+    }
 
+    #[allow(clippy::too_many_arguments)]
+    fn push_frame_instructions(
+        &self,
+        instructions: &mut Vec<EntityInstruction>,
+        camera: &dyn Camera,
+        frame: &AnimationFrame,
+        world_matrix: Matrix4<f32>,
+        entity_id: EntityId,
+        add_to_picker: bool,
+        fade_alpha: f32,
+    ) {
         for (index, frame_part) in frame.frame_parts.iter().enumerate() {
             let animation_index = frame_part.animation_index;
             let sprite_number = frame_part.sprite_number;
