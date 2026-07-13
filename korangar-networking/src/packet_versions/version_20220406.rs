@@ -646,14 +646,26 @@ where
         duration_ms: packet.remaining_in_milliseconds,
         remaining_ms: packet.remaining_in_milliseconds,
     })?;
-    packet_handler.register_noop::<QuestNotificationPacket1>()?;
-    packet_handler.register_noop::<QuestNotificationPacket4>()?;
+    packet_handler.register(|packet: QuestNotificationPacket1| NetworkEvent::QuestAdded {
+        quest_id: packet.quest_id,
+        active: packet.active != 0,
+    })?;
+    packet_handler.register(|packet: QuestNotificationPacket4| NetworkEvent::QuestAdded {
+        quest_id: packet.quest_id,
+        active: packet.active != 0,
+    })?;
     packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
-    packet_handler.register_noop::<QuestRemovedPacket>()?;
-    packet_handler.register_noop::<QuestListPacket>()?;
-    packet_handler.register_noop::<QuestListPacket4>()?;
+    packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved {
+        quest_id: packet.quest_id,
+    })?;
+    packet_handler.register(|packet: QuestListPacket| NetworkEvent::QuestList {
+        quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
+    })?;
+    packet_handler.register(|packet: QuestListPacket4| NetworkEvent::QuestList {
+        quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
+    })?;
     packet_handler.register(|packet: VisualEffectPacket| {
         let VisualEffectPacket { entity_id, effect } = packet;
 

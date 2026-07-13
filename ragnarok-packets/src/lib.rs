@@ -5937,6 +5937,15 @@ mod tests {
     }
 
     #[test]
+    fn quest_removed_packet_matches_20220406_layout() {
+        // 0x02B4 ZC_DEL_QUEST: header + quest_id. Drives NetworkEvent::QuestRemoved
+        // (exercised live by the headless dm-quest-lifecycle scenario).
+        let bytes = [0xB4, 0x02, 0x21, 0x4E, 0x00, 0x00]; // quest_id = 20001
+        let packet = read_packet::<QuestRemovedPacket>(&bytes);
+        assert_eq!(packet.quest_id, 20001);
+    }
+
+    #[test]
     fn notify_actor_init_packet_matches_20220406_layout() {
         read_packet::<NotifyActorInitPacket>(&[0x1B, 0x0B]);
     }

@@ -263,6 +263,19 @@ pub enum NetworkEvent {
     RemoveQuestEffect {
         entity_id: EntityId,
     },
+    /// A quest was added to the quest log (`ZC_ADD_QUEST` family).
+    QuestAdded {
+        quest_id: u32,
+        active: bool,
+    },
+    /// A quest was erased from the quest log (`ZC_DEL_QUEST`).
+    QuestRemoved {
+        quest_id: u32,
+    },
+    /// The full quest log, sent after map login (`ZC_ALL_QUEST_LIST` family).
+    QuestList {
+        quest_ids: Vec<u32>,
+    },
     SetInventory {
         items: Vec<InventoryItem<NoMetadata>>,
     },

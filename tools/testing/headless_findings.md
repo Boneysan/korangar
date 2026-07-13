@@ -12,15 +12,51 @@ All findings are classified by layer:
 ## Summary of Recent Resolutions (July 2026)
 
 The original 73 integration tests—including all 39 job class skill sweeps and
-phase 6/7 item/dialogue loops—passed as a complete run. The expanded suite now
-contains 91 scenarios; its newly added lifecycle, skill-menu, multi-client, and DM cases
-must be reported separately until they complete a clean full run.
+phase 6/7 item/dialogue loops—passed as a complete run. The suite now contains
+**110 scenarios** after the July 12 Phase 9 DM suite (14) and straggler additions
+(`weapon-refine-cancel`, `repair-list-empty`, `repair-invalid-item`,
+`character-slot-switch`). Phase 9 passes as a `--scenario phase9` run; the full
+`--scenario all` double-run acceptance gate is still pending.
+
+## DM suite (Phase 9) server-side fixes — July 12, 2026
+
+Bugs the Phase 9 headless scenarios found and fixed in `Hercules/` (Server Emulator
+layer — no client port; each ships in the campaign scripts or map-server source):
+
+| Finding | Found by | Layer | Root cause & resolution |
+| :--- | :--- | :--- | :--- |
+| `@roll NdX` (no modifier) leaked a spurious modifier | `dm-roll-bounds` | Server script (`dm_console.txt`) | `sscanf(input, "%dd%d+%d", …)` was tried first and partially matched modifier-less input, so `1d1` rolled as `1d2+1`. Now the format is chosen by the sign actually present in the string (`compare()` on `+`/`-`). |
+| `@dminstance` untrackable when instance id is 0 | `dm-instance-lifecycle` | Server script (`dm_instances.txt`) | The live-instance record stored the raw instance id, and ids start at 0, so the first instance after a boot read back as "no instance". Record now stores `id + 1` (0 = none). |
+| Freshly created instance did not warp the party in | `dm-instance-lifecycle` | Server script (`dm_instances.txt`) | `instance_warpall` only moves players already standing on the instance's maps; right after creation nobody is. Replaced with an explicit `DM_WarpParty` into the new map. |
+| Map-server crash on map-load after instance destroy | `dm-instance-lifecycle` | **Map-server source (`src/map/instance.c`)** | `instance_add_map` `memcpy`s the whole `map_data`, shallow-copying the source map's `qi_list` questinfo vector; destroying the instance `VECTOR_CLEAR`ed it and freed the source map's array, so the next `LoadEndAck` dereferenced freed memory in `quest_questinfo_refresh`. Fixed with `VECTOR_INIT(map->list[im].qi_list)` right after the copy (instanced NPC clones carry no questinfo of their own). Requires a map-server rebuild. |
+| Colons in beat-menu labels split every menu | `dm-beat-table` | Server script (`dm_beats.txt`) | `select()` uses `:` as its option separator, so `"Warp: Wynne"` became two menu items and every choice after the first mapped to the wrong `switch` case. Only clicking the very first option ever worked (which is why manual testing missed it). Replaced `Warp: `/`Beat: ` label prefixes with `Warp - `/`Beat - ` (162 labels). |
+
+## Phase 9 / straggler design deltas vs headless_remaining_test_design.md
+
+- **`dm-roll-bounds`**: `1d1` cannot total 1 — the server clamps dice sides to ≥2, so
+  `1d1` behaves as `1d2` (asserted range `1..=2`). The design doc's "1d1 must equal 1"
+  is not achievable without a server rule change.
+- **quest coverage is `dm-quest-lifecycle`, not `dm-quest-markers`**: `@dmquest`
+  drives the quest *log* (modeled as new `QuestAdded`/`QuestRemoved`/`QuestList`
+  events, converted from noops in `version_20220406.rs`), not on-map quest *effect*
+  bubbles. Quest-effect markers (`AddQuestEffect`) come from campaign NPC `questinfo`
+  blocks and are covered incidentally; a dedicated marker scenario would need a beat
+  that attaches a marker deterministically.
+- **`dm-beat-table` scope**: verifies every arc beat menu opens with a stable choice
+  list and every `Warp:` beat changes the map (59 warp beats). Story/encounter beats
+  are catalogued (103) but not executed — they spawn bosses and mutate campaign flags
+  (content, not protocol), and leave NPC dialog state that made a full drive flaky.
+- **`dm-reward-delta` zeny baseline** reads the wallet via an explicit `@zeny +1/-1`
+  round trip; the map-login burst does not reliably emit a tracked `Zeny` stat update.
+- **instanced-map name**: the shared crate reports the client resource name (the part
+  after `#`, e.g. `000#pronter` → `pronter`); the scenario normalizes on `#`. Resource-
+  name resolution for instanced town maps remains a graphical-client presentation gap.
 
 ## Open findings from the expanded suite (July 12, 2026)
 
 | Finding / Issue | Affected Scenarios | Layer | Current evidence |
 | :--- | :--- | :--- | :--- |
-| Character-slot success requires entitlement | `character-slot-switch-rejected` | Test fixture / server configuration | The primary fixture has `slotchange=0`. The automated scenario now verifies the explicit rejection and cleans up its disposable character. A success/persistence case requires a separate entitled fixture. |
+| Character-slot success requires entitlement | `character-slot-switch-rejected`, `character-slot-switch` | Test fixture / server configuration | The GM fixture has `slotchange=0` (keeps the rejection scenario valid). The success/persistence case runs on the `headless2` partner character after a one-time `tools/testing/fixtures/grant-slotchange.sql` grant. Both scenarios now exist and pass. |
 | Partner registration connection closes after creation | phase 8 scenarios on a fresh server | Client test harness | Hercules created the `_M` account but closed that registration connection. The harness now retries once using the stable username instead of repeatedly sending the registration suffix. |
 | Interrupted partner session can remain online | phase 8 after Ctrl-C | Server emulator / fixture hygiene | An interrupted two-client run can leave the partner account unavailable until Hercules clears its online state. Normal `TestContext` drops perform acknowledged logout; forced termination cannot. |
 
@@ -41,6 +77,10 @@ This is the port checklist for scenarios added after the original 73-scenario ru
 | Partner registration/retry and cleanup | Headless fixture harness only | Do not port; these helpers only make integration tests repeatable. |
 | Skill icon audit | Graphical resource loader/library | Run `cargo run -p korangar --bin skill-asset-audit` with configured archives; zero missing player-visible assets is required. |
 | `repair-weapon-cancel`, `repair-weapon-success` | Shared modern Repair Weapon packets/events/API plus graphical selection window | Ported; both scenarios pass live. Graphical core flow was verified on macOS 2026-07-12: the window offered Sword, selection repaired it, and named success feedback appeared. Window resize/move and graphical Cancel remain presentation checks. |
+| `repair-list-empty`, `repair-invalid-item`, `weapon-refine-cancel` | Shared skill/repair/refine packets and events | Shared automatically. Negative paths (no list opens; a vanished target reports no success; cancel clears pending menu state) are wire behavior. No new graphical surface. |
+| `character-slot-switch` (success + persistence) | Shared character-server event mapping | Shared automatically. Graphical check still needs a `slotchange > 0` character; apply `tools/testing/fixtures/grant-slotchange.sql` to the fixture. |
+| DM quest lifecycle (`dm-quest-lifecycle`) | **New** `QuestAdded`/`QuestRemoved`/`QuestList` events (converted from noops in `version_20220406.rs`) | Shared automatically. The graphical client currently ignores these three events (no quest-log window yet); they are wired for the headless tester and a future quest log. When a quest-log UI lands, consume them there. |
+| DM warp/recall, hazard, instance, reward, exp, beat sweep | Shared warp/stat/map/inventory/experience events + `ChatMessage` feedback | Protocol behavior shared automatically. Graphically verify the GM/DM panel buttons that issue these commands and that map changes / feedback render. Instanced town-map resource-name resolution (`000#pronter` → `pronter`) is an open graphical gap. |
 
 ### Port completion rule
 

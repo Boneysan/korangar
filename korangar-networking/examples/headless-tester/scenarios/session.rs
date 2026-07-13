@@ -14,6 +14,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("bad-password", 1, bad_password),
         Scenario::new("character-create-delete", 1, character_create_delete),
         Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
+        Scenario::new("character-slot-switch", 1, character_slot_switch),
         Scenario::new("logout-relogin", 1, logout_relogin),
         Scenario::new("respawn", 1, respawn),
     ]
@@ -63,6 +64,80 @@ fn character_slot_switch_rejected(config: &Config) -> Result<(), String> {
         _ => None,
     })
     .map_err(|error| format!("temporary-character cleanup: {error}"))??;
+    Ok(())
+}
+
+/// Slot-switch success and persistence on the entitled partner character.
+///
+/// Slot moves are gated per character by the `slotchange` column of the
+/// `char` table (this Hercules build has no config to enable them globally),
+/// so the partner character needs the one-time SQL fixture in
+/// `tools/testing/fixtures/grant-slotchange.sql`. The GM character keeps
+/// `slotchange = 0` so `character-slot-switch-rejected` stays valid.
+fn character_slot_switch(config: &Config) -> Result<(), String> {
+    const PARTNER_CHARACTER: &str = "HeadlessTwo";
+
+    let connect = |config: &Config| connect_to_character_select_as(config, &config.partner_username, &config.partner_password);
+
+    let (mut session, characters) = connect(config).map_err(|error| {
+        format!("partner account unavailable (run a phase 8 scenario once to create it): {error}")
+    })?;
+    let character = characters
+        .iter()
+        .find(|character| character.name == PARTNER_CHARACTER)
+        .ok_or_else(|| format!("partner character {PARTNER_CHARACTER} not found (run a phase 8 scenario once to create it)"))?
+        .clone();
+
+    let origin_slot = character.character_number as usize;
+    let used_slots: Vec<usize> = characters.iter().map(|entry| entry.character_number as usize).collect();
+    let target_slot = (0..9usize)
+        .find(|slot| !used_slots.contains(slot))
+        .ok_or("no free character slot on the partner account")?;
+
+    let switch = |session: &mut CharSession, from: usize, to: usize, timeout| {
+        session.0.switch_character_slot(from, to).map_err(|_| "disconnected")?;
+        wait_char_event(session, timeout, &mut |event| match event {
+            NetworkEvent::CharacterSlotSwitched => Some(Ok(())),
+            NetworkEvent::CharacterSlotSwitchFailed => Some(Err(
+                "slot switch rejected — grant the entitlement fixture with tools/testing/fixtures/grant-slotchange.sql".to_owned(),
+            )),
+            _ => None,
+        })?
+    };
+
+    switch(&mut session, origin_slot, target_slot, config.timeout)?;
+    drop(session);
+    sleep(Duration::from_millis(700));
+
+    // The move must persist across a fresh character-server session.
+    let (mut session, characters) = connect(config)?;
+    let moved = characters
+        .iter()
+        .find(|entry| entry.character_id == character.character_id)
+        .ok_or("partner character vanished after slot switch")?;
+    if moved.character_number as usize != target_slot {
+        return Err(format!(
+            "character sits in slot {} after relogin, expected {target_slot}",
+            moved.character_number
+        ));
+    }
+
+    // Restore the original slot and verify that persists too.
+    switch(&mut session, target_slot, origin_slot, config.timeout)?;
+    drop(session);
+    sleep(Duration::from_millis(700));
+
+    let (_, characters) = connect(config)?;
+    let restored = characters
+        .iter()
+        .find(|entry| entry.character_id == character.character_id)
+        .ok_or("partner character vanished after restoring its slot")?;
+    if restored.character_number as usize != origin_slot {
+        return Err(format!(
+            "character sits in slot {} after restore, expected {origin_slot}",
+            restored.character_number
+        ));
+    }
     Ok(())
 }
 
@@ -207,12 +282,20 @@ type CharSession = (NetworkingSystem<crate::ledger::Ledger>, korangar_networking
 
 /// Connect up to (and including) the character list, without selecting.
 fn connect_to_character_select(config: &Config) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
+    connect_to_character_select_as(config, &config.username, &config.password)
+}
+
+fn connect_to_character_select_as(
+    config: &Config,
+    username: &str,
+    password: &str,
+) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
     let mut last_error = String::new();
     for attempt in 0..4 {
         if attempt > 0 {
             sleep(Duration::from_secs(4));
         }
-        match try_connect_to_character_select(config) {
+        match try_connect_to_character_select(config, username, password) {
             Ok(session) => return Ok(session),
             Err(error) => last_error = error,
         }
@@ -220,9 +303,13 @@ fn connect_to_character_select(config: &Config) -> Result<(CharSession, Vec<ragn
     Err(last_error)
 }
 
-fn try_connect_to_character_select(config: &Config) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
+fn try_connect_to_character_select(
+    config: &Config,
+    username: &str,
+    password: &str,
+) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
     let (mut net, buffer) = NetworkingSystem::spawn_with_callback(config.ledger.clone());
-    net.connect_to_login_server(PACKET_VERSION, config.server, config.username.clone(), config.password.clone());
+    net.connect_to_login_server(PACKET_VERSION, config.server, username.to_owned(), password.to_owned());
 
     let mut session = (net, buffer);
 

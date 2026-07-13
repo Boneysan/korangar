@@ -23,6 +23,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
+        Scenario::new("repair-list-empty", 6, repair_list_empty),
+        Scenario::new("repair-invalid-item", 6, repair_invalid_item),
     ]
 }
 
@@ -88,6 +90,75 @@ fn repair_weapon_success(config: &Config) -> Result<(), String> {
         } if *inventory_index == expected_index => Some(()),
         _ => None,
     })
+}
+
+/// Casting Repair Weapon with no broken equipment anywhere must not open a
+/// repair list (the skill simply fails server-side).
+fn repair_list_empty(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(10)?;
+    context.say("@allskill")?;
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(400));
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == BS_REPAIRWEAPON)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+    context.flush();
+    context
+        .net
+        .cast_skill(BS_REPAIRWEAPON, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_millis(1500));
+    if events
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::RepairableItemList { .. }))
+    {
+        return Err("Repair Weapon opened a repair list with nothing broken".to_owned());
+    }
+    Ok(())
+}
+
+/// Selecting a repair target that vanished between the list and the response
+/// must not succeed or corrupt anything, and a fresh repair must still work.
+fn repair_invalid_item(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let (_, stale_item) = prepare_repair(&mut context)?;
+
+    // The listed weapon disappears before we answer the menu.
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(400));
+    context.flush();
+    context.net.request_item_repair(stale_item).map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_millis(1500));
+    if events.iter().any(|event| {
+        matches!(
+            event,
+            NetworkEvent::ItemRepairResult { success: true, .. } | NetworkEvent::IventoryItemAdded { .. }
+        )
+    }) {
+        return Err("repairing a vanished item reported success or mutated the inventory".to_owned());
+    }
+
+    // The session must still support a full, valid repair afterwards.
+    let (_, item) = prepare_repair(&mut context)?;
+    context.give_item(1002, 1)?; // Iron Ore for a level-one weapon.
+    let expected_index = ragnarok_packets::InventoryIndex(item.inventory_index.0);
+    context.flush();
+    context.net.request_item_repair(item).map_err(|_| "disconnected")?;
+    context.wait_for("successful ItemRepairResult after invalid attempt", |event| match event {
+        NetworkEvent::ItemRepairResult {
+            inventory_index,
+            success: true,
+        } if *inventory_index == expected_index => Some(()),
+        _ => None,
+    })?;
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(200));
+    Ok(())
 }
 
 /// Give ourselves a Red Potion and use it, verifying it heals us and gets

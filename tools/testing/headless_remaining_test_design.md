@@ -4,6 +4,17 @@ Implementation-ready specification for closing the remaining Korangar/Hercules
 integration backlog. This document complements `headless_test_plan.md`; it defines
 fixtures, scenario names, exact assertions, cleanup rules, and acceptance gates.
 
+> **Status (2026-07-12):** The Phase 9 DM suite and the skill-menu/repair
+> stragglers below are **implemented and green**. See `headless_findings.md`
+> ("DM suite server-side fixes" and "Phase 9 / straggler design deltas") for the
+> bugs this work surfaced and where the implementation deviates from the sections
+> below (notably: `1d1` cannot equal 1 — sides clamp to ≥2; quest coverage is a
+> quest-*log* lifecycle scenario via new `QuestAdded/Removed/List` events rather
+> than `dm-quest-markers`; and `dm-beat-table` runs all 19 arc menus + all 59 warp
+> beats but catalogues rather than executes story/encounter beats). Still
+> outstanding: the destructive-lifecycle create/delete/relogin refinements in §4,
+> and the full `--scenario all` double-run acceptance gate.
+
 ## 1. Scope and completion boundary
 
 Headless tests own protocol serialization, packet framing, `NetworkEvent` mapping,

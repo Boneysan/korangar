@@ -21,6 +21,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("teleport-cancel", 5, teleport_cancel),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
+        Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
         // --- Basic Classes ---
         Scenario::new("skills-novice", 5, |config| sweep_job(config, 0, "Novice")),
         Scenario::new("skills-swordman", 5, |config| sweep_job(config, 1, "Swordman")),
@@ -190,6 +191,59 @@ fn weapon_refine_success(config: &Config) -> Result<(), String> {
         }
         _ => None,
     })
+}
+
+/// Cancelling the refine selection must produce no result and no inventory
+/// change, and must clear the server's pending menu state so the skill can be
+/// cast again immediately.
+fn weapon_refine_cancel(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(400));
+    let index = context.give_item(1101, 1)?;
+
+    context.flush();
+    context
+        .net
+        .cast_skill(WS_WEAPONREFINE, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("RefinableWeaponList", |event| match event {
+        NetworkEvent::RefinableWeaponList { weapons } if weapons.iter().any(|weapon| weapon.inventory_index == index) => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.net.cancel_weapon_refine().map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_secs(1));
+    for event in &events {
+        match event {
+            NetworkEvent::WeaponRefineResult { .. } => {
+                return Err("refine cancellation produced a refine result".to_owned());
+            }
+            NetworkEvent::InventoryItemRemoved { index: removed, .. } if *removed == index => {
+                return Err("refine cancellation consumed the weapon".to_owned());
+            }
+            _ => {}
+        }
+    }
+
+    // The pending menu state must be cleared: a second cast reopens the list.
+    context.flush();
+    context
+        .net
+        .cast_skill(WS_WEAPONREFINE, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("RefinableWeaponList after cancel", |event| match event {
+        NetworkEvent::RefinableWeaponList { weapons } if weapons.iter().any(|weapon| weapon.inventory_index == index) => Some(()),
+        _ => None,
+    })?;
+    context.net.cancel_weapon_refine().map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(300));
+
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(200));
+    Ok(())
 }
 
 /// Skills that legitimately produce no direct cast response headlessly

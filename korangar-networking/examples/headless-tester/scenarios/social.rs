@@ -19,7 +19,7 @@ pub fn scenarios() -> Vec<Scenario> {
     ]
 }
 
-fn connect_pair(config: &Config) -> Result<(TestContext, TestContext), String> {
+pub(super) fn connect_pair(config: &Config) -> Result<(TestContext, TestContext), String> {
     let mut primary = TestContext::connect(config)?;
     let mut partner = TestContext::connect_partner(config)?;
     // The partner is deliberately non-GM and cannot use @warp. Bring the GM
@@ -125,7 +125,7 @@ fn friend_reject(config: &Config) -> Result<(), String> {
     })
 }
 
-fn create_party(primary: &mut TestContext) -> Result<(), String> {
+pub(super) fn create_party(primary: &mut TestContext) -> Result<(), String> {
     primary.flush();
     let party_name = format!("Headless{}", std::process::id() % 100000);
     primary.net.create_party(&party_name).map_err(|_| "primary disconnected")?;
@@ -133,6 +133,45 @@ fn create_party(primary: &mut TestContext) -> Result<(), String> {
         NetworkEvent::CreatePartyResult { result: 0 } => Some(()),
         _ => None,
     })
+}
+
+/// Best-effort: leave any party a previous (possibly interrupted) run left
+/// behind, so `create_party` starts from a clean slate.
+pub(super) fn ensure_no_party(context: &mut TestContext) {
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(300));
+    context.flush();
+}
+
+/// Create a party on the primary and pull the partner into it, waiting out
+/// the full invite/accept round trip.
+pub(super) fn form_party(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
+    ensure_no_party(primary);
+    ensure_no_party(partner);
+    create_party(primary)?;
+    partner.flush();
+    primary
+        .net
+        .invite_to_party(&partner.character_name)
+        .map_err(|_| "primary disconnected")?;
+    let party_id = partner.wait_for("PartyInvite", |event| match event {
+        NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+        _ => None,
+    })?;
+    partner.net.accept_party_invite(party_id).map_err(|_| "partner disconnected")?;
+    primary.wait_for("PartyMemberAdded", |event| match event {
+        NetworkEvent::PartyMemberAdded { member } if member.player_name == partner.character_name => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+/// Dissolve the party formed by `form_party` (best-effort, for cleanup).
+pub(super) fn leave_party_both(primary: &mut TestContext, partner: &mut TestContext) {
+    let _ = partner.net.leave_party();
+    partner.pump(Duration::from_millis(300));
+    let _ = primary.net.leave_party();
+    primary.pump(Duration::from_millis(300));
 }
 
 fn party_lifecycle(config: &Config) -> Result<(), String> {

@@ -307,8 +307,32 @@ needed to route the fix:
 | 5 Skill sweep | ✅ 39 job sweeps implemented and green | done |
 | 6 Items/economy | ✅ implemented and green | done |
 | 7 NPC dialogue | ✅ implemented and green | done |
-| 8 Multi-client social | not started (needs 2nd account) | P2 |
-| 9 DM campaign suite | not started | **P1 — fork-critical, resumes paused DM testing** |
+| 8 Multi-client social | ✅ implemented and green (partner account `headless2`, `DualContext` helpers in social.rs) | done |
+| 9 DM campaign suite | ✅ 14 scenarios implemented and green | done |
 | 10 Coverage ledger | ✅ implemented | done |
 
 Suggested build order: **2 → 10 (callback) → 3 → 4 → 5 → 9 → 6 → 7 → 8**.
+
+### Phase 9 implementation status (2026-07-12)
+
+All 14 Phase 9 scenarios pass individually and as a `--scenario phase9` run:
+`dm-roll`, `dm-roll-hidden`, `dm-roll-override`, `dm-roll-bounds`, `dm-command-help`,
+`dm-command-contract`, `dm-flags-status`, `dm-quest-lifecycle`, `dm-reward-delta`,
+`dm-experience`, `dm-warp-recall`, `dm-hazard-periodic`, `dm-instance-lifecycle`,
+`dm-beat-table` (sweeps all 19 arc beat menus; verifies all 59 warp beats change maps).
+Party scenarios reuse `social.rs::{connect_pair, form_party, leave_party_both}`.
+
+Server-side fixes this suite forced (all in `Hercules/`, see findings log): a `@roll`
+sscanf format-selection bug, three `@dminstance` bugs (instance-id-0 tracking,
+`instance_warpall` not moving freshly-created parties, a `map_data` qi_list
+double-free crash in `src/map/instance.c`), and colons in `dm_beats.txt` beat-menu
+labels (the RO `select()` option separator) that had silently misaligned every
+non-first menu choice.
+
+### Straggler scenarios closed (2026-07-12)
+- `weapon-refine-cancel` (phase 5), `repair-list-empty` + `repair-invalid-item`
+  (phase 6): all green.
+- `character-slot-switch` (phase 1): success + persistence on the `headless2`
+  partner character; needs the one-time `tools/testing/fixtures/grant-slotchange.sql`
+  entitlement grant (the GM character stays `slotchange=0` so the rejection scenario
+  remains valid).

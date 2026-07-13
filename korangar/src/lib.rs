@@ -1969,6 +1969,11 @@ impl Client {
                     }
                 }
                 NetworkEvent::RemoveQuestEffect { entity_id } => self.particle_holder.remove_quest_icon(entity_id),
+                // The quest log has no UI yet; these events exist for the
+                // headless tester and a future quest-log window.
+                NetworkEvent::QuestAdded { .. } => {}
+                NetworkEvent::QuestRemoved { .. } => {}
+                NetworkEvent::QuestList { .. } => {}
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
                         .follow_mut(client_state().inventory())
