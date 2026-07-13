@@ -113,12 +113,24 @@ impl From<JobId> for EntityType {
     fn from(job_id: JobId) -> Self {
         match job_id.0 {
             45 => EntityType::Warp,
-            111 => EntityType::Hidden,
+            111 | 139 => EntityType::Hidden,
             0..=44 | 4000..=5999 => EntityType::Player,
             46..=999 | 10000..=19999 => EntityType::Npc,
             1000..=3999 | 20000..=29999 => EntityType::Monster,
             _ => EntityType::Npc,
         }
+    }
+}
+
+#[cfg(test)]
+mod entity_type_tests {
+    use ragnarok_packets::JobId;
+
+    use super::EntityType;
+
+    #[test]
+    fn modern_hidden_warp_npc_is_not_rendered() {
+        assert_eq!(EntityType::from(JobId(139)), EntityType::Hidden);
     }
 }
 

@@ -11,7 +11,7 @@ use korangar_networking::{
     DisconnectReason, EntityData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SupportedPacketVersion,
 };
 use ragnarok_packets::{
-    AccountId, CharacterInformation, Direction, EntityId, InventoryIndex, JobId, SkillInformation, TilePosition, WorldPosition,
+    AccountId, CharacterId, CharacterInformation, Direction, EntityId, InventoryIndex, JobId, SkillInformation, TilePosition, WorldPosition,
 };
 
 use crate::ledger::Ledger;
@@ -46,6 +46,7 @@ pub struct TestContext {
 
     // --- identity ---
     pub account_id: AccountId,
+    pub character_id: CharacterId,
     pub player_id: EntityId,
     pub character_name: String,
     pub characters: Vec<CharacterInformation>,
@@ -110,6 +111,7 @@ impl TestContext {
             event_log: Vec::new(),
             timeout: config.timeout,
             account_id: AccountId(0),
+            character_id: CharacterId(0),
             player_id: EntityId(0),
             character_name: String::new(),
             characters: Vec::new(),
@@ -191,6 +193,7 @@ impl TestContext {
             .unwrap()
             .clone();
         context.character_name = info.name.clone();
+        context.character_id = info.character_id;
         context.job_id = info.job_id;
         context.base_level = info.base_level as u32;
 
@@ -214,6 +217,54 @@ impl TestContext {
         context.pump(Duration::from_millis(800));
 
         Ok(context)
+    }
+
+    /// Connect the configured second account, registering it and creating a
+    /// character on first use. Hercules' `_M` suffix is only sent for the
+    /// registration attempt; subsequent runs use the stable account name.
+    pub fn connect_partner(config: &Config) -> Result<Self, String> {
+        const CHARACTER_NAME: &str = "HeadlessTwo";
+        match Self::connect_as(
+            config,
+            &config.partner_username,
+            &config.partner_password,
+            Some(CHARACTER_NAME),
+            Some(CHARACTER_NAME),
+        ) {
+            Ok(context) => Ok(context),
+            Err(first_error) if first_error.contains("login failed") => {
+                let registration_name = format!("{}_M", config.partner_username);
+                match Self::try_connect(
+                    config,
+                    &registration_name,
+                    &config.partner_password,
+                    Some(CHARACTER_NAME),
+                    Some(CHARACTER_NAME),
+                ) {
+                    Ok(context) => Ok(context),
+                    Err(registration_result) => {
+                        // Hercules may create the account and still close this
+                        // registration connection. Retry using the stable name
+                        // rather than repeatedly sending the `_M` suffix.
+                        sleep(Duration::from_secs(1));
+                        Self::connect_as(
+                            config,
+                            &config.partner_username,
+                            &config.partner_password,
+                            Some(CHARACTER_NAME),
+                            Some(CHARACTER_NAME),
+                        )
+                        .map_err(|error| {
+                            format!(
+                                "partner login failed ({first_error}); registration returned ({registration_result}); retry failed \
+                                 ({error})"
+                            )
+                        })
+                    }
+                }
+            }
+            Err(error) => Err(error),
+        }
     }
 
     // --- event machinery -------------------------------------------------
@@ -399,9 +450,10 @@ impl TestContext {
                 account_id: event_account,
                 job_id: event_job,
             } if event_account.0 == account_id.0 && event_job.0 == job_id => Some(Ok(())),
-            NetworkEvent::ChatMessage { text, color: MessageColor::Server }
-                if text.contains("unable to change") || text.contains("failed") =>
-            {
+            NetworkEvent::ChatMessage {
+                text,
+                color: MessageColor::Server,
+            } if text.contains("unable to change") || text.contains("failed") => {
                 Some(Err(format!("Job change to {job_id} failed: {text}")))
             }
             _ => None,

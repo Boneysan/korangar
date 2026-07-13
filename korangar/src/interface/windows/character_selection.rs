@@ -538,12 +538,12 @@ where
             fn correct_element_size(&mut self, state: &State<ClientState>) {
                 let character_slots = state.get(&self.character_slots);
                 let slot_count = character_slots.get_slot_count();
+                let row_count = slot_count.div_ceil(5);
 
-                // FIX: Very broken check
-                if self.item_boxes.len() != slot_count / 5 {
+                if self.item_boxes.len() != row_count {
                     self.item_boxes.clear();
 
-                    for row in 0..slot_count / 5 {
+                    for row in 0..row_count {
                         let slot = row * 5;
                         let path = self.character_slots;
 
@@ -638,8 +638,8 @@ where
             title: "Select Character",
             class: Self::window_class(),
             theme: InterfaceThemeType::Menu,
-            minimum_width: 900.0,
-            maximum_width: 900.0,
+            minimum_width: 600.0,
+            maximum_width: 1600.0,
             elements: (
                 fragment! {
                     gaps: 8.0,

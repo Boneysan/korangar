@@ -13,9 +13,57 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("smoke", 1, smoke),
         Scenario::new("bad-password", 1, bad_password),
         Scenario::new("character-create-delete", 1, character_create_delete),
+        Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
         Scenario::new("logout-relogin", 1, logout_relogin),
         Scenario::new("respawn", 1, respawn),
     ]
+}
+
+/// A character with zero `slotchange` entitlement must receive an explicit
+/// rejection when it attempts to exchange two occupied slots.
+fn character_slot_switch_rejected(config: &Config) -> Result<(), String> {
+    let (mut session, characters) = connect_to_character_select(config)?;
+    let primary = match config.character.as_deref() {
+        Some(name) => characters.iter().find(|character| character.name == name),
+        None => characters.first(),
+    }
+    .ok_or("no primary character available for slot switch")?
+    .clone();
+    let temporary = if let Some(character) = characters.iter().find(|character| character.name.starts_with("HlSwap")) {
+        character.clone()
+    } else {
+        let used_slots: Vec<usize> = characters.iter().map(|character| character.character_number as usize).collect();
+        let free_slot = (0..9usize)
+            .find(|slot| !used_slots.contains(slot))
+            .ok_or("no free character slot")?;
+        let name = format!("HlSwap{}", std::process::id() % 100000);
+        session.0.create_character(free_slot, name).map_err(|_| "disconnected")?;
+        wait_char_event(&mut session, config.timeout, &mut |event| match event {
+            NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
+            NetworkEvent::CharacterCreationFailed { message, .. } => Some(Err(format!("creation failed: {message}"))),
+            _ => None,
+        })??
+    };
+
+    let origin_slot = primary.character_number as usize;
+    session
+        .0
+        .switch_character_slot(origin_slot, temporary.character_number as usize)
+        .map_err(|_| "disconnected")?;
+    wait_char_event(&mut session, config.timeout, &mut |event| match event {
+        NetworkEvent::CharacterSlotSwitchFailed => Some(Ok(())),
+        NetworkEvent::CharacterSlotSwitched => Some(Err("slot switch unexpectedly succeeded without entitlement".to_owned())),
+        _ => None,
+    })
+    .map_err(|error| format!("slot rejection: {error}"))??;
+    session.0.delete_character(temporary.character_id).map_err(|_| "disconnected")?;
+    wait_char_event(&mut session, config.timeout, &mut |event| match event {
+        NetworkEvent::CharacterDeleted => Some(Ok(())),
+        NetworkEvent::CharacterDeletionFailed { message, .. } => Some(Err(format!("cleanup deletion failed: {message}"))),
+        _ => None,
+    })
+    .map_err(|error| format!("temporary-character cleanup: {error}"))??;
+    Ok(())
 }
 
 /// Login → char select → map load → chat echo round trip.
@@ -159,6 +207,20 @@ type CharSession = (NetworkingSystem<crate::ledger::Ledger>, korangar_networking
 
 /// Connect up to (and including) the character list, without selecting.
 fn connect_to_character_select(config: &Config) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
+    let mut last_error = String::new();
+    for attempt in 0..4 {
+        if attempt > 0 {
+            sleep(Duration::from_secs(4));
+        }
+        match try_connect_to_character_select(config) {
+            Ok(session) => return Ok(session),
+            Err(error) => last_error = error,
+        }
+    }
+    Err(last_error)
+}
+
+fn try_connect_to_character_select(config: &Config) -> Result<(CharSession, Vec<ragnarok_packets::CharacterInformation>), String> {
     let (mut net, buffer) = NetworkingSystem::spawn_with_callback(config.ledger.clone());
     net.connect_to_login_server(PACKET_VERSION, config.server, config.username.clone(), config.password.clone());
 

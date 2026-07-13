@@ -150,6 +150,13 @@ pub enum NetworkEvent {
         result: i32,
         item_id: ItemId,
     },
+    RepairableItemList {
+        items: Vec<RepairableItemInformation>,
+    },
+    ItemRepairResult {
+        inventory_index: InventoryIndex,
+        success: bool,
+    },
     /// Player was moved to a new position on a different map or the current map
     ChangeMap {
         map_name: String,

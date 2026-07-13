@@ -160,6 +160,13 @@ pub struct SkillTree {
 }
 
 impl SkillTree {
+    /// Remove character-specific skill data while retaining globally cached
+    /// SPR/ACT resources in the loaders.
+    pub fn clear(&mut self) {
+        self.layout.tabs.clear();
+        self.skills.clear();
+    }
+
     pub fn upsert_skill(&mut self, skill: LearnedSkill) {
         if let Some(existing) = self.skills.iter_mut().find(|existing| existing.skill_id == skill.skill_id) {
             *existing = skill;

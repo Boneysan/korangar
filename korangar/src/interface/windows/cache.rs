@@ -33,7 +33,8 @@ impl WindowState {
             && self.size.height < 10_000.0
     }
 
-    /// User has settled placement (dragged or seeded with `initializing: false`).
+    /// User has settled placement (dragged or seeded with `initializing:
+    /// false`).
     fn has_settled_anchor(&self) -> bool {
         !self.anchor.is_initializing()
     }
@@ -70,7 +71,11 @@ impl WindowCache {
 
         if let Err(_error) = std::fs::create_dir_all("client") {
             #[cfg(feature = "debug")]
-            print_debug!("[{}] failed to create client/ for window cache: {:?}", "warning".yellow(), _error);
+            print_debug!(
+                "[{}] failed to create client/ for window cache: {:?}",
+                "warning".yellow(),
+                _error
+            );
         }
 
         let data = ron::ser::to_string_pretty(&self.entries, PrettyConfig::new()).unwrap();
@@ -88,10 +93,10 @@ impl WindowCache {
     /// RO-style default placement around the screen edge (not center).
     fn default_for_class(class: WindowClass) -> Option<WindowState> {
         let state = |point, left, top, width, height| {
-            WindowState::new(
-                Anchor::with_point(point, ScreenPosition { left, top }),
-                ScreenSize { width, height },
-            )
+            WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
+                width,
+                height,
+            })
         };
 
         Some(match class {
@@ -120,7 +125,7 @@ impl WindowCache {
             WindowClass::Trade => state(AnchorPoint::Center, -20.0, -80.0, 400.0, 360.0),
             WindowClass::TradeRequest => state(AnchorPoint::Center, 0.0, -40.0, 320.0, 160.0),
             WindowClass::Identify => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
-            WindowClass::WarpSelection | WindowClass::WeaponRefine => {
+            WindowClass::WarpSelection | WindowClass::WeaponRefine | WindowClass::RepairWeapon => {
                 state(AnchorPoint::Center, 0.0, -80.0, 360.0, 300.0)
             }
             WindowClass::ItemActions => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 220.0),
@@ -132,10 +137,9 @@ impl WindowCache {
             WindowClass::SellCart => state(AnchorPoint::CenterRight, -(220.0 + MARGIN), -200.0, 200.0, 360.0),
             WindowClass::BuyOrSell => state(AnchorPoint::Center, 0.0, -40.0, 200.0, 120.0),
             // Settings — keep near center-left.
-            WindowClass::GameSettings
-            | WindowClass::InterfaceSettings
-            | WindowClass::GraphicsSettings
-            | WindowClass::AudioSettings => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -160.0, 360.0, 400.0),
+            WindowClass::GameSettings | WindowClass::InterfaceSettings | WindowClass::GraphicsSettings | WindowClass::AudioSettings => {
+                state(AnchorPoint::CenterLeft, MARGIN + 40.0, -160.0, 360.0, 400.0)
+            }
             WindowClass::Respawn => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 140.0),
             WindowClass::FriendRequest => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
             WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 470.0, 520.0),
@@ -180,6 +184,7 @@ impl WindowCache {
             WindowClass::Identify,
             WindowClass::WarpSelection,
             WindowClass::WeaponRefine,
+            WindowClass::RepairWeapon,
             WindowClass::Dialog,
             WindowClass::Buy,
             WindowClass::BuyCart,
@@ -223,12 +228,10 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
             let size = if entry.has_valid_size() {
                 entry.size
             } else {
-                Self::default_for_class(class)
-                    .map(|d| d.size)
-                    .unwrap_or(ScreenSize {
-                        width: 200.0,
-                        height: 200.0,
-                    })
+                Self::default_for_class(class).map(|d| d.size).unwrap_or(ScreenSize {
+                    width: 200.0,
+                    height: 200.0,
+                })
             };
             return Some((entry.anchor, size));
         }
@@ -286,7 +289,10 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
         } else {
             self.entries.insert(
                 class,
-                WindowState::new(Anchor::with_point(AnchorPoint::Center, ScreenPosition { left: 0.0, top: 0.0 }), size),
+                WindowState::new(
+                    Anchor::with_point(AnchorPoint::Center, ScreenPosition { left: 0.0, top: 0.0 }),
+                    size,
+                ),
             );
         }
         self.save();

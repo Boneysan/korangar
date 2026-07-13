@@ -22,6 +22,13 @@ use crate::world::{
     SkillListInformation, SkillListKey, SkillListRequirements, SpriteAnimationState,
 };
 
+fn skill_asset_paths(sprite_file_name: &str, actions_file_name: &str) -> (String, String) {
+    (
+        format!("아이템\\{sprite_file_name}"),
+        format!("아이템\\{actions_file_name}"),
+    )
+}
+
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub enum LoaderId {
     AnimationData(EntityId),
@@ -251,9 +258,11 @@ impl AsyncLoader {
         let skill_information = self.library.get::<SkillListInformation>(skill_id);
         let skill_requirements = self.library.get::<SkillListRequirements>(SkillListKey::with_job(job_id, skill_id));
 
-        let path = format!("아이템\\{}", skill_information.file_name);
-        let sprite = self.request_skill_sprite_load(skill_id, &path);
-        let actions = self.request_skill_actions_load(skill_id, &path);
+        let (sprite_file_name, actions_file_name) = crate::world::skill_asset_file_names(&skill_information.file_name);
+        // SpriteLoader and ActionLoader prepend `data\sprite\` themselves.
+        let (sprite_path, actions_path) = skill_asset_paths(sprite_file_name, actions_file_name);
+        let sprite = self.request_skill_sprite_load(skill_id, &sprite_path);
+        let actions = self.request_skill_actions_load(skill_id, &actions_path);
 
         LearnableSkill {
             skill_id,
@@ -372,5 +381,18 @@ impl AsyncLoader {
                 }
             }
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::skill_asset_paths;
+
+    #[test]
+    fn skill_paths_are_relative_to_the_sprite_loader_root() {
+        assert_eq!(
+            skill_asset_paths("AL_TELEPORT", "AL_TELEPORT"),
+            ("아이템\\AL_TELEPORT".to_owned(), "아이템\\AL_TELEPORT".to_owned())
+        );
     }
 }

@@ -9,6 +9,7 @@ mapping errors, skill/combat bugs, and server-script regressions early.
 - [headless_findings.md](headless_findings.md) — bug log + port-back tracking (fill this in whenever a scenario fails)
 - [headless_mock_client_plan.md](headless_mock_client_plan.md) — original design doc (implementation status updated there)
 - [testing_guide.md](testing_guide.md) — overall project testing reference
+- [headless_remaining_test_design.md](headless_remaining_test_design.md) — implementation-ready design for the remaining lifecycle, social, DM, repair, and skill-menu coverage
 
 ---
 

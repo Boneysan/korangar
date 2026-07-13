@@ -335,19 +335,8 @@ where
                     // Base on stored size (not last frame's laid-out area) so content-driven
                     // windows don't fight the drag and snap back every frame.
                     let scale = interface_scaling.max(0.01);
-                    // For roughly-square windows, prefer the larger axis delta so a single
-                    // edge drag grows both dimensions evenly.
-                    let mut dw = delta_width / scale;
-                    let mut dh = delta_height / scale;
-                    if matches!(resize_mode, ResizeMode::Horizontal) {
-                        dh = dw;
-                    } else if matches!(resize_mode, ResizeMode::Vertical) {
-                        dw = dh;
-                    } else {
-                        let dominant = if dw.abs() >= dh.abs() { dw } else { dh };
-                        dw = dominant;
-                        dh = dominant;
-                    }
+                    let dw = delta_width / scale;
+                    let dh = delta_height / scale;
                     wrapper.data.size = App::Size::new(
                         (wrapper.data.size.width() + dw).max(32.0),
                         (wrapper.data.size.height() + dh).max(32.0),

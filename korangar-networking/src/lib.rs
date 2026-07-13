@@ -754,7 +754,11 @@ where
     }
 
     pub fn cancel_warp_selection(&mut self, skill_id: SkillId) -> Result<(), NotConnectedError> {
-        self.select_warp_destination(skill_id, String::new())
+        // Warp selection has no server-side modal state to dismiss. Sending an
+        // empty map name is not a cancellation on Hercules: Teleport treats it
+        // as the random destination and immediately changes maps.
+        let _ = skill_id;
+        Ok(())
     }
 
     pub fn request_weapon_refine(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
@@ -769,6 +773,22 @@ where
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestWeaponRefinePacket::new(0)),
         }
+    }
+
+    pub fn request_item_repair(&mut self, item: RepairableItemInformation) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(RequestItemRepairPacket::new(item)),
+        }
+    }
+
+    pub fn cancel_item_repair(&mut self) -> Result<(), NotConnectedError> {
+        self.request_item_repair(RepairableItemInformation {
+            inventory_index: RawIndex(u16::MAX),
+            item_id: ItemId(0),
+            cards: [ItemId(0); 4],
+            refinement_level: 0,
+            grade: 0,
+        })
     }
 
     pub fn entity_details(&mut self, entity_id: EntityId) -> Result<(), NotConnectedError> {

@@ -43,7 +43,7 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             minimum_width: 300.0,
-            maximum_width: 300.0,
+            maximum_width: 900.0,
             elements: (
                 fragment! {
                     gaps: 4.0,

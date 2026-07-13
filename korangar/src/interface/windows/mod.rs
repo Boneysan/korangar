@@ -25,31 +25,32 @@ mod interface_settings;
 mod inventory;
 mod item_actions;
 mod login;
-mod minimap;
-mod party;
-mod storage;
-mod trade;
 #[cfg(feature = "debug")]
 mod maps;
 mod menu;
+mod minimap;
 #[cfg(feature = "debug")]
 mod packet_inspector;
+mod party;
 #[cfg(feature = "debug")]
 mod profiler;
 #[cfg(feature = "debug")]
 mod render_options;
+mod repair_weapon;
 mod respawn;
+mod selection_list;
 mod sell;
 mod sell_cart;
-mod selection_list;
 mod server_selection;
 mod skill_tree;
 mod stats;
 mod status_bar;
-mod warp_selection;
-mod weapon_refine;
+mod storage;
 #[cfg(feature = "debug")]
 mod theme_inspector;
+mod trade;
+mod warp_selection;
+mod weapon_refine;
 
 use serde::{Deserialize, Serialize};
 
@@ -77,33 +78,34 @@ pub use self::hotbar::HotbarWindow;
 pub use self::hud::HudWindow;
 pub use self::identify::IdentifyWindow;
 pub use self::interface_settings::InterfaceSettingsWindow;
-pub use self::status_bar::StatusBarWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::item_actions::{ItemActionsWindow, inventory_item_amount};
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
-pub use self::minimap::MinimapWindow;
-pub use self::party::PartyWindow;
-pub use self::storage::StorageWindow;
-pub use self::trade::{TradeRequestWindow, TradeWindow};
-pub use self::warp_selection::WarpSelectionWindow;
-pub use self::weapon_refine::WeaponRefineWindow;
 #[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
+pub use self::minimap::MinimapWindow;
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
+pub use self::party::PartyWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
 #[cfg(feature = "debug")]
 pub use self::render_options::RenderOptionsWindow;
+pub use self::repair_weapon::RepairWeaponWindow;
 pub use self::respawn::RespawnWindow;
 pub use self::sell::SellWindow;
 pub use self::sell_cart::SellCartWindow;
 pub use self::server_selection::ServerSelectionWindow;
 pub use self::skill_tree::{SkillTreeWindow, SkillTreeWindowState, SkillTreeWindowStatePathExt};
 pub use self::stats::StatsWindow;
+pub use self::status_bar::StatusBarWindow;
+pub use self::storage::StorageWindow;
 #[cfg(feature = "debug")]
 pub use self::theme_inspector::{ThemeInspectorWindow, ThemeInspectorWindowState};
+pub use self::trade::{TradeRequestWindow, TradeWindow};
+pub use self::warp_selection::WarpSelectionWindow;
+pub use self::weapon_refine::WeaponRefineWindow;
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum WindowClass {
@@ -143,7 +145,9 @@ pub enum WindowClass {
     SellCart,
     WarpSelection,
     WeaponRefine,
-    /// GM / DM command panel (levels, zeny, heal, campaign mode). Available in all builds.
+    RepairWeapon,
+    /// GM / DM command panel (levels, zeny, heal, campaign mode). Available in
+    /// all builds.
     Commands,
     /// Dice roller (sends `@roll`). Available to all players in all builds.
     Dice,

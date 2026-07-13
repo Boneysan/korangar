@@ -391,6 +391,7 @@ where
         let minimum_height = *state.get(&self.minimum_height);
         let maximum_height = *state.get(&self.maximum_height);
 
+        let has_initial_size = data.size.width() >= 1.0 && data.size.height() < 10_000.0;
         let adjusted_size = App::Size::new(
             data.size.width().min(maximum_width).max(minimum_width),
             data.size.height().min(maximum_height).max(minimum_height),
@@ -426,11 +427,17 @@ where
             self.elements.create_layout_info(state, store, resolver)
         });
 
+        let natural_height = (title_area.height + area.height).min(maximum_height).max(minimum_height);
+        let display_height = if *state.get(&self.resizable) && has_initial_size {
+            adjusted_size.height()
+        } else {
+            natural_height
+        };
         let area = Area {
             left: title_area.left,
             top: title_area.top,
             width: title_area.width,
-            height: (title_area.height + area.height).min(maximum_height).max(minimum_height),
+            height: display_height,
         };
 
         self.layout_info = Some(WindowLayoutInfoSet {
@@ -438,8 +445,6 @@ where
             title_area,
             children,
         });
-
-        let display_height = area.height;
 
         DisplayInformation {
             real_area: area,
@@ -521,16 +526,17 @@ where
         let resize_hovered = resize_area.check().run(layout);
 
         let horizontal_resize_available = *state.get(&self.minimum_width) != *state.get(&self.maximum_width);
-        let vertical_resize_availabe = *state.get(&self.resizable);
+        let vertical_resize_available =
+            *state.get(&self.resizable) && *state.get(&self.minimum_height) != *state.get(&self.maximum_height);
 
-        if horizontal_resize_hovered && horizontal_resize_available {
+        if resize_hovered && horizontal_resize_available && vertical_resize_available {
+            layout.register_click_handler(MouseButton::Left, &self.resize_click_action);
+            layout.set_hovered();
+        } else if horizontal_resize_hovered && horizontal_resize_available {
             layout.register_click_handler(MouseButton::Left, &self.horizontal_resize_click_action);
             layout.set_hovered();
-        } else if vertical_resize_hovered && vertical_resize_availabe {
+        } else if vertical_resize_hovered && vertical_resize_available {
             layout.register_click_handler(MouseButton::Left, &self.vertical_resize_click_action);
-            layout.set_hovered();
-        } else if resize_hovered && horizontal_resize_available && vertical_resize_availabe {
-            layout.register_click_handler(MouseButton::Left, &self.resize_click_action);
             layout.set_hovered();
         }
 
@@ -566,7 +572,20 @@ where
             *state.get(&self.shadow_padding),
         );
 
-        if horizontal_resize_hovered && horizontal_resize_available
+        if resize_hovered && horizontal_resize_available && vertical_resize_available
+            || matches!(layout.get_mouse_mode(), MouseMode::ResizingWindow {
+                resize_mode: ResizeMode::Both,
+                window_id,
+            } if *window_id == data.id)
+        {
+            layout.add_rectangle(
+                resize_area,
+                App::CornerDiameter::new(12.0, 12.0, 12.0, 12.0),
+                *state.get(&theme().window().closest_anchor_color()),
+                *state.get(&theme().window().closest_anchor_color()),
+                App::ShadowPadding::none(),
+            );
+        } else if horizontal_resize_hovered && horizontal_resize_available
             || matches!(layout.get_mouse_mode(), MouseMode::ResizingWindow {
                 resize_mode: ResizeMode::Horizontal,
                 window_id,
@@ -580,7 +599,7 @@ where
                 *state.get(&theme().window().closest_anchor_color()),
                 App::ShadowPadding::none(),
             );
-        } else if vertical_resize_hovered && vertical_resize_availabe
+        } else if vertical_resize_hovered && vertical_resize_available
             || matches!(layout.get_mouse_mode(), MouseMode::ResizingWindow {
                 resize_mode: ResizeMode::Vertical,
                 window_id,
@@ -589,20 +608,6 @@ where
             layout.add_rectangle(
                 vertical_resize_area,
                 App::CornerDiameter::new(6.0, 6.0, 6.0, 6.0),
-                *state.get(&theme().window().closest_anchor_color()),
-                // TODO: Properly theme
-                *state.get(&theme().window().closest_anchor_color()),
-                App::ShadowPadding::none(),
-            );
-        } else if resize_hovered && horizontal_resize_available && vertical_resize_availabe
-            || matches!(layout.get_mouse_mode(), MouseMode::ResizingWindow {
-                resize_mode: ResizeMode::Both,
-                window_id,
-            } if *window_id == data.id)
-        {
-            layout.add_rectangle(
-                resize_area,
-                App::CornerDiameter::new(12.0, 12.0, 12.0, 12.0),
                 *state.get(&theme().window().closest_anchor_color()),
                 // TODO: Properly theme
                 *state.get(&theme().window().closest_anchor_color()),

@@ -10,13 +10,17 @@
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
-use ragnarok_packets::{Direction, SkillType, TilePosition, WorldPosition};
+use ragnarok_packets::{Direction, SkillId, SkillLevel, SkillType, TilePosition, WorldPosition};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
+        Scenario::new("teleport-select", 5, teleport_select),
+        Scenario::new("teleport-cancel", 5, teleport_cancel),
+        Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
+        Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         // --- Basic Classes ---
         Scenario::new("skills-novice", 5, |config| sweep_job(config, 0, "Novice")),
         Scenario::new("skills-swordman", 5, |config| sweep_job(config, 1, "Swordman")),
@@ -61,6 +65,131 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("skills-star-gladiator", 5, |config| sweep_job(config, 4047, "Star Gladiator")),
         Scenario::new("skills-soul-linker", 5, |config| sweep_job(config, 4049, "Soul Linker")),
     ]
+}
+
+const AL_TELEPORT: SkillId = SkillId(26);
+const WS_WEAPONREFINE: SkillId = SkillId(477);
+
+fn prepare_skill(context: &mut TestContext, job_id: u16, skill_id: SkillId) -> Result<SkillLevel, String> {
+    context.ensure_job(job_id)?;
+    context.say("@allskill")?;
+    context.pump(Duration::from_millis(500));
+    context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == skill_id)
+        .map(|skill| skill.skill_level)
+        .ok_or_else(|| format!("skill {} was not present after @allskill", skill_id.0))
+}
+
+fn teleport_select(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let level = prepare_skill(&mut context, 4, AL_TELEPORT)?;
+    context.flush();
+    context
+        .net
+        .cast_skill(AL_TELEPORT, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    let destinations = context.wait_for("Teleport WarpList", |event| match event {
+        NetworkEvent::WarpList { skill_id, destinations } if *skill_id == AL_TELEPORT => Some(destinations.clone()),
+        _ => None,
+    })?;
+    let destination = destinations
+        .into_iter()
+        .find(|destination| !destination.is_empty())
+        .ok_or("Teleport returned no selectable destination")?;
+    context
+        .net
+        .select_warp_destination(AL_TELEPORT, destination)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("ChangeMap after Teleport selection", |event| match event {
+        NetworkEvent::ChangeMap { .. } => Some(()),
+        _ => None,
+    })
+}
+
+fn teleport_cancel(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let level = prepare_skill(&mut context, 4, AL_TELEPORT)?;
+    context.flush();
+    context
+        .net
+        .cast_skill(AL_TELEPORT, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("Teleport WarpList", |event| match event {
+        NetworkEvent::WarpList { skill_id, .. } if *skill_id == AL_TELEPORT => Some(()),
+        _ => None,
+    })?;
+    context.net.cancel_warp_selection(AL_TELEPORT).map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_secs(1));
+    if events.iter().any(|event| matches!(event, NetworkEvent::ChangeMap { .. })) {
+        return Err("Teleport cancellation unexpectedly changed maps".to_owned());
+    }
+    Ok(())
+}
+
+fn weapon_refine_missing_material(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
+    // Remove both ordinary Weapon Refine catalysts so prior manual/testing
+    // inventory cannot silently turn this negative case into a success.
+    context.say("@delitem 984 999")?; // Oridecon
+    context.say("@delitem 1010 999")?; // Phracon
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(500));
+    let index = context.give_item(1101, 1)?;
+    context.flush();
+    context
+        .net
+        .cast_skill(WS_WEAPONREFINE, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    let listed = context.wait_for("RefinableWeaponList", |event| match event {
+        NetworkEvent::RefinableWeaponList { weapons } => Some(weapons.clone()),
+        _ => None,
+    })?;
+    if !listed.iter().any(|weapon| weapon.inventory_index == index) {
+        return Err(format!("created weapon at index {} was absent from refine list", index.0));
+    }
+    context.net.request_weapon_refine(index).map_err(|_| "disconnected")?;
+    context.wait_for("missing refine material feedback", |event| match event {
+        NetworkEvent::ChatMessage { text, .. }
+            if text.to_ascii_lowercase().contains("material") || text.to_ascii_lowercase().contains("missing") =>
+        {
+            Some(())
+        }
+        NetworkEvent::MessageTable { .. } => Some(()),
+        _ => None,
+    })
+}
+
+fn weapon_refine_success(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
+    context.say("@delitem 1101 999")?;
+    context.say("@item 1010 1")?;
+    context.pump(Duration::from_millis(400));
+    let index = context.give_item(1101, 1)?;
+    context.flush();
+    context
+        .net
+        .cast_skill(WS_WEAPONREFINE, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("RefinableWeaponList", |event| match event {
+        NetworkEvent::RefinableWeaponList { weapons } if weapons.iter().any(|weapon| weapon.inventory_index == index) => Some(()),
+        _ => None,
+    })?;
+    context.net.request_weapon_refine(index).map_err(|_| "disconnected")?;
+    context.wait_for("successful WeaponRefineResult", |event| match event {
+        NetworkEvent::WeaponRefineResult { result: 0, item_id } if item_id.0 == 1101 => Some(()),
+        _ => None,
+    })?;
+    let player_id = context.player_id;
+    context.wait_for("refine success visual effect", |event| match event {
+        NetworkEvent::VisualEffect { effect_path, entity_id } if *entity_id == player_id && *effect_path == "bs_refinesuccess.str" => {
+            Some(())
+        }
+        _ => None,
+    })
 }
 
 /// Skills that legitimately produce no direct cast response headlessly
@@ -356,14 +485,7 @@ fn stateful_skill_rank(skill_name: &str) -> u8 {
     }
     u8::from(matches!(
         skill_name,
-        "AL_TELEPORT"
-            | "LK_TENSIONRELAX"
-            | "TF_HIDING"
-            | "AS_CLOAKING"
-            | "MC_VENDING"
-            | "HP_BASILICA"
-            | "PA_GOSPEL"
-            | "ST_CHASEWALK"
+        "AL_TELEPORT" | "LK_TENSIONRELAX" | "TF_HIDING" | "AS_CLOAKING" | "MC_VENDING" | "HP_BASILICA" | "PA_GOSPEL" | "ST_CHASEWALK"
     ))
 }
 
@@ -417,5 +539,8 @@ fn approach_target(context: &mut TestContext, target: TilePosition) -> Result<()
         }
     }
 
-    Err(format!("no walkable adjacent cell found around target ({}, {})", target.x, target.y))
+    Err(format!(
+        "no walkable adjacent cell found around target ({}, {})",
+        target.x, target.y
+    ))
 }

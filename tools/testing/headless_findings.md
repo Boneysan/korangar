@@ -11,7 +11,51 @@ All findings are classified by layer:
 
 ## Summary of Recent Resolutions (July 2026)
 
-All 73 integration tests—including all 39 job class skill sweeps and phase 6/7 item/dialogue loops—now pass with a **100% green status**.
+The original 73 integration tests—including all 39 job class skill sweeps and
+phase 6/7 item/dialogue loops—passed as a complete run. The expanded suite now
+contains 91 scenarios; its newly added lifecycle, skill-menu, multi-client, and DM cases
+must be reported separately until they complete a clean full run.
+
+## Open findings from the expanded suite (July 12, 2026)
+
+| Finding / Issue | Affected Scenarios | Layer | Current evidence |
+| :--- | :--- | :--- | :--- |
+| Character-slot success requires entitlement | `character-slot-switch-rejected` | Test fixture / server configuration | The primary fixture has `slotchange=0`. The automated scenario now verifies the explicit rejection and cleans up its disposable character. A success/persistence case requires a separate entitled fixture. |
+| Partner registration connection closes after creation | phase 8 scenarios on a fresh server | Client test harness | Hercules created the `_M` account but closed that registration connection. The harness now retries once using the stable username instead of repeatedly sending the registration suffix. |
+| Interrupted partner session can remain online | phase 8 after Ctrl-C | Server emulator / fixture hygiene | An interrupted two-client run can leave the partner account unavailable until Hercules clears its online state. Normal `TestContext` drops perform acknowledged logout; forced termination cannot. |
+
+## Expanded-suite graphical-client handoff
+
+This is the port checklist for scenarios added after the original 73-scenario run.
+“Shared automatically” means the graphical client calls the same
+`korangar-networking` implementation and no headless code should be copied.
+
+| Headless coverage | Implementation layer | Graphical-client handoff |
+| :--- | :--- | :--- |
+| `teleport-select` | Shared packet/event API plus graphical selection window | Already consumed by the Warp Selection window; retain live click verification. |
+| `teleport-cancel` | Shared `NetworkingSystem::cancel_warp_selection` | Shared automatically. Cancellation is deliberately a no-op on the wire; never send an empty destination because Hercules treats it as random Teleport. |
+| `weapon-refine-missing-material`, `weapon-refine-success` | Shared refine list/result/effect events plus graphical Weapon Refine window | Packet behavior is shared automatically. The graphical client must resolve `item_id` through item metadata for result text and render `bs_refinesuccess.str`; both were manually verified. |
+| Character-slot rejection | Shared character-server event mapping | Shared automatically. A success/persistence graphical check still requires a character with `slotchange > 0`. |
+| Whisper, emotion, friends, party, and trade | Shared events and requests; graphical state/window consumers | Protocol behavior is shared automatically. Graphically verify window opening, accept/reject controls, roster/state updates, and item presentation. |
+| DM dice and read-only command contracts | Normal chat requests and `ChatMessage` responses | No protocol port. Dice/Commands windows must emit the documented strings and display server feedback. |
+| Partner registration/retry and cleanup | Headless fixture harness only | Do not port; these helpers only make integration tests repeatable. |
+| Skill icon audit | Graphical resource loader/library | Run `cargo run -p korangar --bin skill-asset-audit` with configured archives; zero missing player-visible assets is required. |
+| `repair-weapon-cancel`, `repair-weapon-success` | Shared modern Repair Weapon packets/events/API plus graphical selection window | Ported; both scenarios pass live. Graphical core flow was verified on macOS 2026-07-12: the window offered Sword, selection repaired it, and named success feedback appeared. Window resize/move and graphical Cancel remain presentation checks. |
+
+### Port completion rule
+
+A headless result alone does not verify presentation. Integration is complete when:
+
+1. serialization/deserialization and event mapping have unit coverage;
+2. the live headless scenario passes without unknown packets;
+3. the graphical event consumer updates the appropriate state/window;
+4. a manual graphical pass verifies clicking, labels, icons, resizing where relevant,
+   feedback text, and visual effects; and
+5. results and fixture requirements are recorded here and in `testing_guide.md`.
+
+Window resizing is a graphical framework guarantee rather than a protocol behavior.
+It was live-verified across the client on macOS 2026-07-12; new windows inherit
+two-axis resizing from the `window!` component default.
 
 | Finding / Issue | Affected Scenarios | Layer | Root Cause & Resolution |
 | :--- | :--- | :--- | :--- |

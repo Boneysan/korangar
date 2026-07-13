@@ -12,6 +12,12 @@ pub struct Hotbar {
 }
 
 impl Hotbar {
+    /// Clear local bindings when leaving an account/character. The next map
+    /// login repopulates them from the server's hotkey packet.
+    pub fn clear(&mut self) {
+        self.skills.fill(None);
+    }
+
     pub fn first_empty_slot(&self) -> Option<HotbarSlot> {
         self.skills.iter().position(Option::is_none).map(|index| HotbarSlot(index as u16))
     }

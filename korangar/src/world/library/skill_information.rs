@@ -26,6 +26,20 @@ pub struct SkillListInformation {
     pub acquisition: SkillAcquisition,
 }
 
+/// Some official skill icons intentionally split their ACT/SPR pair across
+/// differently named resources, or omit a trivial one-frame ACT and reuse a
+/// passive skill's animation. Keep those aliases in one place so runtime
+/// loading and the asset audit agree.
+pub(crate) fn skill_asset_file_names(file_name: &str) -> (&str, &str) {
+    match file_name {
+        "BS_ENCHANTEDSTONE" => ("BS_FINDINGORE", "BS_ENCHANTEDSTONE"),
+        "BS_WEAPONRESEARCH" => ("VS_WEAPONRESEARCH", "BS_WEAPONRESEARCH"),
+        "BS_SKINTEMPER" => ("BS_SKINTEMPER", "BS_HILTBINDING"),
+        "HT_FALCON" => ("HT_FALCON", "HT_STEELCROW"),
+        _ => (file_name, file_name),
+    }
+}
+
 impl Table for SkillListInformation {
     type Key<'a> = SkillId;
     type Storage = HashMap<SkillId, Self>;
@@ -151,7 +165,7 @@ fn format_identifier_word(word: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::skill_name_from_identifier;
+    use super::{skill_asset_file_names, skill_name_from_identifier};
 
     #[test]
     fn skill_name_from_identifier_removes_job_prefix() {
@@ -167,6 +181,19 @@ mod tests {
         assert_eq!(skill_name_from_identifier("BS_HILTBINDING").as_deref(), Some("Hilt Binding"));
         assert_eq!(skill_name_from_identifier("WS_WEAPONREFINE").as_deref(), Some("Upgrade Weapon"));
         assert_eq!(skill_name_from_identifier("WS_MELTDOWN").as_deref(), Some("Shattering Strike"));
-        assert_eq!(skill_name_from_identifier("WS_OVERTHRUSTMAX").as_deref(), Some("Maximum Power Thrust"));
+        assert_eq!(
+            skill_name_from_identifier("WS_OVERTHRUSTMAX").as_deref(),
+            Some("Maximum Power Thrust")
+        );
+    }
+
+    #[test]
+    fn split_official_skill_assets_use_known_aliases() {
+        assert_eq!(
+            skill_asset_file_names("BS_WEAPONRESEARCH"),
+            ("VS_WEAPONRESEARCH", "BS_WEAPONRESEARCH")
+        );
+        assert_eq!(skill_asset_file_names("BS_SKINTEMPER"), ("BS_SKINTEMPER", "BS_HILTBINDING"));
+        assert_eq!(skill_asset_file_names("AL_TELEPORT"), ("AL_TELEPORT", "AL_TELEPORT"));
     }
 }

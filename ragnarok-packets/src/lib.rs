@@ -1931,6 +1931,47 @@ pub struct WeaponRefineResultPacket {
     pub item_id: ItemId,
 }
 
+/// Broken equipment offered by Blacksmith Repair Weapon. Unlike most inventory
+/// packets, Hercules sends and expects the raw zero-based inventory index here.
+#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub struct RepairableItemInformation {
+    pub inventory_index: RawIndex,
+    pub item_id: ItemId,
+    pub cards: [ItemId; 4],
+    pub refinement_level: u8,
+    pub grade: u8,
+}
+
+/// Broken-equipment selection list (`ZC_REPAIRITEMLIST`, modern 0x0B65 layout).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B65)]
+#[variable_length]
+pub struct RepairableItemListPacket {
+    #[repeating_remaining]
+    pub items: Vec<RepairableItemInformation>,
+}
+
+/// Select or cancel Repair Weapon (`CZ_REQ_ITEMREPAIR2`). A raw index of
+/// `u16::MAX` is the official cancellation sentinel used by Hercules.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B66)]
+pub struct RequestItemRepairPacket {
+    pub item: RepairableItemInformation,
+}
+
+/// Repair Weapon result (`ZC_ACK_ITEMREPAIR`). The wire index uses the normal
+/// inventory +2 offset, so `InventoryIndex` normalizes it for consumers.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01FE)]
+pub struct ItemRepairResultPacket {
+    pub inventory_index: InventoryIndex,
+    pub result: u8,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0977)]
@@ -6030,15 +6071,12 @@ mod tests {
         assert_eq!(warps.skill_id, SkillId(26));
         assert_eq!(warps.destinations[0].map_name, fixed_string("payon.gat", 16).as_slice());
 
-        let cooldowns = read_packet::<SkillCooldownListPacket>(&[
-            0x85, 0x09, 0x0E, 0x00, 89, 0, 0xE8, 0x03, 0, 0, 0xF4, 0x01, 0, 0,
-        ]);
+        let cooldowns = read_packet::<SkillCooldownListPacket>(&[0x85, 0x09, 0x0E, 0x00, 89, 0, 0xE8, 0x03, 0, 0, 0xF4, 0x01, 0, 0]);
         assert_eq!(cooldowns.cooldowns[0].skill_id, SkillId(89));
         assert_eq!(cooldowns.cooldowns[0].remaining_ms, 500);
 
         let status = read_packet::<StatusChange2Packet>(&[
-            0x3F, 0x04, 10, 0, 0x04, 0x03, 0x02, 0x01, 1, 0xE8, 0x03, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3,
-            0, 0, 0,
+            0x3F, 0x04, 10, 0, 0x04, 0x03, 0x02, 0x01, 1, 0xE8, 0x03, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0,
         ]);
         assert_eq!(status.entity_id, EntityId(0x0102_0304));
         assert_eq!(status.remaining_in_milliseconds, 1000);
@@ -6061,14 +6099,39 @@ mod tests {
             packet_bytes(SelectWarpDestinationPacket::new(SkillId(26), "payon.gat".to_owned())),
             [&[0x1B, 0x01, 0x1A, 0x00][..], &fixed_string("payon.gat", 16)[..]].concat()
         );
-        assert_eq!(
-            packet_bytes(RequestWeaponRefinePacket::new(7)),
-            [0x22, 0x02, 0x07, 0x00, 0x00, 0x00]
-        );
+        assert_eq!(packet_bytes(RequestWeaponRefinePacket::new(7)), [
+            0x22, 0x02, 0x07, 0x00, 0x00, 0x00
+        ]);
 
         let result = read_packet::<WeaponRefineResultPacket>(&[0x23, 0x02, 0, 0, 0, 0, 0x4D, 0x04, 0, 0]);
         assert_eq!(result.result, 0);
         assert_eq!(result.item_id, ItemId(1101));
+    }
+
+    #[test]
+    fn repair_weapon_packets_match_hercules_20220406_layouts() {
+        let mut list = vec![0x65, 0x0B, 0x1C, 0x00, 7, 0];
+        list.extend(1101u32.to_le_bytes());
+        for card in [4001u32, 4002, 4003, 4004] {
+            list.extend(card.to_le_bytes());
+        }
+        list.extend([3, 2]);
+
+        let list = read_packet::<RepairableItemListPacket>(&list);
+        let item = list.items[0].clone();
+        assert_eq!(item.inventory_index, RawIndex(7));
+        assert_eq!(item.item_id, ItemId(1101));
+        assert_eq!(item.cards, [ItemId(4001), ItemId(4002), ItemId(4003), ItemId(4004)]);
+        assert_eq!(item.refinement_level, 3);
+        assert_eq!(item.grade, 2);
+
+        assert_eq!(packet_bytes(RequestItemRepairPacket::new(item)), [
+            0x66, 0x0B, 7, 0, 0x4D, 0x04, 0, 0, 0xA1, 0x0F, 0, 0, 0xA2, 0x0F, 0, 0, 0xA3, 0x0F, 0, 0, 0xA4, 0x0F, 0, 0, 3, 2,
+        ]);
+
+        let result = read_packet::<ItemRepairResultPacket>(&[0xFE, 0x01, 9, 0, 0]);
+        assert_eq!(result.inventory_index, InventoryIndex(7));
+        assert_eq!(result.result, 0);
     }
 }
 

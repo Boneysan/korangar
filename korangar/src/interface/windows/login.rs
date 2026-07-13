@@ -113,7 +113,7 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::Menu,
             minimum_width: 450.0,
-            maximum_width: 450.0,
+            maximum_width: 1200.0,
             elements: (
                 text! { text: client_state().localization().select_service_text() },
                 drop_down! {

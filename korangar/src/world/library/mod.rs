@@ -23,8 +23,9 @@ pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
 pub use self::job_identity::JobIdentity;
 pub use self::map_sky_data::MapSkyData;
-pub use self::skill_tree::SkillTreeLayout;
 pub use self::msgstringtable::MsgStringTable;
+pub(crate) use self::skill_information::skill_asset_file_names;
+pub use self::skill_tree::SkillTreeLayout;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
 use crate::loaders::GameFileLoader;
 pub use crate::world::library::skill_information::SkillListInformation;
@@ -82,6 +83,22 @@ impl Library {
     #[inline]
     pub fn message_string(&self, message_id: u16) -> String {
         self.msgstringtable.resolve(message_id)
+    }
+
+    pub(crate) fn skill_asset_entries(&self) -> Vec<(ragnarok_packets::SkillId, &str, &str)> {
+        let visible_skill_ids = self
+            .skill_tree_table
+            .values()
+            .flat_map(|layout| &layout.tabs)
+            .flat_map(|tab| tab.skills.values())
+            .copied()
+            .collect::<hashbrown::HashSet<_>>();
+
+        self.skill_information_table
+            .iter()
+            .filter(|(skill_id, _)| visible_skill_ids.contains(*skill_id))
+            .map(|(skill_id, information)| (*skill_id, information.name.as_str(), information.file_name.as_str()))
+            .collect()
     }
 }
 

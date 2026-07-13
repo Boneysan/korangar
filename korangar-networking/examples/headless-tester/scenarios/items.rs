@@ -4,8 +4,8 @@ use std::time::Duration;
 
 use korangar_networking::{NetworkEvent, ShopItem};
 use ragnarok_packets::{
-    BuyOrSellOption, BuyShopItemsResult, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, SellItemsResult,
-    SoldItemInformation, StatType, StatUpType,
+    BuyOrSellOption, BuyShopItemsResult, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, SellItemsResult, SkillId,
+    SkillLevel, SoldItemInformation, StatType, StatUpType,
 };
 
 use crate::context::{Config, TestContext};
@@ -21,7 +21,73 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("storage", 6, storage),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("hotkeys", 6, hotkeys),
+        Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
+        Scenario::new("repair-weapon-success", 6, repair_weapon_success),
     ]
+}
+
+const BS_REPAIRWEAPON: SkillId = SkillId(108);
+
+fn prepare_repair(context: &mut TestContext) -> Result<(SkillLevel, ragnarok_packets::RepairableItemInformation), String> {
+    context.ensure_job(10)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(400));
+    context.flush();
+    context.say("@item2 1101 1 1 0 1 0 0 0 0")?;
+    context.wait_for("broken Sword inventory add", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == 1101 => Some(()),
+        _ => None,
+    })?;
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == BS_REPAIRWEAPON)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+    context.flush();
+    context
+        .net
+        .cast_skill(BS_REPAIRWEAPON, level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    let items = context.wait_for("RepairableItemList", |event| match event {
+        NetworkEvent::RepairableItemList { items } => Some(items.clone()),
+        _ => None,
+    })?;
+    items
+        .into_iter()
+        .find(|item| item.item_id.0 == 1101)
+        .map(|item| (level, item))
+        .ok_or_else(|| "RepairableItemList omitted the broken Sword".to_owned())
+}
+
+fn repair_weapon_cancel(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let _ = prepare_repair(&mut context)?;
+    context.flush();
+    context.net.cancel_item_repair().map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_secs(1));
+    if events.iter().any(|event| matches!(event, NetworkEvent::ItemRepairResult { .. })) {
+        return Err("Repair Weapon cancellation produced a repair result".to_owned());
+    }
+    Ok(())
+}
+
+fn repair_weapon_success(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let (_, item) = prepare_repair(&mut context)?;
+    context.give_item(1002, 1)?; // Iron Ore for a level-one weapon.
+    let expected_index = ragnarok_packets::InventoryIndex(item.inventory_index.0);
+    context.flush();
+    context.net.request_item_repair(item).map_err(|_| "disconnected")?;
+    context.wait_for("successful ItemRepairResult", |event| match event {
+        NetworkEvent::ItemRepairResult {
+            inventory_index,
+            success: true,
+        } if *inventory_index == expected_index => Some(()),
+        _ => None,
+    })
 }
 
 /// Give ourselves a Red Potion and use it, verifying it heals us and gets
@@ -40,14 +106,10 @@ fn use_consumable(config: &Config) -> Result<(), String> {
     // skill sweep, the first @die is consumed to resurrect the player on the
     // spot without triggering a RemoveEntity event. We wait briefly, and if we
     // don't stay dead, we send @die again.
-    let first_death = context.wait_for_within(
-        "first death attempt",
-        Duration::from_secs(2),
-        &mut |event| match event {
-            NetworkEvent::RemoveEntity { entity_id, .. } if entity_id.0 == player_id.0 => Some(()),
-            _ => None,
-        },
-    );
+    let first_death = context.wait_for_within("first death attempt", Duration::from_secs(2), &mut |event| match event {
+        NetworkEvent::RemoveEntity { entity_id, .. } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    });
     if first_death.is_err() {
         context.say("@die")?;
         context.wait_for("death", |event| match event {
@@ -168,7 +230,7 @@ fn identify(config: &Config) -> Result<(), String> {
         .map_err(|_| "disconnected")?;
 
     let (skill_id, skill_level) = context.wait_for("AutoRunSkill", |event| match event {
-        NetworkEvent::AutoRunSkill { skill_id, skill_level } => Some((*skill_id, *skill_level)),
+        NetworkEvent::AutoRunSkill { skill_id, skill_level, .. } => Some((*skill_id, *skill_level)),
         _ => None,
     })?;
 

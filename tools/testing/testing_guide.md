@@ -133,6 +133,13 @@ The headless tester (`korangar-networking/examples/headless-tester.rs`) automate
 * **Smoke test result (2026-07-11)**: PASS — login → character select → map load → chat round-trip, exit 0; failure paths (bad credentials, missing character, dead server) exit 1.
 * **Full scenario catalog**: [headless_test_plan.md](headless_test_plan.md) (10 phases: session, GM bootstrap, movement, combat, skill sweep, items, dialogue, multi-client social, DM campaign commands, protocol coverage).
 * **Bug documentation & port-back workflow**: [headless_findings.md](headless_findings.md) — every failed scenario gets an entry classifying the layer (shared crate / client / server) before the fix lands.
+* **Graphical-client handoff matrix**: the “Expanded-suite graphical-client handoff” section in [headless_findings.md](headless_findings.md) records what is shared automatically, what still needs UI verification, and what remains blocked.
+
+The expanded runner currently registers 91 scenarios across phases 1–9. Phase
+8 requires a pre-provisioned, non-GM `headless2` account with a `HeadlessTwo`
+character; automatic Hercules `_M` registration may be disabled in the local
+login configuration. Phase 9 covers the Seal Cascade dice and DM command
+contracts.
 
 ### B. Manual: Graphical Client
 Since Korangar is a graphical client, manual integration testing is used to verify the actual game loop against a live Hercules server.
@@ -156,3 +163,23 @@ Perform the following functional checks during feature updates (see [M1-p0-verif
 - [x] **Economy**: Inventory drag & drop, item split, NPC shop buying/selling in English (utilizes compilation of 13k+ names from [items.json](../../docs/items.json)), item identification (Magnifiers), and Kafra storage grids.
 - [x] **NPC Interaction**: Dialogue options, warp transitions, and dialogue numeric/string inputs.
 - [x] **Skill menus**: Teleport destination selection/cancel and Whitesmith Upgrade Weapon selection were live-verified on macOS 2026-07-12; refine failure, success acknowledgement, and the refinement visual effect rendered correctly.
+- [x] **Repair Weapon core flow**: live-verified on macOS 2026-07-12 — the cast completed, the selection window offered Sword, clicking it repaired the item, and chat displayed `Repair succeeded for Sword.` Headless success and cancellation scenarios also pass. Window resize/move and graphical Cancel remain presentation checks.
+- [x] **Universal window resizing**: live-verified on macOS 2026-07-12. All current windows resize horizontally and vertically. The interface component default is resizable, stored height is preserved instead of being overwritten by content layout, edge deltas are axis-specific, and future windows inherit two-axis resizing unless they deliberately constrain their dimensions.
+- [x] **Account-independent skills and sprites**: every selected character rebuilds its skill layout from that character's job and requests the corresponding SPR/ACT resources through the global asset loaders. Logout and character selection clear learned skills and hotbar bindings so account-specific state cannot leak into the next login; valid decoded assets remain globally cached. The runtime skill paths are relative to the loaders' `data\\sprite\\` root and have regression coverage.
+
+### C. Skill Icon Asset Audit
+
+Run from the nested client directory so `client/game_archives.ron` and the GRFs
+resolve exactly as they do for the graphical client:
+
+```bash
+cd korangar
+cargo run --release --bin skill-asset-audit
+```
+
+The audit evaluates the patched Lua skill catalog, takes the union of every
+player job's visible skill-tree layout, and verifies that each skill resolves a
+loadable SPR/ACT pair. The archive list must include `renewal2021.grf` and
+`resources2021.grf` in addition to `data.grf` and `rdata.grf`.
+
+**Result (2026-07-12):** 1,007 visible skills checked; 0 missing icon assets.

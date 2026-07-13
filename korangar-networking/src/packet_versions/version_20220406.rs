@@ -539,9 +539,7 @@ where
         skill_level: packet.skill_level,
         spell_point_cost: packet.skill_sp,
         attack_range: AttackRange(packet.skill_range),
-        skill_name: String::from_utf8_lossy(&packet.skill_name)
-            .trim_end_matches('\0')
-            .to_owned(),
+        skill_name: String::from_utf8_lossy(&packet.skill_name).trim_end_matches('\0').to_owned(),
         upgradable: packet.up_flag != 0,
     })?;
     packet_handler.register(|packet: UpdateHotkeysPacket| NetworkEvent::SetHotkeyData {
@@ -876,12 +874,15 @@ where
     packet_handler.register(|packet: SkillCooldownListPacket| NetworkEvent::SkillCooldownList {
         cooldowns: packet.cooldowns,
     })?;
-    packet_handler.register(|packet: RefinableWeaponListPacket| NetworkEvent::RefinableWeaponList {
-        weapons: packet.weapons,
-    })?;
+    packet_handler.register(|packet: RefinableWeaponListPacket| NetworkEvent::RefinableWeaponList { weapons: packet.weapons })?;
     packet_handler.register(|packet: WeaponRefineResultPacket| NetworkEvent::WeaponRefineResult {
         result: packet.result,
         item_id: packet.item_id,
+    })?;
+    packet_handler.register(|packet: RepairableItemListPacket| NetworkEvent::RepairableItemList { items: packet.items })?;
+    packet_handler.register(|packet: ItemRepairResultPacket| NetworkEvent::ItemRepairResult {
+        inventory_index: packet.inventory_index,
+        success: packet.result == 0,
     })?;
     packet_handler.register(|packet: DamagePacket1| match packet.damage_type {
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
