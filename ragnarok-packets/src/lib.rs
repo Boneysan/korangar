@@ -209,13 +209,13 @@ pub struct InventoryIndex(pub u16);
 
 impl FromBytes for InventoryIndex {
     fn from_bytes(byte_reader: &mut ByteReader) -> ConversionResult<Self> {
-        u16::from_bytes(byte_reader).map(|raw| Self(raw - 2))
+        u16::from_bytes(byte_reader).map(|raw| Self(raw.wrapping_sub(2)))
     }
 }
 
 impl ToBytes for InventoryIndex {
     fn to_bytes(&self, byte_writer: &mut ByteWriter) -> ConversionResult<usize> {
-        u16::to_bytes(&(self.0 + 2), byte_writer)
+        u16::to_bytes(&self.0.wrapping_add(2), byte_writer)
     }
 }
 

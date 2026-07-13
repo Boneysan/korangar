@@ -120,7 +120,11 @@ fn friend_reject(config: &Config) -> Result<(), String> {
         .reject_friend_request(requestee.account_id, requestee.character_id)
         .map_err(|_| "partner disconnected")?;
     primary.wait_for("friend rejection result", |event| match event {
-        NetworkEvent::ChatMessage { text, .. } if text.to_ascii_lowercase().contains("reject") => Some(()),
+        NetworkEvent::ChatMessage { text, .. }
+            if text.to_ascii_lowercase().contains("reject") || text.to_ascii_lowercase().contains("does not want to be friends") =>
+        {
+            Some(())
+        }
         _ => None,
     })
 }
@@ -253,7 +257,7 @@ fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(
     })?;
     partner.net.accept_trade().map_err(|_| "partner disconnected")?;
     primary.wait_for("successful TradeStart", |event| match event {
-        NetworkEvent::TradeStart { result: 0, .. } => Some(()),
+        NetworkEvent::TradeStart { result: 3, .. } => Some(()),
         _ => None,
     })
 }

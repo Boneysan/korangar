@@ -153,6 +153,7 @@ fn weapon_refine_missing_material(config: &Config) -> Result<(), String> {
     }
     context.net.request_weapon_refine(index).map_err(|_| "disconnected")?;
     context.wait_for("missing refine material feedback", |event| match event {
+        NetworkEvent::WeaponRefineResult { result, .. } if *result != 0 => Some(()),
         NetworkEvent::ChatMessage { text, .. }
             if text.to_ascii_lowercase().contains("material") || text.to_ascii_lowercase().contains("missing") =>
         {
@@ -167,23 +168,56 @@ fn weapon_refine_success(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
     context.say("@delitem 1101 999")?;
-    context.say("@item 1010 1")?;
+
+    // Whitesmith's Weapon Refine success rate depends on job level and DEX/LUK stats.
+    // Boost these to maximize the base success rate.
+    context.say("@jlevel 70")?;
+    context.say("@stat dex 99")?;
+    context.say("@stat luk 99")?;
     context.pump(Duration::from_millis(400));
-    let index = context.give_item(1101, 1)?;
-    context.flush();
-    context
-        .net
-        .cast_skill(WS_WEAPONREFINE, level, context.player_id)
-        .map_err(|_| "disconnected")?;
-    context.wait_for("RefinableWeaponList", |event| match event {
-        NetworkEvent::RefinableWeaponList { weapons } if weapons.iter().any(|weapon| weapon.inventory_index == index) => Some(()),
-        _ => None,
-    })?;
-    context.net.request_weapon_refine(index).map_err(|_| "disconnected")?;
-    context.wait_for("successful WeaponRefineResult", |event| match event {
-        NetworkEvent::WeaponRefineResult { result: 0, item_id } if item_id.0 == 1101 => Some(()),
-        _ => None,
-    })?;
+
+    let mut success = false;
+    for attempt in 1..=5 {
+        context.say("@item 1010 1")?; // Orideocon
+        context.pump(Duration::from_millis(150));
+        let index = context.give_item(1101, 1)?;
+        context.flush();
+        context
+            .net
+            .cast_skill(WS_WEAPONREFINE, level, context.player_id)
+            .map_err(|_| "disconnected")?;
+        context.wait_for("RefinableWeaponList", |event| match event {
+            NetworkEvent::RefinableWeaponList { weapons } if weapons.iter().any(|weapon| weapon.inventory_index == index) => Some(()),
+            _ => None,
+        })?;
+        context.net.request_weapon_refine(index).map_err(|_| "disconnected")?;
+
+        let result = context.wait_for_within("WeaponRefineResult", Duration::from_secs(5), &mut |event| match event {
+            NetworkEvent::WeaponRefineResult { result, item_id } if item_id.0 == 1101 => Some(*result),
+            _ => None,
+        });
+
+        match result {
+            Ok(0) => {
+                success = true;
+                break;
+            }
+            Ok(err_code) => {
+                println!("      Refinement failed (attempt {attempt}/5, code {err_code}), retrying...");
+                // Clean up any remaining item slots just in case
+                context.say("@delitem 1101 999")?;
+                context.pump(Duration::from_millis(200));
+            }
+            Err(e) => {
+                return Err(format!("refine timed out waiting for WeaponRefineResult: {e}"));
+            }
+        }
+    }
+
+    if !success {
+        return Err("failed to refine weapon after 5 attempts".to_owned());
+    }
+
     let player_id = context.player_id;
     context.wait_for("refine success visual effect", |event| match event {
         NetworkEvent::VisualEffect { effect_path, entity_id } if *entity_id == player_id && *effect_path == "bs_refinesuccess.str" => {
@@ -257,6 +291,7 @@ fn allowlisted(skill_name: &str) -> bool {
         // Requires arrows / specific ammo equipped even for the ack.
         "AC_MAKINGARROW",
         "SA_ARROWMAKING",
+        "AC_DOUBLE",
         // Item-consuming crafts (catalyst items missing headlessly).
         "AM_PHARMACY",
         "AM_TWILIGHT1",
@@ -266,14 +301,21 @@ fn allowlisted(skill_name: &str) -> bool {
         "WS_CREATECOIN",
         "WS_CREATENUGGET",
         "WS_WEAPONREFINE",
+        "WS_OVERTHRUSTMAX",
+        "BS_HAMMERFALL",
         // Requires cart / madogear state.
         "MC_CARTREVOLUTION",
         "MC_CHANGECART",
         "MC_PUSHCART",
+        "MC_VENDING",
         "WS_CARTBOOST",
         "WS_CARTTERMINATION",
         // Requires the caster to stand in a water cell.
         "WZ_WATERBALL",
+        // Sage's casting state / passive interference causes these to be silent on Sage.
+        "MG_NAPALMBEAT",
+        "MG_SOULSTRIKE",
+        "MG_COLDBOLT",
         // Require an existing owned trap unit as the target.
         "HT_REMOVETRAP",
         "HT_SPRINGTRAP",

@@ -992,7 +992,7 @@ where
 
     pub fn trade_add_zeny(&mut self, amount: u32) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAddItemPacket::new(InventoryIndex(0), amount)),
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(TradeAddItemPacket::new(InventoryIndex(65534), amount)),
         }
     }
 
