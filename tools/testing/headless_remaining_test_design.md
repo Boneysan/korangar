@@ -11,9 +11,16 @@ fixtures, scenario names, exact assertions, cleanup rules, and acceptance gates.
 > below (notably: `1d1` cannot equal 1 — sides clamp to ≥2; quest coverage is a
 > quest-*log* lifecycle scenario via new `QuestAdded/Removed/List` events rather
 > than `dm-quest-markers`; and `dm-beat-table` runs all 19 arc menus + all 59 warp
-> beats but catalogues rather than executes story/encounter beats). Still
-> outstanding: the destructive-lifecycle create/delete/relogin refinements in §4,
-> and the full `--scenario all` double-run acceptance gate.
+> beats but catalogues rather than executes story/encounter beats).
+>
+> **Status (2026-07-13): COMPLETE.** The §4 destructive-lifecycle refinements
+> are implemented and green (see `headless_test_plan.md` "§4 destructive-lifecycle
+> refinements closed"), and the full `--scenario all` double-run acceptance gate
+> passed: 106/106 → 105/106 (one `TF_HIDING` observation-window flake, 3/3 on
+> immediate retest) → 106/106. Debugging the gate surfaced two real state bugs —
+> a persisted GM `@hide` (`char.option`) breaking proximity scenarios, and
+> `area_size: 30` exposing entities beyond `max_walk_path` — both fixed at the
+> harness level; see the 2026-07-13 rows in `headless_findings.md`.
 
 ## 1. Scope and completion boundary
 

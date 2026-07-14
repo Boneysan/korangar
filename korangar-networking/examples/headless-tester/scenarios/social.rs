@@ -30,6 +30,16 @@ pub(super) fn connect_pair(config: &Config) -> Result<(TestContext, TestContext)
     primary.warp(&map_name, x, y)?;
     primary.pump(Duration::from_millis(500));
     partner.pump(Duration::from_millis(500));
+    eprintln!(
+        "    [connect_pair] partner at {}({}, {}), primary at {}({}, {}), partner sees primary: {}",
+        partner.map_name,
+        partner.position.x,
+        partner.position.y,
+        primary.map_name,
+        primary.position.x,
+        primary.position.y,
+        partner.entities.contains_key(&primary.player_id)
+    );
     Ok((primary, partner))
 }
 
@@ -56,8 +66,16 @@ fn whisper_emotion(config: &Config) -> Result<(), String> {
     })?;
 
     partner.flush();
+    primary.flush();
     primary.net.request_emotion(1).map_err(|_| "primary disconnected")?;
     let player_id = primary.player_id;
+    // The emotion is an area broadcast that includes the sender, so the
+    // sender-side echo separates "server rejected the emote" from "partner
+    // out of view range".
+    primary.wait_for("own DisplayEmotion echo", |event| match event {
+        NetworkEvent::DisplayEmotion { entity_id, emotion: 1 } if *entity_id == player_id => Some(()),
+        _ => None,
+    })?;
     partner.wait_for("DisplayEmotion", |event| match event {
         NetworkEvent::DisplayEmotion { entity_id, emotion: 1 } if *entity_id == player_id => Some(()),
         _ => None,

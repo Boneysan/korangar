@@ -300,7 +300,7 @@ needed to route the fix:
 
 | Phase | Status | Priority |
 |---|---|---|
-| 1 Session lifecycle | ✅ core implemented (smoke) — create/delete/slot-switch pending | follow-up |
+| 1 Session lifecycle | ✅ implemented and green incl. §4 destructive-lifecycle refinements (2026-07-13) | done |
 | 2 GM channel | ✅ implemented and green | done |
 | 3 Movement/world | ✅ implemented and green | done |
 | 4 Combat melee | ✅ implemented and green | done |
@@ -336,3 +336,19 @@ non-first menu choice.
   partner character; needs the one-time `tools/testing/fixtures/grant-slotchange.sql`
   entitlement grant (the GM character stays `slotchange=0` so the rejection scenario
   remains valid).
+
+### §4 destructive-lifecycle refinements closed (2026-07-13)
+
+Per `headless_remaining_test_design.md` §4:
+- `character-create-delete`: now also asserts the created slot, persistence
+  across a fresh character-server session, duplicate-name rejection without
+  character-list mutation, absence after delete + reconnect, and cleans up the
+  temp character even when a mid-scenario assertion fails.
+- `character-delete-after-play` (new): disposable character enters the map
+  once, is deleted from character select, and absence is verified across two
+  reconnects with no collateral ID/slot/name changes to other characters.
+- `logout-relogin`: chat markers before logout and after relogin prove both
+  sessions are actionable.
+- `respawn`: pins the save point (`@warp prontera` + `@save`), asserts the
+  respawn `ChangeMap` lands on the save map, waits for HP > 0, and completes a
+  movement round trip before healing up.

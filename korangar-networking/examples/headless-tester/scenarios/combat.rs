@@ -188,11 +188,22 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
     // GM rights, where @monster is unavailable).
     let mut natural = None;
     for leg in 0..8 {
+        // With the enlarged view radius, entities are visible far beyond
+        // practical walking distance — pick the closest mob, and only within
+        // a range a provoke walk can realistically cover.
+        let position = context.position;
         natural = context
             .entities
             .iter()
-            .find(|(_, entity)| (1001..2000).contains(&entity.job_id.0))
-            .map(|(entity_id, entity)| (*entity_id, entity.job_id.0));
+            .filter(|(_, entity)| (1001..2000).contains(&entity.job_id.0))
+            .map(|(entity_id, entity)| {
+                let mob = entity.position.tile_position();
+                let distance = mob.x.abs_diff(position.x).max(mob.y.abs_diff(position.y));
+                (*entity_id, entity.job_id.0, distance)
+            })
+            .filter(|(_, _, distance)| *distance <= 12)
+            .min_by_key(|(_, _, distance)| *distance)
+            .map(|(entity_id, job_id, _)| (entity_id, job_id));
         if natural.is_some() {
             break;
         }

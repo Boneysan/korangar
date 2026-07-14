@@ -216,6 +216,16 @@ impl TestContext {
         // Let the initial burst (inventory, skill tree, stats, entities) land.
         context.pump(Duration::from_millis(800));
 
+        // Baseline state: a GUI DM session may have left the GM character
+        // hidden (`@hide` persists via char.option), which makes it invisible
+        // to other clients and untargetable by mobs — silently breaking every
+        // proximity-dependent scenario. Clear all option flags best-effort
+        // (harmless no-op rejection on the non-GM partner account).
+        if username == config.username {
+            let _ = context.say("@option 0 0 0");
+            context.pump(Duration::from_millis(200));
+        }
+
         Ok(context)
     }
 
@@ -518,24 +528,51 @@ impl TestContext {
         Ok(())
     }
 
-    /// Walk to a tile and wait out the travel time.
+    /// Walk to a tile and wait out the travel time. Long walks are split into
+    /// short hops: the server silently ignores move requests beyond
+    /// `max_walk_path` (17 cells stock), and with the enlarged `area_size`
+    /// view radius entities are visible well past that.
     pub fn walk_to(&mut self, x: u16, y: u16) -> Result<(), String> {
         use ragnarok_packets::{Direction, WorldPosition};
 
-        self.flush();
-        self.net
-            .player_move(WorldPosition::new(x, y, Direction::North))
-            .map_err(|_| "disconnected")?;
-        let (origin, destination) = self.wait_for("PlayerMove ack", |event| match event {
-            NetworkEvent::PlayerMove { origin, destination, .. } => Some((origin.tile_position(), destination.tile_position())),
-            _ => None,
-        })?;
+        const MAX_HOP: i32 = 10;
 
-        let distance = (origin.x.abs_diff(destination.x)).max(origin.y.abs_diff(destination.y)) as u64;
-        // Base walk speed is ~150ms/cell at speed 150; pad generously.
-        self.pump(Duration::from_millis((distance * 200 + 400).min(4000)));
-        self.position = destination;
-        Ok(())
+        for _hop in 0..12 {
+            let current = self.position;
+            let dx = x as i32 - current.x as i32;
+            let dy = y as i32 - current.y as i32;
+            if dx == 0 && dy == 0 {
+                return Ok(());
+            }
+            let step_x = (current.x as i32 + dx.clamp(-MAX_HOP, MAX_HOP)) as u16;
+            let step_y = (current.y as i32 + dy.clamp(-MAX_HOP, MAX_HOP)) as u16;
+
+            self.flush();
+            self.net
+                .player_move(WorldPosition::new(step_x, step_y, Direction::North))
+                .map_err(|_| "disconnected")?;
+            let (origin, destination) = self.wait_for("PlayerMove ack", |event| match event {
+                NetworkEvent::PlayerMove { origin, destination, .. } => Some((origin.tile_position(), destination.tile_position())),
+                _ => None,
+            })?;
+
+            let distance = (origin.x.abs_diff(destination.x)).max(origin.y.abs_diff(destination.y)) as u64;
+            // Base walk speed is ~150ms/cell at speed 150; pad generously.
+            self.pump(Duration::from_millis((distance * 200 + 400).min(4000)));
+            self.position = destination;
+
+            // Close enough: the server may route around small obstacles.
+            if self.position.x.abs_diff(x) <= 1 && self.position.y.abs_diff(y) <= 1 {
+                return Ok(());
+            }
+            if self.position.x == current.x && self.position.y == current.y {
+                return Err(format!(
+                    "walk made no progress toward ({x}, {y}) from ({}, {})",
+                    current.x, current.y
+                ));
+            }
+        }
+        Err(format!("did not reach ({x}, {y}) within the hop budget"))
     }
 
     /// `@item` an item and return its inventory index.
