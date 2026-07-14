@@ -29,7 +29,9 @@ macro_rules! time_phase {
     }
 }
 
+mod dm;
 mod graphics;
+use crate::dm::DmCampaignStatePathExt;
 mod input;
 mod state;
 #[macro_use]
@@ -1693,6 +1695,15 @@ impl Client {
                                 entity.set_dead(client_tick);
                                 entity.stop_movement();
 
+                                // Record the kill for the bestiary journal.
+                                // Raw job IDs only — the bestiary data itself
+                                // is parsed lazily when the journal opens.
+                                let job_id = entity.get_job_id().0 as u32;
+                                let unlocked = self.client_state.follow_mut(client_state().dm_campaign().bestiary_unlocked());
+                                if !unlocked.contains(&job_id) {
+                                    unlocked.push(job_id);
+                                }
+
                                 // Remove the entity from the list of alive entities.
                                 self.client_state
                                     .follow_mut(client_state().entities())
@@ -1872,7 +1883,10 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::WarpSelection);
                     self.interface.close_window_with_class(WindowClass::WeaponRefine);
 
-                    self.async_loader.request_map_load(map_name, Some(position));
+                    // Instanced maps (`000#pronter`) must load their base
+                    // map's resources; the wire name has no `.rsw`.
+                    let resource_name = self.game_file_loader.resolve_map_name(&map_name);
+                    self.async_loader.request_map_load(resource_name, Some(position));
                 }
                 NetworkEvent::UpdateClientTick { client_tick, received_at } => {
                     self.game_timer.set_client_tick(client_tick, received_at);
@@ -4327,6 +4341,22 @@ impl Client {
                         match self.interface.is_window_with_class_open(WindowClass::Commands) {
                             true => self.interface.close_window_with_class(WindowClass::Commands),
                             false => self.interface.open_window(CommandsWindow::new(client_state().commands_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleBestiaryWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::Bestiary) {
+                            true => self.interface.close_window_with_class(WindowClass::Bestiary),
+                            false => self.interface.open_window(BestiaryWindow::new(client_state().bestiary_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleLootWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::DmLoot) {
+                            true => self.interface.close_window_with_class(WindowClass::DmLoot),
+                            false => self.interface.open_window(LootGeneratorWindow::new(client_state().loot_window())),
                         }
                     }
                 }

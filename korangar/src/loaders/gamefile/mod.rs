@@ -141,6 +141,34 @@ impl GameFileLoader {
         self.add_archive(lua_archive, false);
     }
 
+    /// Resolve a server-sent map name to a loadable `.rsw` resource name.
+    ///
+    /// Hercules instanced maps arrive as `<instance>#<base>` (e.g.
+    /// `000#pronter`), and the 12-byte wire limit may additionally have
+    /// truncated the base name. Strip the instance prefix and, when the
+    /// stripped name has no `.rsw` of its own, complete it against the
+    /// archive file table (first alphabetical match).
+    pub fn resolve_map_name(&self, map_name: &str) -> String {
+        if map_name.is_empty() || self.file_exists(&format!("data\\{map_name}.rsw")) {
+            return map_name.to_owned();
+        }
+
+        let Some((_, base)) = map_name.rsplit_once('#') else {
+            return map_name.to_owned();
+        };
+
+        if self.file_exists(&format!("data\\{base}.rsw")) {
+            return base.to_owned();
+        }
+
+        let prefix = format!("data\\{}", base.to_lowercase());
+        self.get_files_with_extension(&[".rsw"])
+            .iter()
+            .find(|path| path.to_lowercase().starts_with(&prefix))
+            .map(|path| path["data\\".len()..path.len() - ".rsw".len()].to_owned())
+            .unwrap_or_else(|| base.to_owned())
+    }
+
     pub fn get_files_with_extension(&self, extensions: &[&str]) -> Vec<String> {
         let mut files = Vec::new();
         self.archives
@@ -154,7 +182,32 @@ impl GameFileLoader {
 
         files
     }
+}
 
+#[cfg(test)]
+mod resolve_map_name_tests {
+    use super::GameFileLoader;
+
+    /// Needs the configured game archives; run explicitly with
+    /// `cargo test -p korangar resolve_map_name -- --ignored`.
+    #[test]
+    #[ignore]
+    fn resolves_instanced_and_truncated_names() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        // Plain maps resolve to themselves.
+        assert_eq!(game_file_loader.resolve_map_name("prontera"), "prontera");
+        // Instance prefix is stripped.
+        assert_eq!(game_file_loader.resolve_map_name("001#izlude"), "izlude");
+        // A wire-truncated base name is completed from the archive table.
+        assert_eq!(game_file_loader.resolve_map_name("000#pronter"), "prontera");
+        // Unknown names fall through unchanged.
+        assert_eq!(game_file_loader.resolve_map_name("no_such_map"), "no_such_map");
+    }
+}
+
+impl GameFileLoader {
     fn patch_lua_files(&self) {
         use lunify::{Format, Settings, unify};
 

@@ -10,6 +10,7 @@ mod chat;
 mod commands;
 mod dialog;
 mod dice;
+mod dm;
 mod equipment;
 mod error;
 #[cfg(feature = "debug")]
@@ -66,6 +67,7 @@ pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
 pub use self::commands::{CommandsWindow, CommandsWindowState};
 pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::dice::{DiceWindow, DiceWindowState};
+pub use self::dm::{BestiaryWindow, BestiaryWindowState, LootGeneratorWindow, LootWindowState};
 pub use self::equipment::EquipmentWindow;
 pub use self::error::ErrorWindow;
 #[cfg(feature = "debug")]
@@ -151,6 +153,10 @@ pub enum WindowClass {
     Commands,
     /// Dice roller (sends `@roll`). Available to all players in all builds.
     Dice,
+    /// Bestiary journal (Seal Cascade campaign, unlock-on-kill).
+    Bestiary,
+    /// DM loot / rewards generator (Seal Cascade campaign).
+    DmLoot,
     #[cfg(feature = "debug")]
     Maps,
     #[cfg(feature = "debug")]

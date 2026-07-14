@@ -152,6 +152,21 @@ where
                                     },
                                 ),
                             },
+                            split! {
+                                gaps: theme().window().gaps(),
+                                children: (
+                                    button! {
+                                        text: "Bestiary",
+                                        tooltip: "Monster manual with stats and drops (unlocks on kill)",
+                                        event: InputEvent::ToggleBestiaryWindow,
+                                    },
+                                    button! {
+                                        text: "Loot generator",
+                                        tooltip: "Data-driven reward suggestions and @dmreward presets",
+                                        event: InputEvent::ToggleLootWindow,
+                                    },
+                                ),
+                            },
                             text! {
                                 text: "Tip: Ctrl+D opens the Dice Roller. @dm* also works in chat.",
                                 overflow_behavior: OverflowBehavior::LineBreak,

@@ -48,9 +48,10 @@ use crate::PacketHistory;
 use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
+use crate::dm::DmCampaignState;
 use crate::interface::windows::{
-    ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState, LoginWindowState,
-    LoginWindowStatePathExt, SkillTreeWindowState, WindowCache, WindowClass,
+    BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState,
+    LoginWindowState, LoginWindowStatePathExt, LootWindowState, SkillTreeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -161,6 +162,12 @@ pub struct ClientState {
     dialog_window: DialogWindowState,
     /// Internal state of the skill tree window.
     skill_tree_window: SkillTreeWindowState,
+    /// Internal state of the bestiary journal window.
+    bestiary_window: BestiaryWindowState,
+    /// Internal state of the DM loot generator window.
+    loot_window: LootWindowState,
+    /// Seal Cascade campaign progress (bestiary unlocks).
+    dm_campaign: DmCampaignState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -344,6 +351,9 @@ impl ClientState {
             let chat_window = ChatWindowState::default();
             let dice_window = DiceWindowState::default();
             let commands_window = CommandsWindowState::default();
+            let bestiary_window = BestiaryWindowState::default();
+            let loot_window = LootWindowState::default();
+            let dm_campaign = DmCampaignState::default();
         });
 
         time_phase!("create character server resources", {
@@ -436,6 +446,9 @@ impl ClientState {
             chat_window,
             dice_window,
             commands_window,
+            bestiary_window,
+            loot_window,
+            dm_campaign,
             friend_list_window,
             dialog_window,
             skill_tree_window,

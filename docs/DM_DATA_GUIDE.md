@@ -102,10 +102,18 @@ Generated via Python parsers from `Hercules_RO/db/re/*.conf` (renewal, matching 
 - **Events**: Extend NetworkEvent or use chat parser for [DMJ] to update (e.g., "mob killed" → unlock).
 - **UI patterns**: Reuse `item_box`/`skill_box` for cards/loot display. Use reactive paths.
 - **Next quick wins** (after E7.1 server [DMJ]):
-  1. Load bestiary.json + basic journal window (static + unlock on kill).
+  1. ✅ (2026-07-14) Load bestiary.json + basic journal window (static + unlock
+     on kill) — `src/dm/data.rs` (embedded via `include_str!`, lazy `OnceLock`
+     parse, ID/sprite/drops indexes) + `interface/windows/dm/bestiary.rs`
+     (search, ???-locked entries, Reveal all, `@monster` spawn). Unlock hook on
+     monster death in `lib.rs`; session-scoped (`DmCampaignState`).
   2. Dice cards from chat parse.
-  3. Rewards drawer using items.json + simple filter.
-  4. Encounter panel with bestiary search + stats preview.
+  3. ✅ (2026-07-14) Rewards drawer using items.json + simple filter —
+     `src/dm/loot.rs` generator (level ±5 drops, difficulty budgets, type
+     buckets) + `interface/windows/dm/loot.rs` (per-row `@item` grants,
+     `@dmreward <arc> <tier>` presets). Launchers on the Ctrl+O DM tab.
+  4. Encounter panel with bestiary search + stats preview (bestiary window
+     covers search/stats/spawn; initiative & scaling still open).
 - **Loot table builder**: Standalone tool (or in DM console) that takes party level + desired difficulty → outputs suggested mob + reward list.
 - **Testing**: Use the data to simulate encounters (e.g., party DPS vs mob HP/DPS).
 

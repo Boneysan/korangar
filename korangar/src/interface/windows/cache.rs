@@ -143,6 +143,9 @@ impl WindowCache {
             WindowClass::Respawn => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 140.0),
             WindowClass::FriendRequest => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
             WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 470.0, 520.0),
+            // DM campaign tools: bestiary right of center, loot generator left.
+            WindowClass::Bestiary => state(AnchorPoint::CenterRight, -(400.0 + MARGIN), -240.0, 380.0, 480.0),
+            WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
             // Login / char select stay centered (menu flow).
             WindowClass::Login | WindowClass::SelectServer | WindowClass::CharacterSelection | WindowClass::CharacterCreation => {

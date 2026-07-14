@@ -360,6 +360,10 @@ pub enum InputEvent {
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
+    /// Open or close the bestiary journal. Only works while playing.
+    ToggleBestiaryWindow,
+    /// Open or close the DM loot generator. Only works while playing.
+    ToggleLootWindow,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]
     ToggleThemeInspectorWindow,

@@ -55,6 +55,7 @@ rayon = { workspace = true }
 ron = { workspace = true }
 rust-state = { workspace = true }
 serde = { workspace = true }
+serde_json = { workspace = true }
 sevenz-rust2 = { workspace = true, features = ["compress"] }
 smallvec = { workspace = true, features = ["const_generics", "const_new", "union"] }
 spin_sleep = { workspace = true }

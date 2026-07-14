@@ -1930,6 +1930,7 @@ dependencies = [
  "ron",
  "rust-state",
  "serde",
+ "serde_json",
  "sevenz-rust2",
  "smallvec",
  "spin_sleep",
