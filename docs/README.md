@@ -85,6 +85,8 @@ These are concrete, code-level guides ready for implementation:
 ### Other / Historical
 - [protocol/2026-07-07-handoff.md](protocol/2026-07-07-handoff.md) — Packet audit handoff note.
 - [2026-07-10-handover.md](2026-07-10-handover.md) — Client/server bring-up handover covering connectivity, controls, and the bundled English item-name path.
+- [2026-07-13-session-notes.md](2026-07-13-session-notes.md) — Sprite lighting modes, emote bubbles, jobname.lub sprite resolution, entity-sprite audit.
+- [2026-07-14-session-notes.md](2026-07-14-session-notes.md) — Headless→graphical port-back closure (instanced-map resolution, skill-asset audit), E7 first slice (Bestiary Journal + Loot Generator), main merge. **Start here to resume DM-feature work.**
 - [dm-atcommand-feedback.md](dm-atcommand-feedback.md) — `dispbottom` / `@dm` chat via packet `0x017F`; pair with Hercules `planning/dm-mode-troubleshooting.md`.
 - [storage-window.md](storage-window.md) — Kafra storage grid, drag packets, `close2` then `openstorage` UX.
 

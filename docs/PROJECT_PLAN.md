@@ -75,7 +75,7 @@ the server actually supports, then exceeding the official client with custom fea
 ### 1.3 `~/GitHub/korangar` — the client codebase
 
 - Rust nightly workspace; wgpu rendering; builds on Linux/Windows/macOS.
-- **DM client docs**: See new `DM_CLIENT_IMPLEMENTATION.md` for architecture to execute E7. Core DM code (dm/ + windows/dm/) not started yet; all E7 is still in planning + recent packet/world deep dives.
+- **DM client docs**: See `DM_CLIENT_IMPLEMENTATION.md` for architecture to execute E7. Core DM code **started 2026-07-14**: `src/dm/` (embedded bestiary/items/cards data layer + loot generator) and `interface/windows/dm/` (Bestiary Journal, Loot Generator) shipped — see `2026-07-14-session-notes.md` and `DM_DATA_GUIDE.md` quick-wins. Dice cards (E7.2), quest journal (E7.3), and initiative panel (E7.5) still open.
 - Speaks exactly **one packet version: 20220406** (`korangar-networking`).
 - Loads `data.grf` + `rdata.grf` from `korangar/korangar/`; additional archives configurable; overrides in `korangar/archive/data/`; server list in `archive/data/sclientinfo.xml`.
 - Built-in dev tools behind `debug` feature: packet inspector, profiler, theme/frame inspectors, command window.
@@ -207,7 +207,7 @@ Legend — **Korangar status**: ✅ implemented · 🔶 partial/present in code,
 ### 2.9 HerculesRO custom systems (beyond the official client)
 | Feature | Korangar | Pri | Notes |
 |---|---|---|---|
-| **DM campaign interface** (Seal Cascade) | ❌ | **P1 custom** | Flagship custom feature — full design in [DM_INTERFACE.md](DM_INTERFACE.md); tasks in E7 |
+| **DM campaign interface** (Seal Cascade) | 🔶 | **P1 custom** | Flagship custom feature — full design in [DM_INTERFACE.md](DM_INTERFACE.md); tasks in E7. Shipped: Ctrl+O GM/DM panel, Ctrl+D dice roller, Bestiary Journal + Loot Generator (2026-07-14, pending live GUI pass) |
 | Player dice rolls (`@roll`, GM level 0) | 🔶 | P1 custom | Works today as chat text; native dice cards in E7.2 |
 | Campaign quest journal (IDs 20000–20234) | ❌ | P1 custom | Supersedes official `OngoingQuestInfoList` pipeline; E7.3 |
 | Custom utility NPCs (warper, healer, jobmaster, stylist…) | ✅ | P0 | Standard dialog/shops — covered by existing NPC support |
