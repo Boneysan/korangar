@@ -79,15 +79,82 @@ limits, strict one-action turns. RO characters are balanced around ASPD and
 sustained DPS; a free-action time window preserves that economy, a turn
 economy erases it.
 
+## Phase B — time dilation: extend the native clock (the real ATB)
+
+The engine's gates are authentic ATB but tick at machine speed — ASPD
+delays run 0.4–2 s, aftercast a few seconds. Bars that refill in under
+2 s read as cooldown flicker, not turns. The pacing benchmark is **FF6:
+~6–8 s per bar fill**, so Phase B does not impose a new clock: it
+**dilates the engine's own timers ~4–6×** (tune the multiplier so the
+party's median ASPD lands near 6 s) while an encounter is in ATB mode.
+Because the multiplier is uniform, stat ratios survive — the AGI-built
+Assassin still acts ~1.6× as often as the Knight, now visibly.
+
+Dilation levers (all confirmed in-tree, 2026-07-15):
+
+| Timer | Mechanism | Access |
+| --- | --- | --- |
+| ASPD + walk speed | `SC_DEC_AGI` / `SC_QUAGMIRE` (AGI-down statuses slow both) | script (`sc_start`) today — crude; ties dilation to a dispellable debuff |
+| Cast time | `SC_SLOWCAST` (+val2% cast, `src/map/skill.c:17572`) | script today |
+| Aftercast delay (`canact_tick`) | `delayrate` multiplier (`src/map/status.c:1509`) — only Bragi *lowers* it; nothing script-side raises it | small plugin hooking `skill->delay_fix` (+ walk/ASPD done properly there too), gated on a DM-instance mapflag |
+| Auto-attack (`attackabletime`) | ASPD-derived; follows the ASPD lever | — |
+
+Recommended shape: prototype the feel with the script-only SC combo, then
+replace with one plugin-provided `SC_DM_TIMEDILATION` (or mapflag check)
+scaling all four coherently — the SC-combo route stays as the fallback.
+
+**Movement stays continuous (MMO-style, deliberate).** Players move
+freely at all times, WoW-style — only the *action* gates are turns. But
+walk speed **must be dilated by the same multiplier** as the combat
+timers: at normal walk speed with 6 s attack gates, everyone kites
+everything forever and melee never lands. Slowed uniformly, movement
+becomes its own tactical currency — repositioning to flank or escape an
+AoE costs a visible fraction of your bar-fill time, which is the ATB
+equivalent of spending your move action. (The AGI-down SC route slows
+walk automatically; the dilation plugin must do it deliberately.)
+
+**Combat flow under DM-initiated ATB** (what a fight actually looks like):
+
+1. DM starts the encounter (`@dminitiative atb` on a registered
+   encounter). Dilation applies to party + registered mobs, the ATB strip
+   appears, and the whole fight drops into ~5× slow motion.
+2. Combat is continuous but legible: bars fill over ~6–8 s; when yours
+   fills, your queued attack/skill fires (input works as normal RO —
+   click target, cast — the gate just opens slower). Mob wind-ups become
+   readable telegraphs; hazard pulses (E7.11) become dodgeable on
+   purpose rather than by reflex.
+3. Between beats the DM narrates and calls checks — "as the golem winds
+   up, Wynne: AGI check to slip behind it" — dice cards resolve while
+   bars keep crawling. Tension comes from the clock, FF-style, not from
+   the world stopping.
+4. The DM's **hold button** (`setpcblock`/`SC_STOP`, the one surviving
+   use of the hard locks) freezes everything for real narration moments;
+   release resumes mid-fill.
+5. Encounter ends (kill, `@dminitiative stop`, or manual complete on the
+   E7.8 panel) → dilation clears, world returns to real time. Cleanup
+   unconditional, as ever.
+
+Net feel change: a fight that took 40 seconds of real-time blur now runs
+4–6 minutes; each individual swing is an *event* the table watches, which
+is what makes downed states, death saves (`@dmdown`), and mid-fight
+checks actually playable instead of instantaneous. The Phase A
+structured-rounds mode above remains the cheaper first slice and the
+strict-turns option for tables that want it; dilation is the mode that
+matches how the engine actually works.
+
+Client: the ATB strip stops animating scripted windows and renders the
+**real gates** — predicted client-side from the ASPD/cast math it already
+knows, corrected by `[DMJ]` ticks (or Phase B packets if echo latency
+shows at the table). DM per-combatant overrides come from the encounter
+panel (E7.8).
+
 ## Phasing
 
-- **MVP (Phase A, script + client widget):** fixed windows, party +
-  encounter-registry mobs only, `setpcblock`/`SC_STOP` enforcement, `[DMJ]`
-  sync, ATB strip UI. No core changes.
-- **Later (Phase B):** charge rates scaled from live AGI/ASPD instead of
-  fixed windows; client-side bar prediction between `[DMJ]` events; custom
-  packets if script-echo latency shows at the table; DM per-combatant
-  window overrides from the encounter panel (E7.8).
+- **MVP (Phase A, script + client widget):** structured rounds — fixed
+  windows, party + encounter-registry mobs, `setpcblock`/`SC_STOP`
+  enforcement, `[DMJ]` sync, ATB strip UI. No core changes.
+- **Phase B:** time dilation as above — script-SC prototype first, then
+  the dilation plugin; strip switches to rendering predicted native gates.
 
 ## Open questions (decide at build time)
 
