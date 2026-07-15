@@ -1,0 +1,41 @@
+{
+ "_meta": {
+  "purpose": "Elite/tiered-reskin mob ids that inherit their base monster's lore entry rather than getting bespoke prose. Ragnarok's own naming convention marks these: 'Solid/Swift/Elusive/Furious <Base>', '<Base> Ringleader' (dungeon/instance elite tiers), a job-class prefix on a named NPC-mob ('Paladin Randel' etc., Lighthalzen Bio Lab research-staff set), or the same display Name reused across multiple mob_db ids (simultaneous-spawn duplicates, e.g. the four Incarnation of Morroc splinters).",
+  "resolution": "Bestiary detail pane: if mob_id has no entry in mob_lore_campaign.json / mob_lore_rml.json / mob_lore.json, look up here; if present, render base_id's lore with the 'tier' string appended as a small tag (e.g. 'Elite variant of Stapo.').",
+  "generated": "2026-07-15, manual review — NOT a fuzzy/heuristic match; every row is an exact-name convention match, verified against db/re/mob_db.conf"
+ },
+ "variants": {
+  "2643": { "base_id": 1784, "tier": "Ringleader (elite variant of Stapo)" },
+  "2741": { "base_id": 1055, "tier": "Ringleader (elite variant of Muka)" },
+  "2750": { "base_id": 1614, "tier": "Solid (elite variant of Mineral)" },
+  "2753": { "base_id": 1191, "tier": "Elusive (elite variant of Mimic)" },
+  "2761": { "base_id": 1143, "tier": "Ringleader (elite variant of Marionette)" },
+  "2769": { "base_id": 1836, "tier": "Swift (elite variant of Magmaring)" },
+  "2770": { "base_id": 1063, "tier": "Solid (elite variant of Lunatic)" },
+  "2790": { "base_id": 1029, "tier": "Solid (elite variant of Isis)" },
+  "2794": { "base_id": 1777, "tier": "Swift (elite variant of Ice Titan)" },
+  "2838": { "base_id": 1117, "tier": "Elusive (elite variant of Evil Druid)" },
+  "2851": { "base_id": 1110, "tier": "Furious (elite variant of Dokebi)" },
+  "2854": { "base_id": 1109, "tier": "Solid (elite variant of Deviruchi)" },
+  "2875": { "base_id": 2223, "tier": "Ringleader (elite variant of Celia)" },
+  "2889": { "base_id": 1315, "tier": "Ringleader (elite variant of Assaulter)" },
+  "2912": { "base_id": 1713, "tier": "Solid (elite variant of Acidus)" },
+  "2710": { "base_id": 2015, "tier": "Solid (elite variant of Dark Pinguicula)" },
+  "2828": { "base_id": 1783, "tier": "Elusive (elite variant of Galion)" },
+  "2844": { "base_id": 1781, "tier": "Solid (elite variant of Drosera)" },
+  "2738": { "base_id": 1780, "tier": "Elusive (elite variant of Muscipular)" },
+  "2742": { "base_id": 1918, "tier": "Furious (elite variant of Incarnation of Morroc)" },
+  "2228": { "base_id": 2221, "tier": "Paladin-tier (Bio Lab research-staff set)" },
+  "2229": { "base_id": 2222, "tier": "Creator-tier (Bio Lab research-staff set)" },
+  "2230": { "base_id": 2223, "tier": "Professor-tier (Bio Lab research-staff set)" },
+  "2231": { "base_id": 2224, "tier": "Champion-tier (Bio Lab research-staff set)" },
+  "2232": { "base_id": 2225, "tier": "Stalker-tier (Bio Lab research-staff set)" },
+  "2233": { "base_id": 2226, "tier": "Clown-tier (Bio Lab research-staff set)" },
+  "2234": { "base_id": 2227, "tier": "Gypsy-tier (Bio Lab research-staff set)" },
+  "1716": { "base_id": 1713, "tier": "duplicate spawn id, same entity (Acidus)" },
+  "1717": { "base_id": 1714, "tier": "duplicate spawn id, same entity (Ferus)" },
+  "1919": { "base_id": 1918, "tier": "duplicate spawn id, same entity (Incarnation of Morroc)" },
+  "1920": { "base_id": 1918, "tier": "duplicate spawn id, same entity (Incarnation of Morroc)" },
+  "1921": { "base_id": 1918, "tier": "duplicate spawn id, same entity (Incarnation of Morroc)" }
+ }
+}

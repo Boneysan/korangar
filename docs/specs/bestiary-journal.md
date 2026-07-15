@@ -8,30 +8,60 @@
 - `docs/bestiary.json` — Primary: Id, Name, Lv, Hp, Stats (STR- LUK), Attack, Def, Mdef, MoveSpeed, AttackDelay, Element, Race (inferred), XP, Skills (with Level/Rate/Delay), PhysDPS/MagicDPS.
   - **Known export gaps (audit 2026-07-15)**: Element/Race/Size present for only 3/1759 entries and Skills empty for all — the exporter never read those `mob_db.conf` fields / `mob_skill_db.conf`. Mode flags (Aggressive/Looter/…) never exported. Extend + regenerate before building the lore-check Identity/Combat tiers.
 - **Lore (game data for the Scholar tier — ships in the client, embedded
-  like bestiary.json):**
-  - `docs/mob_lore.json` — 533/1759 mobs, fetched from ragnarok.fandom.com
+  like bestiary.json). Combined coverage: 650/1759 bestiary mobs, and
+  100% of the 62 mobs actually spawned along the campaign's arc route
+  (verified 2026-07-15 by cross-referencing `CAMPAIGN.md`'s arc maps
+  against Hercules' real spawn tables in `npc/re/mobs/`):**
+  - `docs/mob_lore.json` — 540/1759 mobs, fetched from ragnarok.fandom.com
     by `tools/fetch_mob_lore.py` (CC-BY-SA; attribution kept in `_meta` +
-    per-entry `url`).
+    per-entry `url`). Entries are **short excerpts, capped ~500 chars at
+    a sentence boundary** — a blurb for the Scholar-tier panel, not the
+    full article; `url` always links the complete source. **Bug fixed
+    2026-07-15**: the disambiguation filter was matching the *hatnote*
+    text ("For other uses, see X (disambiguation)") that prefixes some
+    articles' real content and discarding the whole entry — Nightmare,
+    Nine Tail, and Dark Illusion were silently dropped this way. Fetcher
+    now strips leading hatnotes before both the filter check and storage.
   - `docs/mob_lore_rml.json` — 151 mob ids from Mitten's fan "Ragnarok
     Monster Lore" encyclopedia (WarpPortal forums), fetched display-clean
-    by `tools/fetch_mob_lore_rml.py`. Deeper than the Fandom intros
-    (Atroce 3.8k chars; official-kRO-sourced material for classic MVPs);
-    ~49 ids Fandom lacks. Fan-authored, no explicit license — shipped in
-    this private non-commercial client with author/source attribution
-    retained per entry.
-  - `docs/mob_lore_campaign.json` — 19 hand-authored Seal Cascade entries
-    (2026-07-15) covering every campaign-referenced mob no external source
-    documents (Amon Ra, Tao Gunka, Ifrit, Venatu, Celia, the Niflheim/
-    banquet dead, the corrected kill-quest targets). Grounded in the
-    campaign vault's beat docs; spoiler-calibrated (foreshadows arcs,
-    reveals no twists).
-  - **Merge priority in the detail pane**: campaign > RML > Fandom. Show a
-    small source line under the lore text.
+    and excerpted (~500 char cap, same rule as above — source posts run
+    up to 13k chars uncapped; official-kRO-sourced material for classic
+    MVPs) by `tools/fetch_mob_lore_rml.py`. ~49 ids Fandom lacks.
+    Fan-authored, no explicit license — shipped in this private
+    non-commercial client as a short excerpt with author/source
+    attribution retained per entry.
+  - `docs/mob_lore_campaign.json` — **49 hand-authored Seal Cascade
+    entries** (2026-07-15). First 19: every campaign-referenced mob no
+    external source documents (Amon Ra, Tao Gunka, Ifrit, Venatu, the
+    Niflheim/banquet dead, the corrected kill-quest targets). Remaining
+    30, added the same day via a **zone-prioritized authoring pass**
+    (arc route maps → real spawn tables → intersect against still-
+    uncovered ids): RSX-0806 and the Wounded Morroc / Incarnation of
+    Morroc finale bosses grounded directly in the Arc 7 and Arc 19 vault
+    synopses; the six Lighthalzen Bio Lab researchers (Randel, Flamel,
+    Chen, Gertie, Alphoccio, Trentini) as a new "Prometheus Project"
+    thread consistent with the existing Rekenber/Bio Labs plot; the
+    Hugel dragon-nest family, Veins' carnivorous-plant trio, Izlude's
+    turtle-dungeon wardens, and Payon/Morroc/Prontera zone flavor. All
+    spoiler-calibrated — foreshadows arcs, reveals no twists.
+  - `docs/mob_lore_variants.json` — **32-entry elite/tiered-reskin
+    inheritance map** (manually verified exact-name matches against
+    `mob_db.conf`, not fuzzy matching — an earlier fuzzy-match attempt
+    produced wrong hits like "Choco"→"Coco" and was discarded). Covers
+    Ragnarok's own tier-naming conventions: `Solid/Swift/Elusive/Furious
+    <Base>`, `<Base> Ringleader`, the Lighthalzen research-staff
+    job-class prefixes (`Paladin Randel` etc.), and same-name duplicate
+    spawn ids (the four Incarnation of Morroc splinters, the Acidus/Ferus
+    pairs). Detail pane: if a mob has no direct entry, look up here and
+    render the `base_id`'s lore with the `tier` string as a small tag
+    ("Elite variant of Stapo.").
+  - **Merge priority in the detail pane**: campaign > RML > Fandom >
+    variant-inherited. Show a small source line under the lore text.
   - Audit note: the earlier "20 campaign mobs missing lore" list contained
     six phantoms — "Elder" was a word-match false positive, and five were
     off-by-one MobId typos in `quest_db.conf` (Evil Snake Lord→Zipper Bear,
     Galion→Roween, Gazeti→Ice Titan, Siroma→Snowier, Blazer→Lava Golem),
-    fixed server-side 2026-07-15.
+    fixed server-side 2026-07-15 (Hercules `d28ffb666`).
 - Cross with `cards.json` for "associated cards".
 - `items.json` for drop-related lore if needed.
 - Static campaign data from `Hercules_RO/npc/custom/dm_campaign/` + planning docs (arcs, which mobs appear).

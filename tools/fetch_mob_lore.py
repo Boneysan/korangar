@@ -30,7 +30,33 @@ USER_AGENT = "SealCascadeDM/1.0 (private tabletop campaign tool; polite batch fe
 BATCH = 20          # MediaWiki extracts limit per query
 SLEEP = 0.7         # politeness delay between requests
 
-DISAMBIG_MARKERS = ("may refer to", "can refer to", "disambiguation")
+DISAMBIG_MARKERS = ("may refer to", "can refer to")
+HATNOTE = re.compile(r"^For [^.\n]*,?\s*see [^.\n]*\.\s*\n*", re.I)
+EXCERPT_CHARS = 500  # bestiary panel is a blurb, not the whole article; url stays for the full text
+
+
+def excerpt(text, limit=EXCERPT_CHARS):
+    """Trim to a short representative excerpt at a sentence boundary."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    end = max(cut.rfind(". "), cut.rfind(".\n"), cut.rfind("! "), cut.rfind("? "))
+    if end > limit * 0.4:  # don't cut absurdly short if punctuation is sparse
+        cut = cut[:end + 1]
+    return cut.strip() + "…"
+
+
+def clean_extract(extract):
+    """Strip leading hatnotes ('For other uses, see X (disambiguation).')
+    that precede the real article text — these matched our old blunt
+    disambiguation filter and caused real lore (Nightmare, Nine Tail,
+    Dark Illusion) to be silently discarded. Loop: some articles stack
+    two hatnotes (character + anime disambiguation)."""
+    prev = None
+    while prev != extract:
+        prev = extract
+        extract = HATNOTE.sub("", extract).strip()
+    return extract
 
 
 def parse_mob_names():
@@ -119,14 +145,14 @@ def recovery_pass(lore, name_to_ids):
             continue
         for page in data.get("query", {}).get("pages", {}).values():
             title = page.get("title")
-            extract = (page.get("extract") or "").strip()
-            if title not in resolved or "missing" in page or not extract:
+            if title not in resolved or "missing" in page:
                 continue
-            if any(m in extract.lower()[:120] for m in DISAMBIG_MARKERS):
+            extract = clean_extract((page.get("extract") or "").strip())
+            if not extract or any(m in extract.lower()[:120] for m in DISAMBIG_MARKERS):
                 continue
             url = "https://ragnarok.fandom.com/wiki/" + urllib.parse.quote(title.replace(" ", "_"))
             for mid in name_to_ids[resolved[title]]:
-                lore.setdefault(str(mid), {"title": title, "lore": extract, "url": url})
+                lore.setdefault(str(mid), {"title": title, "lore": excerpt(extract), "url": url})
         time.sleep(SLEEP)
 
 
@@ -172,13 +198,13 @@ def main():
             page = by_title.get(resolved[queried])
             if not page or "missing" in page:
                 continue
-            extract = (page.get("extract") or "").strip()
+            extract = clean_extract((page.get("extract") or "").strip())
             if not extract or any(m in extract.lower()[:120] for m in DISAMBIG_MARKERS):
                 continue
             title = page["title"]
             url = "https://ragnarok.fandom.com/wiki/" + urllib.parse.quote(title.replace(" ", "_"))
             for mid in name_to_ids[queried]:
-                lore[str(mid)] = {"title": title, "lore": extract, "url": url}
+                lore[str(mid)] = {"title": title, "lore": excerpt(extract), "url": url}
 
         print(f"batch {n}/{len(batches)}: {len(lore)} mobs matched so far")
         time.sleep(SLEEP)

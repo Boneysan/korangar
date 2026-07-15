@@ -42,6 +42,17 @@ ALIASES = {
 }
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (SealCascadeDM lore reference fetch)"
 SLEEP = 1.0
+EXCERPT_CHARS = 500  # ship a short representative excerpt, not the full forum post; url stays for the rest
+
+
+def excerpt(text, limit=EXCERPT_CHARS):
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    end = max(cut.rfind(". "), cut.rfind(".\n"), cut.rfind("! "), cut.rfind("? "))
+    if end > limit * 0.4:
+        cut = cut[:end + 1]
+    return cut.strip() + "…"
 
 
 def get(url):
@@ -127,7 +138,7 @@ def main():
                 hit = by_norm[close[0]] if len(close) == 1 else None
             if hit:
                 mob_ids += mob_names[hit]
-        record = {"title": title, "lore": text, "url": url, "author": "Mitten (RML project)"}
+        record = {"title": title, "lore": excerpt(text), "url": url, "author": "Mitten (RML project)"}
         if mob_ids:
             for mid in sorted(set(mob_ids)):
                 entries[str(mid)] = record

@@ -3,7 +3,7 @@
   "source": "https://ragnarok.fandom.com (MediaWiki API, intro extracts)",
   "license": "CC-BY-SA — attribution required; raw reference text, rewrite in campaign voice before player-facing use",
   "fetched": "2026-07-15",
-  "coverage": "533/1759 bestiary mobs"
+  "coverage": "540/1759 bestiary mobs"
  },
  "mobs": {
   "1001": {
@@ -163,7 +163,7 @@
   },
   "1039": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "1040": {
@@ -256,6 +256,11 @@
    "lore": "Bigfoot is a large, lonely bear that lives in a deep cave. He eats anything he can lay his hands on, adding to his massive bulk. He's very lazy and tends to doze off, but he becomes extremely violent when he's disturbed.\nFortunately, travelers needn't worry so lo... Although its name may be misleading, Bigfoot is actually a large bear. It walks like it owns the forest and it does.",
    "url": "https://ragnarok.fandom.com/wiki/Bigfoot"
   },
+  "1061": {
+   "title": "Nightmare",
+   "lore": "Nightmare is a horse which guides the wagon that leads the dead to Hel. It never gets tired, its nose blows off burning anesthetic smoke, and it's feet are ablaze with raging hellfire. A ghostly horse that radiates a violet aura of evil.",
+   "url": "https://ragnarok.fandom.com/wiki/Nightmare"
+  },
   "1062": {
    "title": "Santa Poring",
    "lore": "A special Poring wearing a Santa Hat. It usually comes out during the winter holidays.",
@@ -328,7 +333,7 @@
   },
   "1077": {
    "title": "Poison Spore",
-   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "lore": "Poison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
    "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
   },
   "1078": {
@@ -578,7 +583,7 @@
   },
   "1128": {
    "title": "Horn",
-   "lore": "For the monster drop, see Horn (item).\n\nHorn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
+   "lore": "Horn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
    "url": "https://ragnarok.fandom.com/wiki/Horn"
   },
   "1129": {
@@ -588,7 +593,7 @@
   },
   "1130": {
    "title": "Jakk",
-   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "lore": "Jakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
    "url": "https://ragnarok.fandom.com/wiki/Jakk"
   },
   "1131": {
@@ -673,7 +678,7 @@
   },
   "1147": {
    "title": "Maya",
-   "lore": "For the Norman character, see Maya (anime).\n\nMaya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
+   "lore": "Maya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
    "url": "https://ragnarok.fandom.com/wiki/Maya"
   },
   "1148": {
@@ -748,7 +753,7 @@
   },
   "1165": {
    "title": "Sandman",
-   "lore": "For the Hunter skill, see Sandman (skill).\n\nSandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
+   "lore": "Sandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
    "url": "https://ragnarok.fandom.com/wiki/Sandman"
   },
   "1166": {
@@ -800,6 +805,11 @@
    "title": "Whisper",
    "lore": "Whisper is a bedcover-shaped monster. As a ghost it doesn't get any damage from normal weapons. It is a piece of living fabric that gives off spooky vibes. Sometimes it likes to turn invisible...",
    "url": "https://ragnarok.fandom.com/wiki/Whisper"
+  },
+  "1180": {
+   "title": "Nine Tail",
+   "lore": "Nine Tail is a smart fox of nine tails. It has rumored to shapeshift into a Norman, but the theory hasn`t been proven.\nA fox with nine tails, it looks just like a regular fox but has nine lush tails. Nine Tail is a magical fox that has slowly absorbed the forest's magic for a long period of time. It is said that they can become Norman once every one thousand years.",
+   "url": "https://ragnarok.fandom.com/wiki/Nine_Tail"
   },
   "1183": {
    "title": "Chonchon",
@@ -873,22 +883,22 @@
   },
   "1200": {
    "title": "Zherlthsh",
-   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "lore": "Zherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
    "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
   },
   "1203": {
    "title": "Mysteltainn",
-   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "lore": "Although Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
    "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
   },
   "1204": {
    "title": "Tirfing",
-   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "lore": "Tirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
    "url": "https://ragnarok.fandom.com/wiki/Tirfing"
   },
   "1205": {
    "title": "Executioner",
-   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "lore": "Although Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
    "url": "https://ragnarok.fandom.com/wiki/Executioner"
   },
   "1206": {
@@ -903,7 +913,7 @@
   },
   "1208": {
    "title": "Wandering Man",
-   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "lore": "Wandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
    "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
   },
   "1209": {
@@ -933,7 +943,7 @@
   },
   "1219": {
    "title": "Knight of Abyss",
-   "lore": "For the character from the animation, see Abysmal Knight (anime).\n\nKnight of Abyss is a a knight that has served the owner of the legendary maze. It's very powerful, merciless. It is later revealed that the Knight of Abyss was formerly a member of the White Knight cavalry knightage that was part of Glastheim Chivalry when Glastheim was still a city. Members of the knightage were turned into undead by Himmelmez. \nOn iRO, this monster is localized as Abysmal Knight.",
+   "lore": "Knight of Abyss is a a knight that has served the owner of the legendary maze. It's very powerful, merciless. It is later revealed that the Knight of Abyss was formerly a member of the White Knight cavalry knightage that was part of Glastheim Chivalry when Glastheim was still a city. Members of the knightage were turned into undead by Himmelmez. \nOn iRO, this monster is localized as Abysmal Knight.",
    "url": "https://ragnarok.fandom.com/wiki/Knight_of_Abyss"
   },
   "1242": {
@@ -948,12 +958,12 @@
   },
   "1246": {
    "title": "Christmas Cookie",
-   "lore": "For the green version of this monster, see Cookie.\n\nChristmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
+   "lore": "Christmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
    "url": "https://ragnarok.fandom.com/wiki/Christmas_Cookie"
   },
   "1247": {
    "title": "Antonio",
-   "lore": "Antonio was a greedy and rash man who lives in Lutie. When he didn`t become the next village leader, he decided to take revenge and run away with all the toys that were made in the Toy Factory. Antonio claimed that he wanted to take over the factory because he liked it and no one else wanted to keep it running. However, after Santa did some investigation, he discovered Antonio was trying to take his job. Antonio doesn't think it's a big deal if he has a surplus of toys, to which Santa argued that it would not be the same if children received toys from Antonio instead of Santa. Antonio is eventually punished by an adventurer and forced out of the factory.",
+   "lore": "Antonio was a greedy and rash man who lives in Lutie. When he didn`t become the next village leader, he decided to take revenge and run away with all the toys that were made in the Toy Factory. Antonio claimed that he wanted to take over the factory because he liked it and no one else wanted to keep it running. However, after Santa did some investigation, he discovered Antonio was trying to take his job.…",
    "url": "https://ragnarok.fandom.com/wiki/Antonio"
   },
   "1248": {
@@ -1028,7 +1038,7 @@
   },
   "1265": {
    "title": "Cookie",
-   "lore": "For the red version of this monster, see Christmas Cookie.\n\nCookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.",
+   "lore": "Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.",
    "url": "https://ragnarok.fandom.com/wiki/Cookie"
   },
   "1266": {
@@ -1038,7 +1048,7 @@
   },
   "1267": {
    "title": "Carat",
-   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared. Carat can be counted to be one of the most positive creature in Glastheim, despite being cursed and dead countless times, he still tries to entertain everyone. Though not many undead enjoy his act, he still tries to make them happy. Sometimes adventurers might bump onto him and he will try to entertain them as well. Although most of the time he will only get slashed and mistaken for an evil monster. Carat seems to have his concious intact, although like most mime and jester, they are not always in the right mind.\nIt is a mystery how Carat get a hold of his memory and concious, but it is said that the curse never really did anything to him except let him live an infinite life. Some say that his countless life was the curse to all, since everyone hate his joke and act, and its terribly annoying to see him around, even the Dark Lord seems to be ignoring him.",
+   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared.…",
    "url": "https://ragnarok.fandom.com/wiki/Carat"
   },
   "1268": {
@@ -1063,7 +1073,7 @@
   },
   "1272": {
    "title": "Dark Lord",
-   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "lore": "Dark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength.…",
    "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
   },
   "1273": {
@@ -1088,7 +1098,7 @@
   },
   "1277": {
    "title": "Greatest General",
-   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.\n(The original iRO description notes that the village is in ancient Korea, which doesn't make sense in the lore of Ragnarok itself considering there is no Korea in the world of Ragnarok, plus the only village these monsters are found near is Payon.)",
+   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.…",
    "url": "https://ragnarok.fandom.com/wiki/Greatest_General"
   },
   "1278": {
@@ -1141,6 +1151,11 @@
    "lore": "Creamy Fear, as the name implies, is a stronger version of a Creamy that is intended to invoke fear in the hearts of adventurers that are too weak to take it down. Those who are strong enough to defeat a Creamy will be sorely disappointed when encountering a Creamy Fear.",
    "url": "https://ragnarok.fandom.com/wiki/Creamy_Fear"
   },
+  "1302": {
+   "title": "Dark Illusion",
+   "lore": "Dark Illusion rapidly closes the distance to a target and deals damage. Has a low chance to trigger Cross Impact.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Illusion"
+  },
   "1308": {
    "title": "Panzer Goblin",
    "lore": "Panzer Goblin is an advanced Goblin that somehow managed to harness nuclear energy to create a noteworthy jetpack.",
@@ -1158,7 +1173,7 @@
   },
   "1317": {
    "title": "Fur Seal",
-   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter. Perhaps that is the reason that it was named Fur Seal. Sea Otter doesn't seem to recognize that Fur Seal is a different species thus it will not attack Fur Seal whenever it enters their territory.\nIn some versions of Ragnarok Online, Fur Seal is localized as Seal.",
+   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter.…",
    "url": "https://ragnarok.fandom.com/wiki/Fur_Seal"
   },
   "1364": {
@@ -1168,7 +1183,7 @@
   },
   "1373": {
    "title": "Lord of the Dead",
-   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon.…",
    "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
   },
   "1388": {
@@ -1193,7 +1208,7 @@
   },
   "1399": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "1402": {
@@ -1241,9 +1256,14 @@
    "lore": "Marc is a seahorse living under the deep sea. As the solid skin covers all around its body, it's very strong so that normal adventurers might get in trouble seeing it under the sea. A proud-looking sea horse that sort of looks like a dragon. Unfortunately, you can't ride it.",
    "url": "https://ragnarok.fandom.com/wiki/Marc"
   },
+  "1427": {
+   "title": "Nightmare",
+   "lore": "Nightmare is a horse which guides the wagon that leads the dead to Hel. It never gets tired, its nose blows off burning anesthetic smoke, and it's feet are ablaze with raging hellfire. A ghostly horse that radiates a violet aura of evil.",
+   "url": "https://ragnarok.fandom.com/wiki/Nightmare"
+  },
   "1428": {
    "title": "Poison Spore",
-   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "lore": "Poison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
    "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
   },
   "1429": {
@@ -1278,7 +1298,7 @@
   },
   "1436": {
    "title": "Jakk",
-   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "lore": "Jakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
    "url": "https://ragnarok.fandom.com/wiki/Jakk"
   },
   "1437": {
@@ -1426,6 +1446,11 @@
    "lore": "Zerom is an undead slave. Sadly, not even death will bring peace to the abusive hours of labor Zerom suffers for his Pharaoh. He is one of the original settlers of the Morocc region who had been drafted for the construction of the Sphinx. They had been cursed by the king and became monsters guarding the Sphinx from intruders.",
    "url": "https://ragnarok.fandom.com/wiki/Zerom"
   },
+  "1471": {
+   "title": "Nine Tail",
+   "lore": "Nine Tail is a smart fox of nine tails. It has rumored to shapeshift into a Norman, but the theory hasn`t been proven.\nA fox with nine tails, it looks just like a regular fox but has nine lush tails. Nine Tail is a magical fox that has slowly absorbed the forest's magic for a long period of time. It is said that they can become Norman once every one thousand years.",
+   "url": "https://ragnarok.fandom.com/wiki/Nine_Tail"
+  },
   "1472": {
    "title": "Bongun",
    "lore": "Bongun is a frozen male corpse that had become a monster by his own will to protect the girl, Munak. He has a tender passion for Munak; he does anything for her. A male oriental zombie who volunteered to be a monster to protect a girl who became Munak. It seems he fell in love with Munak.",
@@ -1478,22 +1503,22 @@
   },
   "1482": {
    "title": "Zherlthsh",
-   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "lore": "Zherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
    "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
   },
   "1485": {
    "title": "Mysteltainn",
-   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "lore": "Although Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
    "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
   },
   "1486": {
    "title": "Tirfing",
-   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "lore": "Tirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
    "url": "https://ragnarok.fandom.com/wiki/Tirfing"
   },
   "1487": {
    "title": "Executioner",
-   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "lore": "Although Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
    "url": "https://ragnarok.fandom.com/wiki/Executioner"
   },
   "1488": {
@@ -1508,7 +1533,7 @@
   },
   "1490": {
    "title": "Wandering Man",
-   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "lore": "Wandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
    "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
   },
   "1491": {
@@ -1553,7 +1578,7 @@
   },
   "1533": {
    "title": "Fur Seal",
-   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter. Perhaps that is the reason that it was named Fur Seal. Sea Otter doesn't seem to recognize that Fur Seal is a different species thus it will not attack Fur Seal whenever it enters their territory.\nIn some versions of Ragnarok Online, Fur Seal is localized as Seal.",
+   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter.…",
    "url": "https://ragnarok.fandom.com/wiki/Fur_Seal"
   },
   "1534": {
@@ -1588,7 +1613,7 @@
   },
   "1541": {
    "title": "Greatest General",
-   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.\n(The original iRO description notes that the village is in ancient Korea, which doesn't make sense in the lore of Ragnarok itself considering there is no Korea in the world of Ragnarok, plus the only village these monsters are found near is Payon.)",
+   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.…",
    "url": "https://ragnarok.fandom.com/wiki/Greatest_General"
   },
   "1545": {
@@ -1628,7 +1653,7 @@
   },
   "1558": {
    "title": "Sandman",
-   "lore": "For the Hunter skill, see Sandman (skill).\n\nSandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
+   "lore": "Sandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
    "url": "https://ragnarok.fandom.com/wiki/Sandman"
   },
   "1559": {
@@ -1718,7 +1743,7 @@
   },
   "1587": {
    "title": "Kraben",
-   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part. He fears that his real nature will be detected for he has a stump of a tail.",
+   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part.…",
    "url": "https://ragnarok.fandom.com/wiki/Kraben"
   },
   "1589": {
@@ -1745,6 +1770,11 @@
    "title": "Bigfoot",
    "lore": "Bigfoot is a large, lonely bear that lives in a deep cave. He eats anything he can lay his hands on, adding to his massive bulk. He's very lazy and tends to doze off, but he becomes extremely violent when he's disturbed.\nFortunately, travelers needn't worry so lo... Although its name may be misleading, Bigfoot is actually a large bear. It walks like it owns the forest and it does.",
    "url": "https://ragnarok.fandom.com/wiki/Bigfoot"
+  },
+  "1605": {
+   "title": "Dark Illusion",
+   "lore": "Dark Illusion rapidly closes the distance to a target and deals damage. Has a low chance to trigger Cross Impact.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Illusion"
   },
   "1606": {
    "title": "Garm Baby",
@@ -1823,22 +1853,22 @@
   },
   "1688": {
    "title": "Lady Tanee",
-   "lore": "Lady Tanee is a female spirit that has a beautiful face with long hair. She has fragrant skin and her hands and feet are light red, like a pigeon's feet. Her lips are the color of ripen ivy gourd fruit and her body shape is similar to the trunk shape of the musa balbisiana she resides in.\nTanee may come out to seduce a man to have sexual intercourse with her. After having sex with her, the man can’t pay any attention to any other women. If he tries to get with another girl without getting permission from Tanee, Tanee will go after that girl and kill her. If he obtains Tanee's permission with honesty, the guy will easily get the girl with Tanee's help. Some say the guy will lose weight until death soon after having sex with Tanee.\nBecause of this ghost, people prefer not to grow a musa balbisian near their home. If one wants to get the banana leaves to use, the leaves have to be broken or cut before being taken into a house. Taking the whole leaf into a house will cause a family member to die. In the olden days, people lay three leaves of the musa balbisian at the bottom of a coffin.\nWhen the plant is in bloom, some may offer pig head, dessert, rice, flower, candle, incense etc. to Tanee. Some even place rings and necklaces at the inflorescent and tie a red cloth around the pseudostem as her skirt. This practice is to ask her to protect everyone in the house and, at best, get some luck. This is because some believe that Tanee only stays in the plant that blooms. Some say the plant that has Tanee is the one that has a clean pseudostem and green leaves without dry leaf sheathes. The area around the canopy is also clean.\nMore about this Tanee banana: If the inflorescent comes out at the middle of the pseudostem instead of the tip of the pseudostem, it is believe that there is a baby ghost “Kuman Thong” in that inflorescent.",
+   "lore": "Lady Tanee is a female spirit that has a beautiful face with long hair. She has fragrant skin and her hands and feet are light red, like a pigeon's feet. Her lips are the color of ripen ivy gourd fruit and her body shape is similar to the trunk shape of the musa balbisiana she resides in.\nTanee may come out to seduce a man to have sexual intercourse with her. After having sex with her, the man can’t pay any attention to any other women.…",
    "url": "https://ragnarok.fandom.com/wiki/Lady_Tanee"
   },
   "1691": {
    "title": "Kraben",
-   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part. He fears that his real nature will be detected for he has a stump of a tail.",
+   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part.…",
    "url": "https://ragnarok.fandom.com/wiki/Kraben"
   },
   "1708": {
    "title": "Thanatos",
-   "lore": "For the cursed sword, see Tartanos.\n\nThanatos (Korean: 타나토스) is a legendary powerful Warrior who defeated Surt and sealed the jotunn beneath the Morocc castle.\nIn the English release of the manhwa, this character is mistranslated as Tanat.",
+   "lore": "Thanatos (Korean: 타나토스) is a legendary powerful Warrior who defeated Surt and sealed the jotunn beneath the Morocc castle.\nIn the English release of the manhwa, this character is mistranslated as Tanat.",
    "url": "https://ragnarok.fandom.com/wiki/Thanatos"
   },
   "1722": {
    "title": "Jakk",
-   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "lore": "Jakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
    "url": "https://ragnarok.fandom.com/wiki/Jakk"
   },
   "1725": {
@@ -1878,12 +1908,12 @@
   },
   "1735": {
    "title": "Alicel",
-   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Alicel do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Alicel was one of the captured students that was modified to become a monster. Now she roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans.…",
    "url": "https://ragnarok.fandom.com/wiki/Alicel"
   },
   "1736": {
    "title": "Aliot",
-   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Aliot do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Aliot was one of the captured students that was modified to become a monster. Now he roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans.…",
    "url": "https://ragnarok.fandom.com/wiki/Aliot"
   },
   "1737": {
@@ -1893,22 +1923,22 @@
   },
   "1739": {
    "title": "Alicel",
-   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Alicel do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Alicel was one of the captured students that was modified to become a monster. Now she roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans.…",
    "url": "https://ragnarok.fandom.com/wiki/Alicel"
   },
   "1740": {
    "title": "Aliot",
-   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Aliot do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Aliot was one of the captured students that was modified to become a monster. Now he roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans.…",
    "url": "https://ragnarok.fandom.com/wiki/Aliot"
   },
   "1741": {
    "title": "Christmas Cookie",
-   "lore": "For the green version of this monster, see Cookie.\n\nChristmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
+   "lore": "Christmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
    "url": "https://ragnarok.fandom.com/wiki/Christmas_Cookie"
   },
   "1742": {
    "title": "Carat",
-   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared. Carat can be counted to be one of the most positive creature in Glastheim, despite being cursed and dead countless times, he still tries to entertain everyone. Though not many undead enjoy his act, he still tries to make them happy. Sometimes adventurers might bump onto him and he will try to entertain them as well. Although most of the time he will only get slashed and mistaken for an evil monster. Carat seems to have his concious intact, although like most mime and jester, they are not always in the right mind.\nIt is a mystery how Carat get a hold of his memory and concious, but it is said that the curse never really did anything to him except let him live an infinite life. Some say that his countless life was the curse to all, since everyone hate his joke and act, and its terribly annoying to see him around, even the Dark Lord seems to be ignoring him.",
+   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared.…",
    "url": "https://ragnarok.fandom.com/wiki/Carat"
   },
   "1743": {
@@ -2048,7 +2078,7 @@
   },
   "1848": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "1849": {
@@ -2078,7 +2108,7 @@
   },
   "1855": {
    "title": "Poison Spore",
-   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "lore": "Poison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
    "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
   },
   "1856": {
@@ -2128,7 +2158,7 @@
   },
   "1876": {
    "title": "Lord of the Dead",
-   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon.…",
    "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
   },
   "1878": {
@@ -2138,7 +2168,7 @@
   },
   "1897": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "1898": {
@@ -2168,7 +2198,7 @@
   },
   "1926": {
    "title": "Jakk",
-   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "lore": "Jakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
    "url": "https://ragnarok.fandom.com/wiki/Jakk"
   },
   "1927": {
@@ -2190,6 +2220,11 @@
    "title": "Entweihen Crothen",
    "lore": "Entweihen Crothen is a middle-rank demon that was supposedly related to Nacht Sieger as an advisor or some sort. But actually it seeks the opportunity to kill Nacht Sieger and usurp his position amongst the demons.",
    "url": "https://ragnarok.fandom.com/wiki/Entweihen_Crothen"
+  },
+  "1964": {
+   "title": "Nightmare",
+   "lore": "Nightmare is a horse which guides the wagon that leads the dead to Hel. It never gets tired, its nose blows off burning anesthetic smoke, and it's feet are ablaze with raging hellfire. A ghostly horse that radiates a violet aura of evil.",
+   "url": "https://ragnarok.fandom.com/wiki/Nightmare"
   },
   "1965": {
    "title": "Wild Rose",
@@ -2253,27 +2288,27 @@
   },
   "2039": {
    "title": "Executioner",
-   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "lore": "Although Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
    "url": "https://ragnarok.fandom.com/wiki/Executioner"
   },
   "2040": {
    "title": "Tirfing",
-   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "lore": "Tirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
    "url": "https://ragnarok.fandom.com/wiki/Tirfing"
   },
   "2041": {
    "title": "Mysteltainn",
-   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "lore": "Although Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
    "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
   },
   "2051": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "2052": {
    "title": "Dark Lord",
-   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "lore": "Dark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength.…",
    "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
   },
   "2058": {
@@ -2298,7 +2333,7 @@
   },
   "2071": {
    "title": "Headless Mule",
-   "lore": "Headless Mule is a figure in Brazilian folklore. In most tales, it is the ghost of a woman that has been cursed by God for her sins (often said to be as concubinate or fornication with a priest within a church) and condemned to turn into a fire-spewing headless mule, galloping through the countryside from Thursday's sundown to Friday's sunrise. The myth has several variations concerning the sin that turned the cursed woman into the monster: necrophagy, infanticide, sacrilege against the church, fornication, etc.",
+   "lore": "Headless Mule is a figure in Brazilian folklore. In most tales, it is the ghost of a woman that has been cursed by God for her sins (often said to be as concubinate or fornication with a priest within a church) and condemned to turn into a fire-spewing headless mule, galloping through the countryside from Thursday's sundown to Friday's sunrise.…",
    "url": "https://ragnarok.fandom.com/wiki/Headless_Mule"
   },
   "2075": {
@@ -2333,17 +2368,17 @@
   },
   "2100": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "2101": {
    "title": "Lord of the Dead",
-   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon.…",
    "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
   },
   "2102": {
    "title": "Dark Lord",
-   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "lore": "Dark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength.…",
    "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
   },
   "2103": {
@@ -2408,7 +2443,7 @@
   },
   "2213": {
    "title": "Wandering Man",
-   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "lore": "Wandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
    "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
   },
   "2217": {
@@ -2448,7 +2483,7 @@
   },
   "2292": {
    "title": "Horn",
-   "lore": "For the monster drop, see Horn (item).\n\nHorn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
+   "lore": "Horn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
    "url": "https://ragnarok.fandom.com/wiki/Horn"
   },
   "2294": {
@@ -2478,7 +2513,7 @@
   },
   "2303": {
    "title": "Maya",
-   "lore": "For the Norman character, see Maya (anime).\n\nMaya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
+   "lore": "Maya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
    "url": "https://ragnarok.fandom.com/wiki/Maya"
   },
   "2305": {
@@ -2523,17 +2558,17 @@
   },
   "2320": {
    "title": "Bakonawa",
-   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.…",
    "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
   },
   "2321": {
    "title": "Bakonawa",
-   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.…",
    "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
   },
   "2322": {
    "title": "Bakonawa",
-   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.…",
    "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
   },
   "2324": {
@@ -2543,7 +2578,7 @@
   },
   "2325": {
    "title": "Baphomet",
-   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "lore": "Baphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard.…",
    "url": "https://ragnarok.fandom.com/wiki/Baphomet"
   },
   "2327": {
@@ -2553,7 +2588,7 @@
   },
   "2345": {
    "title": "Zherlthsh",
-   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "lore": "Zherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
    "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
   },
   "2346": {
@@ -2593,7 +2628,7 @@
   },
   "2564": {
    "title": "Fenrir",
-   "lore": "Fenrir (Korean: 펜릴) is the Wolf God who was reincarnated into the Warlock Fenris Fenrir.\nIt is unknown where Fenrir fits into the scheme of things as both Fenris and Frigg hint that Fenrir was a part of the Thousand-Year War but that doesn't necessarily mean he participated in the war. It seems Fenrir was very familiar with Baldr as the wolf had been to Baldr's temple Breidablik (since Fenris recalled it being very grand when she visited the ruins in A.W. 996) and Fenris literally threw herself into the arms of Baldr's reincarnation when she found him.",
+   "lore": "Fenrir (Korean: 펜릴) is the Wolf God who was reincarnated into the Warlock Fenris Fenrir.\nIt is unknown where Fenrir fits into the scheme of things as both Fenris and Frigg hint that Fenrir was a part of the Thousand-Year War but that doesn't necessarily mean he participated in the war. It seems Fenrir was very familiar with Baldr as the wolf had been to Baldr's temple Breidablik (since Fenris recalled it being very grand when she visited the ruins in A.W.…",
    "url": "https://ragnarok.fandom.com/wiki/Fenrir"
   },
   "2924": {

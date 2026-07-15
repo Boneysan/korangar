@@ -100,6 +100,156 @@
    "title": "Celia",
    "lore": "In the inner corridors of the buried biosphere, the Administrator's security still walks its rounds wearing a woman's face. The Celia-pattern constructs are courteous, symmetrical, and wrong in the way a reflection is wrong — a defense layer built to be mistaken for staff until the moment of enforcement. Each carries a fraction of the facility's old authority: doors obey them, lights follow them, and the outer labs' escaped subjects flee at the sound of their even, unhurried footsteps.",
    "source": "campaign"
+  },
+  "2398": {
+   "title": "Little Poring",
+   "lore": "Even Prontera's gentlest export has an off-season. Little Porings swarm the fountain plaza in numbers no forager can explain, bouncing underfoot in a mood the city's children call playful and the Sigil Ring calls something else — a low, cheerful pressure, the same overflow the party learned to read as the cascade's earliest tremor. They are harmless alone. In a crowd this size, harmless stops being reassuring.",
+   "source": "campaign"
+  },
+  "1290": {
+   "title": "Skeleton General",
+   "lore": "The bone-fields past Payon buried common soldiers by the thousand, and one grave in a hundred remembers rank. A Skeleton General still marshals — raises a rusted blade in signal, and the lesser dead nearby straighten their line before they attack. Payon's tomb-guides say the generals don't know the war ended; they know only that the whistle hasn't blown to stand down, and no living officer has come to give the order.",
+   "source": "campaign"
+  },
+  "1301": {
+   "title": "Am Mut",
+   "lore": "A jackal-headed watcher out of the desert's oldest stories, said to weigh a traveler's heart against a feather at the threshold of the dead. In Payon's outer sands the Am Mut has forgotten the ceremony and kept only the appetite — it still confronts anyone who crosses its ground, still judges, but the verdict is no longer in question. Rashid warns new parties not to mistake its patience for mercy; it is only being thorough.",
+   "source": "campaign"
+  },
+  "1307": {
+   "title": "Cat o' Nine Tails",
+   "lore": "Nine fox-spirits sharing one body, or one spirit wearing nine faces — Payon's grove-folk argue the point and agree on the danger. It moves like a shrug, all its tails flicking a different direction at once, and no two witnesses describe the same face as the one that struck them. The shrine-mediums treat it as an omen of a choice not yet made: nine possible paths, and the cat has not decided which one to close.",
+   "source": "campaign"
+  },
+  "1297": {
+   "title": "Ancient Mummy",
+   "lore": "Morroc's sand keeps its dead honest — wrapped, sealed, and shelved in the pyramid's lower galleries long before the dynasty that built Amon Ra's chamber ever cut stone. An Ancient Mummy does not shamble like the recently raised; it processes, unhurried, wrappings trailing curse-dust that outlives its wearer's patience. Tomb-guides rate them lower on the danger scale than the fresher dead, on the grounds that at least a mummy is predictable. They are also, usually, right.",
+   "source": "campaign"
+  },
+  "1314": {
+   "title": "Permeter",
+   "lore": "The turtle-dungeon beneath Izlude keeps three elemental wardens turning in an old rotation, and Permeter is the ground's turn — a stone-plated tortoise slow enough to mistake for terrain until the floor itself seems to attack. Sailors call the dungeon's cycling wardens 'the argument,' because Permeter, Heater, and Freezer have never agreed on which element should own the depths, and something down there keeps refusing to let any of them win outright.",
+   "source": "campaign"
+  },
+  "1318": {
+   "title": "Heater",
+   "lore": "The second warden of Izlude's turtle-dungeon rotation, shell glowing coal-red, patrolling galleries that stay warm long after it passes. Divers who've mapped the depths note that Heater never strays into Freezer's territory and Freezer never strays into Heater's — an old boundary neither warden seems able to cross, as if something set the lines before either of them had an opinion about it.",
+   "source": "campaign"
+  },
+  "1319": {
+   "title": "Freezer",
+   "lore": "Where Heater's galleries run warm, Freezer's run cold enough to fog a diver's lamp — the turtle-dungeon's third warden, patient and armored in frost that never quite melts even this close to the volcanic vents nearby. Local legend holds that the three wardens (Permeter, Heater, Freezer) were sealed here to keep something older and unaligned from picking an element at all. Nobody has confirmed what. Nobody has gone deep enough to ask.",
+   "source": "campaign"
+  },
+  "1615": {
+   "title": "Obsidian",
+   "lore": "Einbroch's coal seams run deep enough to compress more than rock, and Obsidian is what the mine calls the results — a glass-black golem of fused slag and pressure that wanders the tunnels the smelters have long since abandoned. Miners treat an Obsidian sighting as a schedule change, not an emergency: it doesn't chase, it doesn't hurry, and it has never once left the deep galleries where the company stopped keeping records.",
+   "source": "campaign"
+  },
+  "1623": {
+   "title": "RSX-0806",
+   "lore": "Einbroch built RSX-0806 to end a war and then buried it when the war ended, filed under an asset-tracking number instead of a name. It should still be off. Someone with Rekenber clearance turned the key anyway and used the reactivation bay — and the city's own workers — as a live-fire test. What the party finds when it falls is worse than the machine: a data trail running straight to Lighthalzen, where Rekenber has stopped building weapons around people and started building people as weapons.",
+   "source": "campaign"
+  },
+  "1778": {
+   "title": "Gazeti",
+   "lore": "The ice caves under Rachel host more than praying drifts and glacier-titans — Gazeti are the caves' smaller, quicker cold, spined things that move in the dark between the ice pillars where a lantern doesn't reach. Pilgrims rarely see one directly; they notice the cold spot first, then the spines, and by then a Gazeti has already decided whether the intrusion is worth the trouble of chasing.",
+   "source": "campaign"
+  },
+  "1789": {
+   "title": "Iceicle",
+   "lore": "A shard of the Rachel glacier that decided to keep moving after it broke off — Iceicle drifts through the ice caves at a pace that looks accidental until it changes direction to follow something warm. The temple's cold-caretakers consider them a nuisance rather than a threat, though they concede the nuisance has teeth, and that the caves have been calving more of them since the titans started walking farther than usual.",
+   "source": "campaign"
+  },
+  "2221": {
+   "title": "Randel",
+   "lore": "Lighthalzen's Bio Labs kept a research staff long after the last legitimate project closed, and Randel is what's left of one — reshaped by whatever Rekenber's later experiments required, still moving through the wards on a schedule only he remembers setting. The Prometheus files name him, Flamel, Chen, Gertie, Alphoccio, and Trentini as a single cohort: six researchers who went in to study the process and came out as part of it.",
+   "source": "campaign"
+  },
+  "2222": {
+   "title": "Flamel",
+   "lore": "One of the six Bio Lab researchers the Prometheus Project consumed rather than employed. Flamel's notes, what survive of them, describe a fascination with transmutation that the labs were happy to indulge — until the indulging stopped being metaphorical. What patrols the wards now still moves like someone taking careful notes, just without a hand left steady enough to hold the pen.",
+   "source": "campaign"
+  },
+  "2224": {
+   "title": "Chen",
+   "lore": "Chen was Bio Lab security once, brought in to keep the six researchers' work contained. The containment failed in both directions: nothing stayed in, and Chen didn't stay Chen. What remains still patrols with a guard's instinct for chokepoints and blind corners, which makes the wards more dangerous, not less, for anyone who assumes the change left the training behind too.",
+   "source": "campaign"
+  },
+  "2225": {
+   "title": "Gertie",
+   "lore": "The gentlest name among the six consumed researchers, and by every account the gentlest person — which is exactly why the surviving lab logs single her out as the loss that finally turned the rest of the staff against the Prometheus Project, decades before Rekenber decided to restart it anyway. What moves through the wards now doesn't recognize the objection it once raised.",
+   "source": "campaign"
+  },
+  "2226": {
+   "title": "Alphoccio",
+   "lore": "Of the six Bio Lab researchers folded into the Prometheus Project, Alphoccio's notes show the least resistance and the most enthusiasm — a scientist who kept documenting the process on himself past the point anyone could call it professional curiosity. The wards remember his handwriting getting worse across the file. They don't say what he was still trying to write down at the end.",
+   "source": "campaign"
+  },
+  "2227": {
+   "title": "Trentini",
+   "lore": "The last-hired of the six consumed researchers, and the one whose personnel file Rekenber tried hardest to lose. Trentini's role in the Prometheus Project was oversight — sent to audit the others, not join them. Whatever now patrols the wards under that name is either the audit's final finding or its final casualty, and Lighthalzen's surviving records don't agree on which.",
+   "source": "campaign"
+  },
+  "1699": {
+   "title": "Ancient Mimic",
+   "lore": "Hugel's dragon-nest caverns hold treasure old enough that even the trickery guarding it has fossilized — an Ancient Mimic sits heavier and slower than its city cousins, having long since stopped needing to move fast when nothing has disturbed its hoard in a generation. Wardens who've catalogued the nest note it's the one 'chest' in the caverns worth checking twice before worth opening once.",
+   "source": "campaign"
+  },
+  "1713": {
+   "title": "Acidus",
+   "lore": "A juvenile of the Hugel dragon-nest, half-formed and corrosive before its scales properly set — Acidus spits a caustic ichor in place of the fire its elders will eventually breathe, the nest's way of arming its young before they're strong enough to fight conventionally. Wardens who cull the nest for the farms below always leave the eldest clutches; it's the young, unpredictable broods like this one that actually stray.",
+   "source": "campaign"
+  },
+  "1714": {
+   "title": "Ferus",
+   "lore": "Ferus are Hugel's dragon-nest hatchlings a season past Acidus — faster, meaner, and just old enough to hunt in the caverns' upper galleries instead of waiting to be fed. The nest wardens track their numbers more closely than any other brood, since a Ferus that leaves the nest healthy tends to come back leading younger siblings, and a growing pack is the nest's way of saying it's outgrowing its den.",
+   "source": "campaign"
+  },
+  "1719": {
+   "title": "Detardeurus",
+   "lore": "One of the two adolescent forms guarding Hugel's dragon-nest depths, armored and territorial in the specific way of something that knows it isn't the strongest thing in the caverns yet and is determined not to be tested on the point. Detardeurus holds ground rather than hunts, which the nest wardens read as a good sign — an animal securing borders is an animal that expects to keep living inside them.",
+   "source": "campaign"
+  },
+  "1720": {
+   "title": "Hydrolancer",
+   "lore": "The other adolescent guardian of the Hugel dragon-nest depths, quicker and wetter-elemented than Detardeurus, favoring the caverns' flooded lower galleries where its kin can't easily follow. Hugel's wardens consider a Hydrolancer sighting the reliable early warning that the nest's central clutch — and whatever eventually hatches from it — is close by.",
+   "source": "campaign"
+  },
+  "1721": {
+   "title": "Dragon Egg",
+   "lore": "Unhatched, unmoving, and the single most valuable thing in Hugel's dragon-nest caverns by every measure except the obvious one: nobody who has taken one home has explained afterward what they intended to do with it. The nest's adult guardians treat every egg as equally precious regardless of clutch, which tomb-scholars find more unsettling than reassuring — it suggests the nest itself is keeping count.",
+   "source": "campaign"
+  },
+  "2015": {
+   "title": "Dark Pinguicula",
+   "lore": "The New World's carnivorous flora runs stranger than Midgard's, and the Dark Pinguicula is the strangest common bloom in it — a sticky-leafed trap that doesn't wait for prey to wander in, but leans, slow and deliberate, toward anything warm-blooded that lingers too long at the crossing. Sapha foragers rate it a manageable nuisance. Newcomers rate it the reason they no longer stand still to admire the scenery.",
+   "source": "campaign"
+  },
+  "1783": {
+   "title": "Galion",
+   "lore": "Veins' wild dog packs answer to the factory whistle the way Einbroch's do, but Galion runs leaner and meaner — the alpha temperament of the breed, more territorial than hungry, holding stretches of the ash-fields the way a foreman holds a shift roster. A lone Galion is a nuisance. A Galion that's gathered a pack around it is the reason the mine posts a walk-home escort at all.",
+   "source": "campaign"
+  },
+  "1781": {
+   "title": "Drosera",
+   "lore": "The sundew-flora that carpets Veins' outer fields, sticky-leaved and patient, waiting on the lava-warmed soil for anything careless enough to brush too close. Drosera doesn't hunt so much as accumulate — one plant is harmless, a field of them is a maze where the safe path keeps narrowing the longer you take to find it. The miners route their supply carts around known patches on principle.",
+   "source": "campaign"
+  },
+  "1780": {
+   "title": "Muscipular",
+   "lore": "Veins' largest carnivorous bloom, jaw-leaved and considerably less patient than its sundew cousin Drosera — a Muscipular doesn't wait for prey to wander close, it strikes the moment something warm crosses its reach. The mine posts warning stakes around the densest patches, though the plants have a habit of growing back past the markers within a season.",
+   "source": "campaign"
+  },
+  "1917": {
+   "title": "Wounded Morroc",
+   "lore": "The city is gone. What stands where Morroc used to be is the field form of the thing the party has feared since the shaft under Amon Ra first breathed cold air upward — Satan Morroc, not yet fully risen, wounded by his own arrival into a world too small to hold him comfortably. He is still, somehow, not the worst of what's coming. Killing this form will not be enough. It has never been enough. That was always the point.",
+   "source": "campaign"
+  },
+  "1918": {
+   "title": "Incarnation of Morroc",
+   "lore": "Fragments of Satan Morroc's field-form power, sloughed off and given independent shape as he tears free of the seal that held him — four incarnations, each carrying a splinter of the whole rather than a copy of it. Tomb-guides who study the old dynastic seals recognize the pattern with dread: this is exactly how the deepest chamber's wardens were described breaking apart, generations before anyone thought to write it down as a warning.",
+   "source": "campaign"
   }
  }
 }
