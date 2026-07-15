@@ -1,0 +1,105 @@
+{
+ "_meta": {
+  "source": "Seal Cascade campaign — hand-authored in campaign voice, grounded in the campaign vault (BigZ's Vault/Game Design/Ragnarok_Online) and arc scripts",
+  "license": "original campaign writing",
+  "written": "2026-07-15",
+  "note": "Highest merge priority in the bestiary Scholar tier (campaign > RML > Fandom). Covers campaign-referenced mobs no external source documents. Spoiler-calibrated: entries foreshadow arc themes but do not reveal hidden twists."
+ },
+ "mobs": {
+  "1366": {
+   "title": "Lava Golem",
+   "lore": "The magma under Veins does not cool the way rock should, and where it pools too long it stands up. Lava golems are slag given a walking shape — miners call them 'firebreaks' with bitter humor, because every one that crosses a gallery leaves a burning seam behind it. Since the deep shift began they wander farther from the vents than the old-timers have ever seen. Water quenches the shell; the core stays hot enough to reignite for hours.",
+   "source": "campaign"
+  },
+  "1417": {
+   "title": "Zipper Bear",
+   "lore": "A squat black bear of the eastern hills with a mouth that closes like a drawstring purse — and opens wide enough to take a lantern whole. Einbroch's mine-surgeons pay standing bounties for their gall: rendered down, it is the only remedy that loosens coal dust from a miner's lungs. The bears know the shift whistles better than the miners do, and forage the tailings when the tunnels empty.",
+   "source": "campaign"
+  },
+  "1503": {
+   "title": "Gibbet",
+   "lore": "In Niflheim's Banquet Hall the Gibbet do not haunt the city — they are part of its architecture, the way a keystone is part of a bridge. Hanged shapes that sway from nothing, older than any of the recently dead, set in their places when the pale city first set its tables. The overflow pouring across death's border has unsettled even them, and an unsettled Gibbet leaves its appointed place. The dead of Niflheim find this alarming. The living should too.",
+   "source": "campaign"
+  },
+  "1506": {
+   "title": "Disguise",
+   "lore": "It has no face of its own, so it borrows. The Disguise is a rag of spirit that drapes itself in the recently seen — a footman's coat, a diplomat's smile, a friend's walk — always slightly wrong, like a portrait painted from a description. At a crowded banquet it is not one guest; it is any of them. Watch the wine: a Disguise raises its glass on the wrong beat, because it toasts to what the room feels, not what it hears.",
+   "source": "campaign"
+  },
+  "1507": {
+   "title": "Bloody Murderer",
+   "lore": "Some killers are executed and stop. This one was executed and continued — a butcher's ghost that still keeps a professional's schedule, dragging its chained cleaver through halls it was never invited to. It does not rage; it works. Witnesses who survive describe the same detail: it pauses to wipe the blade between victims, as if the next cut deserves a clean edge. In fine company it has no manners at all, only appointments.",
+   "source": "campaign"
+  },
+  "1509": {
+   "title": "Lude",
+   "lore": "A small hooded ghost, all sleeve and shuffle, that trails the overflow of the dead like a child following a parade it does not understand. Ludes are the least of the unquiet — the recently, mildly, apologetically dead — and they are drawn to warmth, lamplight, and being counted. Scholars of the pale city insist a Lude cannot hurt you. This is true. It can, however, lead you somewhere that will.",
+   "source": "campaign"
+  },
+  "1510": {
+   "title": "Hylozoist",
+   "lore": "The old heresy held that all matter is alive and only politeness keeps it still. The Hylozoist is what happens when something believes the heresy hard enough to enforce it. In the tower where memory outlived its maker, these stitched shapes move through the halls waking things that should not wake — a chair, a door, a suit of armor, a grief. Kill the doll and the animation stops; the belief, unfortunately, is load-bearing in that place.",
+   "source": "campaign"
+  },
+  "1511": {
+   "title": "Amon Ra",
+   "lore": "The god-king under the Pyramid was not buried; he was installed. Morroc's oldest dynasties built downward, dynasty under dynasty, until the deepest chamber — and set Amon Ra in it as king, warden, and threshold all at once. He rises crowned in gold and judgment, attended by the scarab-dead, and the air behind his throne blows cold from somewhere no map admits exists. Grave-robbers call his chamber the bottom of the Pyramid. The kings who built it knew better.",
+   "source": "campaign"
+  },
+  "1583": {
+   "title": "Tao Gunka",
+   "lore": "Past Byalan the sea floor drops into a trench the charts leave decently blank, and in it something the size of an island has been asleep longer than Alberta has had docks. The fishermen knew the rule without being taught: nothing heavy goes over the trench. Then the crates went in anyway, and the nets began coming up empty — or screaming. Tao Gunka is stone-white, tide-slow, and patient the way only the very large can afford to be. It is climbing toward the light now. Ask what woke it *after* it is dead.",
+   "source": "campaign"
+  },
+  "1676": {
+   "title": "Venatu",
+   "lore": "The builders of Juperos are gone; their staff, regrettably, is not. Venatu are custodial automatons still executing the final standing order of a city that died mid-shift — patrol, inspect, remove obstruction. Rust has not slowed the removal step. They nest thickest around shafts and conduits that lead to what the city was built to hold, which is why every extraction crew that goes down for salvage learns the same lesson: the machines are not guarding treasure. They are guarding *procedure*.",
+   "source": "campaign"
+  },
+  "1715": {
+   "title": "Novus",
+   "lore": "A Novus is a dragon the way a spark is a fire — juvenile, quick, and mostly appetite, wings still too big for its judgment. They shoal like fish over the deep water east of Hugel, which is the detail worth losing sleep over: dragons do not school by nature. Something below the lake has them packing together and staying up where the light is. Cull the packs if the farms demand it, but note which way the young ones refuse to fly.",
+   "source": "campaign"
+  },
+  "1775": {
+   "title": "Snowier",
+   "lore": "A drift that prays. Snowiers pile themselves into rough kneeling shapes along the ice caves beneath the holy city, hollow at the core — pilgrims swear the wind through that hollow sounds like the responses in a temple service, half a beat behind. The faithful call them blessed and leave offerings. The offerings are always gone by morning. Whatever fills the hollow when no one is watching, it is heavier than snow: their tracks compress solid ice.",
+   "source": "campaign"
+  },
+  "1777": {
+   "title": "Ice Titan",
+   "lore": "The glacier under Rachel's temple does not calve; it *walks*, one titan at a time. An Ice Titan is old compression given limbs — centuries of snowfall pressed until it remembers pressure as a kind of will. At its center hangs a core of ice so dense it bends lamplight, and it is these cores the temple quietly pays to have sampled, as if someone up there is dating exactly how old the cold beneath their sanctuary is. The titans object to the coring. Slowly. Then all at once.",
+   "source": "campaign"
+  },
+  "1782": {
+   "title": "Roween",
+   "lore": "The wild dogs of the Einbroch fields were ordinary once, before the smokestacks taught them new hours. Roween packs run on factory time now — they gather at the shift whistle, when the gates open and the tired walk home alone through the ash-fields. Soot-gray, lean, and patient, they have learned that the city feeds them best at the change of shift. The foremen post the walk-home roster in pairs for a reason.",
+   "source": "campaign"
+  },
+  "1832": {
+   "title": "Ifrit",
+   "lore": "Beneath Thor's Volcano sleeps the fire that ends the world, and Ifrit is its herald — woken not to fight but to *announce*. A crowned elemental of chained flame, it rises through the magma galleries proclaiming, in a tongue older than the volcano, the dimensions of what follows it. No mortal at any attainable strength faces what it heralds. But heralds can be silenced, and in the reading of a dead herald's embers the wise may learn exactly how large the end intends to be — and how long is left to argue with it.",
+   "source": "campaign"
+  },
+  "1865": {
+   "title": "Ragged Zombie",
+   "lore": "The abbey on the island with no name buried its dead with bells — a cord in every coffin, a bell above every grave, mercy against the old fear of waking underground. The Ragged Zombies are the ones who rang and were not dug up. They shamble in the rotted habits of the order that abandoned them, and they still gather when the abbey bells sound, obedient to the last rule they ever kept. Whoever holds the bell rotation holds the graveyard.",
+   "source": "campaign"
+  },
+  "1992": {
+   "title": "Cornus",
+   "lore": "On the far side of the crossing, where the light falls at an angle Midgard's sun never taught it, the Cornus graze — laurel-winged unicorns the Sapha treat as sacred and the Laphine as omens. The crossing sickens them: the passage that brought Midgard's expeditions through leaks something the herds cannot metabolize, and the afflicted turn glass-eyed and violent before the end. The mercy runs exist because the Sapha cannot bear to do it themselves, and cannot bear to let it go undone.",
+   "source": "campaign"
+  },
+  "1993": {
+   "title": "Naga",
+   "lore": "The serpent-folk of the new world's marches owe allegiance to neither great people and have outlasted every border drawn across their wetlands. Naga fight the way rivers fight — yielding ground, coiling around what enters, drowning it at leisure. They watch the crossing with an attention the diplomats find uncomfortable, because the Naga are old enough here to remember whether anything came through it *before*. They are not saying. Their spears say they were not surprised.",
+   "source": "campaign"
+  },
+  "2223": {
+   "title": "Celia",
+   "lore": "In the inner corridors of the buried biosphere, the Administrator's security still walks its rounds wearing a woman's face. The Celia-pattern constructs are courteous, symmetrical, and wrong in the way a reflection is wrong — a defense layer built to be mistaken for staff until the moment of enforcement. Each carries a fraction of the facility's old authority: doors obey them, lights follow them, and the outer labs' escaped subjects flee at the sound of their even, unhurried footsteps.",
+   "source": "campaign"
+  }
+ }
+}

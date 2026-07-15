@@ -1,0 +1,2675 @@
+{
+ "_meta": {
+  "source": "https://ragnarok.fandom.com (MediaWiki API, intro extracts)",
+  "license": "CC-BY-SA — attribution required; raw reference text, rewrite in campaign voice before player-facing use",
+  "fetched": "2026-07-15",
+  "coverage": "533/1759 bestiary mobs"
+ },
+ "mobs": {
+  "1001": {
+   "title": "Scorpion",
+   "lore": "Scorpion is a kind of Desert Insect. Its solid shell bears most neutral attacks. Carries a poison at the end of its tail. Scorpions can be found in areas where there is desert. It has a beautiful color, but can be dangerous.",
+   "url": "https://ragnarok.fandom.com/wiki/Scorpion"
+  },
+  "1002": {
+   "title": "Poring",
+   "lore": "Poring is a jelly-type creature that is commonly seen everywhere. It's not hostile to Normans and also weak to be a recommendable monster for newbies. It tends to swallow everything in sight. Small, pink monsters that are made of a living gelatinous substance. They're cute and move by bouncing.\nA round, jelly-like body that's said to hold all sorts of items lost by many adventurers.",
+   "url": "https://ragnarok.fandom.com/wiki/Poring"
+  },
+  "1004": {
+   "title": "Hornet",
+   "lore": "Hornet is a working bee working so hard by a command of queen bee. It normally seeks honey, but when something dangerous happens it fights in a swarm. Usually benign, they will attack in swarms if one of them is harmed.",
+   "url": "https://ragnarok.fandom.com/wiki/Hornet"
+  },
+  "1005": {
+   "title": "Familiar",
+   "lore": "Familiar is a bat that lives in a group in a dark cave. It sucks blood from living things nearby using small but sharp teeth. A gray bat that's not very strong, but really annoying because it attacks very fast and relentlessly pursues passersby.",
+   "url": "https://ragnarok.fandom.com/wiki/Familiar"
+  },
+  "1007": {
+   "title": "Fabre",
+   "lore": "Fabres are the larvae of Creamy that are suitable for newbies to fight with. It evolves into a Pupa. Likes to roll around the grassland with its round body. The weak and small larva of Creamy. Although some say it is cute, this author must disagree. Wholeheartedly.",
+   "url": "https://ragnarok.fandom.com/wiki/Fabre"
+  },
+  "1008": {
+   "title": "Pupa",
+   "lore": "Pupa is a pupa of Creamy. As a pupa it is covered with a firm tough shell, but cannot move itself. A monster that is the pupal stage of Fabre, it doesn't attack at all so it's easy to kill for Novices.",
+   "url": "https://ragnarok.fandom.com/wiki/Pupa"
+  },
+  "1009": {
+   "title": "Condor",
+   "lore": "Condor is a kind of desert eagle. It makes a living off of leftover food from adventurers or corpses in the desert because it is too old to hunt living things. A bald, funny-looking, vulture-like bird. They tend to attack in a flock if one of them is threatened.",
+   "url": "https://ragnarok.fandom.com/wiki/Condor"
+  },
+  "1010": {
+   "title": "Willow",
+   "lore": "Willow is a tree monster. Once a tree fairy had lied within but it seems the fairy's gone crazy now. The fairy had endowed a little magical ability to the monster though... Creature reborn from an old tree. The feature and the sounds it makes are incredibly eerie.",
+   "url": "https://ragnarok.fandom.com/wiki/Willow"
+  },
+  "1011": {
+   "title": "Chonchon",
+   "lore": "Chonchon is a kind of small fly that is commonly seen everywhere. They move with great speed. Amazingly, they can heal in the presence of fecal matter.\nThe Fly Wing item it drops does the same effect as Teleport, an Acolyte skill.",
+   "url": "https://ragnarok.fandom.com/wiki/Chonchon"
+  },
+  "1012": {
+   "title": "Roda Frog",
+   "lore": "Roda Frog is a kind of mutant frog usually living in the forest or the grassland. They prefer to be near the water or damp places. Amphibious frogs that have an annoying croak. In some countries, their legs are a delicacy.",
+   "url": "https://ragnarok.fandom.com/wiki/Roda_Frog"
+  },
+  "1013": {
+   "title": "Wolf",
+   "lore": "The Wolf is commonly seen everywhere. It fears Normans so it never initiates the attack before them. Wild, roving wolves with blue manes, they tend to attack as a pack when even one of them is threatened.",
+   "url": "https://ragnarok.fandom.com/wiki/Wolf"
+  },
+  "1014": {
+   "title": "Spore",
+   "lore": "Spore is a cute, chubby mushroom. Its rhythmical body-moving attracts all attention of passersby. Mushroom-like monsters that thrive in forests or dungeon. They have potbellies despite the fact that, as mushrooms, they don't actually eat.",
+   "url": "https://ragnarok.fandom.com/wiki/Spore"
+  },
+  "1015": {
+   "title": "Zombie",
+   "lore": "Zombie is a walking corpse which has been cursed by an evil shaman. Beware of its poisonous breath. Bad case of the dead which has been reborn as a walking corpse by black magic. Let's lead it to Nirvana.",
+   "url": "https://ragnarok.fandom.com/wiki/Zombie"
+  },
+  "1016": {
+   "title": "Archer Skeleton",
+   "lore": "Archer Skeleton is a skeleton archer living in dark caves or sunless places. It is rumored that when a witch curses a man to the death, that dead man will turn into this monster with its rotten and torn body. Despite not having actual eyes, Archer Skeletons have great aim.",
+   "url": "https://ragnarok.fandom.com/wiki/Archer_Skeleton"
+  },
+  "1018": {
+   "title": "Creamy",
+   "lore": "Creamy is the imago of a Fabre. The pipe on the mouth is supposed to be rolled out for drinking honey. It has been mutated by environmental pollution and does harm to Normans. A flying monster with beautiful wings. It will escape by teleporting if it thinks that it is in grave danger.",
+   "url": "https://ragnarok.fandom.com/wiki/Creamy"
+  },
+  "1019": {
+   "title": "Pecopeco",
+   "lore": "Pecopeco is a large bird that is commonly found in the desert. Although it cannot fly due to it's large body, its firm legs allow it to run faster than any other land animals. Sometimes Knights will domesticate them and ride them. Nowadays, Pecopeco is popular as mounts for Knights and Crusaders. They live in the desert or forest and will attack in flocks if one of them is threatened.",
+   "url": "https://ragnarok.fandom.com/wiki/Pecopeco"
+  },
+  "1020": {
+   "title": "Mandragora",
+   "lore": "Although Mandragora stays in the same place, it can attack passersby from a distance using underground stalks.",
+   "url": "https://ragnarok.fandom.com/wiki/Mandragora"
+  },
+  "1023": {
+   "title": "Orc Warrior",
+   "lore": "Orc Warrior is a warrior of the Orc tribe living in the forest. It is dumb but mighty. Orcs have their language and society. They like smoking dried roll-up leaves and tend to attack Norman passersby to extort their money and goods.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Warrior"
+  },
+  "1024": {
+   "title": "Worm Tail",
+   "lore": "Worm Tail is a monster living in a hidden place of the jungle. It kicks off annoying travellers who come into his forest without permission, using its long and narrow tendril. A strange monster that uses whipping attacks with a tail that looks like a blade of grass.",
+   "url": "https://ragnarok.fandom.com/wiki/Worm_Tail"
+  },
+  "1026": {
+   "title": "Munak",
+   "lore": "Munak is the dead body of a young girl who had died holding a deep grudge and never goes beyond the realm of the living. She sucks blood from living things nearby to prevent her body from being more rotten. A beautiful zombie that seems to be linked to Bongun somehow.",
+   "url": "https://ragnarok.fandom.com/wiki/Munak"
+  },
+  "1028": {
+   "title": "Soldier Skeleton",
+   "lore": "Soldier Skeleton is a skeletal soldier living in the sunless area. It handles 2 scimitars because it is a little dumb to use a bow and arrows as archer skeleton does. A skeleton soldier that wields two swords at once. Doesn't have much to do other than attack passersby.",
+   "url": "https://ragnarok.fandom.com/wiki/Soldier_Skeleton"
+  },
+  "1029": {
+   "title": "Isis",
+   "lore": "Isis is a giant serpent that a royal maid transformed into after death and had been buried with a king. She has been dedicated to defending the tomb of the king, so she is very hostile to those that would dare enter it. A monster that is half serpent and half woman, she is one of Osiris' trusted companions.",
+   "url": "https://ragnarok.fandom.com/wiki/Isis"
+  },
+  "1030": {
+   "title": "Anacondaq",
+   "lore": "Anacondaq is a giant snake usually living in the desert area. It's weak but deadly poisonous. Hunts small animals using its poison.\nOn iRO2, this monster is misspelled as Anacondac.",
+   "url": "https://ragnarok.fandom.com/wiki/Anacondaq"
+  },
+  "1031": {
+   "title": "Poporing",
+   "lore": "Poporing is a kind of Poring living in the swamp. It is covered with poisonous elastic skins all around the body. A light green Poring with the poison property. It's much stronger than Poring, but still moves by means of bouncing.",
+   "url": "https://ragnarok.fandom.com/wiki/Poporing"
+  },
+  "1032": {
+   "title": "Verit",
+   "lore": "Verit is a mummy dog that had been a pet dog of Mummy in the realm before its owner became a mummy. Picks up things dropped on the ground to bring them to its owner. A mummified dog that will pick up anything dropped to the ground. Although it's a zombie, it seems happy to be alive again.",
+   "url": "https://ragnarok.fandom.com/wiki/Verit"
+  },
+  "1033": {
+   "title": "Elder Willow",
+   "lore": "Elder Willow is an ancient Willow in which a fairy lies within. It seems to possess magic power through its long age.",
+   "url": "https://ragnarok.fandom.com/wiki/Elder_Willow"
+  },
+  "1034": {
+   "title": "Thara Frog",
+   "lore": "Thara Frog is a mutant frog that prefers a dark, damp place. Also it is much too strong for beginners.\n Red frogs that are much stronger than the green Roda Frogs, they also produce an annoying croaking noise.",
+   "url": "https://ragnarok.fandom.com/wiki/Thara_Frog"
+  },
+  "1035": {
+   "title": "Hunter Fly",
+   "lore": "Hunter Fly is a Chonchon of crimson colour. It possess 3 times higher agility compared to normal Chonchon; also it deals more damage than the normal one. Winged insects covered in the blood of innocents. It's incredibly quick as well. Novices must flee from this monster at all costs.",
+   "url": "https://ragnarok.fandom.com/wiki/Hunter_Fly"
+  },
+  "1036": {
+   "title": "Ghoul",
+   "lore": "Ghoul is a walking corpse that has been cursed by an evil Shaman. Mostly, it preys on dead bodies, however it never gets satisfied with those and keeps attacking the living near the place where it lives. Similar to a Zombie, but are green and much stronger. Its retching is offensive in more ways than two.",
+   "url": "https://ragnarok.fandom.com/wiki/Ghoul"
+  },
+  "1037": {
+   "title": "Sidewinder",
+   "lore": "Sidewinder is a snake. Unlike its legend of twin heads, apparently this snake has one head. Uses a dull tail and a head to threaten and to confuse enemies at the same time. A dark-colored snake that hates people. Be careful and kill them before they can poison you.\nOn iRO, this monster is localized as Side Winder.",
+   "url": "https://ragnarok.fandom.com/wiki/Sidewinder"
+  },
+  "1038": {
+   "title": "Osiris",
+   "lore": "Osiris is the King of the Sphinx. Although he had been deified as the Sun God in the ancient age, he's now nothing but a powerful boss of monsters.",
+   "url": "https://ragnarok.fandom.com/wiki/Osiris"
+  },
+  "1039": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "1040": {
+   "title": "Golem",
+   "lore": "Golem is living stone conjured up by an ancient Magician. It is immune against physical attacks. A being of living stone that has been enchanted with black magic. It can recognize spell casting, but moves incredibly slowly due to its weight problem.",
+   "url": "https://ragnarok.fandom.com/wiki/Golem"
+  },
+  "1041": {
+   "title": "Mummy",
+   "lore": "Mummy is a mummy crawling under the deserted pyramid in Morocc, appearing with Verit the undead dog before the adventurers from time to time. Tends to move in groups attacking other living things nearby. A walking corpse covered with bandages. It probably used to be beautiful once.",
+   "url": "https://ragnarok.fandom.com/wiki/Mummy"
+  },
+  "1042": {
+   "title": "Steel Chonchon",
+   "lore": "Steel Chonchon is a kind of Chonchon that has a firm shell covering its body. Similar to Chonchon, but is yellow green. It picks up everything from the ground so be careful not to drop items.",
+   "url": "https://ragnarok.fandom.com/wiki/Steel_Chonchon"
+  },
+  "1044": {
+   "title": "Obeaune",
+   "lore": "Obeaune is a creature with the head and upper body of a woman and the tail of a fish. She seems to have a bad hair day, her tangled and uncombed hair harms other creatures with the slightest damage. Besides, she isn't nice to let eyesores get near her. A female mermaid that attacks with its wild, flowing hair. Whether or not its male version is Merman is still under debate.",
+   "url": "https://ragnarok.fandom.com/wiki/Obeaune"
+  },
+  "1045": {
+   "title": "Marc",
+   "lore": "Marc is a seahorse living under the deep sea. As the solid skin covers all around its body, it's very strong so that normal adventurers might get in trouble seeing it under the sea. A proud-looking sea horse that sort of looks like a dragon. Unfortunately, you can't ride it.",
+   "url": "https://ragnarok.fandom.com/wiki/Marc"
+  },
+  "1046": {
+   "title": "Doppelganger",
+   "lore": "Doppelganger is a Demon that doubles as a living person. It appears mostly in deep dungeons, transforming into a ghostly double of an adventurer and stabbing the victim in the back.",
+   "url": "https://ragnarok.fandom.com/wiki/Doppelganger"
+  },
+  "1047": {
+   "title": "Pecopeco Egg",
+   "lore": "Pecopeco Egg is the egg of a Pecopeco. The egg is quite small but the shell is very firm. It's used in many ways.",
+   "url": "https://ragnarok.fandom.com/wiki/Pecopeco_Egg"
+  },
+  "1048": {
+   "title": "Thief Bug Egg",
+   "lore": "Thief Bug Egg is the egg of a Thief Bug that hatches into several Thief Bugs. A filthy egg from a filthy Thief Bug. They make horrible omelets.",
+   "url": "https://ragnarok.fandom.com/wiki/Thief_Bug_Egg"
+  },
+  "1049": {
+   "title": "Picky",
+   "lore": "Picky is the baby Pecopeco. Although it is pretty small, it will grow up fast. Lives in the desert hunting small bugs as prey. Cute little chick that may grow up to be a Pecopeco unless, of course, you kill it.",
+   "url": "https://ragnarok.fandom.com/wiki/Picky"
+  },
+  "1050": {
+   "title": "Picky",
+   "lore": "Picky is the baby Pecopeco. Although it is pretty small, it will grow up fast. Lives in the desert hunting small bugs as prey. Cute little chick that may grow up to be a Pecopeco unless, of course, you kill it.",
+   "url": "https://ragnarok.fandom.com/wiki/Picky"
+  },
+  "1051": {
+   "title": "Thief Bug",
+   "lore": "Thief Bug is a kind of bug that is commonly seen in a damp, dark places. It moves very fast and tends to steal items dropped on the ground. The undeveloped version of the Thief Bug. Even as babies, they're pretty disgusting. Dirty, filthy creatures that tend to work in swarms. Whatever you do, don't let them pollute the Prontera Culverts; it'll be a disaster.",
+   "url": "https://ragnarok.fandom.com/wiki/Thief_Bug"
+  },
+  "1052": {
+   "title": "Rocker",
+   "lore": "Rocker is a long-horned grasshopper of a romantic turn of mind, that always play a violin. A lazy grasshopper that loves to play the violin, just like in Aesop's fable. A romantic gentleman roaming the grassland with a leaf parasol in one hand and playing the violin in the other. Most consider him as the main culprit for noise pollution.",
+   "url": "https://ragnarok.fandom.com/wiki/Rocker"
+  },
+  "1055": {
+   "title": "Muka",
+   "lore": "Muka is a monster cactus living in the desert. Although it's usually quite passive in the presence of travellers, it gets furious and shoots needles or cactus water toward enemies when attacked. Cute cactus commonly found in the desert. It tries to threaten passersby with its shrieks, but its noises are too funny to be scary.",
+   "url": "https://ragnarok.fandom.com/wiki/Muka"
+  },
+  "1056": {
+   "title": "Smokie",
+   "lore": "Smokie is an innocent raccoon living in a deep forest. Enjoys shapeshifting with a raccoon leaf on the head. A chubby little raccoon that loves nothing better than to scamper. It's rumored to use a magic leaf to become invisible!",
+   "url": "https://ragnarok.fandom.com/wiki/Smokie"
+  },
+  "1057": {
+   "title": "Yoyo",
+   "lore": "Yoyo is a mischievous animal living in the deep forest. As it's rumored to be as intelligent as a Norman being, it is smart enough to make fun of travellers. Likes bananas a lot, surprise passersby by moving very quick. Pink-colored monkey. They don't just pick up everything dropped on the ground outrageously, but they are nimble and cooperative. You must be cautious of being attacked by a group.",
+   "url": "https://ragnarok.fandom.com/wiki/Yoyo"
+  },
+  "1058": {
+   "title": "Metaller",
+   "lore": "Metaller is a desert Grasshopper that has evolved to survive in barren circumstances. Tends to steal items dropped on the ground in its sight. The evolved form of Rocker, it is dim brown and lives in the desert. This cricket will pick items up from the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Metaller"
+  },
+  "1059": {
+   "title": "Mistress",
+   "lore": "Mistress is the queen of the bees. Rarely appears; only when she controls working bees. The art of handling working bees is the honey pot she's carrying in hand.",
+   "url": "https://ragnarok.fandom.com/wiki/Mistress"
+  },
+  "1060": {
+   "title": "Bigfoot",
+   "lore": "Bigfoot is a large, lonely bear that lives in a deep cave. He eats anything he can lay his hands on, adding to his massive bulk. He's very lazy and tends to doze off, but he becomes extremely violent when he's disturbed.\nFortunately, travelers needn't worry so lo... Although its name may be misleading, Bigfoot is actually a large bear. It walks like it owns the forest and it does.",
+   "url": "https://ragnarok.fandom.com/wiki/Bigfoot"
+  },
+  "1062": {
+   "title": "Santa Poring",
+   "lore": "A special Poring wearing a Santa Hat. It usually comes out during the winter holidays.",
+   "url": "https://ragnarok.fandom.com/wiki/Santa_Poring"
+  },
+  "1063": {
+   "title": "Lunatic",
+   "lore": "Lunatic is a common kind of rodent with fluffy hair covered all around the body. It likes carrots a lot. It's very soft and fluffy without a care. Plump and shaggy monsters shaped like a rabbit. However, it won't give you a Bunny Band.\nA cuddly monster that loves carrots. Its fur is so fluffy that you would want to hug it in the winter for warmth.",
+   "url": "https://ragnarok.fandom.com/wiki/Lunatic"
+  },
+  "1064": {
+   "title": "Megalodon",
+   "lore": "Megalodon is an enchanted fish bone monster that still possesses the habituate of fish and wanders about under the deep sea. An animated fish skeleton that roams the seas. Although it looks scary, it's actually benign.",
+   "url": "https://ragnarok.fandom.com/wiki/Megalodon"
+  },
+  "1065": {
+   "title": "Strouf",
+   "lore": "Strouf is the king of mermaids. However it's not that much stronger than normal mermaids. A lordly fish monster that looks like the god of the seas. Carries a lightning trident to fight people of the surface.",
+   "url": "https://ragnarok.fandom.com/wiki/Strouf"
+  },
+  "1066": {
+   "title": "Vadon",
+   "lore": "Vadon is a kind of lobster living near the sea. It is difficult to deal damage to this monster due to its firm shell covering all around the body. Covered in a thick, protective shell, Vadons attack with powerful pincers. Although they look like crabs, their meat cannot be eaten.\nOn seaRO2 and iRO2, this monster is localized as Vador.",
+   "url": "https://ragnarok.fandom.com/wiki/Vadon"
+  },
+  "1067": {
+   "title": "Cornutus",
+   "lore": "Cornutus is a conch monster hiding in a solid shell. Normally lives near the sea of Izlude. Benign monsters that conceal themselves in hard, turban-shaped shells. They try to live as peacefully as they can in this crazy, crazy world.",
+   "url": "https://ragnarok.fandom.com/wiki/Cornutus"
+  },
+  "1068": {
+   "title": "Hydra",
+   "lore": "Hydra is a sea flower monster that makes roots in a long range under the ground despite its small size. It attacks living things in a distance using the roots. As vegetable monsters that live near water or in the deep sea, they attack using tentacles. As a group, they're a pain in the ass.",
+   "url": "https://ragnarok.fandom.com/wiki/Hydra"
+  },
+  "1069": {
+   "title": "Swordfish",
+   "lore": "The Swordfish is a swordfish, appropriately named after its sharp and pointed mouth. Attacks enemies by emitting ultrasonic waves. Fish monster with a sharp, long nose that's just like a sword. Although it has googly eyes, it's a dangerous monster. Why wasn't it named Sword Nose Fish?",
+   "url": "https://ragnarok.fandom.com/wiki/Swordfish"
+  },
+  "1070": {
+   "title": "Kukre",
+   "lore": "Kukre is a small bug living near the beach. It is pretty fast and tends to eat things on the ground. Kukre look better than Thief Bugs, but basically loot items just the same. Luckily they don't attack in groups.",
+   "url": "https://ragnarok.fandom.com/wiki/Kukre"
+  },
+  "1071": {
+   "title": "Pirate Skeleton",
+   "lore": "Pirate Skeleton is a dead Pirate who had been dead in a ship on the sea, wearing a pirate bandana on the head as if it wants to emphasize it is a pirate. A topless pirate skeleton that skips around in purple socks. Scourge of the seven seas.",
+   "url": "https://ragnarok.fandom.com/wiki/Pirate_Skeleton"
+  },
+  "1072": {
+   "title": "Kaho",
+   "lore": "Kaho is a Demon from another world with a blaze covering its body. It is fond of display and tries to attack smartly. The truth is he is a lesser demon who is not that strong.",
+   "url": "https://ragnarok.fandom.com/wiki/Kaho"
+  },
+  "1073": {
+   "title": "Crab",
+   "lore": "Crab is a creature with a solid, protective shell that is commonly seen at the sea. It is not that strong.",
+   "url": "https://ragnarok.fandom.com/wiki/Crab"
+  },
+  "1074": {
+   "title": "Shellfish",
+   "lore": "Shellfish is a common sea creature that moves with 2 tiny legs.",
+   "url": "https://ragnarok.fandom.com/wiki/Shellfish"
+  },
+  "1076": {
+   "title": "Skeleton",
+   "lore": "Skeleton is the skeleton of a dead person who had died holding a grudge. It's an undead so of course it hates living things.",
+   "url": "https://ragnarok.fandom.com/wiki/Skeleton"
+  },
+  "1077": {
+   "title": "Poison Spore",
+   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
+  },
+  "1078": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1079": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1080": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1081": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1082": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1083": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1084": {
+   "title": "Mushroom",
+   "lore": "Mushroom can be harvested for mushroooms as well as other mushroom material and chemicals such as spores and Alcohol. There are only two variety of mushrooms that can be found all over Midgard.\n\n^Not a complete list of all items they drop.\nThere are also two other kinds of mushrooms--Orange Gooey Mushroom and Orange Net Mushrooms--that can only be found at Shibu's Mushroom Farm in Morocc.",
+   "url": "https://ragnarok.fandom.com/wiki/Mushroom"
+  },
+  "1085": {
+   "title": "Mushroom",
+   "lore": "Mushroom can be harvested for mushroooms as well as other mushroom material and chemicals such as spores and Alcohol. There are only two variety of mushrooms that can be found all over Midgard.\n\n^Not a complete list of all items they drop.\nThere are also two other kinds of mushrooms--Orange Gooey Mushroom and Orange Net Mushrooms--that can only be found at Shibu's Mushroom Farm in Morocc.",
+   "url": "https://ragnarok.fandom.com/wiki/Mushroom"
+  },
+  "1086": {
+   "title": "Golden Thief Bug",
+   "lore": "The mysterious Golden Thief Bug is a Thief Bug whose shell is covered in pure gold. Its size and splendor is superior when compared to other Thief Bugs. A Thief Bug with a shell that shimmers in a brilliant, golden light. Beautiful, but still a nasty bug through and through.",
+   "url": "https://ragnarok.fandom.com/wiki/Golden_Thief_Bug"
+  },
+  "1087": {
+   "title": "Orc Hero",
+   "lore": "Orc Hero is the hero of the Orc tribe who took command of the orc army during the war with Normans. His sword skills have been rumored to shake the heavens, bringing thunder and lightning.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Hero"
+  },
+  "1088": {
+   "title": "Vocal",
+   "lore": "Vocal is a captain of Rockers. It has a sweet voice, every Rocker likes him without any doubt. The violin it's carrying with gets used only as nothing but a weapon.",
+   "url": "https://ragnarok.fandom.com/wiki/Vocal"
+  },
+  "1089": {
+   "title": "Toad",
+   "lore": "Toad is a giant frog that dares to challenge creatures at its size. It carries several Roda Frogs with all the time.",
+   "url": "https://ragnarok.fandom.com/wiki/Toad"
+  },
+  "1090": {
+   "title": "Mastering",
+   "lore": "Mastering is a giant mutant poring that always carries normal Porings with it. A giant Poring rarely seen in the Sograt Desert, Mt. Mjolnir, or the Prontera Maze. It may be the master of Porings, but... it's still a Poring.",
+   "url": "https://ragnarok.fandom.com/wiki/Mastering"
+  },
+  "1091": {
+   "title": "Dragon Fly",
+   "lore": "Dragon Fly is a rare Chonchon that could be born by the probability of 1 in 1000.\nIts name has been originated from the rumor that its power equals to a dragon's (in Chonchon's opinion). It is a leader of Chonchons, so it carries lots of Chonchons with it.",
+   "url": "https://ragnarok.fandom.com/wiki/Dragon_Fly"
+  },
+  "1092": {
+   "title": "Vagabond Wolf",
+   "lore": "The Vagabond Wolf is a rare wolf that has survived after falling behind from the pack. It leads other wolves and invades other animals to make the living.",
+   "url": "https://ragnarok.fandom.com/wiki/Vagabond_Wolf"
+  },
+  "1093": {
+   "title": "Eclipse",
+   "lore": "Eclipse is a kind of Lunatic. Unlike normal Lunatics, it is big and strong. Pretty hostile and instigates Lunatics to attack. Lord and master of all Lunatics, its attacks may be weak but it has considerable defenses.",
+   "url": "https://ragnarok.fandom.com/wiki/Eclipse"
+  },
+  "1094": {
+   "title": "Ambernite",
+   "lore": "Ambernite is a Snail. It may be weak, but its hard shell protects it from even the toughest attacks. A snail-shaped monster, it has highly strong offense and defense. However, it is incredibly slow like all other snails.",
+   "url": "https://ragnarok.fandom.com/wiki/Ambernite"
+  },
+  "1095": {
+   "title": "Andre",
+   "lore": "Andre is a working ant that works hard for its queen, Maya. Tends to collect things dropped on the ground. A diligent worker ant that lives for the sake of the colony. Look out, though. Hit one and you'll fight them all.",
+   "url": "https://ragnarok.fandom.com/wiki/Andre"
+  },
+  "1096": {
+   "title": "Angeling",
+   "lore": "Angeling is the final evolution form of Poring! Unlike its cute appearance, it is pretty strong. It has hated Normans ever since it spotted other innocent brethren get damaged by them.",
+   "url": "https://ragnarok.fandom.com/wiki/Angeling"
+  },
+  "1097": {
+   "title": "Ant Egg",
+   "lore": "Ant Egg is a cluster of eggs that will become Andre, Piere or Deniro when hatched. Merely an ant egg. It can't hurt you. An ant egg that is also defenseless. Some of them actually hatch, though.",
+   "url": "https://ragnarok.fandom.com/wiki/Ant_Egg"
+  },
+  "1098": {
+   "title": "Anubis",
+   "lore": "Anubis is the guardian of the Sphinx.",
+   "url": "https://ragnarok.fandom.com/wiki/Anubis"
+  },
+  "1099": {
+   "title": "Argiope",
+   "lore": "Argiope is a vicious, giant centipede monster that attacks passersby with poisonous fangs. A segmented millipede-type monster that will attack passersby with poison.",
+   "url": "https://ragnarok.fandom.com/wiki/Argiope"
+  },
+  "1100": {
+   "title": "Argos",
+   "lore": "Argos is a giant spider. A monstrous spider that will attack adventurers on sight. It's too big for adventurers to squish with their feet.",
+   "url": "https://ragnarok.fandom.com/wiki/Argos"
+  },
+  "1102": {
+   "title": "Bathory",
+   "lore": "Bathory is an evil Witch who has served the demon. Always flies on a broom in the air and attacks enemies using a crystal ball she's carrying. She likes cute girly stuff. A wart-nosed witch wearing bunny boxers that will attack anything prettier than her. In other words, she attacks everyone.",
+   "url": "https://ragnarok.fandom.com/wiki/Bathory"
+  },
+  "1103": {
+   "title": "Caramel",
+   "lore": "Caramel is a porcupine monster that is very shy and mild. However, it doesn't like someone touching its body. Uses pointed spines as a weapon. An adorable porcupine with tiny spiky quills, it gets incredibly angry when touched.",
+   "url": "https://ragnarok.fandom.com/wiki/Caramel"
+  },
+  "1104": {
+   "title": "Coco",
+   "lore": "Coco is a small squirrel. It is not that strong but very fast; could be hard for newbie travelers. It has dark, piercing eyes and is always holding an Acorn. It would be cute if it didn't always have a look of utter contempt.",
+   "url": "https://ragnarok.fandom.com/wiki/Coco"
+  },
+  "1105": {
+   "title": "Deniro",
+   "lore": "Deniro is a kind of ant of red colour. They live in a group and are very cooperative to attack. Also they tend to collect items dropped on the ground. The red worker ant that is faster than Pieres and Andres.",
+   "url": "https://ragnarok.fandom.com/wiki/Deniro"
+  },
+  "1106": {
+   "title": "Desert Wolf",
+   "lore": "The Desert Wolf is a kind of wolf that is commonly seen in the desert area. They hunt small animals of the desert using sturdy jawbone and speedy robust legs. They are all violent and aggressive to strangers; tend to attack indiscriminately. Wolves in the desert are much stronger than those living in the forest. If you strike one, you'll have to deal with the whole pack.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf"
+  },
+  "1107": {
+   "title": "Desert Wolf Baby",
+   "lore": "The Desert Wolf Baby is a young Desert Wolf. Even though it looks so adorable and cute, its fangs never miss its targets or prey. A baby desert wolf that tries to threaten adventurers with its cute little yelps.\nOn iRO, this monster is localized as Baby Desert Wolf.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf_Baby"
+  },
+  "1108": {
+   "title": "Deviace",
+   "lore": "Deviace is a sea toad-shaped monster that seduces prey using a small antenna and swallows them with a maneater-shaped mouth. It never initiates attack unless somebody comes near and moves very slowly. Fish monster with a big mouth attached to a suction cup. Small, strong, and looks sort of like a watermelon.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviace"
+  },
+  "1109": {
+   "title": "Deviruchi",
+   "lore": "Deviruchi is a cub Demon of the Demon world. Although it has never learned any magic yet, his fork is powerful without any magical assistance. A miniature demon that repeatedly stabs Normans with its pitchfork. It's cute, but nonetheless a true fiend of darkness.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviruchi"
+  },
+  "1110": {
+   "title": "Dokebi",
+   "lore": "Dokebi is a traditional Korean monster living near Payon; it is a kind of good fairy. When it's getting bored playing alone, it gives riddles to travellers. A traditional Korean demon with the power to generate wealth. Using Mammonite is no big deal to them!\nOther versions of RO have translated this monster as Dokaebi in their language.",
+   "url": "https://ragnarok.fandom.com/wiki/Dokebi"
+  },
+  "1111": {
+   "title": "Drainliar",
+   "lore": "Drainliar is a bat that lives in a group in a dark cave. It sucks blood from living things near using small but sharp teeth. It is bigger than a Familiar. A blood bat that's much stronger than Familiar, it also tends to pursue any Norman it finds.",
+   "url": "https://ragnarok.fandom.com/wiki/Drainliar"
+  },
+  "1112": {
+   "title": "Drake",
+   "lore": "Drake is the pirate king who had died at sea while looking for treasure. He was cursed with a deadly spell by a person who held a deep grudge against him. The spell bound him and fellow pirates' souls on the ship. They are watching their treasure... A peg-legged, ghostly pirate captain that takes his leisurely time to attack the living.",
+   "url": "https://ragnarok.fandom.com/wiki/Drake"
+  },
+  "1113": {
+   "title": "Drops",
+   "lore": "Drops is a mutant Poring that has been optimized to survive under the hot and dry weather of the desert. No wonder it tends to swallow things on the ground just like Poring does. The desert version of the Poring that has a pale orange color. It seems a tiny bit stronger than Poring, though.",
+   "url": "https://ragnarok.fandom.com/wiki/Drops"
+  },
+  "1114": {
+   "title": "Dustiness",
+   "lore": "Dustiness is a kind of moth with a solid shell covering its body. Mostly it lives in a dark place like a dungeon, but it is seen near Mt. Mjolnir. This flying monster has a high dodge rate, so if you have low attack accuracy, you may want to leave it alone.",
+   "url": "https://ragnarok.fandom.com/wiki/Dustiness"
+  },
+  "1115": {
+   "title": "Eddga",
+   "lore": "Eddga is an Ancient Tiger living in the deep forest that has been defied by the natives. He loves to smoke a pipe, and thinks Normans are barbarians for destroying mountains. He'll attack any traveler or adventurer that ventures into his mountains.",
+   "url": "https://ragnarok.fandom.com/wiki/Eddga"
+  },
+  "1116": {
+   "title": "Eggyra",
+   "lore": "Eggyra is a solid shell Egg monster. Its shell is thick and firm as much as that of Peco Peco. It is just wandering about the dungeon or somewhere else without any purpose.",
+   "url": "https://ragnarok.fandom.com/wiki/Eggyra"
+  },
+  "1117": {
+   "title": "Evil Druid",
+   "lore": "Evil Druid was once a prominent High Priest, but a demon's curse turned him into one of the undead. As he used to be a High Priest, he is a pretty strong monster. A flamboyant evil druid, it's always using a floating spellbook that crackles with energy to cause misery to adventurers.",
+   "url": "https://ragnarok.fandom.com/wiki/Evil_Druid"
+  },
+  "1118": {
+   "title": "Flora",
+   "lore": "Flora is a man-eating plant that looks similar to a sunflower. It enjoys devouring passerbys, but luckily it cannot move. If you're feeling particularly cowardly, just go around it. A man-eating plant, its parts are considered useful for Alchemists to make monsters of their own...",
+   "url": "https://ragnarok.fandom.com/wiki/Flora"
+  },
+  "1119": {
+   "title": "Frilldora",
+   "lore": "Frilldora is a lizard wearing a large brimmed muffler-like skin around the neck. \nMostly lives in the desert area and hunts small bugs using a long thin tongue.\n Lizard with a frilly, fan-like neck. Although it looks ridiculous, it's actually pretty strong.",
+   "url": "https://ragnarok.fandom.com/wiki/Frilldora"
+  },
+  "1120": {
+   "title": "Ghostring",
+   "lore": "Ghostring is the ghost of a dead Poring that came back to the realm holding a grudge. Normal weapons cannot do any damage to this monster at all.",
+   "url": "https://ragnarok.fandom.com/wiki/Ghostring"
+  },
+  "1121": {
+   "title": "Giearth",
+   "lore": "Giearth is a kind of earth fairy living under the ground. It gathers ores and processes them. It rarely initiates attacks unless somebody tries to steal his possession or to attack first. Appears in a dead pit or the Ant Hell. An elderly pixie that wanders caves to gather ores. Almost a dwarf, but not quite.",
+   "url": "https://ragnarok.fandom.com/wiki/Giearth"
+  },
+  "1122": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1123": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1124": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1125": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1126": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1127": {
+   "title": "Hode",
+   "lore": "Hode is a giant earthworm living under the desert. It is shy, pretty cowardly, and scared of travelers, so you can just pass it by without worrying. A huge earthworm that usually hides under the ground, it can usually be found in the desert.",
+   "url": "https://ragnarok.fandom.com/wiki/Hode"
+  },
+  "1128": {
+   "title": "Horn",
+   "lore": "For the monster drop, see Horn (item).\n\nHorn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
+   "url": "https://ragnarok.fandom.com/wiki/Horn"
+  },
+  "1129": {
+   "title": "Horong",
+   "lore": "Horong is a monster that looks like death fire. It never has been identified where it came from or why it appears in the realm. An eerie-looking violet fireball. It's useless to use hiding skills near this vengeful spirit.",
+   "url": "https://ragnarok.fandom.com/wiki/Horong"
+  },
+  "1130": {
+   "title": "Jakk",
+   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "url": "https://ragnarok.fandom.com/wiki/Jakk"
+  },
+  "1131": {
+   "title": "Joker",
+   "lore": "Joker is a strange creature created by dark Magicians through lots of laboratory experimentation. It lives to protect the tower. A large enchanted playing card. If you don't have good attack accuracy, the stakes are against you when fighting Joker.",
+   "url": "https://ragnarok.fandom.com/wiki/Joker"
+  },
+  "1132": {
+   "title": "Khalitzburg",
+   "lore": "Khalitzburg is the soul of a knight cursed into a suit of armor. Very powerful as it used to be a Norman Knight. It's later revealed that the Khalitzburg Knightage was part of the Glastheim Chivalry as a Khalitzburg Knight when Glastheim was still around. All members were turned into undead by Himmelmez.",
+   "url": "https://ragnarok.fandom.com/wiki/Khalitzburg"
+  },
+  "1133": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1134": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1135": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1136": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1137": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1138": {
+   "title": "Magnolia",
+   "lore": "Magnolia is the ghost of a Pecopeco Egg that never had been a Picky and was eaten by adventurers. As revenge, it eats all items dropped from adventurers. Cute-looking creatures that appear as large frying pans cooking an egg. They mercilessly spank all that oppose them.",
+   "url": "https://ragnarok.fandom.com/wiki/Magnolia"
+  },
+  "1139": {
+   "title": "Mantis",
+   "lore": "Mantis is a mantis-like monster that is an expert of martial arts. Although it has sharp scythe-like legs, it refuses to use them and mostly does kicking and punching for the honor of the martial arts fighter. It wanders about fields, waving a tiny fan. An entire martial arts style is based on the movements of this insect.",
+   "url": "https://ragnarok.fandom.com/wiki/Mantis"
+  },
+  "1140": {
+   "title": "Marduk",
+   "lore": "Marduk is a Shaman of the aborigines living near Morocc. He spellbound his people to use them as royal guards for the tomb of their king. A gangly wizard of darkness. Look out, it knows magic!",
+   "url": "https://ragnarok.fandom.com/wiki/Marduk"
+  },
+  "1141": {
+   "title": "Marina",
+   "lore": "Marina is a kind of jellyfish drifting under the sea. It owns well-developed muscles; can live outside the water world. Its tentacle is elastic just like rubber; used in many ways. Transparent jellyfish that attacks by stretching their flexible bodies in a whip-like fashion. They live in cool places near water.",
+   "url": "https://ragnarok.fandom.com/wiki/Marina"
+  },
+  "1142": {
+   "title": "Marine Sphere",
+   "lore": "Marine Sphere is a spherical creature drifting under the sea without an aim. When it's threatened, it explodes itself. Strange, round-shaped monsters that pulse with destructive energy. Gathering their detonators may be useful for Alchemists.",
+   "url": "https://ragnarok.fandom.com/wiki/Marine_Sphere"
+  },
+  "1143": {
+   "title": "Marionette",
+   "lore": "Marionette is a clutter lesser demon in a puppet which had been used in a royal puppet show. It doesn't have any shape and cannot deal damage with normal weapons. It is a monster reborn as a cursed doll that is bound to strings attached to wooden sticks.",
+   "url": "https://ragnarok.fandom.com/wiki/Marionette"
+  },
+  "1144": {
+   "title": "Marse",
+   "lore": "Marse is a cuttlefish living near the water or under the sea. It rotates its body and swings away its 2 long legs as whips to attack enemies. A miniature squid with miniature tentacles, how it moves through water with those tiny things is still a scientific mystery.",
+   "url": "https://ragnarok.fandom.com/wiki/Marse"
+  },
+  "1145": {
+   "title": "Martin",
+   "lore": "Martin is a mole living under the ground. Normally it stays in a small cave home, but \nsometimes it comes out of home to seek feed.",
+   "url": "https://ragnarok.fandom.com/wiki/Martin"
+  },
+  "1146": {
+   "title": "Matyr",
+   "lore": "Matyr is a hound saturated with evil. It's always sleeping, but springs to action after smelling an adventurer. It is the keeper of the Sphinx that had been created by a forbidden magic. It's covered with thick dark fog all over its body and moves extremely fast.",
+   "url": "https://ragnarok.fandom.com/wiki/Matyr"
+  },
+  "1147": {
+   "title": "Maya",
+   "lore": "For the Norman character, see Maya (anime).\n\nMaya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
+   "url": "https://ragnarok.fandom.com/wiki/Maya"
+  },
+  "1148": {
+   "title": "Medusa",
+   "lore": "Medusa is a monster with hair composed of snakes. It is rumored to turn people into stone if you look into her eyes.",
+   "url": "https://ragnarok.fandom.com/wiki/Medusa"
+  },
+  "1149": {
+   "title": "Minorous",
+   "lore": "Minorous is a mysterious creature living in the farthest depths of a labyrinth. He despises the Orcs, but it doesn't matter since they live in different regions. When he runs into anyone blocking his way or disturbing his quiet life, he will chase them to th... A monster in the shape of an ox, it swings its hammer and follows the one who disturbs it.",
+   "url": "https://ragnarok.fandom.com/wiki/Minorous"
+  },
+  "1150": {
+   "title": "Moonlight Flower",
+   "lore": "Moonlight Flower is a middle-class demon that commands fox troops. You will be sorry if you look down on her just because of her cute appearance. A strange wild girl carrying a big bell and having 9 fox tails.",
+   "url": "https://ragnarok.fandom.com/wiki/Moonlight_Flower"
+  },
+  "1151": {
+   "title": "Myst",
+   "lore": "Myst is a poisonous, fog-shaped monster. According to the references of monster scholars, it is considered to consist of numerous amounts of floating microorganisms. A strange monster made of mist that is attached to a phantom window.",
+   "url": "https://ragnarok.fandom.com/wiki/Myst"
+  },
+  "1152": {
+   "title": "Orc Skeleton",
+   "lore": "Orc Skeleton is a skeletal undead Orc Warrior that is much more powerful than a living orc warrior. The skeleton of an orc that has been brought back to life. Even in death, orcs continue to do battle.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Skeleton"
+  },
+  "1153": {
+   "title": "Orc Zombie",
+   "lore": "Orc Zombie is an undead Orc Warrior. As a Zombie without sense perception, he moves pretty slowly. Orcs that have risen back from the dead. The honorable fighting spirit of the orc warrior never dies!",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Zombie"
+  },
+  "1154": {
+   "title": "Pasana",
+   "lore": "Pasana is a cursed soldier guarding the Pyramid. It has a duty to protect the dead master in the Pyramid.",
+   "url": "https://ragnarok.fandom.com/wiki/Pasana"
+  },
+  "1158": {
+   "title": "Phen",
+   "lore": "Phen is a long slim fish. Its belly skin is well-known as nourishing food to bon vivants. A blue fish with a pointed nose and sad, incredibly sad, vacant eyes.",
+   "url": "https://ragnarok.fandom.com/wiki/Phen"
+  },
+  "1159": {
+   "title": "Phreeoni",
+   "lore": "Phreeoni is a mysterious monster. Nobody quite knows what it is or where it came from for that matter. An extremely strong bastard that is 40% tongue.",
+   "url": "https://ragnarok.fandom.com/wiki/Phreeoni"
+  },
+  "1160": {
+   "title": "Piere",
+   "lore": "Piere is a working ant that works hard for its queen, Maya. Tends to collect things dropped on the ground. A green worker ant that works just as diligently as Andre.",
+   "url": "https://ragnarok.fandom.com/wiki/Piere"
+  },
+  "1161": {
+   "title": "Plankton",
+   "lore": "Plankton is a single-cell creature drifting on the water that is a food for fishes. Even though they seem insignificantly small, be careful not to step on them. Plankton are light and can drift on the water.",
+   "url": "https://ragnarok.fandom.com/wiki/Plankton"
+  },
+  "1162": {
+   "title": "Rafflesia",
+   "lore": "Rafflesias are aggressive sentient bushes that inhabit the fields around Lighthalzen. It is unsure if their existence is magical or scientific in origin.",
+   "url": "https://ragnarok.fandom.com/wiki/Rafflesia"
+  },
+  "1163": {
+   "title": "Raydric",
+   "lore": "Raydric is a cursed spirit confined to a suit of armor. It used to be a castle guard that still it has a deep attachment to protect the castle from it's enemies.",
+   "url": "https://ragnarok.fandom.com/wiki/Raydric"
+  },
+  "1164": {
+   "title": "Requiem",
+   "lore": "Requiem is an ancient slave that carries a heavy coffin on its back. Weary from its labor, Requiem simply collapses when attacking, hoping the coffin will hit its mark. He is one of the original settlers of Morocc region who had been drafted to construct the Sphinx. They were then cursed and became monsters by the king of the tomb and have kept the tomb from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Requiem"
+  },
+  "1165": {
+   "title": "Sandman",
+   "lore": "For the Hunter skill, see Sandman (skill).\n\nSandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
+   "url": "https://ragnarok.fandom.com/wiki/Sandman"
+  },
+  "1166": {
+   "title": "Savage",
+   "lore": "Savage is a wild boar living in the forest. It's mostly a very gentle, simple-minded animal except when it's upset. A wild boar that walks around grunting restlessly. Its rough-looking tusks make it hard to believe it was cute as a baby.",
+   "url": "https://ragnarok.fandom.com/wiki/Savage"
+  },
+  "1167": {
+   "title": "Savage Babe",
+   "lore": "Savage Babe is a baby Savage that is tiny and small, favored as a cute pet. It's disheartening to know that it grows up to become ugly.\nOn iRO and iRO2, this monster is localized as Savage Bebe.",
+   "url": "https://ragnarok.fandom.com/wiki/Savage_Babe"
+  },
+  "1169": {
+   "title": "Skeleton Worker",
+   "lore": "Skeleton Worker is the skeletal dead body of a person holding a deep grudge because he had been killed by an accident in the mine. Still, he continues gathering ores within the deep pit. A reanimated skeleton of a miner that had died, but came back to abuse its health insurance policy.",
+   "url": "https://ragnarok.fandom.com/wiki/Skeleton_Worker"
+  },
+  "1170": {
+   "title": "Sohee",
+   "lore": "Sohee is a virgin ghost that had never had a real love in her lifetime. She mostly appears near Payon, but doesn`t do much harm onto Normans. A female ghost that harbors a deep grudge. Although she is usually crying, she can become fierce upon encountering the living.",
+   "url": "https://ragnarok.fandom.com/wiki/Sohee"
+  },
+  "1174": {
+   "title": "Stainer",
+   "lore": "Stainer is a ladybug that eats noxious insects. Its colorful shell is favored for use in various decorations. a tiny little insect with a splendid ladybug-like shell, it can sense magic and will attack once a spell begins casting.",
+   "url": "https://ragnarok.fandom.com/wiki/Stainer"
+  },
+  "1175": {
+   "title": "Tarou",
+   "lore": "Tarou is a kind of rodent living in a dark place. Has white and fluffy hairs all around the body. A tiny, little white mouse. Its squeaks can be heard in the Dead Pit and the Prontera Culvert.",
+   "url": "https://ragnarok.fandom.com/wiki/Tarou"
+  },
+  "1176": {
+   "title": "Vitata",
+   "lore": "Vitata is an ant with a chubby, dark belly. Honey and Royal Jelly produced from them are used for the queen`s food. They are worker ants that are plump with honey. So plump they won't pick up anything.",
+   "url": "https://ragnarok.fandom.com/wiki/Vitata"
+  },
+  "1177": {
+   "title": "Zenorc",
+   "lore": "Zenorc is a mutated orc that is a kind of anthropoid living under the deep dungeon. Due to the lack of prey in the cave, it tends to eat things dropped on the ground. It's very shy and cowardly; never initiates attack. A dishonorable orc whose body has been cursed. They continue their shameful ways by looting items that have been dropped on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Zenorc"
+  },
+  "1178": {
+   "title": "Zerom",
+   "lore": "Zerom is an undead slave. Sadly, not even death will bring peace to the abusive hours of labor Zerom suffers for his Pharaoh. He is one of the original settlers of the Morocc region who had been drafted for the construction of the Sphinx. They had been cursed by the king and became monsters guarding the Sphinx from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Zerom"
+  },
+  "1179": {
+   "title": "Whisper",
+   "lore": "Whisper is a bedcover-shaped monster. As a ghost it doesn't get any damage from normal weapons. It is a piece of living fabric that gives off spooky vibes. Sometimes it likes to turn invisible...",
+   "url": "https://ragnarok.fandom.com/wiki/Whisper"
+  },
+  "1183": {
+   "title": "Chonchon",
+   "lore": "Chonchon is a kind of small fly that is commonly seen everywhere. They move with great speed. Amazingly, they can heal in the presence of fecal matter.\nThe Fly Wing item it drops does the same effect as Teleport, an Acolyte skill.",
+   "url": "https://ragnarok.fandom.com/wiki/Chonchon"
+  },
+  "1184": {
+   "title": "Fabre",
+   "lore": "Fabres are the larvae of Creamy that are suitable for newbies to fight with. It evolves into a Pupa. Likes to roll around the grassland with its round body. The weak and small larva of Creamy. Although some say it is cute, this author must disagree. Wholeheartedly.",
+   "url": "https://ragnarok.fandom.com/wiki/Fabre"
+  },
+  "1185": {
+   "title": "Whisper",
+   "lore": "Whisper is a bedcover-shaped monster. As a ghost it doesn't get any damage from normal weapons. It is a piece of living fabric that gives off spooky vibes. Sometimes it likes to turn invisible...",
+   "url": "https://ragnarok.fandom.com/wiki/Whisper"
+  },
+  "1188": {
+   "title": "Bongun",
+   "lore": "Bongun is a frozen male corpse that had become a monster by his own will to protect the girl, Munak. He has a tender passion for Munak; he does anything for her. A male oriental zombie who volunteered to be a monster to protect a girl who became Munak. It seems he fell in love with Munak.",
+   "url": "https://ragnarok.fandom.com/wiki/Bongun"
+  },
+  "1189": {
+   "title": "Orc Archer",
+   "lore": "Orc Archer is an Orc that attacks with a bow. Be careful, for it has high accuracy.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Archer"
+  },
+  "1190": {
+   "title": "Orc Lord",
+   "lore": "Orc Lord is the chief of the Orc tribe. He is far more intelligent. He wields no weapons, but prefers to mimic the Norman martial arts. Some people say he doesn't do any better right than normal Orc Warriors and tend to wonder if he really is more intelligent.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Lord"
+  },
+  "1191": {
+   "title": "Mimic",
+   "lore": "Mimic is a treasure chest that has something in it. Be careful, it's very quick.",
+   "url": "https://ragnarok.fandom.com/wiki/Mimic"
+  },
+  "1192": {
+   "title": "Wraith",
+   "lore": "Wraith is the undead ghost of a wicked man who had been cursed. He believes that he can revive himself by draining the life-force of others, so he lurks in the shadows waiting for victims.",
+   "url": "https://ragnarok.fandom.com/wiki/Wraith"
+  },
+  "1193": {
+   "title": "Alarm",
+   "lore": "Alarm is an enchanted magic alarm clock that has been made to protect the Clock Tower from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Alarm"
+  },
+  "1194": {
+   "title": "Arclouse",
+   "lore": "Arclouse, or Arclouze, is an Insect that is covered with a hard, firm shell all over the body. It rolls up its body and attacks enemies.",
+   "url": "https://ragnarok.fandom.com/wiki/Arclouse"
+  },
+  "1195": {
+   "title": "Rideword",
+   "lore": "Rideword is a monster that resembles a book and is usually found in magical libraries. It is unknown if they are a nuisance or a security measure.",
+   "url": "https://ragnarok.fandom.com/wiki/Rideword"
+  },
+  "1196": {
+   "title": "Skeleton Prisoner",
+   "lore": "Skeleton Prisoner is the skeleton of a man that had died in prison under a false accusation. He hates the people who put him in jail and neglected him.",
+   "url": "https://ragnarok.fandom.com/wiki/Skeleton_Prisoner"
+  },
+  "1197": {
+   "title": "Zombie Prisoner",
+   "lore": "Zombie Prisoner is the walking corpse of a prisoner in the underprison of a castle.\nHe must've died holding a grudge to the people who trapped him, but it seems he hates every living things now.",
+   "url": "https://ragnarok.fandom.com/wiki/Zombie_Prisoner"
+  },
+  "1199": {
+   "title": "Punk",
+   "lore": "Punk is a giant mould monster normally drfting in the air. When it spots any living things it attacks them to spread its seed.",
+   "url": "https://ragnarok.fandom.com/wiki/Punk"
+  },
+  "1200": {
+   "title": "Zherlthsh",
+   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
+  },
+  "1203": {
+   "title": "Mysteltainn",
+   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
+  },
+  "1204": {
+   "title": "Tirfing",
+   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "url": "https://ragnarok.fandom.com/wiki/Tirfing"
+  },
+  "1205": {
+   "title": "Executioner",
+   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "url": "https://ragnarok.fandom.com/wiki/Executioner"
+  },
+  "1206": {
+   "title": "Anolian",
+   "lore": "Anolian is a warrior of the Crocodile tribe, with the head of crocodile and the body of a Norman. Even though he's never been educated or trained, he's a still warrior.",
+   "url": "https://ragnarok.fandom.com/wiki/Anolian"
+  },
+  "1207": {
+   "title": "Sting",
+   "lore": "Sting is a mud-shaped monster that attacks in a long range.",
+   "url": "https://ragnarok.fandom.com/wiki/Sting"
+  },
+  "1208": {
+   "title": "Wandering Man",
+   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
+  },
+  "1209": {
+   "title": "Cramp",
+   "lore": "Cramp is a kind of rodent living in the deep side of sewers. It looks similar to Tarou but it is very hostile and has poisonous teeth.",
+   "url": "https://ragnarok.fandom.com/wiki/Cramp"
+  },
+  "1211": {
+   "title": "Brilight",
+   "lore": "Brilight is a ladybug that has been getting bigger and hostile for unknown reasons.\nIt lives in a dark place and attacks passersby.",
+   "url": "https://ragnarok.fandom.com/wiki/Brilight"
+  },
+  "1213": {
+   "title": "High Orc",
+   "lore": "High Orc is a superior Orc that posesses high intelligence and a well-constructed body when compared to other orcs. In addition to this, it is also more hostile and invades nearby villages sometimes.",
+   "url": "https://ragnarok.fandom.com/wiki/High_Orc"
+  },
+  "1215": {
+   "title": "Stem Worm",
+   "lore": "Stem Worm is a mutant Worm Tail that has a much more powerful tendril than Worm Tail.",
+   "url": "https://ragnarok.fandom.com/wiki/Stem_Worm"
+  },
+  "1216": {
+   "title": "Penomena",
+   "lore": "Penomena is similar to Hydra, but unlike the Hydra this monster can move itself and is pretty powerful. Misunderstanding could make for big time trouble. Prepare before you attack Penomena, otherwise you could be dead in no time.",
+   "url": "https://ragnarok.fandom.com/wiki/Penomena"
+  },
+  "1219": {
+   "title": "Knight of Abyss",
+   "lore": "For the character from the animation, see Abysmal Knight (anime).\n\nKnight of Abyss is a a knight that has served the owner of the legendary maze. It's very powerful, merciless. It is later revealed that the Knight of Abyss was formerly a member of the White Knight cavalry knightage that was part of Glastheim Chivalry when Glastheim was still a city. Members of the knightage were turned into undead by Himmelmez. \nOn iRO, this monster is localized as Abysmal Knight.",
+   "url": "https://ragnarok.fandom.com/wiki/Knight_of_Abyss"
+  },
+  "1242": {
+   "title": "Marin",
+   "lore": "Marin is a mutant Poring living in the all-the-time winter area, Lutie. It doesn't care about items dropped on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Marin"
+  },
+  "1243": {
+   "title": "Sasquatch",
+   "lore": "Sasquatch is a Polar Bear living around Lutie. It is quite vicious, frequently attacking innocent travellers. The colour of its fur has been adapted to suit its environment.",
+   "url": "https://ragnarok.fandom.com/wiki/Sasquatch"
+  },
+  "1246": {
+   "title": "Christmas Cookie",
+   "lore": "For the green version of this monster, see Cookie.\n\nChristmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
+   "url": "https://ragnarok.fandom.com/wiki/Christmas_Cookie"
+  },
+  "1247": {
+   "title": "Antonio",
+   "lore": "Antonio was a greedy and rash man who lives in Lutie. When he didn`t become the next village leader, he decided to take revenge and run away with all the toys that were made in the Toy Factory. Antonio claimed that he wanted to take over the factory because he liked it and no one else wanted to keep it running. However, after Santa did some investigation, he discovered Antonio was trying to take his job. Antonio doesn't think it's a big deal if he has a surplus of toys, to which Santa argued that it would not be the same if children received toys from Antonio instead of Santa. Antonio is eventually punished by an adventurer and forced out of the factory.",
+   "url": "https://ragnarok.fandom.com/wiki/Antonio"
+  },
+  "1248": {
+   "title": "Cruiser",
+   "lore": "Cruiser is a toy soldier that keeps the Lutie Toy Factory from intruders. Attacks using a rifle.",
+   "url": "https://ragnarok.fandom.com/wiki/Cruiser"
+  },
+  "1249": {
+   "title": "Myst Case",
+   "lore": "Myst Case is an enchanted toy box that appears in the toy factory of Lutie. Unlike Mimic, it doesn`t have any spirit within the box. It is very mild and gentle, never doing any harm onto visitors unless attacked first.",
+   "url": "https://ragnarok.fandom.com/wiki/Myst_Case"
+  },
+  "1250": {
+   "title": "Chepet",
+   "lore": "Although Chepet looks like a girl carrying a weird doll, the truth is the weird doll controls the girl doll. It strikes a light using a big matchstick to attack targets.\nAn evil creature hiding in a pretty doll. It attacks passersby by striking matchsticks held in the doll's hand. A very rare monster since it dwells in only a few places.",
+   "url": "https://ragnarok.fandom.com/wiki/Chepet"
+  },
+  "1251": {
+   "title": "Knight of Windstorm",
+   "lore": "The Knight of Windstorm, or Stormy Knight, is a legendary monster in the Lutie region. According to the folklore, he brings a snowy storm with him and butchers Normans cruelly.",
+   "url": "https://ragnarok.fandom.com/wiki/Knight_of_Windstorm"
+  },
+  "1252": {
+   "title": "Garm",
+   "lore": "Garm is a giant wolf covered with ice. It lives near Lutie, attacking travellers using a sturdy jawbone and fangs.\nOn iRO, this monster was localized to Hatii to fit with the actual Norse mythos better.",
+   "url": "https://ragnarok.fandom.com/wiki/Garm"
+  },
+  "1253": {
+   "title": "Gargoyle",
+   "lore": "Gargoyles are stone demons that were placed at Baldr's temple Breidablik by Arkana and Zenobia Sadi Freile. They can only be brought to life with the formation of a nest, their source of magical power. Once the source of magic is destroyed, the gargoyles will return to their original stone state.\nIn RO, Gargoyles are lesser demons with large, wide wings on their backs. Attacks travellers from the sky using a bow. They bear no resemblance to the gargoyles from the manhwa.",
+   "url": "https://ragnarok.fandom.com/wiki/Gargoyle"
+  },
+  "1254": {
+   "title": "Raggler",
+   "lore": "Raggler is a wounded soldier of the Raggler tribe of mutant seagulls. Although it cannot fly due to the serious injury, it walks leaning on his wooden stick.\nThe mail system in Rune-Midgarts is serviced by the Raggler tribe (unwounded ones, of course).",
+   "url": "https://ragnarok.fandom.com/wiki/Raggler"
+  },
+  "1256": {
+   "title": "Pest",
+   "lore": "Pest is an unidentified monster that even the monster scholars never have been able to identify. Does a spin attack using the covering for its eye.",
+   "url": "https://ragnarok.fandom.com/wiki/Pest"
+  },
+  "1258": {
+   "title": "Goblin Archer",
+   "lore": "Goblin Archer is a Goblin that carries a bow and arrows. Although the bow is not that efficient, it is hard to dodge arrows shot by many goblins from here and there.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin_Archer"
+  },
+  "1259": {
+   "title": "Gryphon",
+   "lore": "Gryphon is a fabulous-looking beast with the head and wings of an eagle and the body of a lion. It can be tamed to become a mount for a Royal Guard.",
+   "url": "https://ragnarok.fandom.com/wiki/Gryphon"
+  },
+  "1260": {
+   "title": "Dark Frame",
+   "lore": "Dark Frame is a mirror cursed by a devil. It mostly hangs on the wall but when somebody gets near to check their appearance, it reveals itself and attacks the living. It wanders about sometimes to seek victims for itself.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Frame"
+  },
+  "1261": {
+   "title": "Wild Rose",
+   "lore": "Wild Rose is a cat wearing a big ribbon on its back that is very smart and tricky. Also, it is rumored that it can be tamed by Normans as a pet.",
+   "url": "https://ragnarok.fandom.com/wiki/Wild_Rose"
+  },
+  "1263": {
+   "title": "Wind Ghost",
+   "lore": "Wind Ghost is a skull monster with a green manteau. Its magic is very powerful.",
+   "url": "https://ragnarok.fandom.com/wiki/Wind_Ghost"
+  },
+  "1264": {
+   "title": "Merman",
+   "lore": "Merman is of a sea tribe that have ruled the water world and have targeted the world above to conquer. They mostly stay under the sea, appearing in caves near the seashore from time to time. A male mermaid race that rules in the deep sea. Usually can be found in the deep sea or a seaside cave.",
+   "url": "https://ragnarok.fandom.com/wiki/Merman"
+  },
+  "1265": {
+   "title": "Cookie",
+   "lore": "For the red version of this monster, see Christmas Cookie.\n\nCookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.",
+   "url": "https://ragnarok.fandom.com/wiki/Cookie"
+  },
+  "1266": {
+   "title": "Aster",
+   "lore": "Aster is a starfish living at the sea. It is mild and gentle, never attacks first.",
+   "url": "https://ragnarok.fandom.com/wiki/Aster"
+  },
+  "1267": {
+   "title": "Carat",
+   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared. Carat can be counted to be one of the most positive creature in Glastheim, despite being cursed and dead countless times, he still tries to entertain everyone. Though not many undead enjoy his act, he still tries to make them happy. Sometimes adventurers might bump onto him and he will try to entertain them as well. Although most of the time he will only get slashed and mistaken for an evil monster. Carat seems to have his concious intact, although like most mime and jester, they are not always in the right mind.\nIt is a mystery how Carat get a hold of his memory and concious, but it is said that the curse never really did anything to him except let him live an infinite life. Some say that his countless life was the curse to all, since everyone hate his joke and act, and its terribly annoying to see him around, even the Dark Lord seems to be ignoring him.",
+   "url": "https://ragnarok.fandom.com/wiki/Carat"
+  },
+  "1268": {
+   "title": "Bloody Knight",
+   "lore": "Bloody Knight is a high knight cursed into blood-stained armor. He used to be valiant enough to take charge of the chivalry in a castle.",
+   "url": "https://ragnarok.fandom.com/wiki/Bloody_Knight"
+  },
+  "1269": {
+   "title": "Clock",
+   "lore": "Clock is a monster that an ancient wall clock turned into. It is not hostile to Normans because it has existed along with them for a long, long time.",
+   "url": "https://ragnarok.fandom.com/wiki/Clock"
+  },
+  "1270": {
+   "title": "Clock Tower Manager",
+   "lore": "Clock Tower Manager is a magical creature created to manage the Clock Tower in Aldebaran. Although it never openly attacks Normans, it will show no mercy to the ones who tries to harm it or the clock tower.\nNOTE: This monster is known as Tower Keeper in other versions of RO.",
+   "url": "https://ragnarok.fandom.com/wiki/Clock_Tower_Manager"
+  },
+  "1271": {
+   "title": "Alligator",
+   "lore": "Alligator is a humanoid alligator that is not that hostile compared to the Crocodile tribe.",
+   "url": "https://ragnarok.fandom.com/wiki/Alligator"
+  },
+  "1272": {
+   "title": "Dark Lord",
+   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
+  },
+  "1273": {
+   "title": "Orc Lady",
+   "lore": "Orc Lady is a female of the Orc tribe who uses a big giant kitchen knife as a weapon. It seems the orc tribe males think of them as beautiful. They are quick to come to the aid of their Orc Baby.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Lady"
+  },
+  "1274": {
+   "title": "Megalith",
+   "lore": "Megalith is a stone statue from an unknown island. It attacks enemies by shaking rocks around.",
+   "url": "https://ragnarok.fandom.com/wiki/Megalith"
+  },
+  "1275": {
+   "title": "Alice",
+   "lore": "Alice is a maid-type robot that has been taking charge of miscellaneous trifles in the Glastheim Castle. Cleaning is her daily priority in life, however she shows no mercy to intruders and attacks them driving a steel broom.",
+   "url": "https://ragnarok.fandom.com/wiki/Alice"
+  },
+  "1276": {
+   "title": "Raydric Archer",
+   "lore": "Raydric Archer is a cursed armor that a dead castle guard spirit has been trapped within. Unlike Raydric, it uses a bow to attack intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Raydric_Archer"
+  },
+  "1277": {
+   "title": "Greatest General",
+   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.\n(The original iRO description notes that the village is in ancient Korea, which doesn't make sense in the lore of Ragnarok itself considering there is no Korea in the world of Ragnarok, plus the only village these monsters are found near is Payon.)",
+   "url": "https://ragnarok.fandom.com/wiki/Greatest_General"
+  },
+  "1278": {
+   "title": "Stalactic Golem",
+   "lore": "Stalactic Golem is an advanced golem.",
+   "url": "https://ragnarok.fandom.com/wiki/Stalactic_Golem"
+  },
+  "1279": {
+   "title": "Tri Joint",
+   "lore": "Tri Joint is an ancient creature with a hard protective shell that covers its body. It lives in a dark cave. Its fossil has been found from time to time.",
+   "url": "https://ragnarok.fandom.com/wiki/Tri_Joint"
+  },
+  "1280": {
+   "title": "Steam Goblin",
+   "lore": "Steam Goblin is a kind of Goblin that rides a masterpiece steam engine vehicle made by less-dumb goblins. Steam Rider troops is an elite group in the goblin army.\nIn some versions of RO, this monster is localized as Goblin Steamrider.",
+   "url": "https://ragnarok.fandom.com/wiki/Steam_Goblin"
+  },
+  "1281": {
+   "title": "Sage Worm",
+   "lore": "Sage Worm is a supreme worm of the worm tribes that owns high intelligence and stands high in public esteem in their own way.",
+   "url": "https://ragnarok.fandom.com/wiki/Sage_Worm"
+  },
+  "1282": {
+   "title": "Kobold Archer",
+   "lore": "Kobold Archer is a kind of Kobold tribe living in the desert. They live in a small group and travel everywhere. They use quarrel as a weapon unlike the normal kobolds.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold_Archer"
+  },
+  "1283": {
+   "title": "Chimera",
+   "lore": "Chimera is a fire-breathing monster that resembles a lion, goat, and serpent.",
+   "url": "https://ragnarok.fandom.com/wiki/Chimera"
+  },
+  "1288": {
+   "title": "Emperium",
+   "lore": "Merely owning this gloriously resplendent gem is said to be a sign of being chosen by fate to wield great power.",
+   "url": "https://ragnarok.fandom.com/wiki/Emperium"
+  },
+  "1289": {
+   "title": "Maya Purple",
+   "lore": "Maya Purple is the mate of Maya and helps protect her along with their nest and brood.",
+   "url": "https://ragnarok.fandom.com/wiki/Maya_Purple"
+  },
+  "1291": {
+   "title": "Wraith Dead",
+   "lore": "Wraith Dead is a ghost wandering aimlessly. An attack by the big mouth and teeth in its stomach is very threatening.",
+   "url": "https://ragnarok.fandom.com/wiki/Wraith_Dead"
+  },
+  "1293": {
+   "title": "Creamy Fear",
+   "lore": "Creamy Fear, as the name implies, is a stronger version of a Creamy that is intended to invoke fear in the hearts of adventurers that are too weak to take it down. Those who are strong enough to defeat a Creamy will be sorely disappointed when encountering a Creamy Fear.",
+   "url": "https://ragnarok.fandom.com/wiki/Creamy_Fear"
+  },
+  "1308": {
+   "title": "Panzer Goblin",
+   "lore": "Panzer Goblin is an advanced Goblin that somehow managed to harness nuclear energy to create a noteworthy jetpack.",
+   "url": "https://ragnarok.fandom.com/wiki/Panzer_Goblin"
+  },
+  "1312": {
+   "title": "Turtle General",
+   "lore": "Turtle General is the known leader of all the turtles that reside in Turtle Island. Despite his age and the stereotype of turtles being slow, Turtle General is actually fast and agile. He has mastered the art of twin blades and very good at close combat.",
+   "url": "https://ragnarok.fandom.com/wiki/Turtle_General"
+  },
+  "1315": {
+   "title": "Assaulter",
+   "lore": "Assaulter is a ninja Turtle warrior that resides on Turtle Island. It is armed with a giant shuriken that it throws with deadly accuracy.",
+   "url": "https://ragnarok.fandom.com/wiki/Assaulter"
+  },
+  "1317": {
+   "title": "Fur Seal",
+   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter. Perhaps that is the reason that it was named Fur Seal. Sea Otter doesn't seem to recognize that Fur Seal is a different species thus it will not attack Fur Seal whenever it enters their territory.\nIn some versions of Ragnarok Online, Fur Seal is localized as Seal.",
+   "url": "https://ragnarok.fandom.com/wiki/Fur_Seal"
+  },
+  "1364": {
+   "title": "Assaulter",
+   "lore": "Assaulter is a ninja Turtle warrior that resides on Turtle Island. It is armed with a giant shuriken that it throws with deadly accuracy.",
+   "url": "https://ragnarok.fandom.com/wiki/Assaulter"
+  },
+  "1373": {
+   "title": "Lord of the Dead",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
+  },
+  "1388": {
+   "title": "Archangeling",
+   "lore": "Archangeling is an Archangel Poring.\nOn iRO, this monster is localized as Arc Angeling.",
+   "url": "https://ragnarok.fandom.com/wiki/Archangeling"
+  },
+  "1392": {
+   "title": "Rotar Zairo",
+   "lore": "Rotar Zairo is a goblin that took Goblin engineering into a different direction and combines crude propellers with steam power to create a rather inefficient machine compared to his brethren.",
+   "url": "https://ragnarok.fandom.com/wiki/Rotar_Zairo"
+  },
+  "1393": {
+   "title": "Mummy",
+   "lore": "Mummy is a mummy crawling under the deserted pyramid in Morocc, appearing with Verit the undead dog before the adventurers from time to time. Tends to move in groups attacking other living things nearby. A walking corpse covered with bandages. It probably used to be beautiful once.",
+   "url": "https://ragnarok.fandom.com/wiki/Mummy"
+  },
+  "1394": {
+   "title": "Zombie",
+   "lore": "Zombie is a walking corpse which has been cursed by an evil shaman. Beware of its poisonous breath. Bad case of the dead which has been reborn as a walking corpse by black magic. Let's lead it to Nirvana.",
+   "url": "https://ragnarok.fandom.com/wiki/Zombie"
+  },
+  "1399": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "1402": {
+   "title": "Poison Toad",
+   "lore": "Poison Toad is a poisonous toad that prefers dark and wet places.",
+   "url": "https://ragnarok.fandom.com/wiki/Poison_Toad"
+  },
+  "1419": {
+   "title": "Familiar",
+   "lore": "Familiar is a bat that lives in a group in a dark cave. It sucks blood from living things nearby using small but sharp teeth. A gray bat that's not very strong, but really annoying because it attacks very fast and relentlessly pursues passersby.",
+   "url": "https://ragnarok.fandom.com/wiki/Familiar"
+  },
+  "1420": {
+   "title": "Archer Skeleton",
+   "lore": "Archer Skeleton is a skeleton archer living in dark caves or sunless places. It is rumored that when a witch curses a man to the death, that dead man will turn into this monster with its rotten and torn body. Despite not having actual eyes, Archer Skeletons have great aim.",
+   "url": "https://ragnarok.fandom.com/wiki/Archer_Skeleton"
+  },
+  "1421": {
+   "title": "Isis",
+   "lore": "Isis is a giant serpent that a royal maid transformed into after death and had been buried with a king. She has been dedicated to defending the tomb of the king, so she is very hostile to those that would dare enter it. A monster that is half serpent and half woman, she is one of Osiris' trusted companions.",
+   "url": "https://ragnarok.fandom.com/wiki/Isis"
+  },
+  "1422": {
+   "title": "Hunter Fly",
+   "lore": "Hunter Fly is a Chonchon of crimson colour. It possess 3 times higher agility compared to normal Chonchon; also it deals more damage than the normal one. Winged insects covered in the blood of innocents. It's incredibly quick as well. Novices must flee from this monster at all costs.",
+   "url": "https://ragnarok.fandom.com/wiki/Hunter_Fly"
+  },
+  "1423": {
+   "title": "Ghoul",
+   "lore": "Ghoul is a walking corpse that has been cursed by an evil Shaman. Mostly, it preys on dead bodies, however it never gets satisfied with those and keeps attacking the living near the place where it lives. Similar to a Zombie, but are green and much stronger. Its retching is offensive in more ways than two.",
+   "url": "https://ragnarok.fandom.com/wiki/Ghoul"
+  },
+  "1424": {
+   "title": "Sidewinder",
+   "lore": "Sidewinder is a snake. Unlike its legend of twin heads, apparently this snake has one head. Uses a dull tail and a head to threaten and to confuse enemies at the same time. A dark-colored snake that hates people. Be careful and kill them before they can poison you.\nOn iRO, this monster is localized as Side Winder.",
+   "url": "https://ragnarok.fandom.com/wiki/Sidewinder"
+  },
+  "1425": {
+   "title": "Obeaune",
+   "lore": "Obeaune is a creature with the head and upper body of a woman and the tail of a fish. She seems to have a bad hair day, her tangled and uncombed hair harms other creatures with the slightest damage. Besides, she isn't nice to let eyesores get near her. A female mermaid that attacks with its wild, flowing hair. Whether or not its male version is Merman is still under debate.",
+   "url": "https://ragnarok.fandom.com/wiki/Obeaune"
+  },
+  "1426": {
+   "title": "Marc",
+   "lore": "Marc is a seahorse living under the deep sea. As the solid skin covers all around its body, it's very strong so that normal adventurers might get in trouble seeing it under the sea. A proud-looking sea horse that sort of looks like a dragon. Unfortunately, you can't ride it.",
+   "url": "https://ragnarok.fandom.com/wiki/Marc"
+  },
+  "1428": {
+   "title": "Poison Spore",
+   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
+  },
+  "1429": {
+   "title": "Argiope",
+   "lore": "Argiope is a vicious, giant centipede monster that attacks passersby with poisonous fangs. A segmented millipede-type monster that will attack passersby with poison.",
+   "url": "https://ragnarok.fandom.com/wiki/Argiope"
+  },
+  "1430": {
+   "title": "Argos",
+   "lore": "Argos is a giant spider. A monstrous spider that will attack adventurers on sight. It's too big for adventurers to squish with their feet.",
+   "url": "https://ragnarok.fandom.com/wiki/Argos"
+  },
+  "1432": {
+   "title": "Desert Wolf",
+   "lore": "The Desert Wolf is a kind of wolf that is commonly seen in the desert area. They hunt small animals of the desert using sturdy jawbone and speedy robust legs. They are all violent and aggressive to strangers; tend to attack indiscriminately. Wolves in the desert are much stronger than those living in the forest. If you strike one, you'll have to deal with the whole pack.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf"
+  },
+  "1433": {
+   "title": "Deviruchi",
+   "lore": "Deviruchi is a cub Demon of the Demon world. Although it has never learned any magic yet, his fork is powerful without any magical assistance. A miniature demon that repeatedly stabs Normans with its pitchfork. It's cute, but nonetheless a true fiend of darkness.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviruchi"
+  },
+  "1434": {
+   "title": "Drainliar",
+   "lore": "Drainliar is a bat that lives in a group in a dark cave. It sucks blood from living things near using small but sharp teeth. It is bigger than a Familiar. A blood bat that's much stronger than Familiar, it also tends to pursue any Norman it finds.",
+   "url": "https://ragnarok.fandom.com/wiki/Drainliar"
+  },
+  "1435": {
+   "title": "Evil Druid",
+   "lore": "Evil Druid was once a prominent High Priest, but a demon's curse turned him into one of the undead. As he used to be a High Priest, he is a pretty strong monster. A flamboyant evil druid, it's always using a floating spellbook that crackles with energy to cause misery to adventurers.",
+   "url": "https://ragnarok.fandom.com/wiki/Evil_Druid"
+  },
+  "1436": {
+   "title": "Jakk",
+   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "url": "https://ragnarok.fandom.com/wiki/Jakk"
+  },
+  "1437": {
+   "title": "Joker",
+   "lore": "Joker is a strange creature created by dark Magicians through lots of laboratory experimentation. It lives to protect the tower. A large enchanted playing card. If you don't have good attack accuracy, the stakes are against you when fighting Joker.",
+   "url": "https://ragnarok.fandom.com/wiki/Joker"
+  },
+  "1438": {
+   "title": "Khalitzburg",
+   "lore": "Khalitzburg is the soul of a knight cursed into a suit of armor. Very powerful as it used to be a Norman Knight. It's later revealed that the Khalitzburg Knightage was part of the Glastheim Chivalry as a Khalitzburg Knight when Glastheim was still around. All members were turned into undead by Himmelmez.",
+   "url": "https://ragnarok.fandom.com/wiki/Khalitzburg"
+  },
+  "1439": {
+   "title": "High Orc",
+   "lore": "High Orc is a superior Orc that posesses high intelligence and a well-constructed body when compared to other orcs. In addition to this, it is also more hostile and invades nearby villages sometimes.",
+   "url": "https://ragnarok.fandom.com/wiki/High_Orc"
+  },
+  "1440": {
+   "title": "Stem Worm",
+   "lore": "Stem Worm is a mutant Worm Tail that has a much more powerful tendril than Worm Tail.",
+   "url": "https://ragnarok.fandom.com/wiki/Stem_Worm"
+  },
+  "1441": {
+   "title": "Penomena",
+   "lore": "Penomena is similar to Hydra, but unlike the Hydra this monster can move itself and is pretty powerful. Misunderstanding could make for big time trouble. Prepare before you attack Penomena, otherwise you could be dead in no time.",
+   "url": "https://ragnarok.fandom.com/wiki/Penomena"
+  },
+  "1442": {
+   "title": "Sasquatch",
+   "lore": "Sasquatch is a Polar Bear living around Lutie. It is quite vicious, frequently attacking innocent travellers. The colour of its fur has been adapted to suit its environment.",
+   "url": "https://ragnarok.fandom.com/wiki/Sasquatch"
+  },
+  "1443": {
+   "title": "Cruiser",
+   "lore": "Cruiser is a toy soldier that keeps the Lutie Toy Factory from intruders. Attacks using a rifle.",
+   "url": "https://ragnarok.fandom.com/wiki/Cruiser"
+  },
+  "1444": {
+   "title": "Chepet",
+   "lore": "Although Chepet looks like a girl carrying a weird doll, the truth is the weird doll controls the girl doll. It strikes a light using a big matchstick to attack targets.\nAn evil creature hiding in a pretty doll. It attacks passersby by striking matchsticks held in the doll's hand. A very rare monster since it dwells in only a few places.",
+   "url": "https://ragnarok.fandom.com/wiki/Chepet"
+  },
+  "1445": {
+   "title": "Raggler",
+   "lore": "Raggler is a wounded soldier of the Raggler tribe of mutant seagulls. Although it cannot fly due to the serious injury, it walks leaning on his wooden stick.\nThe mail system in Rune-Midgarts is serviced by the Raggler tribe (unwounded ones, of course).",
+   "url": "https://ragnarok.fandom.com/wiki/Raggler"
+  },
+  "1447": {
+   "title": "Gryphon",
+   "lore": "Gryphon is a fabulous-looking beast with the head and wings of an eagle and the body of a lion. It can be tamed to become a mount for a Royal Guard.",
+   "url": "https://ragnarok.fandom.com/wiki/Gryphon"
+  },
+  "1448": {
+   "title": "Dark Frame",
+   "lore": "Dark Frame is a mirror cursed by a devil. It mostly hangs on the wall but when somebody gets near to check their appearance, it reveals itself and attacks the living. It wanders about sometimes to seek victims for itself.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Frame"
+  },
+  "1450": {
+   "title": "Wind Ghost",
+   "lore": "Wind Ghost is a skull monster with a green manteau. Its magic is very powerful.",
+   "url": "https://ragnarok.fandom.com/wiki/Wind_Ghost"
+  },
+  "1451": {
+   "title": "Merman",
+   "lore": "Merman is of a sea tribe that have ruled the water world and have targeted the world above to conquer. They mostly stay under the sea, appearing in caves near the seashore from time to time. A male mermaid race that rules in the deep sea. Usually can be found in the deep sea or a seaside cave.",
+   "url": "https://ragnarok.fandom.com/wiki/Merman"
+  },
+  "1452": {
+   "title": "Orc Lady",
+   "lore": "Orc Lady is a female of the Orc tribe who uses a big giant kitchen knife as a weapon. It seems the orc tribe males think of them as beautiful. They are quick to come to the aid of their Orc Baby.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Lady"
+  },
+  "1453": {
+   "title": "Raydric Archer",
+   "lore": "Raydric Archer is a cursed armor that a dead castle guard spirit has been trapped within. Unlike Raydric, it uses a bow to attack intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Raydric_Archer"
+  },
+  "1454": {
+   "title": "Tri Joint",
+   "lore": "Tri Joint is an ancient creature with a hard protective shell that covers its body. It lives in a dark cave. Its fossil has been found from time to time.",
+   "url": "https://ragnarok.fandom.com/wiki/Tri_Joint"
+  },
+  "1455": {
+   "title": "Kobold Archer",
+   "lore": "Kobold Archer is a kind of Kobold tribe living in the desert. They live in a small group and travel everywhere. They use quarrel as a weapon unlike the normal kobolds.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold_Archer"
+  },
+  "1456": {
+   "title": "Chimera",
+   "lore": "Chimera is a fire-breathing monster that resembles a lion, goat, and serpent.",
+   "url": "https://ragnarok.fandom.com/wiki/Chimera"
+  },
+  "1457": {
+   "title": "Mantis",
+   "lore": "Mantis is a mantis-like monster that is an expert of martial arts. Although it has sharp scythe-like legs, it refuses to use them and mostly does kicking and punching for the honor of the martial arts fighter. It wanders about fields, waving a tiny fan. An entire martial arts style is based on the movements of this insect.",
+   "url": "https://ragnarok.fandom.com/wiki/Mantis"
+  },
+  "1458": {
+   "title": "Marduk",
+   "lore": "Marduk is a Shaman of the aborigines living near Morocc. He spellbound his people to use them as royal guards for the tomb of their king. A gangly wizard of darkness. Look out, it knows magic!",
+   "url": "https://ragnarok.fandom.com/wiki/Marduk"
+  },
+  "1459": {
+   "title": "Marionette",
+   "lore": "Marionette is a clutter lesser demon in a puppet which had been used in a royal puppet show. It doesn't have any shape and cannot deal damage with normal weapons. It is a monster reborn as a cursed doll that is bound to strings attached to wooden sticks.",
+   "url": "https://ragnarok.fandom.com/wiki/Marionette"
+  },
+  "1460": {
+   "title": "Matyr",
+   "lore": "Matyr is a hound saturated with evil. It's always sleeping, but springs to action after smelling an adventurer. It is the keeper of the Sphinx that had been created by a forbidden magic. It's covered with thick dark fog all over its body and moves extremely fast.",
+   "url": "https://ragnarok.fandom.com/wiki/Matyr"
+  },
+  "1461": {
+   "title": "Minorous",
+   "lore": "Minorous is a mysterious creature living in the farthest depths of a labyrinth. He despises the Orcs, but it doesn't matter since they live in different regions. When he runs into anyone blocking his way or disturbing his quiet life, he will chase them to th... A monster in the shape of an ox, it swings its hammer and follows the one who disturbs it.",
+   "url": "https://ragnarok.fandom.com/wiki/Minorous"
+  },
+  "1462": {
+   "title": "Orc Skeleton",
+   "lore": "Orc Skeleton is a skeletal undead Orc Warrior that is much more powerful than a living orc warrior. The skeleton of an orc that has been brought back to life. Even in death, orcs continue to do battle.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Skeleton"
+  },
+  "1463": {
+   "title": "Orc Zombie",
+   "lore": "Orc Zombie is an undead Orc Warrior. As a Zombie without sense perception, he moves pretty slowly. Orcs that have risen back from the dead. The honorable fighting spirit of the orc warrior never dies!",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Zombie"
+  },
+  "1464": {
+   "title": "Pasana",
+   "lore": "Pasana is a cursed soldier guarding the Pyramid. It has a duty to protect the dead master in the Pyramid.",
+   "url": "https://ragnarok.fandom.com/wiki/Pasana"
+  },
+  "1467": {
+   "title": "Raydric",
+   "lore": "Raydric is a cursed spirit confined to a suit of armor. It used to be a castle guard that still it has a deep attachment to protect the castle from it's enemies.",
+   "url": "https://ragnarok.fandom.com/wiki/Raydric"
+  },
+  "1469": {
+   "title": "Skeleton Worker",
+   "lore": "Skeleton Worker is the skeletal dead body of a person holding a deep grudge because he had been killed by an accident in the mine. Still, he continues gathering ores within the deep pit. A reanimated skeleton of a miner that had died, but came back to abuse its health insurance policy.",
+   "url": "https://ragnarok.fandom.com/wiki/Skeleton_Worker"
+  },
+  "1470": {
+   "title": "Zerom",
+   "lore": "Zerom is an undead slave. Sadly, not even death will bring peace to the abusive hours of labor Zerom suffers for his Pharaoh. He is one of the original settlers of the Morocc region who had been drafted for the construction of the Sphinx. They had been cursed by the king and became monsters guarding the Sphinx from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Zerom"
+  },
+  "1472": {
+   "title": "Bongun",
+   "lore": "Bongun is a frozen male corpse that had become a monster by his own will to protect the girl, Munak. He has a tender passion for Munak; he does anything for her. A male oriental zombie who volunteered to be a monster to protect a girl who became Munak. It seems he fell in love with Munak.",
+   "url": "https://ragnarok.fandom.com/wiki/Bongun"
+  },
+  "1473": {
+   "title": "Orc Archer",
+   "lore": "Orc Archer is an Orc that attacks with a bow. Be careful, for it has high accuracy.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Archer"
+  },
+  "1474": {
+   "title": "Mimic",
+   "lore": "Mimic is a treasure chest that has something in it. Be careful, it's very quick.",
+   "url": "https://ragnarok.fandom.com/wiki/Mimic"
+  },
+  "1475": {
+   "title": "Wraith",
+   "lore": "Wraith is the undead ghost of a wicked man who had been cursed. He believes that he can revive himself by draining the life-force of others, so he lurks in the shadows waiting for victims.",
+   "url": "https://ragnarok.fandom.com/wiki/Wraith"
+  },
+  "1476": {
+   "title": "Alarm",
+   "lore": "Alarm is an enchanted magic alarm clock that has been made to protect the Clock Tower from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Alarm"
+  },
+  "1477": {
+   "title": "Arclouse",
+   "lore": "Arclouse, or Arclouze, is an Insect that is covered with a hard, firm shell all over the body. It rolls up its body and attacks enemies.",
+   "url": "https://ragnarok.fandom.com/wiki/Arclouse"
+  },
+  "1478": {
+   "title": "Rideword",
+   "lore": "Rideword is a monster that resembles a book and is usually found in magical libraries. It is unknown if they are a nuisance or a security measure.",
+   "url": "https://ragnarok.fandom.com/wiki/Rideword"
+  },
+  "1479": {
+   "title": "Skeleton Prisoner",
+   "lore": "Skeleton Prisoner is the skeleton of a man that had died in prison under a false accusation. He hates the people who put him in jail and neglected him.",
+   "url": "https://ragnarok.fandom.com/wiki/Skeleton_Prisoner"
+  },
+  "1480": {
+   "title": "Zombie Prisoner",
+   "lore": "Zombie Prisoner is the walking corpse of a prisoner in the underprison of a castle.\nHe must've died holding a grudge to the people who trapped him, but it seems he hates every living things now.",
+   "url": "https://ragnarok.fandom.com/wiki/Zombie_Prisoner"
+  },
+  "1481": {
+   "title": "Punk",
+   "lore": "Punk is a giant mould monster normally drfting in the air. When it spots any living things it attacks them to spread its seed.",
+   "url": "https://ragnarok.fandom.com/wiki/Punk"
+  },
+  "1482": {
+   "title": "Zherlthsh",
+   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
+  },
+  "1485": {
+   "title": "Mysteltainn",
+   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
+  },
+  "1486": {
+   "title": "Tirfing",
+   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "url": "https://ragnarok.fandom.com/wiki/Tirfing"
+  },
+  "1487": {
+   "title": "Executioner",
+   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "url": "https://ragnarok.fandom.com/wiki/Executioner"
+  },
+  "1488": {
+   "title": "Anolian",
+   "lore": "Anolian is a warrior of the Crocodile tribe, with the head of crocodile and the body of a Norman. Even though he's never been educated or trained, he's a still warrior.",
+   "url": "https://ragnarok.fandom.com/wiki/Anolian"
+  },
+  "1489": {
+   "title": "Sting",
+   "lore": "Sting is a mud-shaped monster that attacks in a long range.",
+   "url": "https://ragnarok.fandom.com/wiki/Sting"
+  },
+  "1490": {
+   "title": "Wandering Man",
+   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
+  },
+  "1491": {
+   "title": "Dokebi",
+   "lore": "Dokebi is a traditional Korean monster living near Payon; it is a kind of good fairy. When it's getting bored playing alone, it gives riddles to travellers. A traditional Korean demon with the power to generate wealth. Using Mammonite is no big deal to them!\nOther versions of RO have translated this monster as Dokaebi in their language.",
+   "url": "https://ragnarok.fandom.com/wiki/Dokebi"
+  },
+  "1504": {
+   "title": "Dullahan",
+   "lore": "Dullahan is a possessed suit of armor that stalks the realm of Niflheim.",
+   "url": "https://ragnarok.fandom.com/wiki/Dullahan"
+  },
+  "1515": {
+   "title": "Garm Baby",
+   "lore": "Garm Baby is a baby Garm. It comes to the aid of its father whenever he calls.\nOn iRO, this monster was localized to Baby Hatii or Hatii Babe to fit with the actual Norse mythos.",
+   "url": "https://ragnarok.fandom.com/wiki/Garm_Baby"
+  },
+  "1519": {
+   "title": "Chung E",
+   "lore": "Chung E is a creature that resides within the Suei Long Gon palace of Luoyang's Royal Tomb.\nOn iRO, this monster is localized as Green Maiden.",
+   "url": "https://ragnarok.fandom.com/wiki/Chung_E"
+  },
+  "1521": {
+   "title": "Alice",
+   "lore": "Alice is a maid-type robot that has been taking charge of miscellaneous trifles in the Glastheim Castle. Cleaning is her daily priority in life, however she shows no mercy to intruders and attacks them driving a steel broom.",
+   "url": "https://ragnarok.fandom.com/wiki/Alice"
+  },
+  "1525": {
+   "title": "Bathory",
+   "lore": "Bathory is an evil Witch who has served the demon. Always flies on a broom in the air and attacks enemies using a crystal ball she's carrying. She likes cute girly stuff. A wart-nosed witch wearing bunny boxers that will attack anything prettier than her. In other words, she attacks everyone.",
+   "url": "https://ragnarok.fandom.com/wiki/Bathory"
+  },
+  "1527": {
+   "title": "Clock Tower Manager",
+   "lore": "Clock Tower Manager is a magical creature created to manage the Clock Tower in Aldebaran. Although it never openly attacks Normans, it will show no mercy to the ones who tries to harm it or the clock tower.\nNOTE: This monster is known as Tower Keeper in other versions of RO.",
+   "url": "https://ragnarok.fandom.com/wiki/Clock_Tower_Manager"
+  },
+  "1528": {
+   "title": "Clock",
+   "lore": "Clock is a monster that an ancient wall clock turned into. It is not hostile to Normans because it has existed along with them for a long, long time.",
+   "url": "https://ragnarok.fandom.com/wiki/Clock"
+  },
+  "1533": {
+   "title": "Fur Seal",
+   "lore": "Fur Seal is a fin-footed marine mammal that is semiaquatic. It has a sleek-body and barrel-shaped. Their bodies are well adapted to the aquatic habitat where they spend most of their lives. Due to the excessive hunting for their precious hide, Fur Seals are now threatened with extinction. Fur Seals can only be found at Kokomo Beach, Comodo.\nFur Seal is always mistaken for a Sea Otter. This is because Fur Seal has a habit of disguising itself to be a Sea Otter. Perhaps that is the reason that it was named Fur Seal. Sea Otter doesn't seem to recognize that Fur Seal is a different species thus it will not attack Fur Seal whenever it enters their territory.\nIn some versions of Ragnarok Online, Fur Seal is localized as Seal.",
+   "url": "https://ragnarok.fandom.com/wiki/Fur_Seal"
+  },
+  "1534": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1535": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1536": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1537": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1538": {
+   "title": "Goblin",
+   "lore": "Goblins are a kind of evil fairy that are very sly and wicked. They typically wear masks, which are the tokens of goblin warriors in different tribes of goblins. Small mask-wearing monsters that viciously attack passersby. There seems to be different types that use different weapons. They seem to be very capable of engineering technology as they've been seen riding steampacks and a jetpacks.\nThey live in a small village that neighbors the Orc Village to the south.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin"
+  },
+  "1540": {
+   "title": "Golem",
+   "lore": "Golem is living stone conjured up by an ancient Magician. It is immune against physical attacks. A being of living stone that has been enchanted with black magic. It can recognize spell casting, but moves incredibly slowly due to its weight problem.",
+   "url": "https://ragnarok.fandom.com/wiki/Golem"
+  },
+  "1541": {
+   "title": "Greatest General",
+   "lore": "Greatest General is the guardian of a village that has been beyond people's interest. Sad of being neglected, he becomes furious and attacks passerbys. Once a great patron god protecting a village, but it has been forgotten by the people. Its sadness became anger and started to attack people as it stays in one spot.\n(The original iRO description notes that the village is in ancient Korea, which doesn't make sense in the lore of Ragnarok itself considering there is no Korea in the world of Ragnarok, plus the only village these monsters are found near is Payon.)",
+   "url": "https://ragnarok.fandom.com/wiki/Greatest_General"
+  },
+  "1545": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1546": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1547": {
+   "title": "Kobold",
+   "lore": "Kobolds are canine monsters that live in a pack. They can construct their own weapons, but those are mostly very crude compared to Norman's weapons. So they steal Norman weapons and use them without reconstruction.\nThey reside in a small village in Kordt Forest.",
+   "url": "https://ragnarok.fandom.com/wiki/Kobold"
+  },
+  "1551": {
+   "title": "Marse",
+   "lore": "Marse is a cuttlefish living near the water or under the sea. It rotates its body and swings away its 2 long legs as whips to attack enemies. A miniature squid with miniature tentacles, how it moves through water with those tiny things is still a scientific mystery.",
+   "url": "https://ragnarok.fandom.com/wiki/Marse"
+  },
+  "1553": {
+   "title": "Myst",
+   "lore": "Myst is a poisonous, fog-shaped monster. According to the references of monster scholars, it is considered to consist of numerous amounts of floating microorganisms. A strange monster made of mist that is attached to a phantom window.",
+   "url": "https://ragnarok.fandom.com/wiki/Myst"
+  },
+  "1556": {
+   "title": "Poison Toad",
+   "lore": "Poison Toad is a poisonous toad that prefers dark and wet places.",
+   "url": "https://ragnarok.fandom.com/wiki/Poison_Toad"
+  },
+  "1557": {
+   "title": "Rotar Zairo",
+   "lore": "Rotar Zairo is a goblin that took Goblin engineering into a different direction and combines crude propellers with steam power to create a rather inefficient machine compared to his brethren.",
+   "url": "https://ragnarok.fandom.com/wiki/Rotar_Zairo"
+  },
+  "1558": {
+   "title": "Sandman",
+   "lore": "For the Hunter skill, see Sandman (skill).\n\nSandman is a sand monster living in the Morocc desert. According to Morocc folklore, it is a ghost of a man who died in the desert. The truth is it's a kind of fairy. It hates people.",
+   "url": "https://ragnarok.fandom.com/wiki/Sandman"
+  },
+  "1559": {
+   "title": "Scorpion",
+   "lore": "Scorpion is a kind of Desert Insect. Its solid shell bears most neutral attacks. Carries a poison at the end of its tail. Scorpions can be found in areas where there is desert. It has a beautiful color, but can be dangerous.",
+   "url": "https://ragnarok.fandom.com/wiki/Scorpion"
+  },
+  "1561": {
+   "title": "Smokie",
+   "lore": "Smokie is an innocent raccoon living in a deep forest. Enjoys shapeshifting with a raccoon leaf on the head. A chubby little raccoon that loves nothing better than to scamper. It's rumored to use a magic leaf to become invisible!",
+   "url": "https://ragnarok.fandom.com/wiki/Smokie"
+  },
+  "1562": {
+   "title": "Soldier Skeleton",
+   "lore": "Soldier Skeleton is a skeletal soldier living in the sunless area. It handles 2 scimitars because it is a little dumb to use a bow and arrows as archer skeleton does. A skeleton soldier that wields two swords at once. Doesn't have much to do other than attack passersby.",
+   "url": "https://ragnarok.fandom.com/wiki/Soldier_Skeleton"
+  },
+  "1566": {
+   "title": "Wraith Dead",
+   "lore": "Wraith Dead is a ghost wandering aimlessly. An attack by the big mouth and teeth in its stomach is very threatening.",
+   "url": "https://ragnarok.fandom.com/wiki/Wraith_Dead"
+  },
+  "1568": {
+   "title": "Angeling",
+   "lore": "Angeling is the final evolution form of Poring! Unlike its cute appearance, it is pretty strong. It has hated Normans ever since it spotted other innocent brethren get damaged by them.",
+   "url": "https://ragnarok.fandom.com/wiki/Angeling"
+  },
+  "1569": {
+   "title": "Bloody Knight",
+   "lore": "Bloody Knight is a high knight cursed into blood-stained armor. He used to be valiant enough to take charge of the chivalry in a castle.",
+   "url": "https://ragnarok.fandom.com/wiki/Bloody_Knight"
+  },
+  "1570": {
+   "title": "Cramp",
+   "lore": "Cramp is a kind of rodent living in the deep side of sewers. It looks similar to Tarou but it is very hostile and has poisonous teeth.",
+   "url": "https://ragnarok.fandom.com/wiki/Cramp"
+  },
+  "1571": {
+   "title": "Deviace",
+   "lore": "Deviace is a sea toad-shaped monster that seduces prey using a small antenna and swallows them with a maneater-shaped mouth. It never initiates attack unless somebody comes near and moves very slowly. Fish monster with a big mouth attached to a suction cup. Small, strong, and looks sort of like a watermelon.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviace"
+  },
+  "1572": {
+   "title": "Drops",
+   "lore": "Drops is a mutant Poring that has been optimized to survive under the hot and dry weather of the desert. No wonder it tends to swallow things on the ground just like Poring does. The desert version of the Poring that has a pale orange color. It seems a tiny bit stronger than Poring, though.",
+   "url": "https://ragnarok.fandom.com/wiki/Drops"
+  },
+  "1574": {
+   "title": "Elder Willow",
+   "lore": "Elder Willow is an ancient Willow in which a fairy lies within. It seems to possess magic power through its long age.",
+   "url": "https://ragnarok.fandom.com/wiki/Elder_Willow"
+  },
+  "1575": {
+   "title": "Flora",
+   "lore": "Flora is a man-eating plant that looks similar to a sunflower. It enjoys devouring passerbys, but luckily it cannot move. If you're feeling particularly cowardly, just go around it. A man-eating plant, its parts are considered useful for Alchemists to make monsters of their own...",
+   "url": "https://ragnarok.fandom.com/wiki/Flora"
+  },
+  "1576": {
+   "title": "Ghostring",
+   "lore": "Ghostring is the ghost of a dead Poring that came back to the realm holding a grudge. Normal weapons cannot do any damage to this monster at all.",
+   "url": "https://ragnarok.fandom.com/wiki/Ghostring"
+  },
+  "1577": {
+   "title": "Goblin Archer",
+   "lore": "Goblin Archer is a Goblin that carries a bow and arrows. Although the bow is not that efficient, it is hard to dodge arrows shot by many goblins from here and there.",
+   "url": "https://ragnarok.fandom.com/wiki/Goblin_Archer"
+  },
+  "1578": {
+   "title": "Horong",
+   "lore": "Horong is a monster that looks like death fire. It never has been identified where it came from or why it appears in the realm. An eerie-looking violet fireball. It's useless to use hiding skills near this vengeful spirit.",
+   "url": "https://ragnarok.fandom.com/wiki/Horong"
+  },
+  "1579": {
+   "title": "Hydra",
+   "lore": "Hydra is a sea flower monster that makes roots in a long range under the ground despite its small size. It attacks living things in a distance using the roots. As vegetable monsters that live near water or in the deep sea, they attack using tentacles. As a group, they're a pain in the ass.",
+   "url": "https://ragnarok.fandom.com/wiki/Hydra"
+  },
+  "1581": {
+   "title": "Vocal",
+   "lore": "Vocal is a captain of Rockers. It has a sweet voice, every Rocker likes him without any doubt. The violin it's carrying with gets used only as nothing but a weapon.",
+   "url": "https://ragnarok.fandom.com/wiki/Vocal"
+  },
+  "1582": {
+   "title": "Deviling",
+   "lore": "Deviling is a devil Poring.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviling"
+  },
+  "1587": {
+   "title": "Kraben",
+   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part. He fears that his real nature will be detected for he has a stump of a tail.",
+   "url": "https://ragnarok.fandom.com/wiki/Kraben"
+  },
+  "1589": {
+   "title": "Mandragora",
+   "lore": "Although Mandragora stays in the same place, it can attack passersby from a distance using underground stalks.",
+   "url": "https://ragnarok.fandom.com/wiki/Mandragora"
+  },
+  "1591": {
+   "title": "Lunatic",
+   "lore": "Lunatic is a common kind of rodent with fluffy hair covered all around the body. It likes carrots a lot. It's very soft and fluffy without a care. Plump and shaggy monsters shaped like a rabbit. However, it won't give you a Bunny Band.\nA cuddly monster that loves carrots. Its fur is so fluffy that you would want to hug it in the winter for warmth.",
+   "url": "https://ragnarok.fandom.com/wiki/Lunatic"
+  },
+  "1595": {
+   "title": "Marin",
+   "lore": "Marin is a mutant Poring living in the all-the-time winter area, Lutie. It doesn't care about items dropped on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Marin"
+  },
+  "1597": {
+   "title": "Gargoyle",
+   "lore": "Gargoyles are stone demons that were placed at Baldr's temple Breidablik by Arkana and Zenobia Sadi Freile. They can only be brought to life with the formation of a nest, their source of magical power. Once the source of magic is destroyed, the gargoyles will return to their original stone state.\nIn RO, Gargoyles are lesser demons with large, wide wings on their backs. Attacks travellers from the sky using a bow. They bear no resemblance to the gargoyles from the manhwa.",
+   "url": "https://ragnarok.fandom.com/wiki/Gargoyle"
+  },
+  "1603": {
+   "title": "Bigfoot",
+   "lore": "Bigfoot is a large, lonely bear that lives in a deep cave. He eats anything he can lay his hands on, adding to his massive bulk. He's very lazy and tends to doze off, but he becomes extremely violent when he's disturbed.\nFortunately, travelers needn't worry so lo... Although its name may be misleading, Bigfoot is actually a large bear. It walks like it owns the forest and it does.",
+   "url": "https://ragnarok.fandom.com/wiki/Bigfoot"
+  },
+  "1606": {
+   "title": "Garm Baby",
+   "lore": "Garm Baby is a baby Garm. It comes to the aid of its father whenever he calls.\nOn iRO, this monster was localized to Baby Hatii or Hatii Babe to fit with the actual Norse mythos.",
+   "url": "https://ragnarok.fandom.com/wiki/Garm_Baby"
+  },
+  "1610": {
+   "title": "Munak",
+   "lore": "Munak is the dead body of a young girl who had died holding a deep grudge and never goes beyond the realm of the living. She sucks blood from living things nearby to prevent her body from being more rotten. A beautiful zombie that seems to be linked to Bongun somehow.",
+   "url": "https://ragnarok.fandom.com/wiki/Munak"
+  },
+  "1611": {
+   "title": "Bongun",
+   "lore": "Bongun is a frozen male corpse that had become a monster by his own will to protect the girl, Munak. He has a tender passion for Munak; he does anything for her. A male oriental zombie who volunteered to be a monster to protect a girl who became Munak. It seems he fell in love with Munak.",
+   "url": "https://ragnarok.fandom.com/wiki/Bongun"
+  },
+  "1613": {
+   "title": "Metaling",
+   "lore": "Metalings were made from the blood of living machines that were believe to be called \"Gigantes.\" Metaling is still like those other hopping blobs of gelatin in that they'll swallow whatever might be lying on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Metaling"
+  },
+  "1614": {
+   "title": "Mineral",
+   "lore": "Mineral monsters are actually living stalactites. It's rumored that they are grown in a dark cave in which something inside has some sort of malicious influence over them.",
+   "url": "https://ragnarok.fandom.com/wiki/Mineral"
+  },
+  "1616": {
+   "title": "Pitman",
+   "lore": "Pitmans are the ghosts of dead miners that haunt old and rusted mine cars. For some reason, they can't leave this world so they just wander around the mines.",
+   "url": "https://ragnarok.fandom.com/wiki/Pitman"
+  },
+  "1617": {
+   "title": "Waste Stove",
+   "lore": "Waste Stove is an ancient looking stove with a kettle on top. It has a dark matter that lives in the stove and it has a vicious teeth. It will attack anyone on sight.\nIn other versions of Ragnarok Online, this monster is known as Old Stove.",
+   "url": "https://ragnarok.fandom.com/wiki/Waste_Stove"
+  },
+  "1618": {
+   "title": "Ungoliant",
+   "lore": "Ungoliant is a monster that inhabits the Einbroch area.",
+   "url": "https://ragnarok.fandom.com/wiki/Ungoliant"
+  },
+  "1622": {
+   "title": "Teddy Bear",
+   "lore": "Teddy Bear is a sentient stuffed animal.",
+   "url": "https://ragnarok.fandom.com/wiki/Teddy_Bear"
+  },
+  "1624": {
+   "title": "Waste Stove",
+   "lore": "Waste Stove is an ancient looking stove with a kettle on top. It has a dark matter that lives in the stove and it has a vicious teeth. It will attack anyone on sight.\nIn other versions of Ragnarok Online, this monster is known as Old Stove.",
+   "url": "https://ragnarok.fandom.com/wiki/Waste_Stove"
+  },
+  "1627": {
+   "title": "Anopheles",
+   "lore": "Anopheles is a small swarm of insect monsters that drains the blood of its victims.\nNote: The original name of this monster is Whires, which doesn't seem to correspond to anything insect-related.",
+   "url": "https://ragnarok.fandom.com/wiki/Anopheles"
+  },
+  "1631": {
+   "title": "Chung E",
+   "lore": "Chung E is a creature that resides within the Suei Long Gon palace of Luoyang's Royal Tomb.\nOn iRO, this monster is localized as Green Maiden.",
+   "url": "https://ragnarok.fandom.com/wiki/Chung_E"
+  },
+  "1632": {
+   "title": "Gremlin",
+   "lore": "Gremlin is a malevolent imp that lives to destroy and devour any mechanical object, allowing nothing to stand in its way It is one of several monsters sent by Arkana to destroy Chaos and his friends.",
+   "url": "https://ragnarok.fandom.com/wiki/Gremlin"
+  },
+  "1685": {
+   "title": "Vesper",
+   "lore": "Vesper is a giant mechanical behemoth that wanders the underground laboratory of the Juperos Ruins. It is suggested that it is all that is left of Vesper Newton's physical body.",
+   "url": "https://ragnarok.fandom.com/wiki/Vesper"
+  },
+  "1686": {
+   "title": "Orc Baby",
+   "lore": "Orc Baby is a baby Orc that attacks with an Orcish Axe of its own. It is quick to summon its Orc Warrior and Orc Lady parents when it is in need of support or help.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Baby"
+  },
+  "1688": {
+   "title": "Lady Tanee",
+   "lore": "Lady Tanee is a female spirit that has a beautiful face with long hair. She has fragrant skin and her hands and feet are light red, like a pigeon's feet. Her lips are the color of ripen ivy gourd fruit and her body shape is similar to the trunk shape of the musa balbisiana she resides in.\nTanee may come out to seduce a man to have sexual intercourse with her. After having sex with her, the man can’t pay any attention to any other women. If he tries to get with another girl without getting permission from Tanee, Tanee will go after that girl and kill her. If he obtains Tanee's permission with honesty, the guy will easily get the girl with Tanee's help. Some say the guy will lose weight until death soon after having sex with Tanee.\nBecause of this ghost, people prefer not to grow a musa balbisian near their home. If one wants to get the banana leaves to use, the leaves have to be broken or cut before being taken into a house. Taking the whole leaf into a house will cause a family member to die. In the olden days, people lay three leaves of the musa balbisian at the bottom of a coffin.\nWhen the plant is in bloom, some may offer pig head, dessert, rice, flower, candle, incense etc. to Tanee. Some even place rings and necklaces at the inflorescent and tie a red cloth around the pseudostem as her skirt. This practice is to ask her to protect everyone in the house and, at best, get some luck. This is because some believe that Tanee only stays in the plant that blooms. Some say the plant that has Tanee is the one that has a clean pseudostem and green leaves without dry leaf sheathes. The area around the canopy is also clean.\nMore about this Tanee banana: If the inflorescent comes out at the middle of the pseudostem instead of the tip of the pseudostem, it is believe that there is a baby ghost “Kuman Thong” in that inflorescent.",
+   "url": "https://ragnarok.fandom.com/wiki/Lady_Tanee"
+  },
+  "1691": {
+   "title": "Kraben",
+   "lore": "It is a popular belief that a man who has become an adept in the art of magic will grow wings and is able to fly. He will then turn into a Kraben and use two long pestles, used for pounding rice, as his legs and a small pestle, used for pulverizing rice, as his tail. Nothing has been said about its ways and habits save that it likes to devour dirty things. It is said that a person who becomes a Kraben will not expose or let any one touch his posterior part. He fears that his real nature will be detected for he has a stump of a tail.",
+   "url": "https://ragnarok.fandom.com/wiki/Kraben"
+  },
+  "1708": {
+   "title": "Thanatos",
+   "lore": "For the cursed sword, see Tartanos.\n\nThanatos (Korean: 타나토스) is a legendary powerful Warrior who defeated Surt and sealed the jotunn beneath the Morocc castle.\nIn the English release of the manhwa, this character is mistranslated as Tanat.",
+   "url": "https://ragnarok.fandom.com/wiki/Thanatos"
+  },
+  "1722": {
+   "title": "Jakk",
+   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "url": "https://ragnarok.fandom.com/wiki/Jakk"
+  },
+  "1725": {
+   "title": "Poring",
+   "lore": "Poring is a jelly-type creature that is commonly seen everywhere. It's not hostile to Normans and also weak to be a recommendable monster for newbies. It tends to swallow everything in sight. Small, pink monsters that are made of a living gelatinous substance. They're cute and move by bouncing.\nA round, jelly-like body that's said to hold all sorts of items lost by many adventurers.",
+   "url": "https://ragnarok.fandom.com/wiki/Poring"
+  },
+  "1726": {
+   "title": "Lunatic",
+   "lore": "Lunatic is a common kind of rodent with fluffy hair covered all around the body. It likes carrots a lot. It's very soft and fluffy without a care. Plump and shaggy monsters shaped like a rabbit. However, it won't give you a Bunny Band.\nA cuddly monster that loves carrots. Its fur is so fluffy that you would want to hug it in the winter for warmth.",
+   "url": "https://ragnarok.fandom.com/wiki/Lunatic"
+  },
+  "1727": {
+   "title": "Savage Babe",
+   "lore": "Savage Babe is a baby Savage that is tiny and small, favored as a cute pet. It's disheartening to know that it grows up to become ugly.\nOn iRO and iRO2, this monster is localized as Savage Bebe.",
+   "url": "https://ragnarok.fandom.com/wiki/Savage_Babe"
+  },
+  "1728": {
+   "title": "Desert Wolf Baby",
+   "lore": "The Desert Wolf Baby is a young Desert Wolf. Even though it looks so adorable and cute, its fangs never miss its targets or prey. A baby desert wolf that tries to threaten adventurers with its cute little yelps.\nOn iRO, this monster is localized as Baby Desert Wolf.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf_Baby"
+  },
+  "1730": {
+   "title": "Deviruchi",
+   "lore": "Deviruchi is a cub Demon of the Demon world. Although it has never learned any magic yet, his fork is powerful without any magical assistance. A miniature demon that repeatedly stabs Normans with its pitchfork. It's cute, but nonetheless a true fiend of darkness.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviruchi"
+  },
+  "1731": {
+   "title": "Doppelganger",
+   "lore": "Doppelganger is a Demon that doubles as a living person. It appears mostly in deep dungeons, transforming into a ghostly double of an adventurer and stabbing the victim in the back.",
+   "url": "https://ragnarok.fandom.com/wiki/Doppelganger"
+  },
+  "1734": {
+   "title": "Kiel-D-01",
+   "lore": "Kiel-D-01 is the first Fourth Generation robot created by Kiel Jr. and is a copy of his Second Generation body with significant modifications.",
+   "url": "https://ragnarok.fandom.com/wiki/Kiel-D-01"
+  },
+  "1735": {
+   "title": "Alicel",
+   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Alicel do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Alicel was one of the captured students that was modified to become a monster. Now she roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "url": "https://ragnarok.fandom.com/wiki/Alicel"
+  },
+  "1736": {
+   "title": "Aliot",
+   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Aliot do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Aliot was one of the captured students that was modified to become a monster. Now he roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "url": "https://ragnarok.fandom.com/wiki/Aliot"
+  },
+  "1737": {
+   "title": "Aliza",
+   "lore": "Aliza is a maid type robot that has been taking charge of miscellaneous trifles in Kiel Hyre Robot Factory.\nIt is suggested that Aliza is a Generation 1 Kiel Hyre Robot. She was created to clean the robot factory and organize and manage factory items which no normal Norman would be able to. Like Alice, Aliza will mostly concentrate only to cleaning and finishing her task. Most likely she will not be aware of her surroundings, thus some intruders might get away just by passing her.",
+   "url": "https://ragnarok.fandom.com/wiki/Aliza"
+  },
+  "1739": {
+   "title": "Alicel",
+   "lore": "Alicel is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAlicel was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Alicel do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Alicel was one of the captured students that was modified to become a monster. Now she roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "url": "https://ragnarok.fandom.com/wiki/Alicel"
+  },
+  "1740": {
+   "title": "Aliot",
+   "lore": "Aliot is a Third Generation robot developed by the Kiel Hyre Foundation. It was mostly designed by Kiel Hyre's son, Kiel Jr. Most of the robots that were developed by Kiel Hyre foundation were sold to the Rekenber Corporation, including the Third Generation robots.\n\nAliot was once a student of the Kiel Hyre Academy. The academy was actually a prototype testing ground for Third Generation robots. They were trained there to interact and learn to be more like Normans. Apart from that, each robot was design to master specific tasks to make them experts in their field.  It is noted that most of the prototypes including Aliot do not know that they are robot. They all think they are orphans.\nAn event happened along the way, which leads Kiel Jr. to modify most of the Third Generation robots to become hostile and violent. Aliot was one of the captured students that was modified to become a monster. Now he roams around the factory, preventing intruders from venturing around it.\nIt is not known if there is way to reverse the process and make them normal again. So far the best way to stop them is by simply killing them.",
+   "url": "https://ragnarok.fandom.com/wiki/Aliot"
+  },
+  "1741": {
+   "title": "Christmas Cookie",
+   "lore": "For the green version of this monster, see Cookie.\n\nChristmas Cookie is a fairy worker that works in the Lutie Toy Factory; it likes tricks.\nOn iRO, this monster is localized as simply Cookie.",
+   "url": "https://ragnarok.fandom.com/wiki/Christmas_Cookie"
+  },
+  "1742": {
+   "title": "Carat",
+   "lore": "Carat is a demon pretending to be a pierrot riding a big ball. It can be seen around the corridors and in some room trying to entertain anyone that he can find. Although none of the undead really get his joke. \nCarat always sit on its big ball, and moves around by bouncing it here and there. \nCarat is a shy creature. It is easily scared and might attack anyone when its scared. Carat can be counted to be one of the most positive creature in Glastheim, despite being cursed and dead countless times, he still tries to entertain everyone. Though not many undead enjoy his act, he still tries to make them happy. Sometimes adventurers might bump onto him and he will try to entertain them as well. Although most of the time he will only get slashed and mistaken for an evil monster. Carat seems to have his concious intact, although like most mime and jester, they are not always in the right mind.\nIt is a mystery how Carat get a hold of his memory and concious, but it is said that the curse never really did anything to him except let him live an infinite life. Some say that his countless life was the curse to all, since everyone hate his joke and act, and its terribly annoying to see him around, even the Dark Lord seems to be ignoring him.",
+   "url": "https://ragnarok.fandom.com/wiki/Carat"
+  },
+  "1743": {
+   "title": "Myst Case",
+   "lore": "Myst Case is an enchanted toy box that appears in the toy factory of Lutie. Unlike Mimic, it doesn`t have any spirit within the box. It is very mild and gentle, never doing any harm onto visitors unless attacked first.",
+   "url": "https://ragnarok.fandom.com/wiki/Myst_Case"
+  },
+  "1744": {
+   "title": "Wild Rose",
+   "lore": "Wild Rose is a cat wearing a big ribbon on its back that is very smart and tricky. Also, it is rumored that it can be tamed by Normans as a pet.",
+   "url": "https://ragnarok.fandom.com/wiki/Wild_Rose"
+  },
+  "1746": {
+   "title": "Aliza",
+   "lore": "Aliza is a maid type robot that has been taking charge of miscellaneous trifles in Kiel Hyre Robot Factory.\nIt is suggested that Aliza is a Generation 1 Kiel Hyre Robot. She was created to clean the robot factory and organize and manage factory items which no normal Norman would be able to. Like Alice, Aliza will mostly concentrate only to cleaning and finishing her task. Most likely she will not be aware of her surroundings, thus some intruders might get away just by passing her.",
+   "url": "https://ragnarok.fandom.com/wiki/Aliza"
+  },
+  "1748": {
+   "title": "Anacondaq",
+   "lore": "Anacondaq is a giant snake usually living in the desert area. It's weak but deadly poisonous. Hunts small animals using its poison.\nOn iRO2, this monster is misspelled as Anacondac.",
+   "url": "https://ragnarok.fandom.com/wiki/Anacondaq"
+  },
+  "1749": {
+   "title": "Medusa",
+   "lore": "Medusa is a monster with hair composed of snakes. It is rumored to turn people into stone if you look into her eyes.",
+   "url": "https://ragnarok.fandom.com/wiki/Medusa"
+  },
+  "1750": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1766": {
+   "title": "Angeling",
+   "lore": "Angeling is the final evolution form of Poring! Unlike its cute appearance, it is pretty strong. It has hated Normans ever since it spotted other innocent brethren get damaged by them.",
+   "url": "https://ragnarok.fandom.com/wiki/Angeling"
+  },
+  "1767": {
+   "title": "Deviling",
+   "lore": "Deviling is a devil Poring.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviling"
+  },
+  "1779": {
+   "title": "Ktullanux",
+   "lore": "Ktullanux is a dreadful ice beast that resides deep within the Ice Cave. One day, it was visited by priests from Sessrumnir bearing a young boy. The priests planned to use the cave as his eternal prison and so tasked Ktullanux to guard over the boy. To make sure Ktullanux does his job, the priests threaten to melt the entire cave if it does not comply.",
+   "url": "https://ragnarok.fandom.com/wiki/Ktullanux"
+  },
+  "1784": {
+   "title": "Stapo",
+   "lore": "Stapo is a Poring made of stone.",
+   "url": "https://ragnarok.fandom.com/wiki/Stapo"
+  },
+  "1790": {
+   "title": "Rafflesia",
+   "lore": "Rafflesias are aggressive sentient bushes that inhabit the fields around Lighthalzen. It is unsure if their existence is magical or scientific in origin.",
+   "url": "https://ragnarok.fandom.com/wiki/Rafflesia"
+  },
+  "1793": {
+   "title": "Megalith",
+   "lore": "Megalith is a stone statue from an unknown island. It attacks enemies by shaking rocks around.",
+   "url": "https://ragnarok.fandom.com/wiki/Megalith"
+  },
+  "1795": {
+   "title": "Bloody Knight",
+   "lore": "Bloody Knight is a high knight cursed into blood-stained armor. He used to be valiant enough to take charge of the chivalry in a castle.",
+   "url": "https://ragnarok.fandom.com/wiki/Bloody_Knight"
+  },
+  "1811": {
+   "title": "Smokie",
+   "lore": "Smokie is an innocent raccoon living in a deep forest. Enjoys shapeshifting with a raccoon leaf on the head. A chubby little raccoon that loves nothing better than to scamper. It's rumored to use a magic leaf to become invisible!",
+   "url": "https://ragnarok.fandom.com/wiki/Smokie"
+  },
+  "1814": {
+   "title": "Moonlight Flower",
+   "lore": "Moonlight Flower is a middle-class demon that commands fox troops. You will be sorry if you look down on her just because of her cute appearance. A strange wild girl carrying a big bell and having 9 fox tails.",
+   "url": "https://ragnarok.fandom.com/wiki/Moonlight_Flower"
+  },
+  "1815": {
+   "title": "Rice Cake",
+   "lore": "A snack made out of rice that doesn't contain any fat. Some women love having this snack.",
+   "url": "https://ragnarok.fandom.com/wiki/Rice_Cake"
+  },
+  "1818": {
+   "title": "Alarm",
+   "lore": "Alarm is an enchanted magic alarm clock that has been made to protect the Clock Tower from intruders.",
+   "url": "https://ragnarok.fandom.com/wiki/Alarm"
+  },
+  "1819": {
+   "title": "Bathory",
+   "lore": "Bathory is an evil Witch who has served the demon. Always flies on a broom in the air and attacks enemies using a crystal ball she's carrying. She likes cute girly stuff. A wart-nosed witch wearing bunny boxers that will attack anything prettier than her. In other words, she attacks everyone.",
+   "url": "https://ragnarok.fandom.com/wiki/Bathory"
+  },
+  "1820": {
+   "title": "Bigfoot",
+   "lore": "Bigfoot is a large, lonely bear that lives in a deep cave. He eats anything he can lay his hands on, adding to his massive bulk. He's very lazy and tends to doze off, but he becomes extremely violent when he's disturbed.\nFortunately, travelers needn't worry so lo... Although its name may be misleading, Bigfoot is actually a large bear. It walks like it owns the forest and it does.",
+   "url": "https://ragnarok.fandom.com/wiki/Bigfoot"
+  },
+  "1821": {
+   "title": "Desert Wolf",
+   "lore": "The Desert Wolf is a kind of wolf that is commonly seen in the desert area. They hunt small animals of the desert using sturdy jawbone and speedy robust legs. They are all violent and aggressive to strangers; tend to attack indiscriminately. Wolves in the desert are much stronger than those living in the forest. If you strike one, you'll have to deal with the whole pack.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf"
+  },
+  "1822": {
+   "title": "Deviruchi",
+   "lore": "Deviruchi is a cub Demon of the Demon world. Although it has never learned any magic yet, his fork is powerful without any magical assistance. A miniature demon that repeatedly stabs Normans with its pitchfork. It's cute, but nonetheless a true fiend of darkness.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviruchi"
+  },
+  "1824": {
+   "title": "Garm Baby",
+   "lore": "Garm Baby is a baby Garm. It comes to the aid of its father whenever he calls.\nOn iRO, this monster was localized to Baby Hatii or Hatii Babe to fit with the actual Norse mythos.",
+   "url": "https://ragnarok.fandom.com/wiki/Garm_Baby"
+  },
+  "1826": {
+   "title": "Myst",
+   "lore": "Myst is a poisonous, fog-shaped monster. According to the references of monster scholars, it is considered to consist of numerous amounts of floating microorganisms. A strange monster made of mist that is attached to a phantom window.",
+   "url": "https://ragnarok.fandom.com/wiki/Myst"
+  },
+  "1827": {
+   "title": "Sasquatch",
+   "lore": "Sasquatch is a Polar Bear living around Lutie. It is quite vicious, frequently attacking innocent travellers. The colour of its fur has been adapted to suit its environment.",
+   "url": "https://ragnarok.fandom.com/wiki/Sasquatch"
+  },
+  "1836": {
+   "title": "Magmaring",
+   "lore": "Magmaring is a Poring with magma flowing over its body.",
+   "url": "https://ragnarok.fandom.com/wiki/Magmaring"
+  },
+  "1840": {
+   "title": "Golden Savage",
+   "lore": "Golden Savage is a Savage with unusually golden hair.",
+   "url": "https://ragnarok.fandom.com/wiki/Golden_Savage"
+  },
+  "1845": {
+   "title": "Treasure Box",
+   "lore": "An ancient treasure box filled with old coins, ornaments, and jewelry.",
+   "url": "https://ragnarok.fandom.com/wiki/Treasure_Box"
+  },
+  "1848": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "1849": {
+   "title": "Osiris",
+   "lore": "Osiris is the King of the Sphinx. Although he had been deified as the Sun God in the ancient age, he's now nothing but a powerful boss of monsters.",
+   "url": "https://ragnarok.fandom.com/wiki/Osiris"
+  },
+  "1850": {
+   "title": "Orc Hero",
+   "lore": "Orc Hero is the hero of the Orc tribe who took command of the orc army during the war with Normans. His sword skills have been rumored to shake the heavens, bringing thunder and lightning.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Hero"
+  },
+  "1852": {
+   "title": "Angeling",
+   "lore": "Angeling is the final evolution form of Poring! Unlike its cute appearance, it is pretty strong. It has hated Normans ever since it spotted other innocent brethren get damaged by them.",
+   "url": "https://ragnarok.fandom.com/wiki/Angeling"
+  },
+  "1853": {
+   "title": "Deviling",
+   "lore": "Deviling is a devil Poring.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviling"
+  },
+  "1854": {
+   "title": "Muka",
+   "lore": "Muka is a monster cactus living in the desert. Although it's usually quite passive in the presence of travellers, it gets furious and shoots needles or cactus water toward enemies when attacked. Cute cactus commonly found in the desert. It tries to threaten passersby with its shrieks, but its noises are too funny to be scary.",
+   "url": "https://ragnarok.fandom.com/wiki/Muka"
+  },
+  "1855": {
+   "title": "Poison Spore",
+   "lore": "For the item drop, see Poison Spore (item).\n\nPoison Spore is a mutant spore that possesses poison within. When it jumps around the field in a distance travelers might mistake it for normal Spores. A black-capped mushroom, it attacks adventurers in fear of being eaten, despite being poisonous and not delicious.",
+   "url": "https://ragnarok.fandom.com/wiki/Poison_Spore"
+  },
+  "1856": {
+   "title": "Magnolia",
+   "lore": "Magnolia is the ghost of a Pecopeco Egg that never had been a Picky and was eaten by adventurers. As revenge, it eats all items dropped from adventurers. Cute-looking creatures that appear as large frying pans cooking an egg. They mercilessly spank all that oppose them.",
+   "url": "https://ragnarok.fandom.com/wiki/Magnolia"
+  },
+  "1857": {
+   "title": "Marin",
+   "lore": "Marin is a mutant Poring living in the all-the-time winter area, Lutie. It doesn't care about items dropped on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Marin"
+  },
+  "1858": {
+   "title": "Plankton",
+   "lore": "Plankton is a single-cell creature drifting on the water that is a food for fishes. Even though they seem insignificantly small, be careful not to step on them. Plankton are light and can drift on the water.",
+   "url": "https://ragnarok.fandom.com/wiki/Plankton"
+  },
+  "1859": {
+   "title": "Mandragora",
+   "lore": "Although Mandragora stays in the same place, it can attack passersby from a distance using underground stalks.",
+   "url": "https://ragnarok.fandom.com/wiki/Mandragora"
+  },
+  "1860": {
+   "title": "Coco",
+   "lore": "Coco is a small squirrel. It is not that strong but very fast; could be hard for newbie travelers. It has dark, piercing eyes and is always holding an Acorn. It would be cute if it didn't always have a look of utter contempt.",
+   "url": "https://ragnarok.fandom.com/wiki/Coco"
+  },
+  "1862": {
+   "title": "Martin",
+   "lore": "Martin is a mole living under the ground. Normally it stays in a small cave home, but \nsometimes it comes out of home to seek feed.",
+   "url": "https://ragnarok.fandom.com/wiki/Martin"
+  },
+  "1867": {
+   "title": "Banshee",
+   "lore": "Banshee is a ghostly entity that haunts the cursed monastery of Nameless Island.",
+   "url": "https://ragnarok.fandom.com/wiki/Banshee"
+  },
+  "1868": {
+   "title": "Banshee",
+   "lore": "Banshee is a ghostly entity that haunts the cursed monastery of Nameless Island.",
+   "url": "https://ragnarok.fandom.com/wiki/Banshee"
+  },
+  "1875": {
+   "title": "Tristan III",
+   "lore": "Tristan III is the late King Tristan Gaebolg III, who had been turned into an undead after being imprisoned on Nameless Island. He was eventually put to rest by a passing adventurer.",
+   "url": "https://ragnarok.fandom.com/wiki/Tristan_III"
+  },
+  "1876": {
+   "title": "Lord of the Dead",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
+  },
+  "1878": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "1897": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "1898": {
+   "title": "Zombie",
+   "lore": "Zombie is a walking corpse which has been cursed by an evil shaman. Beware of its poisonous breath. Bad case of the dead which has been reborn as a walking corpse by black magic. Let's lead it to Nirvana.",
+   "url": "https://ragnarok.fandom.com/wiki/Zombie"
+  },
+  "1901": {
+   "title": "Condor",
+   "lore": "Condor is a kind of desert eagle. It makes a living off of leftover food from adventurers or corpses in the desert because it is too old to hunt living things. A bald, funny-looking, vulture-like bird. They tend to attack in a flock if one of them is threatened.",
+   "url": "https://ragnarok.fandom.com/wiki/Condor"
+  },
+  "1902": {
+   "title": "Treasure Box",
+   "lore": "An ancient treasure box filled with old coins, ornaments, and jewelry.",
+   "url": "https://ragnarok.fandom.com/wiki/Treasure_Box"
+  },
+  "1903": {
+   "title": "Treasure Box",
+   "lore": "An ancient treasure box filled with old coins, ornaments, and jewelry.",
+   "url": "https://ragnarok.fandom.com/wiki/Treasure_Box"
+  },
+  "1916": {
+   "title": "Surt",
+   "lore": "Surt is a Jotunn with command over the element of fire. He hails from the world of Muspelheim.\nIn Ragnarok Online, Surt is known as Morocc and Satan Morocc.",
+   "url": "https://ragnarok.fandom.com/wiki/Surt"
+  },
+  "1926": {
+   "title": "Jakk",
+   "lore": "For the costume headgear, see Jakk (headgear).\n\nJakk is a strange-looking monster with a pumpkin head and wearing a tuxedo. Nobody knows where it came from, however according to the monster scholars it might be a familiar of a demon. A spooky, pumpkin-headed monster that dresses in a slick formal suit. It's been known to invade Prontera on St. Hallow's Eve in the past.\nThere is also a version that comes out during the Christmas season.",
+   "url": "https://ragnarok.fandom.com/wiki/Jakk"
+  },
+  "1927": {
+   "title": "Whisper",
+   "lore": "Whisper is a bedcover-shaped monster. As a ghost it doesn't get any damage from normal weapons. It is a piece of living fabric that gives off spooky vibes. Sometimes it likes to turn invisible...",
+   "url": "https://ragnarok.fandom.com/wiki/Whisper"
+  },
+  "1928": {
+   "title": "Deviruchi",
+   "lore": "Deviruchi is a cub Demon of the Demon world. Although it has never learned any magic yet, his fork is powerful without any magical assistance. A miniature demon that repeatedly stabs Normans with its pitchfork. It's cute, but nonetheless a true fiend of darkness.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviruchi"
+  },
+  "1956": {
+   "title": "Nacht Sieger",
+   "lore": "Nacht Sieger is a high-rank demon.\nNOTE: In other versions of Ragnarok Online, this monster is commonly misspelled as Naght Sieger.",
+   "url": "https://ragnarok.fandom.com/wiki/Nacht_Sieger"
+  },
+  "1957": {
+   "title": "Entweihen Crothen",
+   "lore": "Entweihen Crothen is a middle-rank demon that was supposedly related to Nacht Sieger as an advisor or some sort. But actually it seeks the opportunity to kill Nacht Sieger and usurp his position amongst the demons.",
+   "url": "https://ragnarok.fandom.com/wiki/Entweihen_Crothen"
+  },
+  "1965": {
+   "title": "Wild Rose",
+   "lore": "Wild Rose is a cat wearing a big ribbon on its back that is very smart and tricky. Also, it is rumored that it can be tamed by Normans as a pet.",
+   "url": "https://ragnarok.fandom.com/wiki/Wild_Rose"
+  },
+  "1966": {
+   "title": "Doppelganger",
+   "lore": "Doppelganger is a Demon that doubles as a living person. It appears mostly in deep dungeons, transforming into a ghostly double of an adventurer and stabbing the victim in the back.",
+   "url": "https://ragnarok.fandom.com/wiki/Doppelganger"
+  },
+  "1968": {
+   "title": "Strouf",
+   "lore": "Strouf is the king of mermaids. However it's not that much stronger than normal mermaids. A lordly fish monster that looks like the god of the seas. Carries a lightning trident to fight people of the surface.",
+   "url": "https://ragnarok.fandom.com/wiki/Strouf"
+  },
+  "1969": {
+   "title": "Marc",
+   "lore": "Marc is a seahorse living under the deep sea. As the solid skin covers all around its body, it's very strong so that normal adventurers might get in trouble seeing it under the sea. A proud-looking sea horse that sort of looks like a dragon. Unfortunately, you can't ride it.",
+   "url": "https://ragnarok.fandom.com/wiki/Marc"
+  },
+  "1971": {
+   "title": "Vadon",
+   "lore": "Vadon is a kind of lobster living near the sea. It is difficult to deal damage to this monster due to its firm shell covering all around the body. Covered in a thick, protective shell, Vadons attack with powerful pincers. Although they look like crabs, their meat cannot be eaten.\nOn seaRO2 and iRO2, this monster is localized as Vador.",
+   "url": "https://ragnarok.fandom.com/wiki/Vadon"
+  },
+  "1972": {
+   "title": "Marina",
+   "lore": "Marina is a kind of jellyfish drifting under the sea. It owns well-developed muscles; can live outside the water world. Its tentacle is elastic just like rubber; used in many ways. Transparent jellyfish that attacks by stretching their flexible bodies in a whip-like fashion. They live in cool places near water.",
+   "url": "https://ragnarok.fandom.com/wiki/Marina"
+  },
+  "1973": {
+   "title": "Poring",
+   "lore": "Poring is a jelly-type creature that is commonly seen everywhere. It's not hostile to Normans and also weak to be a recommendable monster for newbies. It tends to swallow everything in sight. Small, pink monsters that are made of a living gelatinous substance. They're cute and move by bouncing.\nA round, jelly-like body that's said to hold all sorts of items lost by many adventurers.",
+   "url": "https://ragnarok.fandom.com/wiki/Poring"
+  },
+  "1986": {
+   "title": "Tatacho",
+   "lore": "Tatachos usually sit on the ground, but will roll around if their body temperature goes down too low because of the cold weather.",
+   "url": "https://ragnarok.fandom.com/wiki/Tatacho"
+  },
+  "1988": {
+   "title": "Nepenthes",
+   "lore": "Nepenthes is a Plant that grew by absorbing the bad minerals of the ground. Because of this, the soil underneath the Nepenthes is known to be fertile.\nOn iRO2, this monster is localized as Nependes.",
+   "url": "https://ragnarok.fandom.com/wiki/Nepenthes"
+  },
+  "1997": {
+   "title": "Tatacho",
+   "lore": "Tatachos usually sit on the ground, but will roll around if their body temperature goes down too low because of the cold weather.",
+   "url": "https://ragnarok.fandom.com/wiki/Tatacho"
+  },
+  "2022": {
+   "title": "Nidhoggr's Shadow",
+   "lore": "Nidhoggr's Shadow is the dark energy of Nidhoggr.\nOn iRO, this monster is localized as Nidhoggur's Shadow.",
+   "url": "https://ragnarok.fandom.com/wiki/Nidhoggr%27s_Shadow"
+  },
+  "2034": {
+   "title": "Desert Wolf Baby",
+   "lore": "The Desert Wolf Baby is a young Desert Wolf. Even though it looks so adorable and cute, its fangs never miss its targets or prey. A baby desert wolf that tries to threaten adventurers with its cute little yelps.\nOn iRO, this monster is localized as Baby Desert Wolf.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf_Baby"
+  },
+  "2039": {
+   "title": "Executioner",
+   "lore": "For the weapon, see Executioner (weapon).\n\nAlthough Executioner looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack its victims. This chain monster is very similar to Mysteltainn.",
+   "url": "https://ragnarok.fandom.com/wiki/Executioner"
+  },
+  "2040": {
+   "title": "Tirfing",
+   "lore": "For the item, see Ogre Tooth.\nFor the weapon, see Tirfing (weapon).\n\nTirfing is a monstrous sword that seems to have a mind of its own.\nOn iRO, this monster is localized as Ogretooth.",
+   "url": "https://ragnarok.fandom.com/wiki/Tirfing"
+  },
+  "2041": {
+   "title": "Mysteltainn",
+   "lore": "For the weapon, see Mysteltainn (weapon).\n\nAlthough Mysteltainn looks like a cursed and sealed sword, apparently it is the chain wrapped around the sword that is the real monster. It uses the sword as its body to attack victims.",
+   "url": "https://ragnarok.fandom.com/wiki/Mysteltainn"
+  },
+  "2051": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "2052": {
+   "title": "Dark Lord",
+   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
+  },
+  "2058": {
+   "title": "Mimic",
+   "lore": "Mimic is a treasure chest that has something in it. Be careful, it's very quick.",
+   "url": "https://ragnarok.fandom.com/wiki/Mimic"
+  },
+  "2060": {
+   "title": "Alice",
+   "lore": "Alice is a maid-type robot that has been taking charge of miscellaneous trifles in the Glastheim Castle. Cleaning is her daily priority in life, however she shows no mercy to intruders and attacks them driving a steel broom.",
+   "url": "https://ragnarok.fandom.com/wiki/Alice"
+  },
+  "2066": {
+   "title": "Anopheles",
+   "lore": "Anopheles is a small swarm of insect monsters that drains the blood of its victims.\nNote: The original name of this monster is Whires, which doesn't seem to correspond to anything insect-related.",
+   "url": "https://ragnarok.fandom.com/wiki/Anopheles"
+  },
+  "2067": {
+   "title": "Anopheles",
+   "lore": "Anopheles is a small swarm of insect monsters that drains the blood of its victims.\nNote: The original name of this monster is Whires, which doesn't seem to correspond to anything insect-related.",
+   "url": "https://ragnarok.fandom.com/wiki/Anopheles"
+  },
+  "2071": {
+   "title": "Headless Mule",
+   "lore": "Headless Mule is a figure in Brazilian folklore. In most tales, it is the ghost of a woman that has been cursed by God for her sins (often said to be as concubinate or fornication with a priest within a church) and condemned to turn into a fire-spewing headless mule, galloping through the countryside from Thursday's sundown to Friday's sunrise. The myth has several variations concerning the sin that turned the cursed woman into the monster: necrophagy, infanticide, sacrilege against the church, fornication, etc.",
+   "url": "https://ragnarok.fandom.com/wiki/Headless_Mule"
+  },
+  "2075": {
+   "title": "Vadon",
+   "lore": "Vadon is a kind of lobster living near the sea. It is difficult to deal damage to this monster due to its firm shell covering all around the body. Covered in a thick, protective shell, Vadons attack with powerful pincers. Although they look like crabs, their meat cannot be eaten.\nOn seaRO2 and iRO2, this monster is localized as Vador.",
+   "url": "https://ragnarok.fandom.com/wiki/Vadon"
+  },
+  "2094": {
+   "title": "Orc Hero",
+   "lore": "Orc Hero is the hero of the Orc tribe who took command of the orc army during the war with Normans. His sword skills have been rumored to shake the heavens, bringing thunder and lightning.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Hero"
+  },
+  "2095": {
+   "title": "Eddga",
+   "lore": "Eddga is an Ancient Tiger living in the deep forest that has been defied by the natives. He loves to smoke a pipe, and thinks Normans are barbarians for destroying mountains. He'll attack any traveler or adventurer that ventures into his mountains.",
+   "url": "https://ragnarok.fandom.com/wiki/Eddga"
+  },
+  "2096": {
+   "title": "Osiris",
+   "lore": "Osiris is the King of the Sphinx. Although he had been deified as the Sun God in the ancient age, he's now nothing but a powerful boss of monsters.",
+   "url": "https://ragnarok.fandom.com/wiki/Osiris"
+  },
+  "2098": {
+   "title": "Doppelganger",
+   "lore": "Doppelganger is a Demon that doubles as a living person. It appears mostly in deep dungeons, transforming into a ghostly double of an adventurer and stabbing the victim in the back.",
+   "url": "https://ragnarok.fandom.com/wiki/Doppelganger"
+  },
+  "2099": {
+   "title": "Mistress",
+   "lore": "Mistress is the queen of the bees. Rarely appears; only when she controls working bees. The art of handling working bees is the honey pot she's carrying in hand.",
+   "url": "https://ragnarok.fandom.com/wiki/Mistress"
+  },
+  "2100": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "2101": {
+   "title": "Lord of the Dead",
+   "lore": "Lord of the Dead or Lord of Death is the champion of the undead and death. She possesses unholy strength and remarkable power. She does not possess free will and her mind is inexorably entwined to Death.\nLord of the Dead originated from Hel, the Realm of the Dead. According to The Sign Quest, the Lord of the Dead is actually Lady Hel after she puts on her armor.\nLord of the Dead has a huge lance (it is known to most as Shining Spear Blade) on her right arm as her main weapon. She also carries a huge Cross Shield with some decorated enchantment engraved to it. She also wears an iconic helm called the Lord of the Dead Helm which is known to have some mystical power to the wearer. She rides a white armoured Nightmare that was brought with her from Hel. It is said that it is the king of Nightmares.",
+   "url": "https://ragnarok.fandom.com/wiki/Lord_of_the_Dead"
+  },
+  "2102": {
+   "title": "Dark Lord",
+   "lore": "For the character from the animation, see Dark Lord (anime).\n\nDark Lord is the the king of Demons. Rumor has it that he is considerably weaker in the mortal realm. Still, he's the one of strongest enemies to Norman adventurers.\nAs powerful as Dark Lord is, the life force in the realm of Midgard conflicts with his dark nature and drains a large portion of his power when attempting to enter it. Because of this, Dark Lord can only create manifestations of himself that are only a small fraction of his power, but still devastating in strength. Niflheim is a realm that poses no opposition to Dark Lord's presence, unlike Midgard. However he cannot enter it on his own and requires a summoning. Were Dark Lord be successful in accessing Niflheim, he would be able to enter Midgard easily while retaining most of his powers and with them the ability to destroy the realm.",
+   "url": "https://ragnarok.fandom.com/wiki/Dark_Lord"
+  },
+  "2103": {
+   "title": "Ktullanux",
+   "lore": "Ktullanux is a dreadful ice beast that resides deep within the Ice Cave. One day, it was visited by priests from Sessrumnir bearing a young boy. The priests planned to use the cave as his eternal prison and so tasked Ktullanux to guard over the boy. To make sure Ktullanux does his job, the priests threaten to melt the entire cave if it does not comply.",
+   "url": "https://ragnarok.fandom.com/wiki/Ktullanux"
+  },
+  "2105": {
+   "title": "Turtle General",
+   "lore": "Turtle General is the known leader of all the turtles that reside in Turtle Island. Despite his age and the stereotype of turtles being slow, Turtle General is actually fast and agile. He has mastered the art of twin blades and very good at close combat.",
+   "url": "https://ragnarok.fandom.com/wiki/Turtle_General"
+  },
+  "2106": {
+   "title": "Vesper",
+   "lore": "Vesper is a giant mechanical behemoth that wanders the underground laboratory of the Juperos Ruins. It is suggested that it is all that is left of Vesper Newton's physical body.",
+   "url": "https://ragnarok.fandom.com/wiki/Vesper"
+  },
+  "2135": {
+   "title": "Creeper",
+   "lore": "Summons the tough vine monster. Only one vine monster can be summoned at the same time. Consumes 1 Greater Plant Bottle.\n\n[Lv 1] : Skill duration: 120 seconds.\n[Lv 2] : Skill duration: 180 seconds.\n[Lv 3] : Skill duration: 240 seconds.\n[Lv 4] : Skill duration: 300 seconds.\n[Lv 5] : Skill duration: 360 seconds.",
+   "url": "https://ragnarok.fandom.com/wiki/Creeper"
+  },
+  "2147": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "2148": {
+   "title": "Plant",
+   "lore": "Plants can be harvested for their herbs as well as other plant material like Stems. There are several different varieties of plants to harvest from, each with its own corresponding herb. They can be found all over Midgard, but a well-trained eye is required to spot them underneath bushes and shrubs.",
+   "url": "https://ragnarok.fandom.com/wiki/Plant"
+  },
+  "2149": {
+   "title": "Savage Babe",
+   "lore": "Savage Babe is a baby Savage that is tiny and small, favored as a cute pet. It's disheartening to know that it grows up to become ugly.\nOn iRO and iRO2, this monster is localized as Savage Bebe.",
+   "url": "https://ragnarok.fandom.com/wiki/Savage_Babe"
+  },
+  "2152": {
+   "title": "Comodo",
+   "lore": "Comodo (Korean: 코모도) is famous for having all sorts of entertainment, certainly breaking the laws of the Rune-Midgarts Kingdom. But because it is so far from the capital, Prontera, the laws are not enforced as strictly.",
+   "url": "https://ragnarok.fandom.com/wiki/Comodo"
+  },
+  "2158": {
+   "title": "Hornet",
+   "lore": "Hornet is a working bee working so hard by a command of queen bee. It normally seeks honey, but when something dangerous happens it fights in a swarm. Usually benign, they will attack in swarms if one of them is harmed.",
+   "url": "https://ragnarok.fandom.com/wiki/Hornet"
+  },
+  "2209": {
+   "title": "Thief Bug",
+   "lore": "Thief Bug is a kind of bug that is commonly seen in a damp, dark places. It moves very fast and tends to steal items dropped on the ground. The undeveloped version of the Thief Bug. Even as babies, they're pretty disgusting. Dirty, filthy creatures that tend to work in swarms. Whatever you do, don't let them pollute the Prontera Culverts; it'll be a disaster.",
+   "url": "https://ragnarok.fandom.com/wiki/Thief_Bug"
+  },
+  "2211": {
+   "title": "Teddy Bear",
+   "lore": "Teddy Bear is a sentient stuffed animal.",
+   "url": "https://ragnarok.fandom.com/wiki/Teddy_Bear"
+  },
+  "2212": {
+   "title": "Knight of Windstorm",
+   "lore": "The Knight of Windstorm, or Stormy Knight, is a legendary monster in the Lutie region. According to the folklore, he brings a snowy storm with him and butchers Normans cruelly.",
+   "url": "https://ragnarok.fandom.com/wiki/Knight_of_Windstorm"
+  },
+  "2213": {
+   "title": "Wandering Man",
+   "lore": "For the 3rd Class job, see Wanderer.\n\nWandering Man is a walking corpse that had been a warrior managing a wandering life. He attacks enemies using skillful fencing. He has been rumored to cut even a small flying bugs into 2 pieces without exception.\nOn iRO, this monster is localized as Wanderer.",
+   "url": "https://ragnarok.fandom.com/wiki/Wandering_Man"
+  },
+  "2217": {
+   "title": "Teddy Bear",
+   "lore": "Teddy Bear is a sentient stuffed animal.",
+   "url": "https://ragnarok.fandom.com/wiki/Teddy_Bear"
+  },
+  "2242": {
+   "title": "Desert Wolf",
+   "lore": "The Desert Wolf is a kind of wolf that is commonly seen in the desert area. They hunt small animals of the desert using sturdy jawbone and speedy robust legs. They are all violent and aggressive to strangers; tend to attack indiscriminately. Wolves in the desert are much stronger than those living in the forest. If you strike one, you'll have to deal with the whole pack.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf"
+  },
+  "2243": {
+   "title": "Desert Wolf Baby",
+   "lore": "The Desert Wolf Baby is a young Desert Wolf. Even though it looks so adorable and cute, its fangs never miss its targets or prey. A baby desert wolf that tries to threaten adventurers with its cute little yelps.\nOn iRO, this monster is localized as Baby Desert Wolf.",
+   "url": "https://ragnarok.fandom.com/wiki/Desert_Wolf_Baby"
+  },
+  "2276": {
+   "title": "Doppelganger",
+   "lore": "Doppelganger is a Demon that doubles as a living person. It appears mostly in deep dungeons, transforming into a ghostly double of an adventurer and stabbing the victim in the back.",
+   "url": "https://ragnarok.fandom.com/wiki/Doppelganger"
+  },
+  "2289": {
+   "title": "Fabre",
+   "lore": "Fabres are the larvae of Creamy that are suitable for newbies to fight with. It evolves into a Pupa. Likes to roll around the grassland with its round body. The weak and small larva of Creamy. Although some say it is cute, this author must disagree. Wholeheartedly.",
+   "url": "https://ragnarok.fandom.com/wiki/Fabre"
+  },
+  "2290": {
+   "title": "Thief Bug",
+   "lore": "Thief Bug is a kind of bug that is commonly seen in a damp, dark places. It moves very fast and tends to steal items dropped on the ground. The undeveloped version of the Thief Bug. Even as babies, they're pretty disgusting. Dirty, filthy creatures that tend to work in swarms. Whatever you do, don't let them pollute the Prontera Culverts; it'll be a disaster.",
+   "url": "https://ragnarok.fandom.com/wiki/Thief_Bug"
+  },
+  "2291": {
+   "title": "Hornet",
+   "lore": "Hornet is a working bee working so hard by a command of queen bee. It normally seeks honey, but when something dangerous happens it fights in a swarm. Usually benign, they will attack in swarms if one of them is harmed.",
+   "url": "https://ragnarok.fandom.com/wiki/Hornet"
+  },
+  "2292": {
+   "title": "Horn",
+   "lore": "For the monster drop, see Horn (item).\n\nHorn is a giant ground beetle that never cares about things going around except its business. When it's threatened, it uses scissors-like mandibles to attack enemy. Although it looks fierce, it's actually a peaceful insect. It roams around fields with a crunching sound.",
+   "url": "https://ragnarok.fandom.com/wiki/Horn"
+  },
+  "2294": {
+   "title": "Argiope",
+   "lore": "Argiope is a vicious, giant centipede monster that attacks passersby with poisonous fangs. A segmented millipede-type monster that will attack passersby with poison.",
+   "url": "https://ragnarok.fandom.com/wiki/Argiope"
+  },
+  "2299": {
+   "title": "Stainer",
+   "lore": "Stainer is a ladybug that eats noxious insects. Its colorful shell is favored for use in various decorations. a tiny little insect with a splendid ladybug-like shell, it can sense magic and will attack once a spell begins casting.",
+   "url": "https://ragnarok.fandom.com/wiki/Stainer"
+  },
+  "2300": {
+   "title": "Chonchon",
+   "lore": "Chonchon is a kind of small fly that is commonly seen everywhere. They move with great speed. Amazingly, they can heal in the presence of fecal matter.\nThe Fly Wing item it drops does the same effect as Teleport, an Acolyte skill.",
+   "url": "https://ragnarok.fandom.com/wiki/Chonchon"
+  },
+  "2301": {
+   "title": "Steel Chonchon",
+   "lore": "Steel Chonchon is a kind of Chonchon that has a firm shell covering its body. Similar to Chonchon, but is yellow green. It picks up everything from the ground so be careful not to drop items.",
+   "url": "https://ragnarok.fandom.com/wiki/Steel_Chonchon"
+  },
+  "2302": {
+   "title": "Hunter Fly",
+   "lore": "Hunter Fly is a Chonchon of crimson colour. It possess 3 times higher agility compared to normal Chonchon; also it deals more damage than the normal one. Winged insects covered in the blood of innocents. It's incredibly quick as well. Novices must flee from this monster at all costs.",
+   "url": "https://ragnarok.fandom.com/wiki/Hunter_Fly"
+  },
+  "2303": {
+   "title": "Maya",
+   "lore": "For the Norman character, see Maya (anime).\n\nMaya is the Queen Ant with fantastic power that most people dare not face. She prefers to live undisturbed in dark damp places, but will come out from time to time to punish those that would invade her nest.",
+   "url": "https://ragnarok.fandom.com/wiki/Maya"
+  },
+  "2305": {
+   "title": "Ungoliant",
+   "lore": "Ungoliant is a monster that inhabits the Einbroch area.",
+   "url": "https://ragnarok.fandom.com/wiki/Ungoliant"
+  },
+  "2306": {
+   "title": "Golden Thief Bug",
+   "lore": "The mysterious Golden Thief Bug is a Thief Bug whose shell is covered in pure gold. Its size and splendor is superior when compared to other Thief Bugs. A Thief Bug with a shell that shimmers in a brilliant, golden light. Beautiful, but still a nasty bug through and through.",
+   "url": "https://ragnarok.fandom.com/wiki/Golden_Thief_Bug"
+  },
+  "2307": {
+   "title": "Mistress",
+   "lore": "Mistress is the queen of the bees. Rarely appears; only when she controls working bees. The art of handling working bees is the honey pot she's carrying in hand.",
+   "url": "https://ragnarok.fandom.com/wiki/Mistress"
+  },
+  "2311": {
+   "title": "Manananggal",
+   "lore": "Manananggal is a vampiric monster that resembles a beautiful woman's torso.",
+   "url": "https://ragnarok.fandom.com/wiki/Manananggal"
+  },
+  "2313": {
+   "title": "Tikbalang",
+   "lore": "Tikbalangs are said to scare travelers and lead them astray. They play tricks on travelers to keep them returning to an arbitrary path no matter how far they go or where they turn. It is said that one can avoid being led astray by a Tikbalang by wearing one's shirt inside out. An alternative countermeasure is to ask permission to pass by out loud or not to produce too much noise while in the woods in order not to offend or disturb the Tikbalang.",
+   "url": "https://ragnarok.fandom.com/wiki/Tikbalang"
+  },
+  "2317": {
+   "title": "Bangungot",
+   "lore": "Bangungot is a vicious monster that roams the Bangungot Hospital. Some consider it more of a curse or disease. It is said that Bangungot used to be a wood fairy. It seems to have the ability to take the form of a Norman to trick people.",
+   "url": "https://ragnarok.fandom.com/wiki/Bangungot"
+  },
+  "2318": {
+   "title": "Bangungot",
+   "lore": "Bangungot is a vicious monster that roams the Bangungot Hospital. Some consider it more of a curse or disease. It is said that Bangungot used to be a wood fairy. It seems to have the ability to take the form of a Norman to trick people.",
+   "url": "https://ragnarok.fandom.com/wiki/Bangungot"
+  },
+  "2319": {
+   "title": "Buwaya",
+   "lore": "Buwaya is a merciless monster that roams the forests of Malaya. It is said no living thing is left after Buwaya passes by. It was inactive for a long time, which makes people wonder if it hibernates.",
+   "url": "https://ragnarok.fandom.com/wiki/Buwaya"
+  },
+  "2320": {
+   "title": "Bakonawa",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
+  },
+  "2321": {
+   "title": "Bakonawa",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
+  },
+  "2322": {
+   "title": "Bakonawa",
+   "lore": "Bakonawa is a vicious monster that was defeated by five Malayan warriors about a hundred years ago. One of the warriors received a dire wound on his leg, which caused Bakonawa to hunt after that warrior. Bakonawa then took the form of an old Norman lady and began spreading a story about how she loved her son and that she was unjustly killed by the Malayans' selfishness, which caused her anger and vengeance twisted her spirit into the monster known as Bakonawa.\nWhen an adventurer uncovers the true story behind Bakonawa's manipulations, the people of Malaya set off to destroy him.",
+   "url": "https://ragnarok.fandom.com/wiki/Bakonawa"
+  },
+  "2324": {
+   "title": "Penomena",
+   "lore": "Penomena is similar to Hydra, but unlike the Hydra this monster can move itself and is pretty powerful. Misunderstanding could make for big time trouble. Prepare before you attack Penomena, otherwise you could be dead in no time.",
+   "url": "https://ragnarok.fandom.com/wiki/Penomena"
+  },
+  "2325": {
+   "title": "Baphomet",
+   "lore": "For the character from the animation, see Baphomet (anime).\n\nBaphomet is a legendary notorious demon that lives in the deep jungle. He treats Norman beings as insects. The scythe he carries with him is powerful enough to slay a large number of enemies at a time. A horned goat-like beast that wields an intimidating scythe with incredible might. Sired countless Baphomet Jrs.\nAs Baphomet originates from the demon realm of Muspell, he is unable to fully appear in Midgard. As such, the incarnation of Baphomet that wanders around the Labyrinth Forest only possesses a fraction of the demon's full powers.",
+   "url": "https://ragnarok.fandom.com/wiki/Baphomet"
+  },
+  "2327": {
+   "title": "Bangungot",
+   "lore": "Bangungot is a vicious monster that roams the Bangungot Hospital. Some consider it more of a curse or disease. It is said that Bangungot used to be a wood fairy. It seems to have the ability to take the form of a Norman to trick people.",
+   "url": "https://ragnarok.fandom.com/wiki/Bangungot"
+  },
+  "2345": {
+   "title": "Zherlthsh",
+   "lore": "For the character from the animation, see Zealotus (anime).\n\nZherlthsh is a noble Lady of the Demon world who is very obsessive to control Normans as slaves. Her whip never miss tagets.\nOn iRO, this monster is localized as Zealotus.",
+   "url": "https://ragnarok.fandom.com/wiki/Zherlthsh"
+  },
+  "2346": {
+   "title": "Ktullanux",
+   "lore": "Ktullanux is a dreadful ice beast that resides deep within the Ice Cave. One day, it was visited by priests from Sessrumnir bearing a young boy. The priests planned to use the cave as his eternal prison and so tasked Ktullanux to guard over the boy. To make sure Ktullanux does his job, the priests threaten to melt the entire cave if it does not comply.",
+   "url": "https://ragnarok.fandom.com/wiki/Ktullanux"
+  },
+  "2347": {
+   "title": "Eddga",
+   "lore": "Eddga is an Ancient Tiger living in the deep forest that has been defied by the natives. He loves to smoke a pipe, and thinks Normans are barbarians for destroying mountains. He'll attack any traveler or adventurer that ventures into his mountains.",
+   "url": "https://ragnarok.fandom.com/wiki/Eddga"
+  },
+  "2351": {
+   "title": "Chepet",
+   "lore": "Although Chepet looks like a girl carrying a weird doll, the truth is the weird doll controls the girl doll. It strikes a light using a big matchstick to attack targets.\nAn evil creature hiding in a pretty doll. It attacks passersby by striking matchsticks held in the doll's hand. A very rare monster since it dwells in only a few places.",
+   "url": "https://ragnarok.fandom.com/wiki/Chepet"
+  },
+  "2472": {
+   "title": "Bloody Knight",
+   "lore": "Bloody Knight is a high knight cursed into blood-stained armor. He used to be valiant enough to take charge of the chivalry in a castle.",
+   "url": "https://ragnarok.fandom.com/wiki/Bloody_Knight"
+  },
+  "2475": {
+   "title": "Root of Corruption",
+   "lore": "Root of Corruption is the source of the corruption that Himmelmez used to cause the fall of Glastheim. It turned the Khalitzburg and White Knight knightages into undead monsters. Although Varmundt and some adventurers manage to destroy it, the damage was already done.\nOn iRO, this monster is localized as Corrupted Soul.",
+   "url": "https://ragnarok.fandom.com/wiki/Root_of_Corruption"
+  },
+  "2476": {
+   "title": "Amdarais",
+   "lore": "Amdarais was formerly a Rune Knight name Geralt. He managed to defend the Heart of Ymir located at Glastheim Castle from Himmelmez, but was eventually defeated by the valkyrie. To punish him for wasting her time, Himmelmez tortured him using her magic and then mutated him into Amdarais. Even as Amdarais, Geralt still had his mind intact and tried to stop himself from attacking his commander Heinrich and the people he was with.",
+   "url": "https://ragnarok.fandom.com/wiki/Amdarais"
+  },
+  "2529": {
+   "title": "Faceworm Queen",
+   "lore": "Faceworm Queen is a giant serpentine monster with a head that resembles an old man.\nIn the English release of the manhwa, this monster is known as Face Mask Queen.",
+   "url": "https://ragnarok.fandom.com/wiki/Faceworm_Queen"
+  },
+  "2564": {
+   "title": "Fenrir",
+   "lore": "Fenrir (Korean: 펜릴) is the Wolf God who was reincarnated into the Warlock Fenris Fenrir.\nIt is unknown where Fenrir fits into the scheme of things as both Fenris and Frigg hint that Fenrir was a part of the Thousand-Year War but that doesn't necessarily mean he participated in the war. It seems Fenrir was very familiar with Baldr as the wolf had been to Baldr's temple Breidablik (since Fenris recalled it being very grand when she visited the ruins in A.W. 996) and Fenris literally threw herself into the arms of Baldr's reincarnation when she found him.",
+   "url": "https://ragnarok.fandom.com/wiki/Fenrir"
+  },
+  "2924": {
+   "title": "Elder Willow",
+   "lore": "Elder Willow is an ancient Willow in which a fairy lies within. It seems to possess magic power through its long age.",
+   "url": "https://ragnarok.fandom.com/wiki/Elder_Willow"
+  },
+  "2925": {
+   "title": "Willow",
+   "lore": "Willow is a tree monster. Once a tree fairy had lied within but it seems the fairy's gone crazy now. The fairy had endowed a little magical ability to the monster though... Creature reborn from an old tree. The feature and the sounds it makes are incredibly eerie.",
+   "url": "https://ragnarok.fandom.com/wiki/Willow"
+  },
+  "2927": {
+   "title": "Mineral",
+   "lore": "Mineral monsters are actually living stalactites. It's rumored that they are grown in a dark cave in which something inside has some sort of malicious influence over them.",
+   "url": "https://ragnarok.fandom.com/wiki/Mineral"
+  },
+  "2931": {
+   "title": "Metaling",
+   "lore": "Metalings were made from the blood of living machines that were believe to be called \"Gigantes.\" Metaling is still like those other hopping blobs of gelatin in that they'll swallow whatever might be lying on the ground.",
+   "url": "https://ragnarok.fandom.com/wiki/Metaling"
+  },
+  "2932": {
+   "title": "Poporing",
+   "lore": "Poporing is a kind of Poring living in the swamp. It is covered with poisonous elastic skins all around the body. A light green Poring with the poison property. It's much stronger than Poring, but still moves by means of bouncing.",
+   "url": "https://ragnarok.fandom.com/wiki/Poporing"
+  },
+  "2933": {
+   "title": "Deviling",
+   "lore": "Deviling is a devil Poring.",
+   "url": "https://ragnarok.fandom.com/wiki/Deviling"
+  },
+  "2934": {
+   "title": "Archangeling",
+   "lore": "Archangeling is an Archangel Poring.\nOn iRO, this monster is localized as Arc Angeling.",
+   "url": "https://ragnarok.fandom.com/wiki/Archangeling"
+  },
+  "2936": {
+   "title": "Ghostring",
+   "lore": "Ghostring is the ghost of a dead Poring that came back to the realm holding a grudge. Normal weapons cannot do any damage to this monster at all.",
+   "url": "https://ragnarok.fandom.com/wiki/Ghostring"
+  },
+  "2959": {
+   "title": "Torturous Redeemer",
+   "lore": "The Torturous Redeemer is a demon of Muspelheim who has searched long and hard for the dread blade Tartanos. In his Norman form, he comes off as being a prince of a far off land.\nIn Ragnarok Online, Torturous Redeemer appears in the Cursed Knight instance.",
+   "url": "https://ragnarok.fandom.com/wiki/Torturous_Redeemer"
+  },
+  "2961": {
+   "title": "Torturous Redeemer",
+   "lore": "The Torturous Redeemer is a demon of Muspelheim who has searched long and hard for the dread blade Tartanos. In his Norman form, he comes off as being a prince of a far off land.\nIn Ragnarok Online, Torturous Redeemer appears in the Cursed Knight instance.",
+   "url": "https://ragnarok.fandom.com/wiki/Torturous_Redeemer"
+  },
+  "2996": {
+   "title": "Celine Kimi",
+   "lore": "Celine Kimi is a gloomy doll that wanders the Toy Factory after the factory had been shut down. She is haunted by a mysterious phantom.",
+   "url": "https://ragnarok.fandom.com/wiki/Celine_Kimi"
+  },
+  "3202": {
+   "title": "Organic Pumpkin",
+   "lore": "There is a sticker on this pumpkin that says 'Certified Organic' - Blasphemous Alex",
+   "url": "https://ragnarok.fandom.com/wiki/Organic_Pumpkin"
+  },
+  "20424": {
+   "title": "Moonlight Flower",
+   "lore": "Moonlight Flower is a middle-class demon that commands fox troops. You will be sorry if you look down on her just because of her cute appearance. A strange wild girl carrying a big bell and having 9 fox tails.",
+   "url": "https://ragnarok.fandom.com/wiki/Moonlight_Flower"
+  },
+  "20425": {
+   "title": "Phreeoni",
+   "lore": "Phreeoni is a mysterious monster. Nobody quite knows what it is or where it came from for that matter. An extremely strong bastard that is 40% tongue.",
+   "url": "https://ragnarok.fandom.com/wiki/Phreeoni"
+  },
+  "20571": {
+   "title": "Orc Hero",
+   "lore": "Orc Hero is the hero of the Orc tribe who took command of the orc army during the war with Normans. His sword skills have been rumored to shake the heavens, bringing thunder and lightning.",
+   "url": "https://ragnarok.fandom.com/wiki/Orc_Hero"
+  }
+ }
+}

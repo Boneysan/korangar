@@ -67,6 +67,7 @@ is deliberately out of scope):
 | Arcana | SA_ADVANCEDBOOK, MG_SRECOVERY (any caster mastery) |
 | Medicine | AL_HEAL, NV_FIRSTAID (everyone qualifies at +1) |
 | Social (persuade/intimidate/deceive) | see the dedicated section below |
+| Lore (monster knowledge) | stat + skill vary by mob race — see below |
 
 Fallback: no qualifying skill → proficiency 0, stat-only roll. Every check
 stays possible for everyone; specialists get +1..+5.
@@ -105,6 +106,26 @@ proficiency skills (classic classes; tune to the party at session zero):
 | Rogue | Streetwise menace, scam artistry | LUK | RG_GANGSTER (Gangster's Paradise → intimidation), RG_COMPULSION (Compulsion Discount → haggling) |
 
 Ambiguous or unroleplayed attempts default to **LUK**.
+
+## Lore checks — stat by mob race (monster identification)
+
+`@dm check party lore <mob_id>` drives the bestiary's tiered reveal
+(tier table in `bestiary-journal.md`: Identity at DC, Combat at +5,
+Scholar at +10/nat 20; DC from mob level + boss bump). Like social
+checks, the stat — and the qualifying proficiency skill — depends on the
+*subject*, giving every class a knowledge niche:
+
+| Mob race | Framing | Stat | Qualifying skill |
+|---|---|---|---|
+| Undead, Demon | Holy scholarship | INT | AL_DEMONBANE (Priest/Crusader line) |
+| Brute, Insect, Fish | Field craft | DEX or INT | HT_BEASTBANE (Hunter) |
+| Formless, constructs | Arcana | INT | SA_ADVANCEDBOOK (Sage) |
+| Plant | Herbalism | INT | AM_LEARNINGPOTION (Alchemist) |
+| Demi-human, Angel | Worldliness | INT or LUK | — stat-only |
+| Dragon | Legend-lore | INT | — stat-only (DM may grant advantage for relevant story beats) |
+
+Fallback INT, stat-only. Same nat-1 misinformation toggle as the
+bestiary spec — wrong fact rendered client-side, never stored.
 
 ## Mechanical consequences (the payoff)
 

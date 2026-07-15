@@ -23,9 +23,12 @@ Follow the `window_cache.ron` pattern exactly
 `ron::ser::to_string_pretty` + logged-not-fatal error on save):
 
 - File: `client/dm_campaign.ron`, structure keyed by character name so alts
-  don't share discovery:
+  don't share discovery. **Store the unlock tier from day one** (tiered
+  lore-check reveal, see `bestiary-journal.md`) — even while the shipped
+  code only produces Full (kill) unlocks, writing the tier now avoids a
+  format migration when lore checks land:
   ```ron
-  ( characters: { "Wynne": ( bestiary_unlocked: [1002, 1113] ) } )
+  ( characters: { "Wynne": ( bestiary: { 1002: Full, 1113: Identity } ) } )
   ```
 - **Load** when the character is known (map-login path, where the
   `QuestList` resync also arrives) — populate `bestiary_unlocked`.
@@ -33,8 +36,9 @@ Follow the `window_cache.ron` pattern exactly
   the vec). The file is tiny; unconditional rewrite per unlock is fine, no
   debounce needed. Also save on the DM "reveal all" toggle? **No** — reveal-
   all is a DM view mode, not discovery; persist only real kills.
-- Merge rule everywhere: **union** (never remove ids on load/save; a corrupt
-  or missing file degrades to session-scoped behavior, never a crash).
+- Merge rule everywhere: **union, highest tier wins** (never remove ids or
+  downgrade a tier on load/save; a corrupt or missing file degrades to
+  session-scoped behavior, never a crash).
 
 ## Phase 2 — server-authoritative (design sketch, do not build yet)
 
@@ -44,8 +48,9 @@ Follow the `window_cache.ron` pattern exactly
   by act if needed). Party-wide by definition: any member's kill unlocks
   for everyone.
 - Sync: on map login when `$dm_client_mode` is on, emit
-  `[DMJ]{"t":"bestiary_sync","mobs":[…]}`; on kill, echo
-  `[DMJ]{"t":"bestiary_unlock","mob":1002}` to the party.
+  `[DMJ]{"t":"bestiary_sync","mobs":{"1002":"full","1113":"identity"}}`;
+  on kill or passed lore check, echo
+  `[DMJ]{"t":"bestiary_unlock","mob":1002,"tier":"combat"}` to the party.
 - Client: union server payloads into state + local file (file keeps working
   offline / on fresh installs mid-sync).
 - Cleanup rule: `@dmreset` scope decision — campaign reset probably *should*

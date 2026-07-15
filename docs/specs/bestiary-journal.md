@@ -6,6 +6,32 @@
 
 **Data Sources** (already generated):
 - `docs/bestiary.json` — Primary: Id, Name, Lv, Hp, Stats (STR- LUK), Attack, Def, Mdef, MoveSpeed, AttackDelay, Element, Race (inferred), XP, Skills (with Level/Rate/Delay), PhysDPS/MagicDPS.
+  - **Known export gaps (audit 2026-07-15)**: Element/Race/Size present for only 3/1759 entries and Skills empty for all — the exporter never read those `mob_db.conf` fields / `mob_skill_db.conf`. Mode flags (Aggressive/Looter/…) never exported. Extend + regenerate before building the lore-check Identity/Combat tiers.
+- **Lore (game data for the Scholar tier — ships in the client, embedded
+  like bestiary.json):**
+  - `docs/mob_lore.json` — 533/1759 mobs, fetched from ragnarok.fandom.com
+    by `tools/fetch_mob_lore.py` (CC-BY-SA; attribution kept in `_meta` +
+    per-entry `url`).
+  - `docs/mob_lore_rml.json` — 151 mob ids from Mitten's fan "Ragnarok
+    Monster Lore" encyclopedia (WarpPortal forums), fetched display-clean
+    by `tools/fetch_mob_lore_rml.py`. Deeper than the Fandom intros
+    (Atroce 3.8k chars; official-kRO-sourced material for classic MVPs);
+    ~49 ids Fandom lacks. Fan-authored, no explicit license — shipped in
+    this private non-commercial client with author/source attribution
+    retained per entry.
+  - `docs/mob_lore_campaign.json` — 19 hand-authored Seal Cascade entries
+    (2026-07-15) covering every campaign-referenced mob no external source
+    documents (Amon Ra, Tao Gunka, Ifrit, Venatu, Celia, the Niflheim/
+    banquet dead, the corrected kill-quest targets). Grounded in the
+    campaign vault's beat docs; spoiler-calibrated (foreshadows arcs,
+    reveals no twists).
+  - **Merge priority in the detail pane**: campaign > RML > Fandom. Show a
+    small source line under the lore text.
+  - Audit note: the earlier "20 campaign mobs missing lore" list contained
+    six phantoms — "Elder" was a word-match false positive, and five were
+    off-by-one MobId typos in `quest_db.conf` (Evil Snake Lord→Zipper Bear,
+    Galion→Roween, Gazeti→Ice Titan, Siroma→Snowier, Blazer→Lava Golem),
+    fixed server-side 2026-07-15.
 - Cross with `cards.json` for "associated cards".
 - `items.json` for drop-related lore if needed.
 - Static campaign data from `Hercules_RO/npc/custom/dm_campaign/` + planning docs (arcs, which mobs appear).
@@ -61,9 +87,37 @@
 5. Wire to quest journal or hotkey.
 6. Polish: Sprite rendering, inferred weaknesses, search.
 
+## Tiered reveal — lore checks (design settled 2026-07-15)
+
+Unlocks are **tiered, not binary**. A kill unlocks everything (you learned
+by fighting); a passed lore check (`proficiency-checks.md` formula, DC from
+mob level + boss bump) unlocks by margin — knowledge *before* the fight,
+ordered by what's actionable in RO combat:
+
+| Result | Tier unlocked | Fields shown |
+|---|---|---|
+| Meet DC | **Identity** | true name, level, **race / size / element** (the "what do I hit it with" triad) |
+| Beat by 5+ | **Combat** | + HP pool, attack range, DPS estimates, notable skills (self-destruct, status infliction) |
+| Beat by 10+ or nat 20 | **Scholar** | + drops, cards, lore/flavor text |
+| Kill | **Full** | everything (equals Scholar) |
+| Fail | — | no change |
+| Nat 1 | — | *optional DM toggle*: entry shows one plausibly wrong fact (e.g. wrong element), flagged DM-side |
+
+State accordingly becomes a tier map, not a set:
+`unlocked: HashMap<u32, UnlockTier>` (`Identity < Combat < Scholar/Full`;
+upgrades only, never downgrades — nat-1 misinformation is a display
+overlay, not a stored tier). The detail pane renders locked fields of a
+partially-unlocked entry as `???` per-section rather than hiding the whole
+entry. **Bake the tier into the persistence format from day one** — see
+`bestiary-unlock-persistence.md`.
+
+Who rolls: stat-by-mob-race, mirroring the social-check approach system —
+see the lore-check table in `proficiency-checks.md`. DM flow: click a `???`
+entry in the DM bestiary → "Call lore check" → emits
+`@dm check party lore <mob_id>`.
+
 ## DM-Specific Features
 
-- **Lore checks**: Server can send [DMJ] for "successful Lore check on X" → unlock.
 - **DM overrides**: DM window to "reveal" entries for party or force stats.
 - **Balancing tie-in**: Display estimated party DPS vs mob (from bestiary PhysDPS).
 - **Card synergy**: Show "Drops X Card" from cards.json.
