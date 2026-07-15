@@ -6,7 +6,23 @@
 
 **Data Sources** (already generated):
 - `docs/bestiary.json` — Primary: Id, Name, Lv, Hp, Stats (STR- LUK), Attack, Def, Mdef, MoveSpeed, AttackDelay, Element, Race (inferred), XP, Skills (with Level/Rate/Delay), PhysDPS/MagicDPS.
-  - **Known export gaps (audit 2026-07-15)**: Element/Race/Size present for only 3/1759 entries and Skills empty for all — the exporter never read those `mob_db.conf` fields / `mob_skill_db.conf`. Mode flags (Aggressive/Looter/…) never exported. Extend + regenerate before building the lore-check Identity/Combat tiers.
+  - **Export gap closed 2026-07-15** by `tools/extend_bestiary_export.py`
+    (no original exporter was ever committed, so this is a fresh, narrowly
+    -scoped script — it *merges* into the existing file, leaving every
+    already-shipped field, e.g. `PhysDPS`/`MagicDPS`/`DropsCount`
+    consumed by `src/dm/loot.rs`, untouched). Parses `Element`/`Race`/
+    `Size`/`Mode` straight from `mob_db.conf` and joins `Skills`
+    (id/level/rate/delay) from `mob_skill_db.conf` by `SpriteName`.
+    Coverage: **Element/Race 1750/1759, Size 1744/1759, Mode 1721/1759,
+    Skills 1237/1759** (the ~9-60 gaps left are the known renewal/event
+    mobs already absent from other exports). `Element` is written as a
+    formatted string (`"Water 1"`, type + level) rather than a nested
+    object, matching the existing Rust `Option<String>` field in
+    `BestiaryMonster` (`src/dm/data.rs`) so no schema change was needed;
+    `Mode`/`Skills` have no Rust field yet (safely ignored by serde until
+    one is added — needed to actually *render* the Combat tier). Verified
+    against the existing `dm_data_tests` deserialization tests (pass).
+    Re-run after `mob_db.conf`/`mob_skill_db.conf` changes, then rebuild.
 - **Lore (game data for the Scholar tier — ships in the client, embedded
   like bestiary.json). Combined coverage: 650/1759 bestiary mobs, and
   100% of the 62 mobs actually spawned along the campaign's arc route
