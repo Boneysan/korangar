@@ -322,17 +322,20 @@ the DM console lands alongside M2/M3.
 |---|---|---|---|
 | E7.1 | Server-side structured echo: `$dm_client_mode` flag + `[DMJ]{…}` machine-readable lines in dm_campaign scripts (Phase A transport) | M | — (script-only) |
 | E7.2 | Player dice cards: parse `@roll`/`@dm check` results → animated d20 result cards (roll/mod/DC/pass/nat-20 flair) | M | M1, E7.1 |
-| E7.3 | Native campaign quest journal (IDs 20000–20234, data from `campaign_quest_journal_entries.lua` via build-time codegen) | M | M1 |
+| E7.3 | Native campaign quest journal (IDs 20000+, data from `db/quest_db.conf` via build-time codegen — the previously cited `campaign_quest_journal_entries.lua` does not exist) — spec: [specs/campaign-quest-journal.md](specs/campaign-quest-journal.md) | M | M1 |
 | E7.4 | Inspiration token indicator + downed/death-save overlay | S | E7.2 |
-| E7.5 | Initiative tracker bar (player + DM reorder view) | M | E7.2 |
+| E7.5 | Initiative tracker bar (player + DM reorder view) — spec: [specs/initiative-encounter-panel.md](specs/initiative-encounter-panel.md) (covers the missing `@dminitiative` server script too) | M | E7.2 |
 | E7.6 | DM check console + rewards drawer (`@dm check/inspire`, `@dmreward`, exp presets) | M | E7.2 |
 | E7.7 | DM campaign board + beat director + decision ledger (static data codegen from CAMPAIGN.md/planning lua; `@dmbeat`/`@dmdecide`/`@dmflag`) | L | E7.1 |
-| E7.8 | DM encounter panel (spawn palette w/ mob IDs, `@dmscale` slider w/ balance-checker presets, bloodied, manual fallback) | M | E7.7 |
+| E7.8 | DM encounter panel (spawn palette w/ mob IDs, `@dmscale` slider w/ party-size presets, bloodied, manual fallback) — spec: [specs/initiative-encounter-panel.md](specs/initiative-encounter-panel.md) (covers the missing `dm_combat.txt` commands too) | M | E7.7 |
 | E7.9 | DM hazard/trap board + scene director (`@dmhazard/trap/symptom`, `@dmscene/cutscene/spotlight/say/secret`) | M | E7.7 |
 | E7.10 | DM session HUD (`@dm mode/status`, recap viewer, warp/recall) | S | E7.7 |
 | E7.11 | In-world hazard telegraphs (reuse skill-unit rendering) | M | E7.9 |
 | E7.12 | Phase B: custom packets for initiative/hazard/encounter state (Hercules plugin + `ragnarok-packets`) — only if Phase A parsing proves limiting | XL | E7.5–E7.9 |
 | E7.13 | General QoL parking lot: better `/mi`, native navigation, damage meters, loot filters, replay | — | groom during M3 |
+| E7.14 | ATB structured rounds (future work): DM-toggleable per-encounter active-time-battle mode — charge-bar strip, off-turn movement/action locks via `setpcblock`/`SC_STOP` on Hercules' existing `canact_tick`/`canmove_tick` gates — spec: [specs/atb-structured-rounds.md](specs/atb-structured-rounds.md) | L | E7.5, E7.1 |
+| E7.15 | Bestiary unlock persistence: client-local `client/dm_campaign.ron` (Phase 1), server-authoritative party-wide `[DMJ]` sync (Phase 2) — spec: [specs/bestiary-unlock-persistence.md](specs/bestiary-unlock-persistence.md) | S | — (Phase 2: E7.1) |
+| E7.16 | Proficiencies & mechanical checks (future work): bounded-accuracy check formula (`d20 + base_stat/15 (cap +8) + getskilllv-derived proficiency`), class-skill → check-type mapping, real engine consequences (stealth → `SC_HIDE`, perception → `enablenpc`) — spec: [specs/proficiency-checks.md](specs/proficiency-checks.md) | M | E7.2 (cards render results); shapes `dm_checks.txt` before E7.5/E7.6 build it |
 
 ### E8 — Operations & distribution *(→ M4)*
 | ID | Task | Size |

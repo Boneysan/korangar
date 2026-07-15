@@ -16,6 +16,11 @@ See the main [Documentation Hub](../README.md) for the full categorized list and
 - `dm-ui-window-template.md` — DM window isolation pattern and template.
 - `hud-edit-mode.md` — HUD layout editor (foundational for Phase 2 UI).
 - `navigation-quest-guiding.md` — Quest navigation, breadcrumbs, and pings.
+- `atb-structured-rounds.md` — Future work (E7.14): DM-toggleable ATB rounds on top of Hercules' `canact_tick`/`canmove_tick`/`setpcblock` gates.
+- `campaign-quest-journal.md` — E7.3: quest_db.conf → embedded JSON pipeline, journal window + HUD tracker, consumes the wired Quest* events (last port-back row).
+- `bestiary-unlock-persistence.md` — Client-local RON persistence for bestiary unlocks now; server-authoritative `[DMJ]` sync after E7.1.
+- `initiative-encounter-panel.md` — E7.5+E7.8: `@dminitiative`/`@dmencounter`/`@dmscale`/`@dmbloodied` server scripts + tracker/panel windows.
+- `proficiency-checks.md` — Future work (E7.16): bounded-accuracy `@dm check` formula (handles 100+ stats), class-skill-tree proficiencies, checks with real engine consequences.
 
 When adding a new spec:
 1. Create the file here.

@@ -81,6 +81,11 @@ These are concrete, code-level guides ready for implementation:
 - [dm-ui-window-template.md](specs/dm-ui-window-template.md) — Isolation pattern + copy-paste template for DM windows.
 - [hud-edit-mode.md](specs/hud-edit-mode.md) — Foundational HUD layout editor (required for most Phase 2 UI).
 - [navigation-quest-guiding.md](specs/navigation-quest-guiding.md) — Cross-map breadcrumbs, NAVI parsing, in-world ribbons, pings.
+- [atb-structured-rounds.md](specs/atb-structured-rounds.md) — Future work (E7.14): DM-toggleable ATB encounter rounds (movement/action locks via `setpcblock`, `[DMJ]`-synced charge-bar strip).
+- [campaign-quest-journal.md](specs/campaign-quest-journal.md) — E7.3: quest data pipeline from `quest_db.conf`, journal window, HUD tracker; consumes QuestAdded/QuestRemoved/QuestList.
+- [bestiary-unlock-persistence.md](specs/bestiary-unlock-persistence.md) — Bestiary unlocks: client-local RON file (Phase 1), server-authoritative party-wide sync (Phase 2).
+- [initiative-encounter-panel.md](specs/initiative-encounter-panel.md) — E7.5+E7.8: initiative tracker + encounter panel, client windows *and* the missing `dm_checks.txt`/`dm_combat.txt` server commands.
+- [proficiency-checks.md](specs/proficiency-checks.md) — Future work (E7.16): `d20 + base_stat/15 + proficiency` check formula, class skills as proficiencies, mechanical stealth/perception outcomes.
 
 ### Other / Historical
 - [protocol/2026-07-07-handoff.md](protocol/2026-07-07-handoff.md) — Packet audit handoff note.

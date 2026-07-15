@@ -24,7 +24,7 @@ output as `dispbottom`/announce text. The full server-side surface:
 |---|---|---|
 | Session | `@dm mode/status/reset/cleanup` (`dm_console.txt`) | Party-locked DnD mode, `$dm_active_party`, state lifetimes table |
 | Story | `@dmbeat`, `@dmstory`, `@dmdecide`, `@dmflag`, `@dmquest` (`dm_beats/decisions/flags/quests.txt`) | Beat director (numbered beats per act), exclusive-choice decision registry, cross-arc flag dependency map, quest start/complete |
-| Dice | `@dm check <player\|party> <stat> <DC> [adv\|dis]`, `@roll` (players, GM level 0), `@dminspire`, `@dminitiative` (`dm_checks.txt`) | d20 + stat/10 vs DC; nat-20/nat-1; advantage/disadvantage; inspiration tokens; AGI-sorted party initiative |
+| Dice | `@dm check <player\|party> <stat> <DC> [adv\|dis]`, `@roll` (players, GM level 0), `@dminspire`, `@dminitiative` (`dm_checks.txt`) | d20 + stat mod vs DC (formula superseded by [specs/proficiency-checks.md](specs/proficiency-checks.md): base_stat/15 cap +8, + class-skill proficiency); nat-20/nat-1; advantage/disadvantage; inspiration tokens; AGI-sorted party initiative |
 | Combat | `@dmencounter`, `@dmscale`, `@dmbloodied` (`dm_combat.txt`) | Encounter registry, %-based MVP stat scaling, bloodied watcher |
 | Life/death | `@dmdown`, `@dmrevive`, `@dmdownrule` (`dm_downed.txt`) | Downed/death-save rules |
 | Environment | `@dmhazard`, `@dmsymptom`, `@dmtrap` (+`dm_puzzles.txt` APIs) | Pulsing map hazards, symptom events, traps, sequential puzzles & riddles |
