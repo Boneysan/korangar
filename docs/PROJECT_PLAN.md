@@ -75,7 +75,7 @@ the server actually supports, then exceeding the official client with custom fea
 ### 1.3 `~/GitHub/korangar` — the client codebase
 
 - Rust nightly workspace; wgpu rendering; builds on Linux/Windows/macOS.
-- **DM client docs**: See `DM_CLIENT_IMPLEMENTATION.md` for architecture to execute E7. Core DM code **started 2026-07-14**: `src/dm/` (embedded bestiary/items/cards data layer + loot generator) and `interface/windows/dm/` (Bestiary Journal, Loot Generator) shipped — see `2026-07-14-session-notes.md` and `DM_DATA_GUIDE.md` quick-wins. Dice cards (E7.2), quest journal (E7.3), and initiative panel (E7.5) still open.
+- **DM client docs**: See `DM_CLIENT_IMPLEMENTATION.md` for architecture to execute E7. Core DM code **started 2026-07-14**: `src/dm/` (embedded bestiary/items/cards data layer + loot generator) and `interface/windows/dm/` (Bestiary Journal, Loot Generator) shipped — see `2026-07-14-session-notes.md` and `DM_DATA_GUIDE.md` quick-wins. **2026-07-15**: the full E7 backlog got targeted specs (E7.3, E7.5, E7.8, E7.14, E7.15, E7.16 — see `2026-07-15-session-notes.md`), plus a bestiary data build-out (lore text for 650/1759 mobs incl. 100% of the campaign's arc route, and `bestiary.json` extended with Element/Race/Size/Mode/Skills). Dice cards (E7.2), quest journal (E7.3), and initiative panel (E7.5) still open — no new client code landed this pass, design + data only.
 - Speaks exactly **one packet version: 20220406** (`korangar-networking`).
 - Loads `data.grf` + `rdata.grf` from `korangar/korangar/`; additional archives configurable; overrides in `korangar/archive/data/`; server list in `archive/data/sclientinfo.xml`.
 - Built-in dev tools behind `debug` feature: packet inspector, profiler, theme/frame inspectors, command window.
