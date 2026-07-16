@@ -42,6 +42,29 @@ Scenario inventory by group (106): session/lifecycle 8 · GM 8 · movement 5 · 
 skills 44 (39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 ·
 social 7 · DM tooling 14.
 
+### Regression run — July 16, 2026 (first full run since the gate)
+
+Re-run after the 2026-07-15 GUI pass promoted three map-server packets in the shared
+crates (`0x0229` hide/cloak, `0x0196` status-end, plus the status-name table) and rebuilt
+the `test` character. **First full-suite pass since the 07-13 gate**, so it also caught
+anything the intervening Hercules commits introduced.
+
+- **Result: `dm-quest-lifecycle` was the only failure** (105/106), and it was **not** a
+  client regression — the three promoted packets are unrelated to quests, and no quest
+  file changed in the client commits. **Server Emulator** cause: Hercules `d28ffb666`
+  (post-gate, off-by-one MobId fixes) injected a `//` comment into a *single-line*
+  quest_db entry — `Targets: ( { MobId: 1366 // Lava Golem /* … */ Count: 20 }, )`. `//`
+  runs to end of line, so it ate `Count: 20 }` and the closing `)`; libconfig aborted
+  quest_db parsing and reported the error at the next structure (`db/quest_db.conf:16164`,
+  a line that looked innocent). With quest_db unloaded, `setquest()` silently no-oped, so
+  `@dmquest start` reported success while adding nothing and sending no `QuestAdded`.
+  Fixed in Hercules (`aa40e2053`): removed the stray `//`. Server now loads all 3172 quest
+  entries; scenario passes 2/2 on retest.
+- **Lesson:** a lone failure in the first run after a gap is not automatically a flake or
+  a regression from the current change. Isolate by asking whether the failing subsystem is
+  even touched by the diff — here it plainly was not, which pointed straight at the
+  intervening server commits. (See the diagnostic path in `docs/2026-07-16-session-notes.md`.)
+
 ## DM suite (Phase 9) server-side fixes — July 12, 2026
 
 Bugs the Phase 9 headless scenarios found and fixed in `Hercules/` (Server Emulator

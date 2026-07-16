@@ -83,10 +83,39 @@ The pass kept surfacing stale claims, each of which had already misled someone:
 - `M1-p0-verification.md` §4 told you to write an `input` test NPC that already
   existed, and its environment block had WSL-only paths for a macOS pass.
 
+## Regression run + a caught server bug
+
+Re-ran all 106 scenarios after the fixes — the first full run since the 07-13
+gate. One failure: `dm-quest-lifecycle`, timing out on `QuestAdded`.
+
+**It was not a client regression.** The three promoted packets are unrelated to
+quests, and no quest file changed in the client commits. The diagnostic path:
+
+1. `QuestAdded` comes from `QuestNotificationPacket1/4` — untouched today.
+2. `git diff` over the day's commits: zero quest files.
+3. The DM command *executed and reported success* ("Quest 20001 started for 1
+   party member(s)") but the quest never landed in the char's table → the fault
+   is server-side quest-add, not client packet handling.
+4. The map-server log: `db/quest_db.conf:16164 - syntax error`. Quest_db failed
+   to load, so `setquest()` silently no-oped for every campaign quest.
+
+Root cause: Hercules `d28ffb666` (post-gate off-by-one MobId fixes) injected a
+`//` comment into a **single-line** quest entry —
+`Targets: ( { MobId: 1366 // Lava Golem /* … */ Count: 20 }, )`. `//` runs to
+end of line, eating `Count: 20 }` and the closing `)`; libconfig then reported
+the error at the next structure it reached (line 16164, which looked innocent).
+Fixed in Hercules `aa40e2053`; server now loads all 3172 quest entries and the
+scenario passes.
+
+**Lesson worth keeping:** a single failure in the first run after a gap is not
+automatically a flake *or* a regression from the current change. Ask first
+whether the failing subsystem is even touched by the diff. Here it plainly was
+not, which pointed straight at the intervening server commits rather than
+today's client work.
+
 ## Still open
 
-- **Clean logout** — the last row needing a human.
-- **Reset the `test` character** (still a Rogue with a hand-written hotbar,
-  `skill_point = 0`) and **re-run all 106 headless scenarios**: three packets
-  were promoted in shared crates today (`0x0229`, `0x0196`, plus the status-name
-  table), so the suite needs to prove no regression.
+- **Clean logout** — the last checklist row needing a human.
+- The `test` character was rebuilt into a clean, well-equipped **Knight** for
+  future manual passes (see the character-rebuild note below); it does not affect
+  the suite, which reshapes the job per scenario.
