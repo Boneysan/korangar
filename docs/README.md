@@ -59,6 +59,40 @@ This directory contains all design documents, technical deep dives, implementati
 | [protocol/packet-length-fallbacks.md](protocol/packet-length-fallbacks.md) | How automatic framing via length tables works. |
 | [PACKET_EVENTS_CATALOG.md](PACKET_EVENTS_CATALOG.md) | (See Core section — also the authoritative packet-to-event map.) |
 
+### Testing & Verification
+
+> These live in **`tools/testing/`**, outside `docs/` — they are easy to miss. The
+> **106-scenario headless suite** is the project's main automated regression gate
+> (acceptance passed 2026-07-13, double-run green).
+
+| Document | Purpose |
+|----------|---------|
+| [../tools/testing/testing_guide.md](../tools/testing/testing_guide.md) | Overall project testing reference — **start here**. |
+| [../tools/testing/headless_test_plan.md](../tools/testing/headless_test_plan.md) | Canonical headless test plan: scenario inventory, what each phase covers, and why headless findings transfer to the graphical client. |
+| [../tools/testing/headless_findings.md](../tools/testing/headless_findings.md) | Bug log + port-back tracking; every finding classified by layer (shared crate / harness / server). Fill in whenever a scenario fails. |
+| [../tools/testing/headless_remaining_test_design.md](../tools/testing/headless_remaining_test_design.md) | Implementation-ready design for remaining lifecycle, social, DM, repair, and skill-menu coverage. |
+| [../tools/testing/headless_mock_client_plan.md](../tools/testing/headless_mock_client_plan.md) | Original design doc; implementation status tracked there. |
+| [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | The **GUI** live-verification checklist — complements headless (see the axes note below). |
+
+**Three different axes — do not conflate them:**
+
+1. **Implemented?** → [PROJECT_PLAN.md](PROJECT_PLAN.md) §2's "Korangar" column (✅/🔶/❌).
+2. **Wire protocol proven?** → the headless suite (`--scenario all`). It links the *same*
+   `ragnarok-packets` + `korangar-networking` crates as the real client, so a green
+   scenario means the packets and event mapping are correct.
+3. **Proven through the GUI?** → [plans/M1-p0-verification.md](plans/M1-p0-verification.md).
+
+Headless **cannot** catch a bug in how the main client *consumes* an event (the UI/state
+layer in `korangar/src/`) — but it does establish that the wire data is correct, which
+isolates any remaining bug to the UI layer. A row can be headless-green and still
+unchecked for GUI; that means "the protocol works, the window hasn't been driven by hand."
+
+To run (servers must be up first):
+
+```sh
+cargo run --release --example headless-tester -p korangar-networking -- --scenario all
+```
+
 ### Implementation Plans, Roadmaps & Specs
 | Document | Purpose |
 |----------|---------|

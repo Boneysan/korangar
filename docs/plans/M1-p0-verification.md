@@ -20,14 +20,32 @@ live Hercules_RO (`PACKETVER=20220406`). File defects; fix in E3.2.
 
 ## 2. Environment
 
-```bash
-# DB + servers (MariaDB must be running)
-cd ~/GitHub/Hercules_RO && ./athena-start start
-# expect listeners on 6900 / 6121 / 5121
+**macOS** (where the current live pass runs — see [MACOS_WORKFLOW.md](../MACOS_WORKFLOW.md)):
 
-# Client (WSL — use the GL/D3D12 launcher)
-cd ~/GitHub/korangar && ./run-wsl.sh
+```bash
+# DB first — MariaDB no longer autostarts on the Mac; start it by hand.
+# Use `run`, NOT `start` (`brew services start` re-registers autostart).
+brew services run mariadb
+
+cd /Volumes/T7/GitHub/Ragnarok_Online/Hercules && ./athena-start start
+# expect listeners on 6900 / 6121 / 5121 (+ api 7121)
+
+# Client — no env vars needed; wgpu picks Metal natively
+cd /Volumes/T7/GitHub/Ragnarok_Online/korangar/korangar
+cargo run --release --bin korangar
 ```
+
+**WSL** (the other dev machine — paths differ; see the WSL section in the root `CLAUDE.md`):
+
+```bash
+cd ~/GitHub/Hercules_RO && ./athena-start start
+cd ~/GitHub/korangar && ./run-wsl.sh   # GL/D3D12 launcher — do NOT plain `cargo run`
+```
+
+If MariaDB is restarted while Hercules is running, **restart Hercules too** — the
+servers survive but hold dead connections (their `MYSQL_OPT_RECONNECT` is deprecated).
+A healthy stack shows ~6 `ragnarok` rows in
+`select id, host, command from information_schema.processlist;`, not 1.
 
 Test account (from M0): `korangar` / `korangar` (or create a fresh novice).
 
@@ -38,50 +56,83 @@ in-client packet inspector (`debug` feature).
 
 Mark each item ✅ / ❌ / 🔶 and note the defect.
 
+> **This checklist is the GUI axis only.** An unchecked row here does **not** mean
+> "untested" — most of these rows are already covered by a green scenario in the
+> 106-scenario headless suite (`tools/testing/headless_test_plan.md`, acceptance passed
+> 2026-07-13). Headless links the same `ragnarok-packets` / `korangar-networking` crates
+> as the real client, so headless-green means **the wire protocol and event mapping are
+> correct**; what is unproven is only the `korangar/src/` UI/state layer — i.e. does the
+> window render, and is it clickable. Rows below are annotated with their covering
+> scenario (`headless: name`) so nobody re-reads them as "never tested". Rows with **no**
+> headless annotation are the ones with genuinely no automated coverage — mostly
+> UI-only concerns headless cannot reach by construction.
+
 ### Account & session (P0)
 - [x] Login with valid credentials — macOS 2026-07-10 (`korangar`; `loginlog` rcode 100)
-- [ ] Login failure shows a visible message (bad password / already online)
+- [ ] Login failure shows a visible message (bad password / already online) —
+      *headless: `bad-password` (refusal packet green). Only the **visible message** is
+      unproven.*
 - [x] Character select lists existing chars — `test` displayed and selectable on macOS
-- [ ] Character create works
-- [ ] Character delete (if used) fails safely
+- [ ] Character create works — *validated live in M0 on 2026-07-08
+      ([M0-connectivity.md](M0-connectivity.md)); unchecked here only because the
+      macOS pass has not re-run it. Not a regression. headless:
+      `character-create-delete` (slot assert, persistence, duplicate-name rejection).*
+- [ ] Character delete (if used) fails safely — *headless: `character-create-delete`,
+      `character-delete-after-play` (cleanup-on-failure covered).*
 - [x] Map load after select (no black world / freeze) — entered `int_land`; map TCP connection established
-- [ ] Clean logout / disconnect
+- [ ] Clean logout / disconnect — *headless: `logout-relogin` (incl. chat-marker proofs).*
 
 ### Core gameplay (P0)
 - [x] Click-to-move, pathing (~10 tiles) — full route live-verified on macOS 2026-07-10
 - [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10
 - [x] Basic melee attack + damage numbers — Poring live test: sword cursor, approach, hit/miss and damage numbers, moving-target chase; no freeze/disconnect
-- [ ] Skill damage numbers (if character has a damaging skill)
+- [ ] Skill damage numbers (if character has a damaging skill) — *headless: `skills-*`
+      (44 job-class sweeps) + `attack-kill` / `incoming-damage` cover the damage-event
+      wire path; the rendered **numbers** are the UI-only part still unproven.*
 - [x] Item pickup from ground — labels English live-verified macOS 2026-07-10 (M1-001); re-check pickup path if needed
-- [ ] Stats window + stat allocation (success path)
-- [ ] Skill tree opens; skill use (self / target / ground if available)
-- [ ] Hotbar use
+- [ ] Stats window + stat allocation (success path) — *headless: `stat-skill-points`.*
+- [ ] Skill tree opens; skill use (self / target / ground if available) — *headless:
+      `skills-novice` … `skills-soul-linker` — **39 job-class sweeps**, plus
+      `teleport-select` / `teleport-cancel` for the skill-menu path.*
+- [ ] Hotbar use — *headless: `hotkeys`.*
 - [x] Death → respawn window — killed on `moc_fild22`; Respawn returned to the saved Payon point on macOS 2026-07-11
-- [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color)
+- [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color) — *no
+      headless coverage: footer rendering is UI-only. `CriticalWeightUpdatePacket` /
+      `ParameterChangePacket` were promoted 2026-07-08/09, so the wire side is handled.*
 
 ### Items & economy (P0)
 - [x] Inventory open / use / equip / unequip / drop — open, tooltips, drop, drag, reorder, split live-verified macOS 2026-07-10 (M1-001–003)
-- [ ] NPC shop buy
-- [ ] NPC shop sell
+- [ ] NPC shop buy — *headless: `shop-buy-sell` (full cart flow, `0x0B77` wire).*
+- [ ] NPC shop sell — *headless: `shop-buy-sell`.*
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
 - [ ] Item identify (magnifier / double-click unidentified) — protocol landed; verify live
+      — *headless: `identify`.*
 - [x] Kafra storage open / store / retrieve / close — UI grid live 2026-07-11 (stock Kafra uses `close2` then `openstorage`: click dialog **Close** first; see [storage-window.md](../storage-window.md))
 
 ### Social (P0)
-- [ ] Public chat send + receive
+- [ ] Public chat send + receive — *headless: covered as an assertion rather than a
+      dedicated scenario — `smoke` and `logout-relogin` `say()` a marker and wait for the
+      `ChatMessage` echo, so the send/receive round-trip is green. GUI chat box unproven.*
 
 ### NPC & world (P0)
 - [x] NPC dialog: mes + next + close — live via Kafra 2026-07-11
 - [x] NPC dialog: menu choices — live via Kafra teleport 2026-07-11
-- [ ] **NPC number input** (E3.3) — e.g. scripts that call `input .@n`
-- [ ] **NPC string input** (E3.3) — e.g. scripts that call `input .@s$`
+- [ ] **NPC number input** (E3.3) — e.g. scripts that call `input .@n` — *headless:
+      `dialogue-number`.*
+- [ ] **NPC string input** (E3.3) — e.g. scripts that call `input .@s$` — *headless:
+      `dialogue-string`.*
 - [x] Warp / map change — Kafra teleport live-verified 2026-07-11
 - [x] Kafra **save point** (dialog-only; storage window is E4.4) — live-verified 2026-07-11
 
 ### Status / feedback (recent work)
-- [ ] Buff bar shows timed status (Blessing / `@useskill` / consumable)
-- [ ] Buff expires and tile/summary clears
+- [ ] Buff bar shows timed status (Blessing / `@useskill` / consumable) — *no headless
+      coverage: the buff **bar** is a UI widget. `StatusChangePacket` handling was
+      promoted 2026-07-08/09 ([FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) Phase 1), so
+      the wire side is handled; the widget itself needs eyes.*
+- [ ] Buff expires and tile/summary clears — *no headless coverage (UI-only, as above).*
 - [ ] Rejection messages in chat (skill fail / known ZC_MSG) — see party-whisper loose end
+      — *headless: partially — `friend-reject` and `party-reject-block` assert a rejection
+      `ChatMessage` arrives. Skill-fail / general `ZC_MSG` rejections are not covered.*
 
 ## 4. NPC input smoke scripts
 

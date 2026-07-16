@@ -12,13 +12,35 @@ All findings are classified by layer:
 ## Summary of Recent Resolutions (July 2026)
 
 The original 73 integration tests—including all 39 job class skill sweeps and
-phase 6/7 item/dialogue loops—passed as a complete run. The suite now contains
-**105 active scenarios** after the July 12 Phase 9 DM suite (14) and straggler additions
-(`weapon-refine-cancel`, `repair-list-empty`, `repair-invalid-item`,
-`character-slot-switch`). 
+phase 6/7 item/dialogue loops—passed as a complete run. The July 12 Phase 9 DM suite (14)
+and straggler additions (`weapon-refine-cancel`, `repair-list-empty`,
+`repair-invalid-item`, `character-slot-switch`) took it to **105 active scenarios**.
 
 Following the final fixes on July 12, 2026, the full `--scenario all` sweep
 was completed end-to-end with **100% passing results (105/105 green)**.
+
+### Acceptance gate — July 13, 2026 (current state: 106 scenarios)
+
+The §4 destructive-lifecycle refinements added **`character-delete-after-play`**, bringing
+the suite to its current **106 active scenarios**. The acceptance gate was run as a
+**double run**: run A 106/106, run B 105/106 (a single `TF_HIDING` observation-window
+flake, 3/3 green on retest), run C 106/106. **Gate green — acceptance complete.**
+
+Two failures previously written off as "flaky" were root-caused here and were in fact
+deterministic:
+
+1. A GUI DM session left `OPTION_INVISIBLE` (`char.option = 64`) on the GM character,
+   making it invisible to partner clients and untargetable by mobs — this broke
+   `whisper-emotion` and `incoming-damage` every time. Fixed: flag cleared in the DB, and
+   `TestContext` connect now sends a best-effort `@option 0 0 0` for the GM account.
+2. `area_size: 30` (Hercules `90db6a335`, the draw-distance raise — itself innocent,
+   A/B-verified) exposes entities beyond `max_walk_path` (~17), and Hercules silently
+   drops longer move requests. Fixed: `walk_to` now hops ≤10 cells with progress checks,
+   and `incoming-damage` picks the nearest mob within 12 cells.
+
+Scenario inventory by group (106): session/lifecycle 8 · GM 8 · movement 5 · combat 3 ·
+skills 44 (39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 ·
+social 7 · DM tooling 14.
 
 ## DM suite (Phase 9) server-side fixes — July 12, 2026
 

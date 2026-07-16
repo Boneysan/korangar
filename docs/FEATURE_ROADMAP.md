@@ -59,8 +59,41 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 - [x] Login → char create → walk around Prontera. **This is the milestone demo.**
 
 ### Phase 1 — Playability parity
-- [ ] Verify combat, NPC dialogue, warps, inventory, storage against Hercules.
-- [ ] Catalog Korangar's missing features (it is pre-alpha) that block play; file issues.
+
+> **Every row below is checked, but Phase 1 is NOT done** — though the gap is narrower
+> than the open rows in [plans/M1-p0-verification.md](plans/M1-p0-verification.md) §3
+> make it look. Most of those rows (shop buy/sell, public chat, skill use, hotbar, stat
+> allocation, identify, logout, char create/delete, NPC input) are **already green in the
+> 106-scenario headless suite** — their wire protocol is proven; only the GUI pass is
+> outstanding. What has genuinely **no** automated coverage is the UI-only set: buff bar
+> render/expiry and the inventory weight footer. That plan's status is still
+> *"In progress"*, and it — not this list — is the source of truth for GUI status.
+>
+> **Three different axes — do not conflate them.**
+> 1. **Implemented?** → [PROJECT_PLAN.md](PROJECT_PLAN.md) §2's "Korangar" column (✅/🔶/❌).
+> 2. **Wire protocol proven?** → the headless suite
+>    ([tools/testing/headless_test_plan.md](../tools/testing/headless_test_plan.md)),
+>    acceptance passed 2026-07-13.
+> 3. **Proven through the GUI?** → [plans/M1-p0-verification.md](plans/M1-p0-verification.md).
+>
+> A feature can be ✅ implemented and headless-green and still have an unchecked GUI row.
+> That combination means "the packets are right, the window hasn't been driven by hand" —
+> it does **not** mean untested. Headless cannot reach the `korangar/src/` UI/state layer
+> by construction.
+
+- [x] Verify combat, NPC dialogue, warps, inventory, storage against Hercules.
+      *All five live-verified on macOS 2026-07-10/11 — see
+      [plans/M1-p0-verification.md](plans/M1-p0-verification.md) §3 for the per-row
+      evidence: basic melee + damage numbers (Poring), NPC dialog `mes`/`next`/`close`
+      + menu choices (Kafra), Kafra teleport warp, inventory open/use/equip/drop/split,
+      and Kafra storage open/store/retrieve/close. Narrower gaps remain inside these
+      areas and are tracked as their own rows in that checklist: skill damage numbers,
+      NPC number/string `input` (E3.3), and shop buy/sell.*
+- [x] Catalog Korangar's missing features (it is pre-alpha) that block play; file issues.
+      *The catalog is [PROJECT_PLAN.md](PROJECT_PLAN.md) §2 (per-feature implementation
+      status) plus the open rows in [plans/M1-p0-verification.md](plans/M1-p0-verification.md)
+      §3. Defects are tracked in that plan's §5 defect log (M1-001…004, all closed), not
+      as GitHub issues.*
 - [x] **Promote noop packet handlers → real handlers** per the prioritized backlog in **§8.3** (start with the three MVP rows: status/buffs, skill-damage feedback, stats).
       *MVP rows promoted 2026-07-08/09: buffs (`StatusChangePacket`), skill damage
       (`DisplaySkillEffectAndDamagePacket` + player heal), stats (weight /

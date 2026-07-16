@@ -76,6 +76,37 @@ tooling. The intended path for native-performance testing and distribution is
 cross-compiling from WSL with `cargo-xwin` (target `x86_64-pc-windows-msvc`)
 and running the `.exe` on the Windows side (not yet set up).
 
+## Testing — the headless suite
+
+The project's main automated regression gate is a **106-scenario headless client**
+(`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
+double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
+[headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
+[headless_findings.md](tools/testing/headless_findings.md) is the bug log,
+[testing_guide.md](tools/testing/testing_guide.md) is the overall reference.
+
+Run it with the servers already up:
+
+```sh
+cargo run --release --example headless-tester -p korangar-networking -- --scenario all
+```
+
+Coverage (106): session/lifecycle 8 · GM commands 8 · movement 5 · combat 3 · skills 44
+(39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 · social 7 ·
+DM tooling 14.
+
+**What it proves, and what it doesn't.** The headless tester links the *same*
+`ragnarok-packets` and `korangar-networking` crates as the graphical client, so a
+packet/framing/event-mapping bug found headlessly is fixed for the real client too (it
+must still get a regression unit test in `ragnarok-packets`). It **cannot** catch a bug in
+how `korangar/src/` *consumes* an event — the UI/state layer. So headless-green means "the
+wire data is correct", which usefully isolates any remaining bug to the UI.
+
+This is why a feature can be headless-green while its row in
+`docs/plans/M1-p0-verification.md` (the **GUI** live pass) is still unchecked. Those are
+different axes; see the axes note in [docs/README.md](docs/README.md). Do not report a
+headless pass as "verified working in the client".
+
 ## Architecture & Development Rules
 
 When writing code or adding features, agents must adhere to these project-specific constraints:

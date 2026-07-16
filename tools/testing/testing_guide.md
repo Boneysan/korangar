@@ -135,11 +135,21 @@ The headless tester (`korangar-networking/examples/headless-tester.rs`) automate
 * **Bug documentation & port-back workflow**: [headless_findings.md](headless_findings.md) — every failed scenario gets an entry classifying the layer (shared crate / client / server) before the fix lands.
 * **Graphical-client handoff matrix**: the “Expanded-suite graphical-client handoff” section in [headless_findings.md](headless_findings.md) records what is shared automatically, what still needs UI verification, and what remains blocked.
 
-The expanded runner currently registers 91 scenarios across phases 1–9. Phase
+The expanded runner currently registers **106 scenarios** across phases 1–9
+(acceptance gate green 2026-07-13, double-run): session/lifecycle 8 · GM 8 ·
+movement 5 · combat 3 · skills 44 (39 job-class sweeps + teleport/weapon-refine
+menus) · items 12 · dialogue 5 · social 7 · DM tooling 14. Phase
 8 requires a pre-provisioned, non-GM `headless2` account with a `HeadlessTwo`
 character; automatic Hercules `_M` registration may be disabled in the local
 login configuration. Phase 9 covers the Seal Cascade dice and DM command
 contracts.
+
+**Scope boundary:** headless links the same `ragnarok-packets` /
+`korangar-networking` crates as the graphical client, so green means the wire
+protocol and event mapping are correct. It cannot reach the `korangar/src/`
+UI/state layer — that is what §B below and
+[../../docs/plans/M1-p0-verification.md](../../docs/plans/M1-p0-verification.md)
+are for. Never report a headless pass as "verified working in the client".
 
 ### B. Manual: Graphical Client
 Since Korangar is a graphical client, manual integration testing is used to verify the actual game loop against a live Hercules server.

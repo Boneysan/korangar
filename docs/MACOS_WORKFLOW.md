@@ -12,9 +12,24 @@ Repo layout on the macOS dev machine:
 
 ## Server (Hercules)
 
-Prerequisite: MariaDB running locally (`brew services start mariadb` or
-equivalent) with the Hercules schema already imported. The client's
-`sclientinfo.xml` (see below) points at `127.0.0.1:6900`.
+Prerequisite: MariaDB running locally with the Hercules schema already imported.
+The client's `sclientinfo.xml` (see below) points at `127.0.0.1:6900`.
+
+MariaDB **does not autostart** on this Mac (the Homebrew LaunchAgent was
+unregistered on 2026-07-15), so start it by hand each boot:
+
+```sh
+brew services run mariadb    # start for this session
+```
+
+Use `run`, **not** `brew services start` — `start` re-registers the LaunchAgent and
+silently turns autostart back on. `brew services stop mariadb` stops and unregisters.
+
+If you restart MariaDB while Hercules is up, restart Hercules too: the servers stay
+alive but keep dead DB handles (`MYSQL_OPT_RECONNECT` is deprecated and shouldn't be
+relied on). Sanity check with
+`select id, host, command from information_schema.processlist;` — a healthy running
+stack shows ~6 `ragnarok` connections.
 
 **Building** (must match the client's packet version — see
 `PLATFORM_BRINGUP.md` item 0; a plain `./configure` builds an incompatible
