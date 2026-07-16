@@ -126,6 +126,8 @@ These are concrete, code-level guides ready for implementation:
 - [2026-07-10-handover.md](2026-07-10-handover.md) — Client/server bring-up handover covering connectivity, controls, and the bundled English item-name path.
 - [2026-07-13-session-notes.md](2026-07-13-session-notes.md) — Sprite lighting modes, emote bubbles, jobname.lub sprite resolution, entity-sprite audit.
 - [2026-07-14-session-notes.md](2026-07-14-session-notes.md) — Headless→graphical port-back closure (instanced-map resolution, skill-asset audit), E7 first slice (Bestiary Journal + Loot Generator), main merge. **Start here to resume DM-feature work.**
+- [2026-07-15-session-notes.md](2026-07-15-session-notes.md) — E7 backlog design pass (five targeted specs) + bestiary data pipeline (mob lore, stat/tactical fields for the tiered lore reveal).
+- [2026-07-16-session-notes.md](2026-07-16-session-notes.md) — **E3.1 GUI pass**: checklist driven by hand 17 → 32 of 34 rows; 6 client bugs fixed, 6 filed. Why headless structurally missed all of them, and the test-environment traps (polluted char, macOS F-keys, `trader` vs `shop`). **Start here to resume M1 verification.**
 - [dm-atcommand-feedback.md](dm-atcommand-feedback.md) — `dispbottom` / `@dm` chat via packet `0x017F`; pair with Hercules `planning/dm-mode-troubleshooting.md`.
 - [storage-window.md](storage-window.md) — Kafra storage grid, drag packets, `close2` then `openstorage` UX.
 
