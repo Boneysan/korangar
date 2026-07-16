@@ -133,6 +133,23 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Custom Server IP Input:** An input field on the login screen to manually specify the server IP and port, allowing users to connect to any server without editing `sclientinfo.xml`.
   - **Streamer/privacy mode:** hide player names and the custom server IP for screenshots/streams.
 
+- [ ] **Character select — discoverable, guarded destructive actions** *(M1-014, found live 2026-07-15)*:
+  - **Problem:** Delete / Switch / Cancel are only reachable by **right-clicking** a
+    character slot (`character_selection.rs:336`,
+    `register_click_handler(MouseButton::Right, …)`). Nothing on screen hints at it. A
+    tester driving the client cold concluded *"there is no character delete button"* — the
+    flow works, it is simply invisible.
+  - **Delete has no confirmation.** It fires `InputEvent::DeleteCharacter` straight from
+    the menu. Right-click plus one misclick permanently deletes a character; the only
+    thing standing between a player and losing a character is not knowing the menu exists.
+    That is the wrong safety model for the most destructive action in the client.
+  - **Do:** a visible affordance on each occupied slot (the official client shows
+    Delete/Make buttons), plus a typed-name or hold-to-confirm step before deletion.
+    Keep right-click as an accelerator; don't make it the only path.
+  - **Scope note:** per the Modernization Charter the official client is a baseline, not a
+    ceiling — copying its bare Delete button would fix discoverability but not the missing
+    guard. Do both.
+
 - [ ] **Foundation — UI framework:**
   - Scalable UI framework (resolution independence for 1440p/4K), with per-element UI scale.
   - Modern typography and window management (snapping, docking, locking).
