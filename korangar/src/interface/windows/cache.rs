@@ -116,7 +116,9 @@ impl WindowCache {
             // Minimap top-right (above inventory).
             WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 210.0),
             // Buff bar top-center.
-            WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 48.0),
+            // Effects list one per line (up to MAXIMUM_DISPLAYED_EFFECTS = 8), so 48px
+            // clipped everything past the first. Sized for the full list.
+            WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 160.0),
             // Zeny / EXP / cooldown strip under the minimap.
             WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
             // Party roster left of center.

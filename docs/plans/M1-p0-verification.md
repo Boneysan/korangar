@@ -84,7 +84,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 
 ### Core gameplay (P0)
 - [x] Click-to-move, pathing (~10 tiles) — full route live-verified on macOS 2026-07-10
-- [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10
+- [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10; re-confirmed 2026-07-15. **Insert does not work on this Mac** (laptop keyboards don't expose it) — Home is the macOS path.
 - [x] Basic melee attack + damage numbers — Poring live test: sword cursor, approach, hit/miss and damage numbers, moving-target chase; no freeze/disconnect
 - [x] Skill damage numbers (if character has a damaging skill) — live-verified macOS
       2026-07-15: Rogue `RG_RAID` after Hiding damaged the mob and rendered damage
@@ -100,17 +100,21 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
       `teleport-cancel` for the skill-menu path.*
 - [x] Hotbar use — live-verified macOS 2026-07-15: Fn+F1 cast Hiding (macOS needs Fn, or enable standard function keys — F1-F9 are media keys by default). *headless: `hotkeys`.*
 - [x] Death → respawn window — killed on `moc_fild22`; Respawn returned to the saved Payon point on macOS 2026-07-11
-- [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color) — *no
-      headless coverage: footer rendering is UI-only. `CriticalWeightUpdatePacket` /
-      `ParameterChangePacket` were promoted 2026-07-08/09, so the wire side is handled.*
+- [x] Weight footer updates in inventory (pick up / drop items; soft/hard color) —
+      live-verified macOS 2026-07-15: weight changes on pickup. *No headless coverage —
+      footer rendering is UI-only, so this row had no other safety net.*
 
 ### Items & economy (P0)
 - [x] Inventory open / use / equip / unequip / drop — open, tooltips, drop, drag, reorder, split live-verified macOS 2026-07-10 (M1-001–003)
 - [x] NPC shop buy — live-verified macOS 2026-07-15: bought an arrow; dialogue and shop flow behaved. *headless: `shop-buy-sell` (full cart flow, `0x0B77` wire).*
 - [ ] NPC shop sell — *headless: `shop-buy-sell`.*
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
-- [ ] Item identify (magnifier / double-click unidentified) — protocol landed; verify live
-      — *headless: `identify`.*
+- [x] Item identify (magnifier / double-click unidentified) — live-verified macOS
+      2026-07-15: gear identified correctly. **Fixture:** `@item` only grants *identified*
+      items, so `Hercules/npc/custom/identify_test.txt` adds an **Identify Test NPC at
+      `prontera,164,200`** handing out 4 unidentified pieces via `getitem2` (identify flag
+      0). Deliberately a separate NPC — the headless `dialogue-choice` scenario asserts the
+      Dialogue Test NPC's menu exactly and picks by index. *headless: `identify`.*
 - [x] Kafra storage open / store / retrieve / close — UI grid live 2026-07-11 (stock Kafra uses `close2` then `openstorage`: click dialog **Close** first; see [storage-window.md](../storage-window.md))
 
 ### Social (P0)
@@ -134,11 +138,14 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
       [PROJECT_PLAN.md](../PROJECT_PLAN.md).*
 
 ### Status / feedback (recent work)
-- [ ] Buff bar shows timed status (Blessing / `@useskill` / consumable) — *no headless
-      coverage: the buff **bar** is a UI widget. `StatusChangePacket` handling was
-      promoted 2026-07-08/09 ([FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) Phase 1), so
-      the wire side is handled; the widget itself needs eyes.*
-- [ ] Buff expires and tile/summary clears — *no headless coverage (UI-only, as above).*
+- [x] Buff bar shows timed status (Blessing / `@useskill` / consumable) — live-verified
+      macOS 2026-07-15: `@useskill 34 10 test` produced `Effects: 46 10:218s` — i.e.
+      `SI_POSTDELAY` (46) and **`SI_BLESSING` (10) counting down from 218s**. Wire data and
+      timer are correct. **Displays raw indices instead of names/icons — see M1-010.**
+      *No headless coverage — the bar is a UI widget, so this row had no other safety net.*
+- [x] Buff expires and tile/summary clears — live-verified macOS 2026-07-15: Blessing
+      ran out and cleared on its own. **Zero-duration effects did *not* clear — see
+      M1-011**, fixed same day. *No headless coverage (UI-only).*
 - [ ] Rejection messages in chat (skill fail / known ZC_MSG) — see party-whisper loose end
       — *headless: partially — `friend-reject` and `party-reject-block` assert a rejection
       `ChatMessage` arrives. Skill-fail / general `ZC_MSG` rejections are not covered.*
@@ -215,6 +222,9 @@ a filed defect, not only as ✅), then hand to E3.2.
 | M1-004 | Campaign map placement | P0 | Arc 19 warped players and placed its encounter at non-walkable void cells `moc_fild22,150,150` / `155,150`, producing black surroundings, no destination marker, and no movement. Deep audit proved the map, lighting, terrain, and pathing data valid. Moved the rift/boss/hazards to walkable `(170,140)` and the choice NPC to `(175,140)`. | ✅ Live-verified macOS 2026-07-11 |
 | M1-005 | NPC dialogue window | P0 | **Dialogue box renders collapsed to its minimum size.** The `mes` text is present but the window does not size to its content, so it reads as an empty box until manually resized. Found on the Prontera "Vandez" NPC, macOS 2026-07-15. Layer: **client UI** (`interface/windows/dialog.rs`) — headless `dialogue-linear` / `dialogue-choice` are green, so the wire data is correct and only layout is wrong. Repro: talk to any `mes`-using NPC; observe the box at minimum height with text clipped. Fixed 2026-07-15: added `minimum_width: 400.0` / `minimum_height: 280.0` to the `window!` in `interface/windows/dialog.rs` (it declared no size floor at all), matching the seeded `WindowClass::Dialog` default in `cache.rs`. Also purged the poisoned 392x185 entry from `client/window_cache.ron` — the collapsed size had persisted, so it reopened broken every session. | ✅ Live-verified macOS 2026-07-15 — dialogue sizes correctly and closes normally |
 | M1-006 | Skill targeting | P0 | **No skill-targeting mode.** Targeted skills fire only if the mouse already hovers the target at the instant of the keypress (`lib.rs:4086` requires `PickerTarget::Entity`; `4095` requires `PickerTarget::Tile`). The original client's press-skill → reticle-cursor → click-target flow does not exist: `MouseInputMode` has only `RotateCamera`, `Walk`, `MoveItem`, `MoveSkill`. Player-visible symptom: "skills don't target". Layer: **client UI/input**. Invisible to headless, which calls `cast_skill(id, level, entity_id)` with an entity id and never touches the picker. Repro: put any targeted skill on the hotbar, press its key without hovering a mob — nothing happens, no feedback. | 🔴 Open — found 2026-07-15 |
+| M1-009 | No gear stats or comparison | P1 | **Nowhere in the UI shows an item's stats, and no way to compare against what's equipped.** Reported live 2026-07-15 after identifying gear. Inventory hover shows the item *name* only — that is all M1-002 ever added (`item_box.rs:303` → `add_tooltip(&item.metadata.name, …)`), and `world/library/item_info.rs` parses `identifiedResourceName` (the sprite) but never `identifiedDescriptionName` (the stat text). **The data is already in the binary:** `docs/items.json` carries `Atk` / `Def` / `Matk` / `Slots` / `EquipLv` / `Loc` / `Refine` / `Weight` (Hercules-backed, authoritative), and `DmItem` (`src/dm/data.rs`) already embeds it via `include_str!` — it simply doesn't deserialize those fields. So the cost is deserialize + render, not data sourcing. **Caveat:** `DmItem` lives under `src/dm/`, which `CLAUDE.md` rule 4 keeps isolated for rebaseability — feeding it into the general `item_box.rs` tooltip would couple upstream UI to the fork's DM module; extract a shared item-stat source instead. Planned as **Smart Tooltips** + the unified character sheet in [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.2 — this is the live evidence for that row, not a new idea. | 🔴 Open — found 2026-07-15 |
+| M1-010 | Buff bar shows raw indices, not names | P1 | **The buff bar works but is unreadable: it prints the server status index instead of the effect name.** Live 2026-07-15: Blessing rendered as `10:218s` and the post-delay as `46` — correct data (`SI_BLESSING` = 10, `SI_POSTDELAY` = 46 in Hercules `db/constants.conf`), correct countdown, but the player cannot tell *what* is buffed. Not a regression — `state/status_effects.rs:9` says so outright ("maps to icon/effect type in the future"); the render is `format!("{}:{:02}s", e.index, secs)` at line 47, and a bare `e.index.to_string()` at line 49 for effects with no duration. **The data exists:** Hercules ships **699** `SI_*` constants in `db/constants.conf`, and `tools/extend_bestiary_export.py` is an existing exporter pattern to follow (export → JSON → embed → map index to name), mirroring how items.json/bestiary.json already work. Real SC **icons** additionally need artwork. Already tracked as "real SC icons" in [FEATURE_ROADMAP.md](../FEATURE_ROADMAP.md) §8.3 and [specs/buff-bar-slice.md](../specs/buff-bar-slice.md); this is the live evidence for that row. | 🔴 Open — found 2026-07-15 |
+| M1-011 | "Skill Delay" never clears | P0 | **A zero-duration status stuck on the buff bar permanently.** Reported live 2026-07-15: after un-hiding, `Hiding` cleared correctly but `Skill Delay` remained forever. Root cause is client-side: `StatusEffects::apply` treated `duration_ms == 0` as *infinite* (`expires_at = None`), and `tick()` retains timerless effects by design. But zero duration means **already over**, not forever — Hercules signals genuinely-permanent with `INFINITE_DURATION = -1` (`src/common/mmo.h`), which arrives as `u32::MAX` and was already handled correctly. `SC_POSTDELAY` is the case that bites: `skill.c:6616` fires it via a **direct `clif->status_change`** with `delay_fix()` as the duration and **no `sc_start`** — so there is no server-side timer and **no end packet ever arrives**; the client alone must expire it. A skill with no after-cast delay sends 0/0, so the icon hung forever. Fixed 2026-07-15: expiry now keys off `remaining_ms == u32::MAX` only. 3 regression tests (zero-duration expires, infinite retained until server end, timed expires on schedule). Layer: **client UI/state**. Invisible to headless — no scenario asserts on buff-bar contents. | ✅ Live-verified macOS 2026-07-15 — Skill Delay no longer sticks; it refreshes per cast and expires. Hiding (real 300s duration, `SkillData1 Lv10: 300000`) still counts down correctly, and Cloaking's `INFINITE_DURATION` path is unaffected |
 | M1-008 | Skills have no visual effect | P1 | **Skills deal damage but play no animation.** Observed live 2026-07-15: Hide → Raid damaged the mob and rendered damage numbers, but no skill effect drew. Cause: **`DisplaySpecialEffectPacket` is `register_noop`** (`version_20220406.rs:608`), and it carries the `effect_id`. `NotifyGroundSkillPacket` (line 1065) is likewise noop. The playback machinery already exists and works — `NetworkEvent::VisualEffect` loads a `.str` and plays it on an entity (`lib.rs:2583`), as used by level-up/refine via `VisualEffectPacket`. **The gap is data, not plumbing:** `VisualEffectPacket` hand-maps **10** `VisualEffect` variants to `.str` paths, whereas `EffectId` has **1124** variants; promoting this needs the official effect-id → `.str` table sourced from client data, and mind the No-Upstream-IP rule in `CLAUDE.md`. Not a quick fix — size before scheduling. Layer: **shared crate + client**. | 🔴 Open — found 2026-07-15 |
 | M1-007 | Hide/cloak has no visuals | P0 | **`StateChangePacket` (`0x0229`) is `register_noop`** (`version_20220406.rs:709`), so the client discards every option change. `OPTION_HIDE` (0x02) / `OPTION_CLOAK` (0x04) / `OPTION_INVISIBLE` (0x40) never reach the UI: no sprite transparency, no icon, no buff-bar entry (nothing maps `SC_HIDING`). The player cannot tell whether Hiding is active. Knock-on: hide-gated skills appear broken — `RG_RAID` is `Self: true` and requires `State: "Hiding"`, so it silently refuses when not hidden, with no way to diagnose. Server state is correct (`pc_ishiding` reads the same mask); this is purely the client dropping the packet. Layer: **shared crate + client UI**. Invisible to headless by construction: a noop packet emits no `NetworkEvent` to assert on. Fixed 2026-07-15: promoted to a real handler → `NetworkEvent::StateChange`; `EntityOption` bitflags added to `ragnarok-packets` (values checked against `mmo.h`, `is_concealed()` mirrors the `pc_ishiding` mask, unknown bits truncated so a newer server can't panic us); `Common.option` stores it and `Common::render` multiplies the existing `fade_state` alpha by 0.3 when concealed — no renderer change. 4 regression tests in `ragnarok-packets`. | ✅ Live-verified macOS 2026-07-15 — hide shows a visible cue, and Hide → Raid then worked |
 
