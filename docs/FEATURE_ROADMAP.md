@@ -65,9 +65,12 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 > make it look. Most of those rows (shop buy/sell, public chat, skill use, hotbar, stat
 > allocation, identify, logout, char create/delete, NPC input) are **already green in the
 > 106-scenario headless suite** — their wire protocol is proven; only the GUI pass is
-> outstanding. What has genuinely **no** automated coverage is the UI-only set: buff bar
-> render/expiry and the inventory weight footer. That plan's status is still
-> *"In progress"*, and it — not this list — is the source of truth for GUI status.
+> outstanding. The rows with genuinely **no** automated coverage — buff bar
+> render/expiry, hide visuals, and the inventory weight footer — were all driven by hand
+> on 2026-07-15 and are now verified; that pass alone found and fixed five UI-layer bugs
+> (M1-005, M1-007, M1-010, M1-011, M1-012), every one invisible to headless because the
+> packets were already correct. That plan's status is still *"In progress"*, and it —
+> not this list — is the source of truth for GUI status.
 >
 > **Three different axes — do not conflate them.**
 > 1. **Implemented?** → [PROJECT_PLAN.md](PROJECT_PLAN.md) §2's "Korangar" column (✅/🔶/❌).
@@ -98,8 +101,10 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
       *MVP rows promoted 2026-07-08/09: buffs (`StatusChangePacket`), skill damage
       (`DisplaySkillEffectAndDamagePacket` + player heal), stats (weight /
       `CriticalWeightUpdatePacket` / `ParameterChangePacket` / attack range /
-      stat-up response). Remaining within those rows: cooldown bar UI,
-      special-effect visuals, `StatusChangeSequencePacket`, zeny/exp display.*
+      stat-up response). `StatusChangeSequencePacket` (`0x0196`, the status **end**
+      packet) promoted 2026-07-15 — see M1-012. Remaining within those rows: cooldown bar
+      UI, special-effect visuals (`DisplaySpecialEffectPacket`, see M1-008), zeny/exp
+      display.*
 - [x] Close the party/whisper framing risk before the first group session
       ([plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md)).
 
@@ -559,7 +564,7 @@ should be confirmed against `ragnarok-packets` before implementing.
 
 | Priority | Feature area → unlocks | noop packets to promote |
 |---|---|---|
-| ~~**MVP**~~ **Done 2026-07-09** (core) | Buffs/debuffs (timed) → buff bars (§8 Combat) | `StatusChangePacket` promoted + `StatusEffects` state + MVP status bar window. Remaining: `StatusChangeSequencePacket`, real SC icons. See [specs/buff-bar-slice.md](specs/buff-bar-slice.md). **Note:** `StateChangePacket` is *not* a buff packet (option-flags, moved to World/map below). |
+| ~~**MVP**~~ **Done 2026-07-09** (core) | Buffs/debuffs (timed) → buff bars (§8 Combat) | `StatusChangePacket` promoted + `StatusEffects` state + MVP status bar window. **`StatusChangeSequencePacket` (`0x0196`) promoted 2026-07-15** — despite the name it is how statuses *end*; leaving it noop meant a buff cancelled early kept its timer forever (M1-012). Status **names** now resolve via `docs/status_effects.json` (`tools/export_status_names.py`, from Hercules `db/constants.conf`). Remaining: real SC **icons** (needs artwork). See [specs/buff-bar-slice.md](specs/buff-bar-slice.md). **Note:** `StateChangePacket` is *not* a buff packet (option-flags, moved to World/map below). |
 | ~~**MVP**~~ **Partial 2026-07-09** | Skill/damage feedback → floating combat text, cooldowns (§8 Combat) | **Done:** `DisplaySkillEffectAndDamagePacket` → floating numbers; `DisplayPlayerHealEffect` → heal numbers. **Still noop:** `DisplaySkillCooldownPacket` (hotbar polish), `DisplaySpecialEffectPacket`, `UseSkillSuccessPacket` (cast bars), `NotifyGroundSkillPacket`. Failure path of `ToUseSkillSuccessPacket` already promoted (server-feedback row). |
 | ~~**MVP**~~ **Partial 2026-07-09** | Stats → character sheet, stat window (§8 Core windows) | **Done:** weight via `UpdateStat` + inventory footer (E3.5); `CriticalWeightUpdatePacket`; `ParameterChangePacket` → `UpdateStat`; `UpdateAttackRangePacket`; `RequestStatUpResponsePacket` failure → chat. **Still open:** zeny/exp HUD, full character-sheet stat breakdown. |
 | **High** | Quests → campaign journal ([DM_INTERFACE.md](DM_INTERFACE.md)), quest tracker (§8 Nav) | `QuestListPacket`, `QuestNotificationPacket1`, `QuestRemovedPacket`, `HuntingQuestNotificationPacket`, `HuntingQuestUpdateObjectivePacket`, `NavigateToMonsterPacket`, `MarkMinimapPositionPacket` |

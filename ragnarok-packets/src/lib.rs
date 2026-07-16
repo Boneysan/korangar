@@ -6203,6 +6203,26 @@ mod shop_item_list_tests {
     // cloak never reached the UI. Values mirror Hercules `src/common/mmo.h` `OPTION_*`
     // and the `pc_ishiding` / `pc_isinvisible` masks in `src/map/pc.h`.
 
+    // M1-012: statuses start on 0x0983 but *end* on 0x0196
+    // (`clif_status_change_end` → `status_change_endType`). 0x0196 was noop, so the
+    // server could never clear a buff and cancelling one early left its timer on screen.
+    #[test]
+    fn status_change_sequence_0x196_matches_hercules_end_layout() {
+        // Hercules `packet_status_change_end`: PacketType.W index.W AID.L state.B = 9 bytes.
+        let bytes = [
+            0x96, 0x01, // header 0x0196
+            0x04, 0x00, // index 4 (SI_HIDING)
+            0x80, 0x84, 0x1E, 0x00, // AID 2000000
+            0x00, // state 0 = ended
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let packet = StatusChangeSequencePacket::packet_from_bytes(&mut reader).expect("parse");
+
+        assert_eq!(packet.index, 4);
+        assert_eq!(packet.id, 2000000);
+        assert_eq!(packet.state, 0, "state 0 is what marks this an end");
+    }
+
     #[test]
     fn entity_option_values_match_hercules() {
         assert_eq!(EntityOption::HIDE.bits(), 0x0000_0002);

@@ -1143,7 +1143,20 @@ where
     })?;
     packet_handler.register(|packet: WhisperResultPacket| NetworkEvent::WhisperResult { result: packet.result })?;
     packet_handler.register(|packet: WhisperResult2Packet| NetworkEvent::WhisperResult { result: packet.result })?;
-    packet_handler.register_noop::<StatusChangeSequencePacket>()?;
+    // M1-012: promoted from noop 2026-07-15. Despite the name, this is how a status
+    // *ends*: Hercules' `clif_status_change_end` sends 0x0196 (`status_change_endType`)
+    // with `state = 0`, while starts arrive on 0x0983. Dropping it meant a buff could
+    // never be cleared *by the server* — it only ever vanished when its own client-side
+    // timer ran out, so cancelling early (un-hiding) left the timer on screen forever.
+    packet_handler.register(|packet: StatusChangeSequencePacket| NetworkEvent::StatusChange {
+        entity_id: EntityId(packet.id),
+        index: packet.index,
+        gained: packet.state == 1,
+        // The end packet carries no timings; `gained: false` routes to `remove()`, which
+        // ignores them.
+        duration_ms: 0,
+        remaining_ms: 0,
+    })?;
     packet_handler.register_noop::<ReputationPacket>()?;
     packet_handler.register_noop::<ClanInfoPacket>()?;
     packet_handler.register_noop::<ClanOnlineCountPacket>()?;
