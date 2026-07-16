@@ -471,6 +471,12 @@ where
             // Allow canceling out of long/looping NPC scripts. Closing without
             // notifying the server would leave the player "busy" (ZC_MSG 1923).
             closable: true,
+            // M1-005: without a floor the window collapses to its minimum and the `mes`
+            // text reads as an empty box. Worse, the collapsed size persists to
+            // `window_cache.ron`, so it reopens broken every session. These match the
+            // seeded default in `cache.rs` (`WindowClass::Dialog` → 400 x 280).
+            minimum_width: 400.0,
+            minimum_height: 280.0,
             elements: (
                 InnerElement {
                     dialog_elements_path: self.window_state_path.elements(),

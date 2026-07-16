@@ -2032,6 +2032,27 @@ impl Client {
                         }
                     }
                 }
+                NetworkEvent::StateChange {
+                    entity_id,
+                    option,
+                    body_state: _,
+                    health_state: _,
+                } => {
+                    // M1-007. Applies to every visible entity, not just the local player:
+                    // the server only sends state changes for entities we are allowed to
+                    // see, so a conceal flag here means "draw it translucent", never
+                    // "reveal something hidden from us". `body_state` / `health_state`
+                    // (stun, poison, …) are parsed but not yet surfaced.
+                    let entity = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id);
+
+                    if let Some(entity) = entity {
+                        entity.update_option(option);
+                    }
+                }
                 NetworkEvent::UpdateEntityHealth {
                     entity_id,
                     health_points,

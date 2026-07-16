@@ -86,15 +86,19 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [x] Click-to-move, pathing (~10 tiles) — full route live-verified on macOS 2026-07-10
 - [x] Sit / stand — Home compatibility binding live-verified on macOS 2026-07-10
 - [x] Basic melee attack + damage numbers — Poring live test: sword cursor, approach, hit/miss and damage numbers, moving-target chase; no freeze/disconnect
-- [ ] Skill damage numbers (if character has a damaging skill) — *headless: `skills-*`
-      (44 job-class sweeps) + `attack-kill` / `incoming-damage` cover the damage-event
-      wire path; the rendered **numbers** are the UI-only part still unproven.*
+- [x] Skill damage numbers (if character has a damaging skill) — live-verified macOS
+      2026-07-15: Rogue `RG_RAID` after Hiding damaged the mob and rendered damage
+      numbers. **No skill animation played — see M1-008.** *headless: `skills-*` (39
+      job-class sweeps) + `attack-kill` / `incoming-damage` cover the damage-event wire
+      path.*
 - [x] Item pickup from ground — labels English live-verified macOS 2026-07-10 (M1-001); re-check pickup path if needed
-- [ ] Stats window + stat allocation (success path) — *headless: `stat-skill-points`.*
-- [ ] Skill tree opens; skill use (self / target / ground if available) — *headless:
-      `skills-novice` … `skills-soul-linker` — **39 job-class sweeps**, plus
-      `teleport-select` / `teleport-cancel` for the skill-menu path.*
-- [ ] Hotbar use — *headless: `hotkeys`.*
+- [x] Stats window + stat allocation (success path) — live-verified macOS 2026-07-15: points adjust correctly. *headless: `stat-skill-points`.*
+- [x] Skill tree opens; skill use (self / target / ground if available) — live-verified macOS 2026-07-15:
+      self-cast (Hiding) and self-AoE (Raid) both fire. **Targeted skills require the
+      mouse to already hover the target — see M1-006.** *headless: `skills-novice` …
+      `skills-soul-linker` — **39 job-class sweeps**, plus `teleport-select` /
+      `teleport-cancel` for the skill-menu path.*
+- [x] Hotbar use — live-verified macOS 2026-07-15: Fn+F1 cast Hiding (macOS needs Fn, or enable standard function keys — F1-F9 are media keys by default). *headless: `hotkeys`.*
 - [x] Death → respawn window — killed on `moc_fild22`; Respawn returned to the saved Payon point on macOS 2026-07-11
 - [ ] Weight footer updates in inventory (pick up / drop items; soft/hard color) — *no
       headless coverage: footer rendering is UI-only. `CriticalWeightUpdatePacket` /
@@ -102,7 +106,7 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 
 ### Items & economy (P0)
 - [x] Inventory open / use / equip / unequip / drop — open, tooltips, drop, drag, reorder, split live-verified macOS 2026-07-10 (M1-001–003)
-- [ ] NPC shop buy — *headless: `shop-buy-sell` (full cart flow, `0x0B77` wire).*
+- [x] NPC shop buy — live-verified macOS 2026-07-15: bought an arrow; dialogue and shop flow behaved. *headless: `shop-buy-sell` (full cart flow, `0x0B77` wire).*
 - [ ] NPC shop sell — *headless: `shop-buy-sell`.*
 - [x] NPC shop **English names** (tool dealer — live 2026-07-10; EN `itemInfo` overlay)
 - [ ] Item identify (magnifier / double-click unidentified) — protocol landed; verify live
@@ -110,19 +114,24 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 - [x] Kafra storage open / store / retrieve / close — UI grid live 2026-07-11 (stock Kafra uses `close2` then `openstorage`: click dialog **Close** first; see [storage-window.md](../storage-window.md))
 
 ### Social (P0)
-- [ ] Public chat send + receive — *headless: covered as an assertion rather than a
-      dedicated scenario — `smoke` and `logout-relogin` `say()` a marker and wait for the
-      `ChatMessage` echo, so the send/receive round-trip is green. GUI chat box unproven.*
+- [x] Public chat send + receive — live-verified macOS 2026-07-15: GUI chat box sends and displays. *headless:
+      `smoke` / `logout-relogin` `say()` a marker and await the `ChatMessage` echo.*
 
 ### NPC & world (P0)
 - [x] NPC dialog: mes + next + close — live via Kafra 2026-07-11
 - [x] NPC dialog: menu choices — live via Kafra teleport 2026-07-11
-- [ ] **NPC number input** (E3.3) — e.g. scripts that call `input .@n` — *headless:
-      `dialogue-number`.*
-- [ ] **NPC string input** (E3.3) — e.g. scripts that call `input .@s$` — *headless:
-      `dialogue-string`.*
+- [x] **NPC number input** (E3.3) — live-verified macOS 2026-07-15 via Dialogue Test NPC (`prontera,160,200`). *headless: `dialogue-number`.*
+- [x] **NPC string input** (E3.3) — live-verified macOS 2026-07-15 via Dialogue Test NPC (`prontera,160,200`). *headless: `dialogue-string`.*
 - [x] Warp / map change — Kafra teleport live-verified 2026-07-11
 - [x] Kafra **save point** (dialog-only; storage window is E4.4) — live-verified 2026-07-11
+- [ ] **Job change + appearance** (E3.4) — `@job` to a few classes across our job DB;
+      sprite/appearance updates correctly, no silhouette. *headless: `gm-job` covers the
+      `ChangeJob` wire path only — the **sprite** is UI-only and unproven. A silhouette
+      means the sprite failed to resolve, not that job change failed — see the
+      "Classic mob silhouettes — jobname.lub overlay" section of
+      [2026-07-13-session-notes.md](../2026-07-13-session-notes.md). This row was
+      previously untracked here despite E3.4 existing in
+      [PROJECT_PLAN.md](../PROJECT_PLAN.md).*
 
 ### Status / feedback (recent work)
 - [ ] Buff bar shows timed status (Blessing / `@useskill` / consumable) — *no headless
@@ -136,26 +145,65 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
 
 ## 4. NPC input smoke scripts
 
-If no convenient stock NPC uses `input`, temporarily add under
-`Hercules_RO/npc/custom/`:
+**Already done — nothing to add.** `Hercules/npc/custom/headless_dialog_test.txt`
+(added 2026-07-12, `5c421f162`) provides **Dialogue Test NPC** at **`prontera,160,200`**,
+and it is already loaded via `npc/scripts_custom.conf`. Its menu covers four of the
+rows in §3 in one place:
 
-```c
-// npc/custom/test_input.txt
-prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
-	mes "Number test";
-	next;
-	input .@n;
-	mes "You entered: " + .@n;
-	next;
-	mes "String test";
-	next;
-	input .@s$;
-	mes "You entered: " + .@s$;
-	close;
-}
-```
+| Menu choice | Covers |
+|---|---|
+| Linear Dialogue | `mes` + `next` + `close` |
+| Number Input | **NPC number input** (E3.3) |
+| String Input | **NPC string input** (E3.3) |
+| Dialogue Warp | dialogue-driven `warp` (`close2` → `warp payon,150,150`) |
 
-`@reloadscript` (GM) or restart map-server after adding.
+Just walk to it — it's a short walk from the Prontera spawn, well inside
+`max_walk_path`. If you edit the script, `@reloadscript` (GM) or restart map-server.
+
+## 4.1 Run sheet — the remaining GUI pass in one sitting
+
+§3 is grouped by category; this is the same rows in **execution order**, arranged to
+avoid needless relogging and walking. Nearly every row is already headless-green, so
+unless noted you are only confirming **the window renders and responds** — not whether
+the protocol works. The genuinely uncovered rows are marked ⚠️: nothing else tests them.
+
+Prereqs: `brew services run mariadb` → `./athena-start start` → client. Char `test`
+(level 50, Admin group 99, spawns in Prontera).
+
+**A. At the login / char screen** (do first — needs repeated login)
+1. Bad password → **login failure message visible**.
+2. Create a throwaway character → **char create**.
+3. Delete that character → **char delete fails safely**.
+
+**B. In Prontera, standing still** (log in as `test`)
+4. Type in chat → **public chat send + receive**.
+5. Open stats → allocate a point → **stats window + stat allocation**.
+6. Open skill tree → use a skill → **skill tree + skill use**.
+7. Drag a skill to F1, press it → **hotbar use**.
+8. ⚠️ Pick up / drop an item → **weight footer updates** (soft/hard colour).
+9. ⚠️ `@useskill 34 10 test` (Blessing, `SC_BLESSING`) → **buff bar shows the tile**…
+10. ⚠️ …wait for it to lapse → **buff expires and the tile/summary clears**.
+11. Unidentified item → magnifier → **item identify**.
+
+**C. Prontera NPCs** (a short walk each)
+12. Tool dealer → **shop buy** and **shop sell** (EN names already verified).
+13. **Dialogue Test NPC at `prontera,160,200`** (see §4) → Number Input → **NPC number
+    input**; String Input → **NPC string input**. Leave *Dialogue Warp* for last — it
+    sends you to Payon.
+14. `@job` across a few classes → **job change + appearance** (E3.4). A silhouette is a
+    *sprite-resolution* failure, not a job-change failure.
+
+**D. In the field**
+15. Attack a mob with a damaging skill → **skill damage numbers render**.
+16. Force a skill failure → **rejection message in chat**.
+
+**E. Closing**
+17. Keep playing to ~30 minutes total → exit criterion **no framing desync / silent
+    hang**. B–D usually covers most of this.
+18. Log out cleanly → **clean logout / disconnect**.
+
+File anything broken in §5 with repro steps (that is the E3.1 exit bar — rows may exit as
+a filed defect, not only as ✅), then hand to E3.2.
 
 ## 5. Defect log
 
@@ -165,6 +213,10 @@ prontera,150,180,4	script	InputTester	4_F_KAFRA1,{
 | M1-002 | Inventory UX | P0 | Hovering inventory items showed no identifying text/tooltip. `ResourceMetadata.name` was already populated; `ItemBox::lay_out` only rendered texture/amount. Fix: register `layout.add_tooltip(&item.metadata.name, …)` on hover (same pattern as `SkillBox`). Applies to inventory, equipment, and storage slots that share `ItemBox`. Framework tooltip delay is ~1s. | ✅ Live-verified macOS 2026-07-10 (hover ~1s shows EN name) |
 | M1-003 | Inventory actions | P0 | Drop, drag-to-equip, ground drop, in-inventory reorder, and split (partial drop: half / off 1 / drop all) via right-click menu. `CZ_ITEM_THROW2` 0x0363 + 0x00AF ack; end-of-frame UI event flush for drag. | ✅ Live-verified macOS 2026-07-10 |
 | M1-004 | Campaign map placement | P0 | Arc 19 warped players and placed its encounter at non-walkable void cells `moc_fild22,150,150` / `155,150`, producing black surroundings, no destination marker, and no movement. Deep audit proved the map, lighting, terrain, and pathing data valid. Moved the rift/boss/hazards to walkable `(170,140)` and the choice NPC to `(175,140)`. | ✅ Live-verified macOS 2026-07-11 |
+| M1-005 | NPC dialogue window | P0 | **Dialogue box renders collapsed to its minimum size.** The `mes` text is present but the window does not size to its content, so it reads as an empty box until manually resized. Found on the Prontera "Vandez" NPC, macOS 2026-07-15. Layer: **client UI** (`interface/windows/dialog.rs`) — headless `dialogue-linear` / `dialogue-choice` are green, so the wire data is correct and only layout is wrong. Repro: talk to any `mes`-using NPC; observe the box at minimum height with text clipped. Fixed 2026-07-15: added `minimum_width: 400.0` / `minimum_height: 280.0` to the `window!` in `interface/windows/dialog.rs` (it declared no size floor at all), matching the seeded `WindowClass::Dialog` default in `cache.rs`. Also purged the poisoned 392x185 entry from `client/window_cache.ron` — the collapsed size had persisted, so it reopened broken every session. | ✅ Live-verified macOS 2026-07-15 — dialogue sizes correctly and closes normally |
+| M1-006 | Skill targeting | P0 | **No skill-targeting mode.** Targeted skills fire only if the mouse already hovers the target at the instant of the keypress (`lib.rs:4086` requires `PickerTarget::Entity`; `4095` requires `PickerTarget::Tile`). The original client's press-skill → reticle-cursor → click-target flow does not exist: `MouseInputMode` has only `RotateCamera`, `Walk`, `MoveItem`, `MoveSkill`. Player-visible symptom: "skills don't target". Layer: **client UI/input**. Invisible to headless, which calls `cast_skill(id, level, entity_id)` with an entity id and never touches the picker. Repro: put any targeted skill on the hotbar, press its key without hovering a mob — nothing happens, no feedback. | 🔴 Open — found 2026-07-15 |
+| M1-008 | Skills have no visual effect | P1 | **Skills deal damage but play no animation.** Observed live 2026-07-15: Hide → Raid damaged the mob and rendered damage numbers, but no skill effect drew. Cause: **`DisplaySpecialEffectPacket` is `register_noop`** (`version_20220406.rs:608`), and it carries the `effect_id`. `NotifyGroundSkillPacket` (line 1065) is likewise noop. The playback machinery already exists and works — `NetworkEvent::VisualEffect` loads a `.str` and plays it on an entity (`lib.rs:2583`), as used by level-up/refine via `VisualEffectPacket`. **The gap is data, not plumbing:** `VisualEffectPacket` hand-maps **10** `VisualEffect` variants to `.str` paths, whereas `EffectId` has **1124** variants; promoting this needs the official effect-id → `.str` table sourced from client data, and mind the No-Upstream-IP rule in `CLAUDE.md`. Not a quick fix — size before scheduling. Layer: **shared crate + client**. | 🔴 Open — found 2026-07-15 |
+| M1-007 | Hide/cloak has no visuals | P0 | **`StateChangePacket` (`0x0229`) is `register_noop`** (`version_20220406.rs:709`), so the client discards every option change. `OPTION_HIDE` (0x02) / `OPTION_CLOAK` (0x04) / `OPTION_INVISIBLE` (0x40) never reach the UI: no sprite transparency, no icon, no buff-bar entry (nothing maps `SC_HIDING`). The player cannot tell whether Hiding is active. Knock-on: hide-gated skills appear broken — `RG_RAID` is `Self: true` and requires `State: "Hiding"`, so it silently refuses when not hidden, with no way to diagnose. Server state is correct (`pc_ishiding` reads the same mask); this is purely the client dropping the packet. Layer: **shared crate + client UI**. Invisible to headless by construction: a noop packet emits no `NetworkEvent` to assert on. Fixed 2026-07-15: promoted to a real handler → `NetworkEvent::StateChange`; `EntityOption` bitflags added to `ragnarok-packets` (values checked against `mmo.h`, `is_concealed()` mirrors the `pc_ishiding` mask, unknown bits truncated so a newer server can't panic us); `Common.option` stores it and `Common::render` multiplies the existing `fade_state` alpha by 0.3 when concealed — no renderer change. 4 regression tests in `ragnarok-packets`. | ✅ Live-verified macOS 2026-07-15 — hide shows a visible cue, and Hide → Raid then worked |
 
 ## 5.1 Live session notes
 

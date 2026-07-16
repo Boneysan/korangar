@@ -224,6 +224,20 @@ pub enum NetworkEvent {
         duration_ms: u32,
         remaining_ms: u32,
     },
+    /// An entity's option flags changed (`ZC_STATE_CHANGE` 0x0229).
+    ///
+    /// Distinct from [`NetworkEvent::StatusChange`]: those are timed buffs/debuffs,
+    /// these are the persistent option bitfield (hide, cloak, riding, …). Hercules
+    /// sends `sc->option` verbatim in `effect_state` (`clif_changeoption`).
+    StateChange {
+        entity_id: EntityId,
+        /// `sc->option` — test against the `OPTION_*` masks in [`crate::EntityOption`].
+        option: u32,
+        /// `sc->opt1` — stun/freeze/petrify style states.
+        body_state: u16,
+        /// `sc->opt2` — poison/curse style states.
+        health_state: u16,
+    },
     UpdateStat {
         stat_type: StatType,
     },

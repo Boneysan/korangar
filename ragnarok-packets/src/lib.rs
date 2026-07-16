@@ -3973,8 +3973,52 @@ pub struct StateChangePacket {
     pub entity_id: EntityId,
     pub body_state: u16,
     pub health_state: u16,
+    /// Hercules sends `sc->option` here verbatim (`clif_changeoption`). Interpret
+    /// with [`EntityOption`].
     pub effect_state: u32,
     pub is_pk_mode_on: u8,
+}
+
+bitflags::bitflags! {
+    /// The persistent option bitfield carried by [`StateChangePacket::effect_state`].
+    ///
+    /// Values mirror `enum` `OPTION_*` in Hercules `src/common/mmo.h`. Only the flags
+    /// the client acts on are modelled; unknown bits are discarded rather than
+    /// rejected, so a newer server can add flags without breaking us.
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+    pub struct EntityOption: u32 {
+        const SIGHT = 0x0000_0001;
+        const HIDE = 0x0000_0002;
+        const CLOAK = 0x0000_0004;
+        const FALCON = 0x0000_0010;
+        const RIDING = 0x0000_0020;
+        /// GM invisibility (`@hide`), not the Hiding skill.
+        const INVISIBLE = 0x0000_0040;
+        const RUWACH = 0x0000_2000;
+        const CHASEWALK = 0x0000_4000;
+        const FLYING = 0x0000_8000;
+    }
+}
+
+impl EntityOption {
+    /// Build from a raw `sc->option`, ignoring bits we don't model.
+    pub fn from_raw(raw: u32) -> Self {
+        Self::from_bits_truncate(raw)
+    }
+
+    /// Whether the entity is concealed by a *skill* (Hiding / Cloaking / Chase Walk).
+    ///
+    /// Mirrors Hercules' `pc_ishiding` mask (`src/map/pc.h`). Deliberately excludes
+    /// [`EntityOption::INVISIBLE`], which is GM invisibility — see
+    /// [`EntityOption::is_gm_invisible`].
+    pub fn is_concealed(self) -> bool {
+        self.intersects(Self::HIDE | Self::CLOAK | Self::CHASEWALK)
+    }
+
+    /// Whether the entity is GM-invisible (`pc_isinvisible`).
+    pub fn is_gm_invisible(self) -> bool {
+        self.contains(Self::INVISIBLE)
+    }
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -6153,6 +6197,57 @@ mod shop_item_list_tests {
     #[test]
     fn shop_item_information_size_is_19() {
         assert_eq!(ShopItemInformation::size_in_bytes(), 19);
+    }
+
+    // Regression tests for M1-007: `StateChangePacket` was `register_noop`, so hide /
+    // cloak never reached the UI. Values mirror Hercules `src/common/mmo.h` `OPTION_*`
+    // and the `pc_ishiding` / `pc_isinvisible` masks in `src/map/pc.h`.
+
+    #[test]
+    fn entity_option_values_match_hercules() {
+        assert_eq!(EntityOption::HIDE.bits(), 0x0000_0002);
+        assert_eq!(EntityOption::CLOAK.bits(), 0x0000_0004);
+        assert_eq!(EntityOption::INVISIBLE.bits(), 0x0000_0040);
+        assert_eq!(EntityOption::CHASEWALK.bits(), 0x0000_4000);
+    }
+
+    #[test]
+    fn entity_option_is_concealed_matches_pc_ishiding() {
+        // pc_ishiding = option & (OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK)
+        assert!(EntityOption::from_raw(0x02).is_concealed(), "Hiding");
+        assert!(EntityOption::from_raw(0x04).is_concealed(), "Cloaking");
+        assert!(EntityOption::from_raw(0x4000).is_concealed(), "Chase Walk");
+        assert!(!EntityOption::from_raw(0).is_concealed(), "no options");
+        // GM invisibility is NOT part of the pc_ishiding mask.
+        assert!(!EntityOption::from_raw(0x40).is_concealed(), "GM invisible");
+        assert!(EntityOption::from_raw(0x40).is_gm_invisible());
+    }
+
+    #[test]
+    fn entity_option_ignores_unmodelled_bits() {
+        // A newer server may set flags we don't model (e.g. OPTION_XMAS 0x10000);
+        // truncating must not panic and must not disturb the flags we do model.
+        let option = EntityOption::from_raw(0x0001_0002);
+        assert!(option.is_concealed(), "HIDE survives alongside unknown bits");
+        assert!(!option.contains(EntityOption::CLOAK));
+    }
+
+    #[test]
+    fn parse_state_change_0x229_carries_option() {
+        // header 0x0229, AID 2000000, bodyState 0, healthState 0, effectState = OPTION_HIDE, isPKModeON 0
+        let bytes = [
+            0x29, 0x02, // header
+            0x80, 0x84, 0x1E, 0x00, // entity id 2000000
+            0x00, 0x00, // body_state
+            0x00, 0x00, // health_state
+            0x02, 0x00, 0x00, 0x00, // effect_state = OPTION_HIDE
+            0x00, // is_pk_mode_on
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let packet = StateChangePacket::packet_from_bytes(&mut reader).expect("parse");
+        assert_eq!(packet.entity_id.0, 2000000);
+        assert_eq!(packet.effect_state, 0x02);
+        assert!(EntityOption::from_raw(packet.effect_state).is_concealed());
     }
 
     #[test]

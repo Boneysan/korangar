@@ -10,8 +10,8 @@ use korangar_interface::element::StateElement;
 use korangar_interface::window::{StateWindow, Window};
 use korangar_networking::EntityData;
 use ragnarok_packets::{
-    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, JobId, Sex, StatType, TilePosition,
-    WorldPosition,
+    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, JobId, Sex, StatType,
+    TilePosition, WorldPosition,
 };
 use rust_state::{Path, RustState, VecItem};
 #[cfg(feature = "debug")]
@@ -177,6 +177,9 @@ pub struct Common {
 
     #[hidden_element]
     pub entity_type: EntityType,
+    /// Raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Interpret via
+    /// [`EntityOption`]; `0` until the server says otherwise.
+    pub option: u32,
     pub active_movement: Option<Movement>,
     pub animation_data: Option<Arc<AnimationData>>,
     pub tile_position: TilePosition,
@@ -424,6 +427,9 @@ impl Common {
             sex,
             active_movement,
             entity_type,
+            // No option flags until the server sends ZC_STATE_CHANGE (M1-007). An entity
+            // that spawns already hidden gets its flags via that packet.
+            option: 0,
             movement_speed,
             health_points,
             maximum_health_points,
@@ -868,8 +874,22 @@ impl Common {
         }
     }
 
+    /// Alpha applied to an entity concealed by Hiding / Cloaking / Chase Walk.
+    ///
+    /// The original client draws *your own* concealed character translucent rather than
+    /// fully invisible, so you can still see where you are. Entities the server does not
+    /// want you to see are never sent in the first place, so anything we are asked to
+    /// draw with a conceal flag is one we are allowed to see.
+    const CONCEALED_ALPHA: f32 = 0.3;
+
     pub fn render(&self, instructions: &mut Vec<EntityInstruction>, camera: &dyn Camera, add_to_picker: bool, client_tick: ClientTick) {
         if let Some(animation_data) = self.animation_data.as_ref() {
+            // M1-007: modulate the existing fade alpha so hide/cloak is visible.
+            let mut alpha = self.fade_state.calculate_alpha(client_tick);
+            if EntityOption::from_raw(self.option).is_concealed() {
+                alpha *= Self::CONCEALED_ALPHA;
+            }
+
             animation_data.render(
                 instructions,
                 camera,
@@ -878,7 +898,7 @@ impl Common {
                 self.world_position,
                 &self.animation_state,
                 self.direction,
-                self.fade_state.calculate_alpha(client_tick),
+                alpha,
                 self.scale,
             );
         }
@@ -1548,6 +1568,12 @@ impl Entity {
         let common = self.get_common_mut();
         common.health_points = health_points;
         common.maximum_health_points = maximum_health_points;
+    }
+
+    /// Store raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Drives the concealed
+    /// (Hiding / Cloaking) alpha in [`Common::render`].
+    pub fn update_option(&mut self, option: u32) {
+        self.get_common_mut().option = option;
     }
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {

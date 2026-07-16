@@ -706,7 +706,15 @@ where
         experience_source: packet.experience_source,
     })?;
     packet_handler.register_noop::<DisplayImagePacket>()?;
-    packet_handler.register_noop::<StateChangePacket>()?;
+    // M1-007: promoted from noop 2026-07-15. `effect_state` is `sc->option`, which
+    // carries hide/cloak; dropping it left the player with no way to see whether
+    // Hiding was active, and made hide-gated skills look broken.
+    packet_handler.register(|packet: StateChangePacket| NetworkEvent::StateChange {
+        entity_id: packet.entity_id,
+        option: packet.effect_state,
+        body_state: packet.body_state,
+        health_state: packet.health_state,
+    })?;
 
     packet_handler.register(|packet: QuestEffectPacket| match packet.effect {
         QuestEffect::None => NetworkEvent::RemoveQuestEffect {
