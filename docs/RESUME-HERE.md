@@ -5,9 +5,11 @@ Quick-start for picking this back up. Full detail is in
 
 ## One-line status
 
-M1 P0 checklist at **32/34 verified**; 7 client bugs fixed (all live-verified),
-7 filed. **Nothing is pushed yet** — that's the first resume step, gated on one
-last suite check.
+**RESOLVED 2026-07-16.** M1 P0 checklist at **33/34 verified** (only
+"rejection messages" left, arguably already met); 7 client bugs fixed, 7 filed.
+Both gating items cleared: `skills-monk` retested 3/3 green (flake confirmed),
+clean logout live-verified. Both repos pushed to origin. History below is kept
+for context.
 
 ## The two things left before pushing
 

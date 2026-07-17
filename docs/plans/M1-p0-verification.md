@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **32 of 34 rows verified** — macOS live pass 2026-07-10 → 2026-07-15. Open: clean logout (needs a human), rejection messages (arguably already met, see the row). The 2026-07-15 GUI sitting fixed 6 client bugs and filed 6 more — see §5. |
+| **Status** | **33 of 34 rows verified** — macOS live pass 2026-07-10 → 2026-07-16. Open: rejection messages (arguably already met, see the row). Clean logout verified live 2026-07-16. The 2026-07-15 GUI sitting fixed 6 client bugs and filed 6 more — see §5. |
 | **Milestone** | M1 — Playable solo |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E3 |
 | **Depends on** | M0 complete |
@@ -87,7 +87,9 @@ Mark each item ✅ / ❌ / 🔶 and note the defect.
       slot (`character_selection.rs:336`), not a visible button — see M1-014.
       *headless: `character-create-delete`, `character-delete-after-play`.*
 - [x] Map load after select (no black world / freeze) — entered `int_land`; map TCP connection established
-- [ ] Clean logout / disconnect — *headless: `logout-relogin` (incl. chat-marker proofs).*
+- [x] Clean logout / disconnect — live-verified macOS 2026-07-16: logged in, logged out
+      cleanly back to the login/character-select screen, no hang or stuck state, client
+      process stayed healthy. *headless: `logout-relogin` (incl. chat-marker proofs).*
 
 ### Core gameplay (P0)
 - [x] Click-to-move, pathing (~10 tiles) — full route live-verified on macOS 2026-07-10
