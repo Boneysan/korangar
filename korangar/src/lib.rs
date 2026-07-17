@@ -70,9 +70,10 @@ use korangar_networking::{
 use networking::{PacketHistory, PacketHistoryCallback};
 #[cfg(not(feature = "debug"))]
 use ragnarok_packets::handler::NoPacketCallback;
+use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
-    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, ExperienceType, HotbarSlot,
-    PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId, ExperienceType,
+    HotbarSlot, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -504,6 +505,179 @@ mod normalize_map_base_name_tests {
     }
 }
 
+#[cfg(test)]
+mod resolve_pending_cast_tests {
+    use ragnarok_packets::{EntityId, SkillType, TilePosition};
+
+    use super::{PendingCastResolution, resolve_pending_cast};
+    use crate::graphics::PickerTarget;
+
+    #[test]
+    fn entity_targeted_casts_on_entity() {
+        let id = EntityId(42);
+        assert_eq!(
+            resolve_pending_cast(SkillType::Attack, PickerTarget::Entity(id)),
+            PendingCastResolution::CastEntity(id)
+        );
+        assert_eq!(
+            resolve_pending_cast(SkillType::Support, PickerTarget::Entity(id)),
+            PendingCastResolution::CastEntity(id)
+        );
+    }
+
+    #[test]
+    fn entity_targeted_on_empty_ground_fizzles() {
+        // A stray click on terrain must not walk or waste the cast — it stays armed.
+        assert_eq!(
+            resolve_pending_cast(SkillType::Attack, PickerTarget::Tile { x: 5, y: 9 }),
+            PendingCastResolution::Fizzle
+        );
+        assert_eq!(
+            resolve_pending_cast(SkillType::Support, PickerTarget::Nothing),
+            PendingCastResolution::Fizzle
+        );
+    }
+
+    #[test]
+    fn ground_targeted_casts_at_tile() {
+        assert_eq!(
+            resolve_pending_cast(SkillType::Ground, PickerTarget::Tile { x: 7, y: 3 }),
+            PendingCastResolution::CastTile(TilePosition { x: 7, y: 3 })
+        );
+        assert_eq!(
+            resolve_pending_cast(SkillType::Trap, PickerTarget::Tile { x: 1, y: 2 }),
+            PendingCastResolution::CastTile(TilePosition { x: 1, y: 2 })
+        );
+    }
+
+    #[test]
+    fn ground_targeted_on_entity_uses_entity_tile() {
+        let id = EntityId(7);
+        assert_eq!(
+            resolve_pending_cast(SkillType::Ground, PickerTarget::Entity(id)),
+            PendingCastResolution::CastEntityTile(id)
+        );
+    }
+
+    #[test]
+    fn ground_targeted_on_nothing_fizzles() {
+        assert_eq!(
+            resolve_pending_cast(SkillType::Ground, PickerTarget::Nothing),
+            PendingCastResolution::Fizzle
+        );
+    }
+
+    #[test]
+    fn passive_and_self_cast_never_target() {
+        assert_eq!(
+            resolve_pending_cast(SkillType::Passive, PickerTarget::Entity(EntityId(1))),
+            PendingCastResolution::Fizzle
+        );
+        assert_eq!(
+            resolve_pending_cast(SkillType::SelfCast, PickerTarget::Entity(EntityId(1))),
+            PendingCastResolution::Fizzle
+        );
+    }
+}
+
+/// A skill armed for targeting. Pressing a targeted skill's hotbar key while the
+/// cursor is not over a valid target arms it here; the next left-click picks the
+/// target (RO's press-skill → reticle → click-target flow). Cancelled by
+/// right-click or Escape.
+#[derive(Clone, Debug)]
+struct PendingSkill {
+    skill_id: SkillId,
+    skill_level: SkillLevel,
+    skill_type: SkillType,
+    skill_name: String,
+}
+
+/// What a left-click resolves to while a skill is armed, given what the cursor is
+/// over. Kept separate from the cast itself so the decision is pure and testable.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PendingCastResolution {
+    /// Entity-targeted skill clicked on an entity → cast on it.
+    CastEntity(EntityId),
+    /// Ground-targeted skill clicked on a tile → cast there.
+    CastTile(TilePosition),
+    /// Ground-targeted skill clicked on an entity → cast on that entity's tile.
+    CastEntityTile(EntityId),
+    /// No valid target under the cursor → stay armed (fizzle). Matches the
+    /// entity-targeted convention that a stray click doesn't waste the cast;
+    /// explicit right-click / Escape is the only way to cancel.
+    Fizzle,
+}
+
+/// Decide what a click does for an armed skill. Pure — the caller performs the
+/// actual network cast (and, for [`PendingCastResolution::CastEntityTile`], the
+/// entity → tile lookup) so this can be unit-tested without a live client.
+fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingCastResolution {
+    match skill_type {
+        SkillType::Attack | SkillType::Support => match target {
+            PickerTarget::Entity(entity_id) => PendingCastResolution::CastEntity(entity_id),
+            _ => PendingCastResolution::Fizzle,
+        },
+        SkillType::Ground | SkillType::Trap => match target {
+            PickerTarget::Tile { x, y } => PendingCastResolution::CastTile(TilePosition { x, y }),
+            PickerTarget::Entity(entity_id) => PendingCastResolution::CastEntityTile(entity_id),
+            _ => PendingCastResolution::Fizzle,
+        },
+        SkillType::Passive | SkillType::SelfCast => PendingCastResolution::Fizzle,
+    }
+}
+
+/// Cast `pending` at whatever `target` currently resolves to. Returns `true` if a
+/// cast was sent (the target is consumed and the skill should disarm), `false` if
+/// it fizzled and the skill should stay armed. Shared by the hover-then-press fast
+/// path and the armed click path so both agree. Takes the two fields it needs by
+/// reference rather than `&mut self` so callers can hold unrelated field borrows
+/// (e.g. the per-frame point-light borrow in the render path).
+fn perform_pending_cast<Callback: PacketCallback + Send>(
+    networking_system: &mut NetworkingSystem<Callback>,
+    state: &State<ClientState>,
+    pending: &PendingSkill,
+    target: PickerTarget,
+) -> bool {
+    match resolve_pending_cast(pending.skill_type, target) {
+        PendingCastResolution::CastEntity(entity_id) => {
+            let _ = networking_system.cast_skill(pending.skill_id, pending.skill_level, entity_id);
+            true
+        }
+        PendingCastResolution::CastTile(tile) => {
+            let _ = networking_system.cast_ground_skill(pending.skill_id, pending.skill_level, tile);
+            true
+        }
+        PendingCastResolution::CastEntityTile(entity_id) => {
+            // A ground skill clicked on an entity centres the AoE on that entity's cell.
+            match state
+                .follow(client_state().entities())
+                .iter()
+                .find(|entity| entity.get_entity_id() == entity_id)
+                .map(|entity| entity.get_tile_position())
+            {
+                Some(tile) => {
+                    let _ = networking_system.cast_ground_skill(pending.skill_id, pending.skill_level, tile);
+                    true
+                }
+                None => false,
+            }
+        }
+        PendingCastResolution::Fizzle => false,
+    }
+}
+
+/// Tell the player which skill is now armed and waiting for a target. The targeting
+/// reticle alone doesn't say *which* skill it is (and skills currently draw no cast
+/// effect), so this line is how arming — and a swap — is visible. Takes the chat
+/// state by reference so it can be called inside the input-drain loop, which holds
+/// a borrow of `self` that a `&mut self` method would conflict with.
+fn announce_armed_skill(state: &mut State<ClientState>, skill_name: &str) {
+    state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+        format!("Aiming {skill_name} — click a target (right-click or Esc to cancel)."),
+        MessageColor::Information,
+    ));
+}
+
 pub struct Client {
     game_file_loader: Arc<GameFileLoader>,
     #[cfg(feature = "debug")]
@@ -561,6 +735,8 @@ pub struct Client {
     point_shadow_camera: PointShadowCamera,
 
     input_event_buffer: Vec<InputEvent>,
+    /// A targeted skill awaiting a click to pick its target. See [`PendingSkill`].
+    pending_skill: Option<PendingSkill>,
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
     saved_login_data: Option<LoginServerLoginData>,
@@ -1037,6 +1213,7 @@ impl Client {
             directional_shadow_partitions,
             point_shadow_camera,
             input_event_buffer,
+            pending_skill: None,
             network_event_buffer,
             saved_login_data,
             saved_character_server,
@@ -1401,6 +1578,10 @@ impl Client {
                 }
                 NetworkEvent::MapServerDisconnected { reason } => {
                     self.client_state.follow_mut(client_state().party_state()).clear();
+
+                    // Drop any armed skill so it can't leak across a logout/relogin and fire on
+                    // the first click of the next session.
+                    self.pending_skill = None;
 
                     if reason != DisconnectReason::ClosedByClient {
                         // TODO: Make this an on-screen popup.
@@ -3401,7 +3582,12 @@ impl Client {
                 InputEvent::RotateCamera { rotation } => self.player_camera.soft_rotate(rotation),
                 InputEvent::ResetCameraRotation => self.player_camera.reset_rotation(),
                 InputEvent::ToggleMenuWindow => {
-                    if self.client_state.try_follow(this_entity()).is_some() {
+                    // Escape backs out of the most recent transient state first: if a skill is
+                    // armed, cancel the target instead of opening the menu (secondary cancel
+                    // gesture alongside right-click).
+                    if self.pending_skill.is_some() {
+                        self.pending_skill = None;
+                    } else if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Menu) {
                             true => self.interface.close_window_with_class(WindowClass::Menu),
                             false => self.interface.open_window(MenuWindow),
@@ -4091,66 +4277,82 @@ impl Client {
                     }
                 }
                 InputEvent::CastSkill { slot } => {
-                    if let Some(learnable_skill) = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).as_ref()
-                        && let Some(learned_skill) =
-                            self.client_state
-                                .follow(client_state().skill_tree().skills())
-                                .iter()
-                                .find(|learned_skill| {
-                                    learned_skill.skill_id == learnable_skill.skill_id
-                                        && learned_skill.skill_level.0 >= learnable_skill.maximum_level.0
-                                })
-                    {
-                        match learned_skill.skill_type {
+                    // Resolve the slot to owned data under an immutable borrow, then act — so the
+                    // cast / arm / chat-feedback below can borrow self mutably without conflict.
+                    let learnable_skill = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).clone();
+                    let skill_type = learnable_skill.as_ref().and_then(|learnable_skill| {
+                        self.client_state
+                            .follow(client_state().skill_tree().skills())
+                            .iter()
+                            .find(|learned_skill| {
+                                learned_skill.skill_id == learnable_skill.skill_id
+                                    && learned_skill.skill_level.0 >= learnable_skill.maximum_level.0
+                            })
+                            .map(|learned_skill| learned_skill.skill_type)
+                    });
+
+                    if let (Some(learnable_skill), Some(skill_type)) = (learnable_skill, skill_type) {
+                        match skill_type {
                             SkillType::Passive => {}
+                            SkillType::SelfCast => {
+                                let this_entity_id = self.client_state.follow(this_entity().manually_asserted()).get_entity_id();
+                                match learnable_skill.skill_id == ROLLING_CUTTER_ID {
+                                    true => {
+                                        let _ = self.networking_system.cast_channeling_skill(
+                                            learnable_skill.skill_id,
+                                            learnable_skill.maximum_level,
+                                            this_entity_id,
+                                        );
+                                    }
+                                    false => {
+                                        let _ =
+                                            self.networking_system
+                                                .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, this_entity_id);
+                                    }
+                                }
+                            }
+                            SkillType::Support => {
+                                // Support keeps its self-target fallback: cast on the hovered entity,
+                                // else on self. Self-buffs like Heal/Blessing can't reliably be aimed
+                                // by clicking your own sprite, so they must not require a target.
+                                let target_id = match input_report.mouse_target {
+                                    PickerTarget::Entity(entity_id) => entity_id,
+                                    _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
+                                };
+                                let _ = self
+                                    .networking_system
+                                    .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, target_id);
+                            }
                             SkillType::Attack => {
-                                if let PickerTarget::Entity(entity_id) = input_report.mouse_target {
-                                    let _ = self.networking_system.cast_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        entity_id,
-                                    );
+                                // Entity-target: fast-cast if the cursor is already over a target,
+                                // otherwise arm and wait for the next left-click to pick one.
+                                let pending = PendingSkill {
+                                    skill_id: learnable_skill.skill_id,
+                                    skill_level: learnable_skill.maximum_level,
+                                    skill_type,
+                                    skill_name: learnable_skill.skill_name.clone(),
+                                };
+                                if !perform_pending_cast(
+                                    &mut self.networking_system,
+                                    &self.client_state,
+                                    &pending,
+                                    input_report.mouse_target,
+                                ) {
+                                    announce_armed_skill(&mut self.client_state, &pending.skill_name);
+                                    self.pending_skill = Some(pending);
                                 }
                             }
                             SkillType::Ground | SkillType::Trap => {
-                                if let PickerTarget::Tile { x, y } = input_report.mouse_target {
-                                    let _ = self.networking_system.cast_ground_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        TilePosition { x, y },
-                                    );
-                                }
-                            }
-                            SkillType::SelfCast => match learnable_skill.skill_id == ROLLING_CUTTER_ID {
-                                true => {
-                                    let _ = self.networking_system.cast_channeling_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
-                                    );
-                                }
-                                false => {
-                                    let _ = self.networking_system.cast_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
-                                    );
-                                }
-                            },
-                            SkillType::Support => {
-                                if let PickerTarget::Entity(entity_id) = input_report.mouse_target {
-                                    let _ = self.networking_system.cast_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        entity_id,
-                                    );
-                                } else {
-                                    let _ = self.networking_system.cast_skill(
-                                        learnable_skill.skill_id,
-                                        learnable_skill.maximum_level,
-                                        self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
-                                    );
-                                }
+                                // Ground-target: always arm so the player aims the placement reticle
+                                // and clicks where the AoE lands, rather than dropping it instantly at
+                                // wherever the cursor happens to sit when the key is pressed.
+                                announce_armed_skill(&mut self.client_state, &learnable_skill.skill_name);
+                                self.pending_skill = Some(PendingSkill {
+                                    skill_id: learnable_skill.skill_id,
+                                    skill_level: learnable_skill.maximum_level,
+                                    skill_type,
+                                    skill_name: learnable_skill.skill_name.clone(),
+                                });
                             }
                         }
                     }
@@ -5037,6 +5239,9 @@ impl Client {
             let cursor_state = match input_report.mouse_target {
                 _ if is_rotating_camera => MouseCursorState::RotateCamera,
                 _ if is_grabbing => MouseCursorState::GrabResource,
+                // A skill is armed and waiting for a target: show the attack reticle over
+                // the world so it's clear the next click aims the skill, not a walk.
+                _ if self.pending_skill.is_some() && !is_interface_hovered => MouseCursorState::Attack,
                 PickerTarget::Entity(entity_id) if !is_interface_hovered => {
                     if self
                         .client_state
@@ -5071,36 +5276,58 @@ impl Client {
                     interface_frame.unfocus();
 
                     if mouse_button == MouseButton::Left {
-                        match input_report.mouse_target {
-                            PickerTarget::Nothing => {}
-                            PickerTarget::Entity(entity_id) => {
-                                let is_ground_item = self
-                                    .client_state
-                                    .follow(client_state().ground_items())
-                                    .iter()
-                                    .any(|item| item.get_entity_id() == entity_id);
+                        if let Some(pending) = self.pending_skill.take() {
+                            // A skill is armed: this click picks its target. On a hit the skill
+                            // disarms; on empty ground it fizzles and stays armed (right-click or
+                            // Escape is the only cancel), and the click never falls through to a
+                            // walk/interact.
+                            if !perform_pending_cast(
+                                &mut self.networking_system,
+                                &self.client_state,
+                                &pending,
+                                input_report.mouse_target,
+                            ) {
+                                // Fizzled — put it back so it stays armed for the next click.
+                                self.pending_skill = Some(pending);
+                            }
+                        } else {
+                            match input_report.mouse_target {
+                                PickerTarget::Nothing => {}
+                                PickerTarget::Entity(entity_id) => {
+                                    let is_ground_item = self
+                                        .client_state
+                                        .follow(client_state().ground_items())
+                                        .iter()
+                                        .any(|item| item.get_entity_id() == entity_id);
 
-                                if is_ground_item {
-                                    self.input_event_buffer.push(InputEvent::PickUpItem { entity_id })
-                                } else {
-                                    self.input_event_buffer.push(InputEvent::PlayerInteract { entity_id })
+                                    if is_ground_item {
+                                        self.input_event_buffer.push(InputEvent::PickUpItem { entity_id })
+                                    } else {
+                                        self.input_event_buffer.push(InputEvent::PlayerInteract { entity_id })
+                                    }
+                                }
+                                PickerTarget::Tile { x, y } => {
+                                    let destination = TilePosition { x, y };
+
+                                    interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
+
+                                    self.input_event_buffer.push(InputEvent::PlayerMove { destination });
+                                }
+                                #[cfg(feature = "debug")]
+                                PickerTarget::Marker(marker_identifier) => {
+                                    self.input_event_buffer.push(InputEvent::OpenMarkerDetails { marker_identifier })
                                 }
                             }
-                            PickerTarget::Tile { x, y } => {
-                                let destination = TilePosition { x, y };
-
-                                interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
-
-                                self.input_event_buffer.push(InputEvent::PlayerMove { destination });
-                            }
-                            #[cfg(feature = "debug")]
-                            PickerTarget::Marker(marker_identifier) => {
-                                self.input_event_buffer.push(InputEvent::OpenMarkerDetails { marker_identifier })
-                            }
                         }
-                    } else if mouse_button == MouseButton::Right && currently_playing {
-                        #[cfg_attr(feature = "debug", korangar_debug::debug_condition(!render_options.use_debug_camera))]
-                        interface_frame.set_mouse_mode(MouseInputMode::RotateCamera);
+                    } else if mouse_button == MouseButton::Right {
+                        if self.pending_skill.is_some() {
+                            // Right-click is the primary cancel gesture for an armed skill; it
+                            // clears the target and does not start a camera rotation.
+                            self.pending_skill = None;
+                        } else if currently_playing {
+                            #[cfg_attr(feature = "debug", korangar_debug::debug_condition(!render_options.use_debug_camera))]
+                            interface_frame.set_mouse_mode(MouseInputMode::RotateCamera);
+                        }
                     } else if mouse_button == MouseButton::DoubleRight && currently_playing {
                         #[cfg_attr(feature = "debug", korangar_debug::debug_condition(!render_options.use_debug_camera))]
                         self.input_event_buffer.push(InputEvent::ResetCameraRotation);
@@ -5109,6 +5336,7 @@ impl Client {
             } else if let Some(last_destination) = last_walking_destination
                 && let PickerTarget::Tile { x, y } = input_report.mouse_target
                 && input_report.left_mouse_button_down
+                && self.pending_skill.is_none()
             {
                 let destination = TilePosition { x, y };
 

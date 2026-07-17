@@ -119,3 +119,82 @@ today's client work.
 - The `test` character was rebuilt into a clean, well-equipped **Knight** for
   future manual passes (see the character-rebuild note below); it does not affect
   the suite, which reshapes the job per scenario.
+
+---
+
+# M1-006 skill-targeting — built and live-verified (later 2026-07-16)
+
+After the E3.1 pass closed and both repos were pushed, this follow-on session
+built the **skill-targeting mode** filed as M1-006, live-verified it, and filed
+two new findings. Uncommitted at time of writing; see the M1-006 row in
+`plans/M1-p0-verification.md` for the canonical detail.
+
+## What it does
+
+Pressing a targeted hotbar skill with **no valid target under the cursor** now
+*arms* it: the cursor becomes the attack reticle and the next left-click picks
+the target. Per skill type:
+
+- **Attack** — hover-instant fast path if already over a target, else arm.
+- **Ground/Trap** — **always** arm, so you aim and place the AoE with the click.
+- **Support** — hovered entity, else self (kept the original fallback).
+- **SelfCast** — unchanged instant self-cast.
+
+Cancel = right-click (primary) or Escape (Escape clears the target *before* it
+opens the menu). Pressing another skill re-arms (swap); a chat line names the
+armed skill. Core decision logic is `resolve_pending_cast`, a pure function with
+6 unit tests; the armed state clears on map disconnect so it can't leak across a
+relogin. All in `korangar/src/lib.rs` (rule-4 note: this is core input, not DM).
+
+## The design conventions (user-approved)
+
+Cancel via right-click **and** Escape; a second skill **swaps**; empty ground
+**fizzles** for entity-targeted (stays armed, never walks) and **casts at the
+cell** for ground-targeted. These are the genre-standard RO conventions.
+
+## What live testing taught — three rounds, three real lessons
+
+The feature "worked" in code immediately; the value was in what live iteration
+surfaced that headless never could:
+
+1. **Support arming broke self-cast.** First cut armed Support skills too. But you
+   can't reliably click your *own* sprite (the picker returns the tile under your
+   feet), so Heal became uncastable. Reverted Support to hovered-entity-else-self.
+   Lesson: self-target support skills must not require a click-target.
+
+2. **Ground instant-cast gave no way to aim.** The hybrid "instant-cast if over a
+   valid target" is wrong for ground skills — the cursor is *always* over a valid
+   tile, so it dropped the AoE at wherever the cursor sat with no aiming step. This
+   read to the tester as "Storm Gust isn't selectable." Fix: ground skills *always*
+   arm.
+
+3. **The big one — test-character skill pruning.** Storm Gust wouldn't cast or even
+   announce. Root cause was **not** the client: Hercules' `pc_calc_skilltree`
+   **prunes on login** any skill whose tree prerequisites aren't met (and any skill
+   outside the job's tree entirely). Granting a curated cross-tier / cross-job skill
+   list via SQL left only the first-tier, prereq-less skills (Fire Bolt, Cold Bolt)
+   — everything else was silently stripped, so the client correctly showed them as
+   unlearned/dimmed and refused to cast. **You must grant a complete, valid job
+   tree.** The `test` char (150000) is now a Wizard with the full Mage+Wizard tree.
+   This cost the most time and is the reusable trap — recorded in the
+   `ro-test-environment-traps` memory.
+
+## M1-008 made all of this hard to see
+
+Skills draw **no cast animation** (M1-008), so a correctly-sent cast looks
+identical to one that did nothing — which is why "spells don't cast on ground"
+looked like a targeting bug when it wasn't. Added temporary `eprintln` + a
+"Casting X" chat line purely to prove the packet was sent (it was), then removed
+both once confirmed. Kept only the **"Aiming X"** arm line, which is genuinely
+useful (identifies the armed skill, makes swaps visible) and low-frequency.
+Damage numbers already confirm offensive casts.
+
+## New findings filed
+
+- **M1-016 (P2)** — emotes render only as a chat line, no animated emoticon over
+  the entity. Machinery exists (`DisplayEmotion` → `EmoteBubbles::show` + lazy
+  sprite-sheet load); the sheet likely never resolves. See §5.
+- **Cast interruption (feature request, not a bug)** — the tester repeatedly
+  wanted right-click/Esc to abort an *in-progress* cast. RO cancels a cast by
+  *moving*; there is no cancel packet. This is a separate feature from targeting
+  (M1-006's cancel only clears an *armed*, pre-cast skill) — build it on its own.
