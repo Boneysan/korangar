@@ -624,24 +624,12 @@ where
             is_critical: packet.skill_type == 8,
         })
     })?;
-    packet_handler.register(|packet: DisplaySkillEffectNoDamagePacket| {
-        // The `heal_amount` field only holds a real heal for healing skills
-        // (Hercules re-labels item/regen heals as AL_HEAL for display). For
-        // buffs it carries the skill level, and for skills that suppress the
-        // number (e.g. a mob's Cloaking) it is -1, which must not be shown
-        // as a u32::MAX heal.
-        const AL_HEAL: u16 = 28;
-        const AB_CHEAL: u16 = 2043;
-        const AB_HIGHNESSHEAL: u16 = 2051;
-        const HLIF_HEAL: u16 = 8001;
-
-        let is_heal_skill = matches!(packet.skill_id.0, AL_HEAL | AB_CHEAL | AB_HIGHNESSHEAL | HLIF_HEAL);
-        let is_displayable = packet.heal_amount > 0 && packet.heal_amount < i32::MAX as u32;
-
-        (is_heal_skill && is_displayable).then_some(NetworkEvent::HealEffect {
-            entity_id: packet.destination_entity_id,
-            heal_amount: packet.heal_amount as usize,
-        })
+    packet_handler.register(|packet: DisplaySkillEffectNoDamagePacket| NetworkEvent::SkillEffectNoDamage {
+        skill_id: packet.skill_id,
+        source_entity_id: packet.source_entity_id,
+        destination_entity_id: packet.destination_entity_id,
+        effect_value: packet.heal_amount,
+        successful: packet.result != 0,
     })?;
     // Always targets the receiving client; entity_id 0 falls back to local player
     // in the lib.rs HealEffect arm.

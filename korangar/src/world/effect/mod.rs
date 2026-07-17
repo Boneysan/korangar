@@ -7,7 +7,7 @@ use cgmath::{Point3, Rad, Vector2, Vector3};
 use korangar_collision::{Frustum, Sphere};
 use korangar_container::Cacheable;
 use ragnarok_formats::map::EffectSource;
-use ragnarok_packets::EntityId;
+use ragnarok_packets::{EntityId, SkillId};
 use wgpu::BlendFactor;
 
 pub use self::bolts::FallingBolts;
@@ -318,7 +318,13 @@ impl FrameTimer {
     }
 
     pub fn update(&mut self, delta_time: f32) -> bool {
-        self.total_timer += delta_time;
+        // Loading an STR and its textures is currently synchronous. On the
+        // first use of a large effect (notably Meteor Storm), that work can
+        // make the following application frame substantially longer than the
+        // animation itself. Do not let an asset-loading stall skip the whole
+        // effect before the player gets a chance to see it.
+        const MAX_ANIMATION_STEP: f32 = 1.0 / 15.0;
+        self.total_timer += delta_time.min(MAX_ANIMATION_STEP);
         self.current_frame = (self.total_timer / (1.0 / self.frames_per_second as f32)) as usize;
 
         if self.current_frame >= self.max_key {
@@ -337,7 +343,7 @@ mod frame_at_tests {
     use cgmath::{Rad, Vector2};
     use wgpu::BlendFactor;
 
-    use super::{AnimationType, Frame, FrameType, Layer};
+    use super::{AnimationType, Frame, FrameTimer, FrameType, Layer};
     use crate::graphics::Color;
 
     fn frame(key: usize, frame_type: FrameType, animation_type: AnimationType, texture_index: f32, delay: f32) -> Frame {
@@ -469,6 +475,19 @@ mod frame_at_tests {
         let result = Layer::frame_at(&reversing, 3.0, 10).unwrap();
         assert!((result.texture_index - 7.0).abs() < 0.001, "type 4 plays backwards with wrap-around");
     }
+
+    #[test]
+    fn asset_loading_stall_does_not_skip_an_entire_effect() {
+        let mut timer = FrameTimer {
+            total_timer: 0.0,
+            frames_per_second: 60,
+            max_key: 60,
+            current_frame: 0,
+        };
+
+        assert!(timer.update(2.0), "a long loading frame must not finish a one-second effect");
+        assert_eq!(timer.current_frame, 4);
+    }
 }
 
 pub enum EffectCenter {
@@ -598,6 +617,7 @@ impl EffectBase for EffectWithLight {
 #[derive(Default)]
 pub struct EffectHolder {
     effects: Vec<(Box<dyn EffectBase + Send + Sync>, Option<EntityId>)>,
+    unique_skill_effects: Vec<(EntityId, SkillId, f32)>,
 }
 
 impl EffectHolder {
@@ -609,6 +629,22 @@ impl EffectHolder {
         self.effects.push((effect, Some(entity_id)));
     }
 
+    /// Returns true once per source/skill during `duration`, allowing area
+    /// skills reported as one damage packet per target to spawn one
+    /// caster-centered visual.
+    pub fn claim_unique_skill_effect(&mut self, source_entity_id: EntityId, skill_id: SkillId, duration: f32) -> bool {
+        if self
+            .unique_skill_effects
+            .iter()
+            .any(|(source, skill, _)| *source == source_entity_id && *skill == skill_id)
+        {
+            return false;
+        }
+
+        self.unique_skill_effects.push((source_entity_id, skill_id, duration));
+        true
+    }
+
     pub fn remove_unit(&mut self, removed_entity_id: EntityId) {
         self.effects
             .iter_mut()
@@ -618,10 +654,13 @@ impl EffectHolder {
 
     pub fn clear(&mut self) {
         self.effects.clear();
+        self.unique_skill_effects.clear();
     }
 
     pub fn update(&mut self, entities: &[crate::world::Entity], delta_time: f32) {
         self.effects.retain_mut(|(effect, _)| effect.update(entities, delta_time));
+        self.unique_skill_effects.iter_mut().for_each(|(_, _, remaining)| *remaining -= delta_time);
+        self.unique_skill_effects.retain(|(_, _, remaining)| *remaining > 0.0);
     }
 
     pub fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
@@ -632,5 +671,25 @@ impl EffectHolder {
 
     pub fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
         self.effects.iter().for_each(|(effect, _)| effect.render(renderer, camera));
+    }
+}
+
+#[cfg(test)]
+mod effect_holder_tests {
+    use ragnarok_packets::{EntityId, SkillId};
+
+    use super::EffectHolder;
+
+    #[test]
+    fn caster_effect_is_claimed_once_until_its_gate_expires() {
+        let mut holder = EffectHolder::default();
+        let source = EntityId(42);
+        let frost_nova = SkillId(88);
+
+        assert!(holder.claim_unique_skill_effect(source, frost_nova, 0.5));
+        assert!(!holder.claim_unique_skill_effect(source, frost_nova, 0.5));
+
+        holder.update(&[], 0.6);
+        assert!(holder.claim_unique_skill_effect(source, frost_nova, 0.5));
     }
 }

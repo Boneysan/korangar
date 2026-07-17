@@ -213,6 +213,16 @@ pub enum NetworkEvent {
         entity_id: EntityId,
         heal_amount: usize,
     },
+    /// A successful non-damage skill use (0x09CB). This is
+    /// emitted even when an area skill such as Frost Nova finds no targets,
+    /// making it the correct trigger for caster-centered visuals.
+    SkillEffectNoDamage {
+        skill_id: SkillId,
+        source_entity_id: EntityId,
+        destination_entity_id: EntityId,
+        effect_value: u32,
+        successful: bool,
+    },
     AutoRunSkill {
         skill_id: SkillId,
         skill_type: SkillType,

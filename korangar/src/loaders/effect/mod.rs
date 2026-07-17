@@ -225,7 +225,7 @@ mod diagnostics {
         let game_file_loader = GameFileLoader::default();
         game_file_loader.load_archives_from_settings();
 
-        // The files mapped in `wizard_hit_effects` / `ground_skill_effect`,
+        // The files mapped in `skill_hit_effects` / `ground_skill_effect`,
         // plus `cloudh.str` as a canonical basic-plus-morphing-pair reference.
         let paths = [
             "stormgust.str",     // Storm Gust ground cast (storm_min.str is its reduced variant)
@@ -238,6 +238,30 @@ mod diagnostics {
             "windhit3.str",
             "lightning.str",     // Lightning Bolt strike (classic)
             "new_soulexpansion\\new_soulexpansion_hit\\new_soulexpansion_hit.str", // Soul Strike
+            "freeze.str",           // Frost Diver target
+            "earthhit.str",         // Pierce / earth spells
+            "holyhit.str",          // priest holy hits
+            "firepillarbomb.str",   // Fire Pillar target
+            "shockwavehit.str",     // Shockwave Trap
+            "sandman.str",          // Sandman Trap
+            "freezing.str",         // Freezing Trap
+            "blastmine.str",        // Blast Mine
+            "claymore.str",         // Claymore Trap
+            "poisonreact.str",      // Poison React hit
+            "firewall1.str",        // Firewall cast flash (random 1-2)
+            "firewall2.str",
+            "sanctuary.str",        // Sanctuary cast
+            "magnus.str",           // Magnus Exorcismus cast
+            "firepillar.str",       // Fire Pillar cast
+            "meteor1.str",          // Meteor Storm (random 1-4)
+            "meteor2.str",
+            "meteor3.str",
+            "meteor4.str",
+            "lord.str",             // Lord of Vermilion
+            "quagmire.str",         // Quagmire
+            "crashearth.str",       // Hammer Fall
+            "skidtrap.str",         // Skid Trap
+            "venomdust.str",        // Venom Dust
             "cloudh.str",
         ];
 

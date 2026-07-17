@@ -254,13 +254,29 @@ fn windhit_effect_path() -> &'static str {
     }
 }
 
+fn meteor_effect_path() -> &'static str {
+    match rand_aes::tls::rand_range_u32(1..=4) {
+        1 => "meteor1.str",
+        2 => "meteor2.str",
+        3 => "meteor3.str",
+        _ => "meteor4.str",
+    }
+}
+
+fn firewall_effect_path() -> &'static str {
+    match rand_aes::tls::rand_range_u32(1..=2) {
+        1 => "firewall1.str",
+        _ => "firewall2.str",
+    }
+}
+
 /// M1-008: per-hit STR effects at the struck entity, wired like the original
 /// client (roBrowser's skill/effect tables were the reference — semantics
 /// only). Fire Bolt's burst waits for its bolt volley to land; Cold Bolt's
 /// classic hit is sound-only, its visual is the volley itself; Thunderstorm
 /// and Storm Gust play their large STRs at the targeted ground
 /// (`GroundSkillEffect`), so their per-hit part is small or nothing.
-fn wizard_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
+fn skill_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
     match skill_id.0 {
         // MG_SOULSTRIKE — code-drawn orbs in the original; the hit flash of
         // its direct upgrade (Soul Expansion) stands in for now.
@@ -269,6 +285,11 @@ fn wizard_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
             Color::rgb_u8(190, 120, 255),
             0.0,
         )],
+        // MG_FROSTDIVER — classic freeze/shatter on the target. The traveling
+        // ice trail is code-drawn and remains a separate coverage item.
+        15 => vec![("freeze.str", Color::rgb_u8(150, 225, 255), 0.0)],
+        // MG_FIREBALL / MG_FIREWALL — classic fire-element hit burst.
+        17 | 18 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
         // MG_FIREBOLT — classic firehit burst, timed to the volley landing.
         19 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), BOLT_LANDING_DELAY)],
         // MG_LIGHTNINGBOLT — the classic strike plus a windhit burst.
@@ -279,6 +300,34 @@ fn wizard_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
         // MG_THUNDERSTORM — per-target windhit; the storm itself plays at
         // the targeted ground.
         21 => vec![(windhit_effect_path(), Color::rgb_u8(255, 240, 150), 0.0)],
+        // KN_PIERCE — classic earth/pierce hit.
+        56 => vec![("earthhit.str", Color::rgb_u8(215, 180, 110), 0.0)],
+        // PR_TURNUNDEAD / PR_MAGNUS — holy-element hit.
+        77 | 79 => vec![("holyhit.str", Color::rgb_u8(255, 245, 190), 0.0)],
+        // WZ_FIREPILLAR / WZ_SIGHTRASHER.
+        80 => vec![("firepillarbomb.str", Color::rgb_u8(255, 80, 20), 0.0)],
+        81 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
+        // WZ_METEOR — only the fire impact belongs on the struck target. The
+        // falling meteor starts earlier from GroundSkillEffect.
+        83 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
+        // WZ_VERMILION — per-target wind hit; the large field effect is
+        // emitted by GroundSkillEffect.
+        85 => vec![(windhit_effect_path(), Color::rgb_u8(245, 235, 150), 0.0)],
+        // WZ_FROSTNOVA is handled once on the caster by the successful-use
+        // event; its per-target hit is sound-only in the classic client.
+        // WZ_EARTHSPIKE / WZ_HEAVENDRIVE. Their rising-rock geometry is still
+        // code-drawn, but the shipped hit STR is independent and usable now.
+        90 | 91 => vec![("earthhit.str", Color::rgb_u8(215, 180, 110), 0.0)],
+        // Hunter trap bursts.
+        118 => vec![("shockwavehit.str", Color::rgb_u8(210, 180, 255), 0.0)],
+        119 => vec![("sandman.str", Color::rgb_u8(230, 205, 130), 0.0)],
+        121 => vec![("freezing.str", Color::rgb_u8(150, 225, 255), 0.0)],
+        122 => vec![("blastmine.str", Color::rgb_u8(255, 120, 35), 0.0)],
+        123 => vec![("claymore.str", Color::rgb_u8(255, 80, 25), 0.0)],
+        // AS_POISONREACT — small poison-react hit.
+        139 => vec![("poisonreact.str", Color::rgb_u8(160, 90, 210), 0.0)],
+        // AL_HOLYLIGHT — the classic effect table uses the holy-hit STR.
+        156 => vec![("holyhit.str", Color::rgb_u8(255, 245, 190), 0.0)],
         _ => vec![],
     }
 }
@@ -296,10 +345,28 @@ fn wizard_bolt_volley(skill_id: SkillId) -> Option<&'static [&'static str]> {
 /// `ZC_NOTIFY_GROUNDSKILL` arrives, exactly like the original client.
 fn ground_skill_effect(skill_id: SkillId) -> Option<(&'static str, Color)> {
     match skill_id.0 {
+        // MG_FIREWALL — cast flash; persistent cells remain AddSkillUnit.
+        18 => Some((firewall_effect_path(), Color::rgb_u8(255, 45, 10))),
         // MG_THUNDERSTORM
         21 => Some(("thunderstorm.str", Color::rgb_u8(255, 240, 150))),
+        // PR_SANCTUARY / PR_MAGNUS — initial cast effects. Their persistent
+        // ground cylinders are a separate skill-unit renderer task.
+        70 => Some(("sanctuary.str", Color::rgb_u8(130, 255, 175))),
+        79 => Some(("magnus.str", Color::rgb_u8(255, 225, 170))),
+        // WZ_FIREPILLAR / WZ_VERMILION.
+        80 => Some(("firepillar.str", Color::rgb_u8(255, 65, 15))),
+        // WZ_METEOR — the full falling meteor begins at cast completion;
+        // per-target damage later adds only the fire impact.
+        83 => Some((meteor_effect_path(), Color::rgb_u8(255, 95, 25))),
+        85 => Some(("lord.str", Color::rgb_u8(245, 235, 150))),
         // WZ_STORMGUST
         89 => Some(("stormgust.str", Color::rgb_u8(175, 225, 255))),
+        // WZ_QUAGMIRE
+        92 => Some(("quagmire.str", Color::rgb_u8(135, 105, 75))),
+        // BS_HAMMERFALL / HT_SKIDTRAP / AS_VENOMDUST.
+        110 => Some(("crashearth.str", Color::rgb_u8(235, 190, 95))),
+        115 => Some(("skidtrap.str", Color::rgb_u8(235, 205, 90))),
+        140 => Some(("venomdust.str", Color::rgb_u8(140, 75, 190))),
         _ => None,
     }
 }
@@ -2180,7 +2247,7 @@ impl Client {
                                 )));
                             }
 
-                            for (effect_path, light_color, start_delay) in wizard_hit_effects(skill_id) {
+                            for (effect_path, light_color, start_delay) in skill_hit_effects(skill_id) {
                                 match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
                                     Ok(effect) => {
                                         let frame_timer = effect.new_frame_timer();
@@ -2238,6 +2305,71 @@ impl Client {
                     {
                         self.particle_holder
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), heal_amount.to_string())));
+                    }
+                }
+                NetworkEvent::SkillEffectNoDamage {
+                    skill_id,
+                    source_entity_id,
+                    destination_entity_id,
+                    effect_value,
+                    successful,
+                } => {
+                    // Preserve the heal-number behavior that used to be
+                    // produced directly by the packet handler.
+                    const AL_HEAL: u16 = 28;
+                    const AB_CHEAL: u16 = 2043;
+                    const AB_HIGHNESSHEAL: u16 = 2051;
+                    const HLIF_HEAL: u16 = 8001;
+                    let is_heal_skill = matches!(skill_id.0, AL_HEAL | AB_CHEAL | AB_HIGHNESSHEAL | HLIF_HEAL);
+                    let is_displayable = effect_value > 0 && effect_value < i32::MAX as u32;
+
+                    if is_heal_skill
+                        && is_displayable
+                        && let Some(entity) = self
+                            .client_state
+                            .follow(client_state().entities())
+                            .iter()
+                            .find(|entity| entity.get_entity_id() == destination_entity_id)
+                            .or_else(|| self.client_state.try_follow(this_entity()))
+                    {
+                        self.particle_holder
+                            .spawn_particle(Box::new(HealNumber::new(entity.get_position(), effect_value.to_string())));
+                    }
+
+                    // WZ_FROSTNOVA: the original client plays freeze.str once
+                    // on the caster at successful skill use. This packet is
+                    // sent even when no enemy is in range.
+                    if successful && skill_id.0 == 88 {
+                        let source_position = self
+                            .client_state
+                            .follow(client_state().entities())
+                            .iter()
+                            .find(|source| source.get_entity_id() == source_entity_id)
+                            .map(|source| source.get_position())
+                            .or_else(|| self.client_state.try_follow(this_entity()).map(|source| source.get_position()));
+
+                        if let Some(source_position) = source_position
+                            && self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5)
+                        {
+                            match self.effect_loader.get_or_load("freeze.str", &self.texture_loader) {
+                                Ok(effect) => {
+                                    let frame_timer = effect.new_frame_timer();
+                                    self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                                        effect,
+                                        frame_timer,
+                                        EffectCenter::Position(source_position),
+                                        Vector3::new(0.0, 0.0, 0.0),
+                                        PointLightId::new(source_entity_id.0 ^ u32::from(skill_id.0)),
+                                        Vector3::new(0.0, 6.0, 0.0),
+                                        Color::rgb_u8(145, 220, 255),
+                                        55.0,
+                                        false,
+                                        0.0,
+                                    )));
+                                }
+                                Err(error) => eprintln!("[skill-effect] failed to load freeze.str: {error:?}"),
+                            }
+                        }
                     }
                 }
                 NetworkEvent::StatusChange {

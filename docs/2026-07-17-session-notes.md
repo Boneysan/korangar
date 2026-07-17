@@ -68,3 +68,63 @@ were never STR files (`ef_*` recipes in roBrowserLegacy). Plus skill-unit
 visuals beyond Firewall/Pneuma, `DisplaySpecialEffectPacket`, cast circles,
 and sounds. The roadmap row records the proven method (wire probe → STR
 dump → reference tables → live check).
+
+## Classic skill-effect coverage pass — asset-backed batch 1
+
+The first catalog-wide follow-up keeps to effects that are already shipped as
+classic STR files and are supported by the corrected renderer. The former
+`wizard_hit_effects` table is now `skill_hit_effects` and covers additional
+Mage/Wizard hits plus Knight, Priest, Hunter, Assassin, and Holy Light hits.
+`ground_skill_effect` now includes Firewall, Sanctuary, Magnus, Fire Pillar,
+Meteor Storm, Lord of Vermilion, Quagmire, Hammer Fall, Skid Trap, and Venom
+Dust cast effects.
+
+Live follow-up initially put Meteor's full STR and Frost Nova's freeze STR on
+each damaged target. That exposed the packets and timing problem, but live
+comparison showed only a small animation as the mob died instead of the
+original spell presentation. Rechecking the classic recipes established the
+correct split: Meteor's random `meteor1-4.str` starts at the ground-cast
+position, while only `firehit1-3.str` belongs on each damaged target. Frost
+Nova's `freeze.str` plays once on the caster and its per-target hit is
+sound-only. The mappings now follow that split. A short-lived source/skill
+gate protects Frost Nova's one caster effect from duplicate successful-use
+notifications.
+
+Every new mapping uses `EffectWithLight`, with elemental light colors at the
+target or ground position. All 24 newly referenced STR assets were loaded and
+parsed directly from the configured GRFs with zero unconsumed bytes. Effects
+that are code-drawn in the classic client (Napalm Beat, Frost Diver travel,
+Jupitel Thunder, Earth Spike/Heaven's Drive geometry, Ice Wall, persistent
+Sanctuary/Magnus fields) remain intentionally separate work.
+
+Live testing exposed a first-use timing failure in the new Meteor and Frost
+Nova mappings: their elemental point lights appeared, but the STR geometry did
+not. Loading a previously unseen STR and all of its textures is synchronous;
+the resulting long application frame was passed into `FrameTimer`, which could
+advance a short effect directly to its end. STR animation advancement is now
+limited to 1/15 second per application frame, preserving the animation across
+asset-loading stalls. A regression test covers a two-second loading frame;
+client library tests are green (81 passed, 4 ignored), networking tests are
+green (5 passed), and the release binary was rebuilt for live verification.
+
+The next live pass verified the corrected Meteor Storm presentation. Frost
+Nova still produced no caster animation; its damage packet's source identifier
+did not resolve through the ordinary map-entity lookup. Frost Nova now falls
+back to the authoritative local player entity before claiming its dedup key,
+and missing-caster or STR-load failures are logged explicitly rather than
+remaining silent. Release rebuilt for another live check.
+
+Further live testing showed Frost Nova rendering when it damaged/killed a mob,
+but not when cast with no enemies nearby. Hercules always calls
+`clif->skill_nodamage` for Frost Nova before its area scan; Korangar previously
+discarded that packet for every non-healing skill. The 0x09CB handler now emits
+`SkillEffectNoDamage` for all skills (while lib.rs preserves the existing heal
+number behavior), and Frost Nova's single caster-centered animation is driven
+from that successful-use event rather than target damage. This restores an
+animation even when the cast hits nothing. Tests: client 82 passed/4 ignored,
+networking 5 passed; release rebuilt for live verification.
+
+**Live-verified:** Meteor Storm now plays its falling-meteor animation at the
+cast position, and Frost Nova plays its caster-centered animation both with
+mobs in range and with no mobs nearby. The latter confirms 0x09CB successful
+skill use—not per-target damage—is the required caster-effect trigger.
