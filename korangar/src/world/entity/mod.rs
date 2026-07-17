@@ -10,8 +10,8 @@ use korangar_interface::element::StateElement;
 use korangar_interface::window::{StateWindow, Window};
 use korangar_networking::EntityData;
 use ragnarok_packets::{
-    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, JobId, Sex, StatType,
-    TilePosition, WorldPosition,
+    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, JobId, Sex, SkillId,
+    StatType, TilePosition, WorldPosition,
 };
 use rust_state::{Path, RustState, VecItem};
 #[cfg(feature = "debug")]
@@ -19,6 +19,7 @@ use smallvec::smallvec_inline;
 #[cfg(feature = "debug")]
 use wgpu::{BufferUsages, Device, Queue};
 
+use crate::Color;
 #[cfg(feature = "debug")]
 use crate::graphics::reduce_vertices;
 #[cfg(feature = "debug")]
@@ -38,7 +39,6 @@ use crate::world::{
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
-use crate::Color;
 #[cfg(feature = "debug")]
 use crate::{Buffer, ModelVertex};
 
@@ -174,6 +174,8 @@ pub struct Common {
     pub direction: Direction,
     pub head_direction: usize,
     pub sex: Sex,
+    pub weapon: u32,
+    pub shield: u32,
 
     #[hidden_element]
     pub entity_type: EntityType,
@@ -389,7 +391,55 @@ fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: Job
     }
 }
 
+fn weapon_resource_suffix(weapon: u32) -> Option<&'static str> {
+    match weapon {
+        1 => Some("단검"),
+        2 | 3 => Some("검"),
+        4 | 5 => Some("창"),
+        6 | 7 => Some("도끼"),
+        8 | 9 => Some("클럽"),
+        10 | 23 => Some("로드"),
+        11 => Some("활"),
+        12 => Some("너클"),
+        13 => Some("악기"),
+        14 => Some("채찍"),
+        15 => Some("책"),
+        16 => Some("카타르_카타르"),
+        17 => Some("권총"),
+        18..=21 => Some("기관총"),
+        22 => Some("수리검"),
+        _ => None,
+    }
+}
+
+fn weapon_sound(weapon: u32) -> &'static str {
+    match weapon {
+        1 => "attack_short_sword.wav",
+        2 => "attack_sword.wav",
+        3 => "attack_twohand_sword.wav",
+        4 | 5 => "attack_spear.wav",
+        6 | 7 => "attack_axe.wav",
+        8 | 9 => "attack_mace.wav",
+        10 | 23 => "attack_rod.wav",
+        11 => "attack_bow1.wav",
+        14 => "attack_whip.wav",
+        15 => "attack_book.wav",
+        16 => "attack_katar.wav",
+        22 => "attack_sword.wav",
+        _ => "attack_fist.wav",
+    }
+}
+
 impl Common {
+    /// Alpha applied to an entity concealed by Hiding / Cloaking / Chase Walk.
+    ///
+    /// The original client draws *your own* concealed character translucent
+    /// rather than fully invisible, so you can still see where you are.
+    /// Entities the server does not want you to see are never sent in the
+    /// first place, so anything we are asked to draw with a conceal flag is
+    /// one we are allowed to see.
+    const CONCEALED_ALPHA: f32 = 0.3;
+
     pub fn new(
         library: &Library,
         entity_data: &EntityData,
@@ -406,6 +456,8 @@ impl Common {
         let health_points = entity_data.health_points as usize;
         let maximum_health_points = entity_data.maximum_health_points as usize;
         let sex = entity_data.sex;
+        let weapon = entity_data.weapon;
+        let shield = entity_data.shield;
 
         let active_movement = None;
         let entity_type = job_id.into();
@@ -425,6 +477,8 @@ impl Common {
             direction,
             head_direction,
             sex,
+            weapon,
+            shield,
             active_movement,
             entity_type,
             // No option flags until the server sends ZC_STATE_CHANGE (M1-007). An entity
@@ -444,7 +498,15 @@ impl Common {
     }
 
     pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
-        get_entity_part_files(library, self.entity_type, self.job_id, self.sex, None)
+        let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, None);
+        if self.entity_type == EntityType::Player
+            && let Some(suffix) = weapon_resource_suffix(self.weapon)
+        {
+            let sex = if self.sex == Sex::Female { "여" } else { "남" };
+            let job = get_sprite_path_for_player_job(self.job_id);
+            files.push(format!("인간족\\{job}\\{job}_{sex}_{suffix}"));
+        }
+        files
     }
 
     pub fn is_dead(&self) -> bool {
@@ -484,9 +546,8 @@ impl Common {
                     self.sound_state.update(audio_engine, self.world_position, key, client_tick);
                 }
                 Some(ActionEvent::Attack) => {
-                    // TODO: NHA What do we need to do at this event? Other
-                    //       clients are playing the attackers weapon attack
-                    //       sound using this event.
+                    let key = audio_engine.load(weapon_sound(self.weapon));
+                    self.sound_state.update(audio_engine, self.world_position, key, client_tick);
                 }
                 None | Some(ActionEvent::Unknown) => { /* Nothing to do */ }
             }
@@ -874,14 +935,6 @@ impl Common {
         }
     }
 
-    /// Alpha applied to an entity concealed by Hiding / Cloaking / Chase Walk.
-    ///
-    /// The original client draws *your own* concealed character translucent rather than
-    /// fully invisible, so you can still see where you are. Entities the server does not
-    /// want you to see are never sent in the first place, so anything we are asked to
-    /// draw with a conceal flag is one we are allowed to see.
-    const CONCEALED_ALPHA: f32 = 0.3;
-
     pub fn render(&self, instructions: &mut Vec<EntityInstruction>, camera: &dyn Camera, add_to_picker: bool, client_tick: ClientTick) {
         if let Some(animation_data) = self.animation_data.as_ref() {
             // M1-007: modulate the existing fade alpha so hide/cloak is visible.
@@ -1144,7 +1197,8 @@ impl Player {
         }
     }
 
-    /// Soft overweight starts at the server's critical-weight percent (usually 50%).
+    /// Soft overweight starts at the server's critical-weight percent (usually
+    /// 50%).
     pub fn is_overweight(&self) -> bool {
         self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * self.critical_weight_percent
     }
@@ -1249,7 +1303,13 @@ impl Player {
 
     pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
         let common = self.get_common();
-        get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(self.hair_id))
+        let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(self.hair_id));
+        if let Some(suffix) = weapon_resource_suffix(common.weapon) {
+            let sex = if common.sex == Sex::Female { "여" } else { "남" };
+            let job = get_sprite_path_for_player_job(common.job_id);
+            files.push(format!("인간족\\{job}\\{job}_{sex}_{suffix}"));
+        }
+        files
     }
 }
 
@@ -1340,7 +1400,8 @@ impl Npc {
         );
     }
 
-    /// Ally / party-member HP bar (other player entities appear as `Npc` with `EntityType::Player`).
+    /// Ally / party-member HP bar (other player entities appear as `Npc` with
+    /// `EntityType::Player`).
     pub fn render_ally_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
         if self.common.entity_type != EntityType::Player {
             return;
@@ -1565,6 +1626,35 @@ impl Entity {
             .attack(entity_type, attack_duration, critical, client_tick);
     }
 
+    pub fn set_skill_attack(&mut self, skill_id: Option<SkillId>, attack_duration: u32, critical: bool, client_tick: ClientTick) {
+        let entity_type = self.get_entity_type();
+        let weapon = self.get_common().weapon;
+        if skill_id.is_some_and(|skill_id| skill_id.0 == 59) || weapon == 11 {
+            self.get_common_mut()
+                .animation_state
+                .alternate_attack(entity_type, attack_duration, client_tick);
+        } else if matches!(weapon, 4 | 5) {
+            // The classic weapon-action table is zero-based. Knight spear
+            // maps to entry 2, i.e. the third attack ACT action (Attack3),
+            // which carries the thrust motion and matching spear layer.
+            self.set_attack(attack_duration, true, client_tick);
+        } else {
+            // The skill packet's type 8 describes its damage/multi-hit family;
+            // it does not select the player's critical Attack3 ACT action.
+            // Classic skill recipes use the normal visible-weapon attack
+            // unless they explicitly override it (Spear Boomerang above).
+            self.set_attack(attack_duration, skill_id.is_none() && critical, client_tick);
+        }
+    }
+
+    pub fn set_weapon(&mut self, weapon: u32) {
+        self.get_common_mut().weapon = weapon;
+    }
+
+    pub fn set_shield(&mut self, shield: u32) {
+        self.get_common_mut().shield = shield;
+    }
+
     pub fn stopped_moving(&self) -> bool {
         self.get_common().stopped_moving
     }
@@ -1579,8 +1669,8 @@ impl Entity {
         common.maximum_health_points = maximum_health_points;
     }
 
-    /// Store raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Drives the concealed
-    /// (Hiding / Cloaking) alpha in [`Common::render`].
+    /// Store raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Drives the
+    /// concealed (Hiding / Cloaking) alpha in [`Common::render`].
     pub fn update_option(&mut self, option: u32) {
         self.get_common_mut().option = option;
     }

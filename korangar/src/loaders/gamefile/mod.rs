@@ -186,8 +186,9 @@ impl GameFileLoader {
 
 #[cfg(test)]
 mod resolve_map_name_tests {
-    use super::GameFileLoader;
     use korangar_loaders::FileLoader;
+
+    use super::GameFileLoader;
 
     /// Needs the configured game archives; run explicitly with
     /// `cargo test -p korangar resolve_map_name -- --ignored`.
@@ -251,6 +252,41 @@ mod resolve_map_name_tests {
             {
                 println!("{path}");
             }
+        }
+    }
+
+    /// Opens the configured GRFs, so keep it out of the default fast suite.
+    #[test]
+    #[ignore]
+    fn loads_classic_knight_spear_layer() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        for extension in ["spr", "act"] {
+            let path = format!("data\\sprite\\인간족\\기사\\기사_남_창.{extension}").to_lowercase();
+            assert!(game_file_loader.file_exists(&path), "missing {path}");
+        }
+
+        for path in [
+            "data\\texture\\effect\\ring_yellow.tga",
+            "data\\texture\\effect\\대폭발.tga",
+            "data\\texture\\effect\\lens1.tga",
+            "data\\texture\\effect\\lens2.tga",
+            "data\\texture\\effect\\pierce.str",
+            "data\\texture\\effect\\earthhit.str",
+            "data\\texture\\effect\\brandish.str",
+            "data\\texture\\effect\\brandish2.str",
+            "data\\texture\\effect\\spearstab.str",
+            "data\\texture\\effect\\spearboomerang.str",
+            "data\\texture\\effect\\bowling.str",
+            "data\\wav\\effect\\ef_magnumbreak.wav",
+            "data\\wav\\effect\\knight_brandish_spear.wav",
+            "data\\wav\\effect\\knight_spear_boomerang.wav",
+            "data\\wav\\_enemy_hit_normal1.wav",
+            "data\\wav\\effect\\ef_hit2.wav",
+        ] {
+            let path = path.to_lowercase();
+            assert!(game_file_loader.file_exists(&path), "missing {path}");
         }
     }
 }

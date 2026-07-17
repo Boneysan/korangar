@@ -24,6 +24,9 @@ pub struct PlayerCamera {
     view_matrix: Matrix4<f32>,
     projection_matrix: Matrix4<f32>,
     view_projection_matrix: Matrix4<f32>,
+    shake_remaining: f32,
+    shake_elapsed: f32,
+    shake_offset: Vector3<f32>,
 }
 
 impl PlayerCamera {
@@ -37,6 +40,9 @@ impl PlayerCamera {
             view_matrix: Matrix4::zero(),
             projection_matrix: Matrix4::zero(),
             view_projection_matrix: Matrix4::zero(),
+            shake_remaining: 0.0,
+            shake_elapsed: 0.0,
+            shake_offset: Vector3::zero(),
         }
     }
 
@@ -65,6 +71,11 @@ impl PlayerCamera {
         self.view_angle.set_desired(DEFAULT_ANGLE);
     }
 
+    pub fn shake(&mut self, duration: f32) {
+        self.shake_remaining = self.shake_remaining.max(duration);
+        self.shake_elapsed = 0.0;
+    }
+
     pub fn is_rotating_or_zooming_fast(&self) -> bool {
         let rotation_velocity = self.view_angle.get_velocity();
         let zoom_velocity = self.camera_distance.get_velocity();
@@ -88,6 +99,20 @@ impl PlayerCamera {
         let base_offset = Vector3::new(0.0, 0.0, view_distance);
         let rotated_offset = rotation.rotate_vector(base_offset);
 
+        let delta_time = delta_time as f32;
+        if self.shake_remaining > 0.0 {
+            self.shake_elapsed += delta_time;
+            self.shake_remaining = (self.shake_remaining - delta_time).max(0.0);
+            let fade = (self.shake_remaining / 0.05).clamp(0.0, 1.0);
+            self.shake_offset = Vector3::new(
+                (self.shake_elapsed * 190.0).sin() * 1.4 * fade,
+                (self.shake_elapsed * 240.0).cos() * 0.7 * fade,
+                0.0,
+            );
+        } else {
+            self.shake_offset = Vector3::zero();
+        }
+
         self.camera_position = self.focus_point() + rotated_offset;
         self.view_direction = -rotated_offset.normalize();
     }
@@ -99,7 +124,7 @@ impl Camera for PlayerCamera {
     }
 
     fn focus_point(&self) -> Point3<f32> {
-        self.focus_point.map(|component| component.get_current())
+        self.focus_point.map(|component| component.get_current()) + self.shake_offset
     }
 
     fn generate_view_projection(&mut self, window_size: ScreenSize) {

@@ -567,9 +567,9 @@ mod normalize_map_base_name_tests {
 
 #[cfg(test)]
 mod resolve_pending_cast_tests {
-    use ragnarok_packets::{EntityId, SkillType, TilePosition};
+    use ragnarok_packets::{AttackRange, EntityId, SkillType, TilePosition};
 
-    use super::{PendingCastResolution, resolve_pending_cast};
+    use super::{PendingCastResolution, is_within_skill_range, resolve_pending_cast};
     use crate::graphics::PickerTarget;
 
     #[test]
@@ -638,22 +638,33 @@ mod resolve_pending_cast_tests {
             PendingCastResolution::Fizzle
         );
     }
+
+    #[test]
+    fn skill_range_uses_the_same_chebyshev_distance_as_server_combat() {
+        let player = TilePosition { x: 10, y: 10 };
+
+        assert!(is_within_skill_range(player, TilePosition { x: 11, y: 11 }, AttackRange(1)));
+        assert!(!is_within_skill_range(player, TilePosition { x: 12, y: 11 }, AttackRange(1)));
+        assert!(is_within_skill_range(player, TilePosition { x: 17, y: 3 }, AttackRange(7)));
+    }
 }
 
-/// A skill armed for targeting. Pressing a targeted skill's hotbar key while the
-/// cursor is not over a valid target arms it here; the next left-click picks the
-/// target (RO's press-skill → reticle → click-target flow). Cancelled by
-/// right-click or Escape.
+/// A skill armed for targeting. Pressing a targeted skill's hotbar key while
+/// the cursor is not over a valid target arms it here; the next left-click
+/// picks the target (RO's press-skill → reticle → click-target flow). Cancelled
+/// by right-click or Escape.
 #[derive(Clone, Debug)]
 struct PendingSkill {
     skill_id: SkillId,
     skill_level: SkillLevel,
     skill_type: SkillType,
+    attack_range: AttackRange,
     skill_name: String,
 }
 
-/// What a left-click resolves to while a skill is armed, given what the cursor is
-/// over. Kept separate from the cast itself so the decision is pure and testable.
+/// What a left-click resolves to while a skill is armed, given what the cursor
+/// is over. Kept separate from the cast itself so the decision is pure and
+/// testable.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum PendingCastResolution {
     /// Entity-targeted skill clicked on an entity → cast on it.
@@ -686,12 +697,57 @@ fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingC
     }
 }
 
-/// Cast `pending` at whatever `target` currently resolves to. Returns `true` if a
-/// cast was sent (the target is consumed and the skill should disarm), `false` if
-/// it fizzled and the skill should stay armed. Shared by the hover-then-press fast
-/// path and the armed click path so both agree. Takes the two fields it needs by
-/// reference rather than `&mut self` so callers can hold unrelated field borrows
-/// (e.g. the per-frame point-light borrow in the render path).
+fn is_within_skill_range(player: TilePosition, target: TilePosition, attack_range: AttackRange) -> bool {
+    player.x.abs_diff(target.x).max(player.y.abs_diff(target.y)) <= attack_range.0
+}
+
+/// Cast `pending` at whatever `target` currently resolves to. Returns `true` if
+/// a cast was sent (the target is consumed and the skill should disarm),
+/// `false` if it fizzled and the skill should stay armed. Shared by the
+/// hover-then-press fast path and the armed click path so both agree. Takes the
+/// two fields it needs by reference rather than `&mut self` so callers can hold
+/// unrelated field borrows (e.g. the per-frame point-light borrow in the render
+/// path).
+fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
+    networking_system: &mut NetworkingSystem<Callback>,
+    state: &mut State<ClientState>,
+    map: Option<&Map>,
+    path_finder: &mut PathFinder,
+    skill_id: SkillId,
+    skill_level: SkillLevel,
+    attack_range: AttackRange,
+    entity_id: EntityId,
+) {
+    let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
+    let target_position = state
+        .follow(client_state().entities())
+        .iter()
+        .find(|entity| entity.get_entity_id() == entity_id)
+        .map(Entity::get_tile_position);
+
+    if let (Some(map), Some(player_position), Some(target_position)) = (map, player_position, target_position)
+        && !is_within_skill_range(player_position, target_position, attack_range)
+    {
+        if let Some(path) = path_finder.find_walkable_path_in_range(map, player_position, target_position, attack_range)
+            && let Some(nearest_tile) = path.last()
+        {
+            let _ = networking_system.player_move(WorldPosition {
+                x: nearest_tile.x,
+                y: nearest_tile.y,
+                direction: Direction::North,
+            });
+            *state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::CastSkill {
+                skill_id,
+                skill_level,
+                entity_id,
+                attack_range,
+            });
+        }
+    } else {
+        let _ = networking_system.cast_skill(skill_id, skill_level, entity_id);
+    }
+}
+
 fn perform_pending_cast<Callback: PacketCallback + Send>(
     networking_system: &mut NetworkingSystem<Callback>,
     state: &State<ClientState>,
@@ -726,11 +782,12 @@ fn perform_pending_cast<Callback: PacketCallback + Send>(
     }
 }
 
-/// Tell the player which skill is now armed and waiting for a target. The targeting
-/// reticle alone doesn't say *which* skill it is (and skills currently draw no cast
-/// effect), so this line is how arming — and a swap — is visible. Takes the chat
-/// state by reference so it can be called inside the input-drain loop, which holds
-/// a borrow of `self` that a `&mut self` method would conflict with.
+/// Tell the player which skill is now armed and waiting for a target. The
+/// targeting reticle alone doesn't say *which* skill it is (and skills
+/// currently draw no cast effect), so this line is how arming — and a swap — is
+/// visible. Takes the chat state by reference so it can be called inside the
+/// input-drain loop, which holds a borrow of `self` that a `&mut self` method
+/// would conflict with.
 fn announce_armed_skill(state: &mut State<ClientState>, skill_name: &str) {
     state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
         format!("Aiming {skill_name} — click a target (right-click or Esc to cancel)."),
@@ -749,7 +806,6 @@ pub struct Client {
     font_loader: Arc<FontLoader>,
     #[cfg(feature = "debug")]
     map_loader: Arc<MapLoader>,
-    #[cfg(feature = "debug")]
     sprite_loader: Arc<SpriteLoader>,
     texture_loader: Arc<TextureLoader>,
     library: Arc<Library>,
@@ -795,7 +851,8 @@ pub struct Client {
     point_shadow_camera: PointShadowCamera,
 
     input_event_buffer: Vec<InputEvent>,
-    /// A targeted skill awaiting a click to pick its target. See [`PendingSkill`].
+    /// A targeted skill awaiting a click to pick its target. See
+    /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
@@ -849,6 +906,259 @@ pub struct Client {
 }
 
 impl Client {
+    fn add_str_skill_effect(
+        &mut self,
+        path: &'static str,
+        position: Point3<f32>,
+        point_light_id: PointLightId,
+        light_color: Color,
+        light_intensity: f32,
+    ) {
+        self.add_str_skill_effect_with_offset(
+            path,
+            position,
+            Vector3::new(0.0, 0.0, 0.0),
+            point_light_id,
+            light_color,
+            light_intensity,
+        );
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn add_str_skill_effect_with_offset(
+        &mut self,
+        path: &'static str,
+        position: Point3<f32>,
+        effect_offset: Vector3<f32>,
+        point_light_id: PointLightId,
+        light_color: Color,
+        light_intensity: f32,
+    ) {
+        match self.effect_loader.get_or_load(path, &self.texture_loader) {
+            Ok(effect) => {
+                let frame_timer = effect.new_frame_timer();
+                self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                    effect,
+                    frame_timer,
+                    EffectCenter::Position(position),
+                    effect_offset,
+                    point_light_id,
+                    Vector3::new(0.0, 6.0, 0.0),
+                    light_color,
+                    light_intensity,
+                    false,
+                    0.0,
+                )));
+            }
+            Err(error) => eprintln!("[skill-effect] failed to load {path}: {error:?}"),
+        }
+    }
+
+    fn play_spatial_skill_sound(&self, path: &'static str, position: Point3<f32>) {
+        const SKILL_SOUND_RANGE: f32 = 250.0;
+
+        let key = self.audio_engine.load(path);
+        self.audio_engine.play_spatial_sound_effect(key, position, SKILL_SOUND_RANGE);
+    }
+
+    fn add_procedural_skill_effect(
+        &mut self,
+        texture_path: &'static str,
+        position: Point3<f32>,
+        point_light_id: PointLightId,
+        style: SkillBurstStyle,
+    ) {
+        match self.texture_loader.get_or_load(texture_path, ImageType::Color) {
+            Ok(texture) => self
+                .effect_holder
+                .add_effect(Box::new(SkillBurst::new(texture, position, style, point_light_id))),
+            Err(error) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
+        }
+    }
+
+    fn add_layered_procedural_skill_effect(
+        &mut self,
+        texture_path: &'static str,
+        secondary_texture_path: &'static str,
+        position: Point3<f32>,
+        point_light_id: PointLightId,
+        style: SkillBurstStyle,
+    ) {
+        let primary = self.texture_loader.get_or_load(texture_path, ImageType::Color);
+        let secondary = self.texture_loader.get_or_load(secondary_texture_path, ImageType::Color);
+        match (primary, secondary) {
+            (Ok(primary), Ok(secondary)) => self.effect_holder.add_effect(Box::new(
+                SkillBurst::new(primary, position, style, point_light_id).with_secondary_texture(secondary),
+            )),
+            (Err(error), _) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
+            (_, Err(error)) => eprintln!("[skill-effect] failed to load {secondary_texture_path}: {error:?}"),
+        }
+    }
+
+    fn add_spear_projectile(&mut self, source_position: Point3<f32>, target_position: Point3<f32>) {
+        match self.sprite_loader.get_or_load("이팩트\\창.spr") {
+            Ok(sprite) => match sprite.textures.first() {
+                Some(texture) => self.effect_holder.add_effect(Box::new(SkillProjectile::spear(
+                    texture.clone(),
+                    source_position,
+                    target_position,
+                ))),
+                None => eprintln!("[skill-effect] spear projectile sprite contains no frames"),
+            },
+            Err(error) => eprintln!("[skill-effect] failed to load spear projectile: {error:?}"),
+        }
+    }
+
+    fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
+        if !matches!(skill_id.0, 7 | 88 | 214 | 406 | 2006)
+            || !self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5)
+        {
+            return;
+        }
+
+        let point_light_id = PointLightId::new(source_entity_id.0 ^ u32::from(skill_id.0));
+        match skill_id.0 {
+            // SM_MAGNUM — classic double expanding cylinder.
+            7 => {
+                self.add_layered_procedural_skill_effect(
+                    "effect\\ring_yellow.tga",
+                    "effect\\대폭발.tga",
+                    position,
+                    point_light_id,
+                    SkillBurstStyle::MagnumBreak,
+                );
+                self.play_spatial_skill_sound("effect\\ef_magnumbreak.wav", position);
+                self.player_camera.shake(0.05);
+            }
+            // WZ_FROSTNOVA — one caster-centered freeze, including empty casts.
+            88 => self.add_str_skill_effect("freeze.str", position, point_light_id, Color::rgb_u8(145, 220, 255), 55.0),
+            // RG_RAID — classic blue radial lens streaks.
+            214 => self.add_procedural_skill_effect("effect\\lens1.tga", position, point_light_id, SkillBurstStyle::Raid),
+            // ASC_METEORASSAULT — eight expanding purple slashes.
+            406 => self.add_procedural_skill_effect(
+                "effect\\purpleslash.tga",
+                position,
+                point_light_id,
+                SkillBurstStyle::MeteorAssault,
+            ),
+            // RK_IGNITIONBREAK — shipped classic STR.
+            2006 => self.add_str_skill_effect(
+                "이그니션브레이크.str",
+                position,
+                point_light_id,
+                Color::rgb_u8(255, 105, 30),
+                70.0,
+            ),
+            _ => unreachable!(),
+        }
+    }
+
+    fn spawn_damage_caster_skill_effect(
+        &mut self,
+        skill_id: SkillId,
+        source_entity_id: EntityId,
+        source_position: Point3<f32>,
+        target_position: Point3<f32>,
+    ) {
+        if !matches!(skill_id.0, 56 | 57 | 58 | 59 | 62 | 136) {
+            return;
+        }
+        let claimed = self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5);
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            eprintln!(
+                "[skill-effect] damage-caster skill={} source={} claimed={claimed} source_pos={source_position:?} \
+                 target_pos={target_position:?}",
+                skill_id.0, source_entity_id.0
+            );
+        }
+        if !claimed {
+            return;
+        }
+
+        let base_light_id = source_entity_id.0 ^ u32::from(skill_id.0);
+        let source_light_id = PointLightId::new(base_light_id);
+        let neutral = Color::rgb_u8(235, 220, 180);
+        match skill_id.0 {
+            56 => self.add_str_skill_effect_with_offset(
+                "pierce.str",
+                source_position,
+                Vector3::new(0.0, 3.0, 0.0),
+                source_light_id,
+                neutral,
+                35.0,
+            ),
+            57 => {
+                self.add_str_skill_effect("brandish2.str", source_position, source_light_id, neutral, 40.0);
+                self.add_str_skill_effect(
+                    "brandish.str",
+                    target_position,
+                    PointLightId::new(base_light_id ^ 0x8000_0000),
+                    neutral,
+                    40.0,
+                );
+                self.play_spatial_skill_sound("effect\\knight_brandish_spear.wav", source_position);
+            }
+            58 => {
+                self.add_str_skill_effect_with_offset(
+                    "spearstab.str",
+                    source_position,
+                    Vector3::new(0.0, 3.0, 0.0),
+                    source_light_id,
+                    neutral,
+                    35.0,
+                );
+                self.play_spatial_skill_sound("_enemy_hit_normal1.wav", source_position);
+            }
+            59 => {
+                self.add_str_skill_effect_with_offset(
+                    "spearboomerang.str",
+                    source_position,
+                    Vector3::new(0.0, 6.0, 0.0),
+                    source_light_id,
+                    neutral,
+                    35.0,
+                );
+                self.add_spear_projectile(source_position, target_position);
+                self.play_spatial_skill_sound("effect\\knight_spear_boomerang.wav", source_position);
+            }
+            62 => {
+                self.add_str_skill_effect_with_offset(
+                    "bowling.str",
+                    source_position,
+                    Vector3::new(0.0, 6.0, 0.0),
+                    source_light_id,
+                    neutral,
+                    40.0,
+                );
+                self.add_layered_procedural_skill_effect(
+                    "effect\\lens1.tga",
+                    "effect\\lens2.tga",
+                    target_position,
+                    PointLightId::new(base_light_id ^ 0x8000_0000),
+                    SkillBurstStyle::MeleeHit,
+                );
+                self.play_spatial_skill_sound("_enemy_hit_normal1.wav", source_position);
+                self.play_spatial_skill_sound("effect\\ef_hit2.wav", target_position);
+            }
+            136 => {
+                self.add_procedural_skill_effect(
+                    "effect\\ring2.bmp",
+                    source_position,
+                    source_light_id,
+                    SkillBurstStyle::SonicBlow,
+                );
+                self.add_str_skill_effect(
+                    "sonicblow.str",
+                    target_position,
+                    PointLightId::new(base_light_id ^ 0x8000_0000),
+                    Color::rgb_u8(220, 210, 255),
+                    35.0,
+                );
+            }
+            _ => unreachable!(),
+        }
+    }
+
     pub fn init(sync_cache: bool, event_loop: Option<&EventLoop<()>>) -> Option<Self> {
         // We start a frame so that functions trying to start a measurement don't panic.
         #[cfg(feature = "debug")]
@@ -1232,7 +1542,6 @@ impl Client {
             font_loader,
             #[cfg(feature = "debug")]
             map_loader,
-            #[cfg(feature = "debug")]
             sprite_loader,
             texture_loader,
             library,
@@ -1518,7 +1827,10 @@ impl Client {
         // Deferred: cannot call &mut self helpers while draining network_event_buffer.
         let mut open_storage_ui = false;
 
-        for event in self.network_event_buffer.drain() {
+        // Own the drained batch before dispatching so event handlers can call
+        // reusable methods that borrow other Client fields mutably.
+        let network_events: Vec<_> = self.network_event_buffer.drain().collect();
+        for event in network_events {
             match event {
                 NetworkEvent::LoginServerConnected {
                     character_servers,
@@ -1989,7 +2301,7 @@ impl Client {
                     // If the entity that was removed had an attack buffered we remove the entity
                     // from the buffer.
                     let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
-                    if buffered_action.is_some_and(|buffered_action| buffered_action.is_attack_entity(entity_id)) {
+                    if buffered_action.is_some_and(|buffered_action| buffered_action.targets_entity(entity_id)) {
                         *buffered_action = None;
                     }
 
@@ -2178,6 +2490,14 @@ impl Client {
                     attack_duration,
                     is_critical,
                 } => {
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!(
+                            "[packet-log] damage source={} target={} skill={:?} hits={hit_count} duration={attack_duration}",
+                            source_entity_id.0,
+                            destination_entity_id.0,
+                            skill_id.map(|skill_id| skill_id.0),
+                        );
+                    }
                     let target_position = self
                         .client_state
                         .follow(client_state().entities())
@@ -2203,18 +2523,33 @@ impl Client {
                         }
                     }
 
+                    let mut animated_source = false;
                     if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
                         .iter_mut()
                         .find(|entity| entity.get_entity_id() == source_entity_id)
-                    // TODO: Maybe also or_else this_entity?
                     {
                         if let Some(target_position) = target_position {
                             entity.rotate_towards(target_position);
                         }
 
-                        entity.set_attack(attack_duration, is_critical, client_tick);
+                        entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        animated_source = true;
+                    }
+                    // The local player lives under `this_entity`, not in the
+                    // remote-entity vector. Without this fallback, our own
+                    // skill casts showed effects but no classic weapon action.
+                    if !animated_source
+                        && let Some(entity) = self
+                            .client_state
+                            .try_follow_mut(this_entity())
+                            .filter(|entity| entity.get_entity_id() == source_entity_id)
+                    {
+                        if let Some(target_position) = target_position {
+                            entity.rotate_towards(target_position);
+                        }
+                        entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
                     }
 
                     if let Some(entity) = self
@@ -2233,6 +2568,22 @@ impl Client {
 
                         if let Some(skill_id) = skill_id {
                             let target_position = entity.get_position();
+
+                            if let Some(source_position) = self
+                                .client_state
+                                .follow(client_state().entities())
+                                .iter()
+                                .find(|source| source.get_entity_id() == source_entity_id)
+                                .map(|source| source.get_position())
+                                .or_else(|| {
+                                    self.client_state
+                                        .try_follow(this_entity())
+                                        .filter(|source| source_entity_id.0 == 0 || source.get_entity_id() == source_entity_id)
+                                        .map(|source| source.get_position())
+                                })
+                            {
+                                self.spawn_damage_caster_skill_effect(skill_id, source_entity_id, source_position, target_position);
+                            }
 
                             if let Some(frame_paths) = wizard_bolt_volley(skill_id) {
                                 let textures: Vec<_> = frame_paths
@@ -2336,39 +2687,24 @@ impl Client {
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), effect_value.to_string())));
                     }
 
-                    // WZ_FROSTNOVA: the original client plays freeze.str once
-                    // on the caster at successful skill use. This packet is
-                    // sent even when no enemy is in range.
-                    if successful && skill_id.0 == 88 {
+                    // Caster-centered visuals use this successful-use packet;
+                    // it is sent even when an area skill finds no targets.
+                    if successful {
                         let source_position = self
                             .client_state
                             .follow(client_state().entities())
                             .iter()
                             .find(|source| source.get_entity_id() == source_entity_id)
                             .map(|source| source.get_position())
-                            .or_else(|| self.client_state.try_follow(this_entity()).map(|source| source.get_position()));
+                            .or_else(|| {
+                                self.client_state
+                                    .try_follow(this_entity())
+                                    .filter(|source| source_entity_id.0 == 0 || source.get_entity_id() == source_entity_id)
+                                    .map(|source| source.get_position())
+                            });
 
-                        if let Some(source_position) = source_position
-                            && self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5)
-                        {
-                            match self.effect_loader.get_or_load("freeze.str", &self.texture_loader) {
-                                Ok(effect) => {
-                                    let frame_timer = effect.new_frame_timer();
-                                    self.effect_holder.add_effect(Box::new(EffectWithLight::new(
-                                        effect,
-                                        frame_timer,
-                                        EffectCenter::Position(source_position),
-                                        Vector3::new(0.0, 0.0, 0.0),
-                                        PointLightId::new(source_entity_id.0 ^ u32::from(skill_id.0)),
-                                        Vector3::new(0.0, 6.0, 0.0),
-                                        Color::rgb_u8(145, 220, 255),
-                                        55.0,
-                                        false,
-                                        0.0,
-                                    )));
-                                }
-                                Err(error) => eprintln!("[skill-effect] failed to load freeze.str: {error:?}"),
-                            }
+                        if let Some(source_position) = source_position {
+                            self.spawn_successful_caster_skill_effect(skill_id, source_entity_id, source_position);
                         }
                     }
                 }
@@ -2516,6 +2852,22 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().inventory())
                         .fill(&self.async_loader, items);
+
+                    let weapon = self.client_state.follow(client_state().inventory()).equipped_weapon_type();
+                    if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+                        player.set_weapon(weapon);
+                        let entity_part_files = player.get_entity_part_files(&self.library);
+                        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                            eprintln!("[packet-log] local equipped weapon={weapon} parts={entity_part_files:?}");
+                        }
+                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
+                            player.get_entity_id(),
+                            player.get_entity_type(),
+                            entity_part_files,
+                        ) {
+                            player.set_animation_data(animation_data);
+                        }
+                    }
                 }
                 NetworkEvent::SetStorage { items } => {
                     self.client_state
@@ -2714,6 +3066,17 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().inventory())
                         .update_equipped_position(index, equipped_position);
+                    let weapon = self.client_state.follow(client_state().inventory()).equipped_weapon_type();
+                    if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
+                        player.set_weapon(weapon);
+                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
+                            player.get_entity_id(),
+                            player.get_entity_type(),
+                            player.get_entity_part_files(&self.library),
+                        ) {
+                            player.set_animation_data(animation_data);
+                        }
+                    }
                 }
                 NetworkEvent::ChangeJob { account_id, job_id } => {
                     let layout = self.async_loader.request_skill_tree_layout_load(job_id, client_tick);
@@ -2760,6 +3123,33 @@ impl Client {
                         entity.get_entity_part_files(&self.library),
                     ) {
                         entity.set_animation_data(animation_data);
+                    }
+                }
+                NetworkEvent::ChangeWeapon { account_id, weapon_id } => {
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        entity.set_weapon(weapon_id);
+                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
+                            entity.get_entity_id(),
+                            entity.get_entity_type(),
+                            entity.get_entity_part_files(&self.library),
+                        ) {
+                            entity.set_animation_data(animation_data);
+                        }
+                    }
+                }
+                NetworkEvent::ChangeShield { account_id, shield_id } => {
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        entity.set_shield(shield_id);
                     }
                 }
                 NetworkEvent::LoggedOut => {
@@ -3049,9 +3439,7 @@ impl Client {
                                     frame_timer,
                                     EffectCenter::Position(world_position),
                                     Vector3::new(0.0, 0.0, 0.0),
-                                    PointLightId::new(
-                                        u32::from(position.x) ^ (u32::from(position.y) << 16) ^ u32::from(skill_id.0),
-                                    ),
+                                    PointLightId::new(u32::from(position.x) ^ (u32::from(position.y) << 16) ^ u32::from(skill_id.0)),
                                     Vector3::new(0.0, 6.0, 0.0),
                                     light_color,
                                     60.0,
@@ -3086,11 +3474,11 @@ impl Client {
                     // emote; until the async load completes the chat line below
                     // is the only feedback.
                     if !self.emote_bubbles.has_animation_data()
-                        && let Some(animation_data) = self.async_loader.request_animation_data_load(
-                            EMOTE_ANIMATION_ENTITY_ID,
-                            EntityType::Npc,
-                            vec![EMOTE_SPRITE_FILE.to_string()],
-                        )
+                        && let Some(animation_data) =
+                            self.async_loader
+                                .request_animation_data_load(EMOTE_ANIMATION_ENTITY_ID, EntityType::Npc, vec![
+                                    EMOTE_SPRITE_FILE.to_string(),
+                                ])
                     {
                         self.emote_bubbles.set_animation_data(animation_data);
                     }
@@ -3103,8 +3491,7 @@ impl Client {
                         .client_state
                         .try_follow(this_entity())
                         .is_some_and(|entity| entity.get_entity_id() == entity_id);
-                    let local_entity_name = is_local_entity
-                        .then(|| self.client_state.follow(client_state().player_name()).to_owned());
+                    let local_entity_name = is_local_entity.then(|| self.client_state.follow(client_state().player_name()).to_owned());
                     let player_name = self
                         .client_state
                         .follow(client_state().entities())
@@ -4510,11 +4897,26 @@ impl Client {
                         )),
                     }
                 }
+                InputEvent::CastSkillAtEntity {
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    entity_id,
+                } => cast_or_path_entity_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    entity_id,
+                ),
                 InputEvent::CastSkill { slot } => {
                     // Resolve the slot to owned data under an immutable borrow, then act — so the
                     // cast / arm / chat-feedback below can borrow self mutably without conflict.
                     let learnable_skill = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).clone();
-                    let skill_type = learnable_skill.as_ref().and_then(|learnable_skill| {
+                    let skill_targeting = learnable_skill.as_ref().and_then(|learnable_skill| {
                         self.client_state
                             .follow(client_state().skill_tree().skills())
                             .iter()
@@ -4522,10 +4924,10 @@ impl Client {
                                 learned_skill.skill_id == learnable_skill.skill_id
                                     && learned_skill.skill_level.0 >= learnable_skill.maximum_level.0
                             })
-                            .map(|learned_skill| learned_skill.skill_type)
+                            .map(|learned_skill| (learned_skill.skill_type, learned_skill.attack_range))
                     });
 
-                    if let (Some(learnable_skill), Some(skill_type)) = (learnable_skill, skill_type) {
+                    if let (Some(learnable_skill), Some((skill_type, attack_range))) = (learnable_skill, skill_targeting) {
                         match skill_type {
                             SkillType::Passive => {}
                             SkillType::SelfCast => {
@@ -4539,9 +4941,11 @@ impl Client {
                                         );
                                     }
                                     false => {
-                                        let _ =
-                                            self.networking_system
-                                                .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, this_entity_id);
+                                        let _ = self.networking_system.cast_skill(
+                                            learnable_skill.skill_id,
+                                            learnable_skill.maximum_level,
+                                            this_entity_id,
+                                        );
                                     }
                                 }
                             }
@@ -4553,9 +4957,9 @@ impl Client {
                                     PickerTarget::Entity(entity_id) => entity_id,
                                     _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
                                 };
-                                let _ = self
-                                    .networking_system
-                                    .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, target_id);
+                                let _ =
+                                    self.networking_system
+                                        .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, target_id);
                             }
                             SkillType::Attack => {
                                 // Entity-target: fast-cast if the cursor is already over a target,
@@ -4564,16 +4968,24 @@ impl Client {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level: learnable_skill.maximum_level,
                                     skill_type,
+                                    attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
                                 };
-                                if !perform_pending_cast(
-                                    &mut self.networking_system,
-                                    &self.client_state,
-                                    &pending,
-                                    input_report.mouse_target,
-                                ) {
-                                    announce_armed_skill(&mut self.client_state, &pending.skill_name);
-                                    self.pending_skill = Some(pending);
+                                match resolve_pending_cast(pending.skill_type, input_report.mouse_target) {
+                                    PendingCastResolution::CastEntity(entity_id) => cast_or_path_entity_skill(
+                                        &mut self.networking_system,
+                                        &mut self.client_state,
+                                        self.map.as_deref(),
+                                        &mut self.path_finder,
+                                        pending.skill_id,
+                                        pending.skill_level,
+                                        pending.attack_range,
+                                        entity_id,
+                                    ),
+                                    _ => {
+                                        announce_armed_skill(&mut self.client_state, &pending.skill_name);
+                                        self.pending_skill = Some(pending);
+                                    }
                                 }
                             }
                             SkillType::Ground | SkillType::Trap => {
@@ -4585,6 +4997,7 @@ impl Client {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level: learnable_skill.maximum_level,
                                     skill_type,
+                                    attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
                                 });
                             }
@@ -5151,7 +5564,7 @@ impl Client {
     }
 
     /// Fire any action that the player buffered while out of range or while
-    /// still moving (attack, pick up item). Must be called after
+    /// still moving (attack, skill, pick up item). Must be called after
     /// [`Self::update_entities`] so that the player's `stopped_moving` state
     /// reflects this frame.
     #[inline(always)]
@@ -5182,6 +5595,42 @@ impl Client {
                     .any(|item| item.get_entity_id() == entity_id)
                 {
                     let _ = self.networking_system.pick_up_item(entity_id);
+                }
+            }
+            BufferedAction::CastSkill {
+                skill_id,
+                skill_level,
+                entity_id,
+                attack_range,
+            } => {
+                let player_position = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
+                let target_position = self
+                    .client_state
+                    .follow(client_state().entities())
+                    .iter()
+                    .find(|entity| entity.get_entity_id() == entity_id)
+                    .map(Entity::get_tile_position);
+
+                if let (Some(map), Some(player_position), Some(target_position)) = (self.map.as_deref(), player_position, target_position) {
+                    if is_within_skill_range(player_position, target_position, attack_range) {
+                        let _ = self.networking_system.cast_skill(skill_id, skill_level, entity_id);
+                    } else if let Some(path) =
+                        self.path_finder
+                            .find_walkable_path_in_range(map, player_position, target_position, attack_range)
+                        && let Some(nearest_tile) = path.last()
+                    {
+                        let _ = self.networking_system.player_move(WorldPosition {
+                            x: nearest_tile.x,
+                            y: nearest_tile.y,
+                            direction: Direction::North,
+                        });
+                        *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::CastSkill {
+                            skill_id,
+                            skill_level,
+                            entity_id,
+                            attack_range,
+                        });
+                    }
                 }
             }
         }
@@ -5523,12 +5972,25 @@ impl Client {
                             // disarms; on empty ground it fizzles and stays armed (right-click or
                             // Escape is the only cancel), and the click never falls through to a
                             // walk/interact.
-                            if !perform_pending_cast(
-                                &mut self.networking_system,
-                                &self.client_state,
-                                &pending,
-                                input_report.mouse_target,
-                            ) {
+                            let resolved = resolve_pending_cast(pending.skill_type, input_report.mouse_target);
+                            let performed = match resolved {
+                                PendingCastResolution::CastEntity(entity_id) => {
+                                    self.input_event_buffer.push(InputEvent::CastSkillAtEntity {
+                                        skill_id: pending.skill_id,
+                                        skill_level: pending.skill_level,
+                                        attack_range: pending.attack_range,
+                                        entity_id,
+                                    });
+                                    true
+                                }
+                                _ => perform_pending_cast(
+                                    &mut self.networking_system,
+                                    &self.client_state,
+                                    &pending,
+                                    input_report.mouse_target,
+                                ),
+                            };
+                            if !performed {
                                 // Fizzled — put it back so it stays armed for the next click.
                                 self.pending_skill = Some(pending);
                             }
@@ -6313,7 +6775,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
         }
 
-        if let Some(BufferedAction::AttackEntity { entity_id }) = self.buffered_action
+        if let Some(entity_id) = self.buffered_action.and_then(|action| action.target_entity_id())
             && let Some(entity) = self
                 .client_state
                 .follow(client_state().entities())
@@ -6355,7 +6817,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                         // we make sure not to render it here again if it's the same.
                         if !self
                             .buffered_action
-                            .is_some_and(|buffered_action| buffered_action.is_attack_entity(entity_id))
+                            .is_some_and(|buffered_action| buffered_action.targets_entity(entity_id))
                         {
                             entity.render_status(
                                 self.middle_interface_renderer,

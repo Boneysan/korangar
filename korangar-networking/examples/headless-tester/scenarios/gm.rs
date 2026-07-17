@@ -3,7 +3,7 @@
 use std::time::Duration;
 
 use korangar_networking::{MessageColor, NetworkEvent};
-use ragnarok_packets::StatType;
+use ragnarok_packets::{HotbarSlot, HotbarTab, HotkeyData, HotkeyType, ItemId, SkillId, StatType};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -14,6 +14,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("gm-job", 2, gm_job),
         Scenario::new("gm-level", 2, gm_level),
         Scenario::new("gm-allskill", 2, gm_allskill),
+        Scenario::new("provision-effect-roster", 2, provision_effect_roster),
         Scenario::new("gm-item", 2, gm_item),
         Scenario::new("gm-zeny", 2, gm_zeny),
         Scenario::new("gm-warp", 2, gm_warp),
@@ -84,6 +85,103 @@ fn gm_allskill(config: &Config) -> Result<(), String> {
     })?;
     println!("    skill tree has {skill_count} skills");
     context.ensure_job(0)?;
+    Ok(())
+}
+
+/// Populate the persistent GUI characters used for the classic skill-effect
+/// acceptance pass. Each character keeps its intended class, receives the
+/// complete server skill tree (including prerequisites), and gets any weapon
+/// types needed to exercise the effect-covered skills.
+fn provision_effect_roster(config: &Config) -> Result<(), String> {
+    struct CharacterSetup {
+        name: &'static str,
+        job_id: u16,
+        expected_skills: &'static [u16],
+        weapons: &'static [u32],
+    }
+
+    const ROSTER: &[CharacterSetup] = &[
+        CharacterSetup {
+            name: "EffectKnight",
+            job_id: 7,
+            expected_skills: &[7, 56, 57, 58, 59, 62],
+            // Sword for Magnum Break/Bowling Bash and spear for the spear set.
+            weapons: &[1101, 1404],
+        },
+        CharacterSetup {
+            name: "EffectSinX",
+            job_id: 4013,
+            expected_skills: &[136, 406],
+            weapons: &[1250],
+        },
+        CharacterSetup {
+            name: "EffectStalker",
+            job_id: 4018,
+            expected_skills: &[214],
+            weapons: &[1101],
+        },
+        CharacterSetup {
+            name: "EffectRune",
+            job_id: 4054,
+            expected_skills: &[2006],
+            weapons: &[1101, 1404],
+        },
+    ];
+
+    for setup in ROSTER {
+        let mut context = TestContext::connect_as(config, &config.username, &config.password, Some(setup.name), None)?;
+        if context.job_id.0 != setup.job_id {
+            return Err(format!(
+                "{} has job {}, expected {}",
+                setup.name, context.job_id.0, setup.job_id
+            ));
+        }
+
+        context.flush();
+        context.say("@allskill")?;
+        let skills = context.wait_for("SkillTree after roster @allskill", |event| match event {
+            NetworkEvent::SkillTree { skill_information } if skill_information.len() > 10 => Some(skill_information.clone()),
+            _ => None,
+        })?;
+        for &skill_id in setup.expected_skills {
+            if !skills.iter().any(|skill| skill.skill_id == SkillId(skill_id)) {
+                return Err(format!("{} is missing required skill {} after @allskill", setup.name, skill_id));
+            }
+        }
+
+        for &item_id in setup.weapons {
+            if !context.inventory.iter().any(|item| item.item_id == ItemId(item_id)) {
+                context.give_item(item_id, 1)?;
+            }
+        }
+
+        for (slot, &skill_id) in setup.expected_skills.iter().enumerate() {
+            let skill_level = skills
+                .iter()
+                .find(|skill| skill.skill_id == SkillId(skill_id))
+                .expect("required roster skill was checked above")
+                .skill_level;
+            context
+                .net
+                .set_hotkey_data(
+                    HotbarTab(0),
+                    HotbarSlot(slot as u16),
+                    HotkeyData {
+                        hotkey_type: HotkeyType::Skill,
+                        item_or_skill_id: skill_id as u32,
+                        quantity_or_skill_level: skill_level.0,
+                    },
+                )
+                .map_err(|_| format!("disconnected while binding {} skill {}", setup.name, skill_id))?;
+        }
+        context.pump(Duration::from_millis(300));
+        println!(
+            "    {}: verified and bound {} effect skills; stocked {} weapon types",
+            setup.name,
+            setup.expected_skills.len(),
+            setup.weapons.len()
+        );
+    }
     Ok(())
 }
 

@@ -399,6 +399,14 @@ where
             account_id: packet.account_id,
             hair_id: packet.value,
         }),
+        SpriteChangeType::Weapon => Some(NetworkEvent::ChangeWeapon {
+            account_id: packet.account_id,
+            weapon_id: packet.value,
+        }),
+        SpriteChangeType::Shield => Some(NetworkEvent::ChangeShield {
+            account_id: packet.account_id,
+            shield_id: packet.value,
+        }),
         _ => None,
     })?;
     packet_handler.register({

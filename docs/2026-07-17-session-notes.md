@@ -128,3 +128,72 @@ networking 5 passed; release rebuilt for live verification.
 cast position, and Frost Nova plays its caster-centered animation both with
 mobs in range and with no mobs nearby. The latter confirms 0x09CB successful
 skill use—not per-target damage—is the required caster-effect trigger.
+
+## Classic skill-effect coverage pass — caster batch 2
+
+An audit of first/second/transcendent class recipes found the same trigger
+families beyond Wizard. Hercules confirms Magnum Break (7), Raid (214), Meteor
+Assault (406), and Ignition Break (2006) emit successful non-damage skill-use
+notifications; they now use the same caster path that fixed empty-area Frost
+Nova. Ignition Break loads its shipped `이그니션브레이크.str`. The other
+three were procedural in the classic client, so `SkillBurst` adds reusable
+expanding-cylinder, radial-streak, and eight-direction slash recipes using the
+shipped `ring_yellow.tga`, `lens1.tga`, and `purpleslash.tga` textures. Each
+recipe registers a matching point light.
+
+Targeted Knight/Assassin attacks use damage as their available trigger and a
+short-lived source/skill gate to avoid one caster animation per target. Pierce,
+Brandish Spear, Spear Stab, Spear Boomerang, and Bowling Bash now load their
+classic caster STRs; Brandish also plays its target sweep. Sonic Blow combines
+the procedural expanding caster ring with `sonicblow.str` on the target.
+
+All eight newly mapped STRs parse from the configured GRFs with zero
+unconsumed bytes, and all four procedural textures were found in the GRFs.
+Live GUI verification remains pending for this batch.
+
+For repeatable GUI acceptance, the local `korangar` GM account now has a
+four-character effect roster on `prt_fild07`: `EffectKnight` (Knight),
+`EffectSinX` (Assassin Cross), `EffectStalker` (Stalker), and `EffectRune`
+(Rune Knight). The `provision-effect-roster` headless scenario grants each
+character its complete server skill tree, verifies all ten batch-2 skill IDs,
+binds the relevant skills consecutively from F1, and supplies the necessary
+sword, spear, or katar without duplicating existing items. The initial
+provisioning run passed for all four characters.
+
+## Knight weapon layers, classic recipes, and skill-range movement
+
+The first Knight GUI pass exposed two independent omissions. Character packets
+discarded the server's weapon and shield appearance, and the local player did
+not refresh its appearance from equipped inventory. Both fields are now
+promoted end-to-end. Equipped inventory derives the local weapon type, and an
+appearance change reloads the entity ACT/SPR layers. Sparse ACT actions use an
+empty frame instead of the format's `usize::MAX` sentinel, with an additional
+render bounds check, so selecting the provisioned Knight cannot crash on a
+missing weapon frame. The classic weapon-action table is zero-based: Knight
+spear value 2 selects `Attack3`; Spear Boomerang deliberately keeps the
+weaponless throwing action. Live inspection confirmed the spear weapon layer
+and the Pierce damage packet's local source/action duration.
+
+The follow-up visual pass compared all six provisioned Knight skills with the
+official GRF assets and the independent roBrowserLegacy semantic tables. The
+resulting layer matrix is recorded in
+[KNIGHT_SKILL_EFFECT_RECIPES.md](KNIGHT_SKILL_EFFECT_RECIPES.md). Pierce,
+Brandish Spear, Spear Stab, Spear Boomerang, and Bowling Bash combine the
+weapon ACT with their caster/body/head STR, target STR or procedural hit, point
+light, and classic spatial sound. Spear Boomerang also travels source-to-target
+with the official spear sprite. Magnum Break uses its two original expanding
+cylinders, sound, point light, and 50 ms camera quake. A focused ignored test
+opens the configured official GRFs and confirms every referenced Knight
+SPR/ACT, STR, texture, and sound exists.
+
+Entity-targeted skills now share the normal attack/pickup movement recipe.
+Clicking an out-of-range target computes a walkable path to the learned skill
+range, buffers the exact skill id/level/range/target, and casts after movement
+stops. If the target moves before arrival, the client recomputes the path and
+keeps the same cast buffered. Removing the target clears the buffered action.
+Range decisions use the server-compatible Chebyshev tile distance and have a
+unit test covering melee, diagonal, and longer-range cases.
+
+Validation after this pass: `cargo check -p korangar`; 83 client library tests
+passed with 5 ignored; 5 networking tests passed; the focused official Knight
+asset test passed; and the release client rebuilt successfully.

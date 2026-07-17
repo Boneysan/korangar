@@ -1,5 +1,7 @@
 mod bolts;
+mod burst;
 mod portal;
+mod projectile;
 
 use std::sync::Arc;
 
@@ -11,8 +13,9 @@ use ragnarok_packets::{EntityId, SkillId};
 use wgpu::BlendFactor;
 
 pub use self::bolts::FallingBolts;
+pub use self::burst::{SkillBurst, SkillBurstStyle};
 pub use self::portal::{PORTAL_TEXTURE_PATH, PortalVortex};
-
+pub use self::projectile::SkillProjectile;
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
@@ -397,7 +400,10 @@ mod frame_at_tests {
             let result = Layer::frame_at(&frames, key, 21).expect("layer must be visible during the animation");
             let expected_texture = (0.4 * key) % 21.0;
             assert!((result.texture_index - expected_texture).abs() < 0.001, "texture at key {key}");
-            assert!((result.xy[0] - result.xy[1]).abs() > 1.0, "quad must not be degenerate at key {key}");
+            assert!(
+                (result.xy[0] - result.xy[1]).abs() > 1.0,
+                "quad must not be degenerate at key {key}"
+            );
             assert!(result.color.alpha > 0.0, "frame must not be fully transparent at key {key}");
         }
     }
@@ -473,7 +479,10 @@ mod frame_at_tests {
             frame(50, FrameType::Basic, AnimationType::Type4, 0.0, 0.0),
         ];
         let result = Layer::frame_at(&reversing, 3.0, 10).unwrap();
-        assert!((result.texture_index - 7.0).abs() < 0.001, "type 4 plays backwards with wrap-around");
+        assert!(
+            (result.texture_index - 7.0).abs() < 0.001,
+            "type 4 plays backwards with wrap-around"
+        );
     }
 
     #[test]
@@ -659,7 +668,9 @@ impl EffectHolder {
 
     pub fn update(&mut self, entities: &[crate::world::Entity], delta_time: f32) {
         self.effects.retain_mut(|(effect, _)| effect.update(entities, delta_time));
-        self.unique_skill_effects.iter_mut().for_each(|(_, _, remaining)| *remaining -= delta_time);
+        self.unique_skill_effects
+            .iter_mut()
+            .for_each(|(_, _, remaining)| *remaining -= delta_time);
         self.unique_skill_effects.retain(|(_, _, remaining)| *remaining > 0.0);
     }
 

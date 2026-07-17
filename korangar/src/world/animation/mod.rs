@@ -114,6 +114,19 @@ impl AnimationState {
         self.looping = false;
     }
 
+    pub fn throwing_attack(&mut self, entity_type: EntityType, attack_duration: u32, client_tick: ClientTick) {
+        self.action_type = AnimationActionType::Attack2;
+        self.action_base_offset = self.action_type.action_base_offset(entity_type);
+        self.start_time = client_tick;
+        self.duration = Some(attack_duration);
+        self.factor = None;
+        self.looping = false;
+    }
+
+    pub fn alternate_attack(&mut self, entity_type: EntityType, attack_duration: u32, client_tick: ClientTick) {
+        self.throwing_attack(entity_type, attack_duration, client_tick);
+    }
+
     pub fn pickup(&mut self, entity_type: EntityType, client_tick: ClientTick) {
         self.action_type = AnimationActionType::Pickup;
         self.action_base_offset = self.action_type.action_base_offset(entity_type);
@@ -410,7 +423,13 @@ impl AnimationData {
         for (index, frame_part) in frame.frame_parts.iter().enumerate() {
             let animation_index = frame_part.animation_index;
             let sprite_number = frame_part.sprite_number;
-            let texture = &self.animation_pair[animation_index].sprites.textures[sprite_number];
+            let Some(texture) = self
+                .animation_pair
+                .get(animation_index)
+                .and_then(|pair| pair.sprites.textures.get(sprite_number))
+            else {
+                continue;
+            };
 
             let frame_size = Vector2::new(frame.size.x as f32, frame.size.y as f32);
 

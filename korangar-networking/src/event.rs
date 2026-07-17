@@ -332,6 +332,14 @@ pub enum NetworkEvent {
         account_id: AccountId,
         hair_id: u32,
     },
+    ChangeWeapon {
+        account_id: AccountId,
+        weapon_id: u32,
+    },
+    ChangeShield {
+        account_id: AccountId,
+        shield_id: u32,
+    },
     LoggedOut,
     FriendRequest {
         requestee: Friend,

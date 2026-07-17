@@ -67,7 +67,8 @@ impl Inventory {
     /// Move an item in the local inventory display order (grid drag-and-drop).
     ///
     /// Hercules does not expose a free inventory rearrange packet; this only
-    /// changes how the client lays items out until the next full inventory sync.
+    /// changes how the client lays items out until the next full inventory
+    /// sync.
     pub fn reorder_display(&mut self, from_index: InventoryIndex, to_slot: usize) {
         let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
             return;
@@ -110,5 +111,49 @@ impl Inventory {
 
     pub fn items(&self) -> &[InventoryItem<ResourceMetadata>] {
         &self.items
+    }
+
+    /// Generic weapon appearance type for the equipped right-hand item.
+    ///
+    /// Character selection commonly reports weapon look 0 for the local
+    /// player. The full inventory is authoritative and arrives after map
+    /// login, so derive the classic weapon family from the equipped item ID.
+    pub fn equipped_weapon_type(&self) -> u32 {
+        self.items
+            .iter()
+            .find_map(|item| {
+                let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
+                    return None;
+                };
+                equipped_position
+                    .contains(EquipPosition::RIGHT_HAND)
+                    .then(|| weapon_type_from_item_id(item.item_id.0))
+            })
+            .unwrap_or(0)
+    }
+}
+
+fn weapon_type_from_item_id(item_id: u32) -> u32 {
+    match item_id {
+        1100..=1149 | 13400..=13499 => 2,
+        1150..=1199 | 21000..=21999 => 3,
+        1200..=1249 | 13000..=13099 => 1,
+        1250..=1299 => 16,
+        1300..=1349 => 6,
+        1350..=1399 => 7,
+        1400..=1449 => 4,
+        1450..=1499 => 5,
+        1500..=1549 => 8,
+        1550..=1599 => 15,
+        1600..=1699 => 10,
+        1700..=1749 | 18100..=18499 => 11,
+        1800..=1849 => 12,
+        1900..=1949 => 13,
+        1950..=1999 => 14,
+        20000..=20999 => 23,
+        13100..=13149 => 17,
+        13150..=13199 => 18,
+        13300..=13399 => 22,
+        _ => 0,
     }
 }

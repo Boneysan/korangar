@@ -1,19 +1,19 @@
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
 pub mod character_slots;
+pub mod friends;
 pub mod hotbar;
+pub mod identify;
 pub mod inventory;
 pub mod localization;
-pub mod friends;
-pub mod identify;
+pub mod minimap;
 pub mod party;
 pub mod skill_cooldowns;
 pub mod skills;
-pub mod minimap;
 pub mod status_effects;
 pub mod storage;
-pub mod trade;
 pub mod theme;
+pub mod trade;
 
 use std::cell::Cell;
 use std::sync::Arc;
@@ -34,7 +34,7 @@ use korangar_networking::{MessageColor, SellItem, ShopItem};
 use localization::Localization;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::{EffectSource, LightSource, MapData, SoundSource};
-use ragnarok_packets::{CharacterId, CharacterServerInformation, EntityId};
+use ragnarok_packets::{AttackRange, CharacterId, CharacterServerInformation, EntityId, SkillId, SkillLevel};
 #[cfg(feature = "debug")]
 use rust_state::{ManuallyAssertExt, VecIndexExt};
 use rust_state::{Path, PathExt, RustState, Selector};
@@ -44,14 +44,14 @@ use theme::{InterfaceTheme, InterfaceThemePathExt, InterfaceThemeType};
 use self::cache_statistics::CacheStatistics;
 #[cfg(feature = "debug")]
 use crate::PacketHistory;
+use crate::dm::DmCampaignState;
 #[cfg(feature = "debug")]
 use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
-use crate::dm::DmCampaignState;
 use crate::interface::windows::{
-    BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState,
-    LoginWindowState, LoginWindowStatePathExt, LootWindowState, SkillTreeWindowState, WindowCache, WindowClass,
+    BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState, LoginWindowState,
+    LoginWindowStatePathExt, LootWindowState, SkillTreeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -61,18 +61,18 @@ use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
 use crate::state::character_slots::CharacterSlots;
-use crate::state::hotbar::Hotbar;
-use crate::state::inventory::Inventory;
 use crate::state::friends::FriendEntry;
+use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
+use crate::state::inventory::Inventory;
+use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
-use crate::state::minimap::MinimapState;
 use crate::state::status_effects::StatusEffects;
 use crate::state::storage::StorageState;
-use crate::state::trade::TradeState;
 use crate::state::theme::WorldTheme;
+use crate::state::trade::TradeState;
 #[cfg(feature = "debug")]
 use crate::world::Object;
 use crate::world::{Entity, GroundItem, Player, ResourceMetadata};
@@ -98,17 +98,41 @@ impl ChatMessage {
 
 #[derive(Debug, Clone, Copy, RustState, StateElement)]
 pub enum BufferedAction {
-    AttackEntity { entity_id: EntityId },
-    PickUpItem { entity_id: EntityId },
+    AttackEntity {
+        entity_id: EntityId,
+    },
+    PickUpItem {
+        entity_id: EntityId,
+    },
+    CastSkill {
+        skill_id: SkillId,
+        skill_level: SkillLevel,
+        entity_id: EntityId,
+        attack_range: AttackRange,
+    },
 }
 
 impl BufferedAction {
-    pub fn is_attack_entity(&self, entity_id: EntityId) -> bool {
-        matches!(self, BufferedAction::AttackEntity { entity_id: buffered_entity_id } if *buffered_entity_id == entity_id)
-    }
-
     pub fn is_pick_up_item(&self, entity_id: EntityId) -> bool {
         matches!(self, BufferedAction::PickUpItem { entity_id: buffered_entity_id } if *buffered_entity_id == entity_id)
+    }
+
+    pub fn targets_entity(&self, entity_id: EntityId) -> bool {
+        matches!(
+            self,
+            BufferedAction::AttackEntity { entity_id: buffered_entity_id }
+                | BufferedAction::PickUpItem { entity_id: buffered_entity_id }
+                | BufferedAction::CastSkill { entity_id: buffered_entity_id, .. }
+                if *buffered_entity_id == entity_id
+        )
+    }
+
+    pub fn target_entity_id(&self) -> Option<EntityId> {
+        match self {
+            BufferedAction::AttackEntity { entity_id }
+            | BufferedAction::PickUpItem { entity_id }
+            | BufferedAction::CastSkill { entity_id, .. } => Some(*entity_id),
+        }
     }
 }
 

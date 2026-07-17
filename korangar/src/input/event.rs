@@ -5,8 +5,8 @@ use korangar_debug::profiling::FrameMeasurement;
 use korangar_interface::event::{ClickHandler, Event, EventQueue};
 use korangar_networking::{InventoryItem, ShopItem};
 use ragnarok_packets::{
-    AccountId, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, RepairableItemInformation, ShopId, SkillId,
-    SoldItemInformation, StatUpType, TilePosition,
+    AccountId, AttackRange, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, RepairableItemInformation,
+    ShopId, SkillId, SkillLevel, SoldItemInformation, StatUpType, TilePosition,
 };
 use rust_state::State;
 
@@ -259,6 +259,13 @@ pub enum InputEvent {
     CastSkill {
         /// Slot of the hotbar that the skill is bound to.
         slot: HotbarSlot,
+    },
+    /// Cast an entity-targeted skill, walking into its range first.
+    CastSkillAtEntity {
+        skill_id: SkillId,
+        skill_level: SkillLevel,
+        attack_range: AttackRange,
+        entity_id: EntityId,
     },
     /// Stop a skill.
     StopSkill {
