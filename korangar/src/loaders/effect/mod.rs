@@ -44,7 +44,6 @@ impl EffectLoader {
         self.cache.lock().unwrap().statistics()
     }
 
-    #[allow(clippy::mut_range_bound)]
     fn load(&self, path: &str, texture_loader: &TextureLoader) -> Result<Arc<Effect>, LoadError> {
         #[cfg(feature = "debug")]
         let timer = Timer::new_dynamic(format!("load effect from {}", path.magenta()));
@@ -82,39 +81,6 @@ impl EffectLoader {
                                 texture_loader.get_or_load(&path, ImageType::Color).unwrap()
                             })
                             .collect(),
-                        {
-                            let frame_count = layer_data.frames.len();
-                            let mut map = Vec::with_capacity(frame_count);
-                            let mut list_index = 0;
-
-                            if frame_count > 0 {
-                                let mut previous = None;
-
-                                for _ in 0..layer_data.frames[0].frame_index {
-                                    map.push(None);
-                                    list_index += 1;
-                                }
-
-                                for (index, frame) in layer_data.frames.iter().skip(1).enumerate() {
-                                    for _ in list_index..frame.frame_index as usize {
-                                        map.push(previous);
-                                        list_index += 1;
-                                    }
-
-                                    previous = Some(index);
-                                }
-
-                                // TODO: conditional
-                                map.push(previous);
-                                list_index += 1;
-                            }
-
-                            for _ in list_index..effect_data.max_key as usize {
-                                map.push(None)
-                            }
-
-                            map
-                        },
                         layer_data
                             .frames
                             .into_iter()
@@ -136,7 +102,7 @@ impl EffectLoader {
                                     frame.offset,
                                     frame.uv,
                                     frame.xy,
-                                    frame.texture_index as usize,
+                                    frame.texture_index,
                                     animation_type,
                                     frame.delay,
                                     Deg(frame.angle / (1024.0 / 360.0)).into(),
@@ -219,6 +185,7 @@ fn parse_animation_type(value: i32) -> AnimationType {
         1 => AnimationType::Type1,
         2 => AnimationType::Type2,
         3 => AnimationType::Type3,
+        4 => AnimationType::Type4,
         _ => {
             #[cfg(feature = "debug")]
             print_debug!("[{}] unknown animation type found in frame data: {value}", "error".red());
@@ -235,6 +202,103 @@ fn parse_frame_type(value: i32) -> FrameType {
             #[cfg(feature = "debug")]
             print_debug!("[{}] unknown frame type found in frame data: {value}", "error".red());
             FrameType::Basic
+        }
+    }
+}
+
+#[cfg(test)]
+mod diagnostics {
+    use korangar_loaders::FileLoader;
+    use ragnarok_bytes::{ByteReader, FromBytes};
+    use ragnarok_formats::effect::EffectData;
+    use ragnarok_formats::version::GenericFormatMetadata;
+
+    use crate::loaders::GameFileLoader;
+
+    /// Diagnostic dump for the M1-008 STR renderer work; deliberately ignored
+    /// because it opens the configured multi-gigabyte GRFs.
+    ///
+    /// Run: cargo test -p korangar str_frame_structure -- --ignored --nocapture
+    #[test]
+    #[ignore]
+    fn reports_str_frame_structure() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        // The files mapped in `wizard_hit_effects` / `ground_skill_effect`,
+        // plus `cloudh.str` as a canonical basic-plus-morphing-pair reference.
+        let paths = [
+            "stormgust.str",     // Storm Gust ground cast (storm_min.str is its reduced variant)
+            "thunderstorm.str",  // Thunderstorm ground cast (classic)
+            "firehit1.str",      // Fire Bolt per-hit burst (classic, random 1-3)
+            "firehit2.str",
+            "firehit3.str",
+            "windhit1.str",      // Thunderstorm / Lightning Bolt per-hit burst (random 1-3)
+            "windhit2.str",
+            "windhit3.str",
+            "lightning.str",     // Lightning Bolt strike (classic)
+            "new_soulexpansion\\new_soulexpansion_hit\\new_soulexpansion_hit.str", // Soul Strike
+            "cloudh.str",
+        ];
+
+        for path in paths {
+            let full_path = format!("data\\texture\\effect\\{path}");
+            let Ok(bytes) = game_file_loader.get(&full_path) else {
+                println!("=== {path}: NOT FOUND");
+                continue;
+            };
+            let mut byte_reader: ByteReader = ByteReader::with_default_metadata::<GenericFormatMetadata>(&bytes);
+            let effect_data = match EffectData::from_bytes(&mut byte_reader) {
+                Ok(data) => data,
+                Err(error) => {
+                    println!("=== {path}: PARSE ERROR {error:?}");
+                    continue;
+                }
+            };
+
+            println!(
+                "=== {path}: version {:?}, fps {}, max_key {}, {} layers, {} unconsumed bytes",
+                effect_data.version,
+                effect_data.frames_per_second,
+                effect_data.max_key,
+                effect_data.layers.len(),
+                bytes.len() - byte_reader.get_offset(),
+            );
+
+            for (layer_index, layer) in effect_data.layers.iter().enumerate() {
+                let texture_names: Vec<&str> = layer
+                    .texture_names
+                    .iter()
+                    .map(|name| name.name.as_str())
+                    .collect();
+                println!(
+                    "  layer {layer_index}: {} textures {:?}, {} frames",
+                    layer.texture_names.len(),
+                    texture_names,
+                    layer.frames.len()
+                );
+                for frame in &layer.frames {
+                    let width = (frame.xy[0] - frame.xy[1]).abs().max((frame.xy[2] - frame.xy[3]).abs());
+                    let height = (frame.xy[4] - frame.xy[7]).abs().max((frame.xy[5] - frame.xy[6]).abs());
+                    println!(
+                        "    key {:>3} type {} anim {} tex {:>4.1} delay {:>5.1} blend {}/{} mt {} offset ({:>6.1},{:>6.1}) size ({:>6.1},{:>6.1}) alpha {:>5.1} angle {:>7.1}",
+                        frame.frame_index,
+                        frame.frame_type,
+                        frame.animation_type,
+                        frame.texture_index,
+                        frame.delay,
+                        frame.source_blend_factor,
+                        frame.destination_blend_factor,
+                        frame.mt_present,
+                        frame.offset.x,
+                        frame.offset.y,
+                        width,
+                        height,
+                        frame.color[3],
+                        frame.angle,
+                    );
+                }
+            }
         }
     }
 }

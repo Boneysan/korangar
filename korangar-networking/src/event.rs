@@ -194,8 +194,14 @@ pub enum NetworkEvent {
     DamageEffect {
         source_entity_id: EntityId,
         destination_entity_id: EntityId,
+        /// Present when the damage came from `ZC_NOTIFY_SKILL2` rather than a
+        /// basic attack. The renderer uses this to select a skill visual.
+        skill_id: Option<SkillId>,
         /// Damage amount. [`None`] on miss, [`Some`] otherwise.
         damage_amount: Option<usize>,
+        /// Number of hits bundled into this packet (`div`), at least 1. The
+        /// bolt spells deliver their whole volley in one packet.
+        hit_count: usize,
         attack_duration: u32,
         is_critical: bool,
     },
@@ -467,6 +473,15 @@ pub enum NetworkEvent {
     DisplayEmotion {
         entity_id: EntityId,
         emotion: u8,
+    },
+    /// A skill was used at a ground position (`ZC_NOTIFY_GROUNDSKILL`
+    /// 0x0117). The original client plays ground-cast area effects like
+    /// Thunderstorm and Storm Gust from this packet, not from damage.
+    GroundSkillEffect {
+        skill_id: SkillId,
+        source_entity_id: EntityId,
+        level: SkillLevel,
+        position: TilePosition,
     },
     /// Skill cast bar / wind-up (`ZC_USESKILL_ACK` / success 0x0B1A / 0x07FB).
     SkillCast {

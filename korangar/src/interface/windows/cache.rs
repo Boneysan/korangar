@@ -149,6 +149,7 @@ impl WindowCache {
             WindowClass::Bestiary => state(AnchorPoint::CenterRight, -(400.0 + MARGIN), -240.0, 380.0, 480.0),
             WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
+            WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
             // Login / char select stay centered (menu flow).
             WindowClass::Login | WindowClass::SelectServer | WindowClass::CharacterSelection | WindowClass::CharacterCreation => {
                 return None;
@@ -196,6 +197,7 @@ impl WindowCache {
             WindowClass::Sell,
             WindowClass::SellCart,
             WindowClass::Menu,
+            WindowClass::Emotes,
         ] {
             if !self.entries.contains_key(&class)
                 && let Some(default) = Self::default_for_class(class)

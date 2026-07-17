@@ -315,6 +315,20 @@ impl AnimationData {
         camera.billboard_matrix(entity_position, origin, size)
     }
 
+    /// Height of the entity's current rendered frame in world units. This is
+    /// used by overlays that must sit above actors whose sprites vary greatly
+    /// in height (players, small mobs, and bosses).
+    pub fn current_frame_world_height(
+        &self,
+        animation_state: &AnimationState,
+        camera: &dyn Camera,
+        direction: Direction,
+        scale: f32,
+    ) -> f32 {
+        let frame = self.get_frame(animation_state, camera, direction);
+        frame.size.y as f32 * (SPRITE_SCALE / TILE_SIZE) * scale
+    }
+
     pub fn get_texture_coordinates(&self) -> (Vector2<f32>, Vector2<f32>) {
         let cell_count = Vector2::new(1, 1);
         let cell_position = Vector2::new(0, 0);

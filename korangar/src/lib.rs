@@ -220,6 +220,89 @@ const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
+
+/// The animated fire-arrow frames of the classic `ef_firebolt` volley
+/// (`불화살` = fire arrow).
+const FIREBOLT_BOLT_FRAMES: &[&str] = &[
+    "effect\\불화살1.tga",
+    "effect\\불화살2.tga",
+    "effect\\불화살3.tga",
+    "effect\\불화살4.tga",
+    "effect\\불화살5.tga",
+    "effect\\불화살6.tga",
+];
+/// The classic `ef_coldbolt` volley projectile.
+const COLDBOLT_BOLT_FRAMES: &[&str] = &["effect\\icearrow.tga"];
+/// How long a bolt falls before it lands; hit bursts are delayed by this
+/// much so they coincide with the impact (keep in sync with
+/// `FallingBolts`).
+const BOLT_LANDING_DELAY: f32 = 0.5;
+
+fn firehit_effect_path() -> &'static str {
+    match rand_aes::tls::rand_range_u32(1..=3) {
+        1 => "firehit1.str",
+        2 => "firehit2.str",
+        _ => "firehit3.str",
+    }
+}
+
+fn windhit_effect_path() -> &'static str {
+    match rand_aes::tls::rand_range_u32(1..=3) {
+        1 => "windhit1.str",
+        2 => "windhit2.str",
+        _ => "windhit3.str",
+    }
+}
+
+/// M1-008: per-hit STR effects at the struck entity, wired like the original
+/// client (roBrowser's skill/effect tables were the reference — semantics
+/// only). Fire Bolt's burst waits for its bolt volley to land; Cold Bolt's
+/// classic hit is sound-only, its visual is the volley itself; Thunderstorm
+/// and Storm Gust play their large STRs at the targeted ground
+/// (`GroundSkillEffect`), so their per-hit part is small or nothing.
+fn wizard_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
+    match skill_id.0 {
+        // MG_SOULSTRIKE — code-drawn orbs in the original; the hit flash of
+        // its direct upgrade (Soul Expansion) stands in for now.
+        13 => vec![(
+            "new_soulexpansion\\new_soulexpansion_hit\\new_soulexpansion_hit.str",
+            Color::rgb_u8(190, 120, 255),
+            0.0,
+        )],
+        // MG_FIREBOLT — classic firehit burst, timed to the volley landing.
+        19 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), BOLT_LANDING_DELAY)],
+        // MG_LIGHTNINGBOLT — the classic strike plus a windhit burst.
+        20 => vec![
+            ("lightning.str", Color::rgb_u8(255, 240, 150), 0.0),
+            (windhit_effect_path(), Color::rgb_u8(255, 240, 150), 0.0),
+        ],
+        // MG_THUNDERSTORM — per-target windhit; the storm itself plays at
+        // the targeted ground.
+        21 => vec![(windhit_effect_path(), Color::rgb_u8(255, 240, 150), 0.0)],
+        _ => vec![],
+    }
+}
+
+/// The classic falling-bolt volley for a skill's damage event, if any.
+fn wizard_bolt_volley(skill_id: SkillId) -> Option<&'static [&'static str]> {
+    match skill_id.0 {
+        14 => Some(COLDBOLT_BOLT_FRAMES),
+        19 => Some(FIREBOLT_BOLT_FRAMES),
+        _ => None,
+    }
+}
+
+/// Ground-cast area effects played at the targeted position when
+/// `ZC_NOTIFY_GROUNDSKILL` arrives, exactly like the original client.
+fn ground_skill_effect(skill_id: SkillId) -> Option<(&'static str, Color)> {
+    match skill_id.0 {
+        // MG_THUNDERSTORM
+        21 => Some(("thunderstorm.str", Color::rgb_u8(255, 240, 150))),
+        // WZ_STORMGUST
+        89 => Some(("stormgust.str", Color::rgb_u8(175, 225, 255))),
+        _ => None,
+    }
+}
 // TODO: The number of point lights that can cast shadows should be configurable
 // through the graphics settings. For now I just chose an arbitrary smaller
 // number that should be playable on most devices.
@@ -384,96 +467,6 @@ fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
         DeviceType::Other => 2,
         DeviceType::Cpu => 0,
     }
-}
-
-/// Human-readable emote descriptions by wire ID, ordered to match Hercules'
-/// emote constants (`Hercules/doc/constants_re.md` "Emotes"). Displayed in
-/// chat until emote bubbles are rendered above entities.
-fn emotion_name(emotion: u8) -> Option<&'static str> {
-    const EMOTION_NAMES: [&str; 81] = [
-        "surprised!",
-        "huh?",
-        "delighted",
-        "in love",
-        "sweating",
-        "aha!",
-        "annoyed",
-        "angry!",
-        "money eyes",
-        "speechless...",
-        "scissors",
-        "rock",
-        "paper",
-        "Korea flag",
-        "big hearts",
-        "thanks!",
-        "wailing",
-        "sorry",
-        "smirking",
-        "cold sweat",
-        "pondering",
-        "thumbs up",
-        "no way",
-        "shocked!",
-        "oh?",
-        "nope",
-        "help!",
-        "go!",
-        "sobbing",
-        "giggling",
-        "blows a kiss",
-        "kissing",
-        "hmph!",
-        "okay",
-        "zipped lips",
-        "Indonesia flag",
-        "buzzing",
-        "hungry",
-        "awesome!",
-        "meh",
-        "shy",
-        "pat pat",
-        "low SP",
-        "drooling",
-        "come here",
-        "yawning",
-        "congrats!",
-        "low HP",
-        "Philippines flag",
-        "Malaysia flag",
-        "Singapore flag",
-        "Brazil flag",
-        "camera flash",
-        "spinning",
-        "sighing",
-        "dumbfounded",
-        "shouting",
-        "despair (OTL)",
-        "rolls a 1",
-        "rolls a 2",
-        "rolls a 3",
-        "rolls a 4",
-        "rolls a 5",
-        "rolls a 6",
-        "India flag",
-        "love!",
-        "Russia flag",
-        "innocent",
-        "phone",
-        "mail",
-        "China flag",
-        "1 signal bar",
-        "2 signal bars",
-        "3 signal bars",
-        "humming",
-        "spaced out",
-        "oops!",
-        "spits",
-        "grr!",
-        "panic!",
-        "whispering",
-    ];
-    EMOTION_NAMES.get(emotion as usize).copied()
 }
 
 /// Strip extensions / padding from a server or loader map name (`izlude_in.gat`
@@ -1857,7 +1850,18 @@ impl Client {
                         #[cfg(feature = "debug")]
                         npc.generate_pathing_mesh(&self.device, &self.queue, self.graphics_engine.bindless_support(), map);
 
+                        let entity_position = npc.get_position();
+
                         entities.push(npc);
+
+                        // Map-transfer warps carry no sprite; the original
+                        // client draws its blue swirling vortex there instead.
+                        if entity_type == EntityType::Warp
+                            && let Ok(texture) = self.texture_loader.get_or_load(PORTAL_TEXTURE_PATH, ImageType::Color)
+                        {
+                            self.effect_holder
+                                .add_unit(Box::new(PortalVortex::new(texture, entity_position)), entity_id);
+                        }
                     }
                 }
                 NetworkEvent::RemoveEntity { entity_id, reason } => {
@@ -1921,6 +1925,10 @@ impl Client {
                     if buffered_action.is_some_and(|buffered_action| buffered_action.is_attack_entity(entity_id)) {
                         *buffered_action = None;
                     }
+
+                    // Drop any effect attached to the entity, like a warp's
+                    // portal vortex.
+                    self.effect_holder.remove_unit(entity_id);
                 }
                 NetworkEvent::AddGroundItem {
                     entity_id,
@@ -2097,7 +2105,9 @@ impl Client {
                 NetworkEvent::DamageEffect {
                     source_entity_id,
                     destination_entity_id,
+                    skill_id,
                     damage_amount,
+                    hit_count,
                     attack_duration,
                     is_critical,
                 } => {
@@ -2153,6 +2163,46 @@ impl Client {
                         };
 
                         self.particle_holder.spawn_particle(particle);
+
+                        if let Some(skill_id) = skill_id {
+                            let target_position = entity.get_position();
+
+                            if let Some(frame_paths) = wizard_bolt_volley(skill_id) {
+                                let textures: Vec<_> = frame_paths
+                                    .iter()
+                                    .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+                                    .collect();
+                                self.effect_holder.add_effect(Box::new(FallingBolts::new(
+                                    textures,
+                                    target_position,
+                                    hit_count,
+                                    Color::WHITE,
+                                )));
+                            }
+
+                            for (effect_path, light_color, start_delay) in wizard_hit_effects(skill_id) {
+                                match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
+                                    Ok(effect) => {
+                                        let frame_timer = effect.new_frame_timer();
+                                        self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                                            effect,
+                                            frame_timer,
+                                            EffectCenter::Position(target_position),
+                                            Vector3::new(0.0, 0.0, 0.0),
+                                            PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
+                                            Vector3::new(0.0, 6.0, 0.0),
+                                            light_color,
+                                            45.0,
+                                            false,
+                                            start_delay,
+                                        )));
+                                    }
+                                    Err(error) => {
+                                        eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 NetworkEvent::EntityPickUpItem { entity_id, item_entity_id } => {
@@ -2780,6 +2830,7 @@ impl Client {
                         Color::WHITE,
                         50.0,
                         false,
+                        0.0,
                     )));
                 }
                 NetworkEvent::AddSkillUnit {
@@ -2813,6 +2864,7 @@ impl Client {
                                     Color::rgb_u8(255, 30, 0),
                                     60.0,
                                     true,
+                                    0.0,
                                 )),
                                 entity_id,
                             );
@@ -2838,6 +2890,7 @@ impl Client {
                                     Color::rgb_u8(83, 220, 108),
                                     40.0,
                                     false,
+                                    0.0,
                                 )),
                                 entity_id,
                             );
@@ -2847,6 +2900,38 @@ impl Client {
                 }
                 NetworkEvent::RemoveSkillUnit { entity_id } => {
                     self.effect_holder.remove_unit(entity_id);
+                }
+                NetworkEvent::GroundSkillEffect { skill_id, position, .. } => {
+                    // The original client plays ground-cast area effects
+                    // (Thunderstorm, Storm Gust) from this packet at the
+                    // targeted position, independent of any damage landing.
+                    if let Some((effect_path, light_color)) = ground_skill_effect(skill_id)
+                        && let Some(map) = &self.map
+                        && let Some(world_position) = map.get_world_position(position)
+                    {
+                        match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
+                            Ok(effect) => {
+                                let frame_timer = effect.new_frame_timer();
+                                self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                                    effect,
+                                    frame_timer,
+                                    EffectCenter::Position(world_position),
+                                    Vector3::new(0.0, 0.0, 0.0),
+                                    PointLightId::new(
+                                        u32::from(position.x) ^ (u32::from(position.y) << 16) ^ u32::from(skill_id.0),
+                                    ),
+                                    Vector3::new(0.0, 6.0, 0.0),
+                                    light_color,
+                                    60.0,
+                                    false,
+                                    0.0,
+                                )));
+                            }
+                            Err(error) => {
+                                eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                            }
+                        }
+                    }
                 }
                 NetworkEvent::SetFriendList { friend_list } => {
                     *self.client_state.follow_mut(client_state().friend_list()) = friend_list
@@ -2878,21 +2963,35 @@ impl Client {
                         self.emote_bubbles.set_animation_data(animation_data);
                     }
 
-                    let name = self
+                    // The original client shows only the bubble, no chat text.
+                    // Keep the line for players (useful chat log), but silence
+                    // it for monsters and NPCs, whose scripted emotes would
+                    // otherwise spam the log.
+                    let is_local_entity = self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|entity| entity.get_entity_id() == entity_id);
+                    let local_entity_name = is_local_entity
+                        .then(|| self.client_state.follow(client_state().player_name()).to_owned());
+                    let player_name = self
                         .client_state
                         .follow(client_state().entities())
                         .iter()
                         .find(|entity| entity.get_entity_id() == entity_id)
+                        .filter(|entity| matches!(entity.get_entity_type(), EntityType::Player))
                         .and_then(|entity| entity.get_details())
                         .map(|n| n.split('#').next().unwrap_or("Someone").to_owned())
-                        .unwrap_or_else(|| "Someone".to_owned());
-                    let text = match emotion_name(emotion) {
-                        Some(emote) => format!("{name}: {emote}"),
-                        None => format!("{name} uses emotion {emotion}."),
-                    };
-                    self.client_state
-                        .follow_mut(client_state().chat_messages())
-                        .push(ChatMessage::new(text, MessageColor::Information));
+                        .or(local_entity_name);
+
+                    if let Some(name) = player_name {
+                        let text = match emotion_name(emotion) {
+                            Some(emote) => format!("{name}: {emote}"),
+                            None => format!("{name} uses emotion {emotion}."),
+                        };
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new(text, MessageColor::Information));
+                    }
                 }
                 NetworkEvent::SkillCast {
                     source_entity_id, cast_ms, ..
@@ -4059,6 +4158,9 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &text);
                 }
+                InputEvent::UseEmotion { emotion } => {
+                    let _ = self.networking_system.request_emotion(emotion);
+                }
                 InputEvent::ToggleSit => {
                     toggle_sit = true;
                 }
@@ -4588,6 +4690,14 @@ impl Client {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
                             true => self.interface.close_window_with_class(WindowClass::Dice),
                             false => self.interface.open_window(DiceWindow::new(client_state().dice_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleEmoteWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::Emotes) {
+                            true => self.interface.close_window_with_class(WindowClass::Emotes),
+                            false => self.interface.open_window(EmoteWindow),
                         }
                     }
                 }
@@ -5921,6 +6031,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         let entities = self.client_state.follow(client_state().entities());
         let dead_entities = self.client_state.follow(client_state().dead_entities());
         let ground_items = self.client_state.follow(client_state().ground_items());
+        let player = self.client_state.try_follow(this_entity());
 
         let offset = self.model_instructions.len();
         let object_set = self.map.cull_objects_with_frustum(
@@ -5978,8 +6089,14 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             .render_dead_entities(self.entity_instructions, dead_entities, entity_camera, self.client_tick);
 
         #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_entities))]
-        self.emote_bubbles
-            .render(self.entity_instructions, entities, entity_camera, self.client_tick);
+        self.emote_bubbles.render(
+            self.entity_instructions,
+            entities,
+            player.as_deref(),
+            dead_entities,
+            entity_camera,
+            self.client_tick,
+        );
 
         #[cfg(feature = "debug")]
         if self.render_options.show_entities_debug {

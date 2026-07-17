@@ -1,3 +1,6 @@
+mod bolts;
+mod portal;
+
 use std::sync::Arc;
 
 use cgmath::{Point3, Rad, Vector2, Vector3};
@@ -6,6 +9,9 @@ use korangar_container::Cacheable;
 use ragnarok_formats::map::EffectSource;
 use ragnarok_packets::EntityId;
 use wgpu::BlendFactor;
+
+pub use self::bolts::FallingBolts;
+pub use self::portal::{PORTAL_TEXTURE_PATH, PortalVortex};
 
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
@@ -75,14 +81,18 @@ impl Effect {
                 continue;
             };
 
-            if frame.texture_index > layer.textures.len() {
+            // Truncation matches the original client; `as usize` also
+            // saturates a NaN or negative index to zero.
+            let texture_index = frame.texture_index as usize;
+
+            if texture_index >= layer.textures.len() {
                 continue;
             }
 
             renderer.render_effect(
                 camera,
                 position,
-                layer.textures[frame.texture_index].clone(),
+                layer.textures[texture_index].clone(),
                 [
                     Vector2::new(frame.xy[0], frame.xy[4]),
                     Vector2::new(frame.xy[1], frame.xy[5]),
@@ -114,83 +124,109 @@ impl Cacheable for Effect {
 
 pub struct Layer {
     textures: Vec<Arc<Texture>>,
-    indices: Vec<Option<usize>>,
     frames: Vec<Frame>,
 }
 
 impl Layer {
-    pub fn new(textures: Vec<Arc<Texture>>, indices: Vec<Option<usize>>, frames: Vec<Frame>) -> Self {
-        Self { textures, indices, frames }
+    pub fn new(textures: Vec<Arc<Texture>>, frames: Vec<Frame>) -> Self {
+        Self { textures, frames }
     }
 }
 
 impl Layer {
+    /// STR key frames come in two types: a basic frame (type 0) sets every
+    /// field absolutely, while a morphing frame (type 1) that shares the
+    /// basic frame's key holds per-key deltas that are added onto it for
+    /// every key until the next basic frame. The morphing frame also drives
+    /// the texture animation through its animation type and delay fields.
     fn interpolate_frame(&self, frame_timer: &FrameTimer) -> Option<Frame> {
-        if let Some(frame_index) = self.indices[frame_timer.current_frame] {
-            if let Some(next_frame) = self.frames.get(frame_index + 2) {
-                Some(Self::interpolate(
-                    &self.frames[frame_index],
-                    next_frame,
-                    frame_timer.current_frame,
-                ))
-            } else {
-                Some(self.frames[frame_index].clone())
+        Self::frame_at(&self.frames, frame_timer.fractional_frame(), self.textures.len())
+    }
+
+    fn frame_at(frames: &[Frame], key_index: f32, texture_count: usize) -> Option<Frame> {
+        let mut base_index = None;
+        let mut morph_index = None;
+        let mut last_key = 0;
+        let mut last_base_key = 0;
+
+        for (index, frame) in frames.iter().enumerate() {
+            if (frame.frame_index as f32) <= key_index {
+                match frame.frame_type {
+                    FrameType::Basic => base_index = Some(index),
+                    FrameType::Morphing => morph_index = Some(index),
+                }
             }
-        } else {
-            None
+
+            last_key = last_key.max(frame.frame_index);
+
+            if let FrameType::Basic = frame.frame_type {
+                last_base_key = last_base_key.max(frame.frame_index);
+            }
+        }
+
+        let base_index = base_index?;
+
+        if morph_index.is_none() && (last_key as f32) < key_index {
+            return None;
+        }
+
+        let base_frame = &frames[base_index];
+
+        match morph_index {
+            Some(morph_index) if morph_index == base_index + 1 && frames[morph_index].frame_index == base_frame.frame_index => {
+                let morph_frame = &frames[morph_index];
+                let delta = key_index - base_frame.frame_index as f32;
+                Some(Self::apply_morph(base_frame, morph_frame, delta, texture_count))
+            }
+            // A morphing frame exists somewhere but the current basic frame is
+            // the layer's last one, so there is nothing left to animate into.
+            Some(_) if base_frame.frame_index >= last_base_key => None,
+            _ => Some(base_frame.clone()),
         }
     }
 
-    fn interpolate(first: &Frame, second: &Frame, frame_index: usize) -> Frame {
-        let time = 1.0 / (second.frame_index - first.frame_index) as f32 * (frame_index - first.frame_index) as f32;
-        let sub_mult = 1.0;
-
-        // TODO: angle bias
-        let angle = Self::ease_interpolate(first.angle.0, second.angle.0, time, 0.0, sub_mult);
-        let color = (second.color - first.color) * time + first.color * sub_mult;
+    fn apply_morph(base_frame: &Frame, morph_frame: &Frame, delta: f32, texture_count: usize) -> Frame {
+        let color = base_frame.color + morph_frame.color * delta;
+        let angle = Rad(base_frame.angle.0 + morph_frame.angle.0 * delta);
+        let offset = base_frame.offset + morph_frame.offset * delta;
 
         let uv = (0..8)
-            .map(|index| (second.uv[index] - first.uv[index]) * time + first.uv[index] * sub_mult)
+            .map(|index| base_frame.uv[index] + morph_frame.uv[index] * delta)
             .next_chunk()
             .unwrap();
 
-        // TODO: scale bias
         let xy = (0..8)
-            .map(|index| Self::ease_interpolate(first.xy[index], second.xy[index], time, 0.0, sub_mult))
+            .map(|index| base_frame.xy[index] + morph_frame.xy[index] * delta)
             .next_chunk()
             .unwrap();
 
-        // TODO: additional logic for animation type 2 and 3
-        let texture_index = first.texture_index;
-
-        // TODO: bezier curves
-        let offset_x = (second.offset.x - first.offset.x) * time + first.offset.x * sub_mult;
-        let offset_y = (second.offset.y - first.offset.y) * time + first.offset.y * sub_mult;
+        let texture_count = texture_count as f32;
+        let texture_index = match morph_frame.animation_type {
+            // The original client resets the texture on this animation type.
+            AnimationType::Type0 => 0.0,
+            AnimationType::Type1 => base_frame.texture_index + morph_frame.texture_index * delta,
+            // Advance by `delay` textures per key, stopping at the last one.
+            AnimationType::Type2 => (base_frame.texture_index + morph_frame.delay * delta).min(texture_count - 1.0),
+            // Advance by `delay` textures per key, wrapping around.
+            AnimationType::Type3 => (base_frame.texture_index + morph_frame.delay * delta).rem_euclid(texture_count),
+            // Like type 3, but playing in reverse.
+            AnimationType::Type4 => (base_frame.texture_index - morph_frame.delay * delta).rem_euclid(texture_count),
+        };
 
         Frame {
-            frame_index,
-            frame_type: first.frame_type,
-            offset: Vector2::new(offset_x, offset_y),
+            frame_index: base_frame.frame_index,
+            frame_type: base_frame.frame_type,
+            offset,
             uv,
             xy,
             texture_index,
-            animation_type: first.animation_type,
-            delay: first.delay,
-            angle: Rad(angle),
+            animation_type: base_frame.animation_type,
+            delay: base_frame.delay,
+            angle,
             color,
-            source_blend_factor: first.source_blend_factor,
-            destination_blend_factor: first.destination_blend_factor,
-            mt_present: first.mt_present,
-        }
-    }
-
-    fn ease_interpolate(start_value: f32, end_value: f32, time: f32, bias: f32, sub_multiplier: f32) -> f32 {
-        if bias > 0.0 {
-            (end_value - start_value) * time.powf(1.0 + bias / 5.0) + start_value * sub_multiplier
-        } else if bias < 0.0 {
-            (end_value - start_value) * (1.0 - (1.0 - time).powf(-bias / 5.0 + 1.0)) + start_value * sub_multiplier
-        } else {
-            (end_value - start_value) * time + start_value * sub_multiplier
+            source_blend_factor: base_frame.source_blend_factor,
+            destination_blend_factor: base_frame.destination_blend_factor,
+            mt_present: base_frame.mt_present,
         }
     }
 }
@@ -202,7 +238,7 @@ pub struct Frame {
     offset: Vector2<f32>,
     uv: [f32; 8],
     xy: [f32; 8],
-    texture_index: usize,
+    texture_index: f32,
     animation_type: AnimationType,
     delay: f32,
     angle: Rad<f32>,
@@ -220,7 +256,7 @@ impl Frame {
         offset: Vector2<f32>,
         uv: [f32; 8],
         xy: [f32; 8],
-        texture_index: usize,
+        texture_index: f32,
         animation_type: AnimationType,
         delay: f32,
         angle: Rad<f32>,
@@ -253,6 +289,7 @@ pub enum AnimationType {
     Type1,
     Type2,
     Type3,
+    Type4,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -274,6 +311,12 @@ pub struct FrameTimer {
 }
 
 impl FrameTimer {
+    /// The key index including the fractional progress towards the next key,
+    /// so morph deltas advance smoothly between keys.
+    fn fractional_frame(&self) -> f32 {
+        self.total_timer * self.frames_per_second as f32
+    }
+
     pub fn update(&mut self, delta_time: f32) -> bool {
         self.total_timer += delta_time;
         self.current_frame = (self.total_timer / (1.0 / self.frames_per_second as f32)) as usize;
@@ -286,6 +329,145 @@ impl FrameTimer {
         }
 
         true
+    }
+}
+
+#[cfg(test)]
+mod frame_at_tests {
+    use cgmath::{Rad, Vector2};
+    use wgpu::BlendFactor;
+
+    use super::{AnimationType, Frame, FrameType, Layer};
+    use crate::graphics::Color;
+
+    fn frame(key: usize, frame_type: FrameType, animation_type: AnimationType, texture_index: f32, delay: f32) -> Frame {
+        Frame::new(
+            key,
+            frame_type,
+            Vector2::new(320.0, 290.0),
+            [0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+            [-64.0, 64.0, 64.0, -64.0, -64.0, -64.0, 64.0, 64.0],
+            texture_index,
+            animation_type,
+            delay,
+            Rad(0.0),
+            Color::rgba(1.0, 1.0, 1.0, 0.8),
+            BlendFactor::SrcAlpha,
+            BlendFactor::DstAlpha,
+            super::MultiTexturePresent::None,
+        )
+    }
+
+    fn morph_delta(key: usize, animation_type: AnimationType, texture_delta: f32, delay: f32, xy_delta: f32) -> Frame {
+        Frame::new(
+            key,
+            FrameType::Morphing,
+            Vector2::new(0.0, 0.0),
+            [0.0; 8],
+            [xy_delta; 8],
+            texture_delta,
+            animation_type,
+            delay,
+            Rad(0.0),
+            Color::rgba(0.0, 0.0, 0.0, 0.0),
+            BlendFactor::SrcAlpha,
+            BlendFactor::DstAlpha,
+            super::MultiTexturePresent::None,
+        )
+    }
+
+    /// The shape of `lightningstrike\lightningstrike.str` layer 1: one basic
+    /// frame at key 0, a zero-delta morphing frame at key 0 that cycles 21
+    /// textures at 0.4 textures per key, and a final basic frame at key 53.
+    #[test]
+    fn morph_driven_texture_cycle_is_visible_and_advances() {
+        let frames = vec![
+            frame(0, FrameType::Basic, AnimationType::Type3, 0.0, 0.4),
+            morph_delta(0, AnimationType::Type3, 0.0, 0.4, 0.0),
+            frame(53, FrameType::Basic, AnimationType::Type3, 20.0, 0.4),
+        ];
+
+        for key in [0.0, 10.0, 25.0, 52.9] {
+            let result = Layer::frame_at(&frames, key, 21).expect("layer must be visible during the animation");
+            let expected_texture = (0.4 * key) % 21.0;
+            assert!((result.texture_index - expected_texture).abs() < 0.001, "texture at key {key}");
+            assert!((result.xy[0] - result.xy[1]).abs() > 1.0, "quad must not be degenerate at key {key}");
+            assert!(result.color.alpha > 0.0, "frame must not be fully transparent at key {key}");
+        }
+    }
+
+    /// The shape of `cloudh.str` layer 1: basic + morphing pairs at keys 0,
+    /// 27, and 55, and a final basic frame at key 80. Morph deltas apply
+    /// per key from the paired basic frame.
+    #[test]
+    fn morph_deltas_accumulate_from_the_paired_basic_frame() {
+        let frames = vec![
+            frame(0, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+            morph_delta(0, AnimationType::Type0, 0.0, 0.0, 0.5),
+            frame(27, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+            morph_delta(27, AnimationType::Type0, 0.0, 0.0, -0.5),
+            frame(80, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+        ];
+
+        let result = Layer::frame_at(&frames, 10.0, 1).expect("visible in the first segment");
+        assert!((result.xy[0] - (-64.0 + 0.5 * 10.0)).abs() < 0.001);
+
+        let result = Layer::frame_at(&frames, 30.0, 1).expect("visible in the second segment");
+        assert!((result.xy[0] - (-64.0 - 0.5 * 3.0)).abs() < 0.001);
+
+        // The final basic frame has no morph to animate into; the original
+        // client stops drawing the layer there.
+        assert!(Layer::frame_at(&frames, 80.0, 1).is_none());
+    }
+
+    /// The shape of `storm_min.str`: dense basic-only keys display statically,
+    /// and the layer is hidden before its first key and after its last.
+    #[test]
+    fn basic_only_layers_display_statically_within_their_key_range() {
+        let frames = vec![
+            frame(15, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+            frame(16, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+            frame(17, FrameType::Basic, AnimationType::Type0, 0.0, 0.0),
+        ];
+
+        assert!(Layer::frame_at(&frames, 3.0, 1).is_none(), "hidden before the first key");
+        assert!(Layer::frame_at(&frames, 16.5, 1).is_some(), "visible between keys");
+        assert!(Layer::frame_at(&frames, 40.0, 1).is_none(), "hidden after the last key");
+
+        let result = Layer::frame_at(&frames, 16.5, 1).unwrap();
+        assert_eq!(result.frame_index, 16, "static frames must not interpolate");
+    }
+
+    /// A single basic frame previously never rendered at all because the
+    /// old key-to-frame index map skipped lone frames.
+    #[test]
+    fn single_frame_layers_render_on_their_key() {
+        let frames = vec![frame(0, FrameType::Basic, AnimationType::Type0, 0.0, 0.0)];
+
+        assert!(Layer::frame_at(&frames, 0.0, 1).is_some());
+        assert!(Layer::frame_at(&frames, 0.9, 1).is_none(), "hidden once the key has passed");
+        assert!(Layer::frame_at(&frames, 5.0, 1).is_none(), "hidden after the last key");
+    }
+
+    /// Texture animation types 2 (stop at end) and 4 (reverse) on the
+    /// morphing frame.
+    #[test]
+    fn texture_animation_clamps_and_reverses() {
+        let clamping = vec![
+            frame(0, FrameType::Basic, AnimationType::Type2, 0.0, 0.0),
+            morph_delta(0, AnimationType::Type2, 0.0, 1.0, 0.0),
+            frame(50, FrameType::Basic, AnimationType::Type2, 0.0, 0.0),
+        ];
+        let result = Layer::frame_at(&clamping, 30.0, 10).unwrap();
+        assert!((result.texture_index - 9.0).abs() < 0.001, "type 2 clamps at the last texture");
+
+        let reversing = vec![
+            frame(0, FrameType::Basic, AnimationType::Type4, 0.0, 0.0),
+            morph_delta(0, AnimationType::Type4, 0.0, 1.0, 0.0),
+            frame(50, FrameType::Basic, AnimationType::Type4, 0.0, 0.0),
+        ];
+        let result = Layer::frame_at(&reversing, 3.0, 10).unwrap();
+        assert!((result.texture_index - 7.0).abs() < 0.001, "type 4 plays backwards with wrap-around");
     }
 }
 
@@ -312,6 +494,9 @@ pub struct EffectWithLight {
     light_color: Color,
     light_intensity: f32,
     repeating: bool,
+    /// Seconds to wait before the effect starts playing (e.g. a hit burst
+    /// that must coincide with the landing of a bolt volley).
+    start_delay: f32,
     current_light_intensity: f32,
     gets_deleted: bool,
 }
@@ -328,6 +513,7 @@ impl EffectWithLight {
         light_color: Color,
         light_intensity: f32,
         repeating: bool,
+        start_delay: f32,
     ) -> Self {
         Self {
             effect,
@@ -339,6 +525,7 @@ impl EffectWithLight {
             light_color,
             light_intensity,
             repeating,
+            start_delay,
             current_light_intensity: 0.0,
             gets_deleted: false,
         }
@@ -354,6 +541,11 @@ impl EffectBase for EffectWithLight {
         {
             let new_position = entity.get_position();
             *position = new_position;
+        }
+
+        if self.start_delay > 0.0 {
+            self.start_delay -= delta_time;
+            return true;
         }
 
         if !self.gets_deleted && !self.frame_timer.update(delta_time) && !self.repeating {
@@ -392,7 +584,7 @@ impl EffectBase for EffectWithLight {
     }
 
     fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
-        if !self.gets_deleted {
+        if !self.gets_deleted && self.start_delay <= 0.0 {
             self.effect.render(
                 renderer,
                 camera,

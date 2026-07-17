@@ -1508,6 +1508,15 @@ impl Entity {
         self.get_common().world_position
     }
 
+    /// Height of the actor's current composed sprite frame in world units.
+    /// Returns `None` while its animation data is still loading.
+    pub fn get_visual_height(&self, camera: &dyn Camera) -> Option<f32> {
+        let common = self.get_common();
+        common.animation_data.as_ref().map(|animation_data| {
+            animation_data.current_frame_world_height(&common.animation_state, camera, common.direction, common.scale)
+        })
+    }
+
     pub fn set_position(&mut self, map: &Map, position: TilePosition, client_tick: ClientTick) {
         self.get_common_mut().set_position(map, position, client_tick);
     }

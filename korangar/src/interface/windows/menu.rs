@@ -57,6 +57,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     tooltip: "Roll dice via @roll — standard dice, common combos, and custom NdX+mod (^000001Ctrl+D^000000)",
                     event: InputEvent::ToggleDiceWindow,
                 },
+                button! {
+                    text: "Emotes",
+                    tooltip: "Choose an animated emote to display over your character (^000001Alt+L^000000)",
+                    event: InputEvent::ToggleEmoteWindow,
+                },
                 #[cfg(feature = "debug")]
                 button! {
                     text: "Render options",

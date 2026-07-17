@@ -291,6 +291,11 @@ impl InputSystem {
             events.push(InputEvent::ToggleEquipmentWindow);
         }
 
+        // Original-client-style emotion palette shortcut.
+        if alt_down && self.get_key(KeyCode::KeyL).pressed() {
+            events.push(InputEvent::ToggleEmoteWindow);
+        }
+
         // Compatibility alias retained for the earlier fork binding.
         if alt_down && self.get_key(KeyCode::KeyP).pressed() {
             events.push(InputEvent::TogglePartyWindow);

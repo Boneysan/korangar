@@ -12,6 +12,7 @@ mod dialog;
 mod dice;
 mod dm;
 mod equipment;
+mod emote;
 mod error;
 #[cfg(feature = "debug")]
 mod frame_inspector;
@@ -69,6 +70,7 @@ pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::dm::{BestiaryWindow, BestiaryWindowState, LootGeneratorWindow, LootWindowState};
 pub use self::equipment::EquipmentWindow;
+pub use self::emote::EmoteWindow;
 pub use self::error::ErrorWindow;
 #[cfg(feature = "debug")]
 pub use self::frame_inspector::FrameInspectorWindow;
@@ -128,6 +130,7 @@ pub enum WindowClass {
     Inventory,
     ItemActions,
     Equipment,
+    Emotes,
     StatusBar,
     SkillTree,
     Stats,

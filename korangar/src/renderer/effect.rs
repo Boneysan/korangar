@@ -81,4 +81,52 @@ impl EffectRenderer {
             texture,
         });
     }
+
+    /// Draws a quad whose corners are world-space positions, unlike
+    /// [`render_effect`](Self::render_effect), which offsets screen-space
+    /// corners around a single projected point. Used for geometry that has
+    /// real extent in the world, like the warp portal vortex. Corners and
+    /// texture coordinates are ordered `[top_left, top_right, bottom_left,
+    /// bottom_right]`.
+    #[allow(clippy::too_many_arguments)]
+    pub fn render_effect_world_quad(
+        &mut self,
+        camera: &dyn Camera,
+        corners: [Point3<f32>; 4],
+        texture: Arc<Texture>,
+        texture_coordinates: [Vector2<f32>; 4],
+        color: Color,
+        source_blend_factor: BlendFactor,
+        destination_blend_factor: BlendFactor,
+    ) {
+        let view_projection = camera.view_projection_matrix();
+        let mut clip_space_positions = [ScreenPosition::default(); 4];
+
+        for (index, corner) in corners.iter().enumerate() {
+            let position = view_projection * corner.to_homogeneous();
+
+            // Skip quads that reach behind the near plane instead of letting
+            // the perspective division mirror them across the screen.
+            if position.w <= 0.1 {
+                return;
+            }
+
+            clip_space_positions[index] = ScreenPosition::new(position.x / position.w, position.y / position.w);
+        }
+
+        self.instructions.push(EffectInstruction {
+            top_left: clip_space_positions[0],
+            top_right: clip_space_positions[1],
+            bottom_left: clip_space_positions[2],
+            bottom_right: clip_space_positions[3],
+            texture_top_left: texture_coordinates[0],
+            texture_top_right: texture_coordinates[1],
+            texture_bottom_left: texture_coordinates[2],
+            texture_bottom_right: texture_coordinates[3],
+            color,
+            source_blend_factor,
+            destination_blend_factor,
+            texture,
+        });
+    }
 }

@@ -187,6 +187,7 @@ impl GameFileLoader {
 #[cfg(test)]
 mod resolve_map_name_tests {
     use super::GameFileLoader;
+    use korangar_loaders::FileLoader;
 
     /// Needs the configured game archives; run explicitly with
     /// `cargo test -p korangar resolve_map_name -- --ignored`.
@@ -204,6 +205,53 @@ mod resolve_map_name_tests {
         assert_eq!(game_file_loader.resolve_map_name("000#pronter"), "prontera");
         // Unknown names fall through unchanged.
         assert_eq!(game_file_loader.resolve_map_name("no_such_map"), "no_such_map");
+    }
+
+    /// Needs the configured game archives; run explicitly with
+    /// `cargo test -p korangar loads_emote_assets -- --ignored`.
+    #[test]
+    #[ignore]
+    fn loads_emote_assets() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        game_file_loader
+            .get("data\\sprite\\이팩트\\emotion.spr")
+            .expect("emotion sprite should exist in the configured archives");
+        game_file_loader
+            .get("data\\sprite\\이팩트\\emotion.act")
+            .expect("emotion actions should exist in the configured archives");
+    }
+
+    /// Diagnostic inventory for effect work; deliberately ignored because it
+    /// opens the configured multi-gigabyte GRFs.
+    #[test]
+    #[ignore]
+    fn reports_representative_skill_effect_assets() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        let needles = [
+            "fire", "cold", "frost", "ice", "soul", "storm", "light", "bolt", "bash", "magnum", "raid", "hiding",
+        ];
+        let effect_files = game_file_loader.get_files_with_extension(&[".str", ".spr", ".act"]);
+        println!("{} STR/SPR/ACT assets", effect_files.len());
+        for path in effect_files {
+            let lowercase = path.to_lowercase();
+            let legacy_effect = lowercase
+                .strip_prefix("data\\sprite\\이팩트\\")
+                .is_some_and(|relative| !relative.contains('\\'));
+            let root_effect = lowercase
+                .strip_prefix("data\\texture\\effect\\")
+                .is_some_and(|relative| relative.ends_with(".str") && !relative.contains('\\'));
+            if legacy_effect
+                || root_effect
+                || (needles.iter().any(|needle| lowercase.contains(needle))
+                    && (lowercase.ends_with(".str") || lowercase.contains("\\이팩트\\") || lowercase.contains("\\effect\\")))
+            {
+                println!("{path}");
+            }
+        }
     }
 }
 

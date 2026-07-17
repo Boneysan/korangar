@@ -137,6 +137,10 @@ pub enum InputEvent {
         /// Text of the message.
         text: String,
     },
+    /// Request that the map server broadcast an emote over our character.
+    UseEmotion {
+        emotion: u8,
+    },
     /// Toggle sit / stand (official client: Insert).
     ToggleSit,
     /// Toggle the in-game minimap window (official-style map corner).
@@ -360,6 +364,8 @@ pub enum InputEvent {
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
+    /// Open or close the player emote palette. Only works while playing.
+    ToggleEmoteWindow,
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.

@@ -616,7 +616,9 @@ where
         Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
+            skill_id: Some(packet.skill_id),
             damage_amount: (packet.damage > 0).then_some(packet.damage as usize),
+            hit_count: (packet.div as usize).max(1),
             attack_duration: packet.destination_delay.max(packet.soruce_delay),
             // skill_type 8 is the multi-hit critical family on official clients.
             is_critical: packet.skill_type == 8,
@@ -923,14 +925,18 @@ where
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
+            hit_count: 1,
             attack_duration: packet.attack_duration,
             is_critical: false,
         }),
         DamageType::CriticalHit => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
+            hit_count: 1,
             attack_duration: packet.attack_duration,
             is_critical: true,
         }),
@@ -952,14 +958,18 @@ where
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
+            hit_count: 1,
             attack_duration: packet.attack_duration,
             is_critical: false,
         }),
         DamageType::CriticalHit => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
+            hit_count: 1,
             attack_duration: packet.attack_duration,
             is_critical: true,
         }),
@@ -1062,7 +1072,12 @@ where
         let SkillUnitDisappearPacket { entity_id } = packet;
         NetworkEvent::RemoveSkillUnit { entity_id }
     })?;
-    packet_handler.register_noop::<NotifyGroundSkillPacket>()?;
+    packet_handler.register(|packet: NotifyGroundSkillPacket| NetworkEvent::GroundSkillEffect {
+        skill_id: packet.skill_id,
+        source_entity_id: packet.entity_id,
+        level: packet.level,
+        position: packet.position,
+    })?;
     packet_handler.register(|packet: FriendListPacket| NetworkEvent::SetFriendList {
         friend_list: packet.friend_list,
     })?;
