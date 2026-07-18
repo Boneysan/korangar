@@ -34,6 +34,12 @@ adding more:
    EffectKnight (already green), EffectSinX (katar Attack3 + Sonic Blow ring +
    `sonicblow.str`), EffectStalker, EffectRune (folder-alias weapon layers),
    plus Magnum Break / Raid / Meteor Assault / Ignition Break caster bursts.
+   **EffectSinX verified 2026-07-17** (katar layer + thrust action + Sonic
+   Blow 滅 glyph + EDP status), after finding and fixing a real bug: async
+   `AnimationData` completions were never delivered to `this_entity`, so the
+   local player's weapon layer was loaded and discarded (see session notes).
+   Still open: Meteor Assault streak visibility, EffectStalker, EffectRune,
+   Knight regression glance.
 2. **One mismatched-layer combo live** (female Novice melee or any first-class
    crit) to confirm the body-owned motion-index fallback visually.
 3. **Packet fixtures + golden timeline tests** for the impact scheduler: a

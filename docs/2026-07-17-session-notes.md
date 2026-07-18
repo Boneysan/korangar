@@ -533,6 +533,29 @@ typed recipe schema, current coverage, acceptance rules, and remaining gaps
 are now maintained in [ANIMATION_SYSTEM.md](ANIMATION_SYSTEM.md) and
 [combat-animation-pipeline.md](specs/combat-animation-pipeline.md).
 
+## Phase-A live pass round 1: local-player animation loads were dropped
+
+The first animation-fidelity phase-A GUI pass (EffectSinX vs a Barricade)
+found the katar rendering as a bare-hand "punch" even though the packet log
+proved the wire and derivation were right (`local equipped weapon=16`, katar
+part file requested, impacts due on schedule). Root cause: the async-load
+completion handler (`update_loaded_resources`) delivered finished
+`AnimationData` to the `entities()`, `dead_entities()`, and `ground_items()`
+lists — never to `this_entity`. The char-select body/head set is cached, so
+the local player spawns fine; the first-ever load of a weapon-bearing part
+set (login `SetInventory` or re-equip) completed and was silently discarded,
+leaving the local actor without a weapon layer forever. Remote actors were
+unaffected, and headless testing structurally cannot see this class.
+
+Fixed with the missing `this_entity` branch. Live-verified: the Jur katar
+renders in both hands, the Attack3 thrust reads as a blade stab, and EDP
+(with Poison Bottles; fail reason 71 is `USESKILL_FAIL_NEED_ITEM`) applies
+its 80 s status with visibly boosted damage. Sonic Blow's white→red glyph is
+authentic — `sonicblow.str` uses the `myul_a/b` (멸/滅) textures. EDP has no
+cast visual yet (unmapped recipe, phase E). Remaining round-1 rows:
+EffectStalker, EffectRune, Knight regression glance, female-Novice
+mismatched-layer combo, and a second look at Meteor Assault's streaks.
+
 Final validation for the complete worktree:
 
 - Korangar library: 148 passed, 10 archive-dependent tests ignored;

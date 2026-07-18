@@ -5739,6 +5739,17 @@ impl Client {
                         entity.set_animation_data(animation_data);
                     } else if let Some(entity) = self
                         .client_state
+                        .try_follow_mut(this_entity())
+                        .filter(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        // The local player lives under `this_entity`, not in
+                        // the entities list. Without this branch the weapon
+                        // layer requested on login/equip is loaded and then
+                        // discarded, so the local actor keeps its char-select
+                        // body/head-only animation (no weapon sprite ever).
+                        entity.set_animation_data(animation_data);
+                    } else if let Some(entity) = self
+                        .client_state
                         .follow_mut(client_state().dead_entities())
                         .iter_mut()
                         .find(|entity| entity.get_entity_id() == entity_id)
