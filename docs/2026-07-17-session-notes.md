@@ -552,9 +552,25 @@ renders in both hands, the Attack3 thrust reads as a blade stab, and EDP
 (with Poison Bottles; fail reason 71 is `USESKILL_FAIL_NEED_ITEM`) applies
 its 80 s status with visibly boosted damage. Sonic Blow's white→red glyph is
 authentic — `sonicblow.str` uses the `myul_a/b` (멸/滅) textures. EDP has no
-cast visual yet (unmapped recipe, phase E). Remaining round-1 rows:
-EffectStalker, EffectRune, Knight regression glance, female-Novice
-mismatched-layer combo, and a second look at Meteor Assault's streaks.
+cast visual yet (unmapped recipe, phase E).
+
+The rest of round 1 completed the same day, finding one more visual bug:
+the Raid/Meteor Assault `SkillBurst` streaks were tuned so faint (thin dark
+additive quads at ≤0.45 alpha) that both skills read as a bare point light.
+After brightening (central flash + wider ice-blue streaks; brighter purple),
+both bursts are live-verified visible. Also verified: EffectStalker's
+Rogue-alias weapon layer, Hiding, and the authentic weaponless ReadyFight
+skill exit; EffectRune's weapon layer and Ignition Break's classic STR;
+EffectKnight's Magnum Break cylinders/knockback and spear-equipped
+Pierce/Spear Stab (an initial "no spear" report was a sword-equipped cast);
+and the female-Novice mismatched-layer combo (no blanking, hurt flinch
+plays). Raid's "Skill level not high enough" failure text is Hercules'
+generic `USESKILL_FAIL_LEVEL` for its `State: "Hiding"` requirement — a
+better client message is future polish. One watch item remains: a single
+unreproduced logout-to-char-select panic (rust-state safe-selector unwrap on
+`None`); the client now runs with `RUST_BACKTRACE=1` during GUI passes to
+capture it if it recurs. The roster gained a female `EffectNovice` (slot 1)
+and per-character consumables (EDP Poison Bottles) in provisioning.
 
 Final validation for the complete worktree:
 

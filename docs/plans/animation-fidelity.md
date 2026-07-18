@@ -34,14 +34,24 @@ adding more:
    EffectKnight (already green), EffectSinX (katar Attack3 + Sonic Blow ring +
    `sonicblow.str`), EffectStalker, EffectRune (folder-alias weapon layers),
    plus Magnum Break / Raid / Meteor Assault / Ignition Break caster bursts.
-   **EffectSinX verified 2026-07-17** (katar layer + thrust action + Sonic
-   Blow 滅 glyph + EDP status), after finding and fixing a real bug: async
-   `AnimationData` completions were never delivered to `this_entity`, so the
-   local player's weapon layer was loaded and discarded (see session notes).
-   Still open: Meteor Assault streak visibility, EffectStalker, EffectRune,
-   Knight regression glance.
+   **Round 1 complete 2026-07-17 — all four roster characters verified live**,
+   after finding and fixing two real bugs: (a) async `AnimationData`
+   completions were never delivered to `this_entity`, silently discarding the
+   local player's weapon layer; (b) the Raid/Meteor Assault procedural bursts
+   were tuned so faint they read as a bare point light. Verified green:
+   EffectSinX (katar layer, Attack3 thrust, Sonic Blow 滅 glyph, Meteor
+   Assault burst, EDP status), EffectStalker (Rogue-alias weapon layer,
+   Hiding, Raid starburst, authentic weaponless ReadyFight exit),
+   EffectRune (weapon layer, Ignition Break STR), EffectKnight glance
+   (Magnum Break cylinders + knockback, Pierce/Spear Stab spear layer —
+   spear must be equipped; the "missing spear" report was a sword-equipped
+   cast). Watch item: one unreproduced logout-to-char-select panic
+   (rust-state safe-selector unwrap; backtrace capture armed).
 2. **One mismatched-layer combo live** (female Novice melee or any first-class
    crit) to confirm the body-owned motion-index fallback visually.
+   **Done 2026-07-17**: female Novice (EffectNovice) melee shows no layer
+   blanking or freezing across sustained swings, dagger draws only during
+   swing frames, and the dMotion hurt flinch plays on incoming hits.
 3. **Packet fixtures + golden timeline tests** for the impact scheduler: a
    canned `ZC_NOTIFY_ACT`/`ZC_NOTIFY_SKILL2` byte sequence in, asserted
    (source action, due tick, hurt clock) timeline out. These become the
