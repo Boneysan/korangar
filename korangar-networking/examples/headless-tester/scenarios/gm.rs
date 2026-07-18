@@ -2,7 +2,7 @@
 
 use std::time::Duration;
 
-use korangar_networking::{MessageColor, NetworkEvent};
+use korangar_networking::{InventoryItemDetails, MessageColor, NetworkEvent};
 use ragnarok_packets::{HotbarSlot, HotbarTab, HotkeyData, HotkeyType, ItemId, SkillId, StatType};
 
 use crate::context::{Config, TestContext};
@@ -98,6 +98,9 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
         job_id: u16,
         expected_skills: &'static [u16],
         weapons: &'static [u32],
+        /// Catalyst items consumed by the bound skills, topped up to the
+        /// given count on every provisioning run.
+        consumables: &'static [(u32, u16)],
     }
 
     const ROSTER: &[CharacterSetup] = &[
@@ -107,24 +110,30 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
             expected_skills: &[7, 56, 57, 58, 59, 62],
             // Sword for Magnum Break/Bowling Bash and spear for the spear set.
             weapons: &[1101, 1404],
+            consumables: &[],
         },
         CharacterSetup {
             name: "EffectSinX",
             job_id: 4013,
-            expected_skills: &[136, 406],
+            // Sonic Blow, Meteor Assault, and Enchant Deadly Poison — EDP
+            // consumes a Poison Bottle per cast (fail reason 71 without one).
+            expected_skills: &[136, 406, 378],
             weapons: &[1250],
+            consumables: &[(678, 20)],
         },
         CharacterSetup {
             name: "EffectStalker",
             job_id: 4018,
             expected_skills: &[214],
             weapons: &[1101],
+            consumables: &[],
         },
         CharacterSetup {
             name: "EffectRune",
             job_id: 4054,
             expected_skills: &[2006],
             weapons: &[1101, 1404],
+            consumables: &[],
         },
     ];
 
@@ -152,6 +161,22 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
         for &item_id in setup.weapons {
             if !context.inventory.iter().any(|item| item.item_id == ItemId(item_id)) {
                 context.give_item(item_id, 1)?;
+            }
+        }
+
+        for &(item_id, target_count) in setup.consumables {
+            let held = context
+                .inventory
+                .iter()
+                .filter(|item| item.item_id == ItemId(item_id))
+                .fold(0u16, |total, item| {
+                    total.saturating_add(match &item.details {
+                        InventoryItemDetails::Regular { amount, .. } => *amount,
+                        InventoryItemDetails::Equippable { .. } => 1,
+                    })
+                });
+            if held < target_count {
+                context.give_item(item_id, target_count - held)?;
             }
         }
 
