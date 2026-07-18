@@ -244,6 +244,9 @@ path — `file_exists` does not normalize case the way `get` does).
 
 ## 7. Known gaps / open questions
 
+The execution plan for closing these is
+[plans/animation-fidelity.md](plans/animation-fidelity.md).
+
 - **Per-item weapon sprites** (`기사_남_1530.spr` etc.) and **`_검광` sword
   trail layers** exist in the GRFs but are not rendered. The trail is a
   visible part of classic attack presentation for many weapons.
