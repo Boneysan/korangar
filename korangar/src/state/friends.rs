@@ -48,11 +48,7 @@ impl FriendEntry {
     }
 
     fn format_label(name: &str, online: bool) -> String {
-        if online {
-            format!("{name}  ●")
-        } else {
-            format!("{name}  ○")
-        }
+        if online { format!("{name}  ●") } else { format!("{name}  ○") }
     }
 }
 

@@ -35,7 +35,7 @@ use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
     ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity, Library, MAX_WALK_PATH_SIZE, Map,
-    PathFinder,
+    PathFinder, SoundToken, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -44,10 +44,14 @@ use crate::{Buffer, ModelVertex};
 
 const MALE_HAIR_LOOKUP: &[usize] = &[2, 2, 1, 7, 5, 4, 3, 6, 8, 9, 10, 12, 11];
 const FEMALE_HAIR_LOOKUP: &[usize] = &[2, 2, 4, 7, 1, 5, 3, 6, 12, 10, 9, 11, 8];
-const SOUND_COOLDOWN_DURATION: u32 = 200;
 const SPATIAL_SOUND_RANGE: f32 = 250.0;
 const FADE_IN_DURATION_MS: u32 = 500;
 const BABY_JOB_SCALE: f32 = 0.75;
+const SI_TRICKDEAD: u16 = 29;
+const SI_SU_STOOP: u16 = 893;
+const SI_SUHIDE: u16 = 933;
+const OPT1_STONE: u16 = 1;
+const OPT1_FREEZE: u16 = 2;
 
 #[derive(Clone)]
 pub enum ResourceState<T> {
@@ -124,43 +128,50 @@ impl From<JobId> for EntityType {
 
 #[cfg(test)]
 mod entity_type_tests {
-    use ragnarok_packets::JobId;
+    use ragnarok_packets::{JobId, SkillId};
 
-    use super::EntityType;
+    use super::{EntityType, native_impact_extra_delay_ms};
 
     #[test]
     fn modern_hidden_warp_npc_is_not_rendered() {
         assert_eq!(EntityType::from(JobId(139)), EntityType::Hidden);
+    }
+
+    #[test]
+    fn native_projectile_delay_exceptions_are_route_specific() {
+        assert_eq!(native_impact_extra_delay_ms(JobId(1016), None), 192);
+        assert_eq!(native_impact_extra_delay_ms(JobId(1285), None), 912);
+        assert_eq!(native_impact_extra_delay_ms(JobId(1286), None), 408);
+        assert_eq!(native_impact_extra_delay_ms(JobId(1285), Some(SkillId(1))), 0);
+        assert_eq!(native_impact_extra_delay_ms(JobId(1420), Some(SkillId(1))), 192);
     }
 }
 
 #[derive(Copy, Clone, Default)]
 pub struct SoundState {
     previous_key: Option<SoundEffectKey>,
-    last_played_at: Option<ClientTick>,
+    last_token: Option<SoundToken>,
 }
 
 impl SoundState {
+    /// Play a frame event's sound once per displayed-frame token. A time-based
+    /// cooldown repeats sounds on held frames. Native Ragexe additionally
+    /// scans crossed body motions; that cursor still needs to replace this
+    /// interim token mechanism.
     pub fn update(
         &mut self,
         audio_engine: &AudioEngine<GameFileLoader>,
         position: Point3<f32>,
         sound_effect_key: SoundEffectKey,
-        client_tick: ClientTick,
+        token: SoundToken,
     ) {
-        let should_play = if Some(sound_effect_key) == self.previous_key
-            && let Some(last_tick) = self.last_played_at
-        {
-            (client_tick.0.wrapping_sub(last_tick.0)) >= SOUND_COOLDOWN_DURATION
-        } else {
-            true
-        };
-
-        if should_play {
-            audio_engine.play_spatial_sound_effect(sound_effect_key, position, SPATIAL_SOUND_RANGE);
-            self.last_played_at = Some(client_tick);
-            self.previous_key = Some(sound_effect_key);
+        if self.last_token == Some(token) && self.previous_key == Some(sound_effect_key) {
+            return;
         }
+
+        audio_engine.play_spatial_sound_effect(sound_effect_key, position, SPATIAL_SOUND_RANGE);
+        self.last_token = Some(token);
+        self.previous_key = Some(sound_effect_key);
     }
 }
 
@@ -182,6 +193,12 @@ pub struct Common {
     /// Raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Interpret via
     /// [`EntityOption`]; `0` until the server says otherwise.
     pub option: u32,
+    /// Raw `sc->opt1` / spawn `bodyState`.
+    pub body_state: u16,
+    /// Raw `sc->opt2` / spawn `healthState`.
+    pub health_state: u16,
+    /// Packet `isPKModeON`; native actor field `+0x2C0`.
+    pub is_pk_mode_on: bool,
     pub active_movement: Option<Movement>,
     pub animation_data: Option<Arc<AnimationData>>,
     pub tile_position: TilePosition,
@@ -191,6 +208,14 @@ pub struct Common {
     details: ResourceState<String>,
     #[hidden_element]
     animation_state: AnimationState,
+    #[hidden_element]
+    trick_dead: bool,
+    #[hidden_element]
+    su_hide: bool,
+    #[hidden_element]
+    su_stoop: bool,
+    #[hidden_element]
+    active_cast: Option<ActorCast>,
     stopped_moving: bool,
     #[hidden_element]
     sound_state: SoundState,
@@ -198,9 +223,16 @@ pub struct Common {
     fade_state: FadeState,
 }
 
+#[derive(Copy, Clone)]
+pub(crate) struct ActorCast {
+    _skill_id: SkillId,
+    ends_at: ClientTick,
+    total_ms: u32,
+}
+
 #[cfg_attr(feature = "debug", korangar_debug::profile)]
 #[allow(clippy::invisible_characters)]
-fn get_sprite_path_for_player_job(job_id: JobId) -> &'static str {
+pub(crate) fn get_sprite_path_for_player_job(job_id: JobId) -> &'static str {
     match job_id.0 {
         0 => "초보자",             // NOVICE
         1 => "검사",               // SWORDMAN
@@ -391,14 +423,21 @@ fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: Job
     }
 }
 
-fn weapon_resource_suffix(weapon: u32) -> Option<&'static str> {
-    match weapon {
+/// Weapon appearance class → classic weapon sprite name. Verified against the
+/// configured official GRFs with `weapon-sprite-audit`: two-handed swords,
+/// spears, and axes ship their own `양손*` sprites, classic rods/staves ship
+/// no weapon sprite in these archives, and the
+/// Assassin dual-wield combinations (25..=30) have dedicated pair sprites.
+pub(crate) fn weapon_resource_suffix(weapon: u32) -> Option<&'static str> {
+    match native_real_weapon_id(weapon) {
         1 => Some("단검"),
-        2 | 3 => Some("검"),
-        4 | 5 => Some("창"),
-        6 | 7 => Some("도끼"),
+        2 => Some("검"),
+        3 => Some("양손검"),
+        4 => Some("창"),
+        5 => Some("양손창"),
+        6 => Some("도끼"),
+        7 => Some("양손도끼"),
         8 | 9 => Some("클럽"),
-        10 | 23 => Some("로드"),
         11 => Some("활"),
         12 => Some("너클"),
         13 => Some("악기"),
@@ -406,14 +445,75 @@ fn weapon_resource_suffix(weapon: u32) -> Option<&'static str> {
         15 => Some("책"),
         16 => Some("카타르_카타르"),
         17 => Some("권총"),
-        18..=21 => Some("기관총"),
+        18 => Some("라이플"),
+        19 => Some("기관총"),
+        20 => Some("샷건"),
         22 => Some("수리검"),
+        25 => Some("단검_단검"),
+        26 => Some("검_검"),
+        27 => Some("도끼_도끼"),
+        28 => Some("단검_검"),
+        29 => Some("단검_도끼"),
+        30 => Some("검_도끼"),
+        // 10/23 (rods) and 21 (grenade launcher) have no classic weapon
+        // sprite in the archives.
         _ => None,
     }
 }
 
+/// The folder under `인간족\` holding a job's weapon sprites. Usually the
+/// body sprite folder, but the audit showed three exceptions: the Priest
+/// family's weapon files live under `프리스트`, Royal Guard's under `로얄가드`,
+/// and the transcendent second classes (and Shadow Chaser) ship no weapon
+/// sprites of their own. Korangar currently resolves them to base-class files.
+pub(crate) fn get_weapon_sprite_folder(job_id: JobId) -> &'static str {
+    match job_id.0 {
+        8 | 4009 | 4031 => "프리스트",
+        4008 => "기사",
+        4010 => "위저드",
+        4011 => "제철공",
+        4012 => "헌터",
+        4013 => "어세신",
+        4014 => "페코페코_기사",
+        4015 => "크루세이더",
+        4016 => "몽크",
+        4017 => "세이지",
+        4018 => "로그",
+        4019 => "연금술사",
+        4020 => "바드",
+        4021 => "무희",
+        4066 | 4073 | 4102 => "로얄가드",
+        4072 | 4079 | 4108 => "로그",
+        _ => get_sprite_path_for_player_job(job_id),
+    }
+}
+
+/// Append the equipped weapon's sprite layer when the archives actually ship
+/// one for this job/sex/weapon combination. Requesting a file that does not
+/// exist would render the placeholder fallback sprite on top of the actor.
+fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loader: &GameFileLoader) {
+    if common.entity_type != EntityType::Player {
+        return;
+    }
+    let Some(suffix) = weapon_resource_suffix(common.weapon) else {
+        return;
+    };
+
+    let sex = match common.sex == Sex::Female {
+        true => "여",
+        false => "남",
+    };
+    let folder = get_weapon_sprite_folder(common.job_id);
+    let part_file = format!("인간족\\{folder}\\{folder}_{sex}_{suffix}");
+
+    // `file_exists` does not normalize case the way `get` does.
+    if game_file_loader.file_exists(&format!("data\\sprite\\{part_file}.spr").to_lowercase()) {
+        files.push(part_file);
+    }
+}
+
 fn weapon_sound(weapon: u32) -> &'static str {
-    match weapon {
+    match native_real_weapon_id(weapon) {
         1 => "attack_short_sword.wav",
         2 => "attack_sword.wav",
         3 => "attack_twohand_sword.wav",
@@ -426,7 +526,24 @@ fn weapon_sound(weapon: u32) -> &'static str {
         15 => "attack_book.wav",
         16 => "attack_katar.wav",
         22 => "attack_sword.wav",
+        25 | 28 | 29 => "attack_short_sword.wav",
+        26 | 30 => "attack_sword.wav",
+        27 => "attack_axe.wav",
         _ => "attack_fist.wav",
+    }
+}
+
+/// Hard-coded projectile travel additions in the reference client's basic
+/// and skill damage controllers. These are added after the source ACT event
+/// offset and apply only to the listed actor/job IDs.
+fn native_impact_extra_delay_ms(job_id: JobId, skill_id: Option<SkillId>) -> u32 {
+    match (skill_id, job_id.0) {
+        (Some(_), 1016 | 1420) => 192,
+        (Some(_), _) => 0,
+        (None, 1016 | 1420) => 192,
+        (None, 1285 | 1830) => 912,
+        (None, 1286 | 1287 | 1829) => 408,
+        (None, _) => 0,
     }
 }
 
@@ -463,7 +580,14 @@ impl Common {
         let entity_type = job_id.into();
 
         let details = ResourceState::Unavailable;
-        let animation_state = AnimationState::new(entity_type, client_tick);
+        let mut animation_state = AnimationState::new(entity_type, client_tick);
+        match entity_data.state {
+            1 => animation_state.dead(entity_type, client_tick),
+            2 => animation_state.sit(entity_type, client_tick),
+            _ if entity_data.is_pk_mode_on => animation_state.idle(entity_type, true, client_tick),
+            _ => {}
+        }
+        animation_state.set_status_paused(matches!(entity_data.body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
         let scale = match library.get::<IsBabyJob>(job_id) {
             IsBabyJob(true) => BABY_JOB_SCALE,
             IsBabyJob(false) => 1.0,
@@ -481,15 +605,20 @@ impl Common {
             shield,
             active_movement,
             entity_type,
-            // No option flags until the server sends ZC_STATE_CHANGE (M1-007). An entity
-            // that spawns already hidden gets its flags via that packet.
-            option: 0,
+            option: entity_data.option,
+            body_state: entity_data.body_state,
+            health_state: entity_data.health_state,
+            is_pk_mode_on: entity_data.is_pk_mode_on,
             movement_speed,
             health_points,
             maximum_health_points,
             animation_data: None,
             details,
             animation_state,
+            trick_dead: false,
+            su_hide: false,
+            su_stoop: false,
+            active_cast: None,
             stopped_moving: false,
             sound_state: SoundState::default(),
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
@@ -497,15 +626,9 @@ impl Common {
         }
     }
 
-    pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
+    pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, None);
-        if self.entity_type == EntityType::Player
-            && let Some(suffix) = weapon_resource_suffix(self.weapon)
-        {
-            let sex = if self.sex == Sex::Female { "여" } else { "남" };
-            let job = get_sprite_path_for_player_job(self.job_id);
-            files.push(format!("인간족\\{job}\\{job}_{sex}_{suffix}"));
-        }
+        push_weapon_part_file(&mut files, self, game_file_loader);
         files
     }
 
@@ -526,6 +649,9 @@ impl Common {
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
         self.update_movement(map, client_tick);
+        if self.active_cast.is_some_and(|cast| client_tick.0 >= cast.ends_at.0) {
+            self.active_cast = None;
+        }
         self.animation_state.update(client_tick);
 
         if self.fade_state.is_fading() && self.fade_state.is_done_fading_in(client_tick) {
@@ -533,21 +659,20 @@ impl Common {
         }
 
         if let Some(animation_data) = self.animation_data.as_ref() {
-            if animation_data.is_animation_over(&self.animation_state)
-                && (self.animation_state.is_attack() || self.animation_state.is_pickup())
-            {
-                self.animation_state.idle(self.entity_type, client_tick);
+            if animation_data.is_animation_over(&self.animation_state) {
+                self.animation_state
+                    .apply_completion_transition(self.entity_type, self.is_pk_mode_on, client_tick);
             }
 
-            let frame = animation_data.get_frame(&self.animation_state, camera, self.direction);
+            let (frame, sound_token) = animation_data.get_frame_with_sound_token(&self.animation_state, camera, self.direction);
 
             match frame.event {
                 Some(ActionEvent::Sound { key }) => {
-                    self.sound_state.update(audio_engine, self.world_position, key, client_tick);
+                    self.sound_state.update(audio_engine, self.world_position, key, sound_token);
                 }
                 Some(ActionEvent::Attack) => {
                     let key = audio_engine.load(weapon_sound(self.weapon));
-                    self.sound_state.update(audio_engine, self.world_position, key, client_tick);
+                    self.sound_state.update(audio_engine, self.world_position, key, sound_token);
                 }
                 None | Some(ActionEvent::Unknown) => { /* Nothing to do */ }
             }
@@ -613,7 +738,9 @@ impl Common {
         self.tile_position = position;
         self.world_position = world_position;
         self.active_movement = None;
-        self.animation_state.idle(self.entity_type, client_tick);
+        if !self.action_request_locked() {
+            self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+        }
     }
 
     pub fn move_from_to(
@@ -624,6 +751,9 @@ impl Common {
         goal: TilePosition,
         starting_timestamp: ClientTick,
     ) {
+        if self.action_request_locked() {
+            return;
+        }
         if let Some(path) = path_finder.find_walkable_path(map, start, goal) {
             if path.len() <= 1 {
                 return;
@@ -674,6 +804,85 @@ impl Common {
                     self.animation_state.walk(self.entity_type, self.movement_speed, starting_timestamp);
                 }
             }
+        }
+    }
+
+    fn action_request_locked(&self) -> bool {
+        self.trick_dead || self.animation_state.is_dead()
+    }
+
+    fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, now: ClientTick) {
+        self.active_cast = (cast_ms > 0).then_some(ActorCast {
+            _skill_id: skill_id,
+            ends_at: ClientTick(now.0.saturating_add(cast_ms)),
+            total_ms: cast_ms,
+        });
+    }
+
+    fn clear_cast(&mut self) {
+        self.active_cast = None;
+    }
+
+    fn cast_bar(&self, now: ClientTick) -> Option<(f32, f32)> {
+        let cast = self.active_cast?;
+        if cast.ends_at.0 <= now.0 {
+            return None;
+        }
+        let total = cast.total_ms.max(1) as f32;
+        Some(((cast.ends_at.0 - now.0) as f32, total))
+    }
+
+    fn update_state(&mut self, option: u32, body_state: u16, health_state: u16, is_pk_mode_on: bool, client_tick: ClientTick) {
+        self.option = option;
+        self.body_state = body_state;
+        self.health_state = health_state;
+        let pk_changed = self.is_pk_mode_on != is_pk_mode_on;
+        self.is_pk_mode_on = is_pk_mode_on;
+        self.animation_state
+            .set_status_paused(matches!(body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
+
+        if pk_changed && self.animation_state.is_neutral() && !self.action_request_locked() {
+            self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+        }
+    }
+
+    fn update_animation_status(&mut self, index: u16, gained: bool, client_tick: ClientTick) {
+        match index {
+            SI_TRICKDEAD => {
+                self.trick_dead = gained;
+                self.active_movement = None;
+                self.clear_cast();
+                if gained {
+                    self.animation_state.trick_dead(self.entity_type, client_tick);
+                } else if !self.animation_state.is_dead() {
+                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                }
+            }
+            SI_SUHIDE => {
+                self.su_hide = gained;
+                if self.action_request_locked() {
+                    return;
+                }
+                if gained {
+                    self.animation_state.status_pose(self.entity_type, self.job_id, 48, client_tick);
+                } else if self.su_stoop {
+                    self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
+                } else {
+                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                }
+            }
+            SI_SU_STOOP => {
+                self.su_stoop = gained;
+                if self.action_request_locked() || self.su_hide {
+                    return;
+                }
+                if gained {
+                    self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
+                } else {
+                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                }
+            }
+            _ => {}
         }
     }
 
@@ -1035,10 +1244,6 @@ pub struct Player {
     pub next_base_experience: u64,
     /// Job experience required for the next job level.
     pub next_job_experience: u64,
-    /// When set, a cast bar is drawn until this server client-tick.
-    pub cast_ends_at: Option<ClientTick>,
-    /// Total cast duration in milliseconds (for bar fill ratio).
-    pub cast_total_ms: u32,
 }
 
 impl Player {
@@ -1103,35 +1308,16 @@ impl Player {
             job_experience: 0,
             next_base_experience: 0,
             next_job_experience: 0,
-            cast_ends_at: None,
-            cast_total_ms: 0,
         }
-    }
-
-    pub fn start_cast(&mut self, cast_ms: u32, now: ClientTick) {
-        if cast_ms == 0 {
-            self.cast_ends_at = None;
-            self.cast_total_ms = 0;
-            return;
-        }
-        self.cast_total_ms = cast_ms;
-        self.cast_ends_at = Some(ClientTick(now.0.saturating_add(cast_ms)));
     }
 
     pub fn clear_cast(&mut self) {
-        self.cast_ends_at = None;
-        self.cast_total_ms = 0;
+        self.common.clear_cast();
     }
 
     /// Remaining cast time progress as `(remaining, total)` for the cast bar.
     pub fn cast_bar(&self, now: ClientTick) -> Option<(f32, f32)> {
-        let ends = self.cast_ends_at?;
-        let total = self.cast_total_ms.max(1) as f32;
-        if ends.0 <= now.0 {
-            return None;
-        }
-        let remaining = (ends.0 - now.0) as f32;
-        Some((remaining, total))
+        self.common.cast_bar(now)
     }
 
     pub fn get_common(&self) -> &Common {
@@ -1301,14 +1487,10 @@ impl Player {
         }
     }
 
-    pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
+    pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         let common = self.get_common();
         let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(self.hair_id));
-        if let Some(suffix) = weapon_resource_suffix(common.weapon) {
-            let sex = if common.sex == Sex::Female { "여" } else { "남" };
-            let job = get_sprite_path_for_player_job(common.job_id);
-            files.push(format!("인간족\\{job}\\{job}_{sex}_{suffix}"));
-        }
+        push_weapon_part_file(&mut files, common, game_file_loader);
         files
     }
 }
@@ -1542,10 +1724,10 @@ impl Entity {
         self.get_common_mut().animation_data = Some(animation_data)
     }
 
-    pub fn get_entity_part_files(&self, library: &Library) -> Vec<String> {
+    pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         match self {
-            Self::Player(player) => player.get_entity_part_files(library),
-            Self::Npc(npc) => npc.get_common().get_entity_part_files(library),
+            Self::Player(player) => player.get_entity_part_files(library, game_file_loader),
+            Self::Npc(npc) => npc.get_common().get_entity_part_files(library, game_file_loader),
         }
     }
 
@@ -1583,18 +1765,27 @@ impl Entity {
     }
 
     pub fn set_dead(&mut self, client_tick: ClientTick) {
-        let entity_type = self.get_entity_type();
-        self.get_common_mut().animation_state.dead(entity_type, client_tick);
+        let common = self.get_common_mut();
+        if common.action_request_locked() {
+            return;
+        }
+        common.active_movement = None;
+        common.clear_cast();
+        common.animation_state.dead(common.entity_type, client_tick);
     }
 
     pub fn set_idle(&mut self, client_tick: ClientTick) {
-        let entity_type = self.get_entity_type();
-        self.get_common_mut().animation_state.idle(entity_type, client_tick);
+        let common = self.get_common_mut();
+        if !common.action_request_locked() {
+            common.animation_state.idle(common.entity_type, common.is_pk_mode_on, client_tick);
+        }
     }
 
     pub fn set_sit(&mut self, client_tick: ClientTick) {
-        let entity_type = self.get_entity_type();
-        self.get_common_mut().animation_state.sit(entity_type, client_tick);
+        let common = self.get_common_mut();
+        if !common.action_request_locked() {
+            common.animation_state.sit(common.entity_type, client_tick);
+        }
     }
 
     pub fn is_sitting(&self) -> bool {
@@ -1602,8 +1793,10 @@ impl Entity {
     }
 
     pub fn set_pickup(&mut self, client_tick: ClientTick) {
-        let entity_type = self.get_entity_type();
-        self.get_common_mut().animation_state.pickup(entity_type, client_tick);
+        let common = self.get_common_mut();
+        if !common.action_request_locked() {
+            common.animation_state.pickup(common.entity_type, client_tick);
+        }
     }
 
     pub fn rotate_towards(&mut self, target_position: TilePosition) {
@@ -1619,32 +1812,82 @@ impl Entity {
         }
     }
 
-    pub fn set_attack(&mut self, attack_duration: u32, critical: bool, client_tick: ClientTick) {
-        let entity_type = self.get_entity_type();
-        self.get_common_mut()
-            .animation_state
-            .attack(entity_type, attack_duration, critical, client_tick);
+    pub fn set_attack(&mut self, _attack_duration: u32, critical: bool, client_tick: ClientTick) {
+        let common = self.get_common_mut();
+        // Execution is terminal for the cast overlay even when the actor pose
+        // request is rejected by Trick Dead/death. Ragexe's request guard owns
+        // the pose, not the lifetime of the already completed server cast.
+        common.clear_cast();
+        if common.action_request_locked() {
+            return;
+        }
+        common.animation_state.attack(common.entity_type, critical, client_tick);
     }
 
-    pub fn set_skill_attack(&mut self, skill_id: Option<SkillId>, attack_duration: u32, critical: bool, client_tick: ClientTick) {
+    pub fn set_skill_attack(&mut self, skill_id: Option<SkillId>, _attack_duration: u32, _critical: bool, client_tick: ClientTick) {
         let entity_type = self.get_entity_type();
-        let weapon = self.get_common().weapon;
-        if skill_id.is_some_and(|skill_id| skill_id.0 == 59) || weapon == 11 {
-            self.get_common_mut()
+        if let Some(skill_id) = skill_id {
+            let common = self.get_common_mut();
+            common.clear_cast();
+            if common.action_request_locked() {
+                return;
+            }
+            let (job_id, sex, weapon) = (common.job_id, common.sex, common.weapon);
+            common
                 .animation_state
-                .alternate_attack(entity_type, attack_duration, client_tick);
-        } else if matches!(weapon, 4 | 5) {
-            // The classic weapon-action table is zero-based. Knight spear
-            // maps to entry 2, i.e. the third attack ACT action (Attack3),
-            // which carries the thrust motion and matching spear layer.
-            self.set_attack(attack_duration, true, client_tick);
+                .skill_attack(entity_type, job_id, sex, weapon, skill_id, common.su_hide, client_tick);
+        } else if entity_type == EntityType::Player {
+            // The target Ragexe sends both ordinary and critical player
+            // attacks through the same recovered job/sex/weapon selector.
+            // Its separate attack-event position is not a playback-speed
+            // multiplier; see docs/specs/combat-animation-pipeline.md.
+            let common = self.get_common_mut();
+            common.clear_cast();
+            if common.action_request_locked() {
+                return;
+            }
+            let (job_id, sex, weapon) = (common.job_id, common.sex, common.weapon);
+            common.animation_state.weapon_attack(entity_type, job_id, sex, weapon, client_tick);
         } else {
-            // The skill packet's type 8 describes its damage/multi-hit family;
-            // it does not select the player's critical Attack3 ACT action.
-            // Classic skill recipes use the normal visible-weapon attack
-            // unless they explicitly override it (Spear Boomerang above).
-            self.set_attack(attack_duration, skill_id.is_none() && critical, client_tick);
+            // Monster/NPC ACT layouts expose only their single attack group;
+            // packet critical styling must not select a nonexistent player
+            // Attack3 group.
+            self.set_attack(0, false, client_tick);
         }
+    }
+
+    /// Play the damaged-entity flinch using Ragexe's dMotion/288 reaction
+    /// clock. Real death and Trick Dead reject the request; walking does not —
+    /// Ragexe accepts state 4 and leaves path ownership independent.
+    pub fn set_hurt(&mut self, damage_delay: u32, client_tick: ClientTick) {
+        let common = self.get_common_mut();
+        if common.action_request_locked() {
+            return;
+        }
+        common
+            .animation_state
+            .hurt(common.entity_type, common.job_id, damage_delay, client_tick);
+    }
+
+    /// Calculate the target-event offset after the source action has been
+    /// selected. Missing animation data contributes no ACT delay; this can
+    /// only occur while an asynchronously loaded actor is not yet drawable.
+    pub fn impact_delay_ms(&self, skill_id: Option<SkillId>, camera_direction: usize) -> u32 {
+        let common = self.get_common();
+        let direction_index = (camera_direction + u16::from(common.direction) as usize) & 7;
+        let action_delay = common
+            .animation_data
+            .as_ref()
+            .map(|animation_data| {
+                animation_data.attack_impact_delay_ms(
+                    &common.animation_state,
+                    direction_index,
+                    common.animation_state.impact_event_position_override(),
+                )
+            })
+            .unwrap_or(0);
+
+        action_delay.saturating_add(native_impact_extra_delay_ms(common.job_id, skill_id))
     }
 
     pub fn set_weapon(&mut self, weapon: u32) {
@@ -1669,10 +1912,24 @@ impl Entity {
         common.maximum_health_points = maximum_health_points;
     }
 
-    /// Store raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Drives the
-    /// concealed (Hiding / Cloaking) alpha in [`Common::render`].
-    pub fn update_option(&mut self, option: u32) {
-        self.get_common_mut().option = option;
+    /// Apply the complete `ZC_STATE_CHANGE` record. These four fields are one
+    /// atomic native input; splitting them loses opt1 playback holds and the
+    /// `+0x2C0` PK-ready neutral rule.
+    pub fn update_state(&mut self, option: u32, body_state: u16, health_state: u16, is_pk_mode_on: bool, client_tick: ClientTick) {
+        self.get_common_mut()
+            .update_state(option, body_state, health_state, is_pk_mode_on, client_tick);
+    }
+
+    pub fn update_animation_status(&mut self, index: u16, gained: bool, client_tick: ClientTick) {
+        self.get_common_mut().update_animation_status(index, gained, client_tick);
+    }
+
+    pub fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, client_tick: ClientTick) {
+        self.get_common_mut().start_cast(skill_id, cast_ms, client_tick);
+    }
+
+    pub fn clear_cast(&mut self) {
+        self.get_common_mut().clear_cast();
     }
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
@@ -1779,5 +2036,46 @@ impl StateWindow<ClientState> for Entity {
             // None and dispaly a message if the entity disappeared.
             elements: (),
         }
+    }
+}
+
+#[cfg(test)]
+mod weapon_layer_tests {
+    use ragnarok_packets::JobId;
+
+    use super::{get_weapon_sprite_folder, weapon_resource_suffix};
+
+    #[test]
+    fn two_handed_weapons_use_their_own_sprites() {
+        assert_eq!(weapon_resource_suffix(2), Some("검"));
+        assert_eq!(weapon_resource_suffix(3), Some("양손검"));
+        assert_eq!(weapon_resource_suffix(4), Some("창"));
+        assert_eq!(weapon_resource_suffix(5), Some("양손창"));
+        assert_eq!(weapon_resource_suffix(7), Some("양손도끼"));
+    }
+
+    #[test]
+    fn classic_rods_have_no_weapon_sprite() {
+        assert_eq!(weapon_resource_suffix(10), None);
+        assert_eq!(weapon_resource_suffix(23), None);
+    }
+
+    #[test]
+    fn transcendent_classes_reuse_base_weapon_folders() {
+        assert_eq!(get_weapon_sprite_folder(JobId(4013)), "어세신");
+        assert_eq!(get_weapon_sprite_folder(JobId(4018)), "로그");
+        assert_eq!(get_weapon_sprite_folder(JobId(4008)), "기사");
+    }
+
+    #[test]
+    fn priest_family_weapons_live_under_priest_folder() {
+        assert_eq!(get_weapon_sprite_folder(JobId(8)), "프리스트");
+        assert_eq!(get_weapon_sprite_folder(JobId(4009)), "프리스트");
+    }
+
+    #[test]
+    fn third_classes_keep_their_own_weapon_folders() {
+        assert_eq!(get_weapon_sprite_folder(JobId(4054)), "룬나이트");
+        assert_eq!(get_weapon_sprite_folder(JobId(4059)), "길로틴크로스");
     }
 }

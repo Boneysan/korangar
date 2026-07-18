@@ -113,10 +113,7 @@ fn repair_list_empty(config: &Config) -> Result<(), String> {
         .cast_skill(BS_REPAIRWEAPON, level, context.player_id)
         .map_err(|_| "disconnected")?;
     let events = context.collect_for(Duration::from_millis(1500));
-    if events
-        .iter()
-        .any(|event| matches!(event, NetworkEvent::RepairableItemList { .. }))
-    {
+    if events.iter().any(|event| matches!(event, NetworkEvent::RepairableItemList { .. })) {
         return Err("Repair Weapon opened a repair list with nothing broken".to_owned());
     }
     Ok(())

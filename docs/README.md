@@ -29,6 +29,7 @@ This directory contains all design documents, technical deep dives, implementati
 | [STATE_MANAGEMENT_GUIDE.md](STATE_MANAGEMENT_GUIDE.md) | ClientState reactivity, RustState/StateElement paths, how to add new state safely. |
 | [GRAPHICS_PIPELINE.md](GRAPHICS_PIPELINE.md) | Deep dive into the wgpu forward renderer, lighting, shadows, and shaders. |
 | [WORLD_MAPS_ENTITIES.md](WORLD_MAPS_ENTITIES.md) | Map loading (RSW/GND/GAT), entity system, quest effects/markers, and DM visual integration. |
+| [ANIMATION_SYSTEM.md](ANIMATION_SYSTEM.md) | Actor animation: native SPR/ACT layer rules, weapon sprites, exact basic-attack selection, source/target clocks, delayed impacts, skill actor states, sound events, audit tooling, and known gaps. |
 | [PACKET_EVENTS_CATALOG.md](PACKET_EVENTS_CATALOG.md) | Complete catalogue of `NetworkEvent`s, every producing packet, handlers, data flows, and DM usage. |
 | [LOADERS_ASSET_PIPELINE_INTERNALS.md](LOADERS_ASSET_PIPELINE_INTERNALS.md) | Detailed loaders, async system, archive backends, and Library. |
 | [INPUT_CAMERA_SYSTEMS.md](INPUT_CAMERA_SYSTEMS.md) | Input handling, MouseInputMode, full camera trait + implementations, picking, pathing. |
@@ -109,6 +110,7 @@ cargo run --release --example headless-tester -p korangar-networking -- --scenar
 ### Targeted Implementation Specs (in `specs/`)
 These are concrete, code-level guides ready for implementation:
 
+- [combat-animation-pipeline.md](specs/combat-animation-pipeline.md) — Native-client-backed pipeline and recipe contract for attacks, skills, effects, projectiles, persistent units, reactions, audio, and complete player/mob coverage.
 - [buff-bar-slice.md](specs/buff-bar-slice.md) — Template for packet promotion (status effects).
 - [party-packets.md](specs/party-packets.md) — Detailed plan + Hercules layouts for party (0x0AE4/0x0AE5) and whisper.
 - [dm-phase-a-chat-integration.md](specs/dm-phase-a-chat-integration.md) — `[DMJ]` parser, command emitter, lib.rs integration.

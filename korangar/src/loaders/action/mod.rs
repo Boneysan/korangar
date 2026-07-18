@@ -98,7 +98,10 @@ impl ActionLoader {
 
         let delays = actions_data
             .delays
-            .unwrap_or_else(|| actions_data.actions.iter().map(|_| 0.0).collect());
+            // CActRes supplies 4.0 when an older ACT version has no delay
+            // table. A zero delay would collapse the whole action into one
+            // instant and is not native behavior.
+            .unwrap_or_else(|| actions_data.actions.iter().map(|_| 4.0).collect());
 
         let sprite = Arc::new(Actions {
             actions: actions_data.actions,

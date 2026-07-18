@@ -376,7 +376,10 @@ fn dm_warp_recall(config: &Config) -> Result<(), String> {
     let position = wait_change_map(&mut partner, "partner ChangeMap (dmwarp)", "prontera")?;
     if position.x.abs_diff(156).max(position.y.abs_diff(191)) > 5 {
         leave_party_both(&mut primary, &mut partner);
-        return Err(format!("partner landed at ({}, {}), not near (156, 191)", position.x, position.y));
+        return Err(format!(
+            "partner landed at ({}, {}), not near (156, 191)",
+            position.x, position.y
+        ));
     }
 
     // Move only the DM elsewhere, then pull the party.
@@ -388,7 +391,10 @@ fn dm_warp_recall(config: &Config) -> Result<(), String> {
     let position = wait_change_map(&mut partner, "partner ChangeMap (dmrecall)", "geffen")?;
     if position.x.abs_diff(119).max(position.y.abs_diff(59)) > 5 {
         leave_party_both(&mut primary, &mut partner);
-        return Err(format!("recall landed partner at ({}, {}), not near (119, 59)", position.x, position.y));
+        return Err(format!(
+            "recall landed partner at ({}, {}), not near (119, 59)",
+            position.x, position.y
+        ));
     }
 
     // Both sessions must remain actionable.
@@ -522,7 +528,11 @@ fn dm_instance_lifecycle(config: &Config) -> Result<(), String> {
         wait_change_map(&mut partner, "partner warped into instance", &client_map)?;
 
         // One live instance per party.
-        say_expect(&mut primary, "@dminstance start prontera 156 191", "already has a live instance")?;
+        say_expect(
+            &mut primary,
+            "@dminstance start prontera 156 191",
+            "already has a live instance",
+        )?;
 
         primary.flush();
         partner.flush();

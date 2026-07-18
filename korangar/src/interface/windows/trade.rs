@@ -3,9 +3,9 @@ use rust_state::Path;
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
+use crate::state::ClientState;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::trade::{TradeState, TradeStatePathExt};
-use crate::state::ClientState;
 
 /// Active trade window (after accept / when we initiated and partner accepted).
 pub struct TradeWindow<P> {

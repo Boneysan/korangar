@@ -136,10 +136,7 @@ fn attack_out_of_range(config: &Config) -> Result<(), String> {
     let mut walked = false;
     for (dx, dy) in [(8, 0), (-8, 0), (0, 8), (0, -8)] {
         if context
-            .walk_to(
-                (target_position.x as i16 + dx) as u16,
-                (target_position.y as i16 + dy) as u16,
-            )
+            .walk_to((target_position.x as i16 + dx) as u16, (target_position.y as i16 + dy) as u16)
             .is_ok()
         {
             walked = true;

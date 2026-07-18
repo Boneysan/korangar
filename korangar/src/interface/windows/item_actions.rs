@@ -12,9 +12,9 @@ use crate::world::ResourceMetadata;
 
 /// Compact right-click menu for an inventory item.
 ///
-/// Stack "split" on Hercules is done by dropping a partial amount: the remainder
-/// stays in inventory as its own stack, and the dropped pile is on the ground
-/// (pick it up later, or leave it split off).
+/// Stack "split" on Hercules is done by dropping a partial amount: the
+/// remainder stays in inventory as its own stack, and the dropped pile is on
+/// the ground (pick it up later, or leave it split off).
 pub struct ItemActionsWindow {
     item: InventoryItem<ResourceMetadata>,
 }
@@ -60,10 +60,7 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
             inventory_index,
             amount: 1,
         });
-        let drop_all = ActionThenClose(InputEvent::DropItem {
-            inventory_index,
-            amount,
-        });
+        let drop_all = ActionThenClose(InputEvent::DropItem { inventory_index, amount });
 
         window! {
             title: name,
@@ -142,9 +139,7 @@ fn primary_action_event(item: &InventoryItem<ResourceMetadata>) -> InputEvent {
             if equipped_position.is_empty() {
                 InputEvent::MoveItem {
                     source: ItemSource::Inventory,
-                    destination: ItemSource::Equipment {
-                        position: *equip_position,
-                    },
+                    destination: ItemSource::Equipment { position: *equip_position },
                     item: item.clone(),
                 }
             } else {

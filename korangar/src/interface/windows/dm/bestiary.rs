@@ -7,9 +7,8 @@
 //! server still permission-checks.
 
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::element::StateElement;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
-use korangar_interface::element::{Element, ElementBox};
+use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{ManuallyAssertExt, Path, RustState, State, VecIndexExt};

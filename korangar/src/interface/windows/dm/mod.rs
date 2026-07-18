@@ -5,11 +5,10 @@ mod bestiary;
 mod loot;
 
 pub use bestiary::{BestiaryWindow, BestiaryWindowState};
-pub use loot::{LootGeneratorWindow, LootWindowState};
-
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
+pub use loot::{LootGeneratorWindow, LootWindowState};
 use rust_state::{ManuallyAssertExt, Path, State, VecIndexExt};
 
 use crate::state::ClientState;

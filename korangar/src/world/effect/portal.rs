@@ -94,9 +94,8 @@ impl EffectBase for PortalVortex {
                 let angle_start = rotation + segment as f32 / SEGMENT_COUNT as f32 * TAU;
                 let angle_end = rotation + (segment + 1) as f32 / SEGMENT_COUNT as f32 * TAU;
 
-                let ring_point = |angle: f32, radius: f32, height: f32| {
-                    self.position + Vector3::new(angle.cos() * radius, height, angle.sin() * radius)
-                };
+                let ring_point =
+                    |angle: f32, radius: f32, height: f32| self.position + Vector3::new(angle.cos() * radius, height, angle.sin() * radius);
 
                 let corners = [
                     ring_point(angle_start, cylinder.top_radius, cylinder.height),

@@ -9,7 +9,8 @@ pub struct SkillCooldowns {
     /// skill_id → server client-tick when the skill is usable again.
     #[hidden_element]
     entries: Vec<(SkillId, ClientTick)>,
-    /// Last server tick used by [`Self::tick`] (for UI that cannot pass a tick).
+    /// Last server tick used by [`Self::tick`] (for UI that cannot pass a
+    /// tick).
     #[hidden_element]
     last_now: ClientTick,
     display_text: String,

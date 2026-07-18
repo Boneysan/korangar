@@ -24,7 +24,8 @@ struct DialogInputTextBox;
 /// - Making the elements nicer to construct by putting the [`UnsafeCell::new`]
 ///   and [`Box::new`] behind a function call.
 /// - Storing which elements are next / choice / input widgets so we can remove
-///   them when the dialog advances (stale choice buttons get GM-kicked by Hercules).
+///   them when the dialog advances (stale choice buttons get GM-kicked by
+///   Hercules).
 #[derive(RustState, StateElement)]
 pub struct DialogElement {
     /// Stores the UI element.
@@ -177,7 +178,8 @@ impl DialogWindowState {
         self
     }
 
-    /// Whether a conversation is in progress (window may or may not still be open).
+    /// Whether a conversation is in progress (window may or may not still be
+    /// open).
     pub fn is_active(&self) -> bool {
         self.active
     }

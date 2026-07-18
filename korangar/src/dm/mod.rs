@@ -6,11 +6,10 @@
 pub mod data;
 pub mod loot;
 
-use korangar_interface::element::StateElement;
-use rust_state::RustState;
-
 pub use data::{BestiaryMonster, dm_data};
+use korangar_interface::element::StateElement;
 pub use loot::{LootDifficulty, generate_loot};
+use rust_state::RustState;
 
 /// Campaign-persistent DM state (session-scoped for now).
 #[derive(Default, RustState, StateElement)]

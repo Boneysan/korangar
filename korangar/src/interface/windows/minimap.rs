@@ -1,5 +1,5 @@
-use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::Element;
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::event::{EventQueue, ScrollHandler};
 use korangar_interface::layout::area::Area;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
@@ -111,11 +111,7 @@ impl Element<ClientState> for MinimapView {
                 let Some(pos) = member.position() else {
                     continue;
                 };
-                let member_map = member
-                    .map_name()
-                    .trim_end_matches(".gat")
-                    .trim_end_matches(".GAT")
-                    .to_lowercase();
+                let member_map = member.map_name().trim_end_matches(".gat").trim_end_matches(".GAT").to_lowercase();
                 if !member_map.is_empty() && member_map != current_map {
                     continue;
                 }

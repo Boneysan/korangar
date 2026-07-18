@@ -138,13 +138,18 @@ pub enum NetworkEvent {
     ChatMessage { text: String, color: MessageColor },
 
     // Combat / effects
-    DamageEffect { source_entity_id, destination_entity_id, damage_amount: Option<usize>, attack_duration: u32, is_critical: bool },
+    DamageEffect { source_entity_id, destination_entity_id, skill_id, packet_tick, damage_amount, hit_count, attack_duration, damage_delay, is_critical },
     EntityPickUpItem { entity_id, item_entity_id },
     HealEffect { entity_id, heal_amount: usize },
+    SkillEffectNoDamage { skill_id, source_entity_id, destination_entity_id, effect_value, successful },
     StatusChange { entity_id, index: u16, gained: bool, duration_ms: u32, remaining_ms: u32 },
+    StateChange { entity_id, option, body_state, health_state, is_pk_mode_on },
     VisualEffect { effect_path: &'static str, entity_id: EntityId },
     AddSkillUnit { entity_id, unit_id: UnitId, position: TilePosition },
     RemoveSkillUnit { entity_id },
+    GroundSkillEffect { skill_id, source_entity_id, level, position, start_tick },
+    SkillCast { source_entity_id, skill_id, cast_ms },
+    SkillCastCancelled { source_entity_id: Option<EntityId> },
 
     // Quest markers (the "!" and colored indicators)
     AddQuestEffect { quest_effect: QuestEffectPacket },
@@ -354,14 +359,26 @@ Hotkey binding uses `SetHotkeyData2Packet` (client).
 
 `DamagePacket1` (0x008A) and `DamagePacket3` (0x08C8) are pattern-matched on `DamageType`:
 
-- Damage / CriticalHit → `DamageEffect` (particles + attack anim)
+- Damage / CriticalHit → `DamageEffect` (source action plus queued target impact)
 - PickUpItem → `EntityPickUpItem`
 - StandUp → `PlayerStandUp`
 
 Other:
 
-- `DisplaySkillEffectNoDamagePacket` → `HealEffect`
-- `StatusChangePacket` → `StatusChange`
+- `DisplaySkillEffectAndDamagePacket` → `DamageEffect` with skill ID, packet
+  start tick, hit division, source motion, and target motion preserved.
+- `DisplaySkillEffectNoDamagePacket` → `SkillEffectNoDamage`; successful
+  results drive caster-centered effects and source actions even when no target
+  is damaged, while healing skills retain their number presentation.
+- `StatusChangePacket` / end variants → `StatusChange`; actor guard/pose state
+  applies to every visible entity and the timed HUD list remains local.
+- `StateChangePacket` → one atomic `StateChange` carrying option, body, health,
+  and PK-mode state. Stone/freeze body state pauses the ACT clock; PK mode
+  participates in neutral ReadyFight selection.
+- `UseSkillAck*Packet` → `SkillCast`; `SkillCastCancelledPacket` (`ZC_DISPEL`
+  0x01B9) and failed local use acknowledgement → `SkillCastCancelled`.
+- `NotifyGroundSkillPacket` → `GroundSkillEffect`, retaining source, level,
+  tile, and synchronized start tick.
 - `VisualEffectPacket` → `VisualEffect` (maps enum to `.str` effect paths)
 - `NotifySkillUnitPacket` / `SkillUnitDisappearPacket` → skill ground units (effect_holder)
 
@@ -395,7 +412,14 @@ The main loop drains `network_event_buffer` and has one giant match. Representat
 - `AddQuestEffect` → `particle_holder.add_quest_icon(...)`.
 - `SetInventory` / item deltas → `client_state().inventory()`.
 - `SkillTree` → populate `client_state().skill_tree()`.
-- `DamageEffect` → rotate attacker, start attack anim, spawn `DamageNumber`/`Miss` particle.
+- `DamageEffect` → rotate/start the source action and caster/travel tracks,
+  then queue the target number/miss, hit effect/sound, and Hurt at the
+  ACT-derived impact tick.
+- terminal damage, no-damage, and ground skill results clear the source cast
+  before requesting its guarded actor pose; movement remains independent so
+  Free Cast can move while its cast overlay remains active.
+- `StatusChange` / `StateChange` → update Trick Dead, SU Hide/SU Stoop,
+  option/body/health fields, ACT playback holds, and PK-aware neutral state.
 - `ChangeMap` → close dialogs, `async_loader.request_map_load(...)`.
 - Map disconnect → clear entities/ground/particles/effects/lights, force character server reconnect + default map load.
 - Many others mutate hotbar, shop windows, friend list, equipped positions, etc.

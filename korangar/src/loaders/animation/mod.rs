@@ -70,9 +70,17 @@ impl AnimationLoader {
                 for (motion_index, motion) in action.motions.iter().enumerate() {
                     let mut motion_frames: Vec<AnimationFrame> = Vec::new();
 
-                    if motion.sprite_clip_count == 0 {
-                        continue;
-                    }
+                    // Empty motions are real frames in an ACT. Keep a
+                    // placeholder for them so all following motion indices
+                    // stay aligned with the native client's CActRes data.
+                    let event: Option<ActionEvent> = if let Some(event_id) = motion.event_id
+                        && event_id != -1
+                        && let Some(event) = animation_pair.actions.events.get(event_id as usize).copied()
+                    {
+                        Some(event)
+                    } else {
+                        None
+                    };
 
                     for sprite_clip in motion.sprite_clips.iter() {
                         if sprite_clip.sprite_number == -1 {
@@ -131,8 +139,8 @@ impl AnimationLoader {
                         let mirror = sprite_clip.mirror_on != 0;
 
                         // Attach points have a different offset calculation.
-                        // Currently, this is hardcoded for the player heads. An `animation_index` of
-                        // `0` corresponds to the head, and `1` for the body.
+                        // Currently this is hardcoded for the player head: part 0 is the
+                        // body/parent and part 1 is the head/child.
                         let has_attach_point = match motion.attach_point_count {
                             Some(value) => value == 1,
                             None => false,
@@ -166,17 +174,8 @@ impl AnimationLoader {
                             ..Default::default()
                         };
 
-                        let event: Option<ActionEvent> = if let Some(event_id) = motion.event_id
-                            && event_id != -1
-                            && let Some(event) = animation_pair.actions.events.get(event_id as usize).copied()
-                        {
-                            Some(event)
-                        } else {
-                            None
-                        };
-
                         let frame = AnimationFrame {
-                            event,
+                            event: None,
                             size,
                             top_left: Vector2::zero(),
                             offset,
@@ -190,10 +189,11 @@ impl AnimationLoader {
                         motion_frames.push(frame);
                     }
 
-                    let frame = match motion_frames.len() {
+                    let mut frame = match motion_frames.len() {
                         1 => motion_frames[0].clone(),
                         _ => merge_frame(&mut motion_frames),
                     };
+                    frame.event = event;
 
                     action_frames.push(frame);
                 }
@@ -210,17 +210,32 @@ impl AnimationLoader {
         let mut animations: Vec<Animation> = Vec::new();
 
         // Merge the sprites from each motion by combining the animation pair.
+        //
+        // The native client uses the first (body) ACT as the actor clock. It
+        // passes that body motion index unchanged to the other resources. A
+        // CActRes lookup past a secondary layer's motion count falls back to
+        // motion zero; secondary motions beyond the body count are never
+        // reached. Events are likewise scanned only on the body ACT.
         for action_index in 0..action_size {
-            let motion_size = animation_pairs[0].actions.actions[action_index].motions.len();
+            let motion_size = animations_list[0].get(action_index).map(Vec::len).unwrap_or(0);
+
             let mut frames: Vec<AnimationFrame> = Vec::new();
             for motion_index in 0..motion_size {
                 let mut generate: Vec<AnimationFrame> = Vec::new();
 
-                for pair in &animations_list[0..animation_pair_size] {
-                    if pair.len() <= action_index || pair[action_index].len() <= motion_index {
+                for (pair_index, pair) in animations_list[0..animation_pair_size].iter().enumerate() {
+                    let Some(action_frames) = pair.get(action_index) else {
                         continue;
+                    };
+                    let Some(layer_index) = native_layer_motion_index(motion_index, action_frames.len()) else {
+                        continue;
+                    };
+
+                    let mut frame = action_frames[layer_index].clone();
+                    if pair_index != 0 {
+                        frame.event = None;
                     }
-                    generate.push(pair[action_index][motion_index].clone());
+                    generate.push(frame);
                 }
                 let frame = merge_frame(&mut generate);
                 frames.push(frame);
@@ -425,6 +440,17 @@ fn convert_coordinates(coordinates: Vector2<f32>, size: Vector2<f32>) -> Vector2
     Vector2::<f32>::new(x, y)
 }
 
+/// Reproduce CActRes::get_motion for a valid action: return the requested
+/// motion when present, motion zero when the index is out of range, and no
+/// motion for an empty action.
+fn native_layer_motion_index(motion_index: usize, layer_length: usize) -> Option<usize> {
+    if layer_length == 0 {
+        return None;
+    }
+
+    Some(if motion_index < layer_length { motion_index } else { 0 })
+}
+
 /// This function generates a new frame by merging a list of frames.
 fn merge_frame(frames: &mut [AnimationFrame]) -> AnimationFrame {
     for frame in frames.iter_mut() {
@@ -494,5 +520,29 @@ fn merge_frame(frames: &mut [AnimationFrame]) -> AnimationFrame {
         horizontal_matrix: Matrix4::identity(),
         #[cfg(feature = "debug")]
         vertical_matrix: Matrix4::identity(),
+    }
+}
+
+#[cfg(test)]
+mod layer_sync_tests {
+    use super::native_layer_motion_index;
+
+    #[test]
+    fn secondary_layer_falls_back_to_first_motion_when_shorter_than_body() {
+        assert_eq!(native_layer_motion_index(3, 4), Some(3));
+        assert_eq!(native_layer_motion_index(4, 4), Some(0));
+        assert_eq!(native_layer_motion_index(8, 4), Some(0));
+    }
+
+    #[test]
+    fn secondary_layer_does_not_run_its_own_cycle() {
+        assert_eq!(native_layer_motion_index(3, 3), Some(0));
+        assert_eq!(native_layer_motion_index(7, 3), Some(0));
+    }
+
+    #[test]
+    fn empty_layer_contributes_nothing() {
+        assert_eq!(native_layer_motion_index(0, 0), None);
+        assert_eq!(native_layer_motion_index(5, 0), None);
     }
 }

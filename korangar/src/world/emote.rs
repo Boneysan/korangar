@@ -186,7 +186,10 @@ impl EmoteBubbles {
     ) {
         let Some(animation_data) = self.animation_data.as_ref() else {
             if emote_debug_enabled() && !self.bubbles.is_empty() {
-                eprintln!("[emote] {} bubble(s) pending but animation data not loaded yet", self.bubbles.len());
+                eprintln!(
+                    "[emote] {} bubble(s) pending but animation data not loaded yet",
+                    self.bubbles.len()
+                );
             }
             return;
         };

@@ -1,7 +1,8 @@
-//! Official `data\msgstringtable.txt` (0-based ids used by `ZC_MSG` / `ZC_MSG_COLOR`).
+//! Official `data\msgstringtable.txt` (0-based ids used by `ZC_MSG` /
+//! `ZC_MSG_COLOR`).
 //!
-//! Each line ends with `#`. Index 0 is the first line. Hercules `enum clif_messages`
-//! values match these indices for main-client msg ids.
+//! Each line ends with `#`. Index 0 is the first line. Hercules `enum
+//! clif_messages` values match these indices for main-client msg ids.
 
 use korangar_loaders::FileLoader;
 
@@ -109,13 +110,13 @@ fn hardcoded_message(message_id: u16) -> String {
         0x783 => "You are currently busy. Close the open dialog first.".to_owned(),
         // Attendance system (sent on login when no event is active).
         // MSG_CHECK_ATTENDANCE_FAIL_RESTART
-        0xd90 => "Attendance check failed. Please try again.".to_owned(),
+        0xD90 => "Attendance check failed. Please try again.".to_owned(),
         // MSG_CHECK_ATTENDANCE
-        0xd91 => "Attendance check".to_owned(),
+        0xD91 => "Attendance check".to_owned(),
         // MSG_CHECK_ATTENDANCE_NOT_EVENT — common boot message.
-        0xd92 => "Currently there is no attendance check event.".to_owned(),
+        0xD92 => "Currently there is no attendance check event.".to_owned(),
         // MSG_CHECK_ATTENDANCE_DDAY
-        0xd8e => "D-day".to_owned(),
+        0xD8E => "D-day".to_owned(),
         _ => format!("Server message #{message_id} (see msgstringtable)."),
     }
 }
@@ -131,19 +132,13 @@ mod tests {
         lines[3474] = "Currently there is no attendance check event.#".to_owned();
         let raw = lines.join("\n");
         let table = parse_msgstringtable(raw.as_bytes());
-        assert_eq!(
-            table.resolve(0xd92),
-            "Currently there is no attendance check event."
-        );
+        assert_eq!(table.resolve(0xD92), "Currently there is no attendance check event.");
         assert_eq!(table.resolve(0), "first");
     }
 
     #[test]
     fn hardcoded_attendance_when_empty() {
         let table = MsgStringTable::default();
-        assert_eq!(
-            table.resolve(0xd92),
-            "Currently there is no attendance check event."
-        );
+        assert_eq!(table.resolve(0xD92), "Currently there is no attendance check event.");
     }
 }

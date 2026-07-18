@@ -497,7 +497,8 @@ where
 
         let corner_diameter = *state.get(&self.corner_diameter);
 
-        // Generous hit targets — a 6px strip is nearly impossible on retina / trackpads.
+        // Generous hit targets — a 6px strip is nearly impossible on retina /
+        // trackpads.
         const EDGE_HIT: f32 = 14.0;
         const CORNER_HIT: f32 = 20.0;
         let horizontal_resize_area = Area {
@@ -526,8 +527,7 @@ where
         let resize_hovered = resize_area.check().run(layout);
 
         let horizontal_resize_available = *state.get(&self.minimum_width) != *state.get(&self.maximum_width);
-        let vertical_resize_available =
-            *state.get(&self.resizable) && *state.get(&self.minimum_height) != *state.get(&self.maximum_height);
+        let vertical_resize_available = *state.get(&self.resizable) && *state.get(&self.minimum_height) != *state.get(&self.maximum_height);
 
         if resize_hovered && horizontal_resize_available && vertical_resize_available {
             layout.register_click_handler(MouseButton::Left, &self.resize_click_action);

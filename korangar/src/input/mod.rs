@@ -192,7 +192,8 @@ impl InputSystem {
     }
 
     /// Mark a physical (or synthesised logical) key as down/up. Safe no-op for
-    /// keys that fall outside the KeyCode discriminant range used as array index.
+    /// keys that fall outside the KeyCode discriminant range used as array
+    /// index.
     pub fn update_keyboard(&mut self, key_code: KeyCode, state: ElementState) {
         let index = key_code as usize;
         if index < self.keys.len() {
@@ -201,8 +202,8 @@ impl InputSystem {
         }
     }
 
-    /// Game-action keys that should work even while a text box or window has focus.
-    /// Official RO: Insert = sit/stand; F1–F9 = hotbar.
+    /// Game-action keys that should work even while a text box or window has
+    /// focus. Official RO: Insert = sit/stand; F1–F9 = hotbar.
     pub fn handle_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
         self.push_game_action_keys(events);
     }

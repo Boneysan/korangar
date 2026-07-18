@@ -173,8 +173,8 @@ fn weapon_refine_success(config: &Config) -> Result<(), String> {
     let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
     context.say("@delitem 1101 999")?;
 
-    // Whitesmith's Weapon Refine success rate depends on job level and DEX/LUK stats.
-    // Boost these to maximize the base success rate.
+    // Whitesmith's Weapon Refine success rate depends on job level and DEX/LUK
+    // stats. Boost these to maximize the base success rate.
     context.say("@jlevel 70")?;
     context.say("@stat dex 99")?;
     context.say("@stat luk 99")?;
@@ -625,7 +625,12 @@ fn probe_thunderstorm(config: &Config) -> Result<(), String> {
         .map_err(|_| "disconnected")?;
 
     let events = context.collect_for(Duration::from_secs(6));
-    println!("    {} events after casting Thunderstorm at ({}, {}):", events.len(), position.x, position.y);
+    println!(
+        "    {} events after casting Thunderstorm at ({}, {}):",
+        events.len(),
+        position.x,
+        position.y
+    );
     for event in &events {
         let line: String = format!("{event:?}").chars().take(200).collect();
         println!("      {line}");

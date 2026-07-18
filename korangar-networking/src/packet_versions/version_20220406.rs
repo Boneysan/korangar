@@ -625,9 +625,11 @@ where
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
             skill_id: Some(packet.skill_id),
+            packet_tick: packet.start_time,
             damage_amount: (packet.damage > 0).then_some(packet.damage as usize),
             hit_count: (packet.div as usize).max(1),
-            attack_duration: packet.destination_delay.max(packet.soruce_delay),
+            attack_duration: packet.soruce_delay,
+            damage_delay: packet.destination_delay,
             // skill_type 8 is the multi-hit critical family on official clients.
             is_critical: packet.skill_type == 8,
         })
@@ -670,9 +672,7 @@ where
     packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
-    packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved {
-        quest_id: packet.quest_id,
-    })?;
+    packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved { quest_id: packet.quest_id })?;
     packet_handler.register(|packet: QuestListPacket| NetworkEvent::QuestList {
         quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
     })?;
@@ -712,6 +712,7 @@ where
         option: packet.effect_state,
         body_state: packet.body_state,
         health_state: packet.health_state,
+        is_pk_mode_on: packet.is_pk_mode_on != 0,
     })?;
 
     packet_handler.register(|packet: QuestEffectPacket| match packet.effect {
@@ -922,18 +923,22 @@ where
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
             skill_id: None,
+            packet_tick: packet.client_tick,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
             hit_count: 1,
             attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
             is_critical: false,
         }),
         DamageType::CriticalHit => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
             skill_id: None,
+            packet_tick: packet.client_tick,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
             hit_count: 1,
             attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
             is_critical: true,
         }),
         DamageType::PickUpItem => Some(NetworkEvent::EntityPickUpItem {
@@ -955,18 +960,22 @@ where
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
             skill_id: None,
+            packet_tick: packet.client_tick,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
             hit_count: 1,
             attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
             is_critical: false,
         }),
         DamageType::CriticalHit => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
             skill_id: None,
+            packet_tick: packet.client_tick,
             damage_amount: (packet.damage_amount > 0).then_some(packet.damage_amount as usize),
             hit_count: 1,
             attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
             is_critical: true,
         }),
         DamageType::PickUpItem => Some(NetworkEvent::EntityPickUpItem {
@@ -1037,18 +1046,25 @@ where
             cast_ms: packet.delay_time,
         })
     })?;
+    packet_handler.register(|packet: SkillCastCancelledPacket| NetworkEvent::SkillCastCancelled {
+        source_entity_id: Some(packet.entity_id),
+    })?;
     // ZC_ACK_TOUSESKILL is only sent by Hercules on skill *failure* (flag 0),
     // including gameplay rejections like "party creation requires Basic Skill
     // 7". Without this the rejection is completely silent.
-    packet_handler.register(|packet: ToUseSkillSuccessPacket| {
+    packet_handler.register(|packet: ToUseSkillSuccessPacket| -> NetworkEventList {
         if packet.flag != 0 {
-            return None;
+            return NetworkEventList::default();
         }
 
-        Some(NetworkEvent::ChatMessage {
-            text: skill_failed_text(&packet),
-            color: MessageColor::Error,
-        })
+        vec![
+            NetworkEvent::SkillCastCancelled { source_entity_id: None },
+            NetworkEvent::ChatMessage {
+                text: skill_failed_text(&packet),
+                color: MessageColor::Error,
+            },
+        ]
+        .into()
     })?;
     packet_handler.register(|packet: NotifySkillUnitPacket| {
         let NotifySkillUnitPacket {
@@ -1073,6 +1089,7 @@ where
         source_entity_id: packet.entity_id,
         level: packet.level,
         position: packet.position,
+        start_tick: packet.start_time,
     })?;
     packet_handler.register(|packet: FriendListPacket| NetworkEvent::SetFriendList {
         friend_list: packet.friend_list,
@@ -1155,10 +1172,11 @@ where
     packet_handler.register(|packet: WhisperResultPacket| NetworkEvent::WhisperResult { result: packet.result })?;
     packet_handler.register(|packet: WhisperResult2Packet| NetworkEvent::WhisperResult { result: packet.result })?;
     // M1-012: promoted from noop 2026-07-15. Despite the name, this is how a status
-    // *ends*: Hercules' `clif_status_change_end` sends 0x0196 (`status_change_endType`)
-    // with `state = 0`, while starts arrive on 0x0983. Dropping it meant a buff could
-    // never be cleared *by the server* — it only ever vanished when its own client-side
-    // timer ran out, so cancelling early (un-hiding) left the timer on screen forever.
+    // *ends*: Hercules' `clif_status_change_end` sends 0x0196
+    // (`status_change_endType`) with `state = 0`, while starts arrive on
+    // 0x0983. Dropping it meant a buff could never be cleared *by the server* —
+    // it only ever vanished when its own client-side timer ran out, so
+    // cancelling early (un-hiding) left the timer on screen forever.
     packet_handler.register(|packet: StatusChangeSequencePacket| NetworkEvent::StatusChange {
         entity_id: EntityId(packet.id),
         index: packet.index,

@@ -221,8 +221,7 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
     }
 
     eprintln!(
-        "[towninfo] not found — minimap facility POIs disabled \
-         (looked in GRF System\\ and on disk under cwd/parents/KORANGAR_CLIENT_ROOT)"
+        "[towninfo] not found — minimap facility POIs disabled (looked in GRF System\\ and on disk under cwd/parents/KORANGAR_CLIENT_ROOT)"
     );
     None
 }

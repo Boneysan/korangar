@@ -289,6 +289,231 @@ mod resolve_map_name_tests {
             assert!(game_file_loader.file_exists(&path), "missing {path}");
         }
     }
+
+    /// Diagnostic: parse the real Knight body/weapon/head ACT files and dump
+    /// per-action frame counts, delays, and sound-event placement, to compare
+    /// the client's animation playback against the original data. Run with
+    /// `--ignored --nocapture`.
+    #[test]
+    #[ignore]
+    fn reports_knight_attack_frame_structure() {
+        use ragnarok_bytes::{ByteReader, FromBytes};
+        use ragnarok_formats::action::ActionsData;
+        use ragnarok_formats::version::GenericFormatMetadata;
+
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        for part in [
+            "인간족\\몸통\\남\\기사_남",
+            "인간족\\기사\\기사_남_창",
+            "인간족\\기사\\기사_남_양손검",
+            "인간족\\머리통\\남\\1_남",
+        ] {
+            let bytes = game_file_loader
+                .get(&format!("data\\sprite\\{part}.act"))
+                .expect("action file should exist");
+            let mut byte_reader: ByteReader = ByteReader::with_default_metadata::<GenericFormatMetadata>(&bytes);
+            let actions_data = ActionsData::from_bytes(&mut byte_reader).expect("action file should parse");
+
+            println!("== {part} ==");
+            println!(
+                "actions: {} events: {:?}",
+                actions_data.actions.len(),
+                actions_data.events.iter().map(|event| event.name.as_str()).collect::<Vec<_>>()
+            );
+            let delays = actions_data.delays.clone().unwrap_or_default();
+            for (action_index, action) in actions_data.actions.iter().enumerate() {
+                // Only print direction 0 of each action group.
+                if action_index % 8 != 0 {
+                    continue;
+                }
+                let events: Vec<String> = action
+                    .motions
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(motion_index, motion)| {
+                        motion
+                            .event_id
+                            .filter(|event_id| *event_id != -1)
+                            .map(|event_id| format!("motion {motion_index} → event {event_id}"))
+                    })
+                    .collect();
+                println!(
+                    "action group {:2} (act {:3}): {} motions, delay {:?}, events: {:?}",
+                    action_index / 8,
+                    action_index,
+                    action.motions.len(),
+                    delays.get(action_index),
+                    events
+                );
+            }
+        }
+    }
+
+    /// Diagnostic: probe candidate classic sound names for the mapped skill
+    /// effects. Run with `--ignored --nocapture` and wire only confirmed
+    /// names. Opens the configured GRFs.
+    #[test]
+    #[ignore]
+    fn probes_classic_skill_sound_candidates() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        let candidates = [
+            "effect\\ef_firebolt.wav",
+            "effect\\ef_coldbolt.wav",
+            "effect\\ef_lightingbolt.wav",
+            "effect\\ef_lightningbolt.wav",
+            "effect\\ef_thunderstorm.wav",
+            "effect\\ef_soulstrike.wav",
+            "effect\\ef_frostdiver.wav",
+            "effect\\ef_fireball.wav",
+            "effect\\ef_firewall.wav",
+            "effect\\ef_napalmbeat.wav",
+            "effect\\ef_stormgust.wav",
+            "effect\\ef_meteorstorm.wav",
+            "effect\\ef_lordofvermilion.wav",
+            "effect\\ef_frostnova.wav",
+            "effect\\ef_firepillar.wav",
+            "effect\\ef_firepillarbomb.wav",
+            "effect\\ef_quagmire.wav",
+            "effect\\ef_magnus.wav",
+            "effect\\ef_magnuslight.wav",
+            "effect\\ef_santuary.wav",
+            "effect\\ef_sanctuary.wav",
+            "effect\\ef_holylight.wav",
+            "effect\\ef_turnundead.wav",
+            "effect\\ef_hammerfall.wav",
+            "effect\\ef_venomdust.wav",
+            "effect\\ef_landmine.wav",
+            "effect\\ef_sandman.wav",
+            "effect\\ef_freezingtrap.wav",
+            "effect\\ef_blastmine.wav",
+            "effect\\ef_claymoretrap.wav",
+            "effect\\ef_sonicblow.wav",
+            "effect\\ef_ignitionbreak.wav",
+            "effect\\ef_meteorassault.wav",
+            "effect\\ef_raid.wav",
+            "effect\\ef_firearrow1.wav",
+            "effect\\ef_firearrow2.wav",
+            "effect\\ef_firearrow3.wav",
+            "effect\\ef_icearrow1.wav",
+            "effect\\ef_icearrow.wav",
+            "effect\\assasin_sonicblow.wav",
+            "effect\\rogue_raid.wav",
+            "effect\\t_돌붕괴.wav",
+            "effect\\storm.wav",
+            "effect\\stormgust.wav",
+            "effect\\ef_snowstorm.wav",
+            "effect\\meteor.wav",
+            "effect\\ef_meteor.wav",
+            "effect\\meteorstorm.wav",
+            "effect\\lord.wav",
+            "effect\\lordofvermilion.wav",
+            "effect\\ef_lord.wav",
+            "effect\\frostnova.wav",
+            "effect\\icecrash.wav",
+            "effect\\ef_icecrash.wav",
+            "effect\\firepillar.wav",
+            "effect\\quagmire.wav",
+            "effect\\sanctuary.wav",
+            "effect\\santuary.wav",
+            "effect\\magnus.wav",
+            "effect\\holylight.wav",
+            "effect\\ef_holyhit.wav",
+            "effect\\turnundead.wav",
+            "effect\\hammerfall.wav",
+            "effect\\landmine.wav",
+            "effect\\sandman.wav",
+            "effect\\freezingtrap.wav",
+            "effect\\blastmine.wav",
+            "effect\\claymore.wav",
+            "effect\\skidtrap.wav",
+            "effect\\venomdust.wav",
+            "effect\\raid.wav",
+            "effect\\meteorassault.wav",
+            "effect\\ignitionbreak.wav",
+            "effect\\rk_ignitionbreak.wav",
+            "effect\\ef_lightning.wav",
+            "effect\\lightningbolt.wav",
+            "effect\\thunder.wav",
+            "effect\\ef_thunder.wav",
+            "effect\\ef_firehit.wav",
+            "effect\\firehit.wav",
+            "effect\\ef_windhit.wav",
+            "effect\\ef_bash.wav",
+        ];
+
+        for candidate in candidates {
+            let path = format!("data\\wav\\{candidate}").to_lowercase();
+            let status = match game_file_loader.file_exists(&path) {
+                true => "FOUND  ",
+                false => "missing",
+            };
+            println!("{status} {candidate}");
+        }
+
+        for candidate in [
+            "texture\\effect\\bash.str",
+            "texture\\effect\\bash3d.str",
+            "texture\\effect\\매지컬어택.str",
+            "texture\\effect\\napalmbeat.str",
+            "texture\\effect\\firesplashhit.str",
+        ] {
+            let path = format!("data\\{candidate}").to_lowercase();
+            let status = match game_file_loader.file_exists(&path) {
+                true => "FOUND  ",
+                false => "missing",
+            };
+            println!("{status} {candidate}");
+        }
+
+        println!("== all effect wav files the archives list ==");
+        for path in game_file_loader.get_files_with_extension(&[".wav"]) {
+            if path.to_lowercase().contains("effect") {
+                println!("listed {path}");
+            }
+        }
+    }
+
+    /// The exact weapon sprite layers the client will request for the
+    /// provisioned effect roster and the classic folder aliases (transcendent
+    /// classes reuse base folders, Priest weapons live under 프리스트).
+    /// Opens the configured GRFs, so keep it out of the default fast suite.
+    #[test]
+    #[ignore]
+    fn loads_classic_weapon_layers_for_roster() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        for part_file in [
+            // Knight: spear, two-handed spear, sword, two-handed sword.
+            "인간족\\기사\\기사_남_창",
+            "인간족\\기사\\기사_남_양손창",
+            "인간족\\기사\\기사_남_검",
+            "인간족\\기사\\기사_남_양손검",
+            // Assassin Cross reuses the Assassin folder; katar pair sprite.
+            "인간족\\어세신\\어세신_남_카타르_카타르",
+            "인간족\\어세신\\어세신_여_단검_단검",
+            // Stalker reuses the Rogue folder.
+            "인간족\\로그\\로그_남_단검",
+            "인간족\\로그\\로그_남_활",
+            // Rune Knight ships its own third-class files.
+            "인간족\\룬나이트\\룬나이트_남_창",
+            "인간족\\룬나이트\\룬나이트_남_양손검",
+            // Priest weapons live under 프리스트, not the body folder name.
+            "인간족\\프리스트\\프리스트_남_클럽",
+            "인간족\\프리스트\\프리스트_여_책",
+            // Hunter bow.
+            "인간족\\헌터\\헌터_여_활",
+        ] {
+            for extension in ["spr", "act"] {
+                let path = format!("data\\sprite\\{part_file}.{extension}").to_lowercase();
+                assert!(game_file_loader.file_exists(&path), "missing {path}");
+            }
+        }
+    }
 }
 
 impl GameFileLoader {

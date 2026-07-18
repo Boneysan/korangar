@@ -35,7 +35,8 @@ impl AmountDisplay {
 struct ItemBoxHandler<P> {
     item_path: P,
     source: ItemSource,
-    /// Grid index for inventory reorder (row-major). Unused for equipment/storage.
+    /// Grid index for inventory reorder (row-major). Unused for
+    /// equipment/storage.
     display_slot: usize,
 }
 
@@ -144,9 +145,7 @@ where
                         // Equip to the item's first valid slot (drag still works for multi-slot).
                         queue.queue(InputEvent::MoveItem {
                             source: ItemSource::Inventory,
-                            destination: ItemSource::Equipment {
-                                position: *equip_position,
-                            },
+                            destination: ItemSource::Equipment { position: *equip_position },
                             item,
                         });
                     } else {
@@ -187,7 +186,8 @@ where
             mode: MouseInputMode::MoveItem { source, item },
         } = mouse_mode
         {
-            // Drag within inventory: reorder the local display grid (server indices unchanged).
+            // Drag within inventory: reorder the local display grid (server indices
+            // unchanged).
             if *source == ItemSource::Inventory && self.source == ItemSource::Inventory {
                 queue.queue(InputEvent::ReorderInventory {
                     from_index: item.index,

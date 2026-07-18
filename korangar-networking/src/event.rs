@@ -197,12 +197,21 @@ pub enum NetworkEvent {
         /// Present when the damage came from `ZC_NOTIFY_SKILL2` rather than a
         /// basic attack. The renderer uses this to select a skill visual.
         skill_id: Option<SkillId>,
+        /// Authoritative tick carried by `ZC_NOTIFY_ACT`/`ZC_NOTIFY_SKILL2`.
+        /// Ragexe bases the local actor-message delay on dispatch time, but
+        /// recipes and occurrence correlation must retain this packet field.
+        packet_tick: ClientTick,
         /// Damage amount. [`None`] on miss, [`Some`] otherwise.
         damage_amount: Option<usize>,
         /// Number of hits bundled into this packet (`div`), at least 1. The
         /// bolt spells deliver their whole volley in one packet.
         hit_count: usize,
+        /// The source motion field (`sMotion`/amotion). Ragexe does not use it
+        /// to stretch source ACT playback; retain it for packet/recipe logic.
         attack_duration: u32,
+        /// The target motion field (`dMotion`). Ragexe converts it to reaction
+        /// cycles with `dMotion / 288.0`; zero means no flinch (e.g. Endure).
+        damage_delay: u32,
         is_critical: bool,
     },
     EntityPickUpItem {
@@ -242,17 +251,22 @@ pub enum NetworkEvent {
     },
     /// An entity's option flags changed (`ZC_STATE_CHANGE` 0x0229).
     ///
-    /// Distinct from [`NetworkEvent::StatusChange`]: those are timed buffs/debuffs,
-    /// these are the persistent option bitfield (hide, cloak, riding, …). Hercules
-    /// sends `sc->option` verbatim in `effect_state` (`clif_changeoption`).
+    /// Distinct from [`NetworkEvent::StatusChange`]: those are timed
+    /// buffs/debuffs, these are the persistent option bitfield (hide,
+    /// cloak, riding, …). Hercules sends `sc->option` verbatim in
+    /// `effect_state` (`clif_changeoption`).
     StateChange {
         entity_id: EntityId,
-        /// `sc->option` — test against the `OPTION_*` masks in [`crate::EntityOption`].
+        /// `sc->option` — test against the `OPTION_*` masks in
+        /// [`crate::EntityOption`].
         option: u32,
         /// `sc->opt1` — stun/freeze/petrify style states.
         body_state: u16,
         /// `sc->opt2` — poison/curse style states.
         health_state: u16,
+        /// Packet `isPKModeON`; Ragexe stores this at actor `+0x2C0` and
+        /// uses it to keep the neutral player pose combat-ready.
+        is_pk_mode_on: bool,
     },
     UpdateStat {
         stat_type: StatType,
@@ -500,6 +514,9 @@ pub enum NetworkEvent {
         source_entity_id: EntityId,
         level: SkillLevel,
         position: TilePosition,
+        /// Server-synchronized effect start tick from the packet. Retained for
+        /// recipe clocks even while the current STR backend starts on receipt.
+        start_tick: ClientTick,
     },
     /// Skill cast bar / wind-up (`ZC_USESKILL_ACK` / success 0x0B1A / 0x07FB).
     SkillCast {
@@ -507,6 +524,11 @@ pub enum NetworkEvent {
         skill_id: SkillId,
         /// Cast duration in milliseconds (`delay_time`).
         cast_ms: u32,
+    },
+    /// An active cast ended without executing (`ZC_DISPEL`), or the local
+    /// skill request failed before the server supplied an actor id.
+    SkillCastCancelled {
+        source_entity_id: Option<EntityId>,
     },
     /// Magnifier / identify skill: list of inventory indices
     /// (`ZC_ITEMIDENTIFY_LIST`).

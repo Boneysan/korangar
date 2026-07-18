@@ -54,12 +54,7 @@ impl Table for ItemInfo {
                     #[cfg(feature = "debug")]
                     {
                         use korangar_debug::logging::{Colorize, print_debug};
-                        print_debug!(
-                            "[{}] failed to parse itemInfo from {}: {:?}",
-                            "warning".yellow(),
-                            label,
-                            _error
-                        );
+                        print_debug!("[{}] failed to parse itemInfo from {}: {:?}", "warning".yellow(), label, _error);
                     }
                 }
             }
@@ -149,15 +144,12 @@ fn overlay_bundled_english_names(base: &mut HashMap<ItemId, ItemInfo>) -> usize 
             item.identified_name = ItemName::from_option(Some(name.to_owned()));
             item.unidentified_name = ItemName::from_option(Some(name.to_owned()));
         } else {
-            base.insert(
-                item_id,
-                ItemInfo {
-                    identified_name: ItemName::from_option(Some(name.to_owned())),
-                    unidentified_name: ItemName::from_option(Some(name.to_owned())),
-                    identified_resource: ItemResource::not_found_value(),
-                    unidentified_resource: ItemResource::not_found_value(),
-                },
-            );
+            base.insert(item_id, ItemInfo {
+                identified_name: ItemName::from_option(Some(name.to_owned())),
+                unidentified_name: ItemName::from_option(Some(name.to_owned())),
+                identified_resource: ItemResource::not_found_value(),
+                unidentified_resource: ItemResource::not_found_value(),
+            });
         }
         count += 1;
     }
@@ -269,7 +261,8 @@ tbl = { [501] = {
 "#,
         )
         .unwrap();
-        // Force a non-English-looking name by using only Hangul-range via UTF-8 string (not byte string).
+        // Force a non-English-looking name by using only Hangul-range via UTF-8 string
+        // (not byte string).
         if let Some(row) = base.get_mut(&ItemId(501)) {
             row.identified_name = ItemName::from_option(Some("\u{be68}\u{ac04}\u{d3ec}\u{c158}".to_owned()));
             row.unidentified_name = ItemName::from_option(Some("\u{be68}\u{ac04}\u{d3ec}\u{c158}".to_owned()));

@@ -9,10 +9,10 @@ roBrowserLegacy's independent skill/effect tables.
 | Key | Skill (ID) | Actor / weapon action | Caster layer | Target / travel layer | Audio / camera |
 |---|---|---|---|---|---|
 | F1 | Magnum Break (7) | Normal attack with equipped weapon | Procedural `ring_yellow.tga` + `대폭발.tga` expanding cylinders; orange point light | Caster-centered area recipe, including empty hits | `effect\\ef_magnumbreak.wav`; 50 ms camera quake |
-| F2 | Pierce (56) | Normal spear attack; Knight spear table value 2 maps to `Attack3` | `pierce.str` at body height; warm point light | `earthhit.str` on the struck entity | Weapon ACT event / spear hit sound |
+| F2 | Pierce (56) | Native state 2; Knight spear selection maps to `Attack3` through `native_player_attack_action` | `pierce.str` at body height; warm point light | `earthhit.str` on the struck entity | Weapon ACT event / spear hit sound |
 | F3 | Brandish Spear (57) | Normal spear attack | Attached `brandish2.str`; warm point light | Detached `brandish.str` at the damage target | `effect\\knight_brandish_spear.wav` |
 | F4 | Spear Stab (58) | Normal spear attack | `spearstab.str` at body height; warm point light | Damage packet supplies the target and timing | `_enemy_hit_normal1.wav` |
-| F5 | Spear Boomerang (59) | Throwing `Attack1`, intentionally without the held-weapon layer | `spearboomerang.str` at head height; warm point light | Official `이팩트\\창.spr` travels source-to-target over 140 ms | `effect\\knight_spear_boomerang.wav` |
+| F5 | Spear Boomerang (59) | Native state 12 → shared `Attack1`; actor and projectile selection are independent | `spearboomerang.str` at head height; warm point light | Official `이팩트\\창.spr` travels source-to-target over 140 ms | `effect\\knight_spear_boomerang.wav` |
 | F6 | Bowling Bash (62) | Normal attack with equipped weapon | `bowling.str` at head height; warm point light | Eight alternating `lens1.tga` / `lens2.tga` radial hit streaks | `_enemy_hit_normal1.wav` at caster; `effect\\ef_hit2.wav` at target |
 
 ## Trigger and deduplication rules

@@ -9,9 +9,9 @@ use rust_state::RustState;
 ///
 /// Generated from Hercules' own `db/constants.conf` by
 /// `tools/export_status_names.py`; re-run it if the server's constants change
-/// (`--check` fails when this file is stale). Sourced from Hercules (GPL) rather
-/// than the official client's efst tables to stay clear of the No-Upstream-IP
-/// rule in `CLAUDE.md`.
+/// (`--check` fails when this file is stale). Sourced from Hercules (GPL)
+/// rather than the official client's efst tables to stay clear of the
+/// No-Upstream-IP rule in `CLAUDE.md`.
 const STATUS_NAMES_JSON: &str = include_str!("../../../docs/status_effects.json");
 
 fn status_names() -> &'static HashMap<u16, String> {
@@ -33,9 +33,9 @@ fn status_name(index: u16) -> String {
     status_names().get(&index).cloned().unwrap_or_else(|| format!("#{index}"))
 }
 
-/// Cap on effects listed in the status window. One line each, so this bounds the
-/// window's height — keep it in step with the `WindowClass::StatusBar` default
-/// size in `interface/windows/cache.rs`.
+/// Cap on effects listed in the status window. One line each, so this bounds
+/// the window's height — keep it in step with the `WindowClass::StatusBar`
+/// default size in `interface/windows/cache.rs`.
 const MAXIMUM_DISPLAYED_EFFECTS: usize = 8;
 
 /// A single active status effect (buff or debuff) on the player.
@@ -93,11 +93,13 @@ impl StatusEffects {
             .join("\n");
     }
 
-    /// Apply or refresh an effect. If an effect with the same index exists, it is updated.
+    /// Apply or refresh an effect. If an effect with the same index exists, it
+    /// is updated.
     ///
-    /// `remaining_ms` of [`u32::MAX`] means infinite: Hercules' `INFINITE_DURATION` is
-    /// `-1` (`src/common/mmo.h`), which arrives here as `u32::MAX`. A *zero* duration is
-    /// **not** infinite — it means the effect is already over.
+    /// `remaining_ms` of [`u32::MAX`] means infinite: Hercules'
+    /// `INFINITE_DURATION` is `-1` (`src/common/mmo.h`), which arrives here
+    /// as `u32::MAX`. A *zero* duration is **not** infinite — it means the
+    /// effect is already over.
     pub fn apply(&mut self, index: u16, duration_ms: u32, remaining_ms: u32) {
         // Previously `duration_ms == 0` was also treated as infinite, which stuck
         // zero-length effects on screen forever. `SC_POSTDELAY` ("Skill Delay") is the
@@ -222,10 +224,10 @@ mod tests {
 
     #[test]
     fn zero_duration_effect_expires_instead_of_sticking() {
-        // M1-011: "Skill Delay" hung on screen forever. Hercules fires SC_POSTDELAY via a
-        // direct clif->status_change with delay_fix() as the duration and no sc_start, so
-        // no end packet ever arrives — a skill with no after-cast delay sends 0/0 and the
-        // client must expire it itself.
+        // M1-011: "Skill Delay" hung on screen forever. Hercules fires SC_POSTDELAY via
+        // a direct clif->status_change with delay_fix() as the duration and no
+        // sc_start, so no end packet ever arrives — a skill with no after-cast
+        // delay sends 0/0 and the client must expire it itself.
         let mut effects = StatusEffects::default();
         effects.apply(46, 0, 0); // Skill Delay, zero delay
         assert!(effects.to_string().contains("Skill Delay"), "should appear on apply");

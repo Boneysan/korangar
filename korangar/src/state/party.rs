@@ -58,10 +58,7 @@ impl PartyMemberState {
     pub fn summary_line(&self) -> String {
         let online = if self.online { "online" } else { "offline" };
         let leader = if self.leader { " ★" } else { "" };
-        let level = self
-            .base_level
-            .map(|level| format!(" Lv{level}"))
-            .unwrap_or_default();
+        let level = self.base_level.map(|level| format!(" Lv{level}")).unwrap_or_default();
         let hp = match (self.health_points, self.maximum_health_points) {
             (Some(hp), Some(max)) if max > 0 => format!("  {hp}/{max} HP"),
             _ => String::new(),

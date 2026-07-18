@@ -6,9 +6,9 @@ use rust_state::{Path, PathExt, Selector};
 use crate::graphics::Color;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
+use crate::state::ClientState;
 use crate::state::skill_cooldowns::{SkillCooldowns, SkillCooldownsPathExt};
 use crate::state::theme::InterfaceThemeType;
-use crate::state::ClientState;
 use crate::world::{Player, PlayerPathExt};
 
 /// Compact zeny / base-exp / job-exp / skill-cooldown readout.
@@ -144,7 +144,8 @@ where
             self.last.set(Some((current, next)));
         }
 
-        // SAFETY: see above; returns the stable string buffer for this selector instance.
+        // SAFETY: see above; returns the stable string buffer for this selector
+        // instance.
         unsafe { Some(self.text.as_ref_unchecked()) }
     }
 }

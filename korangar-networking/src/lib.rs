@@ -1227,4 +1227,62 @@ mod packet_handlers {
             events.0
         );
     }
+
+    #[test]
+    fn cast_cancel_packet_targets_the_named_actor() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let bytes = [
+            0xB9, 0x01, // ZC_DISPEL
+            0x80, 0x84, 0x1E, 0x00, // actor 2000000
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("cast-cancel packet did not parse");
+        };
+
+        assert!(matches!(
+            events.0.as_slice(),
+            [NetworkEvent::SkillCastCancelled {
+                source_entity_id: Some(entity_id),
+            }] if entity_id.0 == 2000000
+        ));
+    }
+
+    #[test]
+    fn state_change_preserves_all_four_atomic_actor_fields() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let bytes = [
+            0x29, 0x02, // ZC_STATE_CHANGE
+            0x80, 0x84, 0x1E, 0x00, // actor 2000000
+            0x01, 0x00, // body_state: stone
+            0x04, 0x00, // health_state
+            0x02, 0x00, 0x00, 0x00, // option: hide
+            0x01, // isPKModeON
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("state-change packet did not parse");
+        };
+
+        assert!(matches!(
+            events.0.as_slice(),
+            [NetworkEvent::StateChange {
+                entity_id,
+                option: 2,
+                body_state: 1,
+                health_state: 4,
+                is_pk_mode_on: true,
+            }] if entity_id.0 == 2000000
+        ));
+    }
 }

@@ -73,7 +73,8 @@ where
         }
     }
 
-    /// Build a non-initializing anchor (e.g. default layout for a window class).
+    /// Build a non-initializing anchor (e.g. default layout for a window
+    /// class).
     pub fn with_point(anchor_point: AnchorPoint, offset: App::Position) -> Self {
         Self::initialized(anchor_point, offset)
     }

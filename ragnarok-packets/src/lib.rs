@@ -3973,10 +3973,18 @@ pub struct StateChangePacket {
     pub entity_id: EntityId,
     pub body_state: u16,
     pub health_state: u16,
-    /// Hercules sends `sc->option` here verbatim (`clif_changeoption`). Interpret
-    /// with [`EntityOption`].
+    /// Hercules sends `sc->option` here verbatim (`clif_changeoption`).
+    /// Interpret with [`EntityOption`].
     pub effect_state: u32,
     pub is_pk_mode_on: u8,
+}
+
+/// `ZC_DISPEL` (0x01B9): the server cancelled an actor's active cast.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01B9)]
+pub struct SkillCastCancelledPacket {
+    pub entity_id: EntityId,
 }
 
 bitflags::bitflags! {
@@ -4006,10 +4014,11 @@ impl EntityOption {
         Self::from_bits_truncate(raw)
     }
 
-    /// Whether the entity is concealed by a *skill* (Hiding / Cloaking / Chase Walk).
+    /// Whether the entity is concealed by a *skill* (Hiding / Cloaking / Chase
+    /// Walk).
     ///
-    /// Mirrors Hercules' `pc_ishiding` mask (`src/map/pc.h`). Deliberately excludes
-    /// [`EntityOption::INVISIBLE`], which is GM invisibility — see
+    /// Mirrors Hercules' `pc_ishiding` mask (`src/map/pc.h`). Deliberately
+    /// excludes [`EntityOption::INVISIBLE`], which is GM invisibility — see
     /// [`EntityOption::is_gm_invisible`].
     pub fn is_concealed(self) -> bool {
         self.intersects(Self::HIDE | Self::CLOAK | Self::CHASEWALK)
@@ -6199,16 +6208,19 @@ mod shop_item_list_tests {
         assert_eq!(ShopItemInformation::size_in_bytes(), 19);
     }
 
-    // Regression tests for M1-007: `StateChangePacket` was `register_noop`, so hide /
-    // cloak never reached the UI. Values mirror Hercules `src/common/mmo.h` `OPTION_*`
-    // and the `pc_ishiding` / `pc_isinvisible` masks in `src/map/pc.h`.
+    // Regression tests for M1-007: `StateChangePacket` was `register_noop`, so hide
+    // / cloak never reached the UI. Values mirror Hercules `src/common/mmo.h`
+    // `OPTION_*` and the `pc_ishiding` / `pc_isinvisible` masks in
+    // `src/map/pc.h`.
 
     // M1-012: statuses start on 0x0983 but *end* on 0x0196
     // (`clif_status_change_end` → `status_change_endType`). 0x0196 was noop, so the
-    // server could never clear a buff and cancelling one early left its timer on screen.
+    // server could never clear a buff and cancelling one early left its timer on
+    // screen.
     #[test]
     fn status_change_sequence_0x196_matches_hercules_end_layout() {
-        // Hercules `packet_status_change_end`: PacketType.W index.W AID.L state.B = 9 bytes.
+        // Hercules `packet_status_change_end`: PacketType.W index.W AID.L state.B = 9
+        // bytes.
         let bytes = [
             0x96, 0x01, // header 0x0196
             0x04, 0x00, // index 4 (SI_HIDING)
@@ -6253,21 +6265,36 @@ mod shop_item_list_tests {
     }
 
     #[test]
-    fn parse_state_change_0x229_carries_option() {
-        // header 0x0229, AID 2000000, bodyState 0, healthState 0, effectState = OPTION_HIDE, isPKModeON 0
+    fn parse_state_change_0x229_carries_all_atomic_actor_fields() {
+        // header 0x0229, AID 2000000, bodyState 1 (stone), healthState 4,
+        // effectState OPTION_HIDE, isPKModeON 1.
         let bytes = [
             0x29, 0x02, // header
             0x80, 0x84, 0x1E, 0x00, // entity id 2000000
-            0x00, 0x00, // body_state
-            0x00, 0x00, // health_state
+            0x01, 0x00, // body_state
+            0x04, 0x00, // health_state
             0x02, 0x00, 0x00, 0x00, // effect_state = OPTION_HIDE
-            0x00, // is_pk_mode_on
+            0x01, // is_pk_mode_on
         ];
         let mut reader = ByteReader::without_metadata(&bytes);
         let packet = StateChangePacket::packet_from_bytes(&mut reader).expect("parse");
         assert_eq!(packet.entity_id.0, 2000000);
+        assert_eq!(packet.body_state, 1);
+        assert_eq!(packet.health_state, 4);
         assert_eq!(packet.effect_state, 0x02);
+        assert_eq!(packet.is_pk_mode_on, 1);
         assert!(EntityOption::from_raw(packet.effect_state).is_concealed());
+    }
+
+    #[test]
+    fn parse_skill_cast_cancelled_0x1b9_carries_actor_id() {
+        let bytes = [
+            0xB9, 0x01, // header 0x01B9 (ZC_DISPEL)
+            0x80, 0x84, 0x1E, 0x00, // entity id 2000000
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let packet = SkillCastCancelledPacket::packet_from_bytes(&mut reader).expect("parse");
+        assert_eq!(packet.entity_id.0, 2000000);
     }
 
     #[test]

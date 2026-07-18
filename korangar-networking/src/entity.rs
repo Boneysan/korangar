@@ -14,6 +14,16 @@ pub struct EntityData {
     pub maximum_health_points: i32,
     pub head_direction: usize,
     pub sex: Sex,
+    /// `sc->opt1` / spawn `bodyState`.
+    pub body_state: u16,
+    /// `sc->opt2` / spawn `healthState`.
+    pub health_state: u16,
+    /// `sc->option` / spawn `effectState`.
+    pub option: u32,
+    /// Packet `isPKModeON`, stored by Ragexe at actor `+0x2C0`.
+    pub is_pk_mode_on: bool,
+    /// Idle-unit `dead_sit` value: 0 standing, 1 dead, 2 sitting.
+    pub state: u8,
 }
 
 impl EntityData {
@@ -31,6 +41,11 @@ impl EntityData {
             maximum_health_points: character_information.maximum_health_points as i32,
             head_direction: 0, // TODO: get correct rotation
             sex: character_information.sex,
+            body_state: character_information.body_state as u16,
+            health_state: character_information.health_state as u16,
+            option: character_information.effect_state as u32,
+            is_pk_mode_on: false,
+            state: 0,
         }
     }
 }
@@ -50,6 +65,11 @@ impl From<EntityAppearPacket> for EntityData {
             maximum_health_points: packet.maximum_health_points,
             head_direction: packet.head_direction as usize,
             sex: packet.sex,
+            body_state: packet.body_state,
+            health_state: packet.health_state,
+            option: packet.effect_state,
+            is_pk_mode_on: packet.is_pk_mode_on != 0,
+            state: 0,
         }
     }
 }
@@ -69,6 +89,11 @@ impl From<EntityAppear2Packet> for EntityData {
             maximum_health_points: packet.maximum_health_points,
             head_direction: packet.head_direction as usize,
             sex: packet.sex,
+            body_state: packet.body_state,
+            health_state: packet.health_state,
+            option: packet.effect_state,
+            is_pk_mode_on: packet.is_pk_mode_on != 0,
+            state: packet.state,
         }
     }
 }
@@ -90,6 +115,11 @@ impl From<MovingEntityAppearPacket> for EntityData {
             maximum_health_points: packet.maximum_health_points,
             head_direction: packet.head_direction as usize,
             sex: packet.sex,
+            body_state: packet.body_state,
+            health_state: packet.health_state,
+            option: packet.effect_state,
+            is_pk_mode_on: packet.is_pk_mode_on != 0,
+            state: 0,
         }
     }
 }

@@ -51,16 +51,18 @@ impl CharacterSlots {
 
     /// Replace the slot contents with `characters`.
     ///
-    /// An **empty** list is ignored rather than treated as "no characters" (M1-013).
-    /// With exactly 3 characters on the account, Hercules sends the list and then a
-    /// *second, empty* `0x0B72` — `char.c`: *"send empty packet if chars count is 3, for
-    /// trigger final code in client"*, a quirk of the official client's pagination. The
-    /// two are indistinguishable by content, so without this guard the terminator wipes
-    /// the list we just populated and the character select renders empty.
+    /// An **empty** list is ignored rather than treated as "no characters"
+    /// (M1-013). With exactly 3 characters on the account, Hercules sends
+    /// the list and then a *second, empty* `0x0B72` — `char.c`: *"send
+    /// empty packet if chars count is 3, for trigger final code in
+    /// client"*, a quirk of the official client's pagination. The
+    /// two are indistinguishable by content, so without this guard the
+    /// terminator wipes the list we just populated and the character select
+    /// renders empty.
     ///
-    /// Ignoring it is safe for an account that genuinely has no characters: slots are
-    /// `None` from [`Self::set_slot_count`], so there is nothing to preserve and the
-    /// outcome is identical either way.
+    /// Ignoring it is safe for an account that genuinely has no characters:
+    /// slots are `None` from [`Self::set_slot_count`], so there is nothing
+    /// to preserve and the outcome is identical either way.
     pub fn set_characters(&mut self, characters: Vec<CharacterInformation>) {
         if characters.is_empty() {
             return;
@@ -129,9 +131,10 @@ mod tests {
 
     use super::*;
 
-    /// Minimal character in `slot`. `CharacterInformation` has no `Default` (and adding
-    /// one would mean picking a default `Sex` in the shared protocol crate), so the
-    /// fields are spelled out; only `character_number` and `name` matter here.
+    /// Minimal character in `slot`. `CharacterInformation` has no `Default`
+    /// (and adding one would mean picking a default `Sex` in the shared
+    /// protocol crate), so the fields are spelled out; only
+    /// `character_number` and `name` matter here.
     fn character(slot: u8, name: &str) -> CharacterInformation {
         CharacterInformation {
             character_id: CharacterId(150_000 + slot as u32),

@@ -163,15 +163,11 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
                 .skill_level;
             context
                 .net
-                .set_hotkey_data(
-                    HotbarTab(0),
-                    HotbarSlot(slot as u16),
-                    HotkeyData {
-                        hotkey_type: HotkeyType::Skill,
-                        item_or_skill_id: skill_id as u32,
-                        quantity_or_skill_level: skill_level.0,
-                    },
-                )
+                .set_hotkey_data(HotbarTab(0), HotbarSlot(slot as u16), HotkeyData {
+                    hotkey_type: HotkeyType::Skill,
+                    item_or_skill_id: skill_id as u32,
+                    quantity_or_skill_level: skill_level.0,
+                })
                 .map_err(|_| format!("disconnected while binding {} skill {}", setup.name, skill_id))?;
         }
         context.pump(Duration::from_millis(300));

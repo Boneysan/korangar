@@ -80,9 +80,8 @@ fn character_slot_switch(config: &Config) -> Result<(), String> {
 
     let connect = |config: &Config| connect_to_character_select_as(config, &config.partner_username, &config.partner_password);
 
-    let (mut session, characters) = connect(config).map_err(|error| {
-        format!("partner account unavailable (run a phase 8 scenario once to create it): {error}")
-    })?;
+    let (mut session, characters) =
+        connect(config).map_err(|error| format!("partner account unavailable (run a phase 8 scenario once to create it): {error}"))?;
     let character = characters
         .iter()
         .find(|character| character.name == PARTNER_CHARACTER)
@@ -99,9 +98,9 @@ fn character_slot_switch(config: &Config) -> Result<(), String> {
         session.0.switch_character_slot(from, to).map_err(|_| "disconnected")?;
         wait_char_event(session, timeout, &mut |event| match event {
             NetworkEvent::CharacterSlotSwitched => Some(Ok(())),
-            NetworkEvent::CharacterSlotSwitchFailed => Some(Err(
-                "slot switch rejected — grant the entitlement fixture with tools/testing/fixtures/grant-slotchange.sql".to_owned(),
-            )),
+            NetworkEvent::CharacterSlotSwitchFailed => Some(Err("slot switch rejected — grant the entitlement fixture with \
+                                                                 tools/testing/fixtures/grant-slotchange.sql"
+                .to_owned())),
             _ => None,
         })?
     };
@@ -217,7 +216,10 @@ fn character_delete_after_play(config: &Config) -> Result<(), String> {
 
     // Second reconnect: absence must hold across another fresh session.
     let (_, characters) = connect_to_character_select(config)?;
-    if characters.iter().any(|c| c.character_id == created.character_id || c.name == temp_name) {
+    if characters
+        .iter()
+        .any(|c| c.character_id == created.character_id || c.name == temp_name)
+    {
         return Err(format!("deleted character {temp_name} reappeared on the second reconnect"));
     }
     assert_baseline_unchanged(&characters, &Some(created.clone()), &baseline)?;
@@ -230,7 +232,13 @@ fn character_delete_after_play(config: &Config) -> Result<(), String> {
 fn create_temporary_character(
     config: &Config,
     temp_name: &str,
-) -> Result<(ragnarok_packets::CharacterInformation, Vec<ragnarok_packets::CharacterInformation>), String> {
+) -> Result<
+    (
+        ragnarok_packets::CharacterInformation,
+        Vec<ragnarok_packets::CharacterInformation>,
+    ),
+    String,
+> {
     let (mut session, characters) = connect_to_character_select(config)?;
 
     if characters.iter().any(|c| c.name == temp_name) {
@@ -267,11 +275,7 @@ fn create_temporary_character(
 
 /// Post-creation checks: persistence across a fresh session and duplicate-name
 /// rejection without character-list mutation.
-fn character_create_checks(
-    config: &Config,
-    created: &ragnarok_packets::CharacterInformation,
-    temp_name: &str,
-) -> Result<(), String> {
+fn character_create_checks(config: &Config, created: &ragnarok_packets::CharacterInformation, temp_name: &str) -> Result<(), String> {
     let (mut session, characters) = connect_to_character_select(config)?;
 
     let persisted = characters
@@ -352,7 +356,10 @@ fn delete_and_verify_absent(
     sleep(Duration::from_millis(700));
 
     let (_, characters) = connect_to_character_select(config)?;
-    if characters.iter().any(|c| c.character_id == created.character_id || c.name == temp_name) {
+    if characters
+        .iter()
+        .any(|c| c.character_id == created.character_id || c.name == temp_name)
+    {
         return Err(format!("character {temp_name} still present after deletion and reconnect"));
     }
     assert_baseline_unchanged(&characters, &Some(created.clone()), baseline)

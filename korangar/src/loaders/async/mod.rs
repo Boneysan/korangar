@@ -23,10 +23,7 @@ use crate::world::{
 };
 
 fn skill_asset_paths(sprite_file_name: &str, actions_file_name: &str) -> (String, String) {
-    (
-        format!("아이템\\{sprite_file_name}"),
-        format!("아이템\\{actions_file_name}"),
-    )
+    (format!("아이템\\{sprite_file_name}"), format!("아이템\\{actions_file_name}"))
 }
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]

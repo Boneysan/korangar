@@ -15,8 +15,9 @@ use crate::world::{Player, ResourceMetadata};
 
 /// Formats current/max weight for the inventory footer.
 ///
-/// RO stores weight in 0.1 units; the official client divides by 10 for display.
-/// Soft overweight (≥ critical %, usually 50%) is yellow; hard overweight (≥ 90%) is red.
+/// RO stores weight in 0.1 units; the official client divides by 10 for
+/// display. Soft overweight (≥ critical %, usually 50%) is yellow; hard
+/// overweight (≥ 90%) is red.
 struct WeightTextSelector<A> {
     player_path: A,
     last_key: Cell<Option<(u32, u32, u32)>>,

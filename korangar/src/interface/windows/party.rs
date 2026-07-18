@@ -2,9 +2,9 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::Path;
 
 use crate::interface::windows::WindowClass;
+use crate::state::ClientState;
 use crate::state::party::{PartyState, PartyStatePathExt};
 use crate::state::theme::InterfaceThemeType;
-use crate::state::ClientState;
 
 /// Simple party roster bound to [`PartyState::display_text`].
 pub struct PartyWindow<P> {

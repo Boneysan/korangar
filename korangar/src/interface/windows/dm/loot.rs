@@ -7,9 +7,8 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::element::StateElement;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
-use korangar_interface::element::{Element, ElementBox};
+use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{ManuallyAssertExt, Path, PathExt, RustState, State, VecIndexExt};
@@ -18,8 +17,8 @@ use crate::dm::{LootDifficulty, dm_data, generate_loot};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
-use crate::state::theme::InterfaceThemeType;
 use crate::state::ClientState;
+use crate::state::theme::InterfaceThemeType;
 
 const MAXIMUM_NUMBER_LENGTH: usize = 4;
 const DEFAULT_PARTY_LEVEL: u16 = 40;
@@ -172,7 +171,10 @@ where
                 .parse()
                 .unwrap_or(DEFAULT_PARTY_LEVEL);
             let difficulty = selected_difficulty(*state.get(&window_state_path.difficulty()));
-            let seed = SystemTime::now().duration_since(UNIX_EPOCH).map(|entry| entry.subsec_nanos()).unwrap_or(1) as u64;
+            let seed = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|entry| entry.subsec_nanos())
+                .unwrap_or(1) as u64;
 
             let rows: Vec<LootRow> = generate_loot(dm_data(), party_level, difficulty, seed)
                 .into_iter()

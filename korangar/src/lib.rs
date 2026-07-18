@@ -214,6 +214,252 @@ pub fn audit_entity_sprites() -> Result<(usize, Vec<MissingEntitySprite>), Strin
     Ok((total, missing))
 }
 
+/// Everything the weapon-layer audit learned from the configured archives:
+/// the actual weapon sprite files that ship under `인간족\`, and which of a
+/// set of candidate weapon-name suffixes resolve for each player job folder.
+pub struct WeaponSpriteAuditReport {
+    /// All `data\sprite\인간족\...` SPR paths outside the body/head/shield
+    /// folders, as reported by the archive file tables.
+    pub discovered: Vec<String>,
+    /// `(job folder, sex, found suffixes)` from direct existence probes.
+    pub probed: Vec<(&'static str, &'static str, Vec<&'static str>)>,
+}
+
+/// Candidate weapon sprite name suffixes to probe per job folder. Includes
+/// every suffix the client currently uses plus plausible alternatives, so a
+/// wrong table entry shows up as "candidate exists, table name doesn't".
+const WEAPON_SUFFIX_CANDIDATES: &[&str] = &[
+    "단검",
+    "검",
+    "검_검",
+    "창",
+    "창_창",
+    "도끼",
+    "도끼_도끼",
+    "클럽",
+    "클럽_클럽",
+    "둔기",
+    "메이스",
+    "로드",
+    "지팡이",
+    "활",
+    "너클",
+    "악기",
+    "채찍",
+    "책",
+    "카타르",
+    "카타르_카타르",
+    "권총",
+    "리볼버",
+    "라이플",
+    "기관총",
+    "개틀링",
+    "샷건",
+    "유탄발사기",
+    "수리검",
+    "풍마수리검",
+    "단검_단검",
+    "단검_검",
+    "단검_도끼",
+    "검_도끼",
+    "양손검",
+    "양손창",
+    "양손도끼",
+    "유탄발사기",
+    "그레네이드",
+    "그레네이드런처",
+];
+
+pub fn audit_weapon_sprites() -> Result<WeaponSpriteAuditReport, String> {
+    let game_file_loader = GameFileLoader::default();
+    game_file_loader.load_archives_from_settings();
+
+    let discovered = game_file_loader
+        .get_files_with_extension(&[".spr"])
+        .into_iter()
+        .filter(|path| {
+            path.starts_with("data\\sprite\\인간족\\")
+                && !path.starts_with("data\\sprite\\인간족\\몸통")
+                && !path.starts_with("data\\sprite\\인간족\\머리통")
+                && !path.starts_with("data\\sprite\\인간족\\방패")
+        })
+        .collect();
+
+    let mut folders: Vec<&'static str> = (0..=25)
+        .chain(4001..=4108)
+        .map(|job| crate::world::get_sprite_path_for_player_job(ragnarok_packets::JobId(job)))
+        .filter(|folder| !folder.is_ascii())
+        // The priest weapon sprites live under a folder that differs from the
+        // body sprite table's name for job 8; probe it explicitly.
+        .chain(["프리스트", "성직자"])
+        .collect();
+    folders.sort();
+    folders.dedup();
+
+    let mut probed = Vec::new();
+    for folder in folders {
+        for sex in ["남", "여"] {
+            let found: Vec<&'static str> = WEAPON_SUFFIX_CANDIDATES
+                .iter()
+                .copied()
+                .filter(|suffix| {
+                    let path = format!("data\\sprite\\인간족\\{folder}\\{folder}_{sex}_{suffix}.spr").to_lowercase();
+                    game_file_loader.file_exists(&path)
+                })
+                .collect();
+            probed.push((folder, sex, found));
+        }
+    }
+
+    Ok(WeaponSpriteAuditReport { discovered, probed })
+}
+
+/// Walk every player job's body / head / weapon ACT files and inventory their
+/// per-action frame structure. The native actor clock is owned by the body's
+/// motion count: a shorter non-empty secondary action falls back to motion 0,
+/// while motions beyond the body's length are unreachable. This audit reports
+/// every such mismatch, plus body attack frame counts and authored events.
+pub fn audit_animation_structure() -> Result<Vec<String>, String> {
+    use korangar_loaders::FileLoader;
+    use ragnarok_bytes::{ByteReader, FromBytes};
+    use ragnarok_formats::action::ActionsData;
+    use ragnarok_formats::version::GenericFormatMetadata;
+
+    let game_file_loader = GameFileLoader::default();
+    game_file_loader.load_archives_from_settings();
+
+    let parse = |path: String| -> Option<ActionsData> {
+        let bytes = game_file_loader.get(&path).ok()?;
+        let mut byte_reader: ByteReader = ByteReader::with_default_metadata::<GenericFormatMetadata>(&bytes);
+        ActionsData::from_bytes(&mut byte_reader).ok()
+    };
+
+    let mut folders: Vec<&'static str> = (0..=25)
+        .chain(4001..=4108)
+        .map(|job| crate::world::get_sprite_path_for_player_job(ragnarok_packets::JobId(job)))
+        .filter(|folder| !folder.is_ascii())
+        .collect();
+    folders.sort();
+    folders.dedup();
+
+    let weapon_suffixes = [
+        "단검",
+        "검",
+        "양손검",
+        "창",
+        "양손창",
+        "도끼",
+        "양손도끼",
+        "클럽",
+        "활",
+        "너클",
+        "악기",
+        "채찍",
+        "책",
+        "카타르_카타르",
+        "권총",
+        "라이플",
+        "기관총",
+        "샷건",
+        "수리검",
+        "단검_단검",
+        "검_검",
+        "도끼_도끼",
+        "단검_검",
+        "단검_도끼",
+        "검_도끼",
+    ];
+
+    let mut lines = Vec::new();
+    for sex in ["남", "여"] {
+        let Some(head) = parse(format!("data\\sprite\\인간족\\머리통\\{sex}\\1_{sex}.act")) else {
+            continue;
+        };
+
+        for folder in &folders {
+            let Some(body) = parse(format!("data\\sprite\\인간족\\몸통\\{sex}\\{folder}_{sex}.act")) else {
+                continue;
+            };
+
+            let body_groups: Vec<usize> = body.actions.iter().step_by(8).map(|action| action.motions.len()).collect();
+            lines.push(format!(
+                "{folder} ({sex}): {} actions, groups {body_groups:?}",
+                body.actions.len()
+            ));
+
+            let mut compare = |layer_name: &str, layer: &ActionsData| {
+                if layer.actions.len() != body.actions.len() {
+                    lines.push(format!(
+                        "  MISMATCH {layer_name}: {} actions vs body {}",
+                        layer.actions.len(),
+                        body.actions.len()
+                    ));
+                }
+                let mut mismatched_groups = Vec::new();
+                for (action_index, (body_action, layer_action)) in body.actions.iter().zip(layer.actions.iter()).enumerate() {
+                    if body_action.motions.len() != layer_action.motions.len() {
+                        let group = action_index / 8;
+                        if !mismatched_groups.contains(&group) {
+                            mismatched_groups.push(group);
+                        }
+                    }
+                }
+                for group in mismatched_groups {
+                    let counts = |data: &ActionsData| -> Vec<usize> {
+                        data.actions[group * 8..(group * 8 + 8).min(data.actions.len())]
+                            .iter()
+                            .map(|action| action.motions.len())
+                            .collect()
+                    };
+                    lines.push(format!(
+                        "  MISMATCH {layer_name} group {group}: body {:?} vs layer {:?}",
+                        counts(&body),
+                        counts(layer)
+                    ));
+                }
+            };
+
+            compare("head", &head);
+
+            for suffix in weapon_suffixes {
+                let weapon_folder = *folder;
+                let path = format!("data\\sprite\\인간족\\{weapon_folder}\\{weapon_folder}_{sex}_{suffix}.act");
+                if let Some(weapon) = parse(path) {
+                    compare(&format!("weapon {suffix}"), &weapon);
+                }
+            }
+
+            // Sound-event placement in the three attack groups (direction 0).
+            for (group, name) in [(5usize, "Attack1"), (10, "Attack2"), (11, "Attack3")] {
+                let action_index = group * 8;
+                if let Some(action) = body.actions.get(action_index) {
+                    let events: Vec<String> = action
+                        .motions
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(motion_index, motion)| {
+                            motion
+                                .event_id
+                                .filter(|event_id| *event_id != -1)
+                                .and_then(|event_id| body.events.get(event_id as usize))
+                                .map(|event| format!("frame {motion_index}: {}", event.name))
+                        })
+                        .collect();
+                    if !events.is_empty() {
+                        lines.push(format!(
+                            "  {name}: {} frames, events [{}]",
+                            action.motions.len(),
+                            events.join(", ")
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(lines)
+}
+
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
@@ -221,154 +467,41 @@ const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
 
-/// The animated fire-arrow frames of the classic `ef_firebolt` volley
-/// (`불화살` = fire arrow).
-const FIREBOLT_BOLT_FRAMES: &[&str] = &[
-    "effect\\불화살1.tga",
-    "effect\\불화살2.tga",
-    "effect\\불화살3.tga",
-    "effect\\불화살4.tga",
-    "effect\\불화살5.tga",
-    "effect\\불화살6.tga",
-];
-/// The classic `ef_coldbolt` volley projectile.
-const COLDBOLT_BOLT_FRAMES: &[&str] = &["effect\\icearrow.tga"];
-/// How long a bolt falls before it lands; hit bursts are delayed by this
-/// much so they coincide with the impact (keep in sync with
-/// `FallingBolts`).
-const BOLT_LANDING_DELAY: f32 = 0.5;
-
-fn firehit_effect_path() -> &'static str {
-    match rand_aes::tls::rand_range_u32(1..=3) {
-        1 => "firehit1.str",
-        2 => "firehit2.str",
-        _ => "firehit3.str",
-    }
-}
-
-fn windhit_effect_path() -> &'static str {
-    match rand_aes::tls::rand_range_u32(1..=3) {
-        1 => "windhit1.str",
-        2 => "windhit2.str",
-        _ => "windhit3.str",
-    }
-}
-
-fn meteor_effect_path() -> &'static str {
-    match rand_aes::tls::rand_range_u32(1..=4) {
-        1 => "meteor1.str",
-        2 => "meteor2.str",
-        3 => "meteor3.str",
-        _ => "meteor4.str",
-    }
-}
-
-fn firewall_effect_path() -> &'static str {
-    match rand_aes::tls::rand_range_u32(1..=2) {
-        1 => "firewall1.str",
-        _ => "firewall2.str",
-    }
-}
-
 /// M1-008: per-hit STR effects at the struck entity, wired like the original
 /// client (roBrowser's skill/effect tables were the reference — semantics
-/// only). Fire Bolt's burst waits for its bolt volley to land; Cold Bolt's
-/// classic hit is sound-only, its visual is the volley itself; Thunderstorm
-/// and Storm Gust play their large STRs at the targeted ground
-/// (`GroundSkillEffect`), so their per-hit part is small or nothing.
+/// only). The pending-impact queue owns the target-phase delay, so offsets in
+/// this table are relative to that due boundary. Cold Bolt's classic hit is
+/// sound-only, its visual is the volley itself; Thunderstorm and Storm Gust
+/// play their large STRs at the targeted ground (`GroundSkillEffect`), so
+/// their per-hit part is small or nothing.
 fn skill_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
-    match skill_id.0 {
-        // MG_SOULSTRIKE — code-drawn orbs in the original; the hit flash of
-        // its direct upgrade (Soul Expansion) stands in for now.
-        13 => vec![(
-            "new_soulexpansion\\new_soulexpansion_hit\\new_soulexpansion_hit.str",
-            Color::rgb_u8(190, 120, 255),
-            0.0,
-        )],
-        // MG_FROSTDIVER — classic freeze/shatter on the target. The traveling
-        // ice trail is code-drawn and remains a separate coverage item.
-        15 => vec![("freeze.str", Color::rgb_u8(150, 225, 255), 0.0)],
-        // MG_FIREBALL / MG_FIREWALL — classic fire-element hit burst.
-        17 | 18 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
-        // MG_FIREBOLT — classic firehit burst, timed to the volley landing.
-        19 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), BOLT_LANDING_DELAY)],
-        // MG_LIGHTNINGBOLT — the classic strike plus a windhit burst.
-        20 => vec![
-            ("lightning.str", Color::rgb_u8(255, 240, 150), 0.0),
-            (windhit_effect_path(), Color::rgb_u8(255, 240, 150), 0.0),
-        ],
-        // MG_THUNDERSTORM — per-target windhit; the storm itself plays at
-        // the targeted ground.
-        21 => vec![(windhit_effect_path(), Color::rgb_u8(255, 240, 150), 0.0)],
-        // KN_PIERCE — classic earth/pierce hit.
-        56 => vec![("earthhit.str", Color::rgb_u8(215, 180, 110), 0.0)],
-        // PR_TURNUNDEAD / PR_MAGNUS — holy-element hit.
-        77 | 79 => vec![("holyhit.str", Color::rgb_u8(255, 245, 190), 0.0)],
-        // WZ_FIREPILLAR / WZ_SIGHTRASHER.
-        80 => vec![("firepillarbomb.str", Color::rgb_u8(255, 80, 20), 0.0)],
-        81 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
-        // WZ_METEOR — only the fire impact belongs on the struck target. The
-        // falling meteor starts earlier from GroundSkillEffect.
-        83 => vec![(firehit_effect_path(), Color::rgb_u8(255, 90, 25), 0.0)],
-        // WZ_VERMILION — per-target wind hit; the large field effect is
-        // emitted by GroundSkillEffect.
-        85 => vec![(windhit_effect_path(), Color::rgb_u8(245, 235, 150), 0.0)],
-        // WZ_FROSTNOVA is handled once on the caster by the successful-use
-        // event; its per-target hit is sound-only in the classic client.
-        // WZ_EARTHSPIKE / WZ_HEAVENDRIVE. Their rising-rock geometry is still
-        // code-drawn, but the shipped hit STR is independent and usable now.
-        90 | 91 => vec![("earthhit.str", Color::rgb_u8(215, 180, 110), 0.0)],
-        // Hunter trap bursts.
-        118 => vec![("shockwavehit.str", Color::rgb_u8(210, 180, 255), 0.0)],
-        119 => vec![("sandman.str", Color::rgb_u8(230, 205, 130), 0.0)],
-        121 => vec![("freezing.str", Color::rgb_u8(150, 225, 255), 0.0)],
-        122 => vec![("blastmine.str", Color::rgb_u8(255, 120, 35), 0.0)],
-        123 => vec![("claymore.str", Color::rgb_u8(255, 80, 25), 0.0)],
-        // AS_POISONREACT — small poison-react hit.
-        139 => vec![("poisonreact.str", Color::rgb_u8(160, 90, 210), 0.0)],
-        // AL_HOLYLIGHT — the classic effect table uses the holy-hit STR.
-        156 => vec![("holyhit.str", Color::rgb_u8(255, 245, 190), 0.0)],
-        _ => vec![],
-    }
+    skill_presentation_recipe(skill_id)
+        .hit_effects
+        .iter()
+        .map(|track| (track.asset.resolve(), track.light_color, track.start_delay))
+        .collect()
 }
 
+/// Classic per-hit sounds played at the struck entity. Every name here was
+/// confirmed present in the configured GRFs by
+/// `probes_classic_skill_sound_candidates`; classic sounds for Lightning
+/// Bolt, Meteor, Lord of Vermilion, the Hunter traps, and several others
+/// were not found under any known name and stay silent for now.
 /// The classic falling-bolt volley for a skill's damage event, if any.
 fn wizard_bolt_volley(skill_id: SkillId) -> Option<&'static [&'static str]> {
-    match skill_id.0 {
-        14 => Some(COLDBOLT_BOLT_FRAMES),
-        19 => Some(FIREBOLT_BOLT_FRAMES),
-        _ => None,
+    match skill_presentation_recipe(skill_id).projectile {
+        Some(ProjectileRecipe::FallingBolts(frames)) => Some(frames),
+        None | Some(ProjectileRecipe::Spear) => None,
     }
 }
 
-/// Ground-cast area effects played at the targeted position when
-/// `ZC_NOTIFY_GROUNDSKILL` arrives, exactly like the original client.
-fn ground_skill_effect(skill_id: SkillId) -> Option<(&'static str, Color)> {
-    match skill_id.0 {
-        // MG_FIREWALL — cast flash; persistent cells remain AddSkillUnit.
-        18 => Some((firewall_effect_path(), Color::rgb_u8(255, 45, 10))),
-        // MG_THUNDERSTORM
-        21 => Some(("thunderstorm.str", Color::rgb_u8(255, 240, 150))),
-        // PR_SANCTUARY / PR_MAGNUS — initial cast effects. Their persistent
-        // ground cylinders are a separate skill-unit renderer task.
-        70 => Some(("sanctuary.str", Color::rgb_u8(130, 255, 175))),
-        79 => Some(("magnus.str", Color::rgb_u8(255, 225, 170))),
-        // WZ_FIREPILLAR / WZ_VERMILION.
-        80 => Some(("firepillar.str", Color::rgb_u8(255, 65, 15))),
-        // WZ_METEOR — the full falling meteor begins at cast completion;
-        // per-target damage later adds only the fire impact.
-        83 => Some((meteor_effect_path(), Color::rgb_u8(255, 95, 25))),
-        85 => Some(("lord.str", Color::rgb_u8(245, 235, 150))),
-        // WZ_STORMGUST
-        89 => Some(("stormgust.str", Color::rgb_u8(175, 225, 255))),
-        // WZ_QUAGMIRE
-        92 => Some(("quagmire.str", Color::rgb_u8(135, 105, 75))),
-        // BS_HAMMERFALL / HT_SKIDTRAP / AS_VENOMDUST.
-        110 => Some(("crashearth.str", Color::rgb_u8(235, 190, 95))),
-        115 => Some(("skidtrap.str", Color::rgb_u8(235, 205, 90))),
-        140 => Some(("venomdust.str", Color::rgb_u8(140, 75, 190))),
-        _ => None,
-    }
+/// Current ground-cast mappings played at the packet's target position when
+/// `ZC_NOTIFY_GROUNDSKILL` arrives. Asset and trigger evidence varies by
+/// recipe; see the combat animation pipeline specification.
+fn ground_skill_effect(skill_id: SkillId) -> Option<(&'static str, Color, f32)> {
+    skill_presentation_recipe(skill_id)
+        .ground_effect
+        .map(|track| (track.asset.resolve(), track.light_color, track.start_delay))
 }
 // TODO: The number of point lights that can cast shadows should be configurable
 // through the graphics settings. For now I just chose an arbitrary smaller
@@ -854,6 +987,7 @@ pub struct Client {
     /// A targeted skill awaiting a click to pick its target. See
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
+    pending_impacts: PendingImpactQueue,
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
     saved_login_data: Option<LoginServerLoginData>,
@@ -1010,16 +1144,18 @@ impl Client {
     }
 
     fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
-        if !matches!(skill_id.0, 7 | 88 | 214 | 406 | 2006)
-            || !self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5)
-        {
+        let recipe = skill_presentation_recipe(skill_id);
+        if recipe.successful_caster_effect.is_none() && recipe.successful_caster_sounds.is_empty() {
+            return;
+        }
+        if !self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5) {
             return;
         }
 
         let point_light_id = PointLightId::new(source_entity_id.0 ^ u32::from(skill_id.0));
-        match skill_id.0 {
+        match recipe.successful_caster_effect {
             // SM_MAGNUM — classic double expanding cylinder.
-            7 => {
+            Some(SuccessfulCasterEffect::MagnumBreak) => {
                 self.add_layered_procedural_skill_effect(
                     "effect\\ring_yellow.tga",
                     "effect\\대폭발.tga",
@@ -1027,29 +1163,36 @@ impl Client {
                     point_light_id,
                     SkillBurstStyle::MagnumBreak,
                 );
-                self.play_spatial_skill_sound("effect\\ef_magnumbreak.wav", position);
                 self.player_camera.shake(0.05);
             }
             // WZ_FROSTNOVA — one caster-centered freeze, including empty casts.
-            88 => self.add_str_skill_effect("freeze.str", position, point_light_id, Color::rgb_u8(145, 220, 255), 55.0),
+            Some(SuccessfulCasterEffect::FrostNova) => {
+                self.add_str_skill_effect("freeze.str", position, point_light_id, Color::rgb_u8(145, 220, 255), 55.0)
+            }
             // RG_RAID — classic blue radial lens streaks.
-            214 => self.add_procedural_skill_effect("effect\\lens1.tga", position, point_light_id, SkillBurstStyle::Raid),
+            Some(SuccessfulCasterEffect::Raid) => {
+                self.add_procedural_skill_effect("effect\\lens1.tga", position, point_light_id, SkillBurstStyle::Raid)
+            }
             // ASC_METEORASSAULT — eight expanding purple slashes.
-            406 => self.add_procedural_skill_effect(
+            Some(SuccessfulCasterEffect::MeteorAssault) => self.add_procedural_skill_effect(
                 "effect\\purpleslash.tga",
                 position,
                 point_light_id,
                 SkillBurstStyle::MeteorAssault,
             ),
             // RK_IGNITIONBREAK — shipped classic STR.
-            2006 => self.add_str_skill_effect(
+            Some(SuccessfulCasterEffect::IgnitionBreak) => self.add_str_skill_effect(
                 "이그니션브레이크.str",
                 position,
                 point_light_id,
                 Color::rgb_u8(255, 105, 30),
                 70.0,
             ),
-            _ => unreachable!(),
+            None => {}
+        }
+
+        for sound in recipe.successful_caster_sounds {
+            self.play_spatial_skill_sound(sound.resolve(), position);
         }
     }
 
@@ -1060,7 +1203,11 @@ impl Client {
         source_position: Point3<f32>,
         target_position: Point3<f32>,
     ) {
-        if !matches!(skill_id.0, 56 | 57 | 58 | 59 | 62 | 136) {
+        let recipe = skill_presentation_recipe(skill_id);
+        if recipe.damage_caster_effect.is_none()
+            && recipe.projectile != Some(ProjectileRecipe::Spear)
+            && recipe.damage_caster_sounds.is_empty()
+        {
             return;
         }
         let claimed = self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5);
@@ -1078,8 +1225,8 @@ impl Client {
         let base_light_id = source_entity_id.0 ^ u32::from(skill_id.0);
         let source_light_id = PointLightId::new(base_light_id);
         let neutral = Color::rgb_u8(235, 220, 180);
-        match skill_id.0 {
-            56 => self.add_str_skill_effect_with_offset(
+        match recipe.damage_caster_effect {
+            Some(DamageCasterEffect::Pierce) => self.add_str_skill_effect_with_offset(
                 "pierce.str",
                 source_position,
                 Vector3::new(0.0, 3.0, 0.0),
@@ -1087,18 +1234,10 @@ impl Client {
                 neutral,
                 35.0,
             ),
-            57 => {
+            Some(DamageCasterEffect::BrandishSpear) => {
                 self.add_str_skill_effect("brandish2.str", source_position, source_light_id, neutral, 40.0);
-                self.add_str_skill_effect(
-                    "brandish.str",
-                    target_position,
-                    PointLightId::new(base_light_id ^ 0x8000_0000),
-                    neutral,
-                    40.0,
-                );
-                self.play_spatial_skill_sound("effect\\knight_brandish_spear.wav", source_position);
             }
-            58 => {
+            Some(DamageCasterEffect::SpearStab) => {
                 self.add_str_skill_effect_with_offset(
                     "spearstab.str",
                     source_position,
@@ -1107,9 +1246,8 @@ impl Client {
                     neutral,
                     35.0,
                 );
-                self.play_spatial_skill_sound("_enemy_hit_normal1.wav", source_position);
             }
-            59 => {
+            Some(DamageCasterEffect::SpearBoomerang) => {
                 self.add_str_skill_effect_with_offset(
                     "spearboomerang.str",
                     source_position,
@@ -1118,10 +1256,8 @@ impl Client {
                     neutral,
                     35.0,
                 );
-                self.add_spear_projectile(source_position, target_position);
-                self.play_spatial_skill_sound("effect\\knight_spear_boomerang.wav", source_position);
             }
-            62 => {
+            Some(DamageCasterEffect::BowlingBash) => {
                 self.add_str_skill_effect_with_offset(
                     "bowling.str",
                     source_position,
@@ -1130,32 +1266,60 @@ impl Client {
                     neutral,
                     40.0,
                 );
-                self.add_layered_procedural_skill_effect(
-                    "effect\\lens1.tga",
-                    "effect\\lens2.tga",
-                    target_position,
-                    PointLightId::new(base_light_id ^ 0x8000_0000),
-                    SkillBurstStyle::MeleeHit,
-                );
-                self.play_spatial_skill_sound("_enemy_hit_normal1.wav", source_position);
-                self.play_spatial_skill_sound("effect\\ef_hit2.wav", target_position);
             }
-            136 => {
+            Some(DamageCasterEffect::SonicBlow) => {
                 self.add_procedural_skill_effect(
                     "effect\\ring2.bmp",
                     source_position,
                     source_light_id,
                     SkillBurstStyle::SonicBlow,
                 );
+            }
+            None => {}
+        }
+
+        if recipe.projectile == Some(ProjectileRecipe::Spear) {
+            self.add_spear_projectile(source_position, target_position);
+        }
+        for sound in recipe.damage_caster_sounds {
+            self.play_spatial_skill_sound(sound.resolve(), source_position);
+        }
+    }
+
+    /// Bespoke target tracks formerly mixed into the caster helper. These are
+    /// invoked only after `PendingImpactQueue` reaches the native due tick.
+    fn spawn_damage_target_skill_effect(&mut self, skill_id: SkillId, destination_entity_id: EntityId, target_position: Point3<f32>) {
+        let recipe = skill_presentation_recipe(skill_id);
+        let target_light_id = PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0));
+        let neutral = Color::rgb_u8(235, 220, 180);
+
+        match recipe.damage_target_effect {
+            Some(DamageTargetEffect::BrandishSpear) => {
+                self.add_str_skill_effect("brandish.str", target_position, target_light_id, neutral, 40.0)
+            }
+            Some(DamageTargetEffect::BowlingBash) => {
+                self.add_layered_procedural_skill_effect(
+                    "effect\\lens1.tga",
+                    "effect\\lens2.tga",
+                    target_position,
+                    target_light_id,
+                    SkillBurstStyle::MeleeHit,
+                );
+            }
+            Some(DamageTargetEffect::SonicBlow) => {
                 self.add_str_skill_effect(
                     "sonicblow.str",
                     target_position,
-                    PointLightId::new(base_light_id ^ 0x8000_0000),
+                    target_light_id,
                     Color::rgb_u8(220, 210, 255),
                     35.0,
                 );
             }
-            _ => unreachable!(),
+            None => {}
+        }
+
+        for sound in recipe.damage_target_sounds {
+            self.play_spatial_skill_sound(sound.resolve(), target_position);
         }
     }
 
@@ -1583,6 +1747,7 @@ impl Client {
             point_shadow_camera,
             input_event_buffer,
             pending_skill: None,
+            pending_impacts: PendingImpactQueue::default(),
             network_event_buffer,
             saved_login_data,
             saved_character_server,
@@ -1816,6 +1981,162 @@ impl Client {
         }
     }
 
+    fn entity_world_position(&self, entity_id: EntityId) -> Option<Point3<f32>> {
+        self.client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == entity_id)
+            .map(Entity::get_position)
+            .or_else(|| {
+                self.client_state
+                    .try_follow(this_entity())
+                    .filter(|entity| entity.get_entity_id() == entity_id)
+                    .map(Entity::get_position)
+            })
+            .or_else(|| {
+                self.client_state
+                    .follow(client_state().dead_entities())
+                    .iter()
+                    .find(|entity| entity.get_entity_id() == entity_id)
+                    .map(Entity::get_position)
+            })
+    }
+
+    /// Finish a server-authoritative skill occurrence on its source actor.
+    /// Entity id zero is the protocol's local-player sentinel for some result
+    /// packets. `set_skill_attack` clears the cast before applying native actor
+    /// request guards, so a completed skill cannot leave a stale cast bar.
+    fn execute_skill_actor_action(&mut self, source_entity_id: EntityId, skill_id: SkillId, client_tick: ClientTick) {
+        let animated_remote = self
+            .client_state
+            .follow_mut(client_state().entities())
+            .iter_mut()
+            .find(|entity| entity.get_entity_id() == source_entity_id)
+            .map(|entity| entity.set_skill_attack(Some(skill_id), 0, false, client_tick))
+            .is_some();
+
+        if !animated_remote
+            && let Some(entity) = self
+                .client_state
+                .try_follow_mut(this_entity())
+                .filter(|entity| source_entity_id.0 == 0 || entity.get_entity_id() == source_entity_id)
+        {
+            entity.set_skill_attack(Some(skill_id), 0, false, client_tick);
+        }
+    }
+
+    fn clear_skill_actor_cast(&mut self, source_entity_id: EntityId) {
+        let cleared_remote = self
+            .client_state
+            .follow_mut(client_state().entities())
+            .iter_mut()
+            .find(|entity| entity.get_entity_id() == source_entity_id)
+            .map(Entity::clear_cast)
+            .is_some();
+
+        if !cleared_remote
+            && let Some(entity) = self
+                .client_state
+                .try_follow_mut(this_entity())
+                .filter(|entity| source_entity_id.0 == 0 || entity.get_entity_id() == source_entity_id)
+        {
+            entity.clear_cast();
+        }
+    }
+
+    /// Apply the target phase of one server-authoritative damage event. The
+    /// source action and launch/caster tracks have already started; this phase
+    /// owns numbers, hit effects/sounds, and target Hurt.
+    fn apply_damage_impact(&mut self, pending: PendingImpact, client_tick: ClientTick) {
+        let DamageImpact {
+            source_entity_id: _,
+            destination_entity_id,
+            skill_id,
+            packet_tick: _,
+            damage_amount,
+            hit_count: _,
+            damage_delay,
+            is_critical,
+        } = pending.damage;
+
+        let Some(target_position) = self.entity_world_position(destination_entity_id) else {
+            return;
+        };
+
+        let particle: Box<dyn Particle + Send + Sync> = match damage_amount {
+            Some(amount) => Box::new(DamageNumber::new(target_position, amount.to_string(), is_critical)),
+            None => Box::new(Miss::new(target_position)),
+        };
+        self.particle_holder.spawn_particle(particle);
+
+        if let Some(skill_id) = skill_id {
+            self.spawn_damage_target_skill_effect(skill_id, destination_entity_id, target_position);
+
+            for (effect_path, light_color, start_delay) in skill_hit_effects(skill_id) {
+                match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
+                    Ok(effect) => {
+                        let frame_timer = effect.new_frame_timer();
+                        self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                            effect,
+                            frame_timer,
+                            EffectCenter::Position(target_position),
+                            Vector3::new(0.0, 0.0, 0.0),
+                            PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
+                            Vector3::new(0.0, 6.0, 0.0),
+                            light_color,
+                            45.0,
+                            false,
+                            start_delay,
+                        )));
+                    }
+                    Err(error) => {
+                        eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                    }
+                }
+            }
+
+            for sound in skill_presentation_recipe(skill_id).hit_sounds {
+                self.play_spatial_skill_sound(sound.resolve(), target_position);
+            }
+        }
+
+        if damage_amount.is_some() && damage_delay > 0 {
+            if let Some(entity) = self
+                .client_state
+                .follow_mut(client_state().entities())
+                .iter_mut()
+                .find(|entity| entity.get_entity_id() == destination_entity_id)
+            {
+                entity.set_hurt(damage_delay, client_tick);
+            } else if let Some(entity) = self
+                .client_state
+                .try_follow_mut(this_entity())
+                .filter(|entity| entity.get_entity_id() == destination_entity_id)
+            {
+                entity.set_hurt(damage_delay, client_tick);
+            }
+        }
+    }
+
+    fn apply_due_impacts(&mut self, client_tick: ClientTick) {
+        let due = self.pending_impacts.drain_due(client_tick);
+        for impact in due {
+            if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                eprintln!(
+                    "[packet-log] impact source={} target={} skill={:?} hits={} packet_tick={} due={} now={}",
+                    impact.damage.source_entity_id.0,
+                    impact.damage.destination_entity_id.0,
+                    impact.damage.skill_id.map(|skill_id| skill_id.0),
+                    impact.damage.hit_count,
+                    impact.damage.packet_tick.0,
+                    impact.due_tick.0,
+                    client_tick.0,
+                );
+            }
+            self.apply_damage_impact(impact, client_tick);
+        }
+    }
+
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn handle_network_events(&mut self, client_tick: ClientTick) {
@@ -1969,6 +2290,7 @@ impl Client {
                     self.map = None;
 
                     self.particle_holder.clear();
+                    self.pending_impacts.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
@@ -2112,7 +2434,7 @@ impl Client {
 
                     let entity_id = player.get_entity_id();
                     let entity_type = player.get_entity_type();
-                    let entity_part_files = player.get_entity_part_files(&self.library);
+                    let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
 
                     if let Some(animation_data) = self
                         .async_loader
@@ -2165,6 +2487,7 @@ impl Client {
                     self.map = None;
 
                     self.particle_holder.clear();
+                    self.pending_impacts.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
@@ -2194,7 +2517,7 @@ impl Client {
 
                         let entity_id = npc.get_entity_id();
                         let entity_type = npc.get_entity_type();
-                        let entity_part_files = npc.get_entity_part_files(&self.library);
+                        let entity_part_files = npc.get_entity_part_files(&self.library, &self.game_file_loader);
 
                         #[cfg(feature = "debug")]
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
@@ -2287,6 +2610,8 @@ impl Client {
                             }
                         }
                     } else {
+                        self.pending_impacts.remove_target(entity_id);
+
                         // For non-death disappearances, start fading out the entity.
                         if let Some(entity) = self
                             .client_state
@@ -2430,6 +2755,7 @@ impl Client {
                 NetworkEvent::ChangeMap { map_name, position } => {
                     self.map = None;
                     self.particle_holder.clear();
+                    self.pending_impacts.clear();
                     self.emote_bubbles.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
@@ -2485,11 +2811,14 @@ impl Client {
                     source_entity_id,
                     destination_entity_id,
                     skill_id,
+                    packet_tick,
                     damage_amount,
                     hit_count,
                     attack_duration,
+                    damage_delay,
                     is_critical,
                 } => {
+                    let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         eprintln!(
                             "[packet-log] damage source={} target={} skill={:?} hits={hit_count} duration={attack_duration}",
@@ -2523,6 +2852,7 @@ impl Client {
                         }
                     }
 
+                    let mut source_impact_delay_ms = 0;
                     let mut animated_source = false;
                     if let Some(entity) = self
                         .client_state
@@ -2535,6 +2865,7 @@ impl Client {
                         }
 
                         entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        source_impact_delay_ms = entity.impact_delay_ms(skill_id, camera_direction);
                         animated_source = true;
                     }
                     // The local player lives under `this_entity`, not in the
@@ -2550,78 +2881,43 @@ impl Client {
                             entity.rotate_towards(target_position);
                         }
                         entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        source_impact_delay_ms = entity.impact_delay_ms(skill_id, camera_direction);
                     }
 
-                    if let Some(entity) = self
-                        .client_state
-                        .follow(client_state().entities())
-                        .iter()
-                        .find(|entity| entity.get_entity_id() == destination_entity_id)
-                        .or_else(|| self.client_state.try_follow(this_entity()))
+                    // Caster/begin and travel tracks launch with the source
+                    // action. Target hit tracks are deferred below.
+                    if let Some(skill_id) = skill_id
+                        && let Some(target_position) = self.entity_world_position(destination_entity_id)
                     {
-                        let particle: Box<dyn Particle + Send + Sync> = match damage_amount {
-                            Some(amount) => Box::new(DamageNumber::new(entity.get_position(), amount.to_string(), is_critical)),
-                            None => Box::new(Miss::new(entity.get_position())),
-                        };
+                        let source_position = self.entity_world_position(source_entity_id).or_else(|| {
+                            (source_entity_id.0 == 0)
+                                .then(|| self.client_state.try_follow(this_entity()).map(Entity::get_position))
+                                .flatten()
+                        });
+                        if let Some(source_position) = source_position {
+                            self.spawn_damage_caster_skill_effect(skill_id, source_entity_id, source_position, target_position);
+                        }
 
-                        self.particle_holder.spawn_particle(particle);
-
-                        if let Some(skill_id) = skill_id {
-                            let target_position = entity.get_position();
-
-                            if let Some(source_position) = self
-                                .client_state
-                                .follow(client_state().entities())
+                        if let Some(frame_paths) = wizard_bolt_volley(skill_id) {
+                            let textures: Vec<_> = frame_paths
                                 .iter()
-                                .find(|source| source.get_entity_id() == source_entity_id)
-                                .map(|source| source.get_position())
-                                .or_else(|| {
-                                    self.client_state
-                                        .try_follow(this_entity())
-                                        .filter(|source| source_entity_id.0 == 0 || source.get_entity_id() == source_entity_id)
-                                        .map(|source| source.get_position())
-                                })
-                            {
-                                self.spawn_damage_caster_skill_effect(skill_id, source_entity_id, source_position, target_position);
-                            }
-
-                            if let Some(frame_paths) = wizard_bolt_volley(skill_id) {
-                                let textures: Vec<_> = frame_paths
-                                    .iter()
-                                    .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
-                                    .collect();
-                                self.effect_holder.add_effect(Box::new(FallingBolts::new(
-                                    textures,
-                                    target_position,
-                                    hit_count,
-                                    Color::WHITE,
-                                )));
-                            }
-
-                            for (effect_path, light_color, start_delay) in skill_hit_effects(skill_id) {
-                                match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
-                                    Ok(effect) => {
-                                        let frame_timer = effect.new_frame_timer();
-                                        self.effect_holder.add_effect(Box::new(EffectWithLight::new(
-                                            effect,
-                                            frame_timer,
-                                            EffectCenter::Position(target_position),
-                                            Vector3::new(0.0, 0.0, 0.0),
-                                            PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
-                                            Vector3::new(0.0, 6.0, 0.0),
-                                            light_color,
-                                            45.0,
-                                            false,
-                                            start_delay,
-                                        )));
-                                    }
-                                    Err(error) => {
-                                        eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
-                                    }
-                                }
-                            }
+                                .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+                                .collect();
+                            self.effect_holder
+                                .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
                         }
                     }
+
+                    self.pending_impacts.schedule(client_tick, source_impact_delay_ms, DamageImpact {
+                        source_entity_id,
+                        destination_entity_id,
+                        skill_id,
+                        packet_tick,
+                        damage_amount,
+                        hit_count,
+                        damage_delay,
+                        is_critical,
+                    });
                 }
                 NetworkEvent::EntityPickUpItem { entity_id, item_entity_id } => {
                     let item_position = self
@@ -2665,6 +2961,15 @@ impl Client {
                     effect_value,
                     successful,
                 } => {
+                    // This packet is a terminal skill result. A successful
+                    // result owns the source actor action; a failed one still
+                    // tears down the cast without inventing an action.
+                    if successful {
+                        self.execute_skill_actor_action(source_entity_id, skill_id, client_tick);
+                    } else {
+                        self.clear_skill_actor_cast(source_entity_id);
+                    }
+
                     // Preserve the heal-number behavior that used to be
                     // produced directly by the packet handler.
                     const AL_HEAL: u16 = 28;
@@ -2715,13 +3020,24 @@ impl Client {
                     duration_ms,
                     remaining_ms,
                 } => {
-                    // Only track status effects on the local player for this slice (see
-                    // buff-bar-slice.md).
-                    let local_id = self
+                    let updated_actor = self
                         .client_state
-                        .follow(client_state().entities())
-                        .first()
-                        .map(|e| e.get_entity_id());
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                        .map(|entity| entity.update_animation_status(index, gained, client_tick))
+                        .is_some();
+
+                    let local_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                    if !updated_actor
+                        && Some(entity_id) == local_id
+                        && let Some(entity) = self.client_state.try_follow_mut(this_entity())
+                    {
+                        entity.update_animation_status(index, gained, client_tick);
+                    }
+
+                    // The HUD remains local-only; actor guard/status-pose state
+                    // above is applied to every visible entity.
                     if Some(entity_id) == local_id {
                         let effects = self.client_state.follow_mut(client_state().status_effects());
                         if gained {
@@ -2734,14 +3050,10 @@ impl Client {
                 NetworkEvent::StateChange {
                     entity_id,
                     option,
-                    body_state: _,
-                    health_state: _,
+                    body_state,
+                    health_state,
+                    is_pk_mode_on,
                 } => {
-                    // M1-007. Applies to every visible entity, not just the local player:
-                    // the server only sends state changes for entities we are allowed to
-                    // see, so a conceal flag here means "draw it translucent", never
-                    // "reveal something hidden from us". `body_state` / `health_state`
-                    // (stun, poison, …) are parsed but not yet surfaced.
                     let entity = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -2749,7 +3061,13 @@ impl Client {
                         .find(|entity| entity.get_entity_id() == entity_id);
 
                     if let Some(entity) = entity {
-                        entity.update_option(option);
+                        entity.update_state(option, body_state, health_state, is_pk_mode_on, client_tick);
+                    } else if let Some(entity) = self
+                        .client_state
+                        .try_follow_mut(this_entity())
+                        .filter(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.update_state(option, body_state, health_state, is_pk_mode_on, client_tick);
                     }
                 }
                 NetworkEvent::UpdateEntityHealth {
@@ -2856,7 +3174,7 @@ impl Client {
                     let weapon = self.client_state.follow(client_state().inventory()).equipped_weapon_type();
                     if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.set_weapon(weapon);
-                        let entity_part_files = player.get_entity_part_files(&self.library);
+                        let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                             eprintln!("[packet-log] local equipped weapon={weapon} parts={entity_part_files:?}");
                         }
@@ -3072,7 +3390,7 @@ impl Client {
                         if let Some(animation_data) = self.async_loader.request_animation_data_load(
                             player.get_entity_id(),
                             player.get_entity_type(),
-                            player.get_entity_part_files(&self.library),
+                            player.get_entity_part_files(&self.library, &self.game_file_loader),
                         ) {
                             player.set_animation_data(animation_data);
                         }
@@ -3102,7 +3420,7 @@ impl Client {
                     if let Some(animation_data) = self.async_loader.request_animation_data_load(
                         entity.get_entity_id(),
                         entity.get_entity_type(),
-                        entity.get_entity_part_files(&self.library),
+                        entity.get_entity_part_files(&self.library, &self.game_file_loader),
                     ) {
                         entity.set_animation_data(animation_data);
                     }
@@ -3120,7 +3438,7 @@ impl Client {
                     if let Some(animation_data) = self.async_loader.request_animation_data_load(
                         entity.get_entity_id(),
                         entity.get_entity_type(),
-                        entity.get_entity_part_files(&self.library),
+                        entity.get_entity_part_files(&self.library, &self.game_file_loader),
                     ) {
                         entity.set_animation_data(animation_data);
                     }
@@ -3136,7 +3454,7 @@ impl Client {
                         if let Some(animation_data) = self.async_loader.request_animation_data_load(
                             entity.get_entity_id(),
                             entity.get_entity_type(),
-                            entity.get_entity_part_files(&self.library),
+                            entity.get_entity_part_files(&self.library, &self.game_file_loader),
                         ) {
                             entity.set_animation_data(animation_data);
                         }
@@ -3423,11 +3741,18 @@ impl Client {
                 NetworkEvent::RemoveSkillUnit { entity_id } => {
                     self.effect_holder.remove_unit(entity_id);
                 }
-                NetworkEvent::GroundSkillEffect { skill_id, position, .. } => {
+                NetworkEvent::GroundSkillEffect {
+                    skill_id,
+                    source_entity_id,
+                    position,
+                    ..
+                } => {
+                    self.execute_skill_actor_action(source_entity_id, skill_id, client_tick);
+
                     // The original client plays ground-cast area effects
                     // (Thunderstorm, Storm Gust) from this packet at the
                     // targeted position, independent of any damage landing.
-                    if let Some((effect_path, light_color)) = ground_skill_effect(skill_id)
+                    if let Some((effect_path, light_color, start_delay)) = ground_skill_effect(skill_id)
                         && let Some(map) = &self.map
                         && let Some(world_position) = map.get_world_position(position)
                     {
@@ -3444,12 +3769,18 @@ impl Client {
                                     light_color,
                                     60.0,
                                     false,
-                                    0.0,
+                                    start_delay,
                                 )));
                             }
                             Err(error) => {
                                 eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
                             }
+                        }
+                    }
+
+                    if let Some(world_position) = self.map.as_ref().and_then(|map| map.get_world_position(position)) {
+                        for sound in skill_presentation_recipe(skill_id).ground_sounds {
+                            self.play_spatial_skill_sound(sound.resolve(), world_position);
                         }
                     }
                 }
@@ -3513,12 +3844,43 @@ impl Client {
                     }
                 }
                 NetworkEvent::SkillCast {
-                    source_entity_id, cast_ms, ..
+                    source_entity_id,
+                    skill_id,
+                    cast_ms,
                 } => {
-                    if let Some(player) = self.client_state.try_follow_mut(this_player())
-                        && player.get_common().entity_id == source_entity_id
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == source_entity_id)
                     {
-                        player.start_cast(cast_ms, client_tick);
+                        entity.start_cast(skill_id, cast_ms, client_tick);
+                    } else if let Some(entity) = self
+                        .client_state
+                        .try_follow_mut(this_entity())
+                        .filter(|entity| entity.get_entity_id() == source_entity_id)
+                    {
+                        entity.start_cast(skill_id, cast_ms, client_tick);
+                    }
+                }
+                NetworkEvent::SkillCastCancelled { source_entity_id } => {
+                    if let Some(source_entity_id) = source_entity_id
+                        && let Some(entity) = self
+                            .client_state
+                            .follow_mut(client_state().entities())
+                            .iter_mut()
+                            .find(|entity| entity.get_entity_id() == source_entity_id)
+                    {
+                        entity.clear_cast();
+                    }
+
+                    let clear_local = source_entity_id.is_none_or(|source_entity_id| {
+                        self.client_state
+                            .try_follow(this_entity())
+                            .is_some_and(|entity| entity.get_entity_id() == source_entity_id)
+                    });
+                    if clear_local && let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        player.clear_cast();
                     }
                 }
                 NetworkEvent::SetHotkeyData { tab, hotkeys } => {
@@ -3859,6 +4221,10 @@ impl Client {
                 }
             }
         }
+
+        // Drain after the complete packet batch so zero-delay impacts see any
+        // spawn/death/movement changes delivered in the same network update.
+        self.apply_due_impacts(client_tick);
 
         if open_storage_ui {
             self.open_storage_window_if_needed();
@@ -6853,5 +7219,82 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
             _ => {}
         }
+    }
+}
+
+#[cfg(test)]
+mod skill_effect_asset_tests {
+    use super::*;
+
+    #[test]
+    fn fire_bolt_hit_burst_does_not_delay_twice_after_the_impact_boundary() {
+        let hit_effects = skill_hit_effects(SkillId(19));
+        assert!(!hit_effects.is_empty());
+        assert!(hit_effects.iter().all(|(_, _, start_delay)| *start_delay == 0.0));
+    }
+
+    /// Every asset a mapped skill recipe can reference must ship in the
+    /// configured GRFs. Variant declarations are enumerated exhaustively; no
+    /// random sampling is involved. Opens the
+    /// multi-gigabyte archives; run explicitly with
+    /// `cargo test -p korangar --lib all_mapped_skill_effect_assets_exist --
+    /// --ignored`.
+    #[test]
+    #[ignore]
+    fn all_mapped_skill_effect_assets_exist() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        let mut paths = std::collections::BTreeSet::new();
+
+        for skill_id in MAPPED_SKILL_IDS {
+            let recipe = skill_presentation_recipe(*skill_id);
+            for track in recipe.hit_effects {
+                for effect_path in track.asset.variants() {
+                    paths.insert(format!("data\\texture\\effect\\{effect_path}"));
+                }
+            }
+            if let Some(track) = recipe.ground_effect {
+                for effect_path in track.asset.variants() {
+                    paths.insert(format!("data\\texture\\effect\\{effect_path}"));
+                }
+            }
+            for sound in recipe
+                .successful_caster_sounds
+                .iter()
+                .chain(recipe.damage_caster_sounds)
+                .chain(recipe.damage_target_sounds)
+                .chain(recipe.hit_sounds)
+                .chain(recipe.ground_sounds)
+            {
+                for sound_path in sound.variants() {
+                    paths.insert(format!("data\\wav\\{sound_path}"));
+                }
+            }
+            if let Some(ProjectileRecipe::FallingBolts(frame_paths)) = recipe.projectile {
+                for frame_path in frame_paths {
+                    paths.insert(format!("data\\texture\\{frame_path}"));
+                }
+            }
+        }
+
+        // Assets referenced directly by the caster-effect recipes.
+        for path in [
+            "data\\texture\\effect\\이그니션브레이크.str",
+            "data\\texture\\effect\\freeze.str",
+            "data\\texture\\effect\\sonicblow.str",
+            "data\\texture\\effect\\purpleslash.tga",
+            "data\\texture\\effect\\ring2.bmp",
+            "data\\sprite\\이팩트\\창.spr",
+            "data\\wav\\effect\\assasin_sonicblow.wav",
+        ] {
+            paths.insert(path.to_owned());
+        }
+
+        let missing: Vec<String> = paths
+            .into_iter()
+            .filter(|path| !game_file_loader.file_exists(&path.to_lowercase()))
+            .collect();
+        assert!(missing.is_empty(), "missing skill effect assets: {missing:#?}");
     }
 }

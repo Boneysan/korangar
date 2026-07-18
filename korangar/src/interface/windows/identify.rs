@@ -3,9 +3,9 @@ use rust_state::Path;
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
+use crate::state::ClientState;
 use crate::state::identify::{IdentifyState, IdentifyStatePathExt};
 use crate::state::theme::InterfaceThemeType;
-use crate::state::ClientState;
 
 pub struct IdentifyWindow<P> {
     identify_path: P,

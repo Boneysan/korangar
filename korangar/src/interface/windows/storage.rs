@@ -7,9 +7,9 @@ use crate::ItemSource;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
+use crate::state::ClientState;
 use crate::state::storage::{StorageState, StorageStatePathExt};
 use crate::state::theme::InterfaceThemeType;
-use crate::state::ClientState;
 use crate::world::ResourceMetadata;
 
 /// Kafra personal storage. Opened by the map server when `openstorage` runs
@@ -22,10 +22,7 @@ pub struct StorageWindow<I, S> {
 
 impl<I, S> StorageWindow<I, S> {
     pub fn new(items_path: I, storage_path: S) -> Self {
-        Self {
-            items_path,
-            storage_path,
-        }
+        Self { items_path, storage_path }
     }
 }
 

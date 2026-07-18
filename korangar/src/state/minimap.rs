@@ -53,7 +53,8 @@ pub struct MinimapState {
     /// GAT dimensions in tiles.
     map_width: u16,
     map_height: u16,
-    /// User-controlled square map size (window width tracks this; scroll/buttons zoom).
+    /// User-controlled square map size (window width tracks this;
+    /// scroll/buttons zoom).
     display_side: f32,
     /// Minimap bitmap when available.
     #[hidden_element]
@@ -157,14 +158,7 @@ impl MinimapState {
     }
 
     /// Apply a `MarkMinimapPosition` (0x0144) packet.
-    pub fn apply_mark(
-        &mut self,
-        marker_type: MarkerType,
-        position: (u32, u32),
-        id: u8,
-        color: ColorRGBA,
-        now: ClientTick,
-    ) {
+    pub fn apply_mark(&mut self, marker_type: MarkerType, position: (u32, u32), id: u8, color: ColorRGBA, now: ClientTick) {
         match marker_type {
             MarkerType::RemoveMark => {
                 self.dynamic_markers.retain(|m| m.id != id);

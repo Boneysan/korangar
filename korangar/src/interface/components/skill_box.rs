@@ -42,7 +42,8 @@ impl LevelDisplay {
 /// Cached remaining cooldown label for layout (needs a stable `&str` lifetime).
 #[derive(Default)]
 struct CooldownDisplay {
-    /// Whole tenths of a second so we do not reformat every frame for tiny drift.
+    /// Whole tenths of a second so we do not reformat every frame for tiny
+    /// drift.
     last_tenths: Option<u32>,
     string: Option<String>,
 }
