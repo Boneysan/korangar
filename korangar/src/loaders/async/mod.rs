@@ -135,42 +135,53 @@ impl AsyncLoader {
         }
     }
 
-    /// Phase C4: replace only the weapon layer on an existing player
-    /// `AnimationData`. Returns `None` if body/head are missing (caller should
-    /// fall back to a full reload). Same path is a no-op returning the input
-    /// wrapped in a new `Arc` only when the layer actually changes — caller
-    /// can compare `layer_path` first.
+    /// Phase C4 / D: replace weapon-family layers (base weapon, `_검광` trails,
+    /// dual-wield off-hand) on an existing player `AnimationData`. Returns
+    /// `None` if body/head are missing (caller should fall back to a full
+    /// reload). Identical path lists are a no-op.
     pub fn apply_weapon_layer_swap(
         &self,
         current: &AnimationData,
         weapon_path: Option<&str>,
+    ) -> Option<Arc<AnimationData>> {
+        let paths: Vec<&str> = weapon_path.into_iter().collect();
+        self.apply_weapon_layers_swap(current, &paths)
+    }
+
+    /// Replace all weapon-family layers from an ordered path list.
+    pub fn apply_weapon_layers_swap(
+        &self,
+        current: &AnimationData,
+        weapon_paths: &[&str],
     ) -> Option<Arc<AnimationData>> {
         if !current.has_player_base_layers() {
             return None;
         }
         // Never treat a shield path as a weapon — callers that still index
         // parts[2] can pass `방패\…` when only a shield is equipped.
-        let weapon_path = weapon_path.filter(|path| crate::world::is_weapon_part_path(path));
-        if current.weapon_layer_path() == weapon_path {
+        let weapon_paths: Vec<&str> = weapon_paths
+            .iter()
+            .copied()
+            .filter(|path| crate::world::is_weapon_part_path(path))
+            .collect();
+        if current.weapon_layer_paths() == weapon_paths {
             return Some(Arc::new(current.clone()));
         }
 
-        let updated = match weapon_path {
-            Some(path) => {
-                let layer = self
-                    .animation_loader
-                    .load_layer(
-                        &self.sprite_loader,
-                        &self.action_loader,
-                        path,
-                        crate::world::PLAYER_LAYER_WEAPON,
-                    )
-                    .ok()?;
-                current.clone().with_weapon_layer(Some(layer))
-            }
-            None => current.clone().with_weapon_layer(None),
-        };
-        Some(Arc::new(updated))
+        let mut layers = Vec::with_capacity(weapon_paths.len());
+        for (index, path) in weapon_paths.iter().enumerate() {
+            let layer = self
+                .animation_loader
+                .load_layer(
+                    &self.sprite_loader,
+                    &self.action_loader,
+                    path,
+                    crate::world::PLAYER_LAYER_WEAPON + index,
+                )
+                .ok()?;
+            layers.push(layer);
+        }
+        Some(Arc::new(current.clone().with_weapon_layers(layers)))
     }
 
     /// Phase C4: replace only the head layer (hair change) without reloading

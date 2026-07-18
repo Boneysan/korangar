@@ -39,31 +39,48 @@ Monsters/NPCs are generally a single pair (`몬스터\{name}`, `npc\{name}`),
 but their action layouts still need to be audited by actor family.
 
 **Phase C (runtime layer composition) closed 2026-07-18** — see
-[plans/animation-fidelity.md](plans/animation-fidelity.md) §4. Remaining
-player-visual work is Phase D (per-item weapons, trails) and hat/accessories.
+[plans/animation-fidelity.md](plans/animation-fidelity.md) §4.
+**Phase D (weapon visual completeness) code closed 2026-07-18** — per-item
+weapons, dual-wield combine, `_검광` trails; live GUI check still open.
+Remaining player-visual work is hat/accessories (and live D validation).
 
 The **weapon layer** rules (all verified against the GRFs by
 `weapon-sprite-audit`):
 
-- The weapon *name* comes from the appearance class (`weapon_resource_suffix`):
-  단검/검/양손검/창/양손창/도끼/양손도끼/클럽/활/너클/악기/채찍/책/카타르_카타르/
-  guns/수리검, plus the dual-wield pairs 단검_단검, 검_검, 도끼_도끼, 단검_검,
-  단검_도끼, 검_도끼 (views 25..=30). Two-handed weapons have their **own**
-  sprites — never reuse the one-handed name.
+- Hercules `PACKETVER ≥ 4` puts the **raw item nameid** on LOOK_WEAPON /
+  LOOK_SHIELD (`clif_get_weapon_view`). Class views still appear on older
+  paths and for expansion IDs after `GetRealWeaponId`.
+- Appearance → class view: `weapon_view_from_appearance` (class +
+  `native_real_weapon_id`, or `weapon_view_from_item_id` for item IDs).
+  Assassin dual-wield left+right combine via `effective_weapon_view` into
+  views 25..=30 before attack selection.
+- **Native path builders** (Ragexe `0x007C4F90` weapon, `0x007C4B30` trail;
+  act/spr wrappers `0x009B8A30` / `0x009B8B80` and trail wrappers that pass
+  trail index 0/1). Formats under the job folder:
+  - weapon: `\%s_%s%s.%s` → `{job}_{sex}{suffix}.spr` (suffix from class
+    name table or Lua `ReqWeaponNameByClassNum`)
+  - trail: `\%s_%s%s%s.%s` → `{job}_{sex}{suffix}_검광.spr` (or `_발광`)
+- Sprite probe order (`push_weapon_part_file`): exact per-item path
+  (`{folder}_{sex}_{itemId}`) → dual class pair when off-hand is a weapon →
+  single class suffix (`weapon_resource_suffix`) → none. Never the
+  placeholder. Dual off-hand becomes a second weapon layer when the combined
+  pair was not used.
+- **`_검광` trails** follow the native switch at `0x00976590` /
+  table `0x00976EC0`: class views 1–7, 16–18, 25–30 only. Per-item bases
+  still probe `{base}_검광` when that SPR exists (e.g. Mjolnir 1530).
+- Class suffixes: 단검/검/양손검/창/양손창/도끼/양손도끼/클럽/활/너클/악기/
+  채찍/책/카타르_카타르/guns/수리검, plus dual pairs 단검_단검…검_도끼
+  (views 25..=30). Two-handed weapons have their **own** sprites.
 - Classic rods/staves (views 10/23) ship no generic class weapon layer in the
-  configured archives, so Korangar adds no generic layer for them. Per-item
-  models remain a separate unresolved path.
+  configured archives; per-item rods still load when the numbered SPR exists.
 - The weapon *folder* is usually the body-sprite folder. The archive probes
   show Priest files under `프리스트`, Royal Guard files under `로얄가드`, and
   no class-named weapon layer for the transcendent second classes (plus Shadow
   Chaser). Korangar currently resolves the latter to base-class folders
   (어쌔신크로스→어세신, 스토커→로그, 로드나이트→기사, ...); native lookup
   confirmation is still required.
-- A layer is only requested if the exact `.spr` exists (`push_weapon_part_file`)
-  — a missing combination must render no weapon, not the fallback sprite.
-- The GRFs also ship per-item weapon sprites (numbered, e.g. `기사_남_1530`)
-  and `_검광` "sword glow" trail variants. **Not currently rendered** — see
-  Known gaps.
+- A layer is only requested if the exact `.spr` exists — a missing combination
+  must render no weapon, not the fallback sprite.
 
 ## 2. ACT structure
 
@@ -119,8 +136,8 @@ job/sex/weapon selector.
 The selector normalizes expansion weapon appearances with Lua
 `GetRealWeaponId`. Its exact family predicates and job-ID rows are now mirrored
 by `native_player_attack_action` and unit-tested. Raw item-to-view lookup and
-Assassin left/right-hand combination still occur upstream and need their own
-normalization path.
+Assassin left/right-hand combination are modeled by
+`weapon_view_from_appearance` / `effective_weapon_view` (Phase D).
 
 `0x00991580` returns the attack-event position, not a playback-speed factor.
 It is `5.85` for male Merchant Attack2, `5.75` for Thief Attack2, `3.0` for
@@ -313,10 +330,19 @@ idle/walk/attack and facing-away body covering the Guard.
 | `shield_draw_order_follows_view_direction` | Dirs 2–5: shield before body; dirs 0,1,6,7: shield last (C3). |
 | `weapon_path_from_parts_skips_shield_at_index_two` | Weapon path is never `방패\…` when shield sits at parts[2]. |
 | `weapon_swap_with_shield_path_arg_does_not_clobber_sword` | Mis-fed shield path must not replace sword; dual-equip restore (C5 closeout). |
+| `weapon_layers_preserve_trail_and_offhand` | Multi weapon-family swap keeps shield; trails drop with base (D). |
+| `item_ids_map_to_classic_weapon_views` / dual-combine tests | Item→view + Assassin L/R → 25..=30 (D). |
+| `per_item_candidates_precede_class_suffix` | Path order: item id before class (D). |
 
 **Live checklist (Phase C closed 2026-07-18):** EffectSinX dual-wield + head
 attach; EffectKnight spear/sword attack hold + sound; sword+Guard idle/attack;
 Guard covered by body when facing away.
+
+**Live checklist (Phase D — pending):** full table in
+[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)
+(Mjolnir 1530, dual daggers, trail allowlist, C4/C5 regressions). **That file
+is the next task for Claude/Codex/any agent** — do not start Phase E until it
+is filled in.
 
 **Important**: `GameFileLoader::get_files_with_extension` under-reports the
 classic GRF (verified: the 기사 folder listed 3 files, probes found 16).
@@ -328,12 +354,10 @@ path — `file_exists` does not normalize case the way `get` does).
 The execution plan for closing these is
 [plans/animation-fidelity.md](plans/animation-fidelity.md).
 
-- **Per-item weapon sprites** (`기사_남_1530.spr` etc.) and **`_검광` sword
-  trail layers** exist in the GRFs but are not rendered. The trail is a
-  visible part of classic attack presentation for many weapons.
-- **Attack selector inputs**: raw item-to-view resolution and Assassin
-  left/right-hand combination precede the recovered `0x009A2DB0` matrix and
-  are not modeled yet.
+- **Phase D live GUI** → **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)**
+  (open checklist; code closed 2026-07-18).
+- ~~**Per-item weapon sprites** / **`_검광` trails** / **item→view + dual
+  combine**~~ — Phase D code closed 2026-07-18.
 - **Impact scheduler completeness**: the ACT-derived pending-impact boundary
   and `dMotion / 288.0` target clock are implemented. Add exact damage-type
   reaction guards, per-hit cadence, packet-fixture/golden-timeline coverage,

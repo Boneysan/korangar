@@ -9,6 +9,12 @@ custom UI for a friends group + DM campaign.
 
 See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
 
+**NEXT animation task (2026-07-18):** Phase D *code* is closed (per-item weapons,
+dual-wield views, `_검광` trails). **Live client verification is next** — do not
+start Phase E until this checklist is signed off:
+[docs/plans/phase-d-live-verification.md](docs/plans/phase-d-live-verification.md).
+Parent plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md).
+
 **DM Data Assets (key for upcoming E7 work)**: See new `docs/DM_DATA_GUIDE.md` for how bestiary.json, items.json, cards.json integrate with bestiary journal, encounters, rewards, loot tables. Codex should use these for data-driven DM features.
 
 ## Running on this machine (WSL2)

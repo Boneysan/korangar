@@ -393,6 +393,11 @@ fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: Job
     }
 }
 
+/// Upper bound of classic weapon *class* view IDs (roBrowser `WeaponType.MAX`).
+/// Hercules `PACKETVER >= 4` sends raw item IDs (≥ this) as LOOK_WEAPON /
+/// LOOK_SHIELD for equipped weapons; class views stay in `0..WEAPON_VIEW_CLASS_MAX`.
+pub const WEAPON_VIEW_CLASS_MAX: u32 = 31;
+
 /// Weapon appearance class → classic weapon sprite name. Verified against the
 /// configured official GRFs with `weapon-sprite-audit`: two-handed swords,
 /// spears, and axes ship their own `양손*` sprites, classic rods/staves ship
@@ -431,6 +436,136 @@ pub(crate) fn weapon_resource_suffix(weapon: u32) -> Option<&'static str> {
     }
 }
 
+/// Map a raw item ID to the classic weapon class view used by attack selection
+/// and class sprite names. Mirrors roBrowser `DB.getWeaponViewID` ranges plus
+/// the special sub-ranges Gravity nested inside broader ID bands.
+///
+/// Appearance values already in `0..WEAPON_VIEW_CLASS_MAX` should go through
+/// [`weapon_view_from_appearance`] instead so expansion IDs hit
+/// `native_real_weapon_id`.
+pub fn weapon_view_from_item_id(item_id: u32) -> u32 {
+    // Nested exceptions inside broader ranges (roBrowser / Gravity tables).
+    if (1116..=1118).contains(&item_id) {
+        return 3; // two-hand sword
+    }
+    if (1314..=1315).contains(&item_id) {
+        return 7; // two-hand axe
+    }
+    if (1410..=1412).contains(&item_id) {
+        return 5; // two-hand spear
+    }
+    if (1472..=1473).contains(&item_id) {
+        return 10; // rod
+    }
+    if item_id == 1599 {
+        return 8; // mace
+    }
+    if matches!(item_id, 13157 | 13158 | 13159 | 13172 | 13177) {
+        return 19; // gatling
+    }
+    if matches!(
+        item_id,
+        13154 | 13155 | 13156 | 13167 | 13168 | 13169 | 13173 | 13178
+    ) {
+        return 20; // shotgun
+    }
+    if matches!(item_id, 13160 | 13161 | 13162 | 13174 | 13179) {
+        return 21; // grenade
+    }
+
+    match item_id {
+        1100..=1149 | 13400..=13499 => 2,  // 1H sword
+        1150..=1199 | 21000..=21999 => 3,  // 2H sword
+        1200..=1249 | 13000..=13099 => 1,  // dagger
+        1250..=1299 => 16,                // katar
+        1300..=1349 => 6,                 // 1H axe
+        1350..=1399 => 7,                 // 2H axe
+        1400..=1449 => 4,                 // 1H spear
+        1450..=1499 => 5,                 // 2H spear
+        1500..=1549 => 8,                 // mace
+        1550..=1599 => 15,                // book
+        1600..=1699 => 10,                // rod
+        1700..=1749 | 18100..=18499 => 11, // bow
+        1800..=1849 => 12,                // knuckle
+        1900..=1949 => 13,                // instrument
+        1950..=1999 => 14,                // whip
+        2000..=2049 | 20000..=20999 => 23, // 2H rod
+        13100..=13149 => 17,              // handgun
+        13150..=13199 => 18,              // rifle (exceptions above)
+        13300..=13399 => 22,              // shuriken
+        _ => 0,
+    }
+}
+
+/// Normalize a LOOK_WEAPON / inventory appearance value to a class view.
+///
+/// - Class views (`0..31`) pass through `GetRealWeaponId` expansion mapping.
+/// - Item IDs (`≥ 31`) resolve via [`weapon_view_from_item_id`].
+pub fn weapon_view_from_appearance(appearance: u32) -> u32 {
+    if appearance < WEAPON_VIEW_CLASS_MAX {
+        native_real_weapon_id(appearance)
+    } else {
+        weapon_view_from_item_id(appearance)
+    }
+}
+
+/// Assassin dual-wield combination of two single-hand class views → views
+/// `25..=30`. Returns `None` when the pair is not a dual-wieldable combo.
+pub fn combine_dual_wield_view(right_view: u32, left_view: u32) -> Option<u32> {
+    match (right_view, left_view) {
+        (1, 1) => Some(25), // dagger + dagger
+        (2, 2) => Some(26), // sword + sword
+        (6, 6) => Some(27), // axe + axe
+        (1, 2) | (2, 1) => Some(28), // dagger + sword
+        (1, 6) | (6, 1) => Some(29), // dagger + axe
+        (2, 6) | (6, 2) => Some(30), // sword + axe
+        _ => None,
+    }
+}
+
+/// Whether a LOOK_SHIELD / left-hand appearance is an off-hand *weapon*
+/// (dual-wield) rather than a shield or empty hand.
+///
+/// Hercules `get_weapon_view` (PACKETVER ≥ 4) puts the left-hand item nameid
+/// into the shield channel for dual-wield. Classic shield looks on that
+/// channel are either item IDs in the shield band (`2101..=2200`) or class
+/// views `1..=4` (Guard/Buckler/Shield/Mirror). Dual-wield hands use weapon
+/// item IDs (≥ `WEAPON_VIEW_CLASS_MAX`), not class views 1..=4.
+pub fn appearance_is_offhand_weapon(appearance: u32) -> bool {
+    if appearance == 0 {
+        return false;
+    }
+    if appearance < WEAPON_VIEW_CLASS_MAX {
+        // Class views 1..=4 are classic shields on this channel. Pre-combined
+        // dual class views (25..=30) are weapons if they ever appear here.
+        return matches!(appearance, 25..=30);
+    }
+    // Classic shield items.
+    if (2101..=2200).contains(&appearance) {
+        return false;
+    }
+    // Anything that maps to a non-fist weapon class is a weapon.
+    weapon_view_from_item_id(appearance) != 0
+}
+
+/// Weapon class used for attack-action selection and class sprite fallback.
+/// Combines Assassin left/right hands into views `25..=30` when both are
+/// dual-wield weapons.
+pub fn effective_weapon_view(weapon_appearance: u32, left_appearance: u32) -> u32 {
+    let right = weapon_view_from_appearance(weapon_appearance);
+    if !appearance_is_offhand_weapon(left_appearance) {
+        return right;
+    }
+    let left = weapon_view_from_appearance(left_appearance);
+    combine_dual_wield_view(right, left).unwrap_or(right)
+}
+
+/// True when the path is a `_검광` sword-trail layer (not the base weapon).
+pub fn is_weapon_trail_path(path: &str) -> bool {
+    let normalized = path.replace('/', "\\");
+    normalized.ends_with("_검광")
+}
+
 /// The folder under `인간족\` holding a job's weapon sprites. Usually the
 /// body sprite folder, but the audit showed three exceptions: the Priest
 /// family's weapon files live under `프리스트`, Royal Guard's under `로얄가드`,
@@ -458,27 +593,151 @@ pub(crate) fn get_weapon_sprite_folder(job_id: JobId) -> &'static str {
     }
 }
 
-/// Append the equipped weapon's sprite layer when the archives actually ship
-/// one for this job/sex/weapon combination. Requesting a file that does not
+fn sex_path_token(sex: Sex) -> &'static str {
+    match sex == Sex::Female {
+        true => "여",
+        false => "남",
+    }
+}
+
+fn sprite_part_exists(game_file_loader: &GameFileLoader, part_file: &str) -> bool {
+    // `file_exists` does not normalize case the way `get` does.
+    game_file_loader.file_exists(&format!("data\\sprite\\{part_file}.spr").to_lowercase())
+}
+
+/// Class + optional per-item path candidates for one hand's weapon appearance.
+fn weapon_part_candidates(folder: &str, sex: &str, appearance: u32, prefer_dual_class: Option<u32>) -> Vec<String> {
+    let mut out = Vec::new();
+    // Phase D: exact per-item path first (`기사_남_1530`), never a placeholder.
+    if appearance >= WEAPON_VIEW_CLASS_MAX {
+        out.push(format!("인간족\\{folder}\\{folder}_{sex}_{appearance}"));
+    }
+    // Dual-wield class pair (`단검_단검` …) when both hands are weapons.
+    if let Some(dual_view) = prefer_dual_class
+        && let Some(suffix) = weapon_resource_suffix(dual_view)
+    {
+        out.push(format!("인간족\\{folder}\\{folder}_{sex}_{suffix}"));
+    }
+    // Single-hand class sprite from the normalized view.
+    let view = weapon_view_from_appearance(appearance);
+    if prefer_dual_class != Some(view)
+        && let Some(suffix) = weapon_resource_suffix(view)
+    {
+        out.push(format!("인간족\\{folder}\\{folder}_{sex}_{suffix}"));
+    }
+    out
+}
+
+fn first_existing_part(game_file_loader: &GameFileLoader, candidates: &[String]) -> Option<String> {
+    candidates
+        .iter()
+        .find(|part| sprite_part_exists(game_file_loader, part))
+        .cloned()
+}
+
+/// Weapon class views that receive a `_검광` trail layer in Ragexe
+/// `2019-06-05f` (function around `0x00976590`, switch table `0x00976EC0`).
+///
+/// Views **with** trail: 1–7 (dagger/sword/2hs/spear/2hspear/axe/2haxe),
+/// 16–18 (katar/handgun/rifle), 25–30 (dual-wield pairs).
+/// Views **without**: mace/rod/bow/knuckle/instrument/whip/book/…
+///
+/// Trail path builder is `0x007C4B30` with format `\%s_%s%s%s.%s` and suffix
+/// table `_검광` / `_발광` (`0x00B1C7C4` / `0x00B1C7CC`). Korangar loads
+/// `_검광` when present; `_발광` is not wired yet.
+fn native_weapon_view_has_geom_trail(view: u32) -> bool {
+    matches!(view, 1..=7 | 16..=18 | 25..=30)
+}
+
+/// Append `_검광` trail layer when native would for this class view and the
+/// archives ship the SPR. Always probe for per-item bases (`…_1530_검광`)
+/// because those files exist in the GRF even when the class view is trail-less.
+fn push_weapon_trail_part(
+    files: &mut Vec<String>,
+    game_file_loader: &GameFileLoader,
+    weapon_part: &str,
+    class_view: u32,
+    is_per_item_base: bool,
+) {
+    if !is_per_item_base && !native_weapon_view_has_geom_trail(class_view) {
+        return;
+    }
+    let trail = format!("{weapon_part}_검광");
+    if sprite_part_exists(game_file_loader, &trail) {
+        files.push(trail);
+    }
+}
+
+/// Append the equipped weapon's sprite layer(s) when the archives actually ship
+/// them for this job/sex/weapon combination. Requesting a file that does not
 /// exist would render the placeholder fallback sprite on top of the actor.
+///
+/// Phase D order:
+/// 1. right-hand per-item path (item ID appearance)
+/// 2. dual-wield class pair when left hand is also a weapon
+/// 3. right-hand class sprite
+/// 4. matching `_검광` trail for the chosen base
+/// 5. off-hand weapon as a second layer when dual class was not used
 fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loader: &GameFileLoader) {
     if common.entity_type != EntityType::Player {
         return;
     }
-    let Some(suffix) = weapon_resource_suffix(common.weapon) else {
+
+    let sex = sex_path_token(common.sex);
+    let folder = get_weapon_sprite_folder(common.job_id);
+    let right = common.weapon;
+    let left = common.shield;
+    let dual_view = if appearance_is_offhand_weapon(left) {
+        combine_dual_wield_view(
+            weapon_view_from_appearance(right),
+            weapon_view_from_appearance(left),
+        )
+    } else {
+        None
+    };
+
+    let right_candidates = weapon_part_candidates(folder, sex, right, dual_view);
+    let Some(right_part) = first_existing_part(game_file_loader, &right_candidates) else {
+        // Bare fist / rod / missing combination — no weapon layer.
         return;
     };
 
-    let sex = match common.sex == Sex::Female {
-        true => "여",
-        false => "남",
-    };
-    let folder = get_weapon_sprite_folder(common.job_id);
-    let part_file = format!("인간족\\{folder}\\{folder}_{sex}_{suffix}");
+    let used_dual_class = dual_view
+        .and_then(weapon_resource_suffix)
+        .is_some_and(|suffix| right_part.ends_with(&format!("_{suffix}")));
+    let right_view = dual_view.unwrap_or_else(|| weapon_view_from_appearance(right));
+    let right_is_per_item = right >= WEAPON_VIEW_CLASS_MAX
+        && right_part.ends_with(&format!("_{right}"));
 
-    // `file_exists` does not normalize case the way `get` does.
-    if game_file_loader.file_exists(&format!("data\\sprite\\{part_file}.spr").to_lowercase()) {
-        files.push(part_file);
+    files.push(right_part.clone());
+    push_weapon_trail_part(
+        files,
+        game_file_loader,
+        &right_part,
+        right_view,
+        right_is_per_item,
+    );
+
+    // Second weapon layer for dual-wield when we did not already load the
+    // combined pair sprite (per-item right + class/item left).
+    if appearance_is_offhand_weapon(left) && !used_dual_class {
+        let left_candidates = weapon_part_candidates(folder, sex, left, None);
+        if let Some(left_part) = first_existing_part(game_file_loader, &left_candidates)
+            && left_part != right_part
+            && !files.iter().any(|p| p == &left_part)
+        {
+            let left_view = weapon_view_from_appearance(left);
+            let left_is_per_item = left >= WEAPON_VIEW_CLASS_MAX
+                && left_part.ends_with(&format!("_{left}"));
+            files.push(left_part.clone());
+            push_weapon_trail_part(
+                files,
+                game_file_loader,
+                &left_part,
+                left_view,
+                left_is_per_item,
+            );
+        }
     }
 }
 
@@ -545,8 +804,14 @@ fn shield_part_candidates(job_folder: &str, sex: &str, shield_view: u32) -> Vec<
 
 /// Append the equipped shield layer when the archives ship a matching SPR.
 /// Paths match Ragexe `0x7C46C0` (not under `인간족\`).
+///
+/// Dual-wield left-hand weapons ride the LOOK_SHIELD channel as item IDs and
+/// are rendered as weapon layers by [`push_weapon_part_file`] — skip them here.
 fn push_shield_part_file(files: &mut Vec<String>, common: &Common, game_file_loader: &GameFileLoader) {
     if common.entity_type != EntityType::Player || common.shield == 0 {
+        return;
+    }
+    if appearance_is_offhand_weapon(common.shield) {
         return;
     }
 
@@ -565,8 +830,8 @@ fn push_shield_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
     }
 }
 
-fn weapon_sound(weapon: u32) -> &'static str {
-    match native_real_weapon_id(weapon) {
+fn weapon_sound(weapon_view: u32) -> &'static str {
+    match native_real_weapon_id(weapon_view) {
         1 => "attack_short_sword.wav",
         2 => "attack_sword.wav",
         3 => "attack_twohand_sword.wav",
@@ -721,7 +986,8 @@ impl Common {
                         audio_engine.play_spatial_sound_effect(key, self.world_position, SPATIAL_SOUND_RANGE);
                     }
                     ActionEvent::Attack => {
-                        let key = audio_engine.load(weapon_sound(self.weapon));
+                        let view = effective_weapon_view(self.weapon, self.shield);
+                        let key = audio_engine.load(weapon_sound(view));
                         audio_engine.play_spatial_sound_effect(key, self.world_position, SPATIAL_SOUND_RANGE);
                     }
                     ActionEvent::Unknown => { /* Nothing to do */ }
@@ -1893,7 +2159,11 @@ impl Entity {
             if common.action_request_locked() {
                 return;
             }
-            let (job_id, sex, weapon) = (common.job_id, common.sex, common.weapon);
+            let (job_id, sex, weapon) = (
+                common.job_id,
+                common.sex,
+                effective_weapon_view(common.weapon, common.shield),
+            );
             common
                 .animation_state
                 .skill_attack(entity_type, job_id, sex, weapon, skill_id, common.su_hide, client_tick);
@@ -1907,7 +2177,11 @@ impl Entity {
             if common.action_request_locked() {
                 return;
             }
-            let (job_id, sex, weapon) = (common.job_id, common.sex, common.weapon);
+            let (job_id, sex, weapon) = (
+                common.job_id,
+                common.sex,
+                effective_weapon_view(common.weapon, common.shield),
+            );
             common.animation_state.weapon_attack(entity_type, job_id, sex, weapon, client_tick);
         } else {
             // Monster/NPC ACT layouts expose only their single attack group;
@@ -2104,7 +2378,11 @@ impl StateWindow<ClientState> for Entity {
 mod weapon_layer_tests {
     use ragnarok_packets::JobId;
 
-    use super::{get_weapon_sprite_folder, shield_part_candidates, weapon_resource_suffix};
+    use super::{
+        appearance_is_offhand_weapon, combine_dual_wield_view, effective_weapon_view, get_weapon_sprite_folder,
+        is_weapon_trail_path, shield_part_candidates, weapon_part_candidates, weapon_resource_suffix,
+        weapon_view_from_appearance, weapon_view_from_item_id, WEAPON_VIEW_CLASS_MAX,
+    };
 
     #[test]
     fn two_handed_weapons_use_their_own_sprites() {
@@ -2138,6 +2416,92 @@ mod weapon_layer_tests {
     fn third_classes_keep_their_own_weapon_folders() {
         assert_eq!(get_weapon_sprite_folder(JobId(4054)), "룬나이트");
         assert_eq!(get_weapon_sprite_folder(JobId(4059)), "길로틴크로스");
+    }
+
+    #[test]
+    fn item_ids_map_to_classic_weapon_views() {
+        assert_eq!(weapon_view_from_item_id(1101), 2); // Sword
+        assert_eq!(weapon_view_from_item_id(1201), 1); // Knife
+        assert_eq!(weapon_view_from_item_id(1250), 16); // Jur / katar
+        assert_eq!(weapon_view_from_item_id(1401), 4); // Javelin
+        assert_eq!(weapon_view_from_item_id(1451), 5); // Pike
+        assert_eq!(weapon_view_from_item_id(1530), 8); // Mjolnir → mace
+        assert_eq!(weapon_view_from_item_id(1116), 3); // Katana nested 2HS
+        assert_eq!(weapon_view_from_item_id(501), 0); // potion
+    }
+
+    #[test]
+    fn appearance_class_views_pass_through_real_weapon_id() {
+        assert_eq!(weapon_view_from_appearance(2), 2);
+        assert_eq!(weapon_view_from_appearance(31), weapon_view_from_item_id(31));
+        assert!(WEAPON_VIEW_CLASS_MAX == 31);
+        // Item ID path
+        assert_eq!(weapon_view_from_appearance(1530), 8);
+    }
+
+    #[test]
+    fn assassin_left_right_combine_to_dual_views() {
+        assert_eq!(combine_dual_wield_view(1, 1), Some(25));
+        assert_eq!(combine_dual_wield_view(2, 2), Some(26));
+        assert_eq!(combine_dual_wield_view(6, 6), Some(27));
+        assert_eq!(combine_dual_wield_view(1, 2), Some(28));
+        assert_eq!(combine_dual_wield_view(2, 1), Some(28));
+        assert_eq!(combine_dual_wield_view(1, 6), Some(29));
+        assert_eq!(combine_dual_wield_view(2, 6), Some(30));
+        assert_eq!(combine_dual_wield_view(1, 4), None); // dagger + spear
+        assert_eq!(effective_weapon_view(1201, 1201), 25); // two dagger items
+        assert_eq!(effective_weapon_view(1101, 1201), 28); // sword + dagger items
+        assert_eq!(effective_weapon_view(1101, 2101), 2); // sword + Guard shield
+        assert_eq!(effective_weapon_view(16, 0), 16); // katar alone
+    }
+
+    #[test]
+    fn offhand_weapon_detection_distinguishes_shields() {
+        assert!(appearance_is_offhand_weapon(1201)); // dagger item
+        assert!(appearance_is_offhand_weapon(25)); // pre-combined dual class
+        assert!(!appearance_is_offhand_weapon(0));
+        assert!(!appearance_is_offhand_weapon(2101)); // Guard item
+        assert!(!appearance_is_offhand_weapon(1)); // Guard class view
+        assert!(!appearance_is_offhand_weapon(3)); // Shield class view
+        assert!(!appearance_is_offhand_weapon(2)); // Buckler class view
+    }
+
+    #[test]
+    fn per_item_candidates_precede_class_suffix() {
+        let c = weapon_part_candidates("기사", "남", 1530, None);
+        assert_eq!(c[0], "인간족\\기사\\기사_남_1530");
+        assert!(c.iter().any(|p| p.ends_with("_클럽")));
+    }
+
+    #[test]
+    fn dual_class_candidate_inserted_before_single_class() {
+        let c = weapon_part_candidates("어세신", "남", 1201, Some(25));
+        assert!(c.iter().any(|p| p.ends_with("_단검_단검")));
+        assert!(c.iter().any(|p| p.ends_with("_단검") && !p.ends_with("_단검_단검")));
+    }
+
+    #[test]
+    fn trail_path_suffix_is_detected() {
+        assert!(is_weapon_trail_path("인간족\\기사\\기사_남_검_검광"));
+        assert!(!is_weapon_trail_path("인간족\\기사\\기사_남_검"));
+    }
+
+    #[test]
+    fn native_geom_trail_views_match_ragexe_switch_table() {
+        // Melee blades/spears/axes + katar/guns + dual pairs.
+        for view in [1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 25, 26, 27, 28, 29, 30] {
+            assert!(
+                super::native_weapon_view_has_geom_trail(view),
+                "view {view} should trail"
+            );
+        }
+        // Mace, rod, bow, book, etc. — no class trail in native.
+        for view in [8, 9, 10, 11, 12, 13, 14, 15, 19, 20, 22, 23] {
+            assert!(
+                !super::native_weapon_view_has_geom_trail(view),
+                "view {view} should not trail"
+            );
+        }
     }
 
     #[test]

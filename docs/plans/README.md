@@ -13,6 +13,7 @@ lands.
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |
 | [M1-p0-verification.md](M1-p0-verification.md) | E3.1 live P0 verification checklist against Hercules |
 | [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
+| **[phase-d-live-verification.md](phase-d-live-verification.md)** | **NEXT (2026-07-18): Phase D live GUI checklist — do before Phase E** |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.

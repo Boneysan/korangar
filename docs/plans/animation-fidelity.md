@@ -2,10 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | Draft (2026-07-17) — follows the native combat animation runtime (`cbc03de5`) |
+| **Status** | Active (2026-07-18) — phases A–C closed live; **D code closed, live GUI next** |
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
+| **NEXT AGENT** | **[phase-d-live-verification.md](phase-d-live-verification.md)** — in-client checklist before Phase E |
 
 ## 1. Scope and shape
 
@@ -190,8 +191,37 @@ Documented in [ANIMATION_SYSTEM.md §6](../ANIMATION_SYSTEM.md#6-diagnostics-and
    motion index; audit which weapon classes ship trails and when native draws
    them.
 
+**Done 2026-07-18 (unit + GRF path probes + Ragexe RE; live GUI pending):**
+
+- Hercules `PACKETVER ≥ 4` sends raw item nameids on LOOK_WEAPON / LOOK_SHIELD
+  (`clif_get_weapon_view`). Local inventory now stores those nameids via
+  `equipped_weapon_look` / `equipped_left_hand_look` instead of collapsing to
+  class views only.
+- `weapon_view_from_item_id` + `weapon_view_from_appearance` +
+  `combine_dual_wield_view` / `effective_weapon_view` feed attack selection
+  and class sprite fallback (dagger+dagger → 25, … sword+axe → 30).
+- Sprite probe order: per-item → dual class pair (when off-hand is a weapon)
+  → single class → none. Dual off-hand becomes a second weapon layer when the
+  combined pair sprite was not used.
+- `_검광` trails: native allowlist views 1–7 / 16–18 / 25–30 (Ragexe
+  `0x976EC0`); per-item bases still probe `{base}_검광`. `_발광` not wired.
+- Multi weapon-family partial swaps (`with_weapon_layers` /
+  `apply_weapon_layers_swap`) keep body/head/shield while refreshing
+  base+trail+off-hand together.
+- `weapon-sprite-audit` reports per-item and trail inventory counts.
+- Unit tests: item→view, dual combine, candidate order, trail suffix,
+  multi-layer swap, native trail allowlist. GRF: Mjolnir `기사_*_1530` +
+  trail on the classic weapon roster probe.
+- Native path builders confirmed on
+  `../../RO/client/2019-06-05fRagexe_patched.exe` (`0x7C4F90` weapon,
+  `0x7C4B30` trail).
+
+**NEXT (blocks calling D fully closed):** live GUI —
+see **[phase-d-live-verification.md](phase-d-live-verification.md)**.
+
 Exit: audit tool enumerates per-item/trail coverage; roster + a per-item
-weapon (e.g. a specific named spear) verified live.
+weapon (e.g. Mjolnir 1530 on Knight) verified live. **Code exit met; live
+GUI check still open.**
 
 ## 6. Phase E — Skill/status presentation batches (data track, parallel)
 

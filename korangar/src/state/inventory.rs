@@ -113,12 +113,13 @@ impl Inventory {
         &self.items
     }
 
-    /// Generic weapon appearance type for the equipped right-hand item.
+    /// Right-hand LOOK_WEAPON appearance for the local player.
     ///
-    /// Character selection commonly reports weapon look 0 for the local
-    /// player. The full inventory is authoritative and arrives after map
-    /// login, so derive the classic weapon family from the equipped item ID.
-    pub fn equipped_weapon_type(&self) -> u32 {
+    /// Character selection commonly reports weapon look 0. After map login the
+    /// inventory is authoritative. Hercules `PACKETVER ≥ 4` sends the raw item
+    /// ID (not the class view) on the appearance channel, so we do the same —
+    /// per-item sprites and attack selection both need the nameid.
+    pub fn equipped_weapon_look(&self) -> u32 {
         self.items
             .iter()
             .find_map(|item| {
@@ -127,19 +128,32 @@ impl Inventory {
                 };
                 equipped_position
                     .contains(EquipPosition::RIGHT_HAND)
-                    .then(|| weapon_type_from_item_id(item.item_id.0))
+                    .then_some(item.item_id.0)
             })
             .unwrap_or(0)
     }
 
-    /// Shield view for the equipped left-hand item, when inventory can map it.
+    /// Classic weapon class view for the equipped right-hand item (attack
+    /// family only). Prefer [`Self::equipped_weapon_look`] for sprite paths.
+    pub fn equipped_weapon_type(&self) -> u32 {
+        let look = self.equipped_weapon_look();
+        if look == 0 {
+            0
+        } else {
+            crate::world::weapon_view_from_appearance(look)
+        }
+    }
+
+    /// Left-hand LOOK_SHIELD appearance for the local player.
     ///
-    /// - `Some(0)` — no left-hand equippable (clear the shield layer).
-    /// - `Some(view)` — classic shield item ID → ViewSprite 1..=4.
-    /// - `None` — left hand holds something that is not a known shield (e.g.
-    ///   Assassin off-hand dagger); leave `common.shield` alone so
-    ///   `ChangeShield` / dual-wield packets stay authoritative.
-    pub fn equipped_shield_view(&self) -> Option<u32> {
+    /// - `Some(0)` — no left-hand equippable (clear shield / off-hand).
+    /// - `Some(view 1..=4)` — classic shield item → Guard/Buckler/Shield/Mirror.
+    /// - `Some(item_id)` — off-hand weapon (Assassin dual-wield); matches
+    ///   Hercules `get_weapon_view` which puts the left nameid on the shield
+    ///   channel.
+    /// - `None` — left hand holds something inventory cannot classify; leave
+    ///   `common.shield` alone so `ChangeShield` stays authoritative.
+    pub fn equipped_left_hand_look(&self) -> Option<u32> {
         let left_hand_id = self.items.iter().find_map(|item| {
             let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
                 return None;
@@ -151,33 +165,34 @@ impl Inventory {
 
         match left_hand_id {
             None => Some(0),
-            Some(item_id) => shield_view_from_item_id(item_id),
+            Some(item_id) => {
+                if let Some(shield_view) = shield_view_from_item_id(item_id) {
+                    Some(shield_view)
+                } else if crate::world::weapon_view_from_item_id(item_id) != 0 {
+                    // Dual-wield / left-hand weapon: raw item ID like Hercules.
+                    Some(item_id)
+                } else {
+                    None
+                }
+            }
         }
     }
-}
 
-fn weapon_type_from_item_id(item_id: u32) -> u32 {
-    match item_id {
-        1100..=1149 | 13400..=13499 => 2,
-        1150..=1199 | 21000..=21999 => 3,
-        1200..=1249 | 13000..=13099 => 1,
-        1250..=1299 => 16,
-        1300..=1349 => 6,
-        1350..=1399 => 7,
-        1400..=1449 => 4,
-        1450..=1499 => 5,
-        1500..=1549 => 8,
-        1550..=1599 => 15,
-        1600..=1699 => 10,
-        1700..=1749 | 18100..=18499 => 11,
-        1800..=1849 => 12,
-        1900..=1949 => 13,
-        1950..=1999 => 14,
-        20000..=20999 => 23,
-        13100..=13149 => 17,
-        13150..=13199 => 18,
-        13300..=13399 => 22,
-        _ => 0,
+    /// Shield view for the equipped left-hand item, when inventory can map it.
+    ///
+    /// Prefer [`Self::equipped_left_hand_look`] for full dual-wield support.
+    /// This keeps the Phase C shield-only helper for callers that only care
+    /// about Guard/Buckler/Shield/Mirror.
+    pub fn equipped_shield_view(&self) -> Option<u32> {
+        match self.equipped_left_hand_look() {
+            Some(0) => Some(0),
+            Some(look) if look < crate::world::WEAPON_VIEW_CLASS_MAX => Some(look),
+            Some(_) => {
+                // Off-hand weapon item ID — not a shield view.
+                None
+            }
+            None => None,
+        }
     }
 }
 

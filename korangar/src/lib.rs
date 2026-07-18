@@ -223,6 +223,11 @@ pub struct WeaponSpriteAuditReport {
     pub discovered: Vec<String>,
     /// `(job folder, sex, found suffixes)` from direct existence probes.
     pub probed: Vec<(&'static str, &'static str, Vec<&'static str>)>,
+    /// Per-item weapon sprites (`{job}_{sex}_{itemId}.spr`) from the archive
+    /// listing (Phase D).
+    pub per_item: Vec<String>,
+    /// `_검광` sword-trail sprites from the archive listing (Phase D).
+    pub trails: Vec<String>,
 }
 
 /// Candidate weapon sprite name suffixes to probe per job folder. Includes
@@ -274,7 +279,7 @@ pub fn audit_weapon_sprites() -> Result<WeaponSpriteAuditReport, String> {
     let game_file_loader = GameFileLoader::default();
     game_file_loader.load_archives_from_settings();
 
-    let discovered = game_file_loader
+    let discovered: Vec<String> = game_file_loader
         .get_files_with_extension(&[".spr"])
         .into_iter()
         .filter(|path| {
@@ -284,6 +289,31 @@ pub fn audit_weapon_sprites() -> Result<WeaponSpriteAuditReport, String> {
                 && !path.starts_with("data\\sprite\\인간족\\방패")
         })
         .collect();
+
+    // Phase D inventory: numbered per-item bases and `_검광` trails.
+    // Note: `get_files_with_extension` under-reports classic GRF folders; the
+    // runtime still probes candidates with `file_exists`. This listing is a
+    // coverage lower bound for the audit tool.
+    let mut per_item = Vec::new();
+    let mut trails = Vec::new();
+    for path in &discovered {
+        let lower = path.to_lowercase();
+        if lower.contains("검광") || path.contains("검광") {
+            trails.push(path.clone());
+        }
+        // `{folder}_{sex}_{digits}.spr` — digits-only suffix is a per-item model.
+        if let Some(stem) = path.rsplit('\\').next() {
+            let stem = stem.trim_end_matches(".spr").trim_end_matches(".SPR");
+            if let Some((_, tail)) = stem.rsplit_once('_')
+                && !tail.is_empty()
+                && tail.chars().all(|c| c.is_ascii_digit())
+            {
+                per_item.push(path.clone());
+            }
+        }
+    }
+    per_item.sort();
+    trails.sort();
 
     let mut folders: Vec<&'static str> = (0..=25)
         .chain(4001..=4108)
@@ -311,7 +341,12 @@ pub fn audit_weapon_sprites() -> Result<WeaponSpriteAuditReport, String> {
         }
     }
 
-    Ok(WeaponSpriteAuditReport { discovered, probed })
+    Ok(WeaponSpriteAuditReport {
+        discovered,
+        probed,
+        per_item,
+        trails,
+    })
 }
 
 /// Walk every player job's body / head / weapon ACT files and inventory their
@@ -3172,17 +3207,17 @@ impl Client {
                         .fill(&self.async_loader, items);
 
                     let inventory = self.client_state.follow(client_state().inventory());
-                    let weapon = inventory.equipped_weapon_type();
-                    let shield_view = inventory.equipped_shield_view();
+                    let weapon = inventory.equipped_weapon_look();
+                    let left_hand = inventory.equipped_left_hand_look();
                     if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.set_weapon(weapon);
-                        if let Some(shield) = shield_view {
-                            player.set_shield(shield);
+                        if let Some(left) = left_hand {
+                            player.set_shield(left);
                         }
                         let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                             eprintln!(
-                                "[packet-log] local equipped weapon={weapon} shield={shield_view:?} parts={entity_part_files:?}"
+                                "[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}"
                             );
                         }
                         Self::refresh_entity_player_gear(
@@ -3392,12 +3427,12 @@ impl Client {
                         .follow_mut(client_state().inventory())
                         .update_equipped_position(index, equipped_position);
                     let inventory = self.client_state.follow(client_state().inventory());
-                    let weapon = inventory.equipped_weapon_type();
-                    let shield_view = inventory.equipped_shield_view();
+                    let weapon = inventory.equipped_weapon_look();
+                    let left_hand = inventory.equipped_left_hand_look();
                     if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.set_weapon(weapon);
-                        if let Some(shield) = shield_view {
-                            player.set_shield(shield);
+                        if let Some(left) = left_hand {
+                            player.set_shield(left);
                         }
                         let parts = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         Self::refresh_entity_player_gear(
@@ -5732,16 +5767,17 @@ impl Client {
         );
     }
 
-    /// Phase C4: swap only the weapon layer when body+head are already loaded.
-    /// Falls back to a full part-list reload if partial swap is impossible.
+    /// Phase C4 / D: swap weapon-family layers (base, trails, dual off-hand)
+    /// when body+head are already loaded. Falls back to a full part-list
+    /// reload if partial swap is impossible.
     ///
-    /// Weapon path is resolved by content (`인간족\{job}\…`), not `parts[2]`:
-    /// when a shield is equipped without a weapon, index 2 is the shield and
-    /// treating it as a weapon would drop the sword on the next equip refresh.
+    /// Paths are resolved by content (`인간족\{job}\…`), not `parts[2]`: when a
+    /// shield is equipped without a weapon, index 2 is the shield and treating
+    /// it as a weapon would drop the sword on the next equip refresh.
     fn refresh_entity_weapon_layer(async_loader: &AsyncLoader, entity: &mut Entity, entity_part_files: &[String]) {
-        let weapon_path = crate::world::weapon_path_from_entity_parts(entity_part_files);
+        let weapon_paths = crate::world::weapon_paths_from_entity_parts(entity_part_files);
         if let Some(current) = entity.animation_data()
-            && let Some(updated) = async_loader.apply_weapon_layer_swap(&current, weapon_path)
+            && let Some(updated) = async_loader.apply_weapon_layers_swap(&current, &weapon_paths)
         {
             entity.set_animation_data(updated);
             return;

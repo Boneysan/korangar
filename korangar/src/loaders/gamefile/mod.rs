@@ -748,6 +748,11 @@ mod resolve_map_name_tests {
             "인간족\\프리스트\\프리스트_여_책",
             // Hunter bow.
             "인간족\\헌터\\헌터_여_활",
+            // Phase D: per-item Mjolnir (item 1530) + its trail on Knight.
+            "인간족\\기사\\기사_남_1530",
+            "인간족\\기사\\기사_남_1530_검광",
+            "인간족\\기사\\기사_여_1530",
+            "인간족\\기사\\기사_여_1530_검광",
         ] {
             for extension in ["spr", "act"] {
                 let path = format!("data\\sprite\\{part_file}.{extension}").to_lowercase();

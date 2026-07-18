@@ -765,11 +765,21 @@ pub fn is_weapon_part_path(path: &str) -> bool {
 /// Must not use a fixed index: with shield and no weapon the shield sits at
 /// index 2, and treating it as the weapon layer drops the sword on the next
 /// weapon refresh.
+///
+/// Prefer [`weapon_paths_from_entity_parts`] when trails / dual-wield off-hands
+/// may add multiple weapon-family layers.
 pub fn weapon_path_from_entity_parts(parts: &[String]) -> Option<&str> {
+    weapon_paths_from_entity_parts(parts).into_iter().next()
+}
+
+/// All weapon-family paths in a player part list (base weapon, `_검광` trails,
+/// dual-wield off-hand), in draw order. Never includes `방패\…` shields.
+pub fn weapon_paths_from_entity_parts(parts: &[String]) -> Vec<&str> {
     parts
         .iter()
         .map(String::as_str)
-        .find(|path| is_weapon_part_path(path))
+        .filter(|path| is_weapon_part_path(path))
+        .collect()
 }
 
 /// First shield path in a player part list.
@@ -1089,33 +1099,34 @@ impl AnimationData {
         self
     }
 
-    /// Split optional gear layers (after body/head) into weapon vs shield by path.
-    fn player_optional_gear(&self) -> (Option<AnimationLayer>, Option<AnimationLayer>) {
-        let mut weapon = None;
+    /// Split optional gear layers (after body/head) into weapon-family vs shield.
+    ///
+    /// Weapon-family includes the base weapon, `_검광` trails, and dual-wield
+    /// off-hand weapons — every non-shield path after body/head.
+    fn player_optional_gear(&self) -> (Vec<AnimationLayer>, Option<AnimationLayer>) {
+        let mut weapons = Vec::new();
         let mut shield = None;
         for layer in self.layers.iter().skip(2) {
             if layer.path_key.as_deref().is_some_and(is_shield_part_path) {
                 shield = Some(layer.clone());
             } else {
-                weapon = Some(layer.clone());
+                weapons.push(layer.clone());
             }
         }
-        (weapon, shield)
+        (weapons, shield)
     }
 
-    /// Rebuild player layers as body + head + optional weapon + optional shield.
-    fn with_player_gear(mut self, weapon: Option<AnimationLayer>, shield: Option<AnimationLayer>) -> Self {
+    /// Rebuild player layers as body + head + weapon-family + optional shield.
+    fn with_player_gear(mut self, weapons: Vec<AnimationLayer>, shield: Option<AnimationLayer>) -> Self {
         if self.layers.is_empty() {
             return self;
         }
-        let mut layers = Vec::with_capacity(4);
+        let mut layers = Vec::with_capacity(2 + weapons.len() + usize::from(shield.is_some()));
         layers.push(self.layers[0].clone());
         if self.layers.len() > 1 {
             layers.push(self.layers[1].clone());
         }
-        if let Some(weapon) = weapon {
-            layers.push(weapon);
-        }
+        layers.extend(weapons);
         if let Some(shield) = shield {
             layers.push(shield);
         }
@@ -1125,16 +1136,25 @@ impl AnimationData {
         self
     }
 
-    /// Set or clear the weapon layer without reloading body/head/shield.
-    pub fn with_weapon_layer(self, weapon: Option<AnimationLayer>) -> Self {
+    /// Set or clear weapon-family layers without reloading body/head/shield.
+    ///
+    /// Pass every weapon path in draw order (base, trail, off-hand). An empty
+    /// vec clears all weapon-family layers.
+    pub fn with_weapon_layers(self, weapons: Vec<AnimationLayer>) -> Self {
         let (_, shield) = self.player_optional_gear();
-        self.with_player_gear(weapon, shield)
+        self.with_player_gear(weapons, shield)
+    }
+
+    /// Set or clear a single weapon layer (Phase C API). Prefer
+    /// [`Self::with_weapon_layers`] when trails / dual-wield are present.
+    pub fn with_weapon_layer(self, weapon: Option<AnimationLayer>) -> Self {
+        self.with_weapon_layers(weapon.into_iter().collect())
     }
 
     /// Set or clear the shield layer without reloading body/head/weapon.
     pub fn with_shield_layer(self, shield: Option<AnimationLayer>) -> Self {
-        let (weapon, _) = self.player_optional_gear();
-        self.with_player_gear(weapon, shield)
+        let (weapons, _) = self.player_optional_gear();
+        self.with_player_gear(weapons, shield)
     }
 
     /// Replace the head layer (index 1). Requires body + head already present.
@@ -1149,12 +1169,18 @@ impl AnimationData {
             .and_then(|layer| layer.path_key.as_deref())
     }
 
-    /// Path of the current weapon layer, if any (never the shield path).
+    /// Path of the first weapon-family layer, if any (never the shield path).
     pub fn weapon_layer_path(&self) -> Option<&str> {
+        self.weapon_layer_paths().into_iter().next()
+    }
+
+    /// Paths of all weapon-family layers (base, trails, off-hand) in draw order.
+    pub fn weapon_layer_paths(&self) -> Vec<&str> {
         self.layers
             .iter()
-            .find(|layer| layer.path_key.as_deref().is_some_and(is_weapon_part_path))
-            .and_then(|layer| layer.path_key.as_deref())
+            .filter_map(|layer| layer.path_key.as_deref())
+            .filter(|path| is_weapon_part_path(path))
+            .collect()
     }
 
     /// Delay from source action start to Ragexe's queued target-impact event.
@@ -2623,6 +2649,45 @@ mod runtime_compose_tests {
         // Head should be shifted by body attach (0, 20) − head attach (0, 0).
         let head_part = frame.frame_parts.iter().find(|p| p.animation_index == 1).unwrap();
         assert_eq!(head_part.offset.y, 20, "head follows body attach of motion 2");
+    }
+
+    #[test]
+    fn weapon_layers_preserve_trail_and_offhand() {
+        let body = make_layer(0, 2);
+        let head = make_layer(1, 2);
+        let mut sword = make_layer(2, 2);
+        sword.path_key = Some("인간족\\기사\\기사_남_검".into());
+        let mut trail = make_layer(3, 2);
+        trail.path_key = Some("인간족\\기사\\기사_남_검_검광".into());
+        let mut guard = make_layer(4, 2);
+        guard.path_key = Some("방패\\기사\\기사_남_가드".into());
+
+        let base = AnimationData {
+            layers: vec![body, head, sword, trail, guard],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+        assert_eq!(
+            base.weapon_layer_paths(),
+            vec![
+                "인간족\\기사\\기사_남_검",
+                "인간족\\기사\\기사_남_검_검광",
+            ]
+        );
+        assert_eq!(base.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
+
+        let mut spear = make_layer(2, 2);
+        spear.path_key = Some("인간족\\기사\\기사_남_창".into());
+        let swapped = base.with_weapon_layers(vec![spear]);
+        assert_eq!(swapped.weapon_layer_paths(), vec!["인간족\\기사\\기사_남_창"]);
+        assert_eq!(swapped.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
+        assert_eq!(swapped.layers.len(), 4); // body, head, spear, guard
     }
 
     #[test]

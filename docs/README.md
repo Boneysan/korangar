@@ -16,6 +16,12 @@ This directory contains all design documents, technical deep dives, implementati
   3. `docs/CLIENT_SYSTEMS_OVERVIEW.md` — High-level map of the codebase.
   4. `docs/SOFTWARE_DESIGN.md` — Architecture and key decisions.
 
+- **Current animation next step (2026-07-18):** Phase D code is closed.
+  **Live client verification is next** before Phase E — see
+  [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)
+  (also linked from [plans/animation-fidelity.md](plans/animation-fidelity.md)
+  and [ANIMATION_SYSTEM.md](ANIMATION_SYSTEM.md)).
+
 - **Cross-references**: Documents link to each other extensively. Follow the "See also" sections.
 
 ## Documentation Categories
@@ -104,6 +110,8 @@ cargo run --release --example headless-tester -p korangar-networking -- --scenar
 | [plans/asset-pipeline.md](plans/asset-pipeline.md) | GRF and custom asset loading strategy. |
 | [plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md) | Critical party/whisper packet safety plan. |
 | [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | E3.1 live P0 verification checklist (M1). |
+| [plans/animation-fidelity.md](plans/animation-fidelity.md) | Animation fidelity phases A–F (A–C closed; D code closed). |
+| **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)** | **NEXT: Phase D in-game checklist (Claude/Codex start here).** |
 | [plans/modern-mechanics.md](plans/modern-mechanics.md) | Technical sketches for future action RPG / tabletop mechanics (WASD camera, skill checks, gamepad, etc.). |
 | [specs/](specs/) | Targeted implementation specs (see below). |
 
