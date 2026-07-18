@@ -196,7 +196,22 @@ impl SkillBurst {
     }
 
     fn render_raid(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32) {
+        // Live GUI pass 2026-07-17: the original values (thin 12 px streaks,
+        // 0.2/0.3/1.0 blue at peak alpha 0.45) were invisible against lit
+        // terrain — the whole burst read as a bare point light.
         let alpha = (progress * 4.0).min(1.0) * (1.0 - progress);
+
+        // Central flash so the burst has a readable core.
+        let flash_size = 130.0 + progress * 140.0;
+        self.render_sprite(
+            renderer,
+            camera,
+            Vector2::new(0.0, -10.0),
+            Vector2::new(flash_size, flash_size),
+            progress * 0.8,
+            Color::rgba(0.55, 0.68, 1.0, (1.0 - progress) * 0.85),
+        );
+
         for index in 0..20 {
             let angle = index as f32 / 20.0 * TAU + (index % 3) as f32 * 0.27;
             let distance = 12.0 + progress * (55.0 + (index % 5) as f32 * 7.0);
@@ -205,26 +220,28 @@ impl SkillBurst {
                 renderer,
                 camera,
                 offset,
-                Vector2::new(12.0, 105.0),
+                Vector2::new(20.0, 120.0),
                 angle + PI / 2.0,
-                Color::rgba(0.2, 0.3, 1.0, alpha * 0.8),
+                Color::rgba(0.5, 0.62, 1.0, alpha),
             );
         }
     }
 
     fn render_meteor_assault(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32) {
-        let alpha = (1.0 - progress) * 0.75;
+        // Brightened alongside Raid (2026-07-17): the purple streaks washed
+        // out to nothing and only the point light was visible in game.
+        let alpha = (1.0 - progress) * 0.95;
         for index in 0..8 {
             let angle = index as f32 / 8.0 * TAU;
             let distance = 8.0 + progress * 70.0;
-            let size = 100.0 + progress * 100.0;
+            let size = 110.0 + progress * 110.0;
             self.render_sprite(
                 renderer,
                 camera,
                 Vector2::new(angle.cos(), angle.sin()) * distance,
                 Vector2::new(size, size),
                 -angle,
-                Color::rgba(0.75, 0.35, 1.0, alpha),
+                Color::rgba(0.95, 0.55, 1.0, alpha),
             );
         }
     }
