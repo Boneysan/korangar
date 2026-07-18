@@ -40,6 +40,11 @@ adding more:
    canned `ZC_NOTIFY_ACT`/`ZC_NOTIFY_SKILL2` byte sequence in, asserted
    (source action, due tick, hurt clock) timeline out. These become the
    regression net for every later phase.
+   **Done 2026-07-17** (`golden_timeline_tests` in `world/animation/mod.rs`,
+   damage fixtures in `korangar-networking` `packet_handlers`): sMotion/dMotion
+   separation, miss/critical variants, div→hit_count, the 576 ms Knight spear
+   due boundary, the monster `"atk"`/`motion_count - 2` boundary, and the
+   Spear Boomerang state-12 resolution are pinned.
 
 Exit: all batch-2 rows in the roadmap flip to live-verified, or bugs get filed
 and fixed first.
