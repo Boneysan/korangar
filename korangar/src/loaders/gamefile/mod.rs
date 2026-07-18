@@ -290,6 +290,240 @@ mod resolve_map_name_tests {
         }
     }
 
+    /// Diagnostic: probe shield SPR paths in the original RO client GRFs
+    /// (`../../RO/client/…` relative to korangar/korangar) vs configured pack.
+    #[test]
+    #[ignore]
+    fn probes_original_client_shield_paths() {
+        use std::path::PathBuf;
+
+        let game_file_loader = GameFileLoader::default();
+        // Original client archives from data.ini order (later overrides earlier
+        // in native client; we load all and file_exists if any has it).
+        let root = PathBuf::from("/Volumes/T7/GitHub/RO/client");
+        for name in ["renewal2021.grf", "resources2021.grf", "data.grf", "rdata.grf"] {
+            let path = root.join(name);
+            if path.exists() {
+                let archive = GameFileLoader::load_archive_from_path(path.to_str().unwrap());
+                // insert so lookups hit it
+                game_file_loader.add_archive(archive, true);
+                println!("loaded {}", path.display());
+            } else {
+                println!("missing {}", path.display());
+            }
+        }
+
+        // Classic patterns reported by community clients + this pack's job form
+        let mut found = Vec::new();
+        for sex in ["남", "여"] {
+            for id in 1..=10u32 {
+                for base in [
+                    format!("방패\\{sex}\\{id}_{sex}"),
+                    format!("방패\\{sex}\\방패_{sex}_{id}"),
+                    format!("방패\\방패_{sex}_{id}"),
+                    format!("인간족\\방패\\{sex}\\{id}_{sex}"),
+                    format!("인간족\\방패\\{sex}\\방패_{sex}_{id}"),
+                    format!("방패\\기사\\기사_{sex}_가드"),
+                    format!("방패\\기사\\기사_{sex}_버클러"),
+                    format!("방패\\기사\\기사_{sex}_쉴드"),
+                    format!("방패\\기사\\기사_{sex}_실드"),
+                    format!("방패\\검사\\검사_{sex}_가드"),
+                    format!("방패\\검사\\검사_{sex}_버클러"),
+                    format!("방패\\기사\\기사_{sex}_{id}_방패"),
+                    format!("방패\\기사\\기사_{sex}_{id}"),
+                ] {
+                    let spr = format!("data\\sprite\\{base}.spr").to_lowercase();
+                    if game_file_loader.file_exists(&spr) {
+                        found.push(base);
+                    }
+                }
+            }
+        }
+        found.sort();
+        found.dedup();
+        println!("classic/job pattern hits ({}):", found.len());
+        for p in &found {
+            println!("  {p}");
+        }
+
+        let files = game_file_loader.get_files_with_extension(&["spr"]);
+        let bangpae: Vec<_> = files.iter().filter(|p| p.contains("방패")).cloned().collect();
+        println!("total 방패 spr in original client archives: {}", bangpae.len());
+        let mut sorted = bangpae;
+        sorted.sort_by_key(|p| p.len());
+        println!("shortest 40:");
+        for p in sorted.iter().take(40) {
+            println!("  {p}");
+        }
+        println!("기사 folder:");
+        for p in files.iter().filter(|p| p.contains("방패\\기사\\") || p.contains("방패/기사/")) {
+            println!("  {p}");
+        }
+        println!("sex-only folder 방패\\남:");
+        for p in files.iter().filter(|p| p.contains("방패\\남\\") || p.contains("방패/남/")).take(30) {
+            println!("  {p}");
+        }
+
+        // Also confirm korangar's configured archives (cwd-relative GRFs).
+        let korangar = GameFileLoader::default();
+        korangar.load_archives_from_settings();
+        println!("korangar settings archives:");
+        for base in [
+            // Nested (job subfolder) — how files appear in GRF listing tools
+            "방패\\기사\\기사_남_가드",
+            "방패\\기사\\기사_남_버클러",
+            "방패\\기사\\기사_남_쉴드",
+            "방패\\검사\\검사_남_가드",
+            // Flat native sprintf form from Ragexe 0x7C46C0:
+            //   방패\%s_%s%s.%s  → 방패\{job}_{sex}_{suffix}.spr  (suffix includes leading _)
+            //   방패\%s_%s_%d_방패.%s → 방패\{job}_{sex}_{id}_방패.spr
+            "방패\\기사_남_가드",
+            "방패\\기사_남_버클러",
+            "방패\\기사_남_쉴드",
+            "방패\\기사_남_1_방패",
+            "방패\\기사_남_2101_방패",
+            "방패\\기사_남_28901_방패",
+        ] {
+            let p = format!("data\\sprite\\{base}.spr").to_lowercase();
+            println!("  {base}: {}", if korangar.file_exists(&p) { "YES" } else { "NO" });
+        }
+    }
+
+    /// Diagnostic: body vs sword vs shield ACT action/clip counts (Knight male).
+    #[test]
+    #[ignore]
+    fn dumps_sword_and_shield_action_counts() {
+        use ragnarok_bytes::{ByteReader, FromBytes};
+        use ragnarok_formats::action::ActionsData;
+        use ragnarok_formats::version::GenericFormatMetadata;
+
+        let l = GameFileLoader::default();
+        l.load_archives_from_settings();
+        for part in [
+            "인간족\\몸통\\남\\기사_남",
+            "인간족\\기사\\기사_남_검",
+            "방패\\기사\\기사_남_가드",
+            "인간족\\기사\\기사_남_창",
+        ] {
+            let path = format!("data\\sprite\\{part}.act");
+            match l.get(&path) {
+                Ok(bytes) => {
+                    let mut br = ByteReader::with_default_metadata::<GenericFormatMetadata>(&bytes);
+                    let act = ActionsData::from_bytes(&mut br).expect("parse");
+                    println!("== {part} ==");
+                    println!(
+                        "actions {} events {:?}",
+                        act.actions.len(),
+                        act.events.iter().map(|e| e.name.as_str()).collect::<Vec<_>>()
+                    );
+                    for (i, a) in act.actions.iter().enumerate() {
+                        if i % 8 != 0 {
+                            continue;
+                        }
+                        let n = a.motions.len();
+                        let clips: usize = a.motions.iter().map(|m| m.sprite_clips.len()).sum();
+                        let nonempty = a.motions.iter().filter(|m| !m.sprite_clips.is_empty()).count();
+                        println!(
+                            "  group {:2}: {} motions, {} with clips, {} total clips",
+                            i / 8,
+                            n,
+                            nonempty,
+                            clips
+                        );
+                    }
+                }
+                Err(e) => println!("== {part} == MISSING {e:?}"),
+            }
+        }
+    }
+
+    /// Diagnostic: probe classic shield SPR path patterns under 방패.
+    #[test]
+    #[ignore]
+    fn probes_shield_sprite_paths() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        let mut found = 0usize;
+        let mut seen = std::collections::BTreeSet::new();
+        for sex in ["남", "여"] {
+            for id in 0..=50u32 {
+                let patterns = [
+                    format!("인간족\\방패\\{sex}\\방패_{sex}_{id}"),
+                    format!("인간족\\방패\\방패_{sex}_{id}"),
+                    format!("방패\\{sex}\\방패_{sex}_{id}"),
+                    format!("방패\\방패_{sex}_{id}"),
+                    format!("방패\\{sex}\\{id}_{sex}"),
+                    format!("인간족\\방패\\{sex}\\{id}_{sex}"),
+                    format!("인간족\\방패\\{id}_{sex}"),
+                    format!("방패\\{id}_{sex}"),
+                    format!("인간족\\방패\\{sex}\\{id}"),
+                    format!("방패\\{sex}\\{id}"),
+                ];
+                for base in patterns {
+                    let spr = format!("data\\sprite\\{base}.spr").to_lowercase();
+                    if game_file_loader.file_exists(&spr) && seen.insert(base.clone()) {
+                        println!("FOUND {base}.spr");
+                        found += 1;
+                    }
+                }
+            }
+            // named classics
+            for name in ["가드", "버클러", "실드", "미러실드", "가아드", "buckler", "guard", "shield"] {
+                for base in [
+                    format!("인간족\\방패\\{sex}\\{name}"),
+                    format!("인간족\\방패\\{sex}\\{name}_{sex}"),
+                    format!("방패\\{sex}\\{name}"),
+                    format!("방패\\{sex}\\{name}_{sex}"),
+                    format!("방패\\{name}_{sex}"),
+                ] {
+                    let spr = format!("data\\sprite\\{base}.spr").to_lowercase();
+                    if game_file_loader.file_exists(&spr) && seen.insert(base.clone()) {
+                        println!("FOUND {base}.spr");
+                        found += 1;
+                    }
+                }
+            }
+        }
+        // extension listing for 방패 if the loader can
+        let files = game_file_loader.get_files_with_extension(&["spr"]);
+        let with_bangpae: Vec<_> = files.iter().filter(|p| p.contains("방패")).cloned().collect();
+        println!("paths containing 방패: {}", with_bangpae.len());
+        // Prefer short/classic paths first
+        let mut sorted = with_bangpae;
+        sorted.sort_by_key(|p| p.len());
+        for p in sorted.iter().take(60) {
+            println!("  {p}");
+        }
+        // Top-level folders under data\sprite\인간족\
+        let mut folders = std::collections::BTreeSet::new();
+        for p in files.iter().filter(|p| p.contains("인간족\\") || p.contains("인간족/")) {
+            let rest = p.split("인간족\\").nth(1).or_else(|| p.split("인간족/").nth(1));
+            if let Some(rest) = rest {
+                let folder = rest.split(['\\', '/']).next().unwrap_or("");
+                folders.insert(folder.to_string());
+            }
+        }
+        println!("인간족 folders ({}):", folders.len());
+        for f in &folders {
+            println!("  {f}");
+        }
+        // Any path with shield-related hangul
+        for needle in ["방패", "패", "쉴드", "가드", "버클"] {
+            let n = files.iter().filter(|p| p.contains(needle)).count();
+            println!("contains '{needle}': {n}");
+        }
+        println!("total unique pattern hits: {found}");
+        println!("--- 기사 shield names ---");
+        for p in files.iter().filter(|p| p.contains("방패\\기사\\") || p.contains("방패/기사/")) {
+            println!("  {p}");
+        }
+        println!("--- 검사 shield names ---");
+        for p in files.iter().filter(|p| p.contains("방패\\검사\\") || p.contains("방패/검사/")) {
+            println!("  {p}");
+        }
+    }
+
     /// Diagnostic: parse the real Knight body/weapon/head ACT files and dump
     /// per-action frame counts, delays, and sound-event placement, to compare
     /// the client's animation playback against the original data. Run with
@@ -309,10 +543,17 @@ mod resolve_map_name_tests {
             "인간족\\기사\\기사_남_창",
             "인간족\\기사\\기사_남_양손검",
             "인간족\\머리통\\남\\1_남",
+            // Empty event tables on these are why SinX needs a synthetic Attack
+            // fallback at the native attack-event marker (see collect_crossed_events).
+            "인간족\\몸통\\남\\어세신_남",
+            "인간족\\몸통\\남\\어쌔신크로스_남",
+            "인간족\\몸통\\여\\어세신_여",
         ] {
-            let bytes = game_file_loader
-                .get(&format!("data\\sprite\\{part}.act"))
-                .expect("action file should exist");
+            let path = format!("data\\sprite\\{part}.act");
+            let Ok(bytes) = game_file_loader.get(&path) else {
+                println!("== {part} == MISSING");
+                continue;
+            };
             let mut byte_reader: ByteReader = ByteReader::with_default_metadata::<GenericFormatMetadata>(&bytes);
             let actions_data = ActionsData::from_bytes(&mut byte_reader).expect("action file should parse");
 

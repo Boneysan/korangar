@@ -3,7 +3,7 @@ use std::sync::Arc;
 mod native_motion;
 mod native_skill;
 
-use cgmath::{Array, Matrix4, Point3, Transform, Vector2, Vector3, Zero};
+use cgmath::{Array, Matrix4, Point3, SquareMatrix, Transform, Vector2, Vector3, Zero};
 use korangar_container::Cacheable;
 use korangar_interface::element::StateElement;
 use ragnarok_packets::{ClientTick, Direction, EntityId, JobId, Sex, SkillId};
@@ -712,11 +712,110 @@ impl AnimationState {
     }
 }
 
+/// One SPR+ACT layer after decode. Index 0 is always the body (clock +
+/// events). Secondary layers (head, weapon, shield, …) are sampled with
+/// [`native_layer_motion_index`] at compose time.
+///
+/// `sprites` / `actions` are `None` only in unit tests that exercise the clock
+/// and event paths without GRF assets.
+#[derive(Clone)]
+pub struct AnimationLayer {
+    /// Part path without extension (`인간족\...`), used to skip no-op swaps.
+    pub path_key: Option<String>,
+    pub sprites: Option<Arc<Sprite>>,
+    /// Retained for Phase C2 attach-point composition at render time.
+    #[allow(dead_code)]
+    pub actions: Option<Arc<Actions>>,
+    /// Per flat ACT action (direction included): motions for this layer only.
+    pub animations: Vec<Animation>,
+}
+
+/// Player layer slots after the initial full load (body + head always present).
+/// Weapon and shield are optional and ordered body → head → weapon? → shield?.
+#[allow(dead_code)]
+pub const PLAYER_LAYER_BODY: usize = 0;
+pub const PLAYER_LAYER_HEAD: usize = 1;
+/// Prefer identifying weapon/shield by [`is_shield_part_path`] rather than a
+/// fixed index — shield may sit at 2 when no weapon is equipped.
+pub const PLAYER_LAYER_WEAPON: usize = 2;
+#[allow(dead_code)]
+pub const PLAYER_LAYER_SHIELD: usize = 3;
+
+/// Shield SPR paths live under `방패\…`, not `인간족\…`.
+pub fn is_shield_part_path(path: &str) -> bool {
+    path.starts_with("방패\\") || path.starts_with("방패/")
+}
+
+/// Weapon SPR paths live under `인간족\{job}\…`, never body (`몸통`) or head
+/// (`머리통`) and never the shield tree.
+pub fn is_weapon_part_path(path: &str) -> bool {
+    if is_shield_part_path(path) {
+        return false;
+    }
+    let normalized = path.replace('/', "\\");
+    let rest = match normalized.strip_prefix("인간족\\") {
+        Some(rest) => rest,
+        None => return false,
+    };
+    !rest.starts_with("몸통\\") && !rest.starts_with("머리통\\")
+}
+
+/// First weapon path in a player part list (body, head, weapon?, shield?).
+///
+/// Must not use a fixed index: with shield and no weapon the shield sits at
+/// index 2, and treating it as the weapon layer drops the sword on the next
+/// weapon refresh.
+pub fn weapon_path_from_entity_parts(parts: &[String]) -> Option<&str> {
+    parts
+        .iter()
+        .map(String::as_str)
+        .find(|path| is_weapon_part_path(path))
+}
+
+/// First shield path in a player part list.
+pub fn shield_path_from_entity_parts(parts: &[String]) -> Option<&str> {
+    parts
+        .iter()
+        .map(String::as_str)
+        .find(|path| is_shield_part_path(path))
+}
+
+/// Whether the shield should be drawn *behind* the body for this camera-
+/// relative facing (0..=7).
+///
+/// Matches the classic client hardcode (as recovered in roBrowser
+/// `EntityRender.js`): `behind = direction > 1 && direction < 6` — i.e.
+/// directions W / NW / N / NE (the half of the compass that shows the
+/// character's back). In those facings the shield is painted first so the
+/// body covers it; otherwise it is painted after weapon so it sits in front.
+pub fn shield_draws_behind_body(view_direction: usize) -> bool {
+    let d = view_direction & 7;
+    d > 1 && d < 6
+}
+
+/// Action-global billboard layout measured across every composed motion of
+/// one flat action. Applied at compose time so proportions stay stable across
+/// the action (the same fix the former load-time merge used).
+#[derive(Copy, Clone, Debug)]
+pub struct ActionLayout {
+    pub min_top: i32,
+    pub max_bottom: i32,
+    pub min_left: i32,
+    pub max_right: i32,
+}
+
+/// Runtime-composed actor animation. Layers stay separate; body owns the
+/// clock. Call [`AnimationData::compose_frame`] (or `get_frame`) to merge for
+/// draw.
 #[derive(RustState, Clone, StateElement)]
 pub struct AnimationData {
-    pub animation_pair: Vec<AnimationPair>,
-    pub animations: Vec<Animation>,
+    #[hidden_element]
+    pub layers: Vec<AnimationLayer>,
+    /// Body ACT delays — the only clock used for motion indexing.
     pub delays: Vec<f32>,
+    /// Per flat body action: shared AABB for billboard normalize.
+    #[hidden_element]
+    pub action_layouts: Vec<ActionLayout>,
     #[hidden_element]
     pub entity_type: EntityType,
 }
@@ -728,21 +827,26 @@ impl Cacheable for AnimationData {
     }
 }
 
-#[derive(RustState, Clone, StateElement)]
+/// Legacy pair type kept for loaders that still assemble SPR+ACT before the
+/// layer decode step.
+#[derive(Clone)]
 pub struct AnimationPair {
     pub sprites: Arc<Sprite>,
     pub actions: Arc<Actions>,
 }
 
-#[derive(RustState, Clone, StateElement)]
+#[derive(Clone)]
 pub struct Animation {
-    #[hidden_element]
     pub frames: Vec<AnimationFrame>,
 }
 
 #[derive(Clone)]
 pub struct AnimationFrame {
     pub event: Option<ActionEvent>,
+    /// ACT attach point for this motion, if authored (`attach_point_count == 1`).
+    /// Body supplies the parent; secondary layers use
+    /// `offset += -child + body` at compose time (Phase C2).
+    pub attach_point: Option<Vector2<i32>>,
     pub offset: Vector2<i32>,
     pub top_left: Vector2<i32>,
     pub size: Vector2<i32>,
@@ -802,6 +906,27 @@ fn animation_frame_position(animation_state: &AnimationState, delay: f32, _frame
     (animation_state.time as f32 / frame_duration.max(f32::EPSILON)) as usize
 }
 
+/// True for basic weapon-swing ACT groups (Attack1/2/3). Skill/pickup/hurt
+/// one-shots are excluded — their presentation is owned elsewhere.
+fn is_weapon_swing_action(animation_state: &AnimationState) -> bool {
+    matches!(
+        animation_state.action_type,
+        AnimationActionType::Attack1 | AnimationActionType::Attack2 | AnimationActionType::Attack3
+    )
+}
+
+/// Motion index where a synthetic `ActionEvent::Attack` should fire when the
+/// body ACT authored no events for this action. Uses the same marker as the
+/// impact scheduler (`impact_event_position_override`, else
+/// `motion_count - 2`) so Assassin Cross katar (table value 3.0) aligns with
+/// the native attack-event position even though its body ACT is empty.
+fn synthetic_attack_marker_motion(animation_state: &AnimationState, frame_count: usize) -> usize {
+    let position = animation_state
+        .impact_event_position_override
+        .unwrap_or_else(|| native_shared_attack_event_position(frame_count, None));
+    (position.floor() as usize).min(frame_count.saturating_sub(1))
+}
+
 /// The crossed-motion walk behind [`AnimationData::take_crossed_events`],
 /// operating on the already-resolved action animation and delay.
 ///
@@ -811,6 +936,12 @@ fn animation_frame_position(animation_state: &AnimationState, delay: f32, _frame
 /// advance at most one step per actor update, so each `step_serial` change
 /// is one event occurrence — a duplicate authored motion fires again, a
 /// terminal held motion does not.
+///
+/// When a weapon-swing action's body ACT has an empty event table (common
+/// for male Assassin and Assassin Cross in classic GRFs), a single synthetic
+/// [`ActionEvent::Attack`] is emitted at the native attack-event marker so
+/// `weapon_sound` still plays. Authored events always win and suppress the
+/// fallback.
 fn collect_crossed_events(animation_state: &mut AnimationState, animation: &Animation, delay: f32) -> Vec<ActionEvent> {
     let frame_count = animation.frames.len();
     if frame_count == 0 {
@@ -857,6 +988,20 @@ fn collect_crossed_events(animation_state: &mut AnimationState, animation: &Anim
                         events.push(event);
                     }
                 }
+
+                // Empty body event tables: synthesize one Attack at the
+                // native marker. Authored events above already win.
+                if events.is_empty()
+                    && !animation_state.looping
+                    && is_weapon_swing_action(animation_state)
+                    && animation.frames.iter().all(|frame| frame.event.is_none())
+                {
+                    let marker = synthetic_attack_marker_motion(animation_state, frame_count);
+                    if (first..=end).contains(&marker) {
+                        events.push(ActionEvent::Attack);
+                    }
+                }
+
                 cursor.last_raw_motion = Some(end);
             }
         }
@@ -882,6 +1027,136 @@ fn is_animation_complete(animation_state: &AnimationState, delay: f32, frame_cou
 }
 
 impl AnimationData {
+    /// Body layer (index 0). Empty only for invalid loads.
+    pub fn body_layer(&self) -> Option<&AnimationLayer> {
+        self.layers.first()
+    }
+
+    fn body_animation(&self, action_index: usize) -> Option<&Animation> {
+        let body = self.body_layer()?;
+        body.animations.get(action_index % body.animations.len().max(1))
+    }
+
+    /// True when this data has at least body + head (player partial-swap ready).
+    pub fn has_player_base_layers(&self) -> bool {
+        self.layers.len() >= 2 && self.entity_type == EntityType::Player
+    }
+
+    pub fn layer_path(&self, index: usize) -> Option<&str> {
+        self.layers.get(index).and_then(|layer| layer.path_key.as_deref())
+    }
+
+    /// Stamp every part's `animation_index` to its layer vector index and
+    /// clear events on non-body layers.
+    fn normalize_layer_indices(layers: &mut [AnimationLayer]) {
+        for (layer_index, layer) in layers.iter_mut().enumerate() {
+            for animation in layer.animations.iter_mut() {
+                for frame in animation.frames.iter_mut() {
+                    if layer_index != 0 {
+                        frame.event = None;
+                    }
+                    for part in frame.frame_parts.iter_mut() {
+                        part.animation_index = layer_index;
+                    }
+                }
+            }
+        }
+    }
+
+    /// Replace or append a layer at `index`, then recompute action layouts.
+    /// Does not touch body delays (body path unchanged).
+    pub fn with_layer_at(mut self, index: usize, layer: AnimationLayer) -> Self {
+        if index < self.layers.len() {
+            self.layers[index] = layer;
+        } else if index == self.layers.len() {
+            self.layers.push(layer);
+        } else {
+            // Unexpected gap — append rather than invent empty middle layers.
+            self.layers.push(layer);
+        }
+        Self::normalize_layer_indices(&mut self.layers);
+        self.action_layouts = compute_action_layouts(&self.layers);
+        self
+    }
+
+    /// Keep only the first `len` layers (e.g. drop weapon: `truncate_layers(2)`).
+    pub fn with_layers_truncated(mut self, len: usize) -> Self {
+        if len < self.layers.len() {
+            self.layers.truncate(len);
+            Self::normalize_layer_indices(&mut self.layers);
+            self.action_layouts = compute_action_layouts(&self.layers);
+        }
+        self
+    }
+
+    /// Split optional gear layers (after body/head) into weapon vs shield by path.
+    fn player_optional_gear(&self) -> (Option<AnimationLayer>, Option<AnimationLayer>) {
+        let mut weapon = None;
+        let mut shield = None;
+        for layer in self.layers.iter().skip(2) {
+            if layer.path_key.as_deref().is_some_and(is_shield_part_path) {
+                shield = Some(layer.clone());
+            } else {
+                weapon = Some(layer.clone());
+            }
+        }
+        (weapon, shield)
+    }
+
+    /// Rebuild player layers as body + head + optional weapon + optional shield.
+    fn with_player_gear(mut self, weapon: Option<AnimationLayer>, shield: Option<AnimationLayer>) -> Self {
+        if self.layers.is_empty() {
+            return self;
+        }
+        let mut layers = Vec::with_capacity(4);
+        layers.push(self.layers[0].clone());
+        if self.layers.len() > 1 {
+            layers.push(self.layers[1].clone());
+        }
+        if let Some(weapon) = weapon {
+            layers.push(weapon);
+        }
+        if let Some(shield) = shield {
+            layers.push(shield);
+        }
+        self.layers = layers;
+        Self::normalize_layer_indices(&mut self.layers);
+        self.action_layouts = compute_action_layouts(&self.layers);
+        self
+    }
+
+    /// Set or clear the weapon layer without reloading body/head/shield.
+    pub fn with_weapon_layer(self, weapon: Option<AnimationLayer>) -> Self {
+        let (_, shield) = self.player_optional_gear();
+        self.with_player_gear(weapon, shield)
+    }
+
+    /// Set or clear the shield layer without reloading body/head/weapon.
+    pub fn with_shield_layer(self, shield: Option<AnimationLayer>) -> Self {
+        let (weapon, _) = self.player_optional_gear();
+        self.with_player_gear(weapon, shield)
+    }
+
+    /// Replace the head layer (index 1). Requires body + head already present.
+    pub fn with_head_layer(self, head: AnimationLayer) -> Self {
+        self.with_layer_at(PLAYER_LAYER_HEAD, head)
+    }
+
+    pub fn shield_layer_path(&self) -> Option<&str> {
+        self.layers
+            .iter()
+            .find(|layer| layer.path_key.as_deref().is_some_and(is_shield_part_path))
+            .and_then(|layer| layer.path_key.as_deref())
+    }
+
+    /// Path of the current weapon layer, if any (never the shield path).
+    pub fn weapon_layer_path(&self) -> Option<&str> {
+        self.layers
+            .iter()
+            .find(|layer| layer.path_key.as_deref().is_some_and(is_weapon_part_path))
+            .and_then(|layer| layer.path_key.as_deref())
+    }
+
     /// Delay from source action start to Ragexe's queued target-impact event.
     /// Player weapon attacks provide the `0x00991580` marker explicitly;
     /// shared actor states use the body action's `"atk"` motion, falling back
@@ -897,10 +1172,9 @@ impl AnimationData {
             0 => 4.0,
             count => self.delays[action_index % count],
         };
-        let event_position = event_position_override.unwrap_or_else(|| match self.animations.len() {
-            0 => 0.0,
-            count => {
-                let animation = &self.animations[action_index % count];
+        let event_position = event_position_override.unwrap_or_else(|| match self.body_animation(action_index) {
+            None => 0.0,
+            Some(animation) => {
                 let attack_event_index = animation
                     .frames
                     .iter()
@@ -918,40 +1192,119 @@ impl AnimationData {
         }
 
         let animation_action_index = animation_state.current_action_base_offset() * 8;
-
-        let delay_index = animation_action_index % self.delays.len();
-        let animation_index = animation_action_index % self.animations.len();
-
-        let delay = self.delays[delay_index];
-        let animation = &self.animations[animation_index];
+        if self.delays.is_empty() {
+            return true;
+        }
+        let delay = self.delays[animation_action_index % self.delays.len()];
+        let Some(animation) = self.body_animation(animation_action_index) else {
+            return true;
+        };
 
         is_animation_complete(animation_state, delay, animation.frames.len())
     }
 
-    pub fn get_frame(&self, animation_state: &AnimationState, camera: &dyn Camera, direction: Direction) -> &AnimationFrame {
+    /// Compose the current body motion with secondary layers into one draw
+    /// frame. Body owns the clock; secondary layers use
+    /// [`native_layer_motion_index`] (CActRes::get_motion fallback to 0).
+    /// Shield draw order is per camera-relative facing (Phase C3).
+    pub fn compose_frame(&self, animation_state: &AnimationState, camera: &dyn Camera, direction: Direction) -> AnimationFrame {
         let camera_direction = camera.camera_direction();
-        let direction = (camera_direction + u16::from(direction) as usize) & 7;
-        let animation_action_index = animation_state.current_action_base_offset() * 8 + direction;
+        let view_direction = (camera_direction + u16::from(direction) as usize) & 7;
+        let animation_action_index = animation_state.current_action_base_offset() * 8 + view_direction;
+        self.compose_action_motion(animation_state, animation_action_index, view_direction)
+    }
 
-        let delay_index = animation_action_index % self.delays.len();
-        let animation_index = animation_action_index % self.animations.len();
+    /// Alias kept for call sites; returns an owned composed frame.
+    pub fn get_frame(&self, animation_state: &AnimationState, camera: &dyn Camera, direction: Direction) -> AnimationFrame {
+        self.compose_frame(animation_state, camera, direction)
+    }
 
-        let delay = self.delays[delay_index];
-        let animation = &self.animations[animation_index];
+    fn compose_action_motion(
+        &self,
+        animation_state: &AnimationState,
+        animation_action_index: usize,
+        view_direction: usize,
+    ) -> AnimationFrame {
+        let Some(body) = self.body_layer() else {
+            return empty_animation_frame();
+        };
+        if body.animations.is_empty() || self.delays.is_empty() {
+            return empty_animation_frame();
+        }
 
-        let frame_time = animation_frame_position(animation_state, delay, animation.frames.len());
+        let body_action_index = animation_action_index % body.animations.len();
+        let body_animation = &body.animations[body_action_index];
+        if body_animation.frames.is_empty() {
+            return empty_animation_frame();
+        }
 
-        let frame_index = match animation_state.looping {
-            true => frame_time % animation.frames.len(),
-            false => frame_time.min(animation.frames.len().saturating_sub(1)),
+        let delay = self.delays[body_action_index % self.delays.len()];
+        let raw_motion = animation_frame_position(animation_state, delay, body_animation.frames.len());
+
+        // Player idle: suppress Doridori by always showing motion 0.
+        let body_motion = if self.entity_type == EntityType::Player && animation_state.action_type == AnimationActionType::Idle {
+            0
+        } else if animation_state.looping {
+            raw_motion % body_animation.frames.len()
+        } else {
+            raw_motion.min(body_animation.frames.len() - 1)
         };
 
-        // Remove Doridori animation from Player
-        if self.entity_type == EntityType::Player && animation_state.action_type == AnimationActionType::Idle {
-            &animation.frames[0]
-        } else {
-            &animation.frames[frame_index]
+        let body_attach = body_animation.frames[body_motion].attach_point;
+
+        // Build each layer's motion frame, then order for draw. `animation_index`
+        // on parts still identifies the SPR layer; only the merge/paint order
+        // changes so `extra_depth_offset` puts the shield behind the body when
+        // facing away (native hardcode, roBrowser EntityRender).
+        let mut non_shield_frames = Vec::with_capacity(self.layers.len());
+        let mut shield_frames = Vec::new();
+        for (layer_index, layer) in self.layers.iter().enumerate() {
+            let Some(layer_animation) = layer.animations.get(body_action_index % layer.animations.len().max(1)) else {
+                continue;
+            };
+            let Some(layer_motion) = native_layer_motion_index(body_motion, layer_animation.frames.len()) else {
+                continue;
+            };
+            let mut frame = layer_animation.frames[layer_motion].clone();
+            // Events are body-owned (native scanner walks only the body ACT).
+            if layer_index != 0 {
+                frame.event = None;
+                // Parent secondary layers (head, …) to the body attach of the
+                // *body* motion index. When the secondary layer fell back to
+                // motion 0, its own attach still comes from that motion.
+                apply_child_attach(&mut frame, body_attach);
+            }
+            if layer.path_key.as_deref().is_some_and(is_shield_part_path) {
+                shield_frames.push(frame);
+            } else {
+                non_shield_frames.push(frame);
+            }
         }
+
+        let mut layer_frames = Vec::with_capacity(non_shield_frames.len() + shield_frames.len());
+        if shield_draws_behind_body(view_direction) {
+            // shield → body → head → weapon
+            layer_frames.append(&mut shield_frames);
+            layer_frames.append(&mut non_shield_frames);
+        } else {
+            // body → head → weapon → shield
+            layer_frames.append(&mut non_shield_frames);
+            layer_frames.append(&mut shield_frames);
+        }
+
+        let mut composed = merge_frame(&mut layer_frames);
+        let layout = self
+            .action_layouts
+            .get(body_action_index)
+            .copied()
+            .unwrap_or(ActionLayout {
+                min_top: 0,
+                max_bottom: 0,
+                min_left: 0,
+                max_right: 0,
+            });
+        finalize_frame_layout(&mut composed, layout);
+        composed
     }
 
     /// Deliver each ACT frame event crossed since the previous call, exactly
@@ -961,7 +1314,7 @@ impl AnimationData {
     /// slow application frame that jumps several motions still fires the
     /// events on the skipped frames.
     pub fn take_crossed_events(&self, animation_state: &mut AnimationState, camera: &dyn Camera, direction: Direction) -> Vec<ActionEvent> {
-        if self.delays.is_empty() || self.animations.is_empty() {
+        if self.delays.is_empty() || self.body_layer().is_none_or(|layer| layer.animations.is_empty()) {
             return Vec::new();
         }
 
@@ -970,7 +1323,9 @@ impl AnimationData {
         let animation_action_index = animation_state.current_action_base_offset() * 8 + direction;
 
         let delay = self.delays[animation_action_index % self.delays.len()];
-        let animation = &self.animations[animation_action_index % self.animations.len()];
+        let Some(animation) = self.body_animation(animation_action_index) else {
+            return Vec::new();
+        };
 
         collect_crossed_events(animation_state, animation, delay)
     }
@@ -1015,11 +1370,21 @@ impl AnimationData {
         (texture_size, texture_position)
     }
 
+    /// Number of flat body actions (used by emote debug / diagnostics).
+    pub fn body_action_count(&self) -> usize {
+        self.body_layer().map(|layer| layer.animations.len()).unwrap_or(0)
+    }
+
     /// Total play time of one action in milliseconds, ignoring animation
     /// state factors. Used for one-shot playback like emote bubbles.
     pub fn action_duration_ms(&self, action_index: usize) -> u32 {
+        if self.delays.is_empty() {
+            return 0;
+        }
         let delay = self.delays[action_index % self.delays.len()];
-        let animation = &self.animations[action_index % self.animations.len()];
+        let Some(animation) = self.body_animation(action_index) else {
+            return 0;
+        };
         (animation.frames.len() as f32 * delay * ACT_DELAY_UNIT_MS) as u32
     }
 
@@ -1036,23 +1401,49 @@ impl AnimationData {
         action_index: usize,
         time_ms: u32,
     ) -> bool {
-        if self.animations.is_empty() || self.delays.is_empty() {
+        if self.delays.is_empty() {
             return false;
         }
-
-        let delay = self.delays[action_index % self.delays.len()];
-        let animation = &self.animations[action_index % self.animations.len()];
-
+        let Some(animation) = self.body_animation(action_index) else {
+            return false;
+        };
         if animation.frames.is_empty() {
             return false;
         }
 
+        let delay = self.delays[action_index % self.delays.len()];
         let frame_time_ms = delay * ACT_DELAY_UNIT_MS;
         let frame_index = ((time_ms as f32 / frame_time_ms) as usize).min(animation.frames.len() - 1);
-        let frame = &animation.frames[frame_index];
 
-        let world_matrix = self.calculate_world_matrix(camera, frame, entity_position, 1.0);
-        self.push_frame_instructions(instructions, camera, frame, world_matrix, entity_id, false, 1.0);
+        // Emotes are single-layer; compose with a synthetic idle-like state
+        // that pins the requested motion via a one-shot non-looping clock.
+        let body_attach = animation.frames[frame_index].attach_point;
+        let mut layer_frames = Vec::with_capacity(self.layers.len());
+        for (layer_index, layer) in self.layers.iter().enumerate() {
+            let Some(layer_animation) = layer.animations.get(action_index % layer.animations.len().max(1)) else {
+                continue;
+            };
+            let Some(layer_motion) = native_layer_motion_index(frame_index, layer_animation.frames.len()) else {
+                continue;
+            };
+            let mut frame = layer_animation.frames[layer_motion].clone();
+            if layer_index != 0 {
+                frame.event = None;
+                apply_child_attach(&mut frame, body_attach);
+            }
+            layer_frames.push(frame);
+        }
+        let mut composed = merge_frame(&mut layer_frames);
+        let layout = self.action_layouts.get(action_index).copied().unwrap_or(ActionLayout {
+            min_top: 0,
+            max_bottom: 0,
+            min_left: 0,
+            max_right: 0,
+        });
+        finalize_frame_layout(&mut composed, layout);
+
+        let world_matrix = self.calculate_world_matrix(camera, &composed, entity_position, 1.0);
+        self.push_frame_instructions(instructions, camera, &composed, world_matrix, entity_id, false, 1.0);
         true
     }
 
@@ -1070,8 +1461,8 @@ impl AnimationData {
         scale: f32,
     ) {
         let frame = self.get_frame(animation_state, camera, direction);
-        let world_matrix = self.calculate_world_matrix(camera, frame, entity_position, scale);
-        self.push_frame_instructions(instructions, camera, frame, world_matrix, entity_id, add_to_picker, fade_alpha);
+        let world_matrix = self.calculate_world_matrix(camera, &frame, entity_position, scale);
+        self.push_frame_instructions(instructions, camera, &frame, world_matrix, entity_id, add_to_picker, fade_alpha);
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -1089,9 +1480,10 @@ impl AnimationData {
             let animation_index = frame_part.animation_index;
             let sprite_number = frame_part.sprite_number;
             let Some(texture) = self
-                .animation_pair
+                .layers
                 .get(animation_index)
-                .and_then(|pair| pair.sprites.textures.get(sprite_number))
+                .and_then(|layer| layer.sprites.as_ref())
+                .and_then(|sprites| sprites.textures.get(sprite_number))
             else {
                 continue;
             };
@@ -1138,7 +1530,7 @@ impl AnimationData {
         scale: f32,
     ) {
         let frame = self.get_frame(animation_state, camera, direction);
-        let world_matrix = self.calculate_world_matrix(camera, frame, entity_position, scale);
+        let world_matrix = self.calculate_world_matrix(camera, &frame, entity_position, scale);
         instructions.push(DebugRectangleInstruction {
             world: world_matrix,
             color: color_external,
@@ -1159,6 +1551,261 @@ impl AnimationData {
             });
         }
     }
+}
+
+/// Reproduce CActRes::get_motion for a valid action: return the requested
+/// motion when present, motion zero when the index is out of range, and no
+/// motion for an empty action.
+pub(crate) fn native_layer_motion_index(motion_index: usize, layer_length: usize) -> Option<usize> {
+    if layer_length == 0 {
+        return None;
+    }
+
+    Some(if motion_index < layer_length { motion_index } else { 0 })
+}
+
+fn empty_animation_frame() -> AnimationFrame {
+    AnimationFrame {
+        event: None,
+        attach_point: None,
+        size: Vector2::new(1, 1),
+        top_left: Vector2::zero(),
+        offset: Vector2::zero(),
+        frame_parts: Vec::new(),
+        #[cfg(feature = "debug")]
+        horizontal_matrix: Matrix4::identity(),
+        #[cfg(feature = "debug")]
+        vertical_matrix: Matrix4::identity(),
+    }
+}
+
+/// Align a secondary layer's geometry to the body attach point.
+/// `delta = -child_attach + body_attach` matches the classic head↔body rule.
+pub(crate) fn apply_child_attach(frame: &mut AnimationFrame, body_attach: Option<Vector2<i32>>) {
+    let Some(child_attach) = frame.attach_point else {
+        return;
+    };
+    let Some(parent_attach) = body_attach else {
+        return;
+    };
+    let delta = -child_attach + parent_attach;
+    frame.offset += delta;
+    for part in frame.frame_parts.iter_mut() {
+        part.offset += delta;
+    }
+}
+
+/// Merge layer frames into one AABB + part list. Events: first non-None wins
+/// (callers strip secondary-layer events first).
+pub(crate) fn merge_frame(frames: &mut [AnimationFrame]) -> AnimationFrame {
+    for frame in frames.iter_mut() {
+        let half_size = (frame.size - Vector2::new(1, 1)) / 2;
+        frame.top_left = frame.offset - half_size;
+    }
+
+    if frames.is_empty() {
+        return empty_animation_frame();
+    }
+
+    let top_left_x = frames.iter().min_by_key(|frame| frame.top_left.x).unwrap().top_left.x;
+    let top_left_y = frames.iter().min_by_key(|frame| frame.top_left.y).unwrap().top_left.y;
+    let frame_x = frames.iter().max_by_key(|frame| frame.top_left.x + frame.size.x).unwrap();
+    let frame_y = frames.iter().max_by_key(|frame| frame.top_left.y + frame.size.y).unwrap();
+    let new_width = (frame_x.top_left.x + frame_x.size.x) - top_left_x;
+    let new_height = (frame_y.top_left.y + frame_y.size.y) - top_left_y;
+
+    let mut new_frame_parts = Vec::with_capacity(frames.iter().map(|frame| frame.frame_parts.len()).sum());
+    for frame in frames.iter_mut() {
+        new_frame_parts.append(&mut frame.frame_parts);
+    }
+    let event = frames.iter().filter_map(|frame| frame.event).next();
+    // Composed frames no longer need a single attach; parenting was applied
+    // per layer before the merge.
+    let attach_point = None;
+
+    AnimationFrame {
+        event,
+        attach_point,
+        size: Vector2::new(new_width, new_height),
+        top_left: Vector2::zero(),
+        offset: Vector2::new(top_left_x + (new_width - 1) / 2, top_left_y + (new_height - 1) / 2),
+        frame_parts: new_frame_parts,
+        #[cfg(feature = "debug")]
+        horizontal_matrix: Matrix4::identity(),
+        #[cfg(feature = "debug")]
+        vertical_matrix: Matrix4::identity(),
+    }
+}
+
+/// Measure the union AABB of a composed frame into an accumulating layout.
+pub(crate) fn accumulate_action_layout(layout: &mut ActionLayout, frame: &AnimationFrame) {
+    let center_x = (frame.size.x - 1) / 2;
+    let center_y = (frame.size.y - 1) / 2;
+    layout.min_left = layout.min_left.min(frame.offset.x - center_x);
+    layout.max_right = layout.max_right.max(frame.offset.x + (frame.size.x - 1 - center_x));
+    layout.min_top = layout.min_top.min(frame.offset.y - center_y);
+    layout.max_bottom = layout.max_bottom.max(frame.offset.y + (frame.size.y - 1 - center_y));
+}
+
+pub(crate) fn empty_action_layout() -> ActionLayout {
+    ActionLayout {
+        min_top: i32::MAX,
+        max_bottom: 0,
+        min_left: i32::MAX,
+        max_right: 0,
+    }
+}
+
+fn vector2_i32_to_f32(vector: Vector2<i32>) -> Vector2<f32> {
+    vector.map(|value| value as f32)
+}
+
+fn calculate_new_size(min_top: i32, max_bottom: i32, min_left: i32, max_right: i32) -> Vector2<i32> {
+    let size_x = 2 * i32::abs(min_left).max(i32::abs(max_right)) + 1;
+    let mut padding = 1;
+    if (max_bottom - min_top) % 2 == 0 {
+        padding = 0;
+    }
+    let size_y = max_bottom - min_top + 1 + padding;
+    Vector2::new(size_x, size_y)
+}
+
+fn convert_coordinates(coordinates: Vector2<f32>, size: Vector2<f32>) -> Vector2<f32> {
+    assert!(size.x != 0.0 && size.y != 0.0);
+    let x = (coordinates.x / size.x - 1.0 / 2.0) * 2.0;
+    let y = 2.0 - (coordinates.y / size.y) * 2.0;
+    Vector2::<f32>::new(x, y)
+}
+
+fn calculate_recenter_rotation_matrix(texture_frame_center: Vector2<f32>, angle: f32) -> Matrix4<f32> {
+    use cgmath::Rad;
+    let translation_to_center_matrix = Matrix4::from_translation(texture_frame_center.extend(0.0));
+    let rotation_matrix = Matrix4::from_angle_z(Rad(angle));
+    let translation_to_origin_matrix = Matrix4::from_translation((-texture_frame_center).extend(0.0));
+    translation_to_center_matrix * rotation_matrix * translation_to_origin_matrix
+}
+
+fn calculate_scale_matrix(
+    texture_top_left: Vector2<f32>,
+    texture_bottom_left: Vector2<f32>,
+    texture_bottom_right: Vector2<f32>,
+) -> Matrix4<f32> {
+    Matrix4::from_nonuniform_scale(
+        (texture_bottom_right.x - texture_bottom_left.x) / 2.0,
+        (texture_top_left.y - texture_bottom_left.y) / 2.0,
+        1.0,
+    )
+}
+
+fn calculate_translation_matrix(
+    texture_top_left: Vector2<f32>,
+    texture_bottom_left: Vector2<f32>,
+    texture_bottom_right: Vector2<f32>,
+) -> Matrix4<f32> {
+    let texture_center = (texture_top_left + texture_bottom_right) / 2.0;
+    let texture_frame_new_center = Vector2::new(0.0, (texture_top_left.y - texture_bottom_left.y) / 2.0);
+    Matrix4::from_translation(texture_center.extend(1.0) - texture_frame_new_center.extend(1.0))
+}
+
+/// Apply the action-global layout and bake per-part affine matrices.
+pub(crate) fn finalize_frame_layout(frame: &mut AnimationFrame, layout: ActionLayout) {
+    let min_top = if layout.min_top == i32::MAX { 0 } else { layout.min_top };
+    let min_left = if layout.min_left == i32::MAX { 0 } else { layout.min_left };
+    let max_bottom = layout.max_bottom;
+    let max_right = layout.max_right;
+
+    frame.size = calculate_new_size(min_top, max_bottom, min_left, max_right);
+    frame.offset = Vector2::new(0, -max_bottom);
+
+    #[cfg(feature = "debug")]
+    {
+        let frame_size = vector2_i32_to_f32(frame.size);
+        let frame_top_left = Vector2::new(-frame_size.x / 2.0, -frame_size.y + 0.5);
+        let frame_origin = vector2_i32_to_f32(frame.offset);
+        let bounding_box_origin = frame_origin - frame_top_left;
+
+        let texture_top_left = convert_coordinates(Vector2::new(0.0, bounding_box_origin.y), frame_size);
+        let texture_bottom_left = convert_coordinates(Vector2::new(0.0, bounding_box_origin.y), frame_size);
+        let texture_bottom_right = convert_coordinates(Vector2::new(frame_size.x, bounding_box_origin.y), frame_size);
+        let scale_matrix = calculate_scale_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        let translation_matrix = calculate_translation_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        frame.horizontal_matrix = translation_matrix * scale_matrix;
+
+        let texture_top_left = convert_coordinates(Vector2::new(bounding_box_origin.x, 0.0), frame_size);
+        let texture_bottom_left = convert_coordinates(Vector2::new(bounding_box_origin.x, frame_size.y), frame_size);
+        let texture_bottom_right = convert_coordinates(Vector2::new(bounding_box_origin.x, frame_size.y), frame_size);
+        let scale_matrix = calculate_scale_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        let translation_matrix = calculate_translation_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        frame.vertical_matrix = translation_matrix * scale_matrix;
+    }
+
+    for frame_part in frame.frame_parts.iter_mut() {
+        let frame_size = vector2_i32_to_f32(frame.size);
+        let frame_origin = vector2_i32_to_f32(frame.offset);
+        let frame_top_left = Vector2::new(-frame_size.x / 2.0, -frame_size.y + 0.5);
+        let frame_part_top_left_shift = vector2_i32_to_f32(-((frame_part.size - Vector2::new(1, 1)) / 2));
+        let frame_part_offset = vector2_i32_to_f32(frame_part.offset);
+        let frame_part_top_left =
+            (frame_origin + frame_part_offset + frame_part_top_left_shift) - Vector2::<f32>::from_value(0.5);
+
+        let texture_frame_center = Vector2::new(0.0, 1.0);
+        let new_vector = vector2_i32_to_f32(frame_part.size);
+        let top_left = frame_part_top_left - frame_top_left;
+        let bottom_left = top_left + new_vector.y * Vector2::<f32>::unit_y();
+        let bottom_right = top_left + new_vector;
+
+        let texture_top_left = convert_coordinates(top_left, frame_size);
+        let texture_bottom_left = convert_coordinates(bottom_left, frame_size);
+        let texture_bottom_right = convert_coordinates(bottom_right, frame_size);
+
+        let rotation_matrix = calculate_recenter_rotation_matrix(texture_frame_center, -frame_part.angle);
+        let scale_matrix = calculate_scale_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        let translation_matrix = calculate_translation_matrix(texture_top_left, texture_bottom_left, texture_bottom_right);
+        frame_part.affine_matrix = translation_matrix * scale_matrix * rotation_matrix;
+    }
+}
+
+/// Build per-action layouts by composing every body motion once (load-time).
+pub(crate) fn compute_action_layouts(layers: &[AnimationLayer]) -> Vec<ActionLayout> {
+    let Some(body) = layers.first() else {
+        return Vec::new();
+    };
+
+    let mut layouts = Vec::with_capacity(body.animations.len());
+    for action_index in 0..body.animations.len() {
+        let body_frames = &body.animations[action_index].frames;
+        let mut layout = empty_action_layout();
+        for body_motion in 0..body_frames.len() {
+            let body_attach = body_frames[body_motion].attach_point;
+            let mut layer_frames = Vec::with_capacity(layers.len());
+            for (layer_index, layer) in layers.iter().enumerate() {
+                let Some(layer_animation) = layer.animations.get(action_index) else {
+                    continue;
+                };
+                let Some(layer_motion) = native_layer_motion_index(body_motion, layer_animation.frames.len()) else {
+                    continue;
+                };
+                let mut frame = layer_animation.frames[layer_motion].clone();
+                if layer_index != 0 {
+                    frame.event = None;
+                    apply_child_attach(&mut frame, body_attach);
+                }
+                layer_frames.push(frame);
+            }
+            let composed = merge_frame(&mut layer_frames);
+            accumulate_action_layout(&mut layout, &composed);
+        }
+        if layout.min_top == i32::MAX {
+            layout = ActionLayout {
+                min_top: 0,
+                max_bottom: 0,
+                min_left: 0,
+                max_right: 0,
+            };
+        }
+        layouts.push(layout);
+    }
+    layouts
 }
 
 #[cfg(test)]
@@ -1612,9 +2259,9 @@ mod weapon_action_tests {
     #[test]
     fn impact_offset_multiplies_event_position_by_act_delay_and_24ms() {
         let animation_data = AnimationData {
-            animation_pair: Vec::new(),
-            animations: Vec::new(),
+            layers: Vec::new(),
             delays: vec![4.0, 5.0],
+            action_layouts: Vec::new(),
             entity_type: EntityType::Player,
         };
         let state = AnimationState::new(EntityType::Player, ClientTick(0));
@@ -1683,6 +2330,7 @@ mod golden_timeline_tests {
     fn frame(event: Option<ActionEvent>) -> AnimationFrame {
         AnimationFrame {
             event,
+            attach_point: None,
             offset: Vector2::new(0, 0),
             top_left: Vector2::new(0, 0),
             size: Vector2::new(0, 0),
@@ -1697,13 +2345,25 @@ mod golden_timeline_tests {
     /// One synthetic action reused for every action index (modulo indexing),
     /// mirroring one direction of a body ACT with `frame_count` motions.
     fn animation_data(entity_type: EntityType, delay: f32, frame_count: usize, attack_event_index: Option<usize>) -> AnimationData {
+        use super::{ActionLayout, AnimationLayer};
+
         let frames = (0..frame_count)
             .map(|index| frame((attack_event_index == Some(index)).then_some(ActionEvent::Attack)))
             .collect();
         AnimationData {
-            animation_pair: Vec::new(),
-            animations: vec![Animation { frames }],
+            layers: vec![AnimationLayer {
+                path_key: None,
+                sprites: None,
+                actions: None,
+                animations: vec![Animation { frames }],
+            }],
             delays: vec![delay],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 0,
+                min_left: 0,
+                max_right: 0,
+            }],
             entity_type,
         }
     }
@@ -1807,5 +2467,636 @@ mod golden_timeline_tests {
         assert!(animated);
         assert_eq!(state.action_type, AnimationActionType::Attack1);
         assert!(state.motion_program.is_none(), "state 12 installs no higher motion program");
+    }
+}
+
+/// Phase C1: runtime layer composition — body clock + secondary motion-0 fallback.
+#[cfg(test)]
+mod runtime_compose_tests {
+    use cgmath::{Vector2, Zero};
+    #[cfg(feature = "debug")]
+    use cgmath::Matrix4;
+    use ragnarok_packets::ClientTick;
+
+    use super::{
+        ActionLayout, Animation, AnimationData, AnimationFrame, AnimationFramePart, AnimationLayer, AnimationState,
+        is_weapon_part_path, native_layer_motion_index, shield_draws_behind_body, shield_path_from_entity_parts,
+        weapon_path_from_entity_parts,
+    };
+    use crate::EntityType;
+    use crate::graphics::Color;
+
+    fn part(layer: usize) -> AnimationFramePart {
+        AnimationFramePart {
+            animation_index: layer,
+            sprite_number: 0,
+            offset: Vector2::new(0, 0),
+            size: Vector2::new(2, 2),
+            mirror: false,
+            angle: 0.0,
+            color: Color {
+                red: 1.0,
+                green: 1.0,
+                blue: 1.0,
+                alpha: 1.0,
+            },
+            affine_matrix: cgmath::Matrix4::from_scale(1.0),
+        }
+    }
+
+    fn layer_frame(layer: usize) -> AnimationFrame {
+        AnimationFrame {
+            event: None,
+            attach_point: None,
+            offset: Vector2::new(0, 0),
+            top_left: Vector2::zero(),
+            size: Vector2::new(2, 2),
+            frame_parts: vec![part(layer)],
+            #[cfg(feature = "debug")]
+            horizontal_matrix: Matrix4::from_scale(1.0),
+            #[cfg(feature = "debug")]
+            vertical_matrix: Matrix4::from_scale(1.0),
+        }
+    }
+
+    fn make_layer(layer_index: usize, motion_count: usize) -> AnimationLayer {
+        let frames: Vec<_> = (0..motion_count).map(|_| layer_frame(layer_index)).collect();
+        AnimationLayer {
+            path_key: Some(format!("layer-{layer_index}")),
+            sprites: None,
+            actions: None,
+            animations: vec![Animation { frames }],
+        }
+    }
+
+    #[test]
+    fn compose_uses_body_motion_count_and_motion_zero_fallback() {
+        // Body 4 motions, head only 2 — body motion 3 must sample head motion 0.
+        assert_eq!(native_layer_motion_index(3, 2), Some(0));
+        assert_eq!(native_layer_motion_index(1, 2), Some(1));
+
+        let data = AnimationData {
+            layers: vec![make_layer(0, 4), make_layer(1, 2)],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        state.attack(EntityType::Player, false, ClientTick(0));
+        // Advance to body motion 3 (4.0 delay × 24 ms = 96 ms per motion).
+        state.time = 3 * 96;
+
+        // Attack1 base offset is 5; only one synthetic action exists so % 1 → 0.
+        let frame = data.compose_action_motion(&state, 5 * 8, 0);
+        assert_eq!(frame.frame_parts.len(), 2, "body + head parts");
+        assert_eq!(frame.frame_parts[0].animation_index, 0);
+        assert_eq!(frame.frame_parts[1].animation_index, 1);
+    }
+
+    #[test]
+    fn child_attach_aligns_to_body_attach_point() {
+        use super::apply_child_attach;
+
+        // Body attach at (10, 20); head attach at (3, 4) → delta = (7, 16).
+        let mut head = layer_frame(1);
+        head.attach_point = Some(Vector2::new(3, 4));
+        head.offset = Vector2::new(1, 2);
+        head.frame_parts[0].offset = Vector2::new(1, 2);
+
+        apply_child_attach(&mut head, Some(Vector2::new(10, 20)));
+        assert_eq!(head.offset, Vector2::new(8, 18));
+        assert_eq!(head.frame_parts[0].offset, Vector2::new(8, 18));
+    }
+
+    #[test]
+    fn attach_uses_body_motion_when_secondary_falls_back_to_motion_zero() {
+        // Body 3 motions with moving attach; head only 1 motion (always motion 0).
+        let mut body_frames = Vec::new();
+        for i in 0..3 {
+            let mut f = layer_frame(0);
+            f.attach_point = Some(Vector2::new(0, i as i32 * 10));
+            body_frames.push(f);
+        }
+        let mut head = layer_frame(1);
+        head.attach_point = Some(Vector2::new(0, 0));
+        head.offset = Vector2::new(0, 0);
+        head.frame_parts[0].offset = Vector2::new(0, 0);
+
+        let data = AnimationData {
+            layers: vec![
+                AnimationLayer {
+                    path_key: Some("body".into()),
+                    sprites: None,
+                    actions: None,
+                    animations: vec![Animation { frames: body_frames }],
+                },
+                AnimationLayer {
+                    path_key: Some("head".into()),
+                    sprites: None,
+                    actions: None,
+                    animations: vec![Animation {
+                        frames: vec![head],
+                    }],
+                },
+            ],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 2,
+                min_left: 0,
+                max_right: 2,
+            }],
+            entity_type: EntityType::Player,
+        };
+
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        state.attack(EntityType::Player, false, ClientTick(0));
+        state.time = 2 * 96; // body motion 2
+
+        let frame = data.compose_action_motion(&state, 5 * 8, 0);
+        // Head should be shifted by body attach (0, 20) − head attach (0, 0).
+        let head_part = frame.frame_parts.iter().find(|p| p.animation_index == 1).unwrap();
+        assert_eq!(head_part.offset.y, 20, "head follows body attach of motion 2");
+    }
+
+    #[test]
+    fn weapon_layer_swap_preserves_body_and_head_paths() {
+        let body = make_layer(0, 2);
+        let head = make_layer(1, 2);
+        let sword = {
+            let mut layer = make_layer(2, 2);
+            layer.path_key = Some("sword".into());
+            layer
+        };
+        let spear = {
+            let mut layer = make_layer(2, 2);
+            layer.path_key = Some("spear".into());
+            layer
+        };
+
+        let base = AnimationData {
+            layers: vec![body, head, sword],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+        assert!(base.has_player_base_layers());
+        assert_eq!(base.layer_path(0), Some("layer-0"));
+        assert_eq!(base.layer_path(2), Some("sword"));
+
+        let swapped = base.clone().with_weapon_layer(Some(spear));
+        assert_eq!(swapped.layers.len(), 3);
+        assert_eq!(swapped.layer_path(0), Some("layer-0"));
+        assert_eq!(swapped.layer_path(1), Some("layer-1"));
+        assert_eq!(swapped.layer_path(2), Some("spear"));
+        // Parts reindexed to weapon slot.
+        assert!(
+            swapped.layers[2]
+                .animations
+                .iter()
+                .flat_map(|a| a.frames.iter())
+                .flat_map(|f| f.frame_parts.iter())
+                .all(|p| p.animation_index == 2)
+        );
+
+        let unequipped = swapped.with_weapon_layer(None);
+        assert_eq!(unequipped.layers.len(), 2);
+        assert_eq!(unequipped.layer_path(2), None);
+    }
+
+    #[test]
+    fn shield_layer_swap_preserves_weapon() {
+        let body = make_layer(0, 2);
+        let head = make_layer(1, 2);
+        let mut sword = make_layer(2, 2);
+        sword.path_key = Some("인간족\\기사\\기사_남_검".into());
+        let mut guard = make_layer(3, 2);
+        guard.path_key = Some("방패\\기사\\기사_남_가드".into());
+
+        let base = AnimationData {
+            layers: vec![body, head, sword],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+
+        let with_shield = base.clone().with_shield_layer(Some(guard));
+        assert_eq!(with_shield.layers.len(), 4);
+        assert_eq!(with_shield.layer_path(2), Some("인간족\\기사\\기사_남_검"));
+        assert_eq!(with_shield.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
+        assert_eq!(with_shield.weapon_layer_path(), Some("인간족\\기사\\기사_남_검"));
+
+        // Unequip weapon — shield remains.
+        let no_weapon = with_shield.with_weapon_layer(None);
+        assert_eq!(no_weapon.layers.len(), 3);
+        assert_eq!(no_weapon.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
+        assert_eq!(no_weapon.weapon_layer_path(), None);
+        assert!(!no_weapon.layers[2].path_key.as_deref().unwrap().contains("인간족"));
+
+        let no_shield = no_weapon.with_shield_layer(None);
+        assert_eq!(no_shield.layers.len(), 2);
+        assert_eq!(no_shield.shield_layer_path(), None);
+    }
+
+    #[test]
+    fn shield_draw_order_follows_view_direction() {
+        // body(0), head(1), weapon(2), shield(3) — paint order is what merge
+        // emits; later parts get higher extra_depth_offset (in front).
+        let mut body = make_layer(0, 2);
+        body.path_key = Some("인간족\\몸통\\남\\기사_남".into());
+        let mut head = make_layer(1, 2);
+        head.path_key = Some("인간족\\머리통\\남\\1_남".into());
+        let mut sword = make_layer(2, 2);
+        sword.path_key = Some("인간족\\기사\\기사_남_검".into());
+        let mut guard = make_layer(3, 2);
+        guard.path_key = Some("방패\\기사\\기사_남_가드".into());
+
+        let data = AnimationData {
+            layers: vec![body, head, sword, guard],
+            delays: vec![4.0; 8],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }; 8],
+            entity_type: EntityType::Player,
+        };
+
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        // Front-ish facings (0,1,6,7): shield last.
+        for dir in [0usize, 1, 6, 7] {
+            assert!(!shield_draws_behind_body(dir), "dir {dir} is front");
+            let frame = data.compose_action_motion(&state, dir, dir);
+            let order: Vec<_> = frame.frame_parts.iter().map(|p| p.animation_index).collect();
+            assert_eq!(order, vec![0, 1, 2, 3], "front dir {dir}: body,head,weapon,shield");
+        }
+        // Back half (2..=5): shield first so body covers it.
+        for dir in [2usize, 3, 4, 5] {
+            assert!(shield_draws_behind_body(dir), "dir {dir} is behind");
+            let frame = data.compose_action_motion(&state, dir, dir);
+            let order: Vec<_> = frame.frame_parts.iter().map(|p| p.animation_index).collect();
+            assert_eq!(order, vec![3, 0, 1, 2], "back dir {dir}: shield,body,head,weapon");
+        }
+        // silence unused mut warning if any
+        let _ = &mut state;
+    }
+
+    #[test]
+    fn weapon_path_from_parts_skips_shield_at_index_two() {
+        // body, head, shield only — index 2 is the Guard, not a weapon.
+        let shield_only = vec![
+            "인간족\\몸통\\남\\기사_남".into(),
+            "인간족\\머리통\\남\\1_남".into(),
+            "방패\\기사\\기사_남_가드".into(),
+        ];
+        assert_eq!(weapon_path_from_entity_parts(&shield_only), None);
+        assert_eq!(
+            shield_path_from_entity_parts(&shield_only),
+            Some("방패\\기사\\기사_남_가드")
+        );
+
+        // body, head, sword, shield — weapon is not "whatever is at [2]" alone;
+        // both paths must resolve independently.
+        let both = vec![
+            "인간족\\몸통\\남\\기사_남".into(),
+            "인간족\\머리통\\남\\1_남".into(),
+            "인간족\\기사\\기사_남_검".into(),
+            "방패\\기사\\기사_남_가드".into(),
+        ];
+        assert_eq!(
+            weapon_path_from_entity_parts(&both),
+            Some("인간족\\기사\\기사_남_검")
+        );
+        assert_eq!(
+            shield_path_from_entity_parts(&both),
+            Some("방패\\기사\\기사_남_가드")
+        );
+
+        assert!(is_weapon_part_path("인간족\\기사\\기사_남_검"));
+        assert!(!is_weapon_part_path("방패\\기사\\기사_남_가드"));
+        assert!(!is_weapon_part_path("인간족\\몸통\\남\\기사_남"));
+        assert!(!is_weapon_part_path("인간족\\머리통\\남\\1_남"));
+    }
+
+    #[test]
+    fn weapon_swap_with_shield_path_arg_does_not_clobber_sword() {
+        // Simulates the old bug: refresh_entity_weapon_layer(parts.get(2)) when
+        // parts = [body, head, shield] would pass the guard path as "weapon".
+        let body = make_layer(0, 2);
+        let head = make_layer(1, 2);
+        let mut sword = make_layer(2, 2);
+        sword.path_key = Some("인간족\\기사\\기사_남_검".into());
+        let mut guard = make_layer(3, 2);
+        guard.path_key = Some("방패\\기사\\기사_남_가드".into());
+
+        let equipped = AnimationData {
+            layers: vec![body, head, sword, guard.clone()],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+
+        // with_weapon_layer(None) is what apply_weapon_layer_swap does after
+        // filtering a shield path out of the weapon_path argument.
+        let after_bad_refresh = equipped.with_weapon_layer(None).with_shield_layer(Some(guard));
+        // Caller must re-apply the real sword; the shield alone must not replace it.
+        assert_eq!(after_bad_refresh.weapon_layer_path(), None);
+        assert_eq!(
+            after_bad_refresh.shield_layer_path(),
+            Some("방패\\기사\\기사_남_가드")
+        );
+
+        let mut sword_again = make_layer(2, 2);
+        sword_again.path_key = Some("인간족\\기사\\기사_남_검".into());
+        let restored = after_bad_refresh.with_weapon_layer(Some(sword_again));
+        assert_eq!(restored.weapon_layer_path(), Some("인간족\\기사\\기사_남_검"));
+        assert_eq!(restored.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
+        assert_eq!(restored.layers.len(), 4);
+    }
+}
+
+/// Phase B: crossed-motion event cursor (`0x008AC860`). Events fire once per
+/// body motion crossed since the prior actor update — not once per displayed
+/// frame sample — so multi-motion jumps, loop wraps, held finals, and motion-
+/// program `step_serial` occurrences are all pinned here.
+#[cfg(test)]
+mod frame_event_cursor_tests {
+    use cgmath::Vector2;
+    #[cfg(feature = "debug")]
+    use cgmath::{Matrix4, Zero};
+    use ragnarok_packets::{ClientTick, JobId, Sex};
+
+    use super::native_motion::shared_state_program;
+    use super::{Animation, AnimationActionType, AnimationFrame, AnimationState, collect_crossed_events};
+    use crate::EntityType;
+    use crate::world::ActionEvent;
+
+    /// Delay units → ms: `delay * 24`. With delay 4.0 each motion is 96 ms.
+    const DELAY: f32 = 4.0;
+    const MOTION_MS: u32 = 96;
+
+    fn frame(event: Option<ActionEvent>) -> AnimationFrame {
+        AnimationFrame {
+            event,
+            attach_point: None,
+            offset: Vector2::new(0, 0),
+            top_left: Vector2::new(0, 0),
+            size: Vector2::new(0, 0),
+            frame_parts: Vec::new(),
+            #[cfg(feature = "debug")]
+            horizontal_matrix: Matrix4::zero(),
+            #[cfg(feature = "debug")]
+            vertical_matrix: Matrix4::zero(),
+        }
+    }
+
+    /// `event_at[i]` is true when motion `i` authors an `Attack` event.
+    fn animation(event_at: &[bool]) -> Animation {
+        Animation {
+            frames: event_at
+                .iter()
+                .map(|&has| frame(has.then_some(ActionEvent::Attack)))
+                .collect(),
+        }
+    }
+
+    fn one_shot_state(start: ClientTick) -> AnimationState {
+        let mut state = AnimationState::new(EntityType::Player, start);
+        state.attack(EntityType::Player, false, start);
+        state
+    }
+
+    fn looping_state(start: ClientTick) -> AnimationState {
+        AnimationState::new(EntityType::Player, start)
+    }
+
+    fn event_count(events: &[ActionEvent]) -> usize {
+        events.iter().filter(|event| matches!(event, ActionEvent::Attack)).count()
+    }
+
+    /// A slow application frame that jumps several motions must deliver every
+    /// authored event on the crossed frames, not only the displayed end motion.
+    #[test]
+    fn multi_motion_jump_fires_every_crossed_event() {
+        // Motions 0..=4; authored events on 1, 2, and 3.
+        let anim = animation(&[false, true, true, true, false]);
+        let mut state = one_shot_state(ClientTick(0));
+
+        // First poll lands on motion 0 — no event.
+        state.time = 0;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 0);
+
+        // Jump to motion 3 (288 ms): must fire events on 1, 2, and 3.
+        state.time = 3 * MOTION_MS;
+        let events = collect_crossed_events(&mut state, &anim, DELAY);
+        assert_eq!(event_count(&events), 3, "jump 0→3 must cross events on 1, 2, 3");
+    }
+
+    /// Looping actions continue the raw motion index past one cycle so the
+    /// wrap re-fires frame-0 events on the next pass.
+    #[test]
+    fn loop_wrap_fires_events_on_the_next_cycle() {
+        // Events on motions 0 and 2 of a 4-frame loop.
+        let anim = animation(&[true, false, true, false]);
+        let mut state = looping_state(ClientTick(0));
+
+        state.time = 0;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+
+        // Through motion 3: crosses 1, 2, 3 → one event (motion 2).
+        state.time = 3 * MOTION_MS;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+
+        // Motion 4 is the wrap onto cycle frame 0 — must re-fire its event.
+        state.time = 4 * MOTION_MS;
+        assert_eq!(
+            event_count(&collect_crossed_events(&mut state, &anim, DELAY)),
+            1,
+            "loop wrap must fire the event on motion 0 of the next cycle"
+        );
+
+        // Motion 6 lands on cycle frame 2 again.
+        state.time = 6 * MOTION_MS;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+    }
+
+    /// One-shot actions clamp at the final motion; holding it produces no
+    /// further crossings (image stays, sound does not re-fire).
+    #[test]
+    fn held_final_frame_produces_no_new_crossings() {
+        let anim = animation(&[false, false, true, false]);
+        let mut state = one_shot_state(ClientTick(0));
+
+        // Reach and deliver through the last motion (index 3).
+        state.time = 3 * MOTION_MS;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+
+        // Still on the held final frame — raw motion keeps growing but the
+        // one-shot end clamp keeps `end` at frame_count-1, so start > end.
+        state.time = 10 * MOTION_MS;
+        assert!(
+            collect_crossed_events(&mut state, &anim, DELAY).is_empty(),
+            "held final frame must not re-fire events"
+        );
+        state.time = 20 * MOTION_MS;
+        assert!(collect_crossed_events(&mut state, &anim, DELAY).is_empty());
+    }
+
+    /// Extreme hitches only recover the final full cycle of motions so a stall
+    /// cannot flood the audio mixer with dozens of backlog events.
+    #[test]
+    fn stall_recovery_is_bounded_to_one_cycle() {
+        // Every motion authors an event; 4-frame loop.
+        let anim = animation(&[true, true, true, true]);
+        let mut state = looping_state(ClientTick(0));
+
+        state.time = 0;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+
+        // Jump from motion 0 to motion 20: unbound would emit 20 events; the
+        // cursor keeps only the last full cycle (motions 17..=20 → 4 events).
+        state.time = 20 * MOTION_MS;
+        assert_eq!(
+            event_count(&collect_crossed_events(&mut state, &anim, DELAY)),
+            4,
+            "stall recovery must bound delivery to one full cycle"
+        );
+    }
+
+    /// Motion programs advance at most one step per actor update; each
+    /// `step_serial` change is one event occurrence — a duplicate authored
+    /// motion fires again, a terminal held motion does not.
+    #[test]
+    fn motion_program_fires_once_per_step_serial_occurrence() {
+        // State 19: sequence [0, 0, 0, 1, 1], cadence 10 actor updates.
+        let anim = animation(&[true, true, false, false, false]);
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        state.action_base_offset = 12;
+        state.native_actor_state = 19;
+        state.looping = false;
+        state.motion_program = shared_state_program(19, 12, JobId(7), false);
+
+        // Serial 0 / motion 0.
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+        // Same serial again — no re-fire.
+        assert!(collect_crossed_events(&mut state, &anim, DELAY).is_empty());
+
+        // Advance to the next duplicate motion-0 step (serial 1).
+        for elapsed in 1..=10 {
+            state.motion_program.as_mut().unwrap().update(elapsed);
+        }
+        assert_eq!(state.motion_program.as_ref().unwrap().step_serial(), 1);
+        assert_eq!(
+            event_count(&collect_crossed_events(&mut state, &anim, DELAY)),
+            1,
+            "duplicate authored motion must fire again on a new step_serial"
+        );
+
+        // Advance through serials 2, 3, 4 to the terminal held motion 1.
+        for elapsed in 11..=50 {
+            state.motion_program.as_mut().unwrap().update(elapsed);
+        }
+        assert_eq!(state.motion_program.as_ref().unwrap().step_serial(), 4);
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 1);
+
+        // Terminal hold: more updates leave the serial unchanged.
+        for elapsed in 51..=100 {
+            state.motion_program.as_mut().unwrap().update(elapsed);
+        }
+        assert_eq!(state.motion_program.as_ref().unwrap().step_serial(), 4);
+        assert!(
+            collect_crossed_events(&mut state, &anim, DELAY).is_empty(),
+            "terminal held motion must not create new event occurrences"
+        );
+    }
+
+    /// A new playback identity (new start tick / action) resets the cursor so
+    /// the first motion of the new action is delivered fresh.
+    #[test]
+    fn new_playback_identity_resets_the_cursor() {
+        let anim = animation(&[true, false, true, false]);
+        let mut state = one_shot_state(ClientTick(100));
+        state.time = 2 * MOTION_MS;
+        assert_eq!(event_count(&collect_crossed_events(&mut state, &anim, DELAY)), 2);
+
+        // New attack starts a new cursor; motion 0 of the fresh playback fires.
+        state.attack(EntityType::Player, false, ClientTick(500));
+        state.time = 0;
+        assert_eq!(
+            event_count(&collect_crossed_events(&mut state, &anim, DELAY)),
+            1,
+            "new start_time must reset the frame-event cursor"
+        );
+    }
+
+    /// Assassin Cross body ACTs ship with an empty event table. The native
+    /// attack-event marker (katar → 3.0) still owns the swing sound via a
+    /// synthetic `ActionEvent::Attack` that `weapon_sound` resolves.
+    #[test]
+    fn empty_body_act_synthesizes_attack_at_native_marker() {
+        // 8-frame Attack3 with no authored events — male Assassin Cross shape.
+        let anim = animation(&[false; 8]);
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        // Job 4013 Assassin Cross, katar view 16 → Attack3, marker 3.0.
+        state.weapon_attack(EntityType::Player, JobId(4013), Sex::Male, 16, ClientTick(0));
+        assert_eq!(state.action_type, AnimationActionType::Attack3);
+        assert_eq!(state.impact_event_position_override(), Some(3.0));
+
+        // Before the marker: silence.
+        state.time = 2 * MOTION_MS;
+        assert!(
+            collect_crossed_events(&mut state, &anim, DELAY).is_empty(),
+            "synthetic Attack must wait for the native marker motion"
+        );
+
+        // Crossing motion 3: exactly one Attack.
+        state.time = 3 * MOTION_MS;
+        let events = collect_crossed_events(&mut state, &anim, DELAY);
+        assert_eq!(events, vec![ActionEvent::Attack]);
+
+        // Held / further motions: no re-fire.
+        state.time = 7 * MOTION_MS;
+        assert!(collect_crossed_events(&mut state, &anim, DELAY).is_empty());
+    }
+
+    /// Authored body events always win; never stack a synthetic Attack on top
+    /// of an already-populated event table (Knight spear shape: event at 5,
+    /// marker at 6 — only one delivery).
+    #[test]
+    fn authored_events_suppress_synthetic_attack_fallback() {
+        let anim = animation(&[false, false, false, false, false, true, false, false]);
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        state.weapon_attack(EntityType::Player, JobId(7), Sex::Male, 4, ClientTick(0));
+        assert_eq!(state.impact_event_position_override(), Some(6.0));
+
+        state.time = 7 * MOTION_MS;
+        let events = collect_crossed_events(&mut state, &anim, DELAY);
+        assert_eq!(
+            event_count(&events),
+            1,
+            "authored event must suppress the empty-table synthetic Attack"
+        );
     }
 }

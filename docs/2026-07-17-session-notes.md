@@ -598,3 +598,159 @@ Final validation for the complete worktree:
 - `git diff --check`: clean.
 
 Only the pre-existing unused-method warnings remain.
+
+## Phase B closed: cursor unit tests + docs
+
+Phase B exit criteria met (code was already landed; this pass closes the
+remaining verification debt):
+
+1. **`frame_event_cursor_tests`** (6 cases) pin multi-motion jump, loop wrap,
+   held final frame, one-cycle stall bound, motion-program `step_serial`
+   (duplicate fire + terminal hold), and playback-identity reset.
+2. **ANIMATION_SYSTEM.md §5** now documents `FrameEventCursor` semantics; the
+   old `SoundToken` caveat is gone. The §7 "Crossed frame events" gap row is
+   removed. `plans/animation-fidelity.md` phase B is marked closed.
+3. **Live listen** (no binary change this pass — cursor already in the running
+   release): on `prt_fild07` with the effect roster, confirm basic-attack and
+   skill ACT sounds fire once per swing (EffectKnight spear / EffectSinX
+   katar), with no drop under sustained multi-mob combat.
+
+Validation: `cargo test -p korangar --lib` → **157 passed**, 10 ignored.
+
+## Live Phase B listen → SinX silent attacks
+
+Live feedback: EffectKnight spear swing plays one sound; EffectSinX attacks
+are silent even with a Jur in both hands (katar layer correct).
+
+Root cause (GRF dump): `어쌔신크로스_{sex}` and male `어세신_{sex}` body ACTs
+ship an **empty event table**. Knight body authors `attack_spear.wav` on
+Attack3 motion 5, so the cursor has something to fire. Weapon layers also
+carry no events. `attack_katar.wav` exists in the GRFs; the client simply
+never reached `weapon_sound` because no body frame event was authored.
+
+Fix: when a one-shot weapon-swing action (Attack1/2/3) has an empty body
+event table, `collect_crossed_events` emits a single synthetic
+`ActionEvent::Attack` at the native attack-event marker
+(`impact_event_position_override`, Assassin Cross katar → 3.0; else
+`motion_count - 2`). Entity update already maps `Attack` →
+`weapon_sound(self.weapon)` → `attack_katar.wav`. Authored events still
+suppress the fallback. Unit-tested; release rebuilt.
+
+**Live-verified 2026-07-17:** EffectSinX + Jur basic attack plays one katar
+swing sound; EffectKnight already green earlier. Phase B fully closed.
+
+## Phase C1: runtime layer composition
+
+Started the engine track of [plans/animation-fidelity.md](plans/animation-fidelity.md)
+Phase C.
+
+- `AnimationData` now stores `layers: Vec<AnimationLayer>` (body first) plus
+  body `delays` and per-action `action_layouts` (shared AABB).
+- `AnimationLoader` decodes each SPR/ACT pair independently; **no** load-time
+  cross-layer merge. Head attach still baked at load (C2).
+- `compose_frame` / `compose_action_motion` merge layers at draw time with
+  `native_layer_motion_index` (body clock, secondary motion-0 fallback) and
+  apply the load-time action layout + affine bake.
+- Events / Phase B cursor / impact delay still body-only.
+- Unit test: `runtime_compose_tests::compose_uses_body_motion_count_and_motion_zero_fallback`.
+- Lib suite green (160+). Release rebuilt.
+
+**Live-verified 2026-07-17 (C1):**
+- EffectSinX: Jur in each hand, head alignment OK idle/walk (no jitter), basic
+  attack looks good with one sound, Sonic Blow glyph still present.
+- EffectKnight: spear attack holds spear through swing (no mid-attack vanish),
+  one spear sound; sword attack one sound; Magnum shows sword.
+
+## Phase C2: runtime attach points
+
+Head↔body attach no longer bakes at load.
+
+- Each motion stores `AnimationFrame.attach_point` from the ACT when
+  `attach_point_count == 1`.
+- `apply_child_attach` at compose (and layout measurement) shifts every
+  non-body layer that has an attach: `delta = -child + body`.
+- Body attach is always taken from the **body** motion index; secondary
+  layers that fall back to motion 0 still use that motion's own attach
+  against the current body attach (native short-layer rule).
+- No hard-coded "layer 1 = head" — any secondary layer with attach parents
+  to body.
+
+Tests: `child_attach_aligns_to_body_attach_point`,
+`attach_uses_body_motion_when_secondary_falls_back_to_motion_zero`.
+
+**Live-verified 2026-07-17 (C2):** idle and walk head stays on neck; after
+attack head still correctly on body.
+
+## Phase C4: dynamic weapon/head layer swaps
+
+Weapon and hair changes no longer rebuild body SPR/ACT when a full player
+animation is already loaded.
+
+- `AnimationLayer.path_key` identifies the part path for no-op detection.
+- `AnimationLoader::load_layer` decodes one path (sprite/action caches).
+- `with_weapon_layer` / `with_head_layer` replace slot 2 / 1 and recompute
+  `action_layouts` only.
+- Wired: inventory equip, `ChangeWeapon`, `ChangeHair`. Job change still
+  full-reloads (body path changes).
+- Fallback: if body+head are missing, request full `AnimationData` load.
+
+**Live-verified 2026-07-17 (C4):** equip spear ↔ sword — head stays put;
+attack animation changes with weapon type. Class weapon sprites (not per-item
+models) are the classic presentation; per-item is Phase D.
+
+## Phase C5: shield layer
+
+Shield presentation on the actor stack:
+
+- GRF layout in this pack: `data\sprite\방패\{job}\{job}_{sex}_{suffix}.spr`
+  (not under `인간족`). Class suffixes: view 1=`가드`, 2=`버클러`, 3=`쉴드`/
+  `실드`; higher ids try `{id}_방패`.
+- `push_shield_part_file` after weapon; only if SPR exists (never placeholder).
+- `AnimationData::with_shield_layer` keeps weapon when equipping/unequipping
+  shield; weapon unequip keeps shield.
+- `ChangeShield` (entities + local player) partial-swaps via
+  `apply_shield_layer_swap`.
+
+**Original client reverse-engineering** (`2019-06-05fRagexe_patched.exe`,
+SHA-256 `61663a6f…`, same digest as ANIMATION_SYSTEM):
+
+- Path builder **`0x7C46C0`** (callers `0x9924CE` act / `0x99253E` spr).
+- Format strings (CP949) at `0xB1C748` / `0xB1C760`:
+  - `방패\%s_%s_%d_방패.%s` — item/high-view form
+  - `방패\%s_%s%s.%s` — class form (third arg includes leading `_`)
+- Job name table entries are compound: `기사\\기사`, `검사\\검사`, …
+  so the sprintf result is nested: `방패\기사\기사_남_가드.spr`.
+- Class name table (leading `_`) at `0x72796C`: `_가드`, `_쉴드`,
+  `_미러쉴드`, `_버클러` (storage order ≠ ViewSprite order).
+- ViewSprite mapping we use: 1=가드, 2=버클러, 3=쉴드, 4=미러쉴드.
+- When view ≥ 5, native may take the item form after `0x9A2430(view, job)`.
+- Job id `> 0xF6E` (3950) remapped `job - 3950` for the name-table index.
+- Flat path `방패\기사_남_가드` does **not** exist; nested does (`file_exists`).
+- `get_files_with_extension` under-lists classic class shields; probe by
+  `file_exists`.
+
+Live: equip Guard (view 1) on EffectKnight → `방패\기사\기사_남_가드`.
+
+## Phase C3: per-direction shield draw order
+
+**Done + live-verified 2026-07-18.** Camera-relative dirs `2..=5` draw shield
+before body (torso covers Guard from behind); dirs `0,1,6,7` draw shield after
+weapon. Matches roBrowser `EntityRender` hardcode.
+
+## Phase C closed 2026-07-18
+
+All of C1–C5 live-verified on EffectKnight / EffectSinX:
+
+| Step | Live check |
+|------|------------|
+| C1 compose | dual-wield SinX, Knight spear/sword attack hold |
+| C2 attach | head on neck idle/walk/after attack |
+| C3 draw order | Guard under body when facing away |
+| C4 swaps | spear↔sword head stable; attack anim follows weapon |
+| C5 shield | Guard + sword idle/attack; path not clobbered by `parts[2]` |
+
+Closeout code (same day): inventory classic shield views 2101–2104; equip
+refreshes weapon+shield together; weapon path helpers reject `방패\…`.
+
+**Out of C:** hat/accessory stack, per-item weapons, `_검광`, Assassin L/R
+(Phase D); skills/status (Phase E).

@@ -1,5 +1,5 @@
 mod action;
-mod animation;
+pub(crate) mod animation;
 mod cameras;
 mod effect;
 mod emote;

@@ -131,6 +131,29 @@ impl Inventory {
             })
             .unwrap_or(0)
     }
+
+    /// Shield view for the equipped left-hand item, when inventory can map it.
+    ///
+    /// - `Some(0)` — no left-hand equippable (clear the shield layer).
+    /// - `Some(view)` — classic shield item ID → ViewSprite 1..=4.
+    /// - `None` — left hand holds something that is not a known shield (e.g.
+    ///   Assassin off-hand dagger); leave `common.shield` alone so
+    ///   `ChangeShield` / dual-wield packets stay authoritative.
+    pub fn equipped_shield_view(&self) -> Option<u32> {
+        let left_hand_id = self.items.iter().find_map(|item| {
+            let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
+                return None;
+            };
+            equipped_position
+                .contains(EquipPosition::LEFT_HAND)
+                .then_some(item.item_id.0)
+        });
+
+        match left_hand_id {
+            None => Some(0),
+            Some(item_id) => shield_view_from_item_id(item_id),
+        }
+    }
 }
 
 fn weapon_type_from_item_id(item_id: u32) -> u32 {
@@ -155,5 +178,34 @@ fn weapon_type_from_item_id(item_id: u32) -> u32 {
         13150..=13199 => 18,
         13300..=13399 => 22,
         _ => 0,
+    }
+}
+
+/// Classic shield item IDs → ViewSprite (Guard/Buckler/Shield/Mirror).
+/// Unknown IDs return `None` so inventory never invents a shield view;
+/// `ChangeShield` remains authoritative for custom / high-view shields.
+fn shield_view_from_item_id(item_id: u32) -> Option<u32> {
+    match item_id {
+        2101 => Some(1), // Guard
+        2102 => Some(2), // Buckler
+        2103 => Some(3), // Shield
+        2104 => Some(4), // Mirror Shield
+        _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::shield_view_from_item_id;
+
+    #[test]
+    fn classic_shield_item_ids_map_to_view_sprites() {
+        assert_eq!(shield_view_from_item_id(2101), Some(1));
+        assert_eq!(shield_view_from_item_id(2102), Some(2));
+        assert_eq!(shield_view_from_item_id(2103), Some(3));
+        assert_eq!(shield_view_from_item_id(2104), Some(4));
+        // Not a shield (sword / dagger)
+        assert_eq!(shield_view_from_item_id(1101), None);
+        assert_eq!(shield_view_from_item_id(1201), None);
     }
 }

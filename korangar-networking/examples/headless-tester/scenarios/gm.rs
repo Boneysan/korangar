@@ -109,7 +109,8 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
             job_id: 7,
             expected_skills: &[7, 56, 57, 58, 59, 62],
             // Sword for Magnum Break/Bowling Bash and spear for the spear set.
-            weapons: &[1101, 1404],
+            // Shields: Guard (view 1), Buckler (2), Shield (3) — C5 path probe.
+            weapons: &[1101, 1404, 2101, 2103, 2105],
             consumables: &[],
         },
         CharacterSetup {
@@ -132,13 +133,67 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
             name: "EffectRune",
             job_id: 4054,
             expected_skills: &[2006],
-            weapons: &[1101, 1404],
+            // Rune Knight + sword + classic shields for C5.
+            weapons: &[1101, 1404, 2101, 2103, 2105],
             consumables: &[],
         },
     ];
 
     for setup in ROSTER {
-        let mut context = TestContext::connect_as(config, &config.username, &config.password, Some(setup.name), None)?;
+        // Create the roster character on a free slot if it does not exist yet.
+        let mut context = match TestContext::connect_as(
+            config,
+            &config.username,
+            &config.password,
+            Some(setup.name),
+            None,
+        ) {
+            Ok(context) => context,
+            Err(error) if error.contains("not found") => {
+                println!("    {}: creating character ({error})", setup.name);
+                let mut bootstrap =
+                    TestContext::connect_as(config, &config.username, &config.password, None, None)?;
+                let free_slot = (0..9u8)
+                    .find(|slot| {
+                        !bootstrap
+                            .characters
+                            .iter()
+                            .any(|info| info.character_number == *slot)
+                    })
+                    .ok_or_else(|| format!("no free character slot for {}", setup.name))?;
+                bootstrap
+                    .net
+                    .create_character(free_slot as usize, setup.name.to_owned())
+                    .map_err(|_| format!("disconnected creating {}", setup.name))?;
+                let info = bootstrap.wait_for("CharacterCreated", |event| match event {
+                    NetworkEvent::CharacterCreated { character_information } => {
+                        Some(Ok(character_information.clone()))
+                    }
+                    NetworkEvent::CharacterCreationFailed { message, .. } => {
+                        Some(Err(format!("creation failed for {}: {message}", setup.name)))
+                    }
+                    _ => None,
+                })??;
+                println!(
+                    "    {}: created in slot {}",
+                    setup.name, info.character_number
+                );
+                // Drop bootstrap session cleanly, then log in as the new character.
+                drop(bootstrap);
+                std::thread::sleep(Duration::from_millis(700));
+                TestContext::connect_as(
+                    config,
+                    &config.username,
+                    &config.password,
+                    Some(setup.name),
+                    None,
+                )?
+            }
+            Err(error) => return Err(error),
+        };
+
+        context.ensure_base_level(99)?;
+        context.ensure_job(setup.job_id)?;
         if context.job_id.0 != setup.job_id {
             return Err(format!(
                 "{} has job {}, expected {}",
@@ -157,6 +212,10 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
                 return Err(format!("{} is missing required skill {} after @allskill", setup.name, skill_id));
             }
         }
+
+        // Spare zeny for shops/repairs during live GUI testing.
+        let _ = context.say("@zeny 5000000");
+        context.pump(Duration::from_millis(200));
 
         for &item_id in setup.weapons {
             if !context.inventory.iter().any(|item| item.item_id == ItemId(item_id)) {
@@ -180,6 +239,10 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
             }
         }
 
+        // Effect-roster map for live skill/shield checks.
+        let _ = context.say("@go prt_fild07");
+        context.pump(Duration::from_millis(500));
+
         for (slot, &skill_id) in setup.expected_skills.iter().enumerate() {
             let skill_level = skills
                 .iter()
@@ -197,8 +260,10 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
         }
         context.pump(Duration::from_millis(300));
         println!(
-            "    {}: verified and bound {} effect skills; stocked {} weapon types",
+            "    {}: job {} lv {}; bound {} skills; stocked {} gear items",
             setup.name,
+            context.job_id.0,
+            context.base_level,
             setup.expected_skills.len(),
             setup.weapons.len()
         );

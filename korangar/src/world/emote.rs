@@ -142,7 +142,7 @@ impl EmoteBubbles {
         if emote_debug_enabled() {
             eprintln!(
                 "[emote] animation data ready: {} actions, {} delays",
-                animation_data.animations.len(),
+                animation_data.body_action_count(),
                 animation_data.delays.len()
             );
         }

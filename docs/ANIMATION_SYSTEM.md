@@ -20,13 +20,27 @@ Every visible actor is a stack of sprite layers. Each layer is one SPR
 | Body | `인간족\몸통\{sex}\{job}_{sex}` |
 | Head | `인간족\머리통\{sex}\{hair}_{sex}` |
 | Weapon | `인간족\{weapon folder}\{folder}_{sex}_{weapon name}` |
+| Shield | Ragexe `0x7C46C0`: job token is compound `job\\job`. Class views 1–4 → `방패\{job}\{job}_{sex}_{가드\|버클러\|쉴드\|미러쉴드}`; view ≥ 5 prefers `방패\{job}\{job}_{sex}_{view}_방패` when the special-job check at `0x9A2430` allows (we always probe). Not under `인간족\`. |
 
-`Common::get_entity_part_files` (entity/mod.rs) assembles this list. Korangar's
-`AnimationLoader` currently pre-merges the pairs into one `AnimationData`.
-The native client retains separate resources and composes them at render time;
-runtime composition is therefore the long-term fidelity architecture.
+`Common::get_entity_part_files` (entity/mod.rs) assembles this list. Korangar
+keeps per-layer SPR/ACT resources in `AnimationData.layers` and composes them
+at render time (`compose_frame`): the body owns the clock; secondary layers
+use `CActRes::get_motion` motion-0 fallback (`native_layer_motion_index`).
+Action-global billboard AABBs are measured once at load (`action_layouts`) so
+proportions stay stable across a motion. Head (and any secondary) attach
+points are applied at compose: `offset += -child_attach + body_attach` using
+the body motion's attach and the secondary layer's selected motion attach.
+**Shield draw order** is per camera-relative facing: dirs `2..=5` paint the
+shield before the body (back half); otherwise after the weapon (front).
+**Partial swaps** (`with_weapon_layer` / `with_head_layer` / `with_shield_layer`)
+reload one layer without re-fetching body/head delays. Weapon vs shield paths
+are identified by content (`인간족\{job}\…` vs `방패\…`), not fixed indices.
 Monsters/NPCs are generally a single pair (`몬스터\{name}`, `npc\{name}`),
 but their action layouts still need to be audited by actor family.
+
+**Phase C (runtime layer composition) closed 2026-07-18** — see
+[plans/animation-fidelity.md](plans/animation-fidelity.md) §4. Remaining
+player-visual work is Phase D (per-item weapons, trails) and hat/accessories.
 
 The **weapon layer** rules (all verified against the GRFs by
 `weapon-sprite-audit`):
@@ -190,10 +204,24 @@ For a damage packet (`ZC_NOTIFY_ACT` 0x08C8 / skill damage 0x01DE):
    work. None changes the resolved source actor-state clock.
 3. **Sound events**: the native scanner (`0x008AC860`) examines the body ACT
    and walks every body motion crossed since the prior update, including loop
-   wrap. Korangar's `SoundToken` prevents repeated playback while one frame is
-   displayed, but it can miss an event when a slow frame crosses multiple ACT
-   motions. It must be replaced by a crossed-motion cursor. Native `.wav`
-   events are body-owned; `"atk"` is searched separately at `0x008A9500`.
+   wrap. Korangar matches that with `FrameEventCursor` on `AnimationState`
+   (`AnimationData::take_crossed_events` / `collect_crossed_events`):
+   - cursor identity is the playback start tick + flat action base offset;
+   - one-shot actions clamp at the final motion so a held last frame produces
+     no new crossings (image only; sound does not re-fire);
+   - looping actions continue the raw motion index so wrap re-fires cycle
+     events;
+   - a slow application frame that jumps several motions delivers every
+     authored event on the crossed frames;
+   - stall recovery is deliberately bounded to one full cycle so an extreme
+     hitch cannot flood the audio mixer (native walks unbounded);
+   - higher motion programs fire once per `step_serial` occurrence (duplicate
+     authored motions fire again; a terminal held step does not).
+   Native `.wav` events are body-owned; `"atk"` is searched separately at
+   `0x008A9500` for impact scheduling. When a weapon-swing body ACT has an
+   empty event table (male Assassin / Assassin Cross in classic GRFs), the
+   cursor emits one synthetic `ActionEvent::Attack` at the native attack-
+   event marker so `weapon_sound` still plays; authored events suppress it.
 
 Request-time actor input is now packet/status owned:
 
@@ -225,17 +253,70 @@ complete RO skill coverage.
 
 ## 6. Diagnostics and tests
 
+### 6.1 How to run (fast suite)
+
+From the repo root (`korangar/`):
+
+```bash
+# Full client lib unit suite
+cargo test -p korangar --lib
+
+# Phase C composition + gear (recommended smoke after animation edits)
+cargo test -p korangar --lib runtime_compose_tests
+cargo test -p korangar --lib classic_shield
+cargo test -p korangar --lib native_shield_paths
+cargo test -p korangar --lib weapon_layer_tests
+cargo test -p korangar --lib frame_event_cursor_tests
+```
+
+GRF-backed diagnostics (need official client archives configured):
+
+```bash
+cd korangar
+cargo test -p korangar --lib probes_original_client_shield_paths -- --ignored --nocapture
+cargo test -p korangar --lib loads_classic_weapon_layers_for_roster -- --ignored --nocapture
+cargo run --release --bin weapon-sprite-audit
+cargo run --release --bin animation-audit
+```
+
+Live GUI (manual): provision with headless `provision-effect-roster` (Knight
+gets sword/spear + Guard/Shield items), then check EffectKnight sword+Guard
+idle/walk/attack and facing-away body covering the Guard.
+
+### 6.2 Catalog
+
 | Tool / test | What it does |
 |---|---|
 | `cargo run --release --bin weapon-sprite-audit` (from `korangar/korangar/`) | Probes every job folder × sex × candidate weapon name against the GRFs; also dumps the archives' own 인간족 listing. |
 | `cargo run --release --bin animation-audit` (from `korangar/korangar/`) | Parses every player job's body/head/weapon ACTs; reports per-direction frame-count mismatches and body attack events. It inventories data; it does not prove runtime selection. |
 | `PYTHONPATH=/tmp/ro_binary_tools python3 tools/native_skill_state_audit.py` (from `korangar/korangar/`) | Hash-checks the reference Ragexe and exhaustively emulates `0x009B4B30` over the full `u16` skill-ID domain. This regenerates pipeline spec section 18's source actor-state catalog. Requires `pefile` and `capstone`. |
 | `native_motion::tests` (fast suite) | Pin actor-update cadence, wall deadlines, duplicate-motion occurrences, ping-pong/cycle order, cross-action steps, random branches, and job-specific programs. |
+| `frame_event_cursor_tests` (fast suite, Phase B) | Pin the crossed-motion event cursor: multi-motion jump, loop wrap, held final frame, one-cycle stall bound, motion-program `step_serial`, and playback-identity reset. |
+| **`runtime_compose_tests` (fast suite, Phase C)** | See §6.3. |
+| `weapon_action_tests`, `weapon_layer_tests` (fast suite) | Pin the job×weapon action table, suffix/folder mappings, and Ragexe shield path candidates (`native_shield_paths_match_ragexe_sprintf_forms`). |
+| `state::inventory::tests::classic_shield_item_ids_map_to_view_sprites` | Guard/Buckler/Shield/Mirror item IDs → views 1–4; non-shield IDs return `None`. |
 | `reports_knight_attack_frame_structure` (ignored, `--nocapture`) | Parses real body/weapon/head ACTs; prints per-action frame counts, delays, event placement. Point it at other jobs when extending. |
 | `loads_classic_weapon_layers_for_roster` (ignored) | Asserts the exact weapon SPR/ACT paths for the effect roster exist. |
+| `probes_original_client_shield_paths` / `probes_shield_sprite_paths` (ignored) | GRF existence probes for nested `방패\{job}\{job}_{sex}_{suffix}` forms. |
 | `all_mapped_skill_effect_assets_exist` (ignored) | Walks every typed skill recipe and every declared random variant, then asserts each referenced STR/texture/wav ships. |
 | `probes_classic_skill_sound_candidates` (ignored, `--nocapture`) | Existence probes for classic sound names. |
-| `weapon_action_tests`, `weapon_layer_tests` (fast suite) | Pin the job×weapon action table and the suffix/folder mappings. |
+
+### 6.3 Phase C unit tests (`runtime_compose_tests`)
+
+| Test | Pins |
+|---|---|
+| `compose_uses_body_motion_count_and_motion_zero_fallback` | Body owns clock; secondary `get_motion` falls back to motion 0 (C1). |
+| `child_attach_aligns_to_body_attach_point` | `offset += -child + body` attach delta (C2). |
+| `attach_uses_body_motion_when_secondary_falls_back_to_motion_zero` | Attach uses body motion's point when secondary is on motion 0 (C2). |
+| `weapon_layer_swap_preserves_body_and_head_paths` | Partial weapon swap does not reload body/head (C4). |
+| `shield_layer_swap_preserves_weapon` | Shield equip/unequip keeps weapon; weapon unequip keeps shield (C5). |
+| `shield_draw_order_follows_view_direction` | Dirs 2–5: shield before body; dirs 0,1,6,7: shield last (C3). |
+| `weapon_path_from_parts_skips_shield_at_index_two` | Weapon path is never `방패\…` when shield sits at parts[2]. |
+| `weapon_swap_with_shield_path_arg_does_not_clobber_sword` | Mis-fed shield path must not replace sword; dual-equip restore (C5 closeout). |
+
+**Live checklist (Phase C closed 2026-07-18):** EffectSinX dual-wield + head
+attach; EffectKnight spear/sword attack hold + sound; sword+Guard idle/attack;
+Guard covered by body when facing away.
 
 **Important**: `GameFileLoader::get_files_with_extension` under-reports the
 classic GRF (verified: the 기사 folder listed 3 files, probes found 16).
@@ -262,11 +343,10 @@ The execution plan for closing these is
   stone/freeze opt1 holds are implemented. The remaining body/health/option
   values still need their native tint, attached effect, pose, sound, refresh,
   and removal recipes; damage-type-specific reaction guards also remain.
-- **Crossed frame events**: replace displayed-frame sound polling with the
-  body event cursor used by the native client.
-- **Runtime layer composition and attach rules**: stop permanently flattening
-  player parts; recover special motion-0 attachment cases, layer ordering,
-  shields, cosmetics, and dynamic swaps.
+- **Player cosmetics / hat stack**: body+head+weapon+shield compose is closed
+  (Phase C). Bottom/mid/top accessories and mounts are not layered yet.
+- **Special motion-0 attach edge cases**: generic attach is C2; any rare
+  native specials beyond body-clock + motion-0 fallback remain unproven.
 - Several classic skill sounds were not found under any probed name — list in
   the 2026-07-17 session notes.
 - Freeze1/Freeze2 action groups are not selected as generic status poses;

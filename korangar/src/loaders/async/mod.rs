@@ -135,6 +135,99 @@ impl AsyncLoader {
         }
     }
 
+    /// Phase C4: replace only the weapon layer on an existing player
+    /// `AnimationData`. Returns `None` if body/head are missing (caller should
+    /// fall back to a full reload). Same path is a no-op returning the input
+    /// wrapped in a new `Arc` only when the layer actually changes — caller
+    /// can compare `layer_path` first.
+    pub fn apply_weapon_layer_swap(
+        &self,
+        current: &AnimationData,
+        weapon_path: Option<&str>,
+    ) -> Option<Arc<AnimationData>> {
+        if !current.has_player_base_layers() {
+            return None;
+        }
+        // Never treat a shield path as a weapon — callers that still index
+        // parts[2] can pass `방패\…` when only a shield is equipped.
+        let weapon_path = weapon_path.filter(|path| crate::world::is_weapon_part_path(path));
+        if current.weapon_layer_path() == weapon_path {
+            return Some(Arc::new(current.clone()));
+        }
+
+        let updated = match weapon_path {
+            Some(path) => {
+                let layer = self
+                    .animation_loader
+                    .load_layer(
+                        &self.sprite_loader,
+                        &self.action_loader,
+                        path,
+                        crate::world::PLAYER_LAYER_WEAPON,
+                    )
+                    .ok()?;
+                current.clone().with_weapon_layer(Some(layer))
+            }
+            None => current.clone().with_weapon_layer(None),
+        };
+        Some(Arc::new(updated))
+    }
+
+    /// Phase C4: replace only the head layer (hair change) without reloading
+    /// body or weapon.
+    pub fn apply_head_layer_swap(&self, current: &AnimationData, head_path: &str) -> Option<Arc<AnimationData>> {
+        if !current.has_player_base_layers() {
+            return None;
+        }
+        if current.layer_path(crate::world::PLAYER_LAYER_HEAD) == Some(head_path) {
+            return Some(Arc::new(current.clone()));
+        }
+
+        let layer = self
+            .animation_loader
+            .load_layer(
+                &self.sprite_loader,
+                &self.action_loader,
+                head_path,
+                crate::world::PLAYER_LAYER_HEAD,
+            )
+            .ok()?;
+        Some(Arc::new(current.clone().with_head_layer(layer)))
+    }
+
+    /// Phase C5: set or clear the shield layer without reloading body/head/weapon.
+    pub fn apply_shield_layer_swap(
+        &self,
+        current: &AnimationData,
+        shield_path: Option<&str>,
+    ) -> Option<Arc<AnimationData>> {
+        if !current.has_player_base_layers() {
+            return None;
+        }
+        if current.shield_layer_path() == shield_path {
+            return Some(Arc::new(current.clone()));
+        }
+
+        let updated = match shield_path {
+            Some(path) => {
+                // Layer index is re-stamped by with_shield_layer; pass 3 as a
+                // stable default for part animation_index during decode.
+                let layer = self
+                    .animation_loader
+                    .load_layer(
+                        &self.sprite_loader,
+                        &self.action_loader,
+                        path,
+                        crate::world::PLAYER_LAYER_SHIELD,
+                    )
+                    .ok()?;
+                current.clone().with_shield_layer(Some(layer))
+            }
+            None => current.clone().with_shield_layer(None),
+        };
+        Some(Arc::new(updated))
+    }
+
     #[must_use]
     pub fn request_skill_sprite_load(&self, skill_id: SkillId, path: &str) -> Option<Arc<Sprite>> {
         let sprite_path = format!("{path}.spr");

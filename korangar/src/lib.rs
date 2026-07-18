@@ -3171,20 +3171,27 @@ impl Client {
                         .follow_mut(client_state().inventory())
                         .fill(&self.async_loader, items);
 
-                    let weapon = self.client_state.follow(client_state().inventory()).equipped_weapon_type();
+                    let inventory = self.client_state.follow(client_state().inventory());
+                    let weapon = inventory.equipped_weapon_type();
+                    let shield_view = inventory.equipped_shield_view();
                     if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.set_weapon(weapon);
+                        if let Some(shield) = shield_view {
+                            player.set_shield(shield);
+                        }
                         let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!("[packet-log] local equipped weapon={weapon} parts={entity_part_files:?}");
+                            eprintln!(
+                                "[packet-log] local equipped weapon={weapon} shield={shield_view:?} parts={entity_part_files:?}"
+                            );
                         }
-                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
-                            player.get_entity_id(),
-                            player.get_entity_type(),
-                            entity_part_files,
-                        ) {
-                            player.set_animation_data(animation_data);
-                        }
+                        Self::refresh_entity_player_gear(
+                            &self.async_loader,
+                            &self.library,
+                            &self.game_file_loader,
+                            player,
+                            &entity_part_files,
+                        );
                     }
                 }
                 NetworkEvent::SetStorage { items } => {
@@ -3384,16 +3391,22 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().inventory())
                         .update_equipped_position(index, equipped_position);
-                    let weapon = self.client_state.follow(client_state().inventory()).equipped_weapon_type();
+                    let inventory = self.client_state.follow(client_state().inventory());
+                    let weapon = inventory.equipped_weapon_type();
+                    let shield_view = inventory.equipped_shield_view();
                     if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.set_weapon(weapon);
-                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
-                            player.get_entity_id(),
-                            player.get_entity_type(),
-                            player.get_entity_part_files(&self.library, &self.game_file_loader),
-                        ) {
-                            player.set_animation_data(animation_data);
+                        if let Some(shield) = shield_view {
+                            player.set_shield(shield);
                         }
+                        let parts = player.get_entity_part_files(&self.library, &self.game_file_loader);
+                        Self::refresh_entity_player_gear(
+                            &self.async_loader,
+                            &self.library,
+                            &self.game_file_loader,
+                            player,
+                            &parts,
+                        );
                     }
                 }
                 NetworkEvent::ChangeJob { account_id, job_id } => {
@@ -3434,14 +3447,8 @@ impl Client {
                         .unwrap();
 
                     entity.set_hair(hair_id as usize);
-
-                    if let Some(animation_data) = self.async_loader.request_animation_data_load(
-                        entity.get_entity_id(),
-                        entity.get_entity_type(),
-                        entity.get_entity_part_files(&self.library, &self.game_file_loader),
-                    ) {
-                        entity.set_animation_data(animation_data);
-                    }
+                    let parts = entity.get_entity_part_files(&self.library, &self.game_file_loader);
+                    Self::refresh_entity_head_layer(&self.async_loader, entity, &parts);
                 }
                 NetworkEvent::ChangeWeapon { account_id, weapon_id } => {
                     if let Some(entity) = self
@@ -3451,13 +3458,8 @@ impl Client {
                         .find(|entity| entity.get_entity_id().0 == account_id.0)
                     {
                         entity.set_weapon(weapon_id);
-                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
-                            entity.get_entity_id(),
-                            entity.get_entity_type(),
-                            entity.get_entity_part_files(&self.library, &self.game_file_loader),
-                        ) {
-                            entity.set_animation_data(animation_data);
-                        }
+                        let parts = entity.get_entity_part_files(&self.library, &self.game_file_loader);
+                        Self::refresh_entity_weapon_layer(&self.async_loader, entity, &parts);
                     }
                 }
                 NetworkEvent::ChangeShield { account_id, shield_id } => {
@@ -3468,6 +3470,24 @@ impl Client {
                         .find(|entity| entity.get_entity_id().0 == account_id.0)
                     {
                         entity.set_shield(shield_id);
+                        Self::refresh_entity_shield_layer(
+                            &self.async_loader,
+                            &self.library,
+                            &self.game_file_loader,
+                            entity,
+                        );
+                    } else if let Some(player) = self
+                        .client_state
+                        .try_follow_mut(this_entity())
+                        .filter(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        player.set_shield(shield_id);
+                        Self::refresh_entity_shield_layer(
+                            &self.async_loader,
+                            &self.library,
+                            &self.game_file_loader,
+                            player,
+                        );
                     }
                 }
                 NetworkEvent::LoggedOut => {
@@ -5710,6 +5730,95 @@ impl Client {
             &self.animation_loader,
             &self.effect_loader,
         );
+    }
+
+    /// Phase C4: swap only the weapon layer when body+head are already loaded.
+    /// Falls back to a full part-list reload if partial swap is impossible.
+    ///
+    /// Weapon path is resolved by content (`인간족\{job}\…`), not `parts[2]`:
+    /// when a shield is equipped without a weapon, index 2 is the shield and
+    /// treating it as a weapon would drop the sword on the next equip refresh.
+    fn refresh_entity_weapon_layer(async_loader: &AsyncLoader, entity: &mut Entity, entity_part_files: &[String]) {
+        let weapon_path = crate::world::weapon_path_from_entity_parts(entity_part_files);
+        if let Some(current) = entity.animation_data()
+            && let Some(updated) = async_loader.apply_weapon_layer_swap(&current, weapon_path)
+        {
+            entity.set_animation_data(updated);
+            return;
+        }
+        if let Some(animation_data) = async_loader.request_animation_data_load(
+            entity.get_entity_id(),
+            entity.get_entity_type(),
+            entity_part_files.to_vec(),
+        ) {
+            entity.set_animation_data(animation_data);
+        }
+    }
+
+    /// Local-player equip path: refresh weapon then shield from the same part
+    /// list so dual-equip (sword + Guard) never loses either layer.
+    fn refresh_entity_player_gear(
+        async_loader: &AsyncLoader,
+        library: &Library,
+        game_file_loader: &GameFileLoader,
+        entity: &mut Entity,
+        entity_part_files: &[String],
+    ) {
+        Self::refresh_entity_weapon_layer(async_loader, entity, entity_part_files);
+        Self::refresh_entity_shield_layer(async_loader, library, game_file_loader, entity);
+    }
+
+    /// Phase C4: swap only the head layer on hair change.
+    fn refresh_entity_head_layer(async_loader: &AsyncLoader, entity: &mut Entity, entity_part_files: &[String]) {
+        let Some(head_path) = entity_part_files.get(1).map(|path| path.as_str()) else {
+            if let Some(animation_data) = async_loader.request_animation_data_load(
+                entity.get_entity_id(),
+                entity.get_entity_type(),
+                entity_part_files.to_vec(),
+            ) {
+                entity.set_animation_data(animation_data);
+            }
+            return;
+        };
+        if let Some(current) = entity.animation_data()
+            && let Some(updated) = async_loader.apply_head_layer_swap(&current, head_path)
+        {
+            entity.set_animation_data(updated);
+            return;
+        }
+        if let Some(animation_data) = async_loader.request_animation_data_load(
+            entity.get_entity_id(),
+            entity.get_entity_type(),
+            entity_part_files.to_vec(),
+        ) {
+            entity.set_animation_data(animation_data);
+        }
+    }
+
+    /// Phase C5: swap only the shield layer (`방패\…`).
+    /// After the shield swap, re-apply the weapon layer from the same part list
+    /// so a prior mis-classified `parts[2]` refresh cannot leave the sword gone.
+    fn refresh_entity_shield_layer(
+        async_loader: &AsyncLoader,
+        library: &Library,
+        game_file_loader: &GameFileLoader,
+        entity: &mut Entity,
+    ) {
+        let parts = entity.get_entity_part_files(library, game_file_loader);
+        let shield_path = crate::world::shield_path_from_entity_parts(&parts);
+        if let Some(current) = entity.animation_data()
+            && let Some(updated) = async_loader.apply_shield_layer_swap(&current, shield_path)
+        {
+            entity.set_animation_data(updated);
+            // Keep weapon in sync (weapon may sit after shield in path logic).
+            Self::refresh_entity_weapon_layer(async_loader, entity, &parts);
+            return;
+        }
+        if let Some(animation_data) =
+            async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), parts)
+        {
+            entity.set_animation_data(animation_data);
+        }
     }
 
     /// Drain finished async loads from the loader thread and apply their

@@ -79,16 +79,20 @@ exactly once per crossing.
 - Unit tests: multi-motion jump, loop wrap, held frame, motion-program
   duplicate steps (keep the `step_serial` behavior).
 
-**Implementation landed 2026-07-17** (`FrameEventCursor` +
+**Closed 2026-07-17 (live-verified).** Implementation (`FrameEventCursor` +
 `AnimationData::take_crossed_events` + `collect_crossed_events`; `SoundToken`
 and `SoundState` deleted; events delivered before the completion transition
 so final-frame crossings are not lost; stall recovery bounded to one full
-cycle as a deliberate audio-flood guard). **Still open to close phase B**:
-the cursor unit tests listed above, the ANIMATION_SYSTEM.md §5.3 update, and
-a live listen (attack sounds still fire once per swing; no dropped sounds
-under load).
+cycle as a deliberate audio-flood guard). Unit tests in
+`frame_event_cursor_tests` cover multi-motion jump, loop wrap, held final
+frame, one-cycle stall bound, motion-program `step_serial`, playback-
+identity reset, empty-body synthetic Attack (SinX katar), and authored-event
+suppression. ANIMATION_SYSTEM.md §5 documents the cursor (the SoundToken
+caveat is removed). **Live listen:** EffectKnight spear once-per-swing;
+EffectSinX Jur once-per-swing after empty-ACT synthetic `ActionEvent::Attack`
+fallback (body ACTs for male Assassin / Assassin Cross ship no events).
 
-Exit: `SoundToken` deleted; ANIMATION_SYSTEM.md §5.3 caveat removed.
+Exit: `SoundToken` deleted; ANIMATION_SYSTEM.md §5.3 caveat removed. **Met.**
 
 ## 4. Phase C — Runtime layer composition (large, engine)
 
@@ -102,20 +106,77 @@ Steps, each landable separately behind the existing `get_frame` API:
    body owns clock + motion index; secondary layers resolve via the
    `get_motion` motion-0 fallback (`0x004F5360`) at render time instead of
    merge time. The existing merge tests become composition tests.
+   **Done + live-verified 2026-07-17 (C1):** `AnimationLayer` + `compose_frame` /
+   `compose_action_motion`; loader no longer cross-merges; action-global AABB
+   measured at load (`action_layouts`) and applied at compose; body-only
+   events preserved (Phase B cursor still green). Head attach still load-baked
+   (C2). **Live:** EffectSinX Jur dual-wield, head attach idle/walk (no jitter),
+   basic attack + one sound, Sonic Blow glyph; EffectKnight spear/sword attacks
+   hold weapon through swing, one sound each, Magnum shows sword.
 2. **Attach points**: apply ACT attach data (head↔body alignment, the special
    motion-0 attachment cases) instead of baked offsets.
+   **Done + live-verified 2026-07-17 (C2):** load stores motion `attach_point`
+   only; compose applies `offset += -child + body` for every non-body layer
+   that authors an attach (not hard-coded to layer 1). Body attach comes from
+   the **body** motion index; when a secondary layer falls back to motion 0
+   its attach is still that motion's point. Action AABB measurement uses the
+   same rule. Unit tests pin the delta and the motion-0 fallback case.
+   **Live:** idle/walk head on neck; after attack head still on body.
 3. **Layer ordering + per-direction draw order** as authored.
+   **Done + live-verified 2026-07-18 (C3):** shield paint order follows
+   camera-relative facing — dirs `2..=5` (W/NW/N/NE, back half) draw shield
+   **before** body so the torso covers it; dirs `0,1,6,7` draw shield after
+   weapon (in front). Matches roBrowser `EntityRender` / classic hardcode
+   (`behind = direction > 1 && direction < 6`). Unit test
+   `shield_draw_order_follows_view_direction`. **Live:** Guard under body
+   when facing away; in front when facing camera.
 4. **Dynamic layer swaps**: weapon/head/appearance changes swap one layer
    without re-requesting the whole actor (today an appearance change reloads
    everything through `AsyncLoader`).
+   **Done + live-verified 2026-07-17 (C4):** `AnimationLayer.path_key` +
+   `load_layer`; `AnimationData::with_weapon_layer` / `with_head_layer`
+   recompute layouts without touching body delays. `SetInventory` / equip /
+   `ChangeWeapon` / `ChangeHair` call partial swap when body+head are present;
+   job change still full-reloads. Unit test:
+   `weapon_layer_swap_preserves_body_and_head_paths`. **Live:** head stays put
+   on equip; attack animation follows weapon type (spear vs sword). Per-item
+   weapon models remain Phase D.
 5. **Shield layer** (`방패` paths) — first new layer type the architecture
    must absorb cleanly.
+   **Done + live-verified 2026-07-18 (C5):** paths are
+   `방패\{job}\{job}_{sex}_{suffix}` (not under `인간족`). Views 1–4 →
+   `가드`/`버클러`/`쉴드`/`미러쉴드` (view ≥ 5 probes `{id}_방패`).
+   `push_shield_part_file` only when SPR exists. `with_shield_layer` preserves
+   weapon; `ChangeShield` partial-swaps and re-applies weapon. Local inventory
+   maps classic shield item IDs 2101–2104 → views and refreshes both gear
+   layers on equip (`refresh_entity_player_gear`). Weapon path selection uses
+   content (`is_weapon_part_path`), never fixed `parts[2]`.
+   **Original client confirmed:** same path form; Knight ships class shields
+   (`file_exists` YES; listing tools under-report).
+   **Live:** EffectKnight Sword + Guard idle/walk/attack; body covers Guard
+   from behind.
 
-Risks: draw-call count and the WSL GL fallback (no bindless arrays) — profile
-on both backends; keep the flattened path compilable until step 3 lands.
+**Phase C closed 2026-07-18.** Explicitly out of C (later phases):
+hat/accessory stack, per-item weapons, `_검광` trails, Assassin L/R combo
+(Phase D); skill/status presentation (Phase E).
 
-Exit: pre-merge deleted; Knight/roster render identical before/after
-(screenshot diff); shield renders; appearance swap causes no full reload.
+Risks (historical): draw-call count / WSL GL — not blocking; layers are
+already runtime-composed.
+
+Exit: pre-merge deleted; Knight/roster render with body+head+weapon+shield;
+appearance swap causes no full reload. **Met.**
+
+### Phase C test map
+
+Documented in [ANIMATION_SYSTEM.md §6](../ANIMATION_SYSTEM.md#6-diagnostics-and-tests).
+
+| Suite | Command |
+|---|---|
+| C compose + gear | `cargo test -p korangar --lib runtime_compose_tests` |
+| Shield item→view | `cargo test -p korangar --lib classic_shield` |
+| Shield SPR path forms | `cargo test -p korangar --lib native_shield_paths` |
+| B event cursor | `cargo test -p korangar --lib frame_event_cursor_tests` |
+| Full lib | `cargo test -p korangar --lib` |
 
 ## 5. Phase D — Weapon visual completeness (medium, engine, needs C)
 

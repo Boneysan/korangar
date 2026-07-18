@@ -482,6 +482,89 @@ fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
     }
 }
 
+/// Ragexe `0x7C46C0` (2019-06-05f, SHA-256 `61663a6f…`) builds shield paths.
+///
+/// Job name table entries are compound (`기사\\기사`), so:
+/// - class: `방패\%s_%s%s.%s` → `방패\기사\기사_남_가드.spr`
+/// - item (view ≥ 5 and special job check at `0x9A2430`):  
+///   `방패\%s_%s_%d_방패.%s` → `방패\기사\기사_남_{view}_방패.spr`
+///
+/// Class suffixes (with leading `_` in the binary name table at `0x72796C`):
+/// `_가드`, `_쉴드`, `_미러쉴드`, `_버클러`. Item ViewSprite 1..4 maps to those
+/// names in classic DB order (Guard/Buckler/Shield/Mirror), not table storage order.
+///
+/// Job ids `> 0xF6E` (3950) are remapped `job - 3950` for the name table index.
+fn native_shield_class_suffix(shield_view: u32) -> Option<&'static str> {
+    // Matches ViewSprite in item_db + GRF class files, not the binary string
+    // table order (which stores 가드/쉴드/미러쉴드/버클러).
+    match shield_view {
+        1 => Some("가드"),
+        2 => Some("버클러"),
+        3 => Some("쉴드"),
+        4 => Some("미러쉴드"),
+        _ => None,
+    }
+}
+
+/// Job folder tokens for shield sprites (same sprite-job names as body).
+fn shield_sprite_folders(job_id: JobId) -> Vec<&'static str> {
+    let body = get_sprite_path_for_player_job(job_id);
+    let weapon_alias = get_weapon_sprite_folder(job_id);
+    if body == weapon_alias {
+        vec![body]
+    } else {
+        vec![body, weapon_alias]
+    }
+}
+
+fn shield_part_candidates(job_folder: &str, sex: &str, shield_view: u32) -> Vec<String> {
+    let mut out = Vec::new();
+    // Native tries the item-id form first when view ≥ 5 (and the job is
+    // allowed by 0x9A2430). We always probe it for view ≥ 5; missing SPR is
+    // harmless.
+    if shield_view >= 5 {
+        out.push(format!(
+            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"
+        ));
+    }
+    if let Some(class_name) = native_shield_class_suffix(shield_view) {
+        out.push(format!(
+            "방패\\{job_folder}\\{job_folder}_{sex}_{class_name}"
+        ));
+    } else if shield_view > 0 {
+        // Non-classic view that still has a class-style file under some packs.
+        out.push(format!(
+            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"
+        ));
+        out.push(format!(
+            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}"
+        ));
+    }
+    out
+}
+
+/// Append the equipped shield layer when the archives ship a matching SPR.
+/// Paths match Ragexe `0x7C46C0` (not under `인간족\`).
+fn push_shield_part_file(files: &mut Vec<String>, common: &Common, game_file_loader: &GameFileLoader) {
+    if common.entity_type != EntityType::Player || common.shield == 0 {
+        return;
+    }
+
+    let sex = match common.sex == Sex::Female {
+        true => "여",
+        false => "남",
+    };
+
+    for folder in shield_sprite_folders(common.job_id) {
+        for part_file in shield_part_candidates(folder, sex, common.shield) {
+            if game_file_loader.file_exists(&format!("data\\sprite\\{part_file}.spr").to_lowercase()) {
+                files.push(part_file);
+                return;
+            }
+        }
+    }
+}
+
 fn weapon_sound(weapon: u32) -> &'static str {
     match native_real_weapon_id(weapon) {
         1 => "attack_short_sword.wav",
@@ -598,6 +681,7 @@ impl Common {
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, None);
         push_weapon_part_file(&mut files, self, game_file_loader);
+        push_shield_part_file(&mut files, self, game_file_loader);
         files
     }
 
@@ -1463,6 +1547,7 @@ impl Player {
         let common = self.get_common();
         let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(self.hair_id));
         push_weapon_part_file(&mut files, common, game_file_loader);
+        push_shield_part_file(&mut files, common, game_file_loader);
         files
     }
 }
@@ -1694,6 +1779,10 @@ impl Entity {
 
     pub fn set_animation_data(&mut self, animation_data: Arc<AnimationData>) {
         self.get_common_mut().animation_data = Some(animation_data)
+    }
+
+    pub fn animation_data(&self) -> Option<Arc<AnimationData>> {
+        self.get_common().animation_data.clone()
     }
 
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
@@ -2015,7 +2104,7 @@ impl StateWindow<ClientState> for Entity {
 mod weapon_layer_tests {
     use ragnarok_packets::JobId;
 
-    use super::{get_weapon_sprite_folder, weapon_resource_suffix};
+    use super::{get_weapon_sprite_folder, shield_part_candidates, weapon_resource_suffix};
 
     #[test]
     fn two_handed_weapons_use_their_own_sprites() {
@@ -2049,5 +2138,29 @@ mod weapon_layer_tests {
     fn third_classes_keep_their_own_weapon_folders() {
         assert_eq!(get_weapon_sprite_folder(JobId(4054)), "룬나이트");
         assert_eq!(get_weapon_sprite_folder(JobId(4059)), "길로틴크로스");
+    }
+
+    #[test]
+    fn native_shield_paths_match_ragexe_sprintf_forms() {
+        // Class form: 방패\%s_%s%s with job token "기사\기사", sex "남", name "_가드"
+        assert_eq!(
+            shield_part_candidates("기사", "남", 1),
+            vec!["방패\\기사\\기사_남_가드".to_owned()]
+        );
+        assert_eq!(
+            shield_part_candidates("기사", "남", 2)[0],
+            "방패\\기사\\기사_남_버클러"
+        );
+        assert_eq!(
+            shield_part_candidates("기사", "여", 3)[0],
+            "방패\\기사\\기사_여_쉴드"
+        );
+        assert_eq!(
+            shield_part_candidates("기사", "남", 4)[0],
+            "방패\\기사\\기사_남_미러쉴드"
+        );
+        // Item form first when view ≥ 5: 방패\%s_%s_%d_방패
+        let high = shield_part_candidates("기사", "남", 28901);
+        assert_eq!(high[0], "방패\\기사\\기사_남_28901_방패");
     }
 }
