@@ -135,9 +135,11 @@ The headless tester (`korangar-networking/examples/headless-tester.rs`) automate
 * **Bug documentation & port-back workflow**: [headless_findings.md](headless_findings.md) — every failed scenario gets an entry classifying the layer (shared crate / client / server) before the fix lands.
 * **Graphical-client handoff matrix**: the “Expanded-suite graphical-client handoff” section in [headless_findings.md](headless_findings.md) records what is shared automatically, what still needs UI verification, and what remains blocked.
 
-The expanded runner currently registers **106 scenarios** across phases 1–9
-(acceptance gate green 2026-07-13, double-run): session/lifecycle 8 · GM 8 ·
-movement 5 · combat 3 · skills 44 (39 job-class sweeps + teleport/weapon-refine
+The expanded runner currently registers **107 scenarios** across phases 1–9
+(acceptance gate green 2026-07-13 at the previous count of 106, double-run):
+session/lifecycle 8 · GM 9 (including the idempotent `provision-effect-roster`
+setup for the GUI effect roster, added 2026-07-17) · movement 5 · combat 3 ·
+skills 44 (39 job-class sweeps + teleport/weapon-refine
 menus) · items 12 · dialogue 5 · social 7 · DM tooling 14. Phase
 8 requires a pre-provisioned, non-GM `headless2` account with a `HeadlessTwo`
 character; automatic Hercules `_M` registration may be disabled in the local

@@ -17,10 +17,6 @@ use crate::scenarios::Scenario;
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
-        // TEMPORARY diagnostic for M1-008: prints the raw event stream when
-        // Thunderstorm damages a target. Remove when the wiring is settled.
-        Scenario::new("probe-thunderstorm", 5, probe_thunderstorm),
-        Scenario::new("probe-knight-action", 5, probe_knight_action),
         Scenario::new("teleport-select", 5, teleport_select),
         Scenario::new("teleport-cancel", 5, teleport_cancel),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
@@ -594,99 +590,6 @@ fn stateful_skill_rank(skill_name: &str) -> u8 {
 /// is approaching them.
 fn ensure_target(context: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
     context.spawn_monster("PUPA", 1008)
-}
-
-/// TEMPORARY diagnostic for M1-008: cast Thunderstorm at a live target and
-/// print every network event that follows, so the packet the damage pulses
-/// actually arrive in can be read off directly. Runs on its own GM account
-/// (`probe`) so it does not kick a GUI session using the main test account.
-fn probe_thunderstorm(config: &Config) -> Result<(), String> {
-    let mut context = TestContext::connect_as(config, "probe", "probe", None, Some("ProbeWiz"))?;
-    context.ensure_job(9)?;
-    context.ensure_base_level(99)?;
-    context.say("@heal")?;
-    context.warp_random("prt_fild08")?;
-    context.flush();
-    context.say("@allskill")?;
-    context.pump(Duration::from_millis(600));
-
-    let target = ensure_target(&mut context)?;
-    let position = context
-        .entities
-        .get(&target)
-        .map(|entity| entity.position.tile_position())
-        .ok_or("target vanished")?;
-    approach_target(&mut context, position)?;
-
-    context.flush();
-    context
-        .net
-        .cast_ground_skill(SkillId(21), SkillLevel(10), position)
-        .map_err(|_| "disconnected")?;
-
-    let events = context.collect_for(Duration::from_secs(6));
-    println!(
-        "    {} events after casting Thunderstorm at ({}, {}):",
-        events.len(),
-        position.x,
-        position.y
-    );
-    for event in &events {
-        let line: String = format!("{event:?}").chars().take(200).collect();
-        println!("      {line}");
-    }
-
-    context.kill_all_monsters();
-    Ok(())
-}
-
-/// Focused actor-animation diagnostic: unlike the broad sweep, wait through
-/// status/cooldown noise and report the Pierce damage event that actually
-/// carries the source identity and action duration used by the renderer.
-fn probe_knight_action(config: &Config) -> Result<(), String> {
-    let mut context = TestContext::connect(config)?;
-    context.ensure_job(7)?;
-    context.say("@allskill")?;
-    context.say("@heal")?;
-    context.pump(Duration::from_millis(500));
-
-    let target = ensure_target(&mut context)?;
-    let position = context
-        .entities
-        .get(&target)
-        .map(|entity| entity.position.tile_position())
-        .ok_or("target vanished")?;
-    approach_target(&mut context, position)?;
-
-    context.flush();
-    context
-        .net
-        .cast_skill(SkillId(56), SkillLevel(10), target)
-        .map_err(|_| "disconnected")?;
-    let events = context.collect_for(Duration::from_secs(3));
-    for event in &events {
-        println!("      {event:?}");
-    }
-    let damage = events.iter().find_map(|event| match event {
-        NetworkEvent::DamageEffect {
-            source_entity_id,
-            skill_id: Some(skill_id),
-            attack_duration,
-            ..
-        } if skill_id.0 == 56 => Some((*source_entity_id, *attack_duration)),
-        _ => None,
-    });
-    context.kill_all_monsters();
-    match damage {
-        Some((source, duration)) => {
-            println!(
-                "    Pierce animation fields: source={}, local={}, duration={}ms",
-                source.0, context.player_id.0, duration
-            );
-            Ok(())
-        }
-        None => Err("Pierce produced no DamageEffect".to_owned()),
-    }
 }
 
 /// Move next to a target without assuming a particular adjacent cell is

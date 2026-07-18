@@ -49,6 +49,10 @@ travel; additive blend. `EffectWithLight` gained a `start_delay` parameter
   tables name them; future work.
 - The probe scenario + `probe` account are temporary diagnostics; remove
   before the next acceptance gate (scenario count parity: suite is 106).
+  **Done post-review 2026-07-17**: `probe-thunderstorm` and
+  `probe-knight-action` removed from the suite; `provision-effect-roster`
+  stays as a permanent idempotent scenario, so the documented gate count is
+  now 107. The `probe` login-table account was removed separately.
 
 All `cargo test -p korangar --lib` green (80); all mapped STRs parse with 0
 unconsumed bytes; release rebuilt and relaunched for live verification.

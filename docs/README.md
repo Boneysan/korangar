@@ -63,7 +63,7 @@ This directory contains all design documents, technical deep dives, implementati
 ### Testing & Verification
 
 > These live in **`tools/testing/`**, outside `docs/` — they are easy to miss. The
-> **106-scenario headless suite** is the project's main automated regression gate
+> **107-scenario headless suite** is the project's main automated regression gate
 > (acceptance passed 2026-07-13, double-run green).
 
 | Document | Purpose |
