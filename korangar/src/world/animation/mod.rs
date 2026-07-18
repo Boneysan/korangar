@@ -1584,3 +1584,151 @@ mod weapon_action_tests {
         }
     }
 }
+
+/// Golden timeline tests for the animation-fidelity plan (phase A): chain the
+/// pieces a damage packet drives — source action selection, the ACT-derived
+/// impact boundary, `PendingImpactQueue`, and the target Hurt clock — through
+/// synthetic ACT data and assert the exact millisecond boundaries.
+#[cfg(test)]
+mod golden_timeline_tests {
+    use cgmath::Vector2;
+    #[cfg(feature = "debug")]
+    use cgmath::{Matrix4, Zero};
+    use ragnarok_packets::{ClientTick, EntityId, JobId, Sex, SkillId};
+
+    use super::{
+        Animation, AnimationActionType, AnimationData, AnimationFrame, AnimationState, animation_frame_position, is_animation_complete,
+    };
+    use crate::EntityType;
+    use crate::world::ActionEvent;
+    use crate::world::impact::{DamageImpact, PendingImpactQueue};
+
+    fn frame(event: Option<ActionEvent>) -> AnimationFrame {
+        AnimationFrame {
+            event,
+            offset: Vector2::new(0, 0),
+            top_left: Vector2::new(0, 0),
+            size: Vector2::new(0, 0),
+            frame_parts: Vec::new(),
+            #[cfg(feature = "debug")]
+            horizontal_matrix: Matrix4::zero(),
+            #[cfg(feature = "debug")]
+            vertical_matrix: Matrix4::zero(),
+        }
+    }
+
+    /// One synthetic action reused for every action index (modulo indexing),
+    /// mirroring one direction of a body ACT with `frame_count` motions.
+    fn animation_data(entity_type: EntityType, delay: f32, frame_count: usize, attack_event_index: Option<usize>) -> AnimationData {
+        let frames = (0..frame_count)
+            .map(|index| frame((attack_event_index == Some(index)).then_some(ActionEvent::Attack)))
+            .collect();
+        AnimationData {
+            animation_pair: Vec::new(),
+            animations: vec![Animation { frames }],
+            delays: vec![delay],
+            entity_type,
+        }
+    }
+
+    fn damage(target: u32, damage_delay: u32) -> DamageImpact {
+        DamageImpact {
+            source_entity_id: EntityId(2000000),
+            destination_entity_id: EntityId(target),
+            skill_id: None,
+            packet_tick: ClientTick(5000),
+            damage_amount: Some(120),
+            hit_count: 1,
+            damage_delay,
+            is_critical: false,
+        }
+    }
+
+    /// A Knight spear basic attack (`ZC_NOTIFY_ACT` type Damage): the source
+    /// plays Attack3 on its natural ACT clock, the impact boundary is the
+    /// exact `0x00991580` marker (6.0) × delay × 24 ms, and a `dMotion` of
+    /// exactly one reaction cycle plays the target Hurt at natural speed.
+    #[test]
+    fn knight_spear_attack_timeline_hits_native_boundaries() {
+        let packet_arrival = ClientTick(10_000);
+        let mut source_state = AnimationState::new(EntityType::Player, packet_arrival);
+        source_state.weapon_attack(EntityType::Player, JobId(7), Sex::Male, 4, packet_arrival);
+        assert_eq!(source_state.action_type, AnimationActionType::Attack3);
+        assert_eq!(source_state.impact_event_position_override(), Some(6.0));
+
+        // The Knight body ACT delay for Attack3 is 4.0 in the classic data.
+        let source_data = animation_data(EntityType::Player, 4.0, 8, None);
+        let impact_delay = source_data.attack_impact_delay_ms(&source_state, 0, source_state.impact_event_position_override());
+        assert_eq!(impact_delay, 576, "6.0 × 4.0 × 24 ms");
+
+        let mut queue = PendingImpactQueue::default();
+        queue.schedule(packet_arrival, impact_delay, damage(110000001, 288));
+        assert!(queue.drain_due(ClientTick(10_575)).is_empty(), "one tick before the boundary");
+        let due = queue.drain_due(ClientTick(10_576));
+        assert_eq!(due.len(), 1, "due exactly at the ACT-derived boundary");
+
+        // Hurt begins at the due boundary, not at packet receipt. dMotion 288
+        // is exactly one reaction cycle: natural ACT speed (96 ms per motion),
+        // complete after frame_count × 96 ms.
+        let due_tick = ClientTick(10_576);
+        let mut target_state = AnimationState::new(EntityType::Player, due_tick);
+        target_state.hurt(EntityType::Player, JobId(0), due[0].damage.damage_delay, due_tick);
+
+        target_state.time = 95;
+        assert_eq!(animation_frame_position(&target_state, 4.0, 3), 0);
+        target_state.time = 96;
+        assert_eq!(animation_frame_position(&target_state, 4.0, 3), 1);
+        target_state.time = 287;
+        assert!(!is_animation_complete(&target_state, 4.0, 3));
+        target_state.time = 288;
+        assert!(is_animation_complete(&target_state, 4.0, 3));
+    }
+
+    /// A monster source action uses the shared actor path: an authored `"atk"`
+    /// event owns the impact boundary; without one the boundary falls back to
+    /// `motion_count - 2` exactly like Ragexe `0x008A9500`.
+    #[test]
+    fn monster_impact_boundary_uses_atk_event_with_native_fallback() {
+        let packet_arrival = ClientTick(20_000);
+        let mut source_state = AnimationState::new(EntityType::Monster, packet_arrival);
+        // Unmapped skill IDs resolve to native default state 7; a non-player
+        // actor keeps native flat group 2 (the monster attack action).
+        let animated = source_state.skill_attack(
+            EntityType::Monster,
+            JobId(1002),
+            Sex::Male,
+            0,
+            SkillId(9999),
+            false,
+            packet_arrival,
+        );
+        assert!(animated);
+        assert_eq!(source_state.impact_event_position_override(), None);
+
+        let authored = animation_data(EntityType::Monster, 5.0, 6, Some(3));
+        assert_eq!(
+            authored.attack_impact_delay_ms(&source_state, 0, None),
+            360,
+            "authored atk event at motion 3: 3 × 5.0 × 24 ms"
+        );
+
+        let unauthored = animation_data(EntityType::Monster, 5.0, 6, None);
+        assert_eq!(
+            unauthored.attack_impact_delay_ms(&source_state, 0, None),
+            480,
+            "fallback motion_count - 2: 4 × 5.0 × 24 ms"
+        );
+    }
+
+    /// Spear Boomerang (skill 59) is proven native state 12 → flat Attack1;
+    /// its former throwing/Attack2 override was wrong. Pin the corrected
+    /// resolution end-to-end through `skill_attack`.
+    #[test]
+    fn spear_boomerang_resolves_state_12_attack1() {
+        let mut state = AnimationState::new(EntityType::Player, ClientTick(0));
+        let animated = state.skill_attack(EntityType::Player, JobId(7), Sex::Male, 4, SkillId(59), false, ClientTick(0));
+        assert!(animated);
+        assert_eq!(state.action_type, AnimationActionType::Attack1);
+        assert!(state.motion_program.is_none(), "state 12 installs no higher motion program");
+    }
+}

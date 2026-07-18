@@ -1285,4 +1285,172 @@ mod packet_handlers {
             }] if entity_id.0 == 2000000
         ));
     }
+
+    /// Golden fixture for the animation-fidelity plan (phase A): the basic
+    /// damage packet's native timing fields must survive into `DamageEffect`
+    /// unmodified — `sMotion` and `dMotion` are separate clocks, and the
+    /// packet tick is retained for occurrence correlation.
+    #[test]
+    fn basic_damage_0x08c8_keeps_smotion_and_dmotion_separate() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x08C8 | source 2000000 | destination 110000001 | tick 5000 |
+        // sMotion 576 | dMotion 288 | damage 120 | special 0 | hits 1 |
+        // type 0 (Damage) | damage2 0
+        let mut bytes = vec![0xC8, 0x08];
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(&110000001u32.to_le_bytes());
+        bytes.extend_from_slice(&5000u32.to_le_bytes());
+        bytes.extend_from_slice(&576u32.to_le_bytes());
+        bytes.extend_from_slice(&288u32.to_le_bytes());
+        bytes.extend_from_slice(&120u32.to_le_bytes());
+        bytes.push(0);
+        bytes.extend_from_slice(&1u16.to_le_bytes());
+        bytes.push(0);
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("basic damage packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    skill_id: None,
+                    packet_tick,
+                    damage_amount: Some(120),
+                    hit_count: 1,
+                    attack_duration: 576,
+                    damage_delay: 288,
+                    is_critical: false,
+                }] if source_entity_id.0 == 2000000
+                    && destination_entity_id.0 == 110000001
+                    && packet_tick.0 == 5000
+            ),
+            "unexpected events: {:?}",
+            events.0
+        );
+    }
+
+    /// A zero-damage basic hit of type Damage is a miss: `damage_amount` must
+    /// be `None` (Miss particle), while the timing fields still schedule the
+    /// impact boundary. Critical type must set `is_critical`.
+    #[test]
+    fn basic_damage_0x08c8_miss_and_critical_variants() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        let mut build = |damage: u32, damage_type: u8| {
+            let mut bytes = vec![0xC8, 0x08];
+            bytes.extend_from_slice(&2000000u32.to_le_bytes());
+            bytes.extend_from_slice(&110000001u32.to_le_bytes());
+            bytes.extend_from_slice(&5000u32.to_le_bytes());
+            bytes.extend_from_slice(&500u32.to_le_bytes());
+            bytes.extend_from_slice(&144u32.to_le_bytes());
+            bytes.extend_from_slice(&damage.to_le_bytes());
+            bytes.push(0);
+            bytes.extend_from_slice(&1u16.to_le_bytes());
+            bytes.push(damage_type);
+            bytes.extend_from_slice(&0u32.to_le_bytes());
+            bytes
+        };
+
+        let miss = build(0, 0);
+        let mut reader = ByteReader::without_metadata(&miss);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("miss packet did not parse");
+        };
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::DamageEffect {
+                damage_amount: None,
+                damage_delay: 144,
+                is_critical: false,
+                ..
+            }]),
+            "unexpected miss events: {:?}",
+            events.0
+        );
+
+        // damage_type 10 = CriticalHit.
+        let critical = build(333, 10);
+        let mut reader = ByteReader::without_metadata(&critical);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("critical packet did not parse");
+        };
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::DamageEffect {
+                damage_amount: Some(333),
+                is_critical: true,
+                ..
+            }]),
+            "unexpected critical events: {:?}",
+            events.0
+        );
+    }
+
+    /// Golden fixture for `ZC_NOTIFY_SKILL2` (0x01DE): `attack_duration` must
+    /// be the *source* delay alone (the old `max(sdelay, ddelay)` bug), the
+    /// destination delay must arrive as `damage_delay`, the volley `div`
+    /// becomes `hit_count`, and skill_type 8 is the multi-hit critical family.
+    #[test]
+    fn skill_damage_0x01de_routes_native_timing_fields() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x01DE | skill 56 (Pierce) | source 2000000 |
+        // destination 110000001 | tick 7777 | sdelay 672 | ddelay 480 |
+        // damage 900 | level 10 | div 3 | skill_type 6
+        let mut bytes = vec![0xDE, 0x01];
+        bytes.extend_from_slice(&56u16.to_le_bytes());
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(&110000001u32.to_le_bytes());
+        bytes.extend_from_slice(&7777u32.to_le_bytes());
+        bytes.extend_from_slice(&672u32.to_le_bytes());
+        bytes.extend_from_slice(&480u32.to_le_bytes());
+        bytes.extend_from_slice(&900u32.to_le_bytes());
+        bytes.extend_from_slice(&10u16.to_le_bytes());
+        bytes.extend_from_slice(&3u16.to_le_bytes());
+        bytes.push(6);
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("skill damage packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    skill_id: Some(skill_id),
+                    packet_tick,
+                    damage_amount: Some(900),
+                    hit_count: 3,
+                    attack_duration: 672,
+                    damage_delay: 480,
+                    is_critical: false,
+                    ..
+                }] if source_entity_id.0 == 2000000 && skill_id.0 == 56 && packet_tick.0 == 7777
+            ),
+            "unexpected events: {:?}",
+            events.0
+        );
+    }
 }
