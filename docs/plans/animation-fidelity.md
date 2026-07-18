@@ -79,6 +79,15 @@ exactly once per crossing.
 - Unit tests: multi-motion jump, loop wrap, held frame, motion-program
   duplicate steps (keep the `step_serial` behavior).
 
+**Implementation landed 2026-07-17** (`FrameEventCursor` +
+`AnimationData::take_crossed_events` + `collect_crossed_events`; `SoundToken`
+and `SoundState` deleted; events delivered before the completion transition
+so final-frame crossings are not lost; stall recovery bounded to one full
+cycle as a deliberate audio-flood guard). **Still open to close phase B**:
+the cursor unit tests listed above, the ANIMATION_SYSTEM.md §5.3 update, and
+a live listen (attack sounds still fire once per swing; no dropped sounds
+under load).
+
 Exit: `SoundToken` deleted; ANIMATION_SYSTEM.md §5.3 caveat removed.
 
 ## 4. Phase C — Runtime layer composition (large, engine)

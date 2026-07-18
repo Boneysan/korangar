@@ -319,12 +319,41 @@ pub struct AnimationState {
     /// `opt1` stone/freeze set Ragexe's playback hold byte. Position and
     /// subsequent action selection may still change, but ACT time does not.
     paused: bool,
+    event_cursor: FrameEventCursor,
 }
 
 #[derive(Copy, Clone, Debug)]
 struct HurtMotionTiming {
     reaction_cycles: f32,
     uses_body_act_delay: bool,
+}
+
+/// Tracks how far into one playback frame events have been delivered. Keyed
+/// to the playback identity (start tick + selected flat action) so a new
+/// action naturally starts a fresh cursor without every setter resetting it.
+#[derive(Copy, Clone, Debug, Default)]
+struct FrameEventCursor {
+    initialized: bool,
+    playback_start: u32,
+    action_base_offset: usize,
+    last_raw_motion: Option<usize>,
+    last_step_serial: Option<u32>,
+}
+
+impl FrameEventCursor {
+    fn new(start_time: ClientTick, action_base_offset: usize) -> Self {
+        Self {
+            initialized: true,
+            playback_start: start_time.0,
+            action_base_offset,
+            last_raw_motion: None,
+            last_step_serial: None,
+        }
+    }
+
+    fn matches(&self, start_time: ClientTick, action_base_offset: usize) -> bool {
+        self.initialized && self.playback_start == start_time.0 && self.action_base_offset == action_base_offset
+    }
 }
 
 impl AnimationState {
@@ -342,6 +371,7 @@ impl AnimationState {
             impact_event_position_override: None,
             looping: true,
             paused: false,
+            event_cursor: FrameEventCursor::default(),
         }
     }
 
@@ -670,9 +700,6 @@ impl AnimationState {
         self.motion_program.as_ref().map(|program| program.current_step().motion_index)
     }
 
-    fn motion_step_serial(&self) -> u32 {
-        self.motion_program.as_ref().map(NativeMotionProgram::step_serial).unwrap_or(0)
-    }
 
     pub fn update(&mut self, client_tick: ClientTick) {
         if self.paused {
@@ -683,17 +710,6 @@ impl AnimationState {
             program.update(self.time);
         }
     }
-}
-
-/// Identifies one displayed frame occurrence of one animation playback; see
-/// [`AnimationData::get_frame_with_sound_token`].
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
-pub struct SoundToken {
-    animation_start: u32,
-    frame_position: usize,
-    /// Higher motion programs can deliberately visit the same motion more
-    /// than once. Each visit is a distinct native event occurrence.
-    motion_step_serial: u32,
 }
 
 #[derive(RustState, Clone, StateElement)]
@@ -786,6 +802,70 @@ fn animation_frame_position(animation_state: &AnimationState, delay: f32, _frame
     (animation_state.time as f32 / frame_duration.max(f32::EPSILON)) as usize
 }
 
+/// The crossed-motion walk behind [`AnimationData::take_crossed_events`],
+/// operating on the already-resolved action animation and delay.
+///
+/// A cursor keyed to the playback identity tracks the last delivered motion.
+/// One-shot actions clamp at their final motion (a held frame delivers
+/// nothing new); looping actions walk through the wrap. Motion programs
+/// advance at most one step per actor update, so each `step_serial` change
+/// is one event occurrence — a duplicate authored motion fires again, a
+/// terminal held motion does not.
+fn collect_crossed_events(animation_state: &mut AnimationState, animation: &Animation, delay: f32) -> Vec<ActionEvent> {
+    let frame_count = animation.frames.len();
+    if frame_count == 0 {
+        return Vec::new();
+    }
+
+    if !animation_state
+        .event_cursor
+        .matches(animation_state.start_time, animation_state.action_base_offset)
+    {
+        animation_state.event_cursor = FrameEventCursor::new(animation_state.start_time, animation_state.action_base_offset);
+    }
+    let mut cursor = animation_state.event_cursor;
+    let mut events = Vec::new();
+
+    match animation_state.motion_program.as_ref() {
+        Some(program) => {
+            let serial = program.step_serial();
+            if cursor.last_step_serial != Some(serial) {
+                cursor.last_step_serial = Some(serial);
+                let motion_index = program.current_step().motion_index.min(frame_count - 1);
+                if let Some(event) = animation.frames[motion_index].event {
+                    events.push(event);
+                }
+            }
+        }
+        None => {
+            let raw_motion = animation_frame_position(animation_state, delay, frame_count);
+            let end = match animation_state.looping {
+                true => raw_motion,
+                false => raw_motion.min(frame_count - 1),
+            };
+            let start = match cursor.last_raw_motion {
+                None => 0,
+                Some(last) => last.saturating_add(1),
+            };
+
+            if start <= end {
+                // Native walks every crossing; bound stall recovery to the
+                // final full cycle so an extreme hitch cannot flood audio.
+                let first = start.max(end.saturating_sub(frame_count - 1));
+                for position in first..=end {
+                    if let Some(event) = animation.frames[position % frame_count].event {
+                        events.push(event);
+                    }
+                }
+                cursor.last_raw_motion = Some(end);
+            }
+        }
+    }
+
+    animation_state.event_cursor = cursor;
+    events
+}
+
 fn is_animation_complete(animation_state: &AnimationState, delay: f32, frame_count: usize) -> bool {
     if let Some(program) = animation_state.motion_program.as_ref() {
         return program.is_complete();
@@ -849,19 +929,6 @@ impl AnimationData {
     }
 
     pub fn get_frame(&self, animation_state: &AnimationState, camera: &dyn Camera, direction: Direction) -> &AnimationFrame {
-        self.get_frame_with_sound_token(animation_state, camera, direction).0
-    }
-
-    /// Returns the frame to render plus a token identifying this displayed
-    /// frame occurrence. It prevents a held frame from replaying its sound.
-    /// Native Ragexe also scans every crossed body motion, so this token is an
-    /// interim mechanism and can still miss events after a multi-frame jump.
-    pub fn get_frame_with_sound_token(
-        &self,
-        animation_state: &AnimationState,
-        camera: &dyn Camera,
-        direction: Direction,
-    ) -> (&AnimationFrame, SoundToken) {
         let camera_direction = camera.camera_direction();
         let direction = (camera_direction + u16::from(direction) as usize) & 7;
         let animation_action_index = animation_state.current_action_base_offset() * 8 + direction;
@@ -874,28 +941,38 @@ impl AnimationData {
 
         let frame_time = animation_frame_position(animation_state, delay, animation.frames.len());
 
-        let (frame_index, sound_position) = match animation_state.looping {
-            // Unclamped, so every pass over the event frame is a new token.
-            true => (frame_time % animation.frames.len(), frame_time),
-            // Clamped, so a held final frame keeps one token.
-            false => {
-                let clamped = frame_time.min(animation.frames.len().saturating_sub(1));
-                (clamped, clamped)
-            }
-        };
-
-        let token = SoundToken {
-            animation_start: animation_state.start_time.0,
-            frame_position: sound_position,
-            motion_step_serial: animation_state.motion_step_serial(),
+        let frame_index = match animation_state.looping {
+            true => frame_time % animation.frames.len(),
+            false => frame_time.min(animation.frames.len().saturating_sub(1)),
         };
 
         // Remove Doridori animation from Player
         if self.entity_type == EntityType::Player && animation_state.action_type == AnimationActionType::Idle {
-            (&animation.frames[0], token)
+            &animation.frames[0]
         } else {
-            (&animation.frames[frame_index], token)
+            &animation.frames[frame_index]
         }
+    }
+
+    /// Deliver each ACT frame event crossed since the previous call, exactly
+    /// once per crossing. Native Ragexe fires events by walking every body
+    /// motion passed since the prior actor update (`0x008AC860`), including
+    /// the loop wrap — not by sampling the currently displayed frame — so a
+    /// slow application frame that jumps several motions still fires the
+    /// events on the skipped frames.
+    pub fn take_crossed_events(&self, animation_state: &mut AnimationState, camera: &dyn Camera, direction: Direction) -> Vec<ActionEvent> {
+        if self.delays.is_empty() || self.animations.is_empty() {
+            return Vec::new();
+        }
+
+        let camera_direction = camera.camera_direction();
+        let direction = (camera_direction + u16::from(direction) as usize) & 7;
+        let animation_action_index = animation_state.current_action_base_offset() * 8 + direction;
+
+        let delay = self.delays[animation_action_index % self.delays.len()];
+        let animation = &self.animations[animation_action_index % self.animations.len()];
+
+        collect_crossed_events(animation_state, animation, delay)
     }
 
     pub fn calculate_world_matrix(

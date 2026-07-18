@@ -572,6 +572,21 @@ unreproduced logout-to-char-select panic (rust-state safe-selector unwrap on
 capture it if it recurs. The roster gained a female `EffectNovice` (slot 1)
 and per-character consumables (EDP Poison Bottles) in provisioning.
 
+## Phase B started: crossed-motion event cursor (implementation only)
+
+After the round-1 pass closed, phase B of
+[plans/animation-fidelity.md](plans/animation-fidelity.md) was implemented:
+`FrameEventCursor` in `AnimationState` walks every ACT motion crossed since
+the previous actor update (including loop wrap), replacing the displayed-frame
+`SoundToken`/`SoundState` dedup that could drop an event when a slow frame
+skipped motions. Events are delivered before the completion transition (a
+new playback identity would discard final-frame crossings), motion-program
+steps fire once per `step_serial` occurrence, and stall recovery is bounded
+to one full cycle as an audio-flood guard (deliberate deviation from the
+unbounded native walk). Compiles clean; the pre-existing 151-test suite is
+green. **Phase B is not closed**: the dedicated cursor unit tests, the
+ANIMATION_SYSTEM.md §5.3 update, and a live sound check are still pending.
+
 Final validation for the complete worktree:
 
 - Korangar library: 148 passed, 10 archive-dependent tests ignored;

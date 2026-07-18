@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use arrayvec::ArrayVec;
 use cgmath::{EuclideanSpace, Point3, Vector2, VectorSpace};
-use korangar_audio::{AudioEngine, SoundEffectKey};
+use korangar_audio::AudioEngine;
 #[cfg(feature = "debug")]
 use korangar_debug::logging::Colorize;
 use korangar_interface::element::StateElement;
@@ -35,7 +35,7 @@ use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
     ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity, Library, MAX_WALK_PATH_SIZE, Map,
-    PathFinder, SoundToken, native_real_weapon_id,
+    PathFinder, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -147,34 +147,6 @@ mod entity_type_tests {
     }
 }
 
-#[derive(Copy, Clone, Default)]
-pub struct SoundState {
-    previous_key: Option<SoundEffectKey>,
-    last_token: Option<SoundToken>,
-}
-
-impl SoundState {
-    /// Play a frame event's sound once per displayed-frame token. A time-based
-    /// cooldown repeats sounds on held frames. Native Ragexe additionally
-    /// scans crossed body motions; that cursor still needs to replace this
-    /// interim token mechanism.
-    pub fn update(
-        &mut self,
-        audio_engine: &AudioEngine<GameFileLoader>,
-        position: Point3<f32>,
-        sound_effect_key: SoundEffectKey,
-        token: SoundToken,
-    ) {
-        if self.last_token == Some(token) && self.previous_key == Some(sound_effect_key) {
-            return;
-        }
-
-        audio_engine.play_spatial_sound_effect(sound_effect_key, position, SPATIAL_SOUND_RANGE);
-        self.last_token = Some(token);
-        self.previous_key = Some(sound_effect_key);
-    }
-}
-
 #[derive(Clone, RustState, StateElement)]
 pub struct Common {
     pub entity_id: EntityId,
@@ -217,8 +189,6 @@ pub struct Common {
     #[hidden_element]
     active_cast: Option<ActorCast>,
     stopped_moving: bool,
-    #[hidden_element]
-    sound_state: SoundState,
     #[hidden_element]
     fade_state: FadeState,
 }
@@ -620,7 +590,6 @@ impl Common {
             su_stoop: false,
             active_cast: None,
             stopped_moving: false,
-            sound_state: SoundState::default(),
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
             scale,
         }
@@ -659,22 +628,25 @@ impl Common {
         }
 
         if let Some(animation_data) = self.animation_data.as_ref() {
+            // Deliver crossed frame events before any completion transition:
+            // the transition swaps the playback identity, which would discard
+            // crossings on the final motions of the finished action.
+            for event in animation_data.take_crossed_events(&mut self.animation_state, camera, self.direction) {
+                match event {
+                    ActionEvent::Sound { key } => {
+                        audio_engine.play_spatial_sound_effect(key, self.world_position, SPATIAL_SOUND_RANGE);
+                    }
+                    ActionEvent::Attack => {
+                        let key = audio_engine.load(weapon_sound(self.weapon));
+                        audio_engine.play_spatial_sound_effect(key, self.world_position, SPATIAL_SOUND_RANGE);
+                    }
+                    ActionEvent::Unknown => { /* Nothing to do */ }
+                }
+            }
+
             if animation_data.is_animation_over(&self.animation_state) {
                 self.animation_state
                     .apply_completion_transition(self.entity_type, self.is_pk_mode_on, client_tick);
-            }
-
-            let (frame, sound_token) = animation_data.get_frame_with_sound_token(&self.animation_state, camera, self.direction);
-
-            match frame.event {
-                Some(ActionEvent::Sound { key }) => {
-                    self.sound_state.update(audio_engine, self.world_position, key, sound_token);
-                }
-                Some(ActionEvent::Attack) => {
-                    let key = audio_engine.load(weapon_sound(self.weapon));
-                    self.sound_state.update(audio_engine, self.world_position, key, sound_token);
-                }
-                None | Some(ActionEvent::Unknown) => { /* Nothing to do */ }
             }
         }
     }
