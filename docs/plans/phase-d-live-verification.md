@@ -158,10 +158,12 @@ count — while idle):**
 Fix deferred by decision 2026-07-20 (finish the checklist first). Does **not**
 require re-deriving the original client — the draw model is already RE'd in Phase C/D.
 
-**Diagnostic scaffolding added (revert or promote before commit):**
-`korangar/src/lib.rs::probe_weapon_parts` (+16 lines) and
-`korangar/examples/trail_probe.rs` — file_exists probes used to prove the trail
-SPR findings above.
+**Diagnostic scaffolding — REVERTED 2026-07-21.** The one-off probes
+(`korangar/src/lib.rs::probe_weapon_parts` +16 lines and
+`korangar/examples/trail_probe.rs`) that verified the trail SPR findings above
+have been removed; their conclusions are already captured in the row notes. If
+the same `file_exists` probing is needed again, promote it into the
+`weapon-sprite-audit` tool rather than re-adding a loose example.
 
 ## Fast re-check commands (no GUI)
 
