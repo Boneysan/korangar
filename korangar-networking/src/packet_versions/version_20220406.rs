@@ -919,6 +919,38 @@ where
         success: packet.result == 0,
     })?;
     packet_handler.register(|packet: DamagePacket1| match packet.damage_type {
+        // Assassin dual-wield / Double Attack normal hits arrive as a multi-hit
+        // damage type carrying a second damage value (`damage_amount_2`). These
+        // must still surface a `DamageEffect`; otherwise the auto-attack loop
+        // (which re-fires on the player's own damage ack) stalls after one swing.
+        DamageType::MultiHitDamage | DamageType::MultiHitDamageEndure => Some(NetworkEvent::DamageEffect {
+            source_entity_id: packet.source_entity_id,
+            destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
+            packet_tick: packet.client_tick,
+            damage_amount: {
+                let total = packet.damage_amount as i32 + packet.damage_amount_2 as i32;
+                (total > 0).then_some(total as usize)
+            },
+            hit_count: (packet.number_of_hits as usize).max(2),
+            attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
+            is_critical: false,
+        }),
+        DamageType::CriticalMultiHit => Some(NetworkEvent::DamageEffect {
+            source_entity_id: packet.source_entity_id,
+            destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
+            packet_tick: packet.client_tick,
+            damage_amount: {
+                let total = packet.damage_amount as i32 + packet.damage_amount_2 as i32;
+                (total > 0).then_some(total as usize)
+            },
+            hit_count: (packet.number_of_hits as usize).max(2),
+            attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
+            is_critical: true,
+        }),
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,
@@ -956,6 +988,36 @@ where
         _ => None,
     })?;
     packet_handler.register(|packet: DamagePacket3| match packet.damage_type {
+        // See DamagePacket1 above: dual-wield / Double Attack multi-hit normals
+        // must produce a DamageEffect so the auto-attack loop keeps firing.
+        DamageType::MultiHitDamage | DamageType::MultiHitDamageEndure => Some(NetworkEvent::DamageEffect {
+            source_entity_id: packet.source_entity_id,
+            destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
+            packet_tick: packet.client_tick,
+            damage_amount: {
+                let total = packet.damage_amount as usize + packet.damage_amount_2 as usize;
+                (total > 0).then_some(total)
+            },
+            hit_count: (packet.number_of_hits as usize).max(2),
+            attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
+            is_critical: false,
+        }),
+        DamageType::CriticalMultiHit => Some(NetworkEvent::DamageEffect {
+            source_entity_id: packet.source_entity_id,
+            destination_entity_id: packet.destination_entity_id,
+            skill_id: None,
+            packet_tick: packet.client_tick,
+            damage_amount: {
+                let total = packet.damage_amount as usize + packet.damage_amount_2 as usize;
+                (total > 0).then_some(total)
+            },
+            hit_count: (packet.number_of_hits as usize).max(2),
+            attack_duration: packet.attack_duration,
+            damage_delay: packet.damage_delay,
+            is_critical: true,
+        }),
         DamageType::Damage => Some(NetworkEvent::DamageEffect {
             source_entity_id: packet.source_entity_id,
             destination_entity_id: packet.destination_entity_id,

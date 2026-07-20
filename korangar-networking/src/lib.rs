@@ -1401,6 +1401,70 @@ mod packet_handlers {
         );
     }
 
+    /// Assassin dual-wield / Double Attack normals arrive as `MultiHitDamage`
+    /// (type 8) with a second damage value in `damage_amount_2`. Regression for
+    /// the auto-attack stall: these must still yield a `DamageEffect` (summing
+    /// both hits) so the player's own damage-ack keeps the attack loop alive.
+    /// The critical multi-hit type (13) must set `is_critical`.
+    #[test]
+    fn dual_wield_multi_hit_damage_0x08c8_surfaces_damage_effect() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        let build = |damage: u32, damage2: u32, hits: u16, damage_type: u8| {
+            let mut bytes = vec![0xC8, 0x08];
+            bytes.extend_from_slice(&2000000u32.to_le_bytes());
+            bytes.extend_from_slice(&110000001u32.to_le_bytes());
+            bytes.extend_from_slice(&5000u32.to_le_bytes());
+            bytes.extend_from_slice(&500u32.to_le_bytes());
+            bytes.extend_from_slice(&144u32.to_le_bytes());
+            bytes.extend_from_slice(&damage.to_le_bytes());
+            bytes.push(0);
+            bytes.extend_from_slice(&hits.to_le_bytes());
+            bytes.push(damage_type);
+            bytes.extend_from_slice(&damage2.to_le_bytes());
+            bytes
+        };
+
+        // type 8 = MultiHitDamage (dual wield): 100 + 90 = 190, two hits.
+        let dual = build(100, 90, 2, 8);
+        let mut reader = ByteReader::without_metadata(&dual);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("dual-wield damage packet did not parse");
+        };
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::DamageEffect {
+                damage_amount: Some(190),
+                hit_count: 2,
+                is_critical: false,
+                ..
+            }]),
+            "dual-wield multi-hit should surface a DamageEffect: {:?}",
+            events.0
+        );
+
+        // type 13 = CriticalMultiHit.
+        let crit = build(150, 140, 2, 13);
+        let mut reader = ByteReader::without_metadata(&crit);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("critical multi-hit packet did not parse");
+        };
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::DamageEffect {
+                damage_amount: Some(290),
+                hit_count: 2,
+                is_critical: true,
+                ..
+            }]),
+            "critical multi-hit should surface a critical DamageEffect: {:?}",
+            events.0
+        );
+    }
+
     /// Golden fixture for `ZC_NOTIFY_SKILL2` (0x01DE): `attack_duration` must
     /// be the *source* delay alone (the old `max(sdelay, ddelay)` bug), the
     /// destination delay must arrive as `damage_delay`, the volley `div`
