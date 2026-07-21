@@ -9,10 +9,10 @@ custom UI for a friends group + DM campaign.
 
 See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
 
-**NEXT animation task (2026-07-22):** Phase D is **DONE** — code closed *and* live
-GUI verification signed off (all 8 rows PASS 2026-07-21, see
-[docs/plans/phase-d-live-verification.md](docs/plans/phase-d-live-verification.md)).
-**Phase E (skill/status recipes)** is next: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+**NEXT animation task (2026-07-22):** Phase D is **DONE** (live-green 2026-07-21).
+**Phase E1 code is closed** (Napalm/Soul Strike/Frost Diver/Fire Ball/Jupitel/
+Earth Spike/Heaven's Drive procedural recipes) — needs a **live GUI pass** then
+E2 (persistent skill units). Plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
 Fixes shipped while closing D (all on `agent/platform-connectivity-controls`):
 armed players stand in the ReadyFight stance so weapon+shield render at idle
 (`78f57915`), and relax to Idle on town/safe maps (`abb519f1`); respawn/resurrect

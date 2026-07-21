@@ -346,9 +346,11 @@ Guard covered by body when facing away.
 
 **Live checklist (Phase D — DONE 2026-07-21, all 8 rows PASS):** full results in
 [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)
-(Mjolnir 1530, dual daggers, trail allowlist, C4/C5 regressions, bow/mace). **Next
-task for Claude/Codex/any agent is Phase E** (skill/status recipes,
-[plans/animation-fidelity.md](plans/animation-fidelity.md) §6).
+(Mjolnir 1530, dual daggers, trail allowlist, C4/C5 regressions, bow/mace).
+**Phase E1 code closed 2026-07-22** (Mage/Wizard code-drawn effects) — next is
+the **E1 live GUI pass** then E2; see
+[plans/phase-e1-live-verification.md](plans/phase-e1-live-verification.md) and
+[plans/animation-fidelity.md](plans/animation-fidelity.md) §6.
 
 **Important**: `GameFileLoader::get_files_with_extension` under-reports the
 classic GRF (verified: the 기사 folder listed 3 files, probes found 16).
@@ -364,6 +366,9 @@ The execution plan for closing these is
   **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)**.
 - ~~**Per-item weapon sprites** / **`_검광` trails** / **item→view + dual
   combine**~~ — Phase D code closed 2026-07-18, live-verified 2026-07-21.
+- **Phase E1 code** (Napalm/Soul Strike orbs/Frost Diver/Fire Ball/Jupitel/
+  Earth Spike/Heaven's Drive) closed 2026-07-22 — **live GUI pending**
+  **[plans/phase-e1-live-verification.md](plans/phase-e1-live-verification.md)**.
 - **Impact scheduler completeness**: the ACT-derived pending-impact boundary
   and `dMotion / 288.0` target clock are implemented. Add exact damage-type
   reaction guards, per-hit cadence, packet-fixture/golden-timeline coverage,

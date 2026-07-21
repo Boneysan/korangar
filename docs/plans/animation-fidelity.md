@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | Active (2026-07-18) — phases A–C closed live; **D code closed, live GUI next** |
+| **Status** | Active (2026-07-22) — phases A–D closed live; **E1 code closed, live GUI next** |
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | **[phase-d-live-verification.md](phase-d-live-verification.md)** — in-client checklist before Phase E |
+| **NEXT AGENT** | **Live GUI pass of Phase E1** (Mage/Wizard code-drawn effects) → then E2 |
 
 ## 1. Scope and shape
 
@@ -234,11 +234,31 @@ Continue the proven per-batch method (wire probe → asset dump → roBrowserLeg
 semantic cross-check → typed recipe → GRF audit test → live check). Suggested
 batch order by campaign visibility:
 
-- **E1 — Code-drawn classic effects** (procedural `EffectBase` recipes like
-  `FallingBolts`/`SkillBurst`): Napalm Beat, Soul Strike orbs, Frost Diver
-  travel + freeze, Jupitel Thunder ball, Earth Spike / Heaven's Drive ground
-  geometry, Fire Ball. These are common low-level mob/party spells — highest
-  visible payoff.
+### E1 — Code-drawn classic effects — **CODE CLOSED 2026-07-22**
+
+Procedural `EffectBase` recipes on top of `FallingBolts` / `SkillBurst` /
+`SkillProjectile`. Live GUI still required before calling E1 fully done.
+
+| Skill (ID) | Track | Implementation |
+|---|---|---|
+| Napalm Beat (11) | Target burst | `SkillBurstStyle::NapalmBeat` (violet rings) |
+| Soul Strike (13) | Travel + hit | `SoulStrikeOrbs` (orb count = `hit_count`) + existing hit STR |
+| Frost Diver (15) | Travel + hit | `TravelBall(FrostDiver)` + `freeze.str` hit |
+| Fire Ball (17) | Travel + hit | `TravelBall(FireBall)` + firehit |
+| Jupitel Thunder (84) | Travel + hit | `TravelBall(Jupitel)` + lightning/wind hits |
+| Earth Spike (90) | Target geometry | `SkillBurstStyle::EarthSpike` + earthhit |
+| Heaven's Drive (91) | Target geometry | `SkillBurstStyle::HeavensDrive` (6-spike ring) + earthhit |
+
+Recipe table: `world/skill_recipe.rs`. Spawn unified through
+`spawn_damage_caster_skill_effect` (projectiles) and
+`spawn_damage_target_skill_effect` (target bursts). Unit tests:
+`phase_e1_code_drawn_recipes_are_wired`. GRF audit
+`all_mapped_skill_effect_assets_exist` green for E1 textures.
+
+**Live checklist (E1):** Mage/Wizard on field — cast each skill above, confirm
+travel or burst is visible (not sound/point-light only). Record date + observer
+here when done.
+
 - **E2 — Persistent skill units** beyond Firewall/Pneuma: Safety Wall,
   Sanctuary, Magnus, Ice Wall, Sage ground fields, Hunter traps (armed
   visual), song/dance areas. Requires keeping creator/level/range/visibility

@@ -118,6 +118,56 @@ pub enum DamageTargetEffect {
     BrandishSpear,
     BowlingBash,
     SonicBlow,
+    /// Phase E1 — MG_NAPALMBEAT psychic shock rings.
+    NapalmBeat,
+    /// Phase E1 — WZ_EARTHSPIKE single ground spike.
+    EarthSpike,
+    /// Phase E1 — WZ_HEAVENDRIVE multi-spike ring.
+    HeavensDrive,
+}
+
+/// Source→target travel ball kind for classic Mage/Wizard spells (Phase E1).
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum TravelBallKind {
+    FireBall,
+    FrostDiver,
+    Jupitel,
+}
+
+impl TravelBallKind {
+    pub fn texture_path(self) -> &'static str {
+        match self {
+            // Fire-arrow frame is the closest shipped ball-like fire texture.
+            Self::FireBall => "effect\\불화살1.tga",
+            Self::FrostDiver => "effect\\icearrow.tga",
+            // Electric flash using the bright lens texture + yellow tint.
+            Self::Jupitel => "effect\\lens1.tga",
+        }
+    }
+
+    pub fn duration(self) -> f32 {
+        match self {
+            Self::FireBall => 0.28,
+            Self::FrostDiver => 0.32,
+            Self::Jupitel => 0.38,
+        }
+    }
+
+    pub fn size(self) -> f32 {
+        match self {
+            Self::FireBall => 72.0,
+            Self::FrostDiver => 64.0,
+            Self::Jupitel => 80.0,
+        }
+    }
+
+    pub fn color(self) -> Color {
+        match self {
+            Self::FireBall => Color::rgb_u8(255, 120, 40),
+            Self::FrostDiver => Color::rgb_u8(160, 220, 255),
+            Self::Jupitel => Color::rgb_u8(255, 245, 160),
+        }
+    }
 }
 
 pub const COLDBOLT_BOLT_FRAMES: &[&str] = &["effect\\icearrow.tga"];
@@ -134,7 +184,23 @@ pub const FIREBOLT_BOLT_FRAMES: &[&str] = &[
 pub enum ProjectileRecipe {
     FallingBolts(&'static [&'static str]),
     Spear,
+    /// Phase E1 — single source→target travel ball.
+    TravelBall(TravelBallKind),
+    /// Phase E1 — Soul Strike multi-orb volley (orb count = hit_count).
+    SoulStrikeOrbs,
 }
+
+/// Procedural texture paths referenced by Phase E1 target/travel recipes.
+/// Kept explicit so the GRF audit can assert them without walking spawn code.
+#[cfg(test)]
+pub const E1_PROCEDURAL_TEXTURES: &[&str] = &[
+    "effect\\purpleslash.tga",
+    "effect\\lens1.tga",
+    "effect\\lens2.tga",
+    "effect\\ring_yellow.tga",
+    "effect\\불화살1.tga",
+    "effect\\icearrow.tga",
+];
 
 #[derive(Copy, Clone, Debug)]
 pub struct SkillPresentationRecipe {
@@ -260,8 +326,12 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             successful_caster_effect: Some(SuccessfulCasterEffect::MagnumBreak),
             successful_caster_sounds: &[SoundAsset::Fixed("effect\\ef_magnumbreak.wav")],
         ),
-        11 => recipe!(hit_sounds: &[SoundAsset::Fixed("effect\\ef_napalmbeat.wav")]),
+        11 => recipe!(
+            damage_target_effect: Some(DamageTargetEffect::NapalmBeat),
+            hit_sounds: &[SoundAsset::Fixed("effect\\ef_napalmbeat.wav")],
+        ),
         13 => recipe!(
+            projectile: Some(ProjectileRecipe::SoulStrikeOrbs),
             hit_effects: SOUL_STRIKE_HITS,
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_soulstrike.wav")],
         ),
@@ -270,10 +340,12 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_icearrow.wav")],
         ),
         15 => recipe!(
+            projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver)),
             hit_effects: FROST_DIVER_HITS,
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_frostdiver.wav")],
         ),
         17 => recipe!(
+            projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FireBall)),
             hit_effects: &[FIRE_HIT],
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_fireball.wav")],
         ),
@@ -375,8 +447,20 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             }),
             ground_sounds: &[SoundAsset::Fixed("effect\\storm.wav")],
         ),
-        90 => recipe!(hit_effects: &[EARTH_HIT]),
-        91 => recipe!(hit_effects: &[EARTH_HIT]),
+        // WZ_JUPITEL — travel ball + wind/lightning hits (Phase E1).
+        84 => recipe!(
+            projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::Jupitel)),
+            hit_effects: LIGHTNING_BOLT_HITS,
+            hit_sounds: &[SoundAsset::Fixed("effect\\ef_thunderstorm.wav")],
+        ),
+        90 => recipe!(
+            damage_target_effect: Some(DamageTargetEffect::EarthSpike),
+            hit_effects: &[EARTH_HIT],
+        ),
+        91 => recipe!(
+            damage_target_effect: Some(DamageTargetEffect::HeavensDrive),
+            hit_effects: &[EARTH_HIT],
+        ),
         92 => recipe!(ground_effect: Some(EffectTrack {
             asset: EffectAsset::Fixed("quagmire.str"),
             light_color: Color::rgb_u8(135, 105, 75),
@@ -442,6 +526,7 @@ pub const MAPPED_SKILL_IDS: &[SkillId] = &[
     SkillId(80),
     SkillId(81),
     SkillId(83),
+    SkillId(84),
     SkillId(85),
     SkillId(88),
     SkillId(89),
@@ -498,6 +583,38 @@ mod tests {
             Some(ProjectileRecipe::FallingBolts(FIREBOLT_BOLT_FRAMES))
         );
         assert_eq!(skill_presentation_recipe(SkillId(62)).damage_target_sounds.len(), 2);
+    }
+
+    #[test]
+    fn phase_e1_code_drawn_recipes_are_wired() {
+        assert_eq!(
+            skill_presentation_recipe(SkillId(11)).damage_target_effect,
+            Some(DamageTargetEffect::NapalmBeat)
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(13)).projectile,
+            Some(ProjectileRecipe::SoulStrikeOrbs)
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(15)).projectile,
+            Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver))
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(17)).projectile,
+            Some(ProjectileRecipe::TravelBall(TravelBallKind::FireBall))
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(84)).projectile,
+            Some(ProjectileRecipe::TravelBall(TravelBallKind::Jupitel))
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(90)).damage_target_effect,
+            Some(DamageTargetEffect::EarthSpike)
+        );
+        assert_eq!(
+            skill_presentation_recipe(SkillId(91)).damage_target_effect,
+            Some(DamageTargetEffect::HeavensDrive)
+        );
     }
 
     #[test]

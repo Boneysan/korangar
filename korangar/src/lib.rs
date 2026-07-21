@@ -522,14 +522,6 @@ fn skill_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
 /// `probes_classic_skill_sound_candidates`; classic sounds for Lightning
 /// Bolt, Meteor, Lord of Vermilion, the Hunter traps, and several others
 /// were not found under any known name and stay silent for now.
-/// The classic falling-bolt volley for a skill's damage event, if any.
-fn wizard_bolt_volley(skill_id: SkillId) -> Option<&'static [&'static str]> {
-    match skill_presentation_recipe(skill_id).projectile {
-        Some(ProjectileRecipe::FallingBolts(frames)) => Some(frames),
-        None | Some(ProjectileRecipe::Spear) => None,
-    }
-}
-
 /// Current ground-cast mappings played at the packet's target position when
 /// `ZC_NOTIFY_GROUNDSKILL` arrives. Asset and trigger evidence varies by
 /// recipe; see the combat animation pipeline specification.
@@ -1278,96 +1270,195 @@ impl Client {
         source_entity_id: EntityId,
         source_position: Point3<f32>,
         target_position: Point3<f32>,
+        hit_count: usize,
+        impact_delay_ms: u32,
     ) {
         let recipe = skill_presentation_recipe(skill_id);
-        if recipe.damage_caster_effect.is_none()
-            && recipe.projectile != Some(ProjectileRecipe::Spear)
-            && recipe.damage_caster_sounds.is_empty()
-        {
+        let has_projectile = recipe.projectile.is_some();
+        if recipe.damage_caster_effect.is_none() && !has_projectile && recipe.damage_caster_sounds.is_empty() {
             return;
         }
-        let claimed = self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5);
+
+        // Independent once-per-cast slots (see UniqueEffectSlot):
+        // - CasterLayer: multi-target Brandish/Pierce share one caster STR
+        // - TravelProjectile: multi-hit Jupitel packets share one ball
+        // FallingBolts stay unclaimed so rapid Fire Bolts still volley.
+        let spawn_caster_layer = match recipe.damage_caster_effect {
+            Some(_) => self.effect_holder.claim_unique_skill_effect(source_entity_id, skill_id, 0.5),
+            None => false,
+        };
+        let once_per_cast_travel = matches!(
+            recipe.projectile,
+            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SoulStrikeOrbs)
+        );
+        // Short gate: multi-hit packets arrive in the same few frames; recasts
+        // after ~cast time must not be blocked for long.
+        let spawn_travel = !once_per_cast_travel
+            || self.effect_holder.claim_unique_skill_effect_slot(
+                source_entity_id,
+                skill_id,
+                UniqueEffectSlot::TravelProjectile,
+                0.22,
+            );
+
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
             eprintln!(
-                "[skill-effect] damage-caster skill={} source={} claimed={claimed} source_pos={source_position:?} \
-                 target_pos={target_position:?}",
+                "[skill-effect] damage-caster skill={} source={} spawn_caster={spawn_caster_layer} \
+                 spawn_travel={spawn_travel} impact_delay_ms={impact_delay_ms} \
+                 source_pos={source_position:?} target_pos={target_position:?}",
                 skill_id.0, source_entity_id.0
             );
-        }
-        if !claimed {
-            return;
         }
 
         let base_light_id = source_entity_id.0 ^ u32::from(skill_id.0);
         let source_light_id = PointLightId::new(base_light_id);
         let neutral = Color::rgb_u8(235, 220, 180);
-        match recipe.damage_caster_effect {
-            Some(DamageCasterEffect::Pierce) => self.add_str_skill_effect_with_offset(
-                "pierce.str",
-                source_position,
-                Vector3::new(0.0, 3.0, 0.0),
-                source_light_id,
-                neutral,
-                35.0,
-            ),
-            Some(DamageCasterEffect::BrandishSpear) => {
-                self.add_str_skill_effect("brandish2.str", source_position, source_light_id, neutral, 40.0);
-            }
-            Some(DamageCasterEffect::SpearStab) => {
-                self.add_str_skill_effect_with_offset(
-                    "spearstab.str",
+        if spawn_caster_layer {
+            match recipe.damage_caster_effect {
+                Some(DamageCasterEffect::Pierce) => self.add_str_skill_effect_with_offset(
+                    "pierce.str",
                     source_position,
                     Vector3::new(0.0, 3.0, 0.0),
                     source_light_id,
                     neutral,
                     35.0,
-                );
+                ),
+                Some(DamageCasterEffect::BrandishSpear) => {
+                    self.add_str_skill_effect("brandish2.str", source_position, source_light_id, neutral, 40.0);
+                }
+                Some(DamageCasterEffect::SpearStab) => {
+                    self.add_str_skill_effect_with_offset(
+                        "spearstab.str",
+                        source_position,
+                        Vector3::new(0.0, 3.0, 0.0),
+                        source_light_id,
+                        neutral,
+                        35.0,
+                    );
+                }
+                Some(DamageCasterEffect::SpearBoomerang) => {
+                    self.add_str_skill_effect_with_offset(
+                        "spearboomerang.str",
+                        source_position,
+                        Vector3::new(0.0, 6.0, 0.0),
+                        source_light_id,
+                        neutral,
+                        35.0,
+                    );
+                }
+                Some(DamageCasterEffect::BowlingBash) => {
+                    self.add_str_skill_effect_with_offset(
+                        "bowling.str",
+                        source_position,
+                        Vector3::new(0.0, 6.0, 0.0),
+                        source_light_id,
+                        neutral,
+                        40.0,
+                    );
+                }
+                Some(DamageCasterEffect::SonicBlow) => {
+                    self.add_procedural_skill_effect(
+                        "effect\\ring2.bmp",
+                        source_position,
+                        source_light_id,
+                        SkillBurstStyle::SonicBlow,
+                    );
+                }
+                None => {}
             }
-            Some(DamageCasterEffect::SpearBoomerang) => {
-                self.add_str_skill_effect_with_offset(
-                    "spearboomerang.str",
-                    source_position,
-                    Vector3::new(0.0, 6.0, 0.0),
-                    source_light_id,
-                    neutral,
-                    35.0,
-                );
+            for sound in recipe.damage_caster_sounds {
+                self.play_spatial_skill_sound(sound.resolve(), source_position);
             }
-            Some(DamageCasterEffect::BowlingBash) => {
-                self.add_str_skill_effect_with_offset(
-                    "bowling.str",
-                    source_position,
-                    Vector3::new(0.0, 6.0, 0.0),
-                    source_light_id,
-                    neutral,
-                    40.0,
-                );
-            }
-            Some(DamageCasterEffect::SonicBlow) => {
-                self.add_procedural_skill_effect(
-                    "effect\\ring2.bmp",
-                    source_position,
-                    source_light_id,
-                    SkillBurstStyle::SonicBlow,
-                );
-            }
-            None => {}
         }
 
-        if recipe.projectile == Some(ProjectileRecipe::Spear) {
-            self.add_spear_projectile(source_position, target_position);
+        let impact_delay_secs = impact_delay_ms as f32 / 1000.0;
+        match recipe.projectile {
+            Some(ProjectileRecipe::Spear) if spawn_travel => self.add_spear_projectile(source_position, target_position),
+            Some(ProjectileRecipe::TravelBall(kind)) if spawn_travel => {
+                self.add_travel_ball_projectile(kind, source_position, target_position, impact_delay_secs)
+            }
+            Some(ProjectileRecipe::SoulStrikeOrbs) if spawn_travel => {
+                self.add_soul_strike_orbs(source_position, target_position, hit_count.max(1), impact_delay_secs);
+            }
+            // Per-packet volleys: never once-per-cast gated.
+            Some(ProjectileRecipe::FallingBolts(frame_paths)) => {
+                let textures: Vec<_> = frame_paths
+                    .iter()
+                    .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+                    .collect();
+                if !textures.is_empty() {
+                    self.effect_holder
+                        .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
+                }
+            }
+            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SoulStrikeOrbs) | None => {}
         }
-        for sound in recipe.damage_caster_sounds {
-            self.play_spatial_skill_sound(sound.resolve(), source_position);
+    }
+
+    fn add_travel_ball_projectile(
+        &mut self,
+        kind: TravelBallKind,
+        source_position: Point3<f32>,
+        target_position: Point3<f32>,
+        impact_delay_secs: f32,
+    ) {
+        // Land near the impact due-tick so hit STR and ball arrival coincide.
+        let duration = if impact_delay_secs > 0.05 {
+            impact_delay_secs.clamp(0.12, 0.55)
+        } else {
+            kind.duration()
+        };
+        match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
+            Ok(texture) => self.effect_holder.add_effect(Box::new(SkillProjectile::travel_ball(
+                texture,
+                source_position,
+                target_position,
+                duration,
+                kind.size(),
+                kind.color(),
+            ))),
+            Err(error) => eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path()),
+        }
+    }
+
+    fn add_soul_strike_orbs(
+        &mut self,
+        source_position: Point3<f32>,
+        target_position: Point3<f32>,
+        orb_count: usize,
+        impact_delay_secs: f32,
+    ) {
+        match self.texture_loader.get_or_load("effect\\purpleslash.tga", ImageType::Color) {
+            Ok(texture) => self.effect_holder.add_effect(Box::new(SoulStrikeOrbs::new(
+                texture,
+                source_position,
+                target_position,
+                orb_count,
+                impact_delay_secs,
+            ))),
+            Err(error) => eprintln!("[skill-effect] failed to load soul-strike orb texture: {error:?}"),
         }
     }
 
     /// Bespoke target tracks formerly mixed into the caster helper. These are
     /// invoked only after `PendingImpactQueue` reaches the native due tick.
-    fn spawn_damage_target_skill_effect(&mut self, skill_id: SkillId, destination_entity_id: EntityId, target_position: Point3<f32>) {
+    fn spawn_damage_target_skill_effect(
+        &mut self,
+        skill_id: SkillId,
+        source_entity_id: EntityId,
+        destination_entity_id: EntityId,
+        target_position: Point3<f32>,
+    ) {
         let recipe = skill_presentation_recipe(skill_id);
         let target_light_id = PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0));
         let neutral = Color::rgb_u8(235, 220, 180);
+
+        // Large AOE rings: one geometry per cast (multi-target damage packets
+        // would otherwise stack N rings on N mobs). Per-target hit STRs still
+        // fire via hit_effects below the call site.
+        let spawn_target_aoe = |holder: &mut EffectHolder| {
+            holder.claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::TargetAoe, 0.45)
+        };
 
         match recipe.damage_target_effect {
             Some(DamageTargetEffect::BrandishSpear) => {
@@ -1390,6 +1481,37 @@ impl Client {
                     Color::rgb_u8(220, 210, 255),
                     35.0,
                 );
+            }
+            Some(DamageTargetEffect::NapalmBeat) => {
+                if spawn_target_aoe(&mut self.effect_holder) {
+                    self.add_procedural_skill_effect(
+                        "effect\\purpleslash.tga",
+                        target_position,
+                        target_light_id,
+                        SkillBurstStyle::NapalmBeat,
+                    );
+                }
+            }
+            Some(DamageTargetEffect::EarthSpike) => {
+                // Single-target skill; no AOE gate.
+                self.add_layered_procedural_skill_effect(
+                    "effect\\lens1.tga",
+                    "effect\\lens2.tga",
+                    target_position,
+                    target_light_id,
+                    SkillBurstStyle::EarthSpike,
+                );
+            }
+            Some(DamageTargetEffect::HeavensDrive) => {
+                if spawn_target_aoe(&mut self.effect_holder) {
+                    self.add_layered_procedural_skill_effect(
+                        "effect\\lens1.tga",
+                        "effect\\lens2.tga",
+                        target_position,
+                        target_light_id,
+                        SkillBurstStyle::HeavensDrive,
+                    );
+                }
             }
             None => {}
         }
@@ -2126,7 +2248,7 @@ impl Client {
     /// owns numbers, hit effects/sounds, and target Hurt.
     fn apply_damage_impact(&mut self, pending: PendingImpact, client_tick: ClientTick) {
         let DamageImpact {
-            source_entity_id: _,
+            source_entity_id,
             destination_entity_id,
             skill_id,
             packet_tick: _,
@@ -2147,7 +2269,7 @@ impl Client {
         self.particle_holder.spawn_particle(particle);
 
         if let Some(skill_id) = skill_id {
-            self.spawn_damage_target_skill_effect(skill_id, destination_entity_id, target_position);
+            self.spawn_damage_target_skill_effect(skill_id, source_entity_id, destination_entity_id, target_position);
 
             for (effect_path, light_color, start_delay) in skill_hit_effects(skill_id) {
                 match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
@@ -2990,16 +3112,14 @@ impl Client {
                                 .flatten()
                         });
                         if let Some(source_position) = source_position {
-                            self.spawn_damage_caster_skill_effect(skill_id, source_entity_id, source_position, target_position);
-                        }
-
-                        if let Some(frame_paths) = wizard_bolt_volley(skill_id) {
-                            let textures: Vec<_> = frame_paths
-                                .iter()
-                                .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
-                                .collect();
-                            self.effect_holder
-                                .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
+                            self.spawn_damage_caster_skill_effect(
+                                skill_id,
+                                source_entity_id,
+                                source_position,
+                                target_position,
+                                hit_count,
+                                source_impact_delay_ms,
+                            );
                         }
                     }
 
@@ -7502,10 +7622,19 @@ mod skill_effect_asset_tests {
                     paths.insert(format!("data\\wav\\{sound_path}"));
                 }
             }
-            if let Some(ProjectileRecipe::FallingBolts(frame_paths)) = recipe.projectile {
-                for frame_path in frame_paths {
-                    paths.insert(format!("data\\texture\\{frame_path}"));
+            match recipe.projectile {
+                Some(ProjectileRecipe::FallingBolts(frame_paths)) => {
+                    for frame_path in frame_paths {
+                        paths.insert(format!("data\\texture\\{frame_path}"));
+                    }
                 }
+                Some(ProjectileRecipe::TravelBall(kind)) => {
+                    paths.insert(format!("data\\texture\\{}", kind.texture_path()));
+                }
+                Some(ProjectileRecipe::SoulStrikeOrbs) => {
+                    paths.insert("data\\texture\\effect\\purpleslash.tga".to_owned());
+                }
+                Some(ProjectileRecipe::Spear) | None => {}
             }
         }
 
@@ -7520,6 +7649,9 @@ mod skill_effect_asset_tests {
             "data\\wav\\effect\\assasin_sonicblow.wav",
         ] {
             paths.insert(path.to_owned());
+        }
+        for path in E1_PROCEDURAL_TEXTURES {
+            paths.insert(format!("data\\texture\\{path}"));
         }
 
         let missing: Vec<String> = paths

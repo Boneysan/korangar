@@ -5,11 +5,11 @@ Quick-start for picking this back up. Full detail is in
 
 ## One-line status
 
-**RESOLVED 2026-07-22.** M1 P0 checklist at **34/34 verified** — rejection
-messages closed via unit fixtures + headless `skill-fail-rejection` (Fire Bolt
-at 0 SP → chat). Earlier: 7 client bugs fixed; remaining open §5 defects are
-P1/P2 polish (see below). Phase D live-green 2026-07-21; **next engine work is
-Phase E** (skill/status recipes). History below is kept for context.
+**RESOLVED 2026-07-22.** M1 P0 checklist at **34/34 verified**. Phase D
+live-green 2026-07-21. **Phase E1 code closed** (code-drawn Mage/Wizard
+effects: Napalm, Soul Strike orbs, Frost Diver, Fire Ball, Jupitel, Earth
+Spike, Heaven's Drive) — **next: live GUI pass of E1**, then E2 persistent
+units. History below is kept for context.
 
 ## The two things left before pushing
 

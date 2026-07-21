@@ -15,7 +15,7 @@ use wgpu::BlendFactor;
 pub use self::bolts::FallingBolts;
 pub use self::burst::{SkillBurst, SkillBurstStyle};
 pub use self::portal::{PORTAL_TEXTURE_PATH, PortalVortex};
-pub use self::projectile::SkillProjectile;
+pub use self::projectile::{SkillProjectile, SoulStrikeOrbs};
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
@@ -623,10 +623,24 @@ impl EffectBase for EffectWithLight {
     }
 }
 
+/// Independent once-per-cast gates so a travel ball claim does not suppress
+/// a caster STR (and vice versa). AOE target rings use their own slot so
+/// multi-target damage packets share one geometry.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum UniqueEffectSlot {
+    /// Caster STR / SkillBurst on the source actor (multi-target dedup).
+    CasterLayer,
+    /// Source→target travel projectile that must fire once per cast
+    /// (Jupitel multi-hit packets, Soul Strike multi-packet, Spear Boomerang).
+    TravelProjectile,
+    /// Large target AOE ring (Heaven's Drive, Napalm) — one geometry per cast.
+    TargetAoe,
+}
+
 #[derive(Default)]
 pub struct EffectHolder {
     effects: Vec<(Box<dyn EffectBase + Send + Sync>, Option<EntityId>)>,
-    unique_skill_effects: Vec<(EntityId, SkillId, f32)>,
+    unique_skill_effects: Vec<(EntityId, SkillId, UniqueEffectSlot, f32)>,
 }
 
 impl EffectHolder {
@@ -638,20 +652,28 @@ impl EffectHolder {
         self.effects.push((effect, Some(entity_id)));
     }
 
-    /// Returns true once per source/skill during `duration`, allowing area
-    /// skills reported as one damage packet per target to spawn one
-    /// caster-centered visual.
-    pub fn claim_unique_skill_effect(&mut self, source_entity_id: EntityId, skill_id: SkillId, duration: f32) -> bool {
-        if self
-            .unique_skill_effects
-            .iter()
-            .any(|(source, skill, _)| *source == source_entity_id && *skill == skill_id)
-        {
+    /// Returns true once per source/skill/`slot` during `duration`.
+    pub fn claim_unique_skill_effect_slot(
+        &mut self,
+        source_entity_id: EntityId,
+        skill_id: SkillId,
+        slot: UniqueEffectSlot,
+        duration: f32,
+    ) -> bool {
+        if self.unique_skill_effects.iter().any(|(source, skill, existing_slot, _)| {
+            *source == source_entity_id && *skill == skill_id && *existing_slot == slot
+        }) {
             return false;
         }
 
-        self.unique_skill_effects.push((source_entity_id, skill_id, duration));
+        self.unique_skill_effects
+            .push((source_entity_id, skill_id, slot, duration));
         true
+    }
+
+    /// Caster-layer convenience (historical API used by Magnum / Pierce / …).
+    pub fn claim_unique_skill_effect(&mut self, source_entity_id: EntityId, skill_id: SkillId, duration: f32) -> bool {
+        self.claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::CasterLayer, duration)
     }
 
     pub fn remove_unit(&mut self, removed_entity_id: EntityId) {
@@ -670,8 +692,8 @@ impl EffectHolder {
         self.effects.retain_mut(|(effect, _)| effect.update(entities, delta_time));
         self.unique_skill_effects
             .iter_mut()
-            .for_each(|(_, _, remaining)| *remaining -= delta_time);
-        self.unique_skill_effects.retain(|(_, _, remaining)| *remaining > 0.0);
+            .for_each(|(_, _, _, remaining)| *remaining -= delta_time);
+        self.unique_skill_effects.retain(|(_, _, _, remaining)| *remaining > 0.0);
     }
 
     pub fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
@@ -689,7 +711,7 @@ impl EffectHolder {
 mod effect_holder_tests {
     use ragnarok_packets::{EntityId, SkillId};
 
-    use super::EffectHolder;
+    use super::{EffectHolder, UniqueEffectSlot};
 
     #[test]
     fn caster_effect_is_claimed_once_until_its_gate_expires() {
@@ -702,5 +724,19 @@ mod effect_holder_tests {
 
         holder.update(&[], 0.6);
         assert!(holder.claim_unique_skill_effect(source, frost_nova, 0.5));
+    }
+
+    #[test]
+    fn independent_slots_do_not_block_each_other() {
+        let mut holder = EffectHolder::default();
+        let source = EntityId(7);
+        let jupitel = SkillId(84);
+
+        assert!(holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::TravelProjectile, 0.25));
+        // Caster and AOE rings remain available while travel is claimed.
+        assert!(holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::CasterLayer, 0.5));
+        assert!(holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::TargetAoe, 0.4));
+        // Same travel slot stays blocked.
+        assert!(!holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::TravelProjectile, 0.25));
     }
 }

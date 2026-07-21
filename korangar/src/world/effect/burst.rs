@@ -20,6 +20,12 @@ pub enum SkillBurstStyle {
     MeteorAssault,
     SonicBlow,
     MeleeHit,
+    /// Phase E1 — MG_NAPALMBEAT: psychic shock rings at the struck target.
+    NapalmBeat,
+    /// Phase E1 — WZ_EARTHSPIKE: a single ground spike under the target.
+    EarthSpike,
+    /// Phase E1 — WZ_HEAVENDRIVE: a ring of ground spikes around the target.
+    HeavensDrive,
 }
 
 impl SkillBurstStyle {
@@ -30,6 +36,9 @@ impl SkillBurstStyle {
             Self::MeteorAssault => 0.5,
             Self::SonicBlow => 0.4,
             Self::MeleeHit => 0.3,
+            Self::NapalmBeat => 0.45,
+            Self::EarthSpike => 0.4,
+            Self::HeavensDrive => 0.55,
         }
     }
 
@@ -40,6 +49,9 @@ impl SkillBurstStyle {
             Self::MeteorAssault => (Color::rgb_u8(180, 70, 255), 55.0),
             Self::SonicBlow => (Color::rgb_u8(220, 210, 255), 35.0),
             Self::MeleeHit => (Color::rgb_u8(255, 245, 220), 25.0),
+            Self::NapalmBeat => (Color::rgb_u8(200, 90, 255), 55.0),
+            Self::EarthSpike => (Color::rgb_u8(210, 170, 90), 40.0),
+            Self::HeavensDrive => (Color::rgb_u8(200, 160, 80), 50.0),
         }
     }
 }
@@ -257,6 +269,88 @@ impl SkillBurst {
             Color::rgba(1.0, 1.0, 1.0, 1.0 - progress),
         );
     }
+
+    fn render_napalm_beat(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32) {
+        // Classic napalm is a psychic shock at the target: expanding violet
+        // rings plus a short flash. Code-drawn — no napalm STR is used.
+        let alpha = (1.0 - progress) * 0.9;
+        let flash = 90.0 + progress * 160.0;
+        self.render_sprite(
+            renderer,
+            camera,
+            Vector2::new(0.0, -8.0),
+            Vector2::new(flash, flash),
+            progress * TAU,
+            Color::rgba(0.85, 0.45, 1.0, alpha),
+        );
+        for layer in 0..3 {
+            let size = 70.0 + progress * (140.0 + layer as f32 * 50.0);
+            self.render_sprite(
+                renderer,
+                camera,
+                Vector2::new(0.0, -6.0 - layer as f32 * 4.0),
+                Vector2::new(size, size * 0.55),
+                progress * (1.2 + layer as f32 * 0.4),
+                Color::rgba(0.75, 0.35, 1.0, alpha * (1.0 - layer as f32 * 0.2)),
+            );
+        }
+    }
+
+    fn render_earth_spikes(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32, count: usize, radius: f32) {
+        // Rising ground spikes: thin vertical world quads that grow then fade.
+        let rise = (progress * 1.4).min(1.0);
+        let alpha = (1.0 - progress) * 0.95;
+        let height = 2.0 + rise * 10.0;
+        let half_width = 0.55 + (1.0 - progress) * 0.35;
+
+        for index in 0..count {
+            let angle = if count == 1 {
+                0.0
+            } else {
+                index as f32 / count as f32 * TAU + progress * 0.4
+            };
+            let offset = Vector3::new(angle.cos() * radius, 0.0, angle.sin() * radius);
+            let base = self.position + offset;
+            let top = base + Vector3::new(0.0, height, 0.0);
+            let edge = Vector3::new((-angle).sin() * half_width, 0.0, angle.cos() * half_width);
+            let texture = if index % 2 == 0 {
+                &self.texture
+            } else {
+                self.secondary_texture.as_ref().unwrap_or(&self.texture)
+            };
+
+            renderer.render_effect_world_quad(
+                camera,
+                [
+                    top - edge,
+                    top + edge,
+                    base - edge,
+                    base + edge,
+                ],
+                texture.clone(),
+                [
+                    Vector2::new(0.0, 0.0),
+                    Vector2::new(1.0, 0.0),
+                    Vector2::new(0.0, 1.0),
+                    Vector2::new(1.0, 1.0),
+                ],
+                Color::rgba(0.85, 0.7, 0.35, alpha),
+                BlendFactor::SrcAlpha,
+                BlendFactor::OneMinusSrcAlpha,
+            );
+        }
+
+        // Ground flash so the eruption reads against dark terrain.
+        let flash_size = 40.0 + progress * 90.0;
+        self.render_sprite(
+            renderer,
+            camera,
+            Vector2::new(0.0, 10.0),
+            Vector2::new(flash_size, flash_size * 0.45),
+            0.0,
+            Color::rgba(0.9, 0.75, 0.35, alpha * 0.6),
+        );
+    }
 }
 
 impl EffectBase for SkillBurst {
@@ -289,6 +383,9 @@ impl EffectBase for SkillBurst {
             SkillBurstStyle::MeteorAssault => self.render_meteor_assault(renderer, camera, progress),
             SkillBurstStyle::SonicBlow => self.render_sonic_blow(renderer, camera, progress),
             SkillBurstStyle::MeleeHit => self.render_melee_hit(renderer, camera, progress),
+            SkillBurstStyle::NapalmBeat => self.render_napalm_beat(renderer, camera, progress),
+            SkillBurstStyle::EarthSpike => self.render_earth_spikes(renderer, camera, progress, 1, 0.0),
+            SkillBurstStyle::HeavensDrive => self.render_earth_spikes(renderer, camera, progress, 6, 3.5),
         }
     }
 }
