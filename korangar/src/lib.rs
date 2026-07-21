@@ -1178,6 +1178,44 @@ impl Client {
         }
     }
 
+    /// Spawn the flying projectile for a *normal* ranged attack (bow/gun),
+    /// matching the classic client, which draws the arrow item sprite
+    /// travelling shooter → target. No-op for melee weapons or when either
+    /// position is unknown. The local player is `entities[0]`, so the entity
+    /// lookup covers it too.
+    fn spawn_ranged_attack_projectile(&mut self, source_entity_id: EntityId, destination_entity_id: EntityId) {
+        let Some(weapon) = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == source_entity_id)
+            .map(|entity| entity.get_weapon())
+        else {
+            return;
+        };
+        let Some(sprite_path) = ranged_attack_projectile_sprite(weapon_view_from_appearance(weapon)) else {
+            return;
+        };
+        let (Some(source), Some(target)) = (
+            self.entity_world_position(source_entity_id),
+            self.entity_world_position(destination_entity_id),
+        ) else {
+            return;
+        };
+        if source == target {
+            return;
+        }
+        match self.sprite_loader.get_or_load(sprite_path) {
+            Ok(sprite) => match sprite.textures.first() {
+                Some(texture) => self
+                    .effect_holder
+                    .add_effect(Box::new(SkillProjectile::arrow(texture.clone(), source, target))),
+                None => eprintln!("[ranged-attack] projectile sprite {sprite_path} has no frames"),
+            },
+            Err(error) => eprintln!("[ranged-attack] failed to load {sprite_path}: {error:?}"),
+        }
+    }
+
     fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
         let recipe = skill_presentation_recipe(skill_id);
         if recipe.successful_caster_effect.is_none() && recipe.successful_caster_sounds.is_empty() {
@@ -2958,6 +2996,11 @@ impl Client {
                             self.effect_holder
                                 .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
                         }
+                    }
+
+                    // Normal (non-skill) ranged attack: draw the flying arrow.
+                    if skill_id.is_none() {
+                        self.spawn_ranged_attack_projectile(source_entity_id, destination_entity_id);
                     }
 
                     self.pending_impacts.schedule(client_tick, source_impact_delay_ms, DamageImpact {

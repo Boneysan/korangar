@@ -645,6 +645,18 @@ fn first_existing_part(game_file_loader: &GameFileLoader, candidates: &[String])
 /// Trail path builder is `0x007C4B30` with format `\%s_%s%s%s.%s` and suffix
 /// table `_검광` / `_발광` (`0x00B1C7C4` / `0x00B1C7CC`). Korangar loads
 /// `_검광` when present; `_발광` is not wired yet.
+/// Projectile sprite fired by a *normal attack* with the given weapon class
+/// view, or `None` for melee weapons. Classic RO draws the flying arrow using
+/// the arrow *item* sprite; only the plain arrow is wired here (per-arrow-type
+/// and gun-bullet sprites are a follow-up). Ranged views: bow (11), gunslinger
+/// firearms (17-21), shuriken (22).
+pub fn ranged_attack_projectile_sprite(view: u32) -> Option<&'static str> {
+    match view {
+        11 => Some("아이템\\화살.spr"), // bow → generic arrow
+        _ => None,
+    }
+}
+
 fn native_weapon_view_has_geom_trail(view: u32) -> bool {
     matches!(view, 1..=7 | 16..=18 | 25..=30)
 }
@@ -1981,6 +1993,11 @@ impl Entity {
         self.get_common().entity_id
     }
 
+    /// Right-hand weapon appearance (item id or class view) of this entity.
+    pub fn get_weapon(&self) -> u32 {
+        self.get_common().weapon
+    }
+
     pub fn get_job_id(&self) -> JobId {
         self.get_common().job_id
     }
@@ -2536,6 +2553,21 @@ mod weapon_layer_tests {
                 !super::native_weapon_view_has_geom_trail(view),
                 "view {view} should not trail"
             );
+        }
+    }
+
+    #[test]
+    fn bow_fires_a_ranged_projectile_melee_does_not() {
+        // Bow (view 11) draws the arrow item sprite as its projectile.
+        assert_eq!(super::ranged_attack_projectile_sprite(11), Some("아이템\\화살.spr"));
+        // A bow item id also resolves through the appearance path.
+        assert_eq!(
+            super::ranged_attack_projectile_sprite(super::weapon_view_from_item_id(1710)),
+            Some("아이템\\화살.spr")
+        );
+        // Melee weapons and bare hands never spawn a projectile.
+        for view in [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 23] {
+            assert_eq!(super::ranged_attack_projectile_sprite(view), None, "view {view} is melee");
         }
     }
 

@@ -33,6 +33,30 @@ impl SkillProjectile {
             gets_deleted: false,
         }
     }
+
+    /// Arrow/bullet fired on a normal ranged attack (bow, gun). Flies straight
+    /// from shooter to target at a fixed speed, so the flight time scales with
+    /// range; the sprite keeps its native aspect and is rotated to face travel.
+    pub fn arrow(texture: Arc<Texture>, source: Point3<f32>, target: Point3<f32>) -> Self {
+        // ~10 units above the ground so it reads at torso/bow height.
+        let lift = Vector3::new(0.0, 10.0, 0.0);
+        let source = source + lift;
+        let target = target + lift;
+        let distance = (target - source).magnitude();
+        // Arrows are fast; clamp so a point-blank shot is still visible and a
+        // max-range shot doesn't crawl. Speed in world units / second.
+        let duration = (distance / 220.0).clamp(0.10, 0.35);
+        let texture_size = texture.get_size();
+        Self {
+            texture,
+            source,
+            target,
+            elapsed: 0.0,
+            duration,
+            size: Vector2::new(texture_size.width as f32, texture_size.height as f32),
+            gets_deleted: false,
+        }
+    }
 }
 
 impl EffectBase for SkillProjectile {
