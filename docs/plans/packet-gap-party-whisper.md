@@ -155,18 +155,16 @@ Issues found and fixed during validation:
   robustness fixes (stale-task abort, no panic on instant connect failure)
   found while reproducing login failures.
 
-**Open loose end — rejection messages not yet demoed live.** The new
-rejection-message path (0x0110 / 0x0291 / 0x09CD → chat lines) is verified
-against Hercules source only: packet layouts, field semantics, and the exact
-party-create rejection (`clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 4, 0)`,
-i.e. skill 1 / cause 0) were checked in `clif.c` / `packets_struct.h`, but the
-live end-to-end demo did not happen (the test client was past the drivable
-point and keyboard input cannot be injected under WSLg). It will confirm
-itself the first time any rejection occurs in play (e.g. a skill without
-enough SP). For a deliberate test: set `basic_skill_check: true` in
-`Hercules_RO/conf/import/battle.conf`, restart the servers, and
-`/party create Foo` should print the red "You need to learn the basic skills
-first." line — then set it back to `false` (the campaign setting).
+**Loose end closed 2026-07-22.** Rejection messages (0x0110 / 0x0291 / 0x09CD →
+chat lines) are verified end-to-end:
+
+- Unit fixtures in `korangar-networking` assert skill-fail → red chat (including
+  the basic-skill gate text for skill 1 / cause 0) and both `ZC_MSG` variants →
+  `MessageTable`.
+- Headless `skill-fail-rejection` PASSed live against Hercules: Mage Fire Bolt
+  at 0 SP produces a rejection `ChatMessage`.
+- Earlier live coverage still stands: login-failure message, friend/party
+  rejection chat (`friend-reject`, `party-reject-block`).
 
 ## 6. Acceptance Criteria
 

@@ -1517,4 +1517,166 @@ mod packet_handlers {
             events.0
         );
     }
+
+    /// M1-p0 rejection-messages row: Hercules skill failures arrive as
+    /// `ZC_ACK_TOUSESKILL` (0x0110) with `flag = 0`. They must surface as a
+    /// red chat line (not silence) so the player can see why a cast refused.
+    #[test]
+    fn skill_fail_0x0110_surfaces_chat_message() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x0110 | skill 19 (Fire Bolt) | btype 0 | item 0 | flag 0 | cause 1 (SP)
+        let mut bytes = vec![0x10, 0x01];
+        bytes.extend_from_slice(&19u16.to_le_bytes());
+        bytes.extend_from_slice(&0i32.to_le_bytes());
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.push(0); // flag: failure
+        bytes.push(1); // USESKILL_FAIL_SP_INSUFFICIENT
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("skill-fail packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [
+                    NetworkEvent::SkillCastCancelled { source_entity_id: None },
+                    NetworkEvent::ChatMessage {
+                        text,
+                        color: MessageColor::Error,
+                    }
+                ] if text == "Not enough SP."
+            ),
+            "expected skill-fail chat line, got {:?}",
+            events.0
+        );
+
+        // Success path (flag != 0) must stay silent — Hercules only sends
+        // 0x0110 on failure, but the handler must not invent chat on flag=1.
+        let mut success = vec![0x10, 0x01];
+        success.extend_from_slice(&19u16.to_le_bytes());
+        success.extend_from_slice(&0i32.to_le_bytes());
+        success.extend_from_slice(&0u32.to_le_bytes());
+        success.push(1);
+        success.push(0);
+        let mut reader = ByteReader::without_metadata(&success);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("skill-success flag packet did not parse");
+        };
+        assert!(events.0.is_empty(), "flag!=0 must not emit events, got {:?}", events.0);
+    }
+
+    /// Party-create / basic-skill rejections reuse 0x0110 with skill 1 / cause 0
+    /// (see packet-gap-party-whisper.md).
+    #[test]
+    fn skill_fail_basic_skill_gate_has_readable_text() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        let mut bytes = vec![0x10, 0x01];
+        bytes.extend_from_slice(&1u16.to_le_bytes()); // NV_BASIC
+        bytes.extend_from_slice(&4i32.to_le_bytes());
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.push(0);
+        bytes.push(0); // USESKILL_FAIL_LEVEL
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("basic-skill fail packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [
+                    NetworkEvent::SkillCastCancelled { .. },
+                    NetworkEvent::ChatMessage {
+                        text,
+                        color: MessageColor::Error,
+                    }
+                ] if text.contains("basic skills")
+            ),
+            "expected basic-skills chat line, got {:?}",
+            events.0
+        );
+    }
+
+    /// General `ZC_MSG` (0x0291) must become `MessageTable` so the client can
+    /// resolve msgstringtable and push a chat line (lib.rs NetworkEvent arm).
+    #[test]
+    fn message_table_0x0291_surfaces_message_table_event() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // Attendance "not event" boot id 3474 (0xD92).
+        let bytes = [0x91, 0x02, 0x92, 0x0D];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("ZC_MSG packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::MessageTable {
+                    message_id: 0xD92,
+                    color: MessageColor::Error,
+                }]
+            ),
+            "expected MessageTable for ZC_MSG, got {:?}",
+            events.0
+        );
+    }
+
+    /// Colored variant used by some rejections (`ZC_MSG_COLOR` 0x09CD).
+    #[test]
+    fn message_table_color_0x09cd_preserves_rgb() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x09CD | id 0xD92 | color 0x00FF0000 (red in low 24 bits)
+        let mut bytes = vec![0xCD, 0x09];
+        bytes.extend_from_slice(&0xD92u16.to_le_bytes());
+        bytes.extend_from_slice(&0x00FF_0000u32.to_le_bytes());
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("ZC_MSG_COLOR packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::MessageTable {
+                    message_id: 0xD92,
+                    color: MessageColor::Rgb {
+                        red: 0xFF,
+                        green: 0x00,
+                        blue: 0x00,
+                    },
+                }]
+            ),
+            "expected RGB MessageTable, got {:?}",
+            events.0
+        );
+    }
 }

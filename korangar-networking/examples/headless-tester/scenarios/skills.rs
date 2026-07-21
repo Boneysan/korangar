@@ -19,6 +19,7 @@ pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("teleport-select", 5, teleport_select),
         Scenario::new("teleport-cancel", 5, teleport_cancel),
+        Scenario::new("skill-fail-rejection", 5, skill_fail_rejection),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
@@ -69,7 +70,39 @@ pub fn scenarios() -> Vec<Scenario> {
 }
 
 const AL_TELEPORT: SkillId = SkillId(26);
+const MG_FIREBOLT: SkillId = SkillId(19);
 const WS_WEAPONREFINE: SkillId = SkillId(477);
+
+/// Force a skill failure (`ZC_ACK_TOUSESKILL` / 0x0110) and assert the shared
+/// stack promotes it to a rejection `ChatMessage` (M1-p0 rejection-messages row).
+fn skill_fail_rejection(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    // Mage Fire Bolt always costs SP; drain SP then cast at self.
+    let level = prepare_skill(&mut context, 2, MG_FIREBOLT)?;
+    // `@heal <hp> <sp>`: negative SP damages current SP (see atcommand.c).
+    context.say("@heal 0 -999999")?;
+    context.pump(Duration::from_millis(400));
+    context.flush();
+
+    let player_id = context.player_id;
+    context
+        .net
+        .cast_skill(MG_FIREBOLT, level, player_id)
+        .map_err(|_| "disconnected mid skill-fail cast".to_owned())?;
+
+    context.wait_for("skill-fail rejection ChatMessage", |event| match event {
+        NetworkEvent::ChatMessage { text, .. }
+            if text.to_ascii_lowercase().contains("not enough sp")
+                || text.to_ascii_lowercase().contains("skill failed")
+                || text.to_ascii_lowercase().contains("skill level") =>
+        {
+            Some(())
+        }
+        // ZC_MSG path is also acceptable if the server routes this fail that way.
+        NetworkEvent::MessageTable { .. } => Some(()),
+        _ => None,
+    })
+}
 
 fn prepare_skill(context: &mut TestContext, job_id: u16, skill_id: SkillId) -> Result<SkillLevel, String> {
     context.ensure_job(job_id)?;

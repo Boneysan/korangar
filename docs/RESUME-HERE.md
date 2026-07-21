@@ -5,11 +5,11 @@ Quick-start for picking this back up. Full detail is in
 
 ## One-line status
 
-**RESOLVED 2026-07-16.** M1 P0 checklist at **33/34 verified** (only
-"rejection messages" left, arguably already met); 7 client bugs fixed, 7 filed.
-Both gating items cleared: `skills-monk` retested 3/3 green (flake confirmed),
-clean logout live-verified. Both repos pushed to origin. History below is kept
-for context.
+**RESOLVED 2026-07-22.** M1 P0 checklist at **34/34 verified** — rejection
+messages closed via unit fixtures + headless `skill-fail-rejection` (Fire Bolt
+at 0 SP → chat). Earlier: 7 client bugs fixed; remaining open §5 defects are
+P1/P2 polish (see below). Phase D live-green 2026-07-21; **next engine work is
+Phase E** (skill/status recipes). History below is kept for context.
 
 ## The two things left before pushing
 
@@ -60,21 +60,18 @@ Push both to `origin` (the fork; do NOT push to `upstream`).
 
 ## Bugs filed, still open (in `plans/M1-p0-verification.md` §5)
 
-| ID | Pri | What |
-|---|---|---|
-| M1-006 | P0 | No skill-targeting mode — **needs a design call** (see below) |
-| M1-008 | P1 | Skills play no animation (`DisplaySpecialEffectPacket` noop; 1124-entry EffectId table needed) |
-| M1-009 | P1 | No gear stats/comparison (data is in the binary; blocked on `src/dm/` rebaseability) |
-| M1-010 | P1 | Kept open for the **icon** half (names done; icons need artwork) |
-| M1-014 | P2 | Char delete is right-click-only *and* unconfirmed |
-| M1-015 | P2 | Stuck at server select after failed login — **observed once, not reproduced** |
+Reconciled 2026-07-22 against the live §5 table:
 
-## Decision blocking M1-006
+| ID | Pri | Status | What |
+|---|---|---|---|
+| M1-006 | P0 | ✅ Fixed 2026-07-16 | Skill-targeting mode (`PendingSkill`) live-verified |
+| M1-008 | P1 | 🟡 Partial | Wizard kit effects live-verified 2026-07-17; catalog-wide coverage + sounds remain (Phase E adjacent) |
+| M1-009 | P1 | 🔴 Open | No gear stats/comparison (data in binary; extract shared source outside `src/dm/`) |
+| M1-010 | P1 | 🟡 Names done | Icons still need artwork |
+| M1-014 | P2 | 🔴 Open | Char delete is right-click-only *and* unconfirmed |
+| M1-015 | P2 | 🔴 Open | Stuck at server select after failed login — observed once, not reproduced |
 
-Before building the skill-targeting mode, need the user's call:
-- Cancel a pending target with **right-click**, **Escape**, or both?
-- Pressing a **second** skill while one is pending — swap the target, or cancel?
-- Clicking **empty ground** — cancel, or fizzle?
+**Also fixed during the GUI sitting (not open):** M1-005 dialog sizing, M1-007 hide/cloak, M1-011 zero-duration stick, M1-012 status-end packet, M1-013 3-char list wipe, M1-016 emotes.
 
 ## Environment notes (or you'll lose time)
 
