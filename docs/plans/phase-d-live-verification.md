@@ -91,12 +91,17 @@ class trail) closed on EffectStalker with a bow (view 11). Driving via `cliclick
   an existing slot. Fixed to handle non-`Regular` stacks gracefully (replace instead
   of panic).
 
-**Follow-ups discovered (NOT blocking Phase D, tracked separately):**
-- **Ammo count not displayed** — `Equippable` has no `amount` field, so stacked arrow
-  quantities show no number. Needs an amount on the ammo model + display. Cosmetic.
-- **No arrow projectile on normal ranged attack** — korangar only renders projectiles
-  for specific skills (`skill_recipe.rs`: bolts, one spear skill); a normal bow
-  auto-attack spawns no flying arrow. Missing combat-visual feature, separate work item.
+**Follow-ups discovered while running Row 7 — both now IMPLEMENTED (code) 2026-07-21:**
+- **Ammo count not displayed** — FIXED (korangar `9cc805c5`). Gave
+  `InventoryItemDetails::Equippable` an `amount` (1 for gear, real count for ammo),
+  populated at all three construction sites, displayed for ammo (> 1), and merged on
+  stack. Fully code-verified (build + tests).
+- **No arrow projectile on normal ranged attack** — IMPLEMENTED (korangar `2244c7c8`).
+  `SkillProjectile::arrow` + `ranged_attack_projectile_sprite` (bow view 11 →
+  `아이템\화살.spr`) spawned from a normal `DamageEffect`. Mechanism/detection/fallback
+  are build+test covered; **flight timing and sprite choice still want an in-client
+  eyeball**. Remaining sub-follow-ups: gun-bullet + shuriken sprites, per-arrow-type
+  sprite (fire/poison arrows), and launch-timed-to-release-frame accuracy.
 
 **Row 4 geometry note:** a tall Barricade due-south occludes a Knight standing
 north of it; stand diagonally (upper-left, Barricade to the SE) so the Knight
