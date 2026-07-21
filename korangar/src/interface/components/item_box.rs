@@ -329,10 +329,19 @@ where
                     }
                 }
 
-                if matches!(item.details, InventoryItemDetails::Regular { .. }) {
+                // Draw the stack count for Regular items and for stackable ammo
+                // (Equippable with amount > 1). `amount_display.string` is only
+                // set in those cases, so require it rather than unwrap.
+                let show_amount = match item.details {
+                    InventoryItemDetails::Regular { .. } => true,
+                    InventoryItemDetails::Equippable { amount, .. } => amount > 1,
+                };
+                if show_amount
+                    && let Some(amount_string) = self.amount_display.string.as_ref()
+                {
                     layout.add_text(
                         layout_info.area,
-                        self.amount_display.string.as_ref().unwrap(),
+                        amount_string,
                         // TODO: Put this in the theme
                         FontSize(12.0),
                         // TODO: Put this in the theme

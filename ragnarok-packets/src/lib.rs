@@ -1150,7 +1150,7 @@ pub struct InventoyEndPacket {
     pub flag: u8, // maybe char ?
 }
 
-#[derive(Debug, Clone, ByteConvertable, FixedByteSize)]
+#[derive(Debug, Clone, Copy, Default, ByteConvertable, FixedByteSize)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ItemOptions {
     pub index: u16,

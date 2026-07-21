@@ -37,6 +37,34 @@ pub struct InventoryItem<Meta> {
     pub details: InventoryItemDetails,
 }
 
+/// Hercules `IT_AMMO` item type (arrows, bullets, …). Ammo is stackable yet
+/// occupies the AMMO equip slot, so it must be modeled as `Equippable` (which
+/// carries the equip slot + amount) rather than `Regular`, and consistently so
+/// across every inventory source (normal list, pickup, storage).
+pub const IT_AMMO: u8 = 10;
+
+impl InventoryItemDetails {
+    /// Build the `Equippable` details for stackable ammo, which the server may
+    /// report without the equippable fields (e.g. in the normal/stackable
+    /// list). Ammo is always the AMMO slot, unrefined, no options.
+    pub fn ammo(amount: u16, equipped_position: EquipPosition, identified: bool) -> Self {
+        let mut flags = EquippableItemFlags::empty();
+        flags.set(EquippableItemFlags::IDENTIFIED, identified);
+        InventoryItemDetails::Equippable {
+            amount,
+            equip_position: EquipPosition::AMMO,
+            equipped_position,
+            bind_on_equip_type: 0,
+            w_item_sprite_number: 0,
+            option_count: 0,
+            option_data: [ItemOptions::default(); 5],
+            refinement_level: 0,
+            enchantment_level: 0,
+            flags,
+        }
+    }
+}
+
 impl<Meta> InventoryItem<Meta> {
     pub fn is_identified(&self) -> bool {
         match &self.details {

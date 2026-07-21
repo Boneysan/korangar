@@ -91,7 +91,11 @@ impl Inventory {
     }
 
     pub fn update_equipped_position(&mut self, index: InventoryIndex, new_equipped_position: EquipPosition) {
-        let item = self.items.iter_mut().find(|item| item.index == index).unwrap();
+        // A stale/out-of-range index (e.g. an equip broadcast racing an
+        // inventory reload) must not crash the client.
+        let Some(item) = self.items.iter_mut().find(|item| item.index == index) else {
+            return;
+        };
 
         let InventoryItemDetails::Equippable { equipped_position, .. } = &mut item.details else {
             // This can happen for ammunition for example.

@@ -7,7 +7,7 @@ use ragnarok_packets::handler::{DuplicateHandlerError, PacketCallback, PacketHan
 use ragnarok_packets::*;
 
 use crate::event::{NetworkEventList, NoNetworkEvents};
-use crate::items::ItemQuantity;
+use crate::items::{IT_AMMO, ItemQuantity};
 use crate::{
     CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NetworkEvent,
     NoMetadata, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
@@ -442,6 +442,18 @@ where
                     false => InventoryIndex(index.0.saturating_sub(2)),
                 };
 
+                // Ammo is stackable but occupies the AMMO slot; the normal list
+                // omits the equippable fields, so build them explicitly.
+                let details = if item_type == IT_AMMO {
+                    InventoryItemDetails::ammo(amount, equipped_position, flags.contains(RegularItemFlags::IDENTIFIED))
+                } else {
+                    InventoryItemDetails::Regular {
+                        amount,
+                        equipped_position,
+                        flags,
+                    }
+                };
+
                 InventoryItem {
                     index: actual_index,
                     metadata: NoMetadata,
@@ -449,11 +461,7 @@ where
                     item_type,
                     slot,
                     hire_expiration_date,
-                    details: InventoryItemDetails::Regular {
-                        amount,
-                        equipped_position,
-                        flags,
-                    },
+                    details,
                 }
             }));
             NoNetworkEvents
@@ -755,7 +763,12 @@ where
         // sending these either. We will certainly use them at some point though.
         let _ = (favorite, look);
 
-        let details = match equip_position.is_empty() {
+        let details = if item_type == IT_AMMO {
+            // Stackable-but-equippable ammo; model it consistently with the
+            // inventory list so it keeps its equip option and stack count.
+            InventoryItemDetails::ammo(quantity, EquipPosition::empty(), is_identified != 0)
+        } else {
+            match equip_position.is_empty() {
             true => InventoryItemDetails::Regular {
                 amount: quantity,
                 equipped_position: equip_position,
@@ -766,8 +779,6 @@ where
                 },
             },
             false => InventoryItemDetails::Equippable {
-                // Ammo (arrows) has an equip position yet is stackable, so a
-                // pickup carries a real quantity; gear picks up as 1.
                 amount: quantity,
                 equip_position,
                 equipped_position: EquipPosition::empty(),
@@ -784,6 +795,7 @@ where
                     flags
                 },
             },
+            }
         };
 
         let item = InventoryItem {
@@ -1326,7 +1338,14 @@ where
             }),
         }
     })?;
-    packet_handler.register_noop::<EquipAmmunitionPacket>()?;
+    // Ammo (arrows) equips via its own packet, not the normal equip ack; mark
+    // the item equipped in the AMMO slot so it shows in the equipment window.
+    // Its index already matches the stored inventory index (unlike the initial
+    // list, no -2 offset — verified against live data).
+    packet_handler.register(|packet: EquipAmmunitionPacket| NetworkEvent::UpdateEquippedPosition {
+        index: packet.inventory_index,
+        equipped_position: EquipPosition::AMMO,
+    })?;
     packet_handler.register_noop::<AmmunitionActionPacket>()?;
     packet_handler.register(|packet: UpdateSkillPacket| {
         let UpdateSkillPacket {
@@ -1395,8 +1414,15 @@ where
         equip_flags.set(EquippableItemFlags::IS_BROKEN, packet.damaged != 0);
 
         // Stackable types use Regular; non-stackable use Equippable-ish details.
-        let details = if packet.item_type == 4 || packet.item_type == 5 || packet.item_type == 7 || packet.item_type == 8 {
-            // Armor / weapon / bothside / ammo-like equippables (Hercules type enum).
+        let details = if packet.item_type == IT_AMMO {
+            // Stackable-but-equippable ammo: keep it Equippable like the other sources.
+            InventoryItemDetails::ammo(
+                packet.amount.min(u32::from(u16::MAX)) as u16,
+                EquipPosition::empty(),
+                packet.identified != 0,
+            )
+        } else if packet.item_type == 4 || packet.item_type == 5 || packet.item_type == 7 || packet.item_type == 8 {
+            // Armor / weapon / bothside / pet-armor equippables (Hercules type enum).
             InventoryItemDetails::Equippable {
                 amount: packet.amount.min(u32::from(u16::MAX)) as u16,
                 equip_position: EquipPosition::empty(),
