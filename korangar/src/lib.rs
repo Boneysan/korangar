@@ -1071,6 +1071,9 @@ pub struct Client {
     window: Option<Arc<Window>>,
 
     map: Option<Arc<Map>>,
+    /// Whether the current map is a town / safe map (no monsters); relaxes the
+    /// battle-ready stance. Set on each map load from Towninfo.
+    current_map_is_town: bool,
     client_state: State<ClientState>,
 }
 
@@ -1855,6 +1858,7 @@ impl Client {
             window,
 
             map: Some(map),
+            current_map_is_town: false,
             client_state,
         })
     }
@@ -2638,6 +2642,7 @@ impl Client {
 
                         let entity_position = npc.get_position();
 
+                        npc.set_in_safe_zone(self.current_map_is_town);
                         entities.push(npc);
 
                         // Map-transfer warps carry no sprite; the original
@@ -6008,12 +6013,19 @@ impl Client {
                             map.set_ambient_sound_sources(&self.audio_engine);
                             self.audio_engine.play_background_music_track(map.background_music_track_name());
 
+                            // Relax the battle stance on town / safe maps.
+                            let base = normalize_map_base_name(&map_file_name);
+                            self.current_map_is_town = self.library.is_town_map(&base);
+
                             if let Some(position) = position {
                                 // `manually_asserted` is safe because we are in the branch where `this_player`
                                 // is not `None`.
+                                let in_safe_zone = self.current_map_is_town;
                                 let player = self.client_state.follow_mut(this_entity().manually_asserted());
 
+                                player.set_in_safe_zone(in_safe_zone);
                                 player.set_position(map, position, client_tick);
+                                player.refresh_neutral_stance(client_tick);
                                 self.player_camera.set_focus_point(player.get_position());
                             }
 

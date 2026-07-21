@@ -79,6 +79,12 @@ impl Library {
         self.towninfo_table.pois_for_map(map_name)
     }
 
+    /// Whether the map is a town / safe map (has Towninfo facilities). Used to
+    /// relax the battle-ready stance to peaceful idle where there are no monsters.
+    pub fn is_town_map(&self, map_name: &str) -> bool {
+        self.towninfo_table.is_town(map_name)
+    }
+
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.
     #[inline]
     pub fn message_string(&self, message_id: u16) -> String {

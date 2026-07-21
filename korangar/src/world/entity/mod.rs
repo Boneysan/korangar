@@ -171,6 +171,9 @@ pub struct Common {
     pub health_state: u16,
     /// Packet `isPKModeON`; native actor field `+0x2C0`.
     pub is_pk_mode_on: bool,
+    /// True on town / safe maps (no monsters). Relaxes an armed player's
+    /// standing pose from the battle-ready ReadyFight stance back to Idle.
+    pub in_safe_zone: bool,
     pub active_movement: Option<Movement>,
     pub animation_data: Option<Arc<AnimationData>>,
     pub tile_position: TilePosition,
@@ -941,6 +944,7 @@ impl Common {
             body_state: entity_data.body_state,
             health_state: entity_data.health_state,
             is_pk_mode_on: entity_data.is_pk_mode_on,
+            in_safe_zone: false,
             movement_speed,
             health_points,
             maximum_health_points,
@@ -1149,10 +1153,12 @@ impl Common {
 
     /// A player stands in the battle-ready pose (ReadyFight, group 4) rather
     /// than the peaceful unarmed Idle (group 0) whenever a weapon is equipped
-    /// (or in PK mode). The weapon sprite's Idle frames are blank, so an armed
-    /// player must resolve its neutral pose to ReadyFight to render the weapon.
+    /// (or in PK mode) — but relaxes to Idle on town / safe maps, where there
+    /// are no monsters. The weapon sprite's Idle frames are blank, so an armed
+    /// player renders no weapon while relaxed; that matches the classic look
+    /// of a sheathed weapon in town.
     fn wants_ready_fight_stance(&self) -> bool {
-        self.is_pk_mode_on || self.weapon != 0
+        !self.in_safe_zone && (self.is_pk_mode_on || self.weapon != 0)
     }
 
     fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, now: ClientTick) {
@@ -2279,6 +2285,12 @@ impl Entity {
 
     pub fn set_weapon(&mut self, weapon: u32) {
         self.get_common_mut().weapon = weapon;
+    }
+
+    /// Mark whether this entity is on a town / safe map, which relaxes an armed
+    /// player's standing pose from ReadyFight back to Idle.
+    pub fn set_in_safe_zone(&mut self, in_safe_zone: bool) {
+        self.get_common_mut().in_safe_zone = in_safe_zone;
     }
 
     pub fn set_shield(&mut self, shield: u32) {

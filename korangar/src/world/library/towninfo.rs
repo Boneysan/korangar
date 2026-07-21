@@ -125,13 +125,23 @@ impl TownInfoTable {
     }
 
     pub fn pois_for_map(&self, map_name: &str) -> &[TownPoi] {
-        let key = map_name
+        self.by_map.get(&Self::key(map_name)).map(Vec::as_slice).unwrap_or(&[])
+    }
+
+    /// Whether the map appears in the Towninfo facility data — a good proxy for
+    /// "town / safe map" (towns and their shop/inn interiors), where the battle
+    /// stance should relax to peaceful idle.
+    pub fn is_town(&self, map_name: &str) -> bool {
+        self.by_map.contains_key(&Self::key(map_name))
+    }
+
+    fn key(map_name: &str) -> String {
+        map_name
             .trim_end_matches(".gat")
             .trim_end_matches(".GAT")
             .trim_end_matches(".rsw")
             .trim_end_matches(".RSW")
-            .to_lowercase();
-        self.by_map.get(&key).map(Vec::as_slice).unwrap_or(&[])
+            .to_lowercase()
     }
 }
 
