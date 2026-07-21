@@ -248,9 +248,14 @@ where
 
             if let Some(item) = state.try_get(&self.item_path)
                 && item.metadata.texture.as_ref().is_some()
-                && let InventoryItemDetails::Regular { amount, .. } = &item.details
             {
-                self.amount_display.update(*amount);
+                // Regular items always show their count; Equippable is gear
+                // (always 1, no number) except stackable ammo, which shows > 1.
+                match &item.details {
+                    InventoryItemDetails::Regular { amount, .. } => self.amount_display.update(*amount),
+                    InventoryItemDetails::Equippable { amount, .. } if *amount > 1 => self.amount_display.update(*amount),
+                    InventoryItemDetails::Equippable { .. } => {}
+                }
             }
 
             Self::LayoutInfo { area }

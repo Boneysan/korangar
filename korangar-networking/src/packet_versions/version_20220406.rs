@@ -498,6 +498,9 @@ where
                     slot,
                     hire_expiration_date,
                     details: InventoryItemDetails::Equippable {
+                        // The equip inventory list is real gear only (always 1);
+                        // stackable ammo arrives via the normal list / pickup.
+                        amount: 1,
                         equip_position,
                         equipped_position,
                         bind_on_equip_type,
@@ -763,6 +766,9 @@ where
                 },
             },
             false => InventoryItemDetails::Equippable {
+                // Ammo (arrows) has an equip position yet is stackable, so a
+                // pickup carries a real quantity; gear picks up as 1.
+                amount: quantity,
                 equip_position,
                 equipped_position: EquipPosition::empty(),
                 bind_on_equip_type,
@@ -1392,6 +1398,7 @@ where
         let details = if packet.item_type == 4 || packet.item_type == 5 || packet.item_type == 7 || packet.item_type == 8 {
             // Armor / weapon / bothside / ammo-like equippables (Hercules type enum).
             InventoryItemDetails::Equippable {
+                amount: packet.amount.min(u32::from(u16::MAX)) as u16,
                 equip_position: EquipPosition::empty(),
                 equipped_position: EquipPosition::empty(),
                 bind_on_equip_type: 0,

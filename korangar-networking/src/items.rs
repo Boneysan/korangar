@@ -11,6 +11,9 @@ pub enum InventoryItemDetails {
         flags: RegularItemFlags,
     },
     Equippable {
+        /// Stack size. Real gear is always 1; ammo (arrows) is equippable *and*
+        /// stackable, so it carries its real count here for display/merging.
+        amount: u16,
         equip_position: EquipPosition,
         equipped_position: EquipPosition,
         bind_on_equip_type: u16,

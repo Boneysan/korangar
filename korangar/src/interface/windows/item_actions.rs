@@ -159,6 +159,6 @@ fn primary_action_event(item: &InventoryItem<ResourceMetadata>) -> InputEvent {
 pub fn inventory_item_amount(item: &InventoryItem<ResourceMetadata>) -> u16 {
     match &item.details {
         InventoryItemDetails::Regular { amount, .. } => *amount,
-        InventoryItemDetails::Equippable { .. } => 1,
+        InventoryItemDetails::Equippable { amount, .. } => *amount,
     }
 }

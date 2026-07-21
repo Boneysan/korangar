@@ -30,24 +30,21 @@ impl Inventory {
             return;
         };
 
-        // Only plain (Regular) items merge by amount. Ammo (arrows) carries an
-        // equip position, so the server models it as Equippable — stacking a
-        // second pickup onto the same slot (or any non-Regular re-report) must
-        // not crash the client; replace the existing entry instead of panicking.
-        let both_regular = matches!(self.items[position].details, InventoryItemDetails::Regular { .. })
-            && matches!(item.details, InventoryItemDetails::Regular { .. });
-
-        if both_regular {
-            if let (
-                InventoryItemDetails::Regular { amount, .. },
-                InventoryItemDetails::Regular {
-                    amount: added_amount, ..
-                },
-            ) = (&mut self.items[position].details, &item.details)
-            {
-                *amount = amount.saturating_add(*added_amount);
+        // Stacking a pickup onto an existing slot merges the amount. Both
+        // Regular items (potions) and Equippable-but-stackable ammo (arrows,
+        // which carry an equip position) merge; any variant mismatch is a
+        // re-report, so replace rather than panic (the old behaviour crashed
+        // the client when ammo restacked).
+        let merged = match (&mut self.items[position].details, &item.details) {
+            (InventoryItemDetails::Regular { amount, .. }, InventoryItemDetails::Regular { amount: added, .. })
+            | (InventoryItemDetails::Equippable { amount, .. }, InventoryItemDetails::Equippable { amount: added, .. }) => {
+                *amount = amount.saturating_add(*added);
+                true
             }
-        } else {
+            _ => false,
+        };
+
+        if !merged {
             self.items[position] = async_loader.request_inventory_item_metadata_load(item);
         }
     }
