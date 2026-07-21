@@ -18,6 +18,10 @@ pub struct SkillProjectile {
     elapsed: f32,
     duration: f32,
     size: Vector2<f32>,
+    /// Extra rotation (radians) added to the travel-direction angle, to account
+    /// for the sprite's own resting orientation (the spear art points one way,
+    /// the arrow item sprite another).
+    angle_offset: f32,
     gets_deleted: bool,
 }
 
@@ -30,6 +34,7 @@ impl SkillProjectile {
             elapsed: 0.0,
             duration: 0.14,
             size: Vector2::new(100.0, 100.0),
+            angle_offset: std::f32::consts::PI,
             gets_deleted: false,
         }
     }
@@ -46,14 +51,23 @@ impl SkillProjectile {
         // Arrows are fast; clamp so a point-blank shot is still visible and a
         // max-range shot doesn't crawl. Speed in world units / second.
         let duration = (distance / 220.0).clamp(0.10, 0.35);
+        // Item sprites are small (a few px), so scale the longest side up to a
+        // readable world size, keeping the sprite's aspect ratio.
         let texture_size = texture.get_size();
+        let native = Vector2::new(texture_size.width.max(1) as f32, texture_size.height.max(1) as f32);
+        const TARGET_LONGEST: f32 = 40.0;
+        let size = native * (TARGET_LONGEST / native.x.max(native.y));
         Self {
             texture,
             source,
             target,
             elapsed: 0.0,
             duration,
-            size: Vector2::new(texture_size.width as f32, texture_size.height as f32),
+            size,
+            // The arrow item icon rests pointing up-right, so bring its nose
+            // onto the travel direction; -135° was dialed in against the live
+            // client (the isometric camera tilts a purely horizontal shot).
+            angle_offset: -135.0_f32.to_radians(),
             gets_deleted: false,
         }
     }
@@ -79,7 +93,7 @@ impl EffectBase for SkillProjectile {
         let target_screen = camera.clip_to_screen_space(view_projection * self.target.to_homogeneous());
         let direction = target_screen - source_screen;
         let angle = if direction.magnitude2() > 0.0 {
-            Rad(direction.y.atan2(direction.x) + std::f32::consts::PI)
+            Rad(direction.y.atan2(direction.x) + self.angle_offset)
         } else {
             Rad(0.0)
         };
