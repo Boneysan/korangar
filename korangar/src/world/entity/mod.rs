@@ -902,7 +902,9 @@ impl Common {
         match entity_data.state {
             1 => animation_state.dead(entity_type, client_tick),
             2 => animation_state.sit(entity_type, client_tick),
-            _ if entity_data.is_pk_mode_on => animation_state.idle(entity_type, true, client_tick),
+            // Armed players (or PK mode) spawn in the ReadyFight stance so the
+            // weapon renders; its Idle frames are the blank unarmed stand.
+            _ if entity_data.is_pk_mode_on || weapon != 0 => animation_state.idle(entity_type, true, client_tick),
             _ => {}
         }
         animation_state.set_status_paused(matches!(entity_data.body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
@@ -996,7 +998,7 @@ impl Common {
 
             if animation_data.is_animation_over(&self.animation_state) {
                 self.animation_state
-                    .apply_completion_transition(self.entity_type, self.is_pk_mode_on, client_tick);
+                    .apply_completion_transition(self.entity_type, self.wants_ready_fight_stance(), client_tick);
             }
         }
     }
@@ -1061,7 +1063,7 @@ impl Common {
         self.world_position = world_position;
         self.active_movement = None;
         if !self.action_request_locked() {
-            self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+            self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
         }
     }
 
@@ -1133,6 +1135,14 @@ impl Common {
         self.trick_dead || self.animation_state.is_dead()
     }
 
+    /// A player stands in the battle-ready pose (ReadyFight, group 4) rather
+    /// than the peaceful unarmed Idle (group 0) whenever a weapon is equipped
+    /// (or in PK mode). The weapon sprite's Idle frames are blank, so an armed
+    /// player must resolve its neutral pose to ReadyFight to render the weapon.
+    fn wants_ready_fight_stance(&self) -> bool {
+        self.is_pk_mode_on || self.weapon != 0
+    }
+
     fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, now: ClientTick) {
         self.active_cast = (cast_ms > 0).then_some(ActorCast {
             _skill_id: skill_id,
@@ -1164,7 +1174,7 @@ impl Common {
             .set_status_paused(matches!(body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
 
         if pk_changed && self.animation_state.is_neutral() && !self.action_request_locked() {
-            self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+            self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
         }
     }
 
@@ -1177,7 +1187,7 @@ impl Common {
                 if gained {
                     self.animation_state.trick_dead(self.entity_type, client_tick);
                 } else if !self.animation_state.is_dead() {
-                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             SI_SUHIDE => {
@@ -1190,7 +1200,7 @@ impl Common {
                 } else if self.su_stoop {
                     self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
                 } else {
-                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             SI_SU_STOOP => {
@@ -1201,7 +1211,7 @@ impl Common {
                 if gained {
                     self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
                 } else {
-                    self.animation_state.idle(self.entity_type, self.is_pk_mode_on, client_tick);
+                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             _ => {}
@@ -2104,7 +2114,32 @@ impl Entity {
     pub fn set_idle(&mut self, client_tick: ClientTick) {
         let common = self.get_common_mut();
         if !common.action_request_locked() {
-            common.animation_state.idle(common.entity_type, common.is_pk_mode_on, client_tick);
+            let ready_fight_stance = common.wants_ready_fight_stance();
+            common.animation_state.idle(common.entity_type, ready_fight_stance, client_tick);
+        }
+    }
+
+    /// Force the entity back to a living idle pose, bypassing the death
+    /// action-lock. `set_idle` no-ops while dead (`action_request_locked` is
+    /// true when `is_dead`), so respawn/resurrection must use this instead or
+    /// the entity stays in its death pose.
+    pub fn revive(&mut self, client_tick: ClientTick) {
+        let common = self.get_common_mut();
+        common.trick_dead = false;
+        common.active_movement = None;
+        let ready_fight_stance = common.wants_ready_fight_stance();
+        common.animation_state.idle(common.entity_type, ready_fight_stance, client_tick);
+    }
+
+    /// After an equipped-weapon change, flip the standing stance
+    /// (Idle <-> ReadyFight) to match the new armed state — but only while the
+    /// entity is already standing, so a walk/attack/sit/death motion is never
+    /// interrupted.
+    pub fn refresh_neutral_stance(&mut self, client_tick: ClientTick) {
+        let common = self.get_common_mut();
+        if common.animation_state.is_neutral_standing() {
+            let ready_fight_stance = common.wants_ready_fight_stance();
+            common.animation_state.idle(common.entity_type, ready_fight_stance, client_tick);
         }
     }
 

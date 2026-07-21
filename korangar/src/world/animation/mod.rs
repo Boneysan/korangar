@@ -395,8 +395,8 @@ impl AnimationState {
         self.looping = looping;
     }
 
-    pub fn idle(&mut self, entity_type: EntityType, pk_mode: bool, client_tick: ClientTick) {
-        self.return_to_neutral(entity_type, pk_mode, client_tick);
+    pub fn idle(&mut self, entity_type: EntityType, ready_fight_stance: bool, client_tick: ClientTick) {
+        self.return_to_neutral(entity_type, ready_fight_stance, client_tick);
     }
 
     pub fn attack(&mut self, entity_type: EntityType, critical: bool, client_tick: ClientTick) {
@@ -548,17 +548,23 @@ impl AnimationState {
     /// classic player state 51 first becomes state 2 and exits one update
     /// later. Every other higher state deliberately holds until another game
     /// event requests a state change.
-    pub fn apply_completion_transition(&mut self, entity_type: EntityType, pk_mode: bool, client_tick: ClientTick) {
+    pub fn apply_completion_transition(&mut self, entity_type: EntityType, ready_fight_stance: bool, client_tick: ClientTick) {
         match self.native_actor_state {
-            2 | 4 | 5 | 7 | 9 | 12 | 45 => self.return_to_neutral(entity_type, pk_mode, client_tick),
+            2 | 4 | 5 | 7 | 9 | 12 | 45 => self.return_to_neutral(entity_type, ready_fight_stance, client_tick),
             51 => self.native_actor_state = 2,
             _ => {}
         }
     }
 
-    fn return_to_neutral(&mut self, entity_type: EntityType, pk_mode: bool, client_tick: ClientTick) {
+    /// `ready_fight_stance`: a player who should stand in the battle-ready pose
+    /// (group 4) rather than the peaceful unarmed Idle (group 0) — true for PK
+    /// mode OR whenever a weapon is equipped. The weapon `.act` blanks its Idle
+    /// frames (they are the *unarmed* stand), so an armed player left in Idle
+    /// renders no weapon; ReadyFight is the only non-attack action the weapon
+    /// sprite populates.
+    fn return_to_neutral(&mut self, entity_type: EntityType, ready_fight_stance: bool, client_tick: ClientTick) {
         let previous_state = self.native_actor_state;
-        let action_base_offset = match entity_type == EntityType::Player && (pk_mode || matches!(previous_state, 2 | 4 | 8)) {
+        let action_base_offset = match entity_type == EntityType::Player && (ready_fight_stance || matches!(previous_state, 2 | 4 | 8)) {
             true => AnimationActionType::ReadyFight.action_base_offset(entity_type),
             false => AnimationActionType::Idle.action_base_offset(entity_type),
         };
@@ -687,6 +693,13 @@ impl AnimationState {
 
     pub fn is_neutral(&self) -> bool {
         self.native_actor_state == 0
+    }
+
+    /// The entity is standing still (peaceful Idle or battle-ready ReadyFight),
+    /// i.e. safe to re-resolve the stance after an equip change without
+    /// interrupting a walk/attack/sit/dead motion.
+    pub fn is_neutral_standing(&self) -> bool {
+        matches!(self.action_type, AnimationActionType::Idle | AnimationActionType::ReadyFight)
     }
 
     fn current_action_base_offset(&self) -> usize {

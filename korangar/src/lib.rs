@@ -2364,6 +2364,17 @@ impl Client {
                     }
                 }
                 NetworkEvent::ResurrectPlayer { entity_id } => {
+                    // Revive the sprite: an in-place resurrection (Resurrection
+                    // skill, town revive) leaves the entity in its death pose
+                    // otherwise. `revive` bypasses the death action-lock.
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.revive(client_tick);
+                    }
                     // If the resurrected player is us, close the resurrect window.
                     if self
                         .client_state
@@ -2802,8 +2813,14 @@ impl Client {
                     self.client_state.follow_mut(client_state().ground_items()).clear();
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
-                    if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                    // A respawn-to-save-point (die → Respawn) arrives as a map
+                    // change, and the local player survives the truncate(1)
+                    // above carrying its death animation. Revive it to idle so
+                    // we don't stay dead after respawning; harmless for a normal
+                    // portal warp, where the player always arrives standing.
+                    if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                         player.clear_cast();
+                        player.revive(client_tick);
                     }
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
 
@@ -3227,6 +3244,7 @@ impl Client {
                             player,
                             &entity_part_files,
                         );
+                        player.refresh_neutral_stance(client_tick);
                     }
                 }
                 NetworkEvent::SetStorage { items } => {
@@ -3442,6 +3460,7 @@ impl Client {
                             player,
                             &parts,
                         );
+                        player.refresh_neutral_stance(client_tick);
                     }
                 }
                 NetworkEvent::ChangeJob { account_id, job_id } => {
@@ -3495,6 +3514,7 @@ impl Client {
                         entity.set_weapon(weapon_id);
                         let parts = entity.get_entity_part_files(&self.library, &self.game_file_loader);
                         Self::refresh_entity_weapon_layer(&self.async_loader, entity, &parts);
+                        entity.refresh_neutral_stance(client_tick);
                     }
                 }
                 NetworkEvent::ChangeShield { account_id, shield_id } => {
