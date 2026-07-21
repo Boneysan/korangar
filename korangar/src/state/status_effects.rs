@@ -33,6 +33,94 @@ fn status_name(index: u16) -> String {
     status_names().get(&index).cloned().unwrap_or_else(|| format!("#{index}"))
 }
 
+/// Compact glyph "icon" for a status (M1-010 icon half without GRF artwork).
+///
+/// Two-letter monograms from the English name, plus a role tag so buffs and
+/// debuffs are visually distinct in the text bar. Real SC sprites remain a
+/// follow-up once artwork is licensed/shipped.
+fn status_icon_glyph(index: u16, name: &str) -> String {
+    let monogram: String = name
+        .split(|c: char| c.is_whitespace() || c == '-' || c == '/')
+        .filter(|w| !w.is_empty())
+        .take(2)
+        .filter_map(|w| w.chars().next())
+        .map(|c| c.to_ascii_uppercase())
+        .collect();
+    let monogram = if monogram.is_empty() {
+        format!("{index}")
+    } else {
+        monogram
+    };
+    let role = status_role_tag(index, name);
+    format!("[{monogram}{role}]")
+}
+
+/// `+` buff-like, `−` debuff-like, `·` neutral/utility (hide, post-delay, …).
+///
+/// Classification is name-based on the SI English table (not SC_* ids). Keep
+/// it conservative: substring matches that would tag buffs as debuffs
+/// (`Stonehardskin`, `Enchant Poison`, `Freeze Sp`) are excluded.
+fn status_role_tag(index: u16, name: &str) -> char {
+    // Explicit utility / non-buff SI indices.
+    match index {
+        4 | 5 => return '·',   // Hiding / Cloaking
+        46 => return '·',      // Skill Delay (postdelay)
+        27 | 28 => return '·', // Riding / Falcon
+        35 | 36 => return '·', // Weightover
+        _ => {}
+    }
+
+    let lower = name.to_ascii_lowercase();
+
+    // Utility first so "Skill Delay" / "Hiding" don't fall through.
+    if lower.contains("delay")
+        || lower == "hiding"
+        || lower == "cloaking"
+        || lower.contains("weightover")
+        || lower.contains("noequip")
+        || lower.contains("riding")
+        || lower.contains("falcon")
+    {
+        return '·';
+    }
+
+    // Known buff names that share debuff substrings.
+    if lower.contains("enchant poison")
+        || lower.contains("poison react")
+        || lower.contains("poisoningweapon")
+        || lower.contains("stonehard")
+        || lower.contains("stone shield")
+        || lower.contains("freeze sp")
+        || lower.contains("slow poison") // support skill icon
+    {
+        return '+';
+    }
+
+    // Debuff / control cues (SI display names).
+    if lower.contains("quagmire")
+        || lower.contains("decrease agi")
+        || lower.contains("lex aeterna")
+        || lower.contains("anklesnare")
+        || lower.contains("broken")
+        || lower.contains("illusion")
+        || lower.contains("bleed")
+        || lower.contains("deepsleep")
+        || lower.contains("oblivioncurse")
+        || lower.contains("soulcurse")
+        || lower.starts_with("gvg ")
+        || (lower.contains("curse") && !lower.contains("cursed soil"))
+        || lower.contains("stun")
+        || lower.contains("silence")
+        || lower.contains("blind")
+        || (lower.contains("sleep") && !lower.contains("deep"))
+        || lower.contains("strip")
+    {
+        return '−';
+    }
+
+    '+' // default: treat as buff / support
+}
+
 /// Cap on effects listed in the status window. One line each, so this bounds
 /// the window's height — keep it in step with the `WindowClass::StatusBar`
 /// default size in `interface/windows/cache.rs`.
@@ -82,11 +170,12 @@ impl StatusEffects {
             .take(MAXIMUM_DISPLAYED_EFFECTS)
             .map(|e| {
                 let name = status_name(e.index);
+                let icon = status_icon_glyph(e.index, &name);
                 if let Some(exp) = e.expires_at {
                     let secs = exp.saturating_duration_since(now).as_secs() as u32;
-                    format!("{name} {secs}s")
+                    format!("{icon} {name} {secs}s")
                 } else {
-                    name
+                    format!("{icon} {name}")
                 }
             })
             .collect::<Vec<_>>()
@@ -202,10 +291,23 @@ mod tests {
         effects.apply(10, 240_000, 218_000);
         let shown = effects.to_string();
         assert!(shown.contains("Blessing"), "expected a name, got: {shown}");
+        assert!(shown.contains("[B+]"), "expected buff monogram [B+], got: {shown}");
         assert!(!shown.contains("10:"), "raw index leaked into display: {shown}");
 
         effects.remove(10);
         assert_eq!(effects.to_string(), "No active effects");
+    }
+
+    #[test]
+    fn role_tags_do_not_mark_common_buffs_as_debuffs() {
+        assert_eq!(status_role_tag(10, "Blessing"), '+');
+        assert_eq!(status_role_tag(3, "Concentration"), '+');
+        assert_eq!(status_role_tag(6, "Enchant Poison"), '+');
+        assert_eq!(status_role_tag(320, "Stonehardskin"), '+');
+        assert_eq!(status_role_tag(4, "Hiding"), '·');
+        assert_eq!(status_role_tag(46, "Skill Delay"), '·');
+        assert_eq!(status_role_tag(13, "Decrease AGI"), '−');
+        assert_eq!(status_role_tag(8, "Quagmire"), '−');
     }
 
     #[test]
@@ -218,8 +320,8 @@ mod tests {
 
         let lines: Vec<_> = effects.to_string().lines().map(str::to_owned).collect();
         assert_eq!(lines.len(), 2, "expected one line per effect, got: {lines:?}");
-        assert_eq!(lines[0], "Hiding");
-        assert!(lines[1].starts_with("Blessing "), "expected timer on line 2: {lines:?}");
+        assert!(lines[0].contains("Hiding"), "line 0: {lines:?}");
+        assert!(lines[1].contains("Blessing"), "expected timer on line 2: {lines:?}");
     }
 
     #[test]

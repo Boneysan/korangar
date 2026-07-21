@@ -1,3 +1,5 @@
+use std::cell::UnsafeCell;
+
 use korangar_interface::MouseMode;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{BaseLayoutInfo, Element};
@@ -14,8 +16,8 @@ use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::resource::ItemSource;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
-use crate::state::ClientState;
-use crate::world::ResourceMetadata;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::world::{ResourceMetadata, item_stats, item_tooltip_text};
 
 #[derive(Default)]
 struct AmountDisplay {
@@ -211,6 +213,8 @@ pub struct ItemBox<A> {
     double_click_handler: ItemBoxDoubleClickHandler<A>,
     right_click_handler: ItemBoxRightClickHandler<A>,
     amount_display: AmountDisplay,
+    /// Tooltip text rebuilt when the hovered item changes (M1-009 stats).
+    tooltip_text: UnsafeCell<String>,
 }
 
 impl<A> ItemBox<A>
@@ -227,6 +231,7 @@ where
             double_click_handler: ItemBoxDoubleClickHandler::new(item_path, source),
             right_click_handler: ItemBoxRightClickHandler::new(item_path, source),
             amount_display: AmountDisplay::default(),
+            tooltip_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -301,11 +306,64 @@ where
         }
 
         if let Some(item) = state.try_get(&self.item_path) {
-            // Hover tooltip for inventory, equipment, and storage slots. Name is
-            // resolved when metadata is loaded (bundled Hercules EN overlay).
-            if is_hovered && !item.metadata.name.is_empty() {
+            // Hover tooltip: name + combat stats (M1-009), with compare vs
+            // equipped gear when this stack is not currently worn.
+            if is_hovered && (!item.metadata.name.is_empty() || item.item_id.0 != 0) {
                 struct ItemBoxTooltip;
-                layout.add_tooltip(&item.metadata.name, ItemBoxTooltip.tooltip_id());
+                let refinement = match &item.details {
+                    InventoryItemDetails::Equippable { refinement_level, .. } => Some(*refinement_level),
+                    _ => None,
+                };
+                let (equipped_stats, equipped_refine) = match &item.details {
+                    InventoryItemDetails::Equippable {
+                        equip_position,
+                        equipped_position,
+                        ..
+                    } if equipped_position.is_empty() && !equip_position.is_empty() => {
+                        let inventory_path = client_state().inventory();
+                        let inventory = state.get(&inventory_path);
+                        inventory
+                            .items()
+                            .iter()
+                            .find_map(|other| {
+                                let InventoryItemDetails::Equippable {
+                                    equip_position: other_equip,
+                                    equipped_position: other_worn,
+                                    refinement_level,
+                                    ..
+                                } = &other.details
+                                else {
+                                    return None;
+                                };
+                                if other_worn.is_empty() {
+                                    return None;
+                                }
+                                // Overlap: worn item occupies a slot this item could fill.
+                                if other_worn.intersects(*equip_position) || other_equip.intersects(*equip_position) {
+                                    let stats = item_stats(other.item_id.0)?;
+                                    Some((stats, Some(*refinement_level)))
+                                } else {
+                                    None
+                                }
+                            })
+                            .map(|(s, r)| (Some(s), r))
+                            .unwrap_or((None, None))
+                    }
+                    _ => (None, None),
+                };
+                let text = item_tooltip_text(
+                    item.item_id.0,
+                    &item.metadata.name,
+                    refinement,
+                    equipped_stats,
+                    equipped_refine,
+                );
+                // Same pattern as character-slot display strings: keep the
+                // tooltip buffer on the element so the layout borrow is stable.
+                unsafe {
+                    *self.tooltip_text.get() = text;
+                    layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), ItemBoxTooltip.tooltip_id());
+                }
             }
 
             if let Some(texture) = item.metadata.texture.as_ref() {

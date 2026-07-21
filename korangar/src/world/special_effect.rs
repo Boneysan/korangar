@@ -200,6 +200,86 @@ pub fn special_effect_recipe(effect_id: EffectId) -> Option<SpecialEffectRecipe>
             light_intensity: 35.0,
         }),
 
+        // Cast-target reticle / begin-cast auras (E3 cast-circle slice).
+        EffectId::Lockon => Some(SpecialEffectRecipe::Burst {
+            style: SkillBurstStyle::Raid,
+            texture: "effect\\ring_yellow.tga",
+            secondary: None,
+        }),
+        EffectId::Beginspell
+        | EffectId::Beginspell2
+        | EffectId::Beginspell3
+        | EffectId::Beginspell4
+        | EffectId::Beginspell5
+        | EffectId::Beginspell6
+        | EffectId::Beginspell7 => Some(SpecialEffectRecipe::Burst {
+            style: SkillBurstStyle::SonicBlow,
+            texture: "effect\\ring_blue.tga",
+            secondary: None,
+        }),
+
+        // Priest / support / hunter / trap hits used by campaign jobs.
+        EffectId::Healsp | EffectId::Recovery => Some(SpecialEffectRecipe::Str {
+            path: "holyhit.str",
+            light_color: Color::rgb_u8(255, 245, 190),
+            light_intensity: 40.0,
+        }),
+        EffectId::Blessing | EffectId::Incagility | EffectId::Angelus | EffectId::Gloria | EffectId::Magnificat => {
+            Some(SpecialEffectRecipe::Str {
+                path: "holyhit.str",
+                light_color: Color::rgb_u8(255, 245, 190),
+                light_intensity: 35.0,
+            })
+        }
+        EffectId::Resurrection => Some(SpecialEffectRecipe::Str {
+            path: "holyhit.str",
+            light_color: Color::rgb_u8(255, 255, 220),
+            light_intensity: 50.0,
+        }),
+        EffectId::Bowlingbash | EffectId::Bowlingself => Some(SpecialEffectRecipe::Burst {
+            style: SkillBurstStyle::MeleeHit,
+            texture: "effect\\lens1.tga",
+            secondary: Some("effect\\lens2.tga"),
+        }),
+        EffectId::Spearbmr | EffectId::Spearbmrself => Some(SpecialEffectRecipe::Str {
+            path: "spearboomerang.str",
+            light_color: Color::rgb_u8(235, 220, 180),
+            light_intensity: 35.0,
+        }),
+        EffectId::Bash => Some(SpecialEffectRecipe::Burst {
+            style: SkillBurstStyle::MeleeHit,
+            texture: "effect\\lens1.tga",
+            secondary: None,
+        }),
+        EffectId::Crashearth => Some(SpecialEffectRecipe::Str {
+            path: "crashearth.str",
+            light_color: Color::rgb_u8(235, 190, 95),
+            light_intensity: 40.0,
+        }),
+        EffectId::Venomdust => Some(SpecialEffectRecipe::Str {
+            path: "venomdust.str",
+            light_color: Color::rgb_u8(140, 75, 190),
+            light_intensity: 30.0,
+        }),
+        EffectId::Skidtrap | EffectId::Blastminebomb | EffectId::Claymore | EffectId::Freezing | EffectId::Sandman => {
+            Some(SpecialEffectRecipe::Burst {
+                style: SkillBurstStyle::MeleeHit,
+                texture: "effect\\ring_yellow.tga",
+                secondary: None,
+            })
+        }
+        EffectId::Pneuma => Some(SpecialEffectRecipe::Str {
+            // No dedicated STR in many GRFs; holy flash stands in.
+            path: "holyhit.str",
+            light_color: Color::rgb_u8(200, 220, 255),
+            light_intensity: 35.0,
+        }),
+        EffectId::Icewall => Some(SpecialEffectRecipe::Str {
+            path: "freeze.str",
+            light_color: Color::rgb_u8(150, 225, 255),
+            light_intensity: 40.0,
+        }),
+
         _ => None,
     }
 }

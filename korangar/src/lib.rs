@@ -2461,8 +2461,15 @@ impl Client {
                         .open_window(ServerSelectionWindow::new(client_state().character_servers()));
                 }
                 NetworkEvent::LoginServerConnectionFailed { message, .. } => {
+                    // M1-015: a failed re-login must not leave a stale server-select
+                    // (or character-select) window sitting on a dead/half-open
+                    // connection. Tear down every connection-scoped UI surface and
+                    // both login/character sockets before showing the error.
                     self.networking_system.disconnect_from_login_server();
-
+                    self.networking_system.disconnect_from_character_server();
+                    self.interface.close_window_with_class(WindowClass::SelectServer);
+                    self.interface.close_window_with_class(WindowClass::CharacterSelection);
+                    self.interface.close_window_with_class(WindowClass::CharacterCreation);
                     self.interface.open_window(ErrorWindow::new(message.to_owned()));
                 }
                 NetworkEvent::LoginServerDisconnected { reason } => {

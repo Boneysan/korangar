@@ -63,26 +63,64 @@ mod character_slot_preview {
         A: Path<ClientState, Option<usize>>,
         B: Path<ClientState, CharacterInformation, false>,
     {
-        fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
             use korangar_interface::prelude::*;
 
             let slot = self.slot;
             let switch_request_path = self.switch_request_path;
             let character_information_path = self.character_information_path;
+            let overlay_position = self.position;
+            let overlay_window_id = self.window_id;
+
+            // M1-014: name the character on the destructive action, and require a
+            // second click ("Yes, delete") so right-click → Delete is not enough
+            // to destroy a slot by accident.
+            let character_name = state
+                .try_get(&character_information_path)
+                .map(|c| c.name.clone())
+                .unwrap_or_else(|| "this character".to_owned());
+            let delete_label = format!("Delete {character_name}…");
 
             let element = ErasedElement::new(fragment! {
                 gaps: 4.0,
                 children: (
                     button! {
-                        text: "Delete",
+                        text: delete_label,
                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                            // We should not be able to get here if the character is not present, so it's
-                            // fine to unwrap.
-                            let character_information = state.try_get(&character_information_path).unwrap();
-                            let character_id = character_information.character_id;
-
-                            queue.queue(InputEvent::DeleteCharacter { character_id });
+                            let character_information_path = character_information_path;
+                            let name = state
+                                .try_get(&character_information_path)
+                                .map(|c| c.name.clone())
+                                .unwrap_or_else(|| "this character".to_owned());
+                            let confirm_text = format!("Really delete {name}?");
+                            let confirm = ErasedElement::new(fragment! {
+                                gaps: 4.0,
+                                children: (
+                                    text! { text: confirm_text },
+                                    button! {
+                                        text: "Yes, delete",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let character_information = state.try_get(&character_information_path).unwrap();
+                                            let character_id = character_information.character_id;
+                                            queue.queue(InputEvent::DeleteCharacter { character_id });
+                                            queue.queue(Event::CloseOverlay);
+                                        },
+                                    },
+                                    button! {
+                                        text: "Cancel",
+                                        event: move |_: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            queue.queue(Event::CloseOverlay);
+                                        },
+                                    },
+                                ),
+                            });
                             queue.queue(Event::CloseOverlay);
+                            queue.queue(Event::OpenOverlay {
+                                element: confirm,
+                                position: overlay_position,
+                                size: ScreenSize { width: 240.0, height: 130.0 },
+                                window_id: overlay_window_id,
+                            });
                         },
                     },
                     button! {
@@ -121,6 +159,7 @@ mod character_slot_preview {
         click_handler: CharacterSlotPreviewHandler<B>,
         overlay_handler: OverlayHandler<M, P>,
         slot: usize,
+        hover_tip: UnsafeCell<String>,
     }
 
     impl<P, M, B> CharacterSlotPreview<P, M, B> {
@@ -137,6 +176,7 @@ mod character_slot_preview {
                 click_handler,
                 overlay_handler,
                 slot,
+                hover_tip: UnsafeCell::new(String::new()),
             }
         }
     }
@@ -336,8 +376,16 @@ mod character_slot_preview {
                     layout.register_click_handler(MouseButton::Right, &self.overlay_handler);
 
                     {
+                        // M1-014: make delete/switch discoverable without a manual.
                         struct PrivateTooltipId;
-                        layout.add_tooltip(&character_information.name, PrivateTooltipId.tooltip_id());
+                        let tip = format!(
+                            "{}\nLeft-click: play · Right-click: Delete / Switch",
+                            character_information.name
+                        );
+                        unsafe {
+                            *self.hover_tip.get() = tip;
+                            layout.add_tooltip(self.hover_tip.as_ref_unchecked().as_str(), PrivateTooltipId.tooltip_id());
+                        }
                     }
                 }
             } else {

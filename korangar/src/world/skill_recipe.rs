@@ -520,6 +520,20 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             start_delay: 0.0,
         })),
         156 => recipe!(hit_effects: &[HOLY_HIT]),
+        // Acolyte / Priest support feedback (M1-008 catalog expansion).
+        // Acolyte / Priest (IDs verified against Hercules skill_db).
+        28 => recipe!(hit_effects: &[HOLY_HIT]), // AL_HEAL
+        29 => recipe!(hit_effects: &[HOLY_HIT]), // AL_INCAGI
+        30 => recipe!(hit_effects: &[HOLY_HIT]), // AL_DECAGI
+        33 => recipe!(hit_effects: &[HOLY_HIT]), // AL_ANGELUS
+        34 => recipe!(hit_effects: &[HOLY_HIT]), // AL_BLESSING
+        66 => recipe!(hit_effects: &[HOLY_HIT]), // PR_IMPOSITIO
+        67 => recipe!(hit_effects: &[HOLY_HIT]), // PR_SUFFRAGIUM
+        68 => recipe!(hit_effects: &[HOLY_HIT]), // PR_ASPERSIO
+        73 => recipe!(hit_effects: &[HOLY_HIT]), // PR_KYRIE
+        74 => recipe!(hit_effects: &[HOLY_HIT]), // PR_MAGNIFICAT
+        75 => recipe!(hit_effects: &[HOLY_HIT]), // PR_GLORIA
+        // AL_HOLYLIGHT is 156 (already mapped above as HOLY_HIT)
         214 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::Raid)),
         406 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::MeteorAssault)),
         2006 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::IgnitionBreak)),
@@ -571,6 +585,17 @@ pub const MAPPED_SKILL_IDS: &[SkillId] = &[
     SkillId(139),
     SkillId(140),
     SkillId(156),
+    SkillId(28),
+    SkillId(29),
+    SkillId(30),
+    SkillId(33),
+    SkillId(34),
+    SkillId(66),
+    SkillId(67),
+    SkillId(68),
+    SkillId(73),
+    SkillId(74),
+    SkillId(75),
     SkillId(214),
     SkillId(406),
     SkillId(2006),
