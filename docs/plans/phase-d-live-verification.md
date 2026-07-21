@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **OPEN — first task for the next agent (Claude / Codex / Grok)** |
+| **Status** | **LIVE-GREEN — all 8 rows PASS 2026-07-21 (idle-gear blocker fixed en route)** |
 | **Date code closed** | 2026-07-18 |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent plan** | [animation-fidelity.md](animation-fidelity.md) §5 Phase D |
@@ -78,10 +78,25 @@ Observer: Claude + user (bigzome). macOS Metal build. Rows 1–3 done 2026-07-20
 EffectKnight (prt_fild08). Rows 4 & 8 done 2026-07-21 on EffectKnight; rows 5–6
 done 2026-07-21 on EffectSinX (prt_fild07). Target: Barricade (`@monster 1905`,
 600k HP) as a stationary punching bag; zoom in; burst-capture (`screencapture -x`
-every ~0.1s) mid-swing. **Only Row 7 (bow/mace, no class trail) remains** — paused
-2026-07-21 before it (plan: EffectStalker + a bow, view 11 → expect no class
-`_검광` trail). Driving via `cliclick` + `screencapture` bursts; user handles GM
-commands / equipping.
+every ~0.1s) mid-swing. **ALL 8 ROWS PASS as of 2026-07-21** — Row 7 (bow/mace, no
+class trail) closed on EffectStalker with a bow (view 11). Driving via `cliclick`
++ `screencapture` bursts; user handles GM commands / equipping.
+
+**Bugs found + fixed while running Row 7 (2026-07-21):**
+- **Idle-gear blocker RESOLVED** (see below) — armed players now stand in the
+  ReadyFight stance, so weapon + shield render at idle. Committed korangar `78f57915`.
+- **Client crash on adding ammo** — `@item 1750 20` (arrows) panicked at
+  `state/inventory.rs:30`: arrows carry an equip position so the server models them
+  as `Equippable` (no `amount`), and `add_item` `panic!()`d trying to stack them onto
+  an existing slot. Fixed to handle non-`Regular` stacks gracefully (replace instead
+  of panic).
+
+**Follow-ups discovered (NOT blocking Phase D, tracked separately):**
+- **Ammo count not displayed** — `Equippable` has no `amount` field, so stacked arrow
+  quantities show no number. Needs an amount on the ammo model + display. Cosmetic.
+- **No arrow projectile on normal ranged attack** — korangar only renders projectiles
+  for specific skills (`skill_recipe.rs`: bolts, one spear skill); a normal bow
+  auto-attack spawns no flying arrow. Missing combat-visual feature, separate work item.
 
 **Row 4 geometry note:** a tall Barricade due-south occludes a Knight standing
 north of it; stand diagonally (upper-left, Barricade to the SE) so the Knight
@@ -99,7 +114,7 @@ mid-swing, not idle.
 | 4 | Knight sword + Guard | **PASS** (2026-07-21) | EffectKnight, sword (right) + Guard shield (left). **Facing-away** attack: shield correctly behind the back (2026-07-20). **Facing-toward** attack (2026-07-21): stood upper-left of the Barricade so the Knight faces down-toward-camera and isn't occluded — shield clearly drawn **in front of the body** on the left arm. Shield z-order correct both directions ⇒ Phase C4 concern resolved. (Tall-Barricade occludes a Knight standing due-north of it; diagonal positioning avoids that.) |
 | 5 | SinX katar/Jur | **PASS** (2026-07-21) | EffectSinX with **Jur** (katar, item 1250 — two-handed, fills both hand slots in the Equipment window). Mid-swing capture: katar blade drawn forward, crouched Assassin lunge (Attack3 family), prominent white `_검광` trail arc (katar = view 16, in native trail set 16–18 → correct). User confirmed **one attack sound per swing**. Katar auto-attacked continuously (single-hit `Damage`/`CriticalHit` type → drives the loop). |
 | 6 | SinX two daggers | **PASS** (2026-07-21) | Two Main Gauche (1207) dual-wielded — **Equipment window confirms both Left hand + Right hand = daggers**. Mid-swing capture: two dagger sprites + white `_검광` trail arc (dual view 25 `단검_단검`, in native trail set 25–30 → correct), Attack3 Assassin lunge, damage number displays. **NOTE:** exposing this row uncovered a real dual-wield attack bug (see below) — fixed 2026-07-21; auto-attack then verified to continue. |
-| 7 | bow/mace (no class trail) | not started | |
+| 7 | bow/mace (no class trail) | **PASS** (2026-07-21) | EffectStalker (Stalker, bow item 1710). **Code-confirmed:** bow = view 11, mace = view 8; `native_weapon_view_has_geom_trail` (entity/mod.rs:649) = `{1..=7, 16..=18, 25..=30}`, so `push_weapon_trail_part` returns early → **no class `_검광`** attached (same basis as Row 2's trail-less Lance). **Live-confirmed:** with the bow equipped the player's sprite set was exactly **3 layers** — body `스토커_남`, head, bow base `로그_남_1710` — with **no `_검광` layer present at all**, so no trail can render; bow base renders (drawn standing after the ReadyFight-stance fix). Weapon sprite shows + no class trail ⇒ Row 7 met. |
 | 8 | unequip/re-equip | **PASS** (2026-07-21) | EffectKnight, weapon swaps via the inventory right-click menu (Equip/Unequip). User confirmed real-time **no head jump, no body flash/reload**; burst frames show the head/body pinned to the same position across the swap. C4 regression not present. Caveat: the equipped weapon isn't drawn while idle (idle-gear blocker below), so the *weapon* swap is only fully visible mid-attack — the head/body reload check (the C4 concern) is unaffected by that. |
 
 ### BUG FOUND + FIXED 2026-07-21 — dual-wield normal attack "swings once then stops"
@@ -128,7 +143,19 @@ auto-attack now continues; damage numbers display. **Committed + pushed 2026-07-
 on `agent/platform-connectivity-controls`** (this fix + doc only; the Phase D
 diagnostic scaffolding below stayed out of the commit).
 
-### BLOCKER — equipped weapon & shield not rendered on the idle player
+### BLOCKER — equipped weapon & shield not rendered on the idle player — RESOLVED 2026-07-21
+
+**RESOLUTION (2026-07-21, committed korangar `78f57915`):** Not a render/decode bug.
+The weapon/shield `.act` **intentionally blanks** its Idle/Walk frames (sprite index
+`-1`) because Idle is the *unarmed* stand; real gear clips live only in ReadyFight
+(group 4) and the weapon's attack action. Authentic RO stands an **armed** character in
+the **ReadyFight stance**, not Idle. Fix: `Common::wants_ready_fight_stance()`
+(`is_pk_mode_on || weapon != 0`) routes armed players' neutral pose to ReadyFight;
+spawn + equip paths handled; `Entity::refresh_neutral_stance` flips the stance on
+equip/unequip while standing. Confirmed live: standing shows **sword + shield**.
+Verified against roBrowser (skips `-1` gear layers identically, no fallback) and ruled
+out an archive-load-order cause (the ACT exists only in `data.grf`). Original symptom
+retained below for history.
 
 **Symptom:** a standing/idle player shows an empty-handed body; the equipped sword
 AND shield appear only during the attack motion. Authentic RO draws equipped
