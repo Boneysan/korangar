@@ -265,9 +265,12 @@ here when done.
   from `NotifySkillUnitPacket` and exact teardown on `RemoveSkillUnit`
   (spec §14 "Persistent units").
 - **E3 — `DisplaySpecialEffectPacket` (0x01F3) + cast circles + sound
-  retry**: register the packet → `effect id → recipe` table; classic
-  cast-target circles; re-search the missing sounds via roBrowserLegacy's
-  effect-table wav references instead of name guessing.
+  retry**: **Partial 2026-07-22** — 0x01F3 promoted → `NetworkEvent::SpecialEffect`
+  → `special_effect_recipe` (E1 IDs + common STR/procedural). Travel balls and
+  Soul Strike orbs carry mid-flight point lights. Semantic shape hints
+  (`EffectShape`: orb/ring/spike/ball/flash/str) for recipe design without
+  third-party code. Still open: cast-target circles (EF_LOCKON), catalog-wide
+  ID coverage, sound retry.
 - **E4 — Status presentation depth**: opt2/option tints (poison/curse),
   stun/sleep/frozen poses and attached mini-effects, Freeze1/Freeze2 selection
   where native uses them, refresh variants.

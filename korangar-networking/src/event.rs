@@ -362,6 +362,12 @@ pub enum NetworkEvent {
         effect_path: &'static str,
         entity_id: EntityId,
     },
+    /// Native special effect (`ZC_NOTIFY_EFFECT2` / 0x01F3). The client maps
+    /// `effect_id` through `special_effect_recipe` (STR or procedural).
+    SpecialEffect {
+        entity_id: EntityId,
+        effect_id: ragnarok_packets::EffectId,
+    },
     AddSkillUnit {
         entity_id: EntityId,
         unit_id: UnitId,

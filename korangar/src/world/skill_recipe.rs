@@ -135,13 +135,17 @@ pub enum TravelBallKind {
 }
 
 impl TravelBallKind {
+    /// Texture paths confirmed present via `probes_e1_procedural_effect_textures`
+    /// (GRF `file_exists` / archive listing). Prefer root classic assets over
+    /// unrelated modern nested packs when both exist.
     pub fn texture_path(self) -> &'static str {
         match self {
-            // Fire-arrow frame is the closest shipped ball-like fire texture.
-            Self::FireBall => "effect\\불화살1.tga",
-            Self::FrostDiver => "effect\\icearrow.tga",
-            // Electric flash using the bright lens texture + yellow tint.
-            Self::Jupitel => "effect\\lens1.tga",
+            // Root fire splash — reads as a fire ball better than bolt frames.
+            Self::FireBall => "effect\\fire_blast.bmp",
+            // Classic ice disc/crystal (not the cold-bolt arrow).
+            Self::FrostDiver => "effect\\ice.tga",
+            // Lightning burst used as a travel ball with yellow tint.
+            Self::Jupitel => "effect\\번개4.bmp",
         }
     }
 
@@ -155,20 +159,38 @@ impl TravelBallKind {
 
     pub fn size(self) -> f32 {
         match self {
-            Self::FireBall => 72.0,
-            Self::FrostDiver => 64.0,
-            Self::Jupitel => 80.0,
+            Self::FireBall => 78.0,
+            Self::FrostDiver => 70.0,
+            Self::Jupitel => 84.0,
         }
     }
 
     pub fn color(self) -> Color {
         match self {
-            Self::FireBall => Color::rgb_u8(255, 120, 40),
-            Self::FrostDiver => Color::rgb_u8(160, 220, 255),
-            Self::Jupitel => Color::rgb_u8(255, 245, 160),
+            Self::FireBall => Color::rgb_u8(255, 140, 50),
+            Self::FrostDiver => Color::rgb_u8(180, 230, 255),
+            Self::Jupitel => Color::rgb_u8(255, 250, 180),
+        }
+    }
+
+    /// Mid-flight point-light peak intensity (world units).
+    pub fn light_intensity(self) -> f32 {
+        match self {
+            Self::FireBall => 42.0,
+            Self::FrostDiver => 36.0,
+            Self::Jupitel => 48.0,
         }
     }
 }
+
+/// Soul Strike orb texture (soft particle). Confirmed in GRF probe.
+pub const SOUL_STRIKE_ORB_TEXTURE: &str = "effect\\pok1.tga";
+/// Napalm Beat ring/flash. Blue ring + purple tint reads more psychic than slash.
+pub const NAPALM_BEAT_TEXTURE: &str = "effect\\ring_blue.tga";
+/// Earth Spike / Heaven's Drive primary stone face.
+pub const EARTH_SPIKE_TEXTURE: &str = "effect\\bd_stonecurse.tga";
+/// Secondary stone layer for layered spikes.
+pub const EARTH_SPIKE_TEXTURE_SECONDARY: &str = "effect\\crystallization\\cry_stone_01.tga";
 
 pub const COLDBOLT_BOLT_FRAMES: &[&str] = &["effect\\icearrow.tga"];
 pub const FIREBOLT_BOLT_FRAMES: &[&str] = &[
@@ -194,12 +216,17 @@ pub enum ProjectileRecipe {
 /// Kept explicit so the GRF audit can assert them without walking spawn code.
 #[cfg(test)]
 pub const E1_PROCEDURAL_TEXTURES: &[&str] = &[
-    "effect\\purpleslash.tga",
+    SOUL_STRIKE_ORB_TEXTURE,
+    NAPALM_BEAT_TEXTURE,
+    EARTH_SPIKE_TEXTURE,
+    EARTH_SPIKE_TEXTURE_SECONDARY,
+    "effect\\fire_blast.bmp",
+    "effect\\ice.tga",
+    "effect\\번개4.bmp",
     "effect\\lens1.tga",
     "effect\\lens2.tga",
     "effect\\ring_yellow.tga",
-    "effect\\불화살1.tga",
-    "effect\\icearrow.tga",
+    "effect\\purpleslash.tga",
 ];
 
 #[derive(Copy, Clone, Debug)]

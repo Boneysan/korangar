@@ -624,7 +624,11 @@ where
     })?;
     packet_handler.register(|packet: NpcOpenNumberInputPacket| NetworkEvent::NpcRequestNumberInput { npc_id: packet.npc_id })?;
     packet_handler.register(|packet: NpcOpenStringInputPacket| NetworkEvent::NpcRequestStringInput { npc_id: packet.npc_id })?;
-    packet_handler.register_noop::<DisplaySpecialEffectPacket>()?;
+    // ZC_NOTIFY_EFFECT2 (0x01F3): entity + native effect id from effect_list.
+    packet_handler.register(|packet: DisplaySpecialEffectPacket| NetworkEvent::SpecialEffect {
+        entity_id: packet.entity_id,
+        effect_id: packet.effect_id,
+    })?;
     packet_handler.register(|packet: DisplaySkillCooldownPacket| NetworkEvent::SkillCooldown {
         skill_id: packet.skill_id,
         until: packet.until,

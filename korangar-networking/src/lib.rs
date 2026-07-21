@@ -1643,6 +1643,41 @@ mod packet_handlers {
         );
     }
 
+    /// `ZC_NOTIFY_EFFECT2` (0x01F3) must promote to SpecialEffect so native
+    /// effect IDs can drive STR / procedural recipes.
+    #[test]
+    fn special_effect_0x01f3_surfaces_entity_and_effect_id() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::EffectId;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // header 0x01F3 | entity 2000000 | effect 24 (Fireball)
+        let mut bytes = vec![0xF3, 0x01];
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(&24u32.to_le_bytes());
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x01F3 did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::SpecialEffect {
+                    entity_id,
+                    effect_id: EffectId::Fireball,
+                }] if entity_id.0 == 2000000
+            ),
+            "expected SpecialEffect Fireball, got {:?}",
+            events.0
+        );
+    }
+
     /// Colored variant used by some rejections (`ZC_MSG_COLOR` 0x09CD).
     #[test]
     fn message_table_color_0x09cd_preserves_rgb() {

@@ -29,7 +29,20 @@ walked and results are written back into `animation-fidelity.md` §6 E1.
 | Travel vs hit-STR timing | Travel duration / Soul Strike orb packing uses `impact_delay_ms` so arrival ≈ impact due-tick |
 | Multi-packet travel (Jupitel) | `UniqueEffectSlot::TravelProjectile` once-per-cast (~0.22 s); FallingBolts stay per-packet |
 | AOE target spam (HD / Napalm) | `UniqueEffectSlot::TargetAoe` — one ring per cast; per-target `earthhit` / hit sounds still fire |
-| Visual fidelity | Deferred — better textures / native geometry in later E passes; not a wiring bug |
+| Visual fidelity | **Improved 2026-07-22** via GRF probe (`probes_e1_procedural_effect_textures`): see texture table below |
+
+### GRF texture upgrades (probe-backed)
+
+| Effect | Was (weak stand-in) | Now (confirmed in GRF) |
+|---|---|---|
+| Fire Ball travel | `불화살1.tga` (bolt frame) | `fire_blast.bmp` |
+| Frost Diver travel | `icearrow.tga` | `ice.tga` |
+| Jupitel travel | `lens1.tga` | `번개4.bmp` |
+| Soul Strike orbs | `purpleslash.tga` | `pok1.tga` |
+| Napalm Beat | `purpleslash.tga` | `ring_blue.tga` |
+| Earth Spike / Heaven's Drive | `lens1`/`lens2` | `bd_stonecurse.tga` + `crystallization\cry_stone_01.tga` |
+
+Re-probe: `cargo test -p korangar --lib probes_e1_procedural_effect_textures -- --ignored --nocapture`
 
 ## Live checklist (in-game)
 

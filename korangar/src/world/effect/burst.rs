@@ -13,7 +13,7 @@ use crate::world::{Camera, PointLightId, PointLightManager};
 const SEGMENT_COUNT: usize = 24;
 const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum SkillBurstStyle {
     MagnumBreak,
     Raid,

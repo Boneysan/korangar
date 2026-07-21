@@ -1,12 +1,14 @@
+use std::f32::consts::PI;
 use std::sync::Arc;
 
 use cgmath::{InnerSpace, Point3, Rad, Vector2, Vector3};
+use korangar_collision::{Frustum, Sphere};
 use wgpu::BlendFactor;
 
 use super::EffectBase;
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
-use crate::world::{Camera, PointLightManager};
+use crate::world::{Camera, PointLightId, PointLightManager};
 
 const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
 
@@ -24,6 +26,8 @@ pub struct SkillProjectile {
     /// the arrow item sprite another).
     angle_offset: f32,
     color: Color,
+    point_light_id: Option<PointLightId>,
+    light_intensity: f32,
     gets_deleted: bool,
 }
 
@@ -38,6 +42,8 @@ impl SkillProjectile {
             size: Vector2::new(100.0, 100.0),
             angle_offset: std::f32::consts::PI,
             color: Color::WHITE,
+            point_light_id: None,
+            light_intensity: 0.0,
             gets_deleted: false,
         }
     }
@@ -72,12 +78,14 @@ impl SkillProjectile {
             // client (the isometric camera tilts a purely horizontal shot).
             angle_offset: -135.0_f32.to_radians(),
             color: Color::WHITE,
+            point_light_id: None,
+            light_intensity: 0.0,
             gets_deleted: false,
         }
     }
 
     /// Phase E1 — magic travel ball (Fire Ball / Frost Diver / Jupitel).
-    /// Uses an effect texture and a tint so one generic path covers the set.
+    /// Carries a mid-flight point light matching the elemental tint.
     pub fn travel_ball(
         texture: Arc<Texture>,
         source: Point3<f32>,
@@ -85,6 +93,8 @@ impl SkillProjectile {
         duration: f32,
         size: f32,
         color: Color,
+        point_light_id: PointLightId,
+        light_intensity: f32,
     ) -> Self {
         let lift = Vector3::new(0.0, 8.0, 0.0);
         Self {
@@ -96,8 +106,18 @@ impl SkillProjectile {
             size: Vector2::new(size, size),
             angle_offset: 0.0,
             color,
+            point_light_id: Some(point_light_id),
+            light_intensity,
             gets_deleted: false,
         }
+    }
+
+    fn progress(&self) -> f32 {
+        (self.elapsed / self.duration).clamp(0.0, 1.0)
+    }
+
+    fn position_at(&self, progress: f32) -> Point3<f32> {
+        self.source + (self.target - self.source) * progress
     }
 }
 
@@ -111,11 +131,25 @@ impl EffectBase for SkillProjectile {
         self.gets_deleted = true;
     }
 
-    fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
+    fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
+        let Some(point_light_id) = self.point_light_id else {
+            return;
+        };
+        let progress = self.progress();
+        // Peak mid-flight, fade in/out at the ends.
+        let intensity = (progress * PI).sin().max(0.0) * self.light_intensity;
+        if intensity <= 0.5 {
+            return;
+        }
+        let light_position = self.position_at(progress);
+        if Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, intensity)) {
+            point_light_manager.register_fading(point_light_id, light_position, self.color, intensity, self.light_intensity);
+        }
+    }
 
     fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
-        let progress = (self.elapsed / self.duration).clamp(0.0, 1.0);
-        let position = self.source + (self.target - self.source) * progress;
+        let progress = self.progress();
+        let position = self.position_at(progress);
 
         let view_projection = camera.view_projection_matrix();
         let screen_of = |point: Point3<f32>| camera.clip_to_screen_space(view_projection * point.to_homogeneous());
@@ -167,11 +201,14 @@ pub struct SoulStrikeOrbs {
     delays: Vec<f32>,
     elapsed: f32,
     total_duration: f32,
+    point_light_id: PointLightId,
     gets_deleted: bool,
 }
 
 /// Default single-orb travel when the impact delay is unknown.
 const DEFAULT_ORB_TRAVEL: f32 = 0.32;
+const SOUL_LIGHT: Color = Color::rgb_u8(190, 120, 255);
+const SOUL_LIGHT_INTENSITY: f32 = 38.0;
 
 impl SoulStrikeOrbs {
     /// `arrival_secs` is the impact due boundary (seconds). Orbs are packed so
@@ -182,6 +219,7 @@ impl SoulStrikeOrbs {
         target: Point3<f32>,
         orb_count: usize,
         arrival_secs: f32,
+        point_light_id: PointLightId,
     ) -> Self {
         let lift = Vector3::new(0.0, 7.0, 0.0);
         let count = orb_count.max(1);
@@ -206,8 +244,14 @@ impl SoulStrikeOrbs {
             delays,
             elapsed: 0.0,
             total_duration,
+            point_light_id,
             gets_deleted: false,
         }
+    }
+
+    fn travel_duration(&self) -> f32 {
+        let last_delay = self.delays.last().copied().unwrap_or(0.0);
+        (self.total_duration - last_delay).max(0.08)
     }
 }
 
@@ -221,13 +265,35 @@ impl EffectBase for SoulStrikeOrbs {
         self.gets_deleted = true;
     }
 
-    fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
+    fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
+        let travel = self.travel_duration();
+        // Light follows the first still-traveling orb (lead of the volley).
+        for delay in &self.delays {
+            let progress = (self.elapsed - delay) / travel;
+            if !(0.0..1.0).contains(&progress) {
+                continue;
+            }
+            let lateral = Vector3::new((progress - 0.5) * 1.5, (1.0 - progress) * 2.0, (progress - 0.5) * -1.2);
+            let light_position = self.source + (self.target - self.source) * progress + lateral;
+            let intensity = (1.0 - progress) * SOUL_LIGHT_INTENSITY;
+            if intensity > 0.5
+                && Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, intensity))
+            {
+                point_light_manager.register_fading(
+                    self.point_light_id,
+                    light_position,
+                    SOUL_LIGHT,
+                    intensity,
+                    SOUL_LIGHT_INTENSITY,
+                );
+            }
+            break;
+        }
+    }
 
     fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
         let half = Vector2::new(48.0, 48.0);
-        // Per-orb flight = total_duration - last delay (same for all when stagger is even).
-        let last_delay = self.delays.last().copied().unwrap_or(0.0);
-        let travel = (self.total_duration - last_delay).max(0.08);
+        let travel = self.travel_duration();
         for delay in &self.delays {
             let progress = (self.elapsed - delay) / travel;
             if !(0.0..1.0).contains(&progress) {

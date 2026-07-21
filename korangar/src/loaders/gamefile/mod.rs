@@ -760,6 +760,178 @@ mod resolve_map_name_tests {
             }
         }
     }
+
+    /// Phase E1 texture hunt: probe classic effect TGA/BMP candidates for
+    /// travel balls, soul orbs, and ground spikes. `file_exists` is authoritative
+    /// (archive listing under-reports). Run:
+    /// `cargo test -p korangar --lib probes_e1_procedural_effect_textures -- --ignored --nocapture`
+    #[test]
+    #[ignore]
+    fn probes_e1_procedural_effect_textures() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        let candidates = [
+            // Currently wired stand-ins
+            "effect\\불화살1.tga",
+            "effect\\icearrow.tga",
+            "effect\\lens1.tga",
+            "effect\\lens2.tga",
+            "effect\\purpleslash.tga",
+            "effect\\ring_yellow.tga",
+            "effect\\ring2.bmp",
+            // Balls / spheres / orbs
+            "effect\\ball.tga",
+            "effect\\ball1.tga",
+            "effect\\ball2.tga",
+            "effect\\sphere.tga",
+            "effect\\sphere1.tga",
+            "effect\\sphere2.tga",
+            "effect\\magic_sphere.tga",
+            "effect\\magic_sphere1.tga",
+            "effect\\white_sphere.tga",
+            "effect\\orb.tga",
+            "effect\\orb1.tga",
+            "effect\\soul.tga",
+            "effect\\soul1.tga",
+            "effect\\spirit.tga",
+            "effect\\ghost.tga",
+            "effect\\pok1.tga",
+            "effect\\pok2.tga",
+            "effect\\particle1.tga",
+            "effect\\particle2.tga",
+            "effect\\particle3.tga",
+            "effect\\magic.tga",
+            "effect\\magic1.tga",
+            "effect\\magic2.tga",
+            "effect\\magic3.tga",
+            "effect\\alpha_down.tga",
+            "effect\\circle1.tga",
+            "effect\\circle2.tga",
+            "effect\\ring_blue.tga",
+            "effect\\ring_red.tga",
+            "effect\\ring_violet.tga",
+            "effect\\ring_green.tga",
+            "effect\\ring_white.tga",
+            // Fire / ice / electric travel
+            "effect\\fireball.tga",
+            "effect\\fireball1.tga",
+            "effect\\fire.tga",
+            "effect\\fire1.tga",
+            "effect\\flame.tga",
+            "effect\\firesplash.tga",
+            "effect\\firesplashhit.tga",
+            "effect\\iceball.tga",
+            "effect\\ice.tga",
+            "effect\\ice1.tga",
+            "effect\\freezing.tga",
+            "effect\\freeze.tga",
+            "effect\\thunderball.tga",
+            "effect\\thunder.tga",
+            "effect\\thunder1.tga",
+            "effect\\lightning.tga",
+            "effect\\electric.tga",
+            "effect\\plasma1.tga",
+            "effect\\plasma2.tga",
+            "effect\\jupitel.tga",
+            "effect\\yufitel.tga",
+            "effect\\yufitelhit.tga",
+            // Spikes / earth
+            "effect\\spike.tga",
+            "effect\\spike1.tga",
+            "effect\\earth.tga",
+            "effect\\earth1.tga",
+            "effect\\stone.tga",
+            "effect\\stone1.tga",
+            "effect\\rock.tga",
+            "effect\\quake.tga",
+            "effect\\stonecurse.tga",
+            "effect\\elemental_earth.tga",
+            "effect\\대폭발.tga",
+            // Korean classic effect names often used by code-drawn effects
+            "effect\\전기구.tga",
+            "effect\\파이어볼.tga",
+            "effect\\아이스볼.tga",
+            "effect\\소울.tga",
+            "effect\\정령.tga",
+            "effect\\불.tga",
+            "effect\\얼음.tga",
+            "effect\\전기.tga",
+            "effect\\마구.tga",
+            "effect\\마구1.tga",
+            "effect\\마구2.tga",
+            "effect\\스피어.tga",
+            "effect\\스피어1.tga",
+            "effect\\돌.tga",
+            "effect\\바위.tga",
+            "effect\\땅.tga",
+            "effect\\번개.tga",
+            "effect\\번개구.tga",
+            "effect\\영혼.tga",
+            "effect\\영혼1.tga",
+            "effect\\유령.tga",
+            "effect\\나선.tga",
+            "effect\\구슬.tga",
+            "effect\\구슬1.tga",
+            "effect\\빛.tga",
+            "effect\\빛1.tga",
+            "effect\\핑크.tga",
+            "effect\\보라.tga",
+            // Sprite-based projectiles (effect folder under sprite)
+            "sprite\\이팩트\\전기구.spr",
+            "sprite\\이팩트\\파이어볼.spr",
+            "sprite\\이팩트\\아이스볼.spr",
+            "sprite\\이팩트\\소울.spr",
+            "sprite\\이팩트\\정령.spr",
+            "sprite\\이팩트\\불.spr",
+            "sprite\\이팩트\\얼음.spr",
+            "sprite\\이팩트\\전기.spr",
+            "sprite\\이팩트\\창.spr",
+            "sprite\\이팩트\\스피어.spr",
+            "sprite\\이팩트\\돌.spr",
+            "sprite\\이팩트\\번개.spr",
+            "sprite\\이팩트\\영혼.spr",
+            "sprite\\이팩트\\구슬.spr",
+            "sprite\\이팩트\\마구.spr",
+        ];
+
+        println!("== E1 procedural texture probe ==");
+        let mut found = 0usize;
+        for candidate in candidates {
+            let path = if candidate.starts_with("sprite\\") {
+                format!("data\\{candidate}").to_lowercase()
+            } else {
+                format!("data\\texture\\{candidate}").to_lowercase()
+            };
+            if game_file_loader.file_exists(&path) {
+                found += 1;
+                println!("FOUND   {candidate}");
+            } else {
+                println!("missing {candidate}");
+            }
+        }
+        println!("== {found}/{} candidates found ==", candidates.len());
+
+        // Keyword scan of listed TGA/BMP under texture\\effect (best-effort;
+        // listing under-reports — treat as hints only).
+        println!("== listed effect images matching ball|sphere|orb|spike|soul|ice|fire|thunder|electric|stone ==");
+        let mut listed = 0usize;
+        for path in game_file_loader.get_files_with_extension(&[".tga", ".bmp", ".TGA", ".BMP"]) {
+            let lower = path.to_lowercase();
+            if !lower.contains("texture\\effect\\") && !lower.contains("texture/effect/") {
+                continue;
+            }
+            let keywords = [
+                "ball", "sphere", "orb", "spike", "soul", "spirit", "ghost", "ice", "fire", "thunder", "electric",
+                "stone", "earth", "plasma", "particle", "ring_", "구슬", "영혼", "전기", "파이어", "아이스", "돌", "번개",
+            ];
+            if keywords.iter().any(|k| lower.contains(k)) {
+                listed += 1;
+                println!("listed  {path}");
+            }
+        }
+        println!("== {listed} listed keyword matches ==");
+    }
 }
 
 impl GameFileLoader {

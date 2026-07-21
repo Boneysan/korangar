@@ -1408,6 +1408,13 @@ impl Client {
         } else {
             kind.duration()
         };
+        // Stable-ish id from endpoints so concurrent balls don't always share one light.
+        let light_id = PointLightId::new(
+            (source_position.x.to_bits())
+                .wrapping_add(target_position.z.to_bits())
+                .wrapping_mul(31)
+                ^ duration.to_bits(),
+        );
         match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
             Ok(texture) => self.effect_holder.add_effect(Box::new(SkillProjectile::travel_ball(
                 texture,
@@ -1416,6 +1423,8 @@ impl Client {
                 duration,
                 kind.size(),
                 kind.color(),
+                light_id,
+                kind.light_intensity(),
             ))),
             Err(error) => eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path()),
         }
@@ -1428,15 +1437,78 @@ impl Client {
         orb_count: usize,
         impact_delay_secs: f32,
     ) {
-        match self.texture_loader.get_or_load("effect\\purpleslash.tga", ImageType::Color) {
+        let light_id = PointLightId::new(
+            source_position.x.to_bits().wrapping_add(target_position.y.to_bits()) ^ (orb_count as u32).wrapping_mul(17),
+        );
+        match self.texture_loader.get_or_load(SOUL_STRIKE_ORB_TEXTURE, ImageType::Color) {
             Ok(texture) => self.effect_holder.add_effect(Box::new(SoulStrikeOrbs::new(
                 texture,
                 source_position,
                 target_position,
                 orb_count,
                 impact_delay_secs,
+                light_id,
             ))),
-            Err(error) => eprintln!("[skill-effect] failed to load soul-strike orb texture: {error:?}"),
+            Err(error) => eprintln!(
+                "[skill-effect] failed to load soul-strike orb texture {SOUL_STRIKE_ORB_TEXTURE}: {error:?}"
+            ),
+        }
+    }
+
+    fn spawn_special_effect(&mut self, entity_id: EntityId, effect_id: ragnarok_packets::EffectId) {
+        let Some(recipe) = special_effect_recipe(effect_id) else {
+            if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                eprintln!("[skill-effect] unmapped special effect id={effect_id:?} entity={}", entity_id.0);
+            }
+            return;
+        };
+
+        let position = self
+            .entity_world_position(entity_id)
+            .or_else(|| {
+                self.client_state
+                    .try_follow(this_entity())
+                    .filter(|entity| entity.get_entity_id() == entity_id || entity_id.0 == 0)
+                    .map(Entity::get_position)
+            })
+            .unwrap_or(Point3::new(0.0, 0.0, 0.0));
+
+        let point_light_id = PointLightId::new(entity_id.0.wrapping_add(0x01F3_0000));
+
+        match recipe {
+            SpecialEffectRecipe::Str {
+                path,
+                light_color,
+                light_intensity,
+            } => {
+                // Prefer entity-attached center so the flash follows the actor.
+                match self.effect_loader.get_or_load(path, &self.texture_loader) {
+                    Ok(effect) => {
+                        let frame_timer = effect.new_frame_timer();
+                        self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                            effect,
+                            frame_timer,
+                            EffectCenter::Entity(entity_id, position),
+                            Vector3::new(0.0, 4.0, 0.0),
+                            point_light_id,
+                            Vector3::new(0.0, 6.0, 0.0),
+                            light_color,
+                            light_intensity,
+                            false,
+                            0.0,
+                        )));
+                    }
+                    Err(error) => eprintln!("[skill-effect] special-effect STR {path} failed: {error:?}"),
+                }
+            }
+            SpecialEffectRecipe::Burst {
+                style,
+                texture,
+                secondary,
+            } => match secondary {
+                Some(secondary) => self.add_layered_procedural_skill_effect(texture, secondary, position, point_light_id, style),
+                None => self.add_procedural_skill_effect(texture, position, point_light_id, style),
+            },
         }
     }
 
@@ -1485,7 +1557,7 @@ impl Client {
             Some(DamageTargetEffect::NapalmBeat) => {
                 if spawn_target_aoe(&mut self.effect_holder) {
                     self.add_procedural_skill_effect(
-                        "effect\\purpleslash.tga",
+                        NAPALM_BEAT_TEXTURE,
                         target_position,
                         target_light_id,
                         SkillBurstStyle::NapalmBeat,
@@ -1495,8 +1567,8 @@ impl Client {
             Some(DamageTargetEffect::EarthSpike) => {
                 // Single-target skill; no AOE gate.
                 self.add_layered_procedural_skill_effect(
-                    "effect\\lens1.tga",
-                    "effect\\lens2.tga",
+                    EARTH_SPIKE_TEXTURE,
+                    EARTH_SPIKE_TEXTURE_SECONDARY,
                     target_position,
                     target_light_id,
                     SkillBurstStyle::EarthSpike,
@@ -1505,8 +1577,8 @@ impl Client {
             Some(DamageTargetEffect::HeavensDrive) => {
                 if spawn_target_aoe(&mut self.effect_holder) {
                     self.add_layered_procedural_skill_effect(
-                        "effect\\lens1.tga",
-                        "effect\\lens2.tga",
+                        EARTH_SPIKE_TEXTURE,
+                        EARTH_SPIKE_TEXTURE_SECONDARY,
                         target_position,
                         target_light_id,
                         SkillBurstStyle::HeavensDrive,
@@ -3915,6 +3987,9 @@ impl Client {
                         false,
                         0.0,
                     )));
+                }
+                NetworkEvent::SpecialEffect { entity_id, effect_id } => {
+                    self.spawn_special_effect(entity_id, effect_id);
                 }
                 NetworkEvent::AddSkillUnit {
                     entity_id,
@@ -7632,7 +7707,7 @@ mod skill_effect_asset_tests {
                     paths.insert(format!("data\\texture\\{}", kind.texture_path()));
                 }
                 Some(ProjectileRecipe::SoulStrikeOrbs) => {
-                    paths.insert("data\\texture\\effect\\purpleslash.tga".to_owned());
+                    paths.insert(format!("data\\texture\\{SOUL_STRIKE_ORB_TEXTURE}"));
                 }
                 Some(ProjectileRecipe::Spear) | None => {}
             }

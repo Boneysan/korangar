@@ -15,6 +15,7 @@ mod object;
 mod particles;
 mod pathing;
 mod skill_recipe;
+mod special_effect;
 mod sound;
 mod video;
 
@@ -38,6 +39,7 @@ pub use self::particles::*;
 pub use self::pathing::*;
 pub use self::skill_recipe::*;
 pub use self::sound::*;
+pub use self::special_effect::*;
 pub use self::video::*;
 use crate::graphics::Texture;
 
