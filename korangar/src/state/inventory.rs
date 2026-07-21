@@ -25,20 +25,30 @@ impl Inventory {
     }
 
     pub fn add_item(&mut self, async_loader: &AsyncLoader, item: InventoryItem<NoMetadata>) {
-        if let Some(found_item) = self.items.iter_mut().find(|inventory_item| inventory_item.index == item.index) {
-            let InventoryItemDetails::Regular { amount, .. } = &mut found_item.details else {
-                panic!();
-            };
+        let Some(position) = self.items.iter().position(|inventory_item| inventory_item.index == item.index) else {
+            self.items.push(async_loader.request_inventory_item_metadata_load(item));
+            return;
+        };
 
-            let InventoryItemDetails::Regular { amount: added_amount, .. } = item.details else {
-                panic!();
-            };
+        // Only plain (Regular) items merge by amount. Ammo (arrows) carries an
+        // equip position, so the server models it as Equippable — stacking a
+        // second pickup onto the same slot (or any non-Regular re-report) must
+        // not crash the client; replace the existing entry instead of panicking.
+        let both_regular = matches!(self.items[position].details, InventoryItemDetails::Regular { .. })
+            && matches!(item.details, InventoryItemDetails::Regular { .. });
 
-            *amount += added_amount;
+        if both_regular {
+            if let (
+                InventoryItemDetails::Regular { amount, .. },
+                InventoryItemDetails::Regular {
+                    amount: added_amount, ..
+                },
+            ) = (&mut self.items[position].details, &item.details)
+            {
+                *amount = amount.saturating_add(*added_amount);
+            }
         } else {
-            let item = async_loader.request_inventory_item_metadata_load(item);
-
-            self.items.push(item);
+            self.items[position] = async_loader.request_inventory_item_metadata_load(item);
         }
     }
 
