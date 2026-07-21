@@ -40,9 +40,13 @@ but their action layouts still need to be audited by actor family.
 
 **Phase C (runtime layer composition) closed 2026-07-18** — see
 [plans/animation-fidelity.md](plans/animation-fidelity.md) §4.
-**Phase D (weapon visual completeness) code closed 2026-07-18** — per-item
-weapons, dual-wield combine, `_검광` trails; live GUI check still open.
-Remaining player-visual work is hat/accessories (and live D validation).
+**Phase D (weapon visual completeness) DONE 2026-07-22** — per-item weapons,
+dual-wield combine, `_검광` trails; live GUI signed off (all 8 rows PASS
+2026-07-21). Note the idle draw rule this surfaced: a weapon/shield `.act`
+**blanks its Idle/Walk frames** (sprite `-1`) — those are the *unarmed* stand —
+so an armed player must stand in the **ReadyFight** action (group 4) to render
+gear, relaxing to Idle only on town/safe maps. Remaining player-visual work is
+hat/accessories. Next engine work is Phase E.
 
 The **weapon layer** rules (all verified against the GRFs by
 `weapon-sprite-audit`):
@@ -296,9 +300,11 @@ cargo run --release --bin weapon-sprite-audit
 cargo run --release --bin animation-audit
 ```
 
-Live GUI (manual): provision with headless `provision-effect-roster` (Knight
-gets sword/spear + Guard/Shield items), then check EffectKnight sword+Guard
-idle/walk/attack and facing-away body covering the Guard.
+Live GUI (manual, Phase D — DONE 2026-07-21, all 8 rows PASS): provision with
+headless `provision-effect-roster` (Knight gets sword/spear + Guard/Shield
+items), then check EffectKnight sword+Guard idle/walk/attack and facing-away
+body covering the Guard. Full results + method in
+[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md).
 
 ### 6.2 Catalog
 
@@ -338,11 +344,11 @@ idle/walk/attack and facing-away body covering the Guard.
 attach; EffectKnight spear/sword attack hold + sound; sword+Guard idle/attack;
 Guard covered by body when facing away.
 
-**Live checklist (Phase D — pending):** full table in
+**Live checklist (Phase D — DONE 2026-07-21, all 8 rows PASS):** full results in
 [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)
-(Mjolnir 1530, dual daggers, trail allowlist, C4/C5 regressions). **That file
-is the next task for Claude/Codex/any agent** — do not start Phase E until it
-is filled in.
+(Mjolnir 1530, dual daggers, trail allowlist, C4/C5 regressions, bow/mace). **Next
+task for Claude/Codex/any agent is Phase E** (skill/status recipes,
+[plans/animation-fidelity.md](plans/animation-fidelity.md) §6).
 
 **Important**: `GameFileLoader::get_files_with_extension` under-reports the
 classic GRF (verified: the 기사 folder listed 3 files, probes found 16).
@@ -354,10 +360,10 @@ path — `file_exists` does not normalize case the way `get` does).
 The execution plan for closing these is
 [plans/animation-fidelity.md](plans/animation-fidelity.md).
 
-- **Phase D live GUI** → **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)**
-  (open checklist; code closed 2026-07-18).
+- ~~**Phase D live GUI**~~ → **DONE 2026-07-21**, all 8 rows PASS —
+  **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)**.
 - ~~**Per-item weapon sprites** / **`_검광` trails** / **item→view + dual
-  combine**~~ — Phase D code closed 2026-07-18.
+  combine**~~ — Phase D code closed 2026-07-18, live-verified 2026-07-21.
 - **Impact scheduler completeness**: the ACT-derived pending-impact boundary
   and `dMotion / 288.0` target clock are implemented. Add exact damage-type
   reaction guards, per-hit cadence, packet-fixture/golden-timeline coverage,

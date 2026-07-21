@@ -16,11 +16,12 @@ This directory contains all design documents, technical deep dives, implementati
   3. `docs/CLIENT_SYSTEMS_OVERVIEW.md` — High-level map of the codebase.
   4. `docs/SOFTWARE_DESIGN.md` — Architecture and key decisions.
 
-- **Current animation next step (2026-07-18):** Phase D code is closed.
-  **Live client verification is next** before Phase E — see
-  [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)
-  (also linked from [plans/animation-fidelity.md](plans/animation-fidelity.md)
-  and [ANIMATION_SYSTEM.md](ANIMATION_SYSTEM.md)).
+- **Current animation next step (2026-07-22):** Phase D is **DONE** — code closed
+  and live client verification signed off (all 8 rows PASS 2026-07-21, see
+  [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)).
+  **Phase E (skill/status recipes) is next** —
+  [plans/animation-fidelity.md](plans/animation-fidelity.md) §6. New protocol note
+  from closing D: [protocol/inventory-and-ranged-attacks.md](protocol/inventory-and-ranged-attacks.md).
 
 - **Cross-references**: Documents link to each other extensively. Follow the "See also" sections.
 

@@ -9,11 +9,17 @@ custom UI for a friends group + DM campaign.
 
 See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
 
-**NEXT animation task (2026-07-18):** Phase D *code* is closed (per-item weapons,
-dual-wield views, `_검광` trails). **Live client verification is next** — do not
-start Phase E until this checklist is signed off:
-[docs/plans/phase-d-live-verification.md](docs/plans/phase-d-live-verification.md).
-Parent plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md).
+**NEXT animation task (2026-07-22):** Phase D is **DONE** — code closed *and* live
+GUI verification signed off (all 8 rows PASS 2026-07-21, see
+[docs/plans/phase-d-live-verification.md](docs/plans/phase-d-live-verification.md)).
+**Phase E (skill/status recipes)** is next: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+Fixes shipped while closing D (all on `agent/platform-connectivity-controls`):
+armed players stand in the ReadyFight stance so weapon+shield render at idle
+(`78f57915`), and relax to Idle on town/safe maps (`abb519f1`); respawn/resurrect
+revive the sprite (`78f57915`); ammo (arrows) equips/stacks/shows count and a
+normal bow attack draws a flying arrow (`d3f7c5dd`, `2b637bac`) — see
+[docs/protocol/inventory-and-ranged-attacks.md](docs/protocol/inventory-and-ranged-attacks.md).
+Known open sub-follow-ups: gun-bullet/shuriken projectiles, per-arrow-type sprites.
 
 **DM Data Assets (key for upcoming E7 work)**: See new `docs/DM_DATA_GUIDE.md` for how bestiary.json, items.json, cards.json integrate with bestiary journal, encounters, rewards, loot tables. Codex should use these for data-driven DM features.
 

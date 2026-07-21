@@ -216,12 +216,17 @@ Documented in [ANIMATION_SYSTEM.md §6](../ANIMATION_SYSTEM.md#6-diagnostics-and
   `../../RO/client/2019-06-05fRagexe_patched.exe` (`0x7C4F90` weapon,
   `0x7C4B30` trail).
 
-**NEXT (blocks calling D fully closed):** live GUI —
-see **[phase-d-live-verification.md](phase-d-live-verification.md)**.
+**LIVE GUI — DONE 2026-07-21.** All 8 rows PASS
+(**[phase-d-live-verification.md](phase-d-live-verification.md)**). Bugs found &
+fixed while verifying (branch `agent/platform-connectivity-controls`): idle-gear —
+armed players stand in ReadyFight so weapon/shield render at idle, and relax to Idle
+on town/safe maps (`78f57915`, `abb519f1`); dual-wield attack re-trigger (`4df41419`);
+respawn/resurrect sprite revive (`78f57915`); ammo equip/stack/count +
+normal-bow-attack arrow projectile (`d3f7c5dd`, `2b637bac`).
 
 Exit: audit tool enumerates per-item/trail coverage; roster + a per-item
-weapon (e.g. Mjolnir 1530 on Knight) verified live. **Code exit met; live
-GUI check still open.**
+weapon (e.g. Mjolnir 1530 on Knight) verified live. **Met — code exit AND live GUI
+signed off. Phase D complete; next engine work is Phase E (§6).**
 
 ## 6. Phase E — Skill/status presentation batches (data track, parallel)
 
