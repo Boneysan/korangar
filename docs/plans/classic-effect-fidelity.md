@@ -241,15 +241,29 @@ Meteor Assault brightening.
 
 ### Open items
 
-- **Cast bar for menu/priest skills** — packets verified healthy via the new
-  `[skill-cast]` diagnostic (`KORANGAR_PACKET_LOG`): warp 1000 ms, Magnus
-  2005 ms all arrive as `SkillCast` events. Whether the bar *renders* during
-  those casts is still unconfirmed live.
+- ~~Cast bar for menu/priest skills~~ **RESOLVED 2026-07-23**: packets healthy
+  (`[skill-cast]` diagnostic — warp 1000 ms, Magnus 2005 ms) **and the bar
+  renders** (user-confirmed on Magnus). The earlier "no cast bar" report was
+  short DEX-reduced casts going by unnoticed.
 - Warp-selection window close-without-Cancel leaves server menuskill state.
-- Batch 2 units: Hunter traps (`ef_trap_*` string keys in the effect table),
-  Sage ground fields (Volcano/Deluge/Violent Gale/Land Protector →
-  `EF_BOTTOM_*`), Venom Dust (`particle3` sprite loop needs persistent
-  sprite-effect support), song/dance areas.
+
+### Batch 2 blueprint (mappings pulled + GRF-verified 2026-07-23)
+
+All from the reverse-engineered original-client tables, every asset confirmed
+present in our `data.grf`:
+
+| Unit | Original presentation | Assets (verified) | Notes |
+|---|---|---|---|
+| Hunter traps ×10 (Skid/Ankle/Land Mine/Blast/Shockwave/Sandman/Flasher/Freezing/Claymore/Talkie Box) | **RSM 3D prop models**, one per trap type | `data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6` (all 10 present) | Needs a new body kind: spawn a map-model at the unit cell — different pipeline from effects (korangar already renders RSM for maps) |
+| Volcano | Rotating, size-pulsing truncated cone on the ground (`PropertyGround`: top 3.0 cells, bottom 1.0, height 2, pulse 0.5–1.0×) | `effect\ring_red.tga` | Expressible with `UnitCylinders` (top 15 / bottom 5 / height ~6 world) — consider adding the size pulse |
+| Deluge | Same geometry | `effect\ring_blue.tga` | same |
+| Violent Gale | Same geometry | `effect\ring_yellow.tga` | same |
+| Land Protector | Flat pulsing texture tile per cell (`LPEffect`, size ~0.8 cell) | `effect\aaa copy.bmp` | One flat quad per unit cell |
+| Venom Dust | `이팩트\particle3` sprite looping at the cell (effect 171: size 80, rising, `repeat: true`) | `particle3.spr/.act` present | Needs persistent/looping sprite-effect support (SpriteEffects is one-shot today) |
+| Demonstration (Alchemist bomb) | `이팩트\데몬스트레이션` sprite (effect 302) | `.spr/.act` present | Same looping-sprite dependency as Venom Dust |
+
+Song/dance areas: the client tables mark these `'27x_ground'` **Tofix** even
+in roBrowser — no authoritative visual exists there; defer or design our own.
 
 ### iRO Wiki visual brief (acceptance language, not asset table)
 
@@ -272,6 +286,55 @@ despite multi-hit animation.
 Note the two anchor styles differ. Napalm Beat and Soul Strike land on the
 target entity; Earth Spike and Heaven's Drive rise out of the ground; Fire Ball,
 Frost Diver, and Jupitel travel and then burst.
+
+## The method — recovering any original-client visual (repeatable runbook)
+
+How the E1/E2 mappings were derived. Use this for any other skill, status, or
+unit visual we want authentic.
+
+**1. Sources.** `MrAntares/roBrowserLegacy` on GitHub — a from-scratch
+reimplementation whose DB tables reproduce the original exe's hardcoded
+mappings (comments often cite the C++ client's own values):
+
+| File | Gives you |
+|---|---|
+| `src/DB/Skills/SkillEffect.js` | skill ID → effect IDs per phase (`effectId`, `hitEffectId`, `beforeHitEffectId`, `groundEffectId`, `…OnCaster`) |
+| `src/DB/Effects/EffectConst.js` | `EF_*` name → numeric effect ID |
+| `src/DB/Effects/EffectTable.js` | effect ID → component list: `type` (STR / 3D / SPR / RSM / CYLINDER / QuadHorn / FUNC) + files, wavs, sizes, durations |
+| `src/DB/Skills/SkillUnit.js` (+ `SkillUnitConst.js`) | persistent unit ID → effect ID |
+| `src/DB/Monsters/AttackEffectTable.js` | monster attack visuals |
+| `src/Renderer/EffectManager.js`, `src/Renderer/Effects/*.js` | how each `type` renders and which path prefix each field implies |
+
+**2. Path conventions** (from EffectManager): `spriteName`/`SPR` →
+`data\sprite\이팩트\<name>` · `STR` `file` → `data\texture\effect\<name>.str`
+(`%d` + `rand: [a,b]` = random variant) · `RSM` → `data\model\<path>.rsm` ·
+plain `file`/`textureName` → `data\texture\effect\…`.
+
+**3. Decode Korean filenames from raw bytes.** The JS files hold CP949 bytes
+that render as mojibake — `curl` the raw file and decode bytes as CP949
+(`b'\xc0\xcc\xc6\xd1\xc6\xae'` = `이팩트`, `\xbf\xdc\xba\xce\xbc\xd2\xc7\xb0\x5c\xc6\xae\xb7\xa6` = `외부소품\트랩`).
+Never trust the rendered text.
+
+**4. Verify every file against our GRFs** with `tools/grf_list.py` (never
+`get_files_with_extension`), then pin it in the
+`all_mapped_skill_effect_assets_exist` audit so it can't rot.
+
+**5. Cross-check the IDs three ways** before trusting them: roBrowser
+`EffectConst` ↔ Hercules `doc/effect_list.md` ↔ our `ragnarok-packets`
+`EffectId` discriminants; skill IDs against `Hercules/db/*/skill_db.conf`;
+unit IDs against our `UnitId` enum. (All agreed for E1/E2.)
+
+**6. License discipline** (CLAUDE.md §5): take *data* — which files, sizes,
+timings — and write our own renderers. Do not port roBrowser code.
+
+**7. Known pitfalls.** Entries marked `Tofix`/`Todo`/commented-out are
+roBrowser's gaps, not the client's truth — cross-reference the GRF for the
+real asset (that's how Napalm's unimplemented `EF_NAPALMBEAT` 32 was recovered
+as `폭발1–8.tga`, the GRF's only 8-frame explosion cycle). Some `SkillEffect`
+entries are roBrowser approximations rather than exe truth. And everything
+needs a live pass: procedural translucency that looks right in theory washes
+out against lit terrain (additive alphas want ~0.5–0.8), and authored STRs
+beat procedural geometry when both exist (Safety Wall).
 
 ## Tooling
 
