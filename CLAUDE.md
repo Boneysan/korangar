@@ -11,8 +11,21 @@ See the Documentation Hub above for the full list (DM tools, packets, world, gra
 
 **NEXT animation task (2026-07-22):** Phase D is **DONE** (live-green 2026-07-21).
 **Phase E1 code is closed** (Napalm/Soul Strike/Frost Diver/Fire Ball/Jupitel/
-Earth Spike/Heaven's Drive procedural recipes) — needs a **live GUI pass** then
-E2 (persistent skill units). Plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+Earth Spike/Heaven's Drive) — needs a **live GUI pass** then E2 (persistent skill
+units). Plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+
+**Effect fidelity — read this before touching skill visuals.** RO ships effects in
+**two families**: `.str` keyframe scripts (`data\texture\effect\`) used by ground/AoE
+spells, and **sprite animations** (`data\sprite\이팩트\*.spr`+`.act`) used by the
+classic single-target spells. The E1 skills have **no `.str` in the GRFs at all**
+(probed and confirmed), which is why they shipped with procedural stand-ins that
+"don't look like RO". The **sprite backend now exists** (`world/sprite_effect.rs`,
+`EffectAsset::Sprite`, `ResolvedEffect`), but **no skill is mapped to it yet** —
+`skill_recipe.rs` still uses the procedural recipes. Next step is deriving the
+skill→sprite mapping (no authoritative table ships with the client; it is compiled
+into the exe). See [docs/plans/classic-effect-fidelity.md](docs/plans/classic-effect-fidelity.md).
+Caution: `get_files_with_extension` **under-reports the GRFs** — probe with
+`file_exists`, or parse the GRF table directly.
 Fixes shipped while closing D (all on `agent/platform-connectivity-controls`):
 armed players stand in the ReadyFight stance so weapon+shield render at idle
 (`78f57915`), and relax to Idle on town/safe maps (`abb519f1`); respawn/resurrect

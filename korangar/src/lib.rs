@@ -514,7 +514,7 @@ const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
 /// sound-only, its visual is the volley itself; Thunderstorm and Storm Gust
 /// play their large STRs at the targeted ground (`GroundSkillEffect`), so
 /// their per-hit part is small or nothing.
-fn skill_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
+fn skill_hit_effects(skill_id: SkillId) -> Vec<(ResolvedEffect, Color, f32)> {
     skill_presentation_recipe(skill_id)
         .hit_effects
         .iter()
@@ -530,7 +530,7 @@ fn skill_hit_effects(skill_id: SkillId) -> Vec<(&'static str, Color, f32)> {
 /// Current ground-cast mappings played at the packet's target position when
 /// `ZC_NOTIFY_GROUNDSKILL` arrives. Asset and trigger evidence varies by
 /// recipe; see the combat animation pipeline specification.
-fn ground_skill_effect(skill_id: SkillId) -> Option<(&'static str, Color, f32)> {
+fn ground_skill_effect(skill_id: SkillId) -> Option<(ResolvedEffect, Color, f32)> {
     skill_presentation_recipe(skill_id)
         .ground_effect
         .map(|track| (track.asset.resolve(), track.light_color, track.start_delay))
@@ -1039,6 +1039,7 @@ pub struct Client {
 
     particle_holder: ParticleHolder,
     emote_bubbles: EmoteBubbles,
+    sprite_effects: SpriteEffects,
     point_light_manager: PointLightManager,
     effect_holder: EffectHolder,
     path_finder: PathFinder,
@@ -1903,6 +1904,7 @@ impl Client {
 
             let particle_holder = ParticleHolder::default();
             let emote_bubbles = EmoteBubbles::default();
+            let sprite_effects = SpriteEffects::default();
             let point_light_manager = PointLightManager::new();
             let effect_holder = EffectHolder::default();
             let path_finder = PathFinder::default();
@@ -2036,6 +2038,7 @@ impl Client {
             login_auth_expires_at: None,
             particle_holder,
             emote_bubbles,
+            sprite_effects,
             point_light_manager,
             effect_holder,
             path_finder,
@@ -2352,27 +2355,16 @@ impl Client {
         if let Some(skill_id) = skill_id {
             self.spawn_damage_target_skill_effect(skill_id, source_entity_id, destination_entity_id, target_position);
 
-            for (effect_path, light_color, start_delay) in skill_hit_effects(skill_id) {
-                match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
-                    Ok(effect) => {
-                        let frame_timer = effect.new_frame_timer();
-                        self.effect_holder.add_effect(Box::new(EffectWithLight::new(
-                            effect,
-                            frame_timer,
-                            EffectCenter::Position(target_position),
-                            Vector3::new(0.0, 0.0, 0.0),
-                            PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
-                            Vector3::new(0.0, 6.0, 0.0),
-                            light_color,
-                            45.0,
-                            false,
-                            start_delay,
-                        )));
-                    }
-                    Err(error) => {
-                        eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
-                    }
-                }
+            for (resolved, light_color, start_delay) in skill_hit_effects(skill_id) {
+                self.spawn_resolved_effect(
+                    resolved,
+                    target_position,
+                    PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
+                    light_color,
+                    45.0,
+                    start_delay,
+                    client_tick,
+                );
             }
 
             for sound in skill_presentation_recipe(skill_id).hit_sounds {
@@ -3192,6 +3184,7 @@ impl Client {
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
                     self.emote_bubbles.clear();
+                    self.sprite_effects.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
@@ -4222,30 +4215,19 @@ impl Client {
                     // The original client plays ground-cast area effects
                     // (Thunderstorm, Storm Gust) from this packet at the
                     // targeted position, independent of any damage landing.
-                    if let Some((effect_path, light_color, start_delay)) = ground_skill_effect(skill_id)
+                    if let Some((resolved, light_color, start_delay)) = ground_skill_effect(skill_id)
                         && let Some(map) = &self.map
                         && let Some(world_position) = map.get_world_position(position)
                     {
-                        match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
-                            Ok(effect) => {
-                                let frame_timer = effect.new_frame_timer();
-                                self.effect_holder.add_effect(Box::new(EffectWithLight::new(
-                                    effect,
-                                    frame_timer,
-                                    EffectCenter::Position(world_position),
-                                    Vector3::new(0.0, 0.0, 0.0),
-                                    PointLightId::new(u32::from(position.x) ^ (u32::from(position.y) << 16) ^ u32::from(skill_id.0)),
-                                    Vector3::new(0.0, 6.0, 0.0),
-                                    light_color,
-                                    60.0,
-                                    false,
-                                    start_delay,
-                                )));
-                            }
-                            Err(error) => {
-                                eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
-                            }
-                        }
+                        self.spawn_resolved_effect(
+                            resolved,
+                            world_position,
+                            PointLightId::new(u32::from(position.x) ^ (u32::from(position.y) << 16) ^ u32::from(skill_id.0)),
+                            light_color,
+                            60.0,
+                            start_delay,
+                            client_tick,
+                        );
                     }
 
                     if let Some(world_position) = self.map.as_ref().and_then(|map| map.get_world_position(position)) {
@@ -6282,6 +6264,61 @@ impl Client {
     /// must run before the `self.map` check in [`Self::update_and_render`].
     ///
     /// Called as late as possible in the frame to give the loader thread the
+    /// Play a resolved effect at `position`, dispatching to whichever pipeline
+    /// its family needs: the STR keyframe player for `data\texture\effect\*.str`,
+    /// or the classic sprite player for `data\sprite\이팩트\*.spr`.
+    ///
+    /// Sprite effects load lazily on first use, exactly like the emote sheet —
+    /// the first cast of a skill spawns nothing visible while its sprite is in
+    /// flight, and every later cast draws immediately.
+    #[allow(clippy::too_many_arguments)]
+    fn spawn_resolved_effect(
+        &mut self,
+        resolved: ResolvedEffect,
+        position: Point3<f32>,
+        point_light_id: PointLightId,
+        light_color: Color,
+        light_range: f32,
+        start_delay: f32,
+        client_tick: ClientTick,
+    ) {
+        match resolved {
+            ResolvedEffect::Str(effect_path) => match self.effect_loader.get_or_load(effect_path, &self.texture_loader) {
+                Ok(effect) => {
+                    let frame_timer = effect.new_frame_timer();
+                    self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                        effect,
+                        frame_timer,
+                        EffectCenter::Position(position),
+                        Vector3::new(0.0, 0.0, 0.0),
+                        point_light_id,
+                        Vector3::new(0.0, 6.0, 0.0),
+                        light_color,
+                        light_range,
+                        false,
+                        start_delay,
+                    )));
+                }
+                Err(error) => {
+                    eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                }
+            },
+            ResolvedEffect::Sprite { path, action_index } => {
+                // A cached sheet comes back from the request immediately; only
+                // a genuine miss goes through the sentinel routing.
+                if let Some(sentinel) = self.sprite_effects.request_slot(path)
+                    && let Some(animation_data) =
+                        self.async_loader
+                            .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
+                {
+                    self.sprite_effects.set_animation_data(path, animation_data);
+                }
+
+                self.sprite_effects.spawn(path, position, action_index, client_tick);
+            }
+        }
+    }
+
     /// maximum window to finish in-flight work.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
@@ -6294,6 +6331,11 @@ impl Client {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
                     if entity_id == EMOTE_ANIMATION_ENTITY_ID {
                         self.emote_bubbles.set_animation_data(animation_data);
+                    } else if let Some(path) = self.sprite_effects.path_for_sentinel(entity_id) {
+                        // Classic sprite effects route their loads through a
+                        // sentinel range just below the emote sheet, so they
+                        // never collide with a real entity ID.
+                        self.sprite_effects.set_animation_data(path, animation_data);
                     } else if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -6779,6 +6821,7 @@ impl Client {
         // Update particles.
         self.particle_holder.update(delta_time as f32);
         self.emote_bubbles.update(client_tick);
+        self.sprite_effects.update(client_tick);
         self.effect_holder
             .update(self.client_state.follow(client_state().entities()), delta_time as f32);
 
@@ -7095,6 +7138,7 @@ impl Client {
                 water_instruction: &mut water_instruction,
                 particle_holder: &mut self.particle_holder,
                 emote_bubbles: &self.emote_bubbles,
+                sprite_effects: &self.sprite_effects,
                 effect_holder: &mut self.effect_holder,
                 effect_renderer: &mut self.effect_renderer,
                 bottom_interface_renderer: &self.bottom_interface_renderer,
@@ -7437,6 +7481,7 @@ struct MapRenderContext<'a, 'm: 'a> {
     water_instruction: &'a mut Option<WaterInstruction<'m>>,
     particle_holder: &'a mut ParticleHolder,
     emote_bubbles: &'a EmoteBubbles,
+    sprite_effects: &'a SpriteEffects,
     effect_holder: &'a mut EffectHolder,
     effect_renderer: &'a mut EffectRenderer,
     bottom_interface_renderer: &'a GameInterfaceRenderer,
@@ -7640,6 +7685,13 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             entity_camera,
             self.client_tick,
         );
+
+        // Classic sprite effects draw through the entity pipeline for the same
+        // reason emotes do: they are ACT animations, so frame timing and
+        // per-frame offsets come from the shared animation path.
+        #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_entities))]
+        self.sprite_effects
+            .render(self.entity_instructions, entity_camera, self.client_tick);
 
         #[cfg(feature = "debug")]
         if self.render_options.show_entities_debug {

@@ -16,6 +16,7 @@ mod particles;
 mod pathing;
 mod skill_recipe;
 mod special_effect;
+mod sprite_effect;
 mod sound;
 mod video;
 
@@ -40,6 +41,7 @@ pub use self::pathing::*;
 pub use self::skill_recipe::*;
 pub use self::sound::*;
 pub use self::special_effect::*;
+pub use self::sprite_effect::*;
 pub use self::video::*;
 use crate::graphics::Texture;
 

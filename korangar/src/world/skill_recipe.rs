@@ -8,9 +8,32 @@ use ragnarok_packets::SkillId;
 
 use crate::Color;
 
+/// Which effect family an asset belongs to. RO ships two, and they are played
+/// by completely different pipelines: keyframe scripts under
+/// `data\texture\effect\*.str`, and classic sprite animations under
+/// `data\sprite\이팩트\*.spr` + `.act`.
+///
+/// The distinction is not stylistic. The classic single-target spells have no
+/// `.str` file in the GRFs at all, so they can only be drawn authentically
+/// through the sprite path. See `docs/plans/classic-effect-fidelity.md`.
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum ResolvedEffect {
+    /// A keyframe script, relative to `data\texture\effect\`.
+    Str(&'static str),
+    /// A sprite animation, relative to `data\sprite\` and without an
+    /// extension, plus the ACT action to play.
+    Sprite { path: &'static str, action_index: usize },
+}
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum EffectAsset {
     Fixed(&'static str),
+    /// A classic sprite effect. `action_index` selects the ACT action, which
+    /// for most effect sheets is 0.
+    Sprite {
+        path: &'static str,
+        action_index: usize,
+    },
     FireHit,
     WindHit,
     Meteor,
@@ -18,9 +41,26 @@ pub enum EffectAsset {
 }
 
 impl EffectAsset {
-    pub fn resolve(self) -> &'static str {
+    /// Convenience for the common case of a sprite sheet whose effect is its
+    /// first ACT action.
+    pub const fn sprite(path: &'static str) -> Self {
+        Self::Sprite { path, action_index: 0 }
+    }
+
+    pub fn resolve(self) -> ResolvedEffect {
+        match self {
+            Self::Sprite { path, action_index } => ResolvedEffect::Sprite { path, action_index },
+            other => ResolvedEffect::Str(other.resolve_str()),
+        }
+    }
+
+    /// Resolve the `.str` path for the keyframe-script variants. Panics on
+    /// [`Self::Sprite`], which has no `.str` equivalent by construction —
+    /// callers must go through [`Self::resolve`].
+    fn resolve_str(self) -> &'static str {
         match self {
             Self::Fixed(path) => path,
+            Self::Sprite { path, .. } => unreachable!("sprite effect {path} has no .str form; use EffectAsset::resolve"),
             Self::FireHit => match rand_aes::tls::rand_range_u32(1..=3) {
                 1 => "firehit1.str",
                 2 => "firehit2.str",
@@ -44,14 +84,25 @@ impl EffectAsset {
         }
     }
 
+    /// Every `.str` this asset can resolve to. Sprite effects contribute
+    /// nothing here by design — they are covered by [`Self::sprite_path`].
     #[cfg(test)]
     pub fn variants(self) -> Vec<&'static str> {
         match self {
             Self::Fixed(path) => vec![path],
+            Self::Sprite { .. } => Vec::new(),
             Self::FireHit => vec!["firehit1.str", "firehit2.str", "firehit3.str"],
             Self::WindHit => vec!["windhit1.str", "windhit2.str", "windhit3.str"],
             Self::Meteor => vec!["meteor1.str", "meteor2.str", "meteor3.str", "meteor4.str"],
             Self::Firewall => vec!["firewall1.str", "firewall2.str"],
+        }
+    }
+
+    /// The sprite sheet backing this asset, if it is a sprite effect.
+    pub fn sprite_path(self) -> Option<&'static str> {
+        match self {
+            Self::Sprite { path, .. } => Some(path),
+            _ => None,
         }
     }
 }
