@@ -406,7 +406,12 @@ impl AsyncLoader {
     }
 
     pub fn request_skill_tree_layout_load(&self, job_id: JobId, client_tick: ClientTick) -> SkillTreeLayout {
-        let layout = self.library.get::<crate::world::SkillTreeLayout>(job_id);
+        // A job without a tree entry must degrade to an empty window, never
+        // crash — hit live via warp-portal map change as a @jobchange'd job.
+        let Some(layout) = self.library.try_get::<crate::world::SkillTreeLayout>(job_id) else {
+            eprintln!("[skill-tree] no skill tree layout for job {job_id:?}; showing empty tree");
+            return SkillTreeLayout::default();
+        };
 
         let tabs = layout
             .tabs

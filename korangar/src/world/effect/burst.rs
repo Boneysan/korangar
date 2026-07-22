@@ -70,7 +70,7 @@ impl SkillBurstStyle {
 
 /// Deterministic per-element jitter in `[0, 1)` so horn layouts differ without
 /// per-cast randomness (effects can be re-rendered every frame).
-fn hash01(seed: u32) -> f32 {
+pub(super) fn hash01(seed: u32) -> f32 {
     let hashed = seed.wrapping_mul(0x9E37_79B9).rotate_left(13).wrapping_mul(0x85EB_CA6B);
     (hashed >> 8) as f32 / (u32::MAX >> 8) as f32
 }

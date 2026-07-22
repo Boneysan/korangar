@@ -4794,7 +4794,7 @@ pub struct ToUseSkillSuccessPacket {
     pub cause: u8,
 }
 
-#[derive(Debug, Clone, ByteConvertable)]
+#[derive(Debug, Clone, Copy, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u32)]
 pub enum UnitId {

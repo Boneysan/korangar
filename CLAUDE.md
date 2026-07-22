@@ -9,21 +9,20 @@ custom UI for a friends group + DM campaign.
 
 See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
 
-**NEXT animation task (2026-07-22):** Phase D is **DONE** (live-green 2026-07-21).
-**Phase E1 code is closed** (Napalm/Soul Strike/Frost Diver/Fire Ball/Jupitel/
-Earth Spike/Heaven's Drive) — needs a **live GUI pass** then E2 (persistent skill
-units). Plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+**NEXT animation task (2026-07-23):** Phase E1 is **DONE, 7/7 live-verified**
+(all wizard skills rebuilt from the reverse-engineered original-client effect
+table). Phase E2 **batch 1 DONE + live-verified** (10 persistent units via the
+new `world/unit_recipe.rs`). Next: E2 batch 2 (Hunter traps, Sage fields) or
+E3 remainder. Plan: [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
 
 **Effect fidelity — read this before touching skill visuals.** RO ships effects in
-**two families**: `.str` keyframe scripts (`data\texture\effect\`) used by ground/AoE
-spells, and **sprite animations** (`data\sprite\이팩트\*.spr`+`.act`) used by the
-classic single-target spells. The E1 skills have **no `.str` in the GRFs at all**
-(probed and confirmed), which is why they shipped with procedural stand-ins that
-"don't look like RO". The **sprite backend now exists** (`world/sprite_effect.rs`,
-`EffectAsset::Sprite`, `ResolvedEffect`), but **no skill is mapped to it yet** —
-`skill_recipe.rs` still uses the procedural recipes. Next step is deriving the
-skill→sprite mapping (no authoritative table ships with the client; it is compiled
-into the exe). See [docs/plans/classic-effect-fidelity.md](docs/plans/classic-effect-fidelity.md).
+**two families**: `.str` keyframe scripts (`data\texture\effect\`) and sprite/
+procedural effects the exe hardcodes. The authoritative skill→effect→asset mapping
+is **reverse-engineered in roBrowserLegacy's DB tables** (SkillEffect/EffectTable/
+SkillUnit) — use those as *data*, never guess GRF filenames (guessing failed live).
+E1 wizard skills and E2 batch-1 persistent units are mapped and live-verified;
+recipes live in `world/skill_recipe.rs` (one-shot) and `world/unit_recipe.rs`
+(persistent units). See [docs/plans/classic-effect-fidelity.md](docs/plans/classic-effect-fidelity.md).
 Caution: `get_files_with_extension` **under-reports the GRFs** — probe with
 `file_exists`, or parse the GRF table directly.
 Fixes shipped while closing D (all on `agent/platform-connectivity-controls`):

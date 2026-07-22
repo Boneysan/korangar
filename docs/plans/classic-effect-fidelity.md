@@ -187,9 +187,69 @@ all filename guessing. New machinery this landed:
 | F6 | Earth Spike | PASS after two live tweaks: duration 2.0 s → 3.5 s, horns sized up (main 1.35 → 2.1 tiles, minors 0.55 → 0.95) |
 | F7 | Heaven's Drive | PASS — 5×5 stone-horn grid |
 
-**All seven live-verified 2026-07-23.** Next: commit, then Phase E2
-(persistent skill units). Session write-up:
-[2026-07-22-session-notes.md](../2026-07-22-session-notes.md).
+**All seven live-verified 2026-07-23** (committed `7e6daf85`). Session
+write-up: [2026-07-22-session-notes.md](../2026-07-22-session-notes.md).
+
+## Phase E2 — persistent skill units (batch 1, live-verified 2026-07-23)
+
+Skill units now resolve through a typed table (`world/unit_recipe.rs`) instead
+of the old hardcoded Firewall/Pneuma match. A unit lives from `AddSkillUnit`
+until the server's `RemoveSkillUnit` — exact teardown, no client timers.
+Mapping source: the same reverse-engineered original-client tables
+(`SkillUnit` unit-ID→effect-ID, then the effect table for assets); every
+referenced asset is GRF-verified by the extended
+`all_mapped_skill_effect_assets_exist` audit.
+
+New machinery (`world/effect/unit.rs`): `UnitCylinders` — layered rotating
+textured cylinders, N-sided (4 = the original's square map-unit footprint),
+with a steady point light; `UnitIceHorns` — per-cell ice horn cluster with
+grow-in. STR-backed units loop `EffectWithLight` (repeating) under the unit's
+entity id.
+
+| Unit | Presentation | Live |
+|---|---|---|
+| Safety Wall | **looping `safetywall.str`** + ef_glasswall.wav | PASS — procedural pyramid/cylinder attempts read as flat light blobs; Gravity's authored STR was the answer |
+| Fire Wall | looping `firewall.str` (+ new ef_firewall.wav) | PASS (3 server cells) |
+| Pneuma | looping `pneuma1.str` **(was one-shot before — vanished)** + wide soft dome marking the 3×3 footprint | PASS after dome+brightness |
+| Warp portal (pre/active) | flat blue ring → ring + swirling ring_blue vortex + portal wavs | PASS after brightening |
+| Sanctuary | square magic_green glow ×2 layers, 45° yaw | PASS after brightening |
+| Magnus | square ring_red pillars ×2 layers, 45° yaw | PASS after brightening |
+| Fire Pillar (armed) | 3 nested magic_red swirls | PASS after brightening |
+| Ice Wall | 3 ice.tga horns per cell + wizard_icewall.wav | PASS (5 server cells) |
+| Quagmire | looping `quagmire.str` + wizard_quagmire.wav | PASS (light raised) |
+
+**Live lesson:** additive cylinder alphas need ~0.5–0.8 to read against lit
+terrain (0.3–0.4 washes out) — same class of finding as the 2026-07-17 Raid/
+Meteor Assault brightening.
+
+### Bugs found & fixed during the E2 live pass
+
+1. **Client crash on warp** — `SpriteChangePacket` Base for *any* entity was
+   mapped to `NetworkEvent::ChangeJob`, and the handler unconditionally
+   rebuilt the local skill tree from that entity's class id →
+   `SkillTree::get` unwrap panic for non-player ids. Fixed: skill-tree rebuild
+   gated on the local player, `Library::try_get` + empty-layout fallback,
+   entity lookups de-unwrapped (ChangeJob + ChangeHair), regression test
+   `classic_first_and_second_jobs_have_skill_trees`.
+2. **Warp cancel left the server modal** — `cancel_warp_selection` was a
+   no-op (wrong "no server-side state" assumption); every later skill failed
+   with "Any work in progress…". Fixed: send the warp-point selection with
+   the literal map name `"cancel"`, which Hercules' `skill_castend_map`
+   (skill.c:12280) treats as the dismiss command. Verified live (cancel →
+   recast works). Caveat: only the Cancel button sends it — closing the
+   window another way still leaves the server state set (follow-up).
+
+### Open items
+
+- **Cast bar for menu/priest skills** — packets verified healthy via the new
+  `[skill-cast]` diagnostic (`KORANGAR_PACKET_LOG`): warp 1000 ms, Magnus
+  2005 ms all arrive as `SkillCast` events. Whether the bar *renders* during
+  those casts is still unconfirmed live.
+- Warp-selection window close-without-Cancel leaves server menuskill state.
+- Batch 2 units: Hunter traps (`ef_trap_*` string keys in the effect table),
+  Sage ground fields (Volcano/Deluge/Violent Gale/Land Protector →
+  `EF_BOTTOM_*`), Venom Dust (`particle3` sprite loop needs persistent
+  sprite-effect support), song/dance areas.
 
 ### iRO Wiki visual brief (acceptance language, not asset table)
 

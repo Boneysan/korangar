@@ -766,11 +766,13 @@ where
     }
 
     pub fn cancel_warp_selection(&mut self, skill_id: SkillId) -> Result<(), NotConnectedError> {
-        // Warp selection has no server-side modal state to dismiss. Sending an
-        // empty map name is not a cancellation on Hercules: Teleport treats it
-        // as the random destination and immediately changes maps.
-        let _ = skill_id;
-        Ok(())
+        // The warp list DOES hold server-side modal state (`sd->menuskill_id`);
+        // until it clears, every skill fails with "Any work in progress...".
+        // Hercules' `skill_castend_map` (skill.c) treats the literal map name
+        // "cancel" as the dismiss command — the original client sends exactly
+        // this. (An *empty* name would be wrong: Teleport reads it as the
+        // random destination.)
+        self.select_warp_destination(skill_id, "cancel".to_owned())
     }
 
     pub fn request_weapon_refine(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {

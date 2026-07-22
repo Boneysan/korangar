@@ -1516,6 +1516,97 @@ impl Client {
         )));
     }
 
+    /// Spawn everything a persistent skill unit shows (Phase E2). The unit
+    /// lives until `RemoveSkillUnit`; `EffectHolder::remove_unit` tears down
+    /// every piece registered under its entity id.
+    fn spawn_skill_unit(&mut self, entity_id: EntityId, unit_id: UnitId, position: Point3<f32>) {
+        let Some(presentation) = unit_presentation(unit_id) else {
+            if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                eprintln!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
+            }
+            return;
+        };
+
+        let (light_color, light_intensity) = presentation.light.unwrap_or((Color::WHITE, 0.0));
+        let point_light_id = PointLightId::new(entity_id.0 ^ 0x5EED_0000);
+
+        if let Some(path) = presentation.intro_str {
+            match self.effect_loader.get_or_load(path, &self.texture_loader) {
+                Ok(effect) => {
+                    let frame_timer = effect.new_frame_timer();
+                    self.effect_holder.add_effect(Box::new(EffectWithLight::new(
+                        effect,
+                        frame_timer,
+                        EffectCenter::Position(position),
+                        Vector3::new(0.0, 0.0, 0.0),
+                        PointLightId::new(entity_id.0 ^ 0x5EED_0001),
+                        Vector3::new(0.0, 6.0, 0.0),
+                        light_color,
+                        light_intensity,
+                        false,
+                        0.0,
+                    )));
+                }
+                Err(error) => eprintln!("[skill-unit] intro STR {path} failed: {error:?}"),
+            }
+        }
+
+        if let Some(path) = presentation.looping_str {
+            match self.effect_loader.get_or_load(path, &self.texture_loader) {
+                Ok(effect) => {
+                    let frame_timer = effect.new_frame_timer();
+                    self.effect_holder.add_unit(
+                        Box::new(EffectWithLight::new(
+                            effect,
+                            frame_timer,
+                            EffectCenter::Position(position),
+                            Vector3::new(0.0, 0.0, 0.0),
+                            point_light_id,
+                            Vector3::new(0.0, 6.0, 0.0),
+                            light_color,
+                            light_intensity,
+                            true,
+                            0.0,
+                        )),
+                        entity_id,
+                    );
+                }
+                Err(error) => eprintln!("[skill-unit] looping STR {path} failed: {error:?}"),
+            }
+        }
+
+        match presentation.body {
+            Some(UnitBody::Cylinders { texture, specs, color }) => {
+                match self.texture_loader.get_or_load(texture, ImageType::Color) {
+                    Ok(loaded) => self.effect_holder.add_unit(
+                        Box::new(UnitCylinders::new(
+                            loaded,
+                            position,
+                            specs,
+                            color,
+                            point_light_id,
+                            light_color,
+                            light_intensity,
+                        )),
+                        entity_id,
+                    ),
+                    Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                }
+            }
+            Some(UnitBody::IceHorns { texture }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
+                Ok(loaded) => self
+                    .effect_holder
+                    .add_unit(Box::new(UnitIceHorns::new(loaded, position)), entity_id),
+                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+            },
+            None => {}
+        }
+
+        if let Some(sound) = presentation.sound {
+            self.play_spatial_skill_sound(sound, position);
+        }
+    }
+
     /// Fly classic `이팩트\*.spr` sprites from caster to target. Multi-hit skills
     /// pack staggered copies so the last lands near the impact boundary.
     /// `trail_ghosts` adds dimmed duplicates close behind the lead sprite —
@@ -3996,45 +4087,59 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeJob { account_id, job_id } => {
-                    let layout = self.async_loader.request_skill_tree_layout_load(job_id, client_tick);
-                    *self.client_state.follow_mut(client_state().skill_tree_window().selected_tab()) = layout.tabs.len().saturating_sub(1);
-                    *self.client_state.follow_mut(client_state().skill_tree().layout()) = layout;
-                    self.client_state
-                        .follow_mut(client_state().skill_tree_window().chosen_skill_level())
-                        .clear();
-
-                    let entity = self
+                    // This event fires for *any* entity's base-sprite change
+                    // (job changes, but also monster looks and disguises whose
+                    // ids are not player jobs). Only the local player's change
+                    // may rebuild the skill tree UI — the old unconditional
+                    // lookup crashed the client live (2026-07-23).
+                    let is_local_player = self
                         .client_state
-                        .follow_mut(client_state().entities())
-                        .iter_mut()
-                        .find(|entity| entity.get_entity_id().0 == account_id.0)
-                        .unwrap();
+                        .try_follow(this_entity())
+                        .is_some_and(|entity| entity.get_entity_id().0 == account_id.0);
+                    if is_local_player {
+                        let layout = self.async_loader.request_skill_tree_layout_load(job_id, client_tick);
+                        *self.client_state.follow_mut(client_state().skill_tree_window().selected_tab()) =
+                            layout.tabs.len().saturating_sub(1);
+                        *self.client_state.follow_mut(client_state().skill_tree().layout()) = layout;
+                        self.client_state
+                            .follow_mut(client_state().skill_tree_window().chosen_skill_level())
+                            .clear();
+                    }
 
                     // FIX: A job change does not automatically send packets for the
                     // inventory and for unequipping items. We should probably manually
                     // request a full list of items and the hotbar.
 
-                    entity.set_job(&self.library, job_id);
-
-                    if let Some(animation_data) = self.async_loader.request_animation_data_load(
-                        entity.get_entity_id(),
-                        entity.get_entity_type(),
-                        entity.get_entity_part_files(&self.library, &self.game_file_loader),
-                    ) {
-                        entity.set_animation_data(animation_data);
-                    }
-                }
-                NetworkEvent::ChangeHair { account_id, hair_id } => {
-                    let entity = self
+                    if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
                         .iter_mut()
                         .find(|entity| entity.get_entity_id().0 == account_id.0)
-                        .unwrap();
+                    {
+                        entity.set_job(&self.library, job_id);
 
-                    entity.set_hair(hair_id as usize);
-                    let parts = entity.get_entity_part_files(&self.library, &self.game_file_loader);
-                    Self::refresh_entity_head_layer(&self.async_loader, entity, &parts);
+                        if let Some(animation_data) = self.async_loader.request_animation_data_load(
+                            entity.get_entity_id(),
+                            entity.get_entity_type(),
+                            entity.get_entity_part_files(&self.library, &self.game_file_loader),
+                        ) {
+                            entity.set_animation_data(animation_data);
+                        }
+                    }
+                }
+                NetworkEvent::ChangeHair { account_id, hair_id } => {
+                    // Same defensiveness as ChangeJob: the entity may have
+                    // despawned (or never spawned) by the time this arrives.
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        entity.set_hair(hair_id as usize);
+                        let parts = entity.get_entity_part_files(&self.library, &self.game_file_loader);
+                        Self::refresh_entity_head_layer(&self.async_loader, entity, &parts);
+                    }
                 }
                 NetworkEvent::ChangeWeapon { account_id, weapon_id } => {
                     if let Some(entity) = self
@@ -4302,62 +4407,13 @@ impl Client {
                     let Some(map) = &self.map else {
                         continue;
                     };
+                    let Some(world_position) = map.get_world_position(position) else {
+                        #[cfg(feature = "debug")]
+                        print_debug!("[{}] entity with id {:?} is out of map bounds", "error".red(), entity_id);
+                        continue;
+                    };
 
-                    match unit_id {
-                        UnitId::Firewall => {
-                            let Some(position) = map.get_world_position(position) else {
-                                #[cfg(feature = "debug")]
-                                print_debug!("[{}] entity with id {:?} is out of map bounds", "error".red(), entity_id);
-                                continue;
-                            };
-
-                            let effect = self.effect_loader.get_or_load("firewall.str", &self.texture_loader).unwrap();
-                            let frame_timer = effect.new_frame_timer();
-
-                            self.effect_holder.add_unit(
-                                Box::new(EffectWithLight::new(
-                                    effect,
-                                    frame_timer,
-                                    EffectCenter::Position(position),
-                                    Vector3::new(0.0, 0.0, 0.0),
-                                    PointLightId::new(unit_id as u32),
-                                    Vector3::new(0.0, 6.0, 0.0),
-                                    Color::rgb_u8(255, 30, 0),
-                                    60.0,
-                                    true,
-                                    0.0,
-                                )),
-                                entity_id,
-                            );
-                        }
-                        UnitId::Pneuma => {
-                            let Some(position) = map.get_world_position(position) else {
-                                #[cfg(feature = "debug")]
-                                print_debug!("[{}] entity with id {:?} is out of map bounds", "error".red(), entity_id);
-                                continue;
-                            };
-
-                            let effect = self.effect_loader.get_or_load("pneuma1.str", &self.texture_loader).unwrap();
-                            let frame_timer = effect.new_frame_timer();
-
-                            self.effect_holder.add_unit(
-                                Box::new(EffectWithLight::new(
-                                    effect,
-                                    frame_timer,
-                                    EffectCenter::Position(position),
-                                    Vector3::new(0.0, 0.0, 0.0),
-                                    PointLightId::new(unit_id as u32),
-                                    Vector3::new(0.0, 6.0, 0.0),
-                                    Color::rgb_u8(83, 220, 108),
-                                    40.0,
-                                    false,
-                                    0.0,
-                                )),
-                                entity_id,
-                            );
-                        }
-                        _ => {}
-                    }
+                    self.spawn_skill_unit(entity_id, unit_id, world_position);
                 }
                 NetworkEvent::RemoveSkillUnit { entity_id } => {
                     self.effect_holder.remove_unit(entity_id);
@@ -4458,6 +4514,12 @@ impl Client {
                     skill_id,
                     cast_ms,
                 } => {
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!(
+                            "[skill-cast] skill={} source={} cast_ms={cast_ms}",
+                            skill_id.0, source_entity_id.0
+                        );
+                    }
                     if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -8101,6 +8163,23 @@ mod skill_effect_asset_tests {
                     paths.insert(format!("data\\sprite\\{path}.act"));
                 }
                 Some(ProjectileRecipe::Spear) | None => {}
+            }
+        }
+
+        // Persistent skill-unit presentations (Phase E2).
+        for unit_id in MAPPED_UNIT_IDS {
+            let presentation = unit_presentation(*unit_id).expect("mapped unit must resolve");
+            for str_path in presentation.intro_str.iter().chain(presentation.looping_str.iter()) {
+                paths.insert(format!("data\\texture\\effect\\{str_path}"));
+            }
+            match presentation.body {
+                Some(UnitBody::Cylinders { texture, .. } | UnitBody::IceHorns { texture }) => {
+                    paths.insert(format!("data\\texture\\{texture}"));
+                }
+                None => {}
+            }
+            if let Some(sound) = presentation.sound {
+                paths.insert(format!("data\\wav\\{sound}"));
             }
         }
 

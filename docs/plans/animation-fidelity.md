@@ -6,7 +6,7 @@
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | E1 mechanism **DONE**; classic sprite **only Soul Strike live-OK** (filename guesses for F1/F3–F7 failed 2026-07-23 → procedural restored). Next: reverse-engineer skill→effect assets, or Phase E2. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
+| **NEXT AGENT** | E1 **DONE + live-verified 7/7** (2026-07-23, rebuilt from the reverse-engineered original-client effect table). E2 **batch 1 DONE + live-verified** (10 units incl. Safety Wall/Sanctuary/Magnus/Ice Wall/portals). Next: E2 batch 2 (traps, Sage fields) or E3 remainder. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
 
 ## 1. Scope and shape
 
@@ -268,11 +268,12 @@ Recipe table: `world/skill_recipe.rs`. Spawn unified through
 travel or burst is visible (not sound/point-light only). Record date + observer
 here when done.
 
-- **E2 — Persistent skill units** beyond Firewall/Pneuma: Safety Wall,
-  Sanctuary, Magnus, Ice Wall, Sage ground fields, Hunter traps (armed
-  visual), song/dance areas. Requires keeping creator/level/range/visibility
-  from `NotifySkillUnitPacket` and exact teardown on `RemoveSkillUnit`
-  (spec §14 "Persistent units").
+- **E2 — Persistent skill units**: **batch 1 DONE + live-verified 2026-07-23**
+  — typed `unit_recipe.rs` table (Safety Wall, Fire Wall, Pneuma, warp
+  portals, Sanctuary, Magnus, Fire Pillar armed, Ice Wall, Quagmire), exact
+  teardown on `RemoveSkillUnit`, two live bugs fixed (sprite-change crash,
+  warp-cancel modal). Remaining: Hunter traps, Sage ground fields, Venom
+  Dust, song/dance areas — see classic-effect-fidelity.md "Phase E2".
 - **E3 — `DisplaySpecialEffectPacket` (0x01F3) + cast circles + sound
   retry**: **Partial 2026-07-22** — 0x01F3 promoted → `NetworkEvent::SpecialEffect`
   → `special_effect_recipe` (E1 IDs + common STR/procedural). Travel balls and

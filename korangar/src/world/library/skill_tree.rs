@@ -175,3 +175,33 @@ impl Table for SkillTreeLayout {
         Self::try_get(library, key).unwrap()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use ragnarok_packets::JobId;
+
+    use super::*;
+    use crate::loaders::GameFileLoader;
+    use crate::world::library::Table;
+
+    /// The warp-portal crash (2026-07-23) was an unwrap on a job id missing
+    /// from this table. Every classic first/second job the campaign can
+    /// `@jobchange` into must resolve.
+    #[test]
+    #[ignore = "needs game archives"]
+    fn classic_first_and_second_jobs_have_skill_trees() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+        game_file_loader.load_patched_lua_files();
+
+        let storage = SkillTreeLayout::load(&game_file_loader).expect("skill tree table must load");
+        println!("skill tree entries: {}", storage.len());
+        let mut present: Vec<u16> = storage.keys().map(|job_id| job_id.0).collect();
+        present.sort_unstable();
+        println!("job ids: {present:?}");
+
+        // Novice, first jobs, and classic second jobs (0..=20), plus super novice.
+        let missing: Vec<u16> = (0..=20u16).filter(|job| !storage.contains_key(&JobId(*job))).collect();
+        assert!(missing.is_empty(), "jobs without a skill tree: {missing:?}");
+    }
+}

@@ -75,6 +75,14 @@ impl Library {
         T::get(self, key)
     }
 
+    /// Non-panicking lookup for keys that may legitimately be absent (e.g. a
+    /// job id with no skill-tree entry — crashed the client on warp-portal
+    /// map change as a @jobchange'd Priest, 2026-07-23).
+    #[inline(always)]
+    pub fn try_get<T: Table>(&self, key: T::Key<'_>) -> Option<&T> {
+        T::try_get(self, key)
+    }
+
     /// Facility POIs (shops, kafra, guides, …) for a map base name.
     #[inline]
     pub fn town_pois(&self, map_name: &str) -> &[TownPoi] {
