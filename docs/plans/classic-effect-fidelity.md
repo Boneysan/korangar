@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Backend landed 2026-07-22 — **Soul Strike (13) → `이팩트\soule` mapped 2026-07-22** (first live sprite skill); remaining E1 skills still procedural |
+| **Status** | Backend landed 2026-07-22 — **only Soul Strike classic-sprite is live-OK.** Filename-guess sheets for F1/F3–F7 failed live 2026-07-23 and were reverted to E1 procedural/STR. |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -14,7 +14,7 @@ RO effects come in **two distinct families**, and Korangar only supports one of 
 | Family | Location | Used by | Korangar support |
 |---|---|---|---|
 | **STR scripts** | `data\texture\effect\*.str` | Ground / AoE spells | ✅ Full — `EffectLoader`, `EffectAsset::Fixed` |
-| **Sprite effects** | `data\sprite\이팩트\*.spr` + `.act` | Classic single-target spells | ❌ **None in the effect path** |
+| **Sprite effects** | `data\sprite\이팩트\*.spr` + `.act` | Classic single-target spells | ✅ Pipeline (`SpriteEffects` + `SpriteTravel`) — **only Soul Strike mapped live-OK** |
 
 This cleanly explains the symptom. The skills that look right are all STR-backed:
 Thunderstorm (21), Sanctuary (70), Magnus (79), Fire Pillar (80), Meteor (83),
@@ -67,17 +67,21 @@ Verified spr+act pairs include:
 | `particle1-7.spr` | particles | generic particle beds |
 | `poisonhit.spr` | poison hit | poison |
 
-Current procedural E1 recipes to be replaced (`world/skill_recipe.rs`):
+E1 presentation after live feedback 2026-07-23:
 
-| Skill | Current stand-in |
-|---|---|
-| 11 Napalm Beat | `DamageTargetEffect::NapalmBeat` + `ring_blue.tga` |
-| 13 Soul Strike | `ProjectileRecipe::SoulStrikeOrbs` + `pok1.tga` |
-| 15 Frost Diver | `TravelBall(FrostDiver)` + `ice.tga` |
-| 17 Fire Ball | `TravelBall(FireBall)` + `fire_blast.bmp` |
-| 84 Jupitel Thunder | `TravelBall(Jupitel)` + `번개4.bmp` |
-| 90 Earth Spike | `DamageTargetEffect::EarthSpike` |
-| 91 Heaven's Drive | `DamageTargetEffect::HeavensDrive` |
+| Skill | Mapping | Status |
+|---|---|---|
+| 11 Napalm Beat | Procedural `NapalmBeat` rings | Restored — 블래스트 etc. wrong live |
+| 13 Soul Strike | `이팩트\soule` multi travel | **Live OK** |
+| 15 Frost Diver | `TravelBall` ice + `freeze.str` | Restored — spear sheet wrong live |
+| 17 Fire Ball | `TravelBall` fire + fire-hit STR | Restored — fireball.spr travel still needs work |
+| 84 Jupitel Thunder | `TravelBall` lightning + STR hits | Restored — 라이트닝스피어 wrong live |
+| 90 Earth Spike | Procedural spike + `earthhit.str` | Restored — 페트롤로지 wrong live |
+| 91 Heaven's Drive | Procedural multi-spike + earthhit | Restored — 어스퀘이크 wrong live |
+
+**Lesson:** classic skill→sprite is **not** GRF-filename matching. 블래스트 / 페트롤로지 /
+프리징스피어 / 라이트닝스피어 are other skills' sheets. Need reverse-engineered
+effect IDs or reference video before remapping.
 
 ## Backend — DONE 2026-07-22
 
@@ -120,18 +124,39 @@ immediate — identical to emote behaviour.
    The `test` character (char_id 150000) is already a Wizard with all seven E1
    skills bound to F1-F7 — see that doc's "Test character" section.
 
-### Suggested first move — DONE for recipe wiring 2026-07-22 (travel pass)
+### E1 sprite pass — status 2026-07-23
 
-Skill **13 Soul Strike** flies classic `이팩트\soule` ghosts **caster → target**
-via `SpriteEffects::spawn_travel` (multi-hit stagger matches the old procedural
-packing). Live feedback: hit-only spawn looked like a delayed explosion on the
-barricade with an empty flight; that was expected with impact-only placement and
-is why travel is the path now. No separate hit sheet.
+`ProjectileRecipe::SpriteTravel` is proven (Soul Strike). Filename-guess maps for
+the other six **failed live** and were rolled back to E1 procedural/STR.
 
-**Live verify:** on char `test`, F2 Soul Strike. First cast may be blank while
-the sheet loads; later casts should show ghosts traveling during the cast→hit
-window. `KORANGAR_SPRITE_EFFECT_DEBUG=1` logs `travel` lines. Remaining E1
-skills still use procedural stand-ins until mapped.
+| Key | Skill | Live status |
+|---|---|---|
+| F1 | Napalm Beat | procedural restored |
+| F2 | Soul Strike → soule | **OK** |
+| F3–F7 | Frost / Fire / Jupitel / Spike / HD | procedural/STR restored |
+
+**Next authentic work:** reverse-engineer official skill→effect mapping (client
+exe effect IDs, or frame-by-frame vs official client) — do **not** guess from
+unrelated `이팩트\*.spr` names. Session write-up:
+[2026-07-22-session-notes.md](../2026-07-22-session-notes.md).
+
+### iRO Wiki visual brief (acceptance language, not asset table)
+
+Source: [Wizard](https://irowiki.org/wiki/Wizard) + linked skill pages (2026-07-23).
+Wiki has **no GRF filenames** — use for “what should it look like,” not “which file.”
+
+| Skill | Wiki intent |
+|---|---|
+| Napalm Beat | Psychokinetic hit on target; Ghost; AoE damage split |
+| Frost Diver | Stream of frigid ice → target; freeze chance |
+| Fire Ball | Fireball travel; splash AoE at impact |
+| Jupitel | Crackling lightning **ball**; multi-hit animation; knockback |
+| Earth Spike | Ground under **one** target rises into spikes |
+| Heaven's Drive | Ground rises in **5×5**; multi-hit by level |
+| Soul Strike | Ghost orbs travel — **live OK** |
+
+Earth Spike / Heaven's Drive / Jupitel: wiki notes damage is often one bundle
+despite multi-hit animation.
 
 Note the two anchor styles differ. Napalm Beat and Soul Strike land on the
 target entity; Earth Spike and Heaven's Drive rise out of the ground; Fire Ball,

@@ -1299,7 +1299,11 @@ impl Client {
         };
         let once_per_cast_travel = matches!(
             recipe.projectile,
-            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SoulStrikeOrbs)
+            Some(
+                ProjectileRecipe::Spear
+                    | ProjectileRecipe::TravelBall(_)
+                    | ProjectileRecipe::SpriteTravel { .. }
+            )
         );
         // Short gate: multi-hit packets arrive in the same few frames; recasts
         // after ~cast time must not be blocked for long.
@@ -1387,11 +1391,13 @@ impl Client {
             Some(ProjectileRecipe::TravelBall(kind)) if spawn_travel => {
                 self.add_travel_ball_projectile(kind, source_position, target_position, impact_delay_secs)
             }
-            Some(ProjectileRecipe::SoulStrikeOrbs) if spawn_travel => {
-                self.add_soul_strike_orbs(
+            Some(ProjectileRecipe::SpriteTravel { path, multi_hit }) if spawn_travel => {
+                let count = if multi_hit { hit_count.max(1) } else { 1 };
+                self.add_sprite_travel_projectile(
+                    path,
                     source_position,
                     target_position,
-                    hit_count.max(1),
+                    count,
                     impact_delay_secs,
                     client_tick,
                 );
@@ -1407,7 +1413,7 @@ impl Client {
                         .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
                 }
             }
-            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SoulStrikeOrbs) | None => {}
+            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SpriteTravel { .. }) | None => {}
         }
     }
 
@@ -1446,20 +1452,19 @@ impl Client {
         }
     }
 
-    fn add_soul_strike_orbs(
+    /// Fly classic `이팩트\*.spr` sprites from caster to target. Multi-hit skills
+    /// pack staggered copies so the last lands near the impact boundary.
+    fn add_sprite_travel_projectile(
         &mut self,
+        path: &'static str,
         source_position: Point3<f32>,
         target_position: Point3<f32>,
         orb_count: usize,
         impact_delay_secs: f32,
         client_tick: ClientTick,
     ) {
-        /// Classic flying-ghost sheet for MG_SOULSTRIKE.
-        const SOULE_PATH: &str = "이팩트\\soule";
         const BODY_LIFT: f32 = 7.0;
 
-        // Same packing as the old procedural orbs: last ghost lands near the
-        // impact boundary; earlier hits stagger out before it.
         let count = orb_count.max(1);
         let arrival_secs = if impact_delay_secs > 0.05 {
             impact_delay_secs.clamp(0.18, 0.85)
@@ -1477,18 +1482,18 @@ impl Client {
         let to = target_position + Vector3::new(0.0, BODY_LIFT, 0.0);
 
         // Lazy-load the sheet (first cast may draw nothing until it lands).
-        if let Some(sentinel) = self.sprite_effects.request_slot(SOULE_PATH)
+        if let Some(sentinel) = self.sprite_effects.request_slot(path)
             && let Some(animation_data) =
                 self.async_loader
-                    .request_animation_data_load(sentinel, EntityType::Npc, vec![SOULE_PATH.to_string()])
+                    .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
         {
-            self.sprite_effects.set_animation_data(SOULE_PATH, animation_data);
+            self.sprite_effects.set_animation_data(path, animation_data);
         }
 
         for index in 0..count {
             let delay_ms = (index as f32 * stagger_secs * 1000.0).round() as u32;
             self.sprite_effects
-                .spawn_travel(SOULE_PATH, from, to, 0, client_tick, travel_ms, delay_ms);
+                .spawn_travel(path, from, to, 0, client_tick, travel_ms, delay_ms);
         }
     }
 
@@ -7972,10 +7977,9 @@ mod skill_effect_asset_tests {
                 Some(ProjectileRecipe::TravelBall(kind)) => {
                     paths.insert(format!("data\\texture\\{}", kind.texture_path()));
                 }
-                Some(ProjectileRecipe::SoulStrikeOrbs) => {
-                    // Travel ghosts use the classic effect sheet, not the procedural orb texture.
-                    paths.insert("data\\sprite\\이팩트\\soule.spr".to_owned());
-                    paths.insert("data\\sprite\\이팩트\\soule.act".to_owned());
+                Some(ProjectileRecipe::SpriteTravel { path, .. }) => {
+                    paths.insert(format!("data\\sprite\\{path}.spr"));
+                    paths.insert(format!("data\\sprite\\{path}.act"));
                 }
                 Some(ProjectileRecipe::Spear) | None => {}
             }

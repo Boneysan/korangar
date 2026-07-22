@@ -15,7 +15,7 @@ lands.
 | [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
 | [phase-d-live-verification.md](phase-d-live-verification.md) | Phase D live GUI checklist — **CLOSED 2026-07-21**, all 8 rows PASS |
 | [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism; read its "Traps hit while driving this pass" before any new GUI session |
-| **[classic-effect-fidelity.md](classic-effect-fidelity.md)** | **NEXT (2026-07-22): derive the skill→sprite mapping.** Sprite backend shipped (`44927a32`) but **no skill is mapped yet**, so in-game visuals are unchanged. Start with Soul Strike → `이팩트\soule`. Extraction needs GRF decryption — drive `GameFileLoader::get()` from a small Rust bin, *not* the Python script |
+| **[classic-effect-fidelity.md](classic-effect-fidelity.md)** | Soul Strike classic sprite **live-OK**; F1/F3–F7 filename guesses failed 2026-07-23 → procedural restored. Next: reverse-engineered skill→effect map, or Phase E2 |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.

@@ -257,10 +257,23 @@ pub const FIREBOLT_BOLT_FRAMES: &[&str] = &[
 pub enum ProjectileRecipe {
     FallingBolts(&'static [&'static str]),
     Spear,
-    /// Phase E1 — single source→target travel ball.
+    /// Procedural textured ball (fallback; E1 travel skills prefer [`Self::SpriteTravel`]).
     TravelBall(TravelBallKind),
-    /// Phase E1 — Soul Strike multi-orb volley (orb count = hit_count).
-    SoulStrikeOrbs,
+    /// Classic `data\sprite\이팩트\*.spr` flying caster→target.
+    /// When `multi_hit` is true, spawns `hit_count` staggered copies (Soul Strike / Jupitel).
+    SpriteTravel {
+        path: &'static str,
+        multi_hit: bool,
+    },
+}
+
+/// Classic effect sheets under `data\sprite\이팩트\` (no extension).
+/// Only **proven** live mappings live here — filename guesses for other skills
+/// (gunslinger 블래스트, genetic 페트롤로지, etc.) looked wrong in GUI.
+/// See `docs/plans/classic-effect-fidelity.md`.
+pub mod classic_sprites {
+    /// Soul Strike flying ghosts — live-verified 2026-07-22.
+    pub const SOULE: &str = "이팩트\\soule";
 }
 
 /// Procedural texture paths referenced by Phase E1 target/travel recipes.
@@ -400,14 +413,17 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             successful_caster_sounds: &[SoundAsset::Fixed("effect\\ef_magnumbreak.wav")],
         ),
         11 => recipe!(
+            // Procedural psychic rings — no dedicated classic napalm.spr; wrong
+            // filename guesses (블래스트 etc.) failed live 2026-07-23.
             damage_target_effect: Some(DamageTargetEffect::NapalmBeat),
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_napalmbeat.wav")],
         ),
         13 => recipe!(
-            // Classic `이팩트\soule` ghosts travel caster→target (see
-            // `add_soul_strike_orbs`). No separate hit sheet — the delayed
-            // "explosion" was the fixed-at-impact spawn and looked wrong.
-            projectile: Some(ProjectileRecipe::SoulStrikeOrbs),
+            // Classic `이팩트\soule` ghosts travel caster→target. Live OK.
+            projectile: Some(ProjectileRecipe::SpriteTravel {
+                path: classic_sprites::SOULE,
+                multi_hit: true,
+            }),
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_soulstrike.wav")],
         ),
         14 => recipe!(
@@ -415,11 +431,13 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_icearrow.wav")],
         ),
         15 => recipe!(
+            // Procedural ice travel + freeze STR hit (sprite filename guesses failed live).
             projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver)),
             hit_effects: FROST_DIVER_HITS,
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_frostdiver.wav")],
         ),
         17 => recipe!(
+            // Procedural fire travel + fire-hit STR (`fireball.spr` travel still needs work).
             projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FireBall)),
             hit_effects: &[FIRE_HIT],
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_fireball.wav")],
@@ -522,13 +540,14 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             }),
             ground_sounds: &[SoundAsset::Fixed("effect\\storm.wav")],
         ),
-        // WZ_JUPITEL — travel ball + wind/lightning hits (Phase E1).
+        // WZ_JUPITEL — procedural lightning ball + STR hits (spear-sheet guess failed live).
         84 => recipe!(
             projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::Jupitel)),
             hit_effects: LIGHTNING_BOLT_HITS,
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_thunderstorm.wav")],
         ),
         90 => recipe!(
+            // Procedural ground spike — 페트롤로지/etc. were wrong sheets live.
             damage_target_effect: Some(DamageTargetEffect::EarthSpike),
             hit_effects: &[EARTH_HIT],
         ),
@@ -686,18 +705,21 @@ mod tests {
     }
 
     #[test]
-    fn phase_e1_code_drawn_recipes_are_wired() {
+    fn phase_e1_recipes_prefer_proven_presentation() {
+        // Only Soul Strike has a live-proven classic sprite sheet.
+        assert_eq!(
+            skill_presentation_recipe(SkillId(13)).projectile,
+            Some(ProjectileRecipe::SpriteTravel {
+                path: classic_sprites::SOULE,
+                multi_hit: true,
+            })
+        );
+        assert!(skill_presentation_recipe(SkillId(13)).hit_effects.is_empty());
+
+        // The other six stay on E1 procedural / STR until reverse-engineered.
         assert_eq!(
             skill_presentation_recipe(SkillId(11)).damage_target_effect,
             Some(DamageTargetEffect::NapalmBeat)
-        );
-        assert_eq!(
-            skill_presentation_recipe(SkillId(13)).projectile,
-            Some(ProjectileRecipe::SoulStrikeOrbs)
-        );
-        assert!(
-            skill_presentation_recipe(SkillId(13)).hit_effects.is_empty(),
-            "Soul Strike hit is the travel arrival, not a second impact sheet"
         );
         assert_eq!(
             skill_presentation_recipe(SkillId(15)).projectile,

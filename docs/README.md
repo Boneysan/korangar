@@ -16,8 +16,11 @@ This directory contains all design documents, technical deep dives, implementati
   3. `docs/CLIENT_SYSTEMS_OVERVIEW.md` — High-level map of the codebase.
   4. `docs/SOFTWARE_DESIGN.md` — Architecture and key decisions.
 
-- **Current animation next step (2026-07-22):** Phase D is **DONE** — code closed
-  and live client verification signed off (all 8 rows PASS 2026-07-21, see
+- **Current animation next step (2026-07-23):** E1 mechanism live-closed; M1-017
+  fixed; Soul Strike classic sprite travel live-OK. F1/F3–F7 stay procedural after
+  failed filename-guess sprites. Session:
+  [2026-07-22-session-notes.md](2026-07-22-session-notes.md). Phase D is **DONE** —
+  code closed and live client verification signed off (all 8 rows PASS 2026-07-21, see
   [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)).
   **Phase E (skill/status recipes) is next** —
   [plans/animation-fidelity.md](plans/animation-fidelity.md) §6. New protocol note
@@ -140,6 +143,7 @@ These are concrete, code-level guides ready for implementation:
 - [2026-07-15-session-notes.md](2026-07-15-session-notes.md) — E7 backlog design pass (five targeted specs) + bestiary data pipeline (mob lore, stat/tactical fields for the tiered lore reveal).
 - [2026-07-17-session-notes.md](2026-07-17-session-notes.md) — **M1-008 round 2**: `ZC_NOTIFY_GROUNDSKILL` wired (Thunderstorm/Storm Gust play at the cast position), classic falling-bolt volleys for Fire/Cold Bolt (`FallingBolts`), per-hit `firehit`/`windhit` wiring, portal vortex tuning, `probe-thunderstorm` diagnostic scenario.
 - [2026-07-16-session-notes.md](2026-07-16-session-notes.md) — **E3.1 GUI pass + follow-ons**: checklist driven by hand 17 → 32 of 34 rows; skill targeting; M1-016 emote-owner/height fixes; dynamic player/mob anchors; and the 81-entry `Alt+L` emote picker. Also the STR base+morph interpolator fix, classic effect remap, warp portal vortex, and mob-emote chat silence. Includes live results, why headless missed the GUI defects, and test-environment traps. **Start here to resume M1 verification.**
+- [2026-07-22-session-notes.md](2026-07-22-session-notes.md) — **E1 live close + M1-017 + Soul Strike sprites**: F1–F7 mechanism pass; logout crash fixed (Skill Tree); `SpriteTravel` for `이팩트\soule` live-OK; failed filename-guess maps for other E1 skills reverted; iRO Wiki visual brief. **Start here to resume classic effect fidelity.**
 - [dm-atcommand-feedback.md](dm-atcommand-feedback.md) — `dispbottom` / `@dm` chat via packet `0x017F`; pair with Hercules `planning/dm-mode-troubleshooting.md`.
 - [storage-window.md](storage-window.md) — Kafra storage grid, drag packets, `close2` then `openstorage` UX.
 

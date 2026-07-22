@@ -165,20 +165,17 @@ intermittent rather than a hard block — worth a look when Phase E2 starts.
    `screencapture`, user-supervised session).
 2. ✅ E1 exit flipped to live-met in `animation-fidelity.md` §6 (status line,
    `NEXT AGENT` field, and the E1 section all updated).
-3. ⬜ **Not committed.** `docs/plans/phase-e1-live-verification.md`,
-   `M1-p0-verification.md`, `animation-fidelity.md` and `docs/plans/README.md`
-   are modified in the working tree on `agent/platform-connectivity-controls`
-   (clean at `b6ceb25a` before this pass). Commit doc-only when ready.
+3. ✅ **Committed** as part of `ec206219` (E1 docs + M1-017 + Soul Strike).
+   Follow-up rollback of bad F1/F3–F7 sprite guesses may still be uncommitted —
+   see [2026-07-22-session-notes.md](../2026-07-22-session-notes.md).
 4. **Next — recommended order:**
-   1. **Skill→sprite mapping** ([classic-effect-fidelity.md](classic-effect-fidelity.md))
-      *before* E2. E1 passes on mechanism but still doesn't look like RO, and no
-      skill is mapped to a sprite yet, so in-game visuals are unchanged. Prove
-      end-to-end on Soul Strike → `이팩트\soule` first (anchor handling is the
-      likely first bug). Extraction is blocked on GRF decryption — drive
-      `GameFileLoader::get()` from a small Rust bin, not the Python script.
-   2. **M1-017 logout crash** — **CLOSED live 2026-07-22.** Fixed by closing windows
-      on `LoggedOut` before `skill_tree().clear()`, plus optional skill-points / tab
-      skills paths. Live: Skill Tree open → Log out → character select.
+   1. **Classic fidelity** ([classic-effect-fidelity.md](classic-effect-fidelity.md))
+      — Soul Strike → `이팩트\soule` travel is **live-OK**. Do **not** filename-guess
+      more sheets (F1/F3–F7 guesses failed 2026-07-23 → procedural restored).
+      Next authentic step: reverse-engineer effect IDs / official client, or polish
+      procedural against the iRO Wiki visual brief in that plan.
+   2. **M1-017 logout crash** — **CLOSED live 2026-07-22** (Skill Tree open →
+      Log out → character select).
    3. **Phase E2** (persistent skill units) per animation-fidelity §6 — unblocked.
    4. Leftovers for the next GUI session: M1-009's "vs equipped" delta (the
       equip gesture was never worked out — double-click does not equip), the

@@ -6,7 +6,7 @@
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | E1 live pass is **DONE** (2026-07-22, all 7 rows PASS — see [phase-e1-live-verification.md](phase-e1-live-verification.md)). Recommended next: **skill→sprite mapping** ([classic-effect-fidelity.md](classic-effect-fidelity.md)) *before* E2 — E1 passes on mechanism but still does not look like RO, and that is the visible complaint. E2 (persistent skill units) is unblocked whenever you want it. |
+| **NEXT AGENT** | E1 mechanism **DONE**; classic sprite **only Soul Strike live-OK** (filename guesses for F1/F3–F7 failed 2026-07-23 → procedural restored). Next: reverse-engineer skill→effect assets, or Phase E2. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
 
 ## 1. Scope and shape
 
