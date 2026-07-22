@@ -25,3 +25,7 @@ korangar/*.7z
 
 # Idea
 .idea/
+
+# Python bytecode from tools/
+__pycache__/
+*.pyc

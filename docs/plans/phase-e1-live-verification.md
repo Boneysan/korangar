@@ -13,6 +13,19 @@
 Phase E1 **code is closed**. Do **not** start E2 until this live checklist is
 walked and results are written back into `animation-fidelity.md` §6 E1.
 
+> **Scope note added 2026-07-22 — what this pass can and cannot tell you.**
+> Every visual below is a **procedural stand-in**, and we now know those are
+> *not* what the original client draws. The classic single-target spells are
+> sprite animations with no `.str` equivalent in the GRFs, so no amount of
+> texture tuning makes these authentic — see
+> [classic-effect-fidelity.md](classic-effect-fidelity.md).
+>
+> This checklist therefore verifies **mechanism**: that the effect spawns at
+> the right place, at the right time relative to the damage number, with its
+> texture actually loading. It does **not** verify fidelity. A row can pass
+> here and still look wrong, and that is expected — fidelity is tracked
+> separately and needs the skill→sprite mapping.
+
 ## What shipped (code)
 
 - `TravelBall` projectile recipe (Fire Ball / Frost Diver / Jupitel)
@@ -44,9 +57,36 @@ walked and results are written back into `animation-fidelity.md` §6 E1.
 
 Re-probe: `cargo test -p korangar --lib probes_e1_procedural_effect_textures -- --ignored --nocapture`
 
+## Test character — ALREADY SET UP 2026-07-22
+
+**`test` (char_id 150000) is ready; no `@job`/`@allskill` needed.** It was
+promoted Mage → **Wizard (class 9)** and all seven E1 skills are bound to
+**F1–F7 in checklist order**:
+
+| Key | F1 | F2 | F3 | F4 | F5 | F6 | F7 |
+|---|---|---|---|---|---|---|---|
+| Skill | Napalm Beat 11 | Soul Strike 13 | Frost Diver 15 | Fire Ball 17 | Jupitel 84 | Earth Spike 90 | Heaven's Drive 91 |
+| Lv | 10 | 10 | 10 | 10 | 10 | 5 | 5 |
+
+Earth Spike and Heaven's Drive cap at 5 — that is their real `MaxLevel`, not a
+shortfall. Every slot has a matching learned level (no dead bindings).
+
+**Changed from its original state**, should you want to revert:
+`class 2 → 9`, `int 1 → 99`, `dex 1 → 99`, and skills 84/90/91 granted.
+INT/DEX were raised because at DEX 1 the cast times made the Wizard spells
+effectively untestable. Base/job level untouched (50 / 1).
+
+The hotbar is **server-side** — `Hotbar::clear()` repopulates from the server's
+hotkey packet on map login, so Hercules' `hotkey` table is the source of truth,
+not any client file. Edit it with the character **offline** or the map server
+will overwrite on save. Prior stale rows pointed at skills the character did not
+have (83/88/89, left from an earlier Wizard stint) and were cleared.
+
+Still needed at the keyboard: `@warp prt_fild07` and `@monster 1905`.
+**macOS trap:** F-keys need `fn` held unless the system setting is flipped.
+
 ## Live checklist (in-game)
 
-Use a Mage or Wizard (GM `@job 2` / `@job 9` + `@allskill`, or Effect roster).
 Field map with a durable dummy (`@monster 1905` Barricade). Watch for **visible
 geometry**, not only a point light or sound.
 

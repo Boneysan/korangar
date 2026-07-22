@@ -107,13 +107,7 @@ immediate — identical to emote behaviour.
 
 ## Remaining work
 
-1. ~~**Add a sprite-effect asset kind.**~~ **DONE — see above.** `EffectAsset` currently resolves only to
-   `&'static str` `.str` paths (`skill_recipe.rs:12-23`); `EffectTrack` feeds the
-   STR loader exclusively. Introduce `EffectAsset::Sprite(path)` and a playback
-   path that loads `.spr`/`.act` and plays an action at a world position.
-   **The sprite machinery already exists** — emotes (`emotion.spr`) and the ranged
-   arrow (`아이템\화살.spr`) both load and draw sprites; this is about wiring that
-   into the effect track, not writing a loader.
+1. ~~**Add a sprite-effect asset kind.**~~ **DONE — see "Backend" above.**
 2. **Anchor correctly.** The emote work found the generic animation loader
    normalizes each ACT frame to its bottom edge; emotes fixed this by deriving the
    anchor from the composed sprite-frame height. Effects need the same care —
@@ -123,6 +117,53 @@ immediate — identical to emote behaviour.
    per-map ambient effects, not skills. Mapping must be derived by inspecting
    candidate sprites and comparing against reference video/screenshots.
 4. **Verify live**, per [phase-e1-live-verification.md](phase-e1-live-verification.md).
+   The `test` character (char_id 150000) is already a Wizard with all seven E1
+   skills bound to F1-F7 — see that doc's "Test character" section.
+
+### Suggested first move
+
+Prove the path end-to-end on **one** skill before mapping the other six:
+point skill 13 (Soul Strike) at `이팩트\soule` — the one mapping backed by an
+actual filename match — and check that a real sprite animation plays at the
+target. Anchoring is the likely first bug: the emote work found the generic
+animation loader normalizes every ACT frame to its bottom edge, which drew
+emotes *under* the character until the anchor was derived from the composed
+frame height instead.
+
+Note the two anchor styles differ. Napalm Beat and Soul Strike land on the
+target entity; Earth Spike and Heaven's Drive rise out of the ground; Fire Ball,
+Frost Diver, and Jupitel travel and then burst.
+
+## Tooling
+
+Both live in `tools/`, promoted from scratch work so they survive the session:
+
+| Tool | Use |
+|---|---|
+| `tools/grf_list.py` | Dump a GRF file table (v2xx, CP949 names). **Use instead of `get_files_with_extension`.** |
+| `tools/grf_extract.py` | Extract a subtree to a folder. Sizing works; see the encryption limit below. |
+
+```sh
+./tools/grf_list.py korangar/data.grf 'texture\effect'
+./tools/grf_extract.py korangar/data.grf 'data\sprite\이팩트\' korangar/archive --dry-run
+```
+
+### Extraction is blocked on GRF decryption
+
+`data.grf` entry flags break down as **1 (plain): 105,308 · 3 (ENCRYPT_MIXED):
+34,228 · 5 (ENCRYPT_HEADER): 11,150 · 2: 244 · 0: 132**. So ~45k entries are
+encrypted, and the classic effect folder is among the worst hit — a dry run over
+`data\sprite\이팩트\` reports **293 of 427 entries skipped**.
+
+The Python extractor does not implement GRF DES and skips those rather than
+writing corrupt files. **Korangar already decrypts them** in
+`src/loaders/archive/native/mixcrypt.rs` (`decrypt_file`, called from
+`native/mod.rs:107`).
+
+**So do not reimplement DES in Python.** Drive `GameFileLoader::get()` — which
+decrypts transparently — from a small Rust binary or an `#[ignore]`d test, and
+write the bytes out to `korangar/archive/`. That is the correct extraction path
+for the bundling work.
 
 ## Assets are already local
 
