@@ -8,9 +8,7 @@
 use ragnarok_packets::EffectId;
 
 use crate::Color;
-use crate::world::{
-    EARTH_SPIKE_TEXTURE, EARTH_SPIKE_TEXTURE_SECONDARY, NAPALM_BEAT_TEXTURE, SkillBurstStyle,
-};
+use crate::world::{EARTH_SPIKE_TEXTURE, NAPALM_BEAT_TEXTURE, NAPALM_BEAT_TEXTURE_SECONDARY, SkillBurstStyle};
 
 /// High-level geometry family for an effect ID (from Hercules effect_list
 /// descriptions: ball / hit / ring / spike / etc.).
@@ -55,7 +53,7 @@ impl SpecialEffectRecipe {
                 SkillBurstStyle::NapalmBeat => EffectShape::Ring,
                 SkillBurstStyle::EarthSpike | SkillBurstStyle::HeavensDrive => EffectShape::Spike,
                 SkillBurstStyle::MagnumBreak | SkillBurstStyle::Raid | SkillBurstStyle::SonicBlow => EffectShape::Ring,
-                SkillBurstStyle::MeteorAssault | SkillBurstStyle::MeleeHit => EffectShape::Flash,
+                SkillBurstStyle::MeteorAssault | SkillBurstStyle::MeleeHit | SkillBurstStyle::JupitelHit => EffectShape::Flash,
             },
         }
     }
@@ -90,17 +88,17 @@ pub fn special_effect_recipe(effect_id: EffectId) -> Option<SpecialEffectRecipe>
         EffectId::Napalmbeat => Some(SpecialEffectRecipe::Burst {
             style: SkillBurstStyle::NapalmBeat,
             texture: NAPALM_BEAT_TEXTURE,
-            secondary: None,
+            secondary: Some(NAPALM_BEAT_TEXTURE_SECONDARY),
         }),
         EffectId::Earthspike => Some(SpecialEffectRecipe::Burst {
             style: SkillBurstStyle::EarthSpike,
             texture: EARTH_SPIKE_TEXTURE,
-            secondary: Some(EARTH_SPIKE_TEXTURE_SECONDARY),
+            secondary: None,
         }),
         EffectId::Heavensdrive => Some(SpecialEffectRecipe::Burst {
             style: SkillBurstStyle::HeavensDrive,
             texture: EARTH_SPIKE_TEXTURE,
-            secondary: Some(EARTH_SPIKE_TEXTURE_SECONDARY),
+            secondary: None,
         }),
         EffectId::Yufitel | EffectId::Yufitel2 => Some(SpecialEffectRecipe::Str {
             path: "lightning.str",

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Backend landed 2026-07-22 — **only Soul Strike classic-sprite is live-OK.** Filename-guess sheets for F1/F3–F7 failed live 2026-07-23 and were reverted to E1 procedural/STR. |
+| **Status** | 2026-07-23: **all seven skills rebuilt from the reverse-engineered original-client effect table** (see "The authoritative mapping" below). Code green (194 lib tests + GRF asset audit); needs a live GUI pass. |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -14,7 +14,7 @@ RO effects come in **two distinct families**, and Korangar only supports one of 
 | Family | Location | Used by | Korangar support |
 |---|---|---|---|
 | **STR scripts** | `data\texture\effect\*.str` | Ground / AoE spells | ✅ Full — `EffectLoader`, `EffectAsset::Fixed` |
-| **Sprite effects** | `data\sprite\이팩트\*.spr` + `.act` | Classic single-target spells | ✅ Pipeline (`SpriteEffects` + `SpriteTravel`) — **only Soul Strike mapped live-OK** |
+| **Sprite effects** | `data\sprite\이팩트\*.spr` + `.act` | Classic single-target spells | ✅ Pipeline (`SpriteEffects` + `SpriteTravel`) — Soul Strike live-OK, Fire Ball mapped via the reverse-engineered table |
 
 This cleanly explains the symptom. The skills that look right are all STR-backed:
 Thunderstorm (21), Sanctuary (70), Magnus (79), Fire Pillar (80), Meteor (83),
@@ -67,21 +67,57 @@ Verified spr+act pairs include:
 | `particle1-7.spr` | particles | generic particle beds |
 | `poisonhit.spr` | poison hit | poison |
 
-E1 presentation after live feedback 2026-07-23:
+### The authoritative mapping (landed 2026-07-23)
 
-| Skill | Mapping | Status |
-|---|---|---|
-| 11 Napalm Beat | Procedural `NapalmBeat` rings | Restored — 블래스트 etc. wrong live |
-| 13 Soul Strike | `이팩트\soule` multi travel | **Live OK** |
-| 15 Frost Diver | `TravelBall` ice + `freeze.str` | Restored — spear sheet wrong live |
-| 17 Fire Ball | `TravelBall` fire + fire-hit STR | Restored — fireball.spr travel still needs work |
-| 84 Jupitel Thunder | `TravelBall` lightning + STR hits | Restored — 라이트닝스피어 wrong live |
-| 90 Earth Spike | Procedural spike + `earthhit.str` | Restored — 페트롤로지 wrong live |
-| 91 Heaven's Drive | Procedural multi-spike + earthhit | Restored — 어스퀘이크 wrong live |
+The dead end was guessing GRF filenames. The fix was the **reverse-engineered
+original-client effect table**: roBrowserLegacy's `SkillEffect.js` (skill →
+effect ID, reproducing the exe's hardcoded table) + `EffectTable.js` (effect ID
+→ files/primitives, with comments citing the C++ client's own constants and
+values). We used it as **data only** — which files and parameters each skill
+uses — and wrote our own renderers, so CLAUDE.md §5 (no GRAVITY code) holds.
 
-**Lesson:** classic skill→sprite is **not** GRF-filename matching. 블래스트 / 페트롤로지 /
-프리징스피어 / 라이트닝스피어 are other skills' sheets. Need reverse-engineered
-effect IDs or reference video before remapping.
+Skill → original effect IDs: Napalm=32/hit=1 · Soul Strike travel=15/hit=1 ·
+Frost Diver travel=27/hit=28 · Fire Ball travel=24/hit=49 · Jupitel ball=93/
+hit=94 · Earth Spike=79/hit=147 · Heaven's Drive=142/hit=147.
+
+Verified three ways (2026-07-23 double-check): skill IDs against
+`Hercules/db/pre-re/skill_db.conf`; effect ID numbering against Hercules
+`doc/effect_list.md`; and the same numbering against `ragnarok-packets`'
+`EffectId` enum discriminants (Hit2=1, Soulstrike=15, Fireball=24,
+Frostdiver=27/28, Firehit=49, Earthspike=79, Yufitel=93/94, Heavensdrive=142,
+Earthhit=147 — all three sources agree). roBrowser's `spriteName` resolution
+was also confirmed against its `EffectManager.js`: `spriteName: 'fireball'`
+loads `data/sprite/이팩트/fireball.spr`, matching our mapping.
+
+**EF_NAPALMBEAT (32) recovered:** roBrowser left the skill's own effect
+unimplemented (mojibake'd filename comment, "eight files for an animated
+explosion"). The set is `effect\폭발1.tga`–`폭발8.tga` (폭발 = explosion, the
+only 8-frame explosion cycle in the GRF) — now played as a three-puff cluster
+at the target over the effect-1 lens streaks, which is why the recipe keeps
+`ef_napalmbeat.wav` (it belongs to effect 32, while effect 1 carries the
+generic `ef_hit2`).
+
+Key insight: **Napalm Beat, Earth Spike, and Heaven's Drive are procedural in
+the original client too** (lens-streak circle pattern; textured stone horns) —
+our procedural approach was right, it just used the wrong textures/shapes.
+
+E1 presentation as implemented (every asset verified in `data.grf`):
+
+| Skill | Presentation (per original effect table) |
+|---|---|
+| 11 Napalm Beat | 3-puff `폭발1–8.tga` explosion cluster (effect 32) over 8 × `lens1/lens2.tga` streaks converging in a circle (effect 1) |
+| 13 Soul Strike | `이팩트\soule` multi travel — **live OK 2026-07-22** (kept) |
+| 15 Frost Diver | `effect\ice.tga` travel (effect 27 uses exactly this file) + `freeze.str`; launch `ef_frostdiver.wav`, hit `ef_frostdiver2.wav` |
+| 17 Fire Ball | `이팩트\fireball` sprite travels with 4 dimmed trail ghosts (effect 24 = 5 low-alpha duplicates); fire-hit STR; launch `ef_fireball.wav`, hit `ef_firehit.wav` |
+| 84 Jupitel Thunder | Animated `thunder_ball_a–f.bmp` ball over `thunder_center.bmp` glow (93); hit = growing `thunder_pang.bmp` + `thunder_plazma_blast` frames (94); launch `hunter_shockwavetrap.wav` |
+| 90 Earth Spike | 1 main + 4 small `effect\stone.bmp` horns rise/hold/sink (79) + `earthhit.str` + `wizard_earthspike.wav` |
+| 91 Heaven's Drive | 5×5 cell grid of stone horns (142) + `earthhit.str` + `wizard_earthspike.wav`, once per cast |
+
+Deliberate deviations from the original: Earth Spike horns hold 2.0 s (original
+5 s — combat readability); no camera quake (no engine support yet); Heaven's
+Drive horns share the cast cell's ground height (no per-cell terrain sampling);
+Fire Ball's lead sprite is full-alpha with dimmed ghosts (all-0.2-alpha stacks
+need additive blending the sprite path doesn't do).
 
 ## Backend — DONE 2026-07-22
 
@@ -124,20 +160,35 @@ immediate — identical to emote behaviour.
    The `test` character (char_id 150000) is already a Wizard with all seven E1
    skills bound to F1-F7 — see that doc's "Test character" section.
 
-### E1 sprite pass — status 2026-07-23
+### E1 sprite pass — status 2026-07-23 (evening)
 
-`ProjectileRecipe::SpriteTravel` is proven (Soul Strike). Filename-guess maps for
-the other six **failed live** and were rolled back to E1 procedural/STR.
+The reverse-engineered mapping (see "The authoritative mapping" above) replaced
+all filename guessing. New machinery this landed:
 
-| Key | Skill | Live status |
+- `ProjectileRecipe::JupitelBall` + `SkillProjectile::jupitel_ball` — animated
+  frame-cycle billboard with a static core glow, screen-upright, additive.
+- `ProjectileRecipe::SpriteTravel.trail_ghosts` + per-spawn `alpha` on
+  `SpriteEffects::spawn_travel` (ghost instructions are dimmed post-render).
+- `SkillBurstStyle::JupitelHit` (frame-cycle burst via `SkillBurst::with_frames`),
+  rebuilt `NapalmBeat` (lens circle pattern) and `EarthSpike`/`HeavensDrive`
+  (crossed-triangle stone horns, rise/hold/sink, deterministic per-horn jitter).
+- `SkillPresentationRecipe::projectile_sounds` — launch sounds riding the
+  once-per-cast travel gate.
+
+**Live pass 2026-07-23 (user, F1–F7):**
+
+| Key | Skill | Result |
 |---|---|---|
-| F1 | Napalm Beat | procedural restored |
-| F2 | Soul Strike → soule | **OK** |
-| F3–F7 | Frost / Fire / Jupitel / Spike / HD | procedural/STR restored |
+| F1 | Napalm Beat | PASS — explosion cluster on target |
+| F2 | Soul Strike | PASS (unchanged) |
+| F3 | Frost Diver | PASS — ice travels, freeze burst on hit |
+| F4 | Fire Ball | PASS — travel + explosion (reads yellow-ish) |
+| F5 | Jupitel | PASS — crackling ball + burst on impact |
+| F6 | Earth Spike | PASS after two live tweaks: duration 2.0 s → 3.5 s, horns sized up (main 1.35 → 2.1 tiles, minors 0.55 → 0.95) |
+| F7 | Heaven's Drive | PASS — 5×5 stone-horn grid |
 
-**Next authentic work:** reverse-engineer official skill→effect mapping (client
-exe effect IDs, or frame-by-frame vs official client) — do **not** guess from
-unrelated `이팩트\*.spr` names. Session write-up:
+**All seven live-verified 2026-07-23.** Next: commit, then Phase E2
+(persistent skill units). Session write-up:
 [2026-07-22-session-notes.md](../2026-07-22-session-notes.md).
 
 ### iRO Wiki visual brief (acceptance language, not asset table)

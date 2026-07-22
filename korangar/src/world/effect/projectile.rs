@@ -16,6 +16,13 @@ const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
 /// Frost Diver, and Jupitel Thunder.
 pub struct SkillProjectile {
     texture: Arc<Texture>,
+    /// Animated frame cycle drawn instead of `texture` when non-empty
+    /// (Jupitel's thunder-ball frames). `texture` still backs the point light
+    /// fallback and the audit path.
+    frames: Vec<Arc<Texture>>,
+    frame_delay_ms: f32,
+    /// Static glow drawn under the animated frames (Jupitel's thunder_center).
+    core_texture: Option<Arc<Texture>>,
     source: Point3<f32>,
     target: Point3<f32>,
     elapsed: f32,
@@ -25,6 +32,9 @@ pub struct SkillProjectile {
     /// for the sprite's own resting orientation (the spear art points one way,
     /// the arrow item sprite another).
     angle_offset: f32,
+    /// Whether the billboard rotates onto the travel direction. Symmetric
+    /// energy balls stay screen-upright like the original client's billboards.
+    align_to_travel: bool,
     color: Color,
     point_light_id: Option<PointLightId>,
     light_intensity: f32,
@@ -35,12 +45,16 @@ impl SkillProjectile {
     pub fn spear(texture: Arc<Texture>, source: Point3<f32>, target: Point3<f32>) -> Self {
         Self {
             texture,
+            frames: Vec::new(),
+            frame_delay_ms: 0.0,
+            core_texture: None,
             source: source + Vector3::new(0.0, 5.0, 0.0),
             target: target + Vector3::new(0.0, 5.0, 0.0),
             elapsed: 0.0,
             duration: 0.14,
             size: Vector2::new(100.0, 100.0),
             angle_offset: std::f32::consts::PI,
+            align_to_travel: true,
             color: Color::WHITE,
             point_light_id: None,
             light_intensity: 0.0,
@@ -68,6 +82,9 @@ impl SkillProjectile {
         let size = native * (TARGET_LONGEST / native.x.max(native.y));
         Self {
             texture,
+            frames: Vec::new(),
+            frame_delay_ms: 0.0,
+            core_texture: None,
             source,
             target,
             elapsed: 0.0,
@@ -77,6 +94,7 @@ impl SkillProjectile {
             // onto the travel direction; -135° was dialed in against the live
             // client (the isometric camera tilts a purely horizontal shot).
             angle_offset: -135.0_f32.to_radians(),
+            align_to_travel: true,
             color: Color::WHITE,
             point_light_id: None,
             light_intensity: 0.0,
@@ -99,15 +117,52 @@ impl SkillProjectile {
         let lift = Vector3::new(0.0, 8.0, 0.0);
         Self {
             texture,
+            frames: Vec::new(),
+            frame_delay_ms: 0.0,
+            core_texture: None,
             source: source + lift,
             target: target + lift,
             elapsed: 0.0,
             duration,
             size: Vector2::new(size, size),
             angle_offset: 0.0,
+            align_to_travel: true,
             color,
             point_light_id: Some(point_light_id),
             light_intensity,
+            gets_deleted: false,
+        }
+    }
+
+    /// WZ_JUPITEL travel ball, matching the original client's effect 93: the
+    /// six `thunder_ball_*` frames cycle (~10 ms each in the C++ client; a
+    /// touch slower here so the crackle reads at our travel durations) over a
+    /// static `thunder_center` glow, both additive, screen-upright.
+    pub fn jupitel_ball(
+        frames: Vec<Arc<Texture>>,
+        core_texture: Arc<Texture>,
+        source: Point3<f32>,
+        target: Point3<f32>,
+        duration: f32,
+        point_light_id: PointLightId,
+    ) -> Self {
+        let lift = Vector3::new(0.0, 8.0, 0.0);
+        let lead = frames.first().cloned().unwrap_or_else(|| core_texture.clone());
+        Self {
+            texture: lead,
+            frames,
+            frame_delay_ms: 24.0,
+            core_texture: Some(core_texture),
+            source: source + lift,
+            target: target + lift,
+            elapsed: 0.0,
+            duration,
+            size: Vector2::new(90.0, 90.0),
+            angle_offset: 0.0,
+            align_to_travel: false,
+            color: Color::rgb_u8(255, 250, 200),
+            point_light_id: Some(point_light_id),
+            light_intensity: 48.0,
             gets_deleted: false,
         }
     }
@@ -161,34 +216,54 @@ impl EffectBase for SkillProjectile {
         } else {
             Rad(0.0)
         };
-        let angle = Rad(travel_angle.0 + self.angle_offset);
+        let angle = if self.align_to_travel {
+            Rad(travel_angle.0 + self.angle_offset)
+        } else {
+            Rad(self.angle_offset)
+        };
 
-        let half = self.size / 2.0;
         let mut color = self.color;
         color.alpha *= 1.0 - progress * 0.25;
 
-        renderer.render_effect(
-            camera,
-            position,
-            self.texture.clone(),
-            [
-                Vector2::new(-half.x, -half.y),
-                Vector2::new(half.x, -half.y),
-                Vector2::new(-half.x, half.y),
-                Vector2::new(half.x, half.y),
-            ],
-            [
-                Vector2::new(1.0, 1.0),
-                Vector2::new(1.0, 0.0),
-                Vector2::new(0.0, 0.0),
-                Vector2::new(0.0, 1.0),
-            ],
-            EFFECT_ORIGIN,
-            angle,
-            color,
-            BlendFactor::SrcAlpha,
-            BlendFactor::One,
-        );
+        let mut draw = |texture: &Arc<Texture>, half: Vector2<f32>, color: Color| {
+            renderer.render_effect(
+                camera,
+                position,
+                texture.clone(),
+                [
+                    Vector2::new(-half.x, -half.y),
+                    Vector2::new(half.x, -half.y),
+                    Vector2::new(-half.x, half.y),
+                    Vector2::new(half.x, half.y),
+                ],
+                [
+                    Vector2::new(1.0, 1.0),
+                    Vector2::new(1.0, 0.0),
+                    Vector2::new(0.0, 0.0),
+                    Vector2::new(0.0, 1.0),
+                ],
+                EFFECT_ORIGIN,
+                angle,
+                color,
+                BlendFactor::SrcAlpha,
+                BlendFactor::One,
+            );
+        };
+
+        // Static glow first so the animated crackle layers over it.
+        if let Some(core) = &self.core_texture {
+            let mut core_color = color;
+            core_color.alpha *= 0.66;
+            draw(core, self.size * 0.39, core_color);
+        }
+
+        let texture = if self.frames.is_empty() {
+            &self.texture
+        } else {
+            let elapsed_ms = self.elapsed * 1000.0;
+            &self.frames[(elapsed_ms / self.frame_delay_ms.max(1.0)) as usize % self.frames.len()]
+        };
+        draw(texture, self.size / 2.0, color);
     }
 }
 

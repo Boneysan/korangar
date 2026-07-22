@@ -169,79 +169,111 @@ pub enum DamageTargetEffect {
     BrandishSpear,
     BowlingBash,
     SonicBlow,
-    /// Phase E1 — MG_NAPALMBEAT psychic shock rings.
+    /// Phase E1 — MG_NAPALMBEAT converging lens streaks (original effect 1).
     NapalmBeat,
-    /// Phase E1 — WZ_EARTHSPIKE single ground spike.
+    /// Phase E1 — WZ_EARTHSPIKE stone horns under the target (original effect 79).
     EarthSpike,
-    /// Phase E1 — WZ_HEAVENDRIVE multi-spike ring.
+    /// Phase E1 — WZ_HEAVENDRIVE 5×5 grid of stone horns (original effect 142).
     HeavensDrive,
+    /// Phase E1 — WZ_JUPITEL impact: thunder_pang flash + plasma frame cycle
+    /// (original effect 94).
+    JupitelHit,
 }
 
 /// Source→target travel ball kind for classic Mage/Wizard spells (Phase E1).
+///
+/// Only Frost Diver remains procedural here: the original client's own
+/// presentation for it is the plain `effect\ice` texture traveling to the
+/// target (effect 27 in the reverse-engineered table), which this already is.
+/// Fire Ball flies the classic `이팩트\fireball` sheet and Jupitel is an
+/// animated texture ball ([`JUPITEL_BALL_FRAMES`]).
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum TravelBallKind {
-    FireBall,
     FrostDiver,
-    Jupitel,
 }
 
 impl TravelBallKind {
-    /// Texture paths confirmed present via `probes_e1_procedural_effect_textures`
-    /// (GRF `file_exists` / archive listing). Prefer root classic assets over
-    /// unrelated modern nested packs when both exist.
     pub fn texture_path(self) -> &'static str {
         match self {
-            // Root fire splash — reads as a fire ball better than bolt frames.
-            Self::FireBall => "effect\\fire_blast.bmp",
             // Classic ice disc/crystal (not the cold-bolt arrow).
             Self::FrostDiver => "effect\\ice.tga",
-            // Lightning burst used as a travel ball with yellow tint.
-            Self::Jupitel => "effect\\번개4.bmp",
         }
     }
 
     pub fn duration(self) -> f32 {
         match self {
-            Self::FireBall => 0.28,
             Self::FrostDiver => 0.32,
-            Self::Jupitel => 0.38,
         }
     }
 
     pub fn size(self) -> f32 {
         match self {
-            Self::FireBall => 78.0,
             Self::FrostDiver => 70.0,
-            Self::Jupitel => 84.0,
         }
     }
 
     pub fn color(self) -> Color {
         match self {
-            Self::FireBall => Color::rgb_u8(255, 140, 50),
             Self::FrostDiver => Color::rgb_u8(180, 230, 255),
-            Self::Jupitel => Color::rgb_u8(255, 250, 180),
         }
     }
 
     /// Mid-flight point-light peak intensity (world units).
     pub fn light_intensity(self) -> f32 {
         match self {
-            Self::FireBall => 42.0,
             Self::FrostDiver => 36.0,
-            Self::Jupitel => 48.0,
         }
     }
 }
 
 /// Soul Strike orb texture (soft particle). Confirmed in GRF probe.
 pub const SOUL_STRIKE_ORB_TEXTURE: &str = "effect\\pok1.tga";
-/// Napalm Beat ring/flash. Blue ring + purple tint reads more psychic than slash.
-pub const NAPALM_BEAT_TEXTURE: &str = "effect\\ring_blue.tga";
-/// Earth Spike / Heaven's Drive primary stone face.
-pub const EARTH_SPIKE_TEXTURE: &str = "effect\\bd_stonecurse.tga";
-/// Secondary stone layer for layered spikes.
-pub const EARTH_SPIKE_TEXTURE_SECONDARY: &str = "effect\\crystallization\\cry_stone_01.tga";
+/// Napalm Beat lens streaks. The original client's hit effect for
+/// MG_NAPALMBEAT is eight `lens1`/`lens2` streaks converging on the target in
+/// a circle pattern (reverse-engineered effect 1).
+pub const NAPALM_BEAT_TEXTURE: &str = "effect\\lens1.tga";
+pub const NAPALM_BEAT_TEXTURE_SECONDARY: &str = "effect\\lens2.tga";
+/// Napalm Beat's own effect (EF_NAPALMBEAT, 32) is "small clustered
+/// explosions": the eight-frame `폭발` (explosion) cycle played at the target.
+/// This is the piece roBrowser left unimplemented; the frame set is confirmed
+/// complete in `data.grf`.
+pub const NAPALM_BEAT_EXPLOSION_FRAMES: &[&str] = &[
+    "effect\\폭발1.tga",
+    "effect\\폭발2.tga",
+    "effect\\폭발3.tga",
+    "effect\\폭발4.tga",
+    "effect\\폭발5.tga",
+    "effect\\폭발6.tga",
+    "effect\\폭발7.tga",
+    "effect\\폭발8.tga",
+];
+/// Earth Spike / Heaven's Drive stone face. The original client draws both
+/// skills procedurally as textured horns rising out of the ground using this
+/// texture (reverse-engineered effects 79 / 142).
+pub const EARTH_SPIKE_TEXTURE: &str = "effect\\stone.bmp";
+
+/// Jupitel Thunder ball — the original client cycles these six frames as an
+/// additive billboard while a static `thunder_center` glow rides underneath
+/// (reverse-engineered effect 93).
+pub const JUPITEL_BALL_FRAMES: &[&str] = &[
+    "effect\\thunder_ball_a.bmp",
+    "effect\\thunder_ball_b.bmp",
+    "effect\\thunder_ball_c.bmp",
+    "effect\\thunder_ball_d.bmp",
+    "effect\\thunder_ball_e.bmp",
+    "effect\\thunder_ball_f.bmp",
+];
+pub const JUPITEL_BALL_CORE_TEXTURE: &str = "effect\\thunder_center.bmp";
+/// Jupitel Thunder impact — a growing `thunder_pang` flash plus a plasma-blast
+/// frame cycle at the struck entity (reverse-engineered effect 94).
+pub const JUPITEL_HIT_PANG_TEXTURE: &str = "effect\\thunder_pang.bmp";
+pub const JUPITEL_HIT_FRAMES: &[&str] = &[
+    "effect\\thunder_plazma_blast_a.bmp",
+    "effect\\thunder_plazma_blast_b.bmp",
+    "effect\\thunder_ball_d.bmp",
+    "effect\\thunder_ball_e.bmp",
+    "effect\\thunder_ball_f.bmp",
+];
 
 pub const COLDBOLT_BOLT_FRAMES: &[&str] = &["effect\\icearrow.tga"];
 pub const FIREBOLT_BOLT_FRAMES: &[&str] = &[
@@ -257,23 +289,34 @@ pub const FIREBOLT_BOLT_FRAMES: &[&str] = &[
 pub enum ProjectileRecipe {
     FallingBolts(&'static [&'static str]),
     Spear,
-    /// Procedural textured ball (fallback; E1 travel skills prefer [`Self::SpriteTravel`]).
+    /// Procedural textured ball (Frost Diver — matches the original client's
+    /// own `effect\ice` travel presentation).
     TravelBall(TravelBallKind),
+    /// Jupitel Thunder's animated lightning ball ([`JUPITEL_BALL_FRAMES`] over
+    /// a [`JUPITEL_BALL_CORE_TEXTURE`] glow), additive, caster→target.
+    JupitelBall,
     /// Classic `data\sprite\이팩트\*.spr` flying caster→target.
-    /// When `multi_hit` is true, spawns `hit_count` staggered copies (Soul Strike / Jupitel).
+    /// When `multi_hit` is true, spawns `hit_count` staggered copies (Soul
+    /// Strike). `trail_ghosts` adds that many dimmed copies trailing the lead
+    /// sprite at a tight fixed stagger — the original Fire Ball flies five
+    /// low-alpha duplicates of the sheet as a comet trail.
     SpriteTravel {
         path: &'static str,
         multi_hit: bool,
+        trail_ghosts: u8,
     },
 }
 
 /// Classic effect sheets under `data\sprite\이팩트\` (no extension).
-/// Only **proven** live mappings live here — filename guesses for other skills
+/// Only **proven** mappings live here — filename guesses for other skills
 /// (gunslinger 블래스트, genetic 페트롤로지, etc.) looked wrong in GUI.
 /// See `docs/plans/classic-effect-fidelity.md`.
 pub mod classic_sprites {
     /// Soul Strike flying ghosts — live-verified 2026-07-22.
     pub const SOULE: &str = "이팩트\\soule";
+    /// Fire Ball travel sheet — confirmed via the reverse-engineered original
+    /// client effect table (effect 24 plays sprite `fireball` caster→target).
+    pub const FIREBALL: &str = "이팩트\\fireball";
 }
 
 /// Procedural texture paths referenced by Phase E1 target/travel recipes.
@@ -282,14 +325,21 @@ pub mod classic_sprites {
 pub const E1_PROCEDURAL_TEXTURES: &[&str] = &[
     SOUL_STRIKE_ORB_TEXTURE,
     NAPALM_BEAT_TEXTURE,
+    NAPALM_BEAT_TEXTURE_SECONDARY,
+    NAPALM_BEAT_EXPLOSION_FRAMES[0],
+    NAPALM_BEAT_EXPLOSION_FRAMES[1],
+    NAPALM_BEAT_EXPLOSION_FRAMES[2],
+    NAPALM_BEAT_EXPLOSION_FRAMES[3],
+    NAPALM_BEAT_EXPLOSION_FRAMES[4],
+    NAPALM_BEAT_EXPLOSION_FRAMES[5],
+    NAPALM_BEAT_EXPLOSION_FRAMES[6],
+    NAPALM_BEAT_EXPLOSION_FRAMES[7],
     EARTH_SPIKE_TEXTURE,
-    EARTH_SPIKE_TEXTURE_SECONDARY,
-    "effect\\fire_blast.bmp",
+    JUPITEL_BALL_CORE_TEXTURE,
+    JUPITEL_HIT_PANG_TEXTURE,
     "effect\\ice.tga",
-    "effect\\번개4.bmp",
-    "effect\\lens1.tga",
-    "effect\\lens2.tga",
     "effect\\ring_yellow.tga",
+    "effect\\ring_blue.tga",
     "effect\\purpleslash.tga",
 ];
 
@@ -301,6 +351,9 @@ pub struct SkillPresentationRecipe {
     pub hit_effects: &'static [EffectTrack],
     pub ground_effect: Option<EffectTrack>,
     pub projectile: Option<ProjectileRecipe>,
+    /// Played at the source when the travel projectile actually spawns (the
+    /// once-per-cast gate applies), e.g. Fire Ball's launch whoosh.
+    pub projectile_sounds: &'static [SoundAsset],
     pub successful_caster_sounds: &'static [SoundAsset],
     pub damage_caster_sounds: &'static [SoundAsset],
     pub damage_target_sounds: &'static [SoundAsset],
@@ -315,6 +368,7 @@ const EMPTY: SkillPresentationRecipe = SkillPresentationRecipe {
     hit_effects: &[],
     ground_effect: None,
     projectile: None,
+    projectile_sounds: &[],
     successful_caster_sounds: &[],
     damage_caster_sounds: &[],
     damage_target_sounds: &[],
@@ -413,8 +467,8 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             successful_caster_sounds: &[SoundAsset::Fixed("effect\\ef_magnumbreak.wav")],
         ),
         11 => recipe!(
-            // Procedural psychic rings — no dedicated classic napalm.spr; wrong
-            // filename guesses (블래스트 etc.) failed live 2026-07-23.
+            // Original hit effect 1: lens streaks converging on the target in
+            // a circle pattern (there is no napalm sprite or STR).
             damage_target_effect: Some(DamageTargetEffect::NapalmBeat),
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_napalmbeat.wav")],
         ),
@@ -423,6 +477,7 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             projectile: Some(ProjectileRecipe::SpriteTravel {
                 path: classic_sprites::SOULE,
                 multi_hit: true,
+                trail_ghosts: 0,
             }),
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_soulstrike.wav")],
         ),
@@ -431,16 +486,24 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_icearrow.wav")],
         ),
         15 => recipe!(
-            // Procedural ice travel + freeze STR hit (sprite filename guesses failed live).
+            // Original effect 27/28: `effect\ice` travels to the target, then
+            // the freeze STR + ef_frostdiver2 play on hit.
             projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver)),
+            projectile_sounds: &[SoundAsset::Fixed("effect\\ef_frostdiver.wav")],
             hit_effects: FROST_DIVER_HITS,
-            hit_sounds: &[SoundAsset::Fixed("effect\\ef_frostdiver.wav")],
+            hit_sounds: &[SoundAsset::Fixed("effect\\ef_frostdiver2.wav")],
         ),
         17 => recipe!(
-            // Procedural fire travel + fire-hit STR (`fireball.spr` travel still needs work).
-            projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::FireBall)),
+            // Original effect 24/49: the classic `이팩트\fireball` sheet flies
+            // caster→target trailing ghost copies; fire-hit STR on impact.
+            projectile: Some(ProjectileRecipe::SpriteTravel {
+                path: classic_sprites::FIREBALL,
+                multi_hit: false,
+                trail_ghosts: 4,
+            }),
+            projectile_sounds: &[SoundAsset::Fixed("effect\\ef_fireball.wav")],
             hit_effects: &[FIRE_HIT],
-            hit_sounds: &[SoundAsset::Fixed("effect\\ef_fireball.wav")],
+            hit_sounds: &[SoundAsset::Fixed("effect\\ef_firehit.wav")],
         ),
         18 => recipe!(
             hit_effects: &[FIRE_HIT],
@@ -540,18 +603,21 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             }),
             ground_sounds: &[SoundAsset::Fixed("effect\\storm.wav")],
         ),
-        // WZ_JUPITEL — procedural lightning ball + STR hits (spear-sheet guess failed live).
+        // WZ_JUPITEL — original effects 93/94: animated thunder-ball travel
+        // (shockwave-trap launch sound), plasma-blast burst at the target.
         84 => recipe!(
-            projectile: Some(ProjectileRecipe::TravelBall(TravelBallKind::Jupitel)),
-            hit_effects: LIGHTNING_BOLT_HITS,
-            hit_sounds: &[SoundAsset::Fixed("effect\\ef_thunderstorm.wav")],
+            projectile: Some(ProjectileRecipe::JupitelBall),
+            projectile_sounds: &[SoundAsset::Fixed("effect\\hunter_shockwavetrap.wav")],
+            damage_target_effect: Some(DamageTargetEffect::JupitelHit),
         ),
         90 => recipe!(
-            // Procedural ground spike — 페트롤로지/etc. were wrong sheets live.
+            // Original effect 79: stone horns rise under the target; the
+            // original client draws this procedurally too (no sprite/STR).
             damage_target_effect: Some(DamageTargetEffect::EarthSpike),
             hit_effects: &[EARTH_HIT],
         ),
         91 => recipe!(
+            // Original effect 142: a 5×5 grid of stone horns, one per cell.
             damage_target_effect: Some(DamageTargetEffect::HeavensDrive),
             hit_effects: &[EARTH_HIT],
         ),
@@ -705,18 +771,31 @@ mod tests {
     }
 
     #[test]
-    fn phase_e1_recipes_prefer_proven_presentation() {
-        // Only Soul Strike has a live-proven classic sprite sheet.
+    fn phase_e1_recipes_follow_the_original_client_effect_table() {
+        // Soul Strike: classic `이팩트\soule` ghosts, one per hit.
         assert_eq!(
             skill_presentation_recipe(SkillId(13)).projectile,
             Some(ProjectileRecipe::SpriteTravel {
                 path: classic_sprites::SOULE,
                 multi_hit: true,
+                trail_ghosts: 0,
             })
         );
         assert!(skill_presentation_recipe(SkillId(13)).hit_effects.is_empty());
 
-        // The other six stay on E1 procedural / STR until reverse-engineered.
+        // Fire Ball: the classic `이팩트\fireball` sheet flies with a ghost
+        // trail (original effect 24 duplicates the sprite five times).
+        assert_eq!(
+            skill_presentation_recipe(SkillId(17)).projectile,
+            Some(ProjectileRecipe::SpriteTravel {
+                path: classic_sprites::FIREBALL,
+                multi_hit: false,
+                trail_ghosts: 4,
+            })
+        );
+
+        // Napalm Beat / Earth Spike / Heaven's Drive / Jupitel hit are
+        // procedural in the original client as well — no sprite or STR exists.
         assert_eq!(
             skill_presentation_recipe(SkillId(11)).damage_target_effect,
             Some(DamageTargetEffect::NapalmBeat)
@@ -725,13 +804,10 @@ mod tests {
             skill_presentation_recipe(SkillId(15)).projectile,
             Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver))
         );
+        assert_eq!(skill_presentation_recipe(SkillId(84)).projectile, Some(ProjectileRecipe::JupitelBall));
         assert_eq!(
-            skill_presentation_recipe(SkillId(17)).projectile,
-            Some(ProjectileRecipe::TravelBall(TravelBallKind::FireBall))
-        );
-        assert_eq!(
-            skill_presentation_recipe(SkillId(84)).projectile,
-            Some(ProjectileRecipe::TravelBall(TravelBallKind::Jupitel))
+            skill_presentation_recipe(SkillId(84)).damage_target_effect,
+            Some(DamageTargetEffect::JupitelHit)
         );
         assert_eq!(
             skill_presentation_recipe(SkillId(90)).damage_target_effect,
@@ -766,6 +842,7 @@ mod tests {
             for sound in recipe
                 .successful_caster_sounds
                 .iter()
+                .chain(recipe.projectile_sounds)
                 .chain(recipe.damage_caster_sounds)
                 .chain(recipe.damage_target_sounds)
                 .chain(recipe.hit_sounds)

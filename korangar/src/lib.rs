@@ -1302,6 +1302,7 @@ impl Client {
             Some(
                 ProjectileRecipe::Spear
                     | ProjectileRecipe::TravelBall(_)
+                    | ProjectileRecipe::JupitelBall
                     | ProjectileRecipe::SpriteTravel { .. }
             )
         );
@@ -1386,21 +1387,36 @@ impl Client {
         }
 
         let impact_delay_secs = impact_delay_ms as f32 / 1000.0;
+        let mut travel_spawned = false;
         match recipe.projectile {
-            Some(ProjectileRecipe::Spear) if spawn_travel => self.add_spear_projectile(source_position, target_position),
-            Some(ProjectileRecipe::TravelBall(kind)) if spawn_travel => {
-                self.add_travel_ball_projectile(kind, source_position, target_position, impact_delay_secs)
+            Some(ProjectileRecipe::Spear) if spawn_travel => {
+                self.add_spear_projectile(source_position, target_position);
+                travel_spawned = true;
             }
-            Some(ProjectileRecipe::SpriteTravel { path, multi_hit }) if spawn_travel => {
+            Some(ProjectileRecipe::TravelBall(kind)) if spawn_travel => {
+                self.add_travel_ball_projectile(kind, source_position, target_position, impact_delay_secs);
+                travel_spawned = true;
+            }
+            Some(ProjectileRecipe::JupitelBall) if spawn_travel => {
+                self.add_jupitel_ball_projectile(source_position, target_position, impact_delay_secs);
+                travel_spawned = true;
+            }
+            Some(ProjectileRecipe::SpriteTravel {
+                path,
+                multi_hit,
+                trail_ghosts,
+            }) if spawn_travel => {
                 let count = if multi_hit { hit_count.max(1) } else { 1 };
                 self.add_sprite_travel_projectile(
                     path,
                     source_position,
                     target_position,
                     count,
+                    trail_ghosts,
                     impact_delay_secs,
                     client_tick,
                 );
+                travel_spawned = true;
             }
             // Per-packet volleys: never once-per-cast gated.
             Some(ProjectileRecipe::FallingBolts(frame_paths)) => {
@@ -1413,7 +1429,20 @@ impl Client {
                         .add_effect(Box::new(FallingBolts::new(textures, target_position, hit_count, Color::WHITE)));
                 }
             }
-            Some(ProjectileRecipe::Spear | ProjectileRecipe::TravelBall(_) | ProjectileRecipe::SpriteTravel { .. }) | None => {}
+            Some(
+                ProjectileRecipe::Spear
+                | ProjectileRecipe::TravelBall(_)
+                | ProjectileRecipe::JupitelBall
+                | ProjectileRecipe::SpriteTravel { .. },
+            )
+            | None => {}
+        }
+        // Launch sounds ride the once-per-cast travel gate so multi-hit
+        // packets don't stack them.
+        if travel_spawned {
+            for sound in recipe.projectile_sounds {
+                self.play_spatial_skill_sound(sound.resolve(), source_position);
+            }
         }
     }
 
@@ -1452,14 +1481,54 @@ impl Client {
         }
     }
 
+    /// WZ_JUPITEL — the original client's effect 93: an animated
+    /// `thunder_ball_*` billboard over a `thunder_center` glow.
+    fn add_jupitel_ball_projectile(&mut self, source_position: Point3<f32>, target_position: Point3<f32>, impact_delay_secs: f32) {
+        let duration = if impact_delay_secs > 0.05 {
+            impact_delay_secs.clamp(0.12, 0.55)
+        } else {
+            0.38
+        };
+        let core = match self.texture_loader.get_or_load(JUPITEL_BALL_CORE_TEXTURE, ImageType::Color) {
+            Ok(core) => core,
+            Err(error) => {
+                eprintln!("[skill-effect] failed to load {JUPITEL_BALL_CORE_TEXTURE}: {error:?}");
+                return;
+            }
+        };
+        let frames: Vec<_> = JUPITEL_BALL_FRAMES
+            .iter()
+            .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+            .collect();
+        let light_id = PointLightId::new(
+            (source_position.x.to_bits())
+                .wrapping_add(target_position.z.to_bits())
+                .wrapping_mul(31)
+                ^ duration.to_bits(),
+        );
+        self.effect_holder.add_effect(Box::new(SkillProjectile::jupitel_ball(
+            frames,
+            core,
+            source_position,
+            target_position,
+            duration,
+            light_id,
+        )));
+    }
+
     /// Fly classic `이팩트\*.spr` sprites from caster to target. Multi-hit skills
     /// pack staggered copies so the last lands near the impact boundary.
+    /// `trail_ghosts` adds dimmed duplicates close behind the lead sprite —
+    /// the original Fire Ball is five low-alpha copies of the sheet flying as
+    /// a comet trail.
+    #[allow(clippy::too_many_arguments)]
     fn add_sprite_travel_projectile(
         &mut self,
         path: &'static str,
         source_position: Point3<f32>,
         target_position: Point3<f32>,
         orb_count: usize,
+        trail_ghosts: u8,
         impact_delay_secs: f32,
         client_tick: ClientTick,
     ) {
@@ -1493,7 +1562,21 @@ impl Client {
         for index in 0..count {
             let delay_ms = (index as f32 * stagger_secs * 1000.0).round() as u32;
             self.sprite_effects
-                .spawn_travel(path, from, to, 0, client_tick, travel_ms, delay_ms);
+                .spawn_travel(path, from, to, 0, client_tick, travel_ms, delay_ms, 1.0);
+
+            for ghost in 1..=u32::from(trail_ghosts) {
+                let ghost_alpha = 0.45 * (1.0 - ghost as f32 / (u32::from(trail_ghosts) + 1) as f32);
+                self.sprite_effects.spawn_travel(
+                    path,
+                    from,
+                    to,
+                    0,
+                    client_tick,
+                    travel_ms,
+                    delay_ms + ghost * 40,
+                    ghost_alpha,
+                );
+            }
         }
     }
 
@@ -1598,33 +1681,63 @@ impl Client {
             }
             Some(DamageTargetEffect::NapalmBeat) => {
                 if spawn_target_aoe(&mut self.effect_holder) {
-                    self.add_procedural_skill_effect(
-                        NAPALM_BEAT_TEXTURE,
-                        target_position,
-                        target_light_id,
-                        SkillBurstStyle::NapalmBeat,
-                    );
+                    // Original EF_NAPALMBEAT (32): clustered 폭발 explosion
+                    // frames, over hit effect 1's converging lens streaks.
+                    let primary = self.texture_loader.get_or_load(NAPALM_BEAT_TEXTURE, ImageType::Color);
+                    let secondary = self.texture_loader.get_or_load(NAPALM_BEAT_TEXTURE_SECONDARY, ImageType::Color);
+                    match (primary, secondary) {
+                        (Ok(primary), Ok(secondary)) => {
+                            let frames: Vec<_> = NAPALM_BEAT_EXPLOSION_FRAMES
+                                .iter()
+                                .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+                                .collect();
+                            self.effect_holder.add_effect(Box::new(
+                                SkillBurst::new(primary, target_position, SkillBurstStyle::NapalmBeat, target_light_id)
+                                    .with_secondary_texture(secondary)
+                                    .with_frames(frames),
+                            ));
+                        }
+                        (Err(error), _) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE}: {error:?}"),
+                        (_, Err(error)) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE_SECONDARY}: {error:?}"),
+                    }
                 }
             }
             Some(DamageTargetEffect::EarthSpike) => {
-                // Single-target skill; no AOE gate.
-                self.add_layered_procedural_skill_effect(
+                // Single-target skill; no AOE gate. Stone horns + the original
+                // eruption sound (effect 79 carries its own wav).
+                self.add_procedural_skill_effect(
                     EARTH_SPIKE_TEXTURE,
-                    EARTH_SPIKE_TEXTURE_SECONDARY,
                     target_position,
                     target_light_id,
                     SkillBurstStyle::EarthSpike,
                 );
+                self.play_spatial_skill_sound("effect\\wizard_earthspike.wav", target_position);
             }
             Some(DamageTargetEffect::HeavensDrive) => {
                 if spawn_target_aoe(&mut self.effect_holder) {
-                    self.add_layered_procedural_skill_effect(
+                    self.add_procedural_skill_effect(
                         EARTH_SPIKE_TEXTURE,
-                        EARTH_SPIKE_TEXTURE_SECONDARY,
                         target_position,
                         target_light_id,
                         SkillBurstStyle::HeavensDrive,
                     );
+                    // Inside the gate so multi-target packets play it once.
+                    self.play_spatial_skill_sound("effect\\wizard_earthspike.wav", target_position);
+                }
+            }
+            Some(DamageTargetEffect::JupitelHit) => {
+                // Original effect 94: thunder_pang flash + plasma-blast frames.
+                match self.texture_loader.get_or_load(JUPITEL_HIT_PANG_TEXTURE, ImageType::Color) {
+                    Ok(pang) => {
+                        let frames: Vec<_> = JUPITEL_HIT_FRAMES
+                            .iter()
+                            .filter_map(|path| self.texture_loader.get_or_load(path, ImageType::Color).ok())
+                            .collect();
+                        self.effect_holder.add_effect(Box::new(
+                            SkillBurst::new(pang, target_position, SkillBurstStyle::JupitelHit, target_light_id).with_frames(frames),
+                        ));
+                    }
+                    Err(error) => eprintln!("[skill-effect] failed to load {JUPITEL_HIT_PANG_TEXTURE}: {error:?}"),
                 }
             }
             None => {}
@@ -7977,6 +8090,12 @@ mod skill_effect_asset_tests {
                 Some(ProjectileRecipe::TravelBall(kind)) => {
                     paths.insert(format!("data\\texture\\{}", kind.texture_path()));
                 }
+                Some(ProjectileRecipe::JupitelBall) => {
+                    paths.insert(format!("data\\texture\\{JUPITEL_BALL_CORE_TEXTURE}"));
+                    for frame_path in JUPITEL_BALL_FRAMES.iter().chain(JUPITEL_HIT_FRAMES) {
+                        paths.insert(format!("data\\texture\\{frame_path}"));
+                    }
+                }
                 Some(ProjectileRecipe::SpriteTravel { path, .. }) => {
                     paths.insert(format!("data\\sprite\\{path}.spr"));
                     paths.insert(format!("data\\sprite\\{path}.act"));
@@ -7994,6 +8113,7 @@ mod skill_effect_asset_tests {
             "data\\texture\\effect\\ring2.bmp",
             "data\\sprite\\이팩트\\창.spr",
             "data\\wav\\effect\\assasin_sonicblow.wav",
+            "data\\wav\\effect\\wizard_earthspike.wav",
         ] {
             paths.insert(path.to_owned());
         }

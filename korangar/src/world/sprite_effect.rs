@@ -72,6 +72,9 @@ struct ActiveSpriteEffect {
     /// Wall-clock when this effect was queued (before any travel delay).
     start_time: ClientTick,
     motion: SpriteMotion,
+    /// Opacity multiplier. The original client flies some effects as stacks
+    /// of low-alpha duplicates (Fire Ball's trail); 1.0 for normal spawns.
+    alpha: f32,
 }
 
 /// Sprite-based effects currently playing in the world, keyed by the sprite
@@ -138,13 +141,15 @@ impl SpriteEffects {
             action_index,
             start_time: client_tick,
             motion: SpriteMotion::Fixed { position },
+            alpha: 1.0,
         });
     }
 
     /// Queue a sprite that flies from `from` to `to` over `duration_ms`.
     /// `start_delay_ms` staggers multi-hit volleys so later orbs leave later
     /// and still land near the impact boundary when durations match the
-    /// procedural Soul Strike packing.
+    /// procedural Soul Strike packing. `alpha` dims trail ghosts (1.0 for the
+    /// lead sprite).
     pub fn spawn_travel(
         &mut self,
         path: &'static str,
@@ -154,6 +159,7 @@ impl SpriteEffects {
         client_tick: ClientTick,
         duration_ms: u32,
         start_delay_ms: u32,
+        alpha: f32,
     ) {
         if sprite_effect_debug_enabled() {
             eprintln!(
@@ -174,6 +180,7 @@ impl SpriteEffects {
                 duration_ms: duration_ms.max(1),
                 start_delay_ms,
             },
+            alpha,
         });
     }
 
@@ -258,6 +265,7 @@ impl SpriteEffects {
             // Effects are not entities, but `render_action_frame` keys its
             // per-entity state off this ID. Reuse the sentinel space so an
             // effect can never be mistaken for a real entity.
+            let first_new_instruction = instructions.len();
             animation_data.render_action_frame(
                 instructions,
                 camera,
@@ -266,6 +274,14 @@ impl SpriteEffects {
                 effect.action_index,
                 time,
             );
+
+            // Dim trail ghosts after the fact — the shared render path has no
+            // per-call tint parameter.
+            if effect.alpha < 1.0 {
+                for instruction in &mut instructions[first_new_instruction..] {
+                    instruction.color.alpha *= effect.alpha;
+                }
+            }
         }
     }
 }
@@ -330,6 +346,7 @@ mod tests {
             ClientTick(0),
             400,
             100,
+            1.0,
         );
 
         // Still in start delay — not drawn, but not expired.
