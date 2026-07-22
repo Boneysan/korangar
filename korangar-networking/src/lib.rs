@@ -415,8 +415,15 @@ where
         username: impl Into<String>,
         password: impl Into<String>,
     ) {
-        if !matches!(self.login_server_connection, ServerConnection::Disconnected) {
-            return;
+        // Always start clean. A prior attempt may still be Connected (waiting on
+        // the refuse packet) or ClosingManually (waiting for the next
+        // get_events drain). Either state used to make this a silent no-op,
+        // which looked like "login button does nothing" after a bad password.
+        match std::mem::replace(&mut self.login_server_connection, ServerConnection::Disconnected) {
+            ServerConnection::Connected { .. } => {
+                // Dropped channels tear down the old network task.
+            }
+            ServerConnection::ClosingManually | ServerConnection::Disconnected => {}
         }
 
         let (action_sender, action_receiver) = tokio::sync::mpsc::unbounded_channel();
@@ -454,8 +461,12 @@ where
         login_data: &LoginServerLoginData,
         server: CharacterServerInformation,
     ) {
-        if !matches!(self.character_server_connection, ServerConnection::Disconnected) {
-            return;
+        // Same retry-safe clear as login: a half-open ClosingManually / stale
+        // Connected made a second server-select click a silent no-op and left
+        // the player stuck on the select screen.
+        match std::mem::replace(&mut self.character_server_connection, ServerConnection::Disconnected) {
+            ServerConnection::Connected { .. } => {}
+            ServerConnection::ClosingManually | ServerConnection::Disconnected => {}
         }
 
         let (action_sender, action_receiver) = tokio::sync::mpsc::unbounded_channel();
@@ -500,8 +511,9 @@ where
         login_server_login_data: &LoginServerLoginData,
         character_server_login_data: CharacterServerLoginData,
     ) {
-        if !matches!(self.map_server_connection, ServerConnection::Disconnected) {
-            return;
+        match std::mem::replace(&mut self.map_server_connection, ServerConnection::Disconnected) {
+            ServerConnection::Connected { .. } => {}
+            ServerConnection::ClosingManually | ServerConnection::Disconnected => {}
         }
 
         let (action_sender, action_receiver) = tokio::sync::mpsc::unbounded_channel();

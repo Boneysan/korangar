@@ -253,6 +253,8 @@ pub struct ClientState {
 
     /// List of all available character servers.
     character_servers: Vec<CharacterServerInformation>,
+    /// Countdown / status line on the server-select window (auth token TTL).
+    server_select_status: String,
     /// List of all the slots and characters on the current character server.
     character_slots: CharacterSlots,
     /// Id of the character that is currently being deleted. The server does not
@@ -497,6 +499,7 @@ impl ClientState {
             skill_cooldowns,
             minimap,
             character_servers,
+            server_select_status: String::new(),
             character_slots,
             currently_deleting,
             switch_request,

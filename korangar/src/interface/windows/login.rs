@@ -7,7 +7,7 @@ use rust_state::{Path, PathExt, RustState, State};
 use crate::graphics::{Color, ShadowPadding};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
-use crate::loaders::{ClientInfo, ClientInfoPathExt, OverflowBehavior, ServiceId};
+use crate::loaders::{ClientInfo, ClientInfoPathExt, FontSize, OverflowBehavior, ServiceId};
 use crate::settings::{LoginSettings, LoginSettingsPathExt, ServiceSettingsPathExt};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
@@ -20,11 +20,18 @@ const MAXIMUM_PASSWORD_LENGTH: usize = 24;
 #[derive(RustState, StateElement)]
 pub struct LoginWindowState {
     selected_service: ServiceId,
+    /// Shown at the top of the login form after a failed attempt (wrong
+    /// password, connection drop, unsupported packet version, …). Cleared on
+    /// the next login click. No separate Error popup for these.
+    status_message: String,
 }
 
 impl LoginWindowState {
     pub fn new(selected_service: ServiceId) -> Self {
-        Self { selected_service }
+        Self {
+            selected_service,
+            status_message: String::new(),
+        }
     }
 }
 
@@ -67,6 +74,8 @@ where
             selected_service_path.username().follow_safe(state).is_empty() || selected_service_path.password().follow_safe(state).is_empty()
         });
 
+        let status_message_path = self.window_state_path.status_message();
+
         let login_action = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
             let selected_service_path = self.window_state_path.selected_service();
             let selected_service_id = state.get(&selected_service_path);
@@ -76,6 +85,8 @@ where
             // Remember which service was selected so we can select it next time the client
             // starts.
             state.update_value(self.service_settings_path.recent_service_id(), Some(*selected_service_id));
+            // Clear any previous failure so a retry doesn't keep a stale red line.
+            state.update_value(status_message_path, String::new());
 
             queue.queue(InputEvent::LogIn {
                 service_id: *selected_service_id,
@@ -112,9 +123,20 @@ where
             title: client_state().localization().log_in_window_title(),
             class: Self::window_class(),
             theme: InterfaceThemeType::Menu,
+            // Grow with content so a status line is never clipped under a
+            // cached fixed height (live-reported: wrong password left no visible
+            // feedback even though the network event fired).
+            resizable: false,
             minimum_width: 450.0,
             maximum_width: 1200.0,
             elements: (
+                // Status first so a failure is obvious without scrolling/clip.
+                text! {
+                    text: status_message_path,
+                    color: Color::rgb_u8(255, 90, 90),
+                    height: 28.0,
+                    font_size: FontSize(18.0),
+                },
                 text! { text: client_state().localization().select_service_text() },
                 drop_down! {
                     options: self.client_info_path.services(),

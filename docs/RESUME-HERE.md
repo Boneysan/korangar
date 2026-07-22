@@ -66,10 +66,10 @@ Reconciled 2026-07-22 against the live §5 table:
 |---|---|---|---|
 | M1-006 | P0 | ✅ Fixed 2026-07-16 | Skill-targeting mode (`PendingSkill`) live-verified |
 | M1-008 | P1 | 🟡 Partial | Wizard kit effects live-verified 2026-07-17; catalog-wide coverage + sounds remain (Phase E adjacent) |
-| M1-009 | P1 | 🔴 Open | No gear stats/comparison (data in binary; extract shared source outside `src/dm/`) |
-| M1-010 | P1 | 🟡 Names done | Icons still need artwork |
-| M1-014 | P2 | 🔴 Open | Char delete is right-click-only *and* unconfirmed |
-| M1-015 | P2 | 🔴 Open | Stuck at server select after failed login — observed once, not reproduced |
+| M1-009 | P1 | ✅ Code 2026-07-22 | Gear stats + vs-equipped tooltips (live confirm recommended) |
+| M1-010 | P1 | 🟡 Names + monograms | Real SC sprites still deferred |
+| M1-014 | P2 | ✅ Code 2026-07-22 | Hover tip + two-step delete confirm (live confirm recommended) |
+| M1-015 | P2 | ✅ Live 2026-07-22 | Login status line; sole-server auto-enter; no stuck select |
 
 **Also fixed during the GUI sitting (not open):** M1-005 dialog sizing, M1-007 hide/cloak, M1-011 zero-duration stick, M1-012 status-end packet, M1-013 3-char list wipe, M1-016 emotes.
 

@@ -49,6 +49,7 @@ use std::net::{SocketAddr, ToSocketAddrs};
 use std::ops::Deref;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, LazyLock, Mutex};
+use std::time::{Duration, Instant};
 
 use cgmath::{Point3, Vector3};
 use image::{EncodableLayout, ImageFormat, ImageReader};
@@ -126,6 +127,10 @@ use crate::world::MarkerIdentifier;
 use crate::world::*;
 
 const CLIENT_NAME: &str = "Korangar";
+
+/// Matches Hercules `AUTH_TIMEOUT` in `login.c` — the login-server auth token
+/// is only valid for this long before character-server entry is refused.
+const LOGIN_AUTH_TIMEOUT: Duration = Duration::from_secs(30);
 
 #[derive(Debug)]
 pub struct MissingSkillAsset {
@@ -1028,6 +1033,9 @@ pub struct Client {
     saved_username: String,
     // TODO: Move or remove this.
     saved_packet_version: SupportedPacketVersion,
+    /// Wall-clock deadline for using the login auth token (Hercules AUTH_TIMEOUT).
+    /// Only used when the player must pick among multiple character servers.
+    login_auth_expires_at: Option<Instant>,
 
     particle_holder: ParticleHolder,
     emote_bubbles: EmoteBubbles,
@@ -2025,6 +2033,7 @@ impl Client {
             saved_password,
             saved_username,
             saved_packet_version,
+            login_auth_expires_at: None,
             particle_holder,
             emote_bubbles,
             point_light_manager,
@@ -2408,6 +2417,107 @@ impl Client {
         }
     }
 
+    /// Surface a login-time error on the login form status line only (no
+    /// separate Error popup — the form line is enough and stays in place).
+    fn show_login_error(&mut self, message: &str) {
+        eprintln!("[login] show_login_error: {message}");
+        *self.client_state.follow_mut(client_state().login_window().status_message()) = message.to_owned();
+
+        if !self.interface.is_window_with_class_open(WindowClass::Login) {
+            self.interface.open_window(LoginWindow::new(
+                client_state().login_window(),
+                client_state().login_settings(),
+                client_state().client_info(),
+            ));
+        }
+
+        // Drop any leftover Error popup from older builds / other paths.
+        self.interface.close_window_with_class(WindowClass::Error);
+    }
+
+    /// Tear down every connection-scoped surface and return to the login form
+    /// with a status message. Used when the character-server handoff fails so
+    /// the player is never left staring at a dead server-select window.
+    fn return_to_login_with_error(&mut self, message: &str) {
+        self.networking_system.disconnect_from_login_server();
+        self.networking_system.disconnect_from_character_server();
+        self.networking_system.disconnect_from_map_server();
+        self.saved_login_data = None;
+        self.saved_character_server = None;
+        self.login_auth_expires_at = None;
+        *self.client_state.follow_mut(client_state().server_select_status()) = String::new();
+
+        #[cfg(not(feature = "debug"))]
+        self.interface.close_all_windows();
+
+        #[cfg(feature = "debug")]
+        self.interface.close_all_windows_except(DEBUG_WINDOWS);
+
+        self.interface.open_window(LoginWindow::new(
+            client_state().login_window(),
+            client_state().login_settings(),
+            client_state().client_info(),
+        ));
+        self.show_login_error(message);
+    }
+
+    /// Tick the multi-server AUTH countdown. Sole-server stacks never open
+    /// this window (they jump straight to character select).
+    fn tick_server_select_auth(&mut self) {
+        if !self.interface.is_window_with_class_open(WindowClass::SelectServer) {
+            return;
+        }
+
+        let Some(expires_at) = self.login_auth_expires_at else {
+            return;
+        };
+
+        let now = Instant::now();
+        if now >= expires_at {
+            eprintln!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
+            self.return_to_login_with_error(
+                "Login session expired before server select (30s) — please log in again",
+            );
+            return;
+        }
+
+        let remaining = expires_at.saturating_duration_since(now);
+        let secs = remaining.as_secs().max(1);
+        *self.client_state.follow_mut(client_state().server_select_status()) =
+            format!("Select a server — session expires in {secs}s");
+    }
+
+    /// Enter the character server using the same path as a manual server click.
+    fn enter_character_server(&mut self, character_server_information: CharacterServerInformation) {
+        let address = std::net::SocketAddr::new(
+            std::net::IpAddr::V4(character_server_information.server_ip.into()),
+            character_server_information.server_port,
+        );
+        eprintln!(
+            "[login] SelectServer '{}' → {address}",
+            character_server_information.server_name
+        );
+
+        self.login_auth_expires_at = None;
+        *self.client_state.follow_mut(client_state().server_select_status()) =
+            format!("Connecting to {}…", character_server_information.server_name);
+
+        // Mark transition *before* dropping the login socket so a
+        // LoginServerDisconnected event cannot auto-relogin and race us.
+        self.saved_character_server = Some(character_server_information.clone());
+        self.networking_system.disconnect_from_login_server();
+
+        let login_data = self
+            .saved_login_data
+            .as_ref()
+            .expect("character server entry requires a successful login");
+        self.networking_system.connect_to_character_server(
+            self.saved_packet_version,
+            login_data,
+            character_server_information,
+        );
+    }
+
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn handle_network_events(&mut self, client_tick: ClientTick) {
@@ -2448,8 +2558,7 @@ impl Client {
                     }
 
                     self.saved_login_data = Some(login_data);
-
-                    *self.client_state.follow_mut(client_state().character_servers()) = character_servers;
+                    *self.client_state.follow_mut(client_state().character_servers()) = character_servers.clone();
 
                     #[cfg(not(feature = "debug"))]
                     self.interface.close_all_windows();
@@ -2457,37 +2566,83 @@ impl Client {
                     #[cfg(feature = "debug")]
                     self.interface.close_all_windows_except(DEBUG_WINDOWS);
 
-                    self.interface
-                        .open_window(ServerSelectionWindow::new(client_state().character_servers()));
+                    // Local Hercules (and most private servers) only advertise one
+                    // character server — skip the select screen entirely so login
+                    // goes account → character list with no flash.
+                    if character_servers.len() == 1 {
+                        let sole = character_servers.into_iter().next().unwrap();
+                        eprintln!(
+                            "[login] sole character server '{}' — auto-entering",
+                            sole.server_name
+                        );
+                        self.enter_character_server(sole);
+                    } else {
+                        self.login_auth_expires_at = Some(Instant::now() + LOGIN_AUTH_TIMEOUT);
+                        *self.client_state.follow_mut(client_state().server_select_status()) = format!(
+                            "Select a server — session expires in {}s",
+                            LOGIN_AUTH_TIMEOUT.as_secs()
+                        );
+                        self.interface
+                            .open_window(ServerSelectionWindow::new(client_state().character_servers()));
+                    }
                 }
                 NetworkEvent::LoginServerConnectionFailed { message, .. } => {
                     // M1-015: a failed re-login must not leave a stale server-select
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
                     // both login/character sockets before showing the error.
+                    eprintln!("[login] LoginServerConnectionFailed: {message}");
+                    self.login_auth_expires_at = None;
                     self.networking_system.disconnect_from_login_server();
                     self.networking_system.disconnect_from_character_server();
                     self.interface.close_window_with_class(WindowClass::SelectServer);
                     self.interface.close_window_with_class(WindowClass::CharacterSelection);
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
-                    self.interface.open_window(ErrorWindow::new(message.to_owned()));
+                    self.show_login_error(message);
                 }
                 NetworkEvent::LoginServerDisconnected { reason } => {
                     if reason != DisconnectReason::ClosedByClient {
-                        // TODO: Make this an on-screen popup.
-                        #[cfg(feature = "debug")]
-                        print_debug!("Disconnection from the character server with error");
+                        // Do not auto-reconnect once the player is moving on to the
+                        // character server (or already past it). A silent re-login
+                        // here races SelectServer and can leave the UI stuck on the
+                        // server-select window with a dead/half-open session.
+                        let selecting_or_beyond = self.saved_character_server.is_some()
+                            || self.networking_system.is_character_server_connected()
+                            || self.networking_system.is_map_server_connected()
+                            || self.interface.is_window_with_class_open(WindowClass::CharacterSelection);
 
-                        let socket_address = self.saved_login_server_address.unwrap();
-                        self.networking_system.connect_to_login_server(
-                            self.saved_packet_version,
-                            socket_address,
-                            &self.saved_username,
-                            &self.saved_password,
-                        );
+                        if self.saved_login_data.is_some() && !selecting_or_beyond {
+                            #[cfg(feature = "debug")]
+                            print_debug!("Login server dropped after auth — reconnecting");
+
+                            if let Some(socket_address) = self.saved_login_server_address {
+                                eprintln!("[login] login socket dropped after auth — reconnecting");
+                                self.networking_system.connect_to_login_server(
+                                    self.saved_packet_version,
+                                    socket_address,
+                                    &self.saved_username,
+                                    &self.saved_password,
+                                );
+                            }
+                        } else if self.saved_login_data.is_none() {
+                            // TCP drop before auth (or refuse already handled). Surface
+                            // something if the login form has no status yet.
+                            let status = self.client_state.follow(client_state().login_window().status_message());
+                            if status.is_empty() {
+                                eprintln!("[login] LoginServerDisconnected before auth ({reason:?})");
+                                self.show_login_error("Could not connect to login server");
+                            }
+                        } else {
+                            eprintln!(
+                                "[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition"
+                            );
+                        }
                     }
                 }
                 NetworkEvent::CharacterServerConnected { normal_slot_count } => {
+                    eprintln!(
+                        "[login] CharacterServerConnected slots={normal_slot_count} — requesting character list"
+                    );
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .set_slot_count(normal_slot_count);
@@ -2495,45 +2650,35 @@ impl Client {
                     let _ = self.networking_system.request_character_list();
                 }
                 NetworkEvent::CharacterServerConnectionFailed { message, .. } => {
-                    self.networking_system.disconnect_from_character_server();
-
-                    // The login auth token is single-use and expires 30 seconds after
-                    // login (Hercules AUTH_TIMEOUT), so a rejected character server
-                    // connection can never succeed by retrying from the server
-                    // selection screen. Drop the dead session and return to the login
-                    // window so the user can simply log in again.
-                    self.networking_system.disconnect_from_login_server();
-                    self.saved_login_data = None;
-                    self.saved_character_server = None;
-
-                    #[cfg(not(feature = "debug"))]
-                    self.interface.close_all_windows();
-
-                    #[cfg(feature = "debug")]
-                    self.interface.close_all_windows_except(DEBUG_WINDOWS);
-
-                    self.interface.open_window(LoginWindow::new(
-                        client_state().login_window(),
-                        client_state().login_settings(),
-                        client_state().client_info(),
-                    ));
-
-                    self.interface.open_window(ErrorWindow::new(message.to_owned()));
+                    eprintln!("[login] CharacterServerConnectionFailed: {message}");
+                    self.return_to_login_with_error(message);
                 }
                 NetworkEvent::CharacterServerDisconnected { reason } => {
                     if reason != DisconnectReason::ClosedByClient {
-                        // TODO: Make this an on-screen popup.
-                        #[cfg(feature = "debug")]
-                        print_debug!("Disconnection from the character server with error");
-
-                        // The saved session is cleared when we intentionally return to
-                        // the login screen (e.g. after the character server rejected
-                        // us) — don't try to revive a dead session then.
-                        if let (Some(login_data), Some(server)) = (self.saved_login_data.as_ref(), self.saved_character_server.clone()) {
-                            self.networking_system
-                                .connect_to_character_server(self.saved_packet_version, login_data, server);
+                        // A drop while still on server-select / not yet on map is a
+                        // failed handoff — bounce back to login instead of silently
+                        // retrying forever (that left the player stuck on select).
+                        let on_map = self.networking_system.is_map_server_connected();
+                        if on_map {
+                            #[cfg(feature = "debug")]
+                            print_debug!("Character server dropped while on map — reconnecting");
+                            if let (Some(login_data), Some(server)) =
+                                (self.saved_login_data.as_ref(), self.saved_character_server.clone())
+                            {
+                                self.networking_system.connect_to_character_server(
+                                    self.saved_packet_version,
+                                    login_data,
+                                    server,
+                                );
+                            }
+                        } else {
+                            eprintln!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
+                            self.return_to_login_with_error(
+                                "Lost connection to character server (auth may have expired — log in again)",
+                            );
                         }
                     } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
+                        // Intentional char disconnect without map (e.g. log out character).
                         #[cfg(not(feature = "debug"))]
                         self.interface.close_all_windows();
 
@@ -4821,6 +4966,9 @@ impl Client {
 
         let mut toggle_sit = false;
         let mut sync_minimap = false;
+        // Deferred: `enter_character_server` needs &mut self while this loop
+        // already mutably drains `input_event_buffer`.
+        let mut select_server: Option<CharacterServerInformation> = None;
         for event in self.input_event_buffer.drain(..) {
             match event {
                 InputEvent::LogIn {
@@ -4845,9 +4993,14 @@ impl Client {
                         Some(packet_version) => match packet_version {
                             PacketVersion::_20220406 => SupportedPacketVersion::_20220406,
                             PacketVersion::Unsupported(packet_version) => {
-                                self.interface.open_window(ErrorWindow::new(format!(
-                                    "Selected server has an unsupported package version: {packet_version}"
-                                )));
+                                let message =
+                                    format!("Selected server has an unsupported package version: {packet_version}");
+                                // Inline (don't call show_login_error): this loop
+                                // already mutably borrows self via drain.
+                                eprintln!("[login] show_login_error: {message}");
+                                *self.client_state.follow_mut(client_state().login_window().status_message()) =
+                                    message;
+                                self.interface.close_window_with_class(WindowClass::Error);
                                 continue;
                             }
                         },
@@ -4859,22 +5012,14 @@ impl Client {
                     self.saved_password = password.clone();
                     self.saved_packet_version = packet_version;
 
+                    eprintln!("[login] connecting to {socket_address} as {username}");
                     self.networking_system
                         .connect_to_login_server(packet_version, socket_address, username, password);
                 }
                 InputEvent::SelectServer {
                     character_server_information,
                 } => {
-                    self.saved_character_server = Some(character_server_information.clone());
-
-                    self.networking_system.disconnect_from_login_server();
-
-                    // Korangar should never attempt to connect to the character
-                    // server before it logged in to the login server, so it's fine to
-                    // unwrap here.
-                    let login_data = self.saved_login_data.as_ref().unwrap();
-                    self.networking_system
-                        .connect_to_character_server(self.saved_packet_version, login_data, character_server_information);
+                    select_server = Some(character_server_information);
                 }
                 InputEvent::Respawn => {
                     let _ = self.networking_system.respawn();
@@ -5985,6 +6130,10 @@ impl Client {
             }
         }
 
+        if let Some(character_server_information) = select_server {
+            self.enter_character_server(character_server_information);
+        }
+
         if toggle_sit {
             self.toggle_sit(client_tick);
         }
@@ -6563,6 +6712,7 @@ impl Client {
         self.request_entity_details(&input_report);
 
         self.handle_network_events(client_tick);
+        self.tick_server_select_auth();
 
         let interface_has_focus = self.process_user_events(
             &input_report,

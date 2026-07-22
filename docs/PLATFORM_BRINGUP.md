@@ -145,8 +145,12 @@ fallback-consumed packet produces **no NetworkEvent** (see
 
 **Fix (in-tree, 2026-07-10)**: `LoginFailedPacket3` (0x0B02, same 26-byte
 layout as 0x083E) in `ragnarok-packets`, registered in
-`version_20220406.rs`. Failed logins now show "Incorrect username or
-password" and can be retried immediately.
+`version_20220406.rs`. Failed logins now produce
+`LoginServerConnectionFailed`.
+
+**GUI follow-up (2026-07-22)**: the client paints the refusal on the **login
+form status line** (not a separate Error popup). Connect helpers force-clear
+half-open sockets so a retry after a refuse is never a silent no-op.
 
 **Lesson for future packet work**: when a server behavior seems to be
 "silently ignored" by the client, check whether the packet is only in
@@ -161,11 +165,13 @@ server in time. Sitting at the server-selection screen too long then
 clicking a server yields `HC_REFUSE_ENTER` (0x006C) — shown as "Rejected
 from server" — and **no retry from that screen can ever succeed**.
 
-The client now handles this (2026-07-10): on a character server rejection
-it drops the dead session and returns to the login window, so you can just
-log in again. (Previously it stranded you on the server-select screen; the
-auto-reconnect path in `CharacterServerDisconnected` also blindly
-`unwrap`ed saved login data — both fixed in `korangar/src/lib.rs`.)
+**Client behaviour (updated 2026-07-22):**
+
+- **One character server** (local Hercules): skip the select window and enter
+  it immediately after login (`enter_character_server` / sole-server path).
+- **Multiple character servers**: show select with a live countdown; on
+  expiry or handoff failure, return to the login form with a status message
+  (no silent reconnect loop on a dead session).
 
 ## 4c. PACKETVER-dependent headers in the pre-game flow [all platforms]
 
@@ -300,8 +306,8 @@ client bugs.
 3. Create a playable account (SQL or `_M` trick). GM: `group_id = 99`.
 4. (Optional) scripted CA_LOGIN probe → expect `login ok` in `loginlog`.
 5. Build client; launch; **check adapter line** matches the table above.
-6. Log in. A failed login shows "Incorrect username or password" and can be
-   retried directly (item 4).
-7. Pick a character server **within 30 seconds** of logging in (item 4b);
-   if rejected, the client returns to the login window — just log in again.
+6. Log in. A failed login shows "Incorrect username or password" on the login
+   form status line and can be retried directly (item 4).
+7. **One** character server: client auto-enters it (no select window). **Multiple:**
+   pick one within **30 seconds** (item 4b); on expiry/reject, return to login.
 8. Verify char select / creation appears; then map entry.

@@ -7,8 +7,10 @@ use korangar_interface::window::{CustomWindow, Window};
 use ragnarok_packets::{CharacterServerInformation, CharacterServerInformationPathExt};
 use rust_state::{Path, State};
 
+use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
+use crate::loaders::FontSize;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
@@ -123,9 +125,20 @@ where
             title: client_state().localization().server_selection_window_title(),
             class: Self::window_class(),
             theme: InterfaceThemeType::Menu,
+            // Grow with the countdown line + server list (cached fixed height
+            // used to clip status text).
+            resizable: false,
             minimum_width: 450.0,
             maximum_width: 1200.0,
             elements: (
+                // Hercules AUTH_TIMEOUT is 30s — show remaining time so a slow
+                // click does not silently expire into a stuck select screen.
+                text! {
+                    text: client_state().server_select_status(),
+                    color: Color::rgb_u8(255, 200, 120),
+                    height: 28.0,
+                    font_size: FontSize(16.0),
+                },
                 ServerWrapper::new(self.path),
             ),
         }

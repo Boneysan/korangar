@@ -145,12 +145,14 @@ version:
 
 - A fresh DB has no playable accounts (only the `s1` inter-server account).
   Create one via SQL or the `<name>_M` self-registration suffix.
-- A failed login shows "Incorrect username or password" and can be retried
-  directly (the silent-wedge bug this section used to describe was a missing
-  0x0B02 packet mapping, fixed 2026-07-10 — see PLATFORM_BRINGUP.md item 4).
-- Pick a character server within **30 seconds** of logging in — the auth
-  token expires (PLATFORM_BRINGUP.md item 4b). If rejected, the client
-  returns to the login window automatically.
+- A failed login shows **"Incorrect username or password"** as a red status
+  line on the login form (2026-07-22 GUI path; no separate Error popup). The
+  silent-wedge packet gap was 0x0B02 — see PLATFORM_BRINGUP.md item 4.
+- **Sole character server** (typical local Hercules): login goes straight to
+  character select — server select is skipped. **Multiple** character servers
+  still show the select window with a live countdown (Hercules `AUTH_TIMEOUT`
+  is 30s). Sitting too long or a failed handoff returns to login with a
+  status message (PLATFORM_BRINGUP.md item 4b).
 - Check the SQL `loginlog` table to see what the server actually received.
 
 ## Process management cheatsheet

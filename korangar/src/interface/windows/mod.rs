@@ -131,6 +131,8 @@ pub enum WindowClass {
     ItemActions,
     Equipment,
     Emotes,
+    /// Login / network error popup (wrong password, disconnect, …).
+    Error,
     StatusBar,
     SkillTree,
     Stats,
