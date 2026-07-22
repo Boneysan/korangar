@@ -15,19 +15,25 @@
 //! frame timing, multi-layer frames, and per-frame offsets all behave exactly
 //! as they do for entities.
 //!
+//! Two placement modes:
+//! - **Fixed** — play at a world point (impact bursts, ground spikes).
+//! - **Travel** — lerp from caster to target over a duration (Soul Strike
+//!   ghosts). Motion lifetime is independent of ACT length so a long impact
+//!   delay still carries the sprite the whole way.
+//!
 //! See `docs/plans/classic-effect-fidelity.md`.
 
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use cgmath::Point3;
+use cgmath::{Point3, Vector3};
 use ragnarok_packets::{ClientTick, EntityId};
 
 use crate::graphics::EntityInstruction;
 use crate::world::{AnimationData, Camera};
 
-/// Extra display time after a sprite effect finishes, so the final frame is
-/// not cut off abruptly.
+/// Extra display time after a fixed sprite effect finishes, so the final frame
+/// is not cut off abruptly.
 const LINGER_MS: u32 = 120;
 
 /// Lifetime bound used while the animation data is still loading, so a spawn
@@ -45,11 +51,27 @@ pub fn sprite_effect_debug_enabled() -> bool {
     std::env::var_os("KORANGAR_SPRITE_EFFECT_DEBUG").is_some()
 }
 
+/// How a sprite effect moves while its ACT plays.
+#[derive(Clone, Copy)]
+enum SpriteMotion {
+    /// Stay at a fixed world point (hit / ground anchors).
+    Fixed { position: Point3<f32> },
+    /// Lerp from `from` to `to` over `duration_ms`, after an optional
+    /// `start_delay_ms` (used to stagger multi-hit Soul Strike volleys).
+    Travel {
+        from: Point3<f32>,
+        to: Point3<f32>,
+        duration_ms: u32,
+        start_delay_ms: u32,
+    },
+}
+
 struct ActiveSpriteEffect {
     path: &'static str,
-    position: Point3<f32>,
     action_index: usize,
+    /// Wall-clock when this effect was queued (before any travel delay).
     start_time: ClientTick,
+    motion: SpriteMotion,
 }
 
 /// Sprite-based effects currently playing in the world, keyed by the sprite
@@ -113,9 +135,45 @@ impl SpriteEffects {
 
         self.active.push(ActiveSpriteEffect {
             path,
-            position,
             action_index,
             start_time: client_tick,
+            motion: SpriteMotion::Fixed { position },
+        });
+    }
+
+    /// Queue a sprite that flies from `from` to `to` over `duration_ms`.
+    /// `start_delay_ms` staggers multi-hit volleys so later orbs leave later
+    /// and still land near the impact boundary when durations match the
+    /// procedural Soul Strike packing.
+    pub fn spawn_travel(
+        &mut self,
+        path: &'static str,
+        from: Point3<f32>,
+        to: Point3<f32>,
+        action_index: usize,
+        client_tick: ClientTick,
+        duration_ms: u32,
+        start_delay_ms: u32,
+    ) {
+        if sprite_effect_debug_enabled() {
+            eprintln!(
+                "[sprite-effect] travel {path} action={action_index} \
+                 from=({:.1},{:.1},{:.1}) to=({:.1},{:.1},{:.1}) \
+                 duration_ms={duration_ms} delay_ms={start_delay_ms}",
+                from.x, from.y, from.z, to.x, to.y, to.z
+            );
+        }
+
+        self.active.push(ActiveSpriteEffect {
+            path,
+            action_index,
+            start_time: client_tick,
+            motion: SpriteMotion::Travel {
+                from,
+                to,
+                duration_ms: duration_ms.max(1),
+                start_delay_ms,
+            },
         });
     }
 
@@ -123,17 +181,66 @@ impl SpriteEffects {
         self.active.clear();
     }
 
+    fn lifetime_ms(effect: &ActiveSpriteEffect, loaded: &HashMap<&'static str, Arc<AnimationData>>) -> u32 {
+        match effect.motion {
+            SpriteMotion::Fixed { .. } => loaded
+                .get(effect.path)
+                .map(|data| data.action_duration_ms(effect.action_index) + LINGER_MS)
+                .unwrap_or(FALLBACK_LIFETIME_MS),
+            // Travel must outlive the flight even if the ACT is short; linger
+            // briefly on the target so arrival is readable.
+            SpriteMotion::Travel {
+                duration_ms,
+                start_delay_ms,
+                ..
+            } => start_delay_ms.saturating_add(duration_ms).saturating_add(LINGER_MS),
+        }
+    }
+
+    fn age_ms(effect: &ActiveSpriteEffect, client_tick: ClientTick) -> u32 {
+        client_tick.0.wrapping_sub(effect.start_time.0)
+    }
+
+    /// World position for this tick, or `None` while still waiting on a travel
+    /// start delay (not drawn yet).
+    fn position_at(effect: &ActiveSpriteEffect, client_tick: ClientTick) -> Option<Point3<f32>> {
+        match effect.motion {
+            SpriteMotion::Fixed { position } => Some(position),
+            SpriteMotion::Travel {
+                from,
+                to,
+                duration_ms,
+                start_delay_ms,
+            } => {
+                let age = Self::age_ms(effect, client_tick);
+                if age < start_delay_ms {
+                    return None;
+                }
+                let flight = age - start_delay_ms;
+                let progress = (flight as f32 / duration_ms.max(1) as f32).clamp(0.0, 1.0);
+                // Mild arc so multi-hit volleys don't stack on a single line.
+                let lateral = Vector3::new((progress - 0.5) * 1.5, (1.0 - progress) * 2.0, (progress - 0.5) * -1.2);
+                Some(from + (to - from) * progress + lateral)
+            }
+        }
+    }
+
+    /// ACT clock: starts when the sprite becomes visible (after travel delay).
+    fn animation_time_ms(effect: &ActiveSpriteEffect, client_tick: ClientTick) -> u32 {
+        match effect.motion {
+            SpriteMotion::Fixed { .. } => Self::age_ms(effect, client_tick),
+            SpriteMotion::Travel { start_delay_ms, .. } => {
+                Self::age_ms(effect, client_tick).saturating_sub(start_delay_ms)
+            }
+        }
+    }
+
     pub fn update(&mut self, client_tick: ClientTick) {
         let loaded = &self.loaded;
 
         self.active.retain(|effect| {
-            let age = client_tick.0.wrapping_sub(effect.start_time.0);
-            let lifetime = loaded
-                .get(effect.path)
-                .map(|data| data.action_duration_ms(effect.action_index) + LINGER_MS)
-                .unwrap_or(FALLBACK_LIFETIME_MS);
-
-            age < lifetime
+            let age = Self::age_ms(effect, client_tick);
+            age < Self::lifetime_ms(effect, loaded)
         });
     }
 
@@ -142,8 +249,11 @@ impl SpriteEffects {
             let Some(animation_data) = self.loaded.get(effect.path) else {
                 continue;
             };
+            let Some(position) = Self::position_at(effect, client_tick) else {
+                continue;
+            };
 
-            let time = client_tick.0.wrapping_sub(effect.start_time.0);
+            let time = Self::animation_time_ms(effect, client_tick);
 
             // Effects are not entities, but `render_action_frame` keys its
             // per-entity state off this ID. Reuse the sentinel space so an
@@ -152,7 +262,7 @@ impl SpriteEffects {
                 instructions,
                 camera,
                 Self::sentinel(index),
-                effect.position,
+                position,
                 effect.action_index,
                 time,
             );
@@ -207,5 +317,32 @@ mod tests {
 
         effects.update(ClientTick(FALLBACK_LIFETIME_MS));
         assert!(effects.active.is_empty(), "unloaded spawn must not leak");
+    }
+
+    #[test]
+    fn travel_spawns_cover_the_full_flight() {
+        let mut effects = SpriteEffects::default();
+        effects.spawn_travel(
+            PATH_A,
+            Point3::new(0.0, 7.0, 0.0),
+            Point3::new(10.0, 7.0, 0.0),
+            0,
+            ClientTick(0),
+            400,
+            100,
+        );
+
+        // Still in start delay — not drawn, but not expired.
+        assert!(SpriteEffects::position_at(&effects.active[0], ClientTick(50)).is_none());
+        effects.update(ClientTick(50));
+        assert_eq!(effects.active.len(), 1);
+
+        // Mid-flight.
+        let mid = SpriteEffects::position_at(&effects.active[0], ClientTick(300)).expect("visible in flight");
+        assert!(mid.x > 0.0 && mid.x < 10.0, "mid X should be between ends, got {}", mid.x);
+
+        // After delay + duration + linger → gone.
+        effects.update(ClientTick(100 + 400 + LINGER_MS));
+        assert!(effects.active.is_empty());
     }
 }

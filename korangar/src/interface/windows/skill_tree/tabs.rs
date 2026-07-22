@@ -122,10 +122,12 @@ impl<A, B, C, D> SkillTreeTab<A, B, C, D> {
 
 impl<A, B, C, D> Element<ClientState> for SkillTreeTab<A, B, C, D>
 where
-    A: Path<ClientState, HashMap<usize, LearnableSkill>>,
+    // Optional: tab skills path is None when skill_tree was cleared (M1-017 LoggedOut race).
+    A: Path<ClientState, HashMap<usize, LearnableSkill>, false>,
     B: Path<ClientState, Vec<LearnedSkill>>,
     C: Path<ClientState, SkillTreeWindowState>,
-    D: Path<ClientState, u32>,
+    // Optional: see SkillTreeWindow — player may be absent during logout layout (M1-017).
+    D: Path<ClientState, u32, false>,
 {
     type LayoutInfo = ();
 
@@ -138,7 +140,11 @@ where
         with_single_resolver(resolvers, |resolver| {
             use korangar_interface::prelude::*;
 
-            let layout = state.get(&self.layout_path);
+            let Some(layout) = state.try_get(&self.layout_path) else {
+                // Tab vanished (logout cleared skill_tree) — drop rows and skip layout.
+                self.row_elements.clear();
+                return;
+            };
 
             let row_count = 1 + layout.keys().max().copied().unwrap_or_default() / SKILL_TREE_COLUMNS;
 

@@ -13,7 +13,9 @@ lands.
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |
 | [M1-p0-verification.md](M1-p0-verification.md) | E3.1 live P0 verification checklist against Hercules |
 | [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
-| **[phase-d-live-verification.md](phase-d-live-verification.md)** | **NEXT (2026-07-18): Phase D live GUI checklist — do before Phase E** |
+| [phase-d-live-verification.md](phase-d-live-verification.md) | Phase D live GUI checklist — **CLOSED 2026-07-21**, all 8 rows PASS |
+| [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism; read its "Traps hit while driving this pass" before any new GUI session |
+| **[classic-effect-fidelity.md](classic-effect-fidelity.md)** | **NEXT (2026-07-22): derive the skill→sprite mapping.** Sprite backend shipped (`44927a32`) but **no skill is mapped yet**, so in-game visuals are unchanged. Start with Soul Strike → `이팩트\soule`. Extraction needs GRF decryption — drive `GameFileLoader::get()` from a small Rust bin, *not* the Python script |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.

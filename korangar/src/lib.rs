@@ -1281,6 +1281,7 @@ impl Client {
         target_position: Point3<f32>,
         hit_count: usize,
         impact_delay_ms: u32,
+        client_tick: ClientTick,
     ) {
         let recipe = skill_presentation_recipe(skill_id);
         let has_projectile = recipe.projectile.is_some();
@@ -1387,7 +1388,13 @@ impl Client {
                 self.add_travel_ball_projectile(kind, source_position, target_position, impact_delay_secs)
             }
             Some(ProjectileRecipe::SoulStrikeOrbs) if spawn_travel => {
-                self.add_soul_strike_orbs(source_position, target_position, hit_count.max(1), impact_delay_secs);
+                self.add_soul_strike_orbs(
+                    source_position,
+                    target_position,
+                    hit_count.max(1),
+                    impact_delay_secs,
+                    client_tick,
+                );
             }
             // Per-packet volleys: never once-per-cast gated.
             Some(ProjectileRecipe::FallingBolts(frame_paths)) => {
@@ -1445,22 +1452,43 @@ impl Client {
         target_position: Point3<f32>,
         orb_count: usize,
         impact_delay_secs: f32,
+        client_tick: ClientTick,
     ) {
-        let light_id = PointLightId::new(
-            source_position.x.to_bits().wrapping_add(target_position.y.to_bits()) ^ (orb_count as u32).wrapping_mul(17),
-        );
-        match self.texture_loader.get_or_load(SOUL_STRIKE_ORB_TEXTURE, ImageType::Color) {
-            Ok(texture) => self.effect_holder.add_effect(Box::new(SoulStrikeOrbs::new(
-                texture,
-                source_position,
-                target_position,
-                orb_count,
-                impact_delay_secs,
-                light_id,
-            ))),
-            Err(error) => eprintln!(
-                "[skill-effect] failed to load soul-strike orb texture {SOUL_STRIKE_ORB_TEXTURE}: {error:?}"
-            ),
+        /// Classic flying-ghost sheet for MG_SOULSTRIKE.
+        const SOULE_PATH: &str = "이팩트\\soule";
+        const BODY_LIFT: f32 = 7.0;
+
+        // Same packing as the old procedural orbs: last ghost lands near the
+        // impact boundary; earlier hits stagger out before it.
+        let count = orb_count.max(1);
+        let arrival_secs = if impact_delay_secs > 0.05 {
+            impact_delay_secs.clamp(0.18, 0.85)
+        } else {
+            0.32 + (count.saturating_sub(1) as f32) * 0.11
+        };
+        let travel_secs = (arrival_secs * 0.55).clamp(0.16, 0.40);
+        let stagger_secs = if count > 1 {
+            ((arrival_secs - travel_secs) / (count - 1) as f32).max(0.0)
+        } else {
+            0.0
+        };
+        let travel_ms = (travel_secs * 1000.0).round() as u32;
+        let from = source_position + Vector3::new(0.0, BODY_LIFT, 0.0);
+        let to = target_position + Vector3::new(0.0, BODY_LIFT, 0.0);
+
+        // Lazy-load the sheet (first cast may draw nothing until it lands).
+        if let Some(sentinel) = self.sprite_effects.request_slot(SOULE_PATH)
+            && let Some(animation_data) =
+                self.async_loader
+                    .request_animation_data_load(sentinel, EntityType::Npc, vec![SOULE_PATH.to_string()])
+        {
+            self.sprite_effects.set_animation_data(SOULE_PATH, animation_data);
+        }
+
+        for index in 0..count {
+            let delay_ms = (index as f32 * stagger_secs * 1000.0).round() as u32;
+            self.sprite_effects
+                .spawn_travel(SOULE_PATH, from, to, 0, client_tick, travel_ms, delay_ms);
         }
     }
 
@@ -3336,6 +3364,7 @@ impl Client {
                                 target_position,
                                 hit_count,
                                 source_impact_delay_ms,
+                                client_tick,
                             );
                         }
                     }
@@ -3931,6 +3960,17 @@ impl Client {
                     }
                 }
                 NetworkEvent::LoggedOut => {
+                    // Close character UI *before* clearing character-scoped state.
+                    // Skill Tree holds ManuallyAsserted paths into layout tabs; if we
+                    // clear the tree while the window is still open, the next layout
+                    // panics (M1-017). MapServerDisconnected also closes windows, but
+                    // LoggedOut can land a frame earlier.
+                    #[cfg(not(feature = "debug"))]
+                    self.interface.close_all_windows();
+
+                    #[cfg(feature = "debug")]
+                    self.interface.close_all_windows_except(DEBUG_WINDOWS);
+
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
@@ -5069,7 +5109,9 @@ impl Client {
                                 client_state().skill_tree_window(),
                                 client_state().skill_tree().layout(),
                                 client_state().skill_tree().skills(),
-                                this_player().manually_asserted().skill_points(),
+                                // Optional path: Skill Tree may still layout for a frame after
+                                // logout clears `this_player` (M1-017). Do not manually_assert.
+                                this_player().skill_points(),
                             )),
                         }
                     }
@@ -6313,6 +6355,13 @@ impl Client {
                 {
                     self.sprite_effects.set_animation_data(path, animation_data);
                 }
+
+                // ACT frames are bottom-normalized (same as emotes). Entity and
+                // ground anchors are feet-level, so without a lift the ghost
+                // draws under the target. Per-skill anchor styles (ground rise
+                // vs body center) can refine this later.
+                const SPRITE_EFFECT_BODY_LIFT: f32 = 8.0;
+                let position = position + Vector3::new(0.0, SPRITE_EFFECT_BODY_LIFT, 0.0);
 
                 self.sprite_effects.spawn(path, position, action_index, client_tick);
             }
@@ -7888,10 +7937,18 @@ mod skill_effect_asset_tests {
                 for effect_path in track.asset.variants() {
                     paths.insert(format!("data\\texture\\effect\\{effect_path}"));
                 }
+                if let Some(sprite_path) = track.asset.sprite_path() {
+                    paths.insert(format!("data\\sprite\\{sprite_path}.spr"));
+                    paths.insert(format!("data\\sprite\\{sprite_path}.act"));
+                }
             }
             if let Some(track) = recipe.ground_effect {
                 for effect_path in track.asset.variants() {
                     paths.insert(format!("data\\texture\\effect\\{effect_path}"));
+                }
+                if let Some(sprite_path) = track.asset.sprite_path() {
+                    paths.insert(format!("data\\sprite\\{sprite_path}.spr"));
+                    paths.insert(format!("data\\sprite\\{sprite_path}.act"));
                 }
             }
             for sound in recipe
@@ -7916,7 +7973,9 @@ mod skill_effect_asset_tests {
                     paths.insert(format!("data\\texture\\{}", kind.texture_path()));
                 }
                 Some(ProjectileRecipe::SoulStrikeOrbs) => {
-                    paths.insert(format!("data\\texture\\{SOUL_STRIKE_ORB_TEXTURE}"));
+                    // Travel ghosts use the classic effect sheet, not the procedural orb texture.
+                    paths.insert("data\\sprite\\이팩트\\soule.spr".to_owned());
+                    paths.insert("data\\sprite\\이팩트\\soule.act".to_owned());
                 }
                 Some(ProjectileRecipe::Spear) | None => {}
             }

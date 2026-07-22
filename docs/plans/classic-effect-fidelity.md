@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Backend landed 2026-07-22 — skill mapping + asset extraction next |
+| **Status** | Backend landed 2026-07-22 — **Soul Strike (13) → `이팩트\soule` mapped 2026-07-22** (first live sprite skill); remaining E1 skills still procedural |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -120,15 +120,18 @@ immediate — identical to emote behaviour.
    The `test` character (char_id 150000) is already a Wizard with all seven E1
    skills bound to F1-F7 — see that doc's "Test character" section.
 
-### Suggested first move
+### Suggested first move — DONE for recipe wiring 2026-07-22 (travel pass)
 
-Prove the path end-to-end on **one** skill before mapping the other six:
-point skill 13 (Soul Strike) at `이팩트\soule` — the one mapping backed by an
-actual filename match — and check that a real sprite animation plays at the
-target. Anchoring is the likely first bug: the emote work found the generic
-animation loader normalizes every ACT frame to its bottom edge, which drew
-emotes *under* the character until the anchor was derived from the composed
-frame height instead.
+Skill **13 Soul Strike** flies classic `이팩트\soule` ghosts **caster → target**
+via `SpriteEffects::spawn_travel` (multi-hit stagger matches the old procedural
+packing). Live feedback: hit-only spawn looked like a delayed explosion on the
+barricade with an empty flight; that was expected with impact-only placement and
+is why travel is the path now. No separate hit sheet.
+
+**Live verify:** on char `test`, F2 Soul Strike. First cast may be blank while
+the sheet loads; later casts should show ghosts traveling during the cast→hit
+window. `KORANGAR_SPRITE_EFFECT_DEBUG=1` logs `travel` lines. Remaining E1
+skills still use procedural stand-ins until mapped.
 
 Note the two anchor styles differ. Napalm Beat and Soul Strike land on the
 target entity; Earth Spike and Heaven's Drive rise out of the ground; Fire Ball,

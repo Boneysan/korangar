@@ -329,11 +329,6 @@ const HOLY_HIT: EffectTrack = EffectTrack {
     light_color: Color::rgb_u8(255, 245, 190),
     start_delay: 0.0,
 };
-const SOUL_STRIKE_HITS: &[EffectTrack] = &[EffectTrack {
-    asset: EffectAsset::Fixed("new_soulexpansion\\new_soulexpansion_hit\\new_soulexpansion_hit.str"),
-    light_color: Color::rgb_u8(190, 120, 255),
-    start_delay: 0.0,
-}];
 const FROST_DIVER_HITS: &[EffectTrack] = &[EffectTrack {
     asset: EffectAsset::Fixed("freeze.str"),
     light_color: Color::rgb_u8(150, 225, 255),
@@ -409,8 +404,10 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_napalmbeat.wav")],
         ),
         13 => recipe!(
+            // Classic `이팩트\soule` ghosts travel caster→target (see
+            // `add_soul_strike_orbs`). No separate hit sheet — the delayed
+            // "explosion" was the fixed-at-impact spawn and looked wrong.
             projectile: Some(ProjectileRecipe::SoulStrikeOrbs),
-            hit_effects: SOUL_STRIKE_HITS,
             hit_sounds: &[SoundAsset::Fixed("effect\\ef_soulstrike.wav")],
         ),
         14 => recipe!(
@@ -698,6 +695,10 @@ mod tests {
             skill_presentation_recipe(SkillId(13)).projectile,
             Some(ProjectileRecipe::SoulStrikeOrbs)
         );
+        assert!(
+            skill_presentation_recipe(SkillId(13)).hit_effects.is_empty(),
+            "Soul Strike hit is the travel arrival, not a second impact sheet"
+        );
         assert_eq!(
             skill_presentation_recipe(SkillId(15)).projectile,
             Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver))
@@ -733,9 +734,10 @@ mod tests {
         for skill_id in MAPPED_SKILL_IDS {
             let recipe = skill_presentation_recipe(*skill_id);
             for effect in recipe.hit_effects.iter().chain(recipe.ground_effect.iter()) {
+                let auditable = !effect.asset.variants().is_empty() || effect.asset.sprite_path().is_some();
                 assert!(
-                    !effect.asset.variants().is_empty(),
-                    "skill {} effect is not auditable",
+                    auditable,
+                    "skill {} effect is not auditable (need .str variants or a sprite path)",
                     skill_id.0
                 );
             }

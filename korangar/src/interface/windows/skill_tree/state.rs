@@ -2,7 +2,7 @@ use std::cell::UnsafeCell;
 
 use hashbrown::HashMap;
 use ragnarok_packets::SkillId;
-use rust_state::{Path, PathExt, Selector, SelectorExt};
+use rust_state::{Path, Selector, SelectorExt};
 
 use crate::state::ClientState;
 use crate::state::skills::LearnableSkill;
@@ -34,14 +34,17 @@ impl<A, B, C> AvailablePointsDisplay<A, B, C> {
 impl<A, B, C> Selector<ClientState, String> for AvailablePointsDisplay<A, B, C>
 where
     A: Selector<ClientState, String>,
-    B: Selector<ClientState, u32>,
+    // Optional: player skill points vanish on logout while Skill Tree may still render (M1-017).
+    B: Selector<ClientState, u32, false>,
     C: Selector<ClientState, Vec<SkillId>>,
 {
     fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a String> {
         let label = self.label_path.select_safe(state);
         let available_skill_points = self
             .available_skill_points_path
-            .select_safe(state)
+            .select(state)
+            .copied()
+            .unwrap_or(0)
             .saturating_sub(self.pending_skill_points_path.select_safe(state).len() as u32);
 
         // SAFETY:
@@ -113,20 +116,21 @@ where
 
 impl<A> Path<ClientState, LearnableSkill, false> for LearnableSkillPath<A>
 where
-    A: Path<ClientState, HashMap<usize, LearnableSkill>>,
+    // Parent tab map is optional — missing during logout skill_tree clear (M1-017).
+    A: Path<ClientState, HashMap<usize, LearnableSkill>, false>,
 {
     fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a LearnableSkill> {
-        self.layout_path.follow_safe(state).get(&self.index)
+        self.layout_path.follow(state)?.get(&self.index)
     }
 
     fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut LearnableSkill> {
-        self.layout_path.follow_mut_safe(state).get_mut(&self.index)
+        self.layout_path.follow_mut(state)?.get_mut(&self.index)
     }
 }
 
 impl<A> Selector<ClientState, LearnableSkill, false> for LearnableSkillPath<A>
 where
-    A: Path<ClientState, HashMap<usize, LearnableSkill>>,
+    A: Path<ClientState, HashMap<usize, LearnableSkill>, false>,
 {
     fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a LearnableSkill> {
         self.follow(state)

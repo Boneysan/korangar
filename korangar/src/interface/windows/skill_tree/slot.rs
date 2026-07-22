@@ -267,7 +267,8 @@ where
     A: Path<ClientState, LearnableSkill, false>,
     B: Path<ClientState, LearnedSkill, false>,
     C: Path<ClientState, SkillTreeWindowState>,
-    D: Path<ClientState, u32>,
+    // Optional: see SkillTreeWindow — player may be absent during logout layout (M1-017).
+    D: Path<ClientState, u32, false>,
 {
     type LayoutInfo = BaseLayoutInfo;
 
@@ -345,8 +346,11 @@ where
                 .filter(|skill_id| **skill_id == skill.skill_id)
                 .count() as u16;
             let has_pending_points = pending_skill_points > 0;
-            let remaining_skill_points =
-                (*state.get(&self.available_skill_points_path) as usize).saturating_sub(pending_skill_points_list.len());
+            let remaining_skill_points = (state
+                .try_get(&self.available_skill_points_path)
+                .copied()
+                .unwrap_or(0) as usize)
+                .saturating_sub(pending_skill_points_list.len());
             let current_skill_level = learned_skill.map(|skill| skill.skill_level.0).unwrap_or_default() + pending_skill_points;
             let can_rank_up = *state.get(&self.window_state_path.currently_skilling())
                 && remaining_skill_points > 0

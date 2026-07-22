@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | Active (2026-07-22) — phases A–D closed live; **E1 code closed, live GUI next** |
+| **Status** | Active (2026-07-22) — phases A–D closed live; **E1 closed live (all 7 rows PASS on mechanism)** |
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | **Live GUI pass of Phase E1** (Mage/Wizard code-drawn effects) → then E2 |
+| **NEXT AGENT** | E1 live pass is **DONE** (2026-07-22, all 7 rows PASS — see [phase-e1-live-verification.md](phase-e1-live-verification.md)). Recommended next: **skill→sprite mapping** ([classic-effect-fidelity.md](classic-effect-fidelity.md)) *before* E2 — E1 passes on mechanism but still does not look like RO, and that is the visible complaint. E2 (persistent skill units) is unblocked whenever you want it. |
 
 ## 1. Scope and shape
 
@@ -234,10 +234,19 @@ Continue the proven per-batch method (wire probe → asset dump → roBrowserLeg
 semantic cross-check → typed recipe → GRF audit test → live check). Suggested
 batch order by campaign visibility:
 
-### E1 — Code-drawn classic effects — **CODE CLOSED 2026-07-22**
+### E1 — Code-drawn classic effects — **CLOSED LIVE 2026-07-22**
 
 Procedural `EffectBase` recipes on top of `FallingBolts` / `SkillBurst` /
-`SkillProjectile`. Live GUI still required before calling E1 fully done.
+`SkillProjectile`. **Live GUI pass complete 2026-07-22 — all 7 rows PASS on
+mechanism** (spawn position, timing vs the damage number, texture loading); full
+per-row evidence and the driving traps are in
+[phase-e1-live-verification.md](phase-e1-live-verification.md).
+
+**Exit met — with one explicit caveat:** the pass verified *mechanism only*. All
+seven effects remain procedural stand-ins that do not read as RO spells; that is
+tracked separately in
+[classic-effect-fidelity.md](classic-effect-fidelity.md) and is not an E1
+regression.
 
 | Skill (ID) | Track | Implementation |
 |---|---|---|

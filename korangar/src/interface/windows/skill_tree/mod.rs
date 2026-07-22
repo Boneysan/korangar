@@ -6,7 +6,7 @@ use hashbrown::HashMap;
 use korangar_interface::element::StateElement;
 use korangar_interface::window::{CustomWindow, Window};
 use ragnarok_packets::{SkillId, SkillLevel};
-use rust_state::{ManuallyAssertExt, Path, PathExt, RustState, State, VecIndexExt};
+use rust_state::{Path, PathExt, RustState, State, VecIndexExt};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -57,7 +57,8 @@ where
     A: Path<ClientState, SkillTreeWindowState>,
     B: Path<ClientState, SkillTreeLayout>,
     C: Path<ClientState, Vec<LearnedSkill>>,
-    D: Path<ClientState, u32>,
+    // Optional: `this_player` is cleared on logout while the window may still layout (M1-017).
+    D: Path<ClientState, u32, false>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::SkillTree)
@@ -86,7 +87,9 @@ where
                         selected_tab: self.window_state_path.selected_tab(),
                         children: DynamicTabs::new(move |index|
                             SkillTreeTab::new(
-                                self.layout_path.tabs().index(index).skills().manually_asserted(),
+                                // Optional: tabs vanish when skill_tree is cleared on
+                                // LoggedOut while this window may still layout (M1-017).
+                                self.layout_path.tabs().index(index).skills(),
                                 self.skills_path,
                                 self.window_state_path,
                                 self.available_skill_points_path,
@@ -143,7 +146,12 @@ where
                             on_false: button! {
                                 text: client_state().localization().distribute_skill_points_button_text(),
                                 disabled: ComputedSelector::new_default(move |state: &ClientState| {
-                                    *self.available_skill_points_path.follow_safe(state) == 0
+                                    // Treat a missing player (logout race) as zero available points.
+                                    self.available_skill_points_path
+                                        .follow(state)
+                                        .copied()
+                                        .unwrap_or(0)
+                                        == 0
                                 }),
                                 event: SetToTrue(self.window_state_path.currently_skilling()),
                             },
