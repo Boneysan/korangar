@@ -44,6 +44,10 @@ OVERRIDES = {
     # generic. The client names the specific field from the skill unit the
     # player is standing in; this is the fallback when it cannot.
     "GROUNDMAGIC": "Elemental Field",
+    # Fork-only status (SI_LANDPROTECTOR 1150, not an official efst index) —
+    # Land Protector grants nothing officially, so we added an informational
+    # one. "Magnetic Earth" is the skill's own name in skill_db.conf.
+    "LANDPROTECTOR": "Magnetic Earth",
     "SLOWPOISON": "Slow Poison",
     "POISONREACT": "Poison React",
     "ENCHANTPOISON": "Enchant Poison",

@@ -76,26 +76,6 @@ impl SkillUnitRegistry {
     }
 }
 
-impl SkillUnitRegistry {
-    /// Whether `position` sits inside a Land Protector.
-    ///
-    /// Land Protector grants **no status** — it has no `StatusChange` in
-    /// `skill_db.conf` and there is no `SC_LANDPROTECTOR` — because it acts on
-    /// the ground, not on people. So nothing tells the player their magic is
-    /// being suppressed; the client synthesises that hint from this.
-    pub fn in_land_protector(&self, position: Point3<f32>) -> bool {
-        const REACH: f32 = GAT_TILE_SIZE * 0.75;
-
-        self.units.iter().any(|unit| {
-            if !matches!(unit.unit_id, UnitId::Landprotector) {
-                return false;
-            }
-            let offset = unit.position - position;
-            offset.x.hypot(offset.z) <= REACH
-        })
-    }
-}
-
 /// The three Sage fields that share `SI_GROUNDMAGIC`.
 pub fn is_elemental_field(unit_id: UnitId) -> bool {
     matches!(unit_id, UnitId::Volcano | UnitId::Deluge | UnitId::Violentgale)
@@ -162,13 +142,12 @@ mod tests {
     }
 
     #[test]
-    fn land_protector_is_detected_only_from_inside() {
+    fn land_protector_is_not_an_elemental_field() {
+        // It shares neither the icon nor the semantics; the server sends it
+        // its own status (SI_LANDPROTECTOR), so it must never be named here.
         let mut registry = SkillUnitRegistry::default();
         registry.insert(EntityId(1), UnitId::Landprotector, point(100.0, 100.0));
 
-        assert!(registry.in_land_protector(point(100.0, 101.0)));
-        assert!(!registry.in_land_protector(point(100.0 + GAT_TILE_SIZE, 100.0)));
-        // It is not an elemental field and must not be named as one.
         assert_eq!(field_at(&registry, point(100.0, 100.0)), None);
     }
 

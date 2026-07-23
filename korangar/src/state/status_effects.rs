@@ -69,7 +69,7 @@ fn status_role_tag(index: u16, name: &str) -> char {
         35 | 36 => return '·', // Weightover
         // Not a buff on the player at all — a property of the ground they are
         // standing on.
-        SYNTHETIC_LAND_PROTECTOR => return '·',
+        LAND_PROTECTOR => return '·',
         _ => {}
     }
 
@@ -130,16 +130,16 @@ fn status_role_tag(index: u16, name: &str) -> char {
 /// (320×160). Lowered from 8 when descriptions were added.
 const MAXIMUM_DISPLAYED_EFFECTS: usize = 5;
 
-/// Index for the client-synthesised "you are standing in a Land Protector"
-/// hint.
+/// `SI_LANDPROTECTOR` — a **fork-only** status index (1150), not an official
+/// efst one. Land Protector officially grants nothing, because it acts on the
+/// ground rather than on people, so nobody standing in one is told their
+/// ground magic is being suppressed. Our server grants an informational status
+/// carrying the field's remaining duration; see `CLAUDE.md` §3b.
 ///
-/// Land Protector deliberately grants no status — it acts on the ground, not
-/// on people — so the server never sends anything and a modern player gets no
-/// feedback that their ground magic is being suppressed. This is the client
-/// telling them anyway, from the skill units it already tracks.
-///
-/// `u16::MAX` cannot collide: the highest index Hercules defines is 1149.
-pub const SYNTHETIC_LAND_PROTECTOR: u16 = u16::MAX;
+/// This was briefly a client-synthesised entry with no timer. Sourcing it from
+/// the server replaced that: the countdown is now real, and it needs no
+/// client-side copy of `skill_db` durations that could drift.
+const LAND_PROTECTOR: u16 = 1150;
 
 /// What an effect actually does, in the player's terms.
 ///
@@ -165,7 +165,7 @@ fn status_description(index: u16, specific_name: Option<&str>, values: [u32; 3])
             // In a field whose unit we never saw spawn.
             _ => Some("Elemental ground field".to_owned()),
         },
-        SYNTHETIC_LAND_PROTECTOR => Some("Ground magic suppressed here".to_owned()),
+        LAND_PROTECTOR => Some("Ground magic suppressed here".to_owned()),
         _ => None,
     }
 }
@@ -284,24 +284,6 @@ impl StatusEffects {
             });
         }
         self.refresh_display();
-    }
-
-    /// Add or drop a client-synthesised effect — one the server never sends,
-    /// derived from world state the client tracks itself (see
-    /// [`SYNTHETIC_LAND_PROTECTOR`]).
-    ///
-    /// Called every frame, so it must be a no-op when already in the wanted
-    /// state; otherwise the display string would be rebuilt continuously.
-    /// These carry no timer: the client knows the player is standing in the
-    /// area, not how long it will last.
-    pub fn set_synthetic(&mut self, index: u16, name: &str, present: bool) {
-        let existing = self.effects.iter().any(|effect| effect.index == index);
-
-        match (present, existing) {
-            (true, false) => self.apply(index, 0, u32::MAX, [0; 3], Some(name.to_owned())),
-            (false, true) => self.remove(index),
-            _ => {}
-        }
     }
 
     /// Remove an effect by index (if present).
@@ -525,43 +507,34 @@ mod tests {
         assert!(effects.to_string().contains("Deluge"));
     }
 
-    /// Land Protector sends no status at all, so this line exists purely to
-    /// tell a modern player why their ground magic stopped working.
+    /// Land Protector grants nothing officially; our server adds an
+    /// informational status (`SI_LANDPROTECTOR` 1150) so the client can show
+    /// both the reason and a **real** server-sourced countdown.
     #[test]
-    fn land_protector_hint_appears_and_clears_with_the_ground() {
+    fn land_protector_reads_as_ground_state_with_a_server_timer() {
         let mut effects = StatusEffects::default();
+        effects.apply(LAND_PROTECTOR, 345_000, 300_000, [5, 0, 0], None);
 
-        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", true);
         let shown = effects.to_string();
-        assert!(shown.contains("Magnetic Earth"), "{shown}");
+        assert!(shown.contains("Magnetic Earth"), "name comes from the table: {shown}");
         assert!(shown.contains("Ground magic suppressed here"), "{shown}");
         // A property of the ground, not a buff on the player.
         assert!(shown.contains("[ME·]"), "expected the utility tag, got: {shown}");
-        // The client knows the player is inside, not for how long, so the
-        // headline must end at the name with no "123s" appended.
+        // The countdown is the server's, so it must actually be rendered.
+        // Not asserted exactly: the elapsed sub-millisecond truncates 300 to 299.
         let headline = shown.lines().next().unwrap();
+        let seconds: u32 = headline
+            .rsplit(' ')
+            .next()
+            .and_then(|word| word.trim_end_matches('s').parse().ok())
+            .expect("headline must end in a countdown");
         assert!(
-            headline.trim_end().ends_with("Magnetic Earth"),
-            "a synthetic hint must not invent a timer: {headline}"
+            (295..=300).contains(&seconds),
+            "expected the server's ~300s remaining, got {seconds}: {headline}"
         );
 
-        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", false);
+        effects.remove(LAND_PROTECTOR);
         assert_eq!(effects.to_string(), "No active effects");
-    }
-
-    #[test]
-    fn a_synthetic_hint_survives_ticking_and_does_not_duplicate() {
-        // It is set every frame, so it must be idempotent and must not expire
-        // on its own like a zero-duration server effect would.
-        let mut effects = StatusEffects::default();
-        for _ in 0..5 {
-            effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", true);
-        }
-
-        effects.tick(Instant::now() + std::time::Duration::from_secs(600));
-
-        let lines: Vec<_> = effects.to_string().lines().map(str::to_owned).collect();
-        assert_eq!(lines.len(), 2, "one effect: name + description, got: {lines:?}");
     }
 
     #[test]

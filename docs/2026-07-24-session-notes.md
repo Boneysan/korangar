@@ -65,12 +65,36 @@ no table change could tell them apart.
   `val1 = 1, val2 = 0`, so the UI could only render "+0". Added them in
   `Hercules/src/map/status.c`. **This is a C-source patch in the sibling tree;
   see CLAUDE.md §3b — it is lost on an upstream merge.**
-- **Land Protector hint.** It grants no status at all (no `StatusChange`, no
-  `SC_LANDPROTECTOR`) because it acts on the ground, not on people, so nothing
-  told the player their magic was being suppressed. The client now synthesises
-  `[ME·] Magnetic Earth / Ground magic suppressed here` from the registry
-  while standing in one — index `u16::MAX` (highest real index is 1149), no
-  timer (we know *that*, not *how long*), `·` utility rather than `+` buff.
+- **Land Protector.** It grants no status at all because it acts on the ground
+  rather than on people, so nothing told the player their magic was being
+  suppressed. First tried a client-synthesised entry, but that could only show
+  *that* you were inside, not *how long* — and faking the countdown would have
+  meant copying `skill_db` durations into the client, where they would silently
+  drift. Replaced with a real server status (below), and the synthetic
+  machinery was removed so there is one source of truth.
+  Live: `[ME·] Magnetic Earth 318s / Ground magic suppressed here`, the 318
+  confirming *remaining* rather than full duration.
+
+### Adding SC_LANDPROTECTOR — five places, all silent on failure
+
+Hercules has no such status, so this is a fork-invented one. It spans
+`status.h` (enum slot), `constants.conf` (**`SC_LANDPROTECTOR: 728` matching
+the enum slot, and `SI_LANDPROTECTOR: 1150`**), `sc_config.conf`,
+`skill_db.conf` (`StatusChange:` on the skill), and `skill.c`
+(`skill_unit_onplace` / `skill_unit_onout`).
+
+**Cost us a debugging round:** `sc_config.conf` and `skill_db.conf` both
+resolve status names through `script->get_constant()` (`status.c:14522`,
+`skill.c:25048`). With `SI_` added but `SC_` missing, both bindings were
+rejected, `get_sc_type()` fell back to `SC_NONE`, and `sc_start` did nothing —
+announced only by a `ShowWarning`. Worse, **server stdout goes to
+`log/athena-start.out`, not `log/map.log`** (which stays empty), so an early
+"no errors in the log" check was a false negative.
+
+Our `onplace` deliberately diverges from upstream's `sg->limit` pattern
+(`UNT_SUITON` et al) and sends `sg->limit - DIFF_TICK32(tick, sg->tick)` — the
+actual remaining time, so walking into a half-expired field does not show a
+full-length timer.
 
 Live: `+30 ATK & MATK` (`5+lv*5`), `+15% Max HP` (`deluge_eff[]`),
 `+15 Flee` (`lv*3`, flat — not a percentage).

@@ -119,7 +119,6 @@ use crate::settings::{
     GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
-use crate::state::status_effects::SYNTHETIC_LAND_PROTECTOR;
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
 use crate::system::{FrameTimers, GameTimer};
@@ -2441,19 +2440,10 @@ impl Client {
         // highlighted.
         *self.client_state.follow_mut(client_state().skill_tree_window().highlighted_skill()) = None;
 
-        // Land Protector grants no status of its own (it acts on the ground,
-        // not the player), so nothing would tell the player their ground magic
-        // is being suppressed. Derive the hint from the units we track.
-        let in_land_protector = self
-            .client_state
-            .try_follow(this_entity())
-            .map(Entity::get_position)
-            .is_some_and(|position| self.skill_unit_registry.in_land_protector(position));
-
         // Tick status effect timers so tiles expire.
-        let effects = self.client_state.follow_mut(client_state().status_effects());
-        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", in_land_protector);
-        effects.tick(std::time::Instant::now());
+        self.client_state
+            .follow_mut(client_state().status_effects())
+            .tick(std::time::Instant::now());
 
         // Apply the game state after all the UI work + rendering is done.
         if let Err(_errors) = self.client_state.apply() {
