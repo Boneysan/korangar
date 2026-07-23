@@ -247,23 +247,101 @@ Meteor Assault brightening.
   short DEX-reduced casts going by unnoticed.
 - Warp-selection window close-without-Cancel leaves server menuskill state.
 
-### Batch 2 blueprint (mappings pulled + GRF-verified 2026-07-23)
+### Batch 2 (mappings pulled + GRF-verified 2026-07-23; 6 units wired, awaiting live pass)
 
 All from the reverse-engineered original-client tables, every asset confirmed
-present in our `data.grf`:
+present in our `data.grf` and pinned in `all_mapped_skill_effect_assets_exist`.
 
-| Unit | Original presentation | Assets (verified) | Notes |
+| Unit | Original presentation | Assets (verified) | Status |
 |---|---|---|---|
-| Hunter traps ×10 (Skid/Ankle/Land Mine/Blast/Shockwave/Sandman/Flasher/Freezing/Claymore/Talkie Box) | **RSM 3D prop models**, one per trap type | `data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6` (all 10 present) | Needs a new body kind: spawn a map-model at the unit cell — different pipeline from effects (korangar already renders RSM for maps) |
-| Volcano | Rotating, size-pulsing truncated cone on the ground (`PropertyGround`: top 3.0 cells, bottom 1.0, height 2, pulse 0.5–1.0×) | `effect\ring_red.tga` | Expressible with `UnitCylinders` (top 15 / bottom 5 / height ~6 world) — consider adding the size pulse |
-| Deluge | Same geometry | `effect\ring_blue.tga` | same |
-| Violent Gale | Same geometry | `effect\ring_yellow.tga` | same |
-| Land Protector | Flat pulsing texture tile per cell (`LPEffect`, size ~0.8 cell) | `effect\aaa copy.bmp` | One flat quad per unit cell |
-| Venom Dust | `이팩트\particle3` sprite looping at the cell (effect 171: size 80, rising, `repeat: true`) | `particle3.spr/.act` present | Needs persistent/looping sprite-effect support (SpriteEffects is one-shot today) |
-| Demonstration (Alchemist bomb) | `이팩트\데몬스트레이션` sprite (effect 302) | `.spr/.act` present | Same looping-sprite dependency as Venom Dust |
+| Volcano | Rotating, size-pulsing truncated cone on the ground (`PropertyGround`: top 3.0 cells, bottom 1.0, height 2, pulse 0.5–1.0×) | `effect\ring_red.tga` | **Wired** — `UnitCylinders`, top 15 / bottom 5 / height 10 world, alpha 0.7 |
+| Deluge | Same geometry | `effect\ring_blue.tga` | **Wired** — shares `ELEMENTAL_FIELD_CYLINDERS` |
+| Violent Gale | Same geometry | `effect\ring_yellow.tga` | **Wired** — shares `ELEMENTAL_FIELD_CYLINDERS` |
+| Land Protector | Flat pulsing texture tile per cell (`LPEffect`, size ~0.8 cell) | `effect\aaa copy.bmp` | **Wired** — new `UnitGroundQuad` body, half-size 2.0 (= the table's 0.8-cell tile) |
+| Venom Dust | `이팩트\particle3` sprite looping at the cell (effect 171: size 80, rising, `repeat: true`) | `particle3.spr/.act` | **Wired** — new looping-sprite unit mode |
+| Demonstration (Alchemist bomb) | `이팩트\데몬스트레이션` sprite (effect 302) | `.spr/.act` | **Wired** — same looping-sprite mode |
+| Hunter traps ×10 (Skid/Ankle/Land Mine/Blast/Shockwave/Sandman/Flasher/Freezing/Claymore/Talkie Box) | **RSM 3D prop models**, one per trap type | `data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6` (all 10 present) | **Deferred** — needs runtime RSM prop spawning; models are baked into map vertex buffers at load today, so this is a pipeline task (would also serve DM prop placement), not a recipe |
+
+New machinery this pass:
+
+- `UnitPulse` on `UnitCylinderSpec` — breathing radius scale, driven by an
+  unwrapped `age` (not `spin`, which wraps at `TAU` and would step the pulse).
+  Culling uses the pulse's widest extent.
+- `UnitGroundQuad` — one ground-aligned quad per unit cell, lifted 0.6 world
+  units off the terrain so it cannot z-fight the ground mesh.
+- Looping sprite units in `SpriteEffects`: a spawn tagged with the unit's
+  entity ID never expires on a client timer (`lifetime_ms` → `u32::MAX`) and
+  wraps its ACT clock, because `render_action_frame` clamps to the last frame
+  instead of looping. `remove_unit` is called from **both** `RemoveSkillUnit`
+  and entity removal, mirroring `EffectHolder`.
+- `UnitPointLight` — light-only companion registered under the unit's entity
+  id for bodies that can't render their own light (`UnitGroundQuad`, looping
+  sprites). Caught in review: those recipes declared `light:` that nothing
+  consumed — `UnitCylinders` and the STR path self-register, these didn't.
 
 Song/dance areas: the client tables mark these `'27x_ground'` **Tofix** even
 in roBrowser — no authoritative visual exists there; defer or design our own.
+
+### Batch 2 live pass (in progress, 2026-07-24)
+
+| Unit | Live |
+|---|---|
+| Volcano | PASS after two size corrections (below) |
+| Deluge | PASS — blue palette swap of Volcano, which is exactly the original's design |
+| Violent Gale | PASS — yellow palette swap, same shape |
+| Land Protector | PASS as a low square glow (121 units at Lv5). The authentic flat tile spawns and textures correctly but draws **over** the player — see the draw-order limit below |
+| Venom Dust / Demonstration | not yet cast |
+
+**Draw-order limit — effects have no depth.** `EffectInstruction` carries only
+screen-space corners and renders in `passes/postprocessing/effect.rs`, so
+**every** effect composites on top of the whole scene, entities included.
+Vertical bodies (Sanctuary, Fire Wall, the elemental cones) get away with it —
+a glow in front of the character reads fine and matches the original. A
+ground-parallel quad does not: Land Protector's tiles landed on top of the
+player sprite.
+
+Fixing it properly means a **depth-tested ground-decal pass**. The forward
+pass already has the closest thing (`passes/forward/indicator.rs`, the walk
+indicator) but it is a singleton baked into the global uniform
+(`indicator_positions: [[f32; 4]; 4]`, one quad, one color) — supporting N
+textured decals needs an instance buffer, per-batch texture binding, a new
+drawer, wiring at three `engine.rs` call sites, and both the bindless and GL
+fallback paths. Deferred as its own engine task; it would also serve future
+ground effects and DM prop markers.
+
+Interim: Land Protector uses the low square glow that Sanctuary/Magnus already
+passed live with. `UnitGroundQuad` stays wired and asset-audited for the day
+the decal pass lands.
+
+**The scaling bug — read this before adding any per-cell unit.** The effect
+table's `PropertyGround` sizes are in the effect's **own world units, not
+cells**. Reading `top 3.0 / bottom 1.0` as cells and multiplying by
+`GAT_TILE_SIZE` made each cone 6 cells wide; Hercules `Layout: 3` is a **7×7
+square, so the server sends 49 separate `AddSkillUnit` packets** and the field
+rendered as one solid block of fire. Corrected to a per-cell cone at roughly
+cell pitch (`bottom 2.0 / top 5.0 / height 10.0`, alpha 0.45, 12 sides — the
+quad count is paid 49× per field). Sanctuary/Magnus in batch 1 were already at
+this scale, which is the tell: **treat table sizes as world units.**
+
+**Server behaviors that look like client bugs — they are not:**
+
+- *"Volcano does no damage."* `NoDamage: true`. It grants `SC_VOLCANO`:
+  renewal Lv5 = +30 ATK/MATK and +20% Fire damage
+  (`skill_enchant_eff[]`) to anyone standing in it. Verify via the stats
+  window, not by hitting things.
+- *"It never goes away."* `SkillData1` Lv5 = 300000 ms = **5 minutes**.
+- *"The other fields won't cast."* `skill.c:18732`: *"The official
+  implementation makes them fail to appear when casted on top of ANYTHING."*
+  A 7×7 Volcano blankets the area for 5 minutes, so an overlapping Deluge
+  produces zero units and looks like a failed cast. `@warp` to a fresh map
+  between field casts.
+- *"Nothing happens when I press the key."* All four need a **Blue Gemstone**;
+  Land Protector needs a **Yellow** one too (`@item 717 20`, `@item 715 20`).
+  Rejections arrive as `ZC_ACK_TOUSESKILL` and print to chat — easy to miss
+  in combat spam. `@monsterignore` also stops mobs interrupting the ~2 s cast.
+
+Remaining: Violent Gale, Land Protector (121 cells at Lv5 — watch framerate),
+Venom Dust (Assassin), Demonstration (Alchemist).
 
 ### iRO Wiki visual brief (acceptance language, not asset table)
 

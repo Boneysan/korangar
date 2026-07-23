@@ -21,6 +21,24 @@ use crate::loaders::GAT_TILE_SIZE;
 use crate::renderer::EffectRenderer;
 use crate::world::{Camera, PointLightId, PointLightManager};
 
+/// Breathing size animation. The original's elemental field units (Volcano,
+/// Deluge, Violent Gale) scale between 0.5× and 1.0× rather than standing
+/// still.
+pub struct UnitPulse {
+    pub min_scale: f32,
+    pub max_scale: f32,
+    /// Radians/second of the sine driving the scale.
+    pub speed: f32,
+}
+
+impl UnitPulse {
+    /// Radius multiplier at `age` seconds.
+    fn scale_at(&self, age: f32) -> f32 {
+        let wave = 0.5 + 0.5 * (age * self.speed).sin();
+        self.min_scale + (self.max_scale - self.min_scale) * wave
+    }
+}
+
 /// One cylinder layer of a unit body. Sizes are in world units (one map cell
 /// is [`GAT_TILE_SIZE`] = 5.0). `sides` of 4 gives the square footprint the
 /// original uses for Sanctuary / Magnus map units; ~20 reads as round.
@@ -34,6 +52,8 @@ pub struct UnitCylinderSpec {
     pub alpha: f32,
     /// Static rotation offset — the original yaws its square units 45°.
     pub yaw: f32,
+    /// Optional breathing scale; `None` holds a fixed size.
+    pub pulse: Option<UnitPulse>,
 }
 
 /// Persistent layered-cylinder unit body (additive, like the original).
@@ -46,6 +66,9 @@ pub struct UnitCylinders {
     light_color: Color,
     light_intensity: f32,
     spin: f32,
+    /// Unwrapped lifetime, driving [`UnitPulse`]. Kept separate from `spin`,
+    /// which wraps at `TAU` and would step the pulse on every wrap.
+    age: f32,
     gets_deleted: bool,
 }
 
@@ -69,6 +92,7 @@ impl UnitCylinders {
             light_color,
             light_intensity,
             spin: 0.0,
+            age: 0.0,
             gets_deleted: false,
         }
     }
@@ -77,6 +101,7 @@ impl UnitCylinders {
 impl EffectBase for UnitCylinders {
     fn update(&mut self, _entities: &[crate::world::Entity], delta_time: f32) -> bool {
         self.spin = (self.spin + delta_time) % TAU;
+        self.age += delta_time;
         !self.gets_deleted
     }
 
@@ -104,7 +129,11 @@ impl EffectBase for UnitCylinders {
         let culling_radius = self
             .specs
             .iter()
-            .map(|spec| spec.height.max(spec.bottom_radius).max(spec.top_radius))
+            .map(|spec| {
+                // Cull against the pulse's widest extent, never the current one.
+                let widest = spec.pulse.as_ref().map_or(1.0, |pulse| pulse.max_scale.max(1.0));
+                spec.height.max(spec.bottom_radius * widest).max(spec.top_radius * widest)
+            })
             .fold(0.0, f32::max);
         if !Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(self.position, culling_radius)) {
             return;
@@ -112,6 +141,8 @@ impl EffectBase for UnitCylinders {
 
         for spec in self.specs {
             let rotation = spec.yaw + self.spin * spec.spin_speed;
+            let scale = spec.pulse.as_ref().map_or(1.0, |pulse| pulse.scale_at(self.age));
+            let (bottom_radius, top_radius) = (spec.bottom_radius * scale, spec.top_radius * scale);
             let mut color = self.color;
             color.alpha = spec.alpha;
             let sides = spec.sides.max(3);
@@ -124,10 +155,10 @@ impl EffectBase for UnitCylinders {
                     |angle: f32, radius: f32, height: f32| self.position + Vector3::new(angle.cos() * radius, height, angle.sin() * radius);
 
                 let corners = [
-                    ring_point(angle_start, spec.top_radius, spec.height),
-                    ring_point(angle_end, spec.top_radius, spec.height),
-                    ring_point(angle_start, spec.bottom_radius, 0.0),
-                    ring_point(angle_end, spec.bottom_radius, 0.0),
+                    ring_point(angle_start, top_radius, spec.height),
+                    ring_point(angle_end, top_radius, spec.height),
+                    ring_point(angle_start, bottom_radius, 0.0),
+                    ring_point(angle_end, bottom_radius, 0.0),
                 ];
 
                 let u_start = segment as f32 / sides as f32;
@@ -150,6 +181,122 @@ impl EffectBase for UnitCylinders {
                 );
             }
         }
+    }
+}
+
+/// Light-only companion for unit bodies that don't render their own point
+/// light ([`UnitGroundQuad`], looping sprite units). [`UnitCylinders`] and the
+/// STR-backed units register theirs directly; this fills the gap so a
+/// recipe's declared `light` always reaches the world.
+pub struct UnitPointLight {
+    position: Point3<f32>,
+    point_light_id: PointLightId,
+    color: Color,
+    intensity: f32,
+    gets_deleted: bool,
+}
+
+impl UnitPointLight {
+    pub fn new(position: Point3<f32>, point_light_id: PointLightId, color: Color, intensity: f32) -> Self {
+        Self {
+            position,
+            point_light_id,
+            color,
+            intensity,
+            gets_deleted: false,
+        }
+    }
+}
+
+impl EffectBase for UnitPointLight {
+    fn update(&mut self, _entities: &[crate::world::Entity], _delta_time: f32) -> bool {
+        !self.gets_deleted
+    }
+
+    fn mark_for_deletion(&mut self) {
+        self.gets_deleted = true;
+    }
+
+    fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
+        if self.intensity <= 0.0 {
+            return;
+        }
+        let light_position = self.position + Vector3::new(0.0, 4.0, 0.0);
+        if Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, self.intensity)) {
+            point_light_manager.register_fading(self.point_light_id, light_position, self.color, self.intensity, self.intensity);
+        }
+    }
+
+    fn render(&self, _renderer: &mut EffectRenderer, _camera: &dyn Camera) {}
+}
+
+/// Flat pulsing floor tile, one per unit cell — the original's `LPEffect`
+/// (Land Protector), a single ground-aligned quad that breathes rather than
+/// any 3D body.
+pub struct UnitGroundQuad {
+    texture: Arc<Texture>,
+    position: Point3<f32>,
+    /// Half-width in world units.
+    half_size: f32,
+    color: Color,
+    pulse: UnitPulse,
+    age: f32,
+    gets_deleted: bool,
+}
+
+impl UnitGroundQuad {
+    /// Lift off the terrain so the tile never z-fights the ground mesh.
+    const GROUND_LIFT: f32 = 0.6;
+
+    pub fn new(texture: Arc<Texture>, position: Point3<f32>, half_size: f32, color: Color, pulse: UnitPulse) -> Self {
+        Self {
+            texture,
+            position,
+            half_size,
+            color,
+            pulse,
+            age: 0.0,
+            gets_deleted: false,
+        }
+    }
+}
+
+impl EffectBase for UnitGroundQuad {
+    fn update(&mut self, _entities: &[crate::world::Entity], delta_time: f32) -> bool {
+        self.age += delta_time;
+        !self.gets_deleted
+    }
+
+    fn mark_for_deletion(&mut self) {
+        self.gets_deleted = true;
+    }
+
+    fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
+
+    fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
+        let widest = self.half_size * self.pulse.max_scale.max(1.0);
+        if !Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(self.position, widest)) {
+            return;
+        }
+
+        let half = self.half_size * self.pulse.scale_at(self.age);
+        let center = self.position + Vector3::new(0.0, Self::GROUND_LIFT, 0.0);
+        let corner = |x: f32, z: f32| center + Vector3::new(x * half, 0.0, z * half);
+
+        renderer.render_effect_world_quad(
+            camera,
+            [corner(-1.0, -1.0), corner(1.0, -1.0), corner(-1.0, 1.0), corner(1.0, 1.0)],
+            self.texture.clone(),
+            [
+                Vector2::new(0.0, 0.0),
+                Vector2::new(1.0, 0.0),
+                Vector2::new(0.0, 1.0),
+                Vector2::new(1.0, 1.0),
+            ],
+            self.color,
+            BlendFactor::SrcAlpha,
+            BlendFactor::One,
+        );
     }
 }
 

@@ -17,7 +17,7 @@ pub use self::bolts::FallingBolts;
 pub use self::burst::{SkillBurst, SkillBurstStyle};
 pub use self::portal::{PORTAL_TEXTURE_PATH, PortalVortex};
 pub use self::projectile::{SkillProjectile, SoulStrikeOrbs};
-pub use self::unit::{UnitCylinderSpec, UnitCylinders, UnitIceHorns};
+pub use self::unit::{UnitCylinderSpec, UnitCylinders, UnitGroundQuad, UnitIceHorns, UnitPointLight, UnitPulse};
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]

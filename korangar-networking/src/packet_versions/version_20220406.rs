@@ -668,6 +668,7 @@ where
         gained: packet.state == 1,
         duration_ms: packet.duration_in_milliseconds,
         remaining_ms: packet.remaining_in_milliseconds,
+        values: packet.value,
     })?;
     packet_handler.register(|packet: StatusChange2Packet| NetworkEvent::StatusChange {
         entity_id: packet.entity_id,
@@ -675,6 +676,7 @@ where
         gained: packet.state == 1,
         duration_ms: packet.remaining_in_milliseconds,
         remaining_ms: packet.remaining_in_milliseconds,
+        values: packet.value,
     })?;
     packet_handler.register(|packet: QuestNotificationPacket1| NetworkEvent::QuestAdded {
         quest_id: packet.quest_id,
@@ -1265,10 +1267,11 @@ where
         entity_id: EntityId(packet.id),
         index: packet.index,
         gained: packet.state == 1,
-        // The end packet carries no timings; `gained: false` routes to `remove()`, which
-        // ignores them.
+        // The end packet carries no timings or values; `gained: false` routes to
+        // `remove()`, which ignores them.
         duration_ms: 0,
         remaining_ms: 0,
+        values: [0; 3],
     })?;
     packet_handler.register_noop::<ReputationPacket>()?;
     packet_handler.register_noop::<ClanInfoPacket>()?;

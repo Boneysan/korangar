@@ -39,6 +39,11 @@ OVERRIDES = {
     "INC_AGI": "Increase AGI",
     "DEC_AGI": "Decrease AGI",
     "POSTDELAY": "Skill Delay",
+    # Shared by SC_VOLCANO / SC_DELUGE / SC_VIOLENTGALE (all declare
+    # Icon: "SI_GROUNDMAGIC" in db/re/sc_config.conf), so this name can only be
+    # generic. The client names the specific field from the skill unit the
+    # player is standing in; this is the fallback when it cannot.
+    "GROUNDMAGIC": "Elemental Field",
     "SLOWPOISON": "Slow Poison",
     "POISONREACT": "Poison React",
     "ENCHANTPOISON": "Enchant Poison",

@@ -248,6 +248,12 @@ pub enum NetworkEvent {
         gained: bool,
         duration_ms: u32,
         remaining_ms: u32,
+        /// Hercules' `val1`/`val2`/`val3` for this status, sent verbatim in
+        /// `ZC_MSG_STATE_CHANGE`. These carry the server's own computed
+        /// numbers — e.g. `SC_VOLCANO` sends the skill level in `val1` and the
+        /// resulting ATK/MATK bonus in `val2` — so the UI can quote real
+        /// values instead of re-deriving the server's formulas.
+        values: [u32; 3],
     },
     /// An entity's option flags changed (`ZC_STATE_CHANGE` 0x0229).
     ///

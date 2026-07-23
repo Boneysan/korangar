@@ -119,6 +119,7 @@ use crate::settings::{
     GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
+use crate::state::status_effects::SYNTHETIC_LAND_PROTECTOR;
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
 use crate::system::{FrameTimers, GameTimer};
@@ -1042,6 +1043,9 @@ pub struct Client {
     sprite_effects: SpriteEffects,
     point_light_manager: PointLightManager,
     effect_holder: EffectHolder,
+    /// Where the live skill units are, for questions the packets cannot
+    /// answer on their own (which elemental field the player is standing in).
+    skill_unit_registry: SkillUnitRegistry,
     path_finder: PathFinder,
 
     point_light_set_buffer: ResourceSetBuffer<LightSourceKey>,
@@ -1519,7 +1523,12 @@ impl Client {
     /// Spawn everything a persistent skill unit shows (Phase E2). The unit
     /// lives until `RemoveSkillUnit`; `EffectHolder::remove_unit` tears down
     /// every piece registered under its entity id.
-    fn spawn_skill_unit(&mut self, entity_id: EntityId, unit_id: UnitId, position: Point3<f32>) {
+    fn spawn_skill_unit(&mut self, entity_id: EntityId, unit_id: UnitId, position: Point3<f32>, client_tick: ClientTick) {
+        // Track every unit, including ones with no presentation recipe — the
+        // registry answers questions about game state, which does not depend
+        // on whether we can draw the thing.
+        self.skill_unit_registry.insert(entity_id, unit_id, position);
+
         let Some(presentation) = unit_presentation(unit_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                 eprintln!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
@@ -1529,6 +1538,27 @@ impl Client {
 
         let (light_color, light_intensity) = presentation.light.unwrap_or((Color::WHITE, 0.0));
         let point_light_id = PointLightId::new(entity_id.0 ^ 0x5EED_0000);
+
+        // Log *mapped* spawns too. Logging only the unmapped ones left no way
+        // to tell "never spawned" from "spawned but invisible" when Land
+        // Protector rendered nothing (2026-07-24).
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            let body = match presentation.body.as_ref() {
+                Some(UnitBody::Cylinders { .. }) => "cylinders",
+                Some(UnitBody::IceHorns { .. }) => "ice-horns",
+                Some(UnitBody::GroundQuad { .. }) => "ground-quad",
+                Some(UnitBody::LoopingSprite { .. }) => "looping-sprite",
+                None => "none",
+            };
+            eprintln!(
+                "[skill-unit] spawn {unit_id:?} entity={} body={body} str={:?} at ({:.1},{:.1},{:.1})",
+                entity_id.0,
+                presentation.looping_str.or(presentation.intro_str),
+                position.x,
+                position.y,
+                position.z
+            );
+        }
 
         if let Some(path) = presentation.intro_str {
             match self.effect_loader.get_or_load(path, &self.texture_loader) {
@@ -1599,6 +1629,53 @@ impl Client {
                     .add_unit(Box::new(UnitIceHorns::new(loaded, position)), entity_id),
                 Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
             },
+            Some(UnitBody::GroundQuad {
+                texture,
+                half_size,
+                color,
+                pulse,
+            }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
+                Ok(loaded) => {
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!("[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}");
+                    }
+                    self.effect_holder.add_unit(
+                        Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse)),
+                        entity_id,
+                    );
+                    // The quad renders no light of its own; honor the
+                    // recipe's declared glow with a companion light.
+                    self.effect_holder.add_unit(
+                        Box::new(UnitPointLight::new(position, point_light_id, light_color, light_intensity)),
+                        entity_id,
+                    );
+                }
+                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+            },
+            Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
+                // Same sentinel routing as the one-shot sprite effects; a sheet
+                // already in the cache comes back from the request immediately.
+                if let Some(sentinel) = self.sprite_effects.request_slot(path)
+                    && let Some(animation_data) =
+                        self.async_loader
+                            .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
+                {
+                    self.sprite_effects.set_animation_data(path, animation_data);
+                }
+
+                self.sprite_effects.spawn_unit(
+                    path,
+                    position + Vector3::new(0.0, lift, 0.0),
+                    action_index,
+                    client_tick,
+                    entity_id,
+                );
+                // `SpriteEffects` has no light path; same companion light.
+                self.effect_holder.add_unit(
+                    Box::new(UnitPointLight::new(position, point_light_id, light_color, light_intensity)),
+                    entity_id,
+                );
+            }
             None => {}
         }
 
@@ -2144,6 +2221,7 @@ impl Client {
             let sprite_effects = SpriteEffects::default();
             let point_light_manager = PointLightManager::new();
             let effect_holder = EffectHolder::default();
+            let skill_unit_registry = SkillUnitRegistry::default();
             let path_finder = PathFinder::default();
 
             let point_light_set_buffer = ResourceSetBuffer::default();
@@ -2278,6 +2356,7 @@ impl Client {
             sprite_effects,
             point_light_manager,
             effect_holder,
+            skill_unit_registry,
             path_finder,
             point_light_set_buffer,
             directional_shadow_object_set_buffer,
@@ -2362,10 +2441,19 @@ impl Client {
         // highlighted.
         *self.client_state.follow_mut(client_state().skill_tree_window().highlighted_skill()) = None;
 
+        // Land Protector grants no status of its own (it acts on the ground,
+        // not the player), so nothing would tell the player their ground magic
+        // is being suppressed. Derive the hint from the units we track.
+        let in_land_protector = self
+            .client_state
+            .try_follow(this_entity())
+            .map(Entity::get_position)
+            .is_some_and(|position| self.skill_unit_registry.in_land_protector(position));
+
         // Tick status effect timers so tiles expire.
-        self.client_state
-            .follow_mut(client_state().status_effects())
-            .tick(std::time::Instant::now());
+        let effects = self.client_state.follow_mut(client_state().status_effects());
+        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", in_land_protector);
+        effects.tick(std::time::Instant::now());
 
         // Apply the game state after all the UI work + rendering is done.
         if let Err(_errors) = self.client_state.apply() {
@@ -2934,10 +3022,20 @@ impl Client {
                         print_debug!("Disconnection from the map server with error");
                     }
 
-                    let login_data = self.saved_login_data.as_ref().unwrap();
-                    let server = self.saved_character_server.clone().unwrap();
-                    self.networking_system
-                        .connect_to_character_server(self.saved_packet_version, login_data, server);
+                    // When both servers go down at once — a server restart, or any
+                    // network loss — the character-server disconnect is delivered
+                    // first and has already run `return_to_login_with_error`, which
+                    // clears the saved credentials. Unwrapping them here panicked
+                    // (reproduced live 2026-07-24 by stopping Hercules while in
+                    // game). If they are gone we are on the login screen by design,
+                    // so there is nothing to reconnect to. Mirrors the guard the
+                    // `CharacterServerDisconnected` arm already uses.
+                    if let (Some(login_data), Some(server)) =
+                        (self.saved_login_data.as_ref(), self.saved_character_server.clone())
+                    {
+                        self.networking_system
+                            .connect_to_character_server(self.saved_packet_version, login_data, server);
+                    }
 
                     self.map = None;
 
@@ -3297,6 +3395,8 @@ impl Client {
                     // Drop any effect attached to the entity, like a warp's
                     // portal vortex.
                     self.effect_holder.remove_unit(entity_id);
+                    self.sprite_effects.remove_unit(entity_id);
+                    self.skill_unit_registry.remove(entity_id);
                 }
                 NetworkEvent::AddGroundItem {
                     entity_id,
@@ -3423,6 +3523,7 @@ impl Client {
                     self.emote_bubbles.clear();
                     self.sprite_effects.clear();
                     self.effect_holder.clear();
+                    self.skill_unit_registry.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
 
@@ -3694,6 +3795,7 @@ impl Client {
                     gained,
                     duration_ms,
                     remaining_ms,
+                    values,
                 } => {
                     let updated_actor = self
                         .client_state
@@ -3714,9 +3816,21 @@ impl Client {
                     // The HUD remains local-only; actor guard/status-pose state
                     // above is applied to every visible entity.
                     if Some(entity_id) == local_id {
+                        // Several statuses share one icon index — all three
+                        // Sage fields are `SI_GROUNDMAGIC` — so name them from
+                        // the unit the player is actually standing in. Must be
+                        // resolved before borrowing state mutably below.
+                        let specific_name = gained
+                            .then(|| {
+                                let position = self.client_state.try_follow(this_entity())?.get_position();
+                                let unit_id = self.skill_unit_registry.elemental_field_at(position)?;
+                                elemental_field_name(unit_id).map(str::to_owned)
+                            })
+                            .flatten();
+
                         let effects = self.client_state.follow_mut(client_state().status_effects());
                         if gained {
-                            effects.apply(index, duration_ms, remaining_ms);
+                            effects.apply(index, duration_ms, remaining_ms, values, specific_name);
                         } else {
                             effects.remove(index);
                         }
@@ -4413,10 +4527,12 @@ impl Client {
                         continue;
                     };
 
-                    self.spawn_skill_unit(entity_id, unit_id, world_position);
+                    self.spawn_skill_unit(entity_id, unit_id, world_position, client_tick);
                 }
                 NetworkEvent::RemoveSkillUnit { entity_id } => {
                     self.effect_holder.remove_unit(entity_id);
+                    self.sprite_effects.remove_unit(entity_id);
+                    self.skill_unit_registry.remove(entity_id);
                 }
                 NetworkEvent::GroundSkillEffect {
                     skill_id,
@@ -8173,8 +8289,16 @@ mod skill_effect_asset_tests {
                 paths.insert(format!("data\\texture\\effect\\{str_path}"));
             }
             match presentation.body {
-                Some(UnitBody::Cylinders { texture, .. } | UnitBody::IceHorns { texture }) => {
+                Some(
+                    UnitBody::Cylinders { texture, .. }
+                    | UnitBody::IceHorns { texture }
+                    | UnitBody::GroundQuad { texture, .. },
+                ) => {
                     paths.insert(format!("data\\texture\\{texture}"));
+                }
+                Some(UnitBody::LoopingSprite { path, .. }) => {
+                    paths.insert(format!("data\\sprite\\{path}.spr"));
+                    paths.insert(format!("data\\sprite\\{path}.act"));
                 }
                 None => {}
             }

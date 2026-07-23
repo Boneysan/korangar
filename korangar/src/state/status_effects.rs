@@ -67,6 +67,9 @@ fn status_role_tag(index: u16, name: &str) -> char {
         46 => return '·',      // Skill Delay (postdelay)
         27 | 28 => return '·', // Riding / Falcon
         35 | 36 => return '·', // Weightover
+        // Not a buff on the player at all — a property of the ground they are
+        // standing on.
+        SYNTHETIC_LAND_PROTECTOR => return '·',
         _ => {}
     }
 
@@ -121,10 +124,51 @@ fn status_role_tag(index: u16, name: &str) -> char {
     '+' // default: treat as buff / support
 }
 
-/// Cap on effects listed in the status window. One line each, so this bounds
-/// the window's height — keep it in step with the `WindowClass::StatusBar`
-/// default size in `interface/windows/cache.rs`.
-const MAXIMUM_DISPLAYED_EFFECTS: usize = 8;
+/// Cap on effects listed in the status window. Effects with a description take
+/// **two** lines, so this bounds the window's height — keep it in step with the
+/// `WindowClass::StatusBar` default size in `interface/windows/cache.rs`
+/// (320×160). Lowered from 8 when descriptions were added.
+const MAXIMUM_DISPLAYED_EFFECTS: usize = 5;
+
+/// Index for the client-synthesised "you are standing in a Land Protector"
+/// hint.
+///
+/// Land Protector deliberately grants no status — it acts on the ground, not
+/// on people — so the server never sends anything and a modern player gets no
+/// feedback that their ground magic is being suppressed. This is the client
+/// telling them anyway, from the skill units it already tracks.
+///
+/// `u16::MAX` cannot collide: the highest index Hercules defines is 1149.
+pub const SYNTHETIC_LAND_PROTECTOR: u16 = u16::MAX;
+
+/// What an effect actually does, in the player's terms.
+///
+/// Deliberately **not** exhaustive: `docs/status_effects.json` holds 699
+/// indices and most never reach a player's screen. Anything without an entry
+/// renders as name + timer, exactly as before.
+///
+/// Numbers come from the server's own `val1`/`val2`/`val3` rather than
+/// re-deriving Hercules' formulas, so they cannot drift out of sync with the
+/// server the client is actually connected to.
+fn status_description(index: u16, specific_name: Option<&str>, values: [u32; 3]) -> Option<String> {
+    let bonus = values[1];
+
+    match index {
+        // SI_GROUNDMAGIC — shared by all three Sage elemental fields, which is
+        // why the caller has to tell us which one this is. `val2` is the
+        // server's computed bonus in each case (`status.c`: Watk/Matk for
+        // Volcano, `deluge_eff[]` HP% for Deluge, Flee for Violent Gale).
+        112 => match specific_name {
+            Some("Volcano") => Some(format!("+{bonus} ATK & MATK, stronger Fire")),
+            Some("Deluge") => Some(format!("+{bonus}% Max HP, stronger Water")),
+            Some("Violent Gale") => Some(format!("+{bonus} Flee, stronger Wind")),
+            // In a field whose unit we never saw spawn.
+            _ => Some("Elemental ground field".to_owned()),
+        },
+        SYNTHETIC_LAND_PROTECTOR => Some("Ground magic suppressed here".to_owned()),
+        _ => None,
+    }
+}
 
 /// A single active status effect (buff or debuff) on the player.
 #[derive(Clone, Debug, PartialEq, RustState)]
@@ -135,6 +179,15 @@ pub struct StatusEffect {
     pub expires_at: Option<Instant>,
     /// Original full duration in ms (for visual depletion ratio if desired).
     pub duration_ms: u32,
+    /// Hercules' `val1`/`val2`/`val3` — the server's own computed numbers for
+    /// this status, used by [`status_description`] so the UI never re-derives
+    /// a server formula.
+    pub values: [u32; 3],
+    /// A more precise name than the icon index can give, resolved by the
+    /// caller. Several statuses share one icon — `SC_VOLCANO`, `SC_DELUGE`
+    /// and `SC_VIOLENTGALE` are all `SI_GROUNDMAGIC` — so the caller
+    /// disambiguates from world state and passes the answer in.
+    pub specific_name: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, RustState)]
@@ -169,13 +222,22 @@ impl StatusEffects {
             .iter()
             .take(MAXIMUM_DISPLAYED_EFFECTS)
             .map(|e| {
-                let name = status_name(e.index);
+                // A resolved specific name wins: the icon index alone would
+                // render every Sage field as "Elemental Field".
+                let name = e.specific_name.clone().unwrap_or_else(|| status_name(e.index));
                 let icon = status_icon_glyph(e.index, &name);
-                if let Some(exp) = e.expires_at {
+                let headline = if let Some(exp) = e.expires_at {
                     let secs = exp.saturating_duration_since(now).as_secs() as u32;
                     format!("{icon} {name} {secs}s")
                 } else {
                     format!("{icon} {name}")
+                };
+
+                match status_description(e.index, e.specific_name.as_deref(), e.values) {
+                    // Indented so the description reads as subordinate to the
+                    // name rather than as another effect.
+                    Some(description) => format!("{headline}\n    {description}"),
+                    None => headline,
                 }
             })
             .collect::<Vec<_>>()
@@ -189,7 +251,7 @@ impl StatusEffects {
     /// `INFINITE_DURATION` is `-1` (`src/common/mmo.h`), which arrives here
     /// as `u32::MAX`. A *zero* duration is **not** infinite — it means the
     /// effect is already over.
-    pub fn apply(&mut self, index: u16, duration_ms: u32, remaining_ms: u32) {
+    pub fn apply(&mut self, index: u16, duration_ms: u32, remaining_ms: u32, values: [u32; 3], specific_name: Option<String>) {
         // Previously `duration_ms == 0` was also treated as infinite, which stuck
         // zero-length effects on screen forever. `SC_POSTDELAY` ("Skill Delay") is the
         // case that bites: `skill.c` fires it via a direct `clif->status_change` with
@@ -205,14 +267,41 @@ impl StatusEffects {
         if let Some(existing) = self.effects.iter_mut().find(|e| e.index == index) {
             existing.expires_at = expires_at;
             existing.duration_ms = duration_ms;
+            existing.values = values;
+            // A refresh may arrive when the caller cannot resolve the name
+            // (walked out of the unit's cell mid-effect); keep what we had
+            // rather than downgrading to the generic icon name.
+            if specific_name.is_some() {
+                existing.specific_name = specific_name;
+            }
         } else {
             self.effects.push(StatusEffect {
                 index,
                 expires_at,
                 duration_ms,
+                values,
+                specific_name,
             });
         }
         self.refresh_display();
+    }
+
+    /// Add or drop a client-synthesised effect — one the server never sends,
+    /// derived from world state the client tracks itself (see
+    /// [`SYNTHETIC_LAND_PROTECTOR`]).
+    ///
+    /// Called every frame, so it must be a no-op when already in the wanted
+    /// state; otherwise the display string would be rebuilt continuously.
+    /// These carry no timer: the client knows the player is standing in the
+    /// area, not how long it will last.
+    pub fn set_synthetic(&mut self, index: u16, name: &str, present: bool) {
+        let existing = self.effects.iter().any(|effect| effect.index == index);
+
+        match (present, existing) {
+            (true, false) => self.apply(index, 0, u32::MAX, [0; 3], Some(name.to_owned())),
+            (false, true) => self.remove(index),
+            _ => {}
+        }
     }
 
     /// Remove an effect by index (if present).
@@ -288,7 +377,7 @@ mod tests {
         let mut effects = StatusEffects::default();
         assert_eq!(effects.to_string(), "No active effects");
 
-        effects.apply(10, 240_000, 218_000);
+        effects.apply(10, 240_000, 218_000, [0; 3], None);
         let shown = effects.to_string();
         assert!(shown.contains("Blessing"), "expected a name, got: {shown}");
         assert!(shown.contains("[B+]"), "expected buff monogram [B+], got: {shown}");
@@ -315,8 +404,8 @@ mod tests {
         // Names contain spaces, so any inline separator made effects read as one
         // phrase: "Hiding  Blessing 223s".
         let mut effects = StatusEffects::default();
-        effects.apply(4, 0, u32::MAX); // Hiding, permanent — renders without a timer
-        effects.apply(10, 240_000, 223_000); // Blessing — renders with one
+        effects.apply(4, 0, u32::MAX, [0; 3], None); // Hiding, permanent — renders without a timer
+        effects.apply(10, 240_000, 223_000, [0; 3], None); // Blessing — renders with one
 
         let lines: Vec<_> = effects.to_string().lines().map(str::to_owned).collect();
         assert_eq!(lines.len(), 2, "expected one line per effect, got: {lines:?}");
@@ -331,7 +420,7 @@ mod tests {
         // sc_start, so no end packet ever arrives — a skill with no after-cast
         // delay sends 0/0 and the client must expire it itself.
         let mut effects = StatusEffects::default();
-        effects.apply(46, 0, 0); // Skill Delay, zero delay
+        effects.apply(46, 0, 0, [0; 3], None); // Skill Delay, zero delay
         assert!(effects.to_string().contains("Skill Delay"), "should appear on apply");
 
         effects.tick(Instant::now() + std::time::Duration::from_millis(1));
@@ -343,7 +432,7 @@ mod tests {
         // Hercules INFINITE_DURATION is -1 (mmo.h), arriving as u32::MAX. Those are
         // genuinely permanent and end only via an explicit server removal.
         let mut effects = StatusEffects::default();
-        effects.apply(4, 0, u32::MAX); // Hiding, permanent
+        effects.apply(4, 0, u32::MAX, [0; 3], None); // Hiding, permanent
 
         effects.tick(Instant::now() + std::time::Duration::from_secs(3600));
         assert!(effects.to_string().contains("Hiding"), "infinite effect must survive tick");
@@ -356,7 +445,7 @@ mod tests {
     fn timed_effect_expires_on_schedule() {
         let mut effects = StatusEffects::default();
         let start = Instant::now();
-        effects.apply(10, 240_000, 218_000); // Blessing
+        effects.apply(10, 240_000, 218_000, [0; 3], None); // Blessing
 
         effects.tick(start + std::time::Duration::from_secs(217));
         assert!(effects.to_string().contains("Blessing"), "must survive before expiry");
@@ -365,11 +454,121 @@ mod tests {
         assert_eq!(effects.to_string(), "No active effects", "must clear after expiry");
     }
 
+    /// Hercules gives SC_VOLCANO, SC_DELUGE and SC_VIOLENTGALE the same icon
+    /// (SI_GROUNDMAGIC, 112), so the index alone can only say "Elemental
+    /// Field". The caller resolves the real one from the unit the player
+    /// stands in and passes it in.
+    #[test]
+    fn elemental_fields_show_the_specific_name_not_the_shared_icon_name() {
+        let mut effects = StatusEffects::default();
+        effects.apply(112, 300_000, 245_000, [5, 30, 0], Some("Volcano".to_owned()));
+
+        let shown = effects.to_string();
+        assert!(shown.contains("Volcano"), "expected the resolved name, got: {shown}");
+        assert!(!shown.contains("Elemental Field"), "generic name leaked: {shown}");
+    }
+
+    #[test]
+    fn unresolved_field_still_names_itself_something_useful() {
+        // Walking into a field whose units we never saw spawn.
+        let mut effects = StatusEffects::default();
+        effects.apply(112, 300_000, 245_000, [5, 30, 0], None);
+
+        assert!(effects.to_string().contains("Elemental Field"));
+    }
+
+    /// The bonus is quoted from the server's own `val2`, never re-derived, so
+    /// it cannot drift from the server the client is connected to.
+    #[test]
+    fn description_quotes_the_servers_own_numbers() {
+        let cases = [
+            ("Volcano", "+30 ATK & MATK, stronger Fire"),
+            ("Deluge", "+30% Max HP, stronger Water"),
+            ("Violent Gale", "+30 Flee, stronger Wind"),
+        ];
+
+        for (field, expected) in cases {
+            let description = status_description(112, Some(field), [5, 30, 0]).expect("fields describe themselves");
+            assert_eq!(description, expected);
+        }
+    }
+
+    #[test]
+    fn a_described_effect_renders_its_description_on_its_own_line() {
+        let mut effects = StatusEffects::default();
+        effects.apply(112, 300_000, 245_000, [5, 30, 0], Some("Volcano".to_owned()));
+
+        let lines: Vec<_> = effects.to_string().lines().map(str::to_owned).collect();
+        assert_eq!(lines.len(), 2, "name and description are separate lines: {lines:?}");
+        assert!(lines[0].contains("Volcano"), "{lines:?}");
+        assert!(lines[1].trim().starts_with("+30 ATK"), "{lines:?}");
+    }
+
+    #[test]
+    fn effects_without_a_description_stay_one_line() {
+        // Only a curated few have descriptions; the rest must not regress.
+        let mut effects = StatusEffects::default();
+        effects.apply(10, 240_000, 218_000, [0; 3], None); // Blessing
+
+        assert_eq!(effects.to_string().lines().count(), 1);
+    }
+
+    #[test]
+    fn a_refresh_without_a_resolved_name_keeps_the_one_we_had() {
+        // The server refreshes the status while the player has stepped off the
+        // unit's cell; downgrading to "Elemental Field" mid-effect would look
+        // like a bug.
+        let mut effects = StatusEffects::default();
+        effects.apply(112, 300_000, 245_000, [5, 30, 0], Some("Deluge".to_owned()));
+        effects.apply(112, 300_000, 200_000, [5, 30, 0], None);
+
+        assert!(effects.to_string().contains("Deluge"));
+    }
+
+    /// Land Protector sends no status at all, so this line exists purely to
+    /// tell a modern player why their ground magic stopped working.
+    #[test]
+    fn land_protector_hint_appears_and_clears_with_the_ground() {
+        let mut effects = StatusEffects::default();
+
+        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", true);
+        let shown = effects.to_string();
+        assert!(shown.contains("Magnetic Earth"), "{shown}");
+        assert!(shown.contains("Ground magic suppressed here"), "{shown}");
+        // A property of the ground, not a buff on the player.
+        assert!(shown.contains("[ME·]"), "expected the utility tag, got: {shown}");
+        // The client knows the player is inside, not for how long, so the
+        // headline must end at the name with no "123s" appended.
+        let headline = shown.lines().next().unwrap();
+        assert!(
+            headline.trim_end().ends_with("Magnetic Earth"),
+            "a synthetic hint must not invent a timer: {headline}"
+        );
+
+        effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", false);
+        assert_eq!(effects.to_string(), "No active effects");
+    }
+
+    #[test]
+    fn a_synthetic_hint_survives_ticking_and_does_not_duplicate() {
+        // It is set every frame, so it must be idempotent and must not expire
+        // on its own like a zero-duration server effect would.
+        let mut effects = StatusEffects::default();
+        for _ in 0..5 {
+            effects.set_synthetic(SYNTHETIC_LAND_PROTECTOR, "Magnetic Earth", true);
+        }
+
+        effects.tick(Instant::now() + std::time::Duration::from_secs(600));
+
+        let lines: Vec<_> = effects.to_string().lines().map(str::to_owned).collect();
+        assert_eq!(lines.len(), 2, "one effect: name + description, got: {lines:?}");
+    }
+
     #[test]
     fn display_is_capped_so_the_window_cannot_overflow() {
         let mut effects = StatusEffects::default();
         for index in 0..(MAXIMUM_DISPLAYED_EFFECTS as u16 + 5) {
-            effects.apply(index, 60_000, 60_000);
+            effects.apply(index, 60_000, 60_000, [0; 3], None);
         }
         assert_eq!(effects.to_string().lines().count(), MAXIMUM_DISPLAYED_EFFECTS);
     }

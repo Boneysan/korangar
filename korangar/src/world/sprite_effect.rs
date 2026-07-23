@@ -75,6 +75,10 @@ struct ActiveSpriteEffect {
     /// Opacity multiplier. The original client flies some effects as stacks
     /// of low-alpha duplicates (Fire Ball's trail); 1.0 for normal spawns.
     alpha: f32,
+    /// Set for persistent skill units (Venom Dust, Demonstration), whose ACT
+    /// repeats for the server-owned lifetime instead of playing once. The ID
+    /// is the unit's entity, so `RemoveSkillUnit` can tear it down.
+    unit: Option<EntityId>,
 }
 
 /// Sprite-based effects currently playing in the world, keyed by the sprite
@@ -142,7 +146,41 @@ impl SpriteEffects {
             start_time: client_tick,
             motion: SpriteMotion::Fixed { position },
             alpha: 1.0,
+            unit: None,
         });
+    }
+
+    /// Queue a sprite that loops at `position` until [`Self::remove_unit`] is
+    /// called for `entity_id`. Used by persistent skill units whose original
+    /// presentation is a repeating `이팩트` sprite rather than a `.str` script.
+    pub fn spawn_unit(
+        &mut self,
+        path: &'static str,
+        position: Point3<f32>,
+        action_index: usize,
+        client_tick: ClientTick,
+        entity_id: EntityId,
+    ) {
+        if sprite_effect_debug_enabled() {
+            eprintln!(
+                "[sprite-effect] unit {path} action={action_index} entity={} at ({:.1},{:.1},{:.1})",
+                entity_id.0, position.x, position.y, position.z
+            );
+        }
+
+        self.active.push(ActiveSpriteEffect {
+            path,
+            action_index,
+            start_time: client_tick,
+            motion: SpriteMotion::Fixed { position },
+            alpha: 1.0,
+            unit: Some(entity_id),
+        });
+    }
+
+    /// Drop the looping sprites belonging to a skill unit the server removed.
+    pub fn remove_unit(&mut self, entity_id: EntityId) {
+        self.active.retain(|effect| effect.unit != Some(entity_id));
     }
 
     /// Queue a sprite that flies from `from` to `to` over `duration_ms`.
@@ -181,6 +219,7 @@ impl SpriteEffects {
                 start_delay_ms,
             },
             alpha,
+            unit: None,
         });
     }
 
@@ -189,6 +228,12 @@ impl SpriteEffects {
     }
 
     fn lifetime_ms(effect: &ActiveSpriteEffect, loaded: &HashMap<&'static str, Arc<AnimationData>>) -> u32 {
+        // Unit sprites are owned by the server: they expire only via
+        // `remove_unit`, never on a client timer.
+        if effect.unit.is_some() {
+            return u32::MAX;
+        }
+
         match effect.motion {
             SpriteMotion::Fixed { .. } => loaded
                 .get(effect.path)
@@ -233,12 +278,20 @@ impl SpriteEffects {
     }
 
     /// ACT clock: starts when the sprite becomes visible (after travel delay).
-    fn animation_time_ms(effect: &ActiveSpriteEffect, client_tick: ClientTick) -> u32 {
-        match effect.motion {
+    /// Unit sprites wrap it so the ACT repeats — `render_action_frame` clamps
+    /// to the last frame rather than looping on its own.
+    fn animation_time_ms(effect: &ActiveSpriteEffect, animation_data: &AnimationData, client_tick: ClientTick) -> u32 {
+        let time = match effect.motion {
             SpriteMotion::Fixed { .. } => Self::age_ms(effect, client_tick),
-            SpriteMotion::Travel { start_delay_ms, .. } => {
-                Self::age_ms(effect, client_tick).saturating_sub(start_delay_ms)
-            }
+            SpriteMotion::Travel { start_delay_ms, .. } => Self::age_ms(effect, client_tick).saturating_sub(start_delay_ms),
+        };
+
+        match effect.unit {
+            Some(_) => match animation_data.action_duration_ms(effect.action_index) {
+                0 => time,
+                duration => time % duration,
+            },
+            None => time,
         }
     }
 
@@ -260,7 +313,7 @@ impl SpriteEffects {
                 continue;
             };
 
-            let time = Self::animation_time_ms(effect, client_tick);
+            let time = Self::animation_time_ms(effect, animation_data, client_tick);
 
             // Effects are not entities, but `render_action_frame` keys its
             // per-entity state off this ID. Reuse the sentinel space so an
@@ -333,6 +386,23 @@ mod tests {
 
         effects.update(ClientTick(FALLBACK_LIFETIME_MS));
         assert!(effects.active.is_empty(), "unloaded spawn must not leak");
+    }
+
+    #[test]
+    fn unit_sprites_outlive_the_fallback_timer_and_die_with_their_unit() {
+        let mut effects = SpriteEffects::default();
+        let unit = EntityId(4_242);
+        effects.spawn_unit(PATH_A, Point3::new(0.0, 0.0, 0.0), 0, ClientTick(0), unit);
+
+        // A one-shot spawn would have been reaped here; the server owns this one.
+        effects.update(ClientTick(FALLBACK_LIFETIME_MS * 10));
+        assert_eq!(effects.active.len(), 1, "unit sprite must not expire on a client timer");
+
+        effects.remove_unit(EntityId(9_999));
+        assert_eq!(effects.active.len(), 1, "an unrelated unit removal must not touch it");
+
+        effects.remove_unit(unit);
+        assert!(effects.active.is_empty(), "RemoveSkillUnit must tear the sprite down");
     }
 
     #[test]
