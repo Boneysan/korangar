@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 2026-07-24: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). Code green (223 lib tests + GRF asset audit). Open engine follow-ups only: ground-decal depth pass (Land Protector draws over player), status-effect entity visuals, Hunter traps (need runtime RSM prop spawning). |
+| **Status** | 2026-07-24: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. Code green (223 lib tests + GRF asset audit). Open engine follow-ups: status-effect entity visuals, Hunter traps (need runtime RSM prop spawning). |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -289,7 +289,7 @@ in roBrowser — no authoritative visual exists there; defer or design our own.
 | Volcano | PASS after two size corrections (below) |
 | Deluge | PASS — blue palette swap of Volcano, which is exactly the original's design |
 | Violent Gale | PASS — yellow palette swap, same shape |
-| Land Protector | PASS as a low square glow (121 units at Lv5). The authentic flat tile spawns and textures correctly but draws **over** the player — see the draw-order limit below |
+| Land Protector | PASS — authentic flat floor tile (121 units at Lv5), draws **under** the player via the depth-tested ground-decal pass (2026-07-24, see below). The interim low square glow it replaced is gone. |
 | Venom Dust | PASS — 15 units, each `body=looping-sprite` with its `particle3` sprite; first live proof of the looping-sprite path. Poison confirmed applying (porings take damage), though the status itself has **no entity visual** yet |
 | Demonstration | PASS 2026-07-24 — fire field renders on the ground (looping-sprite path). See the NOFOOTSET trap below: the cast is rejected with the misleading "Skill level is not high enough" unless aimed at open ground clear of characters |
 
@@ -309,26 +309,37 @@ skill, then left-click **bare ground 4–5 cells away** from your own character
 and from any mob. Same family as Venom Dust's interval-only behavior — an
 overloaded Hercules failure code, verified in source.
 
-**Draw-order limit — effects have no depth.** `EffectInstruction` carries only
-screen-space corners and renders in `passes/postprocessing/effect.rs`, so
-**every** effect composites on top of the whole scene, entities included.
-Vertical bodies (Sanctuary, Fire Wall, the elemental cones) get away with it —
-a glow in front of the character reads fine and matches the original. A
-ground-parallel quad does not: Land Protector's tiles landed on top of the
-player sprite.
+**Draw-order limit — RESOLVED 2026-07-24 with a depth-tested ground-decal
+pass.** The problem: `EffectInstruction` carries only screen-space corners and
+renders in `passes/postprocessing/effect.rs`, so **every** effect composites on
+top of the whole scene, entities included. Vertical bodies (Sanctuary, Fire
+Wall, the elemental cones) get away with it — a glow in front of the character
+reads fine and matches the original. A ground-parallel quad did not: Land
+Protector's tiles landed on top of the player sprite.
 
-Fixing it properly means a **depth-tested ground-decal pass**. The forward
-pass already has the closest thing (`passes/forward/indicator.rs`, the walk
-indicator) but it is a singleton baked into the global uniform
-(`indicator_positions: [[f32; 4]; 4]`, one quad, one color) — supporting N
-textured decals needs an instance buffer, per-batch texture binding, a new
-drawer, wiring at three `engine.rs` call sites, and both the bindless and GL
-fallback paths. Deferred as its own engine task; it would also serve future
-ground effects and DM prop markers.
+**The fix (live-verified — tiles now draw under the character):** a new
+depth-tested ground-decal pass, built by generalizing the walk indicator to N
+textured instances.
 
-Interim: Land Protector uses the low square glow that Sanctuary/Magnus already
-passed live with. `UnitGroundQuad` stays wired and asset-audited for the day
-the decal pass lands.
+- `GroundDecalInstruction` (`graphics/instruction.rs`) keeps four **world-space**
+  corners + uv + color + `Arc<Texture>` — unlike `EffectInstruction`, which
+  discards depth.
+- `EffectRenderer::render_ground_decal` (`renderer/effect.rs`) is the world-side
+  entry; `UnitGroundQuad::render` calls it instead of `render_effect_world_quad`.
+- `passes/forward/ground_decal.rs` (`ForwardGroundDecalDrawer`) draws in the
+  forward pass **after** the walk indicator and **before** entities, so terrain
+  occludes decals and entities compose over them. Depth-**tested** (reverse-Z
+  `Greater`) but **not** depth-writing (translucent). Shaders
+  `ground_decal_bindless.slang` / `ground_decal.slang` (emissive flat quad,
+  corners from the instance buffer). Batches by texture — Land Protector's 121
+  tiles share one texture, so it is a single instanced draw on both the bindless
+  (Metal) and GL fallback paths; no bindless dependency.
+- Land Protector's recipe (`world/unit_recipe.rs`) is restored from the interim
+  low square glow to the authentic `UnitBody::GroundQuad` (`half_size 2.0` =
+  0.8-cell tile, translucent so the magic pattern reads over the floor).
+
+This pass is the shared prerequisite the plan flagged for **future ground
+effects and DM prop markers** — reuse `render_ground_decal` for those.
 
 **The scaling bug — read this before adding any per-cell unit.** The effect
 table's `PropertyGround` sizes are in the effect's **own world units, not

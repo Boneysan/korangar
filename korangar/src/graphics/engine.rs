@@ -99,6 +99,7 @@ struct EngineContext {
     point_shadow_indicator_drawer: PointShadowIndicatorDrawer,
     light_culling_dispatcher: LightCullingDispatcher,
     forward_entity_drawer: ForwardEntityDrawer,
+    forward_ground_decal_drawer: ForwardGroundDecalDrawer,
     forward_indicator_drawer: ForwardIndicatorDrawer,
     forward_model_drawer: ForwardModelDrawer,
     water_wave_drawer: WaterWaveDrawer,
@@ -339,6 +340,7 @@ impl GraphicsEngine {
                         );
                         let ForwardResources {
                             forward_entity_drawer,
+                            forward_ground_decal_drawer,
                             forward_indicator_drawer,
                             forward_model_drawer,
                         } = ForwardResources::create(
@@ -468,6 +470,7 @@ impl GraphicsEngine {
                         point_shadow_entity_drawer,
                         light_culling_dispatcher,
                         forward_entity_drawer,
+                        forward_ground_decal_drawer,
                         forward_indicator_drawer,
                         forward_model_drawer,
                         water_wave_drawer,
@@ -608,6 +611,7 @@ impl GraphicsEngine {
 
             let ForwardResources {
                 forward_entity_drawer,
+                forward_ground_decal_drawer,
                 forward_indicator_drawer,
                 forward_model_drawer,
             } = ForwardResources::create(
@@ -643,6 +647,7 @@ impl GraphicsEngine {
             );
 
             engine_context.forward_entity_drawer = forward_entity_drawer;
+            engine_context.forward_ground_decal_drawer = forward_ground_decal_drawer;
             engine_context.forward_indicator_drawer = forward_indicator_drawer;
             engine_context.forward_model_drawer = forward_model_drawer;
             engine_context.post_processing_effect_drawer = post_processing_effect_drawer;
@@ -1014,6 +1019,7 @@ impl GraphicsEngine {
             });
             scope.spawn(|_| {
                 context.forward_entity_drawer.prepare(&self.device, instruction);
+                context.forward_ground_decal_drawer.prepare(&self.device, instruction);
                 context.forward_model_drawer.prepare(&self.device, instruction);
             });
             scope.spawn(|_| {
@@ -1066,6 +1072,7 @@ impl GraphicsEngine {
         visitor.upload(&mut context.point_shadow_pass_context);
         visitor.upload(&mut context.post_processing_effect_drawer);
         visitor.upload(&mut context.forward_entity_drawer);
+        visitor.upload(&mut context.forward_ground_decal_drawer);
         visitor.upload(&mut context.forward_model_drawer);
         visitor.upload(&mut context.water_wave_drawer);
         visitor.upload(&mut context.post_processing_rectangle_drawer);
@@ -1298,6 +1305,13 @@ impl GraphicsEngine {
                 engine_context
                     .forward_indicator_drawer
                     .draw(&mut render_pass, instruction.indicator.as_ref());
+
+                // Ground decals draw after opaque geometry (so terrain occludes them)
+                // but before entities (so a character standing on a decal composes
+                // over it, not under it).
+                engine_context
+                    .forward_ground_decal_drawer
+                    .draw(&mut render_pass, instruction.ground_decals);
 
                 engine_context.forward_entity_drawer.draw(&mut render_pass, ForwardEntityDrawData {
                     entities: instruction.entities,
@@ -1536,6 +1550,7 @@ impl UploadVisitor<'_> {
 
 struct ForwardResources {
     forward_entity_drawer: ForwardEntityDrawer,
+    forward_ground_decal_drawer: ForwardGroundDecalDrawer,
     forward_indicator_drawer: ForwardIndicatorDrawer,
     forward_model_drawer: ForwardModelDrawer,
 }
@@ -1550,6 +1565,14 @@ impl ForwardResources {
         forward_pass_context: &ForwardRenderPassContext,
     ) -> Self {
         let forward_entity_drawer = ForwardEntityDrawer::new(
+            capabilities,
+            device,
+            queue,
+            shader_compiler,
+            global_context,
+            forward_pass_context,
+        );
+        let forward_ground_decal_drawer = ForwardGroundDecalDrawer::new(
             capabilities,
             device,
             queue,
@@ -1576,6 +1599,7 @@ impl ForwardResources {
 
         Self {
             forward_entity_drawer,
+            forward_ground_decal_drawer,
             forward_indicator_drawer,
             forward_model_drawer,
         }

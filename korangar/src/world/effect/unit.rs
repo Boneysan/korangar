@@ -283,8 +283,12 @@ impl EffectBase for UnitGroundQuad {
         let center = self.position + Vector3::new(0.0, Self::GROUND_LIFT, 0.0);
         let corner = |x: f32, z: f32| center + Vector3::new(x * half, 0.0, z * half);
 
-        renderer.render_effect_world_quad(
-            camera,
+        // A ground-parallel tile must be depth-tested, unlike the vertical
+        // cylinder/horn bodies: the postprocessing effect path composites on top
+        // of everything, which would draw the tile over a player standing on it.
+        // The decal path draws it in the forward pass so terrain occludes it and
+        // entities compose over it.
+        renderer.render_ground_decal(
             [corner(-1.0, -1.0), corner(1.0, -1.0), corner(-1.0, 1.0), corner(1.0, 1.0)],
             self.texture.clone(),
             [
@@ -294,8 +298,6 @@ impl EffectBase for UnitGroundQuad {
                 Vector2::new(1.0, 1.0),
             ],
             self.color,
-            BlendFactor::SrcAlpha,
-            BlendFactor::One,
         );
     }
 }

@@ -4,11 +4,12 @@ use cgmath::{Matrix2, Point3, Rad, Vector2};
 use korangar_interface::application::Position;
 use wgpu::BlendFactor;
 
-use crate::graphics::{Color, EffectInstruction, ScreenPosition, ScreenSize, Texture};
+use crate::graphics::{Color, EffectInstruction, GroundDecalInstruction, ScreenPosition, ScreenSize, Texture};
 use crate::world::Camera;
 
 pub struct EffectRenderer {
     instructions: Vec<EffectInstruction>,
+    ground_decals: Vec<GroundDecalInstruction>,
     window_size: ScreenSize,
 }
 
@@ -16,16 +17,22 @@ impl EffectRenderer {
     pub fn new(window_size: ScreenSize) -> Self {
         Self {
             instructions: Vec::default(),
+            ground_decals: Vec::default(),
             window_size,
         }
     }
 
     pub fn clear(&mut self) {
         self.instructions.clear();
+        self.ground_decals.clear();
     }
 
     pub fn get_instructions(&self) -> &[EffectInstruction] {
         self.instructions.as_ref()
+    }
+
+    pub fn get_ground_decals(&self) -> &[GroundDecalInstruction] {
+        self.ground_decals.as_ref()
     }
 
     pub fn update_window_size(&mut self, window_size: ScreenSize) {
@@ -126,6 +133,29 @@ impl EffectRenderer {
             color,
             source_blend_factor,
             destination_blend_factor,
+            texture,
+        });
+    }
+
+    /// Queues a flat, **depth-tested** ground quad, drawn in the forward pass
+    /// rather than composited on top like [`render_effect_world_quad`]. Use for
+    /// ground-parallel tiles (Land Protector) where an entity standing on the
+    /// tile must occlude it. Corners and texture coordinates are ordered
+    /// `[top_left, top_right, bottom_left, bottom_right]`; the world corners are
+    /// kept as-is so the forward pass can project and depth-test them.
+    ///
+    /// [`render_effect_world_quad`]: Self::render_effect_world_quad
+    pub fn render_ground_decal(
+        &mut self,
+        corners: [Point3<f32>; 4],
+        texture: Arc<Texture>,
+        texture_coordinates: [Vector2<f32>; 4],
+        color: Color,
+    ) {
+        self.ground_decals.push(GroundDecalInstruction {
+            corners,
+            texture_coordinates,
+            color,
             texture,
         });
     }

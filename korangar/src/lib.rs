@@ -7583,6 +7583,7 @@ impl Client {
             point_shadow_models: &self.point_shadow_model_instructions,
             point_shadow_entities: &self.point_shadow_entity_instructions,
             effects: self.effect_renderer.get_instructions(),
+            ground_decals: self.effect_renderer.get_ground_decals(),
             water: water_instruction,
             map_picker_tile_vertex_buffer: Some(map.get_tile_picker_vertex_buffer()),
             map_picker_tile_index_buffer: Some(map.get_tile_picker_index_buffer()),

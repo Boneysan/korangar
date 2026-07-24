@@ -243,28 +243,6 @@ const ELEMENTAL_FIELD_CYLINDERS: &[UnitCylinderSpec] = &[UnitCylinderSpec {
     }),
 }];
 
-/// Land Protector: one low square glow per cell, yawed 45° like the other
-/// square map units. Deliberately short — it marks the floor, and 121 of these
-/// overlap at Lv5, so the alpha is the lowest in the table.
-const LAND_PROTECTOR_CYLINDERS: &[UnitCylinderSpec] = &[UnitCylinderSpec {
-    bottom_radius: 2.5,
-    top_radius: 2.5,
-    height: 3.0,
-    spin_speed: 0.0,
-    // Raised from 0.35 live (2026-07-24) — even 121 stacked cells read too
-    // faint. The "ground effects want more brightness than theory suggests"
-    // lesson yet again.
-    sides: 4,
-    alpha: 0.6,
-    yaw: std::f32::consts::FRAC_PI_4,
-    // Deeper breath too: 0.85–1.0 was barely perceptible.
-    pulse: Some(UnitPulse {
-        min_scale: 0.65,
-        max_scale: 1.0,
-        speed: 3.0,
-    }),
-}];
-
 /// Resolve a unit ID to its presentation. `None` keeps the explicit empty
 /// contract — unmapped units draw nothing rather than guessing.
 pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
@@ -386,22 +364,33 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
             ..NONE
         }),
         UnitId::Landprotector => Some(UnitPresentation {
-            // The original's `LPEffect` is a flat floor tile per cell, and
-            // `UnitGroundQuad` draws exactly that — but effects composite in a
-            // depth-less post-processing pass, so a ground-parallel quad lands
-            // on top of the player sprite (live, 2026-07-24). Until there is a
-            // depth-tested ground-decal pass, use the low square glow that
-            // Sanctuary/Magnus already passed live with: it still overlays,
-            // but reads as light on the floor rather than a sticker on the
-            // character. `UnitGroundQuad` stays wired for that future pass.
-            body: Some(UnitBody::Cylinders {
+            // The original's `LPEffect` is a flat floor tile per cell. Now that
+            // the depth-tested ground-decal pass exists, `UnitGroundQuad` draws
+            // exactly that: the tile is occluded by terrain and a player standing
+            // on it composes over it, instead of the depth-less post-processing
+            // path that painted it on top of the character (the interim low
+            // square glow it replaced). Half-size 2.0 = the table's 0.8-cell tile.
+            body: Some(UnitBody::GroundQuad {
                 texture: "effect\\aaa copy.bmp",
-                specs: LAND_PROTECTOR_CYLINDERS,
-                color: Color::rgb_u8(190, 230, 255),
+                half_size: 2.0,
+                // Translucent so the magic pattern reads over the floor rather
+                // than masking it; 121 of these overlap at Lv5.
+                color: Color::rgba(0.75, 0.90, 1.0, 0.65),
+                pulse: UnitPulse {
+                    min_scale: 0.85,
+                    max_scale: 1.0,
+                    speed: 2.5,
+                },
             }),
-            // Land Protector is 11×11 cells at Lv5 (15×15 at Lv10), so the
-            // per-cell light stays modest — but 12.0 was invisible live.
-            light: Some((Color::rgb_u8(150, 200, 255), 26.0)),
+            // Soft blue glow: one companion point light per cell (keyed on the
+            // cell's server entity id, so all 121 register). The colour is a
+            // *saturated* blue on purpose — a pale blue accumulates across 121
+            // overlapping lights and clips toward white, so the field reads as a
+            // soft blue only if each light is distinctly blue to begin with.
+            // Land Protector is 11×11 cells at Lv5 (15×15 at Lv10); 12.0 was
+            // invisible live, so intensity stays up. Dialed in live
+            // (2026-07-25, user): 26 too dim → 40 a touch hot → 30 settled.
+            light: Some((Color::rgb_u8(70, 135, 255), 30.0)),
             ..NONE
         }),
         UnitId::Venomdust => Some(UnitPresentation {

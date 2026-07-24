@@ -39,6 +39,7 @@ pub struct RenderInstruction<'a> {
     pub point_shadow_models: &'a [ModelInstruction],
     pub point_shadow_entities: &'a [EntityInstruction],
     pub effects: &'a [EffectInstruction],
+    pub ground_decals: &'a [GroundDecalInstruction],
     pub water: Option<WaterInstruction<'a>>,
     pub map_picker_tile_vertex_buffer: Option<&'a Buffer<TileVertex>>,
     pub map_picker_tile_index_buffer: Option<&'a Buffer<u32>>,
@@ -309,6 +310,21 @@ pub struct EffectInstruction {
     pub color: Color,
     pub source_blend_factor: BlendFactor,
     pub destination_blend_factor: BlendFactor,
+    pub texture: Arc<Texture>,
+}
+
+/// A flat, depth-tested ground quad — the classic client's `LPEffect` (Land
+/// Protector) tile and future ground markers. Unlike [`EffectInstruction`],
+/// which composites screen-space corners on top of the whole scene, this keeps
+/// its four **world-space** corners so the forward pass can depth-test it: the
+/// terrain occludes it and entities standing on it draw on top, rather than the
+/// tile drawing over the player. Corners and texture coordinates are ordered
+/// `[top_left, top_right, bottom_left, bottom_right]`.
+#[derive(Clone, Debug)]
+pub struct GroundDecalInstruction {
+    pub corners: [Point3<f32>; 4],
+    pub texture_coordinates: [Vector2<f32>; 4],
+    pub color: Color,
     pub texture: Arc<Texture>,
 }
 

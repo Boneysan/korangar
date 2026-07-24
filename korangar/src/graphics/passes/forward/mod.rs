@@ -1,9 +1,11 @@
 mod entity;
+mod ground_decal;
 mod indicator;
 mod model;
 mod wave;
 
 pub(crate) use entity::{EntityPassMode, ForwardEntityDrawData, ForwardEntityDrawer};
+pub(crate) use ground_decal::ForwardGroundDecalDrawer;
 pub(crate) use indicator::ForwardIndicatorDrawer;
 pub(crate) use model::{ForwardModelDrawData, ForwardModelDrawer, ModelPassMode};
 pub(crate) use wave::WaterWaveDrawer;
