@@ -1,3 +1,5 @@
+use std::cell::UnsafeCell;
+
 use korangar_interface::MouseMode;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{BaseLayoutInfo, Element};
@@ -17,6 +19,7 @@ use crate::renderer::LayoutExt;
 use crate::state::skills::{LearnableSkill, LearnedSkill, SkillAcquisition};
 use crate::state::theme::{InterfaceThemePathExt, SkillTreeThemePathExt};
 use crate::state::{ClientState, client_theme};
+use crate::world::skill_tooltip_text;
 
 struct LevelDisplay {
     level: Option<SkillLevel>,
@@ -228,6 +231,9 @@ pub struct SkillSlot<A, B, C, D> {
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
     level_display: LevelDisplay,
+    // Owns the hover tooltip string so its borrow can outlive `lay_out` for the
+    // layout's lifetime (same pattern as the hotbar `SkillBox`).
+    tooltip_text: UnsafeCell<String>,
 }
 
 impl<A, B, C, D> SkillSlot<A, B, C, D>
@@ -258,6 +264,7 @@ where
             choose_lower_handler: ChooseLowerClickHandler::new(learned_skill_path, window_state_path),
             choose_higher_handler: ChooseHigherClickHandler::new(learned_skill_path, window_state_path),
             level_display: LevelDisplay::default(),
+            tooltip_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -549,7 +556,15 @@ where
                 }
 
                 struct SkillSlotTooltip;
-                layout.add_tooltip(&skill.skill_name, SkillSlotTooltip.tooltip_id());
+                // Full skill_db detail (cost / target / duration / reagents), the
+                // same tooltip the hotbar shows — not just the name. Unlearned
+                // skills preview at level 1.
+                let level = learned_skill.map_or(1, |learned_skill| learned_skill.skill_level.0);
+                let text = skill_tooltip_text(skill.skill_id.0, &skill.skill_name, level, skill.maximum_level.0);
+                unsafe {
+                    *self.tooltip_text.get() = text;
+                    layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), SkillSlotTooltip.tooltip_id());
+                }
 
                 state.update_value(self.window_state_path.highlighted_skill(), Some(skill.skill_id));
             }

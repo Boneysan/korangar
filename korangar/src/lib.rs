@@ -6062,18 +6062,21 @@ impl Client {
                     // Resolve the slot to owned data under an immutable borrow, then act — so the
                     // cast / arm / chat-feedback below can borrow self mutably without conflict.
                     let learnable_skill = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).clone();
+                    // Cast at the character's CURRENT learned level, never `learnable_skill.maximum_level`
+                    // — that field is whatever level got persisted into the hotkey slot at drag-time
+                    // (see `Hotbar::update_slot`), which can momentarily disagree with the live skill
+                    // list right after a job change / `@allskill` (server then rejects with "Skill Level
+                    // is not high enough", intermittent — a retry works only because the client's skill
+                    // list catches up by then). The learned-skill list is the live source of truth.
                     let skill_targeting = learnable_skill.as_ref().and_then(|learnable_skill| {
                         self.client_state
                             .follow(client_state().skill_tree().skills())
                             .iter()
-                            .find(|learned_skill| {
-                                learned_skill.skill_id == learnable_skill.skill_id
-                                    && learned_skill.skill_level.0 >= learnable_skill.maximum_level.0
-                            })
-                            .map(|learned_skill| (learned_skill.skill_type, learned_skill.attack_range))
+                            .find(|learned_skill| learned_skill.skill_id == learnable_skill.skill_id && learned_skill.skill_level.0 > 0)
+                            .map(|learned_skill| (learned_skill.skill_type, learned_skill.attack_range, learned_skill.skill_level))
                     });
 
-                    if let (Some(learnable_skill), Some((skill_type, attack_range))) = (learnable_skill, skill_targeting) {
+                    if let (Some(learnable_skill), Some((skill_type, attack_range, skill_level))) = (learnable_skill, skill_targeting) {
                         match skill_type {
                             SkillType::Passive => {}
                             SkillType::SelfCast => {
@@ -6082,14 +6085,14 @@ impl Client {
                                     true => {
                                         let _ = self.networking_system.cast_channeling_skill(
                                             learnable_skill.skill_id,
-                                            learnable_skill.maximum_level,
+                                            skill_level,
                                             this_entity_id,
                                         );
                                     }
                                     false => {
                                         let _ = self.networking_system.cast_skill(
                                             learnable_skill.skill_id,
-                                            learnable_skill.maximum_level,
+                                            skill_level,
                                             this_entity_id,
                                         );
                                     }
@@ -6103,16 +6106,14 @@ impl Client {
                                     PickerTarget::Entity(entity_id) => entity_id,
                                     _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
                                 };
-                                let _ =
-                                    self.networking_system
-                                        .cast_skill(learnable_skill.skill_id, learnable_skill.maximum_level, target_id);
+                                let _ = self.networking_system.cast_skill(learnable_skill.skill_id, skill_level, target_id);
                             }
                             SkillType::Attack => {
                                 // Entity-target: fast-cast if the cursor is already over a target,
                                 // otherwise arm and wait for the next left-click to pick one.
                                 let pending = PendingSkill {
                                     skill_id: learnable_skill.skill_id,
-                                    skill_level: learnable_skill.maximum_level,
+                                    skill_level,
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
@@ -6141,7 +6142,7 @@ impl Client {
                                 announce_armed_skill(&mut self.client_state, &learnable_skill.skill_name);
                                 self.pending_skill = Some(PendingSkill {
                                     skill_id: learnable_skill.skill_id,
-                                    skill_level: learnable_skill.maximum_level,
+                                    skill_level,
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),

@@ -15,7 +15,7 @@ lands.
 | [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
 | [phase-d-live-verification.md](phase-d-live-verification.md) | Phase D live GUI checklist — **CLOSED 2026-07-21**, all 8 rows PASS |
 | [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism; read its "Traps hit while driving this pass" before any new GUI session |
-| **[classic-effect-fidelity.md](classic-effect-fidelity.md)** | Soul Strike classic sprite **live-OK**; F1/F3–F7 filename guesses failed 2026-07-23 → procedural restored. Next: reverse-engineered skill→effect map, or Phase E2 |
+| [classic-effect-fidelity.md](classic-effect-fidelity.md) | Classic skill effects — **E1 (7 skills) + E2 batches 1 & 2 all live-verified, CLOSED 2026-07-24 (6/6 batch 2).** Open items are engine follow-ups only (ground-decal depth pass, status entity visuals, Hunter traps). Read its batch-2 NOFOOTSET trap before testing ground-placed skills |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.

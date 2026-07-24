@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 2026-07-23: **all seven skills rebuilt from the reverse-engineered original-client effect table** (see "The authoritative mapping" below). Code green (194 lib tests + GRF asset audit); needs a live GUI pass. |
+| **Status** | 2026-07-24: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). Code green (223 lib tests + GRF asset audit). Open engine follow-ups only: ground-decal depth pass (Land Protector draws over player), status-effect entity visuals, Hunter traps (need runtime RSM prop spawning). |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -282,7 +282,7 @@ New machinery this pass:
 Song/dance areas: the client tables mark these `'27x_ground'` **Tofix** even
 in roBrowser — no authoritative visual exists there; defer or design our own.
 
-### Batch 2 live pass (in progress, 2026-07-24)
+### Batch 2 live pass — COMPLETE 6/6, 2026-07-24
 
 | Unit | Live |
 |---|---|
@@ -291,7 +291,23 @@ in roBrowser — no authoritative visual exists there; defer or design our own.
 | Violent Gale | PASS — yellow palette swap, same shape |
 | Land Protector | PASS as a low square glow (121 units at Lv5). The authentic flat tile spawns and textures correctly but draws **over** the player — see the draw-order limit below |
 | Venom Dust | PASS — 15 units, each `body=looping-sprite` with its `particle3` sprite; first live proof of the looping-sprite path. Poison confirmed applying (porings take damage), though the status itself has **no entity visual** yet |
-| Demonstration | not yet cast — the last batch-2 unit with no live evidence |
+| Demonstration | PASS 2026-07-24 — fire field renders on the ground (looping-sprite path). See the NOFOOTSET trap below: the cast is rejected with the misleading "Skill level is not high enough" unless aimed at open ground clear of characters |
+
+**Demonstration trap — "Skill level is not high enough" is authentic server
+behavior, not a level or client bug.** Demonstration's unit has `UF_NOFOOTSET`
+and the live server config has `skill_nofootset: 1` (`BL_PC` is bit 1, so it
+applies to players). At cast-end `skill_castend_pos` runs `check_unit_range2`,
+which scans ~a 5×5 area (`get_unit_range` 1 + layout radius) around the target
+cell for **any** `BL_CHAR` — **including the caster** (`check_unit_range2_sub`
+only excludes a corpse and an Emperium under Demonstration). If one is found it
+rejects with `USESKILL_FAIL_LEVEL`, whose client string is the misleading
+"Skill level is not high enough." (`skill.c:12091`, `battle/skill.conf:141`).
+The client makes it worse: for a Ground skill clicked **on a monster**,
+`resolve_pending_cast` returns `CastEntityTile` and places the field on that
+monster's own cell — guaranteed footset fail. **Placement rule:** arm the
+skill, then left-click **bare ground 4–5 cells away** from your own character
+and from any mob. Same family as Venom Dust's interval-only behavior — an
+overloaded Hercules failure code, verified in source.
 
 **Draw-order limit — effects have no depth.** `EffectInstruction` carries only
 screen-space corners and renders in `passes/postprocessing/effect.rs`, so
@@ -341,8 +357,8 @@ this scale, which is the tell: **treat table sizes as world units.**
   Rejections arrive as `ZC_ACK_TOUSESKILL` and print to chat — easy to miss
   in combat spam. `@monsterignore` also stops mobs interrupting the ~2 s cast.
 
-Remaining: Violent Gale, Land Protector (121 cells at Lv5 — watch framerate),
-Venom Dust (Assassin), Demonstration (Alchemist).
+Remaining: none — all four Sage fields, Land Protector, Venom Dust, and
+Demonstration are live-verified (batch 2 closed 6/6, 2026-07-24).
 
 ### iRO Wiki visual brief (acceptance language, not asset table)
 
