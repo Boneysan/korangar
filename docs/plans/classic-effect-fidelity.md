@@ -290,7 +290,8 @@ in roBrowser — no authoritative visual exists there; defer or design our own.
 | Deluge | PASS — blue palette swap of Volcano, which is exactly the original's design |
 | Violent Gale | PASS — yellow palette swap, same shape |
 | Land Protector | PASS as a low square glow (121 units at Lv5). The authentic flat tile spawns and textures correctly but draws **over** the player — see the draw-order limit below |
-| Venom Dust / Demonstration | not yet cast |
+| Venom Dust | PASS — 15 units, each `body=looping-sprite` with its `particle3` sprite; first live proof of the looping-sprite path. Poison confirmed applying (porings take damage), though the status itself has **no entity visual** yet |
+| Demonstration | not yet cast — the last batch-2 unit with no live evidence |
 
 **Draw-order limit — effects have no depth.** `EffectInstruction` carries only
 screen-space corners and renders in `passes/postprocessing/effect.rs`, so

@@ -131,9 +131,74 @@ spawn with its body kind under `KORANGAR_PACKET_LOG`, not just unmapped ones.
 cast. That blind spot is what sent us chasing a phantom Land Protector
 renderer bug.
 
+## 5. Skill hover tooltips from `skill_db.conf`
+
+Hovering a skill showed only its name. Now it shows what the skill costs,
+targets, and — the line that earns its place — **what reagent it consumes**.
+This session lost roughly half an hour to Sage fields silently failing for want
+of a Blue Gemstone.
+
+- `tools/export_skill_info.py` → `docs/skills.json` (1170 skills, 156 with item
+  requirements), with a `--check` staleness mode like the status exporter.
+- `world/library/skill_info.rs` mirrors `item_stats.rs`;
+  `skill_box.rs` reuses `item_box.rs`'s buffer-on-element tooltip pattern, so
+  the skill tree **and** hotbar both get it.
+
+```
+Magnetic Earth  Lv 5/5
+Magic · Ground target
+Range 2 · SP 50 · Cast 5.0s
+Lasts 345s · 11x11 cells
+Requires: Blue Gemstone, Yellow Gemstone
+```
+
+**Why not the official text:** `skilldescript.lub` *is* in data.grf and the
+client can already decode its Lua 5.1 bytecode (`lunify`,
+`loaders/gamefile/mod.rs:939`) — but ours is a `kr_ro1_live` build whose body
+text is Korean, with only the skill names in parentheses in English. Generating
+from the server's own db is less evocative but always accurate and covers
+everything.
+
+**Three parser surprises in `skill_db.conf`**, all handled — worth knowing
+before touching the exporter:
+- `/* */` block comments as well as `//`, and `//` also appears inside the
+  ASCII-art header, so comment stripping has to be a real state machine.
+- **Identifiers that start with a digit** — the weapon keys `1HSwords`,
+  `2HAxes`. Requiring a *letter* after the digits keeps them apart from
+  underscore-separated numbers like `1_100`.
+- `Element` is a **per-level string table** in six skills (`TK_SEVENWIND`
+  cycles elements), where every other text field is a plain scalar.
+
+Deliberate omission: `Unit.Layout: -1` means a custom shape, so the area line
+is dropped rather than printing a wrong `(2N+1)²` square.
+
+## 6. Venom Dust — works; the missing piece is visual
+
+Reported as "a Poring walked through and took no damage", then confirmed on a
+second pass that porings **do** take damage. Two mechanics explain the first
+observation, both correct:
+
+- The Venom Dust case is in **`skill_unit_onplace_timer`** (`skill.c:14188`),
+  the interval-driven handler — and `skill_unit_move_sub` returns early for
+  units with an interval (`skill.c:19874`). **Movement never triggers it**; it
+  fires only on its own 1-second tick, so walking through between ticks does
+  nothing at all.
+- It applies `SC_POISON`, never direct damage. Nothing happens on contact; HP
+  drains afterwards. `if (tsc->data[type] == NULL)` also stops it re-applying
+  to something already poisoned.
+
+**Open (client gap):** the poison *status* has no visual on affected entities —
+no tint or indicator, so an afflicted mob looks untouched even while losing HP.
+Entity status visuals are a separate piece of work from the effect layer.
+
 ## Next
 
-- Cast Venom Dust (Assassin, `@item 716`) and Demonstration (Alchemist,
-  `@item 7135`) — the only batch-2 units with no live evidence at all.
+- **Demonstration** (Alchemist, `@jobchange 18`, `@item 7135`) — the only
+  batch-2 unit still never rendered. It uses the same looping-sprite path Venom
+  Dust validated, so it is likely fine, but unverified.
+- **Poison (and status generally) has no entity visual** — see §6.
 - Warp-window close path still leaves server `menuskill_id` set (from batch 1).
 - Depth-tested ground-decal pass, if we want authentic flat ground effects.
+- Hunter traps, pending runtime RSM prop spawning.
+- `Hercules/log/athena-start.out` is untracked and keeps appearing in
+  `git status` — wants a `.gitignore` entry.

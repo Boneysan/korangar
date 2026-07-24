@@ -1,3 +1,5 @@
+use std::cell::UnsafeCell;
+
 use korangar_interface::MouseMode;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{BaseLayoutInfo, Element};
@@ -15,6 +17,7 @@ use crate::renderer::LayoutExt;
 use crate::state::skills::{LearnableSkill, LearnedSkill};
 use crate::state::theme::{GlobalThemePathExt, InterfaceThemePathExt, SkillTreeThemePathExt};
 use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::world::skill_tooltip_text;
 
 struct LevelDisplay {
     maximum_level: SkillLevel,
@@ -153,6 +156,9 @@ pub struct SkillBox<A, B> {
     level_display: LevelDisplay,
     cooldown_display: CooldownDisplay,
     source: SkillSource,
+    /// Hover tooltip text. Kept on the element — same pattern as `ItemBox` —
+    /// so the layout borrow stays stable while the string is rebuilt.
+    tooltip_text: UnsafeCell<String>,
 }
 
 impl<A, B> SkillBox<A, B>
@@ -175,6 +181,7 @@ where
             level_display: LevelDisplay::default(),
             cooldown_display: CooldownDisplay::default(),
             source,
+            tooltip_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -315,7 +322,23 @@ where
                 }
 
                 struct SkillBoxTooltip;
-                layout.add_tooltip(&learnable_skill.skill_name, SkillBoxTooltip.tooltip_id());
+                // What it costs, what it targets, and — the line that earns
+                // its place — what reagent it consumes. A skill that silently
+                // fails for want of a gemstone looks like a client bug.
+                // Unlearned skills preview at level 1.
+                let level = state
+                    .try_get(&self.learned_skill_path)
+                    .map_or(1, |learned_skill| learned_skill.skill_level.0);
+                let text = skill_tooltip_text(
+                    learnable_skill.skill_id.0,
+                    &learnable_skill.skill_name,
+                    level,
+                    learnable_skill.maximum_level.0,
+                );
+                unsafe {
+                    *self.tooltip_text.get() = text;
+                    layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), SkillBoxTooltip.tooltip_id());
+                }
             }
 
             layout.add_text(
