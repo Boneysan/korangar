@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 2026-07-25: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. **Status-effect entity visuals landed + live-verified 2026-07-25** (freeze cyan, petrification greyscale — see §Status-effect entity tints). Code green (223 lib tests + GRF asset audit). Only remaining engine follow-up: Hunter traps (need runtime RSM prop spawning). |
+| **Status** | 2026-07-26: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. **Status-effect entity visuals landed + live-verified 2026-07-25** (freeze cyan, petrification greyscale — see §Status-effect entity tints). Code green (223 lib tests + GRF asset audit). **Hunter traps LANDED 2026-07-26** via runtime RSM prop spawning (shadow/lighting still open). No engine follow-ups remain. |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -440,7 +440,38 @@ emitters verified to mean "resisted" (`skill_failed_text` in
 `korangar-networking`); see that function's comment before adding more, since
 most of the ~60 other cause-0 sites really are unmet conditions.
 
-## TODO — runtime RSM prop spawning (the last engine follow-up)
+## Runtime RSM prop spawning — LANDED 2026-07-26 (was the last engine follow-up)
+
+**The scoping below was wrong, and the correction is the useful part.** It
+claimed models are baked into map vertex buffers at load, making this a new
+pipeline. Direct inspection showed otherwise: map objects are **not** baked —
+they render per frame via `Map::render_objects` → `Object::render_geometry`,
+each emitting a `ModelInstruction` with its own model matrix. Only the *ground*
+uses prebuilt sub-meshes. What is built once at load is the shared geometry
+buffer; a `ModelInstruction` is just a draw range into it plus a transform.
+
+So the real constraint was only: **a prop's geometry must be in that buffer.**
+The map loader now loads the ten trap models into the same buffer and texture set
+as the map's own objects, and a spawned trap is an ordinary `ModelInstruction`.
+No new pass, no new pipeline, no buffer rebuild, correct lighting and depth for
+free. Lesson: re-derive a "substantial" estimate from the code before pricing it.
+
+**Live-verified:** model renders at the placed cell, Sandman applies sleep, prop
+removed on both trigger and expiry.
+
+**Still open:** the prop casts **no visible shadow**, and its lighting
+interaction needs a look. Ruled out: degenerate transform (identity rotation,
+unit scale); shadow instruction wiring (props share the object instruction
+buffer, batch count and partition camera); missing baked lighting
+(`ModelVertex` carries RSM colour and normals, lit by the same shader path as
+any object). **Next diagnostic:** scale a trap up several times — if a shadow
+appears, a small prop flush with the ground is occluding its own shadow and
+there is nothing to fix; if a giant trap still casts nothing, it is not reaching
+the shadow map and the partition culling is the place to look.
+
+DM prop placement can now reuse this path.
+
+### Original scoping (kept for the record — the estimate it gave was wrong)
 
 **Why it is the real fix, not a workaround.** All ten Hunter traps are RSM
 *models*, not textures or sprites — the assets are present and identified
