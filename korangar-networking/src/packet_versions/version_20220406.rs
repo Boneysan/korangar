@@ -775,32 +775,32 @@ where
             InventoryItemDetails::ammo(quantity, EquipPosition::empty(), is_identified != 0)
         } else {
             match equip_position.is_empty() {
-            true => InventoryItemDetails::Regular {
-                amount: quantity,
-                equipped_position: equip_position,
-                flags: {
-                    let mut flags = RegularItemFlags::empty();
-                    flags.set(RegularItemFlags::IDENTIFIED, is_identified != 0);
-                    flags
+                true => InventoryItemDetails::Regular {
+                    amount: quantity,
+                    equipped_position: equip_position,
+                    flags: {
+                        let mut flags = RegularItemFlags::empty();
+                        flags.set(RegularItemFlags::IDENTIFIED, is_identified != 0);
+                        flags
+                    },
                 },
-            },
-            false => InventoryItemDetails::Equippable {
-                amount: quantity,
-                equip_position,
-                equipped_position: EquipPosition::empty(),
-                bind_on_equip_type,
-                w_item_sprite_number: 0,
-                option_count: option_data.len() as u8,
-                option_data,
-                refinement_level,
-                enchantment_level,
-                flags: {
-                    let mut flags = EquippableItemFlags::empty();
-                    flags.set(EquippableItemFlags::IDENTIFIED, is_identified != 0);
-                    flags.set(EquippableItemFlags::IS_BROKEN, is_broken != 0);
-                    flags
+                false => InventoryItemDetails::Equippable {
+                    amount: quantity,
+                    equip_position,
+                    equipped_position: EquipPosition::empty(),
+                    bind_on_equip_type,
+                    w_item_sprite_number: 0,
+                    option_count: option_data.len() as u8,
+                    option_data,
+                    refinement_level,
+                    enchantment_level,
+                    flags: {
+                        let mut flags = EquippableItemFlags::empty();
+                        flags.set(EquippableItemFlags::IDENTIFIED, is_identified != 0);
+                        flags.set(EquippableItemFlags::IS_BROKEN, is_broken != 0);
+                        flags
+                    },
                 },
-            },
             }
         };
 
@@ -1480,6 +1480,29 @@ where
 /// Hercules also reuses this packet for gameplay rejections, e.g. party
 /// creation without Basic Skill 7 arrives as skill 1 / cause 0.
 fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
+    // Hercules overloads USESKILL_FAIL_LEVEL for outcomes that have nothing to do
+    // with skill level, so a maxed skill reports "level not high enough". These are
+    // the ones verified in `skill.c` to mean the target resisted or the roll missed
+    // — extend only after checking the source, since most of the ~60 other cause-0
+    // emitters really are unmet conditions.
+    if packet.cause == 0 {
+        let resisted = match packet.skill_id.0 {
+            // `skill.c:8325` — the petrify roll (`skill_lv*4+20` percent, so 60% at
+            // level 10) missed; `skill.c:8306` — the target is MD_BOSS. Both arrive
+            // as cause 0 and are indistinguishable from here.
+            16 => Some("Stone Curse didn't take hold — the target resisted or is immune."),
+            // `skill.c:8298` — `pc->steal_coin` returned nothing.
+            211 => Some("Failed to steal any Zeny."),
+            // `skill.c:8275` — target out of level range, wrong race, or a boss.
+            1011 => Some("The target was unaffected by the charm."),
+            _ => None,
+        };
+
+        if let Some(resisted) = resisted {
+            return resisted.to_owned();
+        }
+    }
+
     match packet.cause {
         0 if packet.skill_id.0 == 1 => "You need to learn the basic skills first.".to_owned(),
         0 => "Skill level is not high enough.".to_owned(),
@@ -1492,6 +1515,27 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
         7 => "Red Gemstone required.".to_owned(),
         8 => "Blue Gemstone required.".to_owned(),
         9 => "You are overweight.".to_owned(),
+        10 => "You can't use that skill right now.".to_owned(),
+        11 => "That target is invalid for this skill.".to_owned(),
+        13 => "Holy Water required.".to_owned(),
+        14 => "An Ancilla is required.".to_owned(),
+        15 => "Another one of these is already in range.".to_owned(),
+        16 => "You need another skill first.".to_owned(),
+        22 => "That is already active.".to_owned(),
+        23 => "The conditions for this skill are not met.".to_owned(),
+        26 => "You can't place it there.".to_owned(),
+        // Hercules' catch-all for a required item with no dedicated cause —
+        // Yellow Gemstone (Land Protector) lands here, not on 7/8. It sends the
+        // required count in `btype` and the item in `item_id`; the name lookup
+        // lives in the client crate, so report the count and id.
+        71 | 72 => {
+            let what = if packet.cause == 72 { "equipment" } else { "item" };
+            match packet.btype {
+                count if count > 1 => format!("Missing required {what}: {count}x item #{}.", packet.item_id.0),
+                _ => format!("Missing required {what} (#{}).", packet.item_id.0),
+            }
+        }
+        84 => "Not enough ammunition.".to_owned(),
         cause => format!("Skill failed (reason {cause})."),
     }
 }
