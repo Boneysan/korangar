@@ -46,6 +46,7 @@ mod world;
 
 use std::collections::HashMap;
 use std::io::Cursor;
+use ragnarok_formats::transform::Transform;
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::ops::Deref;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -1046,6 +1047,9 @@ pub struct Client {
     /// Which looping status STR each entity is currently showing, so an
     /// unchanged status re-sent by the server doesn't restart the animation.
     active_status_effects: HashMap<EntityId, &'static str>,
+    /// Live Hunter-trap props, keyed by the unit's entity id. Geometry already
+    /// lives in the map's buffer; this only holds where each one sits.
+    active_trap_props: Vec<(EntityId, Arc<Model>, Transform)>,
     /// Where the live skill units are, for questions the packets cannot
     /// answer on their own (which elemental field the player is standing in).
     skill_unit_registry: SkillUnitRegistry,
@@ -1556,6 +1560,20 @@ impl Client {
         // registry answers questions about game state, which does not depend
         // on whether we can draw the thing.
         self.skill_unit_registry.insert(entity_id, unit_id, position);
+
+        // Hunter traps are RSM props rather than procedural bodies, so they take
+        // the prop path instead of a presentation recipe. Their geometry is
+        // already in the map's buffer from load, so this is only a placement.
+        if let Some(model_file) = trap_model_file(unit_id) {
+            match self.map.as_ref().and_then(|map| map.prop_model(model_file)) {
+                Some(model) => {
+                    let model = model.clone();
+                    self.active_trap_props.push((entity_id, model, Transform::position(position)));
+                }
+                None => eprintln!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
+            }
+            return;
+        }
 
         let Some(presentation) = unit_presentation(unit_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
@@ -2430,6 +2448,7 @@ impl Client {
             point_light_manager,
             effect_holder,
             active_status_effects: HashMap::new(),
+            active_trap_props: Vec::new(),
             skill_unit_registry,
             path_finder,
             point_light_set_buffer,
@@ -3108,6 +3127,8 @@ impl Client {
                     self.pending_impacts.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
+                    self.active_trap_props.clear();
+                    self.active_status_effects.clear();
                     self.audio_engine.clear_ambient_sound();
 
                     self.client_state.follow_mut(client_state().entities()).clear();
@@ -3316,6 +3337,8 @@ impl Client {
                     self.pending_impacts.clear();
                     self.effect_holder.clear();
                     self.point_light_manager.clear();
+                    self.active_trap_props.clear();
+                    self.active_status_effects.clear();
                     self.audio_engine.clear_ambient_sound();
                 }
                 NetworkEvent::CharacterCreated { character_information } => {
@@ -3589,6 +3612,8 @@ impl Client {
                     self.sprite_effects.clear();
                     self.effect_holder.clear();
                     self.skill_unit_registry.clear();
+                    self.active_trap_props.clear();
+                    self.active_status_effects.clear();
                     self.point_light_manager.clear();
                     self.audio_engine.clear_ambient_sound();
 
@@ -4600,6 +4625,7 @@ impl Client {
                     self.effect_holder.remove_unit(entity_id);
                     self.sprite_effects.remove_unit(entity_id);
                     self.skill_unit_registry.remove(entity_id);
+                    self.active_trap_props.retain(|(id, _, _)| *id != entity_id);
                 }
                 NetworkEvent::GroundSkillEffect {
                     skill_id,
@@ -7516,6 +7542,7 @@ impl Client {
                 scaling,
                 client_tick,
                 animation_timer_ms,
+                active_trap_props: &self.active_trap_props,
                 currently_playing,
                 is_mouse_mode_default,
                 is_interface_hovered: interface_frame.is_interface_hovered(),
@@ -7848,6 +7875,9 @@ impl ApplicationHandler for Client {
 /// they can be passed as a single `self` argument.
 struct MapRenderContext<'a, 'm: 'a> {
     map: &'m Map,
+    /// Live Hunter-trap props to place this frame. Not part of the map, since
+    /// they appear after it loads.
+    active_trap_props: &'a [(EntityId, Arc<Model>, Transform)],
     current_camera: &'a (dyn Camera + Send + Sync),
     point_light_set: &'a PointLightSet<'a>,
     client_state: &'a State<ClientState>,
@@ -7967,6 +7997,16 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 &partition_camera,
             );
 
+            // Traps cast shadows like any other prop, so they belong in this
+            // pass too — omitting them here would leave them floating.
+            #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_objects))]
+            self.map.render_props(
+                self.directional_shadow_model_instructions,
+                self.active_trap_props,
+                self.animation_timer_ms,
+                &partition_camera,
+            );
+
             #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_map))]
             self.map.render_ground(self.directional_shadow_model_instructions);
 
@@ -8047,6 +8087,14 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         self.map.render_objects(
             self.model_instructions,
             &object_set,
+            self.animation_timer_ms,
+            self.current_camera,
+        );
+
+        #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_objects))]
+        self.map.render_props(
+            self.model_instructions,
+            self.active_trap_props,
             self.animation_timer_ms,
             self.current_camera,
         );

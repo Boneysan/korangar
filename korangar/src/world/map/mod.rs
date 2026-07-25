@@ -17,17 +17,19 @@ use option_ext::OptionExt;
 use ragnarok_formats::map::EffectSource;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::MapData;
+use hashbrown::HashMap;
 use ragnarok_formats::map::{LightSource, SoundSource, Tile, TileFlags};
-#[cfg(feature = "debug")]
 use ragnarok_formats::transform::Transform;
-use ragnarok_packets::{ClientTick, TilePosition};
+use ragnarok_packets::{ClientTick, EntityId, TilePosition};
 use rust_state::RustState;
 use wgpu::Queue;
 
 pub use self::lighting::Lighting;
-use super::{Camera, Entity, GroundItem, Object, PointLightId, PointLightManager, ResourceSet, ResourceSetBuffer, SubMesh, Video};
+use super::{
+    Camera, Entity, GroundItem, Model, Object, PointLightId, PointLightManager, ResourceSet, ResourceSetBuffer, SubMesh, Video,
+};
 #[cfg(feature = "debug")]
-use super::{LightSourceExt, Model, PointLightSet};
+use super::{LightSourceExt, PointLightSet};
 #[cfg(feature = "debug")]
 use crate::graphics::{
     DebugAabbInstruction, DebugCircleInstruction, DebugRectangleInstruction, ModelBatch, RenderOptions, ScreenPosition, ScreenSize,
@@ -111,6 +113,10 @@ pub struct Map {
     index_buffer: Arc<Buffer<u32>>,
     texture_set: Arc<TextureSet>,
     objects: SimpleSlab<ObjectKey, Object>,
+    /// Models loaded into this map's shared geometry buffer but not placed by
+    /// the map itself — spawned at runtime instead (Hunter traps). Keyed by the
+    /// same `data\model\`-relative path used to load them.
+    prop_models: HashMap<&'static str, Arc<Model>>,
     light_sources: SimpleSlab<LightSourceKey, LightSource>,
     sound_sources: Vec<SoundSource>,
     #[cfg(feature = "debug")]
@@ -145,6 +151,7 @@ impl Map {
         index_buffer: Arc<Buffer<u32>>,
         texture_set: Arc<TextureSet>,
         objects: SimpleSlab<ObjectKey, Object>,
+        prop_models: HashMap<&'static str, Arc<Model>>,
         light_sources: SimpleSlab<LightSourceKey, LightSource>,
         sound_sources: Vec<SoundSource>,
         #[cfg(feature = "debug")] effect_sources: Vec<EffectSource>,
@@ -171,6 +178,7 @@ impl Map {
             index_buffer,
             texture_set,
             objects,
+            prop_models,
             light_sources,
             sound_sources,
             #[cfg(feature = "debug")]
@@ -346,6 +354,31 @@ impl Map {
             if let Some(object) = self.objects.get(object_key) {
                 object.render_geometry(instructions, animation_timer_ms, camera);
             }
+        }
+    }
+
+    /// A model preloaded into this map's geometry buffer but placed at runtime.
+    /// `None` if the map finished loading before the model was requested, or if
+    /// the model failed to load — callers must treat a missing prop as "draw
+    /// nothing" rather than as an error.
+    pub fn prop_model(&self, model_file: &str) -> Option<&Arc<Model>> {
+        self.prop_models.get(model_file)
+    }
+
+    /// Draw runtime-placed props (Hunter traps). Deliberately *not* culled
+    /// through the object kd-tree: that tree is built at load from the map's own
+    /// objects and a trap appears afterwards. There are only ever a handful of
+    /// live traps, so per-frame frustum work would cost more than it saves.
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    pub fn render_props(
+        &self,
+        instructions: &mut Vec<ModelInstruction>,
+        props: &[(EntityId, Arc<Model>, Transform)],
+        animation_timer_ms: f32,
+        camera: &dyn Camera,
+    ) {
+        for (_entity_id, model, transform) in props {
+            model.render_geometry(instructions, transform, animation_timer_ms, camera);
         }
     }
 

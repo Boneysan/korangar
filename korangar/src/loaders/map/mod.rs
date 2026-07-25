@@ -25,7 +25,7 @@ use self::water_plane::generate_water_plane;
 use super::error::LoadError;
 use crate::graphics::{BindlessSupport, Buffer, ModelVertex, TextureSet};
 use crate::loaders::{GameFileLoader, ModelLoader, TextureLoader, TextureSetBuilder, VideoLoader, split_mesh_by_texture};
-use crate::world::{Library, LightSourceKey, Lighting, MapSkyData, Model, SubMesh, Video};
+use crate::world::{Library, LightSourceKey, Lighting, MapSkyData, Model, SubMesh, TRAP_MODEL_FILES, Video};
 use crate::{EffectSourceExt, LightSourceExt, Map, Object, ObjectKey, SoundSourceExt};
 
 pub const GROUND_TILE_SIZE: f32 = 10.0;
@@ -282,6 +282,32 @@ impl MapLoader {
             .collect();
         let object_kdtree = KDTree::from_objects(&object_bounding_boxes);
 
+        // Preload the runtime-placed props into the SAME geometry buffer as the
+        // map's own objects. Doing it here rather than on demand is what keeps
+        // runtime spawning cheap: the buffer is built once below, so a trap
+        // appearing mid-fight costs only a draw instruction and never a buffer
+        // rebuild. A model that fails to load is skipped, not fatal — a missing
+        // trap visual must never take the map down with it.
+        let prop_models: HashMap<&'static str, Arc<Model>> = TRAP_MODEL_FILES
+            .iter()
+            .filter_map(|model_file| {
+                match model_loader.load(
+                    &mut texture_set_builder,
+                    &mut model_vertices,
+                    &mut model_indices,
+                    model_file,
+                    false,
+                ) {
+                    Ok(model) => Some((*model_file, Arc::new(model))),
+                    Err(_error) => {
+                        #[cfg(feature = "debug")]
+                        print_debug!("[{}] failed to preload prop model {model_file}: {_error:?}", "warning".yellow());
+                        None
+                    }
+                }
+            })
+            .collect();
+
         let BufferAndTextures {
             vertex_buffer,
             index_buffer,
@@ -317,6 +343,7 @@ impl MapLoader {
             index_buffer,
             texture_set,
             objects,
+            prop_models,
             light_sources,
             map_data.resources.sound_sources,
             #[cfg(feature = "debug")]

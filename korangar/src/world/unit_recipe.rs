@@ -11,6 +11,45 @@ use ragnarok_packets::UnitId;
 use crate::Color;
 use crate::world::{UnitCylinderSpec, UnitPulse};
 
+/// Hunter traps are the one unit family the procedural bodies below cannot
+/// express: their originals are RSM **models**, not textures or sprites.
+///
+/// Paths are relative to `data\model\`. Mapping recovered from the same
+/// reverse-engineered unit table as the rest of this file — roBrowser names them
+/// `ef_trap_NN`, which is its romanisation of these exact files. All ten are
+/// GRF-verified present (2026-07-26) and the mapping is 1:1 with no reuse.
+pub fn trap_model_file(unit_id: UnitId) -> Option<&'static str> {
+    let file = match unit_id {
+        UnitId::Anklesnare => "외부소품\\트랩01.rsm",
+        UnitId::Skidtrap => "외부소품\\트랩02.rsm",
+        UnitId::Landmine => "외부소품\\트랩03.rsm",
+        UnitId::Freezingtrap => "외부소품\\트랩03_2.rsm",
+        UnitId::Blastmine => "외부소품\\트랩03_3.rsm",
+        UnitId::Sandman => "외부소품\\트랩03_4.rsm",
+        UnitId::Flasher => "외부소품\\트랩03_5.rsm",
+        UnitId::Shockwave => "외부소품\\트랩03_6.rsm",
+        UnitId::Claymoretrap => "외부소품\\트랩04.rsm",
+        UnitId::Talkiebox => "외부소품\\트랩05.rsm",
+        _ => return None,
+    };
+    Some(file)
+}
+
+/// Every trap model, so a map load can put their geometry in the shared buffer
+/// up front — a trap spawning mid-fight then costs only a draw instruction.
+pub const TRAP_MODEL_FILES: &[&str] = &[
+    "외부소품\\트랩01.rsm",
+    "외부소품\\트랩02.rsm",
+    "외부소품\\트랩03.rsm",
+    "외부소품\\트랩03_2.rsm",
+    "외부소품\\트랩03_3.rsm",
+    "외부소품\\트랩03_4.rsm",
+    "외부소품\\트랩03_5.rsm",
+    "외부소품\\트랩03_6.rsm",
+    "외부소품\\트랩04.rsm",
+    "외부소품\\트랩05.rsm",
+];
+
 /// Procedural persistent geometry families.
 pub enum UnitBody {
     /// Layered rotating textured cylinders (Safety Wall, portals, Sanctuary,
