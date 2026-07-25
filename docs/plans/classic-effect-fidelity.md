@@ -429,6 +429,15 @@ faint 0.3 drain and `STONE` snaps to 0.95 — live-confirmed as reading correctl
 The animation-pause logic already made this distinction (`OPT1_STONE |
 OPT1_FREEZE`, no `STONEWAIT`); the tint table was the odd one out.
 
+**Sprite freeze extended to stun and sleep (2026-07-26).** The pause list was
+honouring only half the server's rule: Hercules blocks movement for **every**
+`opt1` state except `STONEWAIT` and `BURNING` (`unit.c:1304`), so a stunned or
+sleeping mob was standing still server-side while its sprite kept bobbing
+through its idle loop. Both call sites now go through
+`status_freezes_animation`, and `STONEWAIT` remains excluded — pinned by a test,
+because it is exactly the kind of exception that gets "tidied" into the list
+later. Live-verified with a Hammerfall stun.
+
 **Trap — a failed Stone Curse reports "Skill level is not high enough".** Same
 overloaded `USESKILL_FAIL_LEVEL` family as the Demonstration NOFOOTSET trap
 above, different emitter: `skill.c:8325` sends cause 0 when the petrify roll

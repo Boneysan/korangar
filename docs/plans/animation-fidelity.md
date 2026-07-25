@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | Active (2026-07-26) — **engine track A–D closed live**; E1 closed, **E2 closed incl. Hunter traps**, E4 3-of-5 done live, E3 partial (coverage), F not started |
+| **Status** | Active (2026-07-26) — **engine track A–D closed live**; E1 closed, **E2 closed incl. Hunter traps**, **E4 all grounded items done live** (rest needs reference material), E3 partial (coverage only), F not started |
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | **No engine follow-ups remain.** E1 DONE 7/7 live. E2 DONE — both unit batches, ground-decal depth pass, and **Hunter traps** (2026-07-26, runtime RSM props). E4 **3 of 5 done live** (opt1/opt2 tints, attached looping status STRs, Freeze1/Freeze2 split); **open: stun/sleep/frozen poses + refresh variants**. E3 **partial** — architecture done, gap is table coverage. **Start here:** extend `set_status_paused` to STUN/SLEEP (Hercules immobilises every opt1 state bar STONEWAIT/BURNING, so their sprites should not keep strolling) — small and well-grounded. Then E3 coverage via the `KORANGAR_PACKET_LOG` unmapped-id log. Leave "poses beyond freezing" and "refresh variants" until there is a reference to match — do not eyeball them. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
+| **NEXT AGENT** | **No engine follow-ups remain.** E1 DONE 7/7 live. E2 DONE — both unit batches, ground-decal depth pass, and **Hunter traps** (2026-07-26, runtime RSM props). E4 — **every grounded item is done live**: opt1/opt2 tints, attached looping status STRs, Freeze1/Freeze2 split, and sprite freeze extended to STUN/SLEEP (`status_freezes_animation`). What remains in E4 is **blocked on reference material, not effort**: a *specific* held pose rather than freezing in place, and refresh variants — **do not eyeball either**. E3 **partial** — architecture done, gap is table coverage only. **Start here (cheapest first):** (1) live-check the existing cast circles — `Lockon` and all six `Beginspell` recipes exist but have never been looked at, so this is zero code and may close part of E3 outright; (2) the two testing follow-ups — no client-side range check on ground casts (`is_within_skill_range` exists and is unused on that path, so an out-of-range cast fails silently), and `skill_failed_text` reporting a raw item id because it lives in `korangar-networking` with no item DB; (3) E3 coverage via the `KORANGAR_PACKET_LOG` unmapped-id log — a long tail needing play data, not a session. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
 
 ## 1. Scope and shape
 
@@ -295,13 +295,17 @@ here when done.
   `silence.str` — GRF-probed; `curse.str`/`blind.str`/`stone.str` do **not**
   exist, so those stay tint-only); ✅ Freeze1/Freeze2 selection (`Freeze` and
   `Freezed` had both resolved to `freeze.str`).
-  **Open:** (a) **stun/sleep/frozen poses** — note RO sprites have no dedicated
-  stun or sleep action (the action table is Idle/Walk/Sit/Pickup/ReadyFight/
-  Attack/Hurt/Die/Special), so this cannot mean a new animation. The grounded
-  first step is extending `set_status_paused` beyond `OPT1_STONE | OPT1_FREEZE`
-  to stun and sleep: Hercules immobilises every opt1 state except `STONEWAIT`
-  and `BURNING` (`unit.c:1304`), so those sprites should not keep walking
-  through an idle loop. Anything more specific needs a reference.
+  ✅ **sprite freeze extended to stun and sleep** (2026-07-26) — Hercules blocks
+  movement for every opt1 state except `STONEWAIT` and `BURNING`
+  (`unit.c:1304`), so the client was honouring only half the rule and stunned
+  mobs kept bobbing through their idle loop. Both call sites now go through
+  `status_freezes_animation`; `STONEWAIT` stays excluded and is pinned by a test,
+  since the petrifying phase still walks and attacks.
+  **Open:** (a) a *specific held pose* rather than freezing wherever the sprite
+  happens to be. Note RO sprites have **no dedicated stun or sleep action** (the
+  action table is Idle/Walk/Sit/Pickup/ReadyFight/Attack/Hurt/Die/Special), so
+  this cannot mean a new animation — it would mean holding a particular existing
+  frame, and which one needs a reference. **Do not eyeball it.**
   (b) **refresh variants** — what the original shows when a status is
   re-applied while already active. Needs source before building.
 

@@ -14,13 +14,15 @@ closed**, and so is most of the data track. E1 **DONE 7/7 live**. E2 **DONE** �
 both unit batches plus **Hunter traps**, which now spawn as real RSM props
 (`trap_model_file()` / `TRAP_MODEL_FILES` in `world/unit_recipe.rs`; models
 preloaded into the map's shared buffer at load, placed at runtime as ordinary
-`ModelInstruction`s). E4 **3 of 5 items done live** — opt1/opt2 tints, attached
-looping status STRs, Freeze1/Freeze2 split; **still open: stun/sleep/frozen
-poses and refresh variants**. E3 **partial** — architecture complete, the gap is
+`ModelInstruction`s). E4 — **every grounded item done live**: opt1/opt2 tints, attached
+looping status STRs, Freeze1/Freeze2 split, and sprite freeze extended to
+stun/sleep (`status_freezes_animation` — Hercules immobilises every opt1 state
+bar STONEWAIT/BURNING). What remains is **blocked on reference material, not
+effort**: a specific held pose, and refresh variants — do not eyeball either. E3 **partial** — architecture complete, the gap is
 table coverage (~79 mapped `EffectId` references against 1124 enum variants);
 unmapped ids log under `KORANGAR_PACKET_LOG`. Phase F (timing polish) not
 started and two of its three items are gated on Phase A fixtures.
-Next: close E4's two remaining items, then chip at E3 coverage. Plan:
+Next (cheapest first): live-check the existing cast circles (`Lockon` + six `Beginspell` recipes exist, never looked at — zero code); then the two testing follow-ups (no client-side range check on ground casts; `skill_failed_text` shows a raw item id); then E3 coverage from the `KORANGAR_PACKET_LOG` unmapped-id log. Plan:
 [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
 
 **Two rendering findings worth knowing before touching effects or props:**
