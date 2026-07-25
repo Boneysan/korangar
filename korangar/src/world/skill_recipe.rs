@@ -209,7 +209,11 @@ impl TravelBallKind {
 
     pub fn size(self) -> f32 {
         match self {
-            Self::FrostDiver => 70.0,
+            // Halved from 70 after the first live look at the shard trail — one
+            // big disc read as a blob, and once it became a spray the individual
+            // shards only work at a smaller scale. Shard sizes derive from this
+            // via `trail_shards`, so they shrink with it.
+            Self::FrostDiver => 35.0,
         }
     }
 
@@ -237,14 +241,19 @@ impl TravelBallKind {
     /// table carries no particle count, spread or rate for it, so there is
     /// nothing authoritative to match. A lone disc read as a generic blob, so
     /// the head now drags a short spray that tapers in size and alpha.
+    ///
+    /// Lags and spread were both pulled in after the live look: the alternating
+    /// sideways offsets separated far enough to read as *two* trails flanking
+    /// the head rather than one spray behind it, and the original values were
+    /// dialled at twice the current head size.
     pub fn trail_shards(self) -> &'static [(f32, f32, f32, f32, f32)] {
         match self {
             Self::FrostDiver => &[
-                (0.05, 6.0, 1.5, 0.78, 0.70),
-                (0.10, -7.0, -1.0, 0.66, 0.56),
-                (0.16, 4.0, 3.0, 0.55, 0.44),
-                (0.23, -5.0, 0.5, 0.44, 0.32),
-                (0.31, 2.0, -2.0, 0.34, 0.22),
+                (0.03, 2.5, 0.8, 0.78, 0.70),
+                (0.06, -3.0, -0.5, 0.66, 0.56),
+                (0.09, 1.5, 1.5, 0.55, 0.44),
+                (0.13, -2.0, 0.3, 0.44, 0.32),
+                (0.17, 1.0, -1.0, 0.34, 0.22),
             ],
         }
     }
