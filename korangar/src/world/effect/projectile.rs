@@ -12,8 +12,8 @@ use crate::world::{Camera, PointLightId, PointLightManager};
 
 const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
 
-/// Short classic source-to-target projectile used by Spear Boomerang, Fire Ball,
-/// Frost Diver, and Jupitel Thunder.
+/// Short classic source-to-target projectile used by Spear Boomerang, Fire
+/// Ball, Frost Diver, and Jupitel Thunder.
 pub struct SkillProjectile {
     texture: Arc<Texture>,
     /// Animated frame cycle drawn instead of `texture` when non-empty
@@ -38,6 +38,12 @@ pub struct SkillProjectile {
     color: Color,
     point_light_id: Option<PointLightId>,
     light_intensity: f32,
+    /// Fraction of the flight this copy lags behind the head of the shot.
+    /// `0.0` is the head itself; a trail shard sits at `progress - trail_lag`.
+    trail_lag: f32,
+    /// World-space nudge applied to this copy, so a multi-shard trail reads as
+    /// a spray of ice rather than a straight line of identical quads.
+    trail_offset: Vector3<f32>,
     gets_deleted: bool,
 }
 
@@ -58,6 +64,8 @@ impl SkillProjectile {
             color: Color::WHITE,
             point_light_id: None,
             light_intensity: 0.0,
+            trail_lag: 0.0,
+            trail_offset: Vector3::new(0.0, 0.0, 0.0),
             gets_deleted: false,
         }
     }
@@ -98,6 +106,8 @@ impl SkillProjectile {
             color: Color::WHITE,
             point_light_id: None,
             light_intensity: 0.0,
+            trail_lag: 0.0,
+            trail_offset: Vector3::new(0.0, 0.0, 0.0),
             gets_deleted: false,
         }
     }
@@ -130,8 +140,27 @@ impl SkillProjectile {
             color,
             point_light_id: Some(point_light_id),
             light_intensity,
+            trail_lag: 0.0,
+            trail_offset: Vector3::new(0.0, 0.0, 0.0),
             gets_deleted: false,
         }
+    }
+
+    /// Turn this copy into a trailing shard rather than the head of the shot.
+    ///
+    /// Not a fidelity feature — the original client's effect 27 is a single
+    /// travelling `effect\ice` texture with no particle data in the recovered
+    /// table. This is our own embellishment so the shot reads as a spray of
+    /// ice, and it carries no point light (only the head does, or every shard
+    /// would stack into one blown-out glare).
+    pub fn with_trail(mut self, lag: f32, offset: Vector3<f32>, size_scale: f32, alpha_scale: f32) -> Self {
+        self.trail_lag = lag;
+        self.trail_offset = offset;
+        self.size *= size_scale;
+        self.color.alpha *= alpha_scale;
+        self.point_light_id = None;
+        self.light_intensity = 0.0;
+        self
     }
 
     /// WZ_JUPITEL travel ball, matching the original client's effect 93: the
@@ -163,6 +192,8 @@ impl SkillProjectile {
             color: Color::rgb_u8(255, 250, 200),
             point_light_id: Some(point_light_id),
             light_intensity: 48.0,
+            trail_lag: 0.0,
+            trail_offset: Vector3::new(0.0, 0.0, 0.0),
             gets_deleted: false,
         }
     }
@@ -172,7 +203,10 @@ impl SkillProjectile {
     }
 
     fn position_at(&self, progress: f32) -> Point3<f32> {
-        self.source + (self.target - self.source) * progress
+        // A trail shard rides the same path, just further back along it. Clamped
+        // at 0 so shards emerge from the caster instead of behind them.
+        let progress = (progress - self.trail_lag).max(0.0);
+        self.source + (self.target - self.source) * progress + self.trail_offset
     }
 }
 
@@ -354,13 +388,7 @@ impl EffectBase for SoulStrikeOrbs {
             if intensity > 0.5
                 && Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, intensity))
             {
-                point_light_manager.register_fading(
-                    self.point_light_id,
-                    light_position,
-                    SOUL_LIGHT,
-                    intensity,
-                    SOUL_LIGHT_INTENSITY,
-                );
+                point_light_manager.register_fading(self.point_light_id, light_position, SOUL_LIGHT, intensity, SOUL_LIGHT_INTENSITY);
             }
             break;
         }

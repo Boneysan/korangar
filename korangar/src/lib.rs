@@ -51,7 +51,7 @@ use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, LazyLock, Mutex};
 use std::time::{Duration, Instant};
 
-use cgmath::{Point3, Vector3};
+use cgmath::{InnerSpace, Point3, Vector3};
 use image::{EncodableLayout, ImageFormat, ImageReader};
 use input::{MouseInputMode, MouseModeExt};
 use korangar_audio::{AudioEngine, SoundEffectKey};
@@ -1469,9 +1469,17 @@ impl Client {
                 .wrapping_mul(31)
                 ^ duration.to_bits(),
         );
-        match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
-            Ok(texture) => self.effect_holder.add_effect(Box::new(SkillProjectile::travel_ball(
-                texture,
+        let texture = match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
+            Ok(texture) => texture,
+            Err(error) => {
+                eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path());
+                return;
+            }
+        };
+
+        let make_head = || {
+            SkillProjectile::travel_ball(
+                texture.clone(),
                 source_position,
                 target_position,
                 duration,
@@ -1479,8 +1487,25 @@ impl Client {
                 kind.color(),
                 light_id,
                 kind.light_intensity(),
-            ))),
-            Err(error) => eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path()),
+            )
+        };
+
+        self.effect_holder.add_effect(Box::new(make_head()));
+
+        // Sideways axis of the shot, so shards spray across the flight path
+        // rather than stacking into one thick line.
+        let travel = target_position - source_position;
+        let across = Vector3::new(-travel.z, 0.0, travel.x);
+        let across = if across.magnitude2() > f32::EPSILON {
+            across.normalize()
+        } else {
+            Vector3::new(1.0, 0.0, 0.0)
+        };
+
+        for &(lag, sideways, lift, size_scale, alpha_scale) in kind.trail_shards() {
+            let offset = across * sideways + Vector3::new(0.0, lift, 0.0);
+            self.effect_holder
+                .add_effect(Box::new(make_head().with_trail(lag, offset, size_scale, alpha_scale)));
         }
     }
 

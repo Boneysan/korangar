@@ -171,7 +171,8 @@ pub enum DamageTargetEffect {
     SonicBlow,
     /// Phase E1 — MG_NAPALMBEAT converging lens streaks (original effect 1).
     NapalmBeat,
-    /// Phase E1 — WZ_EARTHSPIKE stone horns under the target (original effect 79).
+    /// Phase E1 — WZ_EARTHSPIKE stone horns under the target (original effect
+    /// 79).
     EarthSpike,
     /// Phase E1 — WZ_HEAVENDRIVE 5×5 grid of stone horns (original effect 142).
     HeavensDrive,
@@ -221,7 +222,30 @@ impl TravelBallKind {
     /// Mid-flight point-light peak intensity (world units).
     pub fn light_intensity(self) -> f32 {
         match self {
-            Self::FrostDiver => 36.0,
+            // Raised from 36 — the blue glow was there but barely read against
+            // lit terrain, the same "ground effects need to be brighter" note
+            // that came out of the E2 unit passes.
+            Self::FrostDiver => 58.0,
+        }
+    }
+
+    /// Trailing shards drawn behind the head of the shot, as
+    /// `(lag, sideways, lift, size_scale, alpha_scale)`.
+    ///
+    /// **Our design, not recovered fidelity.** The original client's effect 27
+    /// is a single travelling `effect\ice` texture — the reverse-engineered
+    /// table carries no particle count, spread or rate for it, so there is
+    /// nothing authoritative to match. A lone disc read as a generic blob, so
+    /// the head now drags a short spray that tapers in size and alpha.
+    pub fn trail_shards(self) -> &'static [(f32, f32, f32, f32, f32)] {
+        match self {
+            Self::FrostDiver => &[
+                (0.05, 6.0, 1.5, 0.78, 0.70),
+                (0.10, -7.0, -1.0, 0.66, 0.56),
+                (0.16, 4.0, 3.0, 0.55, 0.44),
+                (0.23, -5.0, 0.5, 0.44, 0.32),
+                (0.31, 2.0, -2.0, 0.34, 0.22),
+            ],
         }
     }
 }
@@ -804,7 +828,10 @@ mod tests {
             skill_presentation_recipe(SkillId(15)).projectile,
             Some(ProjectileRecipe::TravelBall(TravelBallKind::FrostDiver))
         );
-        assert_eq!(skill_presentation_recipe(SkillId(84)).projectile, Some(ProjectileRecipe::JupitelBall));
+        assert_eq!(
+            skill_presentation_recipe(SkillId(84)).projectile,
+            Some(ProjectileRecipe::JupitelBall)
+        );
         assert_eq!(
             skill_presentation_recipe(SkillId(84)).damage_target_effect,
             Some(DamageTargetEffect::JupitelHit)
