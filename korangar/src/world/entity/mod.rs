@@ -67,6 +67,18 @@ const OPT2_SILENCE: u16 = 0x0004;
 const OPT2_BLIND: u16 = 0x0010;
 const OPT2_DEADLY_POISON: u16 = 0x0080;
 
+/// Whether a status holds the sprite still.
+///
+/// Hercules blocks movement for **every** `opt1` state except `OPT1_STONEWAIT`
+/// and `OPT1_BURNING` (`unit.c:1304`), so a stunned or sleeping entity is
+/// standing still server-side — its sprite must not keep walking through an idle
+/// loop. `STONEWAIT` is deliberately excluded: the *petrifying* phase still moves
+/// and attacks until the wait timer flips it to `OPT1_STONE`, which is the same
+/// distinction [`Common::status_tint`] draws.
+pub fn status_freezes_animation(body_state: u16) -> bool {
+    matches!(body_state, OPT1_STONE | OPT1_FREEZE | OPT1_STUN | OPT1_SLEEP)
+}
+
 /// The looping STR played on an entity for as long as a status is active.
 ///
 /// Only assets confirmed present in the GRF appear here (probed 2026-07-26):
@@ -965,7 +977,7 @@ impl Common {
             _ if entity_data.is_pk_mode_on || weapon != 0 => animation_state.idle(entity_type, true, client_tick),
             _ => {}
         }
-        animation_state.set_status_paused(matches!(entity_data.body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
+        animation_state.set_status_paused(status_freezes_animation(entity_data.body_state), client_tick);
         let scale = match library.get::<IsBabyJob>(job_id) {
             IsBabyJob(true) => BABY_JOB_SCALE,
             IsBabyJob(false) => 1.0,
@@ -1232,7 +1244,7 @@ impl Common {
         let pk_changed = self.is_pk_mode_on != is_pk_mode_on;
         self.is_pk_mode_on = is_pk_mode_on;
         self.animation_state
-            .set_status_paused(matches!(body_state, OPT1_STONE | OPT1_FREEZE), client_tick);
+            .set_status_paused(status_freezes_animation(body_state), client_tick);
 
         if pk_changed && self.animation_state.is_neutral() && !self.action_request_locked() {
             self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
@@ -2520,8 +2532,30 @@ impl StateWindow<ClientState> for Entity {
 
 #[cfg(test)]
 mod status_effect_asset_tests {
-    use super::{status_effect_asset, OPT1_FREEZE, OPT1_SLEEP, OPT1_STONE, OPT1_STONEWAIT, OPT1_STUN};
+    use super::{status_effect_asset, status_freezes_animation, OPT1_FREEZE, OPT1_SLEEP, OPT1_STONE, OPT1_STONEWAIT, OPT1_STUN};
     use super::{OPT2_BLIND, OPT2_CURSE, OPT2_DEADLY_POISON, OPT2_POISON, OPT2_SILENCE};
+
+    /// Hercules blocks movement for every opt1 state bar STONEWAIT/BURNING
+    /// (`unit.c:1304`), so all of these are standing still server-side.
+    #[test]
+    fn incapacitating_states_freeze_the_sprite() {
+        assert!(status_freezes_animation(OPT1_STONE));
+        assert!(status_freezes_animation(OPT1_FREEZE));
+        assert!(status_freezes_animation(OPT1_STUN));
+        assert!(status_freezes_animation(OPT1_SLEEP));
+    }
+
+    /// The petrifying phase still walks and attacks, so freezing it here would
+    /// contradict the server — the same distinction the tint table draws.
+    #[test]
+    fn stonewait_keeps_animating() {
+        assert!(!status_freezes_animation(OPT1_STONEWAIT));
+    }
+
+    #[test]
+    fn healthy_entity_keeps_animating() {
+        assert!(!status_freezes_animation(0));
+    }
 
     #[test]
     fn healthy_entity_has_no_status_visual() {
