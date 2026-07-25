@@ -6,7 +6,7 @@
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | E1 **DONE + live-verified 7/7** (2026-07-23). E2 **batches 1 & 2 DONE + live-verified** (2026-07-24): batch 1 = 10 units (Safety Wall/Sanctuary/Magnus/Ice Wall/portals…), batch 2 = 6 units (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). Remaining are engine follow-ups, not data recipes: ground-decal depth pass (Land Protector draws over player), status-effect entity visuals, Hunter traps (runtime RSM prop spawning). Next data track = E3 remainder. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
+| **NEXT AGENT** | E1 **DONE + live-verified 7/7** (2026-07-23). E2 **batches 1 & 2 DONE + live-verified** (2026-07-24): batch 1 = 10 units (Safety Wall/Sanctuary/Magnus/Ice Wall/portals…), batch 2 = 6 units (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). Ground-decal depth pass **DONE + live-verified** (2026-07-24) and status-effect entity visuals **DONE + live-verified** (2026-07-25: freeze cyan, petrification greyscale via a new shader desaturation path). Only remaining engine follow-up: Hunter traps (runtime RSM prop spawning). Next data track = E3 remainder. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
 
 ## 1. Scope and shape
 

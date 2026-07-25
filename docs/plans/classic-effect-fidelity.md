@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 2026-07-24: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. Code green (223 lib tests + GRF asset audit). Open engine follow-ups: status-effect entity visuals, Hunter traps (need runtime RSM prop spawning). |
+| **Status** | 2026-07-25: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. **Status-effect entity visuals landed + live-verified 2026-07-25** (freeze cyan, petrification greyscale — see §Status-effect entity tints). Code green (223 lib tests + GRF asset audit). Only remaining engine follow-up: Hunter traps (need runtime RSM prop spawning). |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -392,6 +392,74 @@ despite multi-hit animation.
 Note the two anchor styles differ. Napalm Beat and Soul Strike land on the
 target entity; Earth Spike and Heaven's Drive rise out of the ground; Fire Ball,
 Frost Diver, and Jupitel travel and then burst.
+
+## Status-effect entity tints (landed + live-verified 2026-07-25)
+
+Closes the "a poisoned mob looks untouched while losing HP" gap left open by the
+E2 passes. Driven by the `opt1` / `opt2` flags the client already receives per
+entity — note the field names are swapped relative to their contents:
+`body_state` holds opt1, `health_state` holds opt2. `Common::status_tint()` in
+`world/entity/mod.rs` is the whole table.
+
+**A multiplicative tint is not sufficient, and this was the main finding.**
+Multiplying a sprite by grey only ever *darkens* it — a petrified Poring read as
+"standing in shadow", not as stone. Draining colour needs the sprite mixed
+toward its own luminance, which is a per-pixel operation. So `StatusTint` carries
+two knobs:
+
+| Knob | Effect | Used by |
+|---|---|---|
+| `color` | component-wise multiply | freeze (cyan), poison (violet), stun (yellow) — genuine hue shifts |
+| `desaturation` | mix toward Rec. 709 luminance, 0 = untouched | petrification (0.95), curse (0.6), blind (0.35) |
+
+`desaturation` rides in the entity `InstanceData`'s existing `padding` slot, so
+the instance buffer did not grow. The fragment shader drains hue **before** the
+tint multiplies in — order matters, or the tint darkens a colour that is then
+greyscaled. Both `entity.slang` and `entity_bindless.slang` carry the change;
+**only the bindless path has been run** (macOS Metal), so the plain path shares
+the same untested-on-GL/WSL caveat as the ground-decal pass.
+
+**Petrification has two server phases and must render as two.** `SC_STONE`
+starts as `OPT1_STONEWAIT` and Hercules deliberately lets the target keep
+walking and attacking through it (`unit.c:1304` exempts it from the movement
+block); only when the wait timer expires does `status.c:12456` call
+`stop_walking` + `stop_attack` and flip to `OPT1_STONE`. Tinting both phases
+identically produced a fully-grey mob wandering around. Now `STONEWAIT` gets a
+faint 0.3 drain and `STONE` snaps to 0.95 — live-confirmed as reading correctly.
+The animation-pause logic already made this distinction (`OPT1_STONE |
+OPT1_FREEZE`, no `STONEWAIT`); the tint table was the odd one out.
+
+**Trap — a failed Stone Curse reports "Skill level is not high enough".** Same
+overloaded `USESKILL_FAIL_LEVEL` family as the Demonstration NOFOOTSET trap
+above, different emitter: `skill.c:8325` sends cause 0 when the petrify roll
+misses, and the roll is `skill_lv*4+20` percent — **60% at level 10**, so ~4
+casts in 10 report a level error on a maxed skill. `skill.c:8306` sends the same
+cause 0 for an `MD_BOSS` target. Tell: a failed roll above level 5 does **not**
+consume the Red Gemstone. The client now disambiguates the handful of cause-0
+emitters verified to mean "resisted" (`skill_failed_text` in
+`korangar-networking`); see that function's comment before adding more, since
+most of the ~60 other cause-0 sites really are unmet conditions.
+
+## Frost Diver travel spray — OUR DESIGN, not recovered fidelity
+
+Flagged explicitly because everything else in this document is reverse-engineered
+from the original. **Effect 27 carries no particle data.** The recovered table
+entry is just `file: effect/ice`, `attachedEntity: false` — no count, no spread,
+no rate. A dedicated `frostdiver.str` was probed for and does not exist in the
+GRF (only `freeze.str` / `freezed.str`, which are the freeze *status*, effect
+28). So the original really is a single travelling ice texture, and we were
+already rendering exactly that.
+
+It read as a generic blob, so the head now drags five shards (`trail_shards()` in
+`skill_recipe.rs`) that lag 0.05→0.31 of the flight, spray across the travel
+axis, and taper in size 0.78→0.34 and alpha 0.70→0.22. Only the head carries a
+point light — six overlapping lights stack into one blown-out glare. Travel light
+intensity also raised 36 → 58, the recurring "ground effects need to be brighter"
+note from the E2 passes.
+
+Anyone chasing fidelity later: **do not treat these numbers as authentic.** They
+are tuned by eye. Same standing as the song/dance units, which roBrowser also
+leaves as `Tofix`.
 
 ## The method — recovering any original-client visual (repeatable runbook)
 
