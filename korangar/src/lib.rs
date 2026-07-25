@@ -548,6 +548,11 @@ const INITIAL_SCREEN_SIZE: ScreenSize = ScreenSize {
 };
 
 const INITIAL_SCALING_FACTOR: Scaling = Scaling::new(1.0);
+/// Uniform scale applied to runtime-spawned trap props. Map objects get an
+/// explicit scale from the RSW; a runtime spawn has none, and unit scale draws
+/// these models far larger than a trap should read. Dialled in live — the unit
+/// table carries no scale for them.
+const TRAP_PROP_SCALE: f32 = 0.25;
 const FALLBACK_PACKET_VERSION: SupportedPacketVersion = SupportedPacketVersion::_20220406;
 
 static ICON_DATA: &[u8] = include_bytes!("../archive/data/icon.png");
@@ -1568,7 +1573,14 @@ impl Client {
             match self.map.as_ref().and_then(|map| map.prop_model(model_file)) {
                 Some(model) => {
                     let model = model.clone();
-                    self.active_trap_props.push((entity_id, model, Transform::position(position)));
+                    // Map objects carry an explicit scale from the RSW; a runtime
+                    // spawn has none, and unit scale renders these models far
+                    // larger than a trap should read on the ground. Dialled in
+                    // live rather than recovered — there is no scale for these in
+                    // the unit table.
+                    let mut transform = Transform::position(position);
+                    transform.scale = Vector3::new(TRAP_PROP_SCALE, TRAP_PROP_SCALE, TRAP_PROP_SCALE);
+                    self.active_trap_props.push((entity_id, model, transform));
                 }
                 None => eprintln!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
             }
