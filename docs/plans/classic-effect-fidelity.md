@@ -440,6 +440,38 @@ emitters verified to mean "resisted" (`skill_failed_text` in
 `korangar-networking`); see that function's comment before adding more, since
 most of the ~60 other cause-0 sites really are unmet conditions.
 
+## TODO — runtime RSM prop spawning (the last engine follow-up)
+
+**Why it is the real fix, not a workaround.** All ten Hunter traps are RSM
+*models*, not textures or sprites — the assets are present and identified
+(`data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6`, see the batch-2 table
+above). Every other persistent unit renders through a texture or sprite path, so
+none of them apply here. Today a trap arrives from the server, misses
+`MAPPED_UNIT_IDS`, and draws nothing at all: the placement animation plays, the
+unit is live and functional server-side, and the ground stays empty.
+Live-confirmed 2026-07-26 with Sandman.
+
+**Why it is substantial.** Map models are baked into map vertex buffers at load
+time. There is no path to introduce one after that, so this is not a recipe
+entry — it needs:
+
+1. A **runtime spawn path** for an RSM model outside the baked map geometry.
+2. **Lifetime management** — traps are removed by `RemoveSkillUnit`, can expire,
+   and can be destroyed; the prop has to follow that lifecycle.
+3. **Non-disturbance** of the existing baked-map rendering, which is the part
+   most likely to regress and the reason this was deferred rather than rushed.
+
+**Why it is worth doing properly.** The same path serves **DM prop placement**,
+which is a campaign feature rather than a fidelity one — so the work pays for
+itself twice, and a throwaway trap-only hack would have to be rebuilt.
+
+**Interim option, if traps are needed before the pipeline exists:** reuse the
+depth-tested ground-decal drawer (`render_ground_decal`, shipped 2026-07-24 for
+Land Protector) to put a flat marker quad on the trap's cell. Cheap and makes
+traps visible and testable immediately, but it would be **our design, not the
+original's look** — same standing as the Frost Diver spray below. Do not let an
+interim marker close this item.
+
 ## Frost Diver travel spray — OUR DESIGN, not recovered fidelity
 
 Flagged explicitly because everything else in this document is reverse-engineered
