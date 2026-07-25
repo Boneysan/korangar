@@ -25,7 +25,24 @@ func vs_main(input: PostprocessingVertexInput) -> EffectVertexOutput {
     return output;
 }
 
+/// Below this sampled alpha a texel is treated as keyed-out and never written.
+static const var EFFECT_ALPHA_TEST: float = 0.004;
+
 [[shader("pixel")]]
 func fs_main(input: EffectVertexOutput) -> float4 {
-    return texture.Sample(linear_sampler, input.texture_coordinates) * input.color;
+    let color = texture.Sample(linear_sampler, input.texture_coordinates) * input.color;
+
+    // RO effect textures are alpha-keyed and the original client relies on alpha
+    // TESTING, not just blending. Most STR layers blend additively, where a
+    // transparent texel is black and therefore invisible for free — which is why
+    // this was never noticed. But layers that blend One/Zero (silence.str layer
+    // 6, every layer of sleep.str) write the source verbatim, painting the
+    // texture's black backing as an opaque square. Discarding keyed-out texels
+    // restores the original behaviour for those layers and changes nothing for
+    // the additive ones.
+    if (color.a <= EFFECT_ALPHA_TEST) {
+        discard;
+    }
+
+    return color;
 }
