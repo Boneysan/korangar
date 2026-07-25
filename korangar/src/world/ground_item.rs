@@ -8,7 +8,7 @@ use rust_state::RustState;
 use crate::FadeDirection;
 use crate::graphics::EntityInstruction;
 use crate::loaders::GAT_TILE_SIZE;
-use crate::world::{AnimationData, AnimationState, Camera, EntityType, FadeState, ItemResource, ItemResourceKey, Library, Map};
+use crate::world::{AnimationData, AnimationState, Camera, EntityType, FadeState, ItemResource, ItemResourceKey, Library, Map, StatusTint};
 
 pub const ITEM_SPRITE_PREFIX: &str = "아이템\\";
 
@@ -94,6 +94,7 @@ impl GroundItem {
                 &self.animation_state,
                 Direction::South,
                 self.fade_state.calculate_alpha(client_tick),
+                StatusTint::NONE,
                 1.0,
             );
         }

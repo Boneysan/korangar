@@ -290,6 +290,10 @@ pub struct EntityInstruction {
     pub depth_offset: f32,
     pub curvature: f32,
     pub color: Color,
+    /// How far to pull the sprite toward its own luminance, 0 = untouched.
+    /// Statuses that grey a sprite out (petrification) need this — `color`
+    /// is a multiply, which can only darken.
+    pub desaturation: f32,
     pub mirror: bool,
     pub entity_id: EntityId,
     pub add_to_picker: bool,

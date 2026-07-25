@@ -19,6 +19,7 @@ struct ForwardEntityBindlessVertexOutput {
     [[vk::location(6)]] var original_curvature: float;
     [[vk::location(7)]] var texture_index: int;
     [[vk::location(8)]] var color: float4;
+    [[vk::location(9)]] var desaturation: float;
 };
 
 [[vk::binding(0, 0)]] var global_uniforms: ConstantBuffer<GlobalUniforms>;
@@ -74,6 +75,7 @@ func vs_main(input: EntityVertexInput) -> ForwardEntityBindlessVertexOutput {
     output.original_curvature = instance.curvature;
     output.texture_index = instance.texture_index;
     output.color = instance.color;
+    output.desaturation = instance.desaturation;
     return output;
 }
 
@@ -240,9 +242,14 @@ func fragment(input: ForwardEntityBindlessVertexOutput) -> ForwardEntityFragment
             point_light_contribution += (light.color.rgb * intensity) * light_percent_point * attenuation * visibility_point;
         }
 
-        let base_color = diffuse_color * input.color;
+        // Drain the hue BEFORE the tint multiplies in: a status like petrification
+        // has to turn the sprite grey, and multiplying by grey only darkens it.
+        let luminance = dot(diffuse_color.rgb, LUMINANCE_WEIGHTS);
+        let drained = lerp(diffuse_color.rgb, float3(luminance), input.desaturation);
+
+        let base_color = drained * input.color.rgb;
         let light_contributions = saturate(ambient_light_contribution + directional_light_contribution + point_light_contribution);
-        var color = base_color.rgb * light_contributions;
+        var color = base_color * light_contributions;
 
         if (global_uniforms.enhanced_lighting == 0) {
             color = color_balance(color, -0.01, 0.0, 0.0);

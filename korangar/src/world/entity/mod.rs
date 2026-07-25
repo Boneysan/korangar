@@ -35,7 +35,7 @@ use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
     ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity, Library, MAX_WALK_PATH_SIZE, Map,
-    PathFinder, native_real_weapon_id,
+    PathFinder, StatusTint, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -50,8 +50,19 @@ const BABY_JOB_SCALE: f32 = 0.75;
 const SI_TRICKDEAD: u16 = 29;
 const SI_SU_STOOP: u16 = 893;
 const SI_SUHIDE: u16 = 933;
+/// `opt1` is an enum (one state at a time), `opt2` a bitmask. Values from
+/// Hercules `src/map/status.h`. Note the packet field names are swapped
+/// relative to their contents: `body_state` carries opt1, `health_state` opt2.
 const OPT1_STONE: u16 = 1;
 const OPT1_FREEZE: u16 = 2;
+const OPT1_STUN: u16 = 3;
+/// Petrif*ying* — the target still walks and attacks through this phase.
+const OPT1_STONEWAIT: u16 = 6;
+
+const OPT2_POISON: u16 = 0x0001;
+const OPT2_CURSE: u16 = 0x0002;
+const OPT2_BLIND: u16 = 0x0010;
+const OPT2_DEADLY_POISON: u16 = 0x0080;
 
 #[derive(Clone)]
 pub enum ResourceState<T> {
@@ -1494,6 +1505,42 @@ impl Common {
         }
     }
 
+    /// How a status effect recolours this entity's sprite.
+    ///
+    /// `opt1` is exclusive and takes precedence over the `opt2` bitmask, matching
+    /// the server: `status.c` keeps them in separate fields and opt1 states are
+    /// the incapacitating ones.
+    fn status_tint(&self) -> StatusTint {
+        match self.body_state {
+            // Petrification turns the sprite to stone, which is a LOSS of colour,
+            // not a darkening — hence near-full desaturation with a barely-tinted
+            // multiply. A grey multiply alone reads as "standing in shadow".
+            OPT1_STONE => return StatusTint::drained(Color::rgb(0.82, 0.82, 0.86), 0.95),
+            // STONEWAIT is the *petrifying* phase, and Hercules deliberately lets
+            // the target keep walking and attacking through it (`unit.c` exempts
+            // it from the movement block; `status.c` only calls `stop_walking`
+            // when the wait timer flips it to OPT1_STONE). So it must NOT look
+            // like stone yet — just a hint of grey creeping in, then the snap.
+            OPT1_STONEWAIT => return StatusTint::drained(Color::rgb(0.94, 0.94, 0.96), 0.3),
+            OPT1_FREEZE => return StatusTint::tinted(Color::rgb(0.55, 0.75, 1.0)), // icy cyan
+            OPT1_STUN => return StatusTint::tinted(Color::rgb(1.0, 0.9, 0.55)),    // dazed yellow
+            _ => {}
+        }
+
+        if self.health_state & OPT2_DEADLY_POISON != 0 {
+            StatusTint::tinted(Color::rgb(0.65, 0.35, 0.7)) // deadly poison — deeper violet
+        } else if self.health_state & OPT2_POISON != 0 {
+            StatusTint::tinted(Color::rgb(0.72, 0.55, 0.8)) // poison — sickly violet
+        } else if self.health_state & OPT2_CURSE != 0 {
+            // Curse drains colour too, but only partway and warmer than stone.
+            StatusTint::drained(Color::rgb(0.85, 0.78, 0.78), 0.6)
+        } else if self.health_state & OPT2_BLIND != 0 {
+            StatusTint::drained(Color::rgb(0.75, 0.75, 0.8), 0.35) // blind — dim and washed out
+        } else {
+            StatusTint::NONE
+        }
+    }
+
     pub fn render(&self, instructions: &mut Vec<EntityInstruction>, camera: &dyn Camera, add_to_picker: bool, client_tick: ClientTick) {
         if let Some(animation_data) = self.animation_data.as_ref() {
             // M1-007: modulate the existing fade alpha so hide/cloak is visible.
@@ -1511,6 +1558,7 @@ impl Common {
                 &self.animation_state,
                 self.direction,
                 alpha,
+                self.status_tint(),
                 self.scale,
             );
         }

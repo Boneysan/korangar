@@ -28,6 +28,41 @@ const ACT_DELAY_UNIT_MS: f32 = 24.0;
 /// must not be confused with real state 3/death.
 const TRICK_DEAD_POSE_STATE: i8 = -2;
 
+/// How a status effect recolours an entity's sprite.
+///
+/// Two knobs, because one is not enough: `color` multiplies (freeze goes cyan,
+/// poison goes violet), but a multiply can only ever darken — so petrification,
+/// which drains the sprite to stone grey, needs `desaturation` to mix it toward
+/// its own luminance first. A grey `color` alone just looks like shadow.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct StatusTint {
+    pub color: Color,
+    /// `0.0` keeps the original hues, `1.0` is fully greyscale.
+    pub desaturation: f32,
+}
+
+impl StatusTint {
+    /// No recolouring at all.
+    pub const NONE: Self = Self {
+        color: Color::WHITE,
+        desaturation: 0.0,
+    };
+
+    pub const fn tinted(color: Color) -> Self {
+        Self { color, desaturation: 0.0 }
+    }
+
+    pub const fn drained(color: Color, desaturation: f32) -> Self {
+        Self { color, desaturation }
+    }
+}
+
+impl Default for StatusTint {
+    fn default() -> Self {
+        Self::NONE
+    }
+}
+
 /// Ragexe `0x009A3400`: actor jobs using player-style reaction delay scaling.
 fn native_player_job(job_id: JobId) -> bool {
     matches!(job_id.0, 0..=30 | 4001..=5999)
@@ -1482,7 +1517,7 @@ impl AnimationData {
         finalize_frame_layout(&mut composed, layout);
 
         let world_matrix = self.calculate_world_matrix(camera, &composed, entity_position, 1.0);
-        self.push_frame_instructions(instructions, camera, &composed, world_matrix, entity_id, false, 1.0);
+        self.push_frame_instructions(instructions, camera, &composed, world_matrix, entity_id, false, 1.0, StatusTint::NONE);
         true
     }
 
@@ -1497,11 +1532,12 @@ impl AnimationData {
         animation_state: &AnimationState,
         direction: Direction,
         fade_alpha: f32,
+        tint: StatusTint,
         scale: f32,
     ) {
         let frame = self.get_frame(animation_state, camera, direction);
         let world_matrix = self.calculate_world_matrix(camera, &frame, entity_position, scale);
-        self.push_frame_instructions(instructions, camera, &frame, world_matrix, entity_id, add_to_picker, fade_alpha);
+        self.push_frame_instructions(instructions, camera, &frame, world_matrix, entity_id, add_to_picker, fade_alpha, tint);
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -1514,6 +1550,7 @@ impl AnimationData {
         entity_id: EntityId,
         add_to_picker: bool,
         fade_alpha: f32,
+        tint: StatusTint,
     ) {
         for (index, frame_part) in frame.frame_parts.iter().enumerate() {
             let animation_index = frame_part.animation_index;
@@ -1534,7 +1571,7 @@ impl AnimationData {
 
             let position = world_matrix.transform_point(Point3::from_value(0.0));
             let distance = camera.distance_to(position);
-            let color = frame_part.color * fade_alpha;
+            let color = frame_part.color * fade_alpha * tint.color;
 
             instructions.push(EntityInstruction {
                 world: world_matrix,
@@ -1546,6 +1583,7 @@ impl AnimationData {
                 extra_depth_offset: 0.005 * index as f32,
                 curvature,
                 color,
+                desaturation: tint.desaturation,
                 mirror: frame_part.mirror,
                 entity_id,
                 add_to_picker,

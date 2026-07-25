@@ -37,7 +37,7 @@ pub(crate) struct InstanceData {
     curvature: f32,
     mirror: u32,
     texture_index: i32,
-    padding: u32,
+    desaturation: f32,
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
@@ -271,7 +271,7 @@ impl Prepare for ForwardEntityDrawer {
                     curvature: instruction.curvature,
                     mirror: instruction.mirror as u32,
                     texture_index,
-                    padding: Default::default(),
+                    desaturation: instruction.desaturation,
                 });
             }
 
@@ -295,7 +295,7 @@ impl Prepare for ForwardEntityDrawer {
                     curvature: instruction.curvature,
                     mirror: instruction.mirror as u32,
                     texture_index: 0,
-                    padding: Default::default(),
+                    desaturation: instruction.desaturation,
                 });
             }
 

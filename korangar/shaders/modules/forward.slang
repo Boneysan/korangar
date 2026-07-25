@@ -8,6 +8,9 @@ import matrix;
 import sdsm;
 import transform;
 
+/// Rec. 709 luminance weights, used to grey a sprite out without darkening it.
+public static const var LUMINANCE_WEIGHTS = float3(0.2126, 0.7152, 0.0722);
+
 public struct DirectionalLightPartition {
     public var view_projection: float4x4;
     public var interval_end: float;
@@ -49,6 +52,10 @@ public struct ForwardEntityInstanceData {
     public var curvature: float;
     public var mirror: uint;
     public var texture_index: int;
+    /// How far to pull the sprite toward its own luminance, 0 = untouched.
+    /// A multiplicative tint alone can only darken, so statuses that grey a
+    /// sprite out (petrification) need this instead of a grey `color`.
+    public var desaturation: float;
 };
 
 public struct TileLightIndices {

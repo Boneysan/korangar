@@ -194,6 +194,21 @@ impl Mul<f32> for Color {
     }
 }
 
+impl Mul<Color> for Color {
+    type Output = Color;
+
+    /// Component-wise product — used to tint a sprite (e.g. a status-effect
+    /// colour) by a second colour without touching its alpha handling.
+    fn mul(self, rhs: Color) -> Self::Output {
+        Self {
+            red: self.red * rhs.red,
+            green: self.green * rhs.green,
+            blue: self.blue * rhs.blue,
+            alpha: self.alpha * rhs.alpha,
+        }
+    }
+}
+
 impl From<Color> for [f32; 3] {
     fn from(val: Color) -> Self {
         [val.red, val.green, val.blue]
