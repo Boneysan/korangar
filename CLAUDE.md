@@ -9,14 +9,31 @@ custom UI for a friends group + DM campaign.
 
 See the Documentation Hub above for the full list (DM tools, packets, world, graphics, plans, specs, etc.).
 
-**NEXT animation task (2026-07-23):** Phase E1 is **DONE, 7/7 live-verified**
-(all wizard skills rebuilt from the reverse-engineered original-client effect
-table). Phase E2 **batch 1 DONE + live-verified** (10 persistent units via the
-new `world/unit_recipe.rs`). E2 **batch 2 wired, not yet live-verified**: 6
-more units (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust,
-Demonstration); Hunter traps deferred pending runtime RSM prop spawning.
-Next: the batch 2 live pass. Plan:
+**NEXT animation task (2026-07-26):** The **engine track (phases A–D) is
+closed**, and so is most of the data track. E1 **DONE 7/7 live**. E2 **DONE** —
+both unit batches plus **Hunter traps**, which now spawn as real RSM props
+(`trap_model_file()` / `TRAP_MODEL_FILES` in `world/unit_recipe.rs`; models
+preloaded into the map's shared buffer at load, placed at runtime as ordinary
+`ModelInstruction`s). E4 **3 of 5 items done live** — opt1/opt2 tints, attached
+looping status STRs, Freeze1/Freeze2 split; **still open: stun/sleep/frozen
+poses and refresh variants**. E3 **partial** — architecture complete, the gap is
+table coverage (~79 mapped `EffectId` references against 1124 enum variants);
+unmapped ids log under `KORANGAR_PACKET_LOG`. Phase F (timing polish) not
+started and two of its three items are gated on Phase A fixtures.
+Next: close E4's two remaining items, then chip at E3 coverage. Plan:
 [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+
+**Two rendering findings worth knowing before touching effects or props:**
+- **A multiplicative tint cannot desaturate** — multiplying by grey only darkens.
+  Status effects that drain colour (petrification) need the sprite mixed toward
+  its luminance; `StatusTint` carries `color` *and* `desaturation`, and the
+  entity shader drains hue **before** the tint multiplies in.
+- **RO effect textures are alpha-keyed and the original relies on alpha
+  TESTING.** Most STR layers blend additively, where a transparent texel is black
+  and free — which hid the omission for the whole E1/E2 programme. Layers that
+  blend One/Zero (`silence.str` layer 6, every layer of `sleep.str`) write the
+  source verbatim and painted a black square until the effect shaders got a
+  discard. Both `effect.slang` and `effect_bindless.slang` carry it.
 
 **Effect fidelity — read this before touching skill visuals.** RO ships effects in
 **two families**: `.str` keyframe scripts (`data\texture\effect\`) and sprite/

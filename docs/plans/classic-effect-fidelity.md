@@ -247,7 +247,7 @@ Meteor Assault brightening.
   short DEX-reduced casts going by unnoticed.
 - Warp-selection window close-without-Cancel leaves server menuskill state.
 
-### Batch 2 (mappings pulled + GRF-verified 2026-07-23; 6 units wired, awaiting live pass)
+### Batch 2 (mappings pulled + GRF-verified 2026-07-23) — CLOSED LIVE 6/6 2026-07-24
 
 All from the reverse-engineered original-client tables, every asset confirmed
 present in our `data.grf` and pinned in `all_mapped_skill_effect_assets_exist`.
@@ -260,7 +260,7 @@ present in our `data.grf` and pinned in `all_mapped_skill_effect_assets_exist`.
 | Land Protector | Flat pulsing texture tile per cell (`LPEffect`, size ~0.8 cell) | `effect\aaa copy.bmp` | **Wired** — new `UnitGroundQuad` body, half-size 2.0 (= the table's 0.8-cell tile) |
 | Venom Dust | `이팩트\particle3` sprite looping at the cell (effect 171: size 80, rising, `repeat: true`) | `particle3.spr/.act` | **Wired** — new looping-sprite unit mode |
 | Demonstration (Alchemist bomb) | `이팩트\데몬스트레이션` sprite (effect 302) | `.spr/.act` | **Wired** — same looping-sprite mode |
-| Hunter traps ×10 (Skid/Ankle/Land Mine/Blast/Shockwave/Sandman/Flasher/Freezing/Claymore/Talkie Box) | **RSM 3D prop models**, one per trap type | `data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6` (all 10 present) | **Deferred** — needs runtime RSM prop spawning; models are baked into map vertex buffers at load today, so this is a pipeline task (would also serve DM prop placement), not a recipe |
+| Hunter traps ×10 (Skid/Ankle/Land Mine/Blast/Shockwave/Sandman/Flasher/Freezing/Claymore/Talkie Box) | **RSM 3D prop models**, one per trap type | `data\model\외부소품\트랩01.rsm`–`05`, `03_2`–`03_6` (all 10 present) | **DONE 2026-07-26** — runtime RSM prop spawning shipped. Models preload into the map's shared geometry buffer at load; a spawned trap is an ordinary `ModelInstruction`. Mapping is 1:1 (Ankle=01, Skid=02, Land Mine=03, Freezing=03_2, Blast=03_3, Sandman=03_4, Flasher=03_5, Shockwave=03_6, Claymore=04, Talkie=05). Scaled to `TRAP_PROP_SCALE` 0.25 — eyeballed, no scale in the table. The "baked into vertex buffers" claim that deferred this was **wrong**; see the section below |
 
 New machinery this pass:
 

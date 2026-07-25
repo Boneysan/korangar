@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Status** | Active (2026-07-24) — phases A–D closed live; **E1 + E2 (batches 1 & 2) all closed live** |
+| **Status** | Active (2026-07-26) — **engine track A–D closed live**; E1 closed, **E2 closed incl. Hunter traps**, E4 3-of-5 done live, E3 partial (coverage), F not started |
 | **Milestone** | Post-M1 presentation fidelity |
 | **Parent** | [ANIMATION_SYSTEM.md](../ANIMATION_SYSTEM.md) §7 Known gaps, [combat-animation-pipeline.md](../specs/combat-animation-pipeline.md) §14 gap matrix, FEATURE_ROADMAP.md "Classic skill-effect coverage pass" |
 | **Depends on** | Native runtime boundaries (done); `provision-effect-roster` GUI roster (done) |
-| **NEXT AGENT** | E1 **DONE + live-verified 7/7** (2026-07-23). E2 **batches 1 & 2 DONE + live-verified** (2026-07-24): batch 1 = 10 units (Safety Wall/Sanctuary/Magnus/Ice Wall/portals…), batch 2 = 6 units (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). Ground-decal depth pass **DONE + live-verified** (2026-07-24) and status-effect entity visuals **DONE + live-verified** (2026-07-25: freeze cyan, petrification greyscale via a new shader desaturation path). Only remaining engine follow-up: Hunter traps (runtime RSM prop spawning). Next data track = E3 remainder. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
+| **NEXT AGENT** | **No engine follow-ups remain.** E1 DONE 7/7 live. E2 DONE — both unit batches, ground-decal depth pass, and **Hunter traps** (2026-07-26, runtime RSM props). E4 **3 of 5 done live** (opt1/opt2 tints, attached looping status STRs, Freeze1/Freeze2 split); **open: stun/sleep/frozen poses + refresh variants**. E3 **partial** — architecture done, gap is table coverage. **Start here:** extend `set_status_paused` to STUN/SLEEP (Hercules immobilises every opt1 state bar STONEWAIT/BURNING, so their sprites should not keep strolling) — small and well-grounded. Then E3 coverage via the `KORANGAR_PACKET_LOG` unmapped-id log. Leave "poses beyond freezing" and "refresh variants" until there is a reference to match — do not eyeball them. See [classic-effect-fidelity.md](classic-effect-fidelity.md). |
 
 ## 1. Scope and shape
 
@@ -272,18 +272,38 @@ here when done.
   — typed `unit_recipe.rs` table (Safety Wall, Fire Wall, Pneuma, warp
   portals, Sanctuary, Magnus, Fire Pillar armed, Ice Wall, Quagmire), exact
   teardown on `RemoveSkillUnit`, two live bugs fixed (sprite-change crash,
-  warp-cancel modal). Remaining: Hunter traps, Sage ground fields, Venom
+  warp-cancel modal). Batch 2 and **Hunter traps** (2026-07-26, runtime RSM props) now closed too. Remaining: Sage ground fields, Venom
   Dust, song/dance areas — see classic-effect-fidelity.md "Phase E2".
 - **E3 — `DisplaySpecialEffectPacket` (0x01F3) + cast circles + sound
-  retry**: **Partial 2026-07-22** — 0x01F3 promoted → `NetworkEvent::SpecialEffect`
-  → `special_effect_recipe` (E1 IDs + common STR/procedural). Travel balls and
-  Soul Strike orbs carry mid-flight point lights. Semantic shape hints
+  retry**: **Partial — architecture COMPLETE, the gap is table coverage.**
+  0x01F3 → `NetworkEvent::SpecialEffect` → `special_effect_recipe`, anchored to
+  the actor via `EffectCenter::Entity` with a point light. Semantic shape hints
   (`EffectShape`: orb/ring/spike/ball/flash/str) for recipe design without
-  third-party code. Still open: cast-target circles (EF_LOCKON), catalog-wide
-  ID coverage, sound retry.
-- **E4 — Status presentation depth**: opt2/option tints (poison/curse),
-  stun/sleep/frozen poses and attached mini-effects, Freeze1/Freeze2 selection
-  where native uses them, refresh variants.
+  third-party code. **Cast circles are already wired** — `EffectId::Lockon` and
+  all six `Beginspell` variants have recipes (an earlier version of this row
+  listed EF_LOCKON as open; it is not, though whether the current recipe *looks*
+  right has not been checked live).
+  **Remaining:** (a) catalog-wide ID coverage — ~79 mapped `EffectId`
+  references against **1124** enum variants, i.e. single-digit percent; this is
+  a long tail to chip at with real play data, not a task to finish. Harvest ids
+  from the unmapped-effect log (`lib.rs`, gated on `KORANGAR_PACKET_LOG`).
+  (b) sound retry for effects whose audio fails first load. Adding an effect is
+  **one table entry** — no new plumbing.
+- **E4 — Status presentation depth**: **3 of 5 DONE + live-verified 2026-07-25/26.**
+  ✅ opt1/opt2 tints (freeze cyan, petrification greyscale, poison/curse/blind);
+  ✅ attached looping status STRs (`stun.str`, `sleep.str`, `poison.str`,
+  `silence.str` — GRF-probed; `curse.str`/`blind.str`/`stone.str` do **not**
+  exist, so those stay tint-only); ✅ Freeze1/Freeze2 selection (`Freeze` and
+  `Freezed` had both resolved to `freeze.str`).
+  **Open:** (a) **stun/sleep/frozen poses** — note RO sprites have no dedicated
+  stun or sleep action (the action table is Idle/Walk/Sit/Pickup/ReadyFight/
+  Attack/Hurt/Die/Special), so this cannot mean a new animation. The grounded
+  first step is extending `set_status_paused` beyond `OPT1_STONE | OPT1_FREEZE`
+  to stun and sleep: Hercules immobilises every opt1 state except `STONEWAIT`
+  and `BURNING` (`unit.c:1304`), so those sprites should not keep walking
+  through an idle loop. Anything more specific needs a reference.
+  (b) **refresh variants** — what the original shows when a status is
+  re-applied while already active. Needs source before building.
 
 Every batch: extend `all_mapped_skill_effect_assets_exist`, add its skills to
 the roster provisioning if needed, and record the live check in the roadmap

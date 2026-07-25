@@ -12,7 +12,7 @@ lands.
 | [asset-pipeline.md](asset-pipeline.md) | GRF/archive/data sync decisions for M1 |
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |
 | [M1-p0-verification.md](M1-p0-verification.md) | E3.1 live P0 verification checklist against Hercules |
-| [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
+| [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches. **Engine track A–D closed; E1/E2 closed, E4 3-of-5, E3 partial (coverage only), F not started** |
 | [phase-d-live-verification.md](phase-d-live-verification.md) | Phase D live GUI checklist — **CLOSED 2026-07-21**, all 8 rows PASS |
 | [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism; read its "Traps hit while driving this pass" before any new GUI session |
 | [classic-effect-fidelity.md](classic-effect-fidelity.md) | Classic skill effects — **E1 (7 skills) + E2 batches 1 & 2 all live-verified, CLOSED 2026-07-24 (6/6 batch 2).** Ground-decal depth pass and status entity visuals both landed + live-verified (2026-07-24/25); only Hunter traps remain. Read its batch-2 NOFOOTSET trap **and** the Stone Curse cause-0 trap before testing — Hercules reports several unrelated failures as "Skill level is not high enough" |
