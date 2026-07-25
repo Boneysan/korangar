@@ -40,6 +40,14 @@ impl CustomWindow<ClientState> for WarpSelectionWindow {
             title: "Select warp destination",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
+            // Modal: no title-bar close button. The server holds `sd->menuskill_id`
+            // until it hears a selection or an explicit cancel, so the ONLY user
+            // dismissals are the Cancel button (sends the cancel) or picking a
+            // destination (sends the selection). A generic window-close would skip
+            // both and wedge the server's menu state. The app can still force it
+            // shut on map change / logout via `close_window_with_class`, which
+            // ignores `closable`.
+            closable: false,
             elements: (
                 SelectionList::new(entries),
                 button! {
