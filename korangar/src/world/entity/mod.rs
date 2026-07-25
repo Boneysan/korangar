@@ -59,10 +59,42 @@ const OPT1_STUN: u16 = 3;
 /// Petrif*ying* — the target still walks and attacks through this phase.
 const OPT1_STONEWAIT: u16 = 6;
 
+const OPT1_SLEEP: u16 = 4;
+
 const OPT2_POISON: u16 = 0x0001;
 const OPT2_CURSE: u16 = 0x0002;
+const OPT2_SILENCE: u16 = 0x0004;
 const OPT2_BLIND: u16 = 0x0010;
 const OPT2_DEADLY_POISON: u16 = 0x0080;
+
+/// The looping STR played on an entity for as long as a status is active.
+///
+/// Only assets confirmed present in the GRF appear here (probed 2026-07-26):
+/// `stun.str`, `sleep.str`, `poison.str`, `silence.str` exist; `curse.str`,
+/// `blind.str` and `stone.str` do **not**, so those statuses stay tint-only
+/// rather than getting an invented stand-in.
+///
+/// Freeze and petrification are deliberately absent: both already read clearly
+/// through [`Common::status_tint`] plus the paused animation, and the `freeze`
+/// STRs are the one-shot application flash fired by the special-effect packet,
+/// not a loop.
+pub fn status_effect_asset(body_state: u16, health_state: u16) -> Option<&'static str> {
+    match body_state {
+        OPT1_STUN => return Some("stun.str"),
+        OPT1_SLEEP => return Some("sleep.str"),
+        _ => {}
+    }
+
+    // opt2 is a bitmask and several can be set at once; pick the most
+    // incapacitating so the entity never carries two loops.
+    if health_state & (OPT2_POISON | OPT2_DEADLY_POISON) != 0 {
+        Some("poison.str")
+    } else if health_state & OPT2_SILENCE != 0 {
+        Some("silence.str")
+    } else {
+        None
+    }
+}
 
 #[derive(Clone)]
 pub enum ResourceState<T> {
@@ -2483,6 +2515,54 @@ impl StateWindow<ClientState> for Entity {
             // None and dispaly a message if the entity disappeared.
             elements: (),
         }
+    }
+}
+
+#[cfg(test)]
+mod status_effect_asset_tests {
+    use super::{status_effect_asset, OPT1_FREEZE, OPT1_SLEEP, OPT1_STONE, OPT1_STONEWAIT, OPT1_STUN};
+    use super::{OPT2_BLIND, OPT2_CURSE, OPT2_DEADLY_POISON, OPT2_POISON, OPT2_SILENCE};
+
+    #[test]
+    fn healthy_entity_has_no_status_visual() {
+        assert_eq!(status_effect_asset(0, 0), None);
+    }
+
+    #[test]
+    fn opt1_states_map_to_their_loops() {
+        assert_eq!(status_effect_asset(OPT1_STUN, 0), Some("stun.str"));
+        assert_eq!(status_effect_asset(OPT1_SLEEP, 0), Some("sleep.str"));
+    }
+
+    #[test]
+    fn opt2_bits_map_to_their_loops() {
+        assert_eq!(status_effect_asset(0, OPT2_POISON), Some("poison.str"));
+        assert_eq!(status_effect_asset(0, OPT2_DEADLY_POISON), Some("poison.str"));
+        assert_eq!(status_effect_asset(0, OPT2_SILENCE), Some("silence.str"));
+    }
+
+    /// opt1 is exclusive and incapacitating, so it wins over any opt2 bit —
+    /// otherwise a stunned, poisoned entity could show two loops at once.
+    #[test]
+    fn opt1_takes_precedence_over_opt2() {
+        assert_eq!(status_effect_asset(OPT1_STUN, OPT2_POISON | OPT2_SILENCE), Some("stun.str"));
+    }
+
+    /// Several opt2 bits can be set simultaneously; exactly one loop must win.
+    #[test]
+    fn overlapping_opt2_bits_pick_one_loop() {
+        assert_eq!(status_effect_asset(0, OPT2_POISON | OPT2_SILENCE), Some("poison.str"));
+    }
+
+    /// These have no GRF asset (probed 2026-07-26), so they stay tint-only
+    /// rather than falling back to a stand-in from another status.
+    #[test]
+    fn statuses_without_an_asset_stay_tint_only() {
+        assert_eq!(status_effect_asset(0, OPT2_CURSE), None);
+        assert_eq!(status_effect_asset(0, OPT2_BLIND), None);
+        assert_eq!(status_effect_asset(OPT1_STONE, 0), None);
+        assert_eq!(status_effect_asset(OPT1_STONEWAIT, 0), None);
+        assert_eq!(status_effect_asset(OPT1_FREEZE, 0), None);
     }
 }
 

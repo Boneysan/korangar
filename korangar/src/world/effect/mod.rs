@@ -639,9 +639,21 @@ pub enum UniqueEffectSlot {
     TargetAoe,
 }
 
+/// What owns an effect, and therefore what removes it.
+///
+/// Both variants key on an `EntityId`, but they must not share a channel: a
+/// skill unit is removed by `RemoveSkillUnit` on the *unit's* id, while a status
+/// visual is removed when the afflicted entity's opt1/opt2 clears. Keying both
+/// on a bare id would let one delete the other.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+enum EffectAnchor {
+    Unit(EntityId),
+    Status(EntityId),
+}
+
 #[derive(Default)]
 pub struct EffectHolder {
-    effects: Vec<(Box<dyn EffectBase + Send + Sync>, Option<EntityId>)>,
+    effects: Vec<(Box<dyn EffectBase + Send + Sync>, Option<EffectAnchor>)>,
     unique_skill_effects: Vec<(EntityId, SkillId, UniqueEffectSlot, f32)>,
 }
 
@@ -651,7 +663,21 @@ impl EffectHolder {
     }
 
     pub fn add_unit(&mut self, effect: Box<dyn EffectBase + Send + Sync>, entity_id: EntityId) {
-        self.effects.push((effect, Some(entity_id)));
+        self.effects.push((effect, Some(EffectAnchor::Unit(entity_id))));
+    }
+
+    /// A looping visual tied to an entity's status effect. Replaces whatever
+    /// status visual that entity already had, so a status change never stacks.
+    pub fn add_status_effect(&mut self, effect: Box<dyn EffectBase + Send + Sync>, entity_id: EntityId) {
+        self.remove_status_effect(entity_id);
+        self.effects.push((effect, Some(EffectAnchor::Status(entity_id))));
+    }
+
+    pub fn remove_status_effect(&mut self, removed_entity_id: EntityId) {
+        self.effects
+            .iter_mut()
+            .filter(|(_, anchor)| *anchor == Some(EffectAnchor::Status(removed_entity_id)))
+            .for_each(|(effect, _)| effect.mark_for_deletion());
     }
 
     /// Returns true once per source/skill/`slot` during `duration`.
@@ -681,7 +707,7 @@ impl EffectHolder {
     pub fn remove_unit(&mut self, removed_entity_id: EntityId) {
         self.effects
             .iter_mut()
-            .filter(|(_, entity_id)| entity_id.is_some_and(|entity_id| entity_id == removed_entity_id))
+            .filter(|(_, anchor)| *anchor == Some(EffectAnchor::Unit(removed_entity_id)))
             .for_each(|(effect, _)| effect.mark_for_deletion());
     }
 

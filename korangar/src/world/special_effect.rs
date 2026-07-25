@@ -80,8 +80,16 @@ pub fn special_effect_recipe(effect_id: EffectId) -> Option<SpecialEffectRecipe>
             light_color: Color::rgb_u8(160, 220, 255),
             light_intensity: 35.0,
         }),
-        EffectId::Frostdiver2 | EffectId::Freeze | EffectId::Freezed => Some(SpecialEffectRecipe::Str {
+        // Freeze1 vs Freeze2: the client ships BOTH `freeze.str` and `freezed.str`
+        // (GRF-probed 2026-07-26) and the original picks between them, so mapping
+        // both ids onto `freeze.str` threw half the distinction away.
+        EffectId::Frostdiver2 | EffectId::Freeze => Some(SpecialEffectRecipe::Str {
             path: "freeze.str",
+            light_color: Color::rgb_u8(150, 225, 255),
+            light_intensity: 50.0,
+        }),
+        EffectId::Freezed => Some(SpecialEffectRecipe::Str {
+            path: "freezed.str",
             light_color: Color::rgb_u8(150, 225, 255),
             light_intensity: 50.0,
         }),

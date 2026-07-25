@@ -44,6 +44,7 @@ mod settings;
 mod system;
 mod world;
 
+use std::collections::HashMap;
 use std::io::Cursor;
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::ops::Deref;
@@ -1042,6 +1043,9 @@ pub struct Client {
     sprite_effects: SpriteEffects,
     point_light_manager: PointLightManager,
     effect_holder: EffectHolder,
+    /// Which looping status STR each entity is currently showing, so an
+    /// unchanged status re-sent by the server doesn't restart the animation.
+    active_status_effects: HashMap<EntityId, &'static str>,
     /// Where the live skill units are, for questions the packets cannot
     /// answer on their own (which elemental field the player is standing in).
     skill_unit_registry: SkillUnitRegistry,
@@ -1772,6 +1776,51 @@ impl Client {
         }
     }
 
+    /// Attach, swap, or drop the looping visual for an entity's status effect.
+    ///
+    /// Driven off the same opt1/opt2 the tints use, so the two never disagree.
+    /// Keyed per entity through `add_status_effect`, which replaces any existing
+    /// status visual — a poisoned entity that then gets stunned shows only the
+    /// stun, never both stacked.
+    fn update_status_effect_visual(&mut self, entity_id: EntityId, body_state: u16, health_state: u16) {
+        let Some(path) = status_effect_asset(body_state, health_state) else {
+            self.effect_holder.remove_status_effect(entity_id);
+            self.active_status_effects.remove(&entity_id);
+            return;
+        };
+
+        // Re-spawning an identical loop every status packet would restart the
+        // animation constantly — the server re-sends these on unrelated changes.
+        if self.active_status_effects.get(&entity_id) == Some(&path) {
+            return;
+        }
+
+        let position = self.entity_world_position(entity_id).unwrap_or(Point3::new(0.0, 0.0, 0.0));
+
+        match self.effect_loader.get_or_load(path, &self.texture_loader) {
+            Ok(effect) => {
+                let frame_timer = effect.new_frame_timer();
+                self.effect_holder.add_status_effect(
+                    Box::new(EffectWithLight::new(
+                        effect,
+                        frame_timer,
+                        EffectCenter::Entity(entity_id, position),
+                        Vector3::new(0.0, 4.0, 0.0),
+                        PointLightId::new(entity_id.0.wrapping_add(0x5747_0000)),
+                        Vector3::new(0.0, 6.0, 0.0),
+                        Color::rgb_u8(255, 255, 255),
+                        0.0,
+                        true,
+                        0.0,
+                    )),
+                    entity_id,
+                );
+                self.active_status_effects.insert(entity_id, path);
+            }
+            Err(error) => eprintln!("[status-effect] {path} failed to load: {error:?}"),
+        }
+    }
+
     fn spawn_special_effect(&mut self, entity_id: EntityId, effect_id: ragnarok_packets::EffectId) {
         let Some(recipe) = special_effect_recipe(effect_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
@@ -2380,6 +2429,7 @@ impl Client {
             sprite_effects,
             point_light_manager,
             effect_holder,
+            active_status_effects: HashMap::new(),
             skill_unit_registry,
             path_finder,
             point_light_set_buffer,
@@ -3873,6 +3923,8 @@ impl Client {
                     {
                         entity.update_state(option, body_state, health_state, is_pk_mode_on, client_tick);
                     }
+
+                    self.update_status_effect_visual(entity_id, body_state, health_state);
                 }
                 NetworkEvent::UpdateEntityHealth {
                     entity_id,
@@ -8328,6 +8380,13 @@ mod skill_effect_asset_tests {
         for path in [
             "data\\texture\\effect\\이그니션브레이크.str",
             "data\\texture\\effect\\freeze.str",
+            // E4 status visuals: the freeze pair the special-effect path now
+            // distinguishes, plus the looping status STRs.
+            "data\\texture\\effect\\freezed.str",
+            "data\\texture\\effect\\stun.str",
+            "data\\texture\\effect\\sleep.str",
+            "data\\texture\\effect\\poison.str",
+            "data\\texture\\effect\\silence.str",
             "data\\texture\\effect\\sonicblow.str",
             "data\\texture\\effect\\purpleslash.tga",
             "data\\texture\\effect\\ring2.bmp",
@@ -8347,4 +8406,5 @@ mod skill_effect_asset_tests {
             .collect();
         assert!(missing.is_empty(), "missing skill effect assets: {missing:#?}");
     }
+
 }
