@@ -196,6 +196,16 @@ weapon view is ranged.
    three arrows above that ship no distinct sprite, which the sprite path cannot
    reach at all. Keep the two in step — a test asserts every sprite-table arrow
    also has an element, and that neutral ammo has none so it never glows.
+1b. **Another player's ammunition**, via the fork's `LOOK_AMMO` broadcast
+   (2026-07-27). Official Ragnarok reports ammunition for nobody but yourself, so
+   remote archers previously always drew the generic arrow. The server keeps the
+   item id in `view_data.ammo`, broadcasts it on equip/unequip, seeds it at login
+   and re-sends it when the unit enters view; the client stores it on the entity
+   (`Common::ammunition`). It carries the **item id**, so bullets and shuriken are
+   covered too. `0` means unknown and falls through to the class default below —
+   which is also what an older server yields. See `LOOK_AMMO` in the server's
+   `map/map.h`, and [../plans/observer-view-verification.md](../plans/observer-view-verification.md)
+   for the three traps this had to solve.
 2. **The weapon class's canonical ammo item** for everyone else —
    `ranged_attack_default_ammunition` (Hercules `item_db.conf` ids: Arrow **1750**,
    Bullet **13200**, Shuriken **13250**).
