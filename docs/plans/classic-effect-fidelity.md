@@ -792,6 +792,14 @@ unit visual we want authentic.
 reimplementation whose DB tables reproduce the original exe's hardcoded
 mappings (comments often cite the C++ client's own values):
 
+**Repo:** `MrAntares/roBrowserLegacy`, branch `master`. Getting this wrong costs a
+404 — other forks exist under different owners. Fetch with `gh api` rather than
+WebFetch on raw.githubusercontent, which needs the exact owner:
+
+```sh
+gh api "/repos/MrAntares/roBrowserLegacy/contents/<path>" --jq '.content' | base64 -d
+```
+
 | File | Gives you |
 |---|---|
 | `src/DB/Skills/SkillEffect.js` | skill ID → effect IDs per phase (`effectId`, `hitEffectId`, `beforeHitEffectId`, `groundEffectId`, `…OnCaster`) |
@@ -800,6 +808,9 @@ mappings (comments often cite the C++ client's own values):
 | `src/DB/Skills/SkillUnit.js` (+ `SkillUnitConst.js`) | persistent unit ID → effect ID |
 | `src/DB/Monsters/AttackEffectTable.js` | monster attack visuals |
 | `src/Renderer/EffectManager.js`, `src/Renderer/Effects/*.js` | how each `type` renders and which path prefix each field implies |
+| `src/Renderer/Effects/Songs.js` | the 20 song / Gospel / Fog Wall / Evilland ground-tile pairs (colour + hover texture) |
+| `src/Renderer/Effects/FlatColorTile.js` | flat per-cell tile: `uSize 0.5` over ±1.0 verts = **one full cell** |
+| `src/Renderer/Effects/Tiles.js` | `HoveringTexture(path, size, opacity)` — bobs `z + 0.4 − 0.2·sin(oddEven + tick/540π)`, phase-offset per cell |
 
 **2. Path conventions** (from EffectManager): `spriteName`/`SPR` →
 `data\sprite\이팩트\<name>` · `STR` `file` → `data\texture\effect\<name>.str`
