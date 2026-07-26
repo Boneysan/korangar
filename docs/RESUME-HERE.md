@@ -32,15 +32,46 @@ That file is untracked noise; leave it uncommitted.
 
 ## The checklist, cheapest first
 
-| # | What | How to see it | Watch for |
-|---|---|---|---|
-| 1 | **Item names in messages** | Cast Land Protector with no Yellow Gemstone | "You need a Yellow Gemstone to use this skill.", never `#715`. Also check a trade-window row and a weapon-refine result — all three go through `resolve_item_name`. |
-| 2 | **Ammo-item projectiles** | Bow attack with plain Arrow, then Iron/Fire Arrow | The flying sprite should *change with the arrow type*. Firearms (views 17-21) and huuma shuriken (22) now fire too. Grenade launcher falls back to Bullet **by design**. |
-| 3 | **Ground-cast walk-into-range** | Arm a ground skill, click a cell well outside its range | Should walk into range then cast, instead of nothing happening. If nothing walkable is close enough, expect a chat line rather than silence. |
-| 4 | **Support walk-into-range** | Heal/Blessing an ally ~15 cells away (Heal range is 9) | Same walk-then-cast. **This path changed behaviour**, so give it real attention — self-buffs must still fire instantly (self is distance 0). |
-| 5 | **Cast cancel** | Start a long cast, press **right-click**; repeat with **Escape** | Cast bar clears and the skill does NOT go off. Also: right-click with a skill *armed* still clears the reticle first; right-click on nothing still rotates the camera; Escape on nothing still opens the menu. **Moving must NOT cancel** — casting roots, and that is authentic. |
-| 6 | **Ground-skill aiming footprint** | Arm Storm Gust (81 cells), then Land Protector Lv10 (225) | The real question: does a large area read as a *shape* or a solid slab? Colour/alpha are guesses (`IN_RANGE` / `OUT_OF_RANGE` in `render_skill_aiming_footprint`). Out-of-range should tint red. |
-| 7 | **Moonlit / Hermode** | Clown/Gypsy, or grant the skills | Moonlit = flat salmon tile per cell, 9×9. **Hermode is sound-only by design** — hearing `헤르모드의 지팡이.wav` and seeing nothing is a **PASS**, not a bug. |
+Results as of the 2026-07-26 evening pass are in the **Result** column.
+
+| # | What | How to see it | Watch for | Result |
+|---|---|---|---|---|
+| 1 | **Item names in messages** | Cast Land Protector with no Yellow Gemstone | "You need a Yellow Gemstone to use this skill.", never `#715`. Also check a trade-window row and a weapon-refine result — all three go through `resolve_item_name`. | **PASS** (skill-fail path; trade/refine rows not yet seen) |
+| 2 | **Ammo-item projectiles** | Bow attack with plain Arrow, then Iron/Fire Arrow | The flying sprite should *change with the arrow type*. Firearms (views 17-21) and huuma shuriken (22) now fire too. Grenade launcher falls back to Bullet **by design**. | open — unblocked: `@item Iron Arrow 500` and `@item Iron 20` both confirmed working after the fix below |
+| 3 | **Ground-cast walk-into-range** | Arm a ground skill, click a cell well outside its range | Should walk into range then cast, instead of nothing happening. If nothing walkable is close enough, expect a chat line rather than silence. | **PASS** — walked into range, then cast |
+| 4 | **Support walk-into-range** | Heal/Blessing an ally ~15 cells away (Heal range is 9) | Same walk-then-cast. **This path changed behaviour**, so give it real attention — self-buffs must still fire instantly (self is distance 0). | open |
+| 5 | **Cast cancel** | Start a long cast, press **right-click**; repeat with **Escape** | Cast bar clears and the skill does NOT go off. Also: right-click with a skill *armed* still clears the reticle first; right-click on nothing still rotates the camera; Escape on nothing still opens the menu. **Moving must NOT cancel** — casting roots, and that is authentic. | **PASS** — both gestures cancel |
+| 6 | **Ground-skill aiming footprint** | Arm Storm Gust (81 cells), then Land Protector Lv10 (225) | The real question: does a large area read as a *shape* or a solid slab? Colour/alpha are guesses (`IN_RANGE` / `OUT_OF_RANGE` in `render_skill_aiming_footprint`). Out-of-range should tint red. | **PARTIAL** — draws, and the red out-of-range tint works. The 225-cell shape-vs-slab question is still unanswered. |
+| 7 | **Moonlit / Hermode** | Clown/Gypsy, or grant the skills | Moonlit = flat salmon tile per cell, 9×9. **Hermode is sound-only by design** — hearing `헤르모드의 지팡이.wav` and seeing nothing is a **PASS**, not a bug. | open |
+
+### Found while driving the pass: `@item` could not take a multi-word name
+
+`@item Iron Arrow 500` silently produced **one Iron** (id 998). Unquoted, `@item`
+parsed `%99s %12d`, took `Iron` as the name, failed to read `Arrow` as the
+quantity — and still returned ≥ 1, so it reported success. Only the *quoted*
+form ever supported spaces.
+
+Fixed server-side in `src/map/atcommand.c` (`atcommand_item_search` +
+`atcommand_item_parse`, shared by `@item`, `@itembound`, `@item2`,
+`@itembound2`). **The trap:** you cannot just peel the trailing integer off,
+because **1797 items have a display name ending in a digit** (`Vesper Core 01`,
+`Magic Bible Vol1`, `Vita500`). The parser therefore resolves *longest name
+first* — it tries the whole argument string as a name, then peels one trailing
+integer at a time until something resolves. Quoted names, bare IDs and
+single-word names behave exactly as before.
+
+**Longest-first has a trap of its own**, and it bit the first attempt: the ID
+lookup was `itemdb->exists(atoi(name))`, and `atoi("1770 500")` is `1770`. So
+the whole string resolved as an ID, the quantity was never peeled, and
+`@item 1770 500` would have quietly handed over **one** item — a regression on
+the most common DM usage. An ID is now only accepted when the string is numeric
+end to end (`strtol` + endptr check). The compiler was happy either way; a
+14-case throwaway C harness against a stub item table found it in one run.
+
+Display-name lookup was already case-insensitive, so `iron arrow` works. Aegis
+names (`Iron_Arrow`) stay case-sensitive because `case_sensitive_aegisnames:
+true` in `conf/map/battle/misc.conf` — config left alone. For finding a name,
+`@ii <partial>` already searched multi-word text correctly.
 
 ## Why item 7's alpha matters beyond item 7
 
