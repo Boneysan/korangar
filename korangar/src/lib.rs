@@ -946,20 +946,29 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
     if let (Some(map), Some(player_position), Some(target_position)) = (map, player_position, target_position)
         && !is_within_skill_range(player_position, target_position, attack_range)
     {
-        if let Some(path) = path_finder.find_walkable_path_in_range(map, player_position, target_position, attack_range)
-            && let Some(nearest_tile) = path.last()
+        match path_finder
+            .find_walkable_path_in_range(map, player_position, target_position, attack_range)
+            .and_then(|path| path.last().copied())
         {
-            let _ = networking_system.player_move(WorldPosition {
-                x: nearest_tile.x,
-                y: nearest_tile.y,
-                direction: Direction::North,
-            });
-            *state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::CastSkill {
-                skill_id,
-                skill_level,
-                entity_id,
-                attack_range,
-            });
+            Some(nearest_tile) => {
+                let _ = networking_system.player_move(WorldPosition {
+                    x: nearest_tile.x,
+                    y: nearest_tile.y,
+                    direction: Direction::North,
+                });
+                *state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::CastSkill {
+                    skill_id,
+                    skill_level,
+                    entity_id,
+                    attack_range,
+                });
+            }
+            // Same reasoning as the ground path: an unreachable target means the
+            // cast can never land, and Hercules would drop it without a word.
+            None => state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "That target is out of range and there is no way to get closer.".to_owned(),
+                MessageColor::Error,
+            )),
         }
     } else {
         let _ = networking_system.cast_skill(skill_id, skill_level, entity_id);
@@ -6425,7 +6434,21 @@ impl Client {
                                     PickerTarget::Entity(entity_id) => entity_id,
                                     _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
                                 };
-                                let _ = self.networking_system.cast_skill(learnable_skill.skill_id, skill_level, target_id);
+                                // Routed through the pathing cast for the same reason Attack is:
+                                // Hercules drops an out-of-range support cast with no failure
+                                // message either (`unit.c` `unit_skilluse_id2`), so healing an ally
+                                // a few cells too far away did nothing at all. A self-target is
+                                // always at distance 0, so it still casts instantly.
+                                cast_or_path_entity_skill(
+                                    &mut self.networking_system,
+                                    &mut self.client_state,
+                                    self.map.as_deref(),
+                                    &mut self.path_finder,
+                                    learnable_skill.skill_id,
+                                    skill_level,
+                                    attack_range,
+                                    target_id,
+                                );
                             }
                             SkillType::Attack => {
                                 // Entity-target: fast-cast if the cursor is already over a target,

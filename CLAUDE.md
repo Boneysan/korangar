@@ -40,12 +40,16 @@ then E3 coverage from the `KORANGAR_PACKET_LOG` unmapped-id log. Plan:
 [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
 
 **Three follow-ups closed 2026-07-26 (code + tests only — NONE live-verified):**
-- **Out-of-range ground casts no longer vanish.** Hercules drops an out-of-range
-  `CZ_USE_SKILL_TOGROUND` with a bare `return 0` and **no** `clif->skill_fail`
-  (`unit.c` `unit_skilluse_pos2`, the `battle->check_range` arm), so the cast was
-  silently lost. Ground placements now take the same walk-into-range path entity
-  targets already had (`cast_or_path_ground_skill` + `BufferedAction::CastGroundSkill`),
-  and say so in chat when no walkable cell gets close enough.
+- **Out-of-range casts no longer vanish — all three targeting modes now walk into
+  range.** Hercules drops an out-of-range cast with a bare `return 0` and **no**
+  `clif->skill_fail`, both for ground (`unit.c` `unit_skilluse_pos2`) and for entity
+  targets (`unit_skilluse_id2`), so the cast was silently lost. **Attack** already
+  had `cast_or_path_entity_skill`; **Ground/Trap** got `cast_or_path_ground_skill` +
+  `BufferedAction::CastGroundSkill`; **Support** (Heal, Blessing) was casting with no
+  range check at all and now routes through the entity path too — a self-target is
+  distance 0, so self-buffs still fire instantly. All three report in chat when no
+  walkable cell gets close enough. Casting itself still **roots** the character,
+  which is correct RO behaviour (see the cast-cancel note below).
 - **No user-facing message may print a raw item id.** `ZC_ACK_TOUSESKILL` causes
   71/72 now cross the crate boundary as `NetworkEvent::SkillFailedMissingItem`
   (`korangar-networking` has no item DB) and the client names the item. Same for
