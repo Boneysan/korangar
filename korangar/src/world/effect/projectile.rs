@@ -36,6 +36,9 @@ pub struct SkillProjectile {
     /// energy balls stay screen-upright like the original client's billboards.
     align_to_travel: bool,
     color: Color,
+    /// Elemental halo drawn under the sprite, and the colour the point light
+    /// takes. `None` leaves the projectile looking exactly like its artwork.
+    glow_color: Option<Color>,
     point_light_id: Option<PointLightId>,
     light_intensity: f32,
     /// Fraction of the flight this copy lags behind the head of the shot.
@@ -62,6 +65,7 @@ impl SkillProjectile {
             angle_offset: std::f32::consts::PI,
             align_to_travel: true,
             color: Color::WHITE,
+            glow_color: None,
             point_light_id: None,
             light_intensity: 0.0,
             trail_lag: 0.0,
@@ -104,6 +108,7 @@ impl SkillProjectile {
             angle_offset: -135.0_f32.to_radians(),
             align_to_travel: true,
             color: Color::WHITE,
+            glow_color: None,
             point_light_id: None,
             light_intensity: 0.0,
             trail_lag: 0.0,
@@ -138,12 +143,32 @@ impl SkillProjectile {
             angle_offset: 0.0,
             align_to_travel: true,
             color,
+            glow_color: None,
             point_light_id: Some(point_light_id),
             light_intensity,
             trail_lag: 0.0,
             trail_offset: Vector3::new(0.0, 0.0, 0.0),
             gets_deleted: false,
         }
+    }
+
+    /// Give an elemental arrow a coloured halo and a point light in flight.
+    ///
+    /// The stock elemental arrow sprites are only small recolours of the plain
+    /// arrow — at projectile size and speed a Fire Arrow reads as "an arrow",
+    /// not as fire. The halo is our own embellishment: it re-draws the arrow's
+    /// own texture larger, additively, in the element's colour, so no new art is
+    /// needed and the shape always matches whatever sprite was chosen.
+    ///
+    /// It also covers the three elemental arrows that ship *no* distinct sprite
+    /// (Frozen, Counter Evil, Holy), which the sprite path alone cannot reach.
+    pub fn with_elemental_glow(mut self, color: Color, point_light_id: PointLightId) -> Self {
+        self.glow_color = Some(color);
+        self.point_light_id = Some(point_light_id);
+        // Dimmer than a spell's travel ball (Fire Ball is 48): an arrow is a far
+        // smaller thing and should tint the ground it passes, not light the map.
+        self.light_intensity = 26.0;
+        self
     }
 
     /// Turn this copy into a trailing shard rather than the head of the shot.
@@ -158,6 +183,7 @@ impl SkillProjectile {
         self.trail_offset = offset;
         self.size *= size_scale;
         self.color.alpha *= alpha_scale;
+        self.glow_color = None;
         self.point_light_id = None;
         self.light_intensity = 0.0;
         self
@@ -190,6 +216,7 @@ impl SkillProjectile {
             angle_offset: 0.0,
             align_to_travel: false,
             color: Color::rgb_u8(255, 250, 200),
+            glow_color: None,
             point_light_id: Some(point_light_id),
             light_intensity: 48.0,
             trail_lag: 0.0,
@@ -231,8 +258,11 @@ impl EffectBase for SkillProjectile {
             return;
         }
         let light_position = self.position_at(progress);
+        // An elemental arrow lights the scene in its element, not in the white of
+        // its sprite tint.
+        let light_color = self.glow_color.unwrap_or(self.color);
         if Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, intensity)) {
-            point_light_manager.register_fading(point_light_id, light_position, self.color, intensity, self.light_intensity);
+            point_light_manager.register_fading(point_light_id, light_position, light_color, intensity, self.light_intensity);
         }
     }
 
@@ -283,6 +313,16 @@ impl EffectBase for SkillProjectile {
                 BlendFactor::One,
             );
         };
+
+        // Elemental halo under everything else: the same sprite, enlarged and
+        // tinted. Additive blending means the colour only ever brightens, so the
+        // arrow keeps its own shape and reads as glowing rather than repainted.
+        // It pulses over the flight so a fast arrow still registers as alive.
+        if let Some(glow) = self.glow_color {
+            let mut glow_color = glow;
+            glow_color.alpha = color.alpha * (0.45 + 0.25 * (progress * PI).sin().max(0.0));
+            draw(&self.texture, self.size * (1.9 / 2.0), glow_color);
+        }
 
         // Static glow first so the animated crackle layers over it.
         if let Some(core) = &self.core_texture {

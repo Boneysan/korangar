@@ -701,6 +701,102 @@ pub fn ammunition_projectile_sprite_path(resource_name: &str) -> String {
     format!("아이템\\{resource_name}.spr")
 }
 
+/// The generic arrow resource. `iteminfo` hands this back for most ammunition,
+/// including arrows that ship a distinct sprite of their own, which is why every
+/// elemental arrow otherwise flies looking identical.
+pub const GENERIC_ARROW_RESOURCE: &str = "화살";
+
+/// Distinct sprite resource for the **elemental** arrows, used only where
+/// `iteminfo` falls back to [`GENERIC_ARROW_RESOURCE`].
+///
+/// This is a deliberate, small divergence from the original client: it drives
+/// the flying projectile off the arrow's *element* rather than off whatever
+/// `iteminfo` happens to name, so a Fire Arrow reads as a fire arrow in flight.
+/// The client's own mapping still wins wherever it names a specific sprite —
+/// see `spawn_ranged_attack_projectile`.
+///
+/// Ids and elements are from Hercules `db/re/item_db.conf`, taken from each
+/// item's `bonus bAtkEle,Ele_*` script rather than from its name. Every sprite
+/// below was confirmed present in `data.grf` with `tools/grf_list.py`; the
+/// item↔sprite pairing is a translation of the Korean resource names and is the
+/// part to re-check if one looks wrong in flight.
+///
+/// Frozen Arrow (1759, Water), Arrow of Counter Evil (1766, Holy) and Holy Arrow
+/// (1772, Holy) are elemental but ship **no** distinct sprite, so they are
+/// deliberately absent and keep whatever `iteminfo` gives them.
+pub fn elemental_ammunition_resource(item_id: ItemId) -> Option<&'static str> {
+    match item_id.0 {
+        1751 => Some("은화살"),         // Silver Arrow — Holy
+        1752 => Some("불화살"),         // Fire Arrow — Fire
+        1754 => Some("수정화살"),       // Crystal Arrow — Water
+        1755 => Some("바람의화살"),     // Arrow of Wind — Wind
+        1756 => Some("돌화살"),         // Stone Arrow — Earth
+        1757 => Some("무형의화살"),     // Immaterial Arrow — Ghost
+        1762 => Some("녹슨화살"),       // Rusty Arrow — Poison
+        1763 => Some("독화살"),         // Poison Arrow — Poison
+        1767 => Some("그림자의화살"),   // Arrow of Shadow — Dark
+        _ => None,
+    }
+}
+
+/// Attack element of an ammunition item.
+///
+/// Only the elements that ammunition actually carries; there is no `Neutral`
+/// because a neutral arrow has nothing to tint and must not glow at all.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AmmunitionElement {
+    Fire,
+    Water,
+    Wind,
+    Earth,
+    Holy,
+    Dark,
+    Poison,
+    Ghost,
+}
+
+impl AmmunitionElement {
+    /// Colour of the in-flight glow. Drawn additively and used for the point
+    /// light, so these are light colours rather than surface colours: bright and
+    /// unsaturated enough to stay visible against both dark maps and daylight.
+    pub const fn glow_color(self) -> Color {
+        match self {
+            Self::Fire => Color::rgb_u8(255, 120, 40),
+            Self::Water => Color::rgb_u8(90, 175, 255),
+            Self::Wind => Color::rgb_u8(120, 255, 175),
+            Self::Earth => Color::rgb_u8(215, 160, 75),
+            Self::Holy => Color::rgb_u8(255, 240, 170),
+            Self::Dark => Color::rgb_u8(150, 85, 220),
+            Self::Poison => Color::rgb_u8(165, 220, 60),
+            Self::Ghost => Color::rgb_u8(200, 220, 255),
+        }
+    }
+}
+
+/// Attack element of an ammunition item, or `None` for neutral ammo.
+///
+/// Taken from each item's `bonus bAtkEle,Ele_*` script in Hercules
+/// `db/re/item_db.conf` — mechanical, not name matching, so Rusty Arrow (Poison)
+/// and Silver Arrow (Holy) land correctly rather than by guesswork.
+///
+/// Deliberately wider than [`elemental_ammunition_resource`]: Frozen Arrow
+/// (1759), Arrow of Counter Evil (1766) and Holy Arrow (1772) are elemental but
+/// ship no distinct sprite, so a glow is the *only* way they can read as
+/// elemental in flight. Keep the two lists in step when either changes.
+pub fn ammunition_element(item_id: ItemId) -> Option<AmmunitionElement> {
+    match item_id.0 {
+        1751 | 1766 | 1772 => Some(AmmunitionElement::Holy), // Silver / Counter Evil / Holy Arrow
+        1752 => Some(AmmunitionElement::Fire),               // Fire Arrow
+        1754 | 1759 => Some(AmmunitionElement::Water),       // Crystal / Frozen Arrow
+        1755 => Some(AmmunitionElement::Wind),               // Arrow of Wind
+        1756 => Some(AmmunitionElement::Earth),              // Stone Arrow
+        1757 => Some(AmmunitionElement::Ghost),              // Immaterial Arrow
+        1762 | 1763 => Some(AmmunitionElement::Poison),      // Rusty / Poison Arrow
+        1767 => Some(AmmunitionElement::Dark),               // Arrow of Shadow
+        _ => None,
+    }
+}
+
 /// Fallback projectile sprite for a weapon class view, used when the shooter's
 /// real ammunition cannot be resolved (a remote entity whose inventory we never
 /// see, or an item missing from `iteminfo`). `None` for melee weapons.
@@ -2816,6 +2912,84 @@ mod weapon_layer_tests {
     fn ammunition_sprite_path_uses_the_item_folder() {
         // Iron Arrow's iteminfo resource, as the projectile the client draws.
         assert_eq!(super::ammunition_projectile_sprite_path("철화살"), "아이템\\철화살.spr");
+    }
+
+    #[test]
+    fn elemental_arrows_map_to_their_own_sprite() {
+        // Ids and elements come from each item's `bonus bAtkEle,Ele_*` script in
+        // db/re/item_db.conf, not from its name. All nine sprites were confirmed
+        // present in data.grf with tools/grf_list.py.
+        let expected = [
+            (1751u32, "은화살"),       // Silver Arrow — Holy
+            (1752, "불화살"),          // Fire Arrow — Fire
+            (1754, "수정화살"),        // Crystal Arrow — Water
+            (1755, "바람의화살"),      // Arrow of Wind — Wind
+            (1756, "돌화살"),          // Stone Arrow — Earth
+            (1757, "무형의화살"),      // Immaterial Arrow — Ghost
+            (1762, "녹슨화살"),        // Rusty Arrow — Poison
+            (1763, "독화살"),          // Poison Arrow — Poison
+            (1767, "그림자의화살"),    // Arrow of Shadow — Dark
+        ];
+
+        for (item_id, resource) in expected {
+            assert_eq!(
+                super::elemental_ammunition_resource(ItemId(item_id)),
+                Some(resource),
+                "item {item_id}"
+            );
+            // None of them may collapse back onto the generic arrow, which is the
+            // whole point of the table.
+            assert_ne!(resource, super::GENERIC_ARROW_RESOURCE, "item {item_id}");
+        }
+
+        // Plain Arrow keeps the generic sprite, and the three elemental arrows that
+        // ship no distinct sprite stay absent rather than being guessed at.
+        for item_id in [1750, 1759, 1766, 1772] {
+            assert_eq!(super::elemental_ammunition_resource(ItemId(item_id)), None, "item {item_id}");
+        }
+    }
+
+    #[test]
+    fn ammunition_elements_match_their_item_db_script() {
+        use super::AmmunitionElement::*;
+
+        // From `bonus bAtkEle,Ele_*` in db/re/item_db.conf.
+        let expected = [
+            (1751u32, Holy),  // Silver Arrow
+            (1752, Fire),     // Fire Arrow
+            (1754, Water),    // Crystal Arrow
+            (1755, Wind),     // Arrow of Wind
+            (1756, Earth),    // Stone Arrow
+            (1757, Ghost),    // Immaterial Arrow
+            (1759, Water),    // Frozen Arrow — no distinct sprite, glow only
+            (1762, Poison),   // Rusty Arrow
+            (1763, Poison),   // Poison Arrow
+            (1766, Holy),     // Arrow of Counter Evil — no distinct sprite, glow only
+            (1767, Dark),     // Arrow of Shadow
+            (1772, Holy),     // Holy Arrow — no distinct sprite, glow only
+        ];
+
+        for (item_id, element) in expected {
+            assert_eq!(super::ammunition_element(ItemId(item_id)), Some(element), "item {item_id}");
+        }
+
+        // Neutral ammo must not glow at all: plain/Steel/Stun/Iron Arrow, and the
+        // status-effect arrows that carry no element.
+        for item_id in [1750, 1753, 1758, 1760, 1761, 1764, 1765, 1768, 1769, 1770] {
+            assert_eq!(super::ammunition_element(ItemId(item_id)), None, "item {item_id}");
+        }
+    }
+
+    #[test]
+    fn every_elemental_sprite_arrow_also_has_an_element() {
+        // The glow table is the wider of the two; a sprite entry without a matching
+        // element would be an arrow that changes shape but never lights up.
+        for item_id in [1751, 1752, 1754, 1755, 1756, 1757, 1762, 1763, 1767] {
+            assert!(
+                super::ammunition_element(ItemId(item_id)).is_some(),
+                "item {item_id} has a sprite but no element"
+            );
+        }
     }
 
     #[test]

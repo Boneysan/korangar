@@ -61,9 +61,17 @@ impl Inventory {
             return;
         };
 
-        if let InventoryItemDetails::Regular { amount, .. } = &mut self.items[position].details
-            && *amount > remove_amount
-        {
+        // Ammo is stackable *and* `Equippable`, so a stack count has to be honoured
+        // for both variants. Decrementing only `Regular` deleted the whole arrow
+        // stack the first time a single arrow was spent: the item vanished from the
+        // inventory mid-fight, the Ammo slot emptied, and every later shot fell back
+        // to the generic arrow sprite because the equipped stack no longer existed.
+        // Real gear is unaffected — it has `amount: 1`, so it still removes outright.
+        let amount = match &mut self.items[position].details {
+            InventoryItemDetails::Regular { amount, .. } | InventoryItemDetails::Equippable { amount, .. } => amount,
+        };
+
+        if *amount > remove_amount {
             *amount -= remove_amount;
             return;
         }
@@ -91,6 +99,18 @@ impl Inventory {
     }
 
     pub fn update_equipped_position(&mut self, index: InventoryIndex, new_equipped_position: EquipPosition) {
+        // There is one ammo slot, so at most one stack may carry `AMMO`. The server
+        // does unequip the previous stack first, but a dropped or reordered ack would
+        // otherwise leave two stacks looking equipped — and then the *first* one wins
+        // as the active ammunition, which is silently wrong rather than visibly wrong.
+        if new_equipped_position.contains(EquipPosition::AMMO) {
+            for item in self.items.iter_mut().filter(|item| item.index != index) {
+                if let InventoryItemDetails::Equippable { equipped_position, .. } = &mut item.details {
+                    equipped_position.remove(EquipPosition::AMMO);
+                }
+            }
+        }
+
         // A stale/out-of-range index (e.g. an equip broadcast racing an
         // inventory reload) must not crash the client.
         let Some(item) = self.items.iter_mut().find(|item| item.index == index) else {

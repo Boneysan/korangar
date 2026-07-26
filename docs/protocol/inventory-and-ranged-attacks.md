@@ -34,18 +34,109 @@ after a relog" and "no stack count".
 `ItemOptions` is `Copy + Default` so `ammo()` can fill option slots without
 packet-supplied data.
 
-## Equipping ammo uses its own packet — and the index has **no offset**
+### Being `Equippable` means stack maths must handle *both* variants
+
+`Inventory::remove_item` originally decremented the count only for `Regular` and
+otherwise deleted the whole entry. Ammo is `Equippable`, so **firing a single
+arrow deleted the entire stack** — Hercules sends a `delitem` for one arrow, the
+match fell through, and 161 arrows vanished from the client at once.
+
+It presents as a rendering or equip bug, never as an inventory bug: the Ammo slot
+empties (the item holding the flag is gone), the arrows disappear from the
+inventory grid mid-fight, and every later shot draws the *generic* arrow because
+`equipped_ammunition()` no longer finds anything. It also self-heals on relog,
+which makes it look intermittent.
+
+Any code that matches on `InventoryItemDetails` to reach an `amount` must handle
+both variants. Real gear is unaffected either way — it has `amount: 1`, so the
+`amount > remove_amount` test fails and the item is removed outright.
+
+## The stackable item list cannot tell you what is *worn*
+
+`ZC_INVENTORY_ITEMLIST_NORMAL` has one slot field, and Hercules fills it from
+**`id->equip`** — the *item database's* slot mask (`clif_item_normal`):
+
+```c
+p->WearState = id->equip;      // clif_item_normal  — where it CAN go
+```
+
+Compare the equippable list, which has **two** fields and a real worn state:
+
+```c
+p->location  = eqp_pos;        // clif_item_equip — where it CAN go
+p->WearState = it->equip;      // clif_item_equip — where it IS worn
+```
+
+So for stackables the field is a *capability*, identical for every stack of a
+given item and independent of the character. Every arrow stack reports `AMMO`
+whether equipped or not. Reading it as the worn state made **all** arrow stacks
+look equipped: each offered "Unequip" (which the server ignored, since they were
+not equipped), and `equipped_ammunition()` — a `find_map` — picked whichever
+stack came *first* rather than the real one.
+
+The packet field is therefore named **`equippable_position`**, not
+`equipped_position`, and both list branches start items unequipped. Only
+`EquipAmmunitionPacket` can say what is actually worn.
+
+### …and that packet arrives *before* the inventory it refers to
+
+`clif->arrowequip` is sent from inside `clif_inventoryItems`, between the
+stackable and equippable lists — i.e. **before** `clif->inventoryEnd`:
+
+```
+InventoryStart → normal list → arrowequip (0x013C) → equip list → InventoryEnd
+```
+
+The client only publishes the inventory at `InventoryEnd`, so emitting
+`UpdateEquippedPosition` on arrival applies it to the *outgoing* inventory, which
+the following `SetInventory` immediately replaces — equipped ammo would be lost
+on every login while working fine when equipped by hand. The handler buffers the
+index while a list is being accumulated and applies it at `InventoryEnd`
+(`pending_equipped_ammunition`).
+
+`Inventory::update_equipped_position` additionally clears `AMMO` from every other
+stack, since there is one ammo slot. The server does unequip the previous stack
+first, so this is belt-and-braces — but a lost ack would otherwise leave two
+stacks flagged, and then the *first* silently wins.
+
+## Equipping ammo uses its own packet — and the handler must **not** re-offset the index
 
 Arrows do **not** equip via the normal `RequestEquipItemStatusPacket` ack. The server
 sends **`EquipAmmunitionPacket` (header `0x013C`)** carrying only the inventory index.
 It was previously `register_noop`'d, so the equip never reached the client (empty Ammo
 slot). It now emits `NetworkEvent::UpdateEquippedPosition { index, AMMO }`.
 
-**Index gotcha:** the initial inventory *list* packets store items at `raw_index - 2`
-(see the `saturating_sub(2)` in the list handlers), but the `EquipAmmunitionPacket`
-index is **already the stored index — do NOT subtract 2.** A `-2` here writes the
-`AMMO` slot onto the *wrong* item (verified live: it put a sword in the Ammo slot).
-When in doubt, log `index` vs the stored `(index, item_id)` list before adjusting.
+**Index gotcha — the offset lives in the type, not the handler.** Use
+`packet.inventory_index` as-is; do **not** subtract 2.
+
+Both facts are true at once and that is what makes this trap work:
+
+- Hercules really does send the `+2` — `clif_arrowequip` (`src/map/clif.c`) writes
+  `WFIFOW(fd,2) = val + 2`, exactly like `clif_equipitemack`, `clif_delitem`,
+  `clif_useitemack` and the rest.
+- The field is typed `InventoryIndex`, and **that type's `FromBytes` already applies
+  `wrapping_sub(2)`** (`ragnarok-packets/src/lib.rs`; `StorageIndex` does the same with
+  `1`). By the time a handler sees the value, the offset is gone.
+
+So reading Hercules alone "proves" a `- 2` is needed, and it is wrong — the subtraction
+is a *double* subtraction that lands the `AMMO` flag two slots below the arrows. This
+mistake has now been made twice. **Before adjusting any index, check the field's type
+first:** `InventoryIndex`/`StorageIndex` are pre-adjusted, `RawIndex` is not. The
+inventory *list* handlers subtract by hand only because their items carry `RawIndex`
+— that lone `saturating_sub(2)` is not a convention to copy.
+
+The failure is nasty because it is *silent in the UI you would check*. The equipment
+window's Ammo box asks "which item carries `AMMO`", so a flag written to the wrong slot
+just leaves the box empty — indistinguishable from "the equip never happened". It also
+mis-selects the projectile sprite, because `equipped_ammunition()` reads the same flag.
+Symptoms seen live with the double subtraction: the Ammo slot stayed empty, equipped
+arrows appeared to vanish, unequip did nothing, and an earlier test put a *sword* in
+the Ammo slot.
+
+**Diagnose it against the database, not the client** — the client is the thing that is
+wrong. `SELECT id, nameid, amount, equip FROM inventory WHERE char_id = …` shows the
+true equipped ammo (`equip = 32768`, i.e. `EQP_AMMO`); compare that against the
+client's `[ranged-attack] ammo_item=…` log line under `KORANGAR_PACKET_LOG`.
 
 `Inventory::update_equipped_position` tolerates an unknown index (returns instead of
 `unwrap()`-panicking) because an equip broadcast can arrive before an inventory reload.
@@ -62,8 +153,49 @@ weapon view is ranged.
 
 1. **The local player's equipped ammo** — `Inventory::equipped_ammunition()` reads the
    `EquipPosition::AMMO` slot, and `ItemResource` turns the item id into its sprite
-   base, so Iron Arrow / Fire Arrow / Silver Arrow each fly as themselves. Only the
-   local player is covered: the server never reports another character's ammo.
+   base. Only the local player is covered: the server never reports another
+   character's ammo.
+
+   **`iteminfo` collapses most ammo onto the generic arrow.** Item 1770 (Iron Arrow)
+   resolves to `화살`, not `철화살`, even though `아이템\철화살.spr` ships in
+   `data.grf` — so per-arrow-type variety does *not* fall out of the client data by
+   itself. Confirmed by the client's own loaded table; `item_info.rs` reads
+   `identifiedResourceName` straight through, and the bundled English overlay only
+   rewrites display names (a missing row would yield `사과`/Apple instead).
+
+   `elemental_ammunition_resource` (`world/entity/mod.rs`) therefore fills that gap
+   for the **nine elemental arrows that ship a distinct sprite**, and only where
+   `iteminfo` returned `GENERIC_ARROW_RESOURCE` — so the client's own mapping still
+   wins wherever it names something specific. Ids and elements come from each item's
+   `bonus bAtkEle,Ele_*` script in `db/re/item_db.conf` (mechanical, not name
+   matching); sprite presence was verified against `data.grf`'s file table with
+   `tools/grf_list.py`. The item↔sprite *pairing* is a translation of the Korean
+   resource names and is the part to doubt first if one looks wrong in flight.
+
+   Frozen Arrow (1759), Arrow of Counter Evil (1766) and Holy Arrow (1772) are
+   elemental but ship **no** distinct sprite, so they are deliberately absent rather
+   than pointed at a guess. This is a small, deliberate divergence from the original
+   client, which drives the projectile purely off `iteminfo`.
+
+   Note `iteminfo.lub` is a **32-bit** compiled Lua chunk, so 64-bit Lua rejects its
+   header — it cannot be dumped offline with a plain `mlua` harness. The running
+   client is the practical way to read what the table actually contains.
+
+   **Sprites alone are not enough to tell arrows apart.** Confirmed live: the stock
+   elemental sprites are small recolours of the plain arrow, so at projectile size
+   and speed a Fire Arrow still just reads as "an arrow". `ammunition_element`
+   (`world/entity/mod.rs`) therefore gives elemental ammo a coloured halo and a
+   point light — `SkillProjectile::with_elemental_glow`. The halo re-draws the
+   arrow's *own* texture ~1.9× larger and additively in the element colour, so it
+   needs no new art and always matches whichever sprite was selected; additive
+   blending means it only brightens, keeping the arrow's shape.
+
+   Elements come from each item's `bonus bAtkEle,Ele_*` script, so Rusty Arrow
+   (Poison) and Silver Arrow (Holy) are right where name-matching would be wrong.
+   **The glow table is deliberately wider than the sprite table**: it covers the
+   three arrows above that ship no distinct sprite, which the sprite path cannot
+   reach at all. Keep the two in step — a test asserts every sprite-table arrow
+   also has an element, and that neutral ammo has none so it never glows.
 2. **The weapon class's canonical ammo item** for everyone else —
    `ranged_attack_default_ammunition` (Hercules `item_db.conf` ids: Arrow **1750**,
    Bullet **13200**, Shuriken **13250**).

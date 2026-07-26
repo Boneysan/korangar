@@ -1424,26 +1424,59 @@ impl Client {
             .then(|| self.client_state.follow(client_state().inventory()).equipped_ammunition())
             .flatten()
             .or_else(|| ranged_attack_default_ammunition(view));
+
+        // `iteminfo` is authoritative wherever it names a specific sprite. It hands
+        // back the generic arrow for most ammunition though — Iron Arrow included —
+        // so an elemental arrow only gets its own sprite if we fill that gap.
         let ammunition_sprite = ammunition.and_then(|item_id| {
-            self.library
+            let from_client = self
+                .library
                 .try_get::<ItemResource>(ItemResourceKey {
                     item_id,
                     is_identified: true,
                 })
-                .map(|resource| ammunition_projectile_sprite_path(&resource.to_string()))
+                .map(|resource| resource.to_string())
+                .filter(|resource| resource != GENERIC_ARROW_RESOURCE);
+
+            from_client
+                .or_else(|| elemental_ammunition_resource(item_id).map(str::to_owned))
+                .map(|resource| ammunition_projectile_sprite_path(&resource))
         });
 
         // An unknown or spriteless ammo item must not swallow the projectile, so
-        // fall back to the weapon class default before giving up.
-        let texture = ammunition_sprite
-            .as_deref()
-            .and_then(|path| self.first_sprite_frame(path))
-            .or_else(|| self.first_sprite_frame(fallback_sprite));
+        // fall back to the weapon class default before giving up. The fallback is
+        // silent on screen — every arrow type then flies as a plain arrow — so it
+        // is worth being able to see which branch ran.
+        let ammunition_texture = ammunition_sprite.as_deref().and_then(|path| self.first_sprite_frame(path));
+        let used_fallback = ammunition_texture.is_none();
+        let texture = ammunition_texture.or_else(|| self.first_sprite_frame(fallback_sprite));
+
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            eprintln!(
+                "[ranged-attack] view={view} local_player={is_local_player} ammo_item={ammunition:?} \
+                 ammo_sprite={ammunition_sprite:?} used_fallback={used_fallback}"
+            );
+        }
 
         match texture {
-            Some(texture) => self
-                .effect_holder
-                .add_effect(Box::new(SkillProjectile::arrow(texture, source, target))),
+            Some(texture) => {
+                let mut projectile = SkillProjectile::arrow(texture, source, target);
+
+                // Elemental ammo carries a glow in its element. The stock sprites are
+                // only faint recolours, so this is what actually makes a Fire Arrow
+                // read as fire in flight — and it reaches the elemental arrows that
+                // ship no distinct sprite at all. Neutral ammo stays untouched.
+                if let Some(element) = ammunition.and_then(ammunition_element) {
+                    // Distinct light per in-flight arrow, so rapid fire does not
+                    // collapse into one light being dragged between shots.
+                    let light_id = PointLightId::new(
+                        source.x.to_bits().wrapping_add(target.z.to_bits()).wrapping_mul(31) ^ ammunition.map_or(0, |id| id.0),
+                    );
+                    projectile = projectile.with_elemental_glow(element.glow_color(), light_id);
+                }
+
+                self.effect_holder.add_effect(Box::new(projectile));
+            }
             None => eprintln!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
         }
     }
@@ -5155,19 +5188,23 @@ impl Client {
                     player_position,
                     attack_range,
                 } => {
+                    // Make sure that the entity is on screen.
+                    let target_on_screen = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .any(|entity| entity.get_entity_id() == target_entity_id);
+                    let have_player = self.client_state.try_follow_mut(this_entity()).is_some();
+                    let mut walking = false;
+
                     if let Some(map) = &self.map
-                        && self.client_state.try_follow_mut(this_entity()).is_some()
-                        // Make sure that the entity is on screen.
-                        && self
-                            .client_state
-                            .follow(client_state().entities())
-                            .iter()
-                            .any(|entity| entity.get_entity_id() == target_entity_id)
+                        && have_player
+                        && target_on_screen
                         && let Some(path) =
                             self.path_finder
                                 .find_walkable_path_in_range(&**map, player_position, target_position, attack_range)
                     {
-                        let nearest_tile = path.last().unwrap();
+                        let nearest_tile = *path.last().unwrap();
 
                         let _ = self.networking_system.player_move(WorldPosition {
                             x: nearest_tile.x,
@@ -5178,6 +5215,21 @@ impl Client {
                         *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::AttackEntity {
                             entity_id: target_entity_id,
                         });
+                        walking = true;
+                    }
+
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!(
+                            "[attack-range] too far: target={target_entity_id:?} target_pos={target_position:?} \
+                             player_pos={player_position:?} range={} on_screen={target_on_screen} have_player={have_player} \
+                             have_map={} -> {}",
+                            attack_range.0,
+                            self.map.is_some(),
+                            match walking {
+                                true => "walking into range",
+                                false => "did nothing",
+                            }
+                        );
                     }
                 }
                 NetworkEvent::UpdateSkill {

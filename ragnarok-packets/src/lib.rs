@@ -1192,7 +1192,20 @@ pub struct RegularItemInformation {
     pub item_id: ItemId,
     pub item_type: u8,
     pub amount: u16,
-    pub equipped_position: EquipPosition,
+    /// Where this item *can* be worn — **not** where it is worn.
+    ///
+    /// The wire field is called `WearState`, but for stackable items Hercules
+    /// fills it from `id->equip`, the item database's slot mask
+    /// (`clif_item_normal`). It is identical for every stack of a given item and
+    /// never reflects the character. Contrast [`EquippableItemInformation`],
+    /// which has *two* fields: `equip_position` (`location` = `pc->equippoint`)
+    /// and `equipped_position` (`WearState` = `it->equip`, the real worn state).
+    ///
+    /// Consequence: every arrow stack reports `AMMO` here, equipped or not, so
+    /// treating this as worn state makes them all look equipped and picks the
+    /// wrong one as the active ammunition. The stackable list simply cannot say
+    /// what is worn; only `EquipAmmunitionPacket` (0x013C) can.
+    pub equippable_position: EquipPosition,
     pub slot: [u32; 4], // card ?
     pub hire_expiration_date: u32,
     pub flags: RegularItemFlags,

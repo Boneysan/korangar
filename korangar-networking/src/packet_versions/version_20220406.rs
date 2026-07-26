@@ -194,6 +194,14 @@ where
     // Inventory / storage lists share the same Start → item* → End framing.
     // Transient buffer holds (inventory_type, items) until End.
     let inventory_items: Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>> = Rc::new(RefCell::new(None));
+    // Equipped ammunition seen while a list is still being accumulated.
+    //
+    // Hercules sends `clif_arrowequip` from *inside* `clif_inventoryItems`, between
+    // the stackable list and the equippable list — so at login it arrives before the
+    // End packet that publishes the inventory. Emitting it immediately would apply the
+    // AMMO flag to the outgoing inventory and then lose it to the `SetInventory` that
+    // follows, leaving the Ammo slot empty every login. Hold it and apply it at End.
+    let pending_equipped_ammunition: Rc<RefCell<Option<InventoryIndex>>> = Rc::new(RefCell::new(None));
 
     packet_handler.register(|_: MapServerPingPacket| NoNetworkEvents)?;
     packet_handler.register(|packet: BroadcastMessagePacket| NetworkEvent::ChatMessage {
@@ -431,7 +439,7 @@ where
                     item_id,
                     item_type,
                     amount,
-                    equipped_position,
+                    equippable_position: _,
                     slot,
                     hire_expiration_date,
                     flags,
@@ -444,12 +452,19 @@ where
 
                 // Ammo is stackable but occupies the AMMO slot; the normal list
                 // omits the equippable fields, so build them explicitly.
+                //
+                // Everything starts **unequipped**: this packet cannot say what is
+                // worn. Its one slot field is the item database's mask, so every
+                // arrow stack claims `AMMO` — feeding that in as the worn state
+                // marked them all equipped, offered "Unequip" on stacks that were
+                // not equipped, and made the *first* stack win as the active
+                // ammunition. The truth arrives separately, in `EquipAmmunitionPacket`.
                 let details = if item_type == IT_AMMO {
-                    InventoryItemDetails::ammo(amount, equipped_position, flags.contains(RegularItemFlags::IDENTIFIED))
+                    InventoryItemDetails::ammo(amount, EquipPosition::empty(), flags.contains(RegularItemFlags::IDENTIFIED))
                 } else {
                     InventoryItemDetails::Regular {
                         amount,
-                        equipped_position,
+                        equipped_position: EquipPosition::empty(),
                         flags,
                     }
                 };
@@ -526,9 +541,22 @@ where
     })?;
     packet_handler.register({
         let inventory_items = inventory_items.clone();
+        let pending_equipped_ammunition = pending_equipped_ammunition.clone();
 
         move |_packet: InventoyEndPacket| {
-            let (inv_type, items) = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
+            let (inv_type, mut items) = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
+
+            // Apply the ammo equip that arrived mid-list (see the buffer's comment).
+            // Storage lists never carry one, and taking it unconditionally would strand
+            // a real inventory equip behind an unrelated storage window.
+            if !matches!(inv_type, inventory_type::STORAGE | inventory_type::GUILD_STORAGE)
+                && let Some(index) = pending_equipped_ammunition.borrow_mut().take()
+                && let Some(item) = items.iter_mut().find(|item| item.index == index)
+                && let InventoryItemDetails::Equippable { equipped_position, .. } = &mut item.details
+            {
+                *equipped_position = EquipPosition::AMMO;
+            }
+
             match inv_type {
                 inventory_type::STORAGE | inventory_type::GUILD_STORAGE => NetworkEvent::SetStorage { items },
                 _ => NetworkEvent::SetInventory { items },
@@ -1083,6 +1111,11 @@ where
 
         NetworkEvent::OpenDialog { text, npc_id }
     })?;
+    // Yes, Hercules sends `n + 2` here (`clif_equipitemack` / `clif_unequipitemack`),
+    // but do **not** subtract it in the handler: both fields are typed
+    // `InventoryIndex`, whose `FromBytes` already does the `- 2` (see the type in
+    // `ragnarok-packets`). Subtracting again lands two slots early. Only the
+    // inventory *list* adjusts by hand, because its items carry `RawIndex`.
     packet_handler.register(|packet: RequestEquipItemStatusPacket| match packet.result {
         RequestEquipItemStatus::Success => Some(NetworkEvent::UpdateEquippedPosition {
             index: packet.inventory_index,
@@ -1356,11 +1389,31 @@ where
     })?;
     // Ammo (arrows) equips via its own packet, not the normal equip ack; mark
     // the item equipped in the AMMO slot so it shows in the equipment window.
-    // Its index already matches the stored inventory index (unlike the initial
-    // list, no -2 offset — verified against live data).
-    packet_handler.register(|packet: EquipAmmunitionPacket| NetworkEvent::UpdateEquippedPosition {
-        index: packet.inventory_index,
-        equipped_position: EquipPosition::AMMO,
+    //
+    // `clif_arrowequip` does send `val + 2`, but the field is an `InventoryIndex`
+    // and that type's `FromBytes` has already removed the `+ 2` by the time this
+    // handler runs — so use it as-is. Subtracting again flags the item two slots
+    // below the arrows, which leaves the Ammo box empty when that slot is free
+    // (looking exactly like "the equip never happened") and picks the wrong
+    // projectile sprite when it is not.
+    packet_handler.register({
+        let inventory_items = inventory_items.clone();
+        let pending_equipped_ammunition = pending_equipped_ammunition.clone();
+
+        move |packet: EquipAmmunitionPacket| -> Option<NetworkEvent> {
+            // At login this packet lands *between* the inventory list packets, so the
+            // event would be applied to an inventory that is about to be replaced.
+            // Buffer it for the End handler instead of emitting into the void.
+            if inventory_items.borrow().is_some() {
+                *pending_equipped_ammunition.borrow_mut() = Some(packet.inventory_index);
+                return None;
+            }
+
+            Some(NetworkEvent::UpdateEquippedPosition {
+                index: packet.inventory_index,
+                equipped_position: EquipPosition::AMMO,
+            })
+        }
     })?;
     packet_handler.register_noop::<AmmunitionActionPacket>()?;
     packet_handler.register(|packet: UpdateSkillPacket| {
