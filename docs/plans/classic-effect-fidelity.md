@@ -279,54 +279,59 @@ New machinery this pass:
   sprites). Caught in review: those recipes declared `light:` that nothing
   consumed — `UnitCylinders` and the STR path self-register, these didn't.
 
-### Song/dance areas — assets FOUND 2026-07-26, recipes not yet written
+### Song/dance areas — RESOLVED 2026-07-26: 18 of 20 need NO ground visual
 
-roBrowser marks these `'27x_ground'` **Tofix**, so earlier notes said "no
-authoritative visual exists; defer or design our own". **That was wrong** — the
-original's assets are in the GRF, found by searching the reference client tree at
-`/Volumes/T7/GitHub/RO` (a full `2019-06-05f` install; its `data.grf`/`rdata.grf`
-are byte-identical to ours, so anything it draws, we can draw).
+Investigated because roBrowser marks the `27x_ground` range **Tofix**. The answer
+is not a missing asset — **the skills do not create ground units at all**, so
+there was never anything to draw.
 
-**What the server gives us.** `clif_getareachar_skillunit` (`clif.c`) sends *only*
-the `unit_id` in `p.job` — no effect id. So the **UnitId → visual mapping is
-client-side knowledge**, which is exactly why roBrowser could not recover it. All
-18 song/dance `UnitId` variants already exist in `ragnarok-packets`; none has a
-`unit_recipe.rs` entry.
+**The decisive check (do this before hunting assets):** in the renewal
+`db/re/skill_db.conf` this server uses, only **2 of 20** song/dance skills declare
+a `Unit:` block — `CG_MOONLIT` (`Id: 0xb5`, `Layout: 4`, `UF_ENSEMBLE`) and
+`CG_HERMODE`. Every Bard song (`BA_*`), every Dancer dance (`DC_*`) and every
+ensemble (`BD_*`) has none: they are `SkillType: Self` / `SkillInfo: { Song: true }`
+skills that apply an `SC_*` status (and for Dissonance, splash damage). Hercules
+therefore never sends `AddSkillUnit` for them, and 18 `unit_recipe.rs` entries
+would have been **dead code that could never fire**.
 
-**The asset family: one flat `.tga` per song in `data\texture\effect\`**, named
-after the skill. Fifteen are confirmed present and unambiguous:
+The `UNT_*` song ids do exist in the enum and are referenced in `skill.c`
+(`skill_unit_onplace_timer` and the pre-renewal paths), which is what makes the
+enum look like it implies ground units. It does not — check `skill_db.conf`.
 
-`appleidun` · `assassincross` · `dontforgetme` · `drumbattlefield` ·
-`eternalchaos` · `fortunekiss` · `humming` · `intoabyss` · `poembragi` ·
-`richmankim` · `ringnibelungen` · `rokisweil` · `serviceforyou` · `siegfried` ·
-`whistle`
+**So the work splits:**
+- **The 18 belong to the status layer (E4), not E2.** Each has an authentic
+  per-song 32×32 indicator at `data\texture\effect\{skillname}.tga` —
+  `whistle`, `poembragi`, `appleidun`, `humming`, `siegfried`, `assassincross`,
+  `dontforgetme`, `fortunekiss`, `serviceforyou`, `richmankim`, `eternalchaos`,
+  `drumbattlefield`, `ringnibelungen`, `rokisweil`, `intoabyss`, plus Korean-named
+  `안식의자장가` / `바드노래` / `댄서 춤` for Lullaby / Dissonance / Ugly Dance.
+- **Only `CG_MOONLIT` and `CG_HERMODE` want `unit_recipe.rs` entries.**
 
-A single flat texture per unit points at the existing **`UnitGroundQuad`** body
-(what Land Protector uses) plus a `UnitPointLight` companion — not cylinders.
+**Two candidate asset families that are both icons — measure, do not assume.**
+Real ground textures in this engine are **64×64 to 128×128** (`ring_red.tga` is
+64×64; Land Protector's `aaa copy.bmp` is 128×128). Against that yardstick:
+1. `data\sprite\아이템\{skill_constant}.spr` exists for all 36
+   Bard/Dancer/ensemble/Clown-Gypsy skills and looks like a perfect hit — every
+   one is a single **26×26** frame, i.e. the skill *icon*.
+2. `data\texture\effect\{skillname}.tga` is uniformly **32×32, 4140 bytes** —
+   and so is `efst_abyss_slayer.tga`, a known **status indicator**, and
+   `unlimitedhummingvoice.tga`, a Minstrel *buff*. That is the EFST icon family.
+   I briefly recorded these as the ground assets; they are not.
 
-**Three are NOT yet resolved — do not guess them.** Dissonance, Lullaby and Ugly
-Dance have no English-named texture. Korean-named candidates exist
-(`바드노래` "Bard song", `안식의자장가` "Lullaby of Rest", `댄서 춤` "Dancer
-dance") but which maps to which is unproven. Resolve via the roBrowser
-`EffectTable` for `EF_BOTTOM_DISSONANCE` (277) / `EF_BOTTOM_LULLABY` (278) /
-`EF_BOTTOM_UGLYDANCE` (290), or from the reference exe. The `EF_BOTTOM_*` block
-is contiguous 277–294 in `db/constants.conf` and matches the 18 units **by name,
-not by index** — the two orderings differ (Dissonance is 1st in `EF_BOTTOM_*` but
-9th in `UnitId`), so an offset-based mapping would silently mis-assign every one.
+Both were settled by reading image headers through korangar's loader, because many
+entries are **DES-encrypted** and `tools/grf_list.py` skips them silently
+(korangar can read them: `loaders/archive/native/mixcrypt.rs`).
 
-**A dead end worth not repeating:** `data\sprite\아이템\{skill_constant}.spr`
-exists for all 36 Bard/Dancer/ensemble/Clown-Gypsy skills and looks like a
-perfect hit. It is **not** the ground visual — every one is a single **26×26**
-indexed frame, i.e. the skill *icon*. Verified by reading the SPR headers through
-korangar's own loader, because these entries are **DES-encrypted** and
-`tools/grf_list.py` cannot decode them (korangar can: `loaders/archive/native/mixcrypt.rs`).
-Those icons are, however, a candidate for replacing the placeholder monogram
-skill icons.
+**Also note** `EF_BOTTOM_*` (277–294, `db/constants.conf`) maps to the 18 units by
+**name, not index** — the orderings differ (Dissonance is 1st in `EF_BOTTOM_*`,
+9th in `UnitId`), so an offset-based mapping would mis-assign every one. And
+`clif_getareachar_skillunit` sends only `unit_id`, never an effect id, so any
+unit→visual mapping is necessarily client-side knowledge.
 
 **Related discovery:** the reference client's `data.ini` loads two GRFs korangar
 never registers — `renewal2021.grf` (UI textures) and `resources2021.grf` (~30k
-item/accessory sprites) — at *higher* priority than `data.grf`. Not needed for
-songs, but they are the likely home of missing item icons.
+item/accessory sprites) — at *higher* priority than `data.grf`. Likely home of
+missing item icons.
 
 ### Batch 2 live pass — COMPLETE 6/6, 2026-07-24
 
