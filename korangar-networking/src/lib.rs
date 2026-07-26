@@ -1067,6 +1067,16 @@ where
         }
     }
 
+    /// Abort our own in-progress cast. Fork-only — see [`CancelCastPacket`].
+    ///
+    /// Harmless to send when nothing is casting: Hercules'
+    /// `unit->skillcastcancel` returns early with nothing to cancel.
+    pub fn cancel_cast(&mut self) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(CancelCastPacket::default()),
+        }
+    }
+
     pub fn cast_channeling_skill(
         &mut self,
         skill_id: SkillId,

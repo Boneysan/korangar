@@ -1109,6 +1109,37 @@ fn format_missing_skill_item(name: Option<&str>, item_id: ItemId, amount: u16, e
     }
 }
 
+/// Ask the server to abort our own in-progress cast, returning whether there was
+/// one to abort — so the caller knows whether to fall through to the gesture's
+/// normal meaning (open the menu, rotate the camera).
+///
+/// **Fork behaviour, not RO's.** Official Ragnarok has no player-initiated cast
+/// cancel; this pairs with the `clif_parse_CancelCast` Hercules delta. Movement
+/// deliberately does *not* cancel — casting still roots the character, which is
+/// authentic.
+///
+/// The cast bar is left alone here: Hercules broadcasts `clif->skillcastcancel`,
+/// which arrives back as `SkillCastCancelled` and clears it. Clearing
+/// optimistically would show a cancel that might not have happened.
+///
+/// Takes its two fields by reference rather than `&mut self` because both call
+/// sites already hold unrelated borrows of `self` (the input-event drain and the
+/// per-frame point-light borrow).
+fn cancel_own_cast<Callback: PacketCallback + Send>(
+    networking_system: &mut NetworkingSystem<Callback>,
+    state: &State<ClientState>,
+    client_tick: ClientTick,
+) -> bool {
+    let is_casting = state
+        .try_follow(this_entity())
+        .is_some_and(|player| player.is_casting(client_tick));
+
+    if is_casting {
+        let _ = networking_system.cancel_cast();
+    }
+    is_casting
+}
+
 fn announce_armed_skill(state: &mut State<ClientState>, skill_name: &str) {
     state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
         format!("Aiming {skill_name} — click a target (right-click or Esc to cancel)."),
@@ -5657,11 +5688,13 @@ impl Client {
                 InputEvent::RotateCamera { rotation } => self.player_camera.soft_rotate(rotation),
                 InputEvent::ResetCameraRotation => self.player_camera.reset_rotation(),
                 InputEvent::ToggleMenuWindow => {
-                    // Escape backs out of the most recent transient state first: if a skill is
-                    // armed, cancel the target instead of opening the menu (secondary cancel
+                    // Escape backs out of the most recent transient state first: an armed skill
+                    // target, then an in-progress cast, and only then the menu (secondary cancel
                     // gesture alongside right-click).
                     if self.pending_skill.is_some() {
                         self.pending_skill = None;
+                    } else if cancel_own_cast(&mut self.networking_system, &self.client_state, client_tick) {
+                        // Cast aborted; Escape does not also open the menu.
                     } else if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Menu) {
                             true => self.interface.close_window_with_class(WindowClass::Menu),
@@ -7722,6 +7755,9 @@ impl Client {
                             // Right-click is the primary cancel gesture for an armed skill; it
                             // clears the target and does not start a camera rotation.
                             self.pending_skill = None;
+                        } else if cancel_own_cast(&mut self.networking_system, &self.client_state, client_tick) {
+                            // Then an in-progress cast, for the same reason: aborting must not
+                            // also start swinging the camera around.
                         } else if currently_playing {
                             #[cfg_attr(feature = "debug", korangar_debug::debug_condition(!render_options.use_debug_camera))]
                             interface_frame.set_mouse_mode(MouseInputMode::RotateCamera);

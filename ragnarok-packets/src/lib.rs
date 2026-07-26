@@ -4783,6 +4783,22 @@ pub struct UseSkillAckPacket {
     pub attack_motion_time: u32,
 }
 
+/// Abort the caster's own in-progress cast (`CZ_CANCEL_CAST` 0x0F00).
+///
+/// **This packet does not exist in official Ragnarok** — it is a Korangar fork
+/// addition, matched by a companion Hercules delta (`clif_parse_CancelCast`, see
+/// korangar `CLAUDE.md` §3b). Official RO offers no player-initiated cast cancel
+/// at all, and forbids moving while casting, so there was nothing to reuse.
+///
+/// `0x0F00` is deliberate: it is exactly Hercules' `MAX_PACKET_DB` ceiling, so it
+/// is in bounds for `packets->db[]` while sitting far above every real packet id.
+/// A client packet with no length entry makes Hercules **disconnect the session**,
+/// so the length lives in the non-generated `common/packets_len.h`.
+#[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0F00)]
+pub struct CancelCastPacket {}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0110)]
@@ -5660,6 +5676,20 @@ mod tests {
         // 175 bytes at PACKETVER >= 20201007 (64-bit hp and sp).
         assert_eq!(<CharacterInformationLegacy as FixedByteSize>::size_in_bytes(), 155);
         assert_eq!(<CharacterInformation as FixedByteSize>::size_in_bytes(), 175);
+    }
+
+    #[test]
+    fn cancel_cast_packet_is_a_bare_two_byte_header() {
+        // Must be exactly 2 bytes (header only) to match the `packetLen(0x0f00, 2)`
+        // entry the companion Hercules delta adds in `common/packets_len.h`. A
+        // mismatch does not warn — Hercules reads the wrong number of bytes and
+        // desyncs, or `clif_parse` disconnects the session outright.
+        assert_eq!(packet_bytes(CancelCastPacket::default()), [0x00, 0x0F]);
+
+        // 0x0F00 is Hercules' MAX_PACKET_DB ceiling: any higher and both
+        // `packets_addLen` and `packetdb_addpacket` reject the registration, so the
+        // server would drop every client that sent it.
+        assert!(CancelCastPacket::HEADER.0 <= 0x0F00);
     }
 
     #[test]

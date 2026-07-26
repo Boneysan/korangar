@@ -2449,6 +2449,13 @@ impl Entity {
         self.get_common_mut().clear_cast();
     }
 
+    /// Whether a cast bar is still running at `client_tick`. Keyed off the same
+    /// state the cast bar draws from, so "there is a bar on screen" and "a cancel
+    /// would do something" can never disagree.
+    pub fn is_casting(&self, client_tick: ClientTick) -> bool {
+        self.get_common().cast_bar(client_tick).is_some()
+    }
+
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
         self.get_common_mut().update(audio_engine, map, camera, client_tick);
     }
