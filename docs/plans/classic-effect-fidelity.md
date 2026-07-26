@@ -279,53 +279,94 @@ New machinery this pass:
   sprites). Caught in review: those recipes declared `light:` that nothing
   consumed — `UnitCylinders` and the STR path self-register, these didn't.
 
-### Song/dance areas — RESOLVED 2026-07-26: 18 of 20 need NO ground visual
+### Song/dance areas — RESOLVED 2026-07-26: almost nothing here is E2 work
 
-Investigated because roBrowser marks the `27x_ground` range **Tofix**. The answer
-is not a missing asset — **the skills do not create ground units at all**, so
-there was never anything to draw.
+Investigated because roBrowser marks the `27x_ground` range **Tofix**. Three
+rounds of asset hunting produced two wrong answers before the real one, so the
+conclusions are recorded with the evidence that settled them.
 
-**The decisive check (do this before hunting assets):** in the renewal
+**1. The skills mostly do not create ground units.** In the renewal
 `db/re/skill_db.conf` this server uses, only **2 of 20** song/dance skills declare
-a `Unit:` block — `CG_MOONLIT` (`Id: 0xb5`, `Layout: 4`, `UF_ENSEMBLE`) and
-`CG_HERMODE`. Every Bard song (`BA_*`), every Dancer dance (`DC_*`) and every
-ensemble (`BD_*`) has none: they are `SkillType: Self` / `SkillInfo: { Song: true }`
-skills that apply an `SC_*` status (and for Dissonance, splash damage). Hercules
-therefore never sends `AddSkillUnit` for them, and 18 `unit_recipe.rs` entries
-would have been **dead code that could never fire**.
+a `Unit:` block: `CG_MOONLIT` (`Id: 0xb5`, `Layout: 4`, `UF_ENSEMBLE`) and
+`CG_HERMODE`. Every `BA_*`, `DC_*` and `BD_*` is `SkillType: Self` /
+`SkillInfo: { Song: true }`, so Hercules never sends `AddSkillUnit` for them and 18
+`unit_recipe.rs` entries would have been **dead code that could never fire**. The
+`UNT_*` song ids do exist in the enum and are referenced from `skill.c`'s
+pre-renewal / `onplace_timer` paths, which is what makes the enum look like it
+implies ground units. **Check `skill_db.conf` for a `Unit:` block before hunting
+any skill-unit asset.**
 
-The `UNT_*` song ids do exist in the enum and are referenced in `skill.c`
-(`skill_unit_onplace_timer` and the pre-renewal paths), which is what makes the
-enum look like it implies ground units. It does not — check `skill_db.conf`.
+**2. The status side is 15 skills, not 18, and E4 cannot just absorb them.**
+Of the 18: `BA_DISSONANCE` and `DC_UGLYDANCE` declare **no `StatusChange` at all**
+(splash damage / SP drain), and `BD_LULLABY` maps to the shared **`SC_SLEEP`**,
+which the client already renders via `sleep.str`. The other 15 do carry per-song
+statuses with real icons (`SI_WHISTLE`, `SI_POEMBRAGI`, …), so they already reach
+the buff bar from the M1-010 work — songs are **not** invisible today.
 
-**So the work splits:**
-- **The 18 belong to the status layer (E4), not E2.** Each has an authentic
-  per-song 32×32 indicator at `data\texture\effect\{skillname}.tga` —
-  `whistle`, `poembragi`, `appleidun`, `humming`, `siegfried`, `assassincross`,
-  `dontforgetme`, `fortunekiss`, `serviceforyou`, `richmankim`, `eternalchaos`,
-  `drumbattlefield`, `ringnibelungen`, `rokisweil`, `intoabyss`, plus Korean-named
-  `안식의자장가` / `바드노래` / `댄서 춤` for Lullaby / Dissonance / Ugly Dance.
-- **Only `CG_MOONLIT` and `CG_HERMODE` want `unit_recipe.rs` entries.**
+Wiring per-song *entity* visuals is **new plumbing, not configuration**. The E4
+machinery does not fit, in three specific ways:
+  - `update_status_effect_visual` is keyed only on `body_state` / `health_state`
+    (opt1/opt2 bitfields) via `status_effect_asset`. Song statuses arrive on a
+    different channel — `NetworkEvent::StatusChange { index, .. }` — which today
+    feeds only the buff bar and has **no visual path at all**.
+  - It loads **`.str` scripts** via `effect_loader`. The song textures are bare
+    flat images with no `.str`, so they need a procedural renderer like the E1
+    recipes.
+  - It is **single-slot per entity** (`active_status_effects: HashMap<EntityId, _>`).
+    A Bard/Dancer party stacks several songs at once; one slot cannot represent that.
 
-**Two candidate asset families that are both icons — measure, do not assume.**
-Real ground textures in this engine are **64×64 to 128×128** (`ring_red.tga` is
-64×64; Land Protector's `aaa copy.bmp` is 128×128). Against that yardstick:
-1. `data\sprite\아이템\{skill_constant}.spr` exists for all 36
-   Bard/Dancer/ensemble/Clown-Gypsy skills and looks like a perfect hit — every
-   one is a single **26×26** frame, i.e. the skill *icon*.
-2. `data\texture\effect\{skillname}.tga` is uniformly **32×32, 4140 bytes** —
-   and so is `efst_abyss_slayer.tga`, a known **status indicator**, and
-   `unlimitedhummingvoice.tga`, a Minstrel *buff*. That is the EFST icon family.
-   I briefly recorded these as the ground assets; they are not.
+**3. `CG_MOONLIT` and `CG_HERMODE` are real unit work but their visuals are NOT
+recoverable.** Every source is exhausted: the GRF holds only their *icons*
+(`data\sprite\아이템\cg_moonlit.spr`, `cg_hermode.spr`, plus
+`유저인터페이스\item\*.bmp`); there is no `.str` and no dedicated texture; the
+reference exe contains no `moonlit` / `hermode` / `shelter` string at all; and
+`EF_BOTTOM_HERMODE` (517) exists as an id with nothing bound to it. These belong
+in the same bucket as E4's held pose and the cast circles: **blocked on reference
+material — do not eyeball.** Implementing them means an explicit *fork design*
+decision, not recovery.
 
-Both were settled by reading image headers through korangar's loader, because many
-entries are **DES-encrypted** and `tools/grf_list.py` skips them silently
-(korangar can read them: `loaders/archive/native/mixcrypt.rs`).
+#### Sizing yardstick: is this a ground texture?
 
-**Also note** `EF_BOTTOM_*` (277–294, `db/constants.conf`) maps to the 18 units by
-**name, not index** — the orderings differ (Dissonance is 1st in `EF_BOTTOM_*`,
-9th in `UnitId`), so an offset-based mapping would mis-assign every one. And
-`clif_getareachar_skillunit` sends only `unit_id`, never an effect id, so any
+Real ground textures here are **64×64** (`ring_red.tga`, elemental fields) to
+**128×128** (`aaa copy.bmp`, Land Protector). Two candidate families were measured
+against that and both are icons:
+
+1. `data\sprite\아이템\{skill_constant}.spr` — exists for all 36
+   Bard/Dancer/ensemble/Clown-Gypsy skills and looks like a perfect hit. Every one
+   is a single **26×26** frame: a skill icon.
+2. `data\texture\effect\{skillname}.tga` — uniformly **32×32, 4140 bytes**, and so
+   are `efst_abyss_slayer.tga` (a known status indicator) and
+   `unlimitedhummingvoice.tga` (a buff). This is the **EFST** family. It is the
+   right art for the *status* layer, and was briefly mis-recorded here as the
+   ground assets. The three songs with no English-named TGA are exactly the three
+   with no dedicated status — good internal confirmation.
+
+Both were settled by reading image headers through korangar's loader: many entries
+are **DES-encrypted** and `tools/grf_list.py` skips them silently, while korangar
+can read them (`loaders/archive/native/mixcrypt.rs`).
+
+#### A new (partial) authority: the exe's effect-name pool
+
+`client/2019-06-05fRagexe_patched.exe` (see the reference tree, `/Volumes/T7/GitHub/RO`)
+contains a pool of effect `.str` names around offsets **7458420–7461300**, ordered
+by `EffectId` **in runs**. Calibrated against `db/constants.conf` it resolves
+cleanly inside a run — e.g. `poison.str` is **`EF_POISONATTACK` (192)**, *not*
+`EF_POISON` (335); `Deffender.str` is `EF_DEFFENDER` (213), not `EF_DEFENDER` (222);
+and `moonlight_1/2/3.str` is **`EF_LEVEL99/_2/_3` (200–202)**, the level-99 aura,
+**not** `CG_MOONLIT`. It also *skips* `EF_PETRIFYATTACK` (195) and `EF_CURSEATTACK`
+(196), independently confirming this plan's finding that `stone.str` / `curse.str`
+do not exist.
+
+**Its limit, which matters:** ordering holds within a run but resets between them
+(`strip_weapon`→`strip_helm` is 269→272, then the next entry `shield_charge` is
+246). So it can confirm a mapping but cannot be interpolated. Used that way it
+shows **ids 273–294 have no `.str` entry at all** — the `EF_BOTTOM_*` song effects
+are exe-hardcoded procedural effects over flat textures, the same standing as the
+`Lockon` / `Beginspell` cast circles.
+
+Two further notes: `EF_BOTTOM_*` (277–294) maps to the 18 units by **name, not
+index** (Dissonance is 1st there, 9th in `UnitId`), and
+`clif_getareachar_skillunit` sends only `unit_id`, never an effect id — so any
 unit→visual mapping is necessarily client-side knowledge.
 
 **Related discovery:** the reference client's `data.ini` loads two GRFs korangar
