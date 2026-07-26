@@ -279,8 +279,54 @@ New machinery this pass:
   sprites). Caught in review: those recipes declared `light:` that nothing
   consumed — `UnitCylinders` and the STR path self-register, these didn't.
 
-Song/dance areas: the client tables mark these `'27x_ground'` **Tofix** even
-in roBrowser — no authoritative visual exists there; defer or design our own.
+### Song/dance areas — assets FOUND 2026-07-26, recipes not yet written
+
+roBrowser marks these `'27x_ground'` **Tofix**, so earlier notes said "no
+authoritative visual exists; defer or design our own". **That was wrong** — the
+original's assets are in the GRF, found by searching the reference client tree at
+`/Volumes/T7/GitHub/RO` (a full `2019-06-05f` install; its `data.grf`/`rdata.grf`
+are byte-identical to ours, so anything it draws, we can draw).
+
+**What the server gives us.** `clif_getareachar_skillunit` (`clif.c`) sends *only*
+the `unit_id` in `p.job` — no effect id. So the **UnitId → visual mapping is
+client-side knowledge**, which is exactly why roBrowser could not recover it. All
+18 song/dance `UnitId` variants already exist in `ragnarok-packets`; none has a
+`unit_recipe.rs` entry.
+
+**The asset family: one flat `.tga` per song in `data\texture\effect\`**, named
+after the skill. Fifteen are confirmed present and unambiguous:
+
+`appleidun` · `assassincross` · `dontforgetme` · `drumbattlefield` ·
+`eternalchaos` · `fortunekiss` · `humming` · `intoabyss` · `poembragi` ·
+`richmankim` · `ringnibelungen` · `rokisweil` · `serviceforyou` · `siegfried` ·
+`whistle`
+
+A single flat texture per unit points at the existing **`UnitGroundQuad`** body
+(what Land Protector uses) plus a `UnitPointLight` companion — not cylinders.
+
+**Three are NOT yet resolved — do not guess them.** Dissonance, Lullaby and Ugly
+Dance have no English-named texture. Korean-named candidates exist
+(`바드노래` "Bard song", `안식의자장가` "Lullaby of Rest", `댄서 춤` "Dancer
+dance") but which maps to which is unproven. Resolve via the roBrowser
+`EffectTable` for `EF_BOTTOM_DISSONANCE` (277) / `EF_BOTTOM_LULLABY` (278) /
+`EF_BOTTOM_UGLYDANCE` (290), or from the reference exe. The `EF_BOTTOM_*` block
+is contiguous 277–294 in `db/constants.conf` and matches the 18 units **by name,
+not by index** — the two orderings differ (Dissonance is 1st in `EF_BOTTOM_*` but
+9th in `UnitId`), so an offset-based mapping would silently mis-assign every one.
+
+**A dead end worth not repeating:** `data\sprite\아이템\{skill_constant}.spr`
+exists for all 36 Bard/Dancer/ensemble/Clown-Gypsy skills and looks like a
+perfect hit. It is **not** the ground visual — every one is a single **26×26**
+indexed frame, i.e. the skill *icon*. Verified by reading the SPR headers through
+korangar's own loader, because these entries are **DES-encrypted** and
+`tools/grf_list.py` cannot decode them (korangar can: `loaders/archive/native/mixcrypt.rs`).
+Those icons are, however, a candidate for replacing the placeholder monogram
+skill icons.
+
+**Related discovery:** the reference client's `data.ini` loads two GRFs korangar
+never registers — `renewal2021.grf` (UI textures) and `resources2021.grf` (~30k
+item/accessory sprites) — at *higher* priority than `data.grf`. Not needed for
+songs, but they are the likely home of missing item icons.
 
 ### Batch 2 live pass — COMPLETE 6/6, 2026-07-24
 
