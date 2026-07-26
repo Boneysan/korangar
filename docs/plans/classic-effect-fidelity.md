@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 2026-07-26: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. **Status-effect entity visuals landed + live-verified 2026-07-25** (freeze cyan, petrification greyscale — see §Status-effect entity tints). Code green (223 lib tests + GRF asset audit). **Hunter traps LANDED + live-verified 2026-07-26** via runtime RSM prop spawning; the shadow question resolved as a non-bug (it falls under the prop). No engine follow-ups remain. |
+| **Status** | 2026-07-26: **E1 (7 skills) + E2 batches 1 & 2 all live-verified.** E2 batch 2 closed 6/6 (Volcano, Deluge, Violent Gale, Land Protector, Venom Dust, Demonstration). **Depth-tested ground-decal pass landed + live-verified** — Land Protector now draws under the player. **Status-effect entity visuals landed + live-verified 2026-07-25** (freeze cyan, petrification greyscale — see §Status-effect entity tints). Code green (223 lib tests + GRF asset audit). **Hunter traps LANDED + live-verified 2026-07-26** via runtime RSM prop spawning; the shadow question resolved as a non-bug (it falls under the prop). No engine follow-ups remain. **Song/dance investigated + closed 2026-07-26:** 18 of 20 create no ground unit at all (not a missing asset), and the two that do — `CG_MOONLIT` and `CG_HERMODE` — are now mapped from the reverse-engineered table, **code+tests only, not yet seen or heard live**. |
 | **Branch** | `agent/platform-connectivity-controls` |
 | **Parent** | [animation-fidelity.md](animation-fidelity.md) §6 Phase E |
 | **Trigger** | Phase E1 skills work but "don't look right" — particles travel, but they don't read as RO spells |
@@ -315,15 +315,36 @@ machinery does not fit, in three specific ways:
   - It is **single-slot per entity** (`active_status_effects: HashMap<EntityId, _>`).
     A Bard/Dancer party stacks several songs at once; one slot cannot represent that.
 
-**3. `CG_MOONLIT` and `CG_HERMODE` are real unit work but their visuals are NOT
-recoverable.** Every source is exhausted: the GRF holds only their *icons*
-(`data\sprite\아이템\cg_moonlit.spr`, `cg_hermode.spr`, plus
-`유저인터페이스\item\*.bmp`); there is no `.str` and no dedicated texture; the
-reference exe contains no `moonlit` / `hermode` / `shelter` string at all; and
-`EF_BOTTOM_HERMODE` (517) exists as an id with nothing bound to it. These belong
-in the same bucket as E4's held pose and the cast circles: **blocked on reference
-material — do not eyeball.** Implementing them means an explicit *fork design*
-decision, not recovery.
+**3. `CG_MOONLIT` and `CG_HERMODE` are DONE 2026-07-26 — both recovered.** An
+earlier revision of this section called their visuals "not recoverable". **That was
+wrong, and the mistake was not checking roBrowser's `SkillUnit.js`** — it is keyed
+by *unit id*, so Moonlit (`0xb5`) and Hermode (`0xb9`) live there, nowhere near the
+`27x_ground` song range whose `Tofix` note I had wrongly generalised from memory.
+
+- **`CG_HERMODE` → `EF_BOTTOM_HERMODE` (517), which is an explicitly EMPTY entry**
+  commented `(Nothing)`. Its only presentation is the `517_music` variant: a sound,
+  `attachedEntity: true`. **Drawing nothing is the authentic behaviour**, so the
+  recipe is sound-only and a test (`hermode_is_deliberately_audible_only`) pins it
+  so a later pass doesn't "fix" the absent visual.
+- **`CG_MOONLIT` → effect 394**, a `FlatColorTile`: no texture, a flat translucent
+  **salmon** quad, colour verbatim `0xff8abb` at alpha `0.6`, `uSize 0.5` over
+  ±1.0 vertices = one full cell → `half_size` `GAT_TILE_SIZE / 2` (2.5), where Land
+  Protector's 2.0 is its narrower 0.8-cell tile. The original does not pulse.
+
+**Two traps this turned up.** First, Hercules names effect 394 **`EF_SPHEREWIND2`**,
+which has nothing to do with the skill — the table's own comment is "Moonlit water
+mill/sheltering bliss". Same family as the nine-of-eighteen wrong skill-id guesses:
+**never take an effect from its constant name.** Second, roBrowser's
+`'NNN_ground' // Tofix` entries are *guesses at an id it never implemented*, but the
+id itself is usually right — 291/292/293/294/370/405/522 all validate against
+Hercules' `EF_BOTTOM_*`. So a `Tofix` marker means "no renderer here", **not** "no
+information here"; follow the number into `EffectTable.js` anyway. That is exactly
+what turned Moonlit from "unrecoverable" into a verbatim colour value.
+
+Both sounds are real and audited: `data\wav\effect\달빛세레나데.wav` and
+`data\wav\effect\헤르모드의 지팡이.wav`, confirmed through
+`all_mapped_skill_effect_assets_exist` (which does cover `presentation.sound`).
+**Neither has been seen or heard live yet.**
 
 #### Sizing yardstick: is this a ground texture?
 

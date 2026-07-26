@@ -432,6 +432,48 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
             light: Some((Color::rgb_u8(70, 135, 255), 30.0)),
             ..NONE
         }),
+        // CG_MOONLIT — Sheltering Bliss. Effect **394**, whose Hercules constant
+        // is the entirely misleading `EF_SPHEREWIND2`; the reverse-engineered
+        // table names it "Moonlit water mill/sheltering bliss". Another instance
+        // of "never take an effect from its constant name".
+        //
+        // The original is a `FlatColorTile` per cell — no texture at all, just a
+        // flat translucent salmon quad, `uSize 0.5` over ±1.0 vertices, i.e. one
+        // full cell. At 5.0 world units per cell that is half_size 2.5 (Land
+        // Protector's 2.0 is its narrower 0.8-cell tile). Colour is verbatim from
+        // the table: 0xff8abb at alpha 0.6.
+        UnitId::Moonlit => Some(UnitPresentation {
+            body: Some(UnitBody::GroundQuad {
+                // A flat colour needs no artwork; reuse Land Protector's tile as a
+                // neutral carrier so the quad has something to sample. If this
+                // reads as patterned rather than flat when seen live, swap it for
+                // a plain white texture — the *colour* is the authentic part.
+                texture: "effect\\aaa copy.bmp",
+                half_size: 2.5,
+                color: Color::rgba(1.0, 0.541, 0.733, 0.6),
+                // The original tile does not pulse.
+                pulse: UnitPulse {
+                    min_scale: 1.0,
+                    max_scale: 1.0,
+                    speed: 0.0,
+                },
+            }),
+            sound: Some("effect\\달빛세레나데.wav"),
+            // Layout 4 = 9×9, so 81 of these overlap. Kept dim and pink-leaning
+            // for the same reason Land Protector's is saturated: accumulated
+            // light across that many cells clips toward white.
+            light: Some((Color::rgb_u8(255, 120, 180), 18.0)),
+            ..NONE
+        }),
+        // CG_HERMODE — Wand of Hermode. `EF_BOTTOM_HERMODE` (517) is an
+        // **explicitly empty** entry in the reverse-engineered table, commented
+        // "(Nothing)"; the only presentation is the `517_music` variant, a sound.
+        // So drawing nothing here is the authentic behaviour, not a gap — the
+        // area is meant to be audible, not visible.
+        UnitId::Hermode => Some(UnitPresentation {
+            sound: Some("effect\\헤르모드의 지팡이.wav"),
+            ..NONE
+        }),
         UnitId::Venomdust => Some(UnitPresentation {
             // Effect 171: `particle3` rising at the cell, `repeat: true`.
             body: Some(UnitBody::LoopingSprite {
@@ -475,6 +517,8 @@ pub const MAPPED_UNIT_IDS: &[UnitId] = &[
     UnitId::Landprotector,
     UnitId::Venomdust,
     UnitId::Demonstration,
+    UnitId::Moonlit,
+    UnitId::Hermode,
 ];
 
 #[cfg(test)]
@@ -483,14 +527,44 @@ mod tests {
     use crate::loaders::GAT_TILE_SIZE;
 
     #[test]
-    fn every_mapped_unit_has_a_visible_presentation() {
+    fn every_mapped_unit_presents_something() {
         for unit_id in MAPPED_UNIT_IDS {
             let presentation = unit_presentation(*unit_id).expect("mapped unit must resolve");
             assert!(
-                presentation.looping_str.is_some() || presentation.body.is_some(),
-                "unit {unit_id:?} has no persistent visual"
+                presentation.looping_str.is_some() || presentation.body.is_some() || presentation.sound.is_some(),
+                "unit {unit_id:?} presents nothing at all"
             );
         }
+    }
+
+    #[test]
+    fn hermode_is_deliberately_audible_only() {
+        // `EF_BOTTOM_HERMODE` (517) is an explicitly empty entry in the
+        // reverse-engineered table, commented "(Nothing)"; its only presentation
+        // is the `517_music` sound variant. Drawing nothing is therefore correct,
+        // so this is pinned to stop a future pass "fixing" the missing visual.
+        let presentation = unit_presentation(UnitId::Hermode).expect("Hermode is mapped");
+        assert!(presentation.body.is_none(), "Hermode draws nothing by design");
+        assert!(presentation.looping_str.is_none(), "Hermode draws nothing by design");
+        assert_eq!(presentation.sound, Some("effect\\헤르모드의 지팡이.wav"));
+    }
+
+    #[test]
+    fn moonlit_is_the_tables_flat_salmon_cell_tile() {
+        // Effect 394 — Hercules calls that id `EF_SPHEREWIND2`, which has nothing
+        // to do with the skill; the table names it "sheltering bliss". Colour is
+        // verbatim (0xff8abb @ 0.6) and the tile covers one full cell, so
+        // half_size is GAT_TILE_SIZE / 2 rather than Land Protector's narrower 2.0.
+        let Some(UnitBody::GroundQuad {
+            half_size, color, pulse, ..
+        }) = unit_presentation(UnitId::Moonlit).unwrap().body
+        else {
+            panic!("Moonlit must be a ground quad");
+        };
+        assert_eq!(half_size, GAT_TILE_SIZE / 2.0);
+        assert_eq!(color, Color::rgba(1.0, 0.541, 0.733, 0.6));
+        // The original tile is static; a pulse would be our invention.
+        assert_eq!(pulse.min_scale, pulse.max_scale);
     }
 
     #[test]
