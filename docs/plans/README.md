@@ -2,6 +2,10 @@
 
 **Parent hub**: [docs/README.md](../README.md) (start here for the full documentation index).
 
+> **PAUSED 2026-07-26 — the next session is a LIVE PASS, not new plan work.**
+> Eight commits are pushed with nothing seen on screen. Read
+> [../RESUME-HERE.md](../RESUME-HERE.md) before starting anything here.
+
 This directory contains executable implementation plans derived from the design
 docs. Keep plans short, milestone-scoped, and close them or replace them as work
 lands.
