@@ -56,15 +56,24 @@ then E3 coverage from the `KORANGAR_PACKET_LOG` unmapped-id log. Plan:
   and shuriken). See
   [docs/protocol/inventory-and-ranged-attacks.md](docs/protocol/inventory-and-ranged-attacks.md).
 
-**Mid-cast interruption is blocked on the server, not on client work.** Hercules
-has no client→server cancel-cast packet at all (nothing skill-cancel-shaped in
-`src/map/packets.h`), and `unit_can_move` (`unit.c:1216`) *refuses movement while
-casting* unless the caster has `SA_FREECAST` — so "cancel a cast by moving", the
-way the original plays, cannot happen here. The only in-engine cancel is the Sage
-skill `SA_CASTCANCEL`, which `skill.c:1534` whitelists as the one skill usable
-mid-cast. Doing this properly needs a fork Hercules delta (a parse handler calling
-`unit->skillcastcancel`), i.e. the same shape as the `SC_LANDPROTECTOR` delta in
-§3b — **do not fake it client-side**, the server would still complete the cast.
+**Mid-cast interruption is NOT an RO feature — it would be a fork addition.**
+An earlier session note claimed "RO cancels a cast by moving". **That is false**,
+and Hercules is faithful here on both counts:
+- **You cannot move while casting.** `unit_can_move` (`unit.c:1230`) roots the
+  caster; the only exceptions are the Sage skill `SA_FREECAST` and skills flagged
+  `FreeCastNormal` / `FreeCastReduced` in `skill_db.conf`. With Free Cast you walk
+  *and keep casting* — movement still never cancels.
+- **There is no player-initiated cast cancel.** Nothing skill-cancel-shaped exists
+  in `src/map/packets.h`. Casts end by completing, by damage interrupting them
+  (the skill's `castcancel` flag — what Phen card / Bragi protect against), or via
+  the Sage skill `SA_CASTCANCEL`, which `skill.c:1534` whitelists as the one skill
+  usable mid-cast.
+
+So right-click/Esc-to-abort is a **deliberate fork feature**, not a fidelity gap.
+If we ever want it, it needs a Hercules delta (a parse handler calling
+`unit->skillcastcancel`), same shape as the `SC_LANDPROTECTOR` delta in §3b —
+**never fake it client-side**, the server would still complete the cast. Not
+approved as of 2026-07-26.
 
 **Two rendering findings worth knowing before touching effects or props:**
 - **A multiplicative tint cannot desaturate** — multiplying by grey only darkens.
