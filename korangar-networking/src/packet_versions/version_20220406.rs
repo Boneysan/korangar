@@ -415,6 +415,12 @@ where
             account_id: packet.account_id,
             shield_id: packet.value,
         }),
+        // Korangar-fork broadcast riding the unused `LOOK_FLOOR` slot; see the
+        // `Ammunition` variant in `ragnarok-packets`.
+        SpriteChangeType::Ammunition => Some(NetworkEvent::ChangeAmmunition {
+            account_id: packet.account_id,
+            item_id: ItemId(packet.value),
+        }),
         _ => None,
     })?;
     packet_handler.register({

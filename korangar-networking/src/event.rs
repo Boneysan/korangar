@@ -373,6 +373,15 @@ pub enum NetworkEvent {
         account_id: AccountId,
         shield_id: u32,
     },
+    /// Another character's equipped ammunition changed, so their arrows can be
+    /// drawn as the ammo they actually loaded rather than the generic one.
+    ///
+    /// A Korangar-fork broadcast — official Ragnarok never reports anyone else's
+    /// ammunition. `item_id` is `0` when they unequip.
+    ChangeAmmunition {
+        account_id: AccountId,
+        item_id: ItemId,
+    },
     LoggedOut,
     FriendRequest {
         requestee: Friend,

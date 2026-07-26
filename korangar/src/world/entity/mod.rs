@@ -214,6 +214,14 @@ pub struct Common {
     pub sex: Sex,
     pub weapon: u32,
     pub shield: u32,
+    /// Equipped ammunition item id, `0` for none.
+    ///
+    /// Only meaningful for other players, and only because the fork's server
+    /// broadcasts it (see `LOOK_AMMO`); official Ragnarok reports ammunition for
+    /// nobody but yourself. The local player's own ammo comes from the inventory
+    /// instead, which is authoritative — this is a display hint, so a stale value
+    /// costs a wrong projectile tint and nothing more.
+    pub ammunition: u32,
 
     #[hidden_element]
     pub entity_type: EntityType,
@@ -1115,6 +1123,10 @@ impl Common {
             sex,
             weapon,
             shield,
+            // The spawn packet has no ammunition field; it arrives separately as a
+            // `LOOK_AMMO` broadcast, which the server re-sends when this entity
+            // comes into view.
+            ammunition: 0,
             active_movement,
             entity_type,
             option: entity_data.option,
@@ -2509,6 +2521,15 @@ impl Entity {
 
     pub fn set_shield(&mut self, shield: u32) {
         self.get_common_mut().shield = shield;
+    }
+
+    /// Equipped ammunition item id, `0` for none. See [`Common::ammunition`].
+    pub fn set_ammunition(&mut self, ammunition: u32) {
+        self.get_common_mut().ammunition = ammunition;
+    }
+
+    pub fn get_ammunition(&self) -> u32 {
+        self.get_common().ammunition
     }
 
     pub fn stopped_moving(&self) -> bool {

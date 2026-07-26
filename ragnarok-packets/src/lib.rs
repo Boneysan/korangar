@@ -1127,7 +1127,14 @@ pub enum SpriteChangeType {
     Shield,
     Shoes,
     Body,
-    ResetCostumes,
+    /// Equipped ammunition item id — a **Korangar fork addition**, not official.
+    ///
+    /// Hercules calls this slot `LOOK_FLOOR` and never sends it ("unknown
+    /// purpose"), so the fork reuses it to broadcast what ammunition a player has
+    /// loaded; official Ragnarok reports that for nobody but yourself. See
+    /// `LOOK_AMMO` in the server's `map/map.h` for why this rides an existing
+    /// look type instead of a new packet.
+    Ammunition,
     Robe,
     Body2,
 }

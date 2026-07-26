@@ -1413,17 +1413,29 @@ impl Client {
 
         // Prefer the ammunition the shooter actually has loaded, so Iron Arrow,
         // Fire Arrow and the rest read differently in flight the way they do in
-        // the original. Only the local player's inventory is visible to us — the
-        // server never reports another character's ammo — so everyone else gets
-        // the weapon class's default ammo item.
+        // the original.
+        //
+        // For the local player the inventory is exact. For everyone else we rely on
+        // the fork's `LOOK_AMMO` broadcast — official Ragnarok reports nobody else's
+        // ammunition — which is `0` for an unarmed slot, an older server, or a
+        // player who came into view before the server learned their ammo. The
+        // weapon class default covers all of those.
         let is_local_player = self
             .client_state
             .try_follow(this_entity())
             .is_some_and(|player| player.get_entity_id() == source_entity_id);
-        let ammunition = is_local_player
-            .then(|| self.client_state.follow(client_state().inventory()).equipped_ammunition())
-            .flatten()
-            .or_else(|| ranged_attack_default_ammunition(view));
+        let ammunition = match is_local_player {
+            true => self.client_state.follow(client_state().inventory()).equipped_ammunition(),
+            false => self
+                .client_state
+                .follow(client_state().entities())
+                .iter()
+                .find(|entity| entity.get_entity_id() == source_entity_id)
+                .map(|entity| entity.get_ammunition())
+                .filter(|item_id| *item_id != 0)
+                .map(ItemId),
+        }
+        .or_else(|| ranged_attack_default_ammunition(view));
 
         // `iteminfo` is authoritative wherever it names a specific sprite. It hands
         // back the generic arrow for most ammunition though — Iron Arrow included —
@@ -4669,6 +4681,20 @@ impl Client {
                             &self.game_file_loader,
                             player,
                         );
+                    }
+                }
+                NetworkEvent::ChangeAmmunition { account_id, item_id } => {
+                    // Purely a projectile-appearance hint, so unlike weapon/shield
+                    // there is no sprite layer to rebuild — the value is read when a
+                    // shot is fired. The local player is skipped deliberately: their
+                    // own inventory is authoritative and already exact.
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        entity.set_ammunition(item_id.0);
                     }
                 }
                 NetworkEvent::LoggedOut => {
