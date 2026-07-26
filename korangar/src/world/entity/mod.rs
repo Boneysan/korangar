@@ -10,8 +10,8 @@ use korangar_interface::element::StateElement;
 use korangar_interface::window::{StateWindow, Window};
 use korangar_networking::EntityData;
 use ragnarok_packets::{
-    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, JobId, Sex, SkillId,
-    StatType, TilePosition, WorldPosition,
+    AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, ItemId, JobId, Sex,
+    SkillId, StatType, TilePosition, WorldPosition,
 };
 use rust_state::{Path, RustState, VecItem};
 #[cfg(feature = "debug")]
@@ -693,6 +693,44 @@ fn first_existing_part(game_file_loader: &GameFileLoader, candidates: &[String])
         .cloned()
 }
 
+/// Item sprite path for an ammunition item resource name, e.g. `철화살` (Iron
+/// Arrow) → `아이템\철화살.spr`. Classic RO draws the flying projectile with the
+/// ammo *item*'s own sprite, which is why the per-type variants read differently
+/// in flight.
+pub fn ammunition_projectile_sprite_path(resource_name: &str) -> String {
+    format!("아이템\\{resource_name}.spr")
+}
+
+/// Fallback projectile sprite for a weapon class view, used when the shooter's
+/// real ammunition cannot be resolved (a remote entity whose inventory we never
+/// see, or an item missing from `iteminfo`). `None` for melee weapons.
+///
+/// Ranged views: bow (11), gunslinger firearms (17-21), huuma shuriken (22).
+pub fn ranged_attack_projectile_sprite(view: u32) -> Option<&'static str> {
+    match native_real_weapon_id(view) {
+        11 => Some("아이템\\화살.spr"),        // bow → Arrow
+        17..=21 => Some("아이템\\탄약통.spr"), // firearms → Bullet
+        22 => Some("아이템\\수리검.spr"),      // huuma shuriken → Shuriken
+        _ => None,
+    }
+}
+
+/// Canonical ammunition item for a ranged weapon class view, or `None` for
+/// melee. Ids from Hercules `db/re/item_db.conf`: Arrow 1750, Bullet 13200,
+/// Shuriken 13250.
+///
+/// The server never reports what ammunition another character has loaded, so
+/// this stands in for everyone but the local player, whose equipped ammo is
+/// known exactly and takes priority.
+pub fn ranged_attack_default_ammunition(view: u32) -> Option<ItemId> {
+    match native_real_weapon_id(view) {
+        11 => Some(ItemId(1750)),
+        17..=21 => Some(ItemId(13200)),
+        22 => Some(ItemId(13250)),
+        _ => None,
+    }
+}
+
 /// Weapon class views that receive a `_검광` trail layer in Ragexe
 /// `2019-06-05f` (function around `0x00976590`, switch table `0x00976EC0`).
 ///
@@ -703,18 +741,6 @@ fn first_existing_part(game_file_loader: &GameFileLoader, candidates: &[String])
 /// Trail path builder is `0x007C4B30` with format `\%s_%s%s%s.%s` and suffix
 /// table `_검광` / `_발광` (`0x00B1C7C4` / `0x00B1C7CC`). Korangar loads
 /// `_검광` when present; `_발광` is not wired yet.
-/// Projectile sprite fired by a *normal attack* with the given weapon class
-/// view, or `None` for melee weapons. Classic RO draws the flying arrow using
-/// the arrow *item* sprite; only the plain arrow is wired here (per-arrow-type
-/// and gun-bullet sprites are a follow-up). Ranged views: bow (11), gunslinger
-/// firearms (17-21), shuriken (22).
-pub fn ranged_attack_projectile_sprite(view: u32) -> Option<&'static str> {
-    match view {
-        11 => Some("아이템\\화살.spr"), // bow → generic arrow
-        _ => None,
-    }
-}
-
 fn native_weapon_view_has_geom_trail(view: u32) -> bool {
     matches!(view, 1..=7 | 16..=18 | 25..=30)
 }
@@ -2602,7 +2628,7 @@ mod status_effect_asset_tests {
 
 #[cfg(test)]
 mod weapon_layer_tests {
-    use ragnarok_packets::JobId;
+    use ragnarok_packets::{ItemId, JobId};
 
     use super::{
         appearance_is_offhand_weapon, combine_dual_wield_view, effective_weapon_view, get_weapon_sprite_folder,
@@ -2743,6 +2769,46 @@ mod weapon_layer_tests {
         for view in [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 14, 15, 16, 23] {
             assert_eq!(super::ranged_attack_projectile_sprite(view), None, "view {view} is melee");
         }
+    }
+
+    #[test]
+    fn firearms_and_shuriken_fire_their_own_projectile() {
+        // Gunslinger firearms (handgun/rifle/gatling/shotgun/launcher) draw a
+        // Bullet, huuma shuriken draws a Shuriken. Both sprites were confirmed
+        // present in the configured GRFs.
+        for view in 17..=21 {
+            assert_eq!(
+                super::ranged_attack_projectile_sprite(view),
+                Some("아이템\\탄약통.spr"),
+                "view {view} is a firearm"
+            );
+        }
+        assert_eq!(super::ranged_attack_projectile_sprite(22), Some("아이템\\수리검.spr"));
+    }
+
+    #[test]
+    fn default_ammunition_matches_the_hercules_item_ids() {
+        // db/re/item_db.conf: Arrow 1750, Bullet 13200, Shuriken 13250.
+        assert_eq!(super::ranged_attack_default_ammunition(11), Some(ItemId(1750)));
+        for view in 17..=21 {
+            assert_eq!(super::ranged_attack_default_ammunition(view), Some(ItemId(13200)));
+        }
+        assert_eq!(super::ranged_attack_default_ammunition(22), Some(ItemId(13250)));
+        // Every view with a projectile sprite also has default ammo, so the two
+        // tables can never disagree about which weapons are ranged.
+        for view in 0..super::WEAPON_VIEW_CLASS_MAX {
+            assert_eq!(
+                super::ranged_attack_projectile_sprite(view).is_some(),
+                super::ranged_attack_default_ammunition(view).is_some(),
+                "view {view}"
+            );
+        }
+    }
+
+    #[test]
+    fn ammunition_sprite_path_uses_the_item_folder() {
+        // Iron Arrow's iteminfo resource, as the projectile the client draws.
+        assert_eq!(super::ammunition_projectile_sprite_path("철화살"), "아이템\\철화살.spr");
     }
 
     #[test]

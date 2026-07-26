@@ -76,7 +76,7 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId, ExperienceType,
-    HotbarSlot, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    HotbarSlot, ItemId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -739,7 +739,7 @@ mod normalize_map_base_name_tests {
 
 #[cfg(test)]
 mod resolve_pending_cast_tests {
-    use ragnarok_packets::{AttackRange, EntityId, SkillType, TilePosition};
+    use ragnarok_packets::{AttackRange, EntityId, ItemId, SkillType, TilePosition};
 
     use super::{PendingCastResolution, is_within_skill_range, resolve_pending_cast};
     use crate::graphics::PickerTarget;
@@ -818,6 +818,52 @@ mod resolve_pending_cast_tests {
         assert!(is_within_skill_range(player, TilePosition { x: 11, y: 11 }, AttackRange(1)));
         assert!(!is_within_skill_range(player, TilePosition { x: 12, y: 11 }, AttackRange(1)));
         assert!(is_within_skill_range(player, TilePosition { x: 17, y: 3 }, AttackRange(7)));
+    }
+
+    #[test]
+    fn missing_skill_item_names_the_item_when_the_table_knows_it() {
+        use super::format_missing_skill_item;
+
+        let gemstone = ItemId(717);
+        // Hercules leaves the count at 0 for most callers; 0 and 1 both mean one.
+        assert_eq!(
+            format_missing_skill_item(Some("Blue Gemstone"), gemstone, 0, false),
+            "You need a Blue Gemstone to use this skill."
+        );
+        assert_eq!(
+            format_missing_skill_item(Some("Blue Gemstone"), gemstone, 1, false),
+            "You need a Blue Gemstone to use this skill."
+        );
+        assert_eq!(
+            format_missing_skill_item(Some("Yellow Gemstone"), ItemId(715), 2, false),
+            "You need 2x Yellow Gemstone to use this skill."
+        );
+    }
+
+    #[test]
+    fn missing_skill_item_falls_back_to_the_raw_id() {
+        use super::format_missing_skill_item;
+
+        // An item outside the tables (custom, or newer than them) still has to say
+        // something actionable, and cause 72 is equipment rather than a consumable.
+        assert_eq!(
+            format_missing_skill_item(None, ItemId(99999), 0, false),
+            "Missing required item (#99999)."
+        );
+        assert_eq!(
+            format_missing_skill_item(None, ItemId(99999), 3, true),
+            "Missing required equipment: 3x #99999."
+        );
+    }
+
+    #[test]
+    fn trade_rows_name_the_item_instead_of_its_id() {
+        use super::trade_item_label;
+
+        assert_eq!(trade_item_label(Some("Red Potion"), ItemId(501), 12, 0), "Red Potion x12");
+        assert_eq!(trade_item_label(Some("Sword"), ItemId(1101), 1, 7), "+7 Sword x1");
+        // Only an item the tables cannot name may show an id.
+        assert_eq!(trade_item_label(None, ItemId(501), 12, 0), "item #501 x12");
     }
 }
 
@@ -920,38 +966,75 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
     }
 }
 
-fn perform_pending_cast<Callback: PacketCallback + Send>(
-    networking_system: &mut NetworkingSystem<Callback>,
-    state: &State<ClientState>,
-    pending: &PendingSkill,
-    target: PickerTarget,
-) -> bool {
-    match resolve_pending_cast(pending.skill_type, target) {
-        PendingCastResolution::CastEntity(entity_id) => {
-            let _ = networking_system.cast_skill(pending.skill_id, pending.skill_level, entity_id);
-            true
-        }
-        PendingCastResolution::CastTile(tile) => {
-            let _ = networking_system.cast_ground_skill(pending.skill_id, pending.skill_level, tile);
-            true
-        }
-        PendingCastResolution::CastEntityTile(entity_id) => {
-            // A ground skill clicked on an entity centres the AoE on that entity's cell.
-            match state
-                .follow(client_state().entities())
-                .iter()
-                .find(|entity| entity.get_entity_id() == entity_id)
-                .map(|entity| entity.get_tile_position())
-            {
-                Some(tile) => {
-                    let _ = networking_system.cast_ground_skill(pending.skill_id, pending.skill_level, tile);
-                    true
-                }
-                None => false,
-            }
-        }
-        PendingCastResolution::Fizzle => false,
+/// Cell a ground-targeted resolution lands on, or `None` when the click fizzled
+/// (empty space, or an entity that has since despawned) and the skill should
+/// stay armed. `CastEntity` is not a ground placement and also yields `None` —
+/// callers handle that arm separately.
+fn resolve_pending_ground_tile(state: &State<ClientState>, resolution: PendingCastResolution) -> Option<TilePosition> {
+    match resolution {
+        PendingCastResolution::CastTile(tile) => Some(tile),
+        // A ground skill clicked on an entity centres the AoE on that entity's cell.
+        PendingCastResolution::CastEntityTile(entity_id) => state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == entity_id)
+            .map(|entity| entity.get_tile_position()),
+        PendingCastResolution::CastEntity(_) | PendingCastResolution::Fizzle => None,
     }
+}
+
+/// Cast `skill_id` on the cell `tile`, walking into range first when it is out
+/// of reach. Mirrors [`cast_or_path_entity_skill`] for ground placements.
+///
+/// Without this the cast was simply *lost*: Hercules drops an out-of-range
+/// `CZ_USE_SKILL_TOGROUND` with a bare `return 0` and **no** `clif->skill_fail`
+/// (`unit.c` `unit_skilluse_pos2`, the `battle->check_range` arm), so the player
+/// pressed the key, spent nothing, and saw nothing at all. Hercules re-checks
+/// the range from `unit_walk_toxy_timer` when the caster is already walking, so
+/// approaching and re-issuing is what the server expects.
+fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
+    networking_system: &mut NetworkingSystem<Callback>,
+    state: &mut State<ClientState>,
+    map: Option<&Map>,
+    path_finder: &mut PathFinder,
+    skill_id: SkillId,
+    skill_level: SkillLevel,
+    attack_range: AttackRange,
+    tile: TilePosition,
+) {
+    let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
+
+    if let (Some(map), Some(player_position)) = (map, player_position)
+        && !is_within_skill_range(player_position, tile, attack_range)
+    {
+        match path_finder
+            .find_walkable_path_in_range(map, player_position, tile, attack_range)
+            .and_then(|path| path.last().copied())
+        {
+            Some(nearest_tile) => {
+                let _ = networking_system.player_move(WorldPosition {
+                    x: nearest_tile.x,
+                    y: nearest_tile.y,
+                    direction: Direction::North,
+                });
+                *state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::CastGroundSkill {
+                    skill_id,
+                    skill_level,
+                    tile,
+                    attack_range,
+                });
+            }
+            // Nothing walkable gets us close enough, so the cast can never land.
+            // Say so rather than sending a packet the server discards in silence.
+            None => state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "That spot is out of range and there is no way to get closer.".to_owned(),
+                MessageColor::Error,
+            )),
+        }
+        return;
+    }
+
+    let _ = networking_system.cast_ground_skill(skill_id, skill_level, tile);
 }
 
 /// Tell the player which skill is now armed and waiting for a target. The
@@ -960,6 +1043,63 @@ fn perform_pending_cast<Callback: PacketCallback + Send>(
 /// visible. Takes the chat state by reference so it can be called inside the
 /// input-drain loop, which holds a borrow of `self` that a `&mut self` method
 /// would conflict with.
+/// Name a skill's missing item requirement (`ZC_ACK_TOUSESKILL` cause 71/72).
+///
+/// The networking crate reports these as a bare id because it has no item DB;
+/// resolving it here is what turns "Missing required item (#717)." into "You
+/// need a Blue Gemstone to use this skill.".
+fn missing_skill_item_text(library: &Library, item_id: ItemId, amount: u16, equipment: bool) -> String {
+    // Requirement items are always named identified — the requirement is on the
+    // item *kind*, and an unidentified name would not help the player find it.
+    let name = resolve_item_name(library, item_id, true);
+
+    format_missing_skill_item(name.as_deref(), item_id, amount, equipment)
+}
+
+/// Display name for an item, or `None` when the tables cannot name it.
+///
+/// `ItemName` has two distinct failure modes that both have to be caught before
+/// showing text to the player: no entry at all, and an entry whose name is the
+/// `NOTFOUND` sentinel. Callers decide what to say instead — never print the
+/// sentinel, and prefer a description over a bare id.
+fn resolve_item_name(library: &Library, item_id: ItemId, is_identified: bool) -> Option<String> {
+    library
+        .try_get::<ItemName>(ItemNameKey { item_id, is_identified })
+        .map(ItemName::to_string)
+        .filter(|name| name != "NOTFOUND" && !name.is_empty())
+}
+
+/// Row label for one stack in the trade window. Falls back to the id only when
+/// the item tables cannot name the item at all.
+pub fn trade_item_label(name: Option<&str>, item_id: ItemId, amount: u32, refine: u8) -> String {
+    let name = match name {
+        Some(name) => name.to_owned(),
+        None => format!("item #{}", item_id.0),
+    };
+    match refine {
+        0 => format!("{name} x{amount}"),
+        refine => format!("+{refine} {name} x{amount}"),
+    }
+}
+
+/// Pure text half of [`missing_skill_item_text`], so the wording is testable
+/// without a loaded `Library`.
+fn format_missing_skill_item(name: Option<&str>, item_id: ItemId, amount: u16, equipment: bool) -> String {
+    let what = match equipment {
+        true => "equipment",
+        false => "item",
+    };
+    // Hercules sends the requirement count in `btype`, but leaves it 0 for most
+    // callers; both 0 and 1 mean "one of these".
+    match (name, amount) {
+        (Some(name), amount) if amount > 1 => format!("You need {amount}x {name} to use this skill."),
+        (Some(name), _) => format!("You need a {name} to use this skill."),
+        // Not in the item tables (a custom or newer item) — the id is all we have.
+        (None, amount) if amount > 1 => format!("Missing required {what}: {amount}x #{}.", item_id.0),
+        (None, _) => format!("Missing required {what} (#{}).", item_id.0),
+    }
+}
+
 fn announce_armed_skill(state: &mut State<ClientState>, skill_name: &str) {
     state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
         format!("Aiming {skill_name} — click a target (right-click or Esc to cancel)."),
@@ -1202,11 +1342,11 @@ impl Client {
         }
     }
 
-    /// Spawn the flying projectile for a *normal* ranged attack (bow/gun),
-    /// matching the classic client, which draws the arrow item sprite
-    /// travelling shooter → target. No-op for melee weapons or when either
-    /// position is unknown. The local player is `entities[0]`, so the entity
-    /// lookup covers it too.
+    /// Spawn the flying projectile for a *normal* ranged attack (bow, firearm,
+    /// huuma shuriken), matching the classic client, which draws the *ammo
+    /// item's* sprite travelling shooter → target. No-op for melee weapons or
+    /// when either position is unknown. The local player is `entities[0]`, so
+    /// the entity lookup covers it too.
     fn spawn_ranged_attack_projectile(&mut self, source_entity_id: EntityId, destination_entity_id: EntityId) {
         let Some(weapon) = self
             .client_state
@@ -1217,7 +1357,8 @@ impl Client {
         else {
             return;
         };
-        let Some(sprite_path) = ranged_attack_projectile_sprite(weapon_view_from_appearance(weapon)) else {
+        let view = weapon_view_from_appearance(weapon);
+        let Some(fallback_sprite) = ranged_attack_projectile_sprite(view) else {
             return;
         };
         let (Some(source), Some(target)) = (
@@ -1229,15 +1370,47 @@ impl Client {
         if source == target {
             return;
         }
-        match self.sprite_loader.get_or_load(sprite_path) {
-            Ok(sprite) => match sprite.textures.first() {
-                Some(texture) => self
-                    .effect_holder
-                    .add_effect(Box::new(SkillProjectile::arrow(texture.clone(), source, target))),
-                None => eprintln!("[ranged-attack] projectile sprite {sprite_path} has no frames"),
-            },
-            Err(error) => eprintln!("[ranged-attack] failed to load {sprite_path}: {error:?}"),
+
+        // Prefer the ammunition the shooter actually has loaded, so Iron Arrow,
+        // Fire Arrow and the rest read differently in flight the way they do in
+        // the original. Only the local player's inventory is visible to us — the
+        // server never reports another character's ammo — so everyone else gets
+        // the weapon class's default ammo item.
+        let is_local_player = self
+            .client_state
+            .try_follow(this_entity())
+            .is_some_and(|player| player.get_entity_id() == source_entity_id);
+        let ammunition = is_local_player
+            .then(|| self.client_state.follow(client_state().inventory()).equipped_ammunition())
+            .flatten()
+            .or_else(|| ranged_attack_default_ammunition(view));
+        let ammunition_sprite = ammunition.and_then(|item_id| {
+            self.library
+                .try_get::<ItemResource>(ItemResourceKey {
+                    item_id,
+                    is_identified: true,
+                })
+                .map(|resource| ammunition_projectile_sprite_path(&resource.to_string()))
+        });
+
+        // An unknown or spriteless ammo item must not swallow the projectile, so
+        // fall back to the weapon class default before giving up.
+        let texture = ammunition_sprite
+            .as_deref()
+            .and_then(|path| self.first_sprite_frame(path))
+            .or_else(|| self.first_sprite_frame(fallback_sprite));
+
+        match texture {
+            Some(texture) => self
+                .effect_holder
+                .add_effect(Box::new(SkillProjectile::arrow(texture, source, target))),
+            None => eprintln!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
         }
+    }
+
+    /// First frame of a sprite, or `None` if it fails to load or has no frames.
+    fn first_sprite_frame(&self, path: &str) -> Option<Arc<Texture>> {
+        self.sprite_loader.get_or_load(path).ok()?.textures.first().cloned()
     }
 
     fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
@@ -3680,6 +3853,16 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, color));
                 }
+                NetworkEvent::SkillFailedMissingItem {
+                    item_id,
+                    amount,
+                    equipment,
+                } => {
+                    let text = missing_skill_item_text(&self.library, item_id, amount, equipment);
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Error));
+                }
                 NetworkEvent::UpdateEntityDetails { entity_id, name } => {
                     let entity = self
                         .client_state
@@ -4210,9 +4393,10 @@ impl Client {
                     refine,
                     ..
                 } => {
+                    let name = resolve_item_name(&self.library, item_id, identified);
                     self.client_state
                         .follow_mut(client_state().trade_state())
-                        .add_partner_item(item_id, amount, identified, refine);
+                        .add_partner_item(item_id, amount, identified, refine, name.as_deref());
                 }
                 NetworkEvent::TradeAddItemResult { inventory_index, result } => {
                     if result == 0 {
@@ -4226,7 +4410,11 @@ impl Client {
                                     korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
                                     _ => 1,
                                 };
-                                (item.item_id, amount, format!("item {} x{amount}", item.item_id.0))
+                                (item.item_id, amount, item.is_identified())
+                            })
+                            .map(|(item_id, amount, is_identified)| {
+                                let name = resolve_item_name(&self.library, item_id, is_identified);
+                                (item_id, amount, trade_item_label(name.as_deref(), item_id, amount, 0))
                             });
                         if let Some((item_id, amount, label)) = ours {
                             self.client_state
@@ -5055,17 +5243,8 @@ impl Client {
                 }
                 NetworkEvent::WeaponRefineResult { result, item_id } => {
                     self.interface.close_window_with_class(WindowClass::WeaponRefine);
-                    let item_name = self
-                        .library
-                        .get::<ItemName>(ItemNameKey {
-                            item_id,
-                            is_identified: true,
-                        })
-                        .to_string();
-                    let item_name = match item_name.as_str() {
-                        "NOTFOUND" => format!("item #{}", item_id.0),
-                        _ => item_name,
-                    };
+                    let item_name =
+                        resolve_item_name(&self.library, item_id, true).unwrap_or_else(|| format!("item #{}", item_id.0));
                     let (message, color) = match result {
                         0 => (format!("Weapon refine succeeded for {item_name}."), MessageColor::Information),
                         1 => (format!("Weapon refine failed for {item_name}."), MessageColor::Error),
@@ -6183,6 +6362,21 @@ impl Client {
                     attack_range,
                     entity_id,
                 ),
+                InputEvent::CastSkillAtTile {
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    tile,
+                } => cast_or_path_ground_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    tile,
+                ),
                 InputEvent::CastSkill { slot } => {
                     // Resolve the slot to owned data under an immutable borrow, then act — so the
                     // cast / arm / chat-feedback below can borrow self mutably without conflict.
@@ -7084,6 +7278,21 @@ impl Client {
                     }
                 }
             }
+            BufferedAction::CastGroundSkill {
+                skill_id,
+                skill_level,
+                tile,
+                attack_range,
+            } => cast_or_path_ground_skill(
+                &mut self.networking_system,
+                &mut self.client_state,
+                self.map.as_deref(),
+                &mut self.path_finder,
+                skill_id,
+                skill_level,
+                attack_range,
+                tile,
+            ),
         }
     }
 
@@ -7436,12 +7645,21 @@ impl Client {
                                     });
                                     true
                                 }
-                                _ => perform_pending_cast(
-                                    &mut self.networking_system,
-                                    &self.client_state,
-                                    &pending,
-                                    input_report.mouse_target,
-                                ),
+                                // Ground placements go through the same walk-into-range path as
+                                // entity targets; an out-of-range cell is otherwise dropped by
+                                // the server without any feedback at all.
+                                resolution => match resolve_pending_ground_tile(&self.client_state, resolution) {
+                                    Some(tile) => {
+                                        self.input_event_buffer.push(InputEvent::CastSkillAtTile {
+                                            skill_id: pending.skill_id,
+                                            skill_level: pending.skill_level,
+                                            attack_range: pending.attack_range,
+                                            tile,
+                                        });
+                                        true
+                                    }
+                                    None => false,
+                                },
                             };
                             if !performed {
                                 // Fizzled — put it back so it stays armed for the next click.

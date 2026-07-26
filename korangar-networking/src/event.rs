@@ -178,6 +178,19 @@ pub enum NetworkEvent {
         message_id: u16,
         color: MessageColor,
     },
+    /// A skill was rejected because a required item is missing
+    /// (`ZC_ACK_TOUSESKILL` causes 71 / 72). Hercules only sends the item *id*,
+    /// and the item name table lives in the client crate, so the message is
+    /// finished there instead of reporting a raw id.
+    SkillFailedMissingItem {
+        item_id: ItemId,
+        /// How many the skill needs. Hercules sends this in `btype`; `0` and
+        /// `1` both mean a single item.
+        amount: u16,
+        /// `true` for cause 72 (a required *equipment* piece) rather than a
+        /// consumable.
+        equipment: bool,
+    },
     CharacterSlotSwitched,
     CharacterSlotSwitchFailed,
     /// Update entity details. Mostly received when the client sends

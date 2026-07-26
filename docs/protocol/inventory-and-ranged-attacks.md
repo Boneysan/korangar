@@ -55,13 +55,30 @@ When in doubt, log `index` vs the stored `(index, item_id)` list before adjustin
 A normal (non-skill) ranged attack has no projectile from the server — the client
 draws it. On a `DamageEffect` with `skill_id == None`, `spawn_ranged_attack_projectile`
 (lib.rs) fires `SkillProjectile::arrow` from shooter → target when the attacker's
-weapon view is ranged. `ranged_attack_projectile_sprite` (world/entity) maps the view
-to a sprite; only **bow (view 11 → `아이템\화살.spr`)** is wired.
+weapon view is ranged.
+
+**The projectile is the *ammunition* item's sprite, not a per-weapon constant**
+(2026-07-26). Resolution order in `spawn_ranged_attack_projectile`:
+
+1. **The local player's equipped ammo** — `Inventory::equipped_ammunition()` reads the
+   `EquipPosition::AMMO` slot, and `ItemResource` turns the item id into its sprite
+   base, so Iron Arrow / Fire Arrow / Silver Arrow each fly as themselves. Only the
+   local player is covered: the server never reports another character's ammo.
+2. **The weapon class's canonical ammo item** for everyone else —
+   `ranged_attack_default_ammunition` (Hercules `item_db.conf` ids: Arrow **1750**,
+   Bullet **13200**, Shuriken **13250**).
+3. **A hardcoded per-view sprite** if the item tables cannot name the resource —
+   `ranged_attack_projectile_sprite`: bow (11) → `아이템\화살.spr`, firearms (17-21) →
+   `아이템\탄약통.spr`, huuma shuriken (22) → `아이템\수리검.spr`. All three verified
+   present in the configured GRFs; a test pins the two tables to the same set of views
+   so they cannot disagree about which weapons are ranged.
 
 - The arrow sprite is the **item icon** — a single 24×24 frame (RO draws flying arrows
   from the item sprite). It is **not** directional, so it must be **rotated**, not
   frame-picked: `SkillProjectile.angle_offset` = **-135°** onto the screen-space travel
   direction (dialed in live; the isometric camera tilts a horizontal shot), longest
   side scaled to ~40 world units.
-- **Open sub-follow-ups:** gun-bullet (views 17-21) and shuriken (22) projectiles;
-  per-arrow-type sprites (fire/poison arrows).
+- **Open sub-follow-up:** the grenade launcher (view 21) falls back to the Bullet
+  sprite — the GRFs ship no grenade item sprite, so there is nothing better to draw
+  until one is found. Everything else in this row is closed; **none of it has been
+  live-verified yet.**

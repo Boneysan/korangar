@@ -28,17 +28,43 @@ While a ground skill is armed the cursor draws its **real area** — squares fro
 `skill_db`'s `Layout`, the fifteen custom shapes hardcoded in Hercules'
 `skill_init_unit_layout`, and the four direction-dependent walls (Fire Wall, Ice
 Wall, Earth Strain, Fire Rain) oriented via a port of `map_calc_dir`. Lives in
-`world/skill_layout.rs` + `Map::render_skill_footprint`. It also makes an
-out-of-range ground cast *visible* (footprint tints red) though still not
-blocked. **Resolve skill ids through `docs/skills.json`, never from the Hercules
-constant names — nine of eighteen were wrong on the first pass.**
+`world/skill_layout.rs` + `Map::render_skill_footprint`. It also tints the
+footprint red when out of range. **Resolve skill ids through
+`docs/skills.json`, never from the Hercules constant names — nine of eighteen
+were wrong on the first pass.**
 Next (cheapest first): live-verify that footprint (does Land Protector Lv10's
 225-cell area read as a shape or a solid slab?); then the cast circles (`Lockon`
 + six `Beginspell` recipes exist, never looked at — but they are procedural
 placeholders over generic ring textures, so expect a rebuild, not a tick);
-then `skill_failed_text` showing a raw item id; then E3 coverage from the
-`KORANGAR_PACKET_LOG` unmapped-id log. Plan:
+then E3 coverage from the `KORANGAR_PACKET_LOG` unmapped-id log. Plan:
 [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
+
+**Three follow-ups closed 2026-07-26 (code + tests only — NONE live-verified):**
+- **Out-of-range ground casts no longer vanish.** Hercules drops an out-of-range
+  `CZ_USE_SKILL_TOGROUND` with a bare `return 0` and **no** `clif->skill_fail`
+  (`unit.c` `unit_skilluse_pos2`, the `battle->check_range` arm), so the cast was
+  silently lost. Ground placements now take the same walk-into-range path entity
+  targets already had (`cast_or_path_ground_skill` + `BufferedAction::CastGroundSkill`),
+  and say so in chat when no walkable cell gets close enough.
+- **No user-facing message may print a raw item id.** `ZC_ACK_TOUSESKILL` causes
+  71/72 now cross the crate boundary as `NetworkEvent::SkillFailedMissingItem`
+  (`korangar-networking` has no item DB) and the client names the item. Same for
+  the trade-window rows and the weapon-refine result, all via `resolve_item_name`
+  — which also filters the **`NOTFOUND` sentinel**, a second failure mode distinct
+  from a missing entry that will print verbatim if you only check `try_get`.
+- **Ranged projectiles use the ammo item's sprite** (per-arrow-type, plus firearms
+  and shuriken). See
+  [docs/protocol/inventory-and-ranged-attacks.md](docs/protocol/inventory-and-ranged-attacks.md).
+
+**Mid-cast interruption is blocked on the server, not on client work.** Hercules
+has no client→server cancel-cast packet at all (nothing skill-cancel-shaped in
+`src/map/packets.h`), and `unit_can_move` (`unit.c:1216`) *refuses movement while
+casting* unless the caster has `SA_FREECAST` — so "cancel a cast by moving", the
+way the original plays, cannot happen here. The only in-engine cancel is the Sage
+skill `SA_CASTCANCEL`, which `skill.c:1534` whitelists as the one skill usable
+mid-cast. Doing this properly needs a fork Hercules delta (a parse handler calling
+`unit->skillcastcancel`), i.e. the same shape as the `SC_LANDPROTECTOR` delta in
+§3b — **do not fake it client-side**, the server would still complete the cast.
 
 **Two rendering findings worth knowing before touching effects or props:**
 - **A multiplicative tint cannot desaturate** — multiplying by grey only darkens.
@@ -68,7 +94,8 @@ armed players stand in the ReadyFight stance so weapon+shield render at idle
 revive the sprite (`78f57915`); ammo (arrows) equips/stacks/shows count and a
 normal bow attack draws a flying arrow (`d3f7c5dd`, `2b637bac`) — see
 [docs/protocol/inventory-and-ranged-attacks.md](docs/protocol/inventory-and-ranged-attacks.md).
-Known open sub-follow-ups: gun-bullet/shuriken projectiles, per-arrow-type sprites.
+Ranged projectiles now draw the *ammunition item's* sprite (2026-07-26), covering
+per-arrow-type, firearms and shuriken; only the grenade launcher lacks a sprite.
 
 **DM Data Assets (key for upcoming E7 work)**: See new `docs/DM_DATA_GUIDE.md` for how bestiary.json, items.json, cards.json integrate with bestiary journal, encounters, rewards, loot tables. Codex should use these for data-driven DM features.
 

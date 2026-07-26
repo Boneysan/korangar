@@ -78,12 +78,11 @@ impl TradeState {
         self.rebuild_display();
     }
 
-    pub fn add_partner_item(&mut self, item_id: ItemId, amount: u32, identified: bool, refine: u8) {
-        let label = if refine > 0 {
-            format!("+{refine} item {} x{amount}", item_id.0)
-        } else {
-            format!("item {} x{amount}", item_id.0)
-        };
+    /// `name` comes from the caller because the item tables live in `Library`,
+    /// which the state layer does not hold. `None` means the tables could not
+    /// name the item and the label falls back to its id.
+    pub fn add_partner_item(&mut self, item_id: ItemId, amount: u32, identified: bool, refine: u8, name: Option<&str>) {
+        let label = crate::trade_item_label(name, item_id, amount, refine);
         self.partner_items.push(TradeOfferItem {
             item_id,
             amount,

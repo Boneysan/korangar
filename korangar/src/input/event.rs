@@ -267,6 +267,13 @@ pub enum InputEvent {
         attack_range: AttackRange,
         entity_id: EntityId,
     },
+    /// Cast a ground-targeted skill at a cell, walking into its range first.
+    CastSkillAtTile {
+        skill_id: SkillId,
+        skill_level: SkillLevel,
+        attack_range: AttackRange,
+        tile: TilePosition,
+    },
     /// Stop a skill.
     StopSkill {
         /// Slot of the hotbar that the skill is bound to.

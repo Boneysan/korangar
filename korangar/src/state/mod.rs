@@ -34,7 +34,7 @@ use korangar_networking::{MessageColor, SellItem, ShopItem};
 use localization::Localization;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::{EffectSource, LightSource, MapData, SoundSource};
-use ragnarok_packets::{AttackRange, CharacterId, CharacterServerInformation, EntityId, SkillId, SkillLevel};
+use ragnarok_packets::{AttackRange, CharacterId, CharacterServerInformation, EntityId, SkillId, SkillLevel, TilePosition};
 #[cfg(feature = "debug")]
 use rust_state::{ManuallyAssertExt, VecIndexExt};
 use rust_state::{Path, PathExt, RustState, Selector};
@@ -110,6 +110,15 @@ pub enum BufferedAction {
         entity_id: EntityId,
         attack_range: AttackRange,
     },
+    /// A ground-targeted skill queued while walking into its cast range. The
+    /// target is a cell, so unlike [`BufferedAction::CastSkill`] it never
+    /// belongs to an entity and is never cleared by an entity vanishing.
+    CastGroundSkill {
+        skill_id: SkillId,
+        skill_level: SkillLevel,
+        tile: TilePosition,
+        attack_range: AttackRange,
+    },
 }
 
 impl BufferedAction {
@@ -132,6 +141,7 @@ impl BufferedAction {
             BufferedAction::AttackEntity { entity_id }
             | BufferedAction::PickUpItem { entity_id }
             | BufferedAction::CastSkill { entity_id, .. } => Some(*entity_id),
+            BufferedAction::CastGroundSkill { .. } => None,
         }
     }
 }

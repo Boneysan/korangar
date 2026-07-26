@@ -144,6 +144,22 @@ impl Inventory {
             .unwrap_or(0)
     }
 
+    /// Item currently loaded in the ammunition slot, if any.
+    ///
+    /// Ammo is stackable *and* occupies the AMMO equip slot, so it is modeled
+    /// as `Equippable` throughout (see `InventoryItemDetails::ammo`) and its
+    /// equipped state lives in `equipped_position` like any other gear. The
+    /// classic client draws the flying projectile with this item's sprite,
+    /// which is how Iron Arrow and Fire Arrow read differently in flight.
+    pub fn equipped_ammunition(&self) -> Option<ItemId> {
+        self.items.iter().find_map(|item| {
+            let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
+                return None;
+            };
+            equipped_position.contains(EquipPosition::AMMO).then_some(item.item_id)
+        })
+    }
+
     /// Classic weapon class view for the equipped right-hand item (attack
     /// family only). Prefer [`Self::equipped_weapon_look`] for sprite paths.
     pub fn equipped_weapon_type(&self) -> u32 {

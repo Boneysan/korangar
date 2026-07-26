@@ -1143,14 +1143,23 @@ where
             return NetworkEventList::default();
         }
 
-        vec![
-            NetworkEvent::SkillCastCancelled { source_entity_id: None },
-            NetworkEvent::ChatMessage {
-                text: skill_failed_text(&packet),
+        let reported = match skill_failed_reason(&packet) {
+            SkillFailure::Text(text) => NetworkEvent::ChatMessage {
+                text,
                 color: MessageColor::Error,
             },
-        ]
-        .into()
+            SkillFailure::MissingItem {
+                item_id,
+                amount,
+                equipment,
+            } => NetworkEvent::SkillFailedMissingItem {
+                item_id,
+                amount,
+                equipment,
+            },
+        };
+
+        vec![NetworkEvent::SkillCastCancelled { source_entity_id: None }, reported].into()
     })?;
     packet_handler.register(|packet: NotifySkillUnitPacket| {
         let NotifySkillUnitPacket {
@@ -1476,9 +1485,33 @@ where
     Ok(())
 }
 
-/// Text for `ZC_ACK_TOUSESKILL` failures (Hercules `useskill_fail_cause`).
+/// Outcome of reading a `ZC_ACK_TOUSESKILL` failure: either final text, or a
+/// missing-item rejection that only the client can finish rendering because
+/// the item name table lives over there.
+enum SkillFailure {
+    Text(String),
+    MissingItem { item_id: ItemId, amount: u16, equipment: bool },
+}
+
+/// Reason for a `ZC_ACK_TOUSESKILL` failure (Hercules `useskill_fail_cause`).
 /// Hercules also reuses this packet for gameplay rejections, e.g. party
 /// creation without Basic Skill 7 arrives as skill 1 / cause 0.
+fn skill_failed_reason(packet: &ToUseSkillSuccessPacket) -> SkillFailure {
+    match packet.cause {
+        // Hercules' catch-all for a required item with no dedicated cause —
+        // Yellow Gemstone (Land Protector) lands here, not on 7/8. It sends the
+        // required count in `btype` and the item in `item_id`.
+        71 | 72 => SkillFailure::MissingItem {
+            item_id: packet.item_id,
+            amount: packet.btype.clamp(0, i32::from(u16::MAX)) as u16,
+            equipment: packet.cause == 72,
+        },
+        _ => SkillFailure::Text(skill_failed_text(packet)),
+    }
+}
+
+/// Text for every `ZC_ACK_TOUSESKILL` cause the networking crate can render on
+/// its own (i.e. everything that needs no item lookup).
 fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
     // Hercules overloads USESKILL_FAIL_LEVEL for outcomes that have nothing to do
     // with skill level, so a maxed skill reports "level not high enough". These are
@@ -1524,17 +1557,8 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
         22 => "That is already active.".to_owned(),
         23 => "The conditions for this skill are not met.".to_owned(),
         26 => "You can't place it there.".to_owned(),
-        // Hercules' catch-all for a required item with no dedicated cause —
-        // Yellow Gemstone (Land Protector) lands here, not on 7/8. It sends the
-        // required count in `btype` and the item in `item_id`; the name lookup
-        // lives in the client crate, so report the count and id.
-        71 | 72 => {
-            let what = if packet.cause == 72 { "equipment" } else { "item" };
-            match packet.btype {
-                count if count > 1 => format!("Missing required {what}: {count}x item #{}.", packet.item_id.0),
-                _ => format!("Missing required {what} (#{}).", packet.item_id.0),
-            }
-        }
+        // 71 / 72 (a required item / equipment) never reach here — they are
+        // returned as `SkillFailure::MissingItem` so the client can name the item.
         84 => "Not enough ammunition.".to_owned(),
         cause => format!("Skill failed (reason {cause})."),
     }
