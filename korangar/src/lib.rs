@@ -1026,6 +1026,10 @@ pub struct Client {
     /// A targeted skill awaiting a click to pick its target. See
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
+    /// Tile texture for the ground-skill aiming footprint, loaded once at
+    /// startup. `None` if the asset is missing — the footprint is then skipped
+    /// rather than failing the frame.
+    skill_footprint_texture: Option<Arc<Texture>>,
     pending_impacts: PendingImpactQueue,
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
@@ -2282,6 +2286,11 @@ impl Client {
             let mut interface = Interface::new(font_loader.clone(), INITIAL_SCREEN_SIZE);
             let mouse_cursor = MouseCursor::new(&sprite_loader, &action_loader);
             let show_interface = true;
+
+            // The per-cell tile the aiming footprint is drawn with. Same texture
+            // the original uses for Land Protector's ground tiles, which is what
+            // a "this cell is affected" marker looks like in RO.
+            let skill_footprint_texture = texture_loader.get_or_load(SKILL_FOOTPRINT_TEXTURE, ImageType::Color).ok();
         });
 
         time_phase!("initialize timer", {
@@ -2445,6 +2454,7 @@ impl Client {
             point_shadow_camera,
             input_event_buffer,
             pending_skill: None,
+            skill_footprint_texture,
             pending_impacts: PendingImpactQueue::default(),
             network_event_buffer,
             saved_login_data,
@@ -7560,6 +7570,8 @@ impl Client {
                 is_interface_hovered: interface_frame.is_interface_hovered(),
                 last_walking_destination,
                 buffered_action: *self.client_state.follow(client_state().buffered_action()),
+                pending_skill: self.pending_skill.as_ref(),
+                skill_footprint_texture: self.skill_footprint_texture.as_ref(),
                 #[cfg(feature = "debug")]
                 render_options: &render_options,
                 #[cfg(feature = "debug")]
@@ -7905,6 +7917,12 @@ struct MapRenderContext<'a, 'm: 'a> {
     is_interface_hovered: bool,
     last_walking_destination: Option<TilePosition>,
     buffered_action: Option<BufferedAction>,
+    /// The skill currently armed for targeting, so the aiming cursor can show
+    /// its ground footprint.
+    pending_skill: Option<&'a PendingSkill>,
+    /// Tile texture for that footprint. `None` if it failed to load — the
+    /// footprint is then simply not drawn.
+    skill_footprint_texture: Option<&'a Arc<Texture>>,
     #[cfg(feature = "debug")]
     render_options: &'a RenderOptions,
     #[cfg(feature = "debug")]
@@ -8199,6 +8217,57 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         }
     }
 
+    /// Draws the ground area an armed skill will cover, under the cursor.
+    ///
+    /// The shape is the server's own layout (see [`skill_footprint`]), including
+    /// the direction-dependent walls, so what the player aims is what they get.
+    /// Tinted red when the target is out of range — the ground-cast path has no
+    /// client-side range check, so without this the cast just fails silently.
+    #[inline(always)]
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn render_skill_aiming_footprint(&mut self) {
+        /// Additive over lit terrain, so it stays readable without washing the
+        /// ground out. See the batch-1 lesson on ground-effect alphas.
+        const IN_RANGE: Color = Color::rgba(0.35, 0.75, 1.0, 0.5);
+        const OUT_OF_RANGE: Color = Color::rgba(1.0, 0.3, 0.25, 0.5);
+
+        if !self.currently_playing || self.is_interface_hovered {
+            return;
+        }
+
+        let (Some(pending), Some(texture)) = (self.pending_skill, self.skill_footprint_texture) else {
+            return;
+        };
+
+        let PickerTarget::Tile { x, y } = self.mouse_target else {
+            return;
+        };
+        let target = TilePosition { x, y };
+
+        let Some(player_position) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
+            return;
+        };
+
+        let direction = facing_direction(player_position, target);
+        let Some(cells) = skill_footprint(pending.skill_id, pending.skill_level, direction) else {
+            return;
+        };
+
+        // A single cell is what the ordinary walk/target cursor already shows;
+        // drawing a second marker on top of it just doubles the highlight.
+        if cells.len() <= 1 {
+            return;
+        }
+
+        let color = match is_within_skill_range(player_position, target, pending.attack_range) {
+            true => IN_RANGE,
+            false => OUT_OF_RANGE,
+        };
+
+        self.map
+            .render_skill_footprint(self.effect_renderer, texture, target, &cells, color);
+    }
+
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn render_world_overlays(&mut self) {
@@ -8222,6 +8291,8 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         );
 
         self.effect_holder.render(self.effect_renderer, self.current_camera);
+
+        self.render_skill_aiming_footprint();
 
         if let Some(player) = self.client_state.try_follow(this_entity()) {
             #[cfg(feature = "debug")]
@@ -8456,6 +8527,8 @@ mod skill_effect_asset_tests {
         ] {
             paths.insert(path.to_owned());
         }
+        // The ground-skill aiming footprint's per-cell tile.
+        paths.insert(format!("data\\texture\\{SKILL_FOOTPRINT_TEXTURE}"));
         for path in E1_PROCEDURAL_TEXTURES {
             paths.insert(format!("data\\texture\\{path}"));
         }

@@ -24,7 +24,7 @@ pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
 pub use self::item_stats::{ItemStats, item_stats, item_tooltip_text};
-pub use self::skill_info::skill_tooltip_text;
+pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
 pub use self::job_identity::JobIdentity;
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;

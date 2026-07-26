@@ -523,6 +523,71 @@ traps visible and testable immediately, but it would be **our design, not the
 original's look** — same standing as the Frost Diver spray below. Do not let an
 interim marker close this item.
 
+## Ground-skill aiming footprint — WIRED 2026-07-26, NOT YET LIVE-VERIFIED
+
+While a ground-targeted skill is armed, the cursor now draws the **skill's real
+area** on the ground instead of a single tile. Recovered the same way as
+everything else here: from the authoritative source, not by eye.
+
+**Where the shapes come from.** `world/skill_layout.rs` mirrors Hercules'
+`skill_init_unit_layout` (`src/map/skill.c:21422`):
+
+- **Square layouts** expand from `skill_db.conf`'s `Layout: N` to `(2N+1)²`,
+  read out of the existing `docs/skills.json` export (the same field the hover
+  tooltip already prints). Per-level tables are honoured — Land Protector is
+  `[3,3,4,4,5,5,6,6,7,7]`, so its footprint grows 7×7 → 15×15 with level.
+- **The fifteen `Layout: -1` skills** carry the cell lists hardcoded in that C
+  function: Sanctuary (21), Magnus and Gospel (33), Grand Cross and Grand
+  Darkness (29), Fog Wall (15), Kaensin (24), Wall of Thorns (16), Fire Mantle
+  (8), Venom Dust (5), Tatamigaeshi (4/8/12 by level band).
+- **Four wall-shaped skills are direction-dependent** — Fire Wall, Ice Wall,
+  Earth Strain, Fire Rain. `facing_direction` ports `map_calc_dir`
+  (`src/map/map.c:2943`) so the client picks the same one of eight orientations
+  the server will.
+
+**Rendering.** `Map::render_skill_footprint` stamps one decal per cell through
+`render_ground_decal` — the depth-tested drawer built for Land Protector — using
+each tile's own corner heights so the shape rides terrain, and skipping
+unwalkable cells because the server will not place units there either. Driven
+from `render_skill_aiming_footprint` in `lib.rs` off the armed `PendingSkill`.
+
+**This also closes half of the "silent out-of-range ground cast" follow-up**: the
+footprint tints red when `is_within_skill_range` fails. The cast is still *sent*
+— there is still no client-side block on that path — but the player can now see
+why it will fail.
+
+**Two traps worth recording, both found by checking rather than reading:**
+
+1. **Nine of eighteen skill ids taken from the Hercules constant names were
+   wrong.** Land Protector is **288** (not 219), Earth Strain **2216** (not
+   2019), Fire Mantle **8403**, Kaensin **535**, Gospel **369**. Always resolve
+   ids through `docs/skills.json`. `every_custom_shape_id_is_a_custom_layout_in_the_export`
+   now fails the build if any of the fifteen stops exporting `-1`.
+2. **`MAX_SQUARE_LAYOUT` is 7 (15×15), not 5** — `skill.h:55`. An initial clamp
+   at 5 would have drawn Land Protector at Lv9-10 as 11×11 while the server
+   placed 15×15. It is the only skill in the db that exceeds 5, so this would
+   only have surfaced at max level.
+
+**Two skills Hercules groups into custom-shape branches are deliberately
+excluded.** `NPC_EVILLAND` and `MH_POISON_MIST` sit beside Sanctuary and Venom
+Dust in the C `switch`, but that whole branch only runs for skills whose layout
+is `-1`; our `skill_db` gives Evil Land a real `Layout: 1` and Poison Mist no
+layout at all, so both correctly take the generic path.
+
+**Verification status.** Shapes were diffed mechanically against the C arrays
+(all 12 static shapes match on cell set and count; all four directional families
+match across all 8 directions) and the checks are pinned as tests — 10 in the
+module, 242 in the lib, GRF audit green. **Nothing here has been seen on screen
+yet.** Open questions for the live pass:
+
+- Colour and alpha (`IN_RANGE` / `OUT_OF_RANGE` in `render_skill_aiming_footprint`)
+  are guesses. The recurring note from batch 1 is that ground effects always want
+  more brightness than they first get.
+- **Does a large footprint read as a shape or as a solid slab?** Storm Gust is 81
+  cells and Land Protector Lv10 is 225. This is the same failure mode batch 2 hit
+  when 49 overlapping units rendered as one block; per-cell tiles may need a gap,
+  or an edge-only treatment.
+
 ## Frost Diver travel spray — OUR DESIGN, not recovered fidelity
 
 Flagged explicitly because everything else in this document is reverse-engineered

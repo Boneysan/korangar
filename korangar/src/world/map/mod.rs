@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use std::mem::size_of;
 use std::sync::{Arc, Mutex};
 
-use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector3};
+use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector2, Vector3};
 use korangar_audio::AudioEngine;
 use korangar_collision::{AABB, Frustum, KDTree, Sphere};
 use korangar_container::{Cacheable, SimpleKey, SimpleSlab, create_simple_key};
@@ -36,6 +36,7 @@ use crate::graphics::{
 };
 use crate::graphics::{EntityInstruction, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex};
 use crate::loaders::GAT_TILE_SIZE;
+use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
 use crate::world::pathing::Traversable;
@@ -536,6 +537,80 @@ impl Map {
                 lower_right,
                 color,
             });
+        }
+    }
+
+    /// Draws the area a ground-targeted skill will cover, one tile-conforming
+    /// decal per cell, so aiming shows the real footprint instead of a single
+    /// cursor tile. `cells` are `(dx, dy)` offsets from `center` — see
+    /// [`skill_footprint`], which mirrors Hercules' own layout table.
+    ///
+    /// Uses the depth-tested decal path rather than [`IndicatorInstruction`]
+    /// (which is a single `Option`, so it cannot express a multi-cell shape) and
+    /// rides the terrain via each tile's own corner heights, exactly like
+    /// [`Self::render_walk_indicator`].
+    ///
+    /// [`skill_footprint`]: crate::world::skill_footprint
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    pub fn render_skill_footprint(
+        &self,
+        renderer: &mut EffectRenderer,
+        texture: &Arc<Texture>,
+        center: TilePosition,
+        cells: &[(i8, i8)],
+        color: Color,
+    ) {
+        /// Lifted slightly further than the walk indicator so the two do not
+        /// z-fight when both land on the same tile.
+        const OFFSET: f32 = 1.5;
+
+        for &(dx, dy) in cells {
+            // Offsets are signed and the map edge is at 0, so a footprint
+            // hanging off the edge must be clipped rather than wrapped.
+            let Some(x) = center.x.checked_add_signed(dx as i16) else {
+                continue;
+            };
+            let Some(y) = center.y.checked_add_signed(dy as i16) else {
+                continue;
+            };
+
+            if x >= self.width || y >= self.height {
+                continue;
+            }
+
+            let Some(tile) = self.get_tile(TilePosition { x, y }) else {
+                continue;
+            };
+
+            // Skipping unwalkable cells keeps the shape honest: the server will
+            // not place a unit on a wall either.
+            if !tile.flags.contains(TileFlags::WALKABLE) {
+                continue;
+            }
+
+            let base_x = x as f32 * GAT_TILE_SIZE;
+            let base_y = y as f32 * GAT_TILE_SIZE;
+
+            renderer.render_ground_decal(
+                [
+                    Point3::new(base_x, tile.southwest_corner_height + OFFSET, base_y),
+                    Point3::new(base_x + GAT_TILE_SIZE, tile.southeast_corner_height + OFFSET, base_y),
+                    Point3::new(base_x, tile.northwest_corner_height + OFFSET, base_y + GAT_TILE_SIZE),
+                    Point3::new(
+                        base_x + GAT_TILE_SIZE,
+                        tile.northeast_corner_height + OFFSET,
+                        base_y + GAT_TILE_SIZE,
+                    ),
+                ],
+                texture.clone(),
+                [
+                    Vector2::new(0.0, 0.0),
+                    Vector2::new(1.0, 0.0),
+                    Vector2::new(0.0, 1.0),
+                    Vector2::new(1.0, 1.0),
+                ],
+                color,
+            );
         }
     }
 

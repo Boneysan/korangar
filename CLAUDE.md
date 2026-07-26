@@ -22,7 +22,22 @@ effort**: a specific held pose, and refresh variants — do not eyeball either. 
 table coverage (~79 mapped `EffectId` references against 1124 enum variants);
 unmapped ids log under `KORANGAR_PACKET_LOG`. Phase F (timing polish) not
 started and two of its three items are gated on Phase A fixtures.
-Next (cheapest first): live-check the existing cast circles (`Lockon` + six `Beginspell` recipes exist, never looked at — zero code); then the two testing follow-ups (no client-side range check on ground casts; `skill_failed_text` shows a raw item id); then E3 coverage from the `KORANGAR_PACKET_LOG` unmapped-id log. Plan:
+**Newest, and the first thing to look at: the ground-skill aiming footprint
+(2026-07-26) is wired and test-verified but has never been seen on screen.**
+While a ground skill is armed the cursor draws its **real area** — squares from
+`skill_db`'s `Layout`, the fifteen custom shapes hardcoded in Hercules'
+`skill_init_unit_layout`, and the four direction-dependent walls (Fire Wall, Ice
+Wall, Earth Strain, Fire Rain) oriented via a port of `map_calc_dir`. Lives in
+`world/skill_layout.rs` + `Map::render_skill_footprint`. It also makes an
+out-of-range ground cast *visible* (footprint tints red) though still not
+blocked. **Resolve skill ids through `docs/skills.json`, never from the Hercules
+constant names — nine of eighteen were wrong on the first pass.**
+Next (cheapest first): live-verify that footprint (does Land Protector Lv10's
+225-cell area read as a shape or a solid slab?); then the cast circles (`Lockon`
++ six `Beginspell` recipes exist, never looked at — but they are procedural
+placeholders over generic ring textures, so expect a rebuild, not a tick);
+then `skill_failed_text` showing a raw item id; then E3 coverage from the
+`KORANGAR_PACKET_LOG` unmapped-id log. Plan:
 [docs/plans/animation-fidelity.md](docs/plans/animation-fidelity.md) §6.
 
 **Two rendering findings worth knowing before touching effects or props:**

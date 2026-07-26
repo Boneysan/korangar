@@ -120,6 +120,14 @@ fn layout_cells(layout: i64) -> Option<u32> {
     (layout >= 0).then(|| (layout as u32) * 2 + 1)
 }
 
+/// Raw `Layout` value for a skill at `level`, or `None` when the skill places no
+/// ground unit. `-1` is passed through unchanged so callers can tell "custom
+/// shape" apart from "no ground unit" — the aiming cursor needs that
+/// distinction, the tooltip does not.
+pub fn skill_layout_value(skill_id: u16, level: u16) -> Option<i64> {
+    table().get(&skill_id)?.layout.as_ref()?.at(level)
+}
+
 /// Build the hover tooltip for a skill at the level the player has.
 ///
 /// `display_name` is the live client name and wins over the export's when set;
