@@ -3,6 +3,13 @@
 Rust Ragnarok Online client (wgpu 29 + winit). This fork's goal is a usable
 custom UI for a friends group + DM campaign.
 
+**PAUSED 2026-07-26 — the next session is a LIVE PASS, not new features.** Seven
+commits from 2026-07-26 are pushed but **nothing in them has been seen on screen**:
+the aiming footprint, ground+support walk-into-range, item names everywhere,
+ammo-item projectiles, cast cancel (right-click/Escape), and Moonlit/Hermode. The
+checklist, the stack bring-up order, and the traps are in
+[docs/RESUME-HERE.md](docs/RESUME-HERE.md). Read that first.
+
 **Start here for all documentation:**
 - [docs/README.md](docs/README.md) — Master index/hub with categories, search guidance, and links to everything.
 - Then `docs/CLIENT_SYSTEMS_OVERVIEW.md` and `docs/SOFTWARE_DESIGN.md` for architecture.
