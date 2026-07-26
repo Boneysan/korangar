@@ -346,6 +346,67 @@ Both sounds are real and audited: `data\wav\effect\달빛세레나데.wav` and
 `all_mapped_skill_effect_assets_exist` (which does cover `presentation.sound`).
 **Neither has been seen or heard live yet.**
 
+#### Recovered: the full song/dance/ground-tile table (2026-07-26)
+
+`Renderer/Effects/Songs.js` in roBrowserLegacy implements **20** of these after
+all — the `Tofix` markers in `SkillUnit.js` mean "no unit→effect mapping", not "no
+renderer". Every entry is the same two-layer shape:
+
+1. a **`FlatColorTile`** per cell — no texture, a flat tint, almost always `α 0.05`;
+2. a **`Tiles.HoveringTexture(path, size, opacity)`** above it, which **bobs**
+   between `+0.2` and `+0.6` cell (`z + 0.4 - 0.2·sin(oddEven + tick/540π)`) with a
+   per-cell phase offset so neighbouring cells do not pulse in unison.
+
+All 14 distinct hover textures are confirmed present in `data.grf`.
+
+| Effect set | Tile RGBA | Hover texture |
+|---|---|---|
+| Dissonance | `1.0, 1.0, 1.0, 0.05` | `lens_w.bmp` |
+| Lullaby | `0.929, 0.620, 1.0, 0.05` | `zz.bmp` |
+| Mr Kim (Richman) | `0.988, 0.780, 0.780, 0.05` | `pocket.bmp` |
+| Eternal Chaos | `0.502, 1.0, 0.761, 0.05` | `lens_g.bmp` |
+| Drum Battlefield | `0.929, 0.396, 0.988, 0.05` | `melody_b.bmp` |
+| Ring of Nibelungen | `0.110, 0.925, 1.0, 0.05` | `twirl.bmp` |
+| Loki (Roki's Weil) | `0.863, 0.396, 0.988, 0.05` | `safeline.bmp` |
+| Siegfried | `0.282, 0.231, 1.0, 0.05` | `lens_b.bmp` |
+| Whistle | `1.0, 0.753, 0.796, 0.05` | `melody_b.bmp` |
+| Assassin Cross (Sin) | `1.0, 0.800, 0.850, **0.4**` | `lens_r.bmp` |
+| Apple of Idun | `1.0, 1.0, 0.0, 0.05` | `idun_apple.bmp` (size **1**) |
+| Ugly Dance | `1.0, 1.0, 1.0, 0.05` | `lens_w.bmp` |
+| Humming | `0.902, 0.820, 0.820, 0.05` | `melody_a.bmp` |
+| Don't Forget Me | `0.110, 1.0, 0.451, 0.05` | `lens_g.bmp` |
+| Fortune Kiss | `0.988, 0.435, 0.396, 0.05` | `heart_2.bmp` |
+| Service For You | `1.0, 0.502, 0.718, 0.05` | `safeline.bmp` |
+| **Gospel** | `1.0, 1.0, 1.0, 0.05` | `cross_old.bmp` |
+| **Fog Wall** | `0.667, 0.667, 0.667, **0.6**` | `lens_w.bmp` |
+| Gravitation | `1.0, 1.0, 1.0, **0.2**` | `lens_w.bmp` |
+| **Evilland** | `0.627, 0.627, 0.627, **0.2**` | `curse.bmp` (size **1**) |
+
+Poem of Bragi is separate: `getBragiSpellNote` rather than a static pair.
+
+**Which of these can actually fire on THIS server.** The 16 song/dance rows cannot —
+renewal `skill_db.conf` gives those skills no `Unit:` block (see above), so no
+`AddSkillUnit` ever arrives. **Note this is a server-configuration fact, not an
+absolute: `db/pre-re/skill_db.conf` DOES declare song units.** Our build has
+`#define RENEWAL` and the binary resolves `db/re/…`, so renewal it is.
+
+The rows in **bold** do have renewal units and would fire today:
+
+| Skill | Unit | Layout |
+|---|---|---|
+| `PA_GOSPEL` | `0xb3` | `-1` (custom), `Interval: 10000`, `UF_NOOVERLAP` |
+| `PF_FOGWALL` | `0xb6` | `-1` (custom) |
+| `NPC_EVILLAND` | `0xc7` | `1` |
+
+`HW_GRAVITATION` has **no** renewal unit, so `GravityEffects` is unusable here.
+
+**Blocked on one engine decision, not on data.** `UnitBody::GroundQuad` is a single
+flat quad; the authentic recipe is *two* layers with a bobbing upper one. Faithful
+support needs either a new `UnitBody` variant carrying tile-colour + hover
+texture/size/opacity, or a second body slot. Approximating it as one textured quad
+would lose the bob and the tint separation. **Not yet implemented — decide the body
+model first.**
+
 #### Sizing yardstick: is this a ground texture?
 
 Real ground textures here are **64×64** (`ring_red.tga`, elemental fields) to
