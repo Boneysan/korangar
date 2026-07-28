@@ -249,6 +249,19 @@ against the *new* cwd, not `korangar/korangar/`) and `client/login_settings.ron`
 logs in as `headless2`. `window_cache.ron` was deliberately not copied — two
 instances sharing one settings dir fight over it.
 
+**`bgm/` must also be linked into the second cwd** — it is symlinked there
+already. Found live: the second seat had sound effects but **no music**, which
+looks like a broken audio device and is not. Effects go through
+`game_file_loader` and so follow the absolute GRF paths, but music does not touch
+the archive layer at all: `find_file_path` (`korangar-audio/src/lib.rs:889`)
+builds a plain relative `bgm/<track>.mp3` and resolves it against the **cwd**. A
+second instance therefore plays every sound *except* music. The same applies to
+map BGM — only the `mp3NameTable` lookup is in the GRF, the file itself is not.
+
+Everything else is cwd-safe, checked at the same time: `msgstringtable` tries the
+GRF *before* its relative fallbacks (`msgstringtable.rs:57`), themes live in the
+copied `client/` dir, and the only other relative read is in test code.
+
 Accounts: `korangar` (2000000) and **`headless2` (2000001) are BOTH group 99** —
 an earlier version of this note said headless2 was GM 0, which is wrong and cost a
 detour. Each seat can therefore `@`-command itself; no cross-client gearing.
