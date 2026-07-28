@@ -130,27 +130,118 @@ cannot produce. When writing one, log *which branch ran*, not just the result �
 `used_fallback` exists for the sprite lookup and should exist for the ammo
 lookup too.
 
-### A7 — the observer-parity harness *(the real investment)*
+### A7 — observer-parity harness, in two layers
 
-The project's 107-scenario headless tester is **single-session**, which is
-structurally why it caught none of these. Extending it to two sessions —
-one acting, one observing — and asserting the observer's derived view matches the
-actor's would have caught **all five bugs mechanically**.
+**Correction to an earlier draft of this doc:** "extend the headless tester and it
+catches all five" is **false**. The headless tester consumes `NetworkEvent`s
+directly and never runs `korangar/src/lib.rs`, so it sees the wire, not the
+client's use of it. Of the five bugs, it could have caught **one**.
 
-Shape:
+| Bug | Layer | Headless? |
+|---|---|---|
+| Login broadcast before `map->addblock` | server | **yes** |
+| Pre-spawn silent drop (`find(...)` no else) | client handler | no |
+| Entity-rebuild wipe | client handler | no |
+| Stale ammunition across weapon change | client handler | no |
+| Hair on `Player`, `Common` passing `None` | client model | no |
 
-1. Log in two headless sessions on `korangar` and `headless2`, same map, in range
-2. For each state-changing action (equip, unequip, weapon swap, job change, hair,
-   sit/stand, status), have session A perform it
-3. Assert session B's view of A converges to A's own view within a timeout
-4. Repeat each case in **three timings**, because each broke something different:
-   - both already in view (live broadcast)
-   - B arrives after A is already set up (enter-view re-send)
-   - **A arrives after B is already watching** (the login-ordering case — the one
-     that was broken and that nothing else covers)
+Four of five lived in the layer the headless suite structurally cannot see —
+the same axis note already in `CLAUDE.md`. So the harness has to be two things.
 
-Ordering matters more than coverage here: the same action passed in one timing
-and failed in another all day.
+#### A7a — wire parity *(cheap, do first)*
+
+Assert the **server** sends an observer what it should. Nearly free, because the
+primitives exist:
+
+- `TestContext::connect_as(config, username, password, character, ...)` is already
+  parameterised by credentials — a second session is one call with `headless2`.
+- `TestContext` is self-contained (own `NetworkingSystem`, buffer, identity), so
+  two can coexist without refactoring.
+- It already tracks `entities: HashMap<EntityId, EntityData>` — an observer's view
+  of others.
+
+The one gap: that map holds **spawn data**. Sprite-change events must be folded
+into it, or the harness cannot see a look change at all. That is the actual work.
+
+Assert: for each action by session A, session B's tracked view of A converges
+within the timeout. Catches server-side ordering, missing broadcasts, and guards
+that cannot transmit "none" — i.e. audits A4 and A5, mechanically.
+
+#### A7b — client-state parity *(the real investment)*
+
+Catching the other four needs the client's **state layer** driven without a
+window: feed `NetworkEvent`s through the real handlers and assert on the
+resulting `ClientState`/`Entity`. Today that logic lives in `lib.rs` inside the
+event loop, so it cannot be reached from a test.
+
+Two routes, in increasing cost:
+
+1. **Formalise the diagnostics.** Today's `[entity-diag]` / `[hair-diag]` prints
+   were ad hoc and deleted afterwards. A permanent, env-gated observer dump —
+   S3 in the original audit — would make the *real* client scriptable: run two
+   clients, dump both, diff. Cheap, and it captures the exact instrumentation
+   that solved this session.
+2. **Extract the handlers** so `NetworkEvent → ClientState` is callable outside
+   the render loop. The correct fix, and a genuine refactor — the arms are
+   entangled with `self.async_loader`, `self.library` and the graphics engine.
+
+Route 1 is what I would do next; route 2 only if this class keeps recurring.
+
+### A8 — server-side `view_data` lifetime *(new, and it found a live bug)*
+
+The fork stores broadcast state in `sd->vd` (`vd->ammo`). That struct has a
+lifetime nobody audits, so ask: **what resets it?**
+
+```bash
+grep -rn "memset(&sd->vd\|sd->vd = \|memcpy(&sd->vd" src/map/*.c
+```
+
+**Result 2026-07-29 — a real latent bug in our own feature.**
+`status_set_viewdata` (`status.c`) has two branches for `BL_PC`:
+
+```c
+if (pc->db_checkid(class_)) { ... assigns individual fields ... }  // ammo survives
+else if (vd != NULL) { memcpy(&sd->vd, vd, sizeof(struct view_data)); }  // ammo ZEROED
+```
+
+The first branch assigns `class`, weapon, shield, headgear, hair and palettes one
+by one and never touches `ammo`, so it survives a job change. The second —
+**disguise into a mob or NPC class** — overwrites the whole struct, zeroing
+`vd->ammo`. Un-disguising returns through the *first* branch, which never
+re-assigns `ammo`, so it stays `0` **permanently**.
+
+Symptom: `@disguise` → `@undisguise`, and every observer draws that player's
+arrows as generic, forever, until they happen to re-equip ammunition. **This
+matters here because DM mode uses disguises.**
+
+Fix: re-seed `vd->ammo` from `sd->equip_index[EQI_AMMO]` after the wholesale copy
+(and on un-disguise), the same way `clif_inventoryItems` seeds it at login.
+
+**The general rule:** any field the fork adds to `view_data` inherits this
+lifetime problem. Adding one means auditing every wholesale write to `sd->vd`.
+
+## Priorities
+
+Grounded in what the code actually looks like, not guessed:
+
+| | Item | Cost | Why |
+|---|---|---|---|
+| 1 | **Fix A8's disguise hole** | ~15 min | A live bug in shipped code, and DM mode uses disguises |
+| 2 | **A7a wire parity** | small — `connect_as` already takes credentials; the work is folding sprite-change events into `TestContext::entities` | Makes A4/A5 mechanical |
+| 3 | **S3 observer dump** (A7b route 1) | small | Turns this session's ad-hoc diagnostics into a permanent tool |
+| 4 | A4/A5 latent comments | ~10 min | Stops the next reader re-deriving them |
+| 5 | A7b route 2 (extract handlers) | real refactor | Only if this class recurs again |
+
+## Exit criteria
+
+An audit "passes" when every hit is classified, not when it returns nothing:
+
+- **A1/A2** — every hit has a named recovery mechanism (spawn packet, lazy
+  re-request) or a fix
+- **A3** — no appearance state on `Player` alone
+- **A4/A5** — each remaining site has a comment saying why it is safe
+- **A8** — every fork-added `view_data` field survives, or re-seeds after, every
+  wholesale write to `sd->vd`
 
 ## Beyond the observer axis — other things worth auditing
 
