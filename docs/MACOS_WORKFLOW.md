@@ -46,7 +46,30 @@ The `CPPFLAGS`/`LDFLAGS` are required — Homebrew's include/lib dirs aren't
 on clang's default search path, and configure dies with "PCRE header not
 found" without them.
 
-From `Hercules/`:
+From `Hercules/`, **prefer `./dev.sh`** over calling `athena-start` and `make`
+directly — it wraps both and closes two traps that have each cost a session:
+
+```sh
+./dev.sh build     # make map_sql, then FAILS LOUDLY if map-server wasn't relinked
+./dev.sh start     # fresh timestamped log; returns immediately
+./dev.sh wait      # blocks until the map-server is actually ready (several minutes)
+./dev.sh log 40    # tail the current run's log
+./dev.sh stop
+```
+
+- **`make map` is not a target here** — only `map_sql`. `make map` fails with
+  *"No rule to make target"*, which contains no "error" and slips through a
+  grepped build log, leaving you testing a stale binary. `dev.sh build` checks
+  `map-server`'s mtime against the sources instead of trusting the log.
+- **`dev.sh start` opens a new `log/server-<timestamp>.log` every run**
+  (symlinked as `log/server-latest.log`). The older habit of appending every run
+  to one `log/athena-start.out` is why a `head`/early `tail` showed stale
+  shutdown errors from *previous* runs. That file is untracked leftover noise.
+- `dev.sh wait` exists because bring-up exceeds a 300 s agent tool timeout; it
+  polls for the map-server's real readiness marker (`listening on port '5121'`,
+  which comes *after* map loading) and bails early if the process dies.
+
+The underlying script still works if you need it:
 
 ```sh
 ./athena-start start     # starts login-server, char-server, map-server, api-server
@@ -160,7 +183,7 @@ version:
 ```sh
 # server
 pgrep -fl "login-server|char-server|map-server|api-server"
-cd Hercules && ./athena-start stop && ./athena-start start
+cd Hercules && ./dev.sh restart && ./dev.sh wait
 
 # client
 pgrep -fl korangar

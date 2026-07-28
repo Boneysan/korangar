@@ -200,10 +200,11 @@ testable, and S2 guarantees the last step cannot be forgotten.
 - **Two-seat rule.** Any change to a visual states how it was checked from the
   observer seat, or says explicitly that it cannot be observed. Rows 1–11 in the
   checklist below are the standing script.
-- **Trust the timestamp, not the build log.** `ls -la Hercules/map-server` after
-  every server change. `make map` is not a target here; it fails with *"No rule
-  to make target"*, which does not contain the word "error" and slips through a
-  grepped build log. This cost two false negatives in one session.
+- **Trust the timestamp, not the build log.** `make map` is not a target here; it
+  fails with *"No rule to make target"*, which does not contain the word "error"
+  and slips through a grepped build log. This cost two false negatives in one
+  session, and is now enforced by `Hercules/dev.sh build` rather than by
+  remembering to run `ls -la Hercules/map-server`.
 - **Owner-only state has a recipe.** Anything broadcast from private state hits
   the three traps below. Follow `LOOK_AMMO` rather than improvising.
 
@@ -263,8 +264,10 @@ weapon-class default.
 
 > **Build gotcha that cost two false negatives.** The map server target is
 > **`make map_sql`**, not `make map` — the latter fails with *"No rule to make
-> target"*. Confirm `ls -la Hercules/map-server` is newer than your edit before
-> concluding a server change does not work.
+> target"*. **Fixed 2026-07-28: use `Hercules/dev.sh build`**, which runs the
+> right target and then fails loudly if `map-server` was not relinked while a
+> source file is newer than it. If you build by hand anyway, confirm
+> `ls -la Hercules/map-server` is newer than your edit first.
 
 ## Live checklist — NOT yet walked
 

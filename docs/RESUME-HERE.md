@@ -16,19 +16,26 @@ Seven commits landed 2026-07-26 on `agent/platform-connectivity-controls`
 ## Bring the stack up (in this order)
 
 ```sh
-brew services run mariadb              # `run`, NEVER `start` — `start` re-registers autostart
-cd Hercules && ./athena-start start    # several minutes; loads 1156 maps
+brew services run mariadb                        # `run`, NEVER `start` — `start` re-registers autostart
+cd Hercules && ./dev.sh start && ./dev.sh wait   # several minutes; loads 1156 maps
 cd korangar/korangar && cargo run --release --bin korangar
 ```
+
+`dev.sh` (added 2026-07-28) wraps `athena-start` and `make`; see
+[MACOS_WORKFLOW.md](MACOS_WORKFLOW.md). Use `./dev.sh build` for any server-source
+change — it fails loudly when `map-server` was not actually relinked, which is the
+half of the `make map` trap a build log cannot show you.
 
 Verified 2026-07-26 that the stack boots clean **with the new Hercules delta**:
 `Successfully 'connected' to Database 'ragnarok'`, `Successfully loaded '1156' maps`,
 map-server listening on 5121, char-server handshake OK. The map-server binary was
 rebuilt after the delta, so **no `make` is needed** — but a server restart is.
 
-Server stdout goes to **`Hercules/log/athena-start.out`** (appended, so stale
-shutdown errors linger — read the *end*, not a `head`). `log/map.log` stays empty.
-That file is untracked noise; leave it uncommitted.
+Server stdout goes to **`Hercules/log/server-latest.log`** — a fresh file per run
+now, so the whole file is this run. `log/map.log` stays empty. The older
+`log/athena-start.out` was *appended* to across runs, which is why stale shutdown
+errors from previous boots kept getting misread as live failures; it is untracked
+leftover noise, so leave it uncommitted and ignore it.
 
 ## The checklist, cheapest first
 
