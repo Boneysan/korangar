@@ -318,14 +318,15 @@ have failed for a reason that is not a bug.
 | 3 | A walks out of range and back | glow still correct (enter-view re-send) | **PASS** — verified by an actual walk |
 | 4 | B relogs with arrows already equipped | A sees them correctly, no re-equip (login seed) | **PASS** — was the original failure, see Bug 1 |
 | 5 | B fires; check A's log | `local_player=false`, `used_fallback=false` | **PASS** |
-| 6 | B unequips ammo and **fires** | A's arrows revert to plain | ☐ — needs ammo in a second stack to fire at all |
-| 7 | Repeat 1–3 with a gunslinger or shuriken | same behaviour — the broadcast is item-id based | ☐ |
+| 6 | ~~B unequips ammo and fires~~ | **RETIRED** — unobservable, see below | n/a |
+| 7 | Repeat 1–3 with a gunslinger or shuriken | same behaviour — the broadcast is item-id based | **PASS** (2026-07-29) |
 | 8 | A changes **own** hair | updates without relog — **expected to FAIL**, Gap 2 | ☐ |
 | 9 | B changes hair while A watches | A sees it update live | ☐ |
 | 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | ☐ |
 | 11 | B gains a status with values (Sage field) | A sees the same visual | ☐ |
 
-**Still unobserved: the mid-session equip path.** A diagnostic showed
+**Mid-session equip: PASS (2026-07-29).** Closed by the gunslinger run — see below.
+Previously unobserved because: A diagnostic showed
 `pc_equipitem`'s ammo branch ran **zero** times across a whole session — the test
 characters log in with ammunition already equipped from the `inventory` table, so
 no manual equip ever reaches the server. Every pass so far exercised the login
@@ -395,3 +396,50 @@ happen, just later). Instrument both ends before choosing a fix.
 Rows 1–7 cover the shipped ammunition work. Row 8 is Gap 2. Rows 10–11 are
 regression cover for the two categories the audit cleared on inspection but
 which have never actually been eyeballed from the far seat.
+
+## Ammunition sprite survey (2026-07-29)
+
+Run after the observer fixes, to answer "how much ammunition art actually
+exists". Tooling: a GRF file-table parser written for the job, since none was in
+the tree and `get_files_with_extension` is known to under-report. Indexed
+**161,397 unique entries** across `data.grf`, `rdata.grf`, `renewal2021.grf` and
+`resources2021.grf`.
+
+**19 distinct arrow projectile sprites ship.** `elemental_ammunition_resource`
+maps **9**. These have art and are currently drawn as the generic arrow:
+
+`철화살` (iron) · `강철화살` (steel) · `날카로운화살` (sharp) · `뼈화살` (bone) ·
+`사냥용화살` (hunting) · `암석화살` (rock) · `에르늄화살` (elunium) ·
+`오리데오콘화살` (oridecon) · `엘프의화살` (elf)
+
+Other classes are also well supplied: **14** shuriken sprites (1 mapped), **11**
+kunai, plus bullet variants. **Zero** hits for `포탄` (cannonball).
+
+**The blocker is the mapping, not the art.** Iron Arrow resolves as
+`ammo_sprite=None used_fallback=true` because `iteminfo` hands back the *generic*
+arrow resource for it, even though `철화살.spr` exists. So `iteminfo` is not the
+item→projectile mapping for ammunition. Recovering it needs the roBrowser-table
+method in [../plans/classic-effect-fidelity.md](classic-effect-fidelity.md) —
+**do not guess GRF filenames**, which has failed live before.
+
+Same conclusion for the grenade launcher: `battle_check_arrows`
+(`battle.c:6771`) requires `A_GRENADE` for `W_GRENADE` (21), so korangar mapping
+`17..=21` to Bullet is wrong against the server — but fixing it needs a grenade
+projectile sprite that this survey did not find. Left as a known deviation
+rather than "by design".
+
+Weapon→ammo classes, from `battle_check_arrows` (authoritative, and cheaper than
+reading the exe): `W_BOW` (11) → `A_ARROW`; `W_REVOLVER`/`W_RIFLE`/`W_GATLING`/
+`W_SHOTGUN` (17–20) → `A_BULLET`; `W_GRENADE` (21) → `A_GRENADE`; **`W_HUUMA`
+(22) is absent from the switch**, so the server enforces nothing there.
+`item_db.conf` classifies 113 ammo items across 8 `Subtype:` values — a field
+`docs/items.json` **drops entirely**, the same exporter gap already known for the
+mob db.
+
+### Why row 6 was retired
+
+"B unequips ammo, A's arrows revert to plain" cannot be observed. Unequipping
+means B cannot fire, and the projectile only exists in flight — and the moment B
+equips anything, that broadcast overwrites the observer's value anyway. A stale
+entry is only ever *visible* through a weapon-class change, which row 7 covers.
+Row 2 already covers "the observer follows a change".

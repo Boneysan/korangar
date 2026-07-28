@@ -4648,6 +4648,18 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeWeapon { account_id, weapon_id } => {
+                    // Ammunition belongs to the weapon that fired it, so a weapon
+                    // change invalidates it. Dropping it is not a fidelity loss: the
+                    // server force-unequips ammo when a weapon comes off, so it
+                    // already considers there to be none. Without this a cached
+                    // arrow id can be drawn for a gun or shuriken — reachable
+                    // because the server's force-unequip guards on
+                    // `equip_index[EQI_AMMO] > 0`, and inventory slot 0 is valid,
+                    // and because it does not cover huuma weapons at all.
+                    self.client_state
+                        .follow_mut(client_state().remote_ammunition())
+                        .remove(&account_id);
+
                     if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
