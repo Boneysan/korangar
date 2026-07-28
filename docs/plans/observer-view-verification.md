@@ -411,6 +411,14 @@ Rows 1–7 cover the shipped ammunition work. Row 8 is Gap 2. Rows 10–11 are
 regression cover for the two categories the audit cleared on inspection but
 which have never actually been eyeballed from the far seat.
 
+## Follow-on: the audits derived from these bugs
+
+The bug *classes* found here are generalised into runnable audits in
+[observer-parity-audits.md](observer-parity-audits.md) — including two latent
+findings this pass turned up (`LOOK_ROBE`'s re-send guard, and weapon/shield
+broadcasts issued before `map->addblock`), and the two-session harness that would
+have caught all five bugs mechanically.
+
 ## Ammunition sprite survey (2026-07-29)
 
 Run after the observer fixes, to answer "how much ammunition art actually
