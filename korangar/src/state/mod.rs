@@ -16,6 +16,7 @@ pub mod theme;
 pub mod trade;
 
 use std::cell::Cell;
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use korangar_interface::application::Application;
@@ -34,7 +35,9 @@ use korangar_networking::{MessageColor, SellItem, ShopItem};
 use localization::Localization;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::{EffectSource, LightSource, MapData, SoundSource};
-use ragnarok_packets::{AttackRange, CharacterId, CharacterServerInformation, EntityId, SkillId, SkillLevel, TilePosition};
+use ragnarok_packets::{
+    AccountId, AttackRange, CharacterId, CharacterServerInformation, EntityId, ItemId, SkillId, SkillLevel, TilePosition,
+};
 #[cfg(feature = "debug")]
 use rust_state::{ManuallyAssertExt, VecIndexExt};
 use rust_state::{Path, PathExt, RustState, Selector};
@@ -205,6 +208,20 @@ pub struct ClientState {
 
     /// All entities on the map.
     entities: Vec<Entity>,
+    /// Ammunition each remote player has loaded, keyed by account id.
+    ///
+    /// Deliberately **not** stored on the [`Entity`]. The server broadcasts this
+    /// (fork-only `LOOK_AMMO`) independently of the spawn packet, so the value
+    /// routinely arrives *before* the entity exists, and a later respawn packet
+    /// replaces the entity wholesale — both of which silently discarded it when
+    /// it lived on the entity, leaving observers drawing the generic arrow.
+    /// Keyed by account id so entity lifetime cannot lose it.
+    ///
+    /// Entries are cleared on map change rather than when an entity disappears:
+    /// the server re-sends on enter-view, so a stale entry is overwritten, while
+    /// evicting on removal would reopen the same hole.
+    #[hidden_element]
+    remote_ammunition: HashMap<AccountId, ItemId>,
     /// All dead entities on the map.
     dead_entities: Vec<Entity>,
     /// All ground items on the map.
@@ -489,6 +506,7 @@ impl ClientState {
             dialog_window,
             skill_tree_window,
             entities: Vec::new(),
+            remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
             chat_messages,

@@ -304,19 +304,93 @@ weapon-class default.
 
 Two clients, both with bows, in view of each other.
 
+**Rows 1, 2 and 6 were mis-specified** and are corrected below. They said "A sees
+the glow appear when B *equips*", which describes something the code never does:
+the glow is attached to `SkillProjectile::arrow(...)`, so it only exists on an
+arrow **in flight**. Equipping ammunition is invisible to everyone — RO does not
+render arrows on a standing character. As originally written these rows would
+have failed for a reason that is not a bug.
+
 | # | Check | Expected | Result |
 |---|---|---|---|
-| 1 | B equips Fire Arrow while A watches | A sees red glow appear immediately | ☐ |
-| 2 | B swaps to Iron Arrow | A sees the glow disappear | ☐ |
-| 3 | A walks out of range and back | glow still correct (enter-view re-send) | ☐ |
-| 4 | B relogs with arrows already equipped | A sees them correctly, no re-equip (login seed) | ☐ |
-| 5 | B fires; check A's log | `local_player=false`, `used_fallback=false` | ☐ |
-| 6 | B unequips ammo | A's arrows revert to plain | ☐ |
+| 1 | B equips Fire Arrow, then **fires** | A sees the arrow fly with a red glow | **PASS** (2026-07-28, after both fixes) |
+| 2 | B swaps to Iron Arrow and **fires** | plain arrow, **no** glow — 1770 is non-elemental | **PASS** |
+| 3 | A walks out of range and back | glow still correct (enter-view re-send) | **PASS** — verified by an actual walk |
+| 4 | B relogs with arrows already equipped | A sees them correctly, no re-equip (login seed) | **PASS** — was the original failure, see Bug 1 |
+| 5 | B fires; check A's log | `local_player=false`, `used_fallback=false` | **PASS** |
+| 6 | B unequips ammo and **fires** | A's arrows revert to plain | ☐ — needs ammo in a second stack to fire at all |
 | 7 | Repeat 1–3 with a gunslinger or shuriken | same behaviour — the broadcast is item-id based | ☐ |
 | 8 | A changes **own** hair | updates without relog — **expected to FAIL**, Gap 2 | ☐ |
 | 9 | B changes hair while A watches | A sees it update live | ☐ |
 | 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | ☐ |
 | 11 | B gains a status with values (Sage field) | A sees the same visual | ☐ |
+
+**Still unobserved: the mid-session equip path.** A diagnostic showed
+`pc_equipitem`'s ammo branch ran **zero** times across a whole session — the test
+characters log in with ammunition already equipped from the `inventory` table, so
+no manual equip ever reaches the server. Every pass so far exercised the login
+seed and the enter-view re-send, never `pc_equipitem`. Test it explicitly.
+
+## What rows 1–5 found: two bugs, both fixed 2026-07-28
+
+Neither was in the checklist, and neither is visible from one client.
+
+### Bug 1 — the login broadcast reached nobody (server)
+
+`clif_parse_LoadEndAck` sent the `LOOK_AMMO` seed from `clif->inventoryList(sd)`
+~95 lines **before** `map->addblock(&sd->bl)`. `clif_changelook` defaults to
+`target = AREA`, and an AREA send walks the map's block list — which the character
+has not joined yet, so the broadcast went to nobody. It still set `vd->ammo`
+locally, which is exactly why the *arriving-observer* path worked and masked this:
+`clif_getareachar_unit` re-sends correctly, so walking away and back passed while
+watching someone log in failed. `clif->spawn` cannot cover the gap either, because
+`LOOK_AMMO` rides `LOOK_FLOOR`, which the spawn packet never carries.
+
+Fixed by re-broadcasting straight after `clif->spawn`, where the character is on
+the map and has an audience.
+
+### Bug 2 — the client threw the value away twice (client)
+
+Even with bug 1 fixed, observers still drew the generic arrow. Instrumenting both
+ends showed the packet was sent correctly, arrived correctly, and had the right
+enum discriminant (`LOOK_FLOOR` = `Ammunition` = 11 on both sides) — the client
+was discarding it, in **two independent ways**:
+
+```
+change-ammunition account=2000001 entity_found=FALSE   ← arrives pre-spawn, dropped
+add-entity        id=EntityId(2000001)                 ← entity born here
+change-ammunition account=2000001 entity_found=TRUE    ← applied
+add-entity        id=2000001 replaces_existing=TRUE old_ammo=Some(1752)  ← wiped
+```
+
+1. **Pre-spawn race** — `ChangeAmmunition` did `if let Some(entity) = …find(…)`,
+   so a value arriving before the entity existed was silently dropped.
+2. **Entity replacement** — `AddEntity` deliberately removes and rebuilds an
+   entity that is already on screen ("so the entity doesn't exist twice"). The
+   replacement inherits only `inherit_fade_state`; ammunition was reset to `0`.
+
+Either alone breaks it, which is why fixing one at a time kept "not working".
+
+Fixed by moving the value **off the entity** into
+`ClientState::remote_ammunition: HashMap<AccountId, ItemId>`. Entity lifetime can
+no longer lose it. `Common::ammunition` and its accessors were deleted rather than
+left as a second source of truth. Cleared on map change only — the server re-sends
+on enter-view so a stale entry is overwritten, whereas evicting on entity removal
+would reopen the same hole.
+
+**The generalisable lesson.** This is the third time this shape has bitten the
+project (`clif->arrowequip` arriving mid-inventory-list on 07-27, then both halves
+above). *Any* `account_id`-keyed event applied with `if let Some(entity) = find(…)`
+is a silent drop waiting to happen, and the S2 rule — make the match exhaustive so
+the compiler objects — does not help here because the drop is in the *handler*,
+not the mapping. When S4 renders headgear, robes or dye, route them through the
+same off-entity map rather than the entity.
+
+**Method note worth keeping.** Four plausible causes were killed by measurement
+after surviving code review: the `target = SELF` hidden-object override, an enum
+discriminant mismatch, an equip/unequip ordering race, and entity reconstruction
+(dismissed too early on `replaces_existing=false` in the login burst — it does
+happen, just later). Instrument both ends before choosing a fix.
 
 Rows 1–7 cover the shipped ammunition work. Row 8 is Gap 2. Rows 10–11 are
 regression cover for the two categories the audit cleared on inspection but

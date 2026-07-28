@@ -75,8 +75,8 @@ use networking::{PacketHistory, PacketHistoryCallback};
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
-    AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId, ExperienceType,
-    HotbarSlot, ItemId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    AccountId, AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId,
+    ExperienceType, HotbarSlot, ItemId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -1426,14 +1426,14 @@ impl Client {
             .is_some_and(|player| player.get_entity_id() == source_entity_id);
         let ammunition = match is_local_player {
             true => self.client_state.follow(client_state().inventory()).equipped_ammunition(),
+            // Not read from the entity: the ammunition broadcast can arrive before
+            // the entity exists and survives it being replaced by a respawn packet.
             false => self
                 .client_state
-                .follow(client_state().entities())
-                .iter()
-                .find(|entity| entity.get_entity_id() == source_entity_id)
-                .map(|entity| entity.get_ammunition())
-                .filter(|item_id| *item_id != 0)
-                .map(ItemId),
+                .follow(client_state().remote_ammunition())
+                .get(&AccountId(source_entity_id.0))
+                .copied()
+                .filter(|item_id| item_id.0 != 0),
         }
         .or_else(|| ranged_attack_default_ammunition(view));
 
@@ -3414,6 +3414,11 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).clear();
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    // Cleared here rather than when an entity disappears: the server
+                    // re-sends ammunition on enter-view, so a stale entry is simply
+                    // overwritten, whereas evicting on removal would reopen the hole
+                    // this map exists to close.
+                    self.client_state.follow_mut(client_state().remote_ammunition()).clear();
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
 
                     self.audio_engine.play_background_music_track(None);
@@ -4688,14 +4693,13 @@ impl Client {
                     // there is no sprite layer to rebuild — the value is read when a
                     // shot is fired. The local player is skipped deliberately: their
                     // own inventory is authoritative and already exact.
-                    if let Some(entity) = self
-                        .client_state
-                        .follow_mut(client_state().entities())
-                        .iter_mut()
-                        .find(|entity| entity.get_entity_id().0 == account_id.0)
-                    {
-                        entity.set_ammunition(item_id.0);
-                    }
+                    // Keyed by account id rather than stored on the entity: this
+                    // broadcast routinely arrives before the entity exists, and a
+                    // later respawn packet replaces the entity wholesale. Both used
+                    // to discard it silently, leaving observers on the generic arrow.
+                    self.client_state
+                        .follow_mut(client_state().remote_ammunition())
+                        .insert(account_id, item_id);
                 }
                 NetworkEvent::LoggedOut => {
                     // Close character UI *before* clearing character-scoped state.
