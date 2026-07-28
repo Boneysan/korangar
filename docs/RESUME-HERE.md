@@ -46,10 +46,27 @@ Results as of the 2026-07-26 evening pass are in the **Result** column.
 | 1 | **Item names in messages** | Cast Land Protector with no Yellow Gemstone | "You need a Yellow Gemstone to use this skill.", never `#715`. Also check a trade-window row and a weapon-refine result — all three go through `resolve_item_name`. | **PASS** (skill-fail path; trade/refine rows not yet seen) |
 | 2 | **Ammo-item projectiles** | Bow attack with plain Arrow, then Iron/Fire Arrow | The flying sprite should *change with the arrow type*. Firearms (views 17-21) and huuma shuriken (22) now fire too. Grenade launcher falls back to Bullet **by design**. | open — unblocked: `@item Iron Arrow 500` and `@item Iron 20` both confirmed working after the fix below |
 | 3 | **Ground-cast walk-into-range** | Arm a ground skill, click a cell well outside its range | Should walk into range then cast, instead of nothing happening. If nothing walkable is close enough, expect a chat line rather than silence. | **PASS** — walked into range, then cast |
-| 4 | **Support walk-into-range** | Heal/Blessing an ally ~15 cells away (Heal range is 9) | Same walk-then-cast. **This path changed behaviour**, so give it real attention — self-buffs must still fire instantly (self is distance 0). | open |
+| 4 | **Support walk-into-range** | Heal/Blessing an ally ~15 cells away (Heal range is 9) | Same walk-then-cast. **This path changed behaviour**, so give it real attention — self-buffs must still fire instantly (self is distance 0). **Wants two seats:** the client path is entity-agnostic (`resolve_pending_cast`, `lib.rs:905`, treats `Attack`/`Support` alike), so a mob exercises the walk — but a mob closes the distance you are trying to measure. Neither test char has Heal; `@jobchange 8` + `@allskill`. | open |
 | 5 | **Cast cancel** | Start a long cast, press **right-click**; repeat with **Escape** | Cast bar clears and the skill does NOT go off. Also: right-click with a skill *armed* still clears the reticle first; right-click on nothing still rotates the camera; Escape on nothing still opens the menu. **Moving must NOT cancel** — casting roots, and that is authentic. | **PASS** — both gestures cancel |
 | 6 | **Ground-skill aiming footprint** | Arm Storm Gust (81 cells), then Land Protector Lv10 (225) | The real question: does a large area read as a *shape* or a solid slab? Colour/alpha are guesses (`IN_RANGE` / `OUT_OF_RANGE` in `render_skill_aiming_footprint`). Out-of-range should tint red. | **PARTIAL** — draws, and the red out-of-range tint works. The 225-cell shape-vs-slab question is still unanswered. |
-| 7 | **Moonlit / Hermode** | Clown/Gypsy, or grant the skills | Moonlit = flat salmon tile per cell, 9×9. **Hermode is sound-only by design** — hearing `헤르모드의 지팡이.wav` and seeing nothing is a **PASS**, not a bug. | open |
+| 7 | **Moonlit / Hermode** | **Two seats, Clown + Gypsy** — granting the skills is *not* enough, see below | Moonlit = flat salmon tile per cell, 9×9. **Hermode is sound-only by design** — hearing `헤르모드의 지팡이.wav` and seeing nothing is a **PASS**, not a bug. | open |
+
+### Row 7 is an ensemble skill — it cannot be cast solo
+
+Both `CG_MOONLIT` and `CG_HERMODE` are `Ensemble: true` (`db/re/skill_db.conf`),
+`player_skill_partner_check: true` (`conf/map/battle/skill.conf:231`), and the
+Admin group has **`skill_unconditional: false`** (`conf/groups.conf:308`) — so GM
+99 does *not* bypass the check. `skill_check_condition_char_sub`
+(`src/map/skill.c:15400`) requires a partner who is **all** of: opposite sex ·
+job masks to `MAPID_BARDDANCER` · **knows the same skill** · wields an instrument
+(`W_MUSICAL`) or whip (`W_WHIP`) · **in the same party** · not already dancing ·
+not sitting. This is a renewal server, so the partner must independently pass the
+skill's own cast requirements too.
+
+Setup, once both seats are in: `@jobchange 4020` (Clown, seat A — male) and
+`@jobchange 4021` (Gypsy, seat B — female), `@allskill` on both, an instrument
+and a whip, and a party. Do this **last** — it replaces the bow gear the earlier
+rows need.
 
 ### Found while driving the pass: `@item` could not take a multi-word name
 

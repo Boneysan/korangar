@@ -235,21 +235,39 @@ archer and you would see nothing wrong until you happened to watch them equip.
 
 ## Running two clients
 
-A second instance needs its own settings directory — sharing one makes both
-fight over `window_cache.ron`, and sharing an account kicks the first session.
+**Already set up on this box (2026-07-28)** — the second instance lives at
+`/Volumes/T7/GitHub/Ragnarok_Online/client2/`, outside both git repos so it needs
+no gitignore entry and survives across sessions:
 
 ```bash
-mkdir -p /tmp/client2 && cp -R korangar/client /tmp/client2/client
-# in /tmp/client2/client/:
-#   game_archives.ron  → absolute paths (relative ones resolve against cwd)
-#   login_settings.ron → a second account
-cd /tmp/client2 && KORANGAR_PACKET_LOG=1 /path/to/target/release/korangar
+cd /Volumes/T7/GitHub/Ragnarok_Online/client2
+KORANGAR_PACKET_LOG=1 /Volumes/T7/GitHub/Ragnarok_Online/korangar/target/release/korangar
 ```
 
-Accounts on this box: `korangar` (GM 99), `headless2`, `headless3` (both GM 0,
-plaintext passwords in `login.user_pass`). Gear a second character from the GM
-client with `#item <name> <id> <n>` / `#job <name> <id>`, or seed the `inventory`
-table directly while the server is stopped.
+Its `client/game_archives.ron` uses **absolute** paths (relative ones resolve
+against the *new* cwd, not `korangar/korangar/`) and `client/login_settings.ron`
+logs in as `headless2`. `window_cache.ron` was deliberately not copied — two
+instances sharing one settings dir fight over it.
+
+Accounts: `korangar` (2000000) and **`headless2` (2000001) are BOTH group 99** —
+an earlier version of this note said headless2 was GM 0, which is wrong and cost a
+detour. Each seat can therefore `@`-command itself; no cross-client gearing.
+`headless3` (2000002) is group 0. Plaintext passwords in `login.user_pass`.
+
+Characters, both already bow-geared from the 2026-07-27 session:
+
+| Seat | Account | Character | Class | Sex | Gear |
+|---|---|---|---|---|---|
+| A | `korangar` | `test` (150000) | Sniper (4012) | M | Bow + Fire Arrow ×193, several other arrow types |
+| B | `headless2` | `HeadlessTwo` (150018) | Hunter (11) | **F** | Bow + Fire Arrow ×500, Arrow ×500 |
+
+`HeadlessTwo` was switched to **female** on 2026-07-28 so the pair can become
+Clown + Gypsy for row 7 of the RESUME-HERE checklist — ensemble skills require
+opposite sex (see below). Done as a `char`.sex SQL update, which is honoured
+directly because PACKETVER 20220406 ≥ 20141016 (`char.c:1033 char_mmo_gender`).
+The in-game `@changecharsex` is **self-only** and also resets skills; that reset
+exists for sex-locked Bard/Dancer skills, so skipping it was safe for a Hunter.
+Revert with `@changecharsex` from that seat, or flip the column back.
 
 `KORANGAR_PACKET_LOG=1` prints the line that settles ammunition questions:
 
