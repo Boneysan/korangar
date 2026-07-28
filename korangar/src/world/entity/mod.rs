@@ -212,6 +212,14 @@ pub struct Common {
     pub direction: Direction,
     pub head_direction: usize,
     pub sex: Sex,
+    /// Hair style id, from the spawn packet's `head` field.
+    ///
+    /// Lives here rather than on [`Player`] because **remote players are built as
+    /// `Entity::Npc`**, which uses this struct. While it was Player-only, every
+    /// observer resolved head `1` (the `_ => 1` fallback in
+    /// `get_entity_part_files`) for everybody else — permanently, not just after
+    /// a change — and `set_hair` silently no-opped for them.
+    pub head: usize,
     pub weapon: u32,
     pub shield: u32,
     #[hidden_element]
@@ -1112,6 +1120,7 @@ impl Common {
             direction,
             head_direction,
             sex,
+            head: entity_data.head as usize,
             weapon,
             shield,
             active_movement,
@@ -1138,7 +1147,7 @@ impl Common {
     }
 
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
-        let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, None);
+        let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, Some(self.head));
         push_weapon_part_file(&mut files, self, game_file_loader);
         push_shield_part_file(&mut files, self, game_file_loader);
         files
@@ -1760,7 +1769,6 @@ impl Common {
 #[derive(Clone, RustState, StateWindow)]
 pub struct Player {
     common: Common,
-    pub hair_id: usize,
     pub spell_points: usize,
     pub activity_points: usize,
     pub maximum_spell_points: usize,
@@ -1814,7 +1822,6 @@ impl Player {
     /// "void". When a new map is loaded on map change, the server sends
     /// the correct position we need to position the player to.
     pub fn new(library: &Library, account_id: AccountId, character_information: &CharacterInformation, client_tick: ClientTick) -> Self {
-        let hair_id = character_information.head as usize;
         let spell_points = character_information.spell_points as usize;
         let activity_points = 0;
         let maximum_spell_points = character_information.maximum_spell_points as usize;
@@ -1833,7 +1840,6 @@ impl Player {
 
         Self {
             common,
-            hair_id,
             spell_points,
             activity_points,
             maximum_spell_points,
@@ -2052,7 +2058,7 @@ impl Player {
 
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         let common = self.get_common();
-        let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(self.hair_id));
+        let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(common.head));
         push_weapon_part_file(&mut files, common, game_file_loader);
         push_shield_part_file(&mut files, common, game_file_loader);
         files
@@ -2283,10 +2289,11 @@ impl Entity {
         common.scale = scale;
     }
 
+    /// Written through [`Common`] so it applies to any variant. Gating this on
+    /// `Self::Player` meant it silently did nothing for remote players, which are
+    /// `Entity::Npc`.
     pub fn set_hair(&mut self, hair_id: usize) {
-        if let Self::Player(player) = self {
-            player.hair_id = hair_id
-        }
+        self.get_common_mut().head = hair_id;
     }
 
     pub fn set_animation_data(&mut self, animation_data: Arc<AnimationData>) {

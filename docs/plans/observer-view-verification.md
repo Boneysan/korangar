@@ -74,7 +74,21 @@ build from the spawn packet and then never update, so a hat swapped in front of
 you stays wrong until the observer walks away and back. Wiring the events is the
 cheap half; entity fields, part composition, and palette support are the rest.
 
-## Gap 2 — sprite-change handlers disagree about the local player
+## Gap 2 — WRONG, corrected 2026-07-29
+
+**The premise below is false and the section is kept only so nobody re-derives
+it.** Row 8 was predicted to fail and **passed**: changing your own hair applies
+immediately, no relog. Diagnostics showed `entity_found=true is_local=true` in
+`ChangeHair`, and the ammunition work independently logged
+`change-ammunition account=<own account> entity_found=true`. **The local player
+*is* present in `entities()`**, so a handler that searches only `entities()` does
+*not* skip you.
+
+**S1 is therefore unnecessary** — do not add a `this_entity()` fallback helper to
+fix a hole that is not there. The original reasoning follows, preserved as a
+record of what was assumed:
+
+### Original (incorrect) claim
 
 The local player lives at `this_entity()`, **not** in `entities()`. Every
 `account_id`-keyed handler must therefore check both — and only half of them do:
@@ -320,8 +334,8 @@ have failed for a reason that is not a bug.
 | 5 | B fires; check A's log | `local_player=false`, `used_fallback=false` | **PASS** |
 | 6 | ~~B unequips ammo and fires~~ | **RETIRED** — unobservable, see below | n/a |
 | 7 | Repeat 1–3 with a gunslinger or shuriken | same behaviour — the broadcast is item-id based | **PASS** (2026-07-29) |
-| 8 | A changes **own** hair | updates without relog — **expected to FAIL**, Gap 2 | ☐ |
-| 9 | B changes hair while A watches | A sees it update live | ☐ |
+| 8 | A changes **own** hair | updates without relog | **PASS** (2026-07-29) — the "expected to FAIL" prediction was wrong, see Gap 2 correction |
+| 9 | B changes hair while A watches | A sees it update live | **PASS** after the hair fix; **FAILED** before it |
 | 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | ☐ |
 | 11 | B gains a status with values (Sage field) | A sees the same visual | ☐ |
 
@@ -443,3 +457,47 @@ means B cannot fire, and the projectile only exists in flight — and the moment
 equips anything, that broadcast overwrites the observer's value anyway. A stale
 entry is only ever *visible* through a weapon-class change, which row 7 covers.
 Row 2 already covers "the observer follows a change".
+
+## Rows 8–9: remote players never had hair at all (fixed 2026-07-29)
+
+Row 9 failed, and the cause was not the broadcast. Diagnostics on the observer
+showed the packet arriving and being applied:
+
+```
+[sprite-change] account=2000000 type=Hair value=15
+[hair-diag] change-hair hair=15 entity_found=true is_local=false
+            parts=[..., "인간족\머리통\남\1_남", ...]     ← still head 1
+```
+
+`set_hair` was gated on `if let Self::Player(player)`, but **every remote entity —
+other players included — is built as `Entity::Npc`**, so it silently no-opped.
+Worse, `Common::get_entity_part_files` passed `head: None`, which hits the
+`_ => 1` fallback in `get_entity_part_files`.
+
+**So every remote player rendered with hair style 1, permanently, from the moment
+they spawned** — not merely after a change. The `1_남` above is that fallback, not
+a stale value; an earlier reading that looked correct (`hair=1 → 1_남`) was
+coincidence. Seeing it needs two clients *and* a character whose hair is not
+style 1, which is why it survived every previous pass.
+
+The data was always there and simply discarded — proven before writing the fix:
+
+```
+[spawn-diag] add-entity id=EntityId(2000000) job=JobId(24) sex=Male head=15
+```
+
+Fixed by moving `head` onto `Common` beside `weapon`/`shield`, populated from
+`entity_data.head`, with `set_hair` writing through `get_common_mut()` so it
+applies to any variant. `Player::hair_id` was deleted rather than left as a
+second source of truth. One file, +15/−8. Live-verified on both clients, spawn
+rendering and live changes.
+
+**Hair colour remains broken and is a different problem.** `HairCollor` has no
+arm in the packet→event match at all, so it is discarded by `_ => None` — Gap 1,
+now confirmed live rather than by inspection. Fixing it is S2 + S4 work (add the
+arm, add the field, add palette support), not a bug hunt.
+
+**The pattern worth carrying:** `Common` is what remote entities actually use.
+Any appearance state that lives only on `Player` is invisible to observers, and
+the compiler will not complain — `set_hair`'s `if let` made it a silent no-op.
+Headgear, robe and dye will land in exactly this trap when S4 renders them.
