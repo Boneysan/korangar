@@ -196,7 +196,7 @@ lifetime nobody audits, so ask: **what resets it?**
 grep -rn "memset(&sd->vd\|sd->vd = \|memcpy(&sd->vd" src/map/*.c
 ```
 
-**Result 2026-07-29 — a real latent bug in our own feature.**
+**Result 2026-07-29 — a real latent bug in our own feature. FIXED same day.**
 `status_set_viewdata` (`status.c`) has two branches for `BL_PC`:
 
 ```c
@@ -214,8 +214,11 @@ Symptom: `@disguise` → `@undisguise`, and every observer draws that player's
 arrows as generic, forever, until they happen to re-equip ammunition. **This
 matters here because DM mode uses disguises.**
 
-Fix: re-seed `vd->ammo` from `sd->equip_index[EQI_AMMO]` after the wholesale copy
-(and on un-disguise), the same way `clif_inventoryItems` seeds it at login.
+**Fixed** by re-deriving `vd->ammo` in the player-class branch of
+`status_set_viewdata`, beside the existing `clif->get_weapon_view` call — so it
+is restored on un-disguise the same way weapon and shield already are. Note it
+guards on `>= 0`, not upstream's `> 0` for the same index elsewhere in `pc.c`:
+inventory slot 0 is valid, and that off-by-one is a live upstream bug.
 
 **The general rule:** any field the fork adds to `view_data` inherits this
 lifetime problem. Adding one means auditing every wholesale write to `sd->vd`.
@@ -226,7 +229,7 @@ Grounded in what the code actually looks like, not guessed:
 
 | | Item | Cost | Why |
 |---|---|---|---|
-| 1 | **Fix A8's disguise hole** | ~15 min | A live bug in shipped code, and DM mode uses disguises |
+| 1 | ~~Fix A8's disguise hole~~ | **DONE 2026-07-29** | Was a live bug in shipped code; DM mode uses disguises |
 | 2 | **A7a wire parity** | small — `connect_as` already takes credentials; the work is folding sprite-change events into `TestContext::entities` | Makes A4/A5 mechanical |
 | 3 | **S3 observer dump** (A7b route 1) | small | Turns this session's ad-hoc diagnostics into a permanent tool |
 | 4 | A4/A5 latent comments | ~10 min | Stops the next reader re-deriving them |

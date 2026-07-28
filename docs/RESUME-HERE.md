@@ -1,12 +1,31 @@
-# Resume here — live pass of the 2026-07-26 batch
+# Resume here — live pass status
 
-Everything below is **code + tests green, pushed, and NOT live-verified**. The next
-session is a **GUI live pass**, not new feature work.
+**Session 2026-07-28/29 closed a lot.** The observer-view checklist
+([plans/observer-view-verification.md](plans/observer-view-verification.md)) is
+**rows 1-5, 7, 8, 9 PASS**, row 6 retired as unobservable, **rows 10-11 open**.
+That pass found **six real bugs**, all invisible to single-client testing:
 
-(The previous occupant of this file was the E3.1 GUI handoff, resolved 2026-07-22;
-its history lives in [2026-07-16-session-notes.md](2026-07-16-session-notes.md).)
+1. Login `LOOK_AMMO` broadcast issued before `map->addblock` — reached nobody
+2. Client dropped the ammunition packet when it arrived pre-spawn
+3. `AddEntity` rebuilt the entity and wiped the applied value
+4. Cached ammunition survived a weapon change — arrows drawn from a revolver
+5. **Every remote player rendered with hair style 1**, always, since `Common`
+   passed `head: None` and `set_hair` was gated on `Entity::Player`
+6. Disguise zeroed `vd->ammo` server-side and un-disguise never restored it
 
-## One-line status
+All six fixed, live-verified on two clients, and pushed. The bug *classes* are
+generalised into runnable audits in
+[plans/observer-parity-audits.md](plans/observer-parity-audits.md) — which
+themselves found two latent issues (`LOOK_ROBE`'s re-send guard, weapon/shield
+broadcast before `addblock`) and one live one (item 6 above).
+
+**Still open, cheapest first:** observer rows 10-11 (skill effect and status
+values from the far seat — no setup needed, `test` has the Archer skills), then
+the 2026-07-26 batch leftovers below.
+
+---
+
+## The 2026-07-26 batch
 
 Seven commits landed 2026-07-26 on `agent/platform-connectivity-controls`
 (`3fc2c020` … `6b883a5f`) plus one Hercules commit (`ea036fac8` on
@@ -44,7 +63,7 @@ Results as of the 2026-07-26 evening pass are in the **Result** column.
 | # | What | How to see it | Watch for | Result |
 |---|---|---|---|---|
 | 1 | **Item names in messages** | Cast Land Protector with no Yellow Gemstone | "You need a Yellow Gemstone to use this skill.", never `#715`. Also check a trade-window row and a weapon-refine result — all three go through `resolve_item_name`. | **PASS** (skill-fail path; trade/refine rows not yet seen) |
-| 2 | **Ammo-item projectiles** | Bow attack with plain Arrow, then Iron/Fire Arrow | The flying sprite should *change with the arrow type*. Firearms (views 17-21) and huuma shuriken (22) now fire too. Grenade launcher falls back to Bullet **by design**. | open — unblocked: `@item Iron Arrow 500` and `@item Iron 20` both confirmed working after the fix below |
+| 2 | **Ammo-item projectiles** | Bow attack with plain Arrow, then Iron/Fire Arrow | The flying sprite should *change with the arrow type*. Firearms (views 17-21) and huuma shuriken (22) now fire too. Grenade launcher falls back to Bullet **by design**. | **PASS** 2026-07-29 — Fire Arrow, Iron Arrow, Bullet and Silver Bullet all resolve distinctly, on the shooter *and* on an observer. Grenade launcher's Bullet fallback is a **known deviation**, not by design: `battle_check_arrows` requires `A_GRENADE` for `W_GRENADE`, but no grenade projectile sprite was found in the GRF survey. |
 | 3 | **Ground-cast walk-into-range** | Arm a ground skill, click a cell well outside its range | Should walk into range then cast, instead of nothing happening. If nothing walkable is close enough, expect a chat line rather than silence. | **PASS** — walked into range, then cast |
 | 4 | **Support walk-into-range** | Heal/Blessing an ally ~15 cells away (Heal range is 9) | Same walk-then-cast. **This path changed behaviour**, so give it real attention — self-buffs must still fire instantly (self is distance 0). **Wants two seats:** the client path is entity-agnostic (`resolve_pending_cast`, `lib.rs:905`, treats `Attack`/`Support` alike), so a mob exercises the walk — but a mob closes the distance you are trying to measure. Neither test char has Heal; `@jobchange 8` + `@allskill`. | open |
 | 5 | **Cast cancel** | Start a long cast, press **right-click**; repeat with **Escape** | Cast bar clears and the skill does NOT go off. Also: right-click with a skill *armed* still clears the reticle first; right-click on nothing still rotates the camera; Escape on nothing still opens the menu. **Moving must NOT cancel** — casting roots, and that is authentic. | **PASS** — both gestures cancel |
