@@ -4830,6 +4830,28 @@ pub struct ToUseSkillSuccessPacket {
     pub cause: u8,
 }
 
+/// `ZC_NOTIFY_MAPINFO` (0x0189) — an area restriction refused the action.
+///
+/// Hercules sends this *instead of* `clif->skill_fail` for map-zone rejections
+/// (`clif_skill_mapinfomessage`, `clif.c:6213`; the comment there says as much:
+/// "This skill uses this msg instead of skill fails"). It is the only feedback
+/// the player gets when a skill is listed in the map zone's `disabled_skills`,
+/// which on a non-PvP map covers `DC_UGLYDANCE`, `BD_ETERNALCHAOS`,
+/// `BD_ROKISWEIL`, `CG_HERMODE`, `BA_DISSONANCE` and `DC_DONTFORGETME`.
+///
+/// Because it had no packet here, `register_length_fallbacks` consumed it and
+/// the refusal was completely silent: the cast simply did nothing, with no
+/// message and no cast bar. Found by the Dancer/Gypsy skill sweeps once they
+/// could run at all (2026-07-29 shuffle pass).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0189)]
+pub struct NotifyMapInfoPacket {
+    /// 0 = cannot teleport here, 1 = save point cannot be memorized,
+    /// 2 = skill unusable here, 3 = item unusable here.
+    pub info_type: u16,
+}
+
 #[derive(Debug, Clone, Copy, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u32)]

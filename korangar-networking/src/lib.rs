@@ -1779,6 +1779,50 @@ mod packet_handlers {
         assert!(events.0.is_empty(), "flag!=0 must not emit events, got {:?}", events.0);
     }
 
+    /// Map-zone rejections arrive as `ZC_NOTIFY_MAPINFO` (0x0189), which
+    /// Hercules sends *instead of* `clif->skill_fail` (`clif.c:6213`). Before
+    /// this packet was modeled, `register_length_fallbacks` consumed it and the
+    /// refusal was completely silent — a skill listed in the map zone's
+    /// `disabled_skills` (`DC_UGLYDANCE` and friends on any non-PvP map) simply
+    /// did nothing, with no message at all.
+    #[test]
+    fn map_zone_rejection_0x0189_surfaces_chat_message() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // Every defined type must produce a distinct, readable line.
+        for (info_type, expected) in [
+            (0u16, "You cannot teleport in this area."),
+            (1, "This location cannot be memorized as a save point."),
+            (2, "This skill cannot be used in this area."),
+            (3, "This item cannot be used in this area."),
+        ] {
+            let mut bytes = vec![0x89, 0x01];
+            bytes.extend_from_slice(&info_type.to_le_bytes());
+
+            let mut reader = ByteReader::without_metadata(&bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("map-info packet type {info_type} did not parse");
+            };
+
+            assert!(
+                matches!(
+                    events.0.as_slice(),
+                    [NetworkEvent::ChatMessage {
+                        text,
+                        color: MessageColor::Error,
+                    }] if text == expected
+                ),
+                "type {info_type} should read {expected:?}, got {:?}",
+                events.0
+            );
+        }
+    }
+
     /// Party-create / basic-skill rejections reuse 0x0110 with skill 1 / cause 0
     /// (see packet-gap-party-whisper.md).
     #[test]

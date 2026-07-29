@@ -1233,6 +1233,23 @@ where
 
         vec![NetworkEvent::SkillCastCancelled { source_entity_id: None }, reported].into()
     })?;
+    // `ZC_NOTIFY_MAPINFO` — a map-zone restriction refused the action. Hercules
+    // deliberately sends this *instead of* `clif->skill_fail`, so without a
+    // handler here the refusal is silent and the skill just appears to do
+    // nothing. Same reasoning as 0x0110 above: a rejection the player caused
+    // must be visible, never dropped.
+    packet_handler.register(|packet: NotifyMapInfoPacket| NetworkEvent::ChatMessage {
+        text: match packet.info_type {
+            0 => "You cannot teleport in this area.".to_owned(),
+            1 => "This location cannot be memorized as a save point.".to_owned(),
+            2 => "This skill cannot be used in this area.".to_owned(),
+            3 => "This item cannot be used in this area.".to_owned(),
+            // Hercules only defines 0-3; surface anything else rather than
+            // dropping it, so a new type shows up instead of going quiet.
+            other => format!("This action is not allowed in this area. (code {other})"),
+        },
+        color: MessageColor::Error,
+    })?;
     packet_handler.register(|packet: NotifySkillUnitPacket| {
         let NotifySkillUnitPacket {
             entity_id,
