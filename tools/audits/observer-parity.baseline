@@ -1,0 +1,218 @@
+# Classified observer-parity findings, as of 2026-07-29.
+#
+# Every line without a leading `#` is a hit that has been triaged. The comments
+# ARE the audit: a hit with no rationale above it has not been classified, and
+# the audit has not passed. See docs/plans/observer-parity-audits.md for what
+# each check is looking for and docs/plans/observer-parity-harness.md for the
+# boundaries they sit on.
+#
+# Lines beginning `# OPEN:` are reprinted by the script on every run. Use them
+# for hits that are correctly classified and still wrong — a green exit means
+# "nothing new", never "nothing wrong".
+#
+# Regenerate with `./observer-parity.sh --update` (comments are preserved).
+#
+# --- A1 ------------------------------------------------------------------
+# why: 43 entity-keyed `find(...)` sites, every one triaged by recovery
+# mechanism in the audits doc (spawn packet, lazy re-request, or transient).
+# This is a tripwire on the COUNT: a new site is a new handler to classify.
+# Re-run whenever a NetworkEvent is added.
+#
+# 40 -> 43 on 2026-07-29, from the three phase-1 handlers. All three recover
+# via the spawn packet, so a miss is harmless:
+#   ChangeLook      — every look type it carries rides EntityData
+#   EntityDirection — `direction` comes from entity_data.position
+#   EntityStopMove  — position/movement are rebuilt from EntityData
+# That is the distinction that matters: ammunition needed an off-entity map
+# because it has NO spawn-packet slot. None of these three do.
+A1|entity-keyed-find-sites=43
+#
+# --- A2 ------------------------------------------------------------------
+# why: all eight are re-derived at construction from EntityData, so an
+# `AddEntity` rebuild cannot lose them:
+#   position/tile_position/world_position/direction  <- entity_data.position
+#   active_movement                                  <- entity_data.destination
+#   entity_type, scale                               <- job_id at construction
+#   animation_data, in_safe_zone                     <- set explicitly after
+# A field appearing here that is NOT in that list is a rebuild-wipe bug.
+A2|common-field-not-in-entitydata=active_movement
+A2|common-field-not-in-entitydata=animation_data
+A2|common-field-not-in-entitydata=direction
+A2|common-field-not-in-entitydata=entity_type
+A2|common-field-not-in-entitydata=in_safe_zone
+A2|common-field-not-in-entitydata=scale
+A2|common-field-not-in-entitydata=tile_position
+A2|common-field-not-in-entitydata=world_position
+#
+# --- A3 ------------------------------------------------------------------
+# why: no hits. Clean since the hair fix (2026-07-29) moved `head` onto
+# `Common`. Any hit here is appearance state invisible to every observer,
+# because remote players are built as `Entity::Npc`. Run this audit BEFORE
+# shipping headgear, robe or dye, which will otherwise land in the same trap.
+#
+# --- A9 ------------------------------------------------------------------
+# Mutations one path performs and the other does not. Valid classifications
+# are "derived from EntityData at construction" or "transient". Anything else
+# is drift between two pieces of code nothing keeps in step.
+#
+# why (derived in `Common::new` / `Npc::new`, so a rebuild reproduces them):
+#   set_position   <- entity_data.position          (entity/mod.rs:1115-1117)
+#   move_from_to   <- entity_data.destination       (entity/mod.rs:2099-2107)
+#   set_weapon     <- entity_data.weapon            (entity/mod.rs:1093)
+#   set_shield     <- entity_data.shield            (entity/mod.rs:1094)
+#   set_sit/revive <- entity_data.state 1=dead 2=sit(entity/mod.rs:1101-1103)
+#   set_idle       <- same match, default arm
+#   set_look       <- all seven look slots are seeded from EntityData in
+#                     `Common::new` (entity/mod.rs), which is the whole reason
+#                     ChangeLook needs no off-entity map. Added 2026-07-29.
+# why (transient): clear_cast — `active_cast: None` at construction
+#   (entity/mod.rs:1142). A rebuild does drop an in-flight cast bar, which
+#   matches the server: enter-view has no cast re-send either (harness §3.5).
+# why (deliberately AddEntity-only): inherit_fade_state — the one thing a
+#   replacement entity is meant to carry over. See A2.
+A9|addentity-only-mutator=inherit_fade_state
+A9|local-only-mutator=clear_cast
+A9|local-only-mutator=move_from_to
+A9|local-only-mutator=revive
+A9|local-only-mutator=set_idle
+A9|local-only-mutator=set_look
+A9|local-only-mutator=set_position
+A9|local-only-mutator=set_shield
+A9|local-only-mutator=set_sit
+A9|local-only-mutator=set_weapon
+#
+# OPEN: A9 — refresh_neutral_stance is called on the local player
+# OPEN:      (lib.rs:7226, right after set_in_safe_zone) and NEVER on the
+# OPEN:      AddEntity path (lib.rs:3691 sets the safe zone and stops). It is
+# OPEN:      not derived either: `Common::new` picks the stance at
+# OPEN:      entity/mod.rs:1106 with `idle(entity_type, true, ...)` — ready
+# OPEN:      fight hardcoded, no safe-zone term — while in_safe_zone is still
+# OPEN:      its `false` default (1132), and set_in_safe_zone runs afterwards
+# OPEN:      without restancing. It does not self-heal: return_to_neutral
+# OPEN:      (animation/mod.rs:602) forces ReadyFight whenever previous_state
+# OPEN:      is 2|4|8, and ReadyFight is 4.
+# OPEN:      Predicted symptom: an armed remote player who spawns into view on
+# OPEN:      a town map stands battle-ready to that observer until they walk.
+# OPEN:      The local player was fixed for this in abb519f1; the remote path
+# OPEN:      never was. CODE-READ ONLY — confirm on two clients before fixing.
+A9|local-only-mutator=refresh_neutral_stance
+#
+# --- A4 ------------------------------------------------------------------
+# why: latent, not live. All three are broadcast before `map->addblock` in
+# `clif_parse_LoadEndAck`, so the AREA send reaches nobody — but the spawn
+# packet re-supplies weapon and shield to every arriving observer, so the
+# value is right anyway. Becomes a real bug the instant a look type NOT
+# carried by the spawn packet is added here. That is exactly how the
+# LOOK_AMMO login seed failed. Wants a comment at the site, not a fix.
+A4|before-addblock=clif->changelook(&sd->bl, LOOK_SHIELD, sd->status.look.shield);
+A4|before-addblock=clif->changelook(&sd->bl, LOOK_WEAPON, 0);
+A4|before-addblock=clif->changelook(&sd->bl, LOOK_WEAPON, sd->status.look.weapon);
+#
+# --- A5 ------------------------------------------------------------------
+# why: all three are harmless, and an earlier version of the audits doc got
+# this wrong twice. A guard of the form `if (x) refreshlook(...)` cannot tell
+# an arriving observer that the value is *nothing* — but at enter-view it is
+# preceded, unconditionally, by `clif->set_unit_idle`, whose spawn packet
+# carries robe, cloth_color and body_style outright. So the observer already
+# has the truth, including zero, before the guard runs.
+# The rule: this shape can only lose an attribute the spawn packet does NOT
+# carry. That was ammunition, and only ammunition. Do not "fix" these.
+A5|guarded-resend=LOOK_BODY2 guarded-by if (vd->body_style)
+A5|guarded-resend=LOOK_CLOTHES_COLOR guarded-by if (vd->cloth_color)
+A5|guarded-resend=LOOK_ROBE guarded-by if (tsd->status.look.robe != 0)
+#
+# --- A8 ------------------------------------------------------------------
+# why: this is upstream's `status_set_viewdata` memcpy, which zeroes the whole
+# view_data when a player is disguised. It stayed a live bug for our fork
+# until 2026-07-29 because un-disguise returns through the OTHER branch, which
+# assigns fields individually and never re-assigned `ammo`. Now compensated:
+# status.c re-derives vd->ammo in the player-class branch beside weapon and
+# shield. The memcpy itself is upstream code and stays.
+# Any NEW hit here, or any new fork field on view_data, needs the same
+# treatment — this audit is the only thing standing between the next one and
+# a silent permanent zero.
+A8|wholesale-vd-write=memcpy(&sd->vd, vd, sizeof(struct view_data))
+#
+# --- B2a -----------------------------------------------------------------
+# why: no hits. All 14 look types now map to an event (fixed 2026-07-29,
+# harness phase 1). The match in version_20220406.rs is EXHAUSTIVE — no `_`
+# arm — so the compiler, not this audit, is now the primary tripwire: adding a
+# `SpriteChangeType` variant fails to build until somebody decides what it
+# means. Verified by temporarily adding a probe variant (E0004).
+# A hit reappearing here means a catch-all arm has come back.
+#
+# --- B2b -----------------------------------------------------------------
+# OPEN: B2b — EquipmentEffectPacket is a no-op: that is clif_hat_effect, which
+# OPEN:       the server re-sends on enter-view (clif.c:5058). Low priority for
+# OPEN:       a classic-era fork, but it is a dropped visual.
+# ChangeDirectionPacket and EntityStopMovePacket left this list 2026-07-29 —
+# both now produce real events (EntityDirection / EntityStopMove).
+# why (all others): correctly ignored. Login/character-server bookkeeping
+# (CharacterList, CharacterSlotPage, CharacterBanList, LoginPincode,
+# ConnectionRefused), features this fork does not implement (achievements,
+# clans, hunting quests, mail, market, reputation, navigation, equip-switch,
+# show-equip, personal info, open-ui, map type), and unidentified packets kept
+# only for framing (Packet0b18, Packet8302, NotifyActorInit, ChangeMapCell,
+# DisplayImage, OpenMarket, UpdateConfiguration, AmmunitionAction).
+# A new entry here is a new thing the server says and the client ignores —
+# decide deliberately, and record the decision on this line.
+B2b|noop=AchievementListPacket
+B2b|noop=AchievementUpdatePacket
+B2b|noop=AmmunitionActionPacket
+B2b|noop=ChangeMapCellPacket
+B2b|noop=CharacterBanListPacket
+B2b|noop=CharacterListPacket
+B2b|noop=CharacterSlotPagePacket
+B2b|noop=ClanInfoPacket
+B2b|noop=ClanOnlineCountPacket
+B2b|noop=ConnectionRefusedPacket
+B2b|noop=DisplayImagePacket
+B2b|noop=EquipmentEffectPacket
+B2b|noop=EquippableSwitchItemListPacket
+B2b|noop=HuntingQuestNotificationPacket
+B2b|noop=HuntingQuestUpdateObjectivePacket
+B2b|noop=HuntingQuestUpdateObjectivePacket4
+B2b|noop=LoginPincodePacket
+B2b|noop=MapTypePacket
+B2b|noop=NavigateToMonsterPacket
+B2b|noop=NewMailStatusPacket
+B2b|noop=NotifyActorInitPacket
+B2b|noop=OpenMarketPacket
+B2b|noop=OpenUiPacket
+B2b|noop=Packet0b18
+B2b|noop=Packet8302
+B2b|noop=PersonalInformationPacket
+B2b|noop=ReputationPacket
+B2b|noop=UpdateConfigurationPacket
+B2b|noop=UpdateShowEquipPacket
+#
+# --- B2c -----------------------------------------------------------------
+# The seven appearance fields left this list 2026-07-29: accessory,
+# accessory2, accessory3, head_palette, body_palette, robe and body are now
+# carried by EntityData and seeded onto `Common`, so they survive spawn,
+# respawn, rebuild, enter-view and login without a separate broadcast.
+# NOTE they are stored but NOT drawn — sprite composition is still body + head
+# + weapon + shield. Rendering them is harness phase 4 and needs accessory
+# sprite paths and palette files this tree does not have.
+#
+# OPEN: B2c — guild identity (guild_id, emblem_version, group_id) and c_level
+# OPEN:       are still dropped. Deliberately left out of the phase 1 widening:
+# OPEN:       nothing renders a guild emblem or a level tag, and adding unread
+# OPEN:       fields would be scope creep. This audit keeps watching them.
+# why (the rest): effect_state is kept under the name `option`; `name` arrives
+# lazily via UpdateEntityDetails (recovery mechanism 2); object_type is
+# consumed at conversion to pick the entity type; honor, virtue, font, x_size,
+# y_size and is_boss are unused by this fork.
+B2c|spawn-field-dropped=c_level
+B2c|spawn-field-dropped=effect_state
+B2c|spawn-field-dropped=emblem_version
+B2c|spawn-field-dropped=font
+B2c|spawn-field-dropped=group_id
+B2c|spawn-field-dropped=guild_id
+B2c|spawn-field-dropped=honor
+B2c|spawn-field-dropped=is_boss
+B2c|spawn-field-dropped=name
+B2c|spawn-field-dropped=object_type
+B2c|spawn-field-dropped=virtue
+B2c|spawn-field-dropped=x_size
+B2c|spawn-field-dropped=y_size

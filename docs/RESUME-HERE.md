@@ -16,12 +16,38 @@ That pass found **six real bugs**, all invisible to single-client testing:
 All six fixed, live-verified on two clients, and pushed. The bug *classes* are
 generalised into runnable audits in
 [plans/observer-parity-audits.md](plans/observer-parity-audits.md) — which
-themselves found two latent issues (`LOOK_ROBE`'s re-send guard, weapon/shield
-broadcast before `addblock`) and one live one (item 6 above).
+themselves found two latent issues (weapon/shield broadcast before `addblock`,
+and a re-send guard that turned out to be harmless) and one live one (item 6).
+
+**A programme plan now sits on top of those audits:**
+[plans/observer-parity-harness.md](plans/observer-parity-harness.md) (2026-07-29).
+It reframes the six bugs around the four boundaries state crosses between
+`sd->vd` and a pixel, and it found three new live gaps by reading the no-op
+list — **remote players' facing changes never reach observers** (`0x009C` is
+`register_noop`), stop-move is ignored, and hat effects are dropped. Its headline:
+the spawn packet already carries the **complete** appearance (hair colour,
+clothes colour, all three headgear slots, robe, body style, emblem) and
+`EntityData` drops all ten fields, which is why none of it renders. Read §4
+before touching the harness — the ordering there is not optional.
+
+**Harness phases 0 and 1 are DONE (2026-07-29), both written with the stack
+down and NOT live-verified.** Phase 0 is the audit suite
+(`tools/audits/observer-parity.sh` + [runbook](../tools/audits/README.md)).
+Phase 1 closed the wire→event boundary: `EntityData` now carries the seven
+appearance fields the spawn packet always sent, the `SpriteChangeType` match is
+exhaustive behind a new `ChangeLook` event, and `ChangeDirection` / `StopMove`
+produce real events instead of no-ops. Workspace tests green (253 + 21), five
+new wire-level tests, audit open items 32 → 21.
+
+**Those appearance fields are stored, not drawn** — sprite composition is still
+body + head + weapon + shield. Rendering them is phase 4 and needs accessory
+sprite paths and palette files this tree does not have.
 
 **Still open, cheapest first:** observer rows 10-11 (skill effect and status
 values from the far seat — no setup needed, `test` has the Archer skills), then
-the 2026-07-26 batch leftovers below.
+confirm the A9 stance bug (two seats in a town, one armed — code-read only so
+far), then the 2026-07-26 batch leftovers below, then harness phase 2 (the
+two-session harness, which phase 1 just unblocked).
 
 ---
 

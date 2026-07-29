@@ -5,6 +5,7 @@
 | **Status** | Designed 2026-07-29, derived from five live bugs found the same day |
 | **Origin** | [observer-view-verification.md](observer-view-verification.md) |
 | **Prereq** | Two clients — `client2/`, already provisioned |
+| **Superseded in part** | The **audits below stand**; the "what to build next" half is replaced by [observer-parity-harness.md](observer-parity-harness.md), which reframes these findings around the four boundaries state crosses and sequences the harness work. Read that for the plan, this for the greps. |
 
 ## The organising idea
 
@@ -35,6 +36,13 @@ Ammunition was category 3, which is why it broke in four different ways.
 
 Six are static and cheap enough to run as CI checks. The seventh is the real
 investment.
+
+**They are now runnable: `./tools/audits/observer-parity.sh`** (2026-07-29), with
+a classified baseline and a runbook at [tools/audits/README.md](../../tools/audits/README.md).
+The script also carries three checks this document did not have — B2a/B2b/B2c on
+the wire→event boundary, which is where the widest gaps turned out to be. Prefer
+running the script over pasting the greps below; the greps are kept here because
+they explain *what each audit is looking for*, which the script cannot.
 
 ### A1 — entity-keyed handlers with no `else`
 
@@ -109,11 +117,24 @@ A guard of the form `if (x != 0) refreshlook(...)` means an arriving observer ca
 be told the value *is* something but never that it is **nothing** — so a removal
 that happened while they were away is never corrected.
 
-**Result 2026-07-29:** `LOOK_ROBE` still has this guard
-(`if (tsd->status.look.robe != 0)`), the exact shape removed from `LOOK_AMMO`.
-**Latent** — korangar does not render robes yet (Gap 1). Fix it in the same
-change that starts rendering them, or it ships broken. `LOOK_BODY2` is
-unconditional and is the correct model.
+**Result 2026-07-29, CORRECTED same day — this entry was wrong twice.** There are
+**three** such guards, not one: `LOOK_ROBE` (`clif.c:5044`),
+`LOOK_CLOTHES_COLOR` (5029, and again at 1602/1926) and `LOOK_BODY2` (5031, and
+again at 1604/1928). The original claim that `LOOK_BODY2` "is unconditional and
+is the correct model" is false — it is guarded exactly like the others.
+
+**And none of the three is a bug, or will become one.** At enter-view the guards
+are preceded, *unconditionally*, by `clif->set_unit_idle`, whose spawn packet
+carries `robe`, `cloth_color` and `body_style` outright (`clif.c` ~1885–1935). So
+the arriving observer already has the true value, including zero, before the
+guard runs. **A guard of this shape can only lose an attribute the spawn packet
+does not carry** — which was ammunition, and only ammunition, because it is the
+one fork-added `view_data` field with no spawn-packet slot.
+
+Do **not** "fix" the robe guard when robes start rendering; that was the original
+entry's recommendation and it would have been work for nothing. Add a comment
+saying why it is safe. The rule to keep is the one-liner above, which retires
+this audit as a bug class and leaves it a comment task.
 
 ### A6 — fallback values that collide with real ones
 
@@ -223,9 +244,48 @@ inventory slot 0 is valid, and that off-by-one is a live upstream bug.
 **The general rule:** any field the fork adds to `view_data` inherits this
 lifetime problem. Adding one means auditing every wholesale write to `sd->vd`.
 
+### A9 — local-player path vs remote-entity path *(added 2026-07-29, found a bug immediately)*
+
+The local player is mutated through `this_entity()` bindings; every other entity
+is built and mutated in the `AddEntity` arm. **Nothing keeps the two in step**,
+and they are the same two paths that produced the hair bug — appearance state on
+`Player` while observers are `Npc`. A3 catches that bug's *spelling*
+(`if let Self::Player`); it does not catch two call sites that simply drifted.
+
+```bash
+./tools/audits/observer-parity.sh --list | grep '^A9'
+```
+
+Compares *mutating* methods only (`set_*`, `refresh_*`, `revive`, `clear_*`,
+`move_from_to`, `inherit_*`); getters are noise. A hit is a mutation one path
+performs and the other neither performs **nor derives from `EntityData` at
+construction** — deriving it is a valid classification, and eight of the ten
+current hits classify that way.
+
+**Result 2026-07-29 — one real hit.** `refresh_neutral_stance` is called on the
+local player at `lib.rs:7226`, immediately after `set_in_safe_zone`, and **never
+on the `AddEntity` path**, which sets the safe zone at `lib.rs:3691` and stops.
+It is not derived either: `Common::new` picks the stance at
+`world/entity/mod.rs:1106` with `idle(entity_type, true, …)` — ready-fight
+hardcoded, no safe-zone term — while `in_safe_zone` is still its `false` default
+(1132), and `set_in_safe_zone` runs afterwards without restancing. It does not
+self-heal: `return_to_neutral` (`world/animation/mod.rs:602`) forces ReadyFight
+whenever `previous_state` is `2|4|8`, and ReadyFight *is* 4.
+
+**Predicted symptom:** an armed remote player who spawns into view on a town map
+stands battle-ready to that observer until they walk. The local player was fixed
+for exactly this in `abb519f1`; the remote path never was.
+
+**CODE-READ ONLY.** Not confirmed live — and this document's own method note is
+that four plausible causes survived code review last session and were killed only
+by measurement. Two seats in Prontera, one armed, walk into view.
+
 ## Priorities
 
-Grounded in what the code actually looks like, not guessed:
+**Superseded — see [observer-parity-harness.md](observer-parity-harness.md) §6
+for the current sequence.** The table below is kept because its cost estimates
+are still accurate; what changed is the *order*, and one prerequisite the
+original missed.
 
 | | Item | Cost | Why |
 |---|---|---|---|
@@ -234,6 +294,17 @@ Grounded in what the code actually looks like, not guessed:
 | 3 | **S3 observer dump** (A7b route 1) | small | Turns this session's ad-hoc diagnostics into a permanent tool |
 | 4 | A4/A5 latent comments | ~10 min | Stops the next reader re-deriving them |
 | 5 | A7b route 2 (extract handlers) | real refactor | Only if this class recurs again |
+
+**The missed prerequisite:** A7a cannot come first. The harness reads
+`NetworkEvent`s, and **nine of fourteen `SpriteChangeType` variants never become
+one** (`_ => None` in `version_20220406.rs:401`), while `EntityData` drops the
+ten appearance fields the spawn packet already carries. A wire-parity test for
+headgear or dye would pass a client that renders neither, because neither session
+is ever told. Fix that boundary first — harness §4.
+
+**And route 2 is cheaper than stated**, if it is scoped to the appearance arms
+rather than all 131: an `entity_appearance` map keyed by account id is plain data
+and unit-testable with no `Map`, no `PathFinder` and no GPU. Harness §5, L2.
 
 ## Exit criteria
 
