@@ -382,6 +382,43 @@ pub enum NetworkEvent {
         account_id: AccountId,
         item_id: ItemId,
     },
+    /// Any other sprite change: the look types that have no dedicated event of
+    /// their own (headgear, hair colour, clothes colour, shoes, robe, body
+    /// style).
+    ///
+    /// This variant exists so the `SpriteChangeType` match can be **exhaustive**.
+    /// It used to end in `_ => None`, which silently discarded nine of the
+    /// fourteen look types the server broadcasts — the widest hole on the
+    /// wire→event boundary, and one no amount of client-side testing could see,
+    /// because the value never crossed the crate boundary at all.
+    ///
+    /// Do not reintroduce a catch-all arm. The whole point is that adding a look
+    /// type to `SpriteChangeType` now fails to compile until somebody decides
+    /// what it means.
+    ChangeLook {
+        account_id: AccountId,
+        look_type: SpriteChangeType,
+        value: u32,
+    },
+    /// An entity turned in place (`ZC_CHANGE_DIRECTION` / 0x009C).
+    ///
+    /// Broadcast `AREA_WOS` from `clif_parse_ChangeDir` and `AREA` from
+    /// `unit_setdir`, but the packet was a no-op here, so a remote player's
+    /// facing only ever changed as a side effect of movement.
+    EntityDirection {
+        entity_id: EntityId,
+        direction: Direction,
+        head_direction: u16,
+    },
+    /// An entity stopped moving before reaching its destination
+    /// (`ZC_STOPMOVE` / 0x0088).
+    ///
+    /// Previously a no-op, so the client kept animating the entity toward a
+    /// destination it had already abandoned.
+    EntityStopMove {
+        entity_id: EntityId,
+        position: TilePosition,
+    },
     LoggedOut,
     FriendRequest {
         requestee: Friend,

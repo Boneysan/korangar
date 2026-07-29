@@ -11,7 +11,7 @@ use korangar_interface::window::{StateWindow, Window};
 use korangar_networking::EntityData;
 use ragnarok_packets::{
     AccountId, AttackRange, CharacterInformation, ClientTick, Direction, DisappearanceReason, EntityId, EntityOption, ItemId, JobId, Sex,
-    SkillId, StatType, TilePosition, WorldPosition,
+    SkillId, SpriteChangeType, StatType, TilePosition, WorldPosition,
 };
 use rust_state::{Path, RustState, VecItem};
 #[cfg(feature = "debug")]
@@ -222,6 +222,34 @@ pub struct Common {
     pub head: usize,
     pub weapon: u32,
     pub shield: u32,
+    /// Lower headgear view id (`vd->head_bottom`).
+    ///
+    /// This and the six fields below live on `Common` for the same reason `head`
+    /// does — remote players are `Entity::Npc` — and they are seeded from
+    /// [`EntityData`], so an `AddEntity` rebuild reproduces them instead of
+    /// wiping them. That is why they do **not** need the off-entity map
+    /// `remote_ammunition` uses: ammunition is the one attribute the spawn
+    /// packet does not carry, so it alone has no rebuild-safe home.
+    ///
+    /// Wire names, like `head` and `option` above, so the observer-parity audits
+    /// can diff these field names against `EntityData`'s directly.
+    ///
+    /// Stored but not yet drawn — sprite composition is still body + head +
+    /// weapon + shield. Rendering them needs accessory sprite paths and palette
+    /// files, which this tree does not have yet.
+    pub accessory: u16,
+    /// Upper headgear view id (`vd->head_top`).
+    pub accessory2: u16,
+    /// Middle headgear view id (`vd->head_mid`).
+    pub accessory3: u16,
+    /// Hair colour palette (`vd->hair_color`).
+    pub head_palette: u16,
+    /// Clothes colour palette (`vd->cloth_color`).
+    pub body_palette: u16,
+    /// Garment / robe view id (`vd->robe`).
+    pub robe: u16,
+    /// Alternate body style (`vd->body_style`, the `LOOK_BODY2` slot).
+    pub body: u16,
     #[hidden_element]
     pub entity_type: EntityType,
     /// Raw `sc->option` from `ZC_STATE_CHANGE` (M1-007). Interpret via
@@ -1123,6 +1151,13 @@ impl Common {
             head: entity_data.head as usize,
             weapon,
             shield,
+            accessory: entity_data.accessory,
+            accessory2: entity_data.accessory2,
+            accessory3: entity_data.accessory3,
+            head_palette: entity_data.head_palette,
+            body_palette: entity_data.body_palette,
+            robe: entity_data.robe,
+            body: entity_data.body,
             active_movement,
             entity_type,
             option: entity_data.option,
@@ -2294,6 +2329,51 @@ impl Entity {
     /// `Entity::Npc`.
     pub fn set_hair(&mut self, hair_id: usize) {
         self.get_common_mut().head = hair_id;
+    }
+
+    /// Apply a sprite change that has no dedicated setter of its own.
+    ///
+    /// Returns whether the value actually changed, so a caller can skip
+    /// rebuilding sprite layers for a no-op broadcast — the server re-sends
+    /// these on enter-view, so redundant ones are routine.
+    ///
+    /// Deliberately written through [`Common`]: every one of these is invisible
+    /// to observers if it lands on [`Player`] alone, which is exactly how every
+    /// remote player ended up with hair style 1.
+    pub fn set_look(&mut self, look_type: &SpriteChangeType, value: u32) -> bool {
+        let common = self.get_common_mut();
+        let short = value as u16;
+
+        let previous = match look_type {
+            SpriteChangeType::HeadBottom => std::mem::replace(&mut common.accessory, short),
+            SpriteChangeType::HeadTop => std::mem::replace(&mut common.accessory2, short),
+            SpriteChangeType::HeadMiddle => std::mem::replace(&mut common.accessory3, short),
+            SpriteChangeType::HairCollor => std::mem::replace(&mut common.head_palette, short),
+            SpriteChangeType::ClothesColor => std::mem::replace(&mut common.body_palette, short),
+            SpriteChangeType::Robe => std::mem::replace(&mut common.robe, short),
+            SpriteChangeType::Body2 => std::mem::replace(&mut common.body, short),
+            // `Shoes` and `Body` have no view slot in the spawn packet and
+            // nothing reads them; the original client ignores them too. They
+            // reach this function rather than being dropped at the packet
+            // boundary so the coverage stays visible in one place.
+            SpriteChangeType::Shoes | SpriteChangeType::Body => return false,
+            // Handled by their own events before reaching here.
+            SpriteChangeType::Base
+            | SpriteChangeType::Hair
+            | SpriteChangeType::Weapon
+            | SpriteChangeType::Shield
+            | SpriteChangeType::Ammunition => return false,
+        };
+
+        previous != short
+    }
+
+    /// Turn in place. Movement overwrites `direction` on its own, so this is
+    /// only ever the standing case (`ZC_CHANGE_DIRECTION`).
+    pub fn set_direction(&mut self, direction: Direction, head_direction: u16) {
+        let common = self.get_common_mut();
+        common.direction = direction;
+        common.head_direction = head_direction as usize;
     }
 
     pub fn set_animation_data(&mut self, animation_data: Arc<AnimationData>) {

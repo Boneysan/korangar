@@ -288,8 +288,17 @@ where
             starting_timestamp,
         }
     })?;
-    packet_handler.register_noop::<EntityStopMovePacket>()?;
-    packet_handler.register_noop::<ChangeDirectionPacket>()?;
+    packet_handler.register(|packet: EntityStopMovePacket| NetworkEvent::EntityStopMove {
+        entity_id: packet.entity_id,
+        position: packet.position,
+    })?;
+    // `direction` is the wire's 0..7 facing and shares `Direction`'s numbering,
+    // which is why the spawn packet can feed `Common::direction` directly.
+    packet_handler.register(|packet: ChangeDirectionPacket| NetworkEvent::EntityDirection {
+        entity_id: packet.entity_id,
+        direction: Direction::from(packet.direction as u16),
+        head_direction: packet.head_direction,
+    })?;
     packet_handler.register(|packet: PlayerMovePacket| {
         let PlayerMovePacket {
             starting_timestamp,
@@ -398,30 +407,54 @@ where
     packet_handler.register_noop::<AchievementUpdatePacket>()?;
     packet_handler.register_noop::<AchievementListPacket>()?;
     packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent { percent: packet.weight })?;
-    packet_handler.register(|packet: SpriteChangePacket| match packet.sprite_type {
-        SpriteChangeType::Base => Some(NetworkEvent::ChangeJob {
-            account_id: packet.account_id,
-            job_id: JobId(packet.value as u16),
-        }),
-        SpriteChangeType::Hair => Some(NetworkEvent::ChangeHair {
-            account_id: packet.account_id,
-            hair_id: packet.value,
-        }),
-        SpriteChangeType::Weapon => Some(NetworkEvent::ChangeWeapon {
-            account_id: packet.account_id,
-            weapon_id: packet.value,
-        }),
-        SpriteChangeType::Shield => Some(NetworkEvent::ChangeShield {
-            account_id: packet.account_id,
-            shield_id: packet.value,
-        }),
-        // Korangar-fork broadcast riding the unused `LOOK_FLOOR` slot; see the
-        // `Ammunition` variant in `ragnarok-packets`.
-        SpriteChangeType::Ammunition => Some(NetworkEvent::ChangeAmmunition {
-            account_id: packet.account_id,
-            item_id: ItemId(packet.value),
-        }),
-        _ => None,
+    // This match is deliberately EXHAUSTIVE — no `_` arm. It used to end in
+    // `_ => None`, which silently dropped nine of the fourteen look types the
+    // server broadcasts (headgear ×3, hair colour, clothes colour, shoes, body,
+    // robe, body style). Nothing downstream could see them, so no amount of
+    // client testing could find it.
+    //
+    // Matching on a reference keeps `packet.sprite_type` available to forward.
+    packet_handler.register(|packet: SpriteChangePacket| {
+        let account_id = packet.account_id;
+        let value = packet.value;
+
+        match &packet.sprite_type {
+            SpriteChangeType::Base => NetworkEvent::ChangeJob {
+                account_id,
+                job_id: JobId(value as u16),
+            },
+            SpriteChangeType::Hair => NetworkEvent::ChangeHair {
+                account_id,
+                hair_id: value,
+            },
+            SpriteChangeType::Weapon => NetworkEvent::ChangeWeapon {
+                account_id,
+                weapon_id: value,
+            },
+            SpriteChangeType::Shield => NetworkEvent::ChangeShield {
+                account_id,
+                shield_id: value,
+            },
+            // Korangar-fork broadcast riding the unused `LOOK_FLOOR` slot; see the
+            // `Ammunition` variant in `ragnarok-packets`.
+            SpriteChangeType::Ammunition => NetworkEvent::ChangeAmmunition {
+                account_id,
+                item_id: ItemId(value),
+            },
+            SpriteChangeType::HeadBottom
+            | SpriteChangeType::HeadTop
+            | SpriteChangeType::HeadMiddle
+            | SpriteChangeType::HairCollor
+            | SpriteChangeType::ClothesColor
+            | SpriteChangeType::Shoes
+            | SpriteChangeType::Body
+            | SpriteChangeType::Robe
+            | SpriteChangeType::Body2 => NetworkEvent::ChangeLook {
+                account_id,
+                look_type: packet.sprite_type.clone(),
+                value,
+            },
+        }
     })?;
     packet_handler.register({
         let inventory_items = inventory_items.clone();

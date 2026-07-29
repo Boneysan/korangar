@@ -24,6 +24,38 @@ pub struct EntityData {
     pub is_pk_mode_on: bool,
     /// Idle-unit `dead_sit` value: 0 standing, 1 dead, 2 sitting.
     pub state: u8,
+
+    // --- appearance carried by the spawn packet ------------------------------
+    //
+    // These use the *wire* names rather than friendlier ones on purpose. The
+    // B2c audit (`tools/audits/observer-parity.sh`) diffs this struct's field
+    // names against `EntityAppearPacket`'s, so matching names are what make a
+    // field read as covered instead of dropped.
+    //
+    // They matter for observer parity because the spawn packet is the strongest
+    // recovery mechanism there is: `clif_getareachar_unit` sends it
+    // unconditionally on every arrival, so anything carried here survives
+    // spawn, respawn, entity rebuild, enter-view *and* login without needing a
+    // separate broadcast. Ammunition needed four separate fixes precisely
+    // because it is the one attribute with no slot here.
+    /// Lower headgear view id (`vd->head_bottom`).
+    ///
+    /// **Trap:** for `BL_NPC` entities of `FLAG_CLASS` (guild flags) Hercules
+    /// overwrites this and the two below with guild emblem / guild id words
+    /// (`clif_set_unit_idle`). Do not render a flag's "headgear".
+    pub accessory: u16,
+    /// Upper headgear view id (`vd->head_top`).
+    pub accessory2: u16,
+    /// Middle headgear view id (`vd->head_mid`).
+    pub accessory3: u16,
+    /// Hair colour palette (`vd->hair_color`).
+    pub head_palette: u16,
+    /// Clothes colour palette (`vd->cloth_color`).
+    pub body_palette: u16,
+    /// Garment / robe view id (`vd->robe`).
+    pub robe: u16,
+    /// Alternate body style (`vd->body_style`, the `LOOK_BODY2` slot).
+    pub body: u16,
 }
 
 impl EntityData {
@@ -46,6 +78,16 @@ impl EntityData {
             option: character_information.effect_state as u32,
             is_pk_mode_on: false,
             state: 0,
+            accessory: character_information.accessory as u16,
+            accessory2: character_information.accessory2 as u16,
+            accessory3: character_information.accessory3 as u16,
+            head_palette: character_information.head_palette as u16,
+            body_palette: character_information.body_palette as u16,
+            // Misnamed in the char-select packet: `char.c:2127` writes
+            // `p->look.robe` into this slot, so it is the robe *view id*, not a
+            // palette.
+            robe: character_information.robe_palette as u16,
+            body: character_information.body as u16,
         }
     }
 }
@@ -69,6 +111,13 @@ impl From<EntityAppearPacket> for EntityData {
             health_state: packet.health_state,
             option: packet.effect_state,
             is_pk_mode_on: packet.is_pk_mode_on != 0,
+            accessory: packet.accessory,
+            accessory2: packet.accessory2,
+            accessory3: packet.accessory3,
+            head_palette: packet.head_palette,
+            body_palette: packet.body_palette,
+            robe: packet.robe,
+            body: packet.body,
             state: 0,
         }
     }
@@ -93,6 +142,13 @@ impl From<EntityAppear2Packet> for EntityData {
             health_state: packet.health_state,
             option: packet.effect_state,
             is_pk_mode_on: packet.is_pk_mode_on != 0,
+            accessory: packet.accessory,
+            accessory2: packet.accessory2,
+            accessory3: packet.accessory3,
+            head_palette: packet.head_palette,
+            body_palette: packet.body_palette,
+            robe: packet.robe,
+            body: packet.body,
             state: packet.state,
         }
     }
@@ -119,6 +175,13 @@ impl From<MovingEntityAppearPacket> for EntityData {
             health_state: packet.health_state,
             option: packet.effect_state,
             is_pk_mode_on: packet.is_pk_mode_on != 0,
+            accessory: packet.accessory,
+            accessory2: packet.accessory2,
+            accessory3: packet.accessory3,
+            head_palette: packet.head_palette,
+            body_palette: packet.body_palette,
+            robe: packet.robe,
+            body: packet.body,
             state: 0,
         }
     }

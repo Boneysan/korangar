@@ -1310,6 +1310,189 @@ mod packet_handlers {
         ));
     }
 
+    /// Builds a `ZC_SPRITE_CHANGE2` (0x01D7, 15 bytes) for account 2000000.
+    #[cfg(test)]
+    fn sprite_change_bytes(look_type: u8, value: u32) -> Vec<u8> {
+        let mut bytes = vec![0xD7, 0x01];
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.push(look_type);
+        bytes.extend_from_slice(&value.to_le_bytes());
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes
+    }
+
+    /// The nine look types that used to hit `_ => None` must now cross the
+    /// crate boundary. This is the widest hole the observer-parity audit found:
+    /// the server broadcast all of them and nothing downstream could see them,
+    /// so no amount of client-side testing could have caught it.
+    ///
+    /// Look type numbering is `enum SpriteChangeType`'s declaration order,
+    /// which mirrors Hercules' `enum look`.
+    #[test]
+    fn every_sprite_change_look_type_produces_an_event() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        for look_type in 0..=13u8 {
+            let bytes = sprite_change_bytes(look_type, 7);
+            let mut reader = ByteReader::without_metadata(&bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("sprite change {look_type} did not parse");
+            };
+            assert_eq!(
+                events.0.len(),
+                1,
+                "look type {look_type} produced no event — a `_ => None` arm has come back"
+            );
+        }
+    }
+
+    /// Headgear, dye and robe changes carry their look type through rather than
+    /// collapsing into one anonymous event, so a consumer can tell which slot
+    /// changed.
+    #[test]
+    fn unmapped_look_types_arrive_as_change_look() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::SpriteChangeType;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // 6 = HairCollor (hair dye), 12 = Robe.
+        for (look_type, expected) in [(6u8, SpriteChangeType::HairCollor), (12u8, SpriteChangeType::Robe)] {
+            let bytes = sprite_change_bytes(look_type, 3);
+            let mut reader = ByteReader::without_metadata(&bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("sprite change {look_type} did not parse");
+            };
+            match events.0.as_slice() {
+                [NetworkEvent::ChangeLook {
+                    account_id,
+                    look_type: actual,
+                    value: 3,
+                }] => {
+                    assert_eq!(account_id.0, 2000000);
+                    assert_eq!(
+                        std::mem::discriminant(actual),
+                        std::mem::discriminant(&expected),
+                        "look type {look_type} arrived as {actual:?}, expected {expected:?}"
+                    );
+                }
+                other => panic!("look type {look_type} produced {other:?}, expected ChangeLook"),
+            }
+        }
+    }
+
+    /// The five look types that already had dedicated events must keep them —
+    /// making the match exhaustive must not reroute them through `ChangeLook`.
+    #[test]
+    fn mapped_look_types_keep_their_dedicated_events() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        let cases: [(u8, fn(&NetworkEvent) -> bool); 5] = [
+            (0, |event| matches!(event, NetworkEvent::ChangeJob { .. })),
+            (1, |event| matches!(event, NetworkEvent::ChangeHair { .. })),
+            (2, |event| matches!(event, NetworkEvent::ChangeWeapon { .. })),
+            (8, |event| matches!(event, NetworkEvent::ChangeShield { .. })),
+            (11, |event| matches!(event, NetworkEvent::ChangeAmmunition { .. })),
+        ];
+
+        for (look_type, is_expected) in cases {
+            let bytes = sprite_change_bytes(look_type, 5);
+            let mut reader = ByteReader::without_metadata(&bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("sprite change {look_type} did not parse");
+            };
+            assert!(
+                events.0.first().is_some_and(is_expected),
+                "look type {look_type} produced {:?}",
+                events.0
+            );
+        }
+    }
+
+    /// `ZC_CHANGE_DIRECTION` (0x009C) was a no-op, so a remote player turning in
+    /// place never reached an observer. Hercules broadcasts it `AREA_WOS` from
+    /// the parse handler and `AREA` from `unit_setdir`.
+    #[test]
+    fn turning_in_place_reaches_the_client() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::Direction;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let bytes = [
+            0x9C, 0x00, // ZC_CHANGE_DIRECTION
+            0x80, 0x84, 0x1E, 0x00, // actor 2000000
+            0x03, 0x00, // head direction 3
+            0x06, // body direction 6 (West)
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("direction packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::EntityDirection {
+                    entity_id,
+                    direction: Direction::West,
+                    head_direction: 3,
+                }] if entity_id.0 == 2000000
+            ),
+            "got {:?}",
+            events.0
+        );
+    }
+
+    /// `ZC_STOPMOVE` (0x0088) was a no-op, so the client kept animating an
+    /// entity toward a destination it had already abandoned.
+    #[test]
+    fn stopping_early_reaches_the_client() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let bytes = [
+            0x88, 0x00, // ZC_STOPMOVE
+            0x80, 0x84, 0x1E, 0x00, // actor 2000000
+            0x9B, 0x00, // x 155
+            0xB0, 0x00, // y 176
+        ];
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("stop-move packet did not parse");
+        };
+
+        assert!(
+            matches!(
+                events.0.as_slice(),
+                [NetworkEvent::EntityStopMove {
+                    entity_id,
+                    position,
+                }] if entity_id.0 == 2000000 && position.x == 155 && position.y == 176
+            ),
+            "got {:?}",
+            events.0
+        );
+    }
+
     /// Golden fixture for the animation-fidelity plan (phase A): the basic
     /// damage packet's native timing fields must survive into `DamageEffect`
     /// unmodified — `sMotion` and `dMotion` are separate clocks, and the

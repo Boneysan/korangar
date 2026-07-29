@@ -4713,6 +4713,69 @@ impl Client {
                         .follow_mut(client_state().remote_ammunition())
                         .insert(account_id, item_id);
                 }
+                NetworkEvent::ChangeLook {
+                    account_id,
+                    look_type,
+                    value,
+                } => {
+                    // Applied to whichever of the two entity homes matches, because
+                    // the local player lives under `this_entity()` and everyone else
+                    // in `entities()` — the split that made `set_hair` a silent
+                    // no-op for every observer.
+                    //
+                    // A miss is safe here, unlike ammunition: all of these ride the
+                    // spawn packet, so an entity that has not spawned yet gets the
+                    // current value from `EntityData` when it does. No off-entity
+                    // map needed.
+                    let changed = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id().0 == account_id.0)
+                        .map(|entity| entity.set_look(&look_type, value))
+                        .or_else(|| {
+                            self.client_state
+                                .try_follow_mut(this_entity())
+                                .filter(|entity| entity.get_entity_id().0 == account_id.0)
+                                .map(|player| player.set_look(&look_type, value))
+                        });
+
+                    // Nothing composes headgear, robes or palettes into the sprite
+                    // yet, so there is no layer to rebuild — the value is stored and
+                    // will be picked up when rendering lands. Logged under the
+                    // existing packet-log switch so the coverage is observable.
+                    if changed == Some(true) && std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!("[packet-log] look change account={} type={look_type:?} value={value}", account_id.0);
+                    }
+                }
+                NetworkEvent::EntityDirection {
+                    entity_id,
+                    direction,
+                    head_direction,
+                } => {
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.set_direction(direction, head_direction);
+                    }
+                }
+                NetworkEvent::EntityStopMove { entity_id, position } => {
+                    // Snapping to the reported tile also clears `active_movement`,
+                    // which is what stops the walk animation — otherwise the entity
+                    // keeps striding toward a destination it already abandoned.
+                    if let Some(map) = self.map.as_ref()
+                        && let Some(entity) = self
+                            .client_state
+                            .follow_mut(client_state().entities())
+                            .iter_mut()
+                            .find(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.set_position(map, position, client_tick);
+                    }
+                }
                 NetworkEvent::LoggedOut => {
                     // Close character UI *before* clearing character-scoped state.
                     // Skill Tree holds ManuallyAsserted paths into layout tabs; if we
