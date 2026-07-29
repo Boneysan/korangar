@@ -19,28 +19,10 @@ pub fn scenarios() -> Vec<Scenario> {
     ]
 }
 
+/// Moved to [`TestContext::connect_pair`] so the observer-parity scenarios can
+/// use it too; kept as an alias to leave this file's call sites alone.
 pub(super) fn connect_pair(config: &Config) -> Result<(TestContext, TestContext), String> {
-    let mut primary = TestContext::connect(config)?;
-    let mut partner = TestContext::connect_partner(config)?;
-    // The partner is deliberately non-GM and cannot use @warp. Bring the GM
-    // test character to the partner's current map instead.
-    let map_name = partner.map_name.clone();
-    let x = partner.position.x.saturating_add(1);
-    let y = partner.position.y;
-    primary.warp(&map_name, x, y)?;
-    primary.pump(Duration::from_millis(500));
-    partner.pump(Duration::from_millis(500));
-    eprintln!(
-        "    [connect_pair] partner at {}({}, {}), primary at {}({}, {}), partner sees primary: {}",
-        partner.map_name,
-        partner.position.x,
-        partner.position.y,
-        primary.map_name,
-        primary.position.x,
-        primary.position.y,
-        partner.entities.contains_key(&primary.player_id)
-    );
-    Ok((primary, partner))
+    TestContext::connect_pair(config)
 }
 
 fn whisper_emotion(config: &Config) -> Result<(), String> {

@@ -43,11 +43,26 @@ new wire-level tests, audit open items 32 → 21.
 body + head + weapon + shield. Rendering them is phase 4 and needs accessory
 sprite paths and palette files this tree does not have.
 
-**Still open, cheapest first:** observer rows 10-11 (skill effect and status
-values from the far seat — no setup needed, `test` has the Archer skills), then
-confirm the A9 stance bug (two seats in a town, one armed — code-read only so
-far), then the 2026-07-26 batch leftovers below, then harness phase 2 (the
-two-session harness, which phase 1 just unblocked).
+**Phase 2 is WRITTEN but has NEVER BEEN RUN** — it needs the stack. Six new
+scenarios under `--scenario observer` assert on the *observer* across the five
+timings that generalise the four `LOOK_AMMO` bugs (change while watched, while
+out of view, before the observer logs in, across an entity rebuild, and a change
+to zero), plus a disguise round-trip for audit A8. The first run is the
+interesting one — these have never executed, so expect setup failures before
+real findings.
+
+```sh
+cargo run --release --example headless-tester -p korangar-networking -- --scenario observer
+```
+
+**Still open, cheapest first, all needing the stack:** run `--scenario observer`
+above; observer rows 10-11 (skill effect and status values from the far seat —
+no setup needed, `test` has the Archer skills); confirm the A9 stance bug (two
+seats in a town, one armed — code-read only so far); then the 2026-07-26 batch
+leftovers below.
+
+**Phase 3 should NOT be built as originally specced** — phase 1 changed its
+premise. See the harness plan §6.
 
 ---
 

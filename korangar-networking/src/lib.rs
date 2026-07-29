@@ -1333,7 +1333,6 @@ mod packet_handlers {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;
 
-        use crate::NetworkEvent;
 
         let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
 

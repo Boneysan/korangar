@@ -4,6 +4,7 @@ mod dm;
 mod gm;
 mod items;
 mod movement;
+mod observer;
 mod session;
 mod skills;
 mod social;
@@ -42,5 +43,6 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(dialogue::scenarios());
     scenarios.extend(social::scenarios());
     scenarios.extend(dm::scenarios());
+    scenarios.extend(observer::scenarios());
     scenarios
 }

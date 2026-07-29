@@ -154,9 +154,13 @@ findings() {
     # --- A4: AREA broadcasts issued before map->addblock --------------------
     # An AREA send walks the map's block list, so anything broadcast before the
     # character joins it reaches nobody.
+    # Anchored to the start of the statement, not just to the text appearing
+    # somewhere on the line: a *comment* mentioning `map->addblock` used to trip
+    # the stop-flag and silently truncate this audit to nothing. Documenting a
+    # finding must never delete it.
     awk '/^static void clif_parse_LoadEndAck\(/,/^\}/' "$clif" |
-        awk '/map->addblock/ { found = 1 }
-             !found && /clif->(changelook|sendlook)\(/ { gsub(/^[ \t]+|[ \t]+$/, ""); print }' |
+        awk '/^[[:space:]]*map->addblock\(/ { found = 1 }
+             !found && /^[[:space:]]*clif->(changelook|sendlook)\(/ { gsub(/^[ \t]+|[ \t]+$/, ""); print }' |
         sort -u | while read -r hit; do emit A4 "before-addblock=$hit"; done
 
     # --- A5: enter-view re-sends that cannot transmit "none" ----------------

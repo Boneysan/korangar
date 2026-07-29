@@ -273,14 +273,30 @@ screen look right?" — which is the only question a human is actually better at
 
 | Phase | Work | Stack? | Cost | Unlocks |
 |---|---|---|---|---|
-| **0** | ~~Correct §3.3; commit the static audits as a script~~ **DONE 2026-07-29** — `tools/audits/observer-parity.sh` + baseline + [runbook](../../tools/audits/README.md). Still open: comment the A4/A5 sites in `clif.c` | no | done | stops re-derivation; 76 findings now classified and diffed on every run |
+| **0** | ~~Correct §3.3; commit the static audits; comment the A4/A5 sites~~ **DONE 2026-07-29** — `tools/audits/observer-parity.sh` + baseline + [runbook](../../tools/audits/README.md), and `clif.c` now explains at both sites why they are safe | no | done | stops re-derivation; every finding classified and diffed on every run |
 | **1** | ~~B2: widen `EntityData`, exhaustive look match + `ChangeLook`, model direction + stop-move~~ **DONE 2026-07-29** — workspace green, 5 new wire tests, audit rebaselined (open items 32 → 21) | no | done | **the harness's eyesight**, and every appearance attribute gains spawn-packet recovery |
-| **2** | L1 harness + the 75-assertion matrix + T6 | yes | medium | B1/B2 mechanical, forever |
-| **3** | L2 appearance map + unit tests | no | medium | B3 mechanical; retires the recurring bug class |
+| **2** | L1 harness — **WRITTEN 2026-07-29, NEVER RUN.** `TestContext::connect_pair`, appearance folded into `track`, `assert_converges` / `assert_in_view` / `observed`, and six `--scenario observer` rows covering T1–T6. Compiles and registers; needs the stack to execute | yes | written | B1/B2 mechanical, forever |
+| **3** | ~~L2 appearance map~~ **PREMISE CHANGED — see below** | no | — | — |
 | **4** | B4: render headgear, robe, dye (S4) | yes | feature | the actual visible payoff — now landing on a structure that cannot repeat the class |
 | **5** | L3 observer dump | yes | small | B4 comparison without a second pair of eyes |
 
-Phases 0, 1 and 3 need **no running stack** — they are pure code and doc work.
+**Phase 3's premise changed, and it should not be built as specced.** L2 proposed
+generalising `remote_ammunition` into an off-entity appearance map. Phase 1 went
+the other way — appearance lives on `Common`, seeded from `EntityData` — and that
+is *more* correct by this document's own §3.1 reasoning: the spawn packet is the
+strongest recovery mechanism there is, so an attribute it carries has a
+rebuild-safe home on the entity and needs no map. Ammunition needs one precisely
+because it is the exception.
+
+What remains of L2 is the part that was always the expensive half: making
+`NetworkEvent → ClientState` callable outside the render loop, so the handlers
+can be unit-tested. That is still blocked, and now measurably: `Common::new`
+takes a `&Library`, and `Library::new` needs a `GameFileLoader` — real GRF
+access — so no test in this tree can construct an entity at all. Route 2 (extract
+the handlers) is the only way through, and the original advice stands: do it only
+if the class recurs.
+
+Phases 0 and 1 needed **no running stack**, and phase 2 was written without one.
 
 **Phase 4 is the one judgment call.** It is the only phase that is a feature
 rather than infrastructure, and it is the reason anyone would care about the rest.

@@ -11,7 +11,8 @@ use korangar_networking::{
     DisconnectReason, EntityData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SupportedPacketVersion,
 };
 use ragnarok_packets::{
-    AccountId, CharacterId, CharacterInformation, Direction, EntityId, InventoryIndex, JobId, SkillInformation, TilePosition, WorldPosition,
+    AccountId, CharacterId, CharacterInformation, Direction, EntityId, InventoryIndex, ItemId, JobId, SkillInformation, SpriteChangeType,
+    TilePosition, WorldPosition,
 };
 
 use crate::ledger::Ledger;
@@ -59,8 +60,68 @@ pub struct TestContext {
     pub map_name: String,
     pub position: TilePosition,
     pub entities: HashMap<EntityId, EntityData>,
+    /// Equipped ammunition of everyone in view, keyed by account id.
+    ///
+    /// Deliberately *not* on `EntityData`, mirroring `ClientState` in the real
+    /// client: ammunition is the one broadcast attribute with no spawn-packet
+    /// slot, so it has no rebuild-safe home on the entity. Everything else in
+    /// this file lives on the tracked `EntityData` for exactly the opposite
+    /// reason.
+    pub remote_ammunition: HashMap<AccountId, ItemId>,
     pub inventory: Vec<korangar_networking::InventoryItem<korangar_networking::NoMetadata>>,
     pub skills: Vec<SkillInformation>,
+}
+
+/// One observable attribute of another character, as this session currently
+/// believes it to be.
+///
+/// The point of naming them is that a parity assertion reads the *observer's*
+/// belief, never the actor's — the axis that made all six of the 2026-07-29
+/// bugs invisible to single-client testing.
+///
+/// Several variants have no scenario yet. They are declared anyway because the
+/// matrix is the deliverable — the remaining rows are "write a scenario", not
+/// "extend the vocabulary". Headgear and robe need an item equipped rather than
+/// a GM command, and body style needs a third-job costume (`@bodystyle` refuses
+/// otherwise).
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Appearance {
+    HairStyle,
+    HairColor,
+    ClothesColor,
+    HeadTop,
+    HeadMid,
+    HeadBottom,
+    Robe,
+    BodyStyle,
+    Weapon,
+    Shield,
+    JobId,
+    /// Read from [`TestContext::remote_ammunition`], not from `EntityData`.
+    Ammunition,
+}
+
+impl Appearance {
+    fn read(self, entity: Option<&EntityData>, ammunition: Option<ItemId>) -> Option<u32> {
+        match self {
+            Self::Ammunition => Some(ammunition.map(|item| item.0).unwrap_or(0)),
+            other => entity.map(|entity| match other {
+                Self::HairStyle => entity.head as u32,
+                Self::HairColor => entity.head_palette as u32,
+                Self::ClothesColor => entity.body_palette as u32,
+                Self::HeadTop => entity.accessory2 as u32,
+                Self::HeadMid => entity.accessory3 as u32,
+                Self::HeadBottom => entity.accessory as u32,
+                Self::Robe => entity.robe as u32,
+                Self::BodyStyle => entity.body as u32,
+                Self::Weapon => entity.weapon,
+                Self::Shield => entity.shield,
+                Self::JobId => entity.job_id.0 as u32,
+                Self::Ammunition => unreachable!("handled above"),
+            }),
+        }
+    }
 }
 
 impl TestContext {
@@ -122,6 +183,7 @@ impl TestContext {
             map_name: String::new(),
             position: TilePosition { x: 0, y: 0 },
             entities: HashMap::new(),
+            remote_ammunition: HashMap::new(),
             inventory: Vec::new(),
             skills: Vec::new(),
         };
@@ -227,6 +289,35 @@ impl TestContext {
         }
 
         Ok(context)
+    }
+
+    /// Two sessions on the same map, close enough to see each other: a GM
+    /// primary (which can `@warp` and `@item`) and a non-GM partner.
+    ///
+    /// Every observer-parity assertion needs both seats, because the whole bug
+    /// class is invisible from the acting session.
+    pub fn connect_pair(config: &Config) -> Result<(Self, Self), String> {
+        let mut primary = Self::connect(config)?;
+        let mut partner = Self::connect_partner(config)?;
+        // The partner is deliberately non-GM and cannot use @warp. Bring the GM
+        // test character to the partner's current map instead.
+        let map_name = partner.map_name.clone();
+        let x = partner.position.x.saturating_add(1);
+        let y = partner.position.y;
+        primary.warp(&map_name, x, y)?;
+        primary.pump(Duration::from_millis(500));
+        partner.pump(Duration::from_millis(500));
+        eprintln!(
+            "    [connect_pair] partner at {}({}, {}), primary at {}({}, {}), partner sees primary: {}",
+            partner.map_name,
+            partner.position.x,
+            partner.position.y,
+            primary.map_name,
+            primary.position.x,
+            primary.position.y,
+            partner.entities.contains_key(&primary.player_id)
+        );
+        Ok((primary, partner))
     }
 
     /// Connect the configured second account, registering it and creating a
@@ -380,7 +471,82 @@ impl TestContext {
                 self.map_name = map_name.clone();
                 self.position = *position;
                 self.entities.clear();
+                // Cleared on map change, never on entity removal — the server
+                // re-sends on enter-view, so a stale entry is overwritten, while
+                // evicting on removal reopens the hole this map exists to close.
+                self.remote_ammunition.clear();
                 let _ = self.net.map_loaded();
+            }
+            // --- appearance ------------------------------------------------
+            //
+            // Without these the tracked map holds *spawn data only*, and a
+            // parity assertion cannot see a look change at all — the gap that
+            // made this harness impossible before the wire→event boundary was
+            // fixed.
+            NetworkEvent::ChangeHair { account_id, hair_id } => {
+                if let Some(entity) = self.entities.get_mut(&EntityId(account_id.0)) {
+                    entity.head = *hair_id as u16;
+                }
+            }
+            NetworkEvent::ChangeWeapon { account_id, weapon_id } => {
+                // Mirrors the client: a weapon change invalidates cached
+                // ammunition, because the server force-unequips it.
+                self.remote_ammunition.remove(account_id);
+                if let Some(entity) = self.entities.get_mut(&EntityId(account_id.0)) {
+                    entity.weapon = *weapon_id;
+                }
+            }
+            NetworkEvent::ChangeShield { account_id, shield_id } => {
+                if let Some(entity) = self.entities.get_mut(&EntityId(account_id.0)) {
+                    entity.shield = *shield_id;
+                }
+            }
+            NetworkEvent::ChangeJob { account_id, job_id } if account_id.0 != self.account_id.0 => {
+                if let Some(entity) = self.entities.get_mut(&EntityId(account_id.0)) {
+                    entity.job_id = *job_id;
+                }
+            }
+            NetworkEvent::ChangeAmmunition { account_id, item_id } => {
+                self.remote_ammunition.insert(*account_id, *item_id);
+            }
+            NetworkEvent::ChangeLook {
+                account_id,
+                look_type,
+                value,
+            } => {
+                if let Some(entity) = self.entities.get_mut(&EntityId(account_id.0)) {
+                    let short = *value as u16;
+                    match look_type {
+                        SpriteChangeType::HeadBottom => entity.accessory = short,
+                        SpriteChangeType::HeadTop => entity.accessory2 = short,
+                        SpriteChangeType::HeadMiddle => entity.accessory3 = short,
+                        SpriteChangeType::HairCollor => entity.head_palette = short,
+                        SpriteChangeType::ClothesColor => entity.body_palette = short,
+                        SpriteChangeType::Robe => entity.robe = short,
+                        SpriteChangeType::Body2 => entity.body = short,
+                        // No view slot; the original client ignores them too.
+                        SpriteChangeType::Shoes | SpriteChangeType::Body => {}
+                        // Delivered as their own events, never as ChangeLook.
+                        SpriteChangeType::Base
+                        | SpriteChangeType::Hair
+                        | SpriteChangeType::Weapon
+                        | SpriteChangeType::Shield
+                        | SpriteChangeType::Ammunition => {}
+                    }
+                }
+            }
+            NetworkEvent::EntityDirection {
+                entity_id, head_direction, ..
+            } => {
+                if let Some(entity) = self.entities.get_mut(entity_id) {
+                    entity.head_direction = *head_direction as usize;
+                }
+            }
+            NetworkEvent::EntityStopMove { entity_id, position } => {
+                if let Some(entity) = self.entities.get_mut(entity_id) {
+                    entity.position = WorldPosition::new(position.x, position.y, entity.position.direction);
+                    entity.destination = None;
+                }
             }
             NetworkEvent::PlayerMove { destination, .. } => {
                 self.position = destination.tile_position();
@@ -593,6 +759,79 @@ impl TestContext {
             NetworkEvent::AddEntity { entity_data } if entity_data.job_id.0 == mob_job_id => Some(entity_data.entity_id),
             _ => None,
         })
+    }
+
+    // --- observer parity ---------------------------------------------------
+
+    /// What this session currently believes `subject`'s `attribute` to be.
+    /// `None` means the entity is not in view at all.
+    pub fn observed(&self, subject: AccountId, attribute: Appearance) -> Option<u32> {
+        attribute.read(
+            self.entities.get(&EntityId(subject.0)),
+            self.remote_ammunition.get(&subject).copied(),
+        )
+    }
+
+    /// Poll until this session's view of `subject` converges on `expected`.
+    ///
+    /// Convergence, not equality-right-now, is the property worth asserting:
+    /// broadcasts and enter-view re-sends race the spawn packet, and a client
+    /// is allowed to be briefly wrong. It is *staying* wrong that is the bug.
+    ///
+    /// Always call this on the OBSERVER, never on the actor. Every one of the
+    /// six bugs found on 2026-07-29 looked correct from the acting session.
+    pub fn assert_converges(&mut self, subject: AccountId, attribute: Appearance, expected: u32) -> Result<(), String> {
+        let deadline = Instant::now() + self.timeout;
+        loop {
+            let actual = self.observed(subject, attribute);
+            if actual == Some(expected) {
+                return Ok(());
+            }
+
+            if Instant::now() > deadline {
+                let in_view = self.entities.contains_key(&EntityId(subject.0));
+                return Err(format!(
+                    "{:?} of account {} did not converge on {expected}: observer sees {}{}",
+                    attribute,
+                    subject.0,
+                    match actual {
+                        Some(value) => value.to_string(),
+                        None => "nothing".to_owned(),
+                    },
+                    match in_view {
+                        true => "",
+                        false => " (entity not in view — the spawn never arrived, which is a different bug)",
+                    },
+                ));
+            }
+
+            sleep(POLL_INTERVAL);
+            self.poll()?;
+        }
+    }
+
+    /// Wait until `subject` is (or is no longer) in this session's view, so a
+    /// timing scenario can be sure it actually left before changing something.
+    pub fn assert_in_view(&mut self, subject: AccountId, expected: bool) -> Result<(), String> {
+        let deadline = Instant::now() + self.timeout;
+        loop {
+            if self.entities.contains_key(&EntityId(subject.0)) == expected {
+                return Ok(());
+            }
+            if Instant::now() > deadline {
+                return Err(format!(
+                    "account {} was still {} view after {:?}",
+                    subject.0,
+                    match expected {
+                        true => "out of",
+                        false => "in",
+                    },
+                    self.timeout
+                ));
+            }
+            sleep(POLL_INTERVAL);
+            self.poll()?;
+        }
     }
 
     /// Kill every spawned monster on the map (cleanup).
