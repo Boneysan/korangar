@@ -75,10 +75,33 @@ const WS_WEAPONREFINE: SkillId = SkillId(477);
 
 /// Force a skill failure (`ZC_ACK_TOUSESKILL` / 0x0110) and assert the shared
 /// stack promotes it to a rejection `ChatMessage` (M1-p0 rejection-messages row).
+///
+/// This is the only scenario in the suite that *lowers* a shared resource, so it
+/// is the only one that has to put it back — see the restore note below.
 fn skill_fail_rejection(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
+    let result = skill_fail_rejection_body(&mut context);
+
+    // ALWAYS restore SP, including on the failure path. All 114 scenarios share
+    // one character, and draining SP to zero is exactly the kind of "exotic"
+    // state the shared-state rule in `observer.rs` says to undo on the way out.
+    //
+    // Leaving it at zero silently broke `weapon-refine-missing-material`, which
+    // runs immediately after this one in natural order: `WS_WEAPONREFINE` costs
+    // 5 SP, so the cast was rejected, the refine list never arrived, and the
+    // scenario timed out. It looked like a flaky refine bug for long enough to
+    // be logged as one, and `ensure_job` does not heal, so the drain survived
+    // the job change to Whitesmith. Proven by running this scenario and then
+    // that one back to back.
+    let _ = context.say("@heal");
+    context.pump(Duration::from_millis(300));
+
+    result
+}
+
+fn skill_fail_rejection_body(context: &mut TestContext) -> Result<(), String> {
     // Mage Fire Bolt always costs SP; drain SP then cast at self.
-    let level = prepare_skill(&mut context, 2, MG_FIREBOLT)?;
+    let level = prepare_skill(context, 2, MG_FIREBOLT)?;
     // `@heal <hp> <sp>`: negative SP damages current SP (see atcommand.c).
     context.say("@heal 0 -999999")?;
     context.pump(Duration::from_millis(400));
@@ -434,17 +457,52 @@ struct SkillOutcome {
     result: &'static str,
 }
 
+/// Jobs only a female character can hold: Dancer and Gypsy.
+///
+/// Hercules does not *refuse* a sex-mismatched job change, which is why these
+/// needed routing rather than a skip. `pc_jobchange` round-trips the request
+/// through the character's sex (`pc_mapid2jobid`, `pc.c:6465` —
+/// `MAPID_CLOWNGYPSY: return sex ? JOB_CLOWN : JOB_GYPSY`), so asking a male
+/// character for Gypsy silently yields Clown and the server reports "Your job
+/// has been changed." There is no failure message to detect: the old skip guard
+/// below matched on `"unable to change"`/`"failed"` and could never fire, so
+/// these two timed out waiting for a `ChangeJob` that was never coming.
+const FEMALE_ONLY_JOBS: &[u16] = &[20, 4021];
+
+/// Jobs only a male character can hold: Bard and Clown. Same mechanism as
+/// [`FEMALE_ONLY_JOBS`], opposite direction — kept explicit so the pairing is
+/// visible and a future third-job addition (Minstrel/Wanderer) has a home.
+const MALE_ONLY_JOBS: &[u16] = &[19, 4020];
+
 fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String> {
     if job_id == 0 {
         println!("    Novice: skipped (no active skills to sweep)");
         return Ok(());
     }
 
-    let mut context = TestContext::connect(config)?;
+    // Route each sex-locked job to a character that can actually hold it. The
+    // primary test character is male; the partner (`HeadlessTwo`) is female and
+    // also GM group 99, so it can drive `@job`/`@allskill`/`@blevel`/`@warp`.
+    // Everything unlocked stays on the primary, as before.
+    let mut context = if FEMALE_ONLY_JOBS.contains(&job_id) {
+        println!("    {job_name}: female-only job — sweeping on the partner character");
+        TestContext::connect_partner(config)?
+    } else {
+        TestContext::connect(config)?
+    };
+
     if let Err(error) = context.ensure_job(job_id) {
         if error.contains("unable to change") || error.contains("failed") {
             println!("    {job_name}: skipped (job change failed - likely gender or class restriction)");
             return Ok(());
+        }
+        // A timeout here on a sex-locked job means the silent remap above, not a
+        // protocol fault — say so, rather than leaving a bare 15s timeout.
+        if FEMALE_ONLY_JOBS.contains(&job_id) || MALE_ONLY_JOBS.contains(&job_id) {
+            return Err(format!(
+                "{error} — {job_name} is sex-locked and the character it ran on is the wrong sex, so Hercules silently \
+                 remapped the job instead of refusing it"
+            ));
         }
         return Err(error);
     }
@@ -543,6 +601,21 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 entity_id, gained: true, ..
             } if entity_id.0 == player_id.0 => Some(("buff", 0)),
             NetworkEvent::AddSkillUnit { .. } => Some(("ground-unit", 0)),
+            // `ZC_USE_SKILL` (0x09CB on this packetver — *not* 0x011a, which is
+            // the pre-2013 header). This is the success notification for every
+            // no-damage skill, and for most of them it is redundant: they also
+            // grant the caster a status or deal damage, so one of the arms above
+            // matches first and this one was never needed.
+            //
+            // It is not redundant for a skill whose only effect lands on someone
+            // else. `DC_UGLYDANCE` drains SP from enemies in splash range and
+            // gives the caster nothing, so on an empty sweep field 0x09CB is the
+            // *sole* response — and omitting it here made a perfectly healthy
+            // cast read as "SILENT — investigate". Found once the Dancer/Gypsy
+            // sweeps could run at all.
+            NetworkEvent::SkillEffectNoDamage { source_entity_id, .. } if source_entity_id.0 == player_id.0 => {
+                Some(("no-damage-effect", 0))
+            }
             NetworkEvent::SkillCooldown { skill_id, .. } if skill_id.0 == skill.skill_id.0 => Some(("cooldown", 0)),
             NetworkEvent::VisualEffect { .. } => Some(("visual", 0)),
             NetworkEvent::MonsterInformation { .. } => Some(("monster-info", 0)),

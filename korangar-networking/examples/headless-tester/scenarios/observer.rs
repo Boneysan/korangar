@@ -82,6 +82,28 @@ const REVOLVER: u32 = 13100;
 /// and timed the scenario out for a reason having nothing to do with parity.
 const FAR_MAP: &str = "prontera";
 
+/// Used when the pair happens to be standing on [`FAR_MAP`] itself.
+const FAR_MAP_ALTERNATE: &str = "geffen";
+
+/// Pick a map the pair is demonstrably not standing on.
+///
+/// The comment on [`FAR_MAP`] was right about the hazard and wrong about who
+/// could trigger it: it assumed the partner always spawns on `prt_fild08`, so a
+/// constant was enough. The partner does not stay put. `connect_pair` meets on
+/// wherever the partner character was *last left*, and that position persists in
+/// the `char` table across scenarios — so the meeting map is shared mutable
+/// state while `FAR_MAP` is a constant. When scenario order parked the partner
+/// on `prontera`, "warp far away" became "warp to a random cell on the
+/// observer's own map", `assert_in_view(false)` stopped holding, and the
+/// scenario failed for a reason having nothing to do with parity — the precise
+/// failure the constant's own doc comment warned about.
+///
+/// Found by `--shuffle 42` (`observer-look-clear`). The double-run gate cannot
+/// see this class of bug: it runs the same order twice.
+fn far_map_from(home_map: &str) -> &'static str {
+    if home_map == FAR_MAP { FAR_MAP_ALTERNATE } else { FAR_MAP }
+}
+
 pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("observer-look-live", 11, look_change_while_observed),
@@ -134,7 +156,7 @@ fn look_change_while_out_of_view(config: &Config) -> Result<(), String> {
     let subject = primary.account_id;
     let (home_map, home_x, home_y) = (partner.map_name.clone(), partner.position.x + 1, partner.position.y);
 
-    primary.warp_random(FAR_MAP)?;
+    primary.warp_random(far_map_from(&home_map))?;
     partner.assert_in_view(subject, false)?;
 
     // Out of sight: the AREA broadcast for these reaches nobody.
@@ -190,7 +212,7 @@ fn look_survives_entity_rebuild(config: &Config) -> Result<(), String> {
     partner.assert_converges(subject, Appearance::ClothesColor, CLOTHES_COLOR)?;
 
     // Leave and return: the observer rebuilds the entity from EntityData alone.
-    primary.warp_random(FAR_MAP)?;
+    primary.warp_random(far_map_from(&home_map))?;
     partner.assert_in_view(subject, false)?;
     primary.warp(&home_map, home_x, home_y)?;
     partner.assert_in_view(subject, true)?;
@@ -216,7 +238,7 @@ fn clearing_a_look_reaches_the_observer(config: &Config) -> Result<(), String> {
 
     // Reset to zero while out of view, so only the enter-view path can correct
     // the observer — the case a non-zero guard silently drops.
-    primary.warp_random(FAR_MAP)?;
+    primary.warp_random(far_map_from(&home_map))?;
     partner.assert_in_view(subject, false)?;
     primary.say("@dye 0")?;
     primary.say("@haircolor 0")?;
