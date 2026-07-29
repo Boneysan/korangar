@@ -29,6 +29,31 @@
 //! six bugs, this layer could have caught two. See
 //! `docs/plans/observer-parity-harness.md` §5 for the layer that covers the
 //! rest.
+//!
+//! **What each row actually proves**, measured 2026-07-29 by deleting the
+//! `ChangeLook` tracking and re-running — worth knowing before trusting a pass:
+//!
+//! - Four of six then fail, so these do exercise the live broadcast path.
+//! - `observer-look-fresh-login` still **passes**, because it takes everything
+//!   from the spawn packet and never needs a broadcast at all. That is the
+//!   point of it, and it is the row that would have caught the LOOK_AMMO login
+//!   seed reaching nobody.
+//! - T2/T4/T5 converge via the spawn packet too, on re-entering view. They
+//!   assert that recovery *happens*, not which of the three mechanisms
+//!   delivered it — which is the right property, but do not read a pass as
+//!   "the enter-view re-send works".
+//!
+//! **Shared-state rule, learned the hard way here.** All 114 scenarios share
+//! one test character. The first version of this file called
+//! `ensure_base_level(10)` unconditionally, which *lowered* it from 99, and
+//! left it a gun-wielding Gunslinger. That broke two unrelated scenarios much
+//! later in the suite: `weapon-refine-missing-material` (a level-10 character
+//! has no refinable weapon) and `incoming-damage` (which deliberately does not
+//! call `ensure_job`, so a ranged attacker meant the wolf never retaliated).
+//! Both looked like flaky pre-existing failures and were neither.
+//!
+//! So: raise shared state, never lower it, and restore anything exotic on the
+//! way out — including on the failure path.
 
 use std::time::Duration;
 
@@ -48,8 +73,14 @@ const CLOTHES_COLOR: u32 = 4;
 const SILVER_BULLET: u32 = 13201;
 const REVOLVER: u32 = 13100;
 
-/// Somewhere the partner cannot follow, to take the subject out of view.
-const FAR_MAP: &str = "prt_fild08";
+/// Somewhere the partner cannot see, to take the subject out of view.
+///
+/// Must be a DIFFERENT map from wherever the partner spawns (`prt_fild08`).
+/// An earlier version used `prt_fild08` itself and relied on `warp_random`
+/// landing far enough away to drop out of view — which passed, but only by
+/// luck: a random cell near the partner would have left the subject visible
+/// and timed the scenario out for a reason having nothing to do with parity.
+const FAR_MAP: &str = "prontera";
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -209,12 +240,40 @@ fn clearing_a_look_reaches_the_observer(config: &Config) -> Result<(), String> {
 /// tracked `EntityData`.
 fn ammunition_survives_a_disguise(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    let result = ammunition_disguise_body(&mut primary, &mut partner);
+
+    // ALWAYS restore, including on failure. Every scenario shares one test
+    // character, and this is the only one that leaves it holding a gun. That
+    // broke `incoming-damage`, which deliberately does NOT call `ensure_job` —
+    // it uses whatever job it finds, to A/B mob behaviour — so a ranged
+    // Gunslinger meant the wolf never retaliated. 4008 (Lord Knight) is the
+    // melee default `combat_bootstrap` uses.
+    let _ = primary.say("@unequipall");
+    primary.pump(Duration::from_millis(300));
+    let _ = primary.ensure_job(4008);
+
+    result
+}
+
+fn ammunition_disguise_body(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
     let subject = primary.account_id;
 
     // A gun is needed before bullets will equip, and the ammo must go on after
     // it — the server force-unequips ammunition when the weapon comes off.
     // (There is no `@equipall`; only `@unequipall` exists.)
-    primary.ensure_job(4011)?; // Gunslinger — can hold a revolver
+    // Six Shooter is `Job: { Gunslinger: true }`, `EquipLv: 10`. Gunslinger is
+    // job 24 — NOT 4011, which is Whitesmith and cannot hold a gun at all.
+    // Resolve job ids from db/constants.conf, never from memory: nine of
+    // eighteen skill-id guesses were wrong the same way on an earlier pass.
+    primary.ensure_job(24)?;
+    // RAISE ONLY. `ensure_base_level` sets an exact level, so calling it
+    // unconditionally *lowered* the shared test character from 99 to 10 and
+    // broke two later scenarios in the full suite — a level-10 character cannot
+    // make a wolf retaliate and has no refinable weapon. Scenarios share one
+    // character; never move shared state downward to satisfy a local need.
+    if primary.base_level < 10 {
+        primary.ensure_base_level(10)?;
+    }
     let gun = primary.give_item(REVOLVER, 1)?;
     primary
         .net

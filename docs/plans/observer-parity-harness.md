@@ -275,7 +275,7 @@ screen look right?" — which is the only question a human is actually better at
 |---|---|---|---|---|
 | **0** | ~~Correct §3.3; commit the static audits; comment the A4/A5 sites~~ **DONE 2026-07-29** — `tools/audits/observer-parity.sh` + baseline + [runbook](../../tools/audits/README.md), and `clif.c` now explains at both sites why they are safe | no | done | stops re-derivation; every finding classified and diffed on every run |
 | **1** | ~~B2: widen `EntityData`, exhaustive look match + `ChangeLook`, model direction + stop-move~~ **DONE 2026-07-29** — workspace green, 5 new wire tests, audit rebaselined (open items 32 → 21) | no | done | **the harness's eyesight**, and every appearance attribute gains spawn-packet recovery |
-| **2** | L1 harness — **WRITTEN 2026-07-29, NEVER RUN.** `TestContext::connect_pair`, appearance folded into `track`, `assert_converges` / `assert_in_view` / `observed`, and six `--scenario observer` rows covering T1–T6. Compiles and registers; needs the stack to execute | yes | written | B1/B2 mechanical, forever |
+| **2** | L1 harness — **DONE + LIVE-VERIFIED 2026-07-29, 6/6 double-run.** `TestContext::connect_pair`, appearance folded into `track`, `assert_converges` / `assert_in_view` / `observed`, and six `phase11` rows covering T1–T6 | yes | done | B1/B2 mechanical, forever |
 | **3** | ~~L2 appearance map~~ **PREMISE CHANGED — see below** | no | — | — |
 | **4** | B4: render headgear, robe, dye (S4) | yes | feature | the actual visible payoff — now landing on a structure that cannot repeat the class |
 | **5** | L3 observer dump | yes | small | B4 comparison without a second pair of eyes |

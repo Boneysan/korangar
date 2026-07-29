@@ -60,6 +60,38 @@ struct Arguments {
     /// Print the packet coverage ledger even for single scenarios.
     #[arg(long, default_value_t = false)]
     report_packets: bool,
+
+    /// Run the selected scenarios in a shuffled order, to expose ones that only
+    /// pass because of state an earlier scenario happened to leave behind.
+    ///
+    /// All 114 scenarios share one test character, so order dependence is the
+    /// suite's structural weak point — and the existing double-run gate cannot
+    /// see it, because it runs the same order twice. The seed is printed and
+    /// reproduces the exact order.
+    #[arg(long)]
+    shuffle: Option<u64>,
+}
+
+/// Fisher-Yates using a hand-rolled xorshift64 PRNG.
+///
+/// Deterministic on purpose: an order-dependent failure is unactionable unless
+/// the exact order can be replayed with the same `--shuffle <seed>`. Rolled by
+/// hand because this crate has no `rand` dependency and a test-ordering shuffle
+/// does not justify adding one.
+fn shuffle_deterministically<T>(items: &mut [T], seed: u64) {
+    // xorshift64 is degenerate when seeded with zero, so force a set bit.
+    let mut state = seed | 1;
+    let mut next = move || {
+        state ^= state << 13;
+        state ^= state >> 7;
+        state ^= state << 17;
+        state
+    };
+
+    for index in (1..items.len()).rev() {
+        let swap_with = (next() % (index as u64 + 1)) as usize;
+        items.swap(index, swap_with);
+    }
 }
 
 fn main() -> ExitCode {
@@ -67,13 +99,20 @@ fn main() -> ExitCode {
     let scenarios = all_scenarios();
 
     if arguments.list {
-        for scenario in &scenarios {
+        // Lists every scenario regardless of `--scenario`, since the point is
+        // to discover names. `--shuffle` is still honoured so an order can be
+        // previewed — and verified — without running anything.
+        let mut listed: Vec<_> = scenarios.iter().collect();
+        if let Some(seed) = arguments.shuffle {
+            shuffle_deterministically(&mut listed, seed);
+        }
+        for scenario in listed {
             println!("phase {}  {}", scenario.phase, scenario.name);
         }
         return ExitCode::SUCCESS;
     }
 
-    let selected: Vec<_> = scenarios
+    let mut selected: Vec<_> = scenarios
         .iter()
         .filter(|scenario| match arguments.scenario.as_str() {
             "all" => true,
@@ -92,6 +131,11 @@ fn main() -> ExitCode {
             arguments.scenario
         );
         return ExitCode::FAILURE;
+    }
+
+    if let Some(seed) = arguments.shuffle {
+        shuffle_deterministically(&mut selected, seed);
+        println!("[{}] seed {seed} — replay this exact order with --shuffle {seed}", "Shuffled".yellow());
     }
 
     let ledger = Ledger::default();
@@ -145,10 +189,16 @@ fn main() -> ExitCode {
         .count();
 
     println!(
-        "\n=== Summary: {} passed, {} failed, {} known-fail ===",
+        "\n=== Summary: {} passed, {} failed, {} known-fail{} ===",
         results.len() - failures.len() - known_fails,
         failures.len(),
-        known_fails
+        known_fails,
+        match arguments.shuffle {
+            // Repeated in the summary so a failure pasted from the tail of a
+            // long run still carries the seed needed to reproduce it.
+            Some(seed) => format!(" (shuffled, seed {seed})"),
+            None => String::new(),
+        }
     );
     for (name, result, known_issue) in &results {
         match (result, known_issue) {

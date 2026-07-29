@@ -43,17 +43,59 @@ new wire-level tests, audit open items 32 → 21.
 body + head + weapon + shield. Rendering them is phase 4 and needs accessory
 sprite paths and palette files this tree does not have.
 
-**Phase 2 is WRITTEN but has NEVER BEEN RUN** — it needs the stack. Six new
-scenarios under `--scenario observer` assert on the *observer* across the five
-timings that generalise the four `LOOK_AMMO` bugs (change while watched, while
-out of view, before the observer logs in, across an entity rebuild, and a change
-to zero), plus a disguise round-trip for audit A8. The first run is the
-interesting one — these have never executed, so expect setup failures before
-real findings.
+**Phase 2 is DONE and LIVE-VERIFIED (2026-07-29): 6/6 PASS, double-run.**
+Six scenarios assert on the *observer* across the five timings that generalise
+the four `LOOK_AMMO` bugs (change while watched, while out of view, before the
+observer logs in, across an entity rebuild, and a change to zero), plus a
+disguise round-trip for audit A8.
 
 ```sh
-cargo run --release --example headless-tester -p korangar-networking -- --scenario observer
+cargo run --release --example headless-tester -p korangar-networking -- --scenario phase11
 ```
+
+**It is `phase11`, not `--scenario observer`** — `--scenario` matches a scenario
+*name* or `phaseN`, and "observer" is neither, so it silently selects nothing.
+
+They were **proved able to fail**: deleting the `ChangeLook` tracking makes 4 of
+6 fail. `observer-look-fresh-login` still passes without it, because it takes
+everything from the spawn packet — which is exactly what that row is for.
+
+## Test-suite validity work (2026-07-29) — three open items
+
+The full suite is **114 scenarios**, not 107 or 125. First full run after phase 2
+was 112/114; **both failures were caused by the new observer scenario polluting
+the shared test character**, not by the suite. Fixed and re-verified. See the
+shared-state rule in the header of `scenarios/observer.rs`.
+
+**A `--shuffle <seed>` detector is now in the tester** (verified: same seed
+reproduces, different seeds differ, no scenarios lost). All 114 share one
+character, so order dependence is the suite's structural weak point, and the
+existing double-run gate cannot see it — it runs the same order twice.
+
+```sh
+./target/release/examples/headless-tester --scenario all --shuffle 42
+./target/release/examples/headless-tester --list --shuffle 42   # preview order only
+```
+
+Open, in priority order:
+
+1. **`weapon-refine-missing-material` is order-dependent — a real, pre-existing
+   bug.** It fails inside the full suite but passes in isolation, and it is not
+   the test-character pollution (that was fixed and it still failed). Root cause
+   not yet found.
+2. **The first full shuffled run never completed** — it was still in flight at
+   session end, ~14/114 with 0 failures. Re-run it; that is the payoff for
+   building the detector.
+3. **Skips are reported as PASS.** In `sweep_job` (`scenarios/skills.rs`) a
+   failed job change prints "skipped" and returns `Ok(())`. If job changes broke
+   wholesale, much of the 44-scenario sweep would go green while testing
+   nothing. `Scenario` has no "skipped" outcome; it needs one.
+
+**Trap that cost a whole 40-minute run:** do **not** run any `cargo` command
+while the suite is executing. `cargo run` rebuilds
+`target/release/examples/headless-tester` underneath the running process and
+produces a cascade of bogus "disconnected" failures (14 of them), with a
+perfectly healthy server. Invoke the built binary directly instead, as above.
 
 **Still open, cheapest first, all needing the stack:** run `--scenario observer`
 above; observer rows 10-11 (skill effect and status values from the far seat —
