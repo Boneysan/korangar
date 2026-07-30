@@ -73,6 +73,19 @@ const AL_TELEPORT: SkillId = SkillId(26);
 const MG_FIREBOLT: SkillId = SkillId(19);
 const WS_WEAPONREFINE: SkillId = SkillId(477);
 
+/// Trap (item 1065) — consumed by every trap-placing skill. Without a stock of
+/// these the trap sweeps can only ever assert that the refusal was reported,
+/// never that a trap was placed.
+const TRAP_ITEM: u32 = 1065;
+
+/// Skills that *place* a trap: HT_SKIDTRAP..HT_CLAYMORETRAP plus HT_TALKIEBOX.
+///
+/// **Not** `SkillType::Trap`, which is the wire type for skills that *target an
+/// existing* trap — only HT_REMOVETRAP and HT_SPRINGTRAP carry it. Every skill
+/// that lays a trap is typed `Ground`, exactly like Storm Gust, so the type
+/// alone cannot distinguish them and the ids have to be listed.
+const TRAP_PLACING_SKILLS: &[u16] = &[115, 116, 117, 118, 119, 120, 121, 122, 123, 125];
+
 /// Force a skill failure (`ZC_ACK_TOUSESKILL` / 0x0110) and assert the shared
 /// stack promotes it to a rejection `ChatMessage` (M1-p0 rejection-messages row).
 ///
@@ -538,8 +551,29 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     });
     println!("    {job_name}: sweeping {} skills", skills.len());
 
+    // Stock the Trap items the Hunter/Sniper trap skills consume, so they get
+    // *placed* rather than merely refused.
+    //
+    // Without this the sweep never exercised a trap at all: every one of the
+    // seven reported only that the refusal was delivered. That was invisible
+    // while the shared character happened to be carrying traps left over from
+    // earlier runs — they succeeded then, by luck — and it matters because
+    // Hunter traps are the one skill family with real prop rendering behind
+    // them (`trap_model_file()` / `TRAP_MODEL_FILES`, phase E2) and had no
+    // automated coverage of a trap actually landing.
+    //
+    // Granted per sweep and removed again below: ammunition-style leftovers are
+    // what pushed the shared character over its weight limit and broke every
+    // item-dependent scenario at once.
+    let needs_traps = skills.iter().any(|skill| TRAP_PLACING_SKILLS.contains(&skill.skill_id.0));
+    if needs_traps {
+        let _ = context.say(&format!("@item {TRAP_ITEM} 50"));
+        context.pump(Duration::from_millis(400));
+    }
+
     let player_id = context.player_id;
     let mut outcomes: Vec<SkillOutcome> = Vec::new();
+    let mut ground_cast_index: usize = 0;
 
     for skill in &skills {
         let name = skill.skill_name.trim_end_matches('\0').to_owned();
@@ -588,10 +622,28 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         let cast = match skill.skill_type {
             SkillType::Attack => context.net.cast_skill(skill.skill_id, level, target.unwrap()),
             SkillType::Ground | SkillType::Trap => {
+                // Give each ground cast its own cell.
+                //
+                // Every ground skill used to target the same tile
+                // (`position.x + 2`), which is fine for most of them but wrong
+                // for traps: RO will not stack two skill units on one cell, so
+                // the first trap claimed the tile and every trap after it was
+                // refused. The sweep then recorded six refusals and one
+                // placement and called that a pass, having never really
+                // exercised trap placement at all.
+                // Ring the caster rather than fanning outwards: trap range is
+                // about 3 cells, and Hercules drops an out-of-range ground cast
+                // with a bare `return 0` and **no** `clif->skill_fail`, so
+                // anything further away reads as silence rather than a refusal.
+                // Eight cells is more than the seven traps any job has.
+                const GROUND_OFFSETS: [(i16, i16); 8] =
+                    [(2, 0), (0, 2), (-2, 0), (0, -2), (2, 2), (-2, 2), (2, -2), (-2, -2)];
                 let position = context.position;
+                let (dx, dy) = GROUND_OFFSETS[ground_cast_index % GROUND_OFFSETS.len()];
+                ground_cast_index += 1;
                 context.net.cast_ground_skill(skill.skill_id, level, TilePosition {
-                    x: position.x + 2,
-                    y: position.y,
+                    x: (position.x as i16 + dx).max(5) as u16,
+                    y: (position.y as i16 + dy).max(5) as u16,
                 })
             }
             SkillType::SelfCast | SkillType::Support => context.net.cast_skill(skill.skill_id, level, player_id),
@@ -599,6 +651,43 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         };
         if cast.is_err() {
             return Err("disconnected mid-sweep".to_owned());
+        }
+
+        // Traps are held to a stricter standard than "something came back".
+        //
+        // A trap always creates a skill unit, so `AddSkillUnit` (0x09CA) is the
+        // only evidence that it was actually *placed*. The generic matcher below
+        // accepts any response at all, and for traps something else always
+        // arrived first — `ground-unit` was never once reported across a full
+        // 114-scenario run, so the sweep had never proven a trap lands. That
+        // matters because Hunter traps are the one family with real prop
+        // rendering behind them (`TRAP_MODEL_FILES`, phase E2).
+        //
+        // An explicit refusal still counts: conditions the harness cannot meet
+        // are a legitimate outcome. What is no longer accepted is an unrelated
+        // buff or visual standing in for proof of placement.
+        if TRAP_PLACING_SKILLS.contains(&skill.skill_id.0) {
+            let placed = context.wait_for_within("trap skill unit", Duration::from_secs(4), &mut |event| match event {
+                NetworkEvent::AddSkillUnit { .. } => Some(("ground-unit", 0)),
+                NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback", 0)),
+                NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item", 0)),
+                _ => None,
+            });
+
+            let (result, wait) = match placed {
+                Ok((kind, _)) => (kind, 400),
+                Err(_) if allowlisted(&name) => ("silent (allowlisted)", 0),
+                Err(_) => ("SILENT — investigate", 0),
+            };
+            context.pump(Duration::from_millis(wait));
+            outcomes.push(SkillOutcome {
+                skill_id: skill.skill_id.0,
+                name,
+                skill_type: skill.skill_type,
+                level: level.0,
+                result,
+            });
+            continue;
         }
 
         // Any observable response counts; total silence is the failure mode.
@@ -671,6 +760,13 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     }
 
     context.kill_all_monsters();
+
+    // Hand back whatever traps went unused, so they cannot accumulate across
+    // runs the way the observer scenario's ammunition did.
+    if needs_traps {
+        let _ = context.say(&format!("@delitem {TRAP_ITEM} 30000"));
+        context.pump(Duration::from_millis(300));
+    }
 
     // Report.
     let mut silent_count = 0;
