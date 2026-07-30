@@ -118,14 +118,34 @@ map: `DC_UGLYDANCE`, `BD_ETERNALCHAOS`, `BD_ROKISWEIL`, `CG_HERMODE`,
 test (`ee26fb23`). **Not yet seen in the graphical client** — the chat line is
 wire-verified only.
 
+**Also fixed later the same session** (details in
+[tools/testing/headless_findings.md](../tools/testing/headless_findings.md)):
+
+- **Skips no longer count as passes.** `Scenario` has a third outcome and the
+  summary reads `N passed, N failed, N skipped, N known-fail`. `skills-novice` is
+  the one legitimately permanent skip — the Novice tree is passive apart from
+  quest-gated actives — which is why a skip must **not** fail the exit code.
+- **The `BD_ETERNALCHAOS` / `BD_ROKISWEIL` allowlist entries are gone**; their
+  stated reason was wrong (map-zone disabled, not ensemble).
+- **Hercules' per-IP anti-flood was causing every "random disconnect" cluster.**
+  `ip_rules` is now disabled in the Hercules tree — see CLAUDE.md §3b. **The
+  diagnostic:** connection-flavoured failures *plus* `Packet coverage: … 0 failed`
+  means environment, never protocol. Count `there is no char-server online`.
+- **Ammunition accumulated until the character was overweight**, at which point
+  `@item` fails and every item-dependent scenario breaks at once, far from the
+  cause. `observer-ammo-disguise` now cleans up after itself. The existing
+  backlog was purged by hand via SQL and **does not replay on a fresh database**.
+- **Traps now prove they were placed** (`AddSkillUnit`), 12 assertions per run
+  where there were previously zero.
+
 **Still open:**
 
-- **Skips are reported as PASS.** In `sweep_job` (`scenarios/skills.rs`) a failed
-  job change prints "skipped" and returns `Ok(())`. `Scenario` has no "skipped"
-  outcome; it needs one. This is the mechanism that hid items 3 above for weeks.
-- **A stale allowlist reason.** `BD_ETERNALCHAOS` / `BD_ROKISWEIL` are
-  allowlisted as "Ensemble / Duet skills"; they were actually map-zone-disabled,
-  and now produce real feedback, so the entries are inert *and* misleading.
+- **Ground skills assert almost nothing.** ~32 addressable casts; `skill_db`'s
+  `Unit:` block (129 skills) is the authority, and it is very nearly the E1/E2
+  rendered-effect set. Sized and written up in `headless_findings.md`.
+- **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`.
+- **Nothing from today has been seen in the graphical client.** The `0x0189`
+  map-zone chat line is the one item that genuinely needs the GUI pass.
 
 **Trap: never run a second tester instance while the suite is running either.**
 All scenarios share one character *and* one partner character, so a concurrent
