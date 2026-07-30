@@ -176,6 +176,19 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     // Best-effort bootstrap: this scenario must also run without GM rights
     // (used to A/B GM-vs-player mob behavior), so ignore command failures.
+    //
+    // Normalize the job, best-effort. This used to inherit whatever job the
+    // previous scenario left, which made the result depend on scenario order:
+    // after `skills-soul-linker` the provoked mob never retaliates, and the
+    // failure reads as "wolf never swung back" — blaming the mob for a
+    // character-state problem. It passed in natural order only because
+    // `dm-warp-recall` precedes it there and leaves the character alone.
+    //
+    // Bisected under `--shuffle 1337`: failing state -> normalize to 4008 ->
+    // passes, with nothing else changed. 4008 (Lord Knight) is the melee default
+    // `combat_bootstrap` already uses. Kept best-effort so the no-GM A/B path
+    // still runs; it simply cannot normalize without `@job`, which is inherent.
+    let _ = context.ensure_job(4008);
     let _ = context.say("@heal");
     let _ = context.warp("prt_fild08", 170, 180);
     context.pump(Duration::from_secs(2));
