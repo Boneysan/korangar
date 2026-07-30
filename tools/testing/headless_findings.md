@@ -51,6 +51,42 @@ learn-to-ignore-the-tally problem from the other direction.
 | **Ammo accumulated until the character was overweight** | `use-consumable`, `skill-fail-rejection`, `skills-hunter`, `skills-sniper` | Client Test Harness | `observer-ammo-disguise` granted 100 Silver Bullets per run and never removed them. Ammunition stacks, so it was invisible — until ~1600 rounds pushed the shared character past its weight limit, at which point Hercules answers `@item` with "Failed to pick up item." and **every item-dependent scenario fails at once**, far from the cause. **Fix:** clean up the ammo alongside the gun. The backlog was purged by hand via SQL and does **not** replay on a fresh database. |
 | **`SkillFailedMissingItem` counted as silence** | `skills-hunter`, `skills-sniper` | Client Test Harness | `ZC_ACK_TOUSESKILL` causes 71/72 arrive as this event rather than a `ChatMessage` (the networking crate has no item DB), and the sweep's matcher omitted it — so a correctly-reported refusal read as "SILENT". Hidden because the character carried a stash of Trap items from earlier runs, so traps *succeeded*; purge the inventory and all seven go silent at once. Same class as the `SkillEffectNoDamage` arm. |
 
+### Ground skills still assert almost nothing (open)
+
+Traps are now held to `AddSkillUnit` (see the commit "Make trap sweeps prove the
+trap was actually placed"). **The other 119 `Ground`-typed skills are not**, and
+`ground-unit` had never once been reported before that change.
+
+The reason is the `cast` outcome: most ground skills have a cast time, so
+`SkillCast` arrives first, satisfies the generic "any response" wait, and the
+sweep never looks at what the cast *produced*. Traps are instant, which is why
+they were the family that exposed it.
+
+Outcome distribution for the 119 `Ground` skills in a full run:
+
+| Outcome | Count | Can a unit exist? |
+| --- | --- | --- |
+| `fail-feedback` | 72 | No — refused |
+| `fail-missing-item` | 13 | No — refused |
+| `cast` | 23 | **Yes, unverified** |
+| `buff` | 9 | **Yes, unverified** |
+| allowlisted | 2 | — |
+
+So the addressable gap is **~32 casts**, not 119 — asserting a unit for the 85
+refusals would be wrong.
+
+**The authority is `skill_db`: 129 skills have a `Unit:` block** (Safety Wall,
+Fire Wall, Thunderstorm, Pneuma, Warp, Arrow Shower, Sanctuary, Magnus …), which
+is very nearly the E1/E2 rendered-effect set — so this is the coverage that
+matters most for the effect work. Deriving that id list from `skill_db` has
+precedent in `tools/generate_packet_lengths.sh`. Expect real triage when it
+lands: invisible units and owner-only sends mean some legitimately never reach
+the caster.
+
+**Known intermittent:** `MG_FROSTDIVER` occasionally reports SILENT in
+`skills-super-novice` (target dies or the response misses the 4 s window). Two
+isolated re-runs passed, reporting `fail-feedback` and `cast`.
+
 **The diagnostic worth remembering:** a failure that is connection-flavoured
 *and* accompanied by `Packet coverage: … 0 failed` is an environment problem,
 not a test or protocol problem. That one check separates the top row above from
