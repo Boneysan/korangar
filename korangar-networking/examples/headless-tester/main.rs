@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 use clap::Parser;
 use korangar_debug::logging::Colorize;
 
-use crate::context::Config;
+use crate::context::{CONNECTION_ERROR, Config};
 use crate::ledger::Ledger;
 use crate::scenarios::{SKIPPED_PREFIX, all_scenarios, is_skip};
 
@@ -155,7 +155,33 @@ fn main() -> ExitCode {
     for scenario in &selected {
         println!("\n[{}] {} (phase {})", "Running".yellow(), scenario.name, scenario.phase);
         let start = Instant::now();
-        let result = (scenario.run)(&config);
+        let mut result = (scenario.run)(&config);
+
+        // Retry once, loudly, if the map server dropped the session mid-scenario.
+        //
+        // This is a MITIGATION, not a root cause. It appeared once in five full
+        // runs (`skills-rogue`, seed 1337), and the evidence says it is not a
+        // defect in the code under test: the ledger recorded **0** packet
+        // deserialization failures, the next scenario connected fine, and the
+        // scenario passed standalone straight afterwards. `connect_as` already
+        // retries the *login* four times, so this is a disconnect during the
+        // run, not a session-teardown race.
+        //
+        // It is deliberately narrow and deliberately noisy. Only this one error
+        // retries, the retry is printed, and the ledger gate is untouched — a
+        // genuine desync still fails the run through `ledger.failed_count()`.
+        // If these lines start appearing regularly, that is a real bug asking
+        // to be investigated, not something to raise the retry count for.
+        if matches!(&result, Err(message) if message.starts_with(CONNECTION_ERROR)) {
+            println!(
+                "[{}] {} hit a map-server connection error — retrying once",
+                "Retry".yellow(),
+                scenario.name
+            );
+            std::thread::sleep(Duration::from_secs(3));
+            result = (scenario.run)(&config);
+        }
+
         let elapsed = start.elapsed();
 
         match (&result, scenario.known_issue) {

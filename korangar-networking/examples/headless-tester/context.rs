@@ -124,6 +124,11 @@ impl Appearance {
     }
 }
 
+/// Message a scenario fails with when the map server drops the session
+/// mid-run. Matched by the runner, which retries such a scenario once — see the
+/// note there for why this is a mitigation rather than a fix.
+pub const CONNECTION_ERROR: &str = "map server connection error";
+
 impl TestContext {
     /// Full login → character select → map load flow. Retries once to absorb
     /// a lingering "already online" session from a previous run.
@@ -386,7 +391,7 @@ impl TestContext {
                 reason: DisconnectReason::ConnectionError,
             } = &event
             {
-                return Err("map server connection error (possible desync — check ledger for failed packets)".to_owned());
+                return Err(format!("{CONNECTION_ERROR} (possible desync — check ledger for failed packets)"));
             }
             self.pending.push(event);
         }
