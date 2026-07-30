@@ -16,7 +16,7 @@ use korangar_debug::logging::Colorize;
 
 use crate::context::Config;
 use crate::ledger::Ledger;
-use crate::scenarios::all_scenarios;
+use crate::scenarios::{SKIPPED_PREFIX, all_scenarios, is_skip};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -159,6 +159,12 @@ fn main() -> ExitCode {
         let elapsed = start.elapsed();
 
         match (&result, scenario.known_issue) {
+            // A skip is checked before everything else: it means the scenario
+            // never got to assert anything, so neither PASS nor FAIL is honest.
+            _ if is_skip(&result) => {
+                let reason = result.as_ref().err().map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
+                println!("[{}] {}: {} ({:.1?})", "SKIP".yellow(), scenario.name, reason, elapsed);
+            }
             (Ok(()), None) => println!("[{}] {} ({:.1?})", "PASS".green(), scenario.name, elapsed),
             (Ok(()), Some(issue)) => {
                 println!(
@@ -179,19 +185,24 @@ fn main() -> ExitCode {
         std::thread::sleep(Duration::from_millis(700));
     }
 
+    // Skips are counted on their own and excluded from "passed". Folding them
+    // into the pass count is exactly what hid two permanently-red scenarios
+    // behind a green 114/114 — see `SKIPPED_PREFIX`.
+    let skips: Vec<_> = results.iter().filter(|(_, result, _)| is_skip(result)).collect();
     let failures: Vec<_> = results
         .iter()
-        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_none())
+        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_none() && !is_skip(result))
         .collect();
     let known_fails = results
         .iter()
-        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_some())
+        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_some() && !is_skip(result))
         .count();
 
     println!(
-        "\n=== Summary: {} passed, {} failed, {} known-fail{} ===",
-        results.len() - failures.len() - known_fails,
+        "\n=== Summary: {} passed, {} failed, {} skipped, {} known-fail{} ===",
+        results.len() - failures.len() - known_fails - skips.len(),
         failures.len(),
+        skips.len(),
         known_fails,
         match arguments.shuffle {
             // Repeated in the summary so a failure pasted from the tail of a
@@ -202,10 +213,19 @@ fn main() -> ExitCode {
     );
     for (name, result, known_issue) in &results {
         match (result, known_issue) {
+            _ if is_skip(result) => println!("  {} {}", "SKIP".yellow(), name),
             (Ok(()), _) => println!("  {} {}", "PASS".green(), name),
             (Err(_), Some(_)) => println!("  {} {}", "KNOWN-FAIL".yellow(), name),
             (Err(_), None) => println!("  {} {}", "FAIL".red(), name),
         }
+    }
+
+    if !skips.is_empty() {
+        println!(
+            "[{}] {} scenario(s) skipped — they asserted nothing, so treat the pass count accordingly",
+            "Note".yellow(),
+            skips.len()
+        );
     }
 
     if arguments.report_packets || selected.len() > 1 {

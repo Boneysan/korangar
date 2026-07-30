@@ -13,7 +13,7 @@ use korangar_networking::NetworkEvent;
 use ragnarok_packets::{Direction, SkillId, SkillLevel, SkillType, TilePosition, WorldPosition};
 
 use crate::context::{Config, TestContext};
-use crate::scenarios::Scenario;
+use crate::scenarios::{Scenario, skipped};
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -476,8 +476,12 @@ const MALE_ONLY_JOBS: &[u16] = &[19, 4020];
 
 fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String> {
     if job_id == 0 {
-        println!("    Novice: skipped (no active skills to sweep)");
-        return Ok(());
+        // Expected, not a gap to close: the Novice tree is passive apart from
+        // actives that are **quest-gated** (First Aid / Trick Dead), so
+        // `@allskill` cannot hand them over and there is nothing to cast. This
+        // is the one legitimately permanent skip in the suite — which is why a
+        // skip must not fail the gate, only be counted separately.
+        return skipped("Novice has no castable skills — its actives are quest-gated");
     }
 
     // Route each sex-locked job to a character that can actually hold it. The
@@ -493,8 +497,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
 
     if let Err(error) = context.ensure_job(job_id) {
         if error.contains("unable to change") || error.contains("failed") {
-            println!("    {job_name}: skipped (job change failed - likely gender or class restriction)");
-            return Ok(());
+            return skipped(format!("{job_name}: job change refused (gender or class restriction)"));
         }
         // A timeout here on a sex-locked job means the silent remap above, not a
         // protocol fault — say so, rather than leaving a bare 15s timeout.

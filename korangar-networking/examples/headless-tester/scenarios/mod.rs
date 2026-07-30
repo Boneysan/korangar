@@ -11,6 +11,32 @@ mod social;
 
 use crate::context::Config;
 
+/// Marker prefix for a scenario that could not run its assertions.
+///
+/// `Scenario::run` is `fn(&Config) -> Result<(), String>` and 114 functions share
+/// that signature, so a third outcome as a return *type* would touch every one of
+/// them. A skip is instead an `Err` whose message starts with this prefix, which
+/// the runner classifies separately from a real failure.
+///
+/// **It is an `Err` and not an `Ok` on purpose.** The previous code returned
+/// `Ok(())` for a skip, so a skipped scenario printed "skipped" and was still
+/// tallied as PASS — which is how `skills-dancer` and `skills-gypsy` sat red
+/// behind a green "114/114" for weeks. Putting a skip on the failure side means
+/// the worst case is a visible amber row, never a false green. A skip does not
+/// affect the exit code, so it does not break the gate either.
+pub const SKIPPED_PREFIX: &str = "SKIPPED: ";
+
+/// Report that a scenario could not run — a precondition the harness cannot
+/// establish, as opposed to a defect in the code under test.
+pub fn skipped(reason: impl std::fmt::Display) -> Result<(), String> {
+    Err(format!("{SKIPPED_PREFIX}{reason}"))
+}
+
+/// Whether a scenario result is a skip rather than a genuine failure.
+pub fn is_skip(result: &Result<(), String>) -> bool {
+    matches!(result, Err(message) if message.starts_with(SKIPPED_PREFIX))
+}
+
 pub struct Scenario {
     pub name: &'static str,
     pub phase: u8,
