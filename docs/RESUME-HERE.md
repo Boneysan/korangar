@@ -60,14 +60,11 @@ They were **proved able to fail**: deleting the `ChangeLook` tracking makes 4 of
 6 fail. `observer-look-fresh-login` still passes without it, because it takes
 everything from the spawn packet — which is exactly what that row is for.
 
-## Test-suite validity work (2026-07-29) — three open items
+## Test-suite validity work — shuffle pass DONE (2026-07-29/30)
 
-The full suite is **114 scenarios**, not 107 or 125. First full run after phase 2
-was 112/114; **both failures were caused by the new observer scenario polluting
-the shared test character**, not by the suite. Fixed and re-verified. See the
-shared-state rule in the header of `scenarios/observer.rs`.
+The full suite is **114 scenarios**, not 107 or 125.
 
-**A `--shuffle <seed>` detector is now in the tester** (verified: same seed
+**A `--shuffle <seed>` detector is in the tester** (verified: same seed
 reproduces, different seeds differ, no scenarios lost). All 114 share one
 character, so order dependence is the suite's structural weak point, and the
 existing double-run gate cannot see it — it runs the same order twice.
@@ -77,19 +74,65 @@ existing double-run gate cannot see it — it runs the same order twice.
 ./target/release/examples/headless-tester --list --shuffle 42   # preview order only
 ```
 
-Open, in priority order:
+**The shuffle pass is complete and it paid for itself: four order-dependence
+bugs plus one real client bug.** Runs: seed 42 → 111/114, fixes → 112/114, fresh
+seed 1337 → 113/114 (fixes generalised; one new bug), fixes → re-run.
 
-1. **`weapon-refine-missing-material` is order-dependent — a real, pre-existing
-   bug.** It fails inside the full suite but passes in isolation, and it is not
-   the test-character pollution (that was fixed and it still failed). Root cause
-   not yet found.
-2. **The first full shuffled run never completed** — it was still in flight at
-   session end, ~14/114 with 0 failures. Re-run it; that is the payoff for
-   building the detector.
-3. **Skips are reported as PASS.** In `sweep_job` (`scenarios/skills.rs`) a
-   failed job change prints "skipped" and returns `Ok(())`. If job changes broke
-   wholesale, much of the 44-scenario sweep would go green while testing
-   nothing. `Scenario` has no "skipped" outcome; it needs one.
+**Correction to the old tally: the recorded "114/114 green" was never true.**
+`skills-dancer` and `skills-gypsy` had been failing the whole time behind a green
+count, because a skipped/mis-jobbed scenario reports as PASS (item 1 below).
+
+The four order-dependence bugs, all fixed:
+
+1. **`weapon-refine-missing-material`** — recorded as "root cause not yet found".
+   It was never a refine bug: `skill-fail-rejection` drains SP to zero and never
+   restores it, `WS_WEAPONREFINE` costs 5 SP, and `ensure_job` does not heal, so
+   the drain survived the job change. Now restores SP on the way out.
+2. **`observer-look-clear`** — `FAR_MAP` was the constant `"prontera"`, but
+   `connect_pair` meets wherever the partner character was *last left*, and that
+   position persists in the `char` table. Now `far_map_from(home_map)`. Three
+   scenarios used `FAR_MAP`, so all three were latent.
+3. **`skills-dancer` / `skills-gypsy`** — *not* order-dependent. The shared
+   character is male, and **Hercules does not refuse a sex-mismatched job
+   change**: `pc_mapid2jobid` (`pc.c:6465`) round-trips through the character's
+   sex, so asking for Gypsy silently yields Clown and the server says "Your job
+   has been changed." No failure message exists, so `sweep_job`'s
+   gender-restriction skip guard could never fire. Both now route to the female
+   partner character (`HeadlessTwo`, which also has GM rights).
+4. **`incoming-damage`** — inherited whatever job the previous scenario left;
+   after `skills-soul-linker` the provoked mob never retaliates. Passed in
+   natural order only because `dm-warp-recall` precedes it there. Now normalises
+   the job best-effort. **Two wrong hypotheses first** (a lethal provoking blow —
+   the fallback never fired; then mob species — 1007 both passed and failed).
+   Bisect settled it: failing state → normalise to 4008 → passes, nothing else
+   changed. **Bisect, don't theorise.**
+
+**The client bug the sweeps found once they could run:** `ZC_NOTIFY_MAPINFO`
+(**0x0189**) was unmodeled, so `register_length_fallbacks` ate it and four
+user-facing messages were dropped — cannot teleport here / save point cannot be
+memorized / skill unusable here / item unusable here. Hercules sends this
+*instead of* `clif->skill_fail` (`clif.c:6213` says so). Any skill in the map
+zone's `disabled_skills` therefore did nothing at all, silently, on any non-PvP
+map: `DC_UGLYDANCE`, `BD_ETERNALCHAOS`, `BD_ROKISWEIL`, `CG_HERMODE`,
+`BA_DISSONANCE`, `DC_DONTFORGETME`. Fixed with a packet + handler + regression
+test (`ee26fb23`). **Not yet seen in the graphical client** — the chat line is
+wire-verified only.
+
+**Still open:**
+
+- **Skips are reported as PASS.** In `sweep_job` (`scenarios/skills.rs`) a failed
+  job change prints "skipped" and returns `Ok(())`. `Scenario` has no "skipped"
+  outcome; it needs one. This is the mechanism that hid items 3 above for weeks.
+- **A stale allowlist reason.** `BD_ETERNALCHAOS` / `BD_ROKISWEIL` are
+  allowlisted as "Ensemble / Duet skills"; they were actually map-zone-disabled,
+  and now produce real feedback, so the entries are inert *and* misleading.
+
+**Trap: never run a second tester instance while the suite is running either.**
+All scenarios share one character *and* one partner character, so a concurrent
+run corrupts both. Two headless instances in parallel would need two more GM
+accounts plus their own characters, and the partner character name is currently
+hardcoded (`context.rs`, `CHARACTER_NAME`), which is the actual blocker — RO
+character names are globally unique.
 
 **Trap that cost a whole 40-minute run:** do **not** run any `cargo` command
 while the suite is executing. `cargo run` rebuilds

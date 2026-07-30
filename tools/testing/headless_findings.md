@@ -9,6 +9,51 @@ All findings are classified by layer:
 
 ---
 
+## Shuffle pass — July 29/30, 2026 (five bugs, and a tally that was wrong)
+
+Running the 114-scenario suite in a **randomised order** (`--shuffle <seed>`)
+found **four order-dependence bugs** and **one real client bug**. None were
+reachable by the existing double-run gate, which runs the same order twice.
+
+**Read this first: the previously recorded "114/114 green" was never true.**
+`skills-dancer` and `skills-gypsy` had been failing the whole time behind a green
+count, because a skipped scenario was tallied as PASS. Both the cause and the
+mechanism are below. **A pass count that includes non-tests is worse than a red
+one** — it is the reason these sat unnoticed.
+
+| Issue | Scenario | Layer | Root cause & resolution |
+| --- | --- | --- | --- |
+| **SP drained across scenarios** | `weapon-refine-missing-material` | Client Test Harness | Logged for weeks as "order-dependent, root cause not yet found", and never a refine bug. `skill-fail-rejection` drains SP to zero (`@heal 0 -999999`) and never restored it; `WS_WEAPONREFINE` costs 5 SP, and `ensure_job` does not heal, so the drain survived the job change to Whitesmith. The cast was rejected, `RefinableWeaponList` never arrived, the scenario timed out. **Fix:** restore SP on the way out, including the failure path. **Proved** by running the two back to back. |
+| **"Far" map was not far** | `observer-look-clear` (+ 2 latent) | Client Test Harness | `FAR_MAP` was the constant `"prontera"`, but `connect_pair` meets wherever the *partner character was last left*, and that position persists in the `char` table across scenarios. When order parked the partner on prontera, "warp away to leave view" became "warp to a random cell on the observer's own map" and `assert_in_view(false)` stopped holding. **Fix:** `far_map_from(home_map)`. Three scenarios used `FAR_MAP`, so all three were latent. |
+| **Sex-locked jobs silently remapped** | `skills-dancer`, `skills-gypsy` | Client Test Harness | *Not* order-dependent — these could never pass. The shared character is male, and **Hercules does not refuse a sex-mismatched job change**: `pc_mapid2jobid` (`pc.c:6465`) round-trips the request through the character's sex, so asking for Gypsy yields Clown and the server reports "Your job has been changed." With no failure message, `sweep_job`'s gender-restriction skip guard could never fire, so it timed out instead. **Fix:** route female-only jobs to `HeadlessTwo` (already female, level 99, GM group 99 — **no new account needed**, sex is per-character here). |
+| **Inherited job decided the outcome** | `incoming-damage` | Client Test Harness | Deliberately did not call `ensure_job`, so it inherited whatever job ran before it; after `skills-soul-linker` the provoked mob never retaliates. Passed in natural order only because `dm-warp-recall` precedes it there and leaves the character alone. **Fix:** best-effort `ensure_job(4008)`, preserving the no-GM A/B path. **Two wrong hypotheses first:** a lethal provoking blow (the fallback never fired) and mob species (1007 both passed *and* failed). A one-variable bisect settled it in two runs. |
+| **Map-zone rejections were silent** | `skills-dancer`, `skills-gypsy` | **Shared Crate** | `ZC_NOTIFY_MAPINFO` (**0x0189**) was unmodeled, so `register_length_fallbacks` consumed it and **four user-facing messages were dropped**: cannot teleport here / save point cannot be memorized / skill unusable here / item unusable here. Hercules sends this *instead of* `clif->skill_fail` (`clif.c:6213` says so outright). Any skill in the map zone's `disabled_skills` therefore did nothing at all, silently, on every non-PvP map — `DC_UGLYDANCE`, `BD_ETERNALCHAOS`, `BD_ROKISWEIL`, `CG_HERMODE`, `BA_DISSONANCE`, `DC_DONTFORGETME`. **Fix:** packet + handler + regression test over all four types (`ee26fb23`). **Wire-verified only — not yet seen in the graphical client.** |
+
+### Skips are no longer counted as passes
+
+`sweep_job` returned `Ok(())` on a skip, so it printed "skipped" and tallied as
+PASS. `Scenario` now has a third outcome (`SKIPPED_PREFIX` / `skipped()` /
+`is_skip()` in `scenarios/mod.rs`), reported as `SKIP` and excluded from the pass
+count. A skip is deliberately an `Err`, so the worst case is a visible amber row
+rather than a false green.
+
+**`skills-novice` is the one legitimately permanent skip** — the Novice tree is
+passive apart from quest-gated actives (First Aid / Trick Dead), which `@allskill`
+cannot grant. That is why a skip must **not** fail the exit code: it would leave
+the suite permanently red for a correct reason, recreating the same
+learn-to-ignore-the-tally problem from the other direction.
+
+### Two stale entries worth correcting
+
+* `BD_ETERNALCHAOS` / `BD_ROKISWEIL` are allowlisted as "Ensemble / Duet skills".
+  They were actually **map-zone-disabled**, and now produce real feedback — so the
+  entries are both inert and misleading.
+* An earlier note claimed the no-damage skill packet was unhandled as `0x011a`.
+  **Wrong header for this packetver:** ours is `0x09CB`, and it was handled all
+  along. Check the packetver's actual header before concluding a packet is missing.
+
+---
+
 ## Summary of Recent Resolutions (July 2026)
 
 The original 73 integration tests—including all 39 job class skill sweeps and
