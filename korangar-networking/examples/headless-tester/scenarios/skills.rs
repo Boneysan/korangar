@@ -238,11 +238,22 @@ fn weapon_refine_success(config: &Config) -> Result<(), String> {
     let level = prepare_skill(&mut context, 4011, WS_WEAPONREFINE)?;
     context.say("@delitem 1101 999")?;
 
-    // Whitesmith's Weapon Refine success rate depends on job level and DEX/LUK
-    // stats. Boost these to maximize the base success rate.
+    // Whitesmith's Weapon Refine success rate depends on job level and DEX/LUK.
+    //
+    // **`@stat` is not a Hercules command.** This used to say `@stat dex 99` /
+    // `@stat luk 99`, which the server simply rejected, so two thirds of the
+    // documented "boost the stats and retry" fix never did anything and the
+    // retry loop below was carrying the scenario on its own. The real commands
+    // are `@dex` / `@luk` (both aliases of `param`), and they take a **relative
+    // adjustment**, not a target — `<+/-adjustment>` per the usage message —
+    // clamped to the max, so repeated runs saturate rather than accumulate.
+    //
+    // `@jlevel` is relative and clamping too (`job_level += level`), so it
+    // saturates at the job's maximum. All three only ever *raise* shared state,
+    // which is the direction the shared-state rule permits.
     context.say("@jlevel 70")?;
-    context.say("@stat dex 99")?;
-    context.say("@stat luk 99")?;
+    context.say("@dex 99")?;
+    context.say("@luk 99")?;
     context.pump(Duration::from_millis(400));
 
     let mut success = false;
