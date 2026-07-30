@@ -392,12 +392,18 @@ fn allowlisted(skill_name: &str) -> bool {
         "MO_CHAINCOMBO",
         "MO_COMBOFINISH",
         // Ensemble / Duet skills (require Bard + Dancer next to each other).
+        //
+        // BD_ETERNALCHAOS and BD_ROKISWEIL used to be listed here too, with that
+        // same reason, which was wrong: they are disabled by the map zone
+        // (`db/re/map_zone_db.conf`, "Normal"), and the refusal arrives as
+        // ZC_NOTIFY_MAPINFO (0x0189). That packet was unmodeled, so the refusal
+        // was silent and the allowlist quietly absorbed it. Now that 0x0189 is
+        // handled both report fail-feedback, so the entries are removed rather
+        // than left to mask the next genuine silence.
         "BD_LULLABY",
         "BD_RICHMANKIM",
-        "BD_ETERNALCHAOS",
         "BD_DRUMBATTLEFIELD",
         "BD_RINGNIBELUNGEN",
-        "BD_ROKISWEIL",
         "BD_INTOABYSS",
         "BD_SIEGFRIED",
         "BA_DISSONANCE",
@@ -626,6 +632,17 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             NetworkEvent::SkillCooldownList { .. } => Some(("cooldown-list", 0)),
             NetworkEvent::RefinableWeaponList { .. } => Some(("weapon-list", 0)),
             NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback", 0)),
+            // "You need a <item> to use this skill" — `ZC_ACK_TOUSESKILL` causes
+            // 71/72, which the networking crate turns into this instead of a
+            // ChatMessage because it has no item DB to name the item with.
+            //
+            // Omitting it made a correctly-reported refusal look like silence.
+            // It stayed hidden because the shared character happened to be
+            // carrying a stash of Trap items accumulated by earlier runs, so
+            // Hunter/Sniper traps *succeeded* and reported a ground unit. Clear
+            // the junk inventory and all seven trap skills "go silent" at once —
+            // the sweep was quietly depending on leftover state to pass.
+            NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item", 0)),
             // Some skills open a menu (e.g. teleport / warp portal).
             NetworkEvent::OpenDialog { .. } | NetworkEvent::AddChoiceButtons { .. } => Some(("dialog", 0)),
             _ => None,

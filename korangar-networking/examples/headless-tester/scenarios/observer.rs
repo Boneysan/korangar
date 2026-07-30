@@ -274,6 +274,24 @@ fn ammunition_survives_a_disguise(config: &Config) -> Result<(), String> {
     primary.pump(Duration::from_millis(300));
     let _ = primary.ensure_job(4008);
 
+    // Hand the ammunition back too, not just the gun.
+    //
+    // This grants 100 rounds every run and used to keep them. Ammunition
+    // stacks, so nothing ever looked wrong — it just accumulated, run after
+    // run, until the shared character was carrying ~1600 Silver Bullets and
+    // crossed its weight limit. Past that point Hercules answers `@item` with
+    // "Failed to pick up item.", and **every scenario that needs an item
+    // breaks at once**: `use-consumable` timed out waiting for an inventory
+    // add, and `skills-hunter` reported seven skills as silent because its
+    // traps consume items the harness could no longer hand over.
+    //
+    // That failure mode is nastier than an ordinary shared-state bug: it is
+    // invisible for dozens of runs, then appears far away from its cause and
+    // looks like several unrelated regressions at once.
+    let _ = primary.say(&format!("@delitem {SILVER_BULLET} 30000"));
+    let _ = primary.say(&format!("@delitem {REVOLVER} 100"));
+    primary.pump(Duration::from_millis(300));
+
     result
 }
 
