@@ -86,6 +86,36 @@ const TRAP_ITEM: u32 = 1065;
 /// alone cannot distinguish them and the ids have to be listed.
 const TRAP_PLACING_SKILLS: &[u16] = &[115, 116, 117, 118, 119, 120, 121, 122, 123, 125];
 
+/// Every skill whose `skill_db` entry has a `Unit:` block — i.e. every skill
+/// that is supposed to leave a skill unit on the ground.
+///
+/// This is the authority for "did the cast actually do anything". The generic
+/// matcher accepts any response at all, and for these skills `SkillCast`
+/// arrives first and satisfies it, so the sweep recorded a cast bar starting
+/// and never checked what it produced. `ground-unit` was never once reported
+/// across a full run before traps were held to this standard.
+///
+/// Regenerate from Hercules when skill_db changes:
+/// ```sh
+/// python3 - <<'EOF'
+/// import re, pathlib
+/// t = pathlib.Path("db/re/skill_db.conf").read_text(errors="replace")
+/// ids = sorted(int(re.search(r'^\tId:\s*(\d+)', e, re.M).group(1))
+///              for e in re.split(r'\n\{\n', t)
+///              if re.search(r'^\tId:', e, re.M) and re.search(r'^\tUnit:\s*\{', e, re.M))
+/// print(ids)
+/// EOF
+/// ```
+const UNIT_CREATING_SKILLS: &[u16] = &[
+    12, 18, 21, 25, 27, 47, 70, 79, 80, 83, 85, 87, 89, 91, 92, 115, 116, 117, 118, 119, 120, 121, 122, 123, 125,
+    140, 220, 229, 254, 285, 286, 287, 288, 336, 339, 369, 395, 404, 405, 409, 410, 428, 429, 430, 488, 516, 521,
+    525, 527, 535, 538, 541, 653, 670, 2032, 2044, 2213, 2216, 2238, 2239, 2249, 2250, 2251, 2252, 2253, 2254,
+    2273, 2274, 2299, 2300, 2301, 2302, 2303, 2304, 2319, 2414, 2418, 2419, 2443, 2444, 2446, 2447, 2449, 2450,
+    2452, 2453, 2465, 2466, 2467, 2468, 2479, 2482, 2484, 2485, 2487, 2488, 2490, 2555, 2567, 2587, 3006, 3008,
+    3009, 3010, 3020, 5006, 5008, 5010, 5027, 5028, 5029, 8020, 8025, 8033, 8041, 8043, 8208, 8209, 8210, 8211,
+    8212, 8403, 8406, 8409, 8412, 10006, 10007, 10008, 10009
+];
+
 /// Force a skill failure (`ZC_ACK_TOUSESKILL` / 0x0110) and assert the shared
 /// stack promotes it to a rejection `ChatMessage` (M1-p0 rejection-messages row).
 ///
@@ -677,11 +707,20 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         // An explicit refusal still counts: conditions the harness cannot meet
         // are a legitimate outcome. What is no longer accepted is an unrelated
         // buff or visual standing in for proof of placement.
-        if TRAP_PLACING_SKILLS.contains(&skill.skill_id.0) {
-            let placed = context.wait_for_within("trap skill unit", Duration::from_secs(4), &mut |event| match event {
+        if UNIT_CREATING_SKILLS.contains(&skill.skill_id.0) {
+            // 12s, not the 4s the generic path uses: these have cast times (Storm
+            // Gust, Magnus, Warp), and the unit only appears once the bar
+            // completes. `SkillCast` is deliberately NOT accepted here — a cast
+            // bar starting is what the loose standard mistook for evidence.
+            let placed = context.wait_for_within("skill unit", Duration::from_secs(12), &mut |event| match event {
                 NetworkEvent::AddSkillUnit { .. } => Some(("ground-unit", 0)),
                 NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback", 0)),
                 NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item", 0)),
+                // AL_WARP opens a destination picker *before* the portal exists,
+                // so the warp list is its real response — not evidence of a unit,
+                // but not silence either, and the sweep cannot choose a
+                // destination. `teleport-select` covers the selection path.
+                NetworkEvent::WarpList { .. } => Some(("warp-list", 0)),
                 _ => None,
             });
 
