@@ -154,11 +154,67 @@ impl TestContext {
                 sleep(Duration::from_secs(4));
             }
             match Self::try_connect(config, username, password, character, create_character) {
-                Ok(context) => return Ok(context),
+                Ok(mut context) => {
+                    context.normalize();
+                    return Ok(context);
+                }
                 Err(error) => last_error = error,
             }
         }
         Err(last_error)
+    }
+
+    /// Put the shared character into a known state, at the *start* of every
+    /// scenario.
+    ///
+    /// All 114 scenarios share one character and nothing resets it, so each one
+    /// inherits whatever the last left behind. Every order-dependence bug found
+    /// on 2026-07-30 was a variant of that, and each was fixed by patching the
+    /// scenario that leaked. This is the general cure instead.
+    ///
+    /// **At the start, deliberately, not the end.** End-of-scenario cleanup is
+    /// exactly what gets skipped when a scenario fails early or returns on the
+    /// `?` operator — which is when it matters most. The ammunition leak
+    /// survived for weeks because its cleanup ran only on the happy path.
+    ///
+    /// Best-effort throughout: this must not turn a working scenario into a
+    /// failing one, and the partner account is not guaranteed to hold GM rights.
+    ///
+    /// Deliberately **not** normalised here:
+    /// - **Job** — every scenario that cares calls `ensure_job`, which is
+    ///   idempotent. Forcing one here would add a second job change to all 114.
+    /// - **Position** — scenarios warp where they need, and the pair-meeting
+    ///   hazard is fixed properly in `far_map_from`.
+    /// - **Base level and stats** — only ever raised, and they clamp.
+    fn normalize(&mut self) {
+        // Full HP/SP. `skill-fail-rejection` drains SP to zero, and the next
+        // scenario to need any inherited an unusable character.
+        let _ = self.say("@heal");
+
+        // Items that scenarios hand out and that *stack*, so accumulation is
+        // invisible: ammunition, traps, grenades. Left alone, ~16 runs of 100
+        // rounds each pushed the character past its weight limit, at which
+        // point `@item` fails with "Failed to pick up item." and every
+        // item-dependent scenario breaks at once, far from the cause.
+        for item_id in [13200, 13201, 1065, 7135] {
+            let _ = self.say(&format!("@delitem {item_id} 30000"));
+        }
+        // Arrow ids are contiguous (1750-1770).
+        for item_id in 1750..=1770 {
+            let _ = self.say(&format!("@delitem {item_id} 30000"));
+        }
+
+        // Pump so the commands land, but **do NOT flush**. `flush` clears
+        // pending events, and the server delivers real state at login —
+        // `QuestList` among it. Flushing here ate that before the scenario
+        // could see it, breaking `dm-quest-lifecycle`, which reconnects
+        // specifically to assert the quest survives a fresh map login.
+        //
+        // The cost is that this leaves `@delitem` chat noise in the queue.
+        // That is the safer side of the trade: scenarios that need a clean
+        // slate already call `flush` themselves, and losing genuine login data
+        // is not something a scenario can defend against.
+        self.pump(Duration::from_millis(500));
     }
 
     fn try_connect(

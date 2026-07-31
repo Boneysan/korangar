@@ -288,7 +288,70 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
     );
 
     if let Err(error) = incoming {
-        return Err(format!("wolf never swung back after being provoked.\n{error}"));
+        // Distinguish "it did not retaliate" from "there was nothing left to
+        // retaliate". A level-99 melee character one-shots the weak natural
+        // mobs on this field (Poring ~50 HP, Fabre ~140), and the provoke check
+        // is satisfied by our hit landing — so a kill reads exactly like a
+        // sulking monster. That ambiguity cost an earlier investigation two
+        // wrong root causes.
+        //
+        // An earlier attempt checked liveness 600ms after the provoke and
+        // concluded the target had survived; the removal had simply not arrived
+        // yet, and a correct fix was discarded on that bad evidence. Checking
+        // after the full 15s wait has no such race.
+        if context.entities.contains_key(&wolf) {
+            return Err(format!("wolf never swung back after being provoked.\n{error}"));
+        }
+
+        // Fall back to the mob this scenario already keeps for the "nothing in
+        // view" case: a Desert Wolf is tanky enough to survive a maxed
+        // character's opener and aggressive enough to answer it.
+        println!("    provoking blow killed the natural mob; retrying with DESERT_WOLF");
+        let wolf = context.spawn_monster("DESERT_WOLF", 1106)?;
+
+        let mut provoked = false;
+        for _attempt in 0..4 {
+            let wolf_position = context
+                .entities
+                .get(&wolf)
+                .map(|entity| entity.position.tile_position())
+                .ok_or("Desert Wolf entity lost")?;
+            context.walk_to(wolf_position.x.saturating_sub(1), wolf_position.y)?;
+            context.flush();
+            context.net.player_attack(wolf).map_err(|_| "disconnected")?;
+            let landed = context.wait_for_within("our swing at the Desert Wolf", Duration::from_secs(5), &mut |event| match event {
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if source_entity_id.0 == player_id.0 && destination_entity_id.0 == wolf.0 => Some(()),
+                _ => None,
+            });
+            if landed.is_ok() {
+                provoked = true;
+                break;
+            }
+        }
+        if !provoked {
+            return Err("could not land a provoking swing on the Desert Wolf".to_owned());
+        }
+
+        let position = context.position;
+        let _ = context.walk_to(position.x.saturating_sub(1), position.y);
+
+        context.wait_for_within(
+            "incoming DamageEffect from the Desert Wolf",
+            Duration::from_secs(15),
+            &mut |event| match event {
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if source_entity_id.0 == wolf.0 && destination_entity_id.0 == player_id.0 => Some(()),
+                _ => None,
+            },
+        )
+        .map_err(|error| format!("Desert Wolf never swung back after being provoked.\n{error}"))?;
     }
 
     context.kill_all_monsters();
