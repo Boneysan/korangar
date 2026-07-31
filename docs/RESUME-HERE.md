@@ -138,14 +138,34 @@ wire-verified only.
 - **Traps now prove they were placed** (`AddSkillUnit`), 12 assertions per run
   where there were previously zero.
 
+**Suite hardening is COMPLETE (2026-07-31).** Four items, all validated by a
+clean full run on an unseen seed:
+
+1. **`./dev.sh snapshot` / `restore`** (Hercules tree) — rolls the database back
+   after a run, so accumulation cannot build up again. Refuses while any
+   character is online, and verifies the dump's completion trailer.
+2. **`weapon-refine-success` uses real commands** — `@stat` is not a Hercules
+   command, so two thirds of its documented flakiness fix never ran.
+3. **`normalize()` at scenario start** — full HP/SP plus removal of stacking
+   items, at the *start* so a failing scenario cannot skip it. It must **not**
+   flush: the server delivers real state at login (`QuestList`), and flushing ate
+   it.
+4. **Unit-creating skills prove their unit** — 38 `ground-unit` assertions
+   against zero before. `UNIT_CREATING_SKILLS` is a snapshot of `skill_db`'s
+   `Unit:` blocks; **regenerate it when skill_db changes** (snippet in the const's
+   doc comment).
+
 **Still open:**
 
-- **Ground skills assert almost nothing.** ~32 addressable casts; `skill_db`'s
-  `Unit:` block (129 skills) is the authority, and it is very nearly the E1/E2
-  rendered-effect set. Sized and written up in `headless_findings.md`.
 - **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`.
-- **Nothing from today has been seen in the graphical client.** The `0x0189`
-  map-zone chat line is the one item that genuinely needs the GUI pass.
+- **THE GUI PASS — nothing from this session, or from the 26 July batch, has
+  been seen on screen.** This is now the single largest gap. Start with the
+  `0x0189` map-zone chat line (the only new item needing eyes), then
+  Moonlit/Hermode, which has been unblocked all along: `test` (male, GM) and
+  `HeadlessTwo` (female, level 99, GM, separate account) are both ready.
+- **Do not invest further in the suite.** Remaining ideas (parallel instances,
+  per-scenario characters) buy speed and isolation, not trust, and would trade a
+  known-good serial suite for new failure modes.
 
 **Trap: never run a second tester instance while the suite is running either.**
 All scenarios share one character *and* one partner character, so a concurrent
