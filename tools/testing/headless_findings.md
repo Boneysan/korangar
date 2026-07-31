@@ -51,7 +51,7 @@ learn-to-ignore-the-tally problem from the other direction.
 | **Ammo accumulated until the character was overweight** | `use-consumable`, `skill-fail-rejection`, `skills-hunter`, `skills-sniper` | Client Test Harness | `observer-ammo-disguise` granted 100 Silver Bullets per run and never removed them. Ammunition stacks, so it was invisible — until ~1600 rounds pushed the shared character past its weight limit, at which point Hercules answers `@item` with "Failed to pick up item." and **every item-dependent scenario fails at once**, far from the cause. **Fix:** clean up the ammo alongside the gun. The backlog was purged by hand via SQL and does **not** replay on a fresh database. |
 | **`SkillFailedMissingItem` counted as silence** | `skills-hunter`, `skills-sniper` | Client Test Harness | `ZC_ACK_TOUSESKILL` causes 71/72 arrive as this event rather than a `ChatMessage` (the networking crate has no item DB), and the sweep's matcher omitted it — so a correctly-reported refusal read as "SILENT". Hidden because the character carried a stash of Trap items from earlier runs, so traps *succeeded*; purge the inventory and all seven go silent at once. Same class as the `SkillEffectNoDamage` arm. |
 
-### Ground skills still assert almost nothing (open)
+### Ground skills now assert their unit (CLOSED 2026-07-31)
 
 Traps are now held to `AddSkillUnit` (see the commit "Make trap sweeps prove the
 trap was actually placed"). **The other 119 `Ground`-typed skills are not**, and
@@ -82,6 +82,28 @@ matters most for the effect work. Deriving that id list from `skill_db` has
 precedent in `tools/generate_packet_lengths.sh`. Expect real triage when it
 lands: invisible units and owner-only sends mean some legitimately never reach
 the caster.
+
+**Closed.** `UNIT_CREATING_SKILLS` (the 129 skills with a `Unit:` block) must now
+produce `AddSkillUnit` or an explicit refusal; `SkillCast` is not accepted, since
+a cast bar starting is precisely what the loose standard mistook for evidence.
+A full run reports **38 `ground-unit` assertions**, against zero for this suite's
+entire history before 2026-07-30.
+
+Two things the measurement forced, both worth keeping if this is ever revisited:
+a **12s** window (these have cast times; the trap window of 4s would have caused
+false failures), and accepting `WarpList` for `AL_WARP`, which opens a
+destination picker *before* the portal exists — a real response, not silence, so
+accepting it beats allowlisting it.
+
+**The predicted triage did not happen.** I expected invisible and owner-only
+units to need several documented allowlist entries; there was exactly one case
+(`AL_WARP`). `CR_GRANDCROSS` and `PA_GOSPEL` prove their units despite being
+`SelfCast` — caught because the check keys off skill id, not cast type — and the
+three Ninja skills report `fail-missing-item` for stones the harness never
+grants. Worth recording that the estimate was wrong in the pessimistic direction.
+
+**Maintenance:** the id list is a snapshot of `skill_db`. Regenerate it when the
+skill database changes — the snippet is in the const's doc comment.
 
 **Known intermittent:** `MG_FROSTDIVER` occasionally reports SILENT in
 `skills-super-novice` (target dies or the response misses the 4 s window). Two
