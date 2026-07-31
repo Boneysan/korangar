@@ -56,6 +56,13 @@ not per-account):
 
 Separate accounts, so both can be logged in simultaneously.
 
+**Their job and gear drift — set them explicitly, never assume.** The suite
+leaves whatever the last scenario used. At the time of writing `test` was a
+**Taekwon (4046)** and `HeadlessTwo` a **Dancer (20)**, neither of which is what
+any row below wants. Every row states its own `@jobchange`; run it even if you
+think the job is already right. An earlier note in this repo asserted "`test`
+has the Archer skills" — true when written, false a day later.
+
 ---
 
 ## The queue, cheapest first
@@ -73,9 +80,9 @@ Separate accounts, so both can be logged in simultaneously.
 
 | | |
 |---|---|
-| **How** | Two seats. `test` has the Archer skills: `AC_DOUBLE` (46) / `AC_SHOWER` (47) for the effect row, `AC_CONCENTRATION` (45) for status values |
+| **Setup** | Two seats, and **`@jobchange 3` + `@allskill` on the acting seat** — these are Archer-line skills and the shared character will not be an Archer. Ids verified against `docs/skills.json`: `AC_CONCENTRATION` **45**, `AC_DOUBLE` **46**, `AC_SHOWER` **47** |
 | **Watch for** | The *observer* sees the effect and the status icon/values — not the caster |
-| **Note** | No setup needed. These are the last two open rows of [observer-view-verification.md](observer-view-verification.md) |
+| **Note** | The last two open rows of [observer-view-verification.md](observer-view-verification.md) |
 | **Result** | |
 
 ### 3. Support walk-into-range — **give this real attention**
@@ -94,7 +101,17 @@ Separate accounts, so both can be logged in simultaneously.
 |---|---|
 | **How** | Arm Storm Gust (81 cells), then Land Protector Lv10 (**225 cells**) |
 | **Watch for** | Does a large area read as a *shape*, or as a solid slab? Out-of-range should tint red |
+| **Geometry** | Verified against `skill_db` 2026-07-31: Storm Gust `Layout: 4` → 9×9 = **81**; Land Protector Lv10 splash **7** → 15×15 = **225** |
 | **Status** | **PARTIAL** — it draws and the red tint works. The 225-cell question is the open one |
+| **Result** | |
+
+### 4b. Cast circles — never looked at, expect a rebuild
+
+| | |
+|---|---|
+| **How** | Cast anything with a cast bar and watch the ground at the caster's feet. `Lockon` plus six `Beginspell` recipes exist in the recipe tables |
+| **Watch for** | Whether they read as the original client's cast circles at all |
+| **Expectation** | These are **procedural placeholders over generic ring textures**. CLAUDE.md's own note says to expect a rebuild, not a tick — so a "fail" here is the expected outcome and the useful output is a description of what is wrong |
 | **Result** | |
 
 ### 5. Moonlit / Hermode — blocked longest, and the alpha calibration sample
