@@ -337,7 +337,28 @@ have failed for a reason that is not a bug.
 | 8 | A changes **own** hair | updates without relog | **PASS** (2026-07-29) — the "expected to FAIL" prediction was wrong, see Gap 2 correction |
 | 9 | B changes hair while A watches | A sees it update live | **PASS** after the hair fix; **FAILED** before it |
 | 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | ☐ |
-| 11 | B gains a status with values (Sage field) | A sees the same visual | ☐ |
+| 11 | B gains a status with values (**Sage field — NOT `AC_CONCENTRATION`**) | A sees the same visual | ☐ — one invalid attempt 2026-07-31, see below |
+
+**Row 11: the "Sage field" in the Expected column is load-bearing. Do not
+substitute a plain buff.** Attempted 2026-07-31 with `AC_CONCENTRATION`, which
+[gui-verification-pass.md](gui-verification-pass.md) had swapped in because the
+shared character happened to have Archer skills. The observer saw nothing, and
+**that is correct behaviour, not a failure**: `SC_CONCENTRATION`
+(`db/re/sc_config.conf:156`) carries `Flags: { Buff }` + `Icon:
+"SI_CONCENTRATION"` and **no `Opt1`/`Opt2`/`Opt3`**, while Korangar derives every
+entity status visual from opt1/opt2 alone (`status_effect_asset`,
+`korangar/src/world/entity/mod.rs:93` — stun, sleep, poison, silence, and
+nothing else). A buff with no opt-state has no visual to draw for *anyone*, so
+the row becomes unfalsifiable.
+
+Not a broadcast gap either — `clif_status_change_sub` (`src/map/clif.c`) sends
+`AREA` unless the player is `OPTION_INVISIBLE`, so the observer does receive the
+packet.
+
+Valid probes: `SA_VOLCANO` **285** / `SA_DELUGE` **286** / `SA_VIOLENTGALE`
+**287** — the three the Hercules `status_get_val_flag()` delta exists for, which
+have values *and* a ground-unit visual. Aim bare ground 4-5 cells clear
+(`UF_NOFOOTSET`).
 
 **Mid-session equip: PASS (2026-07-29).** Closed by the gunslinger run — see below.
 Previously unobserved because: A diagnostic showed

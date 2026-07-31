@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **NOT STARTED.** Written 2026-07-31 as a queue for a later session |
+| **Status** | **IN PROGRESS.** Written 2026-07-31; first rows walked the same day — **row 1 PASS**, row 11's probe corrected as invalid, rows 10/3/4/4b/5/6 open |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -74,7 +74,24 @@ has the Archer skills" — true when written, false a day later.
 | **How** | On any non-PvP map, as a Dancer or Gypsy, cast `DC_UGLYDANCE`. Also try `@warp` into a no-teleport area, or `/memo` where saving is disallowed |
 | **Watch for** | A red chat line: *"This skill cannot be used in this area."* Before the fix this printed **nothing at all** — the skill simply did nothing |
 | **Why it matters** | Four distinct messages ride this packet (teleport / save point / skill / item). A pass on one is decent evidence for all four, since they share one handler |
-| **Result** | |
+| **Result** | **PASS** 2026-07-31 — `DC_UGLYDANCE` as a Dancer in Prontera printed *"This skill cannot be used in this area."* Covers `info_type` 2; the other three types differ only by a string literal in the same `match`, so the packet + handler + chat path are all proven |
+
+**Two order facts worth keeping**, both checked while setting this row up:
+
+- **A whip is not needed to see the message.** `DC_UGLYDANCE` requires
+  `WeaponTypes: { Whips: true }` and the seat was holding a bow, but it is a
+  `Self:` skill, so `unit_skilluse_id2` runs `status->check_skilluse`
+  (`unit.c:1540`, the map-zone check) *before*
+  `skill->check_condition_castbegin` (`unit.c:1601`, the weapon check). Seeing
+  *"You can't use this skill with that weapon"* instead would mean the zone
+  check was skipped — a finding, not a setup error.
+- **GM 99 does not bypass it.** The enforcement lives in
+  `status_check_skilluse_mapzone` (`src/map/status.c`), which has no permission
+  check at all — unlike `skillnotok`, which honours `PC_PERM_SKILL_UNCONDITIONAL`.
+  It sends `clif->skill_mapinfomessage(sd, 2)` on any `PACKETVER >= 20080311`.
+- `@useskill <id> <lv> self` is a valid trigger — it routes through
+  `unit->skilluse_id` with no bypass (`pc->autocast_clear` first, so the
+  `AUTOCAST_ITEM` escape in `skillnotok` cannot apply).
 
 ### 2. Observer rows 10-11 — skill effect and status values from the far seat
 
@@ -83,7 +100,47 @@ has the Archer skills" — true when written, false a day later.
 | **Setup** | Two seats, and **`@jobchange 3` + `@allskill` on the acting seat** — these are Archer-line skills and the shared character will not be an Archer. Ids verified against `docs/skills.json`: `AC_CONCENTRATION` **45**, `AC_DOUBLE` **46**, `AC_SHOWER` **47** |
 | **Watch for** | The *observer* sees the effect and the status icon/values — not the caster |
 | **Note** | The last two open rows of [observer-view-verification.md](observer-view-verification.md) |
-| **Result** | |
+| **Result** | Row 10 open. **Row 11 was run 2026-07-31 with an INVALID probe — see below. Not a result either way.** |
+
+#### Row 11: do NOT use `AC_CONCENTRATION` — corrected 2026-07-31
+
+This row's substitution of `AC_CONCENTRATION` for the original *"Sage field"*
+**cannot test what the row is for**, and produced a false negative (observer saw
+nothing, which is correct behaviour) before the substitution was checked.
+
+`SC_CONCENTRATION` (`db/re/sc_config.conf:156`) is:
+
+```
+Flags:     { Buff: true }
+CalcFlags: { Agi: true, Dex: true }
+Icon:      "SI_CONCENTRATION"
+```
+
+**No `Opt1`/`Opt2`/`Opt3` flag.** Korangar attaches an entity visual purely from
+opt1/opt2 — `status_effect_asset` (`korangar/src/world/entity/mod.rs:93`) maps
+only `OPT1_STUN`→`stun.str`, `OPT1_SLEEP`→`sleep.str`, `OPT2_POISON`/
+`OPT2_DEADLY_POISON`→`poison.str`, `OPT2_SILENCE`→`silence.str`. So Improve
+Concentration has **no entity visual for anybody** — not the observer, not even
+the caster. Its only representation is a buff-bar icon, and the buff bar is
+self-only.
+
+The packet *does* reach the observer, so this is not a broadcast gap:
+`clif_status_change_sub` (`src/map/clif.c`) ends in
+`clif->send(..., bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA)`
+— **`AREA`**, i.e. every observer gets it. The value simply has nothing to draw.
+
+**Use a status that has both values and a visual** — the original *"Sage field"*
+note meant `SA_VOLCANO` **285** / `SA_DELUGE` **286** / `SA_VIOLENTGALE` **287**
+(`@jobchange 16` + `@allskill`). Those are exactly the three the Hercules delta
+patched `status_get_val_flag()` for so `val1`/`val2` render instead of "+0"
+(CLAUDE.md §3b), and they draw as ground units every seat can see. Aim **bare
+ground 4-5 cells away** — they carry `UF_NOFOOTSET` and refuse to spawn on top
+of anything, including the caster.
+
+**Lesson, general:** before substituting a skill into a verification row, check
+that it still carries the property the row tests. A status with no opt-state has
+no visual, so "observer sees nothing" is unfalsifiable — the row can neither
+pass nor fail.
 
 ### 3. Support walk-into-range — **give this real attention**
 

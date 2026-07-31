@@ -158,12 +158,37 @@ clean full run on an unseen seed:
 **Still open:**
 
 - **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`.
-- **THE GUI PASS — nothing from this session, or from the 26 July batch, has
-  been seen on screen.** This is now the single largest gap: boundaries 1-4 of
-  the wire→pixel path have good confidence, boundary 5 has none. The queue is
-  written up with setup, traps, and a known-unrendered list (so phase-4 gaps are
-  not logged as bugs) in
+- **THE GUI PASS — STARTED 2026-07-31, one row closed.** Boundary 5 now has its
+  first evidence. The queue, with setup, traps and a known-unrendered list (so
+  phase-4 gaps are not logged as bugs), is
   **[plans/gui-verification-pass.md](plans/gui-verification-pass.md)**.
+  - **Row 1 `0x0189` PASS** — `DC_UGLYDANCE` as a Dancer in Prontera printed
+    *"This skill cannot be used in this area."* on screen. That closes the one
+    genuinely new item from 31 July; the other three `info_type` values differ
+    only by a string literal in the same `match`, so the packet, the handler and
+    the chat path are all proven.
+  - **Row 11's probe was invalid and has been corrected** — `AC_CONCENTRATION`
+    has no opt1/opt2 state, so it has no entity visual for *anyone* and the row
+    could neither pass nor fail. Use a Sage field (`SA_VOLCANO` 285 /
+    `SA_DELUGE` 286 / `SA_VIOLENTGALE` 287). Full reasoning in both plan docs.
+    **Generalise this: when substituting a skill into a verification row, check
+    the substitute still carries the property the row tests.**
+  - Rows 10, 3, 4, 4b, 5 and 6 remain open. Row 10 is cheapest — both seats are
+    already provisioned and it needs no gear change.
+
+- **Two client-launch facts worth not re-deriving.** The release binary goes
+  stale silently: on 31 July it predated the `0x0189` fix, so the row would have
+  reported a false FAIL against a build that never contained the code. **Check
+  the binary's mtime against the commit you mean to test, and rebuild first.**
+  Seat A is `cd korangar/korangar && ../target/release/korangar`; seat B is
+  `cd client2 && <abs path>/target/release/korangar` (its `client/` uses absolute
+  GRF paths and logs in as `headless2`).
+
+- **`KORANGAR_PACKET_LOG=1` is not a full dump** — it prints only `impact`,
+  `damage`, `add-entity`, `local equipped`, `look change` and unknown/failed
+  incoming bytes. It logs **nothing for status changes or skill casts**, so its
+  silence is not evidence that a cast did not happen. Confirm state against the
+  `char`/`skill` tables instead.
 - **Do not invest further in the suite.** Remaining ideas (parallel instances,
   per-scenario characters) buy speed and isolation, not trust, and would trade a
   known-good serial suite for new failure modes.
