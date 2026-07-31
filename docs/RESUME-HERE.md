@@ -159,10 +159,11 @@ clean full run on an unseen seed:
 
 - **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`.
 - **THE GUI PASS — nothing from this session, or from the 26 July batch, has
-  been seen on screen.** This is now the single largest gap. Start with the
-  `0x0189` map-zone chat line (the only new item needing eyes), then
-  Moonlit/Hermode, which has been unblocked all along: `test` (male, GM) and
-  `HeadlessTwo` (female, level 99, GM, separate account) are both ready.
+  been seen on screen.** This is now the single largest gap: boundaries 1-4 of
+  the wire→pixel path have good confidence, boundary 5 has none. The queue is
+  written up with setup, traps, and a known-unrendered list (so phase-4 gaps are
+  not logged as bugs) in
+  **[plans/gui-verification-pass.md](plans/gui-verification-pass.md)**.
 - **Do not invest further in the suite.** Remaining ideas (parallel instances,
   per-scenario characters) buy speed and isolation, not trust, and would trade a
   known-good serial suite for new failure modes.
