@@ -68,6 +68,9 @@ Each is a case where the server already sends everything needed.
       `handle_character`, so arrow keys never reach it. Supporting it means
       changing **`korangar-interface`**, which is shared upstream code and cuts
       against the rebaseability rule (CLAUDE.md §4). **A decision, not a task**
+- [ ] **`ZC_TALKBOX_CHATCONTENTS` (0x0191)** — an NPC message board's contents,
+      unmodeled. Low priority on its own, but see the note about *how it was
+      found* under §How to regenerate: it appeared only under a shuffled run
 - [ ] **Triage the remaining `register_noop` packets** — 25 left. Likely worth
       modelling: `ConnectionRefusedPacket` (silent login failures?), `OpenUiPacket`
       (server asking the client to open a UI), `PersonalInformationPacket` (exp /
@@ -99,9 +102,15 @@ Each is a case where the server already sends everything needed.
       run, passes alone (2026-08-02 gate). Logged as finding §4 in
       [../../tools/testing/headless_findings.md](../../tools/testing/headless_findings.md).
       **Bisect it, do not theorise** — every previous instance of this class had
-      a confident wrong hypothesis first
-- [ ] **Run `--scenario all --shuffle <seed>`** now that ten scenarios have been
-      added; order-dependence was a live problem three weeks running
+      a confident wrong hypothesis first. **`--shuffle 42` does not reproduce
+      it** (clean 122/0/1), so that seed is not the lever; try other seeds to
+      find a replayable ordering before hand-bisecting
+- [x] ~~Run `--scenario all --shuffle <seed>`~~ — **done 2026-08-02, seed 42:
+      122 passed / 0 failed / 1 skipped.** The ten scenarios added that day all
+      survive reordering, including the four that leave server-side state
+      (party membership, share rules, the ignore list, an open trade). Worth
+      repeating with other seeds: one seed samples one ordering, it does not
+      prove the suite order-independent
 
 ## 5. Server-side deltas to re-apply after any upstream Hercules merge
 
@@ -132,7 +141,14 @@ grep -o "register_noop::<[A-Za-z]*>" \
 # 3. Packets with no handler at all — the suite prints these every run under
 #    "Unmodeled packets seen". THAT LIST IS A BUG REPORT. Two real bugs came out
 #    of reading it on 2026-08-02.
+#
+#    ONE RUN UNDER-REPORTS. The list depends on execution order: the natural
+#    order showed 1 unmodeled header and `--shuffle 42` showed 2, turning up
+#    ZC_TALKBOX_CHATCONTENTS (0x0191) that the natural order never reached.
+#    Incoming-handled moved too (164 vs 163). Combine several seeds before
+#    treating the list as complete.
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
+cargo run --release --example headless-tester -p korangar-networking -- --scenario all --shuffle 42
 
 # 4. Client actions the UI never reaches. Grep the *whole* client, not just
 #    lib.rs -- several are called from `state/`, and a narrow grep produced three
