@@ -190,6 +190,57 @@ What it took, and why the two halves were not equal:
 Parties live in the `party` table server-side, so rejoining is not needed; a
 character keeps its party across sessions exactly as in official RO.
 
+### 2c. Social windows — the whole family has one GUI row between them
+
+**Why this block exists.** The Social section of
+[M1-p0-verification.md](M1-p0-verification.md) contains exactly one row —
+*"Public chat send + receive"*. Whisper, friends and party were never listed
+anywhere, so every one of those windows shipped without being looked at. That is
+the same gap that hid the observer cast bar for two sessions: the wire layer was
+green the whole time (`friend-lifecycle`, `friend-reject`, and five party
+scenarios all pass), and green wire says nothing about whether a window draws.
+
+**Data is not the problem here.** Unlike party SP, every field these rows need
+already reaches the client. What is untested is `event → pixel`, and in
+particular *re-render on change*, which is precisely where the cast bar failed:
+state was correct and simply never reached a renderer.
+
+Two seats. `test` (Alt+H friend list, Alt+Z party) and `HeadlessTwo`.
+
+#### Party — what today's session did and did not prove
+
+Verified live 2026-08-02 (see §2b): Create, Invite, Accept, the roster filling
+in, HP/SP/cast bars, and membership surviving a logout. That is the happy path
+only. Still unverified:
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| P1 | **Reject** button on the invited seat | Inviter gets the rejection line; the invited seat's status line returns to "Not in a party" | ☐ |
+| P2 | **Leave** button | Roster empties on *both* seats, status line resets, bars over the ex-member disappear | ☐ |
+| P3 | Status line during an outgoing invite | Inviter shows *"Invited X; waiting for an answer…"*, and it **clears** when the answer lands — either answer | ☐ |
+| P4 | Disabled states | Create greys out once in a party, Invite until in one, Accept/Reject with no invite, Leave when party-less — each with its tooltip | ☐ |
+| P5 | A member going **offline** | Roster line flips to `(offline)`; bars over them stop drawing | ☐ |
+| P6 | Party chat | Sent from one seat, shown in the other's chat window | ☐ |
+
+#### Friends — nothing has ever been on screen
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| F1 | Add by name from the friend list text box | `FriendRequestWindow` **pops automatically** on the other seat (`lib.rs:4797`) | ☐ |
+| F2 | Accept | Both lists gain the friend with **no relog** | ☐ |
+| F3 | Reject | Request window closes; requester gets the rejection line | ☐ |
+| F4 | Remove | Per-friend Remove button empties the row on both sides | ☐ |
+| F5 | **Online glyph flips live** | Friend logs out → `○`, back in → `●`, without reopening the window | ☐ |
+| F6 | List survives relog | Friends still listed after logging out and back in | ☐ |
+
+**F5 and F6 are the two to watch.** `FriendEntry::set_online` rewrites
+`display_label` and is wired to `FriendOnlineStatus` (`lib.rs:4817`) with a unit
+test for the glyph itself — so if the glyph does not flip on screen, the state is
+right and the **re-render** is missing, exactly like the cast bar. F6 depends on
+`SetFriendList` at login (`lib.rs:5056`), which arrives *during connect*; that
+same timing is why `party-persists-relog` had to assert functionally rather than
+wait for a packet.
+
 ### 3. Support walk-into-range — **give this real attention**
 
 | | |
