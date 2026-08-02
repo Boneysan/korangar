@@ -3,7 +3,7 @@ mod lighting;
 #[cfg(feature = "debug")]
 use std::collections::HashSet;
 use std::mem::size_of;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 
 use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector2, Vector3};
 use korangar_audio::AudioEngine;
@@ -109,6 +109,16 @@ pub struct Map {
     lighting: Lighting,
     water_plane: Option<WaterPlane>,
     tiles: Vec<Tile>,
+    /// Cells the *server* has re-typed at runtime (`ZC_UPDATE_MAPINFO`), keyed
+    /// by tile index. Ice Wall is the common case: it makes its cells
+    /// impassable while it stands and reverts them when it expires.
+    ///
+    /// Kept beside the tiles rather than written into them because `Map` lives
+    /// behind an `Arc` in a `SimpleCache` and is **reused on a later visit** —
+    /// baking a wall into the tile data would leave it there forever. For the
+    /// same reason [`Self::clear_dynamic_cells`] must run when a map is
+    /// (re-)entered.
+    dynamic_cells: RwLock<HashMap<usize, TileFlags>>,
     sub_meshes: Vec<SubMesh>,
     vertex_buffer: Arc<Buffer<ModelVertex>>,
     index_buffer: Arc<Buffer<u32>>,
@@ -174,6 +184,7 @@ impl Map {
             lighting,
             water_plane,
             tiles,
+            dynamic_cells: RwLock::new(HashMap::new()),
             sub_meshes,
             vertex_buffer,
             index_buffer,
@@ -238,6 +249,53 @@ impl Map {
 
     pub fn get_tile(&self, position: TilePosition) -> Option<&Tile> {
         self.tiles.get(position.x as usize + position.y as usize * self.width as usize)
+    }
+
+    fn tile_index(&self, position: TilePosition) -> Option<usize> {
+        let index = position.x as usize + position.y as usize * self.width as usize;
+        (index < self.tiles.len()).then_some(index)
+    }
+
+    /// Flags for a cell, preferring any runtime override from the server.
+    fn effective_flags(&self, position: TilePosition) -> Option<TileFlags> {
+        let index = self.tile_index(position)?;
+
+        if let Some(flags) = self.dynamic_cells.read().unwrap().get(&index) {
+            return Some(*flags);
+        }
+        self.tiles.get(index).map(|tile| tile.flags)
+    }
+
+    /// Apply a server cell re-type. `cell_type` is a gat type, decoded exactly
+    /// as the map loader decodes the `.gat` file so the two cannot drift.
+    ///
+    /// Without this the client believes an Ice Wall's cells are still walkable
+    /// and happily paths straight through it, then disagrees with the server.
+    pub fn set_cell_type(&self, position: TilePosition, cell_type: u16) {
+        let Some(index) = self.tile_index(position) else {
+            return;
+        };
+
+        let Some(flags) = tile_flags_for_cell_type(cell_type) else {
+            return;
+        };
+
+        let original = self.tiles.get(index).map(|tile| tile.flags);
+        let mut dynamic_cells = self.dynamic_cells.write().unwrap();
+
+        // Reverting to the map's own value drops the override entirely, so the
+        // table stays empty in the common case.
+        match original == Some(flags) {
+            true => dynamic_cells.remove(&index),
+            false => dynamic_cells.insert(index, flags),
+        };
+    }
+
+    /// Drop every runtime cell override. **Must** run when a map is entered:
+    /// the `Map` is cached behind an `Arc`, so overrides would otherwise
+    /// survive into a later visit.
+    pub fn clear_dynamic_cells(&self) {
+        self.dynamic_cells.write().unwrap().clear();
     }
 
     pub fn background_music_track_name(&self) -> Option<&str> {
@@ -941,16 +999,74 @@ impl Map {
     }
 }
 
+/// Gat cell type to [`TileFlags`], mirroring `FromBytes for TileFlags` in
+/// `ragnarok-formats`.
+///
+/// The server sends the same numbering over `ZC_UPDATE_MAPINFO` that the `.gat`
+/// file uses, so the two mappings must agree or a re-typed cell would get
+/// different flags from the identical byte in the map file. `None` for an
+/// unknown type: ignoring it is safer than guessing, since guessing "blocked"
+/// could strand the player behind a wall that is not there.
+fn tile_flags_for_cell_type(cell_type: u16) -> Option<TileFlags> {
+    let flags = match cell_type {
+        0 => TileFlags::WALKABLE,
+        1 => TileFlags::empty(),
+        2 => TileFlags::WATER,
+        3 => TileFlags::WATER | TileFlags::WALKABLE,
+        4 => TileFlags::WATER | TileFlags::SNIPABLE,
+        5 => TileFlags::CLIFF | TileFlags::SNIPABLE,
+        6 => TileFlags::CLIFF,
+        _ => return None,
+    };
+    Some(flags)
+}
+
 impl Traversable for Map {
     fn is_walkable(&self, position: TilePosition) -> bool {
-        self.get_tile(position)
-            .map(|tile| tile.flags.contains(TileFlags::WALKABLE))
+        self.effective_flags(position)
+            .map(|flags| flags.contains(TileFlags::WALKABLE))
             .unwrap_or(false)
     }
 
     fn is_snipeable(&self, position: TilePosition) -> bool {
-        self.get_tile(position)
-            .map(|tile| tile.flags.contains(TileFlags::SNIPABLE))
+        self.effective_flags(position)
+            .map(|flags| flags.contains(TileFlags::SNIPABLE))
             .unwrap_or(false)
+    }
+}
+
+#[cfg(test)]
+mod dynamic_cell_tests {
+    use ragnarok_formats::map::TileFlags;
+
+    use super::tile_flags_for_cell_type;
+
+    /// `Map` itself cannot be built in a unit test -- it owns GPU buffers -- so
+    /// this pins the part that can drift: the cell-type mapping must match the
+    /// `.gat` decoding in `ragnarok-formats`, since the server re-types cells
+    /// using the same numbering the map file uses.
+    #[test]
+    fn cell_types_match_the_gat_mapping() {
+        assert_eq!(tile_flags_for_cell_type(0), Some(TileFlags::WALKABLE));
+        assert_eq!(tile_flags_for_cell_type(1), Some(TileFlags::empty()));
+        assert_eq!(tile_flags_for_cell_type(2), Some(TileFlags::WATER));
+        assert_eq!(tile_flags_for_cell_type(3), Some(TileFlags::WATER | TileFlags::WALKABLE));
+        assert_eq!(tile_flags_for_cell_type(4), Some(TileFlags::WATER | TileFlags::SNIPABLE));
+        assert_eq!(tile_flags_for_cell_type(5), Some(TileFlags::CLIFF | TileFlags::SNIPABLE));
+        assert_eq!(tile_flags_for_cell_type(6), Some(TileFlags::CLIFF));
+    }
+
+    /// Ice Wall sends type 5, which must not be walkable -- the entire point of
+    /// handling this packet.
+    #[test]
+    fn ice_wall_cells_are_not_walkable() {
+        let flags = tile_flags_for_cell_type(5).expect("type 5 is a known cell type");
+        assert!(!flags.contains(TileFlags::WALKABLE));
+    }
+
+    #[test]
+    fn unknown_cell_types_are_ignored() {
+        assert_eq!(tile_flags_for_cell_type(7), None);
+        assert_eq!(tile_flags_for_cell_type(u16::MAX), None);
     }
 }

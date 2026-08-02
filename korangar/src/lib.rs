@@ -5044,6 +5044,14 @@ impl Client {
                     );
                     self.interface.open_window(InstanceWindow::new(client_state().instance_state()));
                 }
+                NetworkEvent::MapCellChanged { position, cell_type } => {
+                    // Ice Wall blocking or unblocking cells. Applied as an
+                    // overlay rather than written into the tile data, which is
+                    // shared and cached across visits to the map.
+                    if let Some(map) = self.map.as_ref() {
+                        map.set_cell_type(position, cell_type);
+                    }
+                }
                 NetworkEvent::InstanceLeft => {
                     self.client_state.follow_mut(client_state().instance_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Instance);
@@ -7654,6 +7662,12 @@ impl Client {
                             // Relax the battle stance on town / safe maps.
                             let base = normalize_map_base_name(&map_file_name);
                             self.current_map_is_town = self.library.is_town_map(&base);
+
+                            // `Map` is cached behind an `Arc`, so a revisit hands
+                            // back the same instance. Any Ice Wall cells the
+                            // server re-typed last time would still be marked
+                            // impassable, so clear them on entry.
+                            map.clear_dynamic_cells();
 
                             if let Some(position) = position {
                                 // `manually_asserted` is safe because we are in the branch where `this_player`

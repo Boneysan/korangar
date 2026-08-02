@@ -1455,7 +1455,10 @@ where
     packet_handler.register_noop::<ReputationPacket>()?;
     packet_handler.register_noop::<ClanInfoPacket>()?;
     packet_handler.register_noop::<ClanOnlineCountPacket>()?;
-    packet_handler.register_noop::<ChangeMapCellPacket>()?;
+    packet_handler.register(|packet: ChangeMapCellPacket| NetworkEvent::MapCellChanged {
+        position: packet.position,
+        cell_type: packet.cell_type,
+    })?;
     packet_handler.register_noop::<OpenMarketPacket>()?;
     packet_handler.register(|packet: BuyOrSellPacket| NetworkEvent::AskBuyOrSell { shop_id: packet.shop_id })?;
     packet_handler.register(|packet: ShopItemListPacket| {

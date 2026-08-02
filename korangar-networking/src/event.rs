@@ -523,6 +523,13 @@ pub enum NetworkEvent {
     },
     /// Instance window should close.
     InstanceLeft,
+    /// The server re-typed a map cell (`ZC_UPDATE_MAPINFO`). Ice Wall is the
+    /// common case: its cells become impassable while it stands and revert
+    /// when it expires.
+    MapCellChanged {
+        position: TilePosition,
+        cell_type: u16,
+    },
     /// Result of an ignore request. `result` is 0 on success.
     IgnoreResult {
         ignore_type: u8,
