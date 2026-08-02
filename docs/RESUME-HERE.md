@@ -155,6 +155,12 @@ clean full run on an unseen seed:
    `Unit:` blocks; **regenerate it when skill_db changes** (snippet in the const's
    doc comment).
 
+**The standing inventory lives in
+[plans/work-backlog.md](plans/work-backlog.md)** (assembled 2026-08-02) — live
+verification debt, features that exist only as discarded data, suite depth, and
+the server deltas a merge would silently drop. It also carries the four greps
+that regenerate it, because a day of fixes came out of lists nobody was reading.
+
 **Still open:**
 
 - **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`.
