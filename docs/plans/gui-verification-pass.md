@@ -279,6 +279,37 @@ A: @killmonster
 | N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | ☐ |
 | N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | ☐ |
 
+#### If a Block A row fails, suspect this first
+
+Written before walking it, from the code rather than from experience. A red row
+should send you somewhere specific instead of into a debugger.
+
+| Row | Most likely cause | Why that one |
+|---|---|---|
+| **N1** class shows an id or "Adventurer" | `JobName` missed the job | It reads the `JT_` constants from `jobidentity.lub`; `Adventurer` is the explicit fallback for an unknown id |
+| **N1** name stale after the target changes job | Expected, not a bug | The frame captures name and class **at open** — a snapshot, not a live view |
+| **N3/N4** colour identical to system text | The theme, not the routing | If routing were broken the *text* would go to the wrong place, not merely look wrong |
+| **N7** channel switches by itself when a whisper arrives | A regression, and deliberately avoided | `note_whisper_from` only records the sender; switching would redirect a half-typed message |
+| **N8** popup names the party but not the inviter | **Server**, not client | `0x0EFF` did not arrive — check the Hercules delta is built and the binary restarted. The client holds the name as `Option` precisely so it degrades this way |
+| **N10** Kick/Promote do nothing, no error | Leader gating, or the packet | Both are leader-only and the server ignores them **silently** from anyone else — confirm the ★ is on your row first |
+| **N11** buttons enabled when you are *not* leader | `local_account_id` never arrived | Gating needs `NetworkEvent::AccountId`, which was discarded until 2026-08-02 |
+| **N12** a toggle flips back | Correct behaviour | The button reflects the server's answer, not the click. Flipping back means the server refused — most likely you are not the leader |
+| **N13** your **own** row never says `DEAD` | Expected | `ZC_GROUP_ISALIVE` is sent `PARTY_WOS`, so it never describes you |
+| **N13** class missing on a member who *changed* job | The `update_job_and_level` path | Names are resolved by the caller in three separate places; that one is the least travelled |
+| **N15** item appears on your side but not theirs | The 0x0B42 fix, or rendering | The wire half is covered by `trade-add-item`; if that scenario passes and this row fails, it is rendering |
+| **N16** zeny silently does nothing | Non-numeric input is ignored **by design** | Deliberate — a stray character must not cost a trade. Check the field parses as a number |
+| **N18/N19** ordering looks wrong | Was a real bug, fixed 2026-08-02 | `FriendOnlineStatus` updated the glyph without re-sorting, leaving rows in place until relog. If it recurs, that is the site |
+| **N19** glyph does not flip at all | Re-render, not state | `set_online` rewrites `display_label` and has a unit test, so a static glyph means correct state never reached the renderer — **the cast-bar shape, and the single most likely defect in this block** |
+
+**The pattern to hold in mind:** four separate times on 2026-08-02 the data was
+already arriving correctly and nothing displayed it — the observer's cast bar,
+the trade requester's name, `PartyMemberState.job_id`, and
+`NetworkEvent::AccountId`. When a row fails, ask *"is the field absent from the
+wire, or merely unused?"* before assuming a protocol problem.
+`KORANGAR_PACKET_LOG=1` on the observing seat answers it, and its
+`[skill-cast]`-style lines sit **before** the entity lookup, which is what makes
+them a clean bisector.
+
 #### Block B — Sage / Wizard seat
 
 `test` is already a Sage with `@allskill`. Setup for the Ice Wall row: `@jobchange 9` + `@allskill`.
