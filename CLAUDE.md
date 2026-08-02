@@ -190,7 +190,7 @@ and running the `.exe` on the Windows side (not yet set up).
 
 ## Testing — the headless suite
 
-The project's main automated regression gate is a **107-scenario headless client**
+The project's main automated regression gate is a **117-scenario headless client**
 (`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
 double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
 [headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
@@ -203,9 +203,17 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (107): session/lifecycle 8 · GM commands 9 · movement 5 · combat 3 · skills 44
-(39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 · social 7 ·
-DM tooling 14.
+Coverage (117): session/lifecycle 8 · GM commands 9 · movement 5 · combat 3 · skills 44
+(39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 · social 10 ·
+DM tooling 14 · observer parity 7.
+
+Three of the social ten guard the 2026-08-02 party work, and two of those exist
+because the failure they catch is **silent**: `party-member-vitals` fails if the
+Hercules `KORANGAR_PARTY_SP_TO_GROUPM` delta is lost in an upstream merge (the
+server falls back to the narrow 0x080E form, `spell_points` becomes `None`, and
+the party SP bar simply never appears again), and `party-sp-only-broadcast`
+covers the `case SP_SP:` trigger on its own, since widening the packet without
+the trigger leaves SP riding along on HP updates.
 
 **What it proves, and what it doesn't.** The headless tester links the *same*
 `ragnarok-packets` and `korangar-networking` crates as the graphical client, so a
