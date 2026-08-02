@@ -1708,3 +1708,77 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
         cause => format!("Skill failed (reason {cause})."),
     }
 }
+
+#[cfg(test)]
+mod length_agreement_tests {
+    use ragnarok_bytes::ByteReader;
+    use ragnarok_packets::handler::{HandlerResult, NoPacketCallback, PacketHandler};
+
+    use super::*;
+    use crate::packet_versions::lengths_20220406::PACKET_LENGTHS;
+
+    /// Every registered server packet must consume exactly the number of bytes
+    /// Hercules' own length table says it sends.
+    ///
+    /// A struct that is even one byte short leaves a stray byte in the read
+    /// buffer, and the next header is then read misaligned. That does **not**
+    /// surface as a deserialization failure: the bogus header simply is not in
+    /// the table, so `process_one` reports `UnhandledPacket` and the rest of the
+    /// buffer — real packets included — is dropped silently. A full suite run
+    /// showed exactly that, as pseudo-headers `0x8600` / `0xD700` / `0xFE00` /
+    /// `0x7F00`, each of which decodes as a leading `0x00` followed by a genuine
+    /// packet (`ZC_NOTIFY_MOVE`, `ZC_SPRITE_CHANGE2`, a spawn, `ZC_NOTIFY_TIME`).
+    ///
+    /// Zeros are used as the payload, so packets that reject a zeroed body are
+    /// skipped rather than failed — this checks framing, not validation.
+    #[test]
+    fn registered_packets_consume_their_declared_length() {
+        let mut mismatches = Vec::new();
+
+        // Some handlers are stateful (the inventory list accumulator) and panic
+        // on a zeroed body. Silence the hook and give each packet a fresh
+        // handler, so one hostile input neither spams the log nor leaves a
+        // half-borrowed `RefCell` that would poison every later packet.
+        let previous_hook = std::panic::take_hook();
+        std::panic::set_hook(Box::new(|_| {}));
+
+        for &(header, length) in PACKET_LENGTHS {
+            // Variable-length packets carry their own size; nothing to compare.
+            if length < 2 {
+                continue;
+            }
+            let length = length as usize;
+
+            let mut bytes: Vec<u8> = header.to_le_bytes().to_vec();
+            bytes.resize(length, 0);
+
+            let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                let mut packet_handler: PacketHandler<NetworkEventList, NoPacketCallback> = PacketHandler::default();
+                register_map_server_packets(&mut packet_handler).expect("registration must not duplicate");
+
+                let mut byte_reader = ByteReader::without_metadata(&bytes);
+                match packet_handler.process_one(&mut byte_reader) {
+                    HandlerResult::Ok(_) => Some(byte_reader.get_offset()),
+                    // Not registered (the fallback consumes it exactly), cut
+                    // off, or the body rejected zeros — none of which is a
+                    // framing disagreement.
+                    _ => None,
+                }
+            }));
+
+            if let Ok(Some(consumed)) = outcome
+                && consumed != length
+            {
+                mismatches.push(format!("0x{header:04X}: consumed {consumed}, table says {length}"));
+            }
+        }
+
+        std::panic::set_hook(previous_hook);
+
+        assert!(
+            mismatches.is_empty(),
+            "packets disagree with the length table, so the reader will misalign:\n  {}",
+            mismatches.join("\n  ")
+        );
+    }
+}

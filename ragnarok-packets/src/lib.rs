@@ -4401,8 +4401,16 @@ pub struct EquipAmmunitionPacket {
     pub inventory_index: InventoryIndex,
 }
 
+/// Hercules writes this with `WFIFOW` — a **u16** — so the enum must be 16-bit.
+///
+/// It defaulted to `u8`, which made `ZC_ACTION_FAILURE` read 3 of its 4 bytes
+/// and leave a stray one in the buffer. The next header was then read
+/// misaligned, produced a nonsense id that is in no length table, and
+/// `process_one` dropped the remainder of the buffer — real packets included —
+/// without a single deserialization failure to show for it.
 #[derive(Debug, Clone, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[numeric_type(u16)]
 pub enum AmmunitionActionType {
     EquipProperAmmunitionFirst,
     WeightLimitExceeded1,
