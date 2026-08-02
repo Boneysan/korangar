@@ -29,6 +29,20 @@ impl CustomWindow<ClientState> for FriendRequestWindow {
                 text! {
                     text: format!("^000001{}^000000 wants to be friends with you", self.friend.name),
                 },
+                // "Who is this?" should be answerable before deciding, the same
+                // as on the party invite popup.
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Whisper",
+                            tooltip: "Ask who they are before deciding",
+                            event: InputEvent::StartWhisper {
+                                character_name: self.friend.name.clone(),
+                            },
+                        },
+                    ),
+                },
                 split! {
                     gaps: theme().window().gaps(),
                     children: (

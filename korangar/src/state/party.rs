@@ -17,6 +17,10 @@ pub struct PartyMemberState {
     maximum_health_points: Option<usize>,
     spell_points: Option<usize>,
     maximum_spell_points: Option<usize>,
+    /// Class name for [`Self::job_id`], resolved by the caller. The state layer
+    /// holds no `Library`, so it cannot turn a job id into a name itself -- the
+    /// same reason `TradeState::add_partner_item` takes an item name.
+    class_name: String,
     /// Cached [`Self::summary_line`]. The party window renders members as
     /// elements with their own buttons, and an element's text has to come from
     /// a *field* path rather than a method.
@@ -77,6 +81,10 @@ impl PartyMemberState {
         }
     }
 
+    pub fn job_id(&self) -> Option<JobId> {
+        self.job_id
+    }
+
     pub fn display_label(&self) -> &str {
         &self.display_label
     }
@@ -94,6 +102,10 @@ impl PartyMemberState {
         let online = if self.online { "online" } else { "offline" };
         let leader = if self.leader { " ★" } else { "" };
         let level = self.base_level.map(|level| format!(" Lv{level}")).unwrap_or_default();
+        let class = match self.class_name.is_empty() {
+            true => String::new(),
+            false => format!(" {}", self.class_name),
+        };
         let hp = match self.health() {
             Some((hp, max)) => format!("  {hp}/{max} HP"),
             None => String::new(),
@@ -107,7 +119,7 @@ impl PartyMemberState {
         } else {
             format!("  [{}]", self.map_name.trim_end_matches(".gat"))
         };
-        format!("{}{leader}{level}  ({online}){hp}{sp}{map}", self.name)
+        format!("{}{leader}{level}{class}  ({online}){hp}{sp}{map}", self.name)
     }
 
     fn from_roster_member(member: PartyMember) -> Self {
@@ -125,6 +137,7 @@ impl PartyMemberState {
             maximum_health_points: None,
             spell_points: None,
             maximum_spell_points: None,
+            class_name: String::new(),
             display_label: String::new(),
         }
     }
@@ -144,6 +157,7 @@ impl PartyMemberState {
             maximum_health_points: None,
             spell_points: None,
             maximum_spell_points: None,
+            class_name: String::new(),
             display_label: String::new(),
         }
     }
@@ -296,18 +310,27 @@ impl PartyState {
         self.rebuild_display_text();
     }
 
-    pub fn set_roster(&mut self, party_name: String, members: Vec<PartyMember>) {
+    pub fn set_roster(&mut self, party_name: String, members: Vec<PartyMember>, class_name: impl Fn(JobId) -> String) {
         self.party_name = party_name;
-        self.members = members.into_iter().map(PartyMemberState::from_roster_member).collect();
+        self.members = members
+            .into_iter()
+            .map(|member| {
+                let class = class_name(member.job_id);
+                let mut member = PartyMemberState::from_roster_member(member);
+                member.class_name = class;
+                member
+            })
+            .collect();
         self.rebuild_display_text();
     }
 
-    pub fn add_or_update_member(&mut self, member: PartyMemberInfoPacket) {
+    pub fn add_or_update_member(&mut self, member: PartyMemberInfoPacket, class_name: String) {
         self.party_name = member.party_name.clone();
         self.share_pickup = member.share_pickup != 0;
         self.share_loot = member.share_loot != 0;
 
-        let member = PartyMemberState::from_member_info(member);
+        let mut member = PartyMemberState::from_member_info(member);
+        member.class_name = class_name;
 
         match self.members.iter_mut().find(|existing| existing.account_id == member.account_id) {
             Some(existing) => *existing = member,
@@ -345,10 +368,11 @@ impl PartyState {
         }
     }
 
-    pub fn update_job_and_level(&mut self, account_id: AccountId, job_id: JobId, base_level: u16) {
+    pub fn update_job_and_level(&mut self, account_id: AccountId, job_id: JobId, base_level: u16, class_name: String) {
         if let Some(member) = self.members.iter_mut().find(|member| member.account_id == account_id) {
             member.job_id = Some(job_id);
             member.base_level = Some(base_level);
+            member.class_name = class_name;
             self.rebuild_display_text();
         }
     }
@@ -453,7 +477,7 @@ mod tests {
         assert!(!state.has_pending_invite());
         assert!(state.status_text().contains("Not in a party"));
 
-        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)]);
+        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| String::new());
         assert!(state.in_party());
         assert!(state.status_text().contains("1 member"));
     }
@@ -461,10 +485,11 @@ mod tests {
     #[test]
     fn roster_builds_display_text() {
         let mut state = PartyState::default();
-        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)]);
+        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| "Wizard".to_owned());
         assert!(state.display_text().contains("Seal Cascade"));
         let label = state.members()[0].display_label();
         assert!(label.contains("Alice"));
+        assert!(label.contains("Wizard"));
         assert!(label.contains("online"));
         assert!(label.contains("Lv50"));
     }
@@ -472,7 +497,7 @@ mod tests {
     #[test]
     fn update_position_and_health() {
         let mut state = PartyState::default();
-        state.set_roster("P".to_owned(), vec![sample_member("Bob", true)]);
+        state.set_roster("P".to_owned(), vec![sample_member("Bob", true)], |_| "Priest".to_owned());
         state.update_position(AccountId(1), TilePosition::new(10, 20));
         state.update_health(AccountId(1), 100, 200, Some((30, 60)));
         let member = &state.members()[0];

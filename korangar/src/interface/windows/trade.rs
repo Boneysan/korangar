@@ -1,5 +1,6 @@
 use korangar_interface::window::{CustomWindow, Window};
-use rust_state::Path;
+use korangar_interface::event::EventQueue;
+use rust_state::{Path, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -82,6 +83,21 @@ impl CustomWindow<ClientState> for TradeRequestWindow {
             closable: true,
             elements: (
                 text! { text: client_state().trade_state().request_text() },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Whisper",
+                            tooltip: "Ask what they want before deciding",
+                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                let character_name = state.get(&client_state().trade_state()).pending_name().to_owned();
+                                if !character_name.is_empty() {
+                                    queue.queue(InputEvent::StartWhisper { character_name });
+                                }
+                            },
+                        },
+                    ),
+                },
                 split! {
                     gaps: theme().window().gaps(),
                     children: (

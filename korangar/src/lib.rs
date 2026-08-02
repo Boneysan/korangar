@@ -502,6 +502,20 @@ pub fn audit_animation_structure() -> Result<Vec<String>, String> {
     Ok(lines)
 }
 
+/// Whisper and party lines are otherwise `MessageColor::Information`, which is
+/// what every system notice uses -- so private and party talk read as server
+/// chatter in a busy log. Distinct colours make the channel obvious at a glance.
+const WHISPER_COLOR: MessageColor = MessageColor::Rgb {
+    red: 255,
+    green: 140,
+    blue: 225,
+};
+const PARTY_CHAT_COLOR: MessageColor = MessageColor::Rgb {
+    red: 120,
+    green: 205,
+    blue: 255,
+};
+
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
@@ -4885,14 +4899,18 @@ impl Client {
                         .set_deny_invites(deny_party_invites);
                 }
                 NetworkEvent::PartyList { party_name, members } => {
+                    // Bound before the mutable follow: `library` and
+                    // `client_state` are disjoint fields, so both borrows coexist.
+                    let library = &self.library;
                     self.client_state
                         .follow_mut(client_state().party_state())
-                        .set_roster(party_name, members);
+                        .set_roster(party_name, members, |job_id| JobName::get(library, job_id).to_string());
                 }
                 NetworkEvent::PartyMemberAdded { member } => {
+                    let class_name = JobName::get(&self.library, member.job_id).to_string();
                     self.client_state
                         .follow_mut(client_state().party_state())
-                        .add_or_update_member(member);
+                        .add_or_update_member(member, class_name);
                 }
                 NetworkEvent::PartyMemberPosition { account_id, position } => {
                     self.client_state
@@ -4917,9 +4935,10 @@ impl Client {
                     job_id,
                     base_level,
                 } => {
+                    let class_name = JobName::get(&self.library, job_id).to_string();
                     self.client_state
                         .follow_mut(client_state().party_state())
-                        .update_job_and_level(account_id, job_id, base_level);
+                        .update_job_and_level(account_id, job_id, base_level, class_name);
                 }
                 NetworkEvent::PartyMemberRemoved {
                     account_id,
@@ -4935,7 +4954,7 @@ impl Client {
                 NetworkEvent::PartyChatMessage { text, .. } => {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
-                        .push(ChatMessage::new(format!("[Party] {text}"), MessageColor::Information));
+                        .push(ChatMessage::new(format!("[Party] {text}"), PARTY_CHAT_COLOR));
                 }
                 NetworkEvent::MarkMinimap {
                     marker_type,
@@ -4975,9 +4994,15 @@ impl Client {
                     ));
                 }
                 NetworkEvent::WhisperReceived { sender_name, message, .. } => {
+                    // Remember the sender so Reply and `/r` have a target. The
+                    // channel is deliberately NOT switched: that would redirect
+                    // a message the player is part-way through typing.
+                    self.client_state
+                        .follow_mut(client_state().chat_window())
+                        .note_whisper_from(sender_name.clone());
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                         format!("[Whisper] {sender_name}: {message}"),
-                        MessageColor::Information,
+                        WHISPER_COLOR,
                     ));
                 }
                 NetworkEvent::WhisperResult { result } => {
@@ -6277,6 +6302,30 @@ impl Client {
                     if let Some(message) = text.strip_prefix("/p ") {
                         let player_name = self.client_state.follow(client_state().player_name()).to_owned();
                         let _ = self.networking_system.send_party_chat_message(&player_name, message);
+                        continue;
+                    }
+
+                    if let Some(message) = text.strip_prefix("/r ").or_else(|| text.strip_prefix("/reply ")) {
+                        let message = message.trim();
+                        let sender = self
+                            .client_state
+                            .follow(client_state().chat_window())
+                            .last_whisper_sender()
+                            .to_owned();
+
+                        match (sender.is_empty(), message.is_empty()) {
+                            (false, false) => {
+                                let _ = self.networking_system.send_whisper_message(&sender, message);
+                            }
+                            (true, _) => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Nobody has whispered you yet.".to_owned(),
+                                MessageColor::Information,
+                            )),
+                            (false, true) => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                format!("Usage: /r <message>  (would reply to {sender})"),
+                                MessageColor::Information,
+                            )),
+                        }
                         continue;
                     }
 

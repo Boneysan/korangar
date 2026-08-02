@@ -176,6 +176,10 @@ pub struct ChatWindowState {
     channel: ChannelIndex,
     /// Who `CHANNEL_WHISPER` talks to.
     whisper_target: String,
+    /// Last character to whisper *us*, for reply. Kept separate from
+    /// `whisper_target` on purpose: an incoming whisper must not silently
+    /// redirect a message you are part-way through typing to someone else.
+    last_whisper_sender: String,
 }
 
 impl ChatWindowState {
@@ -188,6 +192,15 @@ impl ChatWindowState {
     pub fn start_whisper(&mut self, character_name: String) {
         self.channel = CHANNEL_WHISPER;
         self.whisper_target = character_name;
+    }
+
+    /// Remember who whispered us so Reply and `/r` have a target.
+    pub fn note_whisper_from(&mut self, character_name: String) {
+        self.last_whisper_sender = character_name;
+    }
+
+    pub fn last_whisper_sender(&self) -> &str {
+        &self.last_whisper_sender
     }
 }
 
@@ -261,6 +274,15 @@ where
             move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(channel_path, index)
         };
 
+        let last_sender_path = self.chat_window_state.last_whisper_sender();
+        let no_one_to_reply_to = ComputedSelector::new_default(move |state: &ClientState| last_sender_path.follow_safe(state).is_empty());
+        let reply_action = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+            let sender = state.get(&last_sender_path).clone();
+            if !sender.is_empty() {
+                queue.queue(InputEvent::StartWhisper { character_name: sender });
+            }
+        };
+
         window! {
             title: client_state().localization().chat_window_title(),
             class: Self::window_class(),
@@ -293,6 +315,13 @@ where
                             tooltip: "Send privately to one character [^000001/w <name>^000000]",
                             disabled: is_channel(CHANNEL_WHISPER),
                             event: select_channel(CHANNEL_WHISPER),
+                        },
+                        button! {
+                            text: "Reply",
+                            tooltip: "Answer the last character who whispered you [^000001/r <message>^000000]",
+                            disabled: no_one_to_reply_to,
+                            disabled_tooltip: "Nobody has whispered you yet",
+                            event: reply_action,
                         },
                     ),
                 },
