@@ -3,7 +3,7 @@ use rust_state::Path;
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
-use crate::state::ClientState;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::trade::{TradeState, TradeStatePathExt};
 
@@ -59,6 +59,12 @@ where
 }
 
 /// Incoming trade request accept/reject.
+///
+/// Names the requester and their level, both of which ride on
+/// `ZC_REQ_EXCHANGE_ITEM` and were already being stored in `TradeState` -- this
+/// window simply used to ignore them and say "A player wants to trade with
+/// you." No protocol work was needed, unlike the party invite, whose sender
+/// name genuinely is not on the wire.
 pub struct TradeRequestWindow;
 
 impl CustomWindow<ClientState> for TradeRequestWindow {
@@ -75,14 +81,19 @@ impl CustomWindow<ClientState> for TradeRequestWindow {
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                text! { text: "A player wants to trade with you." },
-                button! {
-                    text: "Accept",
-                    event: InputEvent::TradeAccept,
-                },
-                button! {
-                    text: "Reject",
-                    event: InputEvent::TradeReject,
+                text! { text: client_state().trade_state().request_text() },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Reject",
+                            event: InputEvent::TradeReject,
+                        },
+                        button! {
+                            text: "Accept",
+                            event: InputEvent::TradeAccept,
+                        },
+                    ),
                 },
             )
         }

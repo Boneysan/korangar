@@ -30,6 +30,10 @@ pub struct TradeState {
     we_locked: bool,
     they_locked: bool,
     display_text: String,
+    /// Cached "<name> (Lv<n>) wants to trade with you" line for the request
+    /// popup. The name and level arrive on `ZC_REQ_EXCHANGE_ITEM` and were
+    /// already stored; only the window was ignoring them.
+    request_text: String,
 }
 
 impl TradeState {
@@ -45,6 +49,17 @@ impl TradeState {
         &self.pending_name
     }
 
+    pub fn request_text(&self) -> &str {
+        &self.request_text
+    }
+
+    fn rebuild_request_text(&mut self) {
+        self.request_text = match self.pending_name.is_empty() {
+            true => "A player wants to trade with you.".to_owned(),
+            false => format!("^000001{}^000000 (Lv{}) wants to trade with you.", self.pending_name, self.pending_base_level),
+        };
+    }
+
     pub fn display_text(&self) -> &str {
         &self.display_text
     }
@@ -53,6 +68,7 @@ impl TradeState {
         self.pending_name = name;
         self.pending_character_id = Some(character_id);
         self.pending_base_level = base_level;
+        self.rebuild_request_text();
         self.rebuild_display();
     }
 
@@ -60,6 +76,7 @@ impl TradeState {
         self.pending_name.clear();
         self.pending_character_id = None;
         self.pending_base_level = 0;
+        self.rebuild_request_text();
         self.rebuild_display();
     }
 
@@ -175,9 +192,14 @@ mod tests {
         state.set_pending("Alice".into(), CharacterId(1), 50);
         assert!(state.has_pending());
         assert!(state.display_text().contains("Alice"));
+        // The popup must name the requester, not say "a player".
+        assert!(state.request_text().contains("Alice"));
+        assert!(state.request_text().contains("Lv50"));
         state.open_with_partner("Alice".into(), CharacterId(1), 50);
         assert!(state.is_active());
         assert!(!state.has_pending());
+        // Clearing the pending request must not leave a stale name behind.
+        assert!(!state.request_text().contains("Alice"));
         state.lock_side(0);
         state.lock_side(1);
         assert!(state.display_text().contains("you=yes"));
