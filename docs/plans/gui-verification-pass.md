@@ -241,6 +241,74 @@ right and the **re-render** is missing, exactly like the cast bar. F6 depends on
 same timing is why `party-persists-relog` had to assert functionally rather than
 wait for a packet.
 
+### 2d. Everything built 2026-08-02 — rows, grouped by setup
+
+**Why grouped:** the pass has stalled before on setup churn. Each block below is
+one configuration; walk a whole block before changing jobs or gear. Blocks are
+ordered so nothing later undoes something earlier — **E replaces the gear, so it
+is last**.
+
+#### Block A — two seats, no gear needed *(most of the day's work is here)*
+
+Seat A `test`, seat B `HeadlessTwo`, adjacent on a field map. Setup:
+
+```
+A: @warp prt_fild08 320 185      B: @jumpto test
+A: @killmonster
+```
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| N1 | **Left-click seat B's character** | Target frame opens: name, class ("High Wizard", not an id), and Whisper / Invite / Trade / Add friend / Ignore | ☐ |
+| N2 | Left-click **your own** sprite | **Nothing opens** — self-targeting is excluded deliberately | ☐ |
+| N3 | Chat: press **Party**, type a line | Goes to party chat, and the line is a **different colour** from system text | ☐ |
+| N4 | Chat: press **Whisper**, fill the target field, send | Arrives privately, in its own colour | ☐ |
+| N5 | Whisper with the target field **empty** | Prints the `/w` usage hint. **Must not** appear in public chat — that would leak a private message | ☐ |
+| N6 | Type `/party leave` while the channel is **Party** | Runs as a *command*, not sent as party chat | ☐ |
+| N7 | Seat B whispers A, then A presses **Reply** | Channel switches to Whisper with B pre-filled. Receiving a whisper must **not** switch the channel on its own | ☐ |
+| N8 | A invites B to a party | B's popup says **"test invites you to join …"** — the name comes from fork packet `0x0EFF`; a bare party name means the Hercules delta is missing | ☐ |
+| N9 | Invite popup **Whisper** button | Aims chat at the inviter | ☐ |
+| N10 | Party window as **leader**: Kick / Promote | Enabled; kicking removes the row on both seats, promoting moves the ★ | ☐ |
+| N11 | Party window as **non-leader** | Kick / Promote greyed with "Only the party leader can do this" | ☐ |
+| N12 | Share EXP / pickup / loot toggles | Flip and **stay** flipped — they reflect the server's answer, not the click | ☐ |
+| N13 | Roster rows | Show **class name** and, when a member dies (`@die` on B), read `DEAD` | ☐ |
+| N14 | A requests a trade with B | B's popup names **A and their level**, and offers Whisper | ☐ |
+| N15 | In the trade, **right-click an inventory item → Add to trade** | The item appears on **B's** side of the window. This is the path the 0x0B42 fix restored | ☐ |
+| N16 | Trade zeny field → **Add zeny** | Amount appears in the offer; non-numeric input is ignored, not an error | ☐ |
+| N17 | A sends B a friend request | B's popup offers **Whisper** alongside Accept / Reject | ☐ |
+| N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | ☐ |
+| N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | ☐ |
+
+#### Block B — Sage / Wizard seat
+
+`test` is already a Sage with `@allskill`. Setup for the Ice Wall row: `@jobchange 9` + `@allskill`.
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| N20 | Cast **Auto Spell** (`SA_AUTOSPELL`) | A window lists the offered spells **by name**; picking one closes it and the server accepts | ☐ |
+| N21 | As a Wizard, cast **Ice Wall**, then try to walk through it | The client **refuses to path through** it, and the cells free up when it expires. **No headless test can cover this** — the suite does not link the `korangar` crate | ☐ |
+| N22 | Row 4 — Land Protector Lv10 armed | 225 cells: shape or solid slab? Then Fire Wall facing different directions | ☐ |
+| N23 | Row 4b — cast circle | **Expected FAIL**, root-caused: nothing triggers one. Confirm rather than investigate | ☐ |
+
+#### Block C — instance and NPC refine
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| N24 | In a party, `@dminstance start prontera 156 191` | Instance window opens naming it; `@dminstance end` closes it | ☐ |
+| N25 | Refine equipment at a **blacksmith NPC** | Result line names the item and the new level. This is `0x0188`, a *different* path from the Weapon Refine skill | ☐ |
+
+#### Block D — Priest
+
+`@jobchange 8` + `@allskill`.
+
+| # | Check | Watch for | Result |
+|---|---|---|---|
+| N26 | Row 3 — Heal an ally ~15 cells away | Walks into range then casts; **self-buffs still fire instantly** | ☐ |
+
+#### Block E — last, replaces gear
+
+Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5.
+
 ### 3. Support walk-into-range — **give this real attention**
 
 | | |
