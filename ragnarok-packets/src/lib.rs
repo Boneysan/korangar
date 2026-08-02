@@ -5350,6 +5350,150 @@ pub struct PartyMemberHealthPacket {
 ///
 /// Both packets stay registered: 0x0BAB is what our server now sends, and 0x080E
 /// remains correct against a stock server.
+/// NPC refiner result (`ZC_ACK_ITEMREFINING` 0x0188).
+///
+/// Distinct from [`WeaponRefineResultPacket`] (0x0223), which answers the
+/// *skill* `WS_WEAPONREFINE`. This one is the blacksmith NPC path and had no
+/// handling at all, so an NPC refine reported nothing either way.
+///
+/// **`index` is the inventory index plus two** (`clif_refine` sends `index+2`),
+/// the classic Ragnarok off-by-two for inventory positions.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0188)]
+pub struct NpcRefineResultPacket {
+    /// 0 success, 1 failure, 2 downgrade.
+    pub result: u16,
+    pub index: u16,
+    pub refine_level: u16,
+}
+
+/// A party member died or was resurrected (`ZC_GROUP_ISALIVE` 0x0AB2).
+///
+/// Sent `PARTY_WOS`, so it only ever describes *other* members.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AB2)]
+pub struct PartyMemberAlivePacket {
+    pub account_id: AccountId,
+    pub is_dead: u8,
+}
+
+/// Skills offered by Auto Spell (`ZC_AUTOSPELLLIST` 0x0AFB, variable length).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AFB)]
+#[variable_length]
+pub struct AutoSpellListPacket {
+    /// Skill ids, four bytes each in this form of the packet.
+    #[repeating_remaining]
+    pub skills: Vec<u32>,
+}
+
+/// Choose one of the Auto Spell skills (`CZ_SELECTAUTOSPELL` 0x01CE).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01CE)]
+pub struct SelectAutoSpellPacket {
+    pub skill_id: u32,
+}
+
+/// Spirit spheres orbiting an entity (`ZC_SPIRITS` 0x01D0) — Monk spheres,
+/// Gunslinger coins, and the like.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01D0)]
+pub struct SpiritSpheresPacket {
+    pub entity_id: EntityId,
+    pub amount: u16,
+}
+
+/// A skill unit changed state (`clif_skillunit_update` 0x01AC) — sent when a
+/// trap such as Ankle Snare catches something.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01AC)]
+pub struct SkillUnitUpdatePacket {
+    pub entity_id: EntityId,
+}
+
+/// Instant relocation (`clif_snap` 0x08D2) — Snap, Body Relocation, Backslide.
+/// The entity must be *moved*, not walked, or it will appear to slide through
+/// walls.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x08D2)]
+pub struct EntitySnapPacket {
+    pub entity_id: EntityId,
+    pub position: TilePosition,
+}
+
+/// Entity effect state / level (`ZC_NPC_SHOWEFST_UPDATE` 0x028A).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x028A)]
+pub struct EntityEffectStatePacket {
+    pub entity_id: EntityId,
+    pub effect_state: u32,
+    pub level: u32,
+    pub show_efst: u32,
+}
+
+/// Taekwon star place set or reported (`ZC_STARSKILL` 0x020E).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x020E)]
+pub struct StarPlacePacket {
+    #[length(24)]
+    pub map_name: String,
+    pub monster_id: u32,
+    pub star: u8,
+    pub result: u8,
+}
+
+/// Server asks which target to "feel" (`ZC_STARSKILL` request, 0x0253).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0253)]
+pub struct FeelRequestPacket {
+    pub which: u8,
+}
+
+/// Instance information window opens (`ZC_INSTANCE_CREATE` 0x02CB).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02CB)]
+pub struct InstanceInfoPacket {
+    #[length(61)]
+    pub instance_name: String,
+    pub standby_position: u16,
+}
+
+/// Instance entered, with its timers (`ZC_INSTANCE_STATE` 0x02CD).
+///
+/// Exactly one of the two timers is non-zero: `progress` while the instance is
+/// running, `idle` while it is waiting to be entered.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02CD)]
+pub struct InstanceJoinPacket {
+    #[length(61)]
+    pub instance_name: String,
+    pub progress_remaining: u32,
+    pub idle_remaining: u32,
+}
+
+/// Instance window closes (`ZC_INSTANCE_DELETE` 0x02CE).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02CE)]
+pub struct InstanceLeavePacket {
+    pub reason: u32,
+    /// Hercules never assigns this; the packet is 10 bytes and only the first
+    /// field is written, so treat it as reserved rather than meaningful.
+    pub enter_limit: u32,
+}
+
 /// Party share rules changed, rich form (`ZC_REQ_GROUPINFO_CHANGE_V2`).
 ///
 /// Hercules sends **either** this or the 6-byte [`PartyExperienceOptionPacket`]

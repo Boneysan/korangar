@@ -1344,6 +1344,58 @@ where
         item_pickup_share: None,
         item_division_share: None,
     })?;
+    packet_handler.register(|packet: NpcRefineResultPacket| NetworkEvent::NpcRefineResult {
+        result: packet.result,
+        // `clif_refine` sends `index + 2`; undo it here so no consumer has to
+        // remember the off-by-two.
+        inventory_index: InventoryIndex(packet.index.saturating_sub(2)),
+        refine_level: packet.refine_level,
+    })?;
+    packet_handler.register(|packet: PartyMemberAlivePacket| NetworkEvent::PartyMemberAlive {
+        account_id: packet.account_id,
+        is_dead: packet.is_dead != 0,
+    })?;
+    packet_handler.register(|packet: AutoSpellListPacket| NetworkEvent::AutoSpellList {
+        // Zero entries pad the list out to a fixed size on some servers.
+        skills: packet
+            .skills
+            .into_iter()
+            .filter(|skill_id| *skill_id != 0)
+            .map(|skill_id| SkillId(skill_id as u16))
+            .collect(),
+    })?;
+    packet_handler.register(|packet: SpiritSpheresPacket| NetworkEvent::SpiritSpheres {
+        entity_id: packet.entity_id,
+        amount: packet.amount,
+    })?;
+    packet_handler.register(|packet: SkillUnitUpdatePacket| NetworkEvent::SkillUnitUpdated {
+        entity_id: packet.entity_id,
+    })?;
+    packet_handler.register(|packet: EntitySnapPacket| NetworkEvent::EntitySnapped {
+        entity_id: packet.entity_id,
+        position: packet.position,
+    })?;
+    packet_handler.register(|packet: EntityEffectStatePacket| NetworkEvent::EntityEffectState {
+        entity_id: packet.entity_id,
+        effect_state: packet.effect_state,
+        level: packet.level,
+    })?;
+    packet_handler.register(|packet: StarPlacePacket| NetworkEvent::StarPlace {
+        map_name: packet.map_name,
+        monster_id: packet.monster_id,
+        star: packet.star,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: FeelRequestPacket| NetworkEvent::FeelRequest { which: packet.which })?;
+    packet_handler.register(|packet: InstanceInfoPacket| NetworkEvent::InstanceInfo {
+        instance_name: packet.instance_name,
+    })?;
+    packet_handler.register(|packet: InstanceJoinPacket| NetworkEvent::InstanceJoined {
+        instance_name: packet.instance_name,
+        progress_remaining: packet.progress_remaining,
+        idle_remaining: packet.idle_remaining,
+    })?;
+    packet_handler.register(|_: InstanceLeavePacket| NetworkEvent::InstanceLeft)?;
     packet_handler.register(|packet: IgnorePlayerResultPacket| NetworkEvent::IgnoreResult {
         ignore_type: packet.ignore_type,
         result: packet.result,

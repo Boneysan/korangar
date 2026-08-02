@@ -461,6 +461,68 @@ pub enum NetworkEvent {
         item_pickup_share: Option<bool>,
         item_division_share: Option<bool>,
     },
+    /// NPC blacksmith refine result (0x0188), distinct from the skill-based
+    /// `WeaponRefineResult`. `inventory_index` is already corrected for the
+    /// server's `index + 2`.
+    NpcRefineResult {
+        result: u16,
+        inventory_index: InventoryIndex,
+        refine_level: u16,
+    },
+    /// A party member died or came back. Never describes the local player —
+    /// the packet is sent `PARTY_WOS`.
+    PartyMemberAlive {
+        account_id: AccountId,
+        is_dead: bool,
+    },
+    /// Skills Auto Spell is offering.
+    AutoSpellList {
+        skills: Vec<SkillId>,
+    },
+    /// Spirit spheres orbiting an entity (Monk spheres, Gunslinger coins).
+    SpiritSpheres {
+        entity_id: EntityId,
+        amount: u16,
+    },
+    /// A trap or other skill unit changed state (Ankle Snare catching something).
+    SkillUnitUpdated {
+        entity_id: EntityId,
+    },
+    /// Instant relocation — Snap, Body Relocation, Backslide.
+    EntitySnapped {
+        entity_id: EntityId,
+        position: TilePosition,
+    },
+    /// Entity effect state / level.
+    EntityEffectState {
+        entity_id: EntityId,
+        effect_state: u32,
+        level: u32,
+    },
+    /// Taekwon star place set or reported.
+    StarPlace {
+        map_name: String,
+        monster_id: u32,
+        star: u8,
+        result: u8,
+    },
+    /// Server is asking which target to "feel".
+    FeelRequest {
+        which: u8,
+    },
+    /// Instance window should open, with the instance's name.
+    InstanceInfo {
+        instance_name: String,
+    },
+    /// Instance entered. Exactly one timer is non-zero: `progress` while it
+    /// runs, `idle` while it waits to be entered.
+    InstanceJoined {
+        instance_name: String,
+        progress_remaining: u32,
+        idle_remaining: u32,
+    },
+    /// Instance window should close.
+    InstanceLeft,
     /// Result of an ignore request. `result` is 0 on success.
     IgnoreResult {
         ignore_type: u8,

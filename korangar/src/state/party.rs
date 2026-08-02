@@ -21,6 +21,9 @@ pub struct PartyMemberState {
     /// holds no `Library`, so it cannot turn a job id into a name itself -- the
     /// same reason `TradeState::add_partner_item` takes an item name.
     class_name: String,
+    /// Set by `ZC_GROUP_ISALIVE`. Only ever describes other members, since the
+    /// packet is sent `PARTY_WOS`.
+    is_dead: bool,
     /// Cached [`Self::summary_line`]. The party window renders members as
     /// elements with their own buttons, and an element's text has to come from
     /// a *field* path rather than a method.
@@ -85,6 +88,10 @@ impl PartyMemberState {
         self.job_id
     }
 
+    pub fn is_dead(&self) -> bool {
+        self.is_dead
+    }
+
     pub fn display_label(&self) -> &str {
         &self.display_label
     }
@@ -99,7 +106,11 @@ impl PartyMemberState {
 
     /// One-line roster summary for the party window.
     pub fn summary_line(&self) -> String {
-        let online = if self.online { "online" } else { "offline" };
+        let online = match (self.online, self.is_dead) {
+            (false, _) => "offline",
+            (true, true) => "DEAD",
+            (true, false) => "online",
+        };
         let leader = if self.leader { " ★" } else { "" };
         let level = self.base_level.map(|level| format!(" Lv{level}")).unwrap_or_default();
         let class = match self.class_name.is_empty() {
@@ -138,6 +149,7 @@ impl PartyMemberState {
             spell_points: None,
             maximum_spell_points: None,
             class_name: String::new(),
+            is_dead: false,
             display_label: String::new(),
         }
     }
@@ -158,6 +170,7 @@ impl PartyMemberState {
             spell_points: None,
             maximum_spell_points: None,
             class_name: String::new(),
+            is_dead: false,
             display_label: String::new(),
         }
     }
@@ -310,6 +323,14 @@ impl PartyState {
 
     pub fn deny_invites(&self) -> bool {
         self.deny_invites
+    }
+
+    /// A member died or was resurrected.
+    pub fn set_member_dead(&mut self, account_id: AccountId, is_dead: bool) {
+        if let Some(member) = self.members.iter_mut().find(|member| member.account_id == account_id) {
+            member.is_dead = is_dead;
+            self.rebuild_display_text();
+        }
     }
 
     pub fn set_deny_invites(&mut self, deny_invites: bool) {

@@ -206,6 +206,9 @@ mod entity_type_tests {
 pub struct Common {
     pub entity_id: EntityId,
     pub job_id: JobId,
+    /// Spirit spheres orbiting this entity (Monk spheres, Gunslinger coins).
+    /// Stored from `ZC_SPIRITS`; drawing them is a separate asset task.
+    pub spirit_spheres: u16,
     pub health_points: usize,
     pub maximum_health_points: usize,
     pub movement_speed: usize,
@@ -1145,6 +1148,7 @@ impl Common {
             world_position,
             entity_id,
             job_id,
+            spirit_spheres: 0,
             direction,
             head_direction,
             sex,
@@ -2478,6 +2482,12 @@ impl Entity {
 
     pub fn set_position(&mut self, map: &Map, position: TilePosition, client_tick: ClientTick) {
         self.get_common_mut().set_position(map, position, client_tick);
+    }
+
+    /// Spirit spheres orbiting this entity. Drawing them is a separate asset
+    /// task; this only records what the server reported.
+    pub fn set_spirit_spheres(&mut self, amount: u16) {
+        self.get_common_mut().spirit_spheres = amount;
     }
 
     pub fn set_dead(&mut self, client_tick: ClientTick) {

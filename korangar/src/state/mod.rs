@@ -4,6 +4,7 @@ pub mod character_slots;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
+pub mod instance;
 pub mod inventory;
 pub mod localization;
 pub mod minimap;
@@ -69,6 +70,7 @@ use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
+use crate::state::instance::InstanceState;
 use crate::state::party::PartyState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
@@ -197,6 +199,10 @@ pub struct ClientState {
     friend_list_window: FriendListWindowState,
     /// Internal state of the party window.
     party_window: PartyWindowState,
+    /// Memorial dungeon / instance information.
+    instance_state: InstanceState,
+    /// Skills the pending Auto Spell cast is offering.
+    auto_spell_skills: Vec<ragnarok_packets::SkillId>,
     /// Internal state of the trade window.
     trade_window: TradeWindowState,
     /// Internal state of the dialog window.
@@ -430,6 +436,8 @@ impl ClientState {
             let friend_list_window = FriendListWindowState::default();
             let party_state = PartyState::default();
             let party_window = PartyWindowState::default();
+            let instance_state = InstanceState::default();
+            let auto_spell_skills = Vec::default();
             let trade_window = TradeWindowState::default();
         });
 
@@ -510,6 +518,8 @@ impl ClientState {
             dm_campaign,
             friend_list_window,
             party_window,
+            instance_state,
+            auto_spell_skills,
             trade_window,
             dialog_window,
             skill_tree_window,

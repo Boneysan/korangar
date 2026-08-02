@@ -33,6 +33,8 @@ mod menu;
 mod minimap;
 #[cfg(feature = "debug")]
 mod packet_inspector;
+mod auto_spell;
+mod instance;
 mod party;
 mod party_invite;
 mod player_target;
@@ -93,6 +95,8 @@ pub use self::menu::MenuWindow;
 pub use self::minimap::MinimapWindow;
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
+pub use self::auto_spell::AutoSpellWindow;
+pub use self::instance::InstanceWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
 pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
@@ -148,6 +152,10 @@ pub enum WindowClass {
     Party,
     /// Incoming party invite popup (Accept / Decline).
     PartyInvite,
+    /// Auto Spell skill chooser.
+    AutoSpell,
+    /// Memorial dungeon / instance information.
+    Instance,
     /// Target frame for a clicked player (whisper / invite / trade / befriend).
     PlayerTarget,
     Storage,

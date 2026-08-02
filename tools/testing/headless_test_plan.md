@@ -35,6 +35,28 @@ Consequences:
 
 Every finding gets classified into one of those layers in the findings log.
 
+### Unmodeled-packet backlog — read the ledger, it is a bug report
+
+The suite's "Unmodeled packets seen" list is not decoration. Two real bugs came
+out of reading it on 2026-08-02, both of which had been sitting in every run:
+
+- **`0x0B42`** was `ZC_ADD_EXCHANGE_ITEM` in the form our packetver actually
+  uses. Only the older `0x0A96` was modelled, so **every item a trade partner
+  offered was silently discarded** — the trade window showed an empty offer.
+- **Four pseudo-headers** (`0x8600`, `0xD700`, `0xFE00`, `0x7F00`) are in no
+  length table and cannot be real. Each decoded as a stray `0x00` followed by a
+  genuine packet, which traced back to `AmmunitionActionType` defaulting to `u8`
+  where Hercules writes a `u16`. An unrecognised header makes `process_one`
+  discard the rest of the buffer, so this lost real packets while reporting
+  `0 failed`. A `registered_packets_consume_their_declared_length` unit test now
+  guards the whole table.
+
+**`0x0078` is deliberately left unmodeled.** It is `clif_sendfakenpc` — the
+invisible NPC (class 111) that drives script dialogs. At 78 occurrences it is by
+far the loudest entry in the backlog and it is the one entry that must stay
+there: modelling it would spawn phantom entities. **Frequency in that list ranks
+noise, not importance.**
+
 ### Coverage baseline (2026-07-11)
 - `NetworkingSystem` exposes **~65 client actions** (login flow, movement, combat, skills,
   items, storage, trade, party, friends, dialogue, shops, hotkeys, stats).

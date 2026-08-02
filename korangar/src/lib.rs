@@ -4926,6 +4926,128 @@ impl Client {
                         ));
                     }
                 }
+                NetworkEvent::PartyMemberAlive { account_id, is_dead } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_member_dead(account_id, is_dead);
+                }
+                NetworkEvent::NpcRefineResult {
+                    result,
+                    inventory_index,
+                    refine_level,
+                } => {
+                    let item_name = self
+                        .client_state
+                        .follow(client_state().inventory())
+                        .items()
+                        .iter()
+                        .find(|item| item.index == inventory_index)
+                        .map(|item| item.metadata.name.clone())
+                        .unwrap_or_else(|| "the item".to_owned());
+
+                    // Same three outcomes as the skill path, but this is the
+                    // blacksmith NPC and previously said nothing at all.
+                    let (message, color) = match result {
+                        0 => (format!("{item_name} was refined to +{refine_level}."), MessageColor::Information),
+                        2 => (
+                            format!("{item_name} lost a refine level and is now +{refine_level}."),
+                            MessageColor::Error,
+                        ),
+                        _ => (format!("Refining {item_name} failed."), MessageColor::Error),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message, color));
+                }
+                NetworkEvent::AutoSpellList { skills } => {
+                    self.client_state.follow_mut(client_state().auto_spell_skills()).clear();
+                    self.client_state
+                        .follow_mut(client_state().auto_spell_skills())
+                        .extend(skills.iter().copied());
+                    self.interface.open_window(AutoSpellWindow::new(client_state().auto_spell_skills()));
+                }
+                NetworkEvent::SpiritSpheres { entity_id, amount } => {
+                    if let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.set_spirit_spheres(amount);
+                    }
+                }
+                NetworkEvent::SkillUnitUpdated { .. } => {
+                    // Ankle Snare and friends changing state. The unit's own
+                    // visual is already driven by AddSkillUnit / RemoveSkillUnit;
+                    // this only says "something is caught", which we do not draw
+                    // differently yet.
+                }
+                NetworkEvent::EntitySnapped { entity_id, position } => {
+                    // Snap / Body Relocation teleport. The entity must be moved
+                    // outright -- walking it there would slide it through walls.
+                    if let Some(map) = self.map.as_ref()
+                        && let Some(entity) = self
+                            .client_state
+                            .follow_mut(client_state().entities())
+                            .iter_mut()
+                            .find(|entity| entity.get_entity_id() == entity_id)
+                    {
+                        entity.set_position(map, position, client_tick);
+                    }
+                }
+                NetworkEvent::EntityEffectState { .. } => {}
+                NetworkEvent::StarPlace {
+                    map_name,
+                    star,
+                    result,
+                    ..
+                } => {
+                    let target = match star {
+                        0 => "Sun",
+                        1 => "Moon",
+                        _ => "Star",
+                    };
+                    let message = match result {
+                        0 => format!("Your {target} place is now {map_name}."),
+                        _ => format!("Your {target} place is {map_name}."),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message, MessageColor::Information));
+                }
+                NetworkEvent::FeelRequest { which } => {
+                    let target = match which {
+                        0 => "Sun",
+                        1 => "Moon",
+                        _ => "Star",
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Choose your {target} place by warping to the map you want."),
+                        MessageColor::Information,
+                    ));
+                }
+                NetworkEvent::InstanceInfo { instance_name } => {
+                    self.client_state
+                        .follow_mut(client_state().instance_state())
+                        .set_pending(instance_name);
+                    self.interface.open_window(InstanceWindow::new(client_state().instance_state()));
+                }
+                NetworkEvent::InstanceJoined {
+                    instance_name,
+                    progress_remaining,
+                    idle_remaining,
+                } => {
+                    self.client_state.follow_mut(client_state().instance_state()).set_joined(
+                        instance_name,
+                        progress_remaining,
+                        idle_remaining,
+                    );
+                    self.interface.open_window(InstanceWindow::new(client_state().instance_state()));
+                }
+                NetworkEvent::InstanceLeft => {
+                    self.client_state.follow_mut(client_state().instance_state()).clear();
+                    self.interface.close_window_with_class(WindowClass::Instance);
+                }
                 NetworkEvent::PartyInvitationState { deny_party_invites } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
@@ -6921,6 +7043,10 @@ impl Client {
                 }
                 InputEvent::LeaveParty => {
                     let _ = self.networking_system.leave_party();
+                }
+                InputEvent::SelectAutoSpell { skill_id } => {
+                    let _ = self.networking_system.select_auto_spell(skill_id);
+                    self.interface.close_window_with_class(WindowClass::AutoSpell);
                 }
                 InputEvent::StartWhisper { character_name } => {
                     self.client_state

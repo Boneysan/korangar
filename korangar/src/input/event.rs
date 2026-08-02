@@ -330,6 +330,10 @@ pub enum InputEvent {
     RejectPartyInvite,
     /// Leave the current party.
     LeaveParty,
+    /// Choose one of the skills Auto Spell offered.
+    SelectAutoSpell {
+        skill_id: ragnarok_packets::SkillId,
+    },
     /// Point the chat window at a character for whispering.
     StartWhisper {
         /// Character to whisper to.

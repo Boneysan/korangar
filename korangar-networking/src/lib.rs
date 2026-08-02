@@ -929,6 +929,11 @@ where
         self.send_map_server_packet(IgnoreAllPacket::new(u8::from(!ignored)))
     }
 
+    /// Answer `ZC_AUTOSPELLLIST` with the chosen skill.
+    pub fn select_auto_spell(&mut self, skill_id: SkillId) -> Result<(), NotConnectedError> {
+        self.send_map_server_packet(SelectAutoSpellPacket::new(skill_id.0 as u32))
+    }
+
     pub fn set_party_invitation_block(&mut self, blocked: bool) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(SetPartyInvitationStatePacket::new(blocked as u8)),
