@@ -147,6 +147,7 @@ impl WindowCache {
             // Same treatment as a friend request: centred, so an invite cannot
             // arrive off-screen or behind another window.
             WindowClass::PartyInvite => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
+            WindowClass::PlayerTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 120.0, 260.0, 200.0),
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
             WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),

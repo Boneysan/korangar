@@ -35,6 +35,7 @@ mod minimap;
 mod packet_inspector;
 mod party;
 mod party_invite;
+mod player_target;
 #[cfg(feature = "debug")]
 mod profiler;
 #[cfg(feature = "debug")]
@@ -94,6 +95,7 @@ pub use self::minimap::MinimapWindow;
 pub use self::packet_inspector::PacketInspectorWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
 pub use self::party_invite::PartyInviteWindow;
+pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
 #[cfg(feature = "debug")]
@@ -146,6 +148,8 @@ pub enum WindowClass {
     Party,
     /// Incoming party invite popup (Accept / Decline).
     PartyInvite,
+    /// Target frame for a clicked player (whisper / invite / trade / befriend).
+    PlayerTarget,
     Storage,
     Trade,
     TradeRequest,

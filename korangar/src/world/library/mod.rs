@@ -4,6 +4,7 @@ mod item_name;
 mod item_resource;
 mod item_stats;
 mod job_identity;
+mod job_name;
 mod map_sky_data;
 mod msgstringtable;
 mod skill_info;
@@ -26,6 +27,7 @@ pub use self::item_resource::{ItemResource, ItemResourceKey};
 pub use self::item_stats::{ItemStats, item_stats, item_tooltip_text};
 pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
 pub use self::job_identity::JobIdentity;
+pub use self::job_name::JobName;
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
 pub(crate) use self::skill_information::skill_asset_file_names;
@@ -37,6 +39,7 @@ pub use crate::world::library::skill_requirements::{SkillListKey, SkillListRequi
 
 pub struct Library {
     job_identity_table: <JobIdentity as Table>::Storage,
+    job_name_table: <JobName as Table>::Storage,
     item_info_table: <ItemInfo as Table>::Storage,
     map_sky_data_table: <MapSkyData as Table>::Storage,
     skill_information_table: <SkillListInformation as Table>::Storage,
@@ -50,6 +53,7 @@ pub struct Library {
 impl Library {
     pub fn new(game_file_loader: &GameFileLoader) -> mlua::Result<Self> {
         let job_identity_table = JobIdentity::load(game_file_loader)?;
+        let job_name_table = JobName::load(game_file_loader)?;
         let item_info_table = ItemInfo::load(game_file_loader)?;
         let map_sky_data_table = MapSkyData::load(game_file_loader)?;
         let skill_information_table = SkillListInformation::load(game_file_loader)?;
@@ -61,6 +65,7 @@ impl Library {
 
         Ok(Self {
             job_identity_table,
+            job_name_table,
             item_info_table,
             map_sky_data_table,
             skill_information_table,

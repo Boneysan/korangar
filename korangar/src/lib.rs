@@ -6026,6 +6026,11 @@ impl Client {
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
                 }
                 InputEvent::PlayerInteract { entity_id } => {
+                    let is_local_player = self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|player| player.get_entity_id() == entity_id);
+
                     let entity = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -6044,6 +6049,27 @@ impl Client {
                                 }
 
                                 self.networking_system.player_attack(entity_id)
+                            }
+                            // Clicking another player used to do nothing at all
+                            // (it fell through to the catch-all below), which is
+                            // why the target frame lives on left-click.
+                            // Your own sprite is clickable, and a frame
+                            // offering to whisper or trade with yourself is
+                            // nonsense.
+                            EntityType::Player if is_local_player => Ok(()),
+                            EntityType::Player => {
+                                let character_name = entity
+                                    .get_details()
+                                    .map(|details| details.split('#').next().unwrap_or(details).to_owned())
+                                    .unwrap_or_else(|| "Unknown".to_owned());
+                                let class_name = JobName::get(&self.library, entity.get_job_id()).to_string();
+
+                                self.interface.open_window(PlayerTargetWindow::new(
+                                    AccountId(entity_id.0),
+                                    character_name,
+                                    class_name,
+                                ));
+                                Ok(())
                             }
                             EntityType::Warp => self.networking_system.player_move({
                                 let position = entity.get_tile_position();
