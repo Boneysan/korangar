@@ -4840,9 +4840,10 @@ impl Client {
                         .follow_mut(client_state().party_state())
                         .set_pending_invite(party_id, party_name.clone());
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("Party invite from {party_name}. Accept or reject it in the party window (Alt+Z)."),
+                        format!("Party invite from {party_name}."),
                         MessageColor::Information,
                     ));
+                    self.interface.open_window(PartyInviteWindow::new(party_id, party_name));
                 }
                 NetworkEvent::PartyInviteResult { character_name, result } => {
                     let message = match result {
@@ -4863,7 +4864,11 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message, MessageColor::Information));
                 }
-                NetworkEvent::PartyInvitationState { .. } => {}
+                NetworkEvent::PartyInvitationState { deny_party_invites } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_deny_invites(deny_party_invites);
+                }
                 NetworkEvent::PartyList { party_name, members } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
@@ -6733,6 +6738,7 @@ impl Client {
                     }
                 }
                 InputEvent::AcceptPartyInvite => {
+                    self.interface.close_window_with_class(WindowClass::PartyInvite);
                     match self.client_state.follow(client_state().party_state()).pending_invite_id() {
                         Some(party_id) => {
                             self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
@@ -6745,6 +6751,7 @@ impl Client {
                     }
                 }
                 InputEvent::RejectPartyInvite => {
+                    self.interface.close_window_with_class(WindowClass::PartyInvite);
                     match self.client_state.follow(client_state().party_state()).pending_invite_id() {
                         Some(party_id) => {
                             self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
@@ -6758,6 +6765,17 @@ impl Client {
                 }
                 InputEvent::LeaveParty => {
                     let _ = self.networking_system.leave_party();
+                }
+                InputEvent::StartWhisper { character_name } => {
+                    self.client_state
+                        .follow_mut(client_state().chat_window())
+                        .start_whisper(character_name);
+                }
+                InputEvent::RequestTrade { account_id } => {
+                    let _ = self.networking_system.request_trade(account_id);
+                }
+                InputEvent::SetPartyInvitationBlock { blocked } => {
+                    let _ = self.networking_system.set_party_invitation_block(blocked);
                 }
                 InputEvent::BuyItems { items } => {
                     let _ = self.networking_system.purchase_items(items);

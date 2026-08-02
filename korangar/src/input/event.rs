@@ -321,6 +321,21 @@ pub enum InputEvent {
     RejectPartyInvite,
     /// Leave the current party.
     LeaveParty,
+    /// Point the chat window at a character for whispering.
+    StartWhisper {
+        /// Character to whisper to.
+        character_name: String,
+    },
+    /// Ask a character to trade.
+    RequestTrade {
+        /// Account id of the character to trade with.
+        account_id: AccountId,
+    },
+    /// Allow or block incoming party invites.
+    SetPartyInvitationBlock {
+        /// `true` refuses every invite server-side.
+        blocked: bool,
+    },
     /// Buy items from a shop.
     BuyItems {
         /// Items to buy.

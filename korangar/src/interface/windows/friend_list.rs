@@ -60,20 +60,61 @@ where
                         let friend_path = self.friend_list_path.index(index).manually_asserted();
                         let label_path = friend_path.display_label();
 
+                        // Whisper, Invite and Trade all need a *named* player,
+                        // and this is the cheapest place to get one -- no world
+                        // click, no hit-testing. Trade especially: the only
+                        // other way in is `/trade request <account_id>`, and
+                        // nobody knows another player's account id.
                         self.elements.push(ErasedElement::new(collapsible! {
                             text: label_path,
-                            children: button! {
-                                text: client_state().localization().remove_button_text(),
-                                event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                    let friend = state.get(&friend_path);
-                                    let account_id = friend.account_id();
-                                    let character_id = friend.character_id();
-
-                                    queue.queue(
-                                        InputEvent::RemoveFriend { account_id, character_id }
-                                    );
+                            children: (
+                                split! {
+                                    gaps: theme().window().gaps(),
+                                    children: (
+                                        button! {
+                                            text: "Whisper",
+                                            tooltip: "Aim the chat box at this friend [^000001/w <name>^000000]",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let character_name = state.get(&friend_path).name().to_owned();
+                                                queue.queue(InputEvent::StartWhisper { character_name });
+                                            },
+                                        },
+                                        button! {
+                                            text: "Invite",
+                                            tooltip: "Invite to your party [^000001/party invite <name>^000000]",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let character_name = state.get(&friend_path).name().to_owned();
+                                                queue.queue(InputEvent::InviteToParty { character_name });
+                                            },
+                                        },
+                                    ),
                                 },
-                            },
+                                split! {
+                                    gaps: theme().window().gaps(),
+                                    children: (
+                                        button! {
+                                            text: "Trade",
+                                            tooltip: "Ask this friend to trade (they must be nearby)",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let account_id = state.get(&friend_path).account_id();
+                                                queue.queue(InputEvent::RequestTrade { account_id });
+                                            },
+                                        },
+                                        button! {
+                                            text: client_state().localization().remove_button_text(),
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let friend = state.get(&friend_path);
+                                                let account_id = friend.account_id();
+                                                let character_id = friend.character_id();
+
+                                                queue.queue(
+                                                    InputEvent::RemoveFriend { account_id, character_id }
+                                                );
+                                            },
+                                        },
+                                    ),
+                                },
+                            ),
                         }));
                     }
                 }

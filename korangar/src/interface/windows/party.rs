@@ -1,14 +1,18 @@
+use std::cmp::Ordering;
+
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::element::StateElement;
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
+use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::event::{Event, EventQueue};
+use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
-use rust_state::{Path, PathExt, RustState, State};
+use rust_state::{ManuallyAssertExt, Path, PathExt, RustState, State, VecIndexExt};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
-use crate::state::party::{PartyState, PartyStatePathExt};
+use crate::state::party::{PartyMemberState, PartyMemberStatePathExt, PartyState, PartyStatePathExt};
 use crate::state::theme::InterfaceThemeType;
 
 /// Character names cap at 24 in Ragnarok, and party names share the limit.
@@ -42,6 +46,107 @@ where
         state.update_value_with(name_path, |current| current.clear());
         queue.queue(build_event(name));
         queue.queue(Event::Unfocus);
+    }
+}
+
+/// Per-member roster rows, each with its own actions.
+///
+/// Modelled on `FriendList`. A single text blob could not carry buttons, and
+/// per-member Whisper/Trade is the cheapest way to act on a named player --
+/// `/trade request` otherwise needs an account id typed by hand.
+struct PartyMemberList<A> {
+    members_path: A,
+    elements: Vec<ElementBox<ClientState>>,
+}
+
+impl<A> PartyMemberList<A> {
+    fn new(members_path: A) -> Self {
+        Self {
+            members_path,
+            elements: Vec::new(),
+        }
+    }
+}
+
+impl<A> Element<ClientState> for PartyMemberList<A>
+where
+    A: Path<ClientState, Vec<PartyMemberState>>,
+{
+    type LayoutInfo = ();
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        mut store: ElementStoreMut,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            use korangar_interface::prelude::*;
+
+            let members = state.get(&self.members_path);
+
+            match members.len().cmp(&self.elements.len()) {
+                Ordering::Less => self.elements.truncate(members.len()),
+                Ordering::Equal => {}
+                Ordering::Greater => {
+                    for index in self.elements.len()..members.len() {
+                        let member_path = self.members_path.index(index).manually_asserted();
+                        let label_path = member_path.display_label();
+
+                        self.elements.push(ErasedElement::new(collapsible! {
+                            text: label_path,
+                            children: split! {
+                                gaps: theme().window().gaps(),
+                                children: (
+                                    button! {
+                                        text: "Whisper",
+                                        tooltip: "Aim the chat box at this member [^000001/w <name>^000000]",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let character_name = state.get(&member_path).name().to_owned();
+                                            queue.queue(InputEvent::StartWhisper { character_name });
+                                        },
+                                    },
+                                    button! {
+                                        text: "Trade",
+                                        tooltip: "Ask this member to trade (they must be nearby)",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let account_id = state.get(&member_path).account_id();
+                                            queue.queue(InputEvent::RequestTrade { account_id });
+                                        },
+                                    },
+                                ),
+                            },
+                        }));
+                    }
+                }
+            }
+
+            self.elements
+                .iter_mut()
+                .zip(members.iter())
+                .enumerate()
+                .for_each(|(index, (element, _))| {
+                    element.create_layout_info(state, store.child_store(index as u64), resolver);
+                });
+        })
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        _: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        let members = state.get(&self.members_path);
+
+        self.elements
+            .iter()
+            .zip(members.iter())
+            .enumerate()
+            .for_each(|(index, (element, _))| {
+                element.lay_out(state, store.child_store(index as u64), &(), layout);
+            });
     }
 }
 
@@ -176,9 +281,22 @@ where
                         },
                     ),
                 },
+                state_button! {
+                    text: "Block invites",
+                    tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
+                    state: self.party_path.deny_invites(),
+                    event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                        // Send the opposite of what the server last told us,
+                        // never of a locally-toggled value, so a refused
+                        // request cannot leave the button lying.
+                        let blocked = !*state.get(&party_path.deny_invites());
+                        queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
+                    },
+                },
                 text! {
                     text: self.party_path.display_text(),
                 },
+                PartyMemberList::new(self.party_path.members()),
             )
         }
     }

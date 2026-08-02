@@ -17,6 +17,10 @@ pub struct PartyMemberState {
     maximum_health_points: Option<usize>,
     spell_points: Option<usize>,
     maximum_spell_points: Option<usize>,
+    /// Cached [`Self::summary_line`]. The party window renders members as
+    /// elements with their own buttons, and an element's text has to come from
+    /// a *field* path rather than a method.
+    display_label: String,
 }
 
 impl PartyMemberState {
@@ -73,6 +77,10 @@ impl PartyMemberState {
         }
     }
 
+    pub fn display_label(&self) -> &str {
+        &self.display_label
+    }
+
     /// `(current, maximum)` SP, same contract as [`Self::health`].
     pub fn spell(&self) -> Option<(usize, usize)> {
         match (self.spell_points, self.maximum_spell_points) {
@@ -117,6 +125,7 @@ impl PartyMemberState {
             maximum_health_points: None,
             spell_points: None,
             maximum_spell_points: None,
+            display_label: String::new(),
         }
     }
 
@@ -135,6 +144,7 @@ impl PartyMemberState {
             maximum_health_points: None,
             spell_points: None,
             maximum_spell_points: None,
+            display_label: String::new(),
         }
     }
 }
@@ -148,6 +158,10 @@ pub struct PartyState {
     /// Character we have invited and not yet heard back about. Cleared by
     /// `PartyInviteResult`, whatever the answer was.
     outgoing_invite: Option<String>,
+    /// Server-side "refuse every party invite" flag. Only ever set from
+    /// `PartyInvitationState`, so the toggle shows what the server actually
+    /// believes rather than what we last asked for.
+    deny_invites: bool,
     members: Vec<PartyMemberState>,
     share_pickup: bool,
     share_loot: bool,
@@ -166,6 +180,7 @@ impl Default for PartyState {
             pending_invite_id: None,
             pending_invite_name: String::new(),
             outgoing_invite: None,
+            deny_invites: false,
             members: Vec::new(),
             share_pickup: false,
             share_loot: false,
@@ -205,6 +220,15 @@ impl PartyState {
 
     pub fn has_pending_invite(&self) -> bool {
         self.pending_invite_id.is_some()
+    }
+
+    pub fn deny_invites(&self) -> bool {
+        self.deny_invites
+    }
+
+    pub fn set_deny_invites(&mut self, deny_invites: bool) {
+        self.deny_invites = deny_invites;
+        self.rebuild_status_text();
     }
 
     pub fn set_pending_invite(&mut self, party_id: PartyId, party_name: String) {
@@ -310,6 +334,11 @@ impl PartyState {
     }
 
     fn rebuild_status_text(&mut self) {
+        if self.deny_invites && self.members.is_empty() && self.pending_invite_name.is_empty() {
+            self.status_text = "Not in a party. Invites are blocked.".to_owned();
+            return;
+        }
+
         self.status_text = match (&self.pending_invite_name, &self.outgoing_invite, self.members.is_empty()) {
             (name, _, _) if !name.is_empty() => format!("{name} invited you — Accept or Reject."),
             (_, Some(character_name), _) => format!("Invited {character_name}; waiting for an answer\u{2026}"),
@@ -328,6 +357,11 @@ impl PartyState {
     fn rebuild_display_text(&mut self) {
         self.rebuild_status_text();
 
+        // Members render as their own elements, so each caches its own line.
+        for member in &mut self.members {
+            member.display_label = member.summary_line();
+        }
+
         if self.members.is_empty() {
             self.display_text = String::new();
             return;
@@ -338,11 +372,7 @@ impl PartyState {
             if self.share_pickup { "on" } else { "off" },
             if self.share_loot { "on" } else { "off" },
         );
-        let mut lines = vec![format!("Party: {}", self.party_name), share, String::new()];
-        for member in &self.members {
-            lines.push(member.summary_line());
-        }
-        self.display_text = lines.join("\n");
+        self.display_text = format!("Party: {}\n{share}", self.party_name);
     }
 }
 
@@ -399,9 +429,10 @@ mod tests {
         let mut state = PartyState::default();
         state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)]);
         assert!(state.display_text().contains("Seal Cascade"));
-        assert!(state.display_text().contains("Alice"));
-        assert!(state.display_text().contains("online"));
-        assert!(state.display_text().contains("Lv50"));
+        let label = state.members()[0].display_label();
+        assert!(label.contains("Alice"));
+        assert!(label.contains("online"));
+        assert!(label.contains("Lv50"));
     }
 
     #[test]
@@ -414,8 +445,8 @@ mod tests {
         assert_eq!(member.position(), Some(TilePosition::new(10, 20)));
         assert_eq!(member.health_points(), Some(100));
         assert_eq!(member.spell_points(), Some(30));
-        assert!(state.display_text().contains("100/200 HP"));
-        assert!(state.display_text().contains("30/60 SP"));
+        assert!(state.members()[0].display_label().contains("100/200 HP"));
+        assert!(state.members()[0].display_label().contains("30/60 SP"));
 
         // A narrow 0x080E update must not blank the SP we already know.
         state.update_health(AccountId(1), 90, 200, None);
