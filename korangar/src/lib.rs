@@ -4836,6 +4836,13 @@ impl Client {
                     let list = self.client_state.follow_mut(client_state().friend_list());
                     if let Some(entry) = list.iter_mut().find(|f| f.character_id() == character_id) {
                         entry.set_online(online);
+                        // Re-sort: online-first ordering is applied when the
+                        // list arrives at login, so without this a friend who
+                        // logs in mid-session gets the right glyph but stays in
+                        // the wrong position until the next relog.
+                        crate::state::friends::sort_friends(
+                            self.client_state.follow_mut(client_state().friend_list()).as_mut_slice(),
+                        );
                     }
                     let status = if online { "online" } else { "offline" };
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
