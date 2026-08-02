@@ -91,7 +91,7 @@ pub use self::menu::MenuWindow;
 pub use self::minimap::MinimapWindow;
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
-pub use self::party::PartyWindow;
+pub use self::party::{PartyWindow, PartyWindowState};
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
 #[cfg(feature = "debug")]

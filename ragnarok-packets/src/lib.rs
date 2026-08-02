@@ -5301,6 +5301,27 @@ pub struct PartyMemberHealthPacket {
     pub maximum_health_points: u32,
 }
 
+/// Party member's HP **and SP** (`ZC_NOTIFY_HP_TO_GROUPM`, wide form).
+///
+/// Official main-branch servers send the narrow 14-byte [`PartyMemberHealthPacket`]
+/// (0x080E) and never report a party member's SP at all; only the Zero branch
+/// sends this 22-byte form. Our Hercules delta selects it on every branch so the
+/// client can draw an SP bar over party members — see `KORANGAR_PARTY_SP_TO_GROUPM`
+/// in `src/map/packets_struct.h` and korangar `CLAUDE.md` §3b.
+///
+/// Both packets stay registered: 0x0BAB is what our server now sends, and 0x080E
+/// remains correct against a stock server.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0BAB)]
+pub struct PartyMemberVitalsPacket {
+    pub account_id: AccountId,
+    pub health_points: u32,
+    pub maximum_health_points: u32,
+    pub spell_points: u32,
+    pub maximum_spell_points: u32,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0ABD)]
@@ -6098,6 +6119,32 @@ mod tests {
         assert_eq!(packet.delay_time, 0);
         assert_eq!(packet.disposable, 0);
         assert_eq!(packet.attack_motion_time, 0);
+    }
+
+    /// `ZC_NOTIFY_HP_TO_GROUPM` in the wide 22-byte form our Hercules delta
+    /// selects (`KORANGAR_PARTY_SP_TO_GROUPM`). The length must stay 22 to match
+    /// `packetLen(0x0bab, 22)` in Hercules' own main table and the generated
+    /// `lengths_20220406.rs` — a mismatch would desync the read buffer rather
+    /// than fail loudly.
+    #[test]
+    fn party_member_vitals_packet_matches_wide_layout() {
+        let bytes = [
+            0xAB, 0x0B, // header
+            0x81, 0x84, 0x1E, 0x00, // account id 2000001
+            0x2C, 0x01, 0x00, 0x00, // hp 300
+            0xE8, 0x03, 0x00, 0x00, // max hp 1000
+            0x2D, 0x00, 0x00, 0x00, // sp 45
+            0xC8, 0x00, 0x00, 0x00, // max sp 200
+        ];
+        assert_eq!(bytes.len(), 22);
+
+        let packet = read_packet::<PartyMemberVitalsPacket>(&bytes);
+
+        assert_eq!(packet.account_id, AccountId(2000001));
+        assert_eq!(packet.health_points, 300);
+        assert_eq!(packet.maximum_health_points, 1000);
+        assert_eq!(packet.spell_points, 45);
+        assert_eq!(packet.maximum_spell_points, 200);
     }
 
     #[test]

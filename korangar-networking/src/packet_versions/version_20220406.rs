@@ -1332,6 +1332,13 @@ where
         account_id: packet.account_id,
         health_points: packet.health_points as usize,
         maximum_health_points: packet.maximum_health_points as usize,
+        spell_points: None,
+    })?;
+    packet_handler.register(|packet: PartyMemberVitalsPacket| NetworkEvent::PartyMemberHealth {
+        account_id: packet.account_id,
+        health_points: packet.health_points as usize,
+        maximum_health_points: packet.maximum_health_points as usize,
+        spell_points: Some((packet.spell_points as usize, packet.maximum_spell_points as usize)),
     })?;
     packet_handler.register(|packet: PartyMemberJobAndLevelPacket| NetworkEvent::PartyMemberJobAndLevel {
         account_id: packet.account_id,

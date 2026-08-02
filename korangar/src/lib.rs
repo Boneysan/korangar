@@ -3605,7 +3605,7 @@ impl Client {
                         this_player().manually_asserted(),
                         client_state().skill_cooldowns(),
                     ));
-                    self.interface.open_window(PartyWindow::new(client_state().party_state()));
+                    self.interface.open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
                     // Minimap is filled when the map resource finishes loading; open a placeholder
                     // only if the player wants it visible (Game Settings / Map button / Alt+M).
                     let show_minimap = *self.client_state.follow(client_state().game_settings().show_minimap());
@@ -4838,9 +4838,9 @@ impl Client {
                 NetworkEvent::PartyInvite { party_id, party_name } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
-                        .set_pending_invite(party_id);
+                        .set_pending_invite(party_id, party_name.clone());
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("Party invite from {party_name}. Use /party accept or /party reject."),
+                        format!("Party invite from {party_name}. Accept or reject it in the party window (Alt+Z)."),
                         MessageColor::Information,
                     ));
                 }
@@ -4855,6 +4855,10 @@ impl Client {
                         _ => format!("Party invite for {character_name} failed ({result})."),
                     };
 
+                    // The answer landed, so the window stops saying "waiting".
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .clear_outgoing_invite();
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message, MessageColor::Information));
@@ -4879,11 +4883,13 @@ impl Client {
                     account_id,
                     health_points,
                     maximum_health_points,
+                    spell_points,
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).update_health(
                         account_id,
                         health_points,
                         maximum_health_points,
+                        spell_points,
                     );
                 }
                 NetworkEvent::PartyMemberJobAndLevel {
@@ -5953,7 +5959,10 @@ impl Client {
                     if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Party) {
                             true => self.interface.close_window_with_class(WindowClass::Party),
-                            false => self.interface.open_window(PartyWindow::new(client_state().party_state())),
+                            false => self.interface.open_window(PartyWindow::new(
+                                client_state().party_window(),
+                                client_state().party_state(),
+                            )),
                         }
                     }
                 }
@@ -6250,7 +6259,11 @@ impl Client {
                                 let _ = self.networking_system.create_party(arguments);
                             }
                             "invite" if !arguments.is_empty() => {
-                                let _ = self.networking_system.invite_to_party(arguments);
+                                if self.networking_system.invite_to_party(arguments).is_ok() {
+                                    self.client_state
+                                        .follow_mut(client_state().party_state())
+                                        .set_outgoing_invite(arguments.to_owned());
+                                }
                             }
                             "accept" => {
                                 let party_id = if arguments.is_empty() {
@@ -6708,6 +6721,43 @@ impl Client {
                 InputEvent::AcceptFriendRequest { account_id, character_id } => {
                     let _ = self.networking_system.accept_friend_request(account_id, character_id);
                     self.interface.close_window_with_class(WindowClass::FriendRequest);
+                }
+                InputEvent::CreateParty { party_name } => {
+                    let _ = self.networking_system.create_party(&party_name);
+                }
+                InputEvent::InviteToParty { character_name } => {
+                    if self.networking_system.invite_to_party(&character_name).is_ok() {
+                        self.client_state
+                            .follow_mut(client_state().party_state())
+                            .set_outgoing_invite(character_name);
+                    }
+                }
+                InputEvent::AcceptPartyInvite => {
+                    match self.client_state.follow(client_state().party_state()).pending_invite_id() {
+                        Some(party_id) => {
+                            self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
+                            let _ = self.networking_system.accept_party_invite(party_id);
+                        }
+                        None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "No party invite is pending.".to_owned(),
+                            MessageColor::Information,
+                        )),
+                    }
+                }
+                InputEvent::RejectPartyInvite => {
+                    match self.client_state.follow(client_state().party_state()).pending_invite_id() {
+                        Some(party_id) => {
+                            self.client_state.follow_mut(client_state().party_state()).clear_pending_invite();
+                            let _ = self.networking_system.reject_party_invite(party_id);
+                        }
+                        None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "No party invite is pending.".to_owned(),
+                            MessageColor::Information,
+                        )),
+                    }
+                }
+                InputEvent::LeaveParty => {
+                    let _ = self.networking_system.leave_party();
                 }
                 InputEvent::BuyItems { items } => {
                     let _ = self.networking_system.purchase_items(items);
@@ -8741,15 +8791,32 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
-        // Always-on green HP bars for party members visible on this map.
+        // Always-on HP / SP / cast bars for party members visible on this map.
+        // HP and SP come from `PartyState` (keyed by account id, fed by
+        // `ZC_NOTIFY_HP_TO_GROUPM`); the cast bar is read off the entity itself.
         {
             let party = self.client_state.follow(client_state().party_state());
-            let party_account_ids: Vec<_> = party.members().iter().filter(|m| m.online()).map(|m| m.account_id().0).collect();
-            if !party_account_ids.is_empty() {
+            let members: Vec<_> = party
+                .members()
+                .iter()
+                .filter(|member| member.online())
+                .map(|member| (member.account_id().0, member.health(), member.spell()))
+                .collect();
+
+            if !members.is_empty() {
                 let theme = self.client_state.follow(client_state().world_theme());
                 for entity in self.client_state.follow(client_state().entities()).iter().skip(1) {
-                    if party_account_ids.contains(&entity.get_entity_id().0) {
-                        entity.render_ally_status(self.middle_interface_renderer, self.current_camera, theme, self.screen_size);
+                    if let Some((_, health, spell)) = members.iter().find(|(account_id, _, _)| *account_id == entity.get_entity_id().0)
+                    {
+                        entity.render_ally_status(
+                            self.middle_interface_renderer,
+                            self.current_camera,
+                            theme,
+                            self.screen_size,
+                            *health,
+                            *spell,
+                            self.client_tick,
+                        );
                     }
                 }
             }

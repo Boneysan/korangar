@@ -336,8 +336,31 @@ have failed for a reason that is not a bug.
 | 7 | Repeat 1–3 with a gunslinger or shuriken | same behaviour — the broadcast is item-id based | **PASS** (2026-07-29) |
 | 8 | A changes **own** hair | updates without relog | **PASS** (2026-07-29) — the "expected to FAIL" prediction was wrong, see Gap 2 correction |
 | 9 | B changes hair while A watches | A sees it update live | **PASS** after the hair fix; **FAILED** before it |
-| 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | ☐ |
-| 11 | B gains a status with values (**Sage field — NOT `AC_CONCENTRATION`**) | A sees the same visual | ☐ — one invalid attempt 2026-07-31, see below |
+| 10 | B casts a levelled skill (e.g. Fire Bolt) | effect matches what B sees | **PASS** (2026-08-02) — Sage Fire Bolt, observer saw the same bolt |
+| 11 | B gains a status with values (**Sage field — NOT `AC_CONCENTRATION`**) | A sees the same visual | **PASS** (2026-08-02) — `SA_VOLCANO` clicked on bare ground; the observer saw the field. One invalid attempt 2026-07-31, see below |
+
+**The checklist is now closed** — every row is PASS or retired. Row 10 also turned
+up a gap it was not looking for, since **fixed and live-verified the same day**:
+the observer never saw the caster's **cast bar**. Two things had to be true at
+once, and only the second was:
+
+- The state was already right. `SkillCast` is broadcast `AREA`
+  (`clif_useskill`, `clif.c:5859`) and `Entity::start_cast` writes it onto
+  `Common`, so an observer's copy of the caster genuinely knew about the cast.
+  `KORANGAR_PACKET_LOG=1` on the observer seat proved it —
+  `[skill-cast] skill=285 source=2000000 cast_ms=4540`.
+- Nothing rendered it. **Remote players are `Entity::Npc` with
+  `entity_type == Player`** — `Entity::Player` is only ever the local player — and
+  `Npc::render_status` does not even take a `client_tick`, so a cast bar was
+  unreachable by construction. `render_ally_status` drew HP alone.
+
+Party members now get **HP, SP and cast** bars overhead (2026-08-02). SP required
+a Hercules delta, `KORANGAR_PARTY_SP_TO_GROUPM` — see korangar `CLAUDE.md` §3b.
+
+**Method note worth keeping:** the first read of this was "the observer isn't
+getting `SkillCast`", which was wrong. One env var and one log line separated
+*packet never arrives* from *packet arrives and is never drawn* — and they have
+completely different fixes. Instrument the boundary before choosing a side.
 
 **Row 11: the "Sage field" in the Expected column is load-bearing. Do not
 substitute a plain buff.** Attempted 2026-07-31 with `AC_CONCENTRATION`, which

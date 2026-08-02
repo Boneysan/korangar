@@ -480,6 +480,11 @@ pub enum NetworkEvent {
         account_id: AccountId,
         health_points: usize,
         maximum_health_points: usize,
+        /// `(current, maximum)` spell points, or `None` from the narrow 0x080E
+        /// form, which carries no SP. Our Hercules delta makes the server send
+        /// the wide 0x0BAB form, so in practice this is `Some` — but a stock
+        /// server would still be handled correctly.
+        spell_points: Option<(usize, usize)>,
     },
     PartyMemberJobAndLevel {
         account_id: AccountId,

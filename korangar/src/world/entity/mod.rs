@@ -2187,13 +2187,35 @@ impl Npc {
         );
     }
 
-    /// Ally / party-member HP bar (other player entities appear as `Npc` with
-    /// `EntityType::Player`).
-    pub fn render_ally_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    /// Ally / party-member bars: HP, SP and cast progress (other player entities
+    /// appear as `Npc` with `EntityType::Player`).
+    ///
+    /// `health` and `spell` are passed in rather than read off `Common` because
+    /// a party member's vitals arrive on `ZC_NOTIFY_HP_TO_GROUPM` and live in
+    /// `PartyState`, keyed by account id — the entity itself is never told. The
+    /// cast bar *is* local: `SkillCast` is broadcast to the whole area and
+    /// `Entity::start_cast` writes it straight onto `Common`, so an observer
+    /// already has it.
+    ///
+    /// Each bar is skipped independently when its data is unknown, so a member
+    /// whose SP has not arrived yet still gets an HP bar.
+    pub fn render_ally_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        health: Option<(usize, usize)>,
+        spell: Option<(usize, usize)>,
+        client_tick: ClientTick,
+    ) {
         if self.common.entity_type != EntityType::Player {
             return;
         }
-        if self.common.maximum_health_points == 0 {
+
+        let cast = self.common.cast_bar(client_tick);
+
+        if health.is_none() && spell.is_none() && cast.is_none() {
             return;
         }
 
@@ -2205,26 +2227,60 @@ impl Npc {
         };
 
         let bar_width = theme.status_bar.enemy_bar_width;
+        let bar_height = theme.status_bar.enemy_health_height;
+        let gap = theme.status_bar.gap;
+
+        let bar_count = health.is_some() as u32 + spell.is_some() as u32 + cast.is_some() as u32;
+        let total_height = bar_height * bar_count as f32 + gap * bar_count.saturating_sub(1) as f32;
 
         renderer.render_rectangle(
             final_position - theme.status_bar.border_size - ScreenSize::only_width(bar_width / 2.0),
             ScreenSize {
                 width: bar_width,
-                height: theme.status_bar.enemy_health_height,
+                height: total_height,
             } + (theme.status_bar.border_size * 2.0),
             theme.status_bar.background_color,
         );
 
-        renderer.render_bar(
-            final_position,
-            ScreenSize {
-                width: bar_width,
-                height: theme.status_bar.enemy_health_height,
-            },
-            Color::rgb_u8(80, 220, 120),
-            self.common.maximum_health_points as f32,
-            self.common.health_points as f32,
-        );
+        let mut offset = 0.0;
+        let bar_size = ScreenSize {
+            width: bar_width,
+            height: bar_height,
+        };
+
+        if let Some((current, maximum)) = health {
+            renderer.render_bar(
+                final_position,
+                bar_size,
+                Color::rgb_u8(80, 220, 120),
+                maximum as f32,
+                current as f32,
+            );
+            offset += gap + bar_height;
+        }
+
+        if let Some((current, maximum)) = spell {
+            renderer.render_bar(
+                final_position + ScreenPosition::only_top(offset),
+                bar_size,
+                theme.status_bar.spell_point_color,
+                maximum as f32,
+                current as f32,
+            );
+            offset += gap + bar_height;
+        }
+
+        if let Some((remaining, total)) = cast {
+            // Fill grows as the cast completes, matching the local player's bar.
+            let elapsed = (total - remaining).max(0.0);
+            renderer.render_bar(
+                final_position + ScreenPosition::only_top(offset),
+                bar_size,
+                Color::rgb_u8(255, 210, 60),
+                total,
+                elapsed,
+            );
+        }
     }
 }
 
@@ -2700,10 +2756,20 @@ impl Entity {
         }
     }
 
-    pub fn render_ally_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    #[allow(clippy::too_many_arguments)]
+    pub fn render_ally_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        health: Option<(usize, usize)>,
+        spell: Option<(usize, usize)>,
+        client_tick: ClientTick,
+    ) {
         match self {
             Self::Player(_) => {}
-            Self::Npc(npc) => npc.render_ally_status(renderer, camera, theme, window_size),
+            Self::Npc(npc) => npc.render_ally_status(renderer, camera, theme, window_size, health, spell, client_tick),
         }
     }
 }

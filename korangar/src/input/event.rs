@@ -305,6 +305,22 @@ pub enum InputEvent {
         /// Character id of the requestor.
         character_id: CharacterId,
     },
+    /// Create a new party.
+    CreateParty {
+        /// Name of the party to create.
+        party_name: String,
+    },
+    /// Invite a character to the current party.
+    InviteToParty {
+        /// Name of the character to invite.
+        character_name: String,
+    },
+    /// Accept the pending party invite.
+    AcceptPartyInvite,
+    /// Reject the pending party invite.
+    RejectPartyInvite,
+    /// Leave the current party.
+    LeaveParty,
     /// Buy items from a shop.
     BuyItems {
         /// Items to buy.

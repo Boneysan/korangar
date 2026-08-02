@@ -100,7 +100,23 @@ has the Archer skills" — true when written, false a day later.
 | **Setup** | Two seats, and **`@jobchange 3` + `@allskill` on the acting seat** — these are Archer-line skills and the shared character will not be an Archer. Ids verified against `docs/skills.json`: `AC_CONCENTRATION` **45**, `AC_DOUBLE` **46**, `AC_SHOWER` **47** |
 | **Watch for** | The *observer* sees the effect and the status icon/values — not the caster |
 | **Note** | The last two open rows of [observer-view-verification.md](observer-view-verification.md) |
-| **Result** | Row 10 open. **Row 11 was run 2026-07-31 with an INVALID probe — see below. Not a result either way.** |
+| **Result** | **Row 10 PASS and row 11 PASS**, 2026-08-02. `test` as a Sage (`@jobchange 16` + `@allskill`) on prt_fild08: Fire Bolt's effect reached `HeadlessTwo` identically (row 10), and `SA_VOLCANO` clicked on bare ground was visible from the observer seat (row 11). The 2026-07-31 row-11 attempt used an INVALID probe, see below, and was never a result either way. **This closes the observer-view checklist** — but row 10 exposed a new gap it was not testing for: see *The observer never sees a cast* below. |
+
+**One job change covers four rows.** `@jobchange 16` + `@allskill` gives Fire Bolt
+(row 10), the three Sage fields (row 11), Land Protector Lv10 = the 225-cell case
+(row 4), Fire Wall (the direction-dependent wall) and a cast bar (row 4b). Sage
+does *not* have Storm Gust — that needs `@jobchange 9`.
+
+**Row 11 cannot be fired with `@useskill`.** For a ground skill `@useskill` casts
+at the *target player's cell* (`atcommand.c:5960`, `unit->skilluse_pos(bl,
+pl_sd->bl.x, pl_sd->bl.y, ...)`), and the Sage fields carry `UF_NOFOOTSET`, so
+both `self` and a named partner aim at an occupied cell. It must be armed and
+clicked on bare ground.
+
+**Use a field map, not a town.** Row 1's PASS *was* a town map-zone rejection, so
+the same zone rules could refuse a probe in Prontera and it would read as a
+client bug. `prt_fild08` + `@killmonster`, with the observer brought over by
+`@jumpto test`.
 
 #### Row 11: do NOT use `AC_CONCENTRATION` — corrected 2026-07-31
 
@@ -142,6 +158,38 @@ that it still carries the property the row tests. A status with no opt-state has
 no visual, so "observer sees nothing" is unfalsifiable — the row can neither
 pass nor fail.
 
+### 2b. Party window and party-member bars — **built and live-verified 2026-08-02**
+
+Not on the original queue; it came out of row 10. Verified on screen: the party
+window's controls, and **HP, SP and cast bars over party members**.
+
+| | |
+|---|---|
+| **Result** | **PASS.** Cast bar, SP and HP all visible over a party member from the far seat, no hover needed |
+
+What it took, and why the two halves were not equal:
+
+- **The cast bar was client-only.** The observer's state was already correct —
+  see the method note in [observer-view-verification.md](observer-view-verification.md).
+  Remote players are `Entity::Npc`, whose `render_status` takes no `client_tick`,
+  so the bar was unreachable; `render_ally_status` now takes HP/SP/cast and draws
+  each independently, skipping any whose data is unknown.
+- **SP needed a server delta.** Main-branch Hercules never reports a party
+  member's SP — only Zero got the wide 22-byte `ZC_NOTIFY_HP_TO_GROUPM` (0x0BAB).
+  Widened the guard rather than inventing a packet, because **0x0bab is already
+  `packetLen(0x0bab, 22)`** in Hercules' main table *and* the client's generated
+  `lengths_20220406.rs`. Full note, including the `case SP_SP:` trigger that is
+  easy to miss and the battleground guard that must **not** be widened, is in
+  korangar `CLAUDE.md` §3b.
+- **The window** gained a status line (party-less / invite received, with the
+  inviting party's name / invite sent and awaiting an answer / member count) and
+  buttons for every `/party` command, each disabling itself with a
+  `disabled_tooltip` when it cannot apply.
+
+**Party membership survives logout** — confirmed in passing, and it is *correct*.
+Parties live in the `party` table server-side, so rejoining is not needed; a
+character keeps its party across sessions exactly as in official RO.
+
 ### 3. Support walk-into-range — **give this real attention**
 
 | | |
@@ -169,7 +217,31 @@ pass nor fail.
 | **How** | Cast anything with a cast bar and watch the ground at the caster's feet. `Lockon` plus six `Beginspell` recipes exist in the recipe tables |
 | **Watch for** | Whether they read as the original client's cast circles at all |
 | **Expectation** | These are **procedural placeholders over generic ring textures**. CLAUDE.md's own note says to expect a rebuild, not a tick — so a "fail" here is the expected outcome and the useful output is a description of what is wrong |
-| **Result** | |
+| **Result** | **FAIL as expected, but for a sharper reason than "the placeholder looks wrong": nothing triggers a cast circle at all.** 2026-08-02, both seats, Sage Fire Bolt. The **cast bar draws correctly** on the caster — so `SkillCast` arrives and is handled — and the ground at the caster's feet stays empty on both clients |
+
+#### Why there is no circle — the trigger does not exist
+
+Two independent halves are missing, and the recipes are *not* the problem:
+
+- **Cast start spawns no visual.** `NetworkEvent::SkillCast` → `entity.start_cast()`
+  (`korangar/src/lib.rs:5126`), and `start_cast` (`world/entity/mod.rs:1384`) only
+  arms an `ActorCast { ends_at, total_ms }` for the cast **bar**. Its `_skill_id`
+  is underscore-prefixed — the skill is deliberately unused, so nothing could key
+  a per-element circle off it even if a circle existed.
+- **The `Beginspell` / `Lockon` recipes are unreachable from a cast.**
+  `special_effect.rs:210-225` maps them to real `Burst` recipes, but they are
+  driven by `EffectId`s **the map server never sends while casting**: grepping
+  `EF_BEGINSPELL|EF_LOCKON` over Hercules `src/` hits `db/constants.conf` and
+  nothing else. The only emitters in the whole tree are quest scripts calling
+  `specialeffect` (`bard_quest.txt`, `okolnir.txt`, `eye_of_hellion.txt`, …), so
+  those recipes do get used — just never for a cast circle.
+
+**In the original client the cast circle is a client-side visual**, drawn from the
+cast-start packet and coloured by the skill's element. Building it here is a new
+client-side feature hung off `start_cast` (which already carries the skill id and
+the duration), *not* a fidelity fix to the existing recipes. Cost is real but
+bounded; the element→circle mapping should come from roBrowserLegacy's tables per
+the effect-fidelity rule, never guessed.
 
 ### 5. Moonlit / Hermode — blocked longest, and the alpha calibration sample
 
