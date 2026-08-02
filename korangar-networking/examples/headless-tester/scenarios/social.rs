@@ -183,6 +183,13 @@ pub(super) fn leave_party_both(primary: &mut TestContext, partner: &mut TestCont
 
 fn party_lifecycle(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
+    // Self-cleaning, like `friend_lifecycle`: `create_party` fails outright if
+    // the character is already in one, and a party outlives the session that
+    // made it (server-side state in the `party` table). So a party left behind
+    // by an interrupted run -- or simply formed by hand in the GUI -- would
+    // fail this scenario for a reason unrelated to what it tests.
+    ensure_no_party(&mut primary);
+    ensure_no_party(&mut partner);
     create_party(&mut primary)?;
     partner.flush();
     primary
@@ -218,6 +225,8 @@ fn party_lifecycle(config: &Config) -> Result<(), String> {
 
 fn party_reject_block(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
+    ensure_no_party(&mut primary);
+    ensure_no_party(&mut partner);
     create_party(&mut primary)?;
     partner.flush();
     primary
