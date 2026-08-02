@@ -84,6 +84,11 @@ Each is a case where the server already sends everything needed.
 - [ ] **Ground skills assert almost nothing** — ~32 addressable casts;
       `skill_db`'s `Unit:` block is the authority
 - [ ] **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`
+- [ ] **`SM_PROVOKE` in `skills-swordman` is order-dependent** — fails in a full
+      run, passes alone (2026-08-02 gate). Logged as finding §4 in
+      [../../tools/testing/headless_findings.md](../../tools/testing/headless_findings.md).
+      **Bisect it, do not theorise** — every previous instance of this class had
+      a confident wrong hypothesis first
 - [ ] **Run `--scenario all --shuffle <seed>`** now that ten scenarios have been
       added; order-dependence was a live problem three weeks running
 

@@ -307,3 +307,25 @@ two-axis resizing from the `window!` component default.
   * `PA_GOSPEL` (binds the player to the spot and channels a zone).
   * `ST_CHASEWALK` (enters persistent stealth and drains SP).
 * **Resolution**: These are registered in `stateful_skill_rank` and sorted to the very end of the execution queue.
+
+### 4. `skills-swordman` — `SM_PROVOKE` intermittently silent in a full run
+> [!WARNING]
+> **Open.** Reproduces only in a full `--scenario all` run, never in isolation —
+> the definition of order dependence, and the fourth instance of this class in
+> this suite.
+* **Finding**: 2026-08-02 closing gate. `121 passed, 1 failed, 1 skipped`;
+  `skills-swordman` reported *"1 skill(s) produced no observable protocol
+  response"* against `SM_PROVOKE`. Re-running `--scenario skills-swordman` alone
+  passes immediately, with Provoke classified `buff`.
+* **Not caused by that day's changes**: the other 121 scenarios passed, and the
+  new dynamic-cell overlay is inert until a `ZC_UPDATE_MAPINFO` arrives —
+  `effective_flags` falls straight through to the tile data when it is empty.
+  Two earlier full runs the same day were clean.
+* **Do not theorise the cause.** The four order-dependence bugs found in the
+  2026-07-30 shuffle pass each had a confident wrong hypothesis before a
+  one-variable bisect settled them. Provoke is a targeted skill whose observable
+  response depends on a live target, so the leading suspects are target
+  cleanup/positioning (§2 above) and inherited job state (the `incoming-damage`
+  root cause), but **that is a starting point for a bisect, not a conclusion**.
+* **Reproduce**: `--scenario all`, or narrow with
+  `--scenario all --shuffle <seed>` and replay the seed.
