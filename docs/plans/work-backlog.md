@@ -25,6 +25,10 @@ draws. This is the single largest risk in the tree.
 - [ ] Party: kick / promote / share toggles (leader-gated), class in the roster,
       dead members
 - [ ] Auto Spell window, instance window
+- [ ] **Ice Wall blocks pathing** — walk into a cast Ice Wall and confirm the
+      client refuses to path through it, then that the cells free up when it
+      expires. **No headless scenario can cover this**: the suite does not link
+      the `korangar` crate, so the pathfinder is unreachable from it
 - [ ] Row 4 (Land Protector 225: shape or slab?), row 3 (support
       walk-into-range — *changed behaviour*), row 6 (item names), row 5
       (Moonlit/Hermode, last — replaces gear)
@@ -79,8 +83,15 @@ Each is a case where the server already sends everything needed.
       effect state, star/feel, and the three instance packets. They are modelled
       and framed (the length audit covers the fixed-length ones) but nothing
       asserts their *behaviour*
-- [ ] **Ice Wall cell blocking has no scenario** — cast one, assert
-      `MapCellChanged`, and that the reverse arrives on expiry
+- [ ] **Ice Wall cell blocking — only half of it is testable headlessly.** The
+      **wire** half is: cast one, assert `MapCellChanged` arrives and that the
+      revert follows on expiry. The **pathing** half is not, and this is a
+      general limit worth internalising: the headless tester links only
+      `ragnarok-packets` and `korangar-networking`, **not the `korangar` crate**,
+      so `Map`, `Traversable` and the pathfinder are invisible to every scenario.
+      Anything in `korangar/src/` can only be verified in the client — which is
+      also why "the suite is green" says nothing about a rendering or pathing
+      change
 - [ ] **Ground skills assert almost nothing** — ~32 addressable casts;
       `skill_db`'s `Unit:` block is the authority
 - [ ] **`MG_FROSTDIVER` is a known intermittent** in `skills-super-novice`
