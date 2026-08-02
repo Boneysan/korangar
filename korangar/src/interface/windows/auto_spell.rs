@@ -2,7 +2,7 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
-use ragnarok_packets::SkillId;
+use crate::state::skills::{AutoSpellChoice, AutoSpellChoicePathExt};
 use rust_state::{ManuallyAssertExt, Path, State, VecIndexExt};
 
 use crate::input::InputEvent;
@@ -27,7 +27,7 @@ impl<A> AutoSpellList<A> {
 
 impl<A> Element<ClientState> for AutoSpellList<A>
 where
-    A: Path<ClientState, Vec<SkillId>>,
+    A: Path<ClientState, Vec<AutoSpellChoice>>,
 {
     type LayoutInfo = ();
 
@@ -47,12 +47,9 @@ where
                 let skill_path = self.skills_path.index(index).manually_asserted();
 
                 self.elements.push(ErasedElement::new(button! {
-                    // Skill *names* need the skill table, which this window does
-                    // not hold; the id is at least unambiguous and the icons in
-                    // the skill tree carry the naming.
-                    text: format!("Skill {}", state.get(&skill_path).0),
+                    text: skill_path.name(),
                     event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                        let skill_id = *state.get(&skill_path);
+                        let skill_id = state.get(&skill_path).skill_id;
                         queue.queue(InputEvent::SelectAutoSpell { skill_id });
                     },
                 }));
@@ -96,7 +93,7 @@ impl<A> AutoSpellWindow<A> {
 
 impl<A> CustomWindow<ClientState> for AutoSpellWindow<A>
 where
-    A: Path<ClientState, Vec<SkillId>> + 'static,
+    A: Path<ClientState, Vec<AutoSpellChoice>> + 'static,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::AutoSpell)

@@ -246,3 +246,11 @@ pub fn bring_skill_to_level(
 
     available_skill_points.saturating_sub(total_points_required)
 }
+
+/// One entry in the Auto Spell chooser: the skill to answer with, and a name
+/// to show for it.
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct AutoSpellChoice {
+    pub skill_id: SkillId,
+    pub name: String,
+}

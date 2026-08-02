@@ -4960,10 +4960,16 @@ impl Client {
                         .push(ChatMessage::new(message, color));
                 }
                 NetworkEvent::AutoSpellList { skills } => {
-                    self.client_state.follow_mut(client_state().auto_spell_skills()).clear();
-                    self.client_state
-                        .follow_mut(client_state().auto_spell_skills())
-                        .extend(skills.iter().copied());
+                    // Names resolved here: the interface layer holds no `Library`.
+                    let choices: Vec<_> = skills
+                        .into_iter()
+                        .map(|skill_id| crate::state::skills::AutoSpellChoice {
+                            skill_id,
+                            name: self.library.get::<SkillListInformation>(skill_id).name.clone(),
+                        })
+                        .collect();
+
+                    *self.client_state.follow_mut(client_state().auto_spell_skills()) = choices;
                     self.interface.open_window(AutoSpellWindow::new(client_state().auto_spell_skills()));
                 }
                 NetworkEvent::SpiritSpheres { entity_id, amount } => {

@@ -201,8 +201,11 @@ pub struct ClientState {
     party_window: PartyWindowState,
     /// Memorial dungeon / instance information.
     instance_state: InstanceState,
-    /// Skills the pending Auto Spell cast is offering.
-    auto_spell_skills: Vec<ragnarok_packets::SkillId>,
+    /// Skills the pending Auto Spell cast is offering, with their display
+    /// names resolved at the boundary -- the interface layer holds no
+    /// `Library`, the same reason party classes and trade item names are
+    /// resolved by the caller.
+    auto_spell_skills: Vec<crate::state::skills::AutoSpellChoice>,
     /// Internal state of the trade window.
     trade_window: TradeWindowState,
     /// Internal state of the dialog window.
