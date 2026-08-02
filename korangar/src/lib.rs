@@ -3512,7 +3512,13 @@ impl Client {
                         player.set_idle(client_tick);
                     }
                 }
-                NetworkEvent::AccountId { .. } => {}
+                NetworkEvent::AccountId { account_id } => {
+                    // Previously discarded. Kick and promote are leader-only, and
+                    // telling whether *we* lead needs our own account id.
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_local_account_id(account_id);
+                }
                 NetworkEvent::CharacterList { characters } => {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
 
@@ -4463,7 +4469,8 @@ impl Client {
                             .open_with_partner(name, character_id, base_level);
                         self.interface.close_window_with_class(WindowClass::TradeRequest);
                         if !self.interface.is_window_with_class_open(WindowClass::Trade) {
-                            self.interface.open_window(TradeWindow::new(client_state().trade_state()));
+                            self.interface
+                                .open_window(TradeWindow::new(client_state().trade_window(), client_state().trade_state()));
                         }
                     }
                     0 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -4893,6 +4900,32 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message, MessageColor::Information));
                 }
+                NetworkEvent::PartyShareOptions {
+                    experience_share,
+                    item_pickup_share,
+                    item_division_share,
+                } => {
+                    self.client_state.follow_mut(client_state().party_state()).set_share_options(
+                        experience_share,
+                        item_pickup_share,
+                        item_division_share,
+                    );
+                }
+                NetworkEvent::PartyLeaderChanged {
+                    new_leader_account_id, ..
+                } => {
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_leader(new_leader_account_id);
+                }
+                NetworkEvent::IgnoreResult { result, .. } => {
+                    if result != 0 {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "The ignore list is full or the character does not exist.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    }
+                }
                 NetworkEvent::PartyInvitationState { deny_party_invites } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
@@ -5099,10 +5132,12 @@ impl Client {
                     }
                 }
                 NetworkEvent::SetFriendList { friend_list } => {
-                    *self.client_state.follow_mut(client_state().friend_list()) = friend_list
+                    let mut entries: Vec<_> = friend_list
                         .into_iter()
                         .map(|friend| crate::state::friends::FriendEntry::from_friend(friend, false))
                         .collect();
+                    crate::state::friends::sort_friends(&mut entries);
+                    *self.client_state.follow_mut(client_state().friend_list()) = entries;
                 }
                 NetworkEvent::DisplayEmotion { entity_id, emotion } => {
                     if emote_debug_enabled() {
@@ -6305,6 +6340,31 @@ impl Client {
                         continue;
                     }
 
+                    if let Some(rest) = text.strip_prefix("/ignore ").or_else(|| text.strip_prefix("/unignore ")) {
+                        let character_name = rest.trim().to_owned();
+                        let ignored = text.starts_with("/ignore ");
+
+                        if character_name.is_empty() {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /ignore <name>  or  /unignore <name>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        } else {
+                            // Called directly rather than queued: this runs inside
+                            // the drain of `input_event_buffer`.
+                            let _ = self.networking_system.set_player_ignored(&character_name, ignored);
+                            let verb = match ignored {
+                                true => "Ignoring",
+                                false => "No longer ignoring",
+                            };
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                format!("{verb} {character_name}."),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
                     if let Some(message) = text.strip_prefix("/r ").or_else(|| text.strip_prefix("/reply ")) {
                         let message = message.trim();
                         let sender = self
@@ -6602,6 +6662,12 @@ impl Client {
                     self.client_state.follow_mut(client_state().trade_state()).clear_pending();
                     self.interface.close_window_with_class(WindowClass::TradeRequest);
                 }
+                InputEvent::TradeAddItem { inventory_index, amount } => {
+                    let _ = self.networking_system.trade_add_item(inventory_index, amount);
+                }
+                InputEvent::TradeAddZeny { amount } => {
+                    let _ = self.networking_system.trade_add_zeny(amount);
+                }
                 InputEvent::TradeOk => {
                     let _ = self.networking_system.trade_ok();
                 }
@@ -6863,6 +6929,33 @@ impl Client {
                 }
                 InputEvent::RequestTrade { account_id } => {
                     let _ = self.networking_system.request_trade(account_id);
+                }
+                InputEvent::KickPartyMember {
+                    account_id,
+                    character_name,
+                } => {
+                    let _ = self.networking_system.kick_party_member(account_id, &character_name);
+                }
+                InputEvent::PromotePartyLeader { account_id } => {
+                    let _ = self.networking_system.change_party_leader(account_id);
+                }
+                InputEvent::SetPartyShare {
+                    experience,
+                    pickup,
+                    division,
+                } => {
+                    let _ = self.networking_system.set_party_options(experience, pickup, division);
+                }
+                InputEvent::SetPlayerIgnored { character_name, ignored } => {
+                    let _ = self.networking_system.set_player_ignored(&character_name, ignored);
+                    let verb = match ignored {
+                        true => "Ignoring",
+                        false => "No longer ignoring",
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("{verb} {character_name}."),
+                        MessageColor::Information,
+                    ));
                 }
                 InputEvent::SetPartyInvitationBlock { blocked } => {
                     let _ = self.networking_system.set_party_invitation_block(blocked);

@@ -56,6 +56,7 @@ impl CustomWindow<ClientState> for PlayerTargetWindow {
         let whisper_name = character_name.clone();
         let invite_name = character_name.clone();
         let friend_name = character_name.clone();
+        let ignore_name = character_name.clone();
 
         window! {
             title: "Target",
@@ -96,6 +97,19 @@ impl CustomWindow<ClientState> for PlayerTargetWindow {
                             text: "Add friend",
                             tooltip: "Send a friend request [^000001friend list^000000]",
                             event: InputEvent::AddFriend { character_name: friend_name },
+                        },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Ignore",
+                            tooltip: "Block whispers from this player [^000001/ignore <name>^000000]",
+                            event: InputEvent::SetPlayerIgnored {
+                                character_name: ignore_name,
+                                ignored: true,
+                            },
                         },
                     ),
                 },

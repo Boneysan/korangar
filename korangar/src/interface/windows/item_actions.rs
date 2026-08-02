@@ -1,12 +1,12 @@
 use korangar_interface::event::{ClickHandler, EventQueue};
 use korangar_interface::window::{CustomWindow, Window};
 use korangar_networking::{InventoryItem, InventoryItemDetails};
-use rust_state::State;
+use rust_state::{PathExt, State};
 
 use crate::input::InputEvent;
 use crate::interface::resource::ItemSource;
 use crate::interface::windows::WindowClass;
-use crate::state::ClientState;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::state::theme::InterfaceThemeType;
 use crate::world::ResourceMetadata;
 
@@ -49,6 +49,12 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
         let primary_label = primary_action_label(&self.item);
         let primary_event = ActionThenClose(primary_action_event(&self.item));
 
+        // One selector per button: `ComputedSelector` is not `Copy`.
+        let trade_disabled =
+            ComputedSelector::new_default(|state: &ClientState| !client_state().trade_state().follow_safe(state).is_active());
+        let trade_one_disabled =
+            ComputedSelector::new_default(|state: &ClientState| !client_state().trade_state().follow_safe(state).is_active());
+
         let half = (amount / 2).max(1);
         let can_split = amount > 1;
 
@@ -61,6 +67,18 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
             amount: 1,
         });
         let drop_all = ActionThenClose(InputEvent::DropItem { inventory_index, amount });
+
+        // Adding to a trade previously required typing `/trade add
+        // <inventory_index>`, and an inventory index is an internal number no
+        // player can see. This menu already has it.
+        let trade_all = ActionThenClose(InputEvent::TradeAddItem {
+            inventory_index,
+            amount: u32::from(amount),
+        });
+        let trade_one = ActionThenClose(InputEvent::TradeAddItem {
+            inventory_index,
+            amount: 1,
+        });
 
         window! {
             title: name,
@@ -95,6 +113,22 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
                         "Drop".to_owned()
                     },
                     event: drop_all,
+                },
+                button! {
+                    text: if amount > 1 {
+                        format!("Add all to trade ({amount})")
+                    } else {
+                        "Add to trade".to_owned()
+                    },
+                    disabled: trade_disabled,
+                    disabled_tooltip: "No trade is open",
+                    event: trade_all,
+                },
+                button! {
+                    text: "Add 1 to trade",
+                    disabled: trade_one_disabled,
+                    disabled_tooltip: "No trade is open",
+                    event: trade_one,
                 },
                 button! {
                     text: "Cancel",

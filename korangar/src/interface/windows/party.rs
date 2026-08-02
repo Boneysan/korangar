@@ -54,23 +54,26 @@ where
 /// Modelled on `FriendList`. A single text blob could not carry buttons, and
 /// per-member Whisper/Trade is the cheapest way to act on a named player --
 /// `/trade request` otherwise needs an account id typed by hand.
-struct PartyMemberList<A> {
+struct PartyMemberList<A, B> {
     members_path: A,
+    party_path: B,
     elements: Vec<ElementBox<ClientState>>,
 }
 
-impl<A> PartyMemberList<A> {
-    fn new(members_path: A) -> Self {
+impl<A, B> PartyMemberList<A, B> {
+    fn new(members_path: A, party_path: B) -> Self {
         Self {
             members_path,
+            party_path,
             elements: Vec::new(),
         }
     }
 }
 
-impl<A> Element<ClientState> for PartyMemberList<A>
+impl<A, B> Element<ClientState> for PartyMemberList<A, B>
 where
     A: Path<ClientState, Vec<PartyMemberState>>,
+    B: Path<ClientState, PartyState> + Copy + 'static,
 {
     type LayoutInfo = ();
 
@@ -91,11 +94,26 @@ where
                 Ordering::Greater => {
                     for index in self.elements.len()..members.len() {
                         let member_path = self.members_path.index(index).manually_asserted();
+                        let party_path = self.party_path;
+
+                        // Kick and promote are leader-only and never apply to
+                        // yourself; the server ignores both silently, so an
+                        // ungated button would appear to do nothing. One
+                        // selector per button, since they are not `Copy`.
+                        let promote_blocked = ComputedSelector::new_default(move |state: &ClientState| {
+                            let party = party_path.follow_safe(state);
+                            !party.local_is_leader() || party.is_local(member_path.follow_safe(state).account_id())
+                        });
+                        let kick_blocked = ComputedSelector::new_default(move |state: &ClientState| {
+                            let party = party_path.follow_safe(state);
+                            !party.local_is_leader() || party.is_local(member_path.follow_safe(state).account_id())
+                        });
                         let label_path = member_path.display_label();
 
                         self.elements.push(ErasedElement::new(collapsible! {
                             text: label_path,
-                            children: split! {
+                            children: (
+                                split! {
                                 gaps: theme().window().gaps(),
                                 children: (
                                     button! {
@@ -115,7 +133,39 @@ where
                                         },
                                     },
                                 ),
-                            },
+                                },
+                                split! {
+                                    gaps: theme().window().gaps(),
+                                    children: (
+                                        button! {
+                                            text: "Promote",
+                                            tooltip: "Make this member the party leader",
+                                            // Leader-only, and never yourself: the
+                                            // server ignores both silently, so an
+                                            // ungated button would just do nothing.
+                                            disabled: promote_blocked,
+                                            disabled_tooltip: "Only the party leader can do this",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let account_id = state.get(&member_path).account_id();
+                                                queue.queue(InputEvent::PromotePartyLeader { account_id });
+                                            },
+                                        },
+                                        button! {
+                                            text: "Kick",
+                                            tooltip: "Remove this member from the party",
+                                            disabled: kick_blocked,
+                                            disabled_tooltip: "Only the party leader can do this",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let member = state.get(&member_path);
+                                                queue.queue(InputEvent::KickPartyMember {
+                                                    account_id: member.account_id(),
+                                                    character_name: member.name().to_owned(),
+                                                });
+                                            },
+                                        },
+                                    ),
+                                },
+                            ),
                         }));
                     }
                 }
@@ -281,6 +331,52 @@ where
                         },
                     ),
                 },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        state_button! {
+                            text: "Share EXP",
+                            tooltip: "Split experience across the party (leader only)",
+                            state: self.party_path.share_experience(),
+                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                // All three rules ride one packet, so the two we
+                                // are not changing must be sent as they stand.
+                                let party = state.get(&party_path);
+                                queue.queue(InputEvent::SetPartyShare {
+                                    experience: !party.share_experience(),
+                                    pickup: party.share_pickup(),
+                                    division: party.share_loot(),
+                                });
+                            },
+                        },
+                        state_button! {
+                            text: "Share pickup",
+                            tooltip: "Everyone picks up for the party (leader only)",
+                            state: self.party_path.share_pickup(),
+                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                let party = state.get(&party_path);
+                                queue.queue(InputEvent::SetPartyShare {
+                                    experience: party.share_experience(),
+                                    pickup: !party.share_pickup(),
+                                    division: party.share_loot(),
+                                });
+                            },
+                        },
+                        state_button! {
+                            text: "Share loot",
+                            tooltip: "Distribute looted items (leader only)",
+                            state: self.party_path.share_loot(),
+                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                let party = state.get(&party_path);
+                                queue.queue(InputEvent::SetPartyShare {
+                                    experience: party.share_experience(),
+                                    pickup: party.share_pickup(),
+                                    division: !party.share_loot(),
+                                });
+                            },
+                        },
+                    ),
+                },
                 state_button! {
                     text: "Block invites",
                     tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
@@ -296,7 +392,7 @@ where
                 text! {
                     text: self.party_path.display_text(),
                 },
-                PartyMemberList::new(self.party_path.members()),
+                PartyMemberList::new(self.party_path.members(), self.party_path),
             )
         }
     }

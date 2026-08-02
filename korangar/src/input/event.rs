@@ -198,6 +198,15 @@ pub enum InputEvent {
     TradeAccept,
     /// Reject pending trade request.
     TradeReject,
+    /// Put an inventory item into the open trade.
+    TradeAddItem {
+        inventory_index: ragnarok_packets::InventoryIndex,
+        amount: u32,
+    },
+    /// Put zeny into the open trade.
+    TradeAddZeny {
+        amount: u32,
+    },
     /// Lock our trade offer.
     TradeOk,
     /// Commit trade (both sides must have locked).
@@ -330,6 +339,27 @@ pub enum InputEvent {
     RequestTrade {
         /// Account id of the character to trade with.
         account_id: AccountId,
+    },
+    /// Kick a member from the party (leader only).
+    KickPartyMember {
+        account_id: AccountId,
+        character_name: String,
+    },
+    /// Hand party leadership to another member (leader only).
+    PromotePartyLeader {
+        account_id: AccountId,
+    },
+    /// Set the party's three share rules. All three are sent together because
+    /// the packet has no "unchanged" encoding.
+    SetPartyShare {
+        experience: bool,
+        pickup: bool,
+        division: bool,
+    },
+    /// Add or remove a character from the whisper ignore list.
+    SetPlayerIgnored {
+        character_name: String,
+        ignored: bool,
     },
     /// Allow or block incoming party invites.
     SetPartyInvitationBlock {

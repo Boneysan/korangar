@@ -1334,6 +1334,24 @@ where
         maximum_health_points: packet.maximum_health_points as usize,
         spell_points: None,
     })?;
+    packet_handler.register(|packet: PartyOptionsChangedPacket| NetworkEvent::PartyShareOptions {
+        experience_share: packet.experience_share != 0,
+        item_pickup_share: Some(packet.item_pickup_share != 0),
+        item_division_share: Some(packet.item_division_share != 0),
+    })?;
+    packet_handler.register(|packet: PartyExperienceOptionPacket| NetworkEvent::PartyShareOptions {
+        experience_share: packet.experience_share != 0,
+        item_pickup_share: None,
+        item_division_share: None,
+    })?;
+    packet_handler.register(|packet: IgnorePlayerResultPacket| NetworkEvent::IgnoreResult {
+        ignore_type: packet.ignore_type,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: PartyLeaderChangedPacket| NetworkEvent::PartyLeaderChanged {
+        previous_leader_account_id: packet.previous_leader_account_id,
+        new_leader_account_id: packet.new_leader_account_id,
+    })?;
     packet_handler.register(|packet: PartyInviteSenderPacket| NetworkEvent::PartyInviteSender {
         party_id: packet.party_id,
         character_name: packet.character_name,

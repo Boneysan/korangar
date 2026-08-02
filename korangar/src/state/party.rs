@@ -179,6 +179,13 @@ pub struct PartyState {
     pending_inviter: Option<String>,
     /// Party the [`Self::pending_inviter`] name belongs to.
     pending_invite_id_for_inviter: Option<PartyId>,
+    /// Our own account id, from `NetworkEvent::AccountId`. Needed to tell
+    /// whether *we* are the leader, which gates kick and promote.
+    local_account_id: Option<AccountId>,
+    /// EXP share rule. Unlike the two item rules this is not in the member-info
+    /// packet, so it is only known once the server sends a share-options
+    /// broadcast.
+    share_experience: bool,
     /// Server-side "refuse every party invite" flag. Only ever set from
     /// `PartyInvitationState`, so the toggle shows what the server actually
     /// believes rather than what we last asked for.
@@ -203,6 +210,8 @@ impl Default for PartyState {
             outgoing_invite: None,
             pending_inviter: None,
             pending_invite_id_for_inviter: None,
+            local_account_id: None,
+            share_experience: false,
             deny_invites: false,
             members: Vec::new(),
             share_pickup: false,
@@ -243,6 +252,60 @@ impl PartyState {
 
     pub fn has_pending_invite(&self) -> bool {
         self.pending_invite_id.is_some()
+    }
+
+    pub fn set_local_account_id(&mut self, account_id: AccountId) {
+        self.local_account_id = Some(account_id);
+        self.rebuild_display_text();
+    }
+
+    pub fn share_experience(&self) -> bool {
+        self.share_experience
+    }
+
+    pub fn share_pickup(&self) -> bool {
+        self.share_pickup
+    }
+
+    pub fn share_loot(&self) -> bool {
+        self.share_loot
+    }
+
+    /// Whether *we* lead this party. Kick and promote are leader-only; the
+    /// server silently ignores them from anyone else, so ungated buttons would
+    /// appear to do nothing.
+    pub fn local_is_leader(&self) -> bool {
+        let Some(local_account_id) = self.local_account_id else {
+            return false;
+        };
+        self.members
+            .iter()
+            .any(|member| member.account_id == local_account_id && member.leader)
+    }
+
+    pub fn is_local(&self, account_id: AccountId) -> bool {
+        self.local_account_id == Some(account_id)
+    }
+
+    /// Apply a share-options broadcast. The item rules are `None` from the
+    /// minimal 0x0101 form and are then left as they were.
+    pub fn set_share_options(&mut self, experience: bool, pickup: Option<bool>, division: Option<bool>) {
+        self.share_experience = experience;
+        if let Some(pickup) = pickup {
+            self.share_pickup = pickup;
+        }
+        if let Some(division) = division {
+            self.share_loot = division;
+        }
+        self.rebuild_display_text();
+    }
+
+    /// Move the leader star after a `ZC_CHANGE_GROUP_MASTER` broadcast.
+    pub fn set_leader(&mut self, account_id: AccountId) {
+        for member in &mut self.members {
+            member.leader = member.account_id == account_id;
+        }
+        self.rebuild_display_text();
     }
 
     pub fn deny_invites(&self) -> bool {
@@ -426,9 +489,10 @@ impl PartyState {
         }
 
         let share = format!(
-            "EXP share: {}  |  Item share: {}",
-            if self.share_pickup { "on" } else { "off" },
-            if self.share_loot { "on" } else { "off" },
+            "EXP: {}  |  Pickup: {}  |  Loot: {}",
+            if self.share_experience { "shared" } else { "own" },
+            if self.share_pickup { "shared" } else { "own" },
+            if self.share_loot { "shared" } else { "finder" },
         );
         self.display_text = format!("Party: {}\n{share}", self.party_name);
     }

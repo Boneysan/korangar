@@ -111,7 +111,7 @@ pub use self::status_bar::StatusBarWindow;
 pub use self::storage::StorageWindow;
 #[cfg(feature = "debug")]
 pub use self::theme_inspector::{ThemeInspectorWindow, ThemeInspectorWindowState};
-pub use self::trade::{TradeRequestWindow, TradeWindow};
+pub use self::trade::{TradeRequestWindow, TradeWindow, TradeWindowState};
 pub use self::warp_selection::WarpSelectionWindow;
 pub use self::weapon_refine::WeaponRefineWindow;
 

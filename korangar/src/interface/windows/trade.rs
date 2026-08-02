@@ -1,6 +1,8 @@
 use korangar_interface::window::{CustomWindow, Window};
-use korangar_interface::event::EventQueue;
-use rust_state::{Path, State};
+use korangar_interface::components::text_box::DefaultHandler;
+use korangar_interface::element::StateElement;
+use korangar_interface::event::{Event, EventQueue};
+use rust_state::{Path, RustState, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -9,19 +11,37 @@ use crate::state::theme::InterfaceThemeType;
 use crate::state::trade::{TradeState, TradeStatePathExt};
 
 /// Active trade window (after accept / when we initiated and partner accepted).
-pub struct TradeWindow<P> {
-    trade_path: P,
+/// Zeny amounts top out well below `u32::MAX`; ten digits is plenty and stops
+/// a paste from overflowing the parse.
+const MAXIMUM_ZENY_DIGITS: usize = 10;
+
+/// ZST for the zeny field's focus id.
+pub struct TradeZenyTextBox;
+
+/// Internal state of the trade window.
+#[derive(Default, RustState, StateElement)]
+pub struct TradeWindowState {
+    zeny_input: String,
 }
 
-impl<P> TradeWindow<P> {
-    pub fn new(trade_path: P) -> Self {
-        Self { trade_path }
+pub struct TradeWindow<A, B> {
+    window_state_path: A,
+    trade_path: B,
+}
+
+impl<A, B> TradeWindow<A, B> {
+    pub fn new(window_state_path: A, trade_path: B) -> Self {
+        Self {
+            window_state_path,
+            trade_path,
+        }
     }
 }
 
-impl<P> CustomWindow<ClientState> for TradeWindow<P>
+impl<A, B> CustomWindow<ClientState> for TradeWindow<A, B>
 where
-    P: Path<ClientState, TradeState>,
+    A: Path<ClientState, TradeWindowState> + Copy + 'static,
+    B: Path<ClientState, TradeState>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Trade)
@@ -31,6 +51,20 @@ where
         use korangar_interface::prelude::*;
 
         let text_path = self.trade_path.display_text();
+        let zeny_path = self.window_state_path.zeny_input();
+
+        // Non-numeric input is ignored rather than reported: the field is free
+        // text and a stray character should not cost the player a trade.
+        let add_zeny = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+            let Ok(amount) = state.get(&zeny_path).trim().parse::<u32>() else {
+                return;
+            };
+            if amount > 0 {
+                state.update_value_with(zeny_path, |input| input.clear());
+                queue.queue(InputEvent::TradeAddZeny { amount });
+                queue.queue(Event::Unfocus);
+            }
+        };
 
         window! {
             title: "Trade",
@@ -40,7 +74,18 @@ where
             elements: (
                 text! { text: text_path },
                 text! {
-                    text: "Add item: /trade add <inv_index> [amount]\nAdd zeny: /trade zeny <amount>",
+                    text: "Right-click an inventory item to add it.",
+                },
+                text_box! {
+                    ghost_text: "Zeny to offer",
+                    state: zeny_path,
+                    input_handler: DefaultHandler::<_, _, MAXIMUM_ZENY_DIGITS>::new(zeny_path, add_zeny),
+                    focus_id: TradeZenyTextBox,
+                },
+                button! {
+                    text: "Add zeny",
+                    tooltip: "Put the amount above into the trade",
+                    event: add_zeny,
                 },
                 button! {
                     text: "Lock offer",

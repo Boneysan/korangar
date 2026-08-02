@@ -54,7 +54,7 @@ use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenS
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
     BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState, LoginWindowState,
-    LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState, WindowCache, WindowClass,
+    LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -197,6 +197,8 @@ pub struct ClientState {
     friend_list_window: FriendListWindowState,
     /// Internal state of the party window.
     party_window: PartyWindowState,
+    /// Internal state of the trade window.
+    trade_window: TradeWindowState,
     /// Internal state of the dialog window.
     dialog_window: DialogWindowState,
     /// Internal state of the skill tree window.
@@ -428,6 +430,7 @@ impl ClientState {
             let friend_list_window = FriendListWindowState::default();
             let party_state = PartyState::default();
             let party_window = PartyWindowState::default();
+            let trade_window = TradeWindowState::default();
         });
 
         time_phase!("create player resources", {
@@ -507,6 +510,7 @@ impl ClientState {
             dm_campaign,
             friend_list_window,
             party_window,
+            trade_window,
             dialog_window,
             skill_tree_window,
             entities: Vec::new(),

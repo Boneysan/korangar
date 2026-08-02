@@ -892,6 +892,43 @@ where
         }
     }
 
+    /// Kick a member. Leader only — the server ignores it from anyone else.
+    pub fn kick_party_member(&mut self, account_id: AccountId, character_name: &str) -> Result<(), NotConnectedError> {
+        self.send_map_server_packet(RemovePartyMemberPacket::new(account_id, character_name.to_owned()))
+    }
+
+    /// Hand leadership to another member. Leader only.
+    pub fn change_party_leader(&mut self, account_id: AccountId) -> Result<(), NotConnectedError> {
+        self.send_map_server_packet(ChangePartyLeaderPacket::new(account_id))
+    }
+
+    /// Set all three share rules at once — the packet carries no "unchanged"
+    /// encoding, so the caller passes the current value of whatever it is not
+    /// changing.
+    pub fn set_party_options(
+        &mut self,
+        experience_share: bool,
+        item_pickup_share: bool,
+        item_division_share: bool,
+    ) -> Result<(), NotConnectedError> {
+        self.send_map_server_packet(PartyOptionsPacket::new(
+            u32::from(experience_share),
+            u8::from(item_pickup_share),
+            u8::from(item_division_share),
+        ))
+    }
+
+    /// Add (`true`) or remove (`false`) a character from the whisper ignore list.
+    pub fn set_player_ignored(&mut self, character_name: &str, ignored: bool) -> Result<(), NotConnectedError> {
+        // The wire encoding is inverted from the flag: 0 adds, 1 removes.
+        self.send_map_server_packet(IgnorePlayerPacket::new(character_name.to_owned(), u8::from(!ignored)))
+    }
+
+    /// Ignore or accept whispers from everyone.
+    pub fn set_all_ignored(&mut self, ignored: bool) -> Result<(), NotConnectedError> {
+        self.send_map_server_packet(IgnoreAllPacket::new(u8::from(!ignored)))
+    }
+
     pub fn set_party_invitation_block(&mut self, blocked: bool) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(SetPartyInvitationStatePacket::new(blocked as u8)),

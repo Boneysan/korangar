@@ -5311,6 +5311,104 @@ pub struct PartyMemberHealthPacket {
 ///
 /// Both packets stay registered: 0x0BAB is what our server now sends, and 0x080E
 /// remains correct against a stock server.
+/// Party share rules changed, rich form (`ZC_REQ_GROUPINFO_CHANGE_V2`).
+///
+/// Hercules sends **either** this or the 6-byte [`PartyExperienceOptionPacket`]
+/// depending on `send_party_options` in `conf/map/battle/party.conf`, so both
+/// must be handled or the share toggles silently stop updating.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07D8)]
+pub struct PartyOptionsChangedPacket {
+    pub experience_share: u32,
+    pub item_pickup_share: u8,
+    pub item_division_share: u8,
+}
+
+/// Party EXP share changed, minimal form (`ZC_REQ_GROUPINFO_CHANGE`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0101)]
+pub struct PartyExperienceOptionPacket {
+    pub experience_share: u32,
+}
+
+/// Kick a member from the party (`CZ_REQ_LEAVE_GROUP_MEMBER`, 30 bytes).
+/// Leader only; the server silently ignores it from anyone else.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0103)]
+pub struct RemovePartyMemberPacket {
+    pub account_id: AccountId,
+    #[length(24)]
+    pub character_name: String,
+}
+
+/// Hand party leadership to another member (`CZ_CHANGE_GROUP_MASTER`, 6 bytes).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07DA)]
+pub struct ChangePartyLeaderPacket {
+    pub account_id: AccountId,
+}
+
+/// Change EXP / item share rules (`CZ_GROUPINFO_CHANGE_V2`, 8 bytes).
+///
+/// The older `CZ_CHANGE_GROUPEXPOPTION` (0x0102) carries the EXP rule only;
+/// this is the form our packetver uses and it sets all three at once, so a
+/// caller must send the *current* value of the rules it is not changing.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07D7)]
+pub struct PartyOptionsPacket {
+    /// 0 = each keeps their own, 1 = shared evenly.
+    pub experience_share: u32,
+    /// 0 = each picks up their own, 1 = shared.
+    pub item_pickup_share: u8,
+    /// 0 = finder keeps it, 1 = distributed.
+    pub item_division_share: u8,
+}
+
+/// Add or remove a character from the whisper ignore list
+/// (`CZ_SETTING_WHISPER_PC`, 27 bytes).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00CF)]
+pub struct IgnorePlayerPacket {
+    #[length(24)]
+    pub character_name: String,
+    /// 0 adds to the ignore list, 1 removes.
+    pub ignore_type: u8,
+}
+
+/// Ignore or accept whispers from everyone (`CZ_SETTING_WHISPER_STATE`).
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00D0)]
+pub struct IgnoreAllPacket {
+    /// 0 ignores everyone, 1 accepts again.
+    pub ignore_type: u8,
+}
+
+/// Result of an ignore request (`ZC_ACK_WHISPER_LIST`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00D1)]
+pub struct IgnorePlayerResultPacket {
+    pub ignore_type: u8,
+    /// 0 on success.
+    pub result: u8,
+}
+
+/// Party leadership moved (`ZC_CHANGE_GROUP_MASTER`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07FC)]
+pub struct PartyLeaderChangedPacket {
+    pub previous_leader_account_id: AccountId,
+    pub new_leader_account_id: AccountId,
+}
+
 /// Who sent a party invite (`ZC_PARTY_INVITE_SENDER`, **fork packet 0x0EFF**).
 ///
 /// **This packet does not exist in official Ragnarok.** `ZC_PARTY_JOIN_REQ`

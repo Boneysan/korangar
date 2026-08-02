@@ -454,6 +454,23 @@ pub enum NetworkEvent {
     CreatePartyResult {
         result: u8,
     },
+    /// Party share rules. The item fields are `None` from the minimal 0x0101
+    /// form, which carries the EXP rule alone.
+    PartyShareOptions {
+        experience_share: bool,
+        item_pickup_share: Option<bool>,
+        item_division_share: Option<bool>,
+    },
+    /// Result of an ignore request. `result` is 0 on success.
+    IgnoreResult {
+        ignore_type: u8,
+        result: u8,
+    },
+    /// Party leadership moved to another member.
+    PartyLeaderChanged {
+        previous_leader_account_id: AccountId,
+        new_leader_account_id: AccountId,
+    },
     /// Fork packet 0x0EFF: names the sender of the `PartyInvite` that follows.
     /// Arrives first; pair the two by `party_id`.
     PartyInviteSender {
