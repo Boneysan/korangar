@@ -4835,15 +4835,30 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message.to_owned(), MessageColor::Information));
                 }
+                NetworkEvent::PartyInviteSender { party_id, character_name } => {
+                    // Arrives just before the invite it belongs to.
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .set_pending_inviter(party_id, character_name);
+                }
                 NetworkEvent::PartyInvite { party_id, party_name } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .set_pending_invite(party_id, party_name.clone());
-                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("Party invite from {party_name}."),
-                        MessageColor::Information,
-                    ));
-                    self.interface.open_window(PartyInviteWindow::new(party_id, party_name));
+                    let inviter = self
+                        .client_state
+                        .follow(client_state().party_state())
+                        .pending_inviter()
+                        .map(str::to_owned);
+
+                    let message = match &inviter {
+                        Some(inviter) => format!("{inviter} invites you to join {party_name}."),
+                        None => format!("Party invite from {party_name}."),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(message, MessageColor::Information));
+                    self.interface.open_window(PartyInviteWindow::new(party_name, inviter));
                 }
                 NetworkEvent::PartyInviteResult { character_name, result } => {
                     let message = match result {

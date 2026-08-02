@@ -5311,6 +5311,30 @@ pub struct PartyMemberHealthPacket {
 ///
 /// Both packets stay registered: 0x0BAB is what our server now sends, and 0x080E
 /// remains correct against a stock server.
+/// Who sent a party invite (`ZC_PARTY_INVITE_SENDER`, **fork packet 0x0EFF**).
+///
+/// **This packet does not exist in official Ragnarok.** `ZC_PARTY_JOIN_REQ`
+/// carries only the party id and party name, so an official client can say "you
+/// are invited to join <party>" but never "<player> invites you". Our Hercules
+/// delta sends this immediately *before* the invite and the client pairs the
+/// two by party id.
+///
+/// Sent alongside rather than by widening 0x00FE so the official packet keeps
+/// its official shape, and so the feature **degrades gracefully**: without this
+/// packet the invite still works and simply names the party.
+///
+/// 0x0EFF sits above the highest official packet (0x0BC0) and below
+/// `MAX_PACKET_DB` (0x0F00, taken by [`CancelCastPacket`]). Its length lives in
+/// Hercules' hand-maintained `common/packets_len.h`.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0EFF)]
+pub struct PartyInviteSenderPacket {
+    pub party_id: PartyId,
+    #[length(24)]
+    pub character_name: String,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0BAB)]
@@ -6145,6 +6169,22 @@ mod tests {
         assert_eq!(packet.maximum_health_points, 1000);
         assert_eq!(packet.spell_points, 45);
         assert_eq!(packet.maximum_spell_points, 200);
+    }
+
+    /// The fork invite-sender packet must stay 30 bytes to match
+    /// `packetLen(0x0eff, 30)` in Hercules' hand-maintained `packets_len.h`.
+    #[test]
+    fn party_invite_sender_packet_matches_fork_layout() {
+        let mut bytes = vec![0xFF, 0x0E, 0x07, 0x00, 0x00, 0x00];
+        let mut name = b"test".to_vec();
+        name.resize(24, 0);
+        bytes.extend_from_slice(&name);
+        assert_eq!(bytes.len(), 30);
+
+        let packet = read_packet::<PartyInviteSenderPacket>(&bytes);
+
+        assert_eq!(packet.party_id, PartyId(7));
+        assert_eq!(packet.character_name, "test");
     }
 
     #[test]

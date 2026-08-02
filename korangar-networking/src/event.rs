@@ -454,6 +454,12 @@ pub enum NetworkEvent {
     CreatePartyResult {
         result: u8,
     },
+    /// Fork packet 0x0EFF: names the sender of the `PartyInvite` that follows.
+    /// Arrives first; pair the two by `party_id`.
+    PartyInviteSender {
+        party_id: PartyId,
+        character_name: String,
+    },
     PartyInvite {
         party_id: PartyId,
         party_name: String,

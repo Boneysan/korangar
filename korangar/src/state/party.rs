@@ -158,6 +158,13 @@ pub struct PartyState {
     /// Character we have invited and not yet heard back about. Cleared by
     /// `PartyInviteResult`, whatever the answer was.
     outgoing_invite: Option<String>,
+    /// Name of whoever sent the pending invite, from the fork packet 0x0EFF
+    /// that arrives just before it. `None` means the companion packet did not
+    /// arrive -- a stock server, or the delta lost in a merge -- and the UI
+    /// falls back to naming only the party.
+    pending_inviter: Option<String>,
+    /// Party the [`Self::pending_inviter`] name belongs to.
+    pending_invite_id_for_inviter: Option<PartyId>,
     /// Server-side "refuse every party invite" flag. Only ever set from
     /// `PartyInvitationState`, so the toggle shows what the server actually
     /// believes rather than what we last asked for.
@@ -180,6 +187,8 @@ impl Default for PartyState {
             pending_invite_id: None,
             pending_invite_name: String::new(),
             outgoing_invite: None,
+            pending_inviter: None,
+            pending_invite_id_for_inviter: None,
             deny_invites: false,
             members: Vec::new(),
             share_pickup: false,
@@ -231,15 +240,35 @@ impl PartyState {
         self.rebuild_status_text();
     }
 
+    pub fn pending_inviter(&self) -> Option<&str> {
+        self.pending_inviter.as_deref()
+    }
+
+    /// Record the sender of an invite that has not arrived yet (fork packet
+    /// 0x0EFF, which precedes `ZC_PARTY_JOIN_REQ`). Kept keyed by party id so a
+    /// stale name from an earlier, unanswered invite cannot be shown against a
+    /// different party.
+    pub fn set_pending_inviter(&mut self, party_id: PartyId, character_name: String) {
+        self.pending_invite_id_for_inviter = Some(party_id);
+        self.pending_inviter = Some(character_name);
+    }
+
     pub fn set_pending_invite(&mut self, party_id: PartyId, party_name: String) {
         self.pending_invite_id = Some(party_id);
         self.pending_invite_name = party_name;
+
+        // Only trust a sender name that was recorded for *this* party.
+        if self.pending_invite_id_for_inviter != Some(party_id) {
+            self.pending_inviter = None;
+        }
         self.rebuild_status_text();
     }
 
     pub fn clear_pending_invite(&mut self) {
         self.pending_invite_id = None;
         self.pending_invite_name.clear();
+        self.pending_inviter = None;
+        self.pending_invite_id_for_inviter = None;
         self.rebuild_status_text();
     }
 
@@ -258,6 +287,8 @@ impl PartyState {
         self.party_name.clear();
         self.pending_invite_id = None;
         self.pending_invite_name.clear();
+        self.pending_inviter = None;
+        self.pending_invite_id_for_inviter = None;
         self.outgoing_invite = None;
         self.members.clear();
         self.share_pickup = false;
@@ -340,7 +371,10 @@ impl PartyState {
         }
 
         self.status_text = match (&self.pending_invite_name, &self.outgoing_invite, self.members.is_empty()) {
-            (name, _, _) if !name.is_empty() => format!("{name} invited you — Accept or Reject."),
+            (name, _, _) if !name.is_empty() => match &self.pending_inviter {
+                Some(inviter) => format!("{inviter} invited you to {name} — Accept or Reject."),
+                None => format!("{name} invited you — Accept or Reject."),
+            },
             (_, Some(character_name), _) => format!("Invited {character_name}; waiting for an answer\u{2026}"),
             (_, None, true) => "Not in a party. Name it below and press Create.".to_owned(),
             (_, None, false) => {

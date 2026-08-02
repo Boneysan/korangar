@@ -1334,6 +1334,10 @@ where
         maximum_health_points: packet.maximum_health_points as usize,
         spell_points: None,
     })?;
+    packet_handler.register(|packet: PartyInviteSenderPacket| NetworkEvent::PartyInviteSender {
+        party_id: packet.party_id,
+        character_name: packet.character_name,
+    })?;
     packet_handler.register(|packet: PartyMemberVitalsPacket| NetworkEvent::PartyMemberHealth {
         account_id: packet.account_id,
         health_points: packet.health_points as usize,

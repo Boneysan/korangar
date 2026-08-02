@@ -208,6 +208,7 @@ This is the only way to test the peer-to-peer packet families:
 | Party vitals (HP+SP) | A `@heal -500 -50` | B sees `PartyMemberHealth` with **`spell_points: Some`**, HP below maximum — guards the `KORANGAR_PARTY_SP_TO_GROUPM` Hercules delta, whose loss is otherwise silent |
 | Party SP-only broadcast | A full-heals, then `@heal 0 -50` | B still gets `PartyMemberHealth`, with HP **at** maximum — isolates the `case SP_SP:` trigger in `clif_updatestatus`; at full HP there is no HP regeneration, so nothing else could have sent it |
 | Party survives relog | B logs out and back in, no re-invite | B's party chat still reaches A |
+| Invite names its sender | A invites B | B gets `PartyInviteSender` with A's name, then the `PartyInvite` it pairs with — guards fork packet 0x0EFF, whose loss is silent |
 | Party chat | `send_party_chat_message` | other side gets `PartyChatMessage` |
 | Leave/kick | `leave_party` | `PartyMemberRemoved` both sides |
 | Invite block | B: `set_party_invitation_block(true)`, A invites | A gets `PartyInviteResult` rejection |

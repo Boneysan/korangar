@@ -17,6 +17,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-member-vitals", 8, party_member_vitals),
         Scenario::new("party-sp-only-broadcast", 8, party_sp_only_broadcast),
         Scenario::new("party-persists-relog", 8, party_persists_relog),
+        Scenario::new("party-invite-sender", 8, party_invite_sender),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
     ]
@@ -419,6 +420,65 @@ fn party_persists_relog(config: &Config) -> Result<(), String> {
 
     leave_party_both(&mut primary, &mut partner);
     observed
+}
+
+/// An invite names who sent it.
+///
+/// Guards the fork packet `ZC_PARTY_INVITE_SENDER` (0x0EFF) and its Hercules
+/// send site in `clif_party_invite`. Official `ZC_PARTY_JOIN_REQ` carries only
+/// the party id and name, so without the companion packet the invite popup can
+/// only say "you are invited to join <party>".
+///
+/// Losing it is **silent** in the same way the party-SP delta is: the invite
+/// still arrives and still works, the name just quietly stops appearing. The
+/// companion is sent *before* the invite, so this waits for it first.
+fn party_invite_sender(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    ensure_no_party(&mut primary);
+    ensure_no_party(&mut partner);
+    create_party(&mut primary)?;
+
+    partner.flush();
+    primary
+        .net
+        .invite_to_party(&partner.character_name)
+        .map_err(|_| "primary disconnected")?;
+
+    let expected = primary.character_name.clone();
+    let sender = partner.wait_for("PartyInviteSender naming the inviter", |event| match event {
+        NetworkEvent::PartyInviteSender { party_id, character_name } => Some((*party_id, character_name.clone())),
+        _ => None,
+    });
+
+    let invite = match sender.is_ok() {
+        true => partner
+            .wait_for("the PartyInvite it belongs to", |event| match event {
+                NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+                _ => None,
+            })
+            .ok(),
+        false => None,
+    };
+
+    if let Some(party_id) = invite {
+        let _ = partner.net.reject_party_invite(party_id);
+        partner.pump(Duration::from_millis(300));
+    }
+    leave_party_both(&mut primary, &mut partner);
+
+    let (sender_party_id, sender_name) = sender?;
+
+    if sender_name != expected {
+        return Err(format!("invite reported sender {sender_name:?}, expected {expected:?}"));
+    }
+
+    match invite {
+        Some(invite_party_id) if invite_party_id == sender_party_id => Ok(()),
+        Some(invite_party_id) => Err(format!(
+            "sender packet was for party {sender_party_id:?} but the invite was for {invite_party_id:?};              the client pairs them by id, so a mismatch would show the wrong name"
+        )),
+        None => Err("the sender packet arrived but the invite itself never did".to_owned()),
+    }
 }
 
 fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
