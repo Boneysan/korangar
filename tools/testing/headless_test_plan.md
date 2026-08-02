@@ -209,6 +209,11 @@ This is the only way to test the peer-to-peer packet families:
 | Party SP-only broadcast | A full-heals, then `@heal 0 -50` | B still gets `PartyMemberHealth`, with HP **at** maximum — isolates the `case SP_SP:` trigger in `clif_updatestatus`; at full HP there is no HP regeneration, so nothing else could have sent it |
 | Party survives relog | B logs out and back in, no re-invite | B's party chat still reaches A |
 | Invite names its sender | A invites B | B gets `PartyInviteSender` with A's name, then the `PartyInvite` it pairs with — guards fork packet 0x0EFF, whose loss is silent |
+| Kick | leader removes B | `PartyMemberRemoved` for B's account |
+| Promote leader | A promotes B | **B** sees `PartyLeaderChanged` — asserts from the promoted seat, proving the PARTY broadcast reached a non-actor |
+| Share options | A enables EXP share | `PartyShareOptions` with EXP on; only the EXP field is asserted, since the reply is 0x07D8 *or* 0x0101 depending on `send_party_options` |
+| Ignore blocks whispers | A ignores B, B whispers A | B gets `WhisperResult` **2**; asserted functionally, and the ignore list is always cleared again (it is persistent server-side) |
+| Trade add item | A offers a Red Potion | **B** sees `TradePartnerItem` — found the 0x0B42 bug below |
 | Party chat | `send_party_chat_message` | other side gets `PartyChatMessage` |
 | Leave/kick | `leave_party` | `PartyMemberRemoved` both sides |
 | Invite block | B: `set_party_invitation_block(true)`, A invites | A gets `PartyInviteResult` rejection |

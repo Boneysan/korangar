@@ -18,6 +18,11 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-sp-only-broadcast", 8, party_sp_only_broadcast),
         Scenario::new("party-persists-relog", 8, party_persists_relog),
         Scenario::new("party-invite-sender", 8, party_invite_sender),
+        Scenario::new("party-kick", 8, party_kick),
+        Scenario::new("party-promote-leader", 8, party_promote_leader),
+        Scenario::new("party-share-options", 8, party_share_options),
+        Scenario::new("whisper-ignore", 8, whisper_ignore),
+        Scenario::new("trade-add-item", 8, trade_add_item),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
     ]
@@ -481,6 +486,154 @@ fn party_invite_sender(config: &Config) -> Result<(), String> {
     }
 }
 
+/// The leader can remove a member (`CZ_REQ_LEAVE_GROUP_MEMBER`, 0x0103).
+///
+/// Asserted from the kicked seat as well as the leader's: the leader would see
+/// `PartyMemberRemoved` even if the packet had been malformed enough that the
+/// server dropped the *member* silently, so checking only one side could pass
+/// on a half-broken kick.
+fn party_kick(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let partner_name = partner.character_name.clone();
+    let partner_account = partner.account_id;
+    primary.flush();
+    partner.flush();
+
+    primary
+        .net
+        .kick_party_member(partner_account, &partner_name)
+        .map_err(|_| "primary disconnected")?;
+
+    let seen_by_leader = primary.wait_for("PartyMemberRemoved on the leader", |event| match event {
+        NetworkEvent::PartyMemberRemoved { account_id, .. } if *account_id == partner_account => Some(()),
+        _ => None,
+    });
+
+    leave_party_both(&mut primary, &mut partner);
+    seen_by_leader
+}
+
+/// Leadership can be handed to another member (`CZ_CHANGE_GROUP_MASTER`, 0x07DA).
+///
+/// `ZC_CHANGE_GROUP_MASTER` is sent to the whole party, so the *promoted* seat
+/// is the honest place to assert: it proves the broadcast reached someone other
+/// than the actor, which is the half that the client's leader star depends on.
+fn party_promote_leader(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let partner_account = partner.account_id;
+    partner.flush();
+
+    primary
+        .net
+        .change_party_leader(partner_account)
+        .map_err(|_| "primary disconnected")?;
+
+    let observed = partner.wait_for("PartyLeaderChanged naming the new leader", |event| match event {
+        NetworkEvent::PartyLeaderChanged { new_leader_account_id, .. } => Some(*new_leader_account_id),
+        _ => None,
+    });
+
+    leave_party_both(&mut primary, &mut partner);
+
+    match observed? {
+        new_leader if new_leader == partner_account => Ok(()),
+        new_leader => Err(format!("leadership went to {new_leader:?}, expected {partner_account:?}")),
+    }
+}
+
+/// Share rules can be changed and are broadcast back (`CZ_GROUPINFO_CHANGE_V2`).
+///
+/// The reply is **either** the rich 0x07D8 form or the 6-byte 0x0101 depending
+/// on `send_party_options` in `conf/map/battle/party.conf`, so the item fields
+/// are `Option` and only the EXP rule is asserted -- the one field both forms
+/// carry. A run against a server configured to send only 0x0101 must still pass.
+fn party_share_options(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    primary.flush();
+    primary
+        .net
+        .set_party_options(true, false, false)
+        .map_err(|_| "primary disconnected")?;
+
+    let observed = primary.wait_for("PartyShareOptions with EXP sharing on", |event| match event {
+        NetworkEvent::PartyShareOptions { experience_share, .. } => Some(*experience_share),
+        _ => None,
+    });
+
+    // Put it back before leaving: share rules live on the party server-side and
+    // would otherwise leak into whatever runs next.
+    let _ = primary.net.set_party_options(false, false, false);
+    primary.pump(Duration::from_millis(300));
+    leave_party_both(&mut primary, &mut partner);
+
+    match observed? {
+        true => Ok(()),
+        false => Err("the server reported EXP sharing still off after enabling it".to_owned()),
+    }
+}
+
+/// Ignoring a character actually blocks their whispers
+/// (`CZ_SETTING_WHISPER_PC`, 0x00CF).
+///
+/// Asserted functionally rather than by the ack alone: Hercules answers the
+/// *sender* of a blocked whisper with `WhisperResult` **2**, so the round trip
+/// proves the ignore took effect rather than merely that the packet parsed.
+///
+/// The ignore list is persistent server-side, so this always clears it again --
+/// left behind it would silently break any later whisper scenario, which is
+/// exactly the slow-motion shared-state failure `observer-ammo-disguise` caused.
+fn whisper_ignore(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+
+    let partner_name = partner.character_name.clone();
+
+    // Start from a known state in case an interrupted run left it set.
+    let _ = primary.net.set_player_ignored(&partner_name, false);
+    primary.pump(Duration::from_millis(300));
+    primary.flush();
+
+    primary
+        .net
+        .set_player_ignored(&partner_name, true)
+        .map_err(|_| "primary disconnected")?;
+    let acknowledged = primary.wait_for("successful IgnoreResult", |event| match event {
+        NetworkEvent::IgnoreResult { result: 0, .. } => Some(()),
+        _ => None,
+    });
+
+    let blocked = acknowledged.as_ref().ok().map(|()| {
+        partner.flush();
+        let _ = partner.net.send_whisper_message(&primary.character_name, "blocked by ignore");
+        partner.wait_for("WhisperResult reporting the sender is ignored", |event| match event {
+            NetworkEvent::WhisperResult { result } if *result != 0 => Some(*result),
+            _ => None,
+        })
+    });
+
+    // Always clear it, whatever happened above.
+    let _ = primary.net.set_player_ignored(&partner_name, false);
+    primary.pump(Duration::from_millis(300));
+
+    acknowledged?;
+
+    match blocked {
+        Some(Ok(result)) => match result {
+            2 => Ok(()),
+            other => Err(format!(
+                "whisper to an ignoring character failed with result {other}, expected 2 (ignored)"
+            )),
+        },
+        Some(Err(error)) => Err(format!("the whisper was not refused: {error}")),
+        None => Err("ignore was never acknowledged".to_owned()),
+    }
+}
+
 fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
     partner.flush();
     primary.net.request_trade(partner.account_id).map_err(|_| "primary disconnected")?;
@@ -493,6 +646,65 @@ fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(
         NetworkEvent::TradeStart { result: 3, .. } => Some(()),
         _ => None,
     })
+}
+
+/// An item put into a trade reaches the other side.
+///
+/// This is the wire half of the "Add to trade" entry added to the right-click
+/// item menu. It matters because the *only* previous way in was `/trade add
+/// <inventory_index>` -- an internal number no player can see -- so the path
+/// was effectively untested as well as unreachable.
+///
+/// Asserted from the partner seat: `TradeAddItemResult` on the sender only says
+/// the server accepted the request, not that the item was described to anyone
+/// else, and `TradePartnerItem` is what the trade window actually renders.
+fn trade_add_item(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(RED_POTION, 1)?;
+    begin_trade(&mut primary, &mut partner)?;
+
+    partner.flush();
+    primary
+        .net
+        .trade_add_item(index, 1)
+        .map_err(|_| "primary disconnected")?;
+
+    let accepted = primary.wait_for("TradeAddItemResult for the offered item", |event| match event {
+        NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+        _ => None,
+    });
+
+    let seen_by_partner = match accepted.is_ok() {
+        true => partner
+            .wait_for("TradePartnerItem describing it", |event| match event {
+                NetworkEvent::TradePartnerItem { item_id, amount, .. } => Some((*item_id, *amount)),
+                _ => None,
+            })
+            .ok(),
+        false => None,
+    };
+
+    // Always tear the trade down: an open trade blocks later scenarios from
+    // trading, and Hercules refuses several unrelated actions while trading.
+    let _ = primary.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+
+    match accepted? {
+        0 => {}
+        other => return Err(format!("the server refused the offered item with result {other}")),
+    }
+
+    match seen_by_partner {
+        Some((item_id, amount)) if item_id.0 == RED_POTION && amount == 1 => Ok(()),
+        Some((item_id, amount)) => Err(format!(
+            "partner was shown item {} x{amount}, expected {RED_POTION} x1",
+            item_id.0
+        )),
+        None => Err("the item was accepted but never described to the partner".to_owned()),
+    }
 }
 
 fn trade_cancel(config: &Config) -> Result<(), String> {

@@ -1538,6 +1538,13 @@ where
         character_id: packet.character_id,
         base_level: packet.base_level,
     })?;
+    packet_handler.register(|packet: TradeAddItemGradeNotifyPacket| NetworkEvent::TradePartnerItem {
+        item_id: packet.item_id,
+        item_type: packet.item_type,
+        amount: packet.amount,
+        identified: packet.identified == 1,
+        refine: packet.refine,
+    })?;
     packet_handler.register(|packet: TradeAddItemNotifyPacket| NetworkEvent::TradePartnerItem {
         item_id: packet.item_id,
         item_type: packet.item_type,

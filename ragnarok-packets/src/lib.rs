@@ -4537,7 +4537,38 @@ pub struct TradeAddItemPacket {
     pub amount: u32,
 }
 
+/// Other player's item added to the trade (`ZC_ADD_EXCHANGE_ITEM` **0x0B42**),
+/// the form our packetver actually uses.
+///
+/// **This is the one that matters.** From `PACKETVER_MAIN >= 20200916` Hercules
+/// sends 0x0B42, which moves `refine` to the end and appends `grade` — 62 bytes
+/// against 0x0A96's 61. Only the older header was modelled, so every item a
+/// trade partner offered was eaten by the known-length fallback and never
+/// displayed: you could be asked to confirm a trade while seeing an empty
+/// offer. Caught by the `trade-add-item` scenario, which asserts from the
+/// *partner* seat for exactly this reason — the sender's own
+/// `TradeAddItemResult` arrived perfectly well the whole time.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B42)]
+pub struct TradeAddItemGradeNotifyPacket {
+    pub item_id: ItemId,
+    pub item_type: u8,
+    pub amount: u32,
+    pub identified: u8,
+    pub damaged: u8,
+    pub slot: [u32; 4],
+    pub option_data: [ItemOptions; 5],
+    pub location: u32,
+    pub look: u16,
+    pub refine: u8,
+    pub grade: u8,
+}
+
 /// Other player's item added to the trade (`ZC_ADD_EXCHANGE_ITEM` 0x0A96).
+///
+/// Kept for servers older than `PACKETVER_MAIN 20200916`; ours sends
+/// [`TradeAddItemGradeNotifyPacket`] instead.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0A96)]
@@ -6283,6 +6314,35 @@ mod tests {
 
         assert_eq!(packet.party_id, PartyId(7));
         assert_eq!(packet.character_name, "test");
+    }
+
+    /// The trade-item notify packet must be 62 bytes to match
+    /// `packetLen(0x0b42, 62)`. It is one byte longer than the 0x0A96 form it
+    /// replaced, and modelling only that one meant every partner item was
+    /// silently swallowed by the length fallback.
+    #[test]
+    fn trade_add_item_grade_packet_matches_20220406_layout() {
+        let mut bytes = vec![0x42, 0x0B];
+        bytes.extend_from_slice(&501u32.to_le_bytes()); // item id
+        bytes.push(0); // item type
+        bytes.extend_from_slice(&3u32.to_le_bytes()); // amount
+        bytes.push(1); // identified
+        bytes.push(0); // damaged
+        bytes.extend_from_slice(&[0u8; 16]); // four card slots
+        bytes.extend_from_slice(&[0u8; 25]); // five item options
+        bytes.extend_from_slice(&0u32.to_le_bytes()); // location
+        bytes.extend_from_slice(&0u16.to_le_bytes()); // look
+        bytes.push(7); // refine -- at the END in this form
+        bytes.push(2); // grade -- absent from 0x0A96
+        assert_eq!(bytes.len(), 62);
+
+        let packet = read_packet::<TradeAddItemGradeNotifyPacket>(&bytes);
+
+        assert_eq!(packet.item_id, ItemId(501));
+        assert_eq!(packet.amount, 3);
+        assert_eq!(packet.identified, 1);
+        assert_eq!(packet.refine, 7);
+        assert_eq!(packet.grade, 2);
     }
 
     #[test]
