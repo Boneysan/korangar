@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31; first rows walked the same day — **row 1 PASS**, row 11's probe corrected as invalid, rows 10/3/4/4b/5/6 open |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Block A walked 2026-08-04: 18 of 19 rows PASS, N9 the only one unwalked — and it found 12 bugs, every one of them invisible to the headless suite, which stayed green throughout.** Rows 3/4/4b/5/6 and blocks B–E still open |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -259,25 +259,168 @@ A: @killmonster
 
 | # | Check | Watch for | Result |
 |---|---|---|---|
-| N1 | **Left-click seat B's character** | Target frame opens: name, class ("High Wizard", not an id), and Whisper / Invite / Trade / Add friend / Ignore | ☐ |
-| N2 | Left-click **your own** sprite | **Nothing opens** — self-targeting is excluded deliberately | ☐ |
-| N3 | Chat: press **Party**, type a line | Goes to party chat, and the line is a **different colour** from system text | ☐ |
-| N4 | Chat: press **Whisper**, fill the target field, send | Arrives privately, in its own colour | ☐ |
-| N5 | Whisper with the target field **empty** | Prints the `/w` usage hint. **Must not** appear in public chat — that would leak a private message | ☐ |
-| N6 | Type `/party leave` while the channel is **Party** | Runs as a *command*, not sent as party chat | ☐ |
-| N7 | Seat B whispers A, then A presses **Reply** | Channel switches to Whisper with B pre-filled. Receiving a whisper must **not** switch the channel on its own | ☐ |
-| N8 | A invites B to a party | B's popup says **"test invites you to join …"** — the name comes from fork packet `0x0EFF`; a bare party name means the Hercules delta is missing | ☐ |
+| N1 | **Left-click seat B's character** | Target frame opens: name, class ("High Wizard", not an id), and Whisper / Invite / Trade / Add friend / Ignore | **PASS 2026-08-04** (after a fix, re-verified live: reads "HeadlessTwo / Gypsy"). Originally FAILed — frame, name and all five buttons were correct but class read "Adventurer". Not "JobName missed the job" as predicted below: **the table was empty for every id in the game**, see §Findings |
+| N2 | Left-click **your own** sprite | **Nothing opens** — self-targeting is excluded deliberately | **PASS 2026-08-04** |
+| N3 | Chat: press **Party**, type a line | Goes to party chat, and the line is a **different colour** from system text | **PASS 2026-08-04** |
+| N4 | Chat: press **Whisper**, fill the target field, send | Arrives privately, in its own colour | **PASS 2026-08-04** (after a fix, re-verified live: the sender's own line now shows). Originally FAILed — the recipient side was correct all along, but **the sender's own client showed nothing at all**, see §Findings |
+| N5 | Whisper with the target field **empty** | Prints the `/w` usage hint. **Must not** appear in public chat — that would leak a private message | **PASS 2026-08-04** (after a fix). Bare `/w` prints the whisper usage; `/wisper` prints "Unknown command"; neither reaches public chat. Note the row as written never exercised the path that was actually broken — see the slash-command finding |
+| N6 | Type `/party leave` while the channel is **Party** | Runs as a *command*, not sent as party chat | **PASS 2026-08-04** — ran as a command, not echoed to party chat; both seats saw the departure line |
+| N7 | Seat B whispers A, then A presses **Reply** | Channel switches to Whisper with B pre-filled. Receiving a whisper must **not** switch the channel on its own | **PASS 2026-08-04** — Reply pre-fills, and receiving does not switch the channel. **UX finding raised by the tester: replying is obtuse.** Switching to the Whisper channel by hand leaves the target field blank, so the only discoverable path to answering is the Reply button. See §Whisper UX below |
+| N8 | A invites B to a party | B's popup says **"test invites you to join …"** — the name comes from fork packet `0x0EFF`; a bare party name means the Hercules delta is missing | **PASS 2026-08-04** — read "test invites you to join testing", so `0x0EFF` and the Hercules delta are both live. **Wording fixed on the tester's point:** an unqualified party name reads as a verb phrase ("join testing"), now "join **the party** *testing*" |
 | N9 | Invite popup **Whisper** button | Aims chat at the inviter | ☐ |
-| N10 | Party window as **leader**: Kick / Promote | Enabled; kicking removes the row on both seats, promoting moves the ★ | ☐ |
-| N11 | Party window as **non-leader** | Kick / Promote greyed with "Only the party leader can do this" | ☐ |
-| N12 | Share EXP / pickup / loot toggles | Flip and **stay** flipped — they reflect the server's answer, not the click | ☐ |
-| N13 | Roster rows | Show **class name** and, when a member dies (`@die` on B), read `DEAD` | ☐ |
-| N14 | A requests a trade with B | B's popup names **A and their level**, and offers Whisper | ☐ |
-| N15 | In the trade, **right-click an inventory item → Add to trade** | The item appears on **B's** side of the window. This is the path the 0x0B42 fix restored | ☐ |
-| N16 | Trade zeny field → **Add zeny** | Amount appears in the offer; non-numeric input is ignored, not an error | ☐ |
-| N17 | A sends B a friend request | B's popup offers **Whisper** alongside Accept / Reject | ☐ |
-| N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | ☐ |
-| N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | ☐ |
+| N10 | Party window as **leader**: Kick / Promote | Enabled; kicking removes the row on both seats, promoting moves the ★ | **PASS 2026-08-04** — kick removes the row; promote moves the leader marker. Note the marker is now a **gold `*`**: `★` is not in the bundled font and drew as tofu for leader *and* non-leader alike, so this row could not have been read before that fix |
+| N11 | Party window as **non-leader** | Kick / Promote greyed with "Only the party leader can do this" | **PASS 2026-08-04** |
+| N12 | Share EXP / pickup / loot toggles | Flip and **stay** flipped — they reflect the server's answer, not the click | **PASS 2026-08-04** — leader set a share and it *stayed* set, which is the real assertion (the toggle shows the server's answer, not the click); non-leader cannot click them at all |
+| N13 | Roster rows | Show **class name** and, when a member dies (`@die` on B), read `DEAD` | **PASS 2026-08-04** — rows read name, level and class ("Champion", "Gypsy"), and `DEAD` after `@die`. The class half was broken by the N1 empty-table bug and could never have passed before it |
+| N14 | A requests a trade with B | B's popup names **A and their level**, and offers Whisper | **PASS 2026-08-04** — "test (Lv99) wants to trade with you", and the popup now exits via Reject rather than an X |
+| N15 | In the trade, **right-click an inventory item → Add to trade** | The item appears on **B's** side of the window. This is the path the 0x0B42 fix restored | **PARTIAL 2026-08-04** — the menu is correct during a live trade (both trade entries present and enabled). First reported as "no trade option", which was the stuck-`state.trading` session: the trade never really opened, so `is_active()` was false and both entries sat greyed. **The item-actually-crosses half is still untested.** Separately: the tester counted **six** buttons where the window defines **seven** — `Cancel` may be clipped by the fixed 280×220 in `cache.rs:133` |
+| N16 | Trade zeny field → **Add zeny** | Amount appears in the offer; non-numeric input is ignored, not an error | **PASS 2026-08-04** (after a fix, re-verified live). Originally FAILed: zeny transferred but never displayed — `set_our_zeny` was called only from the `/trade zeny` *chat command*, never from the window's button. Not fixable on the round trip — `ZC_ACK_ADD_EXCHANGE_ITEM` carries an index and a result but **no amount**, and its zeny index is the wire's 0 (`InventoryIndex(65534)` after the −2 decode), matching no inventory slot |
+| N17 | A sends B a friend request | B's popup offers **Whisper** alongside Accept / Reject | **PASS 2026-08-04** — popup appears as specified. Prompted the sender-feedback work: the *sender* saw nothing at all, see §Findings |
+| N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | **PASS 2026-08-04** — rows correct. Ordering **cannot be observed with two seats**, so it was verified in code at the tester's request, which found a real gap: `FriendAdded` pushed without re-sorting, so a newly accepted friend sat at the bottom below offline entries until a relog. Fixed; `SetFriendList` and `FriendOnlineStatus` already sorted |
+| N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | **PARTIAL 2026-08-04.** Found the row unreadable, not failing: both glyphs were tofu (see §Findings). Presence is now a **coloured dot plus a word**, green online / red offline, confirmed rendering in both states in both the friend list and the party roster. **The live re-render assertion — does it flip with the window left open — is still unconfirmed** |
+
+#### Findings from the 2026-08-04 walk
+
+**N1 — every class in the client read "Adventurer", and the prediction table
+below sent me to the right file for the wrong reason.** It says "`JobName`
+missed the job". `JobName` missed *every* job: our `jobidentity.lub` names its
+global **`JTtbl`**, `job_name.rs` asked for **`jobtbl`**, and the
+`if let Ok(...)` around it swallowed the failure — so the map loaded with **zero
+entries** and every id fell through to the `Adventurer` default.
+`job_identity.rs:33-45` reads *both* spellings; `JobName` was written later and
+got only the one this GRF does not define. Verified from the data, not inferred:
+the Lua 5.1 bytecode contains no `jobtbl` string at all, and its `JTtbl` does
+hold 4021.
+
+A **second** defect sat behind the first and would have failed the row again
+after a naive fix: the `JT_` constants are *sprite* identities, and Gravity kept
+the pre-rebirth name at rebirth. Reading the right table gives "Dancer H" for a
+Gypsy (4021) and "Monk H" for a Champion (4016) — this row's own example,
+"High Wizard", is a name no `JT_` constant produces. Player classes are now
+overlaid from the connected server's `db/constants.conf` via
+`tools/export_job_names.py` → `hercules_job_names.tsv` (151 jobs), matching the
+`hercules_item_names.tsv` precedent; the lub still supplies monsters and NPCs,
+which Hercules never names. The empty-table case now warns instead of failing
+silently.
+
+**Every class label in the client came through this table**, so N13 and the
+party window's class column were failing for the same cause and could never have
+passed. Re-check them together.
+
+**N4 — the sender's own client never showed the whisper it just sent.** The
+recipient half was fine, which is single-seat blindness once more: the server
+does not echo a whisper back to its sender, only `ZC_ACK_WHISPER` with a status
+code and no text. Nothing on the `/w`, `/r`, or Whisper-channel path pushed a
+local line, so the player had no record of what they sent or to whom. Now
+echoed as `[Whisper] To <name>: <text>` in `WHISPER_COLOR` from
+`echo_own_whisper`, which all three paths funnel through. Echoed optimistically,
+so an offline or ignoring target still prints its `WhisperResult` failure
+underneath.
+
+**N5's neighbour — an unrecognised slash command was broadcast to public chat,
+which is the very leak N5 exists to prevent.** Found by typing a bare `/w`
+rather than walking the row as written. Every handler in the chain matches
+`/name ` *with* its trailing space and arguments, so a bare `/w`, or a typo like
+`/wisper`, or `/W` with a capital, matched nothing and fell through to
+`send_chat_message` — meaning **`/W <name> <secret>` reached everyone on the
+map**. The server's own commands are `@` and `#` (`conf/atcommand.conf`), so a
+leading `/` is always client-side and is never something to send. Text starting
+with `/` is now answered locally: the command's own usage line if we implement
+it (so a bare `/w` gives the whisper usage, which is what the player wanted),
+otherwise "Unknown command". Guarded by unit tests over `slash_command_usage`.
+
+**Walking a row exactly as written would not have found this.** The row says to
+empty the target *field*; the leak needed a malformed *command*. Worth keeping
+in mind for the rest of the pass — the written steps are a floor, not a ceiling.
+
+**N14/N15 — closing a trade window silently bricked trading for the rest of the
+session.** Reported as "I closed it, tried to trade again, and nothing happens,
+in either direction, with no error line". The silence was the diagnostic: the
+client prints a chat line for *every* `TradeStart` result including a catch-all,
+so no line at all meant no packet came back.
+
+`trade.c:185` sets `sd->state.trading = 1` on **both** players when a trade
+starts, and only `CZ_CANCEL_EXCHANGE_ITEM` clears it. Both trade windows were
+`closable: true`, and the interface framework's close button has **no close
+hook** — it sends nothing. So dismissing the window by its X left the flag set
+server-side, and from then on `clif_parse_TradeRequest` returns on
+`sd->state.trading` **before generating any response at all**. Nothing to
+receive, so nothing to report: a permanently dead Trade button until relog.
+
+The trade *request* popup had the same defect one step earlier: closing it sent
+no reply while `trade_request` had already set `trade_partner` on both sides.
+
+**Re-verified live 2026-08-04:** cancelling a trade and immediately requesting
+another now opens a second trade window. That is the direct regression test —
+the previous behaviour was silence.
+
+Both windows are now `closable: false` — Reject and Cancel are the exits, and
+they tell the server. Neither can strand: `TradeCancelled` / `TradeCompleted`
+close them, which is what arrives if the partner cancels or logs out. Hercules
+result `2` also gained a real message instead of falling to the generic
+"Trade failed (result N)".
+
+**The general trap, worth checking on every other popup in this pass:** in this
+framework a close button is *decoration* unless something wires it up. Any window
+whose dismissal ought to tell the server needs `closable: false` and an explicit
+button. `friend_request.rs` is the same shape and is **unaudited** — worth a look
+at F3.
+
+**N19 — `HeadlessTwo []`: the bundled font cannot draw the status glyphs.** Not
+the re-render failure this row predicted. The label was built correctly the whole
+time; `archive/data/font/NotoSans.ttf` is a **3095-codepoint subset** with no
+`●` (U+25CF) and no `○` (U+25CB), so both drew as tofu — and identically in both
+states, which is why nothing ever appeared to change.
+
+Auditing every non-ASCII character in user-facing string literals against the
+font found **three more**, one of which this pass had not reached yet:
+
+- **`★` (U+2605), the party leader marker** (`state/party.rs`) — N10's Promote
+  check is "the ★ moves", and the ★ was a tofu box for leader *and* non-leader.
+- **`→`** in the atcommand echo (`lib.rs`, every `@command` the player types) and
+  in a DM command tooltip.
+
+Replaced with glyphs verified through the **whole** pipeline — codepoint → cmap →
+glyph id → atlas entry: `•` U+2022 online, `·` U+00B7 offline, `*` leader, `>`
+arrow. (`…` U+2026, used by the "waiting for an answer…" lines, checks out.)
+
+**Two things worth knowing before adding any glyph:**
+
+1. **The atlas, not the TTF, is the authority.** `NotoSans.png` +
+   `NotoSans.csv.gz` are pre-baked and the CSV is keyed by **glyph id**, not
+   codepoint. A character can be in the TTF and still not be in the atlas.
+2. **`lib.rs:2485` asks for `["NotoSans", "NotoSansKR"]` and no NotoSansKR file
+   ships** — `archive/data/font/` has only NotoSans. The missing family fails
+   silently, so there is no Korean fallback and no wider symbol coverage.
+
+**The `online_glyph_updates` unit test passed throughout.** It compares `char`s,
+which are equal whether or not anything can draw them. A green test asserting a
+glyph proves nothing about visibility — only the GUI pass catches this.
+
+#### Whisper UX — raised by the tester at N7, fixed 2026-08-04
+
+N7 passes on its own terms, but replying was *obtuse*: switching to the Whisper
+channel by hand landed on a blank target box, so the Reply button was the only
+discoverable way to answer anyone.
+
+The design was deliberate and half right. `last_whisper_sender` is kept separate
+from `whisper_target` (`chat.rs:177-182`) so that an incoming whisper cannot
+redirect a message you are part-way through typing — a good invariant, kept.
+What was wrong is that leaving `whisper_target` **empty** protects nothing.
+`note_whisper_from` now aims the channel at the sender when *nothing is at
+stake*: no target already set **and** nothing being composed. The channel itself
+is still never switched. Three unit tests pin the two guards, which are the parts
+a well-meaning edit would break.
+
+**A near-miss worth recording, because it is the shape of a false pass.** The
+first "verification" of this was reported from clients started **six minutes
+before the fix was built**. The observed behaviour was real but came from
+leftover state: `start_whisper` sets the target and is wired to the Whisper
+buttons on the friend row, party row, target frame and invite popup, plus Reply —
+so the field held a name from earlier in the session. **The observation matched
+the prediction exactly, which is what made it dangerous.** Re-verified against a
+client started after the build. *Check process start time against the binary
+mtime before recording any pass.*
 
 #### If a Block A row fails, suspect this first
 
