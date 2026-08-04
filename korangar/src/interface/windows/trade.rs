@@ -70,7 +70,18 @@ where
             title: "Trade",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
-            closable: true,
+            // **Deliberately not closable, and this one bricks trading for the
+            // rest of the session if it is.** `trade.c:185` sets
+            // `sd->state.trading = 1` on *both* players when a trade starts, and
+            // only `CZ_CANCEL_EXCHANGE_ITEM` clears it. The framework's close
+            // button sends nothing, so closing this window left the flag set --
+            // whereupon `clif_parse_TradeRequest` (`clif.c`) returns on
+            // `sd->state.trading` **before generating any response at all**. Every
+            // later trade attempt, in either direction, silently does nothing:
+            // no packet back, so nothing for the client to report. Cancel is the
+            // way out, and it tells the server. `TradeCancelled` and
+            // `TradeCompleted` still close this window, so it cannot strand.
+            closable: false,
             elements: (
                 text! { text: text_path },
                 text! {
@@ -125,7 +136,17 @@ impl CustomWindow<ClientState> for TradeRequestWindow {
             title: "Trade request",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
-            closable: true,
+            // **Deliberately not closable: a trade request must be answered.**
+            // The framework's close button only closes the window -- there is no
+            // close hook to hang a packet on -- so dismissing it sent no reply
+            // while Hercules had already set `trade_partner` on *both* sides
+            // (`trade.c` `trade_request`). The pair stayed locked with nothing on
+            // screen to say so, and the client's own `pending` state was never
+            // cleared either. Reject is the close button, and it tells the server.
+            //
+            // This cannot strand the popup: `TradeCancelled` (`ZC_CANCEL_EXCHANGE_ITEM`)
+            // closes it, which is what arrives if the requester cancels or logs out.
+            closable: false,
             elements: (
                 text! { text: client_state().trade_state().request_text() },
                 split! {
