@@ -96,8 +96,11 @@ where
                                             text: "Trade",
                                             tooltip: "Ask this friend to trade (they must be nearby)",
                                             event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                                let account_id = state.get(&friend_path).account_id();
-                                                queue.queue(InputEvent::RequestTrade { account_id });
+                                                let friend = state.get(&friend_path);
+                                                queue.queue(InputEvent::RequestTrade {
+                                                    account_id: friend.account_id(),
+                                                    character_name: friend.name().to_owned(),
+                                                });
                                             },
                                         },
                                         button! {

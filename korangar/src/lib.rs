@@ -1154,6 +1154,44 @@ fn cancel_own_cast<Callback: PacketCallback + Send>(
     is_casting
 }
 
+/// Show a whisper the player just sent in their own chat log.
+///
+/// The server does not echo a whisper back to its sender -- only
+/// `ZC_ACK_WHISPER`, which carries a status code and no text -- so without this
+/// the sender sees nothing at all and has no record of what they sent or to
+/// whom. Every send path funnels through here.
+///
+/// Echoed optimistically, before the acknowledgement: a whisper to someone
+/// offline or ignoring prints its own failure line from `WhisperResult`, which
+/// then reads as a reply to the echoed message.
+///
+/// A free function taking the state, for the same reason as
+/// [`cancel_own_cast`]: both call sites are inside the input-event drain, which
+/// already holds a mutable borrow of `self`.
+fn echo_own_whisper(state: &mut State<ClientState>, target_name: &str, message: &str) {
+    state
+        .follow_mut(client_state().chat_messages())
+        .push(ChatMessage::new(format!("[Whisper] To {target_name}: {message}"), WHISPER_COLOR));
+}
+
+/// Usage line for one of our client-side chat commands, or `None` when the word
+/// is not a command we implement.
+fn slash_command_usage(command: &str) -> Option<&'static str> {
+    Some(match command {
+        "/w" | "/whisper" => "Usage: /w <name> <message>",
+        "/r" | "/reply" => "Usage: /r <message>",
+        "/p" => "Usage: /p <message>",
+        "/party" => {
+            "Usage: /party create <name>, /party invite <name>, /party accept <id>, /party reject <id>, /party leave, /party block <on|off>"
+        }
+        "/trade" => "Usage: /trade request <account_id>",
+        "/store" => "Usage: /store <inventory_index> [amount]",
+        "/retrieve" => "Usage: /retrieve <storage_index> [amount]",
+        "/ignore" | "/unignore" => "Usage: /ignore <name>  or  /unignore <name>",
+        _ => return None,
+    })
+}
+
 fn announce_armed_skill(state: &mut State<ClientState>, skill_name: &str) {
     state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
         format!("Aiming {skill_name} — click a target (right-click or Esc to cancel)."),
@@ -4488,6 +4526,14 @@ impl Client {
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new("Trade rejected.".to_owned(), MessageColor::Information));
                     }
+                    // Hercules sends 2 for every "cannot trade right now" case in
+                    // `trade_request`, the commonest being `target_sd->trade_partner != 0`
+                    // -- they have a request open that they have not answered. Naming
+                    // that is the difference between a retryable state and a dead button.
+                    2 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        "Trade failed: they are already in a trade, or have an unanswered trade request.".to_owned(),
+                        MessageColor::Error,
+                    )),
                     5 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                         "Trade failed: target is busy.".to_owned(),
                         MessageColor::Error,
@@ -4826,6 +4872,13 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().friend_list())
                         .push(crate::state::friends::FriendEntry::from_friend(friend, true));
+                    // Sort here too, or a newly accepted friend sits at the bottom of
+                    // the list -- below offline entries -- until a relog or the next
+                    // status change happens to reorder it. The other two mutation
+                    // points (`SetFriendList`, `FriendOnlineStatus`) already do this.
+                    crate::state::friends::sort_friends(
+                        self.client_state.follow_mut(client_state().friend_list()).as_mut_slice(),
+                    );
                 }
                 NetworkEvent::FriendOnlineStatus {
                     character_id,
@@ -4925,12 +4978,29 @@ impl Client {
                         .follow_mut(client_state().party_state())
                         .set_leader(new_leader_account_id);
                 }
-                NetworkEvent::IgnoreResult { result, .. } => {
+                NetworkEvent::IgnoreResult { ignore_type, result } => {
                     if result != 0 {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             "The ignore list is full or the character does not exist.".to_owned(),
                             MessageColor::Error,
                         ));
+                    } else {
+                        // Success was silent, and ignoring someone changes nothing you
+                        // can see -- the whole point is that their messages stop
+                        // arriving, which is indistinguishable from them saying nothing.
+                        // Hercules does acknowledge it (`clif->wisexin` flag 0, the
+                        // branch its own comment marks "Aegis reports success"); the
+                        // client simply threw the success case away.
+                        //
+                        // `ignore_type` is the request's type byte: 0 added, 1 removed
+                        // (`clif_parse_PlayerIgnore`). No name rides on the reply.
+                        let message = match ignore_type {
+                            0 => "Character added to your ignore list.",
+                            _ => "Character removed from your ignore list.",
+                        };
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new(message.to_owned(), MessageColor::Information));
                     }
                 }
                 NetworkEvent::PartyMemberAlive { account_id, is_dead } => {
@@ -6425,7 +6495,15 @@ impl Client {
                         match command {
                             "request" if !arguments.is_empty() => {
                                 if let Ok(aid) = arguments.parse::<u32>() {
-                                    let _ = self.networking_system.request_trade(ragnarok_packets::AccountId(aid));
+                                    // No name to show on this path -- an account id is all
+                                    // the command takes -- but the sender still needs to
+                                    // know the request left.
+                                    if self.networking_system.request_trade(ragnarok_packets::AccountId(aid)).is_ok() {
+                                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                            "Trade request sent; waiting for an answer\u{2026}".to_owned(),
+                                            MessageColor::Information,
+                                        ));
+                                    }
                                 } else {
                                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                         "Usage: /trade request <account_id>".to_owned(),
@@ -6518,7 +6596,9 @@ impl Client {
 
                         match (sender.is_empty(), message.is_empty()) {
                             (false, false) => {
-                                let _ = self.networking_system.send_whisper_message(&sender, message);
+                                if self.networking_system.send_whisper_message(&sender, message).is_ok() {
+                                    echo_own_whisper(&mut self.client_state, &sender, message);
+                                }
                             }
                             (true, _) => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                 "Nobody has whispered you yet.".to_owned(),
@@ -6537,7 +6617,10 @@ impl Client {
                             && !target_name.is_empty()
                             && !message.trim().is_empty()
                         {
-                            let _ = self.networking_system.send_whisper_message(target_name, message.trim());
+                            let message = message.trim();
+                            if self.networking_system.send_whisper_message(target_name, message).is_ok() {
+                                echo_own_whisper(&mut self.client_state, target_name, message);
+                            }
                         } else {
                             self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                 "Usage: /w <name> <message>".to_owned(),
@@ -6558,6 +6641,10 @@ impl Client {
                             }
                             "invite" if !arguments.is_empty() => {
                                 if self.networking_system.invite_to_party(arguments).is_ok() {
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        format!("Party invite sent to {arguments}; waiting for an answer\u{2026}"),
+                                        MessageColor::Information,
+                                    ));
                                     self.client_state
                                         .follow_mut(client_state().party_state())
                                         .set_outgoing_invite(arguments.to_owned());
@@ -6625,12 +6712,33 @@ impl Client {
                         continue;
                     }
 
+                    // Never say a slash command out loud. Every handler above matches
+                    // `/name ` *with* its trailing space and arguments, so a bare `/w`
+                    // or a typo like `/wisper` fell through to here and was broadcast:
+                    // `/W <name> <secret>` reached everyone on the map. That is the same
+                    // leak N5 of the GUI pass guards against, entered through a mistyped
+                    // command rather than an empty target field. The server's own
+                    // commands are `@` and `#` (`conf/atcommand.conf`), so a leading `/`
+                    // is always client-side and is never something to send.
+                    if text.starts_with('/') {
+                        let command = text.split_once(' ').map_or(text.as_str(), |(word, _)| word);
+                        let message = match slash_command_usage(command) {
+                            Some(usage) => usage.to_owned(),
+                            None => format!("Unknown command: {command}"),
+                        };
+
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new(message, MessageColor::Information));
+                        continue;
+                    }
+
                     // Atcommands (@dm, @blvl, …) never rebroadcast as public chat, so echo
                     // the request locally; server feedback arrives via 0x017F (dispbottom).
                     if text.starts_with('@') {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
-                            .push(ChatMessage::new(format!("→ {text}"), MessageColor::Information));
+                            .push(ChatMessage::new(format!("> {text}"), MessageColor::Information));
                     }
 
                     let _ = self
@@ -6809,7 +6917,16 @@ impl Client {
                     let _ = self.networking_system.trade_add_item(inventory_index, amount);
                 }
                 InputEvent::TradeAddZeny { amount } => {
-                    let _ = self.networking_system.trade_add_zeny(amount);
+                    // The display has to be updated here, exactly as the `/trade zeny`
+                    // command path does. `ZC_ACK_ADD_EXCHANGE_ITEM` comes back carrying
+                    // only an index and a result -- never the amount -- and the index it
+                    // carries for zeny is the wire's 0, which is `InventoryIndex(65534)`
+                    // after the -2 decode and matches no inventory slot. So the round
+                    // trip cannot reconstruct the figure: the button sent the zeny and
+                    // then showed nothing.
+                    if self.networking_system.trade_add_zeny(amount).is_ok() {
+                        self.client_state.follow_mut(client_state().trade_state()).set_our_zeny(amount);
+                    }
                 }
                 InputEvent::TradeOk => {
                     let _ = self.networking_system.trade_ok();
@@ -7009,10 +7126,19 @@ impl Client {
                 }
                 InputEvent::AddFriend { character_name } => {
                     if character_name.len() > 24 {
-                        #[cfg(feature = "debug")]
-                        print_debug!("[{}] friend name {} is too long", "error".red(), character_name.magenta());
-                    } else {
-                        let _ = self.networking_system.add_friend(character_name);
+                        // Was debug-log only, so to the player the button simply did
+                        // nothing.
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("\"{character_name}\" is too long to be a character name."),
+                            MessageColor::Error,
+                        ));
+                    } else if self.networking_system.add_friend(character_name.clone()).is_ok() {
+                        // The server answers a friend request only when the *other* side
+                        // acts on it, so the sender otherwise sees nothing at all.
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Friend request sent to {character_name}; waiting for an answer\u{2026}"),
+                            MessageColor::Information,
+                        ));
                     }
                 }
                 InputEvent::RemoveFriend { account_id, character_id } => {
@@ -7031,6 +7157,16 @@ impl Client {
                 }
                 InputEvent::InviteToParty { character_name } => {
                     if self.networking_system.invite_to_party(&character_name).is_ok() {
+                        // The party window's status line already says this, but it is
+                        // *transient* -- it exists only between sending and the answer
+                        // arriving, and only in that one window. If the invitee accepts
+                        // promptly, or the window is closed, the sender never sees any
+                        // confirmation. The chat log keeps it, and matches how trade and
+                        // friend requests report.
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Party invite sent to {character_name}; waiting for an answer\u{2026}"),
+                            MessageColor::Information,
+                        ));
                         self.client_state
                             .follow_mut(client_state().party_state())
                             .set_outgoing_invite(character_name);
@@ -7074,8 +7210,21 @@ impl Client {
                         .follow_mut(client_state().chat_window())
                         .start_whisper(character_name);
                 }
-                InputEvent::RequestTrade { account_id } => {
-                    let _ = self.networking_system.request_trade(account_id);
+                InputEvent::RequestTrade {
+                    account_id,
+                    character_name,
+                } => {
+                    // Confirm to the sender. Nothing else does: the request produces no
+                    // reply for the *requester* unless it fails, so without this the
+                    // button looked identical whether it worked, silently failed, or was
+                    // not wired up at all -- which is exactly what made the stuck
+                    // `state.trading` lock so hard to recognise from this seat.
+                    if self.networking_system.request_trade(account_id).is_ok() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Trade request sent to {character_name}; waiting for an answer\u{2026}"),
+                            MessageColor::Information,
+                        ));
+                    }
                 }
                 InputEvent::KickPartyMember {
                     account_id,
@@ -9254,6 +9403,35 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
             _ => {}
         }
+    }
+}
+
+#[cfg(test)]
+mod slash_command_tests {
+    use super::slash_command_usage;
+
+    /// Every command the chat handler implements needs an entry here, because
+    /// the fall-through guard uses this table to decide between a usage hint
+    /// and "unknown command". Both alias spellings must resolve.
+    #[test]
+    fn known_commands_have_a_usage_line() {
+        for command in [
+            "/w", "/whisper", "/r", "/reply", "/p", "/party", "/trade", "/store", "/retrieve", "/ignore", "/unignore",
+        ] {
+            assert!(slash_command_usage(command).is_some(), "{command} has no usage line");
+        }
+    }
+
+    /// A typo must not be mistaken for a command -- but it must still be caught
+    /// by the `starts_with('/')` guard rather than broadcast to public chat.
+    #[test]
+    fn typos_and_unrelated_text_are_not_commands() {
+        assert!(slash_command_usage("/wisper").is_none());
+        // Command words are matched case-sensitively; `/W` falls to "unknown",
+        // which is still local-only and so still cannot leak.
+        assert!(slash_command_usage("/W").is_none());
+        assert!(slash_command_usage("/").is_none());
+        assert!(slash_command_usage("hello").is_none());
     }
 }
 

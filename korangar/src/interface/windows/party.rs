@@ -128,8 +128,11 @@ where
                                         text: "Trade",
                                         tooltip: "Ask this member to trade (they must be nearby)",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                            let account_id = state.get(&member_path).account_id();
-                                            queue.queue(InputEvent::RequestTrade { account_id });
+                                            let member = state.get(&member_path);
+                                            queue.queue(InputEvent::RequestTrade {
+                                                account_id: member.account_id(),
+                                                character_name: member.name().to_owned(),
+                                            });
                                         },
                                     },
                                 ),

@@ -57,6 +57,7 @@ impl CustomWindow<ClientState> for PlayerTargetWindow {
         let invite_name = character_name.clone();
         let friend_name = character_name.clone();
         let ignore_name = character_name.clone();
+        let trade_name = character_name.clone();
 
         window! {
             title: "Target",
@@ -91,7 +92,10 @@ impl CustomWindow<ClientState> for PlayerTargetWindow {
                         button! {
                             text: "Trade",
                             tooltip: "Ask this player to trade",
-                            event: InputEvent::RequestTrade { account_id },
+                            event: InputEvent::RequestTrade {
+                                account_id,
+                                character_name: trade_name,
+                            },
                         },
                         button! {
                             text: "Add friend",

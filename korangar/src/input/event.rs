@@ -343,6 +343,9 @@ pub enum InputEvent {
     RequestTrade {
         /// Account id of the character to trade with.
         account_id: AccountId,
+        /// Only so the sender's own confirmation can name them: the request
+        /// itself travels by account id.
+        character_name: String,
     },
     /// Kick a member from the party (leader only).
     KickPartyMember {
