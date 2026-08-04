@@ -42,9 +42,12 @@ impl CustomWindow<ClientState> for PartyInviteWindow {
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
 
+        // "join testing" reads as a verb phrase, not as the name of a party, so
+        // the word "party" carries the label. Only the fallback drops it, where
+        // there is no name to qualify.
         let party_name = match self.party_name.trim().is_empty() {
             true => "a party".to_owned(),
-            false => format!("^000001{}^000000", self.party_name),
+            false => format!("the party ^000001{}^000000", self.party_name),
         };
 
         let message = match &self.inviter {
