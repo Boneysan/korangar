@@ -194,8 +194,23 @@ impl ChatWindowState {
         self.whisper_target = character_name;
     }
 
-    /// Remember who whispered us so Reply and `/r` have a target.
+    /// Remember who whispered us so Reply and `/r` have a target, and aim the
+    /// Whisper channel at them when doing so costs nothing.
+    ///
+    /// The channel is still **never** switched here -- that would redirect a
+    /// message you are part-way through typing, which is the whole reason
+    /// `last_whisper_sender` is a separate field. But leaving
+    /// `whisper_target` *empty* protects nothing: switching to the Whisper
+    /// channel by hand then landed on a blank target box, so the only
+    /// discoverable way to answer anyone was the Reply button.
+    ///
+    /// Both guards matter. An existing target is someone you chose, and a
+    /// part-typed message is one you may be about to send to them -- so this
+    /// fills in only when there is no target *and* nothing is being composed.
     pub fn note_whisper_from(&mut self, character_name: String) {
+        if self.whisper_target.is_empty() && self.current_text.is_empty() {
+            self.whisper_target = character_name.clone();
+        }
         self.last_whisper_sender = character_name;
     }
 
@@ -353,5 +368,48 @@ where
                 },
             ),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState};
+
+    /// A first whisper should leave the Whisper channel ready to answer.
+    #[test]
+    fn an_incoming_whisper_aims_an_empty_target() {
+        let mut state = ChatWindowState::default();
+        state.note_whisper_from("Bob".to_owned());
+
+        assert_eq!(state.whisper_target, "Bob");
+        assert_eq!(state.last_whisper_sender(), "Bob");
+        // Receiving must never move the channel: that would redirect whatever
+        // the player is typing right now.
+        assert_eq!(state.channel, CHANNEL_PUBLIC);
+    }
+
+    /// A target the player chose outranks whoever happens to whisper next.
+    #[test]
+    fn an_incoming_whisper_does_not_steal_a_chosen_target() {
+        let mut state = ChatWindowState::default();
+        state.start_whisper("Alice".to_owned());
+        state.note_whisper_from("Bob".to_owned());
+
+        assert_eq!(state.whisper_target, "Alice");
+        // Reply still goes to the person who actually whispered.
+        assert_eq!(state.last_whisper_sender(), "Bob");
+        assert_eq!(state.channel, CHANNEL_WHISPER);
+    }
+
+    /// A half-typed message must not acquire a recipient behind the player's
+    /// back -- the case the separate `last_whisper_sender` field exists for.
+    #[test]
+    fn an_incoming_whisper_does_not_aim_a_part_typed_message() {
+        let mut state = ChatWindowState::default();
+        state.current_text = "meet me at prontera".to_owned();
+        state.note_whisper_from("Bob".to_owned());
+
+        assert!(state.whisper_target.is_empty());
+        assert_eq!(state.last_whisper_sender(), "Bob");
     }
 }
