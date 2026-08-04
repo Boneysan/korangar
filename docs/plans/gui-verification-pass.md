@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Block A walked 2026-08-04: 18 of 19 rows PASS, N9 the only one unwalked — and it found 12 bugs, every one of them invisible to the headless suite, which stayed green throughout.** Rows 3/4/4b/5/6 and blocks B–E still open |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Block A COMPLETE 2026-08-04: 19 of 19 rows PASS, and it found 12 bugs, every one of them invisible to the headless suite, which stayed green throughout.** Rows 3/4/4b/5/6 and blocks B–E still open |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -267,7 +267,7 @@ A: @killmonster
 | N6 | Type `/party leave` while the channel is **Party** | Runs as a *command*, not sent as party chat | **PASS 2026-08-04** — ran as a command, not echoed to party chat; both seats saw the departure line |
 | N7 | Seat B whispers A, then A presses **Reply** | Channel switches to Whisper with B pre-filled. Receiving a whisper must **not** switch the channel on its own | **PASS 2026-08-04** — Reply pre-fills, and receiving does not switch the channel. **UX finding raised by the tester: replying is obtuse.** Switching to the Whisper channel by hand leaves the target field blank, so the only discoverable path to answering is the Reply button. See §Whisper UX below |
 | N8 | A invites B to a party | B's popup says **"test invites you to join …"** — the name comes from fork packet `0x0EFF`; a bare party name means the Hercules delta is missing | **PASS 2026-08-04** — read "test invites you to join testing", so `0x0EFF` and the Hercules delta are both live. **Wording fixed on the tester's point:** an unqualified party name reads as a verb phrase ("join testing"), now "join **the party** *testing*" |
-| N9 | Invite popup **Whisper** button | Aims chat at the inviter | ☐ |
+| N9 | Invite popup **Whisper** button | Aims chat at the inviter | **PASS 2026-08-04** — puts the inviter's name into the whisper target |
 | N10 | Party window as **leader**: Kick / Promote | Enabled; kicking removes the row on both seats, promoting moves the ★ | **PASS 2026-08-04** — kick removes the row; promote moves the leader marker. Note the marker is now a **gold `*`**: `★` is not in the bundled font and drew as tofu for leader *and* non-leader alike, so this row could not have been read before that fix |
 | N11 | Party window as **non-leader** | Kick / Promote greyed with "Only the party leader can do this" | **PASS 2026-08-04** |
 | N12 | Share EXP / pickup / loot toggles | Flip and **stay** flipped — they reflect the server's answer, not the click | **PASS 2026-08-04** — leader set a share and it *stayed* set, which is the real assertion (the toggle shows the server's answer, not the click); non-leader cannot click them at all |
