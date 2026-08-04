@@ -363,8 +363,35 @@ result `2` also gained a real message instead of falling to the generic
 **The general trap, worth checking on every other popup in this pass:** in this
 framework a close button is *decoration* unless something wires it up. Any window
 whose dismissal ought to tell the server needs `closable: false` and an explicit
-button. `friend_request.rs` is the same shape and is **unaudited** — worth a look
-at F3.
+button.
+
+**`friend_request.rs` audited 2026-08-04 — no lock, but a sharper bug.**
+Dismissing it is harmless: there is no `state.friending` equivalent, and
+`clif_parse_FriendsListAdd` simply overwrites `friend_req`, so a re-request
+works. `closable: true` is therefore fine here, unlike trade.
+
+What the audit *did* find is a three-player defect. `open_window` **silently
+drops** a window whose class is already open
+(`korangar-interface/src/lib.rs:423`), and `FriendRequestWindow` captures its
+requester **by value at construction**, so it can never update — while Hercules
+keeps exactly **one** pending request per player and a newer one overwrites it.
+So: A asks B, B does not answer, C asks B → **C's popup never appears and B's
+popup still names A**. Worse, `clif_parse_FriendsListReply` requires `friend_req`
+to match on *both* sides, so B pressing Accept sends **A a rejection** while C
+hears nothing at all. The popup is now replaced rather than dropped, so what is
+on screen is always what the server will accept.
+
+Note the contrast: the *trade* request popup avoids this by design — it stores
+the requester in `TradeState` and the already-open window re-renders from that,
+so a newer request updates it. **Capturing by value is the anti-pattern**; check
+any other popup built the same way.
+
+Also fixed alongside: `clif_parse_FriendsListAdd` returns on `sd->state.trading`
+before sending anything, so mid-trade the Add friend button was silently inert.
+It now says why.
+
+**Needs three characters to reproduce**, which is why two-seat testing could
+never have found it — the same limit that hid the friend-list sort bug at N18.
 
 **N19 — `HeadlessTwo []`: the bundled font cannot draw the status glyphs.** Not
 the re-render failure this row predicted. The label was built correctly the whole

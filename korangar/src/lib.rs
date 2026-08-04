@@ -4861,6 +4861,19 @@ impl Client {
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
+                    // Replace any popup already on screen rather than letting this one
+                    // be dropped. Hercules keeps exactly **one** pending request per
+                    // player (`f_sd->friend_req`, `clif_parse_FriendsListAdd`) and a
+                    // newer request overwrites it, while `open_window` discards a window
+                    // whose class is already open and `FriendRequestWindow` captures its
+                    // requester by value at construction -- so a second request was
+                    // invisible and the stale popup went on naming the first person.
+                    //
+                    // That mismatch is not merely cosmetic: `clif_parse_FriendsListReply`
+                    // requires `friend_req` to match on *both* sides, so accepting the
+                    // stale popup answers the person it names with a **rejection**, and
+                    // the newer requester never hears anything at all.
+                    self.interface.close_window_with_class(WindowClass::FriendRequest);
                     self.interface.open_window(FriendRequestWindow::new(requestee));
                 }
                 NetworkEvent::FriendRemoved { account_id, character_id } => {
@@ -7130,6 +7143,15 @@ impl Client {
                         // nothing.
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             format!("\"{character_name}\" is too long to be a character name."),
+                            MessageColor::Error,
+                        ));
+                    } else if self.client_state.follow(client_state().trade_state()).is_active() {
+                        // `clif_parse_FriendsListAdd` returns on `sd->state.trading`
+                        // before doing anything, and sends nothing back -- so mid-trade
+                        // the button is silently inert. Say so rather than let it look
+                        // broken.
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "You cannot send a friend request while trading.".to_owned(),
                             MessageColor::Error,
                         ));
                     } else if self.networking_system.add_friend(character_name.clone()).is_ok() {
