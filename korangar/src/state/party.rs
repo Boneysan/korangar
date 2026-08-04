@@ -106,12 +106,22 @@ impl PartyMemberState {
 
     /// One-line roster summary for the party window.
     pub fn summary_line(&self) -> String {
+        // Coloured to match the friend list: presence has to be readable at a
+        // glance, and three states that differ only as words are not.
+        let reset = crate::state::COLOR_RESET;
         let online = match (self.online, self.is_dead) {
-            (false, _) => "offline",
-            (true, true) => "DEAD",
-            (true, false) => "online",
+            (false, _) => format!("{}offline{reset}", crate::state::COLOR_OFFLINE),
+            (true, true) => format!("{}DEAD{reset}", crate::state::COLOR_DEAD),
+            (true, false) => format!("{}online{reset}", crate::state::COLOR_ONLINE),
         };
-        let leader = if self.leader { " ★" } else { "" };
+        // `★` (U+2605) is absent from the bundled NotoSans subset and drew as a
+        // tofu box, so the leader marker was unreadable -- and unreadable in
+        // exactly the same way for leader and non-leader. `*` is ASCII, and the
+        // gold makes it a marker rather than punctuation.
+        let leader = match self.leader {
+            true => format!(" {}*{reset}", crate::state::COLOR_LEADER),
+            false => String::new(),
+        };
         let level = self.base_level.map(|level| format!(" Lv{level}")).unwrap_or_default();
         let class = match self.class_name.is_empty() {
             true => String::new(),

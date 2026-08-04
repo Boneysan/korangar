@@ -18,6 +18,24 @@ pub mod trade;
 
 use std::cell::Cell;
 use std::collections::HashMap;
+
+/// Inline colour codes for presence indicators in roster and friend-list rows.
+///
+/// `^RRGGBB` is parsed by `ColorSpanIterator`, which every text element goes
+/// through, so these work in any label. **`^000000` and `^000001` are reserved**
+/// -- they mean reset-to-default and highlight, not black and near-black -- so
+/// never pick a colour that collides with them.
+///
+/// These exist because a *shape* difference was not enough to read at a glance:
+/// the friend list distinguished presence with `●` against `○`, which the
+/// bundled font could draw as neither, and even the working `•`/`·` pair was too
+/// subtle. Colour carries the signal; the glyph is now only a dot to hang it on.
+pub const COLOR_ONLINE: &str = "^00C000";
+pub const COLOR_OFFLINE: &str = "^B03030";
+pub const COLOR_LEADER: &str = "^FFC800";
+pub const COLOR_DEAD: &str = "^FF4040";
+/// Restores the element's default colour. Always close a coloured span with it.
+pub const COLOR_RESET: &str = "^000000";
 use std::sync::Arc;
 
 use korangar_interface::application::Application;

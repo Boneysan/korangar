@@ -47,8 +47,22 @@ impl FriendEntry {
         self.display_label = Self::format_label(&self.name, online);
     }
 
+    /// **Every glyph here must exist in `archive/data/font/NotoSans.ttf`.** The
+    /// bundled font is a 3095-codepoint subset with no `●` (U+25CF) or `○`
+    /// (U+25CB), so the original pair rendered as tofu boxes -- the friend list
+    /// read `HeadlessTwo []` and never appeared to change. `•` (U+2022) is
+    /// present and is the dot used here.
+    ///
+    /// **The distinction is carried by colour, not by shape.** Swapping in a
+    /// `•`/`·` pair rendered correctly but still read as almost no change at a
+    /// glance, so presence is a green dot against a red one.
     fn format_label(name: &str, online: bool) -> String {
-        if online { format!("{name}  ●") } else { format!("{name}  ○") }
+        let (color, state) = match online {
+            true => (crate::state::COLOR_ONLINE, "online"),
+            false => (crate::state::COLOR_OFFLINE, "offline"),
+        };
+        let reset = crate::state::COLOR_RESET;
+        format!("{name}  {color}\u{2022} {state}{reset}")
     }
 }
 
@@ -93,6 +107,14 @@ mod tests {
         assert_eq!(order, ["Bob", "Carol", "alice", "zoe"]);
     }
 
+    /// **This test cannot tell you the glyph is visible.** It passed for the
+    /// whole time the list rendered `Bob []`: the previous `●`/`○` are absent
+    /// from the bundled font, so they drew as tofu while still comparing equal
+    /// as `char`s. Only looking at the screen catches that -- which is what the
+    /// GUI pass is for. Keep the two assertions in sync with `format_label`,
+    /// and if you change the glyphs, check the new ones resolve through the
+    /// font's cmap *and* appear in the pre-baked atlas (`NotoSans.csv.gz` is
+    /// keyed by glyph id, not codepoint).
     #[test]
     fn online_glyph_updates() {
         let friend = Friend {
@@ -100,10 +122,24 @@ mod tests {
             character_id: CharacterId(2),
             name: "Bob".to_owned(),
         };
+
         let mut entry = FriendEntry::from_friend(friend, false);
-        assert!(entry.display_label.contains('○'));
+        assert!(entry.display_label.contains(crate::state::COLOR_OFFLINE));
+        assert!(entry.display_label.contains("offline"));
+        assert!(!entry.online());
+
         entry.set_online(true);
-        assert!(entry.display_label.contains('●'));
+        assert!(entry.display_label.contains(crate::state::COLOR_ONLINE));
+        assert!(entry.display_label.contains("online"));
         assert!(entry.online());
+
+        // The colour is the signal, so the two states must not share one.
+        assert_ne!(crate::state::COLOR_ONLINE, crate::state::COLOR_OFFLINE);
+        // Neither may collide with the reserved reset/highlight codes, which
+        // would silently render as default text instead of a presence colour.
+        for code in [crate::state::COLOR_ONLINE, crate::state::COLOR_OFFLINE] {
+            assert_ne!(code, "^000000", "collides with the reset code");
+            assert_ne!(code, "^000001", "collides with the highlight code");
+        }
     }
 }

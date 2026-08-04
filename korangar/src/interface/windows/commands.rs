@@ -142,7 +142,7 @@ where
                                     },
                                     button! {
                                         text: "Beat menu",
-                                        tooltip: "Open the full Act → Arc → Beat director [^000001@dmbeat^000000]",
+                                        tooltip: "Open the full Act > Arc > Beat director [^000001@dmbeat^000000]",
                                         event: InputEvent::SendMessage { text: "@dmbeat".to_string() },
                                     },
                                     button! {
