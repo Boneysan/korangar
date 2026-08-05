@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Block A COMPLETE 2026-08-04: 19 of 19 rows PASS, and it found 12 bugs, every one of them invisible to the headless suite, which stayed green throughout.** Rows 3/4/4b/5/6 and blocks B–E still open |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04.** A: 19/19, and it found 12 bugs, every one invisible to the headless suite, which stayed green throughout. B: 4/4 — N20/N21/N22 PASS and N23 a confirmed, root-caused FAIL (the cast circle is unbuilt, now a scoped feature). Row 4's premise was corrected: the 225-cell case does not exist. **Open: rows 3/4b/5/6 and blocks C–E** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -488,7 +488,7 @@ them a clean bisector.
 | # | Check | Watch for | Result |
 |---|---|---|---|
 | N20 | Cast **Auto Spell** (`SA_AUTOSPELL`) | A window lists the offered spells **by name**; picking one closes it and the server accepts | ☐ |
-| N21 | As a Wizard, cast **Ice Wall**, then try to walk through it | The client **refuses to path through** it, and the cells free up when it expires. **No headless test can cover this** — the suite does not link the `korangar` crate | ☐ |
+| N21 | As a Wizard, cast **Ice Wall**, then try to walk through it | The client **refuses to path through** it, and the cells free up when it expires. **No headless test can cover this** — the suite does not link the `korangar` crate | **PASS 2026-08-04** — the character paths *around* the wall while it stands, and walks straight through once it expires. Both halves, and the only coverage this will ever have |
 | N22 | Row 4 — Land Protector armed | Its real cap is **Lv5 = 121 cells**, not the "225" this row used to claim. Then Fire Wall facing different directions | **PASS 2026-08-04** — draws 11x11 at max level, which is correct (see row 4). Fire Wall reorients with the caster-to-cursor bearing and resolves diagonals to the diagonal shape. **Cell counts confirmed live: 3 for N/S and E/W, 5 on the diagonals**, matching `fire_wall()`'s ported shapes exactly |
 | N23 | Row 4b — cast circle | **Expected FAIL**, root-caused: nothing triggers one. Confirm rather than investigate | **CONFIRMED FAIL 2026-08-04** — no circle under the caster; **the cast bar draws**, which is the half that matters: `SkillCast` arrives and is handled, so this is a visual that was never built, not a packet that is not landing |
 
@@ -528,7 +528,7 @@ Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5.
 | **How** | Arm Storm Gust (81 cells), then Magnetic Earth / Land Protector at its real cap, Lv5 (**121 cells**) |
 | **Watch for** | Does a large area read as a *shape*, or as a solid slab? Out-of-range should tint red |
 | **Geometry** | Storm Gust `Layout: 4` → 9×9 = **81**. **Land Protector's "225" was wrong** — see below |
-| **Status** | **PASS 2026-08-04** — armed at max level it draws **11×11 = 121**, which is correct |
+| **Status** | **PASS 2026-08-04** — Land Protector draws **11×11 = 121** at max level, Storm Gust **9×9 = 81**, Lord of Vermilion **11×11 = 121**. All three correct |
 | **Result** | **PASS.** The premise was the bug, not the client |
 
 **The 225-cell case does not exist, and this row asked for it for four days.**
@@ -542,7 +542,7 @@ that stops at 5.
 carry a `Layout`). The only other one is `WZ_VERMILION` (Lord of Vermilion,
 Wizard, Lv10) — worth arming during the Wizard block, because it arrives at 121
 by a different route (a genuine max level rather than a truncated array) and
-would expose an off-by-one in the level→layout lookup that Land Protector cannot.
+would expose an off-by-one in the level→layout lookup that Land Protector cannot. **Checked 2026-08-04: Vermilion draws 11×11, so the lookup is right at a real max level too.**
 
 Same family as the trap already recorded for skill *ids*: **resolve it from
 `docs/skills.json`, and mind that `Layout` is per-level.** Note also the in-game
