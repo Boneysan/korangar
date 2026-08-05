@@ -9,27 +9,30 @@ use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 
-pub struct CharacterOverviewWindow<A, B, C> {
+pub struct CharacterOverviewWindow<A, B, C, D> {
     player_name_path: A,
-    base_level_path: B,
-    job_level_path: C,
+    player_class_name_path: B,
+    base_level_path: C,
+    job_level_path: D,
 }
 
-impl<A, B, C> CharacterOverviewWindow<A, B, C> {
-    pub fn new(player_name_path: A, base_level_path: B, job_level_path: C) -> Self {
+impl<A, B, C, D> CharacterOverviewWindow<A, B, C, D> {
+    pub fn new(player_name_path: A, player_class_name_path: B, base_level_path: C, job_level_path: D) -> Self {
         Self {
             player_name_path,
+            player_class_name_path,
             base_level_path,
             job_level_path,
         }
     }
 }
 
-impl<A, B, C> CustomWindow<ClientState> for CharacterOverviewWindow<A, B, C>
+impl<A, B, C, D> CustomWindow<ClientState> for CharacterOverviewWindow<A, B, C, D>
 where
     A: Path<ClientState, String>,
-    B: Path<ClientState, usize>,
+    B: Path<ClientState, String>,
     C: Path<ClientState, usize>,
+    D: Path<ClientState, usize>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::CharacterOverview)
@@ -57,6 +60,24 @@ where
                                 text! {
                                     text: self.player_name_path,
                                     color: Color::rgb_u8(255, 144, 13),
+                                    horizontal_alignment: HorizontalAlignment::Right { offset: 0.0, border: 3.0 },
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                            ),
+                        },
+                        // The window showed two *levels* and no class, so nothing on
+                        // screen said what the character actually was -- which cost a
+                        // testing session when `@jobchange 15` (Monk) was mistaken for
+                        // 16 (Sage) and the missing skills looked like a client bug.
+                        split! {
+                            children: (
+                                text! {
+                                    text: "Job",
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                                text! {
+                                    text: self.player_class_name_path,
+                                    color: Color::rgb_u8(255, 200, 13),
                                     horizontal_alignment: HorizontalAlignment::Right { offset: 0.0, border: 3.0 },
                                     overflow_behavior: OverflowBehavior::Shrink,
                                 },

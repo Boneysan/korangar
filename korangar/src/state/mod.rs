@@ -284,6 +284,10 @@ pub struct ClientState {
     /// The name of the active character. This information is not available
     /// while playing if we don't save it here.
     player_name: String,
+    /// The active character's class, e.g. "Sage". Resolved through `JobName`,
+    /// which needs the `Library` -- unreachable from a selector -- so it is
+    /// stored here and refreshed whenever the local player's job changes.
+    player_class_name: String,
     /// Player configured hotbar.
     hotbar: Hotbar,
     /// Player inventory.
@@ -470,6 +474,7 @@ impl ClientState {
             let sell_items = Vec::default();
             let sell_cart = Vec::default();
             let player_name = String::new();
+            let player_class_name = String::new();
             let hotbar = Hotbar::default();
             let inventory = Inventory::default();
             let storage = StorageState::default();
@@ -556,6 +561,7 @@ impl ClientState {
             sell_items,
             sell_cart,
             player_name,
+            player_class_name,
             hotbar,
             inventory,
             storage,

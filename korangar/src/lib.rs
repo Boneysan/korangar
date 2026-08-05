@@ -3621,6 +3621,8 @@ impl Client {
                     ));
 
                     *self.client_state.follow_mut(client_state().player_name()) = character_information.name;
+                    *self.client_state.follow_mut(client_state().player_class_name()) =
+                        JobName::get(&self.library, player.get_job_id()).to_string();
 
                     let entity_id = player.get_entity_id();
                     let entity_type = player.get_entity_type();
@@ -3645,6 +3647,7 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::CharacterSelection);
                     self.interface.open_window(CharacterOverviewWindow::new(
                         client_state().player_name(),
+                        client_state().player_class_name(),
                         // TODO: Check that manually asserting is fine. Technically this window should only
                         // be open while the player is selected.
                         this_player().manually_asserted().base_level(),
@@ -4670,6 +4673,12 @@ impl Client {
                         .try_follow(this_entity())
                         .is_some_and(|entity| entity.get_entity_id().0 == account_id.0);
                     if is_local_player {
+                        // Same guard as the skill tree: this event fires for any entity's
+                        // base-sprite change, including monster looks and disguises whose
+                        // ids are not player jobs at all.
+                        *self.client_state.follow_mut(client_state().player_class_name()) =
+                            JobName::get(&self.library, job_id).to_string();
+
                         let layout = self.async_loader.request_skill_tree_layout_load(job_id, client_tick);
                         *self.client_state.follow_mut(client_state().skill_tree_window().selected_tab()) =
                             layout.tabs.len().saturating_sub(1);
@@ -6177,6 +6186,7 @@ impl Client {
                             true => self.interface.close_window_with_class(WindowClass::CharacterOverview),
                             false => self.interface.open_window(CharacterOverviewWindow::new(
                                 client_state().player_name(),
+                                client_state().player_class_name(),
                                 this_player().manually_asserted().base_level(),
                                 this_player().manually_asserted().job_level(),
                             )),
