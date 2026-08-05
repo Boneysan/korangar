@@ -490,7 +490,7 @@ them a clean bisector.
 | N20 | Cast **Auto Spell** (`SA_AUTOSPELL`) | A window lists the offered spells **by name**; picking one closes it and the server accepts | ☐ |
 | N21 | As a Wizard, cast **Ice Wall**, then try to walk through it | The client **refuses to path through** it, and the cells free up when it expires. **No headless test can cover this** — the suite does not link the `korangar` crate | ☐ |
 | N22 | Row 4 — Land Protector armed | Its real cap is **Lv5 = 121 cells**, not the "225" this row used to claim. Then Fire Wall facing different directions | **PASS 2026-08-04** — draws 11x11 at max level, which is correct (see row 4). Fire Wall reorients with the caster-to-cursor bearing and resolves diagonals to the diagonal shape. **Cell counts confirmed live: 3 for N/S and E/W, 5 on the diagonals**, matching `fire_wall()`'s ported shapes exactly |
-| N23 | Row 4b — cast circle | **Expected FAIL**, root-caused: nothing triggers one. Confirm rather than investigate | ☐ |
+| N23 | Row 4b — cast circle | **Expected FAIL**, root-caused: nothing triggers one. Confirm rather than investigate | **CONFIRMED FAIL 2026-08-04** — no circle under the caster; **the cast bar draws**, which is the half that matters: `SkillCast` arrives and is handled, so this is a visual that was never built, not a packet that is not landing |
 
 #### Block C — instance and NPC refine
 
@@ -555,7 +555,7 @@ name is **"Magnetic Earth"**, not Land Protector.
 | **How** | Cast anything with a cast bar and watch the ground at the caster's feet. `Lockon` plus six `Beginspell` recipes exist in the recipe tables |
 | **Watch for** | Whether they read as the original client's cast circles at all |
 | **Expectation** | These are **procedural placeholders over generic ring textures**. CLAUDE.md's own note says to expect a rebuild, not a tick — so a "fail" here is the expected outcome and the useful output is a description of what is wrong |
-| **Result** | **FAIL as expected, but for a sharper reason than "the placeholder looks wrong": nothing triggers a cast circle at all.** 2026-08-02, both seats, Sage Fire Bolt. The **cast bar draws correctly** on the caster — so `SkillCast` arrives and is handled — and the ground at the caster's feet stays empty on both clients |
+| **Result** | **FAIL as expected, but for a sharper reason than "the placeholder looks wrong": nothing triggers a cast circle at all.** Re-confirmed 2026-08-04 on a Sage. Originally 2026-08-02, both seats, Sage Fire Bolt. The **cast bar draws correctly** on the caster — so `SkillCast` arrives and is handled — and the ground at the caster's feet stays empty on both clients |
 
 #### Why there is no circle — the trigger does not exist
 
