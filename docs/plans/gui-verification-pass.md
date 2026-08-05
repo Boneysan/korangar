@@ -489,7 +489,7 @@ them a clean bisector.
 |---|---|---|---|
 | N20 | Cast **Auto Spell** (`SA_AUTOSPELL`) | A window lists the offered spells **by name**; picking one closes it and the server accepts | ☐ |
 | N21 | As a Wizard, cast **Ice Wall**, then try to walk through it | The client **refuses to path through** it, and the cells free up when it expires. **No headless test can cover this** — the suite does not link the `korangar` crate | ☐ |
-| N22 | Row 4 — Land Protector Lv10 armed | 225 cells: shape or solid slab? Then Fire Wall facing different directions | ☐ |
+| N22 | Row 4 — Land Protector armed | Its real cap is **Lv5 = 121 cells**, not the "225" this row used to claim. Then Fire Wall facing different directions | **PASS 2026-08-04** — draws 11x11 at max level, which is correct (see row 4). Fire Wall reorients with the caster-to-cursor bearing and resolves diagonals to the diagonal shape. **Cell counts confirmed live: 3 for N/S and E/W, 5 on the diagonals**, matching `fire_wall()`'s ported shapes exactly |
 | N23 | Row 4b — cast circle | **Expected FAIL**, root-caused: nothing triggers one. Confirm rather than investigate | ☐ |
 
 #### Block C — instance and NPC refine
