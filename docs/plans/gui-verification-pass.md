@@ -103,9 +103,10 @@ has the Archer skills" — true when written, false a day later.
 | **Result** | **Row 10 PASS and row 11 PASS**, 2026-08-02. `test` as a Sage (`@jobchange 16` + `@allskill`) on prt_fild08: Fire Bolt's effect reached `HeadlessTwo` identically (row 10), and `SA_VOLCANO` clicked on bare ground was visible from the observer seat (row 11). The 2026-07-31 row-11 attempt used an INVALID probe, see below, and was never a result either way. **This closes the observer-view checklist** — but row 10 exposed a new gap it was not testing for: see *The observer never sees a cast* below. |
 
 **One job change covers four rows.** `@jobchange 16` + `@allskill` gives Fire Bolt
-(row 10), the three Sage fields (row 11), Land Protector Lv10 = the 225-cell case
-(row 4), Fire Wall (the direction-dependent wall) and a cast bar (row 4b). Sage
-does *not* have Storm Gust — that needs `@jobchange 9`.
+(row 10), the three Sage fields (row 11), Land Protector — **max level 5, 121
+cells, not the "225" row 4 used to claim** — Fire Wall (the direction-dependent
+wall) and a cast bar (row 4b). Sage does *not* have Storm Gust; that needs
+`@jobchange 9`, which also brings Lord of Vermilion, the other 121-cell skill.
 
 **Row 11 cannot be fired with `@useskill`.** For a ground skill `@useskill` casts
 at the *target player's cell* (`atcommand.c:5960`, `unit->skilluse_pos(bl,
@@ -524,11 +525,28 @@ Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5.
 
 | | |
 |---|---|
-| **How** | Arm Storm Gust (81 cells), then Land Protector Lv10 (**225 cells**) |
+| **How** | Arm Storm Gust (81 cells), then Magnetic Earth / Land Protector at its real cap, Lv5 (**121 cells**) |
 | **Watch for** | Does a large area read as a *shape*, or as a solid slab? Out-of-range should tint red |
-| **Geometry** | Verified against `skill_db` 2026-07-31: Storm Gust `Layout: 4` → 9×9 = **81**; Land Protector Lv10 splash **7** → 15×15 = **225** |
-| **Status** | **PARTIAL** — it draws and the red tint works. The 225-cell question is the open one |
-| **Result** | |
+| **Geometry** | Storm Gust `Layout: 4` → 9×9 = **81**. **Land Protector's "225" was wrong** — see below |
+| **Status** | **PASS 2026-08-04** — armed at max level it draws **11×11 = 121**, which is correct |
+| **Result** | **PASS.** The premise was the bug, not the client |
+
+**The 225-cell case does not exist, and this row asked for it for four days.**
+`SA_LANDPROTECTOR` has **`MaxLevel: 5`**, and its `Layout` is
+`[3,3,4,4,5,5,6,6,7,7]` — an array **indexed by level**, so its value at max
+level is `levels[MaxLevel-1]` = **5** → 11×11 = 121. The original row read the
+array's *last* entry (7 → 15×15 = 225), which is the level-10 slot of a skill
+that stops at 5.
+
+**121 is the largest square any skill in `docs/skills.json` reaches** (45 skills
+carry a `Layout`). The only other one is `WZ_VERMILION` (Lord of Vermilion,
+Wizard, Lv10) — worth arming during the Wizard block, because it arrives at 121
+by a different route (a genuine max level rather than a truncated array) and
+would expose an off-by-one in the level→layout lookup that Land Protector cannot.
+
+Same family as the trap already recorded for skill *ids*: **resolve it from
+`docs/skills.json`, and mind that `Layout` is per-level.** Note also the in-game
+name is **"Magnetic Earth"**, not Land Protector.
 
 ### 4b. Cast circles — never looked at, expect a rebuild
 
