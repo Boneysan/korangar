@@ -474,9 +474,19 @@ impl AsyncLoader {
 
                 if let Some(id) = completed_id {
                     match pending_loads.remove(&id).unwrap() {
-                        LoadStatus::Failed(_error) => {
+                        LoadStatus::Failed(error) => {
+                            // **Never silent.** This was reported only under the
+                            // `debug` feature, so in a release build a failed load
+                            // vanished: a failed *map* load leaves a black world
+                            // with the interface still compositing over it and no
+                            // line anywhere to say why. The client is not
+                            // recoverable from that state either -- no map means no
+                            // input handling, so chat cannot even be used to warp
+                            // out, and the process has to be killed. Cost is one
+                            // line per failed load, not per frame.
+                            eprintln!("[async-load] {id:?} failed: {error:?}");
                             #[cfg(feature = "debug")]
-                            print_debug!("Async load error: {:?}", _error);
+                            print_debug!("Async load error: {:?}", error);
                             None
                         }
                         LoadStatus::Completed(resource) => Some((id, resource)),

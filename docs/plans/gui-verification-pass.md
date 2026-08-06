@@ -612,8 +612,60 @@ them a clean bisector.
 
 | # | Check | Watch for | Result |
 |---|---|---|---|
-| N24 | In a party, `@dminstance start prontera 156 191` | Instance window opens naming it; `@dminstance end` closes it | ☐ |
+| N24 | In a party, `@dminstance start prontera 156 191` | Instance window opens naming it; `@dminstance end` closes it | **FAIL 2026-08-05**, root-caused, and **not primarily a client bug** — the instance cannot be entered at all for a map called `prontera`. Both seats went to a black screen with the interface still drawn and **no input**, so the only way out was killing the process. See §Instance map names below |
 | N25 | Refine equipment at a **blacksmith NPC** | Result line names the item and the new level. This is `0x0188`, a *different* path from the Weapon Refine skill | ☐ |
+
+#### Instance map names — why N24 cannot pass on `prontera`, 2026-08-05
+
+**Hercules truncates the instanced map's name, and it is an upstream bug that
+breaks most maps.** `instance.c:240`:
+
+```c
+snprintf(map->list[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name);
+```
+
+`MAP_NAME_LENGTH` is `11 + 1` (`mmo.h:343`), so the buffer holds **11**
+characters. The `NNN#` prefix takes four, leaving **seven for the map name**.
+`000#prontera` needs twelve and is clipped to **`000#pronter`**;
+`mapindex_getmapname_ext`'s `sscanf(string, "%*[^#]%*[#]%15s", buf)` then strips
+the prefix and sends the client **`pronter.gat`** — a map that does not exist in
+any GRF.
+
+**The rule worth remembering: a map name longer than seven characters cannot be
+instanced this way.** `prontera` (8) fails, and so would `prt_fild08` (10) →
+`prt_fil`. An official client fails identically; nothing here is korangar's
+fault. Try a short name (`izlude`, 6) to exercise the instance *window*, which is
+what this row was written to test.
+
+**A stuck instance survives every client restart.** Instance 0 was never
+destroyed (the 4h timeout was still running, and `@dminstance end` needs a
+working client), so *every* subsequent login was pushed back onto the phantom
+map — including logins whose `char.last_map` **and** `save_map` both read a clean
+`prontera`. The DB is not evidence about a live session here. Only a server
+restart cleared it.
+
+**Clean the `$dm_inst_*` records after any instance that ends badly.**
+`map_reg_num_db` held `$dm_inst_12`…`$dm_inst_19` from suite runs that never
+ended, and `DM_InstanceStart` refuses while the record is non-zero, so those
+party ids were permanently barred from hosting one. Cleared 2026-08-05.
+
+#### The client hid all of it — a failed load was silent *and* unrecoverable
+
+`loaders/async/mod.rs:477` reported a failed asynchronous load **only under
+`#[cfg(feature = "debug")]`** — the `_error` binding says so outright — so in a
+release build the error was dropped. A failed *map* load therefore produced a
+black world with the interface still compositing over it and not one line
+anywhere. Worse, with no map there is **no input handling**: chat cannot be used
+to warp out, and the process has to be killed. Now reported unconditionally, one
+line per failed load.
+
+**Instrument the boundary before reasoning inward from it.** The investigation
+audited the packet field, the string decoder, the trim chain and
+`resolve_map_name` — each individually correct, so the audit kept coming up
+empty. One `eprintln` of the wire name settled it instantly:
+`[map-change] wire="pronter"`, arriving already truncated. **Same lesson the
+2026-08-02 cast-bar hunt recorded** ("arrives and isn't drawn" vs "never
+arrives") and it was not applied.
 
 #### Block D — Priest
 
