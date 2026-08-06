@@ -6695,7 +6695,13 @@ impl Client {
                                 let _ = self.networking_system.create_party(arguments);
                             }
                             "invite" if !arguments.is_empty() => {
-                                if self.networking_system.invite_to_party(arguments).is_ok() {
+                                if !self.client_state.follow(client_state().party_state()).in_party() {
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        "You need to be in a party to invite someone. Open the party window, name one and press Create."
+                                            .to_owned(),
+                                        MessageColor::Error,
+                                    ));
+                                } else if self.networking_system.invite_to_party(arguments).is_ok() {
                                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                         format!("Party invite sent to {arguments}; waiting for an answer\u{2026}"),
                                         MessageColor::Information,
@@ -7226,7 +7232,16 @@ impl Client {
                     let _ = self.networking_system.create_party(&party_name);
                 }
                 InputEvent::InviteToParty { character_name } => {
-                    if self.networking_system.invite_to_party(&character_name).is_ok() {
+                    // `is_ok()` below only means the packet went out. The server
+                    // drops an invite from someone who is not in a party without
+                    // replying (`party.c:382`), so without this check the client
+                    // promises an answer that can never arrive.
+                    if !self.client_state.follow(client_state().party_state()).in_party() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "You need to be in a party to invite someone. Open the party window, name one and press Create.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else if self.networking_system.invite_to_party(&character_name).is_ok() {
                         // The party window's status line already says this, but it is
                         // *transient* -- it exists only between sending and the answer
                         // arriving, and only in that one window. If the invitee accepts

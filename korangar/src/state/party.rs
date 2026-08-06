@@ -254,6 +254,7 @@ impl PartyState {
         &self.members
     }
 
+
     pub fn display_text(&self) -> &str {
         &self.display_text
     }
@@ -269,6 +270,12 @@ impl PartyState {
     /// True once we are actually in a party. Membership, not the party name —
     /// the name arrives with the roster and is empty for a party of one until
     /// the first member packet lands.
+    /// Also gates inviting, because Hercules requires the *inviter* to already
+    /// be in a party and refuses **silently** when they are not: `party.c:382`
+    /// returns a bare `0` if `party->search(sd->status.party_id)` finds nothing,
+    /// and it is the only failure path in `party_invite` that sends the client
+    /// nothing at all — every branch below it answers with `party_inviteack` or
+    /// a message. Sending anyway leaves no reply to key any feedback off.
     pub fn in_party(&self) -> bool {
         !self.members.is_empty()
     }

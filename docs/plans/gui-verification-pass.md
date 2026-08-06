@@ -477,6 +477,39 @@ what was offered.
 Guarded by `our_offer_records_the_slot_and_the_amount_actually_offered`, because
 the failure is **silent** — no log line, on either side, in any of it.
 
+#### A party invite from outside a party promised an answer that never comes — 2026-08-05
+
+Found off-checklist, while *setting up* for N24: the tester clicked a player and
+pressed **Invite**, and the party window said *"Invited HeadlessTwo; waiting for
+an answer…"* while the other seat got nothing. N8 passes and still does — it
+invites **from within a party**, which is the only case the checklist covers.
+
+**Hercules requires the inviter to already be in a party, and refuses silently.**
+`party.c:382` returns a bare `0` when `party->search(sd->status.party_id)` finds
+nothing. It is the **only** failure path in `party_invite` that sends the client
+nothing at all: every branch below it answers with `clif->party_inviteack`
+(party full, no such player, target already engaged, target offline) or a
+`clif->message` (not the party leader). So there was no reply to react to, and
+none was coming.
+
+**The client read a successful socket write as acceptance.**
+`invite_to_party(..).is_ok()` means the packet went out, nothing more, and both
+invite paths — the target window's button and `/party invite` — printed the
+"waiting for an answer" line off it. Worse, `rebuild_status_text` matches the
+outgoing-invite arm **before** the party-less arm (`party.rs:491-497`), so the
+accurate *"Not in a party."* status was overwritten by the false one.
+
+**Same anti-pattern as N16's zeny: showing the click instead of the server's
+answer.** N12's share toggles are the model — they render what the server
+confirmed, which is exactly why that row passed. Both invite paths now check
+`in_party()` first and say so. Fix live-verified 2026-08-05.
+
+**Setup lesson: `@jobchange`-style state is not the only thing that drifts.**
+`test` had `party_id = 0` because N6 deliberately tested `/party leave` and
+nothing rejoined it. Check `char.party_id` before blaming an invite, the same way
+the doc already says to check the `inventory.equip` column before blaming a
+stance.
+
 #### Whisper UX — raised by the tester at N7, fixed 2026-08-04
 
 N7 passes on its own terms, but replying was *obtuse*: switching to the Whisper
