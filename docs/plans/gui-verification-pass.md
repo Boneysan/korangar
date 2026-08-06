@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04.** A: 19/19, and it found 12 bugs, every one invisible to the headless suite, which stayed green throughout. B: 4/4 — N20/N21/N22 PASS and N23 a confirmed, root-caused FAIL (the cast circle is unbuilt, now a scoped feature). Row 4's premise was corrected: the 225-cell case does not exist. **2026-08-05: N15 closed PASS** after fixing a phantom-item bug the row was not looking for, plus a latent partial-stack bug in the same path; its button sub-check was another premise error. **Open: rows 3/4b/5, row 6's refine half, N19/N24/N25** |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Open: blocks D and E — rows 3, 4b and 5** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -613,7 +613,28 @@ them a clean bisector.
 | # | Check | Watch for | Result |
 |---|---|---|---|
 | N24 | In a party, `@dminstance start prontera 156 191` | Instance window opens naming it; `@dminstance end` closes it | **FAIL 2026-08-05**, root-caused, and **not primarily a client bug** — the instance cannot be entered at all for a map called `prontera`. Both seats went to a black screen with the interface still drawn and **no input**, so the only way out was killing the process. See §Instance map names below |
-| N25 | Refine equipment at a **blacksmith NPC** | Result line names the item and the new level. This is `0x0188`, a *different* path from the Weapon Refine skill | ☐ |
+| N25 | Refine equipment at a **blacksmith NPC** | Result line names the item and the new level. This is `0x0188`, a *different* path from the Weapon Refine skill | **PASS 2026-08-05** — Cotton Shirt refined to **+1** at Hollgrehenn, named with its level rather than an id. Confirmed server-side in `picklog`. **This closes row 6.** Two setup facts the row omitted, both of which cost time — see below |
+
+#### N25 — the row omitted its two preconditions, 2026-08-05
+
+**The classic refiner only offers what you are *wearing*.** `refinemain` builds
+its menu from `getequipisequiped()` over the ten equip slots
+(`npc/merchants/refine.txt:602-611`); with nothing equipped it prints *"I don't
+think I can refine any items you have..."*, which reads like a client or item
+problem and is neither. Equip the piece first. Same family as the 2026-08-02
+note that a job change does not give you gear — **check the `equip` column
+before believing a gear-shaped symptom.** Armor takes Elunium (985); weapons take
+Phracon / Emveretarcon / Oridecon by weapon level.
+
+**`picklog` is the timely source; `inventory` is not.** After a successful
+refine the `inventory` table still read `refine = 0` with the Elunium untouched,
+because it is only written on autosave, and an unrelated `inventory save
+complete` line in the server log made the stale read look fresh. `picklog`
+carries the truth immediately — the refine appears as three rows (`985 -1`,
+`2301 -1 refine 0`, `2301 +1 refine 1`). **Twice in one session a stale
+`inventory`/`char` read produced a wrong conclusion** (the other was reading
+`char.last_map` for a logged-in character during the N24 hunt). For anything
+about a live session, use `picklog`, the server log, or the client itself.
 
 #### N19 passed after being predicted to fail twice — 2026-08-05
 

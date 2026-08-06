@@ -98,6 +98,25 @@ Each is a case where the server already sends everything needed.
       (server asking the client to open a UI), `PersonalInformationPacket` (exp /
       drop rate modifiers). Almost certainly not: clan, mail, market, achievement,
       reputation, pincode, character-slot paging
+- [ ] **Script colour codes are unreadable on the dark dialog — 8,314 uses.**
+      Found at N25 (2026-08-05): Hollgrehenn names the required ore in
+      `^003366` (`refine.txt:675`), RGB (0,51,102), which is invisible on
+      korangar's dialog. **The scripts are not wrong** — they were authored for
+      the official client's light parchment dialog, where dark text is correct.
+      `color_span_iterator.rs:54-58` applies each code verbatim; only `^000000`
+      (reset) and `^000001` (highlight) are remapped to theme colours.
+      Measured over `npc/`: **361 distinct codes, 30,226 uses; 145 of them are
+      dark (luma < 80), accounting for 8,314 uses** — `^ff0000` 3,041,
+      `^0000ff` 1,388, `^3131ff` 886, `^333333` 562. This is most NPC dialogue in
+      the game, not one NPC.
+      Three ways out, and it is **a decision, not a task**: (a) give the dialog a
+      light background, most faithful and makes every script read as intended,
+      but changes the look of a DM-facing UI; (b) **clamp each script colour to a
+      minimum contrast against the actual background**, preserving hue so red
+      stays red — theme-independent and survives a later theme change, and the
+      recommended one; (c) a per-code remap table, brittle across 361 codes.
+      Note (b) needs the background colour threaded into `ColorSpanIterator`,
+      which today receives only `default_color` and `highlight_color`.
 - [ ] **DM instances are unusable for most maps — upstream Hercules limit.**
       Found at N24 (2026-08-05). `instance.c:240` formats the instanced map's name
       into `MAP_NAME_LENGTH` (`11 + 1`, `mmo.h:343`), and the `NNN#` prefix takes
