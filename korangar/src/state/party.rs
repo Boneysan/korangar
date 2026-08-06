@@ -479,12 +479,27 @@ impl PartyState {
     }
 
     pub fn remove_member(&mut self, account_id: AccountId) {
-        self.members.retain(|member| member.account_id != account_id);
+        // **Our own departure arrives as a removal of us.** Hercules reports a
+        // withdrawal to the whole party including the leaver -- `clif_party_withdraw`
+        // sends to `PARTY` at `party.c:632`, *before* the member is zeroed on the
+        // two lines after it -- so retaining the other rows here left the roster
+        // populated for someone who is no longer in a party at all. `in_party()`
+        // then stayed true, and every later invite was sent to a server that
+        // refuses it silently (`party.c:382`), reporting "waiting for an answer"
+        // for an answer that could never come.
+        match self.is_local(account_id) {
+            true => self.members.clear(),
+            false => self.members.retain(|member| member.account_id != account_id),
+        }
 
         if self.members.is_empty() {
             self.party_name.clear();
             self.share_pickup = false;
             self.share_loot = false;
+            // Same staleness, one row down: a share rule left over from the party
+            // we just left would render as this party-less character's own state.
+            self.share_experience = false;
+            self.outgoing_invite = None;
         }
         self.rebuild_display_text();
     }
@@ -553,6 +568,53 @@ mod tests {
             job_id: JobId(1),
             base_level: 50,
         }
+    }
+
+    /// Leaving a party arrives as a removal of *us*, so the whole roster has to
+    /// go. Retaining the other rows left `in_party()` true for a character with
+    /// `party_id = 0` server-side, and the client then sent invites that
+    /// `party.c:382` refuses **silently** — reporting "waiting for an answer"
+    /// for an answer that could never come. Nothing logs any of it.
+    #[test]
+    fn leaving_a_party_clears_the_whole_roster() {
+        let mut state = PartyState::default();
+        state.set_local_account_id(AccountId(11));
+
+        let us = PartyMember {
+            account_id: AccountId(11),
+            player_name: "test".to_owned(),
+            ..sample_member("test", true)
+        };
+        let them = PartyMember {
+            account_id: AccountId(22),
+            player_name: "HeadlessTwo".to_owned(),
+            ..sample_member("HeadlessTwo", true)
+        };
+        state.set_roster("Testing".to_owned(), vec![us, them], |_| String::new());
+        assert!(state.in_party());
+
+        // Someone else leaving must only drop their row.
+        state.remove_member(AccountId(22));
+        assert!(state.in_party(), "we are still in the party after they leave");
+
+        // Us leaving must drop everything, however many others were listed.
+        state.set_roster(
+            "Testing".to_owned(),
+            vec![
+                PartyMember {
+                    account_id: AccountId(11),
+                    ..sample_member("test", true)
+                },
+                PartyMember {
+                    account_id: AccountId(22),
+                    ..sample_member("HeadlessTwo", true)
+                },
+            ],
+            |_| String::new(),
+        );
+        state.remove_member(AccountId(11));
+        assert!(!state.in_party(), "leaving must not leave a roster behind to invite from");
+        assert!(state.status_text().contains("Not in a party"));
     }
 
     #[test]

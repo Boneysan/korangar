@@ -510,6 +510,37 @@ nothing rejoined it. Check `char.party_id` before blaming an invite, the same wa
 the doc already says to check the `inventory.equip` column before blaming a
 stance.
 
+**Then the fix appeared not to work, which found the real bug underneath it.**
+Re-testing produced the false "waiting for an answer" again — from a client that
+had just been told it was not in a party. Ground truth said otherwise twice over:
+both characters at `party_id = 0` **and an empty `party` table**.
+
+**Leaving a party arrives as a removal of yourself, and only your own row was
+dropped.** `clif_party_withdraw` sends to `PARTY` at `party.c:632` — deliberately
+*before* the member is zeroed on the two lines after it — so the leaver receives
+their own `ZC_DELETE_MEMBER_FROM_GROUP`. `remove_member` retained every other
+row, so the roster stayed populated for a character in no party, `in_party()`
+stayed true, and the new guard waved the invite straight through to the silent
+refusal. Our own removal now clears the roster outright, keyed off the existing
+`is_local()`. Stale `share_experience` and `outgoing_invite` go with it — the
+same staleness one row down, where a share rule from the party you just left
+renders as your own state.
+
+**Two lessons, and the second is the expensive one.** A guard is only as good as
+the state it reads: `in_party()` was the right question asked of a lie. And **a
+fix that appears not to work is evidence, not a mistake to undo** — the second
+bug was only reachable *because* the first was fixed, and reverting would have
+buried it.
+
+**All nine party scenarios pass, and passed before the fix.** They cannot see
+this: the suite does not link the crate `PartyState` lives in. Third bug in one
+day that was structurally invisible to it.
+
+Fix live-verified 2026-08-05, along with a cycle the checklist does not ask for
+and should: **join → leave → re-invite → reject → re-invite → accept**, all of
+which now behave. N8 re-verified in passing ("HeadlessTwo invites you to join the
+party Testing"), so fork packet `0x0EFF` and its Hercules delta are both alive.
+
 #### Whisper UX — raised by the tester at N7, fixed 2026-08-04
 
 N7 passes on its own terms, but replying was *obtuse*: switching to the Whisper
