@@ -50,6 +50,28 @@ Each is a case where the server already sends everything needed.
       `EffectId`s the server sends only from quest scripts. In the original client
       this is client-side and keyed on the skill's element; take the mapping from
       roBrowserLegacy's tables, never guess
+- [ ] **Refinery UI — refine from the inventory instead of only what you wear.**
+      Raised by the tester at N25 (2026-08-05) and it is the *modern* behaviour,
+      not a fork idea: Gravity replaced the refiner NPCs with a refinery window in
+      Nov 2016. The pre-2016 script we use builds its menu from
+      `getequipisequiped()` only (`npc/merchants/refine.txt:602-611`), which is
+      why an unequipped item produces *"I don't think I can refine any items you
+      have"*. **Hercules already implements the modern path** — `openrefineryui()`
+      is called from that same script behind `features/replace_refine_npcs`, and
+      both it and `enable_refinery_ui` need PACKETVER ≥ 2016-11-30 (we build
+      **20220406**, so the server side is ready today).
+      Four packets, currently present **only in the generated length table**
+      (`lengths_20220406.rs:1349-1352`), so they are consumed by the length
+      fallback and produce no `NetworkEvent`:
+      `0x0AA0` `ZC_OPEN_REFINING_UI`, `0x0AA1` `CZ_REFINING_SELECT_ITEM`,
+      `0x0AA2` `ZC_REFINING_MATERIAL_LIST` (variable length), `0x0AA3`
+      `CZ_REQ_REFINING`. Cost is comparable to the trade window: four packets plus
+      a window listing refinable inventory items with ore cost and odds.
+      **THE TRAP — do not flip the flag first.** With
+      `replace_refine_npcs: true` and no client support, `openrefineryui()`
+      returns true and the script immediately `close()`s, so the NPC greets you
+      and stops. Refining would go from equipped-only to **impossible**, with no
+      fallback dialog. Client first, flag second.
 - [ ] **Spirit spheres** — stored on `Common` from `ZC_SPIRITS`, never drawn.
       Sprite work
 - [ ] **`EntityEffectState` (0x028A)** — modelled, handled as `{}`. May drive
@@ -76,6 +98,24 @@ Each is a case where the server already sends everything needed.
       (server asking the client to open a UI), `PersonalInformationPacket` (exp /
       drop rate modifiers). Almost certainly not: clan, mail, market, achievement,
       reputation, pincode, character-slot paging
+- [ ] **DM instances are unusable for most maps — upstream Hercules limit.**
+      Found at N24 (2026-08-05). `instance.c:240` formats the instanced map's name
+      into `MAP_NAME_LENGTH` (`11 + 1`, `mmo.h:343`), and the `NNN#` prefix takes
+      four of the eleven, leaving **seven characters for the map name**.
+      `000#prontera` needs twelve and is clipped to `000#pronter`;
+      `mapindex_getmapname_ext` then strips the prefix and sends the client
+      `pronter.gat`, which exists in no GRF. **Any map name longer than seven
+      characters fails**, `prt_fild08` included — an official client fails
+      identically, so this is not korangar's bug and not fixable client-side.
+      Options are a Hercules delta widening the buffer (touches `mmo.h`, so wide
+      blast radius and it changes a wire-visible constant) or restricting DM
+      instances to short-named maps. **Decide before building DM instance
+      content**, since `@dminstance` is campaign tooling per CLAUDE.md rule 1.
+      Two operational notes: a stuck instance survives client restarts and
+      re-warps every login back onto the phantom map until the **server** is
+      restarted, and `$dm_inst_<party>` records in `map_reg_num_db` outlive dead
+      parties and permanently bar a recycled party id from hosting one (cleared
+      2026-08-05).
 - [ ] **~131 `TODO`/`FIXME`** across client + networking, mostly upstream cosmetic
       ("put this in the theme"). Worth one sweep to separate ours from upstream's
 
