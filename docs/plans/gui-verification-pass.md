@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04.** A: 19/19, and it found 12 bugs, every one invisible to the headless suite, which stayed green throughout. B: 4/4 — N20/N21/N22 PASS and N23 a confirmed, root-caused FAIL (the cast circle is unbuilt, now a scoped feature). Row 4's premise was corrected: the 225-cell case does not exist. **Open: rows 3/4b/5/6 and blocks C–E** |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04.** A: 19/19, and it found 12 bugs, every one invisible to the headless suite, which stayed green throughout. B: 4/4 — N20/N21/N22 PASS and N23 a confirmed, root-caused FAIL (the cast circle is unbuilt, now a scoped feature). Row 4's premise was corrected: the 225-cell case does not exist. **2026-08-05: N15 closed PASS** after fixing a phantom-item bug the row was not looking for, plus a latent partial-stack bug in the same path; its button sub-check was another premise error. **Open: rows 3/4b/5, row 6's refine half, N19/N24/N25** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -274,7 +274,7 @@ A: @killmonster
 | N12 | Share EXP / pickup / loot toggles | Flip and **stay** flipped — they reflect the server's answer, not the click | **PASS 2026-08-04** — leader set a share and it *stayed* set, which is the real assertion (the toggle shows the server's answer, not the click); non-leader cannot click them at all |
 | N13 | Roster rows | Show **class name** and, when a member dies (`@die` on B), read `DEAD` | **PASS 2026-08-04** — rows read name, level and class ("Champion", "Gypsy"), and `DEAD` after `@die`. The class half was broken by the N1 empty-table bug and could never have passed before it |
 | N14 | A requests a trade with B | B's popup names **A and their level**, and offers Whisper | **PASS 2026-08-04** — "test (Lv99) wants to trade with you", and the popup now exits via Reject rather than an X |
-| N15 | In the trade, **right-click an inventory item → Add to trade** | The item appears on **B's** side of the window. This is the path the 0x0B42 fix restored | **PARTIAL 2026-08-04** — the menu is correct during a live trade (both trade entries present and enabled). First reported as "no trade option", which was the stuck-`state.trading` session: the trade never really opened, so `is_active()` was false and both entries sat greyed. **The item-actually-crosses half is still untested.** Separately: the tester counted **six** buttons where the window defines **seven** — `Cancel` may be clipped by the fixed 280×220 in `cache.rs:133` |
+| N15 | In the trade, **right-click an inventory item → Add to trade** | The item appears on **B's** side of the window. This is the path the 0x0B42 fix restored | **PASS 2026-08-05** (after a fix, live-verified: the Axe left `HeadlessTwo`'s inventory on screen and the DB agreed). The item crosses and is **named** ("Axe x1"), closing row 6's trade half. Originally FAILed on a bug this row was not looking for: **the giver's inventory never updated** — see §The server never tells you an item left. The button sub-check was a **premise error, not a client bug**: the window defines **four** buttons (`trade.rs:96-112`) and all four render; the "seven" came from counting the seven `elements:` entries, three of which are two texts and a text box, so the `cache.rs:133` clipping theory is dead |
 | N16 | Trade zeny field → **Add zeny** | Amount appears in the offer; non-numeric input is ignored, not an error | **PASS 2026-08-04** (after a fix, re-verified live). Originally FAILed: zeny transferred but never displayed — `set_our_zeny` was called only from the `/trade zeny` *chat command*, never from the window's button. Not fixable on the round trip — `ZC_ACK_ADD_EXCHANGE_ITEM` carries an index and a result but **no amount**, and its zeny index is the wire's 0 (`InventoryIndex(65534)` after the −2 decode), matching no inventory slot |
 | N17 | A sends B a friend request | B's popup offers **Whisper** alongside Accept / Reject | **PASS 2026-08-04** — popup appears as specified. Prompted the sender-feedback work: the *sender* saw nothing at all, see §Findings |
 | N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | **PASS 2026-08-04** — rows correct. Ordering **cannot be observed with two seats**, so it was verified in code at the tester's request, which found a real gap: `FriendAdded` pushed without re-sorting, so a newly accepted friend sat at the bottom below offline entries until a relog. Fixed; `SetFriendList` and `FriendOnlineStatus` already sorted |
@@ -424,6 +424,58 @@ arrow. (`…` U+2026, used by the "waiting for an answer…" lines, checks out.)
 **The `online_glyph_updates` unit test passed throughout.** It compares `char`s,
 which are equal whether or not anything can draw them. A green test asserting a
 glyph proves nothing about visibility — only the GUI pass catches this.
+
+#### The server never tells you an item left — N15, 2026-08-05
+
+**A completed trade left a phantom copy in the giver's inventory forever.** The
+item transferred correctly and the receiver's client was right; only the giver's
+display was stale, and nothing corrected it short of a relog.
+
+**The cause is the opposite of the 0x0B42 bug, and that is the lesson.** That one
+was a packet we failed to model. This one is a packet the server **deliberately
+never sends**: `trade.c:600` deletes the traded item with `type = 1`, and
+`pc.c:4960` reads that flag as *suppress the client notification* —
+
+```c
+if(!(type&1))
+    clif->delitem(sd,n,amount,reason);
+```
+
+Both `0x07FA` and `0x00AF` are modelled and registered client-side
+(`version_20220406.rs:892`, `:909`) and both are correct; they simply never
+arrive for your own side. The official client removes its offered items locally,
+because it already knows what it put in the window, and so must this one. The
+receiver goes through `pc->additem` → `clif->additem` and *is* notified, which is
+precisely why **one seat could never have seen this**.
+
+**Before assuming a packet is missing, check whether the server chose not to send
+it.** Grepping for the client's handler proves nothing when the emitter is
+guarded by a flag.
+
+**The stale count manufactures false positives for other bugs.** With the phantom
+on screen the tester reasonably reported "I think it traded even if I hit cancel"
+— the DB showed no transfer and no inventory save at all, so cancel was correct
+the whole time. A display that never self-corrects will be read as evidence about
+whatever is tested next; fix it before trusting later rows.
+
+**A second, latent bug sat in the same path and would have made the fix worse.**
+`TradeAddItemResult` recorded the amount by reading the **whole stack** out of the
+inventory (`lib.rs:4569`), because `ZC_ACK_ADD_EXCHANGE_ITEM` carries an index and
+a result but **no amount** — the same wire gap already recorded at N16 for zeny.
+Offering 1 of a stack of 20 recorded 20. Harmless while nothing consumed the
+figure; the moment the completion handler used it to decrement, it would have
+deleted the whole stack. The amount is now captured at *send* time
+(`pending_adds`) where it is actually known.
+
+`TradeOfferItem` also carries the inventory slot now, as
+`Option<InventoryIndex>` — `None` for the partner's items, whose slots live on
+their client. **Item id alone is ambiguous**: the bug was found with two identical
+axes, where nothing distinguishes the stacks. And the removal has to read
+`our_items` *before* `TradeCompleted`'s `.clear()`, which drops the only record of
+what was offered.
+
+Guarded by `our_offer_records_the_slot_and_the_amount_actually_offered`, because
+the failure is **silent** — no log line, on either side, in any of it.
 
 #### Whisper UX — raised by the tester at N7, fixed 2026-08-04
 

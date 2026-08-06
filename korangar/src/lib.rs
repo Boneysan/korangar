@@ -4559,6 +4559,12 @@ impl Client {
                         .add_partner_item(item_id, amount, identified, refine, name.as_deref());
                 }
                 NetworkEvent::TradeAddItemResult { inventory_index, result } => {
+                    // Claim the requested amount either way: a failed add must not
+                    // leave a stale entry for a later ack of the same slot to match.
+                    let requested = self
+                        .client_state
+                        .follow_mut(client_state().trade_state())
+                        .take_pending_add(inventory_index);
                     if result == 0 {
                         let ours = self
                             .client_state
@@ -4566,11 +4572,13 @@ impl Client {
                             .iter()
                             .find(|i| i.index == inventory_index)
                             .map(|item| {
-                                let amount = match &item.details {
+                                // Only a fallback: the stack count is the *whole*
+                                // stack, so a partial offer would over-report.
+                                let stack = match &item.details {
                                     korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
                                     _ => 1,
                                 };
-                                (item.item_id, amount, item.is_identified())
+                                (item.item_id, requested.unwrap_or(stack), item.is_identified())
                             })
                             .map(|(item_id, amount, is_identified)| {
                                 let name = resolve_item_name(&self.library, item_id, is_identified);
@@ -4579,7 +4587,7 @@ impl Client {
                         if let Some((item_id, amount, label)) = ours {
                             self.client_state
                                 .follow_mut(client_state().trade_state())
-                                .note_our_item(item_id, amount, label);
+                                .note_our_item(inventory_index, item_id, amount, label);
                         }
                     } else {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -4600,6 +4608,30 @@ impl Client {
                         .push(ChatMessage::new("Trade cancelled.".to_owned(), MessageColor::Information));
                 }
                 NetworkEvent::TradeCompleted { success } => {
+                    // **The server never tells us these left.** `trade.c:600` deletes
+                    // the traded items with `type = 1`, and `pc.c:4960` reads that
+                    // flag as *suppress the client notification* -- so no 0x07FA and
+                    // no 0x00AF arrive for our own side, by design. The official
+                    // client removes them locally, because it already knows what it
+                    // put in the window, and so must we. The partner's client is
+                    // notified normally via `pc->additem`, which is why only the
+                    // giver saw a phantom item.
+                    //
+                    // Read before `clear()`, which drops `our_items` outright.
+                    if success {
+                        let given: Vec<_> = self
+                            .client_state
+                            .follow(client_state().trade_state())
+                            .our_items()
+                            .iter()
+                            .filter_map(|item| item.inventory_index.map(|index| (index, item.amount)))
+                            .collect();
+                        for (index, amount) in given {
+                            self.client_state
+                                .follow_mut(client_state().inventory())
+                                .remove_item(index, amount.min(u32::from(u16::MAX)) as u16);
+                        }
+                    }
                     self.client_state.follow_mut(client_state().trade_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Trade);
                     let msg = if success {
@@ -6937,6 +6969,12 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::TradeRequest);
                 }
                 InputEvent::TradeAddItem { inventory_index, amount } => {
+                    // Remember the amount here: the ack carries only an index and a
+                    // result, so this is the last point at which the figure we asked
+                    // for is known.
+                    self.client_state
+                        .follow_mut(client_state().trade_state())
+                        .note_pending_add(inventory_index, u32::from(amount));
                     let _ = self.networking_system.trade_add_item(inventory_index, amount);
                 }
                 InputEvent::TradeAddZeny { amount } => {

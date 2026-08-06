@@ -1,16 +1,34 @@
 //! Player↔player trade state.
 
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{CharacterId, ItemId};
+use ragnarok_packets::{CharacterId, InventoryIndex, ItemId};
 use rust_state::RustState;
 
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct TradeOfferItem {
+    /// The slot the item came out of, for our own offers; `None` for the
+    /// partner's, whose slots are on their client and mean nothing here.
+    /// Needed because a completed trade has to remove the item from our
+    /// inventory locally -- see `TradeState::our_items`. Item id alone is
+    /// ambiguous: two identical stacks are indistinguishable.
+    pub inventory_index: Option<InventoryIndex>,
     pub item_id: ItemId,
     pub amount: u32,
     pub identified: bool,
     pub refine: u8,
     pub label: String,
+}
+
+/// An add we have sent but not yet had acked.
+///
+/// `ZC_ACK_ADD_EXCHANGE_ITEM` carries an index and a result but **no amount**,
+/// so the figure we asked for is only knowable from the request. Reading the
+/// stack out of the inventory instead is wrong for a partial offer: "trade one"
+/// of a stack of twenty would record twenty.
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct PendingTradeAdd {
+    pub inventory_index: InventoryIndex,
+    pub amount: u32,
 }
 
 #[derive(Clone, Debug, Default, RustState, StateElement)]
@@ -27,6 +45,9 @@ pub struct TradeState {
     partner_zeny: u32,
     our_items: Vec<TradeOfferItem>,
     partner_items: Vec<TradeOfferItem>,
+    /// Sent-but-unacked adds, oldest first. Hercules acks each add in order, so
+    /// the first entry matching an index is the one that ack belongs to.
+    pending_adds: Vec<PendingTradeAdd>,
     we_locked: bool,
     they_locked: bool,
     display_text: String,
@@ -101,6 +122,7 @@ impl TradeState {
     pub fn add_partner_item(&mut self, item_id: ItemId, amount: u32, identified: bool, refine: u8, name: Option<&str>) {
         let label = crate::trade_item_label(name, item_id, amount, refine);
         self.partner_items.push(TradeOfferItem {
+            inventory_index: None,
             item_id,
             amount,
             identified,
@@ -110,8 +132,9 @@ impl TradeState {
         self.rebuild_display();
     }
 
-    pub fn note_our_item(&mut self, item_id: ItemId, amount: u32, label: String) {
+    pub fn note_our_item(&mut self, inventory_index: InventoryIndex, item_id: ItemId, amount: u32, label: String) {
         self.our_items.push(TradeOfferItem {
+            inventory_index: Some(inventory_index),
             item_id,
             amount,
             identified: true,
@@ -119,6 +142,27 @@ impl TradeState {
             label,
         });
         self.rebuild_display();
+    }
+
+    /// Record an add at send time so its amount survives to the ack.
+    pub fn note_pending_add(&mut self, inventory_index: InventoryIndex, amount: u32) {
+        self.pending_adds.push(PendingTradeAdd { inventory_index, amount });
+    }
+
+    /// Claim the amount for an acked add. Returns `None` if we have no record of
+    /// it, which the caller falls back from rather than dropping the item.
+    pub fn take_pending_add(&mut self, inventory_index: InventoryIndex) -> Option<u32> {
+        let position = self
+            .pending_adds
+            .iter()
+            .position(|pending| pending.inventory_index == inventory_index)?;
+        Some(self.pending_adds.remove(position).amount)
+    }
+
+    /// What we put into the offer, for removing it from our own inventory once
+    /// the trade commits.
+    pub fn our_items(&self) -> &[TradeOfferItem] {
+        &self.our_items
     }
 
     pub fn set_our_zeny(&mut self, zeny: u32) {
@@ -204,5 +248,39 @@ mod tests {
         state.lock_side(1);
         assert!(state.display_text().contains("you=yes"));
         assert!(state.display_text().contains("them=yes"));
+    }
+
+    /// A completed trade has to remove our offered items from the inventory
+    /// locally, because Hercules deliberately sends no delete for them
+    /// (`trade.c:600` passes `type = 1`, which `pc.c:4960` reads as "do not
+    /// notify"). That removal needs the slot and the amount, so losing either
+    /// here leaves a phantom item in the inventory with **nothing in any log** —
+    /// and a stale count then reads as though unrelated trades transferred.
+    #[test]
+    fn our_offer_records_the_slot_and_the_amount_actually_offered() {
+        let mut state = TradeState::default();
+        state.open_with_partner("Alice".into(), CharacterId(1), 99);
+
+        // Offer one out of a stack of twenty.
+        state.note_pending_add(InventoryIndex(7), 1);
+        let requested = state.take_pending_add(InventoryIndex(7));
+        assert_eq!(requested, Some(1), "the amount asked for must survive to the ack");
+        state.note_our_item(InventoryIndex(7), ItemId(501), requested.unwrap(), "Red Potion x1".into());
+
+        let ours = state.our_items();
+        assert_eq!(ours.len(), 1);
+        assert_eq!(
+            ours[0].inventory_index,
+            Some(InventoryIndex(7)),
+            "without the slot, two identical stacks are indistinguishable"
+        );
+        assert_eq!(ours[0].amount, 1, "the stack count would over-remove on a partial offer");
+
+        // The ack carries no amount, so a claimed add must not be claimable twice.
+        assert_eq!(state.take_pending_add(InventoryIndex(7)), None);
+
+        // The partner's slots live on their client and must not be mistaken for ours.
+        state.add_partner_item(ItemId(1301), 1, true, 0, Some("Axe"));
+        assert_eq!(state.partner_items[0].inventory_index, None);
     }
 }
