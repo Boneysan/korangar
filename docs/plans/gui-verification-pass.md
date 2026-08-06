@@ -278,7 +278,7 @@ A: @killmonster
 | N16 | Trade zeny field → **Add zeny** | Amount appears in the offer; non-numeric input is ignored, not an error | **PASS 2026-08-04** (after a fix, re-verified live). Originally FAILed: zeny transferred but never displayed — `set_our_zeny` was called only from the `/trade zeny` *chat command*, never from the window's button. Not fixable on the round trip — `ZC_ACK_ADD_EXCHANGE_ITEM` carries an index and a result but **no amount**, and its zeny index is the wire's 0 (`InventoryIndex(65534)` after the −2 decode), matching no inventory slot |
 | N17 | A sends B a friend request | B's popup offers **Whisper** alongside Accept / Reject | **PASS 2026-08-04** — popup appears as specified. Prompted the sender-feedback work: the *sender* saw nothing at all, see §Findings |
 | N18 | Friend list rows | Whisper / Invite / Trade / Remove; **online friends sort first** | **PASS 2026-08-04** — rows correct. Ordering **cannot be observed with two seats**, so it was verified in code at the tester's request, which found a real gap: `FriendAdded` pushed without re-sorting, so a newly accepted friend sat at the bottom below offline entries until a relog. Fixed; `SetFriendList` and `FriendOnlineStatus` already sorted |
-| N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | **PARTIAL 2026-08-04.** Found the row unreadable, not failing: both glyphs were tofu (see §Findings). Presence is now a **coloured dot plus a word**, green online / red offline, confirmed rendering in both states in both the friend list and the party roster. **The live re-render assertion — does it flip with the window left open — is still unconfirmed** |
+| N19 | B logs out, then back in | Friend glyph flips `●`→`○`→`●` **without reopening the window**, and the list survives the relog | **PASS 2026-08-05**, no fix needed. The live re-render assertion holds: green → red → green with the window left open, plus an extra char-select round trip the tester happened to exercise. Presence had already been changed from tofu glyphs to a coloured dot plus a word on 2026-08-04 (see §Findings); this closes the half that was still unconfirmed. **Predicted to fail and did not** — see below |
 
 #### Findings from the 2026-08-04 walk
 
@@ -615,7 +615,27 @@ them a clean bisector.
 | N24 | In a party, `@dminstance start prontera 156 191` | Instance window opens naming it; `@dminstance end` closes it | **FAIL 2026-08-05**, root-caused, and **not primarily a client bug** — the instance cannot be entered at all for a map called `prontera`. Both seats went to a black screen with the interface still drawn and **no input**, so the only way out was killing the process. See §Instance map names below |
 | N25 | Refine equipment at a **blacksmith NPC** | Result line names the item and the new level. This is `0x0188`, a *different* path from the Weapon Refine skill | ☐ |
 
-#### Instance map names — why N24 cannot pass on `prontera`, 2026-08-05
+#### N19 passed after being predicted to fail twice — 2026-08-05
+
+The row was called the likely failure of the block, on the reasoning that
+presence is a cached display string and therefore the same shape as the cast bar
+and as all three bugs fixed earlier that day. **It was not.** `FriendOnlineStatus`
+updates the entry and re-sorts in place (`lib.rs:4937`), and it holds through
+every transition with the window open.
+
+**A "wrong" reading was the tester's client being at character select.** The
+sequence reported was offline → online → offline, which looked like a value
+settling wrong. All three were *correct*: presence is map-server state, so
+returning to character select leaves the map server and fires the offline
+notification at `unit.c:2974` exactly as logging out does. There are only two
+emitters — `clif.c:11534` sends online on map entry, `unit.c:2974` sends offline
+on `unit_free` — and one fires per real transition.
+
+**Two things to check before chasing a presence bug:** whether the other seat is
+actually *in-game* rather than at character select, and whether what is being
+read is the friend list or the **chat log**, which prints a line per event
+(*"Friend X is now online."*) and is a history, not a state. Confusing those two
+is what made a passing row look broken.
 
 **Hercules truncates the instanced map's name, and it is an upstream bug that
 breaks most maps.** `instance.c:240`:
