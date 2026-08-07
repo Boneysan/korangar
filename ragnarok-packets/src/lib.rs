@@ -995,6 +995,46 @@ pub struct MessageTablePacket {
     pub message_id: u16,
 }
 
+/// `ZC_MSG_VALUE` (0x07E2) — a message-table line with a number in it.
+///
+/// Hercules' `clif_msgtable_num` (`clif.c:10684`). Two reachable callers, both
+/// of which the player would otherwise see nothing for: an item still on its
+/// reuse delay (`pc.c:5414`, "[%d] seconds left until you can use") and the
+/// skill tree refusing a point until enough earlier-tier skills are learned
+/// (`pc.c:7362`, `pc.c:7366`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07E2)]
+pub struct MessageTableNumberPacket {
+    pub message_id: u16,
+    pub value: u32,
+}
+
+/// `ZC_ACK_WHISPER_LIST` (0x00D2) — result of ignoring or unignoring *everyone*.
+///
+/// The sibling of [`IgnorePlayerResultPacket`], and it was missed when that one
+/// was fixed: `/exall` and `/inall` are answered here (`clif_wisall`), never on
+/// 0x00D1.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00D2)]
+pub struct IgnoreAllResultPacket {
+    /// 0 when ignoring everyone, 1 when clearing the list.
+    pub ignore_type: u8,
+    /// 0 on success.
+    pub result: u8,
+}
+
+/// `ZC_ACK_REMEMBER_WARPPOINT` (0x011E) — the result of memorising a Warp
+/// Portal destination (`pc.c:6245`-`6266`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x011E)]
+pub struct WarpMemoResultPacket {
+    /// 0 saved, 1 skill level too low, 2 Warp Portal not learned.
+    pub result: u8,
+}
+
 /// `ZC_DEBUGMSG` (0x0ADB) — a coloured line sent straight to one player.
 ///
 /// The name is misleading: this is not a debug channel. Hercules exposes it as

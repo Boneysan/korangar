@@ -191,6 +191,11 @@ pub enum NetworkEvent {
         /// consumable.
         equipment: bool,
     },
+    /// A message-table line carrying a number (`ZC_MSG_VALUE`). The table lives
+    /// in the client crate, and the id's text holds the `%d` this fills.
+    MessageTableNumber { message_id: u16, value: u32 },
+    /// Result of ignoring or unignoring everyone (`ZC_ACK_WHISPER_LIST`).
+    IgnoreAllResult { ignore_type: u8, result: u8 },
     /// A storage deposit was refused (`ZC_MOVE_ITEM_FAILED`). Hercules sends
     /// only the inventory slot, so — as with [`Self::SkillFailedMissingItem`] —
     /// the client finishes the message, since the item table lives there.

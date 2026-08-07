@@ -4069,6 +4069,34 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Error));
                 }
+                NetworkEvent::MessageTableNumber { message_id, value } => {
+                    // These table entries carry a `%d` the packet fills in — an
+                    // item's remaining reuse delay, or how many earlier-tier
+                    // skills the tree still wants.
+                    let text = self.library.message_string(message_id);
+                    let text = match text.split_once("%d") {
+                        Some((before, after)) => format!("{before}{value}{after}"),
+                        None => text,
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Error));
+                }
+                NetworkEvent::IgnoreAllResult { ignore_type, result } => {
+                    // Same shape as `IgnoreResult`, for `/exall` and `/inall`.
+                    let text = match (result, ignore_type) {
+                        (0, 0) => "You are now ignoring everyone.",
+                        (0, _) => "You are no longer ignoring everyone.",
+                        _ => "That did not work.",
+                    };
+                    let color = match result {
+                        0 => MessageColor::Server,
+                        _ => MessageColor::Error,
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text.to_owned(), color));
+                }
                 NetworkEvent::ItemMoveFailed { item_index, amount } => {
                     // The packet names only the slot, so read the item back out
                     // of the inventory the deposit was refused from.

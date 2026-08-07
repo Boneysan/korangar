@@ -241,6 +241,25 @@ where
         message_id: packet.message_id,
         color: MessageColor::Error,
     })?;
+    packet_handler.register(|packet: MessageTableNumberPacket| NetworkEvent::MessageTableNumber {
+        message_id: packet.message_id,
+        value: packet.value,
+    })?;
+    packet_handler.register(|packet: IgnoreAllResultPacket| NetworkEvent::IgnoreAllResult {
+        ignore_type: packet.ignore_type,
+        result: packet.result,
+    })?;
+    packet_handler.register(|packet: WarpMemoResultPacket| NetworkEvent::ChatMessage {
+        text: match packet.result {
+            0 => "Destination memorised.".to_owned(),
+            1 => "Your Warp Portal level is not high enough to memorise a destination.".to_owned(),
+            _ => "You have not learned Warp Portal.".to_owned(),
+        },
+        color: match packet.result {
+            0 => MessageColor::Server,
+            _ => MessageColor::Error,
+        },
+    })?;
     packet_handler.register(|packet: ServiceMessagePacket| NetworkEvent::ChatMessage {
         text: packet.message,
         color: MessageColor::Rgb {
