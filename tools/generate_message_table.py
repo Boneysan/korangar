@@ -31,16 +31,60 @@ import re
 import sys
 from pathlib import Path
 
+PACKETVER = 20220406
 HANGUL = re.compile(r"[가-힯]")
-# /*<version note>
-#  <korean>
-#  <english>
-#  */
-#  MSG_NAME = 0xNNN,
+# A block documents the id for one or more *client version ranges*, newest
+# first, each as `<range>` / `<korean>` / `<english>`:
+#
+#   /*20100525 to latest
+#   아이템을 착용할 수 있는 레벨이 아닙니다.
+#   You cannot equip this item with your current level.
+#   20130807 to 20130814
+#   해당 맵에서는 의상 장비가 보이지 않습니다.
+#   Nothing found in the selected map.
+#   */
+#   MSG_CANNOT_EQUIP_ITEM_LEVEL = 0x6ed,
+#
+# Taking the last English line picks an **obsolete** range — that one would
+# render "Nothing found in the selected map." for a level-too-low equip. Pick
+# the range that covers the server's PACKETVER instead.
 BLOCK = re.compile(
-    r"/\*[^\n]*\n(?P<body>.*?)\*/\s*\n\s*(?P<name>MSG_\w+)\s*=\s*(?P<id>0x[0-9a-fA-F]+|\d+)\s*,",
+    r"/\*(?P<body>.*?)\*/\s*\n\s*(?P<name>MSG_\w+)\s*=\s*(?P<id>0x[0-9a-fA-F]+|\d+)\s*,",
     re.S,
 )
+RANGE = re.compile(r"^(?P<from>\d{8})\s+to\s+(?P<to>latest|\d{8})\s*$")
+
+
+def gloss_for(body: str, packetver: int) -> str | None:
+    """English text of the version range covering `packetver`."""
+    groups: list[tuple[int, int, list[str]]] = []
+    current: tuple[int, int] | None = None
+    for line in body.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        matched = RANGE.match(line)
+        if matched:
+            start = int(matched.group("from"))
+            end = 99999999 if matched.group("to") == "latest" else int(matched.group("to"))
+            current = (start, end)
+            groups.append((start, end, []))
+        elif groups:
+            groups[-1][2].append(line)
+        elif current is None:
+            # No range header at all — a bare block documenting one text.
+            groups.append((0, 99999999, [line]))
+
+    # An open "to latest" range overlaps the narrow historical ones, so prefer
+    # the most specific match rather than whichever is written first.
+    for start, end, lines in sorted(groups, key=lambda group: group[1] - group[0]):
+        if not (start <= packetver <= end):
+            continue
+        # Within a range the Korean line comes first and the English gloss last.
+        english = [line for line in lines if not HANGUL.search(line)]
+        if english:
+            return english[-1]
+    return None
 
 
 def main() -> int:
@@ -54,13 +98,10 @@ def main() -> int:
     text = source.read_text(encoding="utf-8", errors="replace")
     rows: dict[int, str] = {}
     for match in BLOCK.finditer(text):
-        body = [line.strip() for line in match.group("body").strip().splitlines() if line.strip()]
-        if not body:
-            continue
-        gloss = body[-1]
+        gloss = gloss_for(match.group("body"), PACKETVER)
         # A Korean-only entry has no English line to take; leave it to the
         # client's own table rather than showing Korean to an English player.
-        if HANGUL.search(gloss) or not gloss:
+        if not gloss:
             continue
         raw = match.group("id")
         message_id = int(raw, 16) if raw.startswith("0x") else int(raw)

@@ -833,6 +833,18 @@
 834	%d minutes remain until release from auto penalty.
 835	You have been released from the auto penalty. Please refrain from spamming in-game.
 836	%s and %s have divorced from each other.
+837	%s has been designated as Gravity %s's Solar Space.
+838	%s has been designated as Gravity %s's Luna Space.
+839	%s has been designated as Gravity %s's Stellar Space.
+840	Gravity %s's Solar Space: %s
+841	Gravity %s's Luna Space: %s
+842	Gravity %s's Stellar Space: %s
+843	%s has been designated as Gravity %s's Solar Monster.
+844	%s has been designated as Gravity %s's Luna Monster.
+845	%s has been designated as Gravity %s's Stellar Monster.
+846	Gravity %s's Solar Monster: %s
+847	Gravity %s's Luna Monster: %s
+848	Gravity %s's Stellar Monster: %s
 849	/window: Display windows will snap/dock together. On | Off
 850	Display window docking enabled. [/wi ON]
 851	Display window docking disabled. [/wi OFF]
@@ -1240,6 +1252,7 @@
 1253	Do you really want to purchase this item? %d points will be deducted from your total Kafra Credit Points.
 1254	You do not have enough Kafra Credit Points.
 1255	^ff0000Expiration Date: %s^000000
+1256	The '%s' item will disappear in %d minutes.
 1257	'%s' item will be deleted from the Inventory in 1 minute.
 1258	'%s' item has been deleted from the Inventory.
 1259	Input Number
@@ -1362,6 +1375,7 @@
 1377	Once used, skill points cannot be re-allocated. Would you like to use the skill points?
 1378	1st
 1379	2nd
+1380	This account has been used for illegal program or hacking program. Block Time: %s
 1381	The possibility of exposure to illegal program, PC virus infection or Hacking Tool has been detected. Please execute licensed client. Our team is trying to make a best environment for Ro players.
 1382	You are currently playing in the best game environment. Please enjoy the Ragnarok.
 1383	Job Exp points from hunting monsters are increased by 50% for 30 minutes.
@@ -1552,6 +1566,7 @@
 1569	Insert items to convert
 1570	Inconvertible combination
 1571	Inventory weight is too much
+1572	Please secure some room in the inventory
 1573	Material doesn't exist
 1574	Successful.
 1575	Failed.
@@ -1727,740 +1742,745 @@
 1745	Failed to deal because you have not enough Zeny.
 1746	You have sold %s. Amount: %d. Total Zeny: %dz
 1747	%s item could not be sold because you do not have the wanted amount of items.
-1749	You don't have any summoned spirits.
-1750	This is a restricted server.
-1751	OTP password is 6 digits long.
-1752	OTP information is unavailable. Please contact your administrator.
-1753	OTP authentication failed.
-1754	Party ad has been added.
-1755	Recruit party members
-1756	Roles
-1757	1st Jobs
-1758	2nd Jobs
-1759	3-1 Classes
-1760	3-2 Classes
-1761	1st Job High
-1762	2nd Jobs High
-1763	Other Jobs
-1764	Recruit
-1765	Open party recruitment window.
-1766	Searching -
-1767	Select All
-1768	Recruitment of at least one job must be running.
-1769	You have to select atleast 1 or more jobs.
-1770	You have selected %d Jobs. You can only select up to 6 different jobs.
-1771	Only numeric characters are allowed.
-1772	Please enter levels between 1~150.
-1773	Nothing found in the selected map.
-1774	You cannot equip this item with your current level.
-1775	You cannot use this item with your current level.
-1776	Enable Battlemode
-1777	Failed to add because you have reached the limit.
-1778	Window Sign Information
-1779	Sell
-1780	Purchase
-1781	Search for Vends
-1782	Shop Name
-1783	Quantity
-1784	Cost
-1785	Too much results have been found. Please do a more precisely search.
-1786	Do you want to open a street stall?
-1787	Failed to recognize SSO.
-1788	Cannot move to the applied area.
-1789	searching  item including the word
-1790	User has been expelled.
-1791	You have not accepted the user agreements yet.
-1792	You will not be disconnect from the game.
-1793	It is available only for 12 hours.
-1794	Your account is blocked due to illegal use of the game account.
-1795	Your account is blocked because there may exist a bug with your account.
-1796	Increases base exp and job exp gained by killing monsters up to 75% for 30 minutes.
-1797	Increases base exp and job exp gained by killing monsters up to 50% for 30 minutes.
-1798	No sales information.
-1799	Failed to search any further.
-1800	The item you have entered does not exist.
-1801	Cannot search yet.
-1802	Enter the card name or prefix/suffix.
-1803	Searches left: %d
-1804	No result has been found.
-1805	The item price is too high.
-1806	Normal Gear
-1807	Costume
-1808	minute
-1809	second
-1810	Please enter the name of the item.
-1811	The item you have entered does not exist.
-1812	The map is not available.
-1813	The selected name or prefix/suffix does not exist.
-1814	You can purchase up to 10 items.
-1815	Some items could not be purchased.
-1816	Enter your 6-digit DOB(YYMMDD) (e.g: 801122)
-1817	Now Logging Out.
-1818	A database error has occurred.
-1819	Please leave your guild first in order to remove your character.
-1820	Please leave your party first in order to remove your character.
-1821	You cannot delete this character because the delete time has not expired yet.
-1822	You cannot delete this character at the moment.
-1823	Your entered birthday does not match.
-1824	You lack of familiarity.
-1825	This is only available on style change for fighting classes.
-1826	This is only available on style change for novice.
-1827	Party Registration failed.
-1828	results have been found.
-1829	Failed to remove result.
-1830	No results have been found.
-1831	No payment information has been found.
-1832	Screenshot Trade
+1749	This is a restricted server.
+1750	OTP password is 6 digits long.
+1751	OTP information is unavailable. Please contact your administrator.
+1752	OTP authentication failed.
+1753	Party ad has been added.
+1754	Recruit party members
+1755	Roles
+1756	1st Jobs
+1757	2nd Jobs
+1758	3-1 Classes
+1759	3-2 Classes
+1760	1st Job High
+1761	2nd Jobs High
+1762	Other Jobs
+1763	Recruit
+1764	Open party recruitment window.
+1765	Searching -
+1766	Select All
+1767	Recruitment of at least one job must be running.
+1768	You have to select atleast 1 or more jobs.
+1769	You have selected %d Jobs. You can only select up to 6 different jobs.
+1770	Only numeric characters are allowed.
+1771	Please enter levels between 1~150.
+1772	Nothing found in the selected map.
+1773	You cannot equip this item with your current level.
+1774	You cannot use this item with your current level.
+1775	Enable Battlemode
+1776	Failed to add because you have reached the limit.
+1777	Window Sign Information
+1778	Sell
+1779	Purchase
+1780	Search for Vends
+1781	Shop Name
+1782	Quantity
+1783	Cost
+1784	Too much results have been found. Please do a more precisely search.
+1785	Do you want to open a street stall?
+1786	Failed to recognize SSO.
+1787	Cannot move to the applied area.
+1788	searching  item including the word
+1789	User has been expelled.
+1790	You have not accepted the user agreements yet.
+1791	You will not be disconnect from the game.
+1792	It is available only for 12 hours.
+1793	Your account is blocked due to illegal use of the game account.
+1794	Your account is blocked because there may exist a bug with your account.
+1795	Increases base exp and job exp gained by killing monsters up to 75% for 30 minutes.
+1796	Increases base exp and job exp gained by killing monsters up to 50% for 30 minutes.
+1797	No sales information.
+1798	Failed to search any further.
+1799	The item you have entered does not exist.
+1800	Cannot search yet.
+1801	Enter the card name or prefix/suffix.
+1802	Searches left: %d
+1803	No result has been found.
+1804	The item price is too high.
+1805	Normal Gear
+1806	Costume
+1807	minute
+1808	second
+1809	Please enter the name of the item.
+1810	The item you have entered does not exist.
+1811	The map is not available.
+1812	The selected name or prefix/suffix does not exist.
+1813	You can purchase up to 10 items.
+1814	Some items could not be purchased.
+1815	Enter your 6-digit DOB(YYMMDD) (e.g: 801122)
+1816	Now Logging Out.
+1817	A database error has occurred.
+1818	Please leave your guild first in order to remove your character.
+1819	Please leave your party first in order to remove your character.
+1820	You cannot delete this character because the delete time has not expired yet.
+1821	You cannot delete this character at the moment.
+1822	Your entered birthday does not match.
+1823	You lack of familiarity.
+1824	This is only available on style change for fighting classes.
+1825	This is only available on style change for novice.
+1826	Party Registration failed.
+1827	results have been found.
+1828	Failed to remove result.
+1829	No results have been found.
+1830	No payment information has been found.
+1831	Screenshot Trade
+1832	[Trade_%s]
 1833	Death due to the auto insurance young people are spending.
-1835	Chat Dialog
-1836	Redundant is not available.
-1837	Use the limit that has been set.
-1838	No user restrictions are set.
-1839	Connection has failed. Please contact your administrator.
-1840	Failed to authenticate.
-1841	User is offline.
-1842	The age limit from commandment tables cannot connect to this server.
-1843	Buy
-1844	Cancel.
-1845	First page
-1846	Last page
-1847	New
-1848	Headgears
-1849	Limited
-1850	Rental Items
-1851	Equipments
-1852	Scrolls
-1853	Consumables
-1854	Other
-1855	Cost
-1856	Quantity
-1857	Total
-1858	Free Cash: %s C
-1859	CashPoints: %s C
-1860	You cannot summon a monster in this area.
-1861	Exceeded total free cash
-1862	%d seconds left until you can use
-1863	Content has been saved in [SaveData_ExMacro%d]
-1864	~ [Windows] must be equipped with.
-1865	Available only on the dragon.
-1866	Unable to proceed due to exceeding capacity.
-1867	Real name has not been verified. Go to name verification site.
-1868	Please select slot you are going to save.
-1869	Congratulation %s,  Acquired '%s' !
-1870	Unable to use in gloomy state
-1871	Purchased products has exceeded the total price.
-1872	Cannot join a party in this map.
-1873	Cannot leave a party in this map.
-1874	Cannot withdraw/break the party in this map.
-1875	Real Name
-1876	ID Number
-1877	E-mail
-1878	Invalid input
-1879	Failed to send the zeny
-1880	This is not a relevant job
-1881	This is not a relevant gender
-1882	User information identification was successful.
-1883	Name does not match. Please retry.
-1884	ID number does not match. Please retry.
-1885	Service is currently unavailable. Please try again later.
-1886	Unable to attack while riding.
-1887	Unable to cast the skill while riding.
-1888	Pin number should be 4~6 characters.
-1889	Secured authentication is successful.
-1890	Succeeded in creating 2nd password.
-1891	2nd password has been deleted.
-1892	2nd password has been corrected.
-1893	Password is incorrect.
-1894	Failed to create 2nd password.
-1895	Failed to delete 2nd password.
-1896	Failed to correct 2nd password.
-1897	Unable to use restricted number in 2nd password.
-1898	Unable to use your KSSN number.
-1899	~There is already a password.
-1900	Security Code
-1901	Account for the additional password security settings are recommended.
-1902	Do not use secure password.
-1903	Use the set security password failed.
-1904	Use secure passwords. Will be applied to your next login.
-1905	Use the set security password failed.
-1906	Added to the security of your account password is set.
-1907	Use the mouse to enter the 4-digit password below.
-1908	Typing an incorrect password 3 times will shut down the client.
-1909	ITEM
-1910	SKILL
-1911	TACTIC
-1912	ETC
-1913	COMBAT
-1914	NON-COMBAT
-1915	BUFF
-1916	AUTO EQUIPED
-1917	1st. ATTACK
-1918	ATTACK
-1919	Next attack time :
-1920	When died
-1921	When invited to the party
-1922	Pickup Item
-1923	Over 85% Weight
-1924	Any work in progress (NPC dialog, manufacturing ...) quit and try again.
-1925	Monster Job hunting experience that you can get through the doubling of %d is %.2f minutes.
-1926	SaveData_ExMacro%d
-1927	Settings for [%s] are stored in.
-1928	Security level
-1929	The current character is a party or join the guild can not be deleted.
-1930	Objects can be used only near the wall.
-1931	%s: Level %d %s party to obtain level.
-1932	While boarding reins is not available for items.
-1933	This skill requires 1% experience.
-1934	Experience value:
-1935	Drop rate:
-1936	Death Penalty:
-1937	%d%% (PCroom %d%% + TPLUS %d%% + Premium %d%% + %s Server %d%%)
-1938	Amount of party members to cast the skill Chorus SP is low.
-1939	Relative character that has possession of the items can not trade because amount is exceeded.
-1940	Relative character that has possession of the item amount which exceeds makes it impossible to trade.
-1941	Amounts are exceeded the possession of the item is not available for purchase.
-1942	Advertising is pending registration.
-1943	With the following files and text content Ragnarok Official Website -> Support -> Contact Us to submit your comments by:
-1944	Has caused an error in billing system(%d)
-1945	Failed purchase of runes, items exceed the maximum number that can be held.
-1946	Exceeded the number of individual items, purchase failed.
-1947	Purchase failed due to an unknown error.
-1948	Please try again later.
-1949	Kunai must be equipped to use this skill.
-1950	Please enter the value of the minimum level to be recruited.
-1951	Jonda agency receipt of the item to the NPC is not possible. Gaining possession of the free space of the window.
-1952	This skill is only available in the siege.
-1953	This skill is available only to the player.
-1954	Forbidden to wear the state can not be worn.
-1955	Current location of the shop and chat room creation is disabled.
-1956	Elapsed time: %d:%d:%d / %d:%d:%d
-1957	Speed : X 1/4
-1958	Speed : X 1/2
-1959	Speed : X 1
-1960	Speed : X 2
-1961	Speed : X 4
-1962	Speed : X 8
-1963	Speed : X 16
-1964	Speed: Unknown
-1965	Service Info : %s
-1966	Character Name : %s
-1967	Map Name : %s
-1968	Record Time: %d-%01d-%01d %d: %02d: %02d
-1969	Play Time: %02d: %02d: %02d
-1970	No Replay File.
-1971	Server No Matching
-1972	Replay Option Setting
-1973	Enter File Name
-1974	Set Replay Save Data
-1975	Set Rec Option
-1976	%.1f % Pos->:%d:%d:%d
-1977	%.1f % Pos->:cannot move
-1978	Start
-1979	Stop
-1980	Input FileName -> Start
-1981	Open Options
-1982	Close Options
-1983	End
-1984	Time
-1985	Party & Friends
-1986	Chat
-1987	Shortcuts
-1988	Automatic filename generation
-1989	Checking for duplicate files
-1990	The same file exists already.
-1991	Record Start
-1992	Recording saved
-1993	Weight : %3d / %3d
-1994	Total: %s EUR
-1995	[Shuriken] must be equipped.
-1996	Base Lv. %d
-1997	Job Lv. %d
-1998	Zeny : %s
-1999	Trilinear
-2000	attack
-2001	skill
-2002	item
-2003	Ctrl
-2004	More
-2005	(Characters/Total slots)
-2006	VIP Service
-2007	VIP
-2008	Service
+1834	Chat Dialog
+1835	Redundant is not available.
+1836	Use the limit that has been set.
+1837	No user restrictions are set.
+1838	Connection has failed. Please contact your administrator.
+1839	Failed to authenticate.
+1840	User is offline.
+1841	The age limit from commandment tables cannot connect to this server.
+1842	Buy
+1843	Cancel.
+1844	First page
+1845	Last page
+1846	New
+1847	Headgears
+1848	Limited
+1849	Rental Items
+1850	Equipments
+1851	Scrolls
+1852	Consumables
+1853	Other
+1854	Cost
+1855	Quantity
+1856	Total
+1857	Free Cash: %s C
+1858	CashPoints: %s C
+1859	You cannot summon a monster in this area.
+1860	Exceeded total free cash
+1861	%d seconds left until you can use
+1862	Content has been saved in [SaveData_ExMacro%d]
+1863	~ [Windows] must be equipped with.
+1864	Available only on the dragon.
+1865	Unable to proceed due to exceeding capacity.
+1866	Real name has not been verified. Go to name verification site.
+1867	Please select slot you are going to save.
+1868	Congratulation %s,  Acquired '%s' !
+1869	Unable to use in gloomy state
+1870	Purchased products has exceeded the total price.
+1871	Cannot join a party in this map.
+1872	Cannot leave a party in this map.
+1873	Cannot withdraw/break the party in this map.
+1874	Real Name
+1875	ID Number
+1876	E-mail
+1877	Invalid input
+1878	Failed to send the zeny
+1879	This is not a relevant job
+1880	This is not a relevant gender
+1881	User information identification was successful.
+1882	Name does not match. Please retry.
+1883	ID number does not match. Please retry.
+1884	Service is currently unavailable. Please try again later.
+1885	Unable to attack while riding.
+1886	Unable to cast the skill while riding.
+1887	Pin number should be 4~6 characters.
+1888	Secured authentication is successful.
+1889	Succeeded in creating 2nd password.
+1890	2nd password has been deleted.
+1891	2nd password has been corrected.
+1892	Password is incorrect.
+1893	Failed to create 2nd password.
+1894	Failed to delete 2nd password.
+1895	Failed to correct 2nd password.
+1896	Unable to use restricted number in 2nd password.
+1897	Unable to use your KSSN number.
+1898	~There is already a password.
+1899	Security Code
+1900	Account for the additional password security settings are recommended.
+1901	Do not use secure password.
+1902	Use the set security password failed.
+1903	Use secure passwords. Will be applied to your next login.
+1904	Use the set security password failed.
+1905	Added to the security of your account password is set.
+1906	Use the mouse to enter the 4-digit password below.
+1907	Typing an incorrect password 3 times will shut down the client.
+1908	ITEM
+1909	SKILL
+1910	TACTIC
+1911	ETC
+1912	COMBAT
+1913	NON-COMBAT
+1914	BUFF
+1915	AUTO EQUIPED
+1916	1st. ATTACK
+1917	ATTACK
+1918	Next attack time :
+1919	When died
+1920	When invited to the party
+1921	Pickup Item
+1922	Over 85% Weight
+1923	Any work in progress (NPC dialog, manufacturing ...) quit and try again.
+1924	Monster Job hunting experience that you can get through the doubling of %d is %.2f minutes.
+1925	SaveData_ExMacro%d
+1926	Settings for [%s] are stored in.
+1927	Security level
+1928	The current character is a party or join the guild can not be deleted.
+1929	Objects can be used only near the wall.
+1930	%s: Level %d %s party to obtain level.
+1931	While boarding reins is not available for items.
+1932	This skill requires 1% experience.
+1933	Experience value:
+1934	Drop rate:
+1935	Death Penalty:
+1936	%d%% (PCroom %d%% + TPLUS %d%% + Premium %d%% + %s Server %d%%)
+1937	Amount of party members to cast the skill Chorus SP is low.
+1938	Relative character that has possession of the items can not trade because amount is exceeded.
+1939	Relative character that has possession of the item amount which exceeds makes it impossible to trade.
+1940	Amounts are exceeded the possession of the item is not available for purchase.
+1941	Advertising is pending registration.
+1942	With the following files and text content Ragnarok Official Website -> Support -> Contact Us to submit your comments by:
+1943	Has caused an error in billing system(%d)
+1944	Failed purchase of runes, items exceed the maximum number that can be held.
+1945	Exceeded the number of individual items, purchase failed.
+1946	Purchase failed due to an unknown error.
+1947	Please try again later.
+1948	Kunai must be equipped to use this skill.
+1949	Please enter the value of the minimum level to be recruited.
+1950	Jonda agency receipt of the item to the NPC is not possible. Gaining possession of the free space of the window.
+1951	This skill is only available in the siege.
+1952	This skill is available only to the player.
+1953	Forbidden to wear the state can not be worn.
+1954	Current location of the shop and chat room creation is disabled.
+1955	Elapsed time: %d:%d:%d / %d:%d:%d
+1956	Speed : X 1/4
+1957	Speed : X 1/2
+1958	Speed : X 1
+1959	Speed : X 2
+1960	Speed : X 4
+1961	Speed : X 8
+1962	Speed : X 16
+1963	Speed: Unknown
+1964	Service Info : %s
+1965	Character Name : %s
+1966	Map Name : %s
+1967	Record Time: %d-%01d-%01d %d: %02d: %02d
+1968	Play Time: %02d: %02d: %02d
+1969	No Replay File.
+1970	Server No Matching
+1971	Replay Option Setting
+1972	Enter File Name
+1973	Set Replay Save Data
+1974	Set Rec Option
+1975	%.1f % Pos->:%d:%d:%d
+1976	%.1f % Pos->:cannot move
+1977	Start
+1978	Stop
+1979	Input FileName -> Start
+1980	Open Options
+1981	Close Options
+1982	End
+1983	Time
+1984	Party & Friends
+1985	Chat
+1986	Shortcuts
+1987	Automatic filename generation
+1988	Checking for duplicate files
+1989	The same file exists already.
+1990	Record Start
+1991	Recording saved
+1992	Weight : %3d / %3d
+1993	Total: %s EUR
+1994	[Shuriken] must be equipped.
+1995	Base Lv. %d
+1996	Job Lv. %d
+1997	Zeny : %s
+1998	Trilinear
+1999	attack
+2000	skill
+2001	item
+2002	Ctrl
+2003	More
+2004	(Characters/Total slots)
+2005	VIP Service
+2006	VIP
+2007	Service
+2008	VIP
 2009	VIP
-2010	VIP
-2011	Command List
-2012	LEVEL
-2013	MAP
-2014	JOB
-2015	Not Available
-2016	[Protection of Guardian Angel] You can't use it when you reach the highest level.
-2017	Do you really want to move?
-2018	Failed to move Char slot.
-2019	Character name is invalid.
-2020	Show Quest
-2021	Depending on the protection of youth, and 0:00 to 6:00 while under the age of 16 of your game use is limited.
-2022	Depending on the protection of youth, 0:00 to 6:00 ^ff0000 under the age of 16 ^000000 limit your use of the game and the game ends.
-2023	In order to change the character name, you must leave the guild.
-2024	In order to change the character name, you must leave the party.
-2025	Character name change failed, due an unknown error.
-2026	Ready to change character slot in.(%d)
-2027	Ready to change character name in.(%d)
-2028	Length exceeds the maximum size of the character name you want to change.
-2029	Name contains invalid characters. Character name change failed.
-2030	The name change is prohibited. Character name change failed.
-2031	Complete
-2032	During %d minutes your Exp will increase by %d%%.
-2033	%02d seconds left until summon.
-2034	Your party leader summons you to %s (%s). Warp costs %d Zeny.
-2035	Summon target
-2036	Block List
-2037	%d Zeny will be spent for making party ad.
-2038	Insufficient Zeny for making party ad.
-2039	) party: accept invitation
-2040	) party: decline invitation
-2041	) party: show equipment window
-2042	Up to 36 english letters can be entered
-2043	Enter
-2044	1:1 Chat
-2045	Block
-2046	Insufficient Zeny for recall.
-2047	Input your party ad.
-2048	Only party leader can register party ad.
-2049	You have already accepted this ad.
-2050	For
-2051	E
-2052	F
-2053	Drop Lock: On/Off
-2054	Party Alarm
-2055	Create Party
-2056	Leave Party
-2057	Party Invitation
-2058	Party Name:
-2059	Player Name:
-2060	has recieved an invitation to join your party.
-2061	rejected your party invitation.
-2062	accepted your party invitation.
-2063	Recruitment is already a party.
-2064	Same conditions such as the previous search.
-2065	Guild after withdrwal.
-2066	Party after secession.
-2067	The player can not be summoned to this map.
-2068	Party Leader is on a map that is restricted to summon players.
-2069	Summon has been denied.
-2070	Can not be summoned.
-2071	Only the leader can invite.
-2072	Search item:
-2073	You must enter a character name.
-2074	You must enter the name of the party.
-2075	Guild Creation Window
-2076	Join a guild or start your own!
-2077	Create Guild
-2078	Guild Name
-2079	Guild System
-2080	What is the guild system
-2081	You must enter the name of your guild.
-2082	Supported at the party was rejected.
-2083	Select Service:
-2084	Possible escape area.
-2085	Replay File List
-2086	File info
-2087	File List
-2088	%s Item deal not possible.
-2089	Disband the Guild
-2090	Enter Guild Name
-2091	The character is not online or does not exist.
-2092	Failed to call Falcon.
-2093	%d%%(default 100%%+ Premium%d%%+%s Server%d%%)
-2094	This user is currently participating in the siege.
-2095	It is only possible to change the party leader while on the same map.
-2096	In the current region it is not possible to change the party.
-2097	Gryphon making
-2098	Delete: %d/%d - %d:%d:%d
-2099	You can't invite characters in WoE maps.
-2100	You are now in the battlefield queue.
-2101	Queuing has finished.
-2102	Invalid name of the battlefield.
-2103	Invalid type of application.
-2104	People count exceeded.
-2105	Your level doesn't fit this battlefield rules.
-2106	Duplicate application.
-2107	After reconnecting, please re-apply.
-2108	Your class can't participate in this battlefield.
-2109	Only party leader / guild master can apply.
-2110	You can't apply while your team member is already on a battlefield.
-2111	You have left the battlefield queue.
-2112	Wrong battlefield name.
-2113	You are not in the battlefield queue list
-2114	The selected arena is unavailable; your application has been cancelled
-2115	You have left the queue
-2116	Are you sure you want to join a battleground?
-2117	[Battlefield application rules]
-2118	Application and position into the battlefield cannot be applied under this circumtances
-2119	1. Different types of battle can not be applied simultaneously.
-2120	2. Personal / party / guild battle can not be applied simultaneously.
-2121	3. Parties can only be applied by their party leaders.
-2122	Offline party members won't proceed to the queue.
-2123	4. You can add request to enter the arena from any map except for those who don't allow teleport/warp.
-2124	When the battle is finished your character will be returned to the current spot or (if it's not possible) to the save point.
-2125	5. You can view and choose rewards in the arena waiting room.
-2126	Request help battle position
-2127	%s battle begins.
-2128	Do you want to enter the arena?
-2129	[Note]
-2130	When the battle is finished your character will
-2131	be returned to the current spot or (if it's not
-2132	possible) to the save point.
-2133	Waiting for the opponents.
-2134	Battlefield position request
-2135	Accept standby time:%d seconds
-2136	Standby position
-2137	Battlefield name:%s
-2138	Persons required:%d
-2139	Your position:%d
-2140	Name:
-2141	Goal:
-2142	Format:
-2143	Level:
-2144	Win:
-2145	Draw:
-2146	Loss:
-2147	Do you want to participate in the individuals battle?
-2148	Do you want to participate in the parties battle?
-2149	Do you want to participate in the guilds battle?
-2150	Battleground List
-2151	%d VS %d
-2152	LV %d and lower
-2153	LV %d and higher
-2154	LV %d ~ %d
-2155	No restrictions
-2156	[You can't apply on this map.]
-2157	[You must wait about 1 minute to apply.]
-2158	[You must be in a party.]
-2159	[Only party leader can apply.]
-2160	[Too many party members online.]
-2161	[You must be in a guild.]
-2162	[Only guild master can apply.]
-2163	[Too many guild members online.]
-2164	Moving Book
-2165	Move
-2166	Rename
-2167	Create Character
-2168	http://ro.game.gnjoy.com/
-2169	(%s) Server
-2170	Item Merge
-2171	Two or more of the same type. Please select an item.
-2172	Item merge is successful.
-2173	Combining items will be only one kind at a time.
-2174	You cannot have more than 30,000 stacked items.
-2175	Rotate left
-2176	Rotate right
-2177	(%s) to view the old server information
-2178	Existing server information
-2179	^ff0000Existing server: ^0000ff
-2180	^ff0000Existing character: ^0000ff
-2181	Show monster HP bar when attacking.
-2182	Hide monster HP bar when attacking.
-2183	Merge does not exist as an item
-2184	Merge items available does not exist.
-2185	Act
-2186	Pen
-2187	Rec
-2188	Episode
-2189	Loc
-2190	Evt
-2191	New
-2192	Monsters to kill
-2193	Rewards
-2194	Required Items
-2195	Time Limit
-2196	Deadline
-2197	Search
-2198	Navigation
-2199	Back to Navigation
-2200	Find Information
-2201	Toggle Minimap
-2202	Read Information from External File
-2203	Exit
-2204	Change the Default UI
-2205	Change to Default UI
-2206	Help
-2207	ALL
-2208	Map
-2209	Npc
-2210	Mob
-2211	Enter search string... (Ex: word word ...)
-2212	Scroll
-2213	Use Scroll?
-2214	Service
-2215	Use Kafra Warp?
-2216	Plane
-2217	Use Airship?
-2218	>> Failed to read the target information.
-2219	>> Destination <<
-2220	<<   Goal   >>
-2221	-----------
-2222	Navigation
-2223	= Found (%d) ==
-2224	Npc)%s:%s
-2225	Mob)%s:%s
-2226	Map)%s
-2227	======== Results ==========
-2228	Dist  %d Cell %d WarpMove
-2229	Coords %s(%s)
-2230	Goal:%s (%d,%d)
-2231	Boss
-2232	General
-2233	Goal:
-2234	Goal: (%d, %d)
-2235	======= Guidance =======
-2236	%2d) Item:%s => %s Use!
-2237	%2d) %s(%d,%d)=>(%d,%d)
-2238	E%2d) %s(%d,%d)=>(%d,%d)
-2239	E%2d) %s
-2240	Do you want to cancel navigation?
-2241	How to Use Navigation
-2242	------------------- Instruction --------------------
-2243	1) /Navigation or /navi
-2244	ex) /navi prontera 100 100 -> /navi "MAPNAME", 100, 100
-2245	2) /Navigation2 or /navi2
-2246	ex) /navi2 prontera 100 111
-2248	-> /navi2 goes with the case with location coordinates. They must be no less than 3 characters
-2249	3) /$$ Output all the items (Can take a while...)
-2250	4) /$$ Lv30 monsters are placed in the output
-2251	5) /$$ Lv20~30 monsters in that level range are placed in the output
-2252	-------------------  Description  --------------------
-2253	1) One can search for monsters, npcs, maps, or all at once
-2254	2) You can press the search button to get results. It will out put the results depending on what rule you choose
-2255	ex) Drop down box -> Select "Npc", then type in the box "Kafra". Results will now be displayed
-2256	3) When you select an item from a list, information about it are displayed.
-2258	4) Scroll | Zeny | Plane options can be checked to find a faster route
-2259	5) Guide button is pressed, the result list window displays where routes can change direction
-2260	6) Using the button below, search results can be found
-2261	-> [Results List Window] <-> [View Modes can be switched]
-2262	Level:%d (Boss)
-2263	Level:%d (Mob)
-2264	Water %d
-2265	Earth %d
-2266	Fire %d
-2267	Wind %d
-2268	Poison %d
-2269	Holy %d
-2270	Shadow %d
-2272	Undead %d
-2273	Neutral %d
-2274	Medium
-2275	Large
-2276	Small
-2277	Undead
-2278	Brute
-2279	Plant
-2280	Insect
-2281	Fish
-2282	Demon
-2283	Demi-Human
-2284	Angel
-2285	Dragon
-2286	Formless
-2287	Click to move %s
-2288	Move to the Kafra Service Npc
-2289	Click the NPC
-2290	Move %s
-2291	Move to the Airship Service
-2292	By Warp
+2010	Command List
+2011	LEVEL
+2012	MAP
+2013	JOB
+2014	Not Available
+2015	[Protection of Guardian Angel] You can't use it when you reach the highest level.
+2016	Do you really want to move?
+2017	Failed to move Char slot.
+2018	Character name is invalid.
+2019	Show Quest
+2020	Depending on the protection of youth, and 0:00 to 6:00 while under the age of 16 of your game use is limited.
+2021	Depending on the protection of youth, 0:00 to 6:00 ^ff0000 under the age of 16 ^000000 limit your use of the game and the game ends.
+2022	In order to change the character name, you must leave the guild.
+2023	In order to change the character name, you must leave the party.
+2024	Character name change failed, due an unknown error.
+2025	Ready to change character slot in.(%d)
+2026	Ready to change character name in.(%d)
+2027	Length exceeds the maximum size of the character name you want to change.
+2028	Name contains invalid characters. Character name change failed.
+2029	The name change is prohibited. Character name change failed.
+2030	Complete
+2031	During %d minutes your Exp will increase by %d%%.
+2032	%02d seconds left until summon.
+2033	Your party leader summons you to %s (%s). Warp costs %d Zeny.
+2034	Summon target
+2035	Block List
+2036	%d Zeny will be spent for making party ad.
+2037	Insufficient Zeny for making party ad.
+2038	) party: accept invitation
+2039	) party: decline invitation
+2040	) party: show equipment window
+2041	Up to 36 english letters can be entered
+2042	Enter
+2043	1:1 Chat
+2044	Block
+2045	Insufficient Zeny for recall.
+2046	Input your party ad.
+2047	Only party leader can register party ad.
+2048	You have already accepted this ad.
+2049	For
+2050	E
+2051	F
+2052	Drop Lock: On/Off
+2053	Party Alarm
+2054	Create Party
+2055	Leave Party
+2056	Party Invitation
+2057	Party Name:
+2058	Player Name:
+2059	has recieved an invitation to join your party.
+2060	rejected your party invitation.
+2061	accepted your party invitation.
+2062	Recruitment is already a party.
+2063	Same conditions such as the previous search.
+2064	Guild after withdrwal.
+2065	Party after secession.
+2066	The player can not be summoned to this map.
+2067	Party Leader is on a map that is restricted to summon players.
+2068	Summon has been denied.
+2069	Can not be summoned.
+2070	Only the leader can invite.
+2071	Search item:
+2072	You must enter a character name.
+2073	You must enter the name of the party.
+2074	Guild Creation Window
+2075	Join a guild or start your own!
+2076	Create Guild
+2077	Guild Name
+2078	Guild System
+2079	What is the guild system
+2080	You must enter the name of your guild.
+2081	Supported at the party was rejected.
+2082	Select Service:
+2083	Possible escape area.
+2084	Replay File List
+2085	File info
+2086	File List
+2087	%s Item deal not possible.
+2088	Disband the Guild
+2089	Enter Guild Name
+2090	The character is not online or does not exist.
+2091	Failed to call Falcon.
+2092	%d%%(default 100%%+ Premium%d%%+%s Server%d%%)
+2093	This user is currently participating in the siege.
+2094	It is only possible to change the party leader while on the same map.
+2095	In the current region it is not possible to change the party.
+2096	Gryphon making
+2097	Delete: %d/%d - %d:%d:%d
+2098	You can't invite characters in WoE maps.
+2099	You are now in the battlefield queue.
+2100	Queuing has finished.
+2101	Invalid name of the battlefield.
+2102	Invalid type of application.
+2103	People count exceeded.
+2104	Your level doesn't fit this battlefield rules.
+2105	Duplicate application.
+2106	After reconnecting, please re-apply.
+2107	Your class can't participate in this battlefield.
+2108	Only party leader / guild master can apply.
+2109	You can't apply while your team member is already on a battlefield.
+2110	You have left the battlefield queue.
+2111	Wrong battlefield name.
+2112	You are not in the battlefield queue list
+2113	The selected arena is unavailable; your application has been cancelled
+2114	You have left the queue
+2115	Are you sure you want to join a battleground?
+2116	[Battlefield application rules]
+2117	Application and position into the battlefield cannot be applied under this circumtances
+2118	1. Different types of battle can not be applied simultaneously.
+2119	2. Personal / party / guild battle can not be applied simultaneously.
+2120	3. Parties can only be applied by their party leaders.
+2121	Offline party members won't proceed to the queue.
+2122	4. You can add request to enter the arena from any map except for those who don't allow teleport/warp.
+2123	When the battle is finished your character will be returned to the current spot or (if it's not possible) to the save point.
+2124	5. You can view and choose rewards in the arena waiting room.
+2125	Request help battle position
+2126	%s battle begins.
+2127	Do you want to enter the arena?
+2128	[Note]
+2129	When the battle is finished your character will
+2130	be returned to the current spot or (if it's not
+2131	possible) to the save point.
+2132	Waiting for the opponents.
+2133	Battlefield position request
+2134	Accept standby time:%d seconds
+2135	Standby position
+2136	Battlefield name:%s
+2137	Persons required:%d
+2138	Your position:%d
+2139	Name:
+2140	Goal:
+2141	Format:
+2142	Level:
+2143	Win:
+2144	Draw:
+2145	Loss:
+2146	Do you want to participate in the individuals battle?
+2147	Do you want to participate in the parties battle?
+2148	Do you want to participate in the guilds battle?
+2149	Battleground List
+2150	%d VS %d
+2151	LV %d and lower
+2152	LV %d and higher
+2153	LV %d ~ %d
+2154	No restrictions
+2155	[You can't apply on this map.]
+2156	[You must wait about 1 minute to apply.]
+2157	[You must be in a party.]
+2158	[Only party leader can apply.]
+2159	[Too many party members online.]
+2160	[You must be in a guild.]
+2161	[Only guild master can apply.]
+2162	[Too many guild members online.]
+2163	Moving Book
+2164	Move
+2165	Rename
+2166	Create Character
+2167	http://ro.game.gnjoy.com/
+2168	(%s) Server
+2169	Item Merge
+2170	Two or more of the same type. Please select an item.
+2171	Item merge is successful.
+2172	Combining items will be only one kind at a time.
+2173	You cannot have more than 30,000 stacked items.
+2174	Rotate left
+2175	Rotate right
+2176	(%s) to view the old server information
+2177	Existing server information
+2178	^ff0000Existing server: ^0000ff
+2179	^ff0000Existing character: ^0000ff
+2180	Show monster HP bar when attacking.
+2181	Hide monster HP bar when attacking.
+2182	Merge does not exist as an item
+2183	Merge items available does not exist.
+2184	Act
+2185	Pen
+2186	Rec
+2187	Episode
+2188	Loc
+2189	Evt
+2190	New
+2191	Monsters to kill
+2192	Rewards
+2193	Required Items
+2194	Time Limit
+2195	Deadline
+2196	Search
+2197	Navigation
+2198	Back to Navigation
+2199	Find Information
+2200	Toggle Minimap
+2201	Read Information from External File
+2202	Exit
+2203	Change the Default UI
+2204	Change to Default UI
+2205	Help
+2206	ALL
+2207	Map
+2208	Npc
+2209	Mob
+2210	Enter search string... (Ex: word word ...)
+2211	Scroll
+2212	Use Scroll?
+2213	Service
+2214	Use Kafra Warp?
+2215	Plane
+2216	Use Airship?
+2217	>> Failed to read the target information.
+2218	>> Destination <<
+2219	<<   Goal   >>
+2220	-----------
+2221	Navigation
+2222	= Found (%d) ==
+2223	Npc)%s:%s
+2224	Mob)%s:%s
+2225	Map)%s
+2226	======== Results ==========
+2227	Dist  %d Cell %d WarpMove
+2228	Coords %s(%s)
+2229	Goal:%s (%d,%d)
+2230	Boss
+2231	General
+2232	Goal:
+2233	Goal: (%d, %d)
+2234	======= Guidance =======
+2235	%2d) Item:%s => %s Use!
+2236	%2d) %s(%d,%d)=>(%d,%d)
+2237	E%2d) %s(%d,%d)=>(%d,%d)
+2238	E%2d) %s
+2239	Do you want to cancel navigation?
+2240	How to Use Navigation
+2241	------------------- Instruction --------------------
+2242	1) /Navigation or /navi
+2243	ex) /navi prontera 100 100 -> /navi "MAPNAME", 100, 100
+2244	2) /Navigation2 or /navi2
+2245	ex) /navi2 prontera 100 111
+2246	-> MAPNAME location (100 90), Scroll | Zeny | Plane (1: Enable or 0: Disable)
+2248	3) /$$ Output all the items (Can take a while...)
+2249	4) /$$ Lv30 monsters are placed in the output
+2250	5) /$$ Lv20~30 monsters in that level range are placed in the output
+2251	-------------------  Description  --------------------
+2252	1) One can search for monsters, npcs, maps, or all at once
+2253	2) You can press the search button to get results. It will out put the results depending on what rule you choose
+2254	ex) Drop down box -> Select "Npc", then type in the box "Kafra". Results will now be displayed
+2255	3) When you select an item from a list, information about it are displayed.
+2256	-> When button is clicked, it will point you towards your destination if available
+2258	5) Guide button is pressed, the result list window displays where routes can change direction
+2259	6) Using the button below, search results can be found
+2260	-> [Results List Window] <-> [View Modes can be switched]
+2261	Level:%d (Boss)
+2262	Level:%d (Mob)
+2263	Water %d
+2264	Earth %d
+2265	Fire %d
+2266	Wind %d
+2267	Poison %d
+2268	Holy %d
+2269	Shadow %d
+2270	Ghost %d
+2272	Neutral %d
+2273	Medium
+2274	Large
+2275	Small
+2276	Undead
+2277	Brute
+2278	Plant
+2279	Insect
+2280	Fish
+2281	Demon
+2282	Demi-Human
+2283	Angel
+2284	Dragon
+2285	Formless
+2286	Click to move %s
+2287	Move to the Kafra Service Npc
+2288	Click the NPC
+2289	Move %s
+2290	Move to the Airship Service
+2291	By Warp
+2292	End Points: (%d %d)
 2293	That does not support the navigation area
-2295	The purpose is unclear
-2296	Does not meet the map requirement
-2297	Information Failure | Change settings
-2298	Failed to set info for location!
-2299	Failed to find a path
-2300	Failed to find players
-2301	No Information
-2302	Map doesn't support directions
-2303	Please specify target goals.
-2304	Found
-2305	Directions were started
-2306	Is the map that your looking for mob
-2307	Map appears on the guide you are looking for
-2308	Please navigate using the item
-2309	Please follow the instruction to reach your destination.
-2310	Arrived at the target map
-2311	Arrived on the map that has the Npc your looking for. Go to that NPC
-2312	You have arrived at the mob you were looking for
-2313	You have reached your goal
-2314	Please go to indicated direction.
-2315	The goal has been reached
-2316	Navigation >: %s
-2317	Navigation >: Talk to Guide "%s" (A)
-2318	Navigation >: Move to (%s) map
-2319	Navigation >: Choose (%s) Map from Kafra
-2320	Navigation >: Please go to the AirShip
-2321	Navigation >: Get to your destination by using WarpPortal
-2322	Item:
-2323	$$
-2324	$$lv
-2325	~
-2326	$$all
-2327	Confirm Deal
-2328	Below is the total cost:
-2329	Zeny to complete the transaction.
-2330	Press buy to confirm.
-2331	%.1f% (PCRoom %.1f% + TPLUS %.1f% + Premium %.1f% + %sServer %.1f%)
-2332	Card Book
-2333	%d%% [ ( Basic 100%% + %sServer %d%% ) * Active %.1f ]
-2334	%d%% [ Basic 100%% + %sServer %d%% ]
-2335	This is PK region. Minors,Please leave immediately.
-2336	Fatigue
-2337	Health and gaming revenue is 100%%.
-2338	Fatigue because it is now a guest of the gaming revenue is down 50 percent.Hope for the proper health
-2339	Now because it is a non-health to the health of the guests want to offline games. If you still are online gaming revenue because the damage to the health of the game falls to 0% again after 5 hours will be restored offline.
-2340	Online since %d minutes
-2341	Online Time: %d
-2342	Online since %d hours and %d minutes
-2343	/monsterhp: Show the hp of attacked monster. On off
-2344	Skill Points:
-2345	There is no response from the authentification server. Please try again
-2346	Please change your password
-2347	http://www.ragnarok.co.kr
-2348	Guest access is prohibited
-2349	Your System is been Shutdown, %1.2d-%1.2d-%1.2d %1.2d:%1.2d:%1.2d is the end time.
-2350	Selected System Shutdown is activated in your account,Time Left: %1.2d hours %1.2d minutes.
-2351	Replay
-2352	Macro
+2294	The purpose is unclear
+2295	Does not meet the map requirement
+2296	Information Failure | Change settings
+2297	Failed to set info for location!
+2298	Failed to find a path
+2299	Failed to find players
+2300	No Information
+2301	Map doesn't support directions
+2302	Please specify target goals.
+2303	Found
+2304	Directions were started
+2305	Is the map that your looking for mob
+2306	Map appears on the guide you are looking for
+2307	Please navigate using the item
+2308	Please follow the instruction to reach your destination.
+2309	Arrived at the target map
+2310	Arrived on the map that has the Npc your looking for. Go to that NPC
+2311	You have arrived at the mob you were looking for
+2312	You have reached your goal
+2313	Please go to indicated direction.
+2314	The goal has been reached
+2315	Navigation >: %s
+2316	Navigation >: Talk to Guide "%s" (A)
+2317	Navigation >: Move to (%s) map
+2318	Navigation >: Choose (%s) Map from Kafra
+2319	Navigation >: Please go to the AirShip
+2320	Navigation >: Get to your destination by using WarpPortal
+2321	Item:
+2322	$$
+2323	$$lv
+2324	~
+2325	$$all
+2326	Confirm Deal
+2327	Below is the total cost:
+2328	Zeny to complete the transaction.
+2329	Press buy to confirm.
+2330	%.1f% (PCRoom %.1f% + TPLUS %.1f% + Premium %.1f% + %sServer %.1f%)
+2331	Card Book
+2332	%d%% [ ( Basic 100%% + %sServer %d%% ) * Active %.1f ]
+2333	%d%% [ Basic 100%% + %sServer %d%% ]
+2334	This is PK region. Minors,Please leave immediately.
+2335	Fatigue
+2336	Health and gaming revenue is 100%%.
+2337	Fatigue because it is now a guest of the gaming revenue is down 50 percent.Hope for the proper health
+2338	Now because it is a non-health to the health of the guests want to offline games. If you still are online gaming revenue because the damage to the health of the game falls to 0% again after 5 hours will be restored offline.
+2339	Online since %d minutes
+2340	Online Time: %d
+2341	Online since %d hours and %d minutes
+2342	/monsterhp: Show the hp of attacked monster. On off
+2343	Skill Points:
+2344	There is no response from the authentification server. Please try again
+2345	Please change your password
+2346	http://www.ragnarok.co.kr
+2347	Guest access is prohibited
+2348	Your System is been Shutdown, %1.2d-%1.2d-%1.2d %1.2d:%1.2d:%1.2d is the end time.
+2349	Selected System Shutdown is activated in your account,Time Left: %1.2d hours %1.2d minutes.
+2350	Replay
+2351	Macro
+2352	Webbrowser
 2353	Navigation
-2355	UAEURL
-2356	Clan Information
-2357	Clan Level
-2358	Clan Name
-2359	Clan Mark
-2360	Ally Clan
-2361	Antagonist Clan
-2362	Send to Clan
-2363	ClanMaster Name
-2364	Number of Members
+2354	UAEURL
+2355	Clan Information
+2356	Clan Level
+2357	Clan Name
+2358	Clan Mark
+2359	Ally Clan
+2360	Antagonist Clan
+2361	Send to Clan
+2362	ClanMaster Name
+2363	Number of Members
+2364	Castles Owned
 2365	Clan Chat Messages
-2366	Clan Chat Messages
-2367	Go to Page Charged.
-2368	https://gfb.gameflier.com/Billing/ingame/index_new.asp?
-2369	Create char
-2370	Name does not match
-2371	Enter the name of character
-2372	Sex Selection Window
-2373	Editing of the File Detected
-2374	Items obtained by opening the item is character bounded (can not move to storage). Do you want to open the box?
-2375	Game Settings
-2376	Game System
-2377	Game Commands
-2378	Game Command ON/OFF
-2379	Macro
-2380	Trading is prohibited in this Map
-2381	Vending is prohibited in this Map
-2382	In this Map,Effect of Mirace of Sun and Moon is nullified.
-2383	Ranking Board
-2384	Rank
-2385	Name
-2386	Points
-2387	BlackSmith
-2388	Alchemist
-2389	Taekwon
-2390	Killer
+2366	Go to Page Charged.
+2367	https://gfb.gameflier.com/Billing/ingame/index_new.asp?
+2368	Create char
+2369	Name does not match
+2370	Enter the name of character
+2371	Sex Selection Window
+2372	Editing of the File Detected
+2373	Items obtained by opening the item is character bounded (can not move to storage). Do you want to open the box?
+2374	Game Settings
+2375	Game System
+2376	Game Commands
+2377	Game Command ON/OFF
+2378	Macro
+2379	Trading is prohibited in this Map
+2380	Vending is prohibited in this Map
+2381	In this Map,Effect of Mirace of Sun and Moon is nullified.
+2382	Ranking Board
+2383	Rank
+2384	Name
+2385	Points
+2386	BlackSmith
+2387	Alchemist
+2388	Taekwon
+2389	Killer
+2390	7 vs 7
 2391	RuneKnight
-2392	RuneKnight
-2393	Warlock
-2394	Ranger
-2395	Mechanic
-2396	GuillotineCross
-2397	Archbishop
-2398	RoyalGuard
-2399	Sorcerer
-2400	Minstrel
-2401	Wanderer
-2402	Genetic
-2403	ShadowChaser
-2404	Sura
-2405	Kagerou
-2406	Oboro
-2407	Select Ranking Type
-2408	Ranking Type
-2409	Currently,Server is full.           ^0000ffPeople Currently Waiting: %d                    Expected Waiting Time: %dSeconds
-2410	Currently,Server is full.           ^0000ffPeople Currently Waiting: %d                    Expected Waiting Time: %dMinutes %d Seconds
-2411	CBT is not an invited user
-2412	------------------- Instruction --------------------
-2414	2) /Navigation2 or /navi2 ex) /navi2 prontera 100 111 -> MAPNAME location (100 90), Scroll | Zeny | Plane (1: Enable or 0: Disable)
-2415	-> /navi2 goes with the case with location coordinates. They must be no less than 3 characters
-2416	3) $$all Output all the items (Can take a while...)
-2417	4) $$lv30 monsters are placed in the output
-2418	5) $$lv20~30 monsters in that level range are placed in the output
-2419	1 vs 1
-2420	Special Gear
-2421	%d First character of the profession is more than information. Please contact the Customer Care Center. ErrorCode(%d)
-2422	(%s) %d / %d
-2423	%s-%s(%d/%d)
-2424	Server Exceeded the maximum number of users,Cannot Connect anymore users.
-2425	Server Connection Failed (%d)
-2426	Login Timeout Permitted
-2427	Login Authentication Failed from Authentication Server.
-2428	Guild Cannot use Space in the name.
-2429	Hey,Hello There
-2430	Available Time will End on %d month %d hour %d:%d
-2431	You've lot of time,Play in Peace.
-2432	Your hours will be terminated within this week. Please Charge before termination.
-2433	Your hours will be terminated within 24 hours.Please Charge Quickly.
-2434	Current Time Left:%d hours.Charge the game for uninterrupted play.
-2435	Current Time Left:%d minutes.Charge the game for uninterrupted play.
-2436	Time Left: %d hours %d minutes
-2437	%d%% ( Basic 100%% + PCRoom %d%% + Premium %d%% + %sServer %d%% )
-2438	After %d hours %d minutes, your game will be terminated.
-2439	This Account is permanently Banned.
-2440	Termination Time:%04d-%02d-%02d %02d:%02d
-2441	Monster(Tab)
-2442	Map(Alt)
-2443	Product Information
-2444	Find Information
-2445	AirShip
-2446	Kafra
-2447	(Arrival)
-2448	Mob)%s:%s(%s)
-2449	Distribution:%s
-2450	Very Plenty
-2451	Plenty
-2452	Normal
-2453	Low
-2454	Very Low
-2455	The bank is not available. Please try again in a few minutes.
-2456	Bank balance is low.
-2457	You don't have enough zeny
-2458	Minimum Deposit Amount: 1 zeny
-2459	Minimum Withdrawal Amount: 1 zeny
-2460	You cannot hold more than 2,147,483,647 Zeny
-2461	your account is lock by mobile otp
-2462	MOTP auth fail
-2463	For %d minutes,Job Experience obtained from monster is increased by %d%%
-2464	Current Zeny: %s Zeny
-2465	Zeny
-2466	The Maximum amount is 2,147,483,647 Zeny
-2467	Insufficient bullet
-2468	You entered more than 1 Billion Zeny, the price will be set to 1 Billion Zeny.
-2469	AuthTicket is Not Valid
-2470	ErrorCode : %d, ErrorValue : %d
+2392	Warlock
+2393	Ranger
+2394	Mechanic
+2395	GuillotineCross
+2396	Archbishop
+2397	RoyalGuard
+2398	Sorcerer
+2399	Minstrel
+2400	Wanderer
+2401	Genetic
+2402	ShadowChaser
+2403	Sura
+2404	Kagerou
+2405	Oboro
+2406	Select Ranking Type
+2407	Ranking Type
+2408	Currently,Server is full.           ^0000ffPeople Currently Waiting: %d                    Expected Waiting Time: %dSeconds
+2409	Currently,Server is full.           ^0000ffPeople Currently Waiting: %d                    Expected Waiting Time: %dMinutes %d Seconds
+2410	CBT is not an invited user
+2411	------------------- Instruction --------------------
+2412	1) /Navigation or /navi ex) /navi prontera 100 100 -> /navi "MAPNAME", 100, 100
+2414	-> /navi2 goes with the case with location coordinates. They must be no less than 3 characters
+2415	3) $$all Output all the items (Can take a while...)
+2416	4) $$lv30 monsters are placed in the output
+2417	5) $$lv20~30 monsters in that level range are placed in the output
+2418	1 vs 1
+2419	Special Gear
+2420	%d First character of the profession is more than information. Please contact the Customer Care Center. ErrorCode(%d)
+2421	(%s) %d / %d
+2422	%s-%s(%d/%d)
+2423	Server Exceeded the maximum number of users,Cannot Connect anymore users.
+2424	Server Connection Failed (%d)
+2425	Login Timeout Permitted
+2426	Login Authentication Failed from Authentication Server.
+2427	Guild Cannot use Space in the name.
+2428	Hey,Hello There
+2429	Available Time will End on %d month %d hour %d:%d
+2430	You've lot of time,Play in Peace.
+2431	Your hours will be terminated within this week. Please Charge before termination.
+2432	Your hours will be terminated within 24 hours.Please Charge Quickly.
+2433	Current Time Left:%d hours.Charge the game for uninterrupted play.
+2434	Current Time Left:%d minutes.Charge the game for uninterrupted play.
+2435	Time Left: %d hours %d minutes
+2436	%d%% ( Basic 100%% + PCRoom %d%% + Premium %d%% + %sServer %d%% )
+2437	After %d hours %d minutes, your game will be terminated.
+2438	This Account is permanently Banned.
+2439	Termination Time:%04d-%02d-%02d %02d:%02d
+2440	Monster(Tab)
+2441	Map(Alt)
+2442	Product Information
+2443	Find Information
+2444	AirShip
+2445	Kafra
+2446	(Arrival)
+2447	Mob)%s:%s(%s)
+2448	Distribution:%s
+2449	Very Plenty
+2450	Plenty
+2451	Normal
+2452	Low
+2453	Very Low
+2454	The bank is not available. Please try again in a few minutes.
+2455	Bank balance is low.
+2456	You don't have enough zeny
+2457	Minimum Deposit Amount: 1 zeny
+2458	Minimum Withdrawal Amount: 1 zeny
+2459	You cannot hold more than 2,147,483,647 Zeny
+2460	your account is lock by mobile otp
+2461	MOTP auth fail
+2462	For %d minutes,Job Experience obtained from monster is increased by %d%%
+2463	Current Zeny: %s Zeny
+2464	Zeny
+2465	The Maximum amount is 2,147,483,647 Zeny
+2466	Insufficient bullet
+2467	You entered more than 1 Billion Zeny, the price will be set to 1 Billion Zeny.
+2468	AuthTicket is Not Valid
+2469	ErrorCode : %d, ErrorValue : %d
+2470	%d%% ( Basic 100%% + Premium %d%% + Internet cafe %d%% + %s Server %d%% )
 2471	Basic item drop rate from monster hunting is increased for %dmins by %dtimes.
-2474	The price of^0000FF %s^000000
-2475	100000000
-2476	is over ^FF0000%d^0000FF Billion^000000 Zeny and
-2477	10000000
-2478	more than^FF0000 %d0^0000FF Million^000000 Zeny
-2479	. Is this correct?
-2480	Safety check for more than 10m Zeny
+2472	Basic item drop rate from monster hunting is increased for %dhour %.2dmins  by %dtimes.
+2473	The price of^0000FF %s^000000
+2474	100000000
+2475	is over ^FF0000%d^0000FF Billion^000000 Zeny and
+2476	10000000
+2477	more than^FF0000 %d0^0000FF Million^000000 Zeny
+2478	. Is this correct?
+2479	Safety check for more than 10m Zeny
+2480	https://www.warpportal.com/account/login.aspx?ReturnUrl=%2faccount%2fpayment.aspx
 2481	https://kepler.warpportal.com/ror/purchase/?step=1&steamid=%lld&accountname=
-2482	https://kepler.warpportal.com/steam/purchase/?step=1&steamid=76561198071003044&game=rose&accountname=khanhtest111&lang=en
-2483	A giant crevice appeared in Bifrost, the bridge between Splendide, the end of the world and the floating continent of Alfheim, and you do not know the source of the labyrinth forest.
-2484	This is a marker indicating the end of the trip, a new world is opening indicators! Guardian, such as the lyrics to the temptation was gradually losing the soul.
-2485	For thousands of years, a mysterious melody has mesmerized the guardian. After a millennia of slumber, the guardian became confused about what he had been protecting all these years, and began to suspect that he might be the one who has been sealed and hidden away.
-2486	When the melody reached its peak, a giant crevice appeared in Bifrost, the bridge between Splendide, the end of the world and the floating continent of Alfheim. As a result, the two worlds were cut off from each other, causing a big problem for the people.
-2487	Now, the only way to get to Bifrost is through the Labyrinth Forest. Nobody knows how the forest came to exist, and nobody has ever come out of it alive...
-2488	Swallowed countless adventurers to put a hell of confusion, wandering in the forest labyrinth of nowhere, like the heart of a woman was being extend deeper confusion.
-2489	You can enter only numbers.
-2490	Exchange or store window is active and can not register the withdrawal.
-2491	Go to
+2482	A giant crevice appeared in Bifrost, the bridge between Splendide, the end of the world and the floating continent of Alfheim, and you do not know the source of the labyrinth forest.
+2483	This is a marker indicating the end of the trip, a new world is opening indicators! Guardian, such as the lyrics to the temptation was gradually losing the soul.
+2484	For thousands of years, a mysterious melody has mesmerized the guardian. After a millennia of slumber, the guardian became confused about what he had been protecting all these years, and began to suspect that he might be the one who has been sealed and hidden away.
+2485	When the melody reached its peak, a giant crevice appeared in Bifrost, the bridge between Splendide, the end of the world and the floating continent of Alfheim. As a result, the two worlds were cut off from each other, causing a big problem for the people.
+2486	Now, the only way to get to Bifrost is through the Labyrinth Forest. Nobody knows how the forest came to exist, and nobody has ever come out of it alive...
+2487	Swallowed countless adventurers to put a hell of confusion, wandering in the forest labyrinth of nowhere, like the heart of a woman was being extend deeper confusion.
+2488	You can enter only numbers.
+2489	Exchange or store window is active and can not register the withdrawal.
+2490	Go to
+2491	Item Compare
 2492	Now you are trying to mount the gun equipped with bullet does not meet
 2493	Now you are trying to mount the guns and bullets will not fit mounted
 2494	Has not registered to sell the item. Please register to sell the item
@@ -3170,6 +3190,7 @@
 3200	Account block
 3201	System error
 3202	unknown error found.
+3221	10,000,001 z ~ 100,000,000 z
 3238	BOX
 3241	File abusing detected. Please restart the client with clean files.
 3254	MOTP
@@ -3313,7 +3334,6 @@
 3679	Balance: %s %c
 3680	Do you really want to purchase this item? %s Money will be deducted from your total balance.
 3681	Do you really want to purchase this item? %s Money and %s Free Points will be deducted from your total balance.
-3724	%d%%
 3744	Num: %d/%d Weight: %d/%d
 3774	https://member.gnjoy.com.tw/billing.aspx
 3777	Search
@@ -3355,7 +3375,3 @@
 3977	Imperial Guard
 3978	Abyss Chaser
 3979	Windhawk
-3991	↖
-3992	↑
-3993	↗
-3994	Default
