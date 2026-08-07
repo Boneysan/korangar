@@ -1,5 +1,22 @@
 # Resume here — live pass status
 
+> **2026-08-07 — a whole batch of error-message work is pushed and NOT live-verified.**
+> Blocks D and E of [plans/gui-verification-pass.md](plans/gui-verification-pass.md)
+> ran, and the row-5 failure ("skill level is not high enough" from a Clown with
+> the skill at max — it meant *no ensemble partner*) turned into a full audit of
+> every channel by which the server reports a failure. Four channels were
+> completely silent, 25 skill-fail causes printed "Skill failed (reason 73)", and
+> the message table the client resolves ids through was **wrong often enough to
+> invert a success into a failure**. See
+> [protocol/server-error-channels.md](protocol/server-error-channels.md) for the
+> channel map, the four sweeps needed to find them all, and the short list of
+> live checks — `@kick` from a second seat is the most valuable single action.
+>
+> **Block E is still open**: Moonlit's α 0.6 is confirmed correct (which unblocks
+> the whole song/Gospel/Fog-Wall family), but its tile then drew as a solid red
+> square after a fix made during the walk, and **the instrumentation log that
+> would settle it in one cast has never been read**.
+
 **Session 2026-07-28/29 closed a lot.** The observer-view checklist
 ([plans/observer-view-verification.md](plans/observer-view-verification.md)) is
 **rows 1-5, 7, 8, 9 PASS**, row 6 retired as unobservable, **rows 10-11 open**.
