@@ -5141,7 +5141,12 @@ pub enum UnitId {
     BTrap,
     FireRain,
     Catnippowder,
-    Nyanggrass,
+    // 0x107 is `UNT_SV_ROOTTWIST` on this server (`skill.h:1790`). The official
+    // client's table has `NYANGGRASS` here and Hercules defines no such unit at
+    // all, so the two disagree — and the wire is Hercules', which decides it.
+    // Everything after this slot was shifted by the wrong name being here.
+    SvRoottwist,
+    // `UNT_BOOKOFCREATINGSTAR`, abbreviated.
     Creatingstar,
     Dummy0,
     RainOfCrystal,
