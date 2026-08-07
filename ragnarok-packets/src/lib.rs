@@ -995,6 +995,26 @@ pub struct MessageTablePacket {
     pub message_id: u16,
 }
 
+/// `SC_NOTIFY_BAN` (0x0081) as sent by the **map** server — why you were just
+/// disconnected mid-game.
+///
+/// The same header the login and character servers use for
+/// [`LoginFailedPacket`], but reached through a different connection and with a
+/// far wider reason table (`clif.c:770-800`), so it is modeled separately rather
+/// than widening that packet's three-variant enum — an unmodeled variant there
+/// would fail to deserialize and drop the read buffer.
+///
+/// `clif_authfail_fd` calls `sockt->eof(fd)` immediately afterwards, so this is
+/// the *only* explanation the player ever gets for a kick, a ban, a shutdown, or
+/// someone else logging into their account. Without it the client simply bounces
+/// to character select in silence.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0081)]
+pub struct MapDisconnectReasonPacket {
+    pub reason: u8,
+}
+
 /// `ZC_MSG_VALUE` (0x07E2) — a message-table line with a number in it.
 ///
 /// Hercules' `clif_msgtable_num` (`clif.c:10684`). Two reachable callers, both

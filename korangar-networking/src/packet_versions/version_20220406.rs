@@ -241,6 +241,29 @@ where
         message_id: packet.message_id,
         color: MessageColor::Error,
     })?;
+    // Reason table from `clif.c:770-800`. Only the codes Hercules actually
+    // reaches are named; the rest fall through rather than inventing text for
+    // Gravity's regional billing states.
+    packet_handler.register(|packet: MapDisconnectReasonPacket| NetworkEvent::ChatMessage {
+        text: match packet.reason {
+            0 => "Disconnected from the server.".to_owned(),
+            1 => "The server is closing.".to_owned(),
+            2 => "Someone else logged in with this account.".to_owned(),
+            3 => "Disconnected: the connection timed out.".to_owned(),
+            4 => "Disconnected: the server is full.".to_owned(),
+            8 => "The server still recognises your last connection.".to_owned(),
+            9 => "Too many connections from this address.".to_owned(),
+            10 => "Disconnected: out of paid time.".to_owned(),
+            15 => "A GM disconnected you.".to_owned(),
+            108 => "Disconnected: this address is blocked.".to_owned(),
+            109 => "Disconnected: too many invalid password attempts.".to_owned(),
+            110 => "Disconnected: this job class is not allowed here.".to_owned(),
+            113 => "Access is restricted between midnight and 6:00am.".to_owned(),
+            115 => "You are in a connection ban period.".to_owned(),
+            reason => format!("Disconnected by the server (reason {reason})."),
+        },
+        color: MessageColor::Error,
+    })?;
     packet_handler.register(|packet: MessageTableNumberPacket| NetworkEvent::MessageTableNumber {
         message_id: packet.message_id,
         value: packet.value,
