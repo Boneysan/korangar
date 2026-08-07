@@ -241,6 +241,14 @@ where
         message_id: packet.message_id,
         color: MessageColor::Error,
     })?;
+    packet_handler.register(|packet: ServiceMessagePacket| NetworkEvent::ChatMessage {
+        text: packet.message,
+        color: MessageColor::Rgb {
+            red: packet.color.red,
+            green: packet.color.green,
+            blue: packet.color.blue,
+        },
+    })?;
     packet_handler.register(|packet: MoveItemFailedPacket| NetworkEvent::ItemMoveFailed {
         item_index: packet.item_index,
         amount: packet.amount,

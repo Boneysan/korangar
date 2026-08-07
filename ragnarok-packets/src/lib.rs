@@ -995,6 +995,24 @@ pub struct MessageTablePacket {
     pub message_id: u16,
 }
 
+/// `ZC_DEBUGMSG` (0x0ADB) — a coloured line sent straight to one player.
+///
+/// The name is misleading: this is not a debug channel. Hercules exposes it as
+/// the **`servicemessage`** script command (`script.c:17955`), so it is a
+/// message channel this fork's own campaign scripts can use. Unmodeled, such a
+/// line would be consumed by the length fallback and the player would see
+/// nothing at all.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0ADB)]
+#[variable_length]
+pub struct ServiceMessagePacket {
+    /// Hercules writes this through `RGB2BGR`, so it arrives byte-swapped.
+    pub color: ColorBGRA,
+    #[length_remaining]
+    pub message: String,
+}
+
 /// `ZC_MOVE_ITEM_FAILED` (0x0AA7) — an item could not be moved.
 ///
 /// Sent by `clif_item_movefailed` (`clif.c:2912`) when a storage or guild-storage
