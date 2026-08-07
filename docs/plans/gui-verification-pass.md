@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Block D COMPLETE 2026-08-06**: N26 PASS on both halves, which closes row 3 — and it surfaced a bug it was not looking for, **eleven support skills landing with no visual at all** (fixed, live-verified). **Open: block E — rows 4b and 5** |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Block D COMPLETE 2026-08-06**: N26 PASS on both halves, which closes row 3 — and it surfaced a bug it was not looking for, **eleven support skills landing with no visual at all** (fixed, live-verified). **Block E STARTED 2026-08-06 and left open** — Moonlit's 9×9 field draws and **α 0.6 is confirmed correct**, which answers the calibration question the whole song family was waiting on; its sound played 81 times (once per cell) and is fixed; the tile's borrowed texture showed *Land Protector's pattern* and the fix for that is shipped but **unverified after it drew as a solid red square**. Hermode not reached. **Open: rows 4b and 5** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -758,7 +758,52 @@ follow-up against roBrowserLegacy's tables.
 
 #### Block E — last, replaces gear
 
-Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5.
+Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5. **Started 2026-08-06 and
+left OPEN**; two of its four questions are answered, one regressed on a fix
+made during the walk, and Hermode was never reached.
+
+| Question | State |
+|---|---|
+| 9×9 field appears | **PASS** — 9×9, centred on the caster |
+| Tile alpha (the calibration sample) | **PASS at α 0.6** — see §5 |
+| Tile reads flat, not patterned | **FAIL, fix shipped but NOT verified** — see below |
+| Hermode is audible and invisible | **NOT REACHED** |
+
+**Setup for whoever resumes.** `test` is a **Clown (4020)** with a Violin,
+`HeadlessTwo` a **Gypsy (4021)** with a Rope, both party 280 on `prt_fild08`.
+Both know the skills — `CG_MOONLIT` is on **both** job trees (Clown via Musical
+Lesson, Gypsy via Dancing Lesson), so either seat can cast.
+
+**Two name traps cost real time here, and they are a *different* trap from the
+one already recorded.** The skill window shows **"Moonlit"** and **"Hermode"** —
+not "Sheltering Bliss" / "Wand of Hermode", which are Hercules `skill_db`
+**Descriptions** and appear only in `docs/skills.json`. The window's names come
+from the GRF's `skillinfolist.lub`, and ours is a Korean build: 395's `SkillName`
+is `달빛 물레방앗간에 떨어지는 꽃잎`, so `needs_ascii_fallback` fires and the name
+is **synthesised from the `SKID` identifier** (strip the ≤4-char job prefix,
+title-case the rest). So the on-screen name matches neither the code name nor the
+server description. The previously recorded trap ("Magnetic Earth", "Hindsight")
+is the *other* case — an English lua name that differs from the code name.
+
+**Ensemble state, which reads exactly like a client bug.** `CG_MOONLIT`'s
+`SkillData1` is **20 000 ms**, and a successful cast also starts
+**`SC_ENSEMBLEFATIGUE` for 10 s on both partners** (`skill.c:15469`). Neither
+seat can use **any** skill during it. Retry discipline: **wait ~30 s**, or clear
+it with `@die` / a relog. The partner must also be within **4 cells**
+(`ensemble_range` is 4 on RENEWAL, 1 otherwise).
+
+**OPEN, and the thing to look at first: the tile drew as one solid red square.**
+It appeared *between* two observations in the same session, so it is a
+regression from the flat-colour carrier change made during the walk, not an
+original defect — the tester saw a correct translucent salmon field before it.
+The client is instrumented for this: `KORANGAR_PACKET_LOG=1` now prints one
+`[skill-unit] spawn` line per cell plus the resolved colour, the texture, and
+whether the texture reports transparent. **That log has never been read** — the
+cast that produced the square happened before the instrumentation was built, and
+every attempt afterwards was refused by the ensemble check. Read it before
+theorising; the working theory (an opaque white carrier over 81 cells reading as
+saturated pink-red) is untested, and this doc has recorded twice that reasoning
+inward before instrumenting the boundary is what wastes the session.
 
 ### 3. Support walk-into-range — **give this real attention**
 
@@ -836,10 +881,10 @@ the effect-fidelity rule, never guessed.
 |---|---|
 | **How** | Two seats, **Clown + Gypsy**, partied. `@jobchange 4020` (Clown, `test`) and `@jobchange 4021` (Gypsy, `HeadlessTwo`), `@allskill` both, an instrument and a whip, same party |
 | **Watch for** | Moonlit = flat salmon tile per cell, 9×9. **Hermode is sound-only by design** — hearing `헤르모드의 지팡이.wav` and seeing nothing is a **PASS** |
-| **Why it gates other work** | Moonlit's tile is at **α 0.6**; the recovered roBrowser table for the whole song/Gospel/Fog-Wall family uses **α 0.05**, calibrated to a different renderer. **Moonlit is the calibration sample for that entire family** — note how it reads before anyone ports the rest |
+| **Why it gates other work** | Moonlit's tile is at **α 0.6**; the recovered roBrowser table for the whole song/Gospel/Fog-Wall family uses **α 0.05**, calibrated to a different renderer. **Moonlit is the calibration sample for that entire family** — note how it reads before anyone ports the rest. **ANSWERED 2026-08-06: α 0.6 reads correctly on screen** ("a salmon, and about right"). The table's 0.05 does **not** port directly to this renderer — port the rest of the family at *this* magnitude, not the table's, and treat any 0.05 value as needing the same live check. This is a measurement, not an inference, and it unblocks Gospel and Fog Wall |
 | **Do this last** | It replaces the bow gear rows 2-3 need |
-| **Ensemble rules** | Both skills are `Ensemble: true` and GM 99 does **not** bypass the partner check. The partner must be opposite sex, job-mask to `MAPID_BARDDANCER`, know the same skill, wield an instrument or whip, be in the same party, not already dancing, not sitting |
-| **Result** | |
+| **Ensemble rules** | Both skills are `Ensemble: true` and GM 99 does **not** bypass the partner check. The partner must be opposite sex, job-mask to `MAPID_BARDDANCER`, know the same skill, wield an instrument or whip, be in the same party, not already dancing, not sitting — **and be within 4 cells** |
+| **Result** | **PARTIAL, 2026-08-06 — see Block E.** The 9×9 field draws and the **α 0.6 tile reads correctly**, which is the answer this row existed to get. Its sound played **81 times** (once per cell) — fixed and live-verified. The tile read as Land Protector's *pattern*, because it borrowed that skill's texture as a carrier; the fix (a genuine flat colour, no artwork) is shipped but **unverified**, and the tile then drew as **one solid red square**. Hermode not reached |
 
 ### 6. Rest of the 26 July batch — shipped, never seen
 
