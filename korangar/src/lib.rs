@@ -538,6 +538,17 @@ fn skill_hit_effects(skill_id: SkillId) -> Vec<(ResolvedEffect, Color, f32)> {
         .collect()
 }
 
+/// Target-phase effects for a skill that lands without damage (`0x09CB`).
+/// Support skills produce no damage packet, so [`skill_hit_effects`] never
+/// runs for them.
+fn skill_no_damage_target_effects(skill_id: SkillId) -> Vec<(ResolvedEffect, Color, f32)> {
+    skill_presentation_recipe(skill_id)
+        .no_damage_target_effects
+        .iter()
+        .map(|track| (track.asset.resolve(), track.light_color, track.start_delay))
+        .collect()
+}
+
 /// Classic per-hit sounds played at the struck entity. Every name here was
 /// confirmed present in the configured GRFs by
 /// `probes_classic_skill_sound_candidates`; classic sounds for Lightning
@@ -4212,6 +4223,26 @@ impl Client {
                     {
                         self.particle_holder
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), effect_value.to_string())));
+                    }
+
+                    // Target-phase visuals for skills that land without damage.
+                    // Their `hit_effects` are unreachable — that track only
+                    // fires from a damage impact — so a buff or an ally heal
+                    // rendered nothing at all before this.
+                    if successful
+                        && let Some(target_position) = self.entity_world_position(destination_entity_id)
+                    {
+                        for (resolved, light_color, start_delay) in skill_no_damage_target_effects(skill_id) {
+                            self.spawn_resolved_effect(
+                                resolved,
+                                target_position,
+                                PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0)),
+                                light_color,
+                                45.0,
+                                start_delay,
+                                client_tick,
+                            );
+                        }
                     }
 
                     // Caster-centered visuals use this successful-use packet;

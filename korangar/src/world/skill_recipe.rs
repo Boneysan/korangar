@@ -382,6 +382,12 @@ pub struct SkillPresentationRecipe {
     pub damage_caster_effect: Option<DamageCasterEffect>,
     pub damage_target_effect: Option<DamageTargetEffect>,
     pub hit_effects: &'static [EffectTrack],
+    /// Played on the *target* of a successful no-damage skill use (`0x09CB`).
+    ///
+    /// Support skills never produce a damage packet, so `hit_effects` — which
+    /// only fires from a damage impact — can never reach them. Buffs and ally
+    /// heals need their own declared track or they render nothing at all.
+    pub no_damage_target_effects: &'static [EffectTrack],
     pub ground_effect: Option<EffectTrack>,
     pub projectile: Option<ProjectileRecipe>,
     /// Played at the source when the travel projectile actually spawns (the
@@ -399,6 +405,7 @@ const EMPTY: SkillPresentationRecipe = SkillPresentationRecipe {
     damage_caster_effect: None,
     damage_target_effect: None,
     hit_effects: &[],
+    no_damage_target_effects: &[],
     ground_effect: None,
     projectile: None,
     projectile_sounds: &[],
@@ -428,6 +435,13 @@ const HOLY_HIT: EffectTrack = EffectTrack {
     asset: EffectAsset::Fixed("holyhit.str"),
     light_color: Color::rgb_u8(255, 245, 190),
     start_delay: 0.0,
+};
+/// Shared by the Acolyte/Priest support line: a holy flash on whoever the buff
+/// or heal landed on.
+const SUPPORT_HOLY: SkillPresentationRecipe = SkillPresentationRecipe {
+    hit_effects: &[HOLY_HIT],
+    no_damage_target_effects: &[HOLY_HIT],
+    ..EMPTY
 };
 const FROST_DIVER_HITS: &[EffectTrack] = &[EffectTrack {
     asset: EffectAsset::Fixed("freeze.str"),
@@ -688,17 +702,22 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
         156 => recipe!(hit_effects: &[HOLY_HIT]),
         // Acolyte / Priest support feedback (M1-008 catalog expansion).
         // Acolyte / Priest (IDs verified against Hercules skill_db).
-        28 => recipe!(hit_effects: &[HOLY_HIT]), // AL_HEAL
-        29 => recipe!(hit_effects: &[HOLY_HIT]), // AL_INCAGI
-        30 => recipe!(hit_effects: &[HOLY_HIT]), // AL_DECAGI
-        33 => recipe!(hit_effects: &[HOLY_HIT]), // AL_ANGELUS
-        34 => recipe!(hit_effects: &[HOLY_HIT]), // AL_BLESSING
-        66 => recipe!(hit_effects: &[HOLY_HIT]), // PR_IMPOSITIO
-        67 => recipe!(hit_effects: &[HOLY_HIT]), // PR_SUFFRAGIUM
-        68 => recipe!(hit_effects: &[HOLY_HIT]), // PR_ASPERSIO
-        73 => recipe!(hit_effects: &[HOLY_HIT]), // PR_KYRIE
-        74 => recipe!(hit_effects: &[HOLY_HIT]), // PR_MAGNIFICAT
-        75 => recipe!(hit_effects: &[HOLY_HIT]), // PR_GLORIA
+        //
+        // These land through `clif->skill_nodamage` (0x09CB), never through a
+        // damage packet, so the no-damage target track is the one that renders.
+        // `hit_effects` stays because Heal on an undead target is routed the
+        // other way (`skill->attack`, `skill.c:5528`) and arrives as damage.
+        28 => SUPPORT_HOLY, // AL_HEAL
+        29 => SUPPORT_HOLY, // AL_INCAGI
+        30 => SUPPORT_HOLY, // AL_DECAGI
+        33 => SUPPORT_HOLY, // AL_ANGELUS
+        34 => SUPPORT_HOLY, // AL_BLESSING
+        66 => SUPPORT_HOLY, // PR_IMPOSITIO
+        67 => SUPPORT_HOLY, // PR_SUFFRAGIUM
+        68 => SUPPORT_HOLY, // PR_ASPERSIO
+        73 => SUPPORT_HOLY, // PR_KYRIE
+        74 => SUPPORT_HOLY, // PR_MAGNIFICAT
+        75 => SUPPORT_HOLY, // PR_GLORIA
         // AL_HOLYLIGHT is 156 (already mapped above as HOLY_HIT)
         214 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::Raid)),
         406 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::MeteorAssault)),
@@ -780,6 +799,7 @@ mod tests {
                     || recipe.damage_caster_effect.is_some()
                     || recipe.damage_target_effect.is_some()
                     || !recipe.hit_effects.is_empty()
+                    || !recipe.no_damage_target_effects.is_empty()
                     || recipe.ground_effect.is_some()
                     || recipe.projectile.is_some()
                     || !recipe.successful_caster_sounds.is_empty()
@@ -789,6 +809,19 @@ mod tests {
                     || !recipe.ground_sounds.is_empty(),
                 "skill {} is listed but empty",
                 skill_id.0
+            );
+        }
+    }
+
+    /// The Acolyte/Priest line lands through `clif->skill_nodamage`, which
+    /// produces no damage impact, so a recipe carrying only `hit_effects`
+    /// renders nothing on screen no matter how complete it looks.
+    #[test]
+    fn support_skills_declare_a_no_damage_target_track() {
+        for skill_id in [28, 29, 30, 33, 34, 66, 67, 68, 73, 74, 75] {
+            assert!(
+                !skill_presentation_recipe(SkillId(skill_id)).no_damage_target_effects.is_empty(),
+                "support skill {skill_id} would be invisible when it lands"
             );
         }
     }

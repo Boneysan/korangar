@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Open: blocks D and E — rows 3, 4b and 5** |
+| **Status** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Block D COMPLETE 2026-08-06**: N26 PASS on both halves, which closes row 3 — and it surfaced a bug it was not looking for, **eleven support skills landing with no visual at all** (fixed, live-verified). **Open: block E — rows 4b and 5** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |
 | **Blocks** | Nothing. Everything here is verification of work already shipped |
@@ -714,7 +714,47 @@ arrives") and it was not applied.
 
 | # | Check | Watch for | Result |
 |---|---|---|---|
-| N26 | Row 3 — Heal an ally ~15 cells away | Walks into range then casts; **self-buffs still fire instantly** | ☐ |
+| N26 | Row 3 — Heal an ally ~15 cells away | Walks into range then casts; **self-buffs still fire instantly** | **PASS 2026-08-06** on both halves — Heal from ~15 cells walked into range and then cast, and Blessing on self fired instantly. The row's own assertions needed no fix. It did surface a bug it was not looking for: **every support skill landed invisibly**, see below |
+
+#### Finding from the Block D walk — eleven support skills had no trigger
+
+**Fixed and live-verified 2026-08-06.** The tester's report was "Blessing fired
+immediately, got the casting motion, but no visual effect" — and the bug was
+neither the cast nor the packet.
+
+Heal and Blessing on an ally both land through `clif->skill_nodamage`
+(`clif.c:6077`) → `ZC_USE_SKILL`, which at this packetver is **`0x09CB`, not
+`0x011a`** (`packets_struct.h:4788`, guarded on `PACKETVER_RE_NUM >= 20130724`).
+That packet is modelled and *was* being processed — it drove the cast motion and
+Heal's green number. But its handler spawned only `successful_caster_effect`, an
+enum covering five caster-centered skills (Magnum Break, Frost Nova, Raid, Meteor
+Assault, Ignition Break).
+
+The eleven Acolyte/Priest recipes declared `hit_effects: &[HOLY_HIT]`, and
+`hit_effects` fires from **exactly one place** — `apply_damage_impact`
+(`lib.rs:3099`). A buff produces no damage packet, so that track was
+**unreachable for all eleven**: Heal, Increase AGI, Decrease AGI, Angelus,
+Blessing, Impositio, Suffragium, Aspersio, Kyrie, Magnificat, Gloria. The
+recipes read as complete and had no trigger at all.
+
+**The general lesson: a presentation table is only as live as its trigger.** The
+recipe file is organised as a "five-phase contract", which makes a declared track
+look wired up. Nothing in it says which packet fires which phase, so
+`hit_effects` on a no-damage skill was a contradiction the type system happily
+accepted. This is the **same shape as six of Block A's twelve bugs** — the data
+arrives and nothing displays it — and it is now the third recorded instance.
+
+Fixed by declaring the missing phase (`no_damage_target_effects`) and firing it
+from the `0x09CB` arm at the target's position. The support recipes **keep**
+their `hit_effects`, because Heal on an *undead* target is routed the other way
+(`skill->attack`, `skill.c:5528`) and genuinely arrives as damage — both paths
+now render, and neither double-fires, because Hercules sends one or the other for
+a given cast, never both.
+
+**Live-verified:** Blessing flashes on the target, Heal flashes *and* keeps its
+green number. **These skills are silent by design for now** — the recipes declare
+no sounds, and wav names were not guessed at (the effect-fidelity rule). Worth a
+follow-up against roBrowserLegacy's tables.
 
 #### Block E — last, replaces gear
 
@@ -728,7 +768,7 @@ Row 5 (Moonlit / Hermode, Clown + Gypsy) — see §5.
 | **Watch for** | Walks into range, then casts. **Self-buffs must still fire instantly** (self is distance 0) |
 | **Why** | This path *changed behaviour* in the 26 July batch. Wants two seats: the client path is entity-agnostic, so a mob exercises the walk — but a mob closes the distance you are trying to measure |
 | **Setup** | Neither test char has Heal; `@jobchange 8` + `@allskill` |
-| **Result** | |
+| **Result** | **PASS 2026-08-06** (N26). Heal from ~15 cells walks into range and then casts; Blessing on self fires instantly. The behaviour that changed in the 26 July batch is correct. See the Block D finding for the *visual* bug this row uncovered |
 
 ### 4. Ground-skill aiming footprint — shape or slab?
 
