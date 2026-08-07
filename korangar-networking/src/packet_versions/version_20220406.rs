@@ -241,6 +241,18 @@ where
         message_id: packet.message_id,
         color: MessageColor::Error,
     })?;
+    packet_handler.register(|packet: MoveItemFailedPacket| NetworkEvent::ItemMoveFailed {
+        item_index: packet.item_index,
+        amount: packet.amount,
+    })?;
+    // Production skills report success and failure only here. The message ids
+    // live in the same table as `MessageTablePacket`, so this reuses that event
+    // rather than inventing a second rendering path; the skill id adds nothing
+    // the text does not already say.
+    packet_handler.register(|packet: SkillMessageTablePacket| NetworkEvent::MessageTable {
+        message_id: packet.message_id as u16,
+        color: MessageColor::Error,
+    })?;
     packet_handler.register(|packet: MessageTableColorPacket| {
         // Hercules packs RGB in the low 24 bits (0x00RRGGBB on many clients;
         // attendance “not event” uses COLOR_RED).
@@ -1693,6 +1705,25 @@ enum SkillFailure {
     MissingItem { item_id: ItemId, amount: u16, equipment: bool },
 }
 
+const PR_BENEDICTIO: u16 = 69;
+
+/// Every skill flagged `Ensemble: true` in `db/re/skill_db.conf`. These are the
+/// only skills whose cause 0 means "no valid partner" rather than an unmet
+/// condition on the caster.
+const ENSEMBLE_SKILL_IDS: [u16; 11] = [
+    PR_BENEDICTIO, // B.S. Sacramenti
+    306,           // BD_LULLABY
+    307,           // BD_RICHMANKIM
+    308,           // BD_ETERNALCHAOS
+    309,           // BD_DRUMBATTLEFIELD
+    310,           // BD_RINGNIBELUNGEN
+    311,           // BD_ROKISWEIL
+    312,           // BD_INTOABYSS
+    313,           // BD_SIEGFRIED
+    395,           // CG_MOONLIT
+    488,           // CG_HERMODE
+];
+
 /// Reason for a `ZC_ACK_TOUSESKILL` failure (Hercules `useskill_fail_cause`).
 /// Hercules also reuses this packet for gameplay rejections, e.g. party
 /// creation without Basic Skill 7 arrives as skill 1 / cause 0.
@@ -1719,6 +1750,23 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
     // — extend only after checking the source, since most of the ~60 other cause-0
     // emitters really are unmet conditions.
     if packet.cause == 0 {
+        // Ensemble songs and dances report a *missing partner* as cause 0
+        // (`unit.c:1566`, and `skill.c:16015` for Benedictio), so the default
+        // text sends the player to their skill level, which is never the
+        // problem. Hercules has a dedicated `USESKILL_FAIL_ENSEMBLE_PARTYNER`
+        // (94) and simply does not use it here.
+        if ENSEMBLE_SKILL_IDS.contains(&packet.skill_id.0) {
+            return match packet.skill_id.0 {
+                PR_BENEDICTIO => "That needs two Acolyte-class helpers standing to your left and right.".to_owned(),
+                _ => concat!(
+                    "That needs a partner within 4 cells: a Bard or Dancer class of the opposite sex, ",
+                    "in your party, holding an instrument or whip, who knows the same skill and is not ",
+                    "already performing."
+                )
+                .to_owned(),
+            };
+        }
+
         let resisted = match packet.skill_id.0 {
             // `skill.c:8325` — the petrify roll (`skill_lv*4+20` percent, so 60% at
             // level 10) missed; `skill.c:8306` — the target is MD_BOSS. Both arrive
@@ -1757,10 +1805,114 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
         22 => "That is already active.".to_owned(),
         23 => "The conditions for this skill are not met.".to_owned(),
         26 => "You can't place it there.".to_owned(),
+        // Everything below is a cause Hercules genuinely emits (audited against
+        // all 202 `clif->skill_fail` sites in `src/map/`), each worded from its
+        // emitting site rather than from the enum name.
+        12 => "You are already carrying three Ancillae.".to_owned(),                   // skill.c:16174
+        17 => "That needs a partner from your party nearby.".to_owned(),               // skill.c:6539, chorus
+        19 => "You already have the maximum number of these summoned.".to_owned(),     // skill.c:16230
+        20 => "You have nothing summoned to release.".to_owned(),                      // skill.c:16224
+        21 => "No skill has been copied yet.".to_owned(),                              // clif.c:20978
+        25 => "That requires riding a dragon.".to_owned(),                             // skill.c:16537
+        31 => "That must follow Weapon Blocking.".to_owned(),                          // skill.c:5756
+        32 => "That requires a poisoned weapon.".to_owned(),                           // skill.c:12977
+        33 => "That requires a Mado Gear.".to_owned(),                                 // skill.c:16555
+        35 => "That cannot be used on monsters or boss monsters.".to_owned(),          // skill.c:11647
+        36 => "That only works on players, and only where PvP is allowed.".to_owned(), // skill.c:11596
+        37 => "A cannonball must be equipped in the ammunition slot.".to_owned(),      // skill.c:17016
+        43 => "You have nothing to poison the weapon with.".to_owned(),                // clif.c:20927
+        51 => "You have no spellbook to read.".to_owned(),                             // clif.c:20850
+        52 => "You do not know that spellbook's skill, and it puts you to sleep.".to_owned(), // skill.c:20924
+        53 => "That would exceed the spell points you can preserve.".to_owned(),       // skill.c:20933
+        54 => "You cannot memorise any more spells.".to_owned(),                       // skill.c:10516
+        57 => "That requires a pushcart.".to_owned(),                                  // skill.c:16491
+        // Hercules emits this from exactly one site (`skill.c:16257`, Wug
+        // Mastery under SC__GROOMY) and sends **no** accompanying message,
+        // despite the name meaning "the server notifies manually". Printing
+        // nothing would leave the player with silence, so name that one cause.
+        70 => "You are too gloomy to handle your wolf.".to_owned(),
+        73 => "That must follow another skill in its combo.".to_owned(),               // skill.c:15889
+        74 => "Not enough soul spheres.".to_owned(),                                   // skill.c:16674
+        75 => "That requires Fury.".to_owned(),                                        // skill.c:16509
+        79 => "You have no elemental summoned.".to_owned(),                            // skill.c:16367
+        80 => "Your homunculus is not intimate enough.".to_owned(),                    // skill.c:1432
+        83 => "You are standing too close to an NPC.".to_owned(),                      // clif.c:13088
         // 71 / 72 (a required item / equipment) never reach here — they are
         // returned as `SkillFailure::MissingItem` so the client can name the item.
         84 => "Not enough ammunition.".to_owned(),
+        85 => "Not enough coins.".to_owned(), // skill.c:16683, Gunslinger
+        // Hercules does not currently emit this, but it is the cause that
+        // *should* carry an ensemble partner failure — see the cause-0 branch.
+        94 => "That needs an ensemble partner.".to_owned(),
         cause => format!("Skill failed (reason {cause})."),
+    }
+}
+
+#[cfg(test)]
+mod skill_failure_text_tests {
+    use ragnarok_packets::{ItemId, SkillId, ToUseSkillSuccessPacket};
+
+    use super::{ENSEMBLE_SKILL_IDS, SkillFailure, skill_failed_reason, skill_failed_text};
+
+    fn failure(skill_id: u16, cause: u8) -> ToUseSkillSuccessPacket {
+        ToUseSkillSuccessPacket {
+            skill_id: SkillId(skill_id),
+            btype: 0,
+            item_id: ItemId(0),
+            flag: 0,
+            cause,
+        }
+    }
+
+    /// Cause 0 on an ensemble skill is a *missing partner* (`unit.c:1566`), and
+    /// the default text sends the player to their skill level instead — which
+    /// cost a live session twice.
+    #[test]
+    fn ensemble_cause_zero_names_the_partner_requirement() {
+        for skill_id in ENSEMBLE_SKILL_IDS {
+            let text = skill_failed_text(&failure(skill_id, 0));
+            assert!(
+                !text.contains("level is not high enough"),
+                "skill {skill_id} still blames the skill level: {text}"
+            );
+        }
+
+        assert!(skill_failed_text(&failure(395, 0)).contains("partner"));
+        // Benedictio is an ensemble too, but its helpers are Acolytes, not a
+        // Bard/Dancer partner.
+        assert!(skill_failed_text(&failure(69, 0)).contains("Acolyte"));
+    }
+
+    /// A non-ensemble skill must keep the generic cause-0 wording.
+    #[test]
+    fn ordinary_cause_zero_is_unchanged() {
+        assert_eq!(skill_failed_text(&failure(28, 0)), "Skill level is not high enough.");
+    }
+
+    /// Every cause Hercules actually emits should read as a sentence, not as
+    /// "Skill failed (reason N)".
+    #[test]
+    fn every_emitted_cause_has_real_text() {
+        // Audited from all `clif->skill_fail` sites in Hercules `src/map/`.
+        // 71 and 72 are absent deliberately: they carry an item id, so
+        // `skill_failed_reason` routes them to `MissingItem` and they never
+        // reach this function.
+        const EMITTED: [u8; 45] = [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 25, 26, 31, 32, 33, 35, 36, 37, 43,
+            51, 52, 53, 54, 57, 73, 74, 75, 79, 80, 83, 84, 85,
+        ];
+
+        for cause in EMITTED {
+            let text = skill_failed_text(&failure(28, cause));
+            assert!(!text.contains("reason"), "cause {cause} has no text: {text}");
+        }
+
+        for cause in [71, 72] {
+            assert!(
+                matches!(skill_failed_reason(&failure(28, cause)), SkillFailure::MissingItem { .. }),
+                "cause {cause} must name the item instead of printing text"
+            );
+        }
     }
 }
 

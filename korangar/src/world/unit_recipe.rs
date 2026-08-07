@@ -63,7 +63,10 @@ pub enum UnitBody {
     IceHorns { texture: &'static str },
     /// Land Protector's flat pulsing floor tile (`LPEffect`), one per cell.
     GroundQuad {
-        texture: &'static str,
+        /// `None` is the table's `FlatColorTile`: no artwork, just the colour.
+        /// A texture here is artwork the original actually draws, like Land
+        /// Protector's magic circle.
+        texture: Option<&'static str>,
         /// Half-width in world units.
         half_size: f32,
         color: Color,
@@ -410,7 +413,7 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
             // path that painted it on top of the character (the interim low
             // square glow it replaced). Half-size 2.0 = the table's 0.8-cell tile.
             body: Some(UnitBody::GroundQuad {
-                texture: "effect\\aaa copy.bmp",
+                texture: Some("effect\\aaa copy.bmp"),
                 half_size: 2.0,
                 // Translucent so the magic pattern reads over the floor rather
                 // than masking it; 121 of these overlap at Lv5.
@@ -444,11 +447,10 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
         // the table: 0xff8abb at alpha 0.6.
         UnitId::Moonlit => Some(UnitPresentation {
             body: Some(UnitBody::GroundQuad {
-                // A flat colour needs no artwork; reuse Land Protector's tile as a
-                // neutral carrier so the quad has something to sample. If this
-                // reads as patterned rather than flat when seen live, swap it for
-                // a plain white texture — the *colour* is the authentic part.
-                texture: "effect\\aaa copy.bmp",
+                // Confirmed live 2026-08-06: borrowing Land Protector's tile as a
+                // carrier read as Land Protector's *pattern*, so this draws with
+                // no artwork at all, which is what `FlatColorTile` means.
+                texture: None,
                 half_size: 2.5,
                 color: Color::rgba(1.0, 0.541, 0.733, 0.6),
                 // The original tile does not pulse.
@@ -556,11 +558,17 @@ mod tests {
         // verbatim (0xff8abb @ 0.6) and the tile covers one full cell, so
         // half_size is GAT_TILE_SIZE / 2 rather than Land Protector's narrower 2.0.
         let Some(UnitBody::GroundQuad {
-            half_size, color, pulse, ..
+            texture,
+            half_size,
+            color,
+            pulse,
         }) = unit_presentation(UnitId::Moonlit).unwrap().body
         else {
             panic!("Moonlit must be a ground quad");
         };
+        // Live 2026-08-06: any borrowed carrier shows its own artwork through
+        // the tile, which read as Land Protector's magic circle.
+        assert_eq!(texture, None, "a FlatColorTile draws no artwork");
         assert_eq!(half_size, GAT_TILE_SIZE / 2.0);
         assert_eq!(color, Color::rgba(1.0, 0.541, 0.733, 0.6));
         // The original tile is static; a pulse would be our invention.

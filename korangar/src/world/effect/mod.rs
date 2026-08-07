@@ -10,7 +10,7 @@ use cgmath::{Point3, Rad, Vector2, Vector3};
 use korangar_collision::{Frustum, Sphere};
 use korangar_container::Cacheable;
 use ragnarok_formats::map::EffectSource;
-use ragnarok_packets::{EntityId, SkillId};
+use ragnarok_packets::{EntityId, SkillId, UnitId};
 use wgpu::BlendFactor;
 
 pub use self::bolts::FallingBolts;
@@ -655,6 +655,7 @@ enum EffectAnchor {
 pub struct EffectHolder {
     effects: Vec<(Box<dyn EffectBase + Send + Sync>, Option<EffectAnchor>)>,
     unique_skill_effects: Vec<(EntityId, SkillId, UniqueEffectSlot, f32)>,
+    unit_sounds: Vec<(UnitId, f32)>,
 }
 
 impl EffectHolder {
@@ -704,6 +705,22 @@ impl EffectHolder {
         self.claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::CasterLayer, duration)
     }
 
+    /// One announcement per skill-unit *group*.
+    ///
+    /// `ZC_SKILL_ENTRY` arrives once per **cell**, so a 9x9 ensemble spawns 81
+    /// units in one burst. Playing the recipe's sound per unit stacks 81 copies
+    /// of the same wav on the same frame, which is deafening rather than loud.
+    /// The whole burst — including the re-send when a player walks into view of
+    /// an existing group — falls inside one short window.
+    pub fn claim_unit_sound(&mut self, unit_id: UnitId, duration: f32) -> bool {
+        if self.unit_sounds.iter().any(|(claimed, _)| *claimed == unit_id) {
+            return false;
+        }
+
+        self.unit_sounds.push((unit_id, duration));
+        true
+    }
+
     pub fn remove_unit(&mut self, removed_entity_id: EntityId) {
         self.effects
             .iter_mut()
@@ -714,6 +731,7 @@ impl EffectHolder {
     pub fn clear(&mut self) {
         self.effects.clear();
         self.unique_skill_effects.clear();
+        self.unit_sounds.clear();
     }
 
     pub fn update(&mut self, entities: &[crate::world::Entity], delta_time: f32) {
@@ -722,6 +740,8 @@ impl EffectHolder {
             .iter_mut()
             .for_each(|(_, _, _, remaining)| *remaining -= delta_time);
         self.unique_skill_effects.retain(|(_, _, _, remaining)| *remaining > 0.0);
+        self.unit_sounds.iter_mut().for_each(|(_, remaining)| *remaining -= delta_time);
+        self.unit_sounds.retain(|(_, remaining)| *remaining > 0.0);
     }
 
     pub fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
@@ -737,7 +757,7 @@ impl EffectHolder {
 
 #[cfg(test)]
 mod effect_holder_tests {
-    use ragnarok_packets::{EntityId, SkillId};
+    use ragnarok_packets::{EntityId, SkillId, UnitId};
 
     use super::{EffectHolder, UniqueEffectSlot};
 
@@ -766,5 +786,23 @@ mod effect_holder_tests {
         assert!(holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::TargetAoe, 0.4));
         // Same travel slot stays blocked.
         assert!(!holder.claim_unique_skill_effect_slot(source, jupitel, UniqueEffectSlot::TravelProjectile, 0.25));
+    }
+
+    /// A 9x9 ensemble sends 81 `ZC_SKILL_ENTRY` packets in one burst; only the
+    /// first may be audible.
+    #[test]
+    fn a_unit_group_announces_itself_once() {
+        let mut holder = EffectHolder::default();
+
+        assert!(holder.claim_unit_sound(UnitId::Moonlit, 0.3));
+        for _ in 0..80 {
+            assert!(!holder.claim_unit_sound(UnitId::Moonlit, 0.3));
+        }
+        // A different group spawning in the same burst is unaffected.
+        assert!(holder.claim_unit_sound(UnitId::Firewall, 0.3));
+
+        // Once the burst window passes, a genuine recast is audible again.
+        holder.update(&[], 0.4);
+        assert!(holder.claim_unit_sound(UnitId::Moonlit, 0.3));
     }
 }

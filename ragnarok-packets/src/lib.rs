@@ -995,6 +995,36 @@ pub struct MessageTablePacket {
     pub message_id: u16,
 }
 
+/// `ZC_MOVE_ITEM_FAILED` (0x0AA7) — an item could not be moved.
+///
+/// Sent by `clif_item_movefailed` (`clif.c:2912`) when a storage or guild-storage
+/// deposit is refused (`storage.c:301`, `storage.c:687`) — a full storage, or an
+/// item the storage will not take. Without it the item simply stays where it
+/// was, with no explanation at all.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0AA7)]
+pub struct MoveItemFailedPacket {
+    pub item_index: InventoryIndex,
+    pub amount: u16,
+}
+
+/// `ZC_MSG_SKILL` (0x07E6) — a message-table line attributed to a skill.
+///
+/// Hercules' `clif_msgtable_skill` (`clif.c:10711`). This is the *only* channel
+/// for production-skill outcomes: Rune Mastery, Change Material and the
+/// Genetic/Whitesmith crafting skills report `MSG_SKILL_SUCCESS` /
+/// `MSG_SKILL_FAIL` here, never through `ZC_ACK_TOUSESKILL`. Unmodeled it was
+/// consumed by the length fallback, so those skills succeeded or failed in
+/// silence.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x07E6)]
+pub struct SkillMessageTablePacket {
+    pub skill_id: SkillId,
+    pub message_id: u32,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x09CD)]
@@ -4891,7 +4921,7 @@ pub struct NotifyMapInfoPacket {
     pub info_type: u16,
 }
 
-#[derive(Debug, Clone, Copy, ByteConvertable)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u32)]
 pub enum UnitId {

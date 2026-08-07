@@ -191,6 +191,10 @@ pub enum NetworkEvent {
         /// consumable.
         equipment: bool,
     },
+    /// A storage deposit was refused (`ZC_MOVE_ITEM_FAILED`). Hercules sends
+    /// only the inventory slot, so — as with [`Self::SkillFailedMissingItem`] —
+    /// the client finishes the message, since the item table lives there.
+    ItemMoveFailed { item_index: InventoryIndex, amount: u16 },
     CharacterSlotSwitched,
     CharacterSlotSwitchFailed,
     /// Update entity details. Mostly received when the client sends

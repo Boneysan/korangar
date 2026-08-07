@@ -54,7 +54,7 @@ use std::sync::{Arc, LazyLock, Mutex};
 use std::time::{Duration, Instant};
 
 use cgmath::{InnerSpace, Point3, Vector3};
-use image::{EncodableLayout, ImageFormat, ImageReader};
+use image::{EncodableLayout, ImageFormat, ImageReader, Rgba, RgbaImage};
 use input::{MouseInputMode, MouseModeExt};
 use korangar_audio::{AudioEngine, SoundEffectKey};
 #[cfg(feature = "debug")]
@@ -578,6 +578,11 @@ const INITIAL_SCALING_FACTOR: Scaling = Scaling::new(1.0);
 /// these models far larger than a trap should read. Dialled in live — the unit
 /// table carries no scale for them.
 const TRAP_PROP_SCALE: f32 = 0.25;
+/// How long one skill-unit group owns its sound. Every cell of a group arrives
+/// in the same burst, so this only has to outlast that burst; keeping it short
+/// means a genuine recast is still audible (the shortest of these skills has an
+/// after-cast delay well above it).
+const UNIT_SOUND_GROUP_WINDOW: f32 = 0.3;
 const FALLBACK_PACKET_VERSION: SupportedPacketVersion = SupportedPacketVersion::_20220406;
 
 static ICON_DATA: &[u8] = include_bytes!("../archive/data/icon.png");
@@ -1224,6 +1229,10 @@ pub struct Client {
     sprite_loader: Arc<SpriteLoader>,
     texture_loader: Arc<TextureLoader>,
     library: Arc<Library>,
+    /// One opaque white texel, built on first use, so a `FlatColorTile` unit can
+    /// draw its colour without borrowing another skill's artwork. Cached because
+    /// a 9x9 ensemble would otherwise create 81 of them.
+    flat_tile_texture: Option<Arc<Texture>>,
 
     interface_renderer: InterfaceRenderer,
     bottom_interface_renderer: GameInterfaceRenderer,
@@ -1388,6 +1397,19 @@ impl Client {
             }
             Err(error) => eprintln!("[skill-effect] failed to load {path}: {error:?}"),
         }
+    }
+
+    /// Carrier for a `FlatColorTile`: one opaque white texel, so the quad's
+    /// colour reaches the screen unmodulated. The original draws these with no
+    /// artwork at all — borrowing another skill's tile shows *its* pattern, which
+    /// is exactly how this was caught live.
+    fn flat_tile_texture(&mut self) -> Arc<Texture> {
+        self.flat_tile_texture
+            .get_or_insert_with(|| {
+                self.texture_loader
+                    .create_color("korangar://flat-tile", RgbaImage::from_pixel(1, 1, Rgba([255; 4])), false)
+            })
+            .clone()
     }
 
     fn play_spatial_skill_sound(&self, path: &'static str, position: Point3<f32>) {
@@ -1891,6 +1913,10 @@ impl Client {
         // on whether we can draw the thing.
         self.skill_unit_registry.insert(entity_id, unit_id, position);
 
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            eprintln!("[skill-unit] spawn {unit_id:?} entity={entity_id:?} at {position:?}");
+        }
+
         // Hunter traps are RSM props rather than procedural bodies, so they take
         // the prop path instead of a presentation recipe. Their geometry is
         // already in the map's buffer from load, so this is only a placement.
@@ -2017,10 +2043,18 @@ impl Client {
                 half_size,
                 color,
                 pulse,
-            }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
+            }) => match match texture {
+                Some(texture) => self.texture_loader.get_or_load(texture, ImageType::Color),
+                None => Ok(self.flat_tile_texture()),
+            } {
                 Ok(loaded) => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}");
+                        let texture = texture.unwrap_or("<flat colour>");
+                        eprintln!(
+                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, \
+                             transparent={}",
+                            loaded.is_transparent()
+                        );
                     }
                     self.effect_holder.add_unit(
                         Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse)),
@@ -2033,7 +2067,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                Err(error) => eprintln!("[skill-unit] failed to load {texture:?}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -2062,8 +2096,17 @@ impl Client {
             None => {}
         }
 
+        // Once per group, not once per cell — see `claim_unit_sound`. The sound
+        // lands on whichever cell the server sent first rather than the group's
+        // centre, which is at most a few cells off at a 250-unit audio range.
         if let Some(sound) = presentation.sound {
-            self.play_spatial_skill_sound(sound, position);
+            let claimed = self.effect_holder.claim_unit_sound(unit_id, UNIT_SOUND_GROUP_WINDOW);
+            if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                eprintln!("[skill-unit] sound {sound} claimed={claimed}");
+            }
+            if claimed {
+                self.play_spatial_skill_sound(sound, position);
+            }
         }
     }
 
@@ -2737,6 +2780,7 @@ impl Client {
             sprite_loader,
             texture_loader,
             library,
+            flat_tile_texture: None,
             interface_renderer,
             bottom_interface_renderer,
             middle_interface_renderer,
@@ -4021,6 +4065,27 @@ impl Client {
                     equipment,
                 } => {
                     let text = missing_skill_item_text(&self.library, item_id, amount, equipment);
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Error));
+                }
+                NetworkEvent::ItemMoveFailed { item_index, amount } => {
+                    // The packet names only the slot, so read the item back out
+                    // of the inventory the deposit was refused from.
+                    let item = self
+                        .client_state
+                        .follow(client_state().inventory())
+                        .items()
+                        .iter()
+                        .find(|item| item.index == item_index)
+                        .and_then(|item| resolve_item_name(&self.library, item.item_id, true));
+
+                    let text = match item {
+                        Some(name) if amount > 1 => format!("{name} x{amount} could not be stored. The storage may be full."),
+                        Some(name) => format!("{name} could not be stored. The storage may be full."),
+                        None => "That item could not be stored. The storage may be full.".to_owned(),
+                    };
+
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Error));
@@ -9638,12 +9703,14 @@ mod skill_effect_asset_tests {
                 paths.insert(format!("data\\texture\\effect\\{str_path}"));
             }
             match presentation.body {
-                Some(
-                    UnitBody::Cylinders { texture, .. }
-                    | UnitBody::IceHorns { texture }
-                    | UnitBody::GroundQuad { texture, .. },
-                ) => {
+                Some(UnitBody::Cylinders { texture, .. } | UnitBody::IceHorns { texture }) => {
                     paths.insert(format!("data\\texture\\{texture}"));
+                }
+                // A flat-colour tile has no artwork to audit.
+                Some(UnitBody::GroundQuad { texture, .. }) => {
+                    if let Some(texture) = texture {
+                        paths.insert(format!("data\\texture\\{texture}"));
+                    }
                 }
                 Some(UnitBody::LoopingSprite { path, .. }) => {
                     paths.insert(format!("data\\sprite\\{path}.spr"));
