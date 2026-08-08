@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use hashbrown::{HashMap, HashSet};
 use mlua::Lua;
 use ragnarok_packets::{JobId, SkillId, SkillLevel};
@@ -142,6 +144,13 @@ fn merge_required_for(
 
     fully_evaluated.insert(key);
 }
+
+/// Stand-in for a skill the requirements table has no entry for: no
+/// prerequisites and nothing depending on it. Mirrors `SkillListInformation`'s
+/// `NOT_FOUND_ENTRY`, which is the point — both tables are built from the same
+/// `skillinfolist.lub`, so a skill missing from it must degrade the same way in
+/// both, or the first lookup succeeds and the second panics.
+static NOT_FOUND_ENTRY: LazyLock<SkillListRequirements> = LazyLock::new(SkillListRequirements::default);
 
 /// Skill requirements, including skills required for this skill to be leveled
 /// and skills that require this skill to be leveled.
@@ -370,6 +379,15 @@ impl Table for SkillListRequirements {
     where
         Self: Sized,
     {
-        Self::try_get(library, key).expect("incomplete skill tree")
+        // `skilltreeview.lub` and `skillinfolist.lub` are separate GRF tables and
+        // are allowed to disagree: the tree can lay out a skill the info list
+        // never describes. That must degrade to an unskillable entry, never take
+        // the client down — the same guard `request_skill_tree_layout_load`
+        // already applies to a job with no tree at all. Logged rather than
+        // swallowed, because the gap is in the game data and is worth naming.
+        Self::try_get(library, key).unwrap_or_else(|| {
+            eprintln!("[skill-tree] no requirements entry for {key:?}; treating it as having none");
+            &NOT_FOUND_ENTRY
+        })
     }
 }
