@@ -153,6 +153,7 @@ impl WindowCache {
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
             WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),
+            WindowClass::DisconnectNotice => state(AnchorPoint::Center, 0.0, -40.0, 380.0, 170.0),
             WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 470.0, 520.0),
             // DM campaign tools: bestiary right of center, loot generator left.
             WindowClass::Bestiary => state(AnchorPoint::CenterRight, -(400.0 + MARGIN), -240.0, 380.0, 480.0),
@@ -209,6 +210,7 @@ impl WindowCache {
             WindowClass::Emotes,
             // Centered error popup (wrong password / disconnect).
             WindowClass::Error,
+            WindowClass::DisconnectNotice,
         ] {
             if !self.entries.contains_key(&class)
                 && let Some(default) = Self::default_for_class(class)

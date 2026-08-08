@@ -194,6 +194,15 @@ pub enum NetworkEvent {
     /// A message-table line carrying a number (`ZC_MSG_VALUE`). The table lives
     /// in the client crate, and the id's text holds the `%d` this fills.
     MessageTableNumber { message_id: u16, value: u32 },
+    /// Why the map server is about to drop this connection (`SC_NOTIFY_BAN`) —
+    /// a kick, a ban, a shutdown, or someone else taking the account.
+    ///
+    /// **Deliberately not a chat message.** `clif_authfail_fd` closes the socket
+    /// in the same breath, so the client leaves for character select instantly
+    /// and takes the chat window with it; the text has to outlive the screen it
+    /// arrived on. The client holds this until the disconnect lands and then
+    /// shows it as a popup.
+    MapDisconnectReason { message: String },
     /// Result of ignoring or unignoring everyone (`ZC_ACK_WHISPER_LIST`).
     IgnoreAllResult { ignore_type: u8, result: u8 },
     /// A storage deposit was refused (`ZC_MOVE_ITEM_FAILED`). Hercules sends

@@ -251,8 +251,8 @@ where
     // Reason table from `clif.c:770-800`. Only the codes Hercules actually
     // reaches are named; the rest fall through rather than inventing text for
     // Gravity's regional billing states.
-    packet_handler.register(|packet: MapDisconnectReasonPacket| NetworkEvent::ChatMessage {
-        text: match packet.reason {
+    packet_handler.register(|packet: MapDisconnectReasonPacket| NetworkEvent::MapDisconnectReason {
+        message: match packet.reason {
             0 => "Disconnected from the server.".to_owned(),
             1 => "The server is closing.".to_owned(),
             2 => "Someone else logged in with this account.".to_owned(),
@@ -269,7 +269,6 @@ where
             115 => "You are in a connection ban period.".to_owned(),
             reason => format!("Disconnected by the server (reason {reason})."),
         },
-        color: MessageColor::Error,
     })?;
     packet_handler.register(|packet: MessageTableNumberPacket| NetworkEvent::MessageTableNumber {
         message_id: packet.message_id,

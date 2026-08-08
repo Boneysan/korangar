@@ -13,6 +13,7 @@ mod dice;
 mod dm;
 mod emote;
 mod equipment;
+mod disconnect_notice;
 mod error;
 #[cfg(feature = "debug")]
 mod frame_inspector;
@@ -75,6 +76,7 @@ pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::dm::{BestiaryWindow, BestiaryWindowState, LootGeneratorWindow, LootWindowState};
 pub use self::emote::EmoteWindow;
 pub use self::equipment::EquipmentWindow;
+pub use self::disconnect_notice::DisconnectNoticeWindow;
 pub use self::error::ErrorWindow;
 #[cfg(feature = "debug")]
 pub use self::frame_inspector::FrameInspectorWindow;
@@ -141,6 +143,7 @@ pub enum WindowClass {
     Emotes,
     /// Login / network error popup (wrong password, disconnect, …).
     Error,
+    DisconnectNotice,
     StatusBar,
     SkillTree,
     Stats,

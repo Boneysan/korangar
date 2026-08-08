@@ -599,6 +599,27 @@ const DEBUG_WINDOWS: &[WindowClass] = &[
     WindowClass::RenderOptions,
 ];
 
+/// Windows that must survive the walk back from the map to character select.
+///
+/// The return trip closes every window **three** times in separate event
+/// batches — on the map disconnect, on the character-server list, and again on
+/// the character list — so a popup explaining *why* the player was thrown out
+/// gets wiped by a later step no matter which of them it is opened after. Live
+/// 2026-08-08: the kick reason arrived and resolved correctly and was still
+/// invisible, because the character-list arm ran a batch later.
+#[cfg(not(feature = "debug"))]
+const SURVIVES_RETURN_TO_CHARACTER_SELECT: &[WindowClass] = &[WindowClass::DisconnectNotice];
+
+#[cfg(feature = "debug")]
+const SURVIVES_RETURN_TO_CHARACTER_SELECT: &[WindowClass] = &[
+    WindowClass::DisconnectNotice,
+    WindowClass::CacheStatistics,
+    WindowClass::ClientStateInspector,
+    WindowClass::PacketInspector,
+    WindowClass::Profiler,
+    WindowClass::RenderOptions,
+];
+
 // Create the `threads` module.
 #[cfg(feature = "debug")]
 korangar_debug::create_profiler_threads!(threads, {
@@ -1278,6 +1299,18 @@ pub struct Client {
     /// A targeted skill awaiting a click to pick its target. See
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
+    /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
+    /// disconnect itself lands. The packet arrives immediately before the socket
+    /// closes, so it cannot be shown on the map screen we are already leaving.
+    pending_disconnect_reason: Option<String>,
+    /// Set when the server dropped us rather than the player leaving, so the
+    /// notice is opened after the event batch instead of inside whichever arm
+    /// happened to run first.
+    disconnect_needs_notice: bool,
+    /// Frames spent waiting for the screen the notice should sit on top of.
+    disconnect_notice_delay: u32,
+    /// An error popup that arrived mid-transition, held for the same reason.
+    pending_error_message: Option<String>,
     /// Tile texture for the ground-skill aiming footprint, loaded once at
     /// startup. `None` if the asset is missing — the footprint is then skipped
     /// rather than failing the frame.
@@ -2889,6 +2922,10 @@ impl Client {
             point_shadow_camera,
             input_event_buffer,
             pending_skill: None,
+            pending_disconnect_reason: None,
+            disconnect_needs_notice: false,
+            disconnect_notice_delay: 0,
+            pending_error_message: None,
             skill_footprint_texture,
             pending_impacts: PendingImpactQueue::default(),
             network_event_buffer,
@@ -3297,6 +3334,9 @@ impl Client {
     /// with a status message. Used when the character-server handoff fails so
     /// the player is never left staring at a dead server-select window.
     fn return_to_login_with_error(&mut self, message: &str) {
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            eprintln!("[disconnect] return_to_login_with_error closes all windows: {message}");
+        }
         self.networking_system.disconnect_from_login_server();
         self.networking_system.disconnect_from_character_server();
         self.networking_system.disconnect_from_map_server();
@@ -3418,11 +3458,7 @@ impl Client {
                     self.saved_login_data = Some(login_data);
                     *self.client_state.follow_mut(client_state().character_servers()) = character_servers.clone();
 
-                    #[cfg(not(feature = "debug"))]
-                    self.interface.close_all_windows();
-
-                    #[cfg(feature = "debug")]
-                    self.interface.close_all_windows_except(DEBUG_WINDOWS);
+                    self.interface.close_all_windows_except(SURVIVES_RETURN_TO_CHARACTER_SELECT);
 
                     // Local Hercules (and most private servers) only advertise one
                     // character server — skip the select screen entirely so login
@@ -3537,6 +3573,9 @@ impl Client {
                         }
                     } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
                         // Intentional char disconnect without map (e.g. log out character).
+                        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                            eprintln!("[disconnect] CharacterServerDisconnected(intentional) closes all windows");
+                        }
                         #[cfg(not(feature = "debug"))]
                         self.interface.close_all_windows();
 
@@ -3558,7 +3597,6 @@ impl Client {
                     self.pending_skill = None;
 
                     if reason != DisconnectReason::ClosedByClient {
-                        // TODO: Make this an on-screen popup.
                         #[cfg(feature = "debug")]
                         print_debug!("Disconnection from the map server with error");
                     }
@@ -3608,6 +3646,27 @@ impl Client {
 
                     self.async_loader
                         .request_map_load(DEFAULT_MAP.to_string(), Some(TilePosition::new(0, 0)));
+
+                    // Only *arm* the notice here. Showing it in this arm relies on
+                    // the reason packet having been handled already, and the
+                    // ordering is not ours to choose: `clif_authfail_fd` writes
+                    // 0x0081 and calls `sockt->eof` immediately, so whether the
+                    // buffered bytes are drained before or after the closed
+                    // connection is noticed is the networking layer's business.
+                    // The notice is opened once the whole event batch is drained,
+                    // which is also safely after `close_all_windows` above.
+                    if reason != DisconnectReason::ClosedByClient {
+                        self.disconnect_needs_notice = true;
+                    }
+                }
+                NetworkEvent::MapDisconnectReason { message } => {
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!("[disconnect] server reason: {message}");
+                    }
+                    self.pending_disconnect_reason = Some(message);
+                    // A reason implies a server-initiated drop even if the
+                    // disconnect event never arrives.
+                    self.disconnect_needs_notice = true;
                 }
                 NetworkEvent::InitialStats {
                     strength_stat_points_cost,
@@ -3693,11 +3752,7 @@ impl Client {
                         // TODO: this will do one unnecessary restore_focus. check
                         // if that will be problematic
 
-                        #[cfg(not(feature = "debug"))]
-                        self.interface.close_all_windows();
-
-                        #[cfg(feature = "debug")]
-                        self.interface.close_all_windows_except(DEBUG_WINDOWS);
+                        self.interface.close_all_windows_except(SURVIVES_RETURN_TO_CHARACTER_SELECT);
 
                         self.interface.open_window(CharacterSelectionWindow::new(
                             client_state().character_slots(),
@@ -3705,7 +3760,14 @@ impl Client {
                         ));
                     }
                 }
-                NetworkEvent::CharacterSelectionFailed { message, .. } => self.interface.open_window(ErrorWindow::new(message.to_owned())),
+                NetworkEvent::CharacterSelectionFailed { message, .. } => {
+                    // Deferred for the same reason as the disconnect notice: this
+                    // one can arrive *during* the walk back to character select,
+                    // so opening it now puts it under the character-selection
+                    // window. The other three `ErrorWindow` sites fire while that
+                    // screen is already up, so they stack correctly as they are.
+                    self.pending_error_message = Some(message.to_owned());
+                }
                 NetworkEvent::CharacterDeleted => {
                     if let Some(character_id) = self.client_state.follow_mut(client_state().currently_deleting()).take() {
                         self.client_state
@@ -5142,6 +5204,9 @@ impl Client {
                     }
                 }
                 NetworkEvent::LoggedOut => {
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!("[disconnect] LoggedOut closes all windows");
+                    }
                     // Close character UI *before* clearing character-scoped state.
                     // Skill Tree holds ManuallyAsserted paths into layout tabs; if we
                     // clear the tree while the window is still open, the next layout
@@ -6115,6 +6180,48 @@ impl Client {
         // spawn/death/movement changes delivered in the same network update.
         self.apply_due_impacts(client_tick);
 
+        // After the whole batch, so it does not matter whether the reason packet
+        // or the closed connection was noticed first — and so it lands after the
+        // disconnect arm's `close_all_windows`, which would otherwise close the
+        // notice immediately.
+        // **Wait for the destination screen before opening.** Windows are drawn
+        // in the order they were opened and there is no raise-to-front, so a
+        // notice opened while the client is still walking back from the map is
+        // pushed *before* the character-selection window and ends up underneath
+        // it. Live 2026-08-08: the notice opened, nothing closed it, and it was
+        // still invisible — it was behind character select the whole time.
+        if self.disconnect_needs_notice || self.pending_error_message.is_some() {
+            let landed = self.interface.is_window_with_class_open(WindowClass::CharacterSelection)
+                || self.interface.is_window_with_class_open(WindowClass::Login);
+
+            // Never wait forever: if the client ends up somewhere with neither
+            // window, the explanation still matters more than its stacking.
+            self.disconnect_notice_delay = self.disconnect_notice_delay.saturating_add(1);
+
+            if landed || self.disconnect_notice_delay > 600 {
+                self.disconnect_notice_delay = 0;
+
+                if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                    eprintln!("[disconnect] opening pending popups (landed={landed})");
+                }
+
+                // Error first, notice second: both must clear the screen below,
+                // and the notice is the one that has to be acknowledged, so it
+                // takes the top of the stack.
+                if let Some(message) = self.pending_error_message.take() {
+                    self.interface.open_window(ErrorWindow::new(message));
+                }
+
+                if std::mem::take(&mut self.disconnect_needs_notice) {
+                    let message = self
+                        .pending_disconnect_reason
+                        .take()
+                        .unwrap_or_else(|| "You were disconnected from the server.".to_owned());
+                    self.interface.open_window(DisconnectNoticeWindow::new(message));
+                }
+            }
+        }
+
         if open_storage_ui {
             self.open_storage_window_if_needed();
         }
@@ -6448,6 +6555,14 @@ impl Client {
                     let _ = self.networking_system.log_out();
                 }
                 InputEvent::LogOutCharacter => {
+                    self.networking_system.disconnect_from_character_server();
+                }
+                InputEvent::AcknowledgeDisconnect => {
+                    self.interface.close_window_with_class(WindowClass::DisconnectNotice);
+                    // The map connection is already gone; this drops the
+                    // character-server one the client reconnected in the
+                    // meantime, so OK lands on the login form rather than in a
+                    // character select the server has thrown us out of.
                     self.networking_system.disconnect_from_character_server();
                 }
                 InputEvent::Exit => SHUTDOWN_SIGNAL.store(true, Ordering::SeqCst),
