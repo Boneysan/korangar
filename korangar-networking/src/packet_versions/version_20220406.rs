@@ -1756,6 +1756,28 @@ enum SkillFailure {
 }
 
 const PR_BENEDICTIO: u16 = 69;
+const ALL_PARTYFLEE: u16 = 693;
+const PR_REDEMPTIO: u16 = 1014;
+
+/// Every skill declaring `State: "Shield"` in `db/re/skill_db.conf`. Hercules
+/// checks that state in one shared place (`skill.c:16496`) and reports the
+/// missing shield as cause 0, so the skill id is the only thing that
+/// distinguishes it — `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) exists and is
+/// never used.
+const SHIELD_SKILL_IDS: [u16; 12] = [
+    249,  // CR_AUTOGUARD, Guard
+    250,  // CR_SHIELDCHARGE, Smite
+    251,  // CR_SHIELDBOOMERANG, Shield Boomerang
+    252,  // CR_REFLECTSHIELD, Shield Reflect
+    257,  // CR_DEFENDER, Defending Aura
+    480,  // PA_SHIELDCHAIN, Shield Chain
+    1002, // CR_SHRINK, Shrink
+    2310, // LG_SHIELDPRESS, Shield Press
+    2311, // LG_REFLECTDAMAGE, Reflect Damage
+    2315, // LG_SHIELDSPELL, Shield Spell
+    2323, // LG_EARTHDRIVE, Earth Drive
+    8219, // ML_DEFENDER, Defending Aura (mercenary)
+];
 
 /// Every skill flagged `Ensemble: true` in `db/re/skill_db.conf`. These are the
 /// only skills whose cause 0 means "no valid partner" rather than an unmet
@@ -1817,7 +1839,33 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
             };
         }
 
+        // The same shape again: a specific condition Hercules has a dedicated
+        // cause for and does not use. Every cause-0 emission reachable for these
+        // skills was attributed to its enclosing `case` labels first, so the
+        // text is not guessing at which condition failed.
+        if SHIELD_SKILL_IDS.contains(&packet.skill_id.0) {
+            // `skill.c:16496` (the shared `ST_SHIELD` state check) and, for
+            // Shield Spell only, `skill.c:10759`, which additionally insists the
+            // left hand holds a real `IT_ARMOR`. Both mean the same thing.
+            //
+            // Shield Reflect has one other cause-0 path — a 5%-per-level roll
+            // under `SC_KYOMU` (`skill.c:16379`) — which would read as a missing
+            // shield here. Left as is: Kyomu is a Kagerou/Oboro debuff, and the
+            // alternative is hedging every shield skill's message for it.
+            return "That needs a shield equipped.".to_owned();
+        }
+
         let resisted = match packet.skill_id.0 {
+            // `skill.c:10003` — the only cause-0 path this skill has.
+            ALL_PARTYFLEE => Some("You have to be in a party to use that."),
+            // Three indistinguishable cause-0 paths, so the message names all
+            // three conditions: `skill.c:7004` (no party), `skill.c:7013` (the
+            // splash reached nobody), `skill.c:16056` (under 1% of base or job
+            // experience, which is what the skill spends).
+            PR_REDEMPTIO => Some(concat!(
+                "Redemptio needs a party, at least one dead party member in range, ",
+                "and 1% of your base and job experience to spend."
+            )),
             // `skill.c:8325` — the petrify roll (`skill_lv*4+20` percent, so 60% at
             // level 10) missed; `skill.c:8306` — the target is MD_BOSS. Both arrive
             // as cause 0 and are indistinguishable from here.
@@ -1902,7 +1950,7 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
 mod skill_failure_text_tests {
     use ragnarok_packets::{ItemId, SkillId, ToUseSkillSuccessPacket};
 
-    use super::{ENSEMBLE_SKILL_IDS, SkillFailure, skill_failed_reason, skill_failed_text};
+    use super::{ALL_PARTYFLEE, ENSEMBLE_SKILL_IDS, PR_REDEMPTIO, SHIELD_SKILL_IDS, SkillFailure, skill_failed_reason, skill_failed_text};
 
     fn failure(skill_id: u16, cause: u8) -> ToUseSkillSuccessPacket {
         ToUseSkillSuccessPacket {
@@ -1937,6 +1985,39 @@ mod skill_failure_text_tests {
     #[test]
     fn ordinary_cause_zero_is_unchanged() {
         assert_eq!(skill_failed_text(&failure(28, 0)), "Skill level is not high enough.");
+    }
+
+    /// `State: "Shield"` is checked in one shared place and reported as cause 0,
+    /// so a Crusader with no shield was told to level the skill up.
+    /// `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) exists and Hercules never sends
+    /// it.
+    #[test]
+    fn shield_cause_zero_names_the_shield() {
+        for skill_id in SHIELD_SKILL_IDS {
+            let text = skill_failed_text(&failure(skill_id, 0));
+            assert!(
+                text.contains("shield"),
+                "skill {skill_id} does not mention the shield: {text}"
+            );
+        }
+
+        // A skill with no shield requirement must not pick this up.
+        assert_eq!(skill_failed_text(&failure(28, 0)), "Skill level is not high enough.");
+    }
+
+    /// The two party-conditional skills. Redemptio has three indistinguishable
+    /// cause-0 paths, so its message has to name all three conditions; Party
+    /// Flee has exactly one and can be precise.
+    #[test]
+    fn party_cause_zero_names_the_party_requirement() {
+        let party_flee = skill_failed_text(&failure(ALL_PARTYFLEE, 0));
+        assert!(party_flee.contains("party"), "{party_flee}");
+        assert!(!party_flee.contains("level is not high enough"), "{party_flee}");
+
+        let redemptio = skill_failed_text(&failure(PR_REDEMPTIO, 0));
+        assert!(redemptio.contains("party"), "{redemptio}");
+        assert!(redemptio.contains("experience"), "{redemptio}");
+        assert!(!redemptio.contains("level is not high enough"), "{redemptio}");
     }
 
     /// Every cause Hercules actually emits should read as a sentence, not as

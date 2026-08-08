@@ -53,6 +53,31 @@ Cause 94 is mapped too, so a future delta needs no client change.
 All 11 `Ensemble: true` skills now name the real requirement. Benedictio gets its
 own text — its helpers are two flanking Acolytes, not a Bard/Dancer partner.
 
+**It is not one skill family, it is a pattern — three more found 2026-08-07,
+each with an unused dedicated cause sitting right beside it:**
+
+| Skills | Cause 0 really means | Unused cause |
+|---|---|---|
+| The **12** with `State: "Shield"` in `db/re/skill_db.conf` | no shield equipped (`skill.c:16496`, one shared state check; Shield Spell also `skill.c:10759`) | `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) |
+| `ALL_PARTYFLEE` (693) | not in a party (`skill.c:10003`) | `USESKILL_FAIL_NOT_PARTY_MEMBER` (92) |
+| `PR_REDEMPTIO` (1014) | **three** paths: no party (`skill.c:7004`), the splash reached nobody (`skill.c:7013`), under 1% base or job experience (`skill.c:16056`) | (92 covers only the first) |
+
+**The step that makes this safe is attributing every cause-0 emission to its
+enclosing `case` labels before writing a word.** Keying text on a skill id is
+only sound if cause 0 means one thing for that skill, and a grep cannot tell you
+that — the shield check is nowhere near the skills it guards. Doing it turned up
+that Redemptio has three conditions (so its text names all three rather than
+guessing), that Shield Spell's second, stricter check means the same as the
+first, and one honest exception: **Shield Reflect has a 5%-per-level `SC_KYOMU`
+roll (`skill.c:16379`) that will read as a missing shield.** Left that way
+deliberately — Kyomu is a Kagerou/Oboro debuff, and hedging all 12 messages for
+it would cost every player clarity to spare one.
+
+**Still not a server change, for the reason above and one more.** Emitting 94
+would actively *lose* information: the client's cause-0 text for an ensemble
+names the full requirement, while cause 94 carries only "That needs an ensemble
+partner". A correct wire value is not automatically a better message.
+
 ## Method — what actually worked
 
 Four sweeps were needed, because each one's blind spot was invisible from inside
