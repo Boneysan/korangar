@@ -6200,6 +6200,71 @@ pub struct LevelUpSkillPacket {
     pub skill_id: SkillId,
 }
 
+/// Play a sound file (`ZC_SOUND`), from the `soundeffect` / `soundeffectall`
+/// script commands.
+///
+/// Unregistered until 2026-08-08, so a campaign script calling `soundeffect`
+/// produced silence — the packet was consumed by the length fallback with no
+/// trace. Found by the complement audit (what the server can send that the
+/// client never registers), not by the ledger, which only ever shows packets a
+/// test happened to provoke.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01D3)]
+pub struct SoundEffectPacket {
+    #[length(24)]
+    pub file_name: String,
+    /// `PLAY_SOUND_ONCE` (0) or `PLAY_SOUND_REPEAT` (1).
+    pub act: u8,
+    pub term: u32,
+    /// Zero for a repeating sound — Hercules deliberately clears it so the
+    /// client plays it without a position in space.
+    pub entity_id: EntityId,
+}
+
+/// Floating text over an entity (`ZC_SHOWSCRIPT`), from the `showscript`
+/// script command.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x08B3)]
+#[variable_length]
+pub struct ShowScriptPacket {
+    pub entity_id: EntityId,
+    #[length_remaining]
+    pub message: String,
+}
+
+/// Start the NPC progress bar (`ZC_PROGRESS`), from the `progressbar` script
+/// command. The player is locked out for `seconds` while it runs, so without it
+/// they wait with no feedback at all.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02F0)]
+pub struct ProgressBarPacket {
+    pub color: u32,
+    pub seconds: u32,
+}
+
+/// Cancel the progress bar early (`ZC_PROGRESS_CANCEL`).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x02F2)]
+pub struct ProgressBarAbortPacket {}
+
+/// An effect on an entity *with a number* (`ZC_NOTIFY_EFFECT3`), from
+/// `specialeffectnum`. The plain `specialeffect` command rides 0x01F3, which was
+/// already registered — which is precisely how this gap stayed hidden.
+///
+/// `num` is 8 bytes at this packetver (`PACKETVER >= 20191127`), not 4.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B69)]
+pub struct SpecialEffectValuePacket {
+    pub entity_id: EntityId,
+    pub effect_id: EffectId,
+    pub value: u64,
+}
+
 /// A skill *added* to the tree (`ZC_ADD_SKILL`).
 ///
 /// Distinct from [`UpdateSkillPacket`] (0x010E), which raises a skill already

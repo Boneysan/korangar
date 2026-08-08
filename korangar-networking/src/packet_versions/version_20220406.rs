@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::time::Duration;
 use std::net::IpAddr;
 use std::rc::Rc;
 use std::time::Instant;
@@ -1640,6 +1641,26 @@ where
         }
     })?;
     packet_handler.register_noop::<AmmunitionActionPacket>()?;
+    packet_handler.register(|packet: SoundEffectPacket| NetworkEvent::PlaySoundEffect {
+        file_name: packet.file_name,
+        // Hercules zeroes the id for a repeating sound on purpose, so there is
+        // nothing to attach it to in space.
+        entity_id: (packet.entity_id.0 != 0).then_some(packet.entity_id),
+    })?;
+    packet_handler.register(|packet: ShowScriptPacket| NetworkEvent::ShowScript {
+        entity_id: packet.entity_id,
+        message: packet.message,
+    })?;
+    packet_handler.register(|packet: ProgressBarPacket| NetworkEvent::ProgressBar {
+        duration: Some(Duration::from_secs(u64::from(packet.seconds))),
+    })?;
+    packet_handler.register(|_: ProgressBarAbortPacket| NetworkEvent::ProgressBar { duration: None })?;
+    // `specialeffectnum`. The value rides along but nothing displays it yet, so
+    // the effect itself is what matters — same visual as plain `specialeffect`.
+    packet_handler.register(|packet: SpecialEffectValuePacket| NetworkEvent::SpecialEffect {
+        entity_id: packet.entity_id,
+        effect_id: packet.effect_id,
+    })?;
     packet_handler.register(|packet: AddSkillPacket| NetworkEvent::SkillAdded {
         skill_information: packet.skill_information,
     })?;

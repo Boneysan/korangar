@@ -362,6 +362,23 @@ pub enum NetworkEvent {
     SkillTree {
         skill_information: Vec<SkillInformation>,
     },
+    /// Play a sound file (`ZC_SOUND`) — the `soundeffect` script command.
+    /// `entity_id` is `None` for a repeating sound, which Hercules sends with no
+    /// position so it plays flat rather than in space.
+    PlaySoundEffect {
+        file_name: String,
+        entity_id: Option<EntityId>,
+    },
+    /// Floating text over an entity (`ZC_SHOWSCRIPT`) — `showscript`.
+    ShowScript {
+        entity_id: EntityId,
+        message: String,
+    },
+    /// The NPC progress bar started (`ZC_PROGRESS`) or was cancelled
+    /// (`ZC_PROGRESS_CANCEL`). `None` cancels.
+    ProgressBar {
+        duration: Option<std::time::Duration>,
+    },
     /// A single skill *added* to the tree (`ZC_ADD_SKILL`), as opposed to
     /// [`Self::UpdateSkill`] raising one already there. Quest rewards, the
     /// `skill` script command and Plagiarism all arrive this way, and the full

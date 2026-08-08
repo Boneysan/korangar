@@ -4795,6 +4795,59 @@ impl Client {
                     *self.client_state.follow_mut(client_state().skill_tree().skills()) =
                         skill_information.into_iter().map(LearnedSkill::new).collect();
                 }
+                NetworkEvent::PlaySoundEffect { file_name, entity_id } => {
+                    // `soundeffect` gives a bare file name; the GRF keeps them
+                    // under `data\wav\`, the same place the skill recipes load
+                    // from. A repeating sound arrives with no entity — Hercules
+                    // clears the id deliberately so it plays flat, not in space.
+                    const SCRIPT_SOUND_RANGE: f32 = 250.0;
+
+                    let key = self.audio_engine.load(&format!("data\\wav\\{file_name}"));
+                    match entity_id.and_then(|entity_id| {
+                        self.client_state
+                            .follow(client_state().entities())
+                            .iter()
+                            .find(|entity| entity.get_entity_id() == entity_id)
+                            .map(Entity::get_position)
+                    }) {
+                        Some(position) => self.audio_engine.play_spatial_sound_effect(key, position, SCRIPT_SOUND_RANGE),
+                        None => self.audio_engine.play_sound_effect(key),
+                    }
+                }
+                // FIX: `showscript` is meant to float over the entity, and the
+                // client has no overhead-text surface yet — `OverheadMessagePacket`
+                // is routed to chat for the same reason. Chat is where it goes
+                // until that surface exists; a line in the window still beats the
+                // silence this produced before the packet was modelled.
+                NetworkEvent::ShowScript { entity_id, message } => {
+                    let name = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                        .and_then(|entity| entity.get_details())
+                        .filter(|name| !name.is_empty())
+                        .cloned();
+                    let text = match name {
+                        Some(name) => format!("{name}: {message}"),
+                        None => message,
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Broadcast));
+                }
+                // FIX: same shape — there is no progress-bar widget yet. The
+                // player is locked out for the duration server-side, so saying so
+                // is the minimum; without this they waited with no feedback at all.
+                NetworkEvent::ProgressBar { duration } => {
+                    let text = match duration {
+                        Some(duration) => format!("Working… ({} seconds)", duration.as_secs()),
+                        None => "Interrupted.".to_owned(),
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Server));
+                }
                 NetworkEvent::SkillAdded { skill_information } => {
                     // The full tree only arrives at login and on job change, so a
                     // skill granted mid-session has to be appended here or it is

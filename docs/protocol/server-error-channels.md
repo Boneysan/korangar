@@ -349,3 +349,63 @@ Any PACKETVER change or upstream Hercules merge. In particular
 the stale-variant check — *does the client register the header active at this
 packetver?* — should be repeated, since a stale registration is invisible: the
 real packet falls through the length fallback and goes quiet.
+
+
+## The complement audit — what the server sends that the client never registers
+
+Every earlier packet audit asked *for every family the client registers, is it
+the variant active at this packetver?* Answer: zero mismatches across 218
+headers. True, and it never once looked at the families the client does **not**
+register. `ZC_ADD_SKILL` sat in that blind spot and was found by accident, so the
+complement was worth running deliberately (2026-08-08).
+
+**Method — three sources, unioned, then diffed against the client:**
+
+| Source | Count |
+|---|---|
+| Active `DEFINE_PACKET_HEADER` ids, via the **C preprocessor** over `packets_struct.h` at `PACKETVER=20220406` (147 of them ZC) | 218 |
+| Raw `WFIFOW(fd,0)=0x…` writers in `clif.c`, each attributed to its writing function | 232 |
+| **Headers the map server can send** | **378** |
+| Registered by `register_map_server_packets` | 188 |
+| **Sendable but unregistered** | **243** |
+
+Never read `#if` branches by eye — `ZC_ADD_SKILL` is 0x0111 here and 0x0B31 under
+`PACKETVER_RE`/`_ZERO`, and only the preprocessor gets that right.
+
+**Framing risk: none, but it was worth proving.** 13 of the 243 have **no length
+entry**, which is the dangerous class — no handler *and* no fallback means
+`UnhandledPacket` and the whole read buffer, not one message. Two of them
+(`clif_PartyRecruitDeleteNotify`, `clif_PartyBookingVolunteerInfo`) send
+`ALL_CLIENT`, so one player using party booking would have hit everyone. All 13
+are unreachable: twelve sit behind `#ifdef PARTY_RECRUIT`, **off in this build**
+(confirmed by preprocessing `config/core.h`, not by grep), and `clif_PVPInfo`
+(0x0210) answers only `CZ_REQ_PVPPOINT`, which this client never sends — and the
+server's own `packet_len(0x210)` is unset, so it would emit zero bytes anyway.
+
+**The finding: four packets a campaign script can trigger, all silently dropped.**
+
+| Script command | Packet | Was |
+|---|---|---|
+| `soundeffect` / `soundeffectall` | `ZC_SOUND` 0x01D3 | silence |
+| `showscript` | `ZC_SHOWSCRIPT` 0x08B3 | no text |
+| `progressbar` | `ZC_PROGRESS` 0x02F0 / `_CANCEL` 0x02F2 | no bar, and the player is locked out server-side meanwhile |
+| `specialeffectnum` | `ZC_NOTIFY_EFFECT3` 0x0B69 | nothing |
+
+Sixth instance of "the data arrives and nothing displays it", and squarely in
+this fork's own purpose. **How the class hides, stated once more:** plain
+`specialeffect` rides 0x01F3 and was already registered, so the obvious command
+worked and nobody suspected the channel. The fallback consumed all four
+*cleanly*, so the packet ledger showed nothing — and the ledger only ever lists
+what a test provoked.
+
+**Two are only half-fixed, deliberately.** `showscript` is meant to float over
+the entity and `progressbar` wants a widget; the client has neither surface —
+`OverheadMessagePacket` is itself routed to chat with a `FIX` comment for the
+same reason. Both now produce a chat line, which beats silence and is honest
+about being partial. `ZC_SOUND` and `ZC_NOTIFY_EFFECT3` are fully wired: real
+spatial audio (flat when Hercules clears the id for a repeating sound) and the
+same effect path as `specialeffect`.
+
+**The rest of the 243 are genuinely out of scope** — guild, mail/RODEX, auction,
+vending, buying store, battlegrounds, cash shop, roulette, macro detector, pet,
+homunculus, mercenary. Not gaps; features this fork does not have.

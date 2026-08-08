@@ -1828,6 +1828,89 @@ mod packet_handlers {
         assert_eq!(text, "That needs a shield equipped.");
     }
 
+    /// The four packets a campaign script can trigger that the client never
+    /// registered, so `soundeffect`, `showscript`, `progressbar` and
+    /// `specialeffectnum` all did nothing at all.
+    ///
+    /// Feeding real bytes matters here beyond the layouts: each was consumed
+    /// *cleanly* by the length fallback before being modelled, which is why
+    /// nothing ever appeared in the packet ledger and why an audit of registered
+    /// families could not see them.
+    #[test]
+    fn script_driven_packets_reach_the_client() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let events = |handler: &mut ragnarok_packets::handler::PacketHandler<crate::event::NetworkEventList, NoPacketCallback>,
+                      bytes: &[u8]| {
+            let mut reader = ByteReader::without_metadata(bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("packet did not parse");
+            };
+            assert_eq!(reader.remaining_bytes().len(), 0, "packet did not consume its own bytes");
+            events.0
+        };
+
+        // ZC_SOUND — 35 bytes: header, name[24], act, term, AID.
+        let mut bytes = vec![0xD3, 0x01];
+        let mut name = [0u8; 24];
+        name[..11].copy_from_slice(b"effect_male");
+        bytes.extend_from_slice(&name);
+        bytes.push(0); // act: play once
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        assert_eq!(bytes.len(), 35);
+        assert!(matches!(
+            events(&mut handler, &bytes).first(),
+            Some(NetworkEvent::PlaySoundEffect { entity_id: Some(_), .. })
+        ));
+
+        // A repeating sound clears the id on purpose, so it must not be treated
+        // as coming from entity 0.
+        let mut bytes = vec![0xD3, 0x01];
+        bytes.extend_from_slice(&[0u8; 24]);
+        bytes.push(1); // act: repeat
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        assert!(matches!(
+            events(&mut handler, &bytes).first(),
+            Some(NetworkEvent::PlaySoundEffect { entity_id: None, .. })
+        ));
+
+        // ZC_SHOWSCRIPT — variable length: header, length, AID, text.
+        let message = b"The seal cracks.";
+        let mut bytes = vec![0xB3, 0x08];
+        bytes.extend_from_slice(&((message.len() + 8) as u16).to_le_bytes());
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(message);
+        assert!(matches!(events(&mut handler, &bytes).first(), Some(NetworkEvent::ShowScript { .. })));
+
+        // ZC_PROGRESS / ZC_PROGRESS_CANCEL.
+        let mut bytes = vec![0xF0, 0x02];
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.extend_from_slice(&5u32.to_le_bytes());
+        assert!(matches!(
+            events(&mut handler, &bytes).first(),
+            Some(NetworkEvent::ProgressBar { duration: Some(_) })
+        ));
+        assert!(matches!(
+            events(&mut handler, &[0xF2, 0x02]).first(),
+            Some(NetworkEvent::ProgressBar { duration: None })
+        ));
+
+        // ZC_NOTIFY_EFFECT3 — 18 bytes, because `num` is 8 wide at this
+        // packetver, not 4.
+        let mut bytes = vec![0x69, 0x0B];
+        bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        bytes.extend_from_slice(&1u32.to_le_bytes());
+        bytes.extend_from_slice(&7u64.to_le_bytes());
+        assert_eq!(bytes.len(), 18);
+        assert!(matches!(events(&mut handler, &bytes).first(), Some(NetworkEvent::SpecialEffect { .. })));
+    }
+
     /// A reason from a server newer than this build must cost nothing.
     ///
     /// This was wrong when the packet first landed: the reason was modelled as a
