@@ -385,11 +385,23 @@ while the suite is executing. `cargo run` rebuilds
 produces a cascade of bogus "disconnected" failures (14 of them), with a
 perfectly healthy server. Invoke the built binary directly instead, as above.
 
-**Still open, cheapest first, all needing the stack:** run `--scenario observer`
-above; observer rows 10-11 (skill effect and status values from the far seat —
-no setup needed, `test` has the Archer skills); confirm the A9 stance bug (two
-seats in a town, one armed — code-read only so far); then the 2026-07-26 batch
-leftovers below.
+**Still open, cheapest first, all needing the stack:** confirm the A9 stance bug
+(two seats in a town, one armed — code-read only so far); then the 2026-07-26
+batch leftovers below.
+
+**Corrected 2026-08-08 — this list used to claim observer rows 10-11 were open.
+They are not: both PASSED 2026-08-02** and
+[plans/observer-view-verification.md](plans/observer-view-verification.md) states
+that its checklist is closed, every row PASS or retired. The stale entry cost a
+session's planning time. It also repeated the "`test` has the Archer skills"
+claim that the GUI plan already flags as **false** — jobs and gear drift, so read
+the checklist document itself rather than a summary of it, and set the job
+explicitly every time.
+
+What rows 10-11 *do* still lack is any **regression guard**: they were verified
+by eye once and nothing stops them breaking again, which matters because that
+checklist found six bugs single-client testing structurally cannot see. Wire-half
+scenarios would cover the events; the pixels stay manual either way.
 
 **Phase 3 should NOT be built as originally specced** — phase 1 changed its
 premise. See the harness plan §6.
