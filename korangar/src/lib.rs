@@ -4795,6 +4795,16 @@ impl Client {
                     *self.client_state.follow_mut(client_state().skill_tree().skills()) =
                         skill_information.into_iter().map(LearnedSkill::new).collect();
                 }
+                NetworkEvent::SkillAdded { skill_information } => {
+                    // The full tree only arrives at login and on job change, so a
+                    // skill granted mid-session has to be appended here or it is
+                    // invisible until relog.
+                    let skills = self.client_state.follow_mut(client_state().skill_tree().skills());
+                    match skills.iter_mut().find(|skill| skill.skill_id == skill_information.skill_id) {
+                        Some(existing) => *existing = LearnedSkill::new(skill_information),
+                        None => skills.push(LearnedSkill::new(skill_information)),
+                    }
+                }
                 NetworkEvent::UpdateEquippedPosition { index, equipped_position } => {
                     self.client_state
                         .follow_mut(client_state().inventory())

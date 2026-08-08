@@ -1640,6 +1640,9 @@ where
         }
     })?;
     packet_handler.register_noop::<AmmunitionActionPacket>()?;
+    packet_handler.register(|packet: AddSkillPacket| NetworkEvent::SkillAdded {
+        skill_information: packet.skill_information,
+    })?;
     packet_handler.register(|packet: UpdateSkillPacket| {
         let UpdateSkillPacket {
             skill_id,

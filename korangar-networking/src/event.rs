@@ -362,6 +362,14 @@ pub enum NetworkEvent {
     SkillTree {
         skill_information: Vec<SkillInformation>,
     },
+    /// A single skill *added* to the tree (`ZC_ADD_SKILL`), as opposed to
+    /// [`Self::UpdateSkill`] raising one already there. Quest rewards, the
+    /// `skill` script command and Plagiarism all arrive this way, and the full
+    /// tree is only re-sent on login or job change — so without this a newly
+    /// granted skill is invisible until relog.
+    SkillAdded {
+        skill_information: SkillInformation,
+    },
     UpdateEquippedPosition {
         index: InventoryIndex,
         equipped_position: EquipPosition,

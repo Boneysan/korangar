@@ -6200,6 +6200,26 @@ pub struct LevelUpSkillPacket {
     pub skill_id: SkillId,
 }
 
+/// A skill *added* to the tree (`ZC_ADD_SKILL`).
+///
+/// Distinct from [`UpdateSkillPacket`] (0x010E), which raises a skill already
+/// there. This one carries the whole `SKILLDATA` because the client has never
+/// seen the skill before — it needs the type, range and name too.
+///
+/// **0x0111 is the header at this packetver**, not 0x0B31: that variant is
+/// gated on `PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918`
+/// and this server is `main`, so both are 0.
+///
+/// Reached by `pc->skill` with `SKILL_GRANT_PERMANENT` or `_TEMPORARY` — quest
+/// rewards, the `skill` script command, `@questskill`, item-granted skills — and
+/// by Plagiarism / Reproduce copying a skill.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0111)]
+pub struct AddSkillPacket {
+    pub skill_information: SkillInformation,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x010E)]
