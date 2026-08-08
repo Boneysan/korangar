@@ -756,6 +756,14 @@ impl<F: FileLoader> EngineContext<F> {
             if let Some(spatial_track) = self.active_spatial_tracks.get_mut(&playing.key) {
                 playing.last_start = now;
 
+                // Which ambient emitter actually retriggers, and where it sits.
+                // The map side logs the same positions at load, so the two
+                // together name the file responsible for a noise on screen.
+                if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                    let position = self.ambient_sound.get(playing.key).map(|config| config.bounds.center());
+                    eprintln!("[ambient] restart key={:?} at {:?} cycle={}", playing.key, position, playing.cycle);
+                }
+
                 match spatial_track.play(playing.data.clone()) {
                     Ok(handle) => {
                         playing.handle = handle;
