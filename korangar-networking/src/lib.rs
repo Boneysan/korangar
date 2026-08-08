@@ -1766,10 +1766,6 @@ mod packet_handlers {
         );
     }
 
-    /// M1-p0 rejection-messages row: Hercules skill failures arrive as
-    /// `ZC_ACK_TOUSESKILL` (0x0110) with `flag = 0`. They must surface as a
-    /// red chat line (not silence) so the player can see why a cast refused.
-    #[test]
     /// The fork packet 0x0EFE names the runtime reason for a cause-0 failure,
     /// which no static table can reach. Fed as two reads, exactly as Hercules
     /// sends them, so this covers the pairing and not just the wording.
@@ -1882,6 +1878,9 @@ mod packet_handlers {
         )));
     }
 
+    /// M1-p0 rejection-messages row: Hercules skill failures arrive as
+    /// `ZC_ACK_TOUSESKILL` (0x0110) with `flag = 0`. They must surface as a
+    /// red chat line (not silence) so the player can see why a cast refused.
     #[test]
     fn skill_fail_0x0110_surfaces_chat_message() {
         use ragnarok_bytes::ByteReader;
