@@ -20,6 +20,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("teleport-select", 5, teleport_select),
         Scenario::new("teleport-cancel", 5, teleport_cancel),
         Scenario::new("skill-fail-rejection", 5, skill_fail_rejection),
+        Scenario::new("skill-fail-reason-packet", 5, skill_fail_reason_packet),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
@@ -72,6 +73,26 @@ pub fn scenarios() -> Vec<Scenario> {
 const AL_TELEPORT: SkillId = SkillId(26);
 const MG_FIREBOLT: SkillId = SkillId(19);
 const WS_WEAPONREFINE: SkillId = SkillId(477);
+const PR_REDEMPTIO: SkillId = SkillId(1014);
+
+/// What the client says for Redemptio when it has *only* the skill id to go on.
+///
+/// Cause 0 cannot say which of Redemptio's three conditions failed, so without
+/// `ZC_SKILL_FAIL_REASON` the client can only name all three. Seeing this text is
+/// how a lost fork delta looks from the outside — nothing errors, nothing goes
+/// missing, the sentence just gets vaguer.
+const REDEMPTIO_INFERRED: &str = "Redemptio needs a party, at least one dead party member in range, and 1% of your base and job experience to spend.";
+
+/// The three things `ZC_SKILL_FAIL_REASON` can say about Redemptio, one per
+/// cause-0 path in Hercules. Which one fires depends on the shared character's
+/// party and experience at the time, and the scenario deliberately accepts any
+/// of them: what is being guarded is that the *packet arrives*, not which branch
+/// the server happened to take.
+const REDEMPTIO_REASONS: &[&str] = &[
+    "You have to be in a party to use that.",                                    // skill.c:7004
+    "No dead party member was in range.",                                        // skill.c:7013
+    "That spends 1% of your base and job experience, and you do not have it.",   // skill.c:16056
+];
 
 /// Trap (item 1065) — consumed by every trap-placing skill. Without a stock of
 /// these the trap sweeps can only ever assert that the refusal was reported,
@@ -168,6 +189,92 @@ fn skill_fail_rejection_body(context: &mut TestContext) -> Result<(), String> {
         NetworkEvent::MessageTable { .. } => Some(()),
         _ => None,
     })
+}
+
+/// `ZC_SKILL_FAIL_REASON` (fork packet 0x0EFE) has to actually arrive.
+///
+/// Everything else about this packet is covered by unit tests over bytes we
+/// assembled ourselves, which proves the client's half and assumes the server's.
+/// This is the only check that the eleven call sites are reached, that the wire
+/// layout matches, and that the length entry survives in a real stream.
+///
+/// It exists because losing the delta in an upstream merge is **silent**: the
+/// skill still fails, a red line still appears, and only the wording quietly
+/// degrades. So the assertion is on the reason-derived text specifically —
+/// asserting "a failure message arrived" would pass with the delta gone, which
+/// is the one outcome this must catch.
+///
+/// Redemptio is the trigger because most of the obvious ones cannot be guarded:
+/// for Party Flee, Benedictio and the ensemble songs the reason text is
+/// deliberately identical to what the client infers, so a test there proves
+/// nothing. Redemptio has three conditions, so its inferred text is a hedge that
+/// no reason can produce.
+fn skill_fail_reason_packet(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let result = skill_fail_reason_packet_body(&mut context);
+
+    // Redemptio is a *quest* skill, so it has to be granted explicitly and taken
+    // away again — 124 scenarios share one character, and leaving a quest skill
+    // on it is exactly the "exotic state" the shared-state rule says to undo.
+    let _ = context.say("@lostskill 1014");
+    context.pump(Duration::from_millis(300));
+
+    result
+}
+
+fn skill_fail_reason_packet_body(context: &mut TestContext) -> Result<(), String> {
+    context.ensure_job(8)?;
+    // `@allskill` deliberately skips quest skills (`pc->allskillup` honours
+    // `battle_config.quest_skill_learn`, which is false here), so Redemptio has
+    // to come from `@questskill`.
+    context.flush();
+    context.say("@questskill 1014")?;
+
+    // Report what the server said if it refused; "the command did nothing" is
+    // not a debuggable failure message.
+    let replies: Vec<String> = context
+        .collect_for(Duration::from_millis(600))
+        .iter()
+        .filter_map(|event| match event {
+            NetworkEvent::ChatMessage { text, .. } => Some(text.clone()),
+            _ => None,
+        })
+        .collect();
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == PR_REDEMPTIO)
+        .map(|skill| skill.skill_level)
+        .ok_or_else(|| format!("@questskill 1014 did not grant Redemptio; server said {replies:?}"))?;
+    context.flush();
+
+    let player_id = context.player_id;
+    context
+        .net
+        .cast_skill(PR_REDEMPTIO, level, player_id)
+        .map_err(|_| "disconnected mid Redemptio cast".to_owned())?;
+
+    let text = context.wait_for("Redemptio failure ChatMessage", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if !text.is_empty() => Some(text.clone()),
+        _ => None,
+    })?;
+
+    if text == REDEMPTIO_INFERRED {
+        return Err(format!(
+            "the failure was explained by skill id, not by the server: {text:?}\n         \
+             ZC_SKILL_FAIL_REASON (0x0EFE) did not arrive — check the Hercules delta is still \
+             applied and the server was rebuilt (see CLAUDE.md 3b)"
+        ));
+    }
+
+    if !REDEMPTIO_REASONS.contains(&text.as_str()) {
+        return Err(format!(
+            "unexpected Redemptio failure text {text:?}; expected one of {REDEMPTIO_REASONS:?}"
+        ));
+    }
+
+    Ok(())
 }
 
 fn prepare_skill(context: &mut TestContext, job_id: u16, skill_id: SkillId) -> Result<SkillLevel, String> {

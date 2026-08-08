@@ -130,6 +130,20 @@ that cannot be affected at all; and **the Shield Reflect wart is gone** — its
 `SC_KYOMU` roll was indistinguishable from its shield precondition by any static
 means, and is now simply reported.
 
+**Live-verified 2026-08-07** by `skill-fail-reason-packet`, and the guard was
+checked in both directions: it passes against the real server, and neutering the
+client's 0x0EFE handler makes it fail with the inferred text named in the error.
+A guard for a silent regression is worth nothing until you have seen it fail.
+
+**Writing that scenario found a separate bug, which is the argument for writing
+it.** `@questskill` reported success and the skill never appeared, because
+**`ZC_ADD_SKILL` (0x0111) was not modelled at all** — every skill *granted*
+mid-session was consumed by the length fallback and dropped in silence, including
+Plagiarism's copied skill and anything a campaign script grants. It left no trace
+in the unmodelled-packet ledger because the fallback consumed it *cleanly*; the
+only symptom was a command that appeared to do nothing. Fifth instance of "the
+data arrives and nothing displays it".
+
 **Cause 94 stays unused, and that is still right.** Emitting it would *lose*
 information: it carries only "That needs an ensemble partner", where 0x0EFE's
 `ENSEMBLE_PARTNER` reason renders the full requirement. A correct wire value is

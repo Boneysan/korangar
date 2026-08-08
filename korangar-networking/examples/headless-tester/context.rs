@@ -648,6 +648,27 @@ impl TestContext {
             NetworkEvent::SkillTree { skill_information } => {
                 self.skills = skill_information.clone();
             }
+            // A skill granted mid-session (`ZC_ADD_SKILL`) — quest rewards, the
+            // `skill` script command, `@questskill`, Plagiarism. The full tree
+            // only arrives on login and job change, so without this a scenario
+            // that grants a skill cannot see it and reads as "the command did
+            // nothing", which is how the missing 0x0111 handler was found.
+            NetworkEvent::SkillAdded { skill_information } => {
+                match self.skills.iter_mut().find(|skill| skill.skill_id == skill_information.skill_id) {
+                    Some(existing) => *existing = skill_information.clone(),
+                    None => self.skills.push(skill_information.clone()),
+                }
+            }
+            NetworkEvent::UpdateSkill {
+                skill_id, skill_level, ..
+            } => {
+                if let Some(skill) = self.skills.iter_mut().find(|skill| skill.skill_id == *skill_id) {
+                    skill.skill_level = *skill_level;
+                }
+            }
+            NetworkEvent::RemoveSkill { skill_id } => {
+                self.skills.retain(|skill| skill.skill_id != *skill_id);
+            }
             _ => {}
         }
     }

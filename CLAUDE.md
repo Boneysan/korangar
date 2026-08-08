@@ -190,7 +190,7 @@ and running the `.exe` on the Windows side (not yet set up).
 
 ## Testing — the headless suite
 
-The project's main automated regression gate is a **123-scenario headless client**
+The project's main automated regression gate is a **124-scenario headless client**
 (`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
 double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
 [headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
@@ -203,9 +203,17 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (123): session/lifecycle 8 · GM commands 9 · movement 5 · combat 3 · skills 44
+Coverage (124): session/lifecycle 8 · GM commands 9 · movement 5 · combat 3 · skills 45
 (39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 · social 16 ·
 DM tooling 14 · observer parity 7.
+
+`skill-fail-reason-packet` guards the 0x0EFE fork delta, and is the only check
+that the *server* half of it works — every other test over that packet uses bytes
+we assembled ourselves. It asserts the **reason-derived** text specifically:
+asserting "a failure message arrived" would pass with the delta gone, which is
+the one outcome it exists to catch. Redemptio is the trigger because for Party
+Flee, Benedictio and the ensemble songs the reason text is deliberately identical
+to what the client infers, so a test there proves nothing.
 
 Nine of the social sixteen guard the 2026-08-02 party work, and two of those exist
 because the failure they catch is **silent**: `party-member-vitals` fails if the
@@ -322,6 +330,21 @@ When writing code or adding features, agents must adhere to these project-specif
      endptr). Caught by a throwaway harness, not by the compiler. Display
      names already matched case-insensitively; Aegis names stay case-sensitive per
      `case_sensitive_aegisnames: true`. Requires `make -j8` and a server restart.
+   - **`ZC_ADD_SKILL` (`0x0111`) was never modelled** (found 2026-08-07 while
+     writing the scenario above; **client-side fix, no server delta**). A skill
+     *granted* mid-session was consumed by the length fallback and silently
+     dropped, so it did not appear until relog — the full tree (`0x010F`) is only
+     sent at login and job change. `0x010E` (`ZC_SKILLINFO_UPDATE`, *raising* a
+     skill you already have) was modelled, which is why levelling worked and made
+     the gap invisible. **Two traps:** the header is `0x0111` at this packetver,
+     **not** `0x0B31` — that variant is gated on `PACKETVER_RE_NUM >= 20190807 ||
+     PACKETVER_ZERO_NUM >= 20190918` and this server is `main`, so both are 0;
+     and the fallback consumed it *cleanly*, so nothing appeared in the
+     unmodelled-packet ledger as an error. Reached by `pc->skill` with
+     `SKILL_GRANT_PERMANENT`/`_TEMPORARY` — quest rewards, **the `skill` script
+     command (so a DM granting a skill)**, `@questskill`, item-granted skills —
+     and by **Plagiarism / Reproduce**, whose copied skill therefore never
+     showed. Now `NetworkEvent::SkillAdded`, appended to the tree.
    - **`ZC_SKILL_FAIL_REASON` = packet `0x0EFE`** (2026-08-07) — a fork-invented
      *server→client* packet naming the **runtime** reason behind a cause-0 skill
      failure. `ZC_ACK_TOUSESKILL` carries a `useskill_fail_cause`, and Hercules
