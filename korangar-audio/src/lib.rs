@@ -90,6 +90,17 @@ struct PlayingAmbient {
     data: StaticSoundData,
     handle: StaticSoundHandle,
     cycle: f32,
+    /// Extra delay before this emitter may restart, re-rolled every cycle.
+    ///
+    /// Without it, identical emitters are **phase-locked forever**: they come
+    /// into range together, share one `cycle` and one clip length, so they
+    /// restart in exact unison. `prt_fild08` puts up to **eight**
+    /// `se_prtbird_02` sources within earshot of one spot, and eight copies of
+    /// the same waveform sum *coherently* — amplitude multiplication, not the
+    /// usual incoherent mix — which both clips and reads as a synthetic pulse
+    /// rather than birdsong. Reported live 2026-08-08 as "static every few
+    /// seconds, loudest in one place".
+    jitter: f32,
     last_start: Instant,
 }
 
@@ -517,6 +528,7 @@ impl<F: FileLoader> EngineContext<F> {
                                     data,
                                     handle,
                                     cycle,
+                                    jitter: ambient_jitter(ambient_key, 0, cycle),
                                     last_start: Instant::now(),
                                 });
                             }
@@ -729,6 +741,7 @@ impl<F: FileLoader> EngineContext<F> {
                                         data,
                                         handle,
                                         cycle,
+                                        jitter: ambient_jitter(ambient_key, 0, cycle),
                                         last_start: Instant::now(),
                                     });
                                 }
@@ -751,10 +764,14 @@ impl<F: FileLoader> EngineContext<F> {
         let now = Instant::now();
 
         for (_, playing) in self.cycling_ambient.iter_mut().filter(|(_, playing)| {
-            playing.handle.state() != PlaybackState::Playing && now.duration_since(playing.last_start).as_secs_f32() >= playing.cycle
+            playing.handle.state() != PlaybackState::Playing
+                && now.duration_since(playing.last_start).as_secs_f32() >= playing.cycle + playing.jitter
         }) {
             if let Some(spatial_track) = self.active_spatial_tracks.get_mut(&playing.key) {
                 playing.last_start = now;
+                // Re-roll, so emitters that happen to coincide do not stay
+                // coincident for the rest of the session.
+                playing.jitter = ambient_jitter(playing.key, playing.jitter.to_bits(), playing.cycle);
 
                 // Which ambient emitter actually retriggers, and where it sits.
                 // The map side logs the same positions at load, so the two
@@ -948,6 +965,22 @@ fn difference<T: Ord + Copy>(vector_1: &mut [T], vector_2: &mut [T], result: &mu
     }
 
     result.extend_from_slice(&vector_1[i..]);
+}
+
+/// A per-emitter fraction of the cycle, so identical ambient samples drift apart
+/// instead of pulsing together. Deterministic in the key and the round, so a
+/// given emitter behaves the same way across runs.
+fn ambient_jitter(key: AmbientKey, round: u32, cycle: f32) -> f32 {
+    use korangar_container::SimpleKey;
+
+    let mut hash = key.key().wrapping_mul(0x9E37_79B9) ^ round.wrapping_mul(0x85EB_CA6B);
+    hash ^= hash >> 15;
+    hash = hash.wrapping_mul(0x2545_F491);
+    hash ^= hash >> 13;
+
+    // Up to half a cycle. Enough to break unison without making a 4 s ambience
+    // feel irregular.
+    (hash >> 8) as f32 / (u32::MAX >> 8) as f32 * cycle * 0.5
 }
 
 fn linear_to_decibel(linear: f32) -> Decibels {
