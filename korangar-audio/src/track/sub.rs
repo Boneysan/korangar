@@ -140,7 +140,7 @@ struct SpatialData {
     /// How the track's volume will change with distance.
     ///
     /// If `false`, the track will output at a constant volume.
-    use_linear_attenuation_function: bool,
+    attenuation_function: AttenuationFunction,
     /// How much the track's output should be panned left or right depending on
     /// its direction from the listener.
     ///
@@ -157,13 +157,24 @@ impl SpatialData {
 
         let mut output = input;
 
-        if self.use_linear_attenuation_function {
-            // Attenuate volume
-            let distance = (listener_position - position).magnitude();
-            let relative_distance = self.distances.relative_distance(distance);
-            let relative_volume = 1.0 - relative_distance;
-            let amplitude = Tweenable::interpolate(Decibels::SILENCE, Decibels::IDENTITY, relative_volume.into()).as_amplitude();
-            output *= amplitude;
+        match self.attenuation_function {
+            AttenuationFunction::None => {}
+            AttenuationFunction::LinearDecibels => {
+                let distance = (listener_position - position).magnitude();
+                let relative_distance = self.distances.relative_distance(distance);
+                let relative_volume = 1.0 - relative_distance;
+                let amplitude = Tweenable::interpolate(Decibels::SILENCE, Decibels::IDENTITY, relative_volume.into()).as_amplitude();
+                output *= amplitude;
+            }
+            // Miles' inverse-distance law, as the original client uses it: flat
+            // inside `min_distance`, `min / distance` beyond, silent past
+            // `max_distance`. Compared with the decibel-linear curve this is
+            // markedly *louder* through the middle of a sound's radius (0.067 vs
+            // 0.032 at half range) and then stops dead instead of tapering.
+            AttenuationFunction::InverseDistance => {
+                let distance = (listener_position - position).magnitude();
+                output *= inverse_distance_amplitude(distance, self.distances.min_distance, self.distances.max_distance);
+            }
         }
 
         if spatialization_strength != 0.0 {
@@ -222,4 +233,51 @@ pub(crate) fn command_writers_and_readers() -> (CommandWriters, CommandReaders) 
         set_volume: set_volume_reader,
     };
     (command_writers, command_readers)
+}
+
+/// Miles' inverse-distance law: full volume inside `min_distance`,
+/// `min_distance / distance` beyond it, silent past `max_distance`.
+///
+/// Split out so the curve the original client uses can be asserted directly.
+fn inverse_distance_amplitude(distance: f32, min_distance: f32, max_distance: f32) -> f32 {
+    if distance > max_distance {
+        return 0.0;
+    }
+    if distance <= min_distance || min_distance <= 0.0 {
+        return 1.0;
+    }
+    min_distance / distance
+}
+
+#[cfg(test)]
+mod attenuation_tests {
+    use super::inverse_distance_amplitude;
+
+    /// The behaviour that distinguishes Miles from the decibel-linear curve:
+    /// volume halves for every doubling of distance, rather than sliding to
+    /// silence at the edge.
+    #[test]
+    fn inverse_distance_halves_per_doubling() {
+        assert_eq!(inverse_distance_amplitude(10.0, 10.0, 100.0), 1.0);
+        assert_eq!(inverse_distance_amplitude(20.0, 10.0, 100.0), 0.5);
+        assert_eq!(inverse_distance_amplitude(40.0, 10.0, 100.0), 0.25);
+    }
+
+    /// Inside the inner radius it is flat, and past the outer one it stops
+    /// dead — a taper there would leave emitters audible outside the range the
+    /// map author set.
+    #[test]
+    fn inverse_distance_is_flat_inside_and_silent_outside() {
+        assert_eq!(inverse_distance_amplitude(0.0, 10.0, 100.0), 1.0);
+        assert_eq!(inverse_distance_amplitude(5.0, 10.0, 100.0), 1.0);
+        assert!(inverse_distance_amplitude(100.0, 10.0, 100.0) > 0.0);
+        assert_eq!(inverse_distance_amplitude(100.1, 10.0, 100.0), 0.0);
+    }
+
+    /// A zero inner radius would divide by zero; emitters with no inner radius
+    /// stay at full volume rather than producing NaN.
+    #[test]
+    fn a_zero_inner_radius_does_not_divide_by_zero() {
+        assert_eq!(inverse_distance_amplitude(50.0, 0.0, 100.0), 1.0);
+    }
 }

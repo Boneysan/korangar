@@ -912,7 +912,12 @@ provider. The exe drives 3D samples through `AIL_open_3D_provider`,
 Miles semantics: full volume inside `min`, **inaudible beyond `max`**, and an
 **inverse-distance rolloff** between them (amplitude ≈ `min / distance`).
 
-Korangar's own curve is **linear in decibels**, 0 dB → −60 dB across
+**Implemented 2026-08-08.** `AttenuationFunction::InverseDistance` is now the
+default for every spatial track, `width` is fed through as `min_distance`, and
+the range multiplier is gone. What follows is the reasoning, kept because the
+obvious reading of it is wrong.
+
+Korangar's previous curve was **linear in decibels**, 0 dB → −60 dB across
 `min..max` (`SpatialData::spatialize`), i.e. amplitude `10^(-3r)`:
 
 | relative distance | korangar | Miles |
@@ -924,15 +929,41 @@ Korangar's own curve is **linear in decibels**, 0 dB → −60 dB across
 So korangar is *quieter* at range than the original, not louder — worth knowing
 before anyone "fixes" ambience by attenuating harder. Two real deviations:
 
-1. **`use_linear_attenuation_function(false)` is not an alternative curve — it
-   disables distance attenuation entirely.** That `if` is the only place volume
-   falls off with distance. Do not flip it.
-2. **`AMBIENT_SOUND_MULTIPLIER = 1.5`** inflates the map author's range, where
-   Miles treats `max` as a hard cutoff. Left in place (it partly offsets the
-   steeper curve), but it is a korangar invention, not fidelity.
+1. **`use_linear_attenuation_function(false)` was not an alternative curve — it
+   disabled distance attenuation entirely.** That `if` was the only place volume
+   fell off with distance. Replaced by an explicit `AttenuationFunction` enum
+   (`None` / `LinearDecibels` / `InverseDistance`) so the footgun cannot be
+   stepped on again.
+2. **`AMBIENT_SOUND_MULTIPLIER = 1.5` is gone.** It existed to compensate for a
+   curve that was near-silent by half range; with the inverse law the emitter
+   stays audible across its radius, so the author's own range is correct and
+   widening it only drags in emitters the map never meant to overlap.
 3. **Volume was passed through un-clamped.** RSW volumes here reach 1.20 and
    `linear_to_decibel` turns that into a +1.58 dB boost; Miles' sample volume is
    a fraction of full scale and cannot amplify. **Now clamped to unity.**
+4. **`width`/`height` are the emitter's inner radius and were being discarded.**
+   They are always equal, in the same units as `range`, and track the sound —
+   birds 15, brook 10, wind 20 on `prt_fild08`. That is Miles' `min_dist`, and a
+   hardcoded 5.0 stood in for it, which made every emitter fall off far more
+   sharply than the map intended. (Inferred, not read out of the exe: the fields
+   have no other plausible meaning at those values and Miles requires exactly
+   one such parameter.)
+5. **Identical emitters were phase-locked.** No jitter existed anywhere, so
+   sources that came into range together restarted in unison forever — eight
+   copies of one bird clip summing *coherently*. Each emitter now carries a
+   jitter of up to half a cycle, re-rolled per restart.
+
+**What this changes audibly** (amplitude, before → after):
+
+| | 50 units | 100 units | 120 units |
+|---|---|---|---|
+| birds (inner 15) | 0.117 → **0.300** | 0.011 → **0.150** | 0.004 → **0.000** |
+| brook (inner 10) | 0.117 → **0.200** | 0.011 → **0.100** | 0.004 → **0.000** |
+| wind (inner 20) | 0.117 → **0.400** | 0.011 → **0.200** | 0.004 → **0.000** |
+
+Ambience is **louder and more present** across a radius and then stops dead at
+the author's range. That is the original's behaviour, but it is a large enough
+perceptual change to want a live listen before it is called settled.
 
 **`prt_fild08` measured**, as the worked example: 51 emitters — ~31
 `se_prtbird_02`, 12 `se_prtbird_05`, 7 `se_prtthewaterofabrook`, 1

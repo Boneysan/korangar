@@ -335,9 +335,14 @@ impl Map {
     }
 
     pub fn set_ambient_sound_sources(&self, audio_engine: &AudioEngine<GameFileLoader>) {
-        // We increase the range of the ambient sound,
-        // so that it can ease better into the world.
-        const AMBIENT_SOUND_MULTIPLIER: f32 = 1.5;
+        // **No range multiplier.** One used to widen every emitter by 1.5x "so
+        // that it can ease better into the world", compensating for a
+        // decibel-linear falloff that went nearly silent by half range. The
+        // spatial tracks now use the original client's inverse-distance law
+        // (Miles `AIL_set_3D_sample_distances`), which stays audible across the
+        // radius and then stops dead — so the author's own range is the right
+        // number and widening it only pulls in emitters the map never intended
+        // to be heard together.
 
         // This is the only correct place to clear the ambient sound.
         audio_engine.clear_ambient_sound();
@@ -352,13 +357,13 @@ impl Map {
 
             if log_ambient {
                 eprintln!(
-                    "[ambient] {} at ({:.1},{:.1},{:.1}) range={:.1} (eff {:.1}) volume={:.2} cycle={:?}",
+                    "[ambient] {} at ({:.1},{:.1},{:.1}) inner={} range={:.1} volume={:.2} cycle={:?}",
                     sound.sound_file,
                     sound.position.x,
                     sound.position.y,
                     sound.position.z,
+                    sound.width,
                     sound.range,
-                    sound.range * AMBIENT_SOUND_MULTIPLIER,
                     sound.volume,
                     sound.cycle,
                 );
@@ -367,7 +372,14 @@ impl Map {
             audio_engine.add_ambient_sound(
                 sound_effect_key,
                 sound.position,
-                sound.range * AMBIENT_SOUND_MULTIPLIER,
+                // `width`/`height` are a per-emitter inner radius — always equal
+                // in the maps checked, and tracking the sound (birds 15, brook
+                // 10, wind 20 on `prt_fild08`). That is exactly Miles' `min_dist`
+                // and it was previously discarded in favour of a hardcoded 5.0,
+                // which made every emitter fall off far more sharply than the
+                // map intended.
+                sound.width as f32,
+                sound.range,
                 // **Clamped to unity, as the original client does.** RSW volumes
                 // here run to 1.20, and `linear_to_decibel` turns that into a
                 // +1.58 dB *boost*; the original drives Miles Sound System, whose

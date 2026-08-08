@@ -17,9 +17,26 @@ pub(crate) struct SpatialTrackBuilder {
     /// quietest.
     pub(crate) distances: SpatialTrackDistances,
     /// How the track's volume will change with distance.
+    pub(crate) attenuation_function: AttenuationFunction,
+}
+
+/// How a spatial track's volume falls off with distance.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub(crate) enum AttenuationFunction {
+    /// Constant volume at any distance.
     ///
-    /// If false, the track will output at a constant volume.
-    pub(crate) use_linear_attenuation_function: bool,
+    /// Its own variant because this used to be `use_linear_attenuation_function
+    /// = false`, which read like a choice of curve and actually disabled
+    /// attenuation altogether.
+    None,
+    /// Linear in **decibels**: 0 dB at `min_distance` down to silence (-60 dB)
+    /// at `max_distance`. Kira's own default.
+    LinearDecibels,
+    /// The inverse-distance law the original client gets from Miles Sound
+    /// System (`AIL_set_3D_sample_distances`): full volume within
+    /// `min_distance`, `min_distance / distance` beyond it — so the volume
+    /// halves for every doubling of distance — and silent past `max_distance`.
+    InverseDistance,
 }
 
 impl SpatialTrackBuilder {
@@ -29,7 +46,9 @@ impl SpatialTrackBuilder {
         Self {
             persist_until_sounds_finish: false,
             distances: SpatialTrackDistances::default(),
-            use_linear_attenuation_function: true,
+            // The original client's model, so world audio matches it unless a
+            // caller opts out.
+            attenuation_function: AttenuationFunction::InverseDistance,
         }
     }
 
@@ -56,12 +75,10 @@ impl SpatialTrackBuilder {
     }
 
     /// Sets how the emitter's volume will change with distance.
-    ///
-    /// If `false`, the emitter will output at a constant volume.
     #[must_use]
-    pub(crate) fn use_linear_attenuation_function(self, use_linear_attenuation_function: bool) -> Self {
+    pub(crate) fn attenuation_function(self, attenuation_function: AttenuationFunction) -> Self {
         Self {
-            use_linear_attenuation_function,
+            attenuation_function,
             ..self
         }
     }
@@ -88,7 +105,7 @@ impl SpatialTrackBuilder {
             spatial_data: Some(SpatialData {
                 position: Parameter::new(position),
                 distances: self.distances,
-                use_linear_attenuation_function: self.use_linear_attenuation_function,
+                attenuation_function: self.attenuation_function,
                 spatialization_strength: Parameter::new(0.75),
             }),
             playback_state_manager: PlaybackStateManager::new(),

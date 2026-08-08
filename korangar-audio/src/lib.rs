@@ -47,7 +47,7 @@ use crate::manager::{AudioManager, AudioManagerSettings};
 use crate::sound::PlaybackState;
 use crate::sound::static_sound::{StaticSoundData, StaticSoundHandle};
 use crate::sound::streaming::{StreamingSoundData, StreamingSoundHandle};
-use crate::track::{SpatialTrackBuilder, SpatialTrackDistances, SpatialTrackHandle, TrackBuilder, TrackHandle};
+use crate::track::{AttenuationFunction, SpatialTrackBuilder, SpatialTrackDistances, SpatialTrackHandle, TrackBuilder, TrackHandle};
 
 create_generational_key!(SoundEffectKey, "The key for a cached sound effect");
 create_simple_key!(AmbientKey, "The key for a ambient sound");
@@ -81,6 +81,9 @@ struct QueuedSoundEffect {
 struct AmbientSoundConfig {
     sound_effect_key: SoundEffectKey,
     bounds: Sphere,
+    /// Distance within which the emitter plays at full volume — Miles'
+    /// `min_dist`. The RSW carries one per emitter; it used to be hardcoded.
+    inner_radius: f32,
     volume: Decibels,
     cycle: Option<f32>,
 }
@@ -336,14 +339,19 @@ impl<F: FileLoader> AudioEngine<F> {
         &self,
         sound_effect_key: SoundEffectKey,
         position: Point3<f32>,
+        inner_radius: f32,
         range: f32,
         volume: f32,
         cycle: Option<f32>,
     ) -> AmbientKey {
-        self.engine_context
-            .lock()
-            .unwrap()
-            .add_ambient_sound(sound_effect_key, position, range, linear_to_decibel(volume), cycle)
+        self.engine_context.lock().unwrap().add_ambient_sound(
+            sound_effect_key,
+            position,
+            inner_radius,
+            range,
+            linear_to_decibel(volume),
+            cycle,
+        )
     }
 
     /// Removes all ambient-sound tracks.
@@ -447,7 +455,7 @@ impl<F: FileLoader> EngineContext<F> {
                         min_distance: 5.0,
                         max_distance: range,
                     })
-                    .use_linear_attenuation_function(true);
+                    .attenuation_function(AttenuationFunction::InverseDistance);
 
                 match self.spatial_sound_effect_track.add_spatial_sub_track(position, spatial_track) {
                     Ok(mut spatial_track_handle) => {
@@ -498,10 +506,10 @@ impl<F: FileLoader> EngineContext<F> {
             let spatial_track = SpatialTrackBuilder::new()
                 .persist_until_sounds_finish(true)
                 .distances(SpatialTrackDistances {
-                    min_distance: 5.0,
+                    min_distance: sound_config.inner_radius,
                     max_distance: sound_config.bounds.radius(),
                 })
-                .use_linear_attenuation_function(true);
+                .attenuation_function(AttenuationFunction::InverseDistance);
 
             let mut spatial_track_handle = match self.spatial_sound_effect_track.add_spatial_sub_track(position, spatial_track) {
                 Ok(spatial_track_handle) => spatial_track_handle,
@@ -589,6 +597,7 @@ impl<F: FileLoader> EngineContext<F> {
         &mut self,
         sound_effect_key: SoundEffectKey,
         position: Point3<f32>,
+        inner_radius: f32,
         range: f32,
         volume: Decibels,
         cycle: Option<f32>,
@@ -597,6 +606,9 @@ impl<F: FileLoader> EngineContext<F> {
             .insert(AmbientSoundConfig {
                 sound_effect_key,
                 bounds: Sphere::new(position, range),
+                // Never wider than the audible radius, or the emitter would be
+                // at full volume everywhere it can be heard.
+                inner_radius: inner_radius.clamp(0.0, range),
                 volume,
                 cycle,
             })
@@ -713,7 +725,7 @@ impl<F: FileLoader> EngineContext<F> {
                             min_distance: 5.0,
                             max_distance: range,
                         })
-                        .use_linear_attenuation_function(true);
+                        .attenuation_function(AttenuationFunction::InverseDistance);
 
                     match self.spatial_sound_effect_track.add_spatial_sub_track(position, spatial_track) {
                         Ok(mut spatial_track_handle) => {
