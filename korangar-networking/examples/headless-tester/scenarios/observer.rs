@@ -57,7 +57,8 @@
 
 use std::time::Duration;
 
-use ragnarok_packets::EquipPosition;
+use korangar_networking::NetworkEvent;
+use ragnarok_packets::{EquipPosition, SkillId, SkillLevel, TilePosition};
 
 use crate::context::{Appearance, Config, TestContext};
 use crate::scenarios::Scenario;
@@ -112,7 +113,152 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("observer-look-rebuild", 11, look_survives_entity_rebuild),
         Scenario::new("observer-look-clear", 11, clearing_a_look_reaches_the_observer),
         Scenario::new("observer-ammo-disguise", 11, ammunition_survives_a_disguise),
+        Scenario::new("observer-skill-cast", 11, a_cast_reaches_the_observer),
+        Scenario::new("observer-status-values", 11, status_values_reach_the_observer),
     ]
+}
+
+/// Sage, for the elemental fields. `SA_VOLCANO` is the row-11 subject because
+/// it is one of the three statuses whose **values** depend on a Hercules
+/// delta — see [`status_values_reach_the_observer`].
+const SAGE: u16 = 16;
+const SA_VOLCANO: u16 = 285;
+/// `SA_VOLCANO` lists `Items: { Blue_Gemstone: 1 }` and places no field without
+/// one. Notably the **cast bar still broadcasts** — the requirement is checked
+/// when the cast completes — so a missing gemstone reads as a working cast that
+/// quietly produces nothing, which is how it presented here.
+const BLUE_GEMSTONE: u32 = 717;
+/// `SI_GROUNDMAGIC` — the icon index carried in `ZC_MSG_STATE_CHANGE`. **Must be
+/// matched on**, or the first unrelated status the subject happens to gain is
+/// asserted against instead, which reports `[0, 0, 0]` and looks exactly like
+/// the delta below having been lost. All three elemental fields share this one
+/// icon, so it identifies the family rather than the element.
+const SI_GROUNDMAGIC: u16 = 112;
+
+/// Where to place the field: two cells east, which is the **only** workable
+/// distance and was not obvious.
+///
+/// `SA_VOLCANO` has `Range: 2`, and Hercules drops an out-of-range ground cast
+/// with a bare `return 0` and **no** `clif->skill_fail` — so aiming further
+/// away produces total silence that looks exactly like a missing broadcast.
+/// (The graphical client hides this by walking into range first; the tester
+/// sends the packet directly and gets no such help.) Aiming at the caster's own
+/// feet is equally useless: elemental fields carry `UF_NOFOOTSET` and skip any
+/// occupied cell.
+fn field_target(context: &TestContext) -> TilePosition {
+    TilePosition {
+        x: (context.position.x as i16 + 2).max(5) as u16,
+        y: context.position.y,
+    }
+}
+
+/// Row 10 — the observer must see the *cast*, not just its result.
+///
+/// This is the row that turned up the observer cast-bar bug: the state was
+/// already correct (`SkillCast` is broadcast `AREA` and reached the observer's
+/// copy of the caster) and nothing rendered it. The event half is what this
+/// guards; the pixels stay manual.
+fn a_cast_reaches_the_observer(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+
+    primary.ensure_job(SAGE)?;
+    primary.say("@allskill")?;
+    primary.pump(Duration::from_millis(500));
+
+    // Assert the observer can see the caster before casting, so a silent
+    // out-of-view is never mistaken for a missing broadcast.
+    let subject = primary.account_id;
+    partner.assert_in_view(subject, true)?;
+
+    partner.flush();
+    let target = field_target(&primary);
+    primary
+        .net
+        .cast_ground_skill(SkillId(SA_VOLCANO), SkillLevel(1), target)
+        .map_err(|error| format!("could not request the cast: {error:?}"))?;
+
+    partner.wait_for_within("observer sees the cast", Duration::from_secs(12), &mut |event| match event {
+        NetworkEvent::SkillCast {
+            source_entity_id,
+            skill_id,
+            ..
+        } if source_entity_id.0 == subject.0 && skill_id.0 == SA_VOLCANO => Some(()),
+        _ => None,
+    })
+}
+
+/// Row 11 — a status's **values** must reach the observer, not merely the fact
+/// of it.
+///
+/// Deliberately `SA_VOLCANO`, and deliberately asserting `values[1]`. Hercules
+/// sends value fields only when `status_get_val_flag` says to, and upstream says
+/// nothing for the three elemental fields — this fork adds them
+/// (`src/map/status.c`, CLAUDE.md 3b). Without that delta the status still
+/// arrives and the icon still appears, so the loss is **silent**; only the
+/// numbers go to zero and the window can render "+0" forever. Same reasoning as
+/// `party-member-vitals`.
+fn status_values_reach_the_observer(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+
+    primary.ensure_job(SAGE)?;
+    primary.say("@allskill")?;
+    primary.pump(Duration::from_millis(500));
+
+    let subject = primary.account_id;
+    partner.assert_in_view(subject, true)?;
+
+    primary.give_item(BLUE_GEMSTONE, 1)?;
+
+    partner.flush();
+    let target = field_target(&primary);
+    primary
+        .net
+        .cast_ground_skill(SkillId(SA_VOLCANO), SkillLevel(1), target)
+        .map_err(|error| format!("could not request the cast: {error:?}"))?;
+
+    // **Wait for the field to exist before stepping into it.** `SA_VOLCANO` has
+    // a five second cast (4000 + 1000 fixed) and the unit only appears when the
+    // cast completes, so walking to the target first parks the caster there with
+    // nothing to stand in. Cost one debugging round.
+    primary.wait_for_within("field placed", Duration::from_secs(15), &mut |event| match event {
+        NetworkEvent::AddSkillUnit { .. } => Some(()),
+        _ => None,
+    })?;
+
+    primary.walk_to(target.x, target.y)?;
+    primary.pump(Duration::from_millis(1200));
+
+    let values = partner.wait_for_within("observer sees the status", Duration::from_secs(15), &mut |event| match event {
+        NetworkEvent::StatusChange {
+            entity_id,
+            index,
+            gained: true,
+            values,
+            ..
+        } if entity_id.0 == subject.0 && *index == SI_GROUNDMAGIC => Some(*values),
+        _ => None,
+    })?;
+
+    // **Step off the field before returning, on every path.** It stands for 60s
+    // at level 1 and grants a fire bonus, so leaving the character in it hands
+    // the next scenario a buffed, element-shifted attacker — exactly the
+    // shared-state trap this file's header describes, where one scenario broke
+    // two unrelated ones much later in the run.
+    let home = primary.position;
+    let _ = primary.walk_to(home.x.saturating_sub(6).max(5), home.y);
+
+    // `val1` is the skill level and `val2` the bonus it grants. A zero `val2`
+    // is the exact signature of the Hercules delta having been lost.
+    if values[0] == 0 {
+        return Err(format!("status reached the observer with no skill level: {values:?}"));
+    }
+    if values[1] == 0 {
+        return Err(format!(
+            "status reached the observer with a zero bonus ({values:?}) — the SC_VOLCANO/DELUGE/VIOLENTGALE \
+             `status_get_val_flag` delta in Hercules `src/map/status.c` has probably been lost in a merge"
+        ));
+    }
+    Ok(())
 }
 
 /// Put the primary in a known appearance state and wait for the partner to
