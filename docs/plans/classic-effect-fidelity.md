@@ -400,12 +400,30 @@ The rows in **bold** do have renewal units and would fire today:
 
 `HW_GRAVITATION` has **no** renewal unit, so `GravityEffects` is unusable here.
 
-**Blocked on one engine decision, not on data.** `UnitBody::GroundQuad` is a single
-flat quad; the authentic recipe is *two* layers with a bobbing upper one. Faithful
-support needs either a new `UnitBody` variant carrying tile-colour + hover
-texture/size/opacity, or a second body slot. Approximating it as one textured quad
-would lose the bob and the tint separation. **Not yet implemented — decide the body
-model first.**
+**UNBLOCKED 2026-08-08 — `UnitBody::LayeredGroundQuad` is implemented.** It carries
+tile colour + hover texture/size/opacity and renders both layers, the upper one
+bobbing `0.4 - 0.2·sin` cell at the original's rate with a per-cell phase. All three
+renewal rows (`PA_GOSPEL`, `PF_FOGWALL`, `NPC_EVILLAND`) are wired with the tile
+colours above, verbatim. **All three are code-only and have NOT been seen on
+screen** — they need `@jobchange 4015` (Paladin) to trigger.
+
+**Two caveats on the numbers.** The recovered table preserved tile RGBA and texture
+names but only annotated the two `size` values that deviate, so **the default hover
+size and every hover opacity in these recipes are estimates**, not table values, and
+want the same live calibration Moonlit got. And `tile_color` is now `Option` —
+`None` draws the hovering layer over bare ground, which no table row uses but which
+Moonlit needs (below).
+
+**Moonlit's α 0.6 calibration needs re-reading before it is trusted for this
+family.** The reading recorded as "confirmed correct" was taken while the tile still
+borrowed Land Protector's *texture* as a carrier, whose artwork cut the effective
+coverage; the flat-colour change removed that filter and α was never re-derived. It
+has since held up on a genuinely flat tile — but the measurement predates the
+conditions it is now cited for. **What the live pass actually established is
+stronger and different: a full-coverage flat tile reads as a slab at any alpha once
+a field is large**, which is why Moonlit ended up with its tint switched off
+entirely and the colour moved into its light. Expect the same question for Gospel
+(α 0.05) and Fog Wall (α 0.6).
 
 #### Sizing yardstick: is this a ground texture?
 

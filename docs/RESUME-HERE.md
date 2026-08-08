@@ -1,5 +1,100 @@
 # Resume here — live pass status
 
+> **2026-08-08 (evening) — a two-seat live pass. Six bugs, five checks passed,
+> everything pushed.** None of the six was reachable from the headless suite,
+> which links `ragnarok-packets` and `korangar-networking` and **not**
+> `korangar/src`. Two of them needed a *second seat* to exist at all.
+>
+> **PASSED, and these close long-standing debt:**
+> - **`ZC_ADD_SKILL` (0x0111)** — `@questskill 1014` put Redemptio in the skill
+>   tree live. The path no test can reach.
+> - **`ZC_SKILL_FAIL_REASON` (0x0EFE)** — casting Redemptio with no party named
+>   the *experience* condition out of its three cause-0 paths.
+> - **The reuse-delay message** — an Yggdrasil Berry used twice inside five
+>   seconds printed *"%d seconds left until you can use"*. That single line
+>   confirms three separate pieces of the 07-08 work at once: the `ZC_MSG_VALUE`
+>   (0x07E2) channel, the generated message table, and the `messages_main.h`
+>   gloss realignment. It read *"Content has been saved in [SaveData_ExMacro5]"*
+>   before the fix.
+> - **`@kick`** now explains itself, and the berry heal shows a number.
+>
+> **FIXED:**
+> 1. **No Gypsy could log in.** `SkillListRequirements::get` panicked
+>    (`incomplete skill tree`) *before the character reached the screen*.
+>    `CG_LONGINGFREEDOM` (487) is in `skilltreeview.lub`'s Gypsy tab and absent
+>    from `skillinfolist.lub`. **Two GRF tables are allowed to disagree**, and
+>    the sibling built from the same file has always degraded gracefully — so the
+>    skill passed the first lookup and detonated on the second.
+> 2. **Moonlit's white bloom.** One point light *per cell*, 81 on a 9×9. The
+>    recipe's "keep it dim" hedge could not work: **that number is a radius, not
+>    a brightness.** Overlap decides the hue — a saturated colour saturates as
+>    its hue, a pale one goes white, which is why even blue came back white.
+> 3. **`@kick` bounced you to character select in silence** — and this one took
+>    **four** rounds, each at a different stage: routed to chat (destroyed with
+>    the screen), then opened in the wrong event arm (ordering not ours to
+>    choose), then wiped by one of the **three** `close_all_windows` calls on the
+>    way back, and finally **drawn underneath character select**, because windows
+>    render in open order and the interface has no raise-to-front. See the new
+>    failure mode below.
+> 4. **"Rejected from Server"** had the same draw-order problem.
+> 5. **No numeric HP or SP anywhere** in the client. Now in the HUD.
+> 6. **Base EXP looked missing at max level** — the server sends a next-level
+>    requirement of 0 and the zero branch printed a bare number.
+>
+> **A NEW FAILURE MODE, and the most transferable thing here.** "The data arrives
+> and nothing displays it" had three recorded instances and **all three stopped
+> at the handler**. The kick was a fourth stage: correct packet, correct handler,
+> correct living window — **behind another window**. When a message is missing,
+> the stages are wire → handler → surface lifetime → **draw order**, and only
+> instrumenting each in turn found it. Three rounds of theorising lost to it.
+>
+> **Ordering audit (asked for after the kick).** This fork has three companion
+> packets — a small packet sent immediately before the thing it explains.
+> `0x0EFE` and `0x0EFF` are both **sound**: packet↔packet pairings on one
+> connection are safe by construction, since TCP preserves order and the handler
+> dispatches sequentially. `0x0081` broke because it pairs a packet with a
+> **connection-level event**, produced by the socket layer on a different clock.
+> **Packet↔lifecycle pairings are the fragile class, and their bugs surface in
+> the UI rather than on the wire.**
+>
+> **Not a bug, now settled:** the "static / blowing on a mic" on one seat is
+> `prt_fild08`'s own ambience — `se_moc_wind_little.wav` and
+> `se_prtthewaterofabrook.wav` are placed in the RSW. Spatial, cyclic, and
+> loudest at the source, exactly as reported. The two-client phasing theory was
+> wrong; it was position, not client.
+>
+> **Moonlit is redesigned, deliberately.** The α 0.6 salmon tile is *faithful*
+> and was confirmed correct — and 81 full-coverage tiles read as a slab whatever
+> colour they are. The tint is now **off**, the colour moved into the light, and
+> each cell carries a bobbing note. **`UnitBody::LayeredGroundQuad` is built**,
+> which unblocks `PA_GOSPEL`, `PF_FOGWALL` and `NPC_EVILLAND` — all three are
+> wired with the table's verbatim colours, **none has been seen on screen**, and
+> their hover sizes and opacities are estimates, not table values.
+>
+> **CAUTION on the α 0.6 calibration this repo records as settled.** That reading
+> was taken while the tile still borrowed Land Protector's *texture* as a
+> carrier, whose artwork was cutting the coverage. The flat-colour change removed
+> that filter and α was never re-derived. It has since held up on a genuinely
+> flat tile — but anyone porting the song/Gospel/Fog-Wall family at
+> "0.6-magnitude" should know the number was measured under conditions that no
+> longer exist.
+>
+> **Next, cheapest first:** **Hermode** is the last open Block E row — but
+> `HeadlessTwo` is now a **Priest (8)**, because the Redemptio checks jobbed it
+> away from Gypsy. **Order the ensemble rows BEFORE the cause-0 checks in
+> future**: the latter destroy a setup the former needs and which is far more
+> expensive to rebuild (`@jobchange 4021`, `@allskill`, equip the whip — item
+> 1950 is still in its inventory). Then `@jobchange 4015` + `@allskill` for
+> Gospel, the first live look at the two-layer body.
+>
+> **Test-environment note that cost real time:** `inventory` and `char` are stale
+> for a live session — `picklog` is not. It proved the berry was being consumed
+> all along and that both attempts were 6 s and 15 s apart against a 5 s delay,
+> i.e. the "broken" item was working and the test never triggered the condition.
+
+<details>
+<summary>2026-08-08 (earlier) — the cause-0 rebuild (superseded above)</summary>
+
 > **2026-08-08 — the cause-0 work is finished, suite-verified, and STILL NOT ON
 > SCREEN.** The row-5 failure ("skill level is not high enough" from a Clown with
 > the skill at max — it meant *no ensemble partner*) turned into an audit of every
@@ -53,6 +148,8 @@
 > instrumentation log that would settle it in one cast has never been read**. Rows
 > 4b and 5 of [plans/gui-verification-pass.md](plans/gui-verification-pass.md).
 > Do this in the same session — the client has to be launched for all of it.
+
+</details>
 
 <details>
 <summary>2026-08-07 — the error-channel audit that started it (superseded above)</summary>
