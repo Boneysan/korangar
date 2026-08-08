@@ -10038,3 +10038,49 @@ mod skill_effect_asset_tests {
     }
 
 }
+
+#[cfg(test)]
+mod grf_extract {
+    use korangar_loaders::FileLoader;
+
+    use crate::loaders::GameFileLoader;
+
+    /// Copy files out of the configured GRFs, for inspecting assets by hand.
+    ///
+    /// This exists because `tools/grf_extract.py` **silently skips
+    /// DES-encrypted entries** — every `data\\wav\\se_*` ambient sound is one —
+    /// so for those the client's own reader is the only way in. Used
+    /// 2026-08-08 to pull `prt_fild08`'s ambient wavs and measure them.
+    ///
+    /// ```sh
+    /// KORANGAR_EXTRACT='data\wav\se_moc_wind_little.wav' KORANGAR_EXTRACT_OUT=/tmp/out \
+    ///   cargo test -p korangar --lib grf_extract -- --ignored --nocapture
+    /// ```
+    #[test]
+    #[ignore]
+    fn extract_requested_files() {
+        let Ok(requested) = std::env::var("KORANGAR_EXTRACT") else {
+            println!("set KORANGAR_EXTRACT to a comma-separated list of archive paths");
+            return;
+        };
+        let out_dir = std::env::var("KORANGAR_EXTRACT_OUT").unwrap_or_else(|_| "/tmp/korangar-extract".to_owned());
+        std::fs::create_dir_all(&out_dir).unwrap();
+
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+
+        for path in requested.split(',').map(str::trim).filter(|path| !path.is_empty()) {
+            // Archive lookups are lowercase; the GRF table is not case-folded for us.
+            match game_file_loader.get(&path.to_lowercase()) {
+                Ok(bytes) => {
+                    let bytes: Vec<u8> = bytes;
+                    let name = path.rsplit(['\\', '/']).next().unwrap_or(path);
+                    let target = format!("{out_dir}/{name}");
+                    std::fs::write(&target, &bytes).unwrap();
+                    println!("wrote {target} ({} bytes)", bytes.len());
+                }
+                Err(error) => println!("{path}: NOT FOUND ({error:?})"),
+            }
+        }
+    }
+}

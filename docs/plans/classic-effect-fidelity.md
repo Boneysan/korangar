@@ -902,3 +902,56 @@ those two must be copied in before the tree is self-contained for distribution.
 Note: `data.grf` contents are Gravity's copyrighted assets. Bundling them is the
 normal arrangement for a private friends server, but it is asset redistribution,
 distinct from the repo's own "no upstream **code**" rule in CLAUDE.md §5.
+
+## Ambient map sound — how the original does it (2026-08-08)
+
+Recovered from the reference client at `/Volumes/T7/GitHub/RO/client`, which
+ships **`Mss32.dll` (Miles Sound System)** with the **`Mssfast.m3d`** 3D
+provider. The exe drives 3D samples through `AIL_open_3D_provider`,
+`AIL_set_3D_position` and **`AIL_set_3D_sample_distances(handle, max, min)`**.
+Miles semantics: full volume inside `min`, **inaudible beyond `max`**, and an
+**inverse-distance rolloff** between them (amplitude ≈ `min / distance`).
+
+Korangar's own curve is **linear in decibels**, 0 dB → −60 dB across
+`min..max` (`SpatialData::spatialize`), i.e. amplitude `10^(-3r)`:
+
+| relative distance | korangar | Miles |
+|---|---|---|
+| 0.25 | 0.178 | 0.133 |
+| 0.50 | **0.032** | 0.067 |
+| 0.75 | **0.006** | 0.045 |
+
+So korangar is *quieter* at range than the original, not louder — worth knowing
+before anyone "fixes" ambience by attenuating harder. Two real deviations:
+
+1. **`use_linear_attenuation_function(false)` is not an alternative curve — it
+   disables distance attenuation entirely.** That `if` is the only place volume
+   falls off with distance. Do not flip it.
+2. **`AMBIENT_SOUND_MULTIPLIER = 1.5`** inflates the map author's range, where
+   Miles treats `max` as a hard cutoff. Left in place (it partly offsets the
+   steeper curve), but it is a korangar invention, not fidelity.
+3. **Volume was passed through un-clamped.** RSW volumes here reach 1.20 and
+   `linear_to_decibel` turns that into a +1.58 dB boost; Miles' sample volume is
+   a fraction of full scale and cannot amplify. **Now clamped to unity.**
+
+**`prt_fild08` measured**, as the worked example: 51 emitters — ~31
+`se_prtbird_02`, 12 `se_prtbird_05`, 7 `se_prtthewaterofabrook`, 1
+`se_moc_wind_little` — every one `cycle` 4.0, range 100 (150 effective). All are
+plain PCM mono 22050 Hz 16-bit, so nothing is mis-decoded. Measured character:
+
+| file | length | peak | spectral flatness | centroid |
+|---|---|---|---|---|
+| `se_moc_wind_little` | 1.97 s | 0.22 | 0.012 | 534 Hz |
+| `se_prtthewaterofabrook` | 5.27 s | **0.99** | **0.184** | 2047 Hz |
+| `se_prtbird_02` | 2.41 s | 0.15 | 0.011 | 2613 Hz |
+| `se_prtbird_05` | 2.16 s | 0.22 | 0.066 | 3487 Hz |
+
+The brook is the one that reads as "static" — broadband (highest flatness) and
+authored at full scale — and **up to 4 of its emitters are audible from one
+spot**. At realistic distances they sum well below clipping, so the noise is the
+sample rather than a mixing fault, but the clamp above removes the one path that
+could have clipped.
+
+**These files are DES-encrypted in `data.grf`**, so `tools/grf_extract.py` skips
+them silently. Use the `grf_extract` test in `korangar/src/lib.rs`
+(`KORANGAR_EXTRACT`, `--ignored`), which goes through the client's own reader.

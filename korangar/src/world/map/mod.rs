@@ -368,7 +368,16 @@ impl Map {
                 sound_effect_key,
                 sound.position,
                 sound.range * AMBIENT_SOUND_MULTIPLIER,
-                sound.volume,
+                // **Clamped to unity, as the original client does.** RSW volumes
+                // here run to 1.20, and `linear_to_decibel` turns that into a
+                // +1.58 dB *boost*; the original drives Miles Sound System, whose
+                // `AIL_set_3D_sample_volume` is a fraction of full scale and
+                // cannot amplify. Harmless for these particular samples (the
+                // loudest, `se_prtthewaterofabrook.wav`, peaks at 0.99 but is
+                // authored at volume 0.80) — but a map with a hot sample at 1.2
+                // would clip, and clipped broadband noise is indistinguishable
+                // from static.
+                sound.volume.min(1.0),
                 sound.cycle,
             );
         }
