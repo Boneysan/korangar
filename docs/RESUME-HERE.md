@@ -1,5 +1,26 @@
 # Resume here — live pass status
 
+> **START HERE NEXT SESSION — one unfinished job.** The full headless suite must
+> be re-run: `./target/release/examples/headless-tester --scenario all`. It was
+> **green at 123/0/1 before** this session's changes, and two new observer
+> scenarios have since been added (`observer-skill-cast`,
+> `observer-status-values`, both 8/8 within `--scenario phase11` and both proved
+> able to fail). The re-run is not about them passing — it is whether they
+> **disturb the other 123**, since they job the shared character to Sage and walk
+> it about, and this suite has a recorded case of one scenario silently breaking
+> two unrelated ones much later in the run. The interrupted run reached
+> **44 passed / 0 failed**; the 39-job skill sweep after that is where
+> interference would show. Snapshot first (`Hercules/dev.sh snapshot`) and
+> restore after.
+>
+> **Also unverified, and needing ears rather than tests:** the audio work below.
+> Ambience and skill-sound levels both changed substantially, and no one has
+> heard either.
+>
+> **Both test characters need explicit re-jobbing** — `test` is Sage 16 and
+> `HeadlessTwo` is Priest 8 as of shutdown. Hermode wants Clown 4020 + Gypsy
+> 4021 with the whip (1950, still in inventory).
+
 > **2026-08-08 (evening) — a two-seat live pass. Six bugs, five checks passed,
 > everything pushed.** None of the six was reachable from the headless suite,
 > which links `ragnarok-packets` and `korangar-networking` and **not**
