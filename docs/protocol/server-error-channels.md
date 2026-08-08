@@ -186,12 +186,47 @@ mode this whole section is about.
 | `EMOTION_NAMES` (81 positional) | **clean** — anchored by `e_dice1..6` → 58..63 and `e_antenna1..3` → 71..73, runs any drift would break |
 | `status_effects.json` | **clean** — 700 ids vs 700 `SI_`, nothing missing, 9 deliberate renames |
 | `EffectId` (1128 variants) | **clean** — 0 disagreements across the 1098 ids Hercules defines |
-| `UnitId` | **DRIFTED** — `Nyanggrass` sat at `0x107` where this server has `UNT_SV_ROOTTWIST` and defines no NYANGGRASS at all |
+| `UnitId` | **DRIFTED** — `Nyanggrass` sat at `0x107` where this server has `UNT_SV_ROOTTWIST` and defines no NYANGGRASS at all; and see the range check below |
 
 **Two traps in the audit tooling itself, both of which nearly produced a false
 "clean":** `#[numeric_value(0x7E)]` is **hex**, and a `\d+` regex silently makes
 an enum look like it starts at 0; and **naive positional indices are only valid
 before an enum's first explicit value**.
+
+**A third check these tables want, which a name-by-name diff cannot give: does
+every value fall inside the enum's own declared bound?** `UnitId::Deepblindtrap`
+carries `#[numeric_value(20852)]` — `0x5174`, two orders of magnitude past
+`UnitId::Max` (`0x190`), and the only value in the enum that is. It and the three
+variants after it are therefore unreachable. Inherited from upstream Korangar
+(`4c9782f3`) and **left alone deliberately**: Hercules defines no such units, so
+it cannot fire against this server, and there is no local authority to take the
+right ids from. Flagged in place as `FIXME(unit-id)`.
+
+**What that would have cost if it were reachable is the part worth remembering.**
+An unmodelled enum value inside a *registered* packet is not a missing visual: it
+returns `HandlerResult::InternalError`, and `korangar-networking/src/lib.rs:382`
+answers that with `cut_off_buffer_base = 0; break` — **every packet batched
+behind it in that read is discarded.** Coverage of the wide server-facing enums
+is a framing concern, not a cosmetic one. Checked at the same time:
+`DamageType` covers all of `enum battle_dmg_type` (which stops at 11), and
+`StatType` decodes every `SP_` constant `clif_updatestatus` can send —
+`SP_ATTACKRANGE` is the one apparent gap and is not one, since it leaves on
+`ZC_ATTACK_RANGE` rather than as a stat id.
+
+### Client→server layouts, checked mechanically against the same table
+
+Every audit above runs server→client. The other direction was checked too, by
+computing each packet struct's serialized size and diffing it against Hercules'
+generated length table: **73 of 74 `ClientPacket`s match exactly**, and the
+odd one out is `CancelCastPacket` (`0x0F00`), which is absent from the table
+because it is a fork addition whose length lives in the hand-maintained
+`src/common/packets_len.h` — a file `tools/generate_packet_lengths.sh` does not
+read. `ZC_PARTY_INVITE_SENDER` (`0x0EFF`) is missing for the same reason. Both
+are modelled, so nothing depends on the fallback for them; the gap is worth
+knowing before trusting that table as a complete inventory of this server's
+packets. Validation for the size calculation: run over the **210** server
+packets it agrees with Hercules on **206**, the other four being packets modelled
+with an explicit length field instead of `#[variable_length]`.
 
 ## Not yet seen on screen
 

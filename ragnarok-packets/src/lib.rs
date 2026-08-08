@@ -5182,6 +5182,14 @@ pub enum UnitId {
     GroundGravitation,
     #[numeric_value(298)]
     Kunaiwaikyoku,
+    // FIXME(unit-id): 20852 is `0x5174`, two orders of magnitude past this
+    // enum's own `Max` (`0x190`) — the only value here that is. Inherited from
+    // upstream and never reachable, so these four decode to nothing and a real
+    // packet carrying their true ids would fail `from_bytes`, which costs the
+    // whole read buffer rather than one visual. Left as-is because Hercules
+    // defines no such units at all (`skill.h` stops at `UNT_BOOKOFCREATINGSTAR`)
+    // and there is no authority here to take the right ids from; it cannot fire
+    // against this server.
     #[numeric_value(20852)]
     Deepblindtrap,
     Solidtrap,
