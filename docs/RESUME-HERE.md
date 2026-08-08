@@ -1,5 +1,62 @@
 # Resume here — live pass status
 
+> **2026-08-08 — the cause-0 work is finished, suite-verified, and STILL NOT ON
+> SCREEN.** The row-5 failure ("skill level is not high enough" from a Clown with
+> the skill at max — it meant *no ensemble partner*) turned into an audit of every
+> channel by which the server reports a failure, and then into a rebuild of how
+> that reporting works. See
+> [protocol/server-error-channels.md](protocol/server-error-channels.md).
+>
+> **The finding that reframed it:** cause 0 is not laziness in Hercules, it is the
+> protocol's fallback for conditions Gravity never numbered — 21 of the 33 states
+> in `skill_check_condition_castbegin` report cause 0 and only **one** has a
+> dedicated cause; `skill.c` alone has 174 cause-0 emissions. The official client
+> says "Skill level is not high enough" to all of them too. So there is no "send
+> the right cause" fix. What there is, is a split:
+> - **static preconditions** (`State:` in skill_db — shield, falcon, cart, stance)
+>   are on disk at both ends, so nothing needs sending;
+>   `tools/generate_skill_states.py` carries them across (42 skills, 13 states);
+> - **runtime outcomes** (roll missed, nobody in range, not enough experience, no
+>   partner) only the server knows, and now ride **`ZC_SKILL_FAIL_REASON`
+>   (fork packet 0x0EFE)** — see CLAUDE.md 3b for the five touch points.
+>
+> **Two bugs were found by writing the guard rather than by auditing.**
+> `ZC_ADD_SKILL` (0x0111) was **never modelled**, so any skill *granted* rather
+> than levelled was eaten by the length fallback — Plagiarism's copied skill, quest
+> rewards, and anything a campaign script grants, all invisible until relog. And
+> the reason field was first modelled as a `ByteConvertable` enum, which fails to
+> deserialize on an unknown value and **discards the whole read buffer** — in a
+> packet whose enum is documented *append only*, i.e. the intended way to extend it
+> was the trigger. Both fixed and guarded.
+>
+> **Suite: 124 scenarios, green twice** — ordered, and shuffled (seed 20260808),
+> 123 passed / 0 failed / 1 structural skip, 0 packet deserialization failures.
+> The shuffled pass matters because all scenarios share one character and the
+> double-run gate cannot see order dependence.
+>
+> **What the suite CANNOT tell you, and what to do first on screen.** The headless
+> tester links `ragnarok-packets` and `korangar-networking` — **not** `korangar/src`.
+> So `NetworkEvent::SkillAdded` → the Skill Tree window is new, unreached code.
+> One action each, most valuable first:
+> 1. **`@questskill 1014` as a Priest — does Redemptio appear in the skill tree?**
+>    The only path no test can reach, and that window is where the M1-017 logout
+>    crash lived.
+> 2. **Use an Yggdrasil Berry twice inside five seconds** — the reuse-delay message
+>    ("%d seconds left until you can use"), which read "Content has been saved in
+>    [SaveData_ExMacro5]" before the Hercules gloss fix.
+> 3. **Cast Redemptio with no party** — the 0x0EFE reason text as a chat line.
+> 4. **`@kick` from a second seat** — the map-connection `SC_NOTIFY_BAN`.
+>
+> **Block E is still open and is still the actual next task**: Moonlit's α 0.6 is
+> confirmed correct (which unblocks the whole song/Gospel/Fog-Wall family), but its
+> tile then drew as a solid red square after a fix made during the walk, and **the
+> instrumentation log that would settle it in one cast has never been read**. Rows
+> 4b and 5 of [plans/gui-verification-pass.md](plans/gui-verification-pass.md).
+> Do this in the same session — the client has to be launched for all of it.
+
+<details>
+<summary>2026-08-07 — the error-channel audit that started it (superseded above)</summary>
+
 > **2026-08-07 — a whole batch of error-message work is pushed and NOT live-verified.**
 > Blocks D and E of [plans/gui-verification-pass.md](plans/gui-verification-pass.md)
 > ran, and the row-5 failure ("skill level is not high enough" from a Clown with
@@ -16,6 +73,8 @@
 > the whole song/Gospel/Fog-Wall family), but its tile then drew as a solid red
 > square after a fix made during the walk, and **the instrumentation log that
 > would settle it in one cast has never been read**.
+
+</details>
 
 **Session 2026-07-28/29 closed a lot.** The observer-view checklist
 ([plans/observer-view-verification.md](plans/observer-view-verification.md)) is
