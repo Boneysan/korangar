@@ -9,7 +9,7 @@ use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
 use crate::state::skill_cooldowns::{SkillCooldowns, SkillCooldownsPathExt};
 use crate::state::theme::InterfaceThemeType;
-use crate::world::{Player, PlayerPathExt};
+use crate::world::{CommonPathExt, Player, PlayerPathExt};
 
 /// Compact zeny / base-exp / job-exp / skill-cooldown readout.
 pub struct HudWindow<P, C> {
@@ -51,6 +51,38 @@ where
                 fragment! {
                     gaps: 2.0,
                     children: (
+                        // HP and SP first: they change fastest and are what the
+                        // player checks under pressure. Both were missing entirely
+                        // — the client drew no numeric vitals anywhere, so the only
+                        // way to read your own health was the sprite's bar.
+                        split! {
+                            children: (
+                                text! { text: "HP", overflow_behavior: OverflowBehavior::Shrink },
+                                text! {
+                                    text: VitalPairSelector::new(
+                                        self.player_path.common().health_points(),
+                                        self.player_path.common().maximum_health_points(),
+                                    ),
+                                    color: Color::rgb_u8(255, 120, 120),
+                                    horizontal_alignment: HorizontalAlignment::Right { offset: 0.0, border: 2.0 },
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                            ),
+                        },
+                        split! {
+                            children: (
+                                text! { text: "SP", overflow_behavior: OverflowBehavior::Shrink },
+                                text! {
+                                    text: VitalPairSelector::new(
+                                        self.player_path.spell_points(),
+                                        self.player_path.maximum_spell_points(),
+                                    ),
+                                    color: Color::rgb_u8(120, 170, 255),
+                                    horizontal_alignment: HorizontalAlignment::Right { offset: 0.0, border: 2.0 },
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                            ),
+                        },
                         split! {
                             children: (
                                 text! { text: "Zeny", overflow_behavior: OverflowBehavior::Shrink },
@@ -102,6 +134,60 @@ where
     }
 }
 
+/// Formats `current / maximum (pct%)` for HP and SP.
+///
+/// Separate from [`ExpPairSelector`] because these are `usize` rather than
+/// `u64`, and because a maximum of zero means "not known yet" here rather than
+/// "already at the cap" — showing `(MAX)` for an unpopulated maximum would be an
+/// outright lie about the player's health.
+struct VitalPairSelector<A, B> {
+    current: A,
+    maximum: B,
+    last: Cell<Option<(usize, usize)>>,
+    text: UnsafeCell<String>,
+}
+
+impl<A, B> VitalPairSelector<A, B> {
+    fn new(current: A, maximum: B) -> Self {
+        Self {
+            current,
+            maximum,
+            last: Cell::default(),
+            text: UnsafeCell::default(),
+        }
+    }
+}
+
+impl<A, B> Selector<ClientState, String> for VitalPairSelector<A, B>
+where
+    A: Path<ClientState, usize>,
+    B: Path<ClientState, usize>,
+{
+    fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a String> {
+        let current = *self.current.follow_safe(state);
+        let maximum = *self.maximum.follow_safe(state);
+        let last = self.last.get();
+
+        if last != Some((current, maximum)) {
+            // SAFETY: text is only written here and never aliased while we hold &self.
+            unsafe {
+                *self.text.get() = match maximum {
+                    0 => format!("{current}"),
+                    maximum => {
+                        let percent = (current as f64 / maximum as f64 * 100.0).clamp(0.0, 100.0);
+                        format!("{current} / {maximum} ({percent:.0}%)")
+                    }
+                };
+            }
+            self.last.set(Some((current, maximum)));
+        }
+
+        // SAFETY: see above; returns the stable string buffer for this selector
+        // instance.
+        unsafe { Some(self.text.as_ref_unchecked()) }
+    }
+}
+
 /// Formats `current / next (pct%)` experience for the HUD.
 struct ExpPairSelector<A, B> {
     current: A,
@@ -135,7 +221,11 @@ where
             // SAFETY: text is only written here and never aliased while we hold &self.
             unsafe {
                 *self.text.get() = if next == 0 {
-                    format!("{current}")
+                    // The server sends a next-level requirement of 0 at max
+                    // level, which rendered as a bare number with no total and
+                    // no percentage — indistinguishable from the value simply
+                    // being missing, which is how it was first reported.
+                    format!("{current} (MAX)")
                 } else {
                     let pct = (current as f64 / next as f64 * 100.0).clamp(0.0, 100.0);
                     format!("{current} / {next} ({pct:.1}%)")
