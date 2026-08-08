@@ -202,6 +202,12 @@ where
     // AMMO flag to the outgoing inventory and then lose it to the `SetInventory` that
     // follows, leaving the Ammo slot empty every login. Hold it and apply it at End.
     let pending_equipped_ammunition: Rc<RefCell<Option<InventoryIndex>>> = Rc::new(RefCell::new(None));
+    // The runtime reason for the cause-0 failure that is about to arrive
+    // (`ZC_SKILL_FAIL_REASON`, our fork packet). Hercules sends it immediately
+    // before `ZC_ACK_TOUSESKILL`, so this only ever holds a value across those
+    // two reads. Keyed by skill id and taken on use, so a reason that somehow
+    // arrives without its failure cannot be attached to a later, unrelated one.
+    let pending_skill_fail_reason: Rc<RefCell<Option<(SkillId, SkillFailReason)>>> = Rc::new(RefCell::new(None));
 
     packet_handler.register(|_: MapServerPingPacket| NoNetworkEvents)?;
     packet_handler.register(|packet: BroadcastMessagePacket| NetworkEvent::ChatMessage {
@@ -1272,12 +1278,26 @@ where
     // ZC_ACK_TOUSESKILL is only sent by Hercules on skill *failure* (flag 0),
     // including gameplay rejections like "party creation requires Basic Skill
     // 7". Without this the rejection is completely silent.
-    packet_handler.register(|packet: ToUseSkillSuccessPacket| -> NetworkEventList {
+    let reason_slot = pending_skill_fail_reason.clone();
+    packet_handler.register(move |packet: SkillFailReasonPacket| {
+        *reason_slot.borrow_mut() = Some((packet.skill_id, packet.reason));
+        NoNetworkEvents
+    })?;
+    let reason_slot = pending_skill_fail_reason.clone();
+    packet_handler.register(move |packet: ToUseSkillSuccessPacket| -> NetworkEventList {
+        // Take it either way: a reason left behind by a suppressed failure must
+        // not survive to explain a different skill.
+        let reason = reason_slot
+            .borrow_mut()
+            .take()
+            .filter(|&(skill_id, _)| skill_id == packet.skill_id)
+            .map(|(_, reason)| reason);
+
         if packet.flag != 0 {
             return NetworkEventList::default();
         }
 
-        let reported = match skill_failed_reason(&packet) {
+        let reported = match skill_failed_reason(&packet, reason) {
             SkillFailure::Text(text) => NetworkEvent::ChatMessage {
                 text,
                 color: MessageColor::Error,
@@ -1759,25 +1779,21 @@ const PR_BENEDICTIO: u16 = 69;
 const ALL_PARTYFLEE: u16 = 693;
 const PR_REDEMPTIO: u16 = 1014;
 
-/// Every skill declaring `State: "Shield"` in `db/re/skill_db.conf`. Hercules
-/// checks that state in one shared place (`skill.c:16496`) and reports the
-/// missing shield as cause 0, so the skill id is the only thing that
-/// distinguishes it — `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) exists and is
-/// never used.
-const SHIELD_SKILL_IDS: [u16; 12] = [
-    249,  // CR_AUTOGUARD, Guard
-    250,  // CR_SHIELDCHARGE, Smite
-    251,  // CR_SHIELDBOOMERANG, Shield Boomerang
-    252,  // CR_REFLECTSHIELD, Shield Reflect
-    257,  // CR_DEFENDER, Defending Aura
-    480,  // PA_SHIELDCHAIN, Shield Chain
-    1002, // CR_SHRINK, Shrink
-    2310, // LG_SHIELDPRESS, Shield Press
-    2311, // LG_REFLECTDAMAGE, Reflect Damage
-    2315, // LG_SHIELDSPELL, Shield Spell
-    2323, // LG_EARTHDRIVE, Earth Drive
-    8219, // ML_DEFENDER, Defending Aura (mercenary)
-];
+/// The `State:` precondition a skill declares in `skill_db.conf`, or `None` when
+/// it declares one whose failure Hercules reports with a real cause.
+///
+/// Hercules checks all of these in one shared switch and reports every one as
+/// cause 0, so the skill id is the only thing that distinguishes them. The table
+/// is generated (`tools/generate_skill_states.py`) rather than written out here,
+/// because a hand-kept copy goes stale in silence the moment a skill gains or
+/// loses a state — the previous hand-written shield list had that problem, and
+/// it also missed Brandish Spear, Blitz Beat, Raid and Cart Termination.
+fn skill_state(skill_id: u16) -> Option<super::skill_states::SkillState> {
+    super::skill_states::SKILL_STATES
+        .binary_search_by_key(&skill_id, |&(id, _)| id)
+        .ok()
+        .map(|index| super::skill_states::SKILL_STATES[index].1)
+}
 
 /// Every skill flagged `Ensemble: true` in `db/re/skill_db.conf`. These are the
 /// only skills whose cause 0 means "no valid partner" rather than an unmet
@@ -1799,7 +1815,7 @@ const ENSEMBLE_SKILL_IDS: [u16; 11] = [
 /// Reason for a `ZC_ACK_TOUSESKILL` failure (Hercules `useskill_fail_cause`).
 /// Hercules also reuses this packet for gameplay rejections, e.g. party
 /// creation without Basic Skill 7 arrives as skill 1 / cause 0.
-fn skill_failed_reason(packet: &ToUseSkillSuccessPacket) -> SkillFailure {
+fn skill_failed_reason(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailReason>) -> SkillFailure {
     match packet.cause {
         // Hercules' catch-all for a required item with no dedicated cause —
         // Yellow Gemstone (Land Protector) lands here, not on 7/8. It sends the
@@ -1809,19 +1825,57 @@ fn skill_failed_reason(packet: &ToUseSkillSuccessPacket) -> SkillFailure {
             amount: packet.btype.clamp(0, i32::from(u16::MAX)) as u16,
             equipment: packet.cause == 72,
         },
-        _ => SkillFailure::Text(skill_failed_text(packet)),
+        _ => SkillFailure::Text(skill_failed_text(packet, reason)),
     }
+}
+
+/// Text for a runtime reason the server named outright, over our fork packet.
+///
+/// These are the outcomes no static table can reach — a roll that missed, an
+/// empty splash, a partner who is not there — so before this packet existed the
+/// client could only key on the skill id and enumerate every condition the skill
+/// has. `None` means the server sent a reason this build does not know, which is
+/// what an append-only enum is for: fall through to the older inference rather
+/// than print nothing.
+fn skill_fail_reason_text(reason: SkillFailReason) -> Option<&'static str> {
+    let text = match reason {
+        SkillFailReason::None => return None,
+        SkillFailReason::EnsemblePartner => concat!(
+            "That needs a partner within 4 cells: a Bard or Dancer class of the opposite sex, ",
+            "in your party, holding an instrument or whip, who knows the same skill and is not ",
+            "already performing."
+        ),
+        SkillFailReason::BenedictioHelpers => "That needs two Acolyte-class helpers standing to your left and right.",
+        SkillFailReason::NoParty => "You have to be in a party to use that.",
+        SkillFailReason::NoOneInRange => "No dead party member was in range.",
+        SkillFailReason::NotEnoughExperience => "That spends 1% of your base and job experience, and you do not have it.",
+        SkillFailReason::TargetResisted => "The target resisted.",
+        SkillFailReason::NothingToSteal => "There was nothing to steal.",
+        SkillFailReason::SuppressedByKyomu => "Kyomu suppressed the skill.",
+        SkillFailReason::TargetImmune => "The target cannot be affected by that.",
+    };
+
+    Some(text)
 }
 
 /// Text for every `ZC_ACK_TOUSESKILL` cause the networking crate can render on
 /// its own (i.e. everything that needs no item lookup).
-fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
+fn skill_failed_text(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailReason>) -> String {
     // Hercules overloads USESKILL_FAIL_LEVEL for outcomes that have nothing to do
     // with skill level, so a maxed skill reports "level not high enough". These are
     // the ones verified in `skill.c` to mean the target resisted or the roll missed
     // — extend only after checking the source, since most of the ~60 other cause-0
     // emitters really are unmet conditions.
     if packet.cause == 0 {
+        // The server said what actually failed. Everything below this point is
+        // inference from the skill id, kept only so a stock Hercules — or one
+        // that lost the delta in a merge — still reads better than "level".
+        if let Some(reason) = reason
+            && let Some(text) = skill_fail_reason_text(reason)
+        {
+            return text.to_owned();
+        }
+
         // Ensemble songs and dances report a *missing partner* as cause 0
         // (`unit.c:1566`, and `skill.c:16015` for Benedictio), so the default
         // text sends the player to their skill level, which is never the
@@ -1839,20 +1893,17 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
             };
         }
 
-        // The same shape again: a specific condition Hercules has a dedicated
-        // cause for and does not use. Every cause-0 emission reachable for these
-        // skills was attributed to its enclosing `case` labels first, so the
-        // text is not guessing at which condition failed.
-        if SHIELD_SKILL_IDS.contains(&packet.skill_id.0) {
-            // `skill.c:16496` (the shared `ST_SHIELD` state check) and, for
-            // Shield Spell only, `skill.c:10759`, which additionally insists the
-            // left hand holds a real `IT_ARMOR`. Both mean the same thing.
-            //
-            // Shield Reflect has one other cause-0 path — a 5%-per-level roll
-            // under `SC_KYOMU` (`skill.c:16379`) — which would read as a missing
-            // shield here. Left as is: Kyomu is a Kagerou/Oboro debuff, and the
-            // alternative is hedging every shield skill's message for it.
-            return "That needs a shield equipped.".to_owned();
+        // A *static* precondition: the skill declares it in `skill_db.conf`, so
+        // both sides already know it and nothing needs to be sent. 42 skills
+        // across 13 states, none of which the protocol ever gave a code.
+        //
+        // A skill can also fail cause 0 for a runtime reason it happens to share
+        // with its precondition — Shield Reflect has a 5%-per-level `SC_KYOMU`
+        // roll (`skill.c:16379`) — and no static table can tell those apart.
+        // That is what `ZC_SKILL_FAIL_REASON` is for, and it is consulted first,
+        // above.
+        if let Some(state) = skill_state(packet.skill_id.0) {
+            return state.requirement().to_owned();
         }
 
         let resisted = match packet.skill_id.0 {
@@ -1950,7 +2001,13 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket) -> String {
 mod skill_failure_text_tests {
     use ragnarok_packets::{ItemId, SkillId, ToUseSkillSuccessPacket};
 
-    use super::{ALL_PARTYFLEE, ENSEMBLE_SKILL_IDS, PR_REDEMPTIO, SHIELD_SKILL_IDS, SkillFailure, skill_failed_reason, skill_failed_text};
+    use super::{ALL_PARTYFLEE, ENSEMBLE_SKILL_IDS, PR_REDEMPTIO, SkillFailure, skill_failed_reason, skill_failed_text, skill_state};
+
+    /// Rendering with no fork packet in play — i.e. what a stock Hercules, or
+    /// one that lost the delta, still produces.
+    fn text(packet: &ToUseSkillSuccessPacket) -> String {
+        skill_failed_text(packet, None)
+    }
 
     fn failure(skill_id: u16, cause: u8) -> ToUseSkillSuccessPacket {
         ToUseSkillSuccessPacket {
@@ -1968,41 +2025,102 @@ mod skill_failure_text_tests {
     #[test]
     fn ensemble_cause_zero_names_the_partner_requirement() {
         for skill_id in ENSEMBLE_SKILL_IDS {
-            let text = skill_failed_text(&failure(skill_id, 0));
+            let text = text(&failure(skill_id, 0));
             assert!(
                 !text.contains("level is not high enough"),
                 "skill {skill_id} still blames the skill level: {text}"
             );
         }
 
-        assert!(skill_failed_text(&failure(395, 0)).contains("partner"));
+        assert!(text(&failure(395, 0)).contains("partner"));
         // Benedictio is an ensemble too, but its helpers are Acolytes, not a
         // Bard/Dancer partner.
-        assert!(skill_failed_text(&failure(69, 0)).contains("Acolyte"));
+        assert!(text(&failure(69, 0)).contains("Acolyte"));
     }
 
     /// A non-ensemble skill must keep the generic cause-0 wording.
     #[test]
     fn ordinary_cause_zero_is_unchanged() {
-        assert_eq!(skill_failed_text(&failure(28, 0)), "Skill level is not high enough.");
+        assert_eq!(text(&failure(28, 0)), "Skill level is not high enough.");
     }
 
-    /// `State: "Shield"` is checked in one shared place and reported as cause 0,
-    /// so a Crusader with no shield was told to level the skill up.
+    /// Every `State:` precondition is checked in one shared place and reported
+    /// as cause 0, so a Crusader with no shield was told to level the skill up.
     /// `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) exists and Hercules never sends
-    /// it.
+    /// it; the other twelve states have no cause at all.
     #[test]
-    fn shield_cause_zero_names_the_shield() {
-        for skill_id in SHIELD_SKILL_IDS {
-            let text = skill_failed_text(&failure(skill_id, 0));
-            assert!(
-                text.contains("shield"),
-                "skill {skill_id} does not mention the shield: {text}"
-            );
+    fn state_cause_zero_names_the_precondition() {
+        for &(skill_id, state) in super::super::skill_states::SKILL_STATES {
+            let text = text(&failure(skill_id, 0));
+            assert_eq!(text, state.requirement(), "skill {skill_id}");
+            assert!(!text.contains("level is not high enough"), "skill {skill_id}: {text}");
         }
 
-        // A skill with no shield requirement must not pick this up.
-        assert_eq!(skill_failed_text(&failure(28, 0)), "Skill level is not high enough.");
+        // Spot-checks that the generated table is actually reaching the text,
+        // including the four the hand-written shield list never had.
+        assert_eq!(text(&failure(249, 0)), "That needs a shield equipped."); // CR_AUTOGUARD
+        assert_eq!(text(&failure(129, 0)), "That needs a falcon."); // HT_BLITZBEAT
+        assert_eq!(text(&failure(214, 0)), "That needs you to be hiding."); // RG_RAID
+        assert_eq!(text(&failure(57, 0)), "That needs you to be riding."); // KN_BRANDISHSPEAR
+
+        // A skill with no state precondition must not pick any of this up.
+        assert_eq!(text(&failure(28, 0)), "Skill level is not high enough.");
+    }
+
+    /// Every reason the server can send needs text; an append-only enum is easy
+    /// to extend on one side only.
+    #[test]
+    fn every_skill_fail_reason_has_text() {
+        use ragnarok_packets::SkillFailReason::*;
+
+        for reason in [
+            EnsemblePartner,
+            BenedictioHelpers,
+            NoParty,
+            NoOneInRange,
+            NotEnoughExperience,
+            TargetResisted,
+            NothingToSteal,
+            SuppressedByKyomu,
+            TargetImmune,
+        ] {
+            let text = super::skill_fail_reason_text(reason).unwrap_or_else(|| panic!("{reason:?} has no text"));
+            assert!(text.ends_with('.'), "{reason:?}: {text}");
+        }
+
+        // `None` is the enum's zero value, not a reason; it must fall through to
+        // the skill-id inference rather than print something.
+        assert_eq!(super::skill_fail_reason_text(ragnarok_packets::SkillFailReason::None), Option::None);
+    }
+
+    /// A reason the server named beats anything inferred from the skill id —
+    /// that is the whole point of the packet.
+    #[test]
+    fn a_named_reason_overrides_the_skill_id_inference() {
+        use ragnarok_packets::SkillFailReason;
+
+        // Shield Reflect has a shield precondition *and* a Kyomu roll.
+        let inferred = text(&failure(252, 0));
+        assert_eq!(inferred, "That needs a shield equipped.");
+        let named = skill_failed_text(&failure(252, 0), Some(SkillFailReason::SuppressedByKyomu));
+        assert!(named.contains("Kyomu"), "{named}");
+
+        // Redemptio's three conditions collapse to the one that actually failed.
+        let inferred = text(&failure(PR_REDEMPTIO, 0));
+        assert!(inferred.contains("party") && inferred.contains("experience"), "{inferred}");
+        let named = skill_failed_text(&failure(PR_REDEMPTIO, 0), Some(SkillFailReason::NotEnoughExperience));
+        assert!(named.contains("experience") && !named.contains("dead party member"), "{named}");
+    }
+
+    /// The generated table is binary-searched, so it has to stay sorted.
+    #[test]
+    fn generated_skill_state_table_is_sorted_and_reachable() {
+        let table = super::super::skill_states::SKILL_STATES;
+        assert!(table.windows(2).all(|pair| pair[0].0 < pair[1].0), "table is not sorted by skill id");
+        for &(skill_id, state) in table {
+            assert_eq!(skill_state(skill_id), Some(state), "skill {skill_id} is not findable");
+        }
+        assert_eq!(skill_state(28), None);
     }
 
     /// The two party-conditional skills. Redemptio has three indistinguishable
@@ -2010,11 +2128,11 @@ mod skill_failure_text_tests {
     /// Flee has exactly one and can be precise.
     #[test]
     fn party_cause_zero_names_the_party_requirement() {
-        let party_flee = skill_failed_text(&failure(ALL_PARTYFLEE, 0));
+        let party_flee = text(&failure(ALL_PARTYFLEE, 0));
         assert!(party_flee.contains("party"), "{party_flee}");
         assert!(!party_flee.contains("level is not high enough"), "{party_flee}");
 
-        let redemptio = skill_failed_text(&failure(PR_REDEMPTIO, 0));
+        let redemptio = text(&failure(PR_REDEMPTIO, 0));
         assert!(redemptio.contains("party"), "{redemptio}");
         assert!(redemptio.contains("experience"), "{redemptio}");
         assert!(!redemptio.contains("level is not high enough"), "{redemptio}");
@@ -2034,13 +2152,13 @@ mod skill_failure_text_tests {
         ];
 
         for cause in EMITTED {
-            let text = skill_failed_text(&failure(28, cause));
+            let text = text(&failure(28, cause));
             assert!(!text.contains("reason"), "cause {cause} has no text: {text}");
         }
 
         for cause in [71, 72] {
             assert!(
-                matches!(skill_failed_reason(&failure(28, cause)), SkillFailure::MissingItem { .. }),
+                matches!(skill_failed_reason(&failure(28, cause), None), SkillFailure::MissingItem { .. }),
                 "cause {cause} must name the item instead of printing text"
             );
         }

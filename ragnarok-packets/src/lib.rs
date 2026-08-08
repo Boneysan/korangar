@@ -5737,6 +5737,58 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// Why a skill failed, when the protocol has no code for it
+/// (`ZC_SKILL_FAIL_REASON`, **fork packet 0x0EFE**).
+///
+/// **This packet does not exist in official Ragnarok.** `ZC_ACK_TOUSESKILL`
+/// carries a `useskill_fail_cause`, and Hercules sends `USESKILL_FAIL_LEVEL`
+/// (cause 0) for a great many outcomes that have nothing to do with skill level,
+/// because Gravity never numbered them — 21 of the 33 states in
+/// `skill_check_condition_castbegin`'s switch report 0 and only one of those has
+/// a dedicated cause. The official client says "Skill level is not high enough"
+/// to all of them.
+///
+/// Static preconditions do not need this: which skills want a shield or a falcon
+/// is in `skill_db.conf`, so both ends already know it (see
+/// `tools/generate_skill_states.py`). This packet carries the other half — the
+/// **runtime** outcomes only the server can know as it decides.
+///
+/// Sent immediately *before* the failure it explains and paired by skill id,
+/// the same shape as [`PartyInviteSenderPacket`], so a stock client is
+/// unaffected and the feature **degrades gracefully** to the generic text.
+///
+/// 0x0EFE sits below 0x0EFF and above the highest official packet (0x0BC0); its
+/// length lives in Hercules' hand-maintained `common/packets_len.h`.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0EFE)]
+pub struct SkillFailReasonPacket {
+    pub skill_id: SkillId,
+    pub reason: SkillFailReason,
+}
+
+/// The runtime reason behind a cause-0 skill failure, as sent by our Hercules
+/// delta's `enum skill_fail_reason`.
+///
+/// Deliberately not an extension of the official cause enum: that numbering is
+/// Gravity's, and values invented in it would collide with a future official
+/// cause. **Append only, and keep in step with `clif.h`.**
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[numeric_type(u16)]
+pub enum SkillFailReason {
+    None,
+    EnsemblePartner,
+    BenedictioHelpers,
+    NoParty,
+    NoOneInRange,
+    NotEnoughExperience,
+    TargetResisted,
+    NothingToSteal,
+    SuppressedByKyomu,
+    TargetImmune,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0BAB)]

@@ -73,10 +73,53 @@ roll (`skill.c:16379`) that will read as a missing shield.** Left that way
 deliberately — Kyomu is a Kagerou/Oboro debuff, and hedging all 12 messages for
 it would cost every player clarity to spare one.
 
-**Still not a server change, for the reason above and one more.** Emitting 94
-would actively *lose* information: the client's cause-0 text for an ensemble
-names the full requirement, while cause 94 carries only "That needs an ensemble
-partner". A correct wire value is not automatically a better message.
+### The real shape of it, and the fix (2026-08-07)
+
+The one-at-a-time patching above was treating a pattern as a series of
+accidents. Measured properly, **cause 0 is not laziness in Hercules — it is the
+protocol's fallback for conditions Gravity never numbered**:
+
+| | |
+|---|---|
+| States in `skill_check_condition_castbegin`'s switch | 33 |
+| …reporting cause 0 | **21** |
+| …of those, with a dedicated cause in the enum | **1** (`ST_SHIELD` → 110) |
+| …with neither a cause nor a message-table id | **19** |
+| Cause-0 emissions in `skill.c` alone | **174** |
+
+So "make the server send the right cause" is not a fix that exists. The official
+client shows "Skill level is not high enough" for all of these too.
+
+**The split that makes it tractable is static vs. runtime.**
+
+**Static preconditions** — needs a shield, a falcon, a cart, a stance — are
+declared as `State:` in `skill_db.conf`. That is on disk at *both* ends, so
+nothing needs to be sent: `tools/generate_skill_states.py` carries it into
+`korangar-networking/src/packet_versions/skill_states.rs`. **42 skills across 13
+states**, generated rather than hand-listed for the usual reason — a hand-kept
+copy rots silently when `skill_db.conf` changes. It also caught four the
+hand-written shield list had missed outright: **Brandish Spear** (Riding),
+**Blitz Beat** (Falcon), **Raid** (Hiding) and **Cart Termination** (CartBoost).
+
+**Runtime outcomes** — did the petrify roll miss, was anybody in range, is there
+enough experience, is there a valid partner — only the server knows, at the
+moment it decides. No table can reach them, and the skill-id texts above were
+hedges: they enumerate every condition a skill has because they cannot tell which
+one failed. These now ride **`ZC_SKILL_FAIL_REASON` (fork packet 0x0EFE)**,
+sent immediately before the failure and paired by skill id, with 11 call sites
+swapped in `skill.c` / `unit.c`. See `CLAUDE.md` §3b for the five touch points.
+
+**What that buys, concretely:** Redemptio's three conditions collapse to the one
+that actually failed; Stone Curse now distinguishes a lost roll from a target
+that cannot be affected at all; and **the Shield Reflect wart is gone** — its
+`SC_KYOMU` roll was indistinguishable from its shield precondition by any static
+means, and is now simply reported.
+
+**Cause 94 stays unused, and that is still right.** Emitting it would *lose*
+information: it carries only "That needs an ensemble partner", where 0x0EFE's
+`ENSEMBLE_PARTNER` reason renders the full requirement. A correct wire value is
+not automatically a better message — the useful question is which channel carries
+the most truth, not which one is most official.
 
 ## Method — what actually worked
 

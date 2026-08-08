@@ -1770,6 +1770,68 @@ mod packet_handlers {
     /// `ZC_ACK_TOUSESKILL` (0x0110) with `flag = 0`. They must surface as a
     /// red chat line (not silence) so the player can see why a cast refused.
     #[test]
+    /// The fork packet 0x0EFE names the runtime reason for a cause-0 failure,
+    /// which no static table can reach. Fed as two reads, exactly as Hercules
+    /// sends them, so this covers the pairing and not just the wording.
+    #[test]
+    fn skill_fail_reason_0x0efe_explains_the_following_failure() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // Shield Reflect (252) is the case a skill-id table gets wrong: it has a
+        // shield precondition *and* a runtime Kyomu roll, both cause 0.
+        let reason = |skill_id: u16, reason: u16| {
+            let mut bytes = vec![0xFE, 0x0E];
+            bytes.extend_from_slice(&skill_id.to_le_bytes());
+            bytes.extend_from_slice(&reason.to_le_bytes());
+            bytes
+        };
+        let fail = |skill_id: u16| {
+            let mut bytes = vec![0x10, 0x01];
+            bytes.extend_from_slice(&skill_id.to_le_bytes());
+            bytes.extend_from_slice(&0i32.to_le_bytes());
+            bytes.extend_from_slice(&0u32.to_le_bytes());
+            bytes.push(0); // flag: failure
+            bytes.push(0); // USESKILL_FAIL_LEVEL
+            bytes
+        };
+        fn text_of(
+            handler: &mut ragnarok_packets::handler::PacketHandler<crate::event::NetworkEventList, NoPacketCallback>,
+            bytes: &[u8],
+        ) -> Option<String> {
+            let mut reader = ByteReader::without_metadata(bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("packet did not parse");
+            };
+            events.0.into_iter().find_map(|event| match event {
+                NetworkEvent::ChatMessage {
+                    text,
+                    color: MessageColor::Error,
+                } => Some(text),
+                _ => None,
+            })
+        }
+
+        // 8 = SKILLFAILREASON_SUPPRESSED_BY_KYOMU.
+        assert!(text_of(&mut handler, &reason(252, 8)).is_none(), "the reason packet is not itself a message");
+        let text = text_of(&mut handler, &fail(252)).expect("no failure message");
+        assert!(text.contains("Kyomu"), "reason was not applied: {text}");
+
+        // Without a reason, the same skill falls back to its precondition.
+        let text = text_of(&mut handler, &fail(252)).expect("no failure message");
+        assert_eq!(text, "That needs a shield equipped.");
+
+        // A reason whose skill id does not match must be discarded, not
+        // attached to whatever fails next.
+        let _ = text_of(&mut handler, &reason(252, 8));
+        let text = text_of(&mut handler, &fail(249)).expect("no failure message");
+        assert_eq!(text, "That needs a shield equipped.");
+    }
+
     fn skill_fail_0x0110_surfaces_chat_message() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;
