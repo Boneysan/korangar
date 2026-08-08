@@ -52,6 +52,17 @@ use crate::track::{AttenuationFunction, SpatialTrackBuilder, SpatialTrackDistanc
 create_generational_key!(SoundEffectKey, "The key for a cached sound effect");
 create_simple_key!(AmbientKey, "The key for a ambient sound");
 
+/// Inner radius for one-shot spatial effects — skill sounds, and the sounds a
+/// campaign script triggers. Three map cells.
+///
+/// Map emitters get theirs from the RSW; an effect has no such field, and the
+/// hardcoded 5.0 that used to stand in was tuned against the old
+/// decibel-linear curve. Under the inverse-distance law it made a skill cast
+/// **three times quieter** at ordinary combat range (0.281 -> 0.100 at 50
+/// units). 15.0 restores the previously tuned loudness at 25-50 units while
+/// keeping the original's shape further out.
+const SOUND_EFFECT_INNER_RADIUS: f32 = 15.0;
+
 const MAX_QUEUE_TIME_SECONDS: f32 = 1.0;
 const MAX_CACHE_COUNT: u32 = 4096;
 const MAX_CACHE_SIZE: usize = 64 << 20; // 64 MiB
@@ -452,7 +463,7 @@ impl<F: FileLoader> EngineContext<F> {
                 let spatial_track = SpatialTrackBuilder::new()
                     .persist_until_sounds_finish(true)
                     .distances(SpatialTrackDistances {
-                        min_distance: 5.0,
+                        min_distance: SOUND_EFFECT_INNER_RADIUS.min(range),
                         max_distance: range,
                     })
                     .attenuation_function(AttenuationFunction::InverseDistance);
@@ -722,7 +733,7 @@ impl<F: FileLoader> EngineContext<F> {
                     let spatial_track = SpatialTrackBuilder::new()
                         .persist_until_sounds_finish(true)
                         .distances(SpatialTrackDistances {
-                            min_distance: 5.0,
+                            min_distance: SOUND_EFFECT_INNER_RADIUS.min(range),
                             max_distance: range,
                         })
                         .attenuation_function(AttenuationFunction::InverseDistance);
