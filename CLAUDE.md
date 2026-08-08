@@ -345,7 +345,19 @@ When writing code or adding features, agents must adhere to these project-specif
      `enum skill_fail_reason` is **deliberately separate from
      `useskill_fail_cause`**: that numbering is Gravity's, and values invented in
      it would collide with a future official cause. **Append only**, and keep it
-     in step with `SkillFailReason` in `ragnarok-packets`.
+     in step with `SkillFailReason` in `ragnarok-packets` — pinned by
+     `wire_reasons_match_the_server_enum`.
+     **The trap that appending sets, and which this walked into once:** the
+     client must carry `reason` as a **raw `u16`**, never as a `ByteConvertable`
+     enum. Such an enum *fails to deserialize* on a value it does not know, and a
+     failed packet costs the **entire read buffer**
+     (`HandlerResult::InternalError` → `cut_off_buffer_base = 0`), not just the
+     message — so adding a reason server-side would silently break every older
+     client. Resolved via `SkillFailReason::from_wire`, guarded by
+     `an_unknown_skill_fail_reason_does_not_cost_the_read_buffer`.
+     `clif_skill_fail_reason` mirrors **every** condition under which
+     `clif_skill_fail` sends nothing (including the `RG_SNATCHER` / `TF_POISON`
+     ones no current site can hit), because it is meant to stay a drop-in.
      Sent immediately *before* the failure it explains and paired **by skill id**,
      the same shape as `ZC_PARTY_INVITE_SENDER`, so a stock client is unaffected
      and it **degrades gracefully** — the client keeps its older skill-id

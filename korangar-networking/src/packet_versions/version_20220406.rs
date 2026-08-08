@@ -1280,7 +1280,9 @@ where
     // 7". Without this the rejection is completely silent.
     let reason_slot = pending_skill_fail_reason.clone();
     packet_handler.register(move |packet: SkillFailReasonPacket| {
-        *reason_slot.borrow_mut() = Some((packet.skill_id, packet.reason));
+        // Resolved here, not on the wire: an unknown reason must degrade to
+        // `None`, never fail the packet.
+        *reason_slot.borrow_mut() = SkillFailReason::from_wire(packet.reason).map(|reason| (packet.skill_id, reason));
         NoNetworkEvents
     })?;
     let reason_slot = pending_skill_fail_reason.clone();
@@ -1834,12 +1836,9 @@ fn skill_failed_reason(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFai
 /// These are the outcomes no static table can reach — a roll that missed, an
 /// empty splash, a partner who is not there — so before this packet existed the
 /// client could only key on the skill id and enumerate every condition the skill
-/// has. `None` means the server sent a reason this build does not know, which is
-/// what an append-only enum is for: fall through to the older inference rather
-/// than print nothing.
-fn skill_fail_reason_text(reason: SkillFailReason) -> Option<&'static str> {
-    let text = match reason {
-        SkillFailReason::None => return None,
+/// has.
+fn skill_fail_reason_text(reason: SkillFailReason) -> &'static str {
+    match reason {
         SkillFailReason::EnsemblePartner => concat!(
             "That needs a partner within 4 cells: a Bard or Dancer class of the opposite sex, ",
             "in your party, holding an instrument or whip, who knows the same skill and is not ",
@@ -1853,9 +1852,7 @@ fn skill_fail_reason_text(reason: SkillFailReason) -> Option<&'static str> {
         SkillFailReason::NothingToSteal => "There was nothing to steal.",
         SkillFailReason::SuppressedByKyomu => "Kyomu suppressed the skill.",
         SkillFailReason::TargetImmune => "The target cannot be affected by that.",
-    };
-
-    Some(text)
+    }
 }
 
 /// Text for every `ZC_ACK_TOUSESKILL` cause the networking crate can render on
@@ -1870,10 +1867,8 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailR
         // The server said what actually failed. Everything below this point is
         // inference from the skill id, kept only so a stock Hercules — or one
         // that lost the delta in a merge — still reads better than "level".
-        if let Some(reason) = reason
-            && let Some(text) = skill_fail_reason_text(reason)
-        {
-            return text.to_owned();
+        if let Some(reason) = reason {
+            return skill_fail_reason_text(reason).to_owned();
         }
 
         // Ensemble songs and dances report a *missing partner* as cause 0
@@ -2084,13 +2079,37 @@ mod skill_failure_text_tests {
             SuppressedByKyomu,
             TargetImmune,
         ] {
-            let text = super::skill_fail_reason_text(reason).unwrap_or_else(|| panic!("{reason:?} has no text"));
-            assert!(text.ends_with('.'), "{reason:?}: {text}");
+            assert!(super::skill_fail_reason_text(reason).ends_with('.'), "{reason:?}");
+        }
+    }
+
+    /// The wire values are a table spanning two repositories, and a drift shows
+    /// up as a confident wrong sentence rather than as silence — the shape this
+    /// project keeps getting caught by. Pinned against Hercules' `clif.h`.
+    #[test]
+    fn wire_reasons_match_the_server_enum() {
+        use ragnarok_packets::SkillFailReason as R;
+
+        for (wire, expected) in [
+            (1, R::EnsemblePartner),
+            (2, R::BenedictioHelpers),
+            (3, R::NoParty),
+            (4, R::NoOneInRange),
+            (5, R::NotEnoughExperience),
+            (6, R::TargetResisted),
+            (7, R::NothingToSteal),
+            (8, R::SuppressedByKyomu),
+            (9, R::TargetImmune),
+        ] {
+            assert_eq!(R::from_wire(wire), Some(expected), "wire value {wire}");
         }
 
-        // `None` is the enum's zero value, not a reason; it must fall through to
-        // the skill-id inference rather than print something.
-        assert_eq!(super::skill_fail_reason_text(ragnarok_packets::SkillFailReason::None), Option::None);
+        // 0 is SKILLFAILREASON_NONE, and anything above the last known reason is
+        // a server newer than this build. Both must resolve to `None` — *not* to
+        // a deserialization failure, which would cost the whole read buffer.
+        assert_eq!(R::from_wire(0), Option::None);
+        assert_eq!(R::from_wire(10), Option::None);
+        assert_eq!(R::from_wire(u16::MAX), Option::None);
     }
 
     /// A reason the server named beats anything inferred from the skill id —

@@ -1832,6 +1832,57 @@ mod packet_handlers {
         assert_eq!(text, "That needs a shield equipped.");
     }
 
+    /// A reason from a server newer than this build must cost nothing.
+    ///
+    /// This was wrong when the packet first landed: the reason was modelled as a
+    /// `ByteConvertable` enum, so an unknown value failed the whole packet and
+    /// `HandlerResult::InternalError` discarded the entire read buffer — every
+    /// packet batched behind it. Since the enum is documented append-only, the
+    /// server gaining a reason first is the *expected* path, which made adding
+    /// one a wire-breaking change against any older client.
+    #[test]
+    fn an_unknown_skill_fail_reason_does_not_cost_the_read_buffer() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{MessageColor, NetworkEvent};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // 0x0EFE carrying reason 99, then an ordinary failure batched behind it.
+        let mut bytes = vec![0xFE, 0x0E];
+        bytes.extend_from_slice(&252u16.to_le_bytes());
+        bytes.extend_from_slice(&99u16.to_le_bytes());
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        assert!(
+            matches!(handler.process_one(&mut reader), HandlerResult::Ok(_)),
+            "an unknown reason must not fail the packet"
+        );
+
+        // The failure that follows still renders, falling back to what can be
+        // inferred without the server's help.
+        let mut bytes = vec![0x10, 0x01];
+        bytes.extend_from_slice(&252u16.to_le_bytes());
+        bytes.extend_from_slice(&0i32.to_le_bytes());
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.push(0); // flag: failure
+        bytes.push(0); // USESKILL_FAIL_LEVEL
+
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("skill-fail packet did not parse");
+        };
+        assert!(events.0.iter().any(|event| matches!(
+            event,
+            NetworkEvent::ChatMessage {
+                text,
+                color: MessageColor::Error,
+            } if text == "That needs a shield equipped."
+        )));
+    }
+
+    #[test]
     fn skill_fail_0x0110_surfaces_chat_message() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;

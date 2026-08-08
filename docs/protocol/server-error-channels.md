@@ -73,6 +73,10 @@ roll (`skill.c:16379`) that will read as a missing shield.** Left that way
 deliberately — Kyomu is a Kagerou/Oboro debuff, and hedging all 12 messages for
 it would cost every player clarity to spare one.
 
+> **Superseded the same day by the section below.** The exception is gone, the
+> 12-skill list is now 42 and generated, and the runtime half no longer guesses.
+> Kept because the reasoning is what led to the measurement that replaced it.
+
 ### The real shape of it, and the fix (2026-08-07)
 
 The one-at-a-time patching above was treating a pattern as a series of
@@ -108,6 +112,17 @@ hedges: they enumerate every condition a skill has because they cannot tell whic
 one failed. These now ride **`ZC_SKILL_FAIL_REASON` (fork packet 0x0EFE)**,
 sent immediately before the failure and paired by skill id, with 11 call sites
 swapped in `skill.c` / `unit.c`. See `CLAUDE.md` §3b for the five touch points.
+
+**Two things this got wrong on the first pass, both found by re-reading it
+rather than by a failure.** The reason was modelled as a `ByteConvertable` enum,
+so a value from a newer server **failed the packet and discarded the whole read
+buffer** — the exact consequence written up two sections above, walked into in a
+packet whose enum is documented *append only*, which made adding a reason a
+wire-breaking change against every older client. It is a raw `u16` resolved by
+`SkillFailReason::from_wire` now. And `clif_skill_fail_reason` mirrored only one
+of `clif_skill_fail`'s three suppression guards, so a reason could in principle
+be sent without the failure it explains; unreachable at the current eleven sites,
+but the helper is meant to be a drop-in and must not depend on that.
 
 **What that buys, concretely:** Redemptio's three conditions collapse to the one
 that actually failed; Stone Curse now distinguishes a lost roll from a target

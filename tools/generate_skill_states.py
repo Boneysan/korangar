@@ -27,7 +27,9 @@ those travel on `ZC_SKILL_FAIL_REASON` (0x0EFE) instead.
 Re-run after any change to `skill_db.conf` or an upstream Hercules merge.
 
 Usage:
-    tools/generate_skill_states.py [HERCULES_DIR]
+    tools/generate_skill_states.py [HERCULES_DIR] [--check]
+
+    --check  exit 1 if the generated table is stale, without writing (for CI)
 """
 
 import json
@@ -84,7 +86,9 @@ def skill_blocks(text: str):
 
 
 def main() -> int:
-    hercules = Path(sys.argv[1] if len(sys.argv) > 1 else "../Hercules")
+    arguments = [argument for argument in sys.argv[1:] if argument != "--check"]
+    check_only = "--check" in sys.argv
+    hercules = Path(arguments[0] if arguments else "../Hercules")
     source = hercules / "db" / "re" / "skill_db.conf"
     if not source.is_file():
         print(f"error: {source} not found; is HERCULES_DIR correct?", file=sys.stderr)
@@ -152,7 +156,17 @@ def main() -> int:
     lines += [f"{entry:<{width}}  // {name}" for entry, name in entries]
     lines += ["];", ""]
 
-    out.write_text("\n".join(lines), encoding="utf-8")
+    generated = "\n".join(lines)
+    if check_only:
+        # A generated table only stays honest if something re-derives it. Without
+        # this the file is just a hand-written list with a misleading banner.
+        if not out.is_file() or out.read_text(encoding="utf-8") != generated:
+            print(f"error: {out.name} is stale — re-run tools/generate_skill_states.py", file=sys.stderr)
+            return 1
+        print(f"{out.name} is up to date ({len(rows)} skills, {len(states)} states)")
+        return 0
+
+    out.write_text(generated, encoding="utf-8")
     print(f"wrote {out} ({len(rows)} skills, {len(states)} states)")
     return 0
 

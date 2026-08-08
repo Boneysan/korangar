@@ -5764,7 +5764,14 @@ pub struct PartyInviteSenderPacket {
 #[header(0x0EFE)]
 pub struct SkillFailReasonPacket {
     pub skill_id: SkillId,
-    pub reason: SkillFailReason,
+    /// Deliberately the raw value rather than [`SkillFailReason`]. A
+    /// `ByteConvertable` enum **fails to deserialize** on a value it does not
+    /// know, and a failed packet costs the whole read buffer
+    /// (`HandlerResult::InternalError` → `cut_off_buffer_base = 0`), not just
+    /// this message. Since the enum is append-only, the server gaining a reason
+    /// before the client knows it is the *expected* path, not an error — so it
+    /// has to survive one. Resolve with [`SkillFailReason::from_wire`].
+    pub reason: u16,
 }
 
 /// The runtime reason behind a cause-0 skill failure, as sent by our Hercules
@@ -5773,11 +5780,13 @@ pub struct SkillFailReasonPacket {
 /// Deliberately not an extension of the official cause enum: that numbering is
 /// Gravity's, and values invented in it would collide with a future official
 /// cause. **Append only, and keep in step with `clif.h`.**
-#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
+///
+/// The wire values are written out rather than left positional, because this is
+/// a two-repository table and the failure mode of a drift is a confident wrong
+/// sentence, not silence.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[numeric_type(u16)]
 pub enum SkillFailReason {
-    None,
     EnsemblePartner,
     BenedictioHelpers,
     NoParty,
@@ -5787,6 +5796,30 @@ pub enum SkillFailReason {
     NothingToSteal,
     SuppressedByKyomu,
     TargetImmune,
+}
+
+impl SkillFailReason {
+    /// `None` for `SKILLFAILREASON_NONE` (0) and for any reason a newer server
+    /// knows and this build does not. Both mean the same thing to the caller:
+    /// fall back to what can be inferred without the server's help.
+    pub fn from_wire(reason: u16) -> Option<Self> {
+        let reason = match reason {
+            1 => Self::EnsemblePartner,
+            2 => Self::BenedictioHelpers,
+            3 => Self::NoParty,
+            4 => Self::NoOneInRange,
+            5 => Self::NotEnoughExperience,
+            6 => Self::TargetResisted,
+            7 => Self::NothingToSteal,
+            8 => Self::SuppressedByKyomu,
+            9 => Self::TargetImmune,
+            // 0 is `SKILLFAILREASON_NONE`; anything else is from a server newer
+            // than this client.
+            _ => return None,
+        };
+
+        Some(reason)
+    }
 }
 
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
