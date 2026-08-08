@@ -9,6 +9,7 @@
 use ragnarok_packets::UnitId;
 
 use crate::Color;
+use crate::loaders::GAT_TILE_SIZE;
 use crate::world::{UnitCylinderSpec, UnitPulse};
 
 /// Hunter traps are the one unit family the procedural bodies below cannot
@@ -71,6 +72,26 @@ pub enum UnitBody {
         half_size: f32,
         color: Color,
         pulse: UnitPulse,
+    },
+    /// The classic two-layer ground tile: a flat tint with a textured layer
+    /// hovering and bobbing above it. This is the shape *every* entry in the
+    /// original's song/ground-tile table takes, and it is what
+    /// [`UnitBody::GroundQuad`] cannot express — a single quad loses the bob and
+    /// merges tint with artwork.
+    LayeredGroundQuad {
+        /// Lower layer: a `FlatColorTile`, drawn with no artwork. `None` draws
+        /// no tint at all, leaving only the hovering layer over bare ground —
+        /// not a shape the original's table uses, but the tint is what makes a
+        /// large field read as a slab, and some effects are better as their
+        /// artwork alone.
+        tile_color: Option<Color>,
+        /// Half-width of the tint layer in world units.
+        half_size: f32,
+        /// Upper layer artwork, under `data\texture\`.
+        hover_texture: &'static str,
+        /// Half-width of the hovering layer in world units.
+        hover_half_size: f32,
+        hover_opacity: f32,
     },
     /// A `data\sprite\이팩트\*` animation repeating for the unit's lifetime
     /// (Venom Dust, Demonstration) — these have no `.str` equivalent.
@@ -446,25 +467,77 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
         // Protector's 2.0 is its narrower 0.8-cell tile). Colour is verbatim from
         // the table: 0xff8abb at alpha 0.6.
         UnitId::Moonlit => Some(UnitPresentation {
-            body: Some(UnitBody::GroundQuad {
+            body: Some(UnitBody::LayeredGroundQuad {
                 // Confirmed live 2026-08-06: borrowing Land Protector's tile as a
                 // carrier read as Land Protector's *pattern*, so this draws with
                 // no artwork at all, which is what `FlatColorTile` means.
-                texture: None,
-                half_size: 2.5,
-                color: Color::rgba(1.0, 0.541, 0.733, 0.6),
-                // The original tile does not pulse.
-                pulse: UnitPulse {
-                    min_scale: 1.0,
-                    max_scale: 1.0,
-                    speed: 0.0,
-                },
+                // **No tint layer, which is a deliberate departure from the
+                // table.** Effect 394's salmon `FlatColorTile` is faithful and
+                // was verified correct on screen at α 0.6 — and it still read as
+                // a flat slab, because that is what a 9×9 of full-coverage tiles
+                // is. Judged live 2026-08-08: the hovering notes carry the skill
+                // better on their own, with the colour moved into the light.
+                // The tile colour is recorded in the test below so a fidelity
+                // pass can restore it deliberately.
+                tile_color: None,
+                half_size: 2.9,
+                // **A fork embellishment.** Effect 394 is a bare `FlatColorTile`
+                // with no second layer, so the hovering note is ours — added
+                // because live 2026-08-08 the bare field read as inert, with no
+                // animation anywhere on the area.
+                //
+                // The texture is not invented: `melody_a.bmp` is what the
+                // original's own Humming entry hovers, and Whistle and Drum
+                // Battlefield use its sibling `melody_b`. Moonlit is a Clown
+                // song in that same table, and its sound is
+                // "Moonlight Serenade", so a drifting note is the family's own
+                // vocabulary rather than a guess. One cell wide, so the notes
+                // read as individual marks over the field instead of a wash.
+                hover_texture: "effect\\melody_a.bmp",
+                hover_half_size: GAT_TILE_SIZE / 2.0,
+                hover_opacity: 0.7,
             }),
             sound: Some("effect\\달빛세레나데.wav"),
-            // Layout 4 = 9×9, so 81 of these overlap. Kept dim and pink-leaning
-            // for the same reason Land Protector's is saturated: accumulated
-            // light across that many cells clips toward white.
-            light: Some((Color::rgb_u8(255, 120, 180), 18.0)),
+            // The glow is korangar's addition (the original `FlatColorTile`
+            // emits nothing), so it is tuned to read as the tile's own colour —
+            // hence the exact `0xff8abb` above rather than an approximation.
+            //
+            // **The second number is a RADIUS, not a brightness.** `light` is
+            // handed to `register_fading` as the range; there is no separate
+            // intensity, so a light cannot be dimmed, only made smaller. That is
+            // what broke this: Layout 4 is 9×9, and at radius 18.0 every cell's
+            // light reached 3.6 cells in each direction, so ~40 of the 81 piled
+            // up over the middle of the field.
+            //
+            // Stacking is survivable for a strongly hued light and fatal for a
+            // pale one. Land Protector stacks 121 lights at radius 30 and still
+            // reads blue, because its red channel (0.27) stays low however much
+            // it accumulates. Salmon is (1.0, 0.54, 0.73) — already near white,
+            // so every channel saturates together. Measured live 2026-08-08: a
+            // white bloom washing the terrain *under* the tile and spilling past
+            // the field edge, which is what made the tile read as flat red.
+            //
+            // With the tint gone the light carries the skill's colour. Two
+            // constraints fight each other here, and both were measured live
+            // 2026-08-08 rather than reasoned about:
+            //
+            // **Overlap decides the hue, not the colour value.** A field is one
+            // light per cell, so a cell's pool covers `π·r_ground²/25` of its
+            // neighbours. At radius 18 that was a ~40-deep pile and at radius 9
+            // still ~4 deep — enough to drive every channel to 1.0, which is why
+            // *blue* also came back white. Radius 6 puts it near 2.5, low enough
+            // for a colour to survive. A saturated hue has further to climb
+            // before it clips, so the salmon here is deepened toward rose rather
+            // than the tile's near-white (1.0, 0.54, 0.73).
+            //
+            // **The radius must still clear the light's own 4.0 lift** off the
+            // ground (`UnitPointLight`), or it illuminates nothing: 4.0 was tried
+            // live and was invisible, the sphere's underside only grazing the
+            // floor. That is the floor on this number, and it is close — if a
+            // future pass needs the glow both wider and coloured, the real fix is
+            // one light per *group* (as `claim_unit_sound` does for audio), not a
+            // further tweak here.
+            light: Some((Color::rgb_u8(255, 80, 135), 6.0)),
             ..NONE
         }),
         // CG_HERMODE — Wand of Hermode. `EF_BOTTOM_HERMODE` (517) is an
@@ -496,6 +569,48 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
             light: Some((Color::rgb_u8(255, 120, 40), 38.0)),
             ..NONE
         }),
+        // The three renewal survivors of the original's ground-tile table. The
+        // other 16 rows are songs and dances, which renewal `skill_db.conf`
+        // gives no `Unit:` block, so no `AddSkillUnit` ever arrives for them —
+        // a server-configuration fact, not a missing asset (pre-renewal does
+        // declare them).
+        //
+        // Tile colours are verbatim from the recovered table. **The hover
+        // opacity is not**: `HoveringTexture(path, size, opacity)` records a
+        // size per entry but the recovered table only preserved the two sizes
+        // that deviate, so the default size and every opacity here are
+        // estimates and want the same live calibration Moonlit got.
+        UnitId::Gospel => Some(UnitPresentation {
+            body: Some(UnitBody::LayeredGroundQuad {
+                tile_color: Some(Color::rgba(1.0, 1.0, 1.0, 0.05)),
+                half_size: GAT_TILE_SIZE / 2.0,
+                hover_texture: "effect\\cross_old.bmp",
+                hover_half_size: GAT_TILE_SIZE,
+                hover_opacity: 1.0,
+            }),
+            ..NONE
+        }),
+        UnitId::Fogwall => Some(UnitPresentation {
+            body: Some(UnitBody::LayeredGroundQuad {
+                tile_color: Some(Color::rgba(0.667, 0.667, 0.667, 0.6)),
+                half_size: GAT_TILE_SIZE / 2.0,
+                hover_texture: "effect\\lens_w.bmp",
+                hover_half_size: GAT_TILE_SIZE,
+                hover_opacity: 1.0,
+            }),
+            ..NONE
+        }),
+        UnitId::Evilland => Some(UnitPresentation {
+            body: Some(UnitBody::LayeredGroundQuad {
+                tile_color: Some(Color::rgba(0.627, 0.627, 0.627, 0.2)),
+                half_size: GAT_TILE_SIZE / 2.0,
+                // One of the two entries the table records an explicit size for.
+                hover_texture: "effect\\curse.bmp",
+                hover_half_size: GAT_TILE_SIZE / 2.0,
+                hover_opacity: 1.0,
+            }),
+            ..NONE
+        }),
         _ => None,
     }
 }
@@ -521,6 +636,9 @@ pub const MAPPED_UNIT_IDS: &[UnitId] = &[
     UnitId::Demonstration,
     UnitId::Moonlit,
     UnitId::Hermode,
+    UnitId::Gospel,
+    UnitId::Fogwall,
+    UnitId::Evilland,
 ];
 
 #[cfg(test)]
@@ -557,22 +675,40 @@ mod tests {
         // to do with the skill; the table names it "sheltering bliss". Colour is
         // verbatim (0xff8abb @ 0.6) and the tile covers one full cell, so
         // half_size is GAT_TILE_SIZE / 2 rather than Land Protector's narrower 2.0.
-        let Some(UnitBody::GroundQuad {
-            texture,
+        let Some(UnitBody::LayeredGroundQuad {
+            tile_color,
             half_size,
-            color,
-            pulse,
+            hover_texture,
+            hover_half_size,
+            ..
         }) = unit_presentation(UnitId::Moonlit).unwrap().body
         else {
-            panic!("Moonlit must be a ground quad");
+            panic!("Moonlit must be a layered ground quad");
         };
-        // Live 2026-08-06: any borrowed carrier shows its own artwork through
-        // the tile, which read as Land Protector's magic circle.
-        assert_eq!(texture, None, "a FlatColorTile draws no artwork");
-        assert_eq!(half_size, GAT_TILE_SIZE / 2.0);
-        assert_eq!(color, Color::rgba(1.0, 0.541, 0.733, 0.6));
-        // The original tile is static; a pulse would be our invention.
-        assert_eq!(pulse.min_scale, pulse.max_scale);
+        // **The tint is deliberately absent**, judged live 2026-08-08: the
+        // table's salmon is faithful and was confirmed correct at α 0.6, but a
+        // 9×9 of full-coverage tiles reads as a slab whatever its colour, so the
+        // notes carry the skill alone and the colour moved into the light. The
+        // table's value is recorded here so restoring it stays a decision:
+        // `Color::rgba(1.0, 0.541, 0.733, 0.6)`, effect 394's verbatim 0xff8abb.
+        assert_eq!(tile_color, None, "the salmon tint was dropped on purpose");
+
+        // The deliberate fork deviations, pinned so they stay deliberate — a
+        // later fidelity pass may drop them, but should do so knowingly.
+        // Live 2026-08-08: at exactly one cell the soft-edged carrier showed a
+        // seam at every cell border, so the tiles overlap.
+        assert!(
+            half_size > GAT_TILE_SIZE / 2.0,
+            "tiles must overlap so the soft carrier's feather does not show as a grid"
+        );
+        assert!(
+            half_size < GAT_TILE_SIZE * 0.7,
+            "overlap is a seam fix, not a bigger field"
+        );
+        // Effect 394 has no second layer; the hovering note is ours, borrowed
+        // from the sibling songs in the original's own table.
+        assert_eq!(hover_texture, "effect\\melody_a.bmp");
+        assert_eq!(hover_half_size, GAT_TILE_SIZE / 2.0);
     }
 
     #[test]

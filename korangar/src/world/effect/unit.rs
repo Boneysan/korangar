@@ -32,10 +32,76 @@ pub struct UnitPulse {
 }
 
 impl UnitPulse {
-    /// Radius multiplier at `age` seconds.
-    fn scale_at(&self, age: f32) -> f32 {
-        let wave = 0.5 + 0.5 * (age * self.speed).sin();
+    /// Radius multiplier at `age` seconds, offset by a per-cell `phase` in
+    /// radians. A ground field is one unit *per cell*, so without the phase all
+    /// 81 cells of a 9×9 breathe in lockstep and the field reads as one slab
+    /// changing size rather than a surface that is alive.
+    fn scale_at(&self, age: f32, phase: f32) -> f32 {
+        let wave = 0.5 + 0.5 * (age * self.speed + phase).sin();
         self.min_scale + (self.max_scale - self.min_scale) * wave
+    }
+}
+
+/// Per-cell animation offset, stable for a given cell so a unit re-sent when a
+/// player walks into view keeps the phase it already had. Derived from the cell
+/// coordinates rather than spawn order, because the server's cell order is
+/// row-major from a corner and would make the field sweep rather than shimmer.
+fn cell_phase(position: Point3<f32>) -> f32 {
+    let x = (position.x / GAT_TILE_SIZE).floor() as i32 as u32;
+    let z = (position.z / GAT_TILE_SIZE).floor() as i32 as u32;
+    hash01(x.wrapping_mul(73_856_093) ^ z.wrapping_mul(19_349_663))
+}
+
+/// How long a cell takes to fade in, and the spread of the per-cell delay in
+/// front of it. Cells arrive in one burst; staggering their appearance makes
+/// the field bloom instead of popping into existence complete.
+const CELL_FADE_IN: f32 = 0.35;
+const CELL_FADE_IN_SPREAD: f32 = 0.3;
+/// Fade on the way out. The server removes a field cell by cell, so without
+/// this the tiles blink out.
+const CELL_FADE_OUT: f32 = 0.45;
+
+/// Shared fade/stagger state for the ground-tile bodies.
+struct CellFade {
+    age: f32,
+    delay: f32,
+    /// Seconds since removal was requested; `None` while the unit is alive.
+    fading_out: Option<f32>,
+}
+
+impl CellFade {
+    fn new(phase: f32) -> Self {
+        Self {
+            age: 0.0,
+            delay: phase * CELL_FADE_IN_SPREAD,
+            fading_out: None,
+        }
+    }
+
+    /// Returns whether the unit is still alive. A unit being torn down stays
+    /// alive until it has faded, which is why this owns the lifetime decision.
+    fn update(&mut self, delta_time: f32) -> bool {
+        self.age += delta_time;
+
+        match self.fading_out.as_mut() {
+            Some(elapsed) => {
+                *elapsed += delta_time;
+                *elapsed < CELL_FADE_OUT
+            }
+            None => true,
+        }
+    }
+
+    fn begin_fade_out(&mut self) {
+        self.fading_out.get_or_insert(0.0);
+    }
+
+    /// Alpha multiplier for this frame.
+    fn opacity(&self) -> f32 {
+        match self.fading_out {
+            Some(elapsed) => (1.0 - elapsed / CELL_FADE_OUT).clamp(0.0, 1.0),
+            None => ((self.age - self.delay) / CELL_FADE_IN).clamp(0.0, 1.0),
+        }
     }
 }
 
@@ -141,7 +207,9 @@ impl EffectBase for UnitCylinders {
 
         for spec in self.specs {
             let rotation = spec.yaw + self.spin * spec.spin_speed;
-            let scale = spec.pulse.as_ref().map_or(1.0, |pulse| pulse.scale_at(self.age));
+            // Phase 0: the cylinder bodies are stacked layers of one unit, not
+            // one unit per cell, so they are meant to breathe together.
+            let scale = spec.pulse.as_ref().map_or(1.0, |pulse| pulse.scale_at(self.age, 0.0));
             let (bottom_radius, top_radius) = (spec.bottom_radius * scale, spec.top_radius * scale);
             let mut color = self.color;
             color.alpha = spec.alpha;
@@ -240,8 +308,9 @@ pub struct UnitGroundQuad {
     half_size: f32,
     color: Color,
     pulse: UnitPulse,
-    age: f32,
-    gets_deleted: bool,
+    /// Per-cell animation offset in radians.
+    phase: f32,
+    fade: CellFade,
 }
 
 impl UnitGroundQuad {
@@ -249,26 +318,27 @@ impl UnitGroundQuad {
     const GROUND_LIFT: f32 = 0.6;
 
     pub fn new(texture: Arc<Texture>, position: Point3<f32>, half_size: f32, color: Color, pulse: UnitPulse) -> Self {
+        let phase = cell_phase(position);
+
         Self {
             texture,
             position,
             half_size,
             color,
             pulse,
-            age: 0.0,
-            gets_deleted: false,
+            phase: phase * TAU,
+            fade: CellFade::new(phase),
         }
     }
 }
 
 impl EffectBase for UnitGroundQuad {
     fn update(&mut self, _entities: &[crate::world::Entity], delta_time: f32) -> bool {
-        self.age += delta_time;
-        !self.gets_deleted
+        self.fade.update(delta_time)
     }
 
     fn mark_for_deletion(&mut self) {
-        self.gets_deleted = true;
+        self.fade.begin_fade_out();
     }
 
     fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
@@ -279,7 +349,16 @@ impl EffectBase for UnitGroundQuad {
             return;
         }
 
-        let half = self.half_size * self.pulse.scale_at(self.age);
+        let opacity = self.fade.opacity();
+        if opacity <= 0.0 {
+            return;
+        }
+        let color = Color {
+            alpha: self.color.alpha * opacity,
+            ..self.color
+        };
+
+        let half = self.half_size * self.pulse.scale_at(self.fade.age, self.phase);
         let center = self.position + Vector3::new(0.0, Self::GROUND_LIFT, 0.0);
         let corner = |x: f32, z: f32| center + Vector3::new(x * half, 0.0, z * half);
 
@@ -297,7 +376,131 @@ impl EffectBase for UnitGroundQuad {
                 Vector2::new(0.0, 1.0),
                 Vector2::new(1.0, 1.0),
             ],
-            self.color,
+            color,
+        );
+    }
+}
+
+/// The authentic classic ground-tile recipe, which is **two** layers rather
+/// than one (roBrowserLegacy `Renderer/Effects/Songs.js`):
+///
+/// 1. a `FlatColorTile` per cell — a flat tint with no artwork, and
+/// 2. a `Tiles.HoveringTexture` above it, bobbing between `+0.2` and `+0.6`
+///    cell (`z + 0.4 - 0.2·sin(oddEven + tick/540π)`) with a per-cell phase so
+///    neighbouring cells do not rise and fall together.
+///
+/// Approximating this as a single textured quad would lose both the bob and the
+/// separation between tint and artwork, which is why it needed its own body.
+/// Unblocks `PA_GOSPEL`, `PF_FOGWALL` and `NPC_EVILLAND`, whose only missing
+/// piece was this.
+pub struct UnitLayeredGroundQuad {
+    tile_texture: Arc<Texture>,
+    hover_texture: Arc<Texture>,
+    position: Point3<f32>,
+    half_size: f32,
+    tile_color: Option<Color>,
+    hover_half_size: f32,
+    hover_opacity: f32,
+    phase: f32,
+    fade: CellFade,
+}
+
+impl UnitLayeredGroundQuad {
+    /// Bob midpoint and swing, in cells, straight from the original's
+    /// `z + 0.4 - 0.2·sin(…)`.
+    const BOB_CENTER_CELLS: f32 = 0.4;
+    const BOB_SWING_CELLS: f32 = 0.2;
+    /// `tick/540π` is radians per millisecond, so a second advances the sine by
+    /// `1000/540π`.
+    const BOB_SPEED: f32 = 0.589;
+
+    pub fn new(
+        tile_texture: Arc<Texture>,
+        hover_texture: Arc<Texture>,
+        position: Point3<f32>,
+        half_size: f32,
+        tile_color: Option<Color>,
+        hover_half_size: f32,
+        hover_opacity: f32,
+    ) -> Self {
+        let phase = cell_phase(position);
+
+        Self {
+            tile_texture,
+            hover_texture,
+            position,
+            half_size,
+            tile_color,
+            hover_half_size,
+            hover_opacity,
+            phase: phase * TAU,
+            fade: CellFade::new(phase),
+        }
+    }
+
+    /// Height of the hovering layer above the terrain, in world units.
+    fn hover_lift(&self) -> f32 {
+        let bob = Self::BOB_CENTER_CELLS - Self::BOB_SWING_CELLS * (self.phase + self.fade.age * Self::BOB_SPEED).sin();
+        bob * GAT_TILE_SIZE
+    }
+}
+
+impl EffectBase for UnitLayeredGroundQuad {
+    fn update(&mut self, _entities: &[crate::world::Entity], delta_time: f32) -> bool {
+        self.fade.update(delta_time)
+    }
+
+    fn mark_for_deletion(&mut self) {
+        self.fade.begin_fade_out();
+    }
+
+    fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
+
+    fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
+        let widest = self.half_size.max(self.hover_half_size);
+        if !Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(self.position, widest)) {
+            return;
+        }
+
+        let opacity = self.fade.opacity();
+        if opacity <= 0.0 {
+            return;
+        }
+
+        const TEXTURE_COORDINATES: [Vector2<f32>; 4] = [
+            Vector2::new(0.0, 0.0),
+            Vector2::new(1.0, 0.0),
+            Vector2::new(0.0, 1.0),
+            Vector2::new(1.0, 1.0),
+        ];
+
+        let quad = |center: Point3<f32>, half: f32| {
+            let corner = |x: f32, z: f32| center + Vector3::new(x * half, 0.0, z * half);
+            [corner(-1.0, -1.0), corner(1.0, -1.0), corner(-1.0, 1.0), corner(1.0, 1.0)]
+        };
+
+        // Lower layer: the flat tint, on the ground like any other decal. Absent
+        // for recipes that are only their hovering artwork.
+        if let Some(tile_color) = self.tile_color {
+            let tile_center = self.position + Vector3::new(0.0, UnitGroundQuad::GROUND_LIFT, 0.0);
+            renderer.render_ground_decal(
+                quad(tile_center, self.half_size),
+                self.tile_texture.clone(),
+                TEXTURE_COORDINATES,
+                Color {
+                    alpha: tile_color.alpha * opacity,
+                    ..tile_color
+                },
+            );
+        }
+
+        // Upper layer: the artwork, riding above the tint.
+        let hover_center = self.position + Vector3::new(0.0, self.hover_lift(), 0.0);
+        renderer.render_ground_decal(
+            quad(hover_center, self.hover_half_size),
+            self.hover_texture.clone(),
+            TEXTURE_COORDINATES,
+            Color::rgba(1.0, 1.0, 1.0, self.hover_opacity * opacity),
         );
     }
 }

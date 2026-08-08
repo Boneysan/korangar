@@ -1403,11 +1403,43 @@ impl Client {
     /// colour reaches the screen unmodulated. The original draws these with no
     /// artwork at all — borrowing another skill's tile shows *its* pattern, which
     /// is exactly how this was caught live.
+    /// Carrier for the table's `FlatColorTile` — artwork-free, so the recipe's
+    /// colour is the whole appearance.
+    ///
+    /// It is not a single opaque texel. A field is one tile per cell, and 81
+    /// hard-edged opaque squares butted together render as one unbroken slab
+    /// (measured live 2026-08-08 on Moonlit: "just flat red"). This keeps a
+    /// square plateau and feathers only the outer rim, so a field reads as a
+    /// surface with a soft boundary while its interior stays at full strength.
+    /// Recipes using it overlap their tiles slightly so the feathers fall under
+    /// their neighbours' plateaus instead of showing as a grid.
     fn flat_tile_texture(&mut self) -> Arc<Texture> {
+        /// Fraction of the half-width that stays fully opaque.
+        const PLATEAU: f32 = 0.72;
+        const SIZE: u32 = 64;
+
         self.flat_tile_texture
             .get_or_insert_with(|| {
-                self.texture_loader
-                    .create_color("korangar://flat-tile", RgbaImage::from_pixel(1, 1, Rgba([255; 4])), false)
+                let image = RgbaImage::from_fn(SIZE, SIZE, |x, y| {
+                    // Distance from the centre as a square (Chebyshev) metric,
+                    // so the plateau matches the quad's own shape.
+                    let to_unit = |value: u32| (value as f32 + 0.5) / SIZE as f32 * 2.0 - 1.0;
+                    let distance = to_unit(x).abs().max(to_unit(y).abs());
+
+                    let alpha = match distance <= PLATEAU {
+                        true => 1.0,
+                        false => {
+                            let edge = ((distance - PLATEAU) / (1.0 - PLATEAU)).clamp(0.0, 1.0);
+                            // Smoothstep, so the rim has no visible banding.
+                            let faded = 1.0 - edge;
+                            faded * faded * (3.0 - 2.0 * faded)
+                        }
+                    };
+
+                    Rgba([255, 255, 255, (alpha * 255.0).round() as u8])
+                });
+
+                self.texture_loader.create_color("korangar://flat-tile", image, true)
             })
             .clone()
     }
@@ -1956,6 +1988,7 @@ impl Client {
                 Some(UnitBody::Cylinders { .. }) => "cylinders",
                 Some(UnitBody::IceHorns { .. }) => "ice-horns",
                 Some(UnitBody::GroundQuad { .. }) => "ground-quad",
+                Some(UnitBody::LayeredGroundQuad { .. }) => "layered-ground-quad",
                 Some(UnitBody::LoopingSprite { .. }) => "looping-sprite",
                 None => "none",
             };
@@ -2068,6 +2101,43 @@ impl Client {
                     );
                 }
                 Err(error) => eprintln!("[skill-unit] failed to load {texture:?}: {error:?}"),
+            },
+            Some(UnitBody::LayeredGroundQuad {
+                tile_color,
+                half_size,
+                hover_texture,
+                hover_half_size,
+                hover_opacity,
+            }) => match self.texture_loader.get_or_load(hover_texture, ImageType::Color) {
+                Ok(hover) => {
+                    let tile = self.flat_tile_texture();
+
+                    if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        eprintln!(
+                            "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_texture} \
+                             half_size={hover_half_size} opacity={hover_opacity}, transparent={}",
+                            hover.is_transparent()
+                        );
+                    }
+
+                    self.effect_holder.add_unit(
+                        Box::new(UnitLayeredGroundQuad::new(
+                            tile,
+                            hover,
+                            position,
+                            half_size,
+                            tile_color,
+                            hover_half_size,
+                            hover_opacity,
+                        )),
+                        entity_id,
+                    );
+                    self.effect_holder.add_unit(
+                        Box::new(UnitPointLight::new(position, point_light_id, light_color, light_intensity)),
+                        entity_id,
+                    );
+                }
+                Err(error) => eprintln!("[skill-unit] failed to load {hover_texture}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -9802,6 +9872,11 @@ mod skill_effect_asset_tests {
                     if let Some(texture) = texture {
                         paths.insert(format!("data\\texture\\{texture}"));
                     }
+                }
+                // Only the hovering layer has artwork; the tint below it is a
+                // flat colour on the generated carrier.
+                Some(UnitBody::LayeredGroundQuad { hover_texture, .. }) => {
+                    paths.insert(format!("data\\texture\\{hover_texture}"));
                 }
                 Some(UnitBody::LoopingSprite { path, .. }) => {
                     paths.insert(format!("data\\sprite\\{path}.spr"));
