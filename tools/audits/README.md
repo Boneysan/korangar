@@ -1,4 +1,32 @@
-# Observer-parity audits — runbook
+# Audits — runbook
+
+Two audits live here. The packetver-variant check is below; the observer-parity
+suite is the rest of this document.
+
+## `packetver-variants.py` — is the client registering the *live* header?
+
+```sh
+cd korangar
+python3 tools/audits/packetver-variants.py          # exits non-zero on a mismatch
+```
+
+**Re-run after any PACKETVER change or Hercules merge.** Many `ZC_` families
+change header across packetvers — `idle_unitType` alone has nine values — and
+registering the wrong one is **completely silent**: the packet is framed
+correctly by `register_length_fallbacks`, consumed cleanly, and simply never
+handled. No error, no ledger entry, no failing test. The feature just goes
+quiet.
+
+The `#if` chains are decided by the **C preprocessor**, not by reading them —
+reading them by eye is how a stale variant gets certified as correct. Clean as
+of 2026-08-09: 29 multi-variant families, 290 client headers, no stale variants.
+
+Confidence that it works comes from pointing it at a packetver we are *not*
+building: `--packetver 20140101` correctly reports `spawn_unitType` registered
+as `0x09FE` where `0x09DC` would be live. Registering nothing is not a finding —
+that is an unmodelled packet, which the length fallback handles by design.
+
+# Observer-parity audits
 
 Static checks that ask one question in ten places: **does state that reaches a
 client out-of-band from the spawn packet have a recovery mechanism?** They exist
