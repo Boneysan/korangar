@@ -190,7 +190,7 @@ and running the `.exe` on the Windows side (not yet set up).
 
 ## Testing — the headless suite
 
-The project's main automated regression gate is a **130-scenario headless client**
+The project's main automated regression gate is a **135-scenario headless client**
 (`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
 double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
 [headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
@@ -203,10 +203,41 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (130): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 47
-(39 job-class sweeps + teleport/weapon-refine menus) · items 13 · dialogue 5 · social 16 ·
+Coverage (135): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 51
+(39 job-class sweeps + teleport/weapon-refine menus) · items 13 · dialogue 5 · social 17 ·
 DM tooling 14 · observer parity 9. One scenario (`skills-novice`) is a permanent,
-legitimate skip, so a green run reads **129 passed / 0 failed / 1 skipped**.
+legitimate skip, so a green run reads **134 passed / 0 failed / 1 skipped**.
+
+**READ THIS BEFORE QUOTING THE SKILL NUMBERS.** The 39-job sweep passes a skill
+when *any* observable response arrives. That is a **liveness** check — it is what
+catches unregistered and misparsed packets, which is what it was built for — and
+it is **not** a correctness check, though "39 job sweeps, green" reads like one.
+Measured 2026-08-09 across 983 casts: **36% of observations were the server
+refusing the skill**, 26% were passive skills never cast at all, and 6% were
+accepted silence. Only 25 of the 403 skills the sweep touches were checked
+against an outcome specific to that skill. The run now prints this distribution
+at the end so the number cannot be misread; do not report a green sweep as
+"the skills work".
+
+Two structural limits worth knowing before trusting a sweep result:
+- **The matcher stops at the first event it recognises, and `SkillCast` is checked
+  first**, so `cast` means "a cast bar started and we stopped looking", not "the
+  skill did its job". `tools/generate_skill_expectations.py` derives what each
+  skill *should* be seen to do from `skill_db` (664 skills) and is deliberately
+  **not enforced**: validated against real runs it would redden 217 working
+  skills, because the sweep cannot currently see past that first event. Enforcing
+  it means reworking the observation loop to collect a window and to accept an
+  explicit refusal as a legitimate alternative.
+- **The sweep covers 1st, 2nd, transcendent and expanded classes — no 3rd
+  classes.** 573 player skills (Warlock, Sorcerer, Rune Knight, Arch Bishop …)
+  are never swept. That is a deliberate scope boundary for a campaign fork, not a
+  gap, but it means "975 skills exist" and "403 are touched" are both true.
+
+**The allowlist is evidence-based and self-cleaning.** An allowlisted skill that
+answers is reported as a stale entry at the end of the run, because a dead entry
+is not harmless — it silently absorbs a future regression in that skill. Every
+entry is verified against 8 full runs, not one: a single-run cull would have
+removed three load-bearing entries and made the suite intermittently red.
 
 **Every one of the 11 fork deltas in §3b now has a guard** (2026-08-09), because
 losing one to an upstream merge is silent by construction — the patches live in
