@@ -1,25 +1,81 @@
 # Resume here — live pass status
 
-> **START HERE NEXT SESSION — one unfinished job.** The full headless suite must
-> be re-run: `./target/release/examples/headless-tester --scenario all`. It was
-> **green at 123/0/1 before** this session's changes, and two new observer
-> scenarios have since been added (`observer-skill-cast`,
-> `observer-status-values`, both 8/8 within `--scenario phase11` and both proved
-> able to fail). The re-run is not about them passing — it is whether they
-> **disturb the other 123**, since they job the shared character to Sage and walk
-> it about, and this suite has a recorded case of one scenario silently breaking
-> two unrelated ones much later in the run. The interrupted run reached
-> **44 passed / 0 failed**; the 39-job skill sweep after that is where
-> interference would show. Snapshot first (`Hercules/dev.sh snapshot`) and
-> restore after.
+> **2026-08-09 — the suite re-run is DONE and the suite is now 129 scenarios.**
+> The previous session's one unfinished job is closed: `--scenario all` is green,
+> and **all 11 fork deltas now have a guard** (three had none, including the most
+> valuable find of 08-08).
 >
-> **Also unverified, and needing ears rather than tests:** the audio work below.
+> **The re-run's question got a definite answer, and it was the opposite of the
+> one expected.** The two new observer scenarios do **not** disturb the other
+> 123 — those were intact even in the failing run. The suite's shared state broke
+> the *new* scenarios instead, and the recorded "8/8 in `--scenario phase11`" was
+> **luck of position, not a pass**:
+> - `HeadlessTwo`'s **save point is `int_land`**, the renewal start point it was
+>   created on. `dm-instance-lifecycle` ejects it there when the instance closes,
+>   two scenarios before phase 11, and `connect_pair` then meets on the beginner
+>   island for the rest of the run.
+> - The six look rows do not care where they stand. The two casting rows aim
+>   blindly at `x+2`, `int_land(80,101)` cannot take a field, and Hercules drops
+>   an unplaceable ground cast with a bare `return 0` and **no** `clif->skill_fail`.
+>   Total silence. Measured: **8/8 on `prt_fild08`, 6/8 on `int_land`.**
+> - **Second instance in that one file of the class it already documents** — a
+>   constant assumption resting on a position that is shared mutable state.
+>   `far_map_from` fixed the meeting *map*; nothing covered the target *cell*.
+>
+> **`connect_pair`'s "non-GM partner" comment was FALSE** and `skills.rs`
+> contradicted it in the same binary (login table: **both accounts are group
+> 99**). That false premise is *why* the meeting place is inherited rather than
+> chosen. **Recommended next change:** have `connect_pair` warp *both* seats to a
+> chosen venue — the partner can warp itself. Do it as its own change with a full
+> run plus a fresh shuffle seed, since ~16 paired scenarios rest on it.
+> **Do NOT "fix" this with `@save` in `normalize()`:** `@save` pins the *current*
+> position, so run after drift it would make `int_land` the **permanent** save
+> point, and it adds a global shared-state write to a suite whose entire bug
+> history is global shared-state writes.
+>
+> **Four new guards, each proved able to fail on the exact regression it
+> protects** — `cast-cancel` (`CZ_CANCEL_CAST` 0x0F00, whose failure mode is
+> **right-click disconnecting you to login**, and whose only previous tests used
+> bytes we assembled ourselves), `item-command-multi-word` (the `@item` parser
+> delta, both halves), `land-protector-status` (`SC_LANDPROTECTOR`, 5 sites), and
+> `kick-explains-itself` (map-server `SC_NOTIFY_BAN` 0x0081 — verified by eye once
+> on 08-08 and guarded by nothing since).
+>
+> **THE LESSON OF THE DAY, and it was self-inflicted: a new guard introduced the
+> exact hazard this file warns about.** `land-protector-status` cast at the shared
+> venue, and Land Protector at level 1 stands for **165 seconds** over a **7×7**
+> area whose whole purpose is suppressing ground magic — covering cells 285-291,
+> i.e. the meeting cell everything else uses. Two minutes downstream `AL_PNEUMA`
+> went **SILENT** in the Acolyte sweep. It was latent from the moment it was
+> written; the run before it passed only by landing just outside the window, and
+> it surfaced only because a *fourth, unrelated* scenario shifted the timing.
+> **A single green run does not clear a scenario that leaves state behind — and
+> "walk away" is not cleanup, because the field is what harms the next scenario,
+> not your position in it.** Fixed by giving it `prt_fild01`, which nothing else
+> visits, and by casting on the caster's own cell (Land Protector carries only
+> `UF_PATHCHECK`, **no `UF_NOFOOTSET`**, so it places under the caster — which
+> also removes the guessed-neighbour-cell fragility).
+>
+> **Ledger:** `0x0078` is explained and can be retired from the modeling
+> backlog — it is `clif_sendfakenpc`, an **invisible** placeholder (class 111) so
+> a script dialog has an owner. Two new entries appeared once `@kick` was
+> exercised: **`0x00CD`** (`clif_GM_kickack`, the kicker-side ack — documented,
+> not a bug) and **`0x0191`**, previously only ever seen under a shuffled run.
+>
+> **Still unverified, and needing ears rather than tests:** the audio work below.
 > Ambience and skill-sound levels both changed substantially, and no one has
 > heard either.
 >
 > **Both test characters need explicit re-jobbing** — `test` is Sage 16 and
-> `HeadlessTwo` is Priest 8 as of shutdown. Hermode wants Clown 4020 + Gypsy
-> 4021 with the whip (1950, still in inventory).
+> `HeadlessTwo` is Priest 8 at the restored snapshot. Hermode wants Clown 4020 +
+> Gypsy 4021 with the whip (1950, still in inventory).
+>
+> **Next, cheapest first:** the `connect_pair` venue change above; then the
+> untested modelled packets (`AutoSpellList` via Sage `SA_AUTOSPELL`,
+> `SpiritSpheres` via Monk `MO_CALLSPIRITS`, `EntitySnapped` via Champion
+> `MO_BODYRELOCATION` are the cheap three — note the job sweeps already *cast*
+> these, so what a scenario adds is asserting the specific event, not the wire
+> path); then **GUI Block E**, still the largest open item.
 
 > **2026-08-08 (evening) — a two-seat live pass. Six bugs, five checks passed,
 > everything pushed.** None of the six was reachable from the headless suite,

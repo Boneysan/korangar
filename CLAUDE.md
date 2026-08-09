@@ -190,7 +190,7 @@ and running the `.exe` on the Windows side (not yet set up).
 
 ## Testing — the headless suite
 
-The project's main automated regression gate is a **124-scenario headless client**
+The project's main automated regression gate is a **130-scenario headless client**
 (`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
 double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
 [headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
@@ -203,9 +203,20 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (124): session/lifecycle 8 · GM commands 9 · movement 5 · combat 3 · skills 45
-(39 job-class sweeps + teleport/weapon-refine menus) · items 12 · dialogue 5 · social 16 ·
-DM tooling 14 · observer parity 7.
+Coverage (130): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 47
+(39 job-class sweeps + teleport/weapon-refine menus) · items 13 · dialogue 5 · social 16 ·
+DM tooling 14 · observer parity 9. One scenario (`skills-novice`) is a permanent,
+legitimate skip, so a green run reads **129 passed / 0 failed / 1 skipped**.
+
+**Every one of the 11 fork deltas in §3b now has a guard** (2026-08-09), because
+losing one to an upstream merge is silent by construction — the patches live in
+the sibling Hercules tree and are invisible from this repo. The four added last:
+`cast-cancel` (0x0F00 — its failure mode is **right-click disconnecting the
+player to login**, since a client packet with no length entry makes `clif_parse`
+drop the session), `land-protector-status` (`SC_LANDPROTECTOR`, whose five sites
+fail with nothing but a `ShowWarning`), `item-command-multi-word` (the `@item`
+parser, both halves including the `atoi` regression the fix itself introduced),
+and `kick-explains-itself` (the **map-server** half of 0x0081).
 
 `skill-fail-reason-packet` guards the 0x0EFE fork delta, and is the only check
 that the *server* half of it works — every other test over that packet uses bytes
