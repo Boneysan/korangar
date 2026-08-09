@@ -7,6 +7,7 @@
 //! silence means an unregistered/misparsed packet (the bug class this
 //! phase exists to catch). Per-skill outcomes are printed as a table.
 
+use std::sync::Mutex;
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
@@ -14,6 +15,27 @@ use ragnarok_packets::{Direction, SkillId, SkillLevel, SkillType, TilePosition, 
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::{Scenario, skipped};
+
+/// What the sweep actually observed, aggregated across every job, so the run can
+/// end by saying what it *proved* rather than only that it was green.
+///
+/// The distinction this exists to make visible: the sweep's pass condition is
+/// "some observable response arrived", which is a **liveness** check — it caught
+/// unregistered and misparsed packets, which is what it was built for. It is not
+/// a correctness check, and "39 job sweeps, green" reads like one. Measured on
+/// 2026-08-09, 36% of observations were the server *refusing* the skill and 26%
+/// were passive skills that are never cast at all.
+pub static SWEEP_OUTCOMES: Mutex<Vec<&'static str>> = Mutex::new(Vec::new());
+
+/// Allowlisted skills that answered anyway — i.e. entries that are no longer
+/// pulling their weight.
+///
+/// **This is what stops the allowlist rotting.** A stale entry is not harmless:
+/// it silently absorbs a future regression in that skill. 43 of 81 entries were
+/// found dead on 2026-08-09, and the precedent for the damage is on record —
+/// `BD_ETERNALCHAOS` sat in the list under a false reason until `0x0189` was
+/// modelled.
+pub static STALE_ALLOWLIST: Mutex<Vec<(String, &'static str)>> = Mutex::new(Vec::new());
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -933,102 +955,48 @@ fn weapon_refine_cancel(config: &Config) -> Result<(), String> {
 /// Skills that legitimately produce no direct cast response headlessly
 /// (require special weapons/ammo/catalysts/companions or extended setup).
 /// Kept intentionally small: anything else that fails silently is a finding.
+/// Log one sweep observation, and notice when an allowlist entry did not earn
+/// its place on this run.
+fn record_outcome(name: &str, result: &'static str) {
+    if let Ok(mut outcomes) = SWEEP_OUTCOMES.lock() {
+        outcomes.push(result);
+    }
+    // The three known intermittents respond on most runs by definition, so
+    // reporting them every time would train the reader to ignore this block —
+    // and a warning that is always present is a warning nobody reads. They stay
+    // allowlisted, and they are tracked as open questions in the list itself.
+    const KNOWN_INTERMITTENT: &[&str] = &["MG_NAPALMBEAT", "HP_BASILICA", "SL_SMA"];
+
+    if allowlisted(name) && result != "silent (allowlisted)" && !KNOWN_INTERMITTENT.contains(&name) {
+        if let Ok(mut stale) = STALE_ALLOWLIST.lock() {
+            if !stale.iter().any(|(existing, _)| existing == name) {
+                stale.push((name.to_owned(), result));
+            }
+        }
+    }
+}
+
 fn allowlisted(skill_name: &str) -> bool {
+    // **Every entry here is verified against 8 full runs, not one.** An entry
+    // that never fires is not harmless: it is a loaded gun that will absorb a
+    // real regression in that skill without a word. 43 such entries were removed
+    // on 2026-08-09 (32 that never went silent in any run, 11 the sweep never
+    // reaches at all), and the `SG_` blanket prefix was narrowed from 18 skills
+    // to the 8 that actually need it.
+    //
+    // The sweep now REPORTS a stale entry when an allowlisted skill responds, so
+    // this list cannot quietly rot again — see `report_stale_allowlist`.
+    //
+    // Precedent for why this matters: `BD_ETERNALCHAOS` and `BD_ROKISWEIL` sat
+    // here for months under a stated reason that was false (they are map-zone
+    // disabled, and the refusal was invisible only because 0x0189 was unmodeled).
     const ALLOWLIST: &[&str] = &[
-        // Requires a falcon / bird companion state.
-        "HT_FALCON",
-        "SN_FALCONASSAULT",
-        // Requires arrows / specific ammo equipped even for the ack.
-        "AC_MAKINGARROW",
-        "SA_ARROWMAKING",
-        "AC_DOUBLE",
-        // Item-consuming crafts (catalyst items missing headlessly).
-        "AM_PHARMACY",
-        "AM_TWILIGHT1",
-        "AM_TWILIGHT2",
-        "AM_TWILIGHT3",
-        "BS_REPAIRWEAPON",
-        "WS_CREATECOIN",
-        "WS_CREATENUGGET",
-        "WS_WEAPONREFINE",
-        "WS_OVERTHRUSTMAX",
-        "BS_HAMMERFALL",
-        // Requires cart / madogear state.
-        "MC_CARTREVOLUTION",
-        "MC_CHANGECART",
-        "MC_PUSHCART",
-        "MC_VENDING",
-        "WS_CARTBOOST",
-        "WS_CARTTERMINATION",
-        // Requires the caster to stand in a water cell.
-        "WZ_WATERBALL",
-        // Sage's casting state / passive interference causes these to be silent on Sage.
-        "MG_NAPALMBEAT",
-        "MG_SOULSTRIKE",
-        "MG_COLDBOLT",
-        // Require an existing owned trap unit as the target.
-        "HT_REMOVETRAP",
-        "HT_SPRINGTRAP",
-        // Resurrection on the living self has no valid target; Basilica has
-        // party/area preconditions that this single-client sweep cannot
-        // guarantee.
-        "ALL_RESURRECTION",
-        "HP_BASILICA",
-        // Requires being hidden / specific stances first.
-        "AS_GRIMTOOTH",
-        "AS_CLOAKING",
-        "RG_BACKSTAP",
-        "RG_RAID",
-        "RG_TUNNELDRIVE",
-        // Spirit-sphere / combo-state dependent.
-        "MO_ABSORBSPIRITS",
-        "MO_EXTREMITYFIST",
-        "MO_CHAINCOMBO",
-        "MO_COMBOFINISH",
-        // Ensemble / Duet skills (require Bard + Dancer next to each other).
-        //
-        // BD_ETERNALCHAOS and BD_ROKISWEIL used to be listed here too, with that
-        // same reason, which was wrong: they are disabled by the map zone
-        // (`db/re/map_zone_db.conf`, "Normal"), and the refusal arrives as
-        // ZC_NOTIFY_MAPINFO (0x0189). That packet was unmodeled, so the refusal
-        // was silent and the allowlist quietly absorbed it. Now that 0x0189 is
-        // handled both report fail-feedback, so the entries are removed rather
-        // than left to mask the next genuine silence.
-        "BD_LULLABY",
-        "BD_RICHMANKIM",
-        "BD_DRUMBATTLEFIELD",
-        "BD_RINGNIBELUNGEN",
-        "BD_INTOABYSS",
-        "BD_SIEGFRIED",
-        "BA_DISSONANCE",
-        // Rogue flag graffiti (requires flag/paint brush item).
-        "RG_FLAGGRAFFITI",
-        "RG_GRAFFITI",
-        "RG_CLEANER",
-        // Stalker skills that require special state/setup.
-        "ST_REJECTSWORD",
-        "ST_PRESERVE",
-        "ST_FULLSTRIP",
-        "ST_CHASEWALK",
-        // Devotion / Providence (requires other party members / holy targets).
-        "CR_DEVOTION",
-        "CR_PROVIDENCE",
-        // Champion combo skills (require combo state).
-        "CH_TIGERFIST",
-        "CH_CHAINCRUSH",
-        // Clown/Gypsy support skills (require partner / song state).
-        "CG_MARIONETTE",
-        "CG_HERMODE",
-        // Ninja throwing skills (require ammo).
-        "NJ_SYURIKEN",
-        "NJ_KUNAI",
-        // Taekwon kicks and mission (require stance / target).
-        "TK_STORMKICK",
-        "TK_DOWNKICK",
-        "TK_TURNKICK",
-        "TK_COUNTER",
-        "TK_MISSION",
-        // Soul Linker spirit links (require target player of specific class).
+        // Soul Link spirit links — **a harness limitation, not a server condition.**
+        // `Friend`-targeted skills arrive as `SkillType::Support`, and the sweep
+        // casts Support at the caster. A Soul Linker cannot link itself, the
+        // target filter rejects it, and Hercules drops the request with a bare
+        // `return 0` — the same silent path as an out-of-range ground cast.
+        // Aiming these at the partner would turn 15 silences into real coverage.
         "SL_ALCHEMIST",
         "SL_MONK",
         "SL_STAR",
@@ -1044,9 +1012,57 @@ fn allowlisted(skill_name: &str) -> bool {
         "SL_BLACKSMITH",
         "SL_HUNTER",
         "SL_SOULLINKER",
+        // Taekwon kicks — require an active stance/combo the sweep never enters.
+        "TK_STORMKICK",
+        "TK_DOWNKICK",
+        "TK_TURNKICK",
+        "TK_COUNTER",
+        "TK_MISSION",
+        // Combo-state skills: only castable in the window a previous hit opens.
+        "MO_CHAINCOMBO",
+        "MO_COMBOFINISH",
+        "CH_TIGERFIST",
+        "CH_CHAINCRUSH",
+        // Need a target other than the caster (party member / holy target).
+        "ALL_RESURRECTION",
+        "CR_DEVOTION",
+        "CR_PROVIDENCE",
+        "CG_MARIONETTE",
+        // Need an existing owned trap unit as the target.
+        "HT_REMOVETRAP",
+        "HT_SPRINGTRAP",
+        // Need ammunition the sweep does not stock.
+        "NJ_SYURIKEN",
+        "NJ_KUNAI",
+        // Need a prior stance (hidden / chase walk) the sweep does not enter.
+        "AS_CLOAKING",
+        "ST_CHASEWALK",
+        // Needs a paint-brush style consumable.
+        "RG_FLAGGRAFFITI",
+        // Star Gladiator: needs designated sun/moon/star places and hated monsters,
+        // set through `@feelreset` and quest flow the sweep cannot perform.
+        // **Was a blanket `SG_` prefix rule covering 18 skills; only these 8 are
+        // ever silent.** The prefix would have swallowed a genuine silence in
+        // `SG_FEEL`, which casts normally.
+        "SG_FUSION",
+        "SG_HATE",
+        "SG_MOON_COMFORT",
+        "SG_MOON_WARM",
+        "SG_STAR_COMFORT",
+        "SG_STAR_WARM",
+        "SG_SUN_COMFORT",
+        "SG_SUN_WARM",
+        // **KNOWN INTERMITTENTS, not preconditions — do not "tidy" these into a
+        // reason.** Each responds normally in most runs and goes silent in a
+        // few, and mislabelling them as preconditions is exactly what let
+        // `MG_NAPALMBEAT` absorb the 4x `skills-mage` anomaly of 2026-08-09
+        // without anyone noticing. They are here to keep the suite green, and
+        // they are open questions.
+        "MG_NAPALMBEAT",
+        "HP_BASILICA",
         "SL_SMA",
     ];
-    ALLOWLIST.contains(&skill_name) || skill_name.starts_with("SG_")
+    ALLOWLIST.contains(&skill_name)
 }
 
 struct SkillOutcome {
@@ -1216,9 +1232,40 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 // about 3 cells, and Hercules drops an out-of-range ground cast
                 // with a bare `return 0` and **no** `clif->skill_fail`, so
                 // anything further away reads as silence rather than a refusal.
-                // Eight cells is more than the seven traps any job has.
-                const GROUND_OFFSETS: [(i16, i16); 8] =
-                    [(2, 0), (0, 2), (-2, 0), (0, -2), (2, 2), (-2, 2), (2, -2), (-2, -2)];
+                //
+                // **Two rings, because one was not enough and the reason it was
+                // thought to be enough was a miscount.** This used to be eight
+                // cells, justified as "more than the seven traps any job has" —
+                // but the limit is *Ground-typed casts*, not traps, and
+                // `HT_DETECTING` and `HT_TALKIEBOX` are Ground too. Measured
+                // 2026-08-09: Hunter and Sniper make **14** ground casts, High
+                // Wizard 12, Wizard 10, Professor 9. Every cast past the eighth
+                // wrapped onto a cell that still held a unit placed seconds
+                // earlier, RO refuses to stack two units on one cell, and that
+                // refusal is **silent** — so it surfaced as an intermittent
+                // "SILENT — investigate" (HT_SHOCKWAVE, run of 2026-08-09) that
+                // an allowlist entry would have absorbed as a fake precondition.
+                //
+                // Sixteen distinct cells at radius 2 and 3, both inside trap
+                // range. Keep this comfortably above the largest job's count.
+                const GROUND_OFFSETS: [(i16, i16); 16] = [
+                    (2, 0),
+                    (0, 2),
+                    (-2, 0),
+                    (0, -2),
+                    (2, 2),
+                    (-2, 2),
+                    (2, -2),
+                    (-2, -2),
+                    (3, 0),
+                    (0, 3),
+                    (-3, 0),
+                    (0, -3),
+                    (3, 3),
+                    (-3, 3),
+                    (3, -3),
+                    (-3, -3),
+                ];
                 let position = context.position;
                 let (dx, dy) = GROUND_OFFSETS[ground_cast_index % GROUND_OFFSETS.len()];
                 ground_cast_index += 1;
@@ -1270,6 +1317,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 Err(_) => ("SILENT — investigate", 0),
             };
             context.pump(Duration::from_millis(wait));
+            record_outcome(&name, result);
             outcomes.push(SkillOutcome {
                 skill_id: skill.skill_id.0,
                 name,
@@ -1336,6 +1384,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         };
         context.pump(Duration::from_millis(wait.into()));
 
+        record_outcome(&name, result);
         outcomes.push(SkillOutcome {
             skill_id: skill.skill_id.0,
             name,

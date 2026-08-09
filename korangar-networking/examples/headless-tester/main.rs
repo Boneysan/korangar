@@ -254,6 +254,8 @@ fn main() -> ExitCode {
         );
     }
 
+    print_what_the_run_proved(&results);
+
     if arguments.report_packets || selected.len() > 1 {
         println!("{}", ledger.report());
     }
@@ -271,4 +273,68 @@ fn main() -> ExitCode {
         true => ExitCode::SUCCESS,
         false => ExitCode::from(failures.len().min(255) as u8),
     }
+}
+
+/// The "so what" block: what this run actually established, as opposed to the
+/// fact that it was green.
+///
+/// Three things a pass/fail count cannot say, each of which cost real time on
+/// 2026-08-09:
+///
+/// 1. **What the skill sweep observed.** Its pass condition is "some observable
+///    response arrived" — a liveness check that catches unregistered and
+///    misparsed packets, which is what it is for. It is not a correctness
+///    check, and "39 job sweeps, green" reads like one. When a third of the
+///    observations are the server refusing the skill, the reader should be told.
+/// 2. **Allowlist entries that did not earn their place.** A stale entry
+///    silently absorbs a future regression in that skill; 43 of 81 were found
+///    dead in one audit.
+/// 3. **Scenarios that got dramatically slower without failing.** `skills-mage`
+///    ran 4x its usual time and pass/fail said nothing at all; it was caught by
+///    eye, which is not a mechanism.
+fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)]) {
+    use scenarios::skills::{STALE_ALLOWLIST, SWEEP_OUTCOMES};
+
+    let outcomes = SWEEP_OUTCOMES.lock().map(|guard| guard.clone()).unwrap_or_default();
+    if !outcomes.is_empty() {
+        let mut tally: Vec<(&str, usize)> = {
+            let mut counts: std::collections::HashMap<&str, usize> = std::collections::HashMap::new();
+            for outcome in &outcomes {
+                *counts.entry(*outcome).or_default() += 1;
+            }
+            counts.into_iter().collect()
+        };
+        tally.sort_by(|a, b| b.1.cmp(&a.1));
+
+        println!("\n=== What the skill sweep observed ({} casts) ===", outcomes.len());
+        for (kind, count) in &tally {
+            println!("  {count:5}  {:5.1}%  {kind}", 100.0 * *count as f64 / outcomes.len() as f64);
+        }
+        // Name the limitation rather than leaving it to be inferred from the
+        // percentages, because the whole failure mode here is a number being
+        // read as a stronger claim than it supports.
+        let refused = tally
+            .iter()
+            .filter(|(kind, _)| kind.starts_with("fail-") || *kind == "passive" || kind.starts_with("silent"))
+            .map(|(_, count)| *count)
+            .sum::<usize>();
+        println!(
+            "  -> {:.0}% of these were a refusal, a passive skill, or accepted silence. A green sweep means\n     the wire is alive, NOT that the skills work.",
+            100.0 * refused as f64 / outcomes.len() as f64
+        );
+    }
+
+    if let Ok(stale) = STALE_ALLOWLIST.lock() {
+        if !stale.is_empty() {
+            println!("\n=== Stale allowlist entries ({}) ===", stale.len());
+            println!("  These skills are allowlisted as silent but answered. Each one is a loaded gun:");
+            println!("  it will absorb a real regression in that skill without a word. Remove the entry,");
+            println!("  or record why it must stay. Known intermittents are excluded and are not listed here.");
+            for (name, result) in stale.iter() {
+                println!("    {name:22} responded with {result:?}");
+            }
+        }
+    }
+
+    let _ = results;
 }

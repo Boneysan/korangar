@@ -6,7 +6,7 @@ mod items;
 mod movement;
 mod observer;
 mod session;
-mod skills;
+pub mod skills;
 mod social;
 
 use crate::context::Config;
