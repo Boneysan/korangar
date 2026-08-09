@@ -342,8 +342,10 @@ impl TestContext {
         // Baseline state: a GUI DM session may have left the GM character
         // hidden (`@hide` persists via char.option), which makes it invisible
         // to other clients and untargetable by mobs — silently breaking every
-        // proximity-dependent scenario. Clear all option flags best-effort
-        // (harmless no-op rejection on the non-GM partner account).
+        // proximity-dependent scenario. Clear all option flags best-effort.
+        // Only the primary is touched because only a GUI DM session leaves this
+        // state behind — both accounts are in fact GM 99, so this is a scoping
+        // choice, not a permission one.
         if username == config.username {
             let _ = context.say("@option 0 0 0");
             context.pump(Duration::from_millis(200));
@@ -352,16 +354,27 @@ impl TestContext {
         Ok(context)
     }
 
-    /// Two sessions on the same map, close enough to see each other: a GM
-    /// primary (which can `@warp` and `@item`) and a non-GM partner.
+    /// Two sessions on the same map, close enough to see each other.
     ///
     /// Every observer-parity assertion needs both seats, because the whole bug
     /// class is invisible from the acting session.
+    ///
+    /// **Both accounts are GM group 99.** This comment used to say the partner
+    /// was "deliberately non-GM and cannot use `@warp`", and that was false —
+    /// `headless2` was given GM rights during the 2026-07-30 shuffle pass so the
+    /// sex-locked job sweeps could drive `@job`/`@allskill` on it (`skills.rs`
+    /// says so explicitly, and the two files contradicted each other). The stale
+    /// claim was load-bearing: it is why the meeting place below is *inherited*
+    /// from the partner rather than chosen, which is shared mutable state and
+    /// has now caused two separate failures in `observer.rs`. **A deterministic
+    /// venue is possible here** — the partner can warp itself — and is worth
+    /// doing as its own change, verified by a full run plus a fresh shuffle
+    /// seed, since ~16 paired scenarios rest on this behaviour.
     pub fn connect_pair(config: &Config) -> Result<(Self, Self), String> {
         let mut primary = Self::connect(config)?;
         let mut partner = Self::connect_partner(config)?;
-        // The partner is deliberately non-GM and cannot use @warp. Bring the GM
-        // test character to the partner's current map instead.
+        // Meet wherever the partner was last left. See the caveat above: this is
+        // inherited state, not a chosen venue.
         let map_name = partner.map_name.clone();
         let x = partner.position.x.saturating_add(1);
         let y = partner.position.y;
