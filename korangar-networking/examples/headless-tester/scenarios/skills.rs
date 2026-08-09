@@ -21,6 +21,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("teleport-cancel", 5, teleport_cancel),
         Scenario::new("skill-fail-rejection", 5, skill_fail_rejection),
         Scenario::new("skill-fail-reason-packet", 5, skill_fail_reason_packet),
+        Scenario::new("cast-cancel", 5, cast_cancel),
+        Scenario::new("land-protector-status", 5, land_protector_status),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
@@ -209,6 +211,208 @@ fn skill_fail_rejection_body(context: &mut TestContext) -> Result<(), String> {
 /// deliberately identical to what the client infers, so a test there proves
 /// nothing. Redemptio has three conditions, so its inferred text is a hedge that
 /// no reason can produce.
+/// A Sage, for `SA_VOLCANO`'s five second cast (4000 + 1000 fixed) — long
+/// enough that a cancel lands while the cast is genuinely in progress.
+const SAGE: u16 = 16;
+const SA_VOLCANO: SkillId = SkillId(285);
+const BLUE_GEMSTONE: u32 = 717;
+/// Open ground, chosen rather than inherited. An unplaceable field looks exactly
+/// like a cancelled one, which would let this scenario pass for the wrong
+/// reason — see `observer.rs`'s `CAST_VENUE`, where that cost a debugging round.
+const CAST_VENUE: (&str, u16, u16) = ("prt_fild08", 286, 338);
+
+const SA_LANDPROTECTOR: SkillId = SkillId(288);
+/// A map no other scenario visits, so a long-lived field cannot reach them.
+const ISOLATION_MAP: &str = "prt_fild01";
+const YELLOW_GEMSTONE: u32 = 715;
+/// `SI_LANDPROTECTOR`, the icon index this fork *invented*. Must be matched on:
+/// taking whatever status happens to arrive first would assert against an
+/// unrelated one and look exactly like the delta working.
+const SI_LANDPROTECTOR: u16 = 1150;
+
+/// Guards the **`SC_LANDPROTECTOR`** fork delta, which spans **five** places and
+/// **fails silently if any one of them is missing**.
+///
+/// Officially Land Protector grants nothing — it acts on the ground, not on
+/// people — so this fork invented a status purely to tell the player their
+/// ground magic is suppressed and for how long. The five sites are `status.h`
+/// (the `sc_type` slot), `db/constants.conf` (**both** `SC_LANDPROTECTOR: 728`
+/// and `SI_LANDPROTECTOR: 1150`), `db/re/sc_config.conf`, `db/re/skill_db.conf`
+/// (`StatusChange:` on the skill), and `src/map/skill.c`
+/// (`skill_unit_onplace` / `skill_unit_onout`).
+///
+/// **Why it needs a scenario rather than a code review:** `sc_config.conf` and
+/// `skill_db.conf` resolve status names through `script->get_constant()`, so if
+/// the `SC_` constant goes missing both bindings are skipped with nothing but a
+/// `ShowWarning` — on a server whose stdout goes to `log/server-latest.log`, not
+/// to any log anyone reads during a merge. The field still spawns and still
+/// suppresses magic; only the *explanation* disappears.
+fn land_protector_status(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    context.ensure_job(SAGE)?;
+    context.say("@allskill")?;
+    // Land Protector costs 66 SP at level 1 and scenarios share one character,
+    // so an earlier SP drain would otherwise fail the cast before it began.
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(500));
+
+    // **This one gets a map to itself, and that is not fastidiousness.** At
+    // level 1 the field stands for **165 seconds** over a **7×7** area
+    // (`Layout: 3`) and its whole purpose is suppressing ground magic. Cast at
+    // the shared venue it covers cells 285-291 — i.e. the meeting cell every
+    // other paired scenario uses — and leaves a nearly three-minute dead zone
+    // behind it. That silently took out `AL_PNEUMA` in the Acolyte sweep two
+    // minutes downstream, which is exactly the "one scenario breaks two
+    // unrelated ones much later" trap this file's header describes. Nothing
+    // else in the suite goes to `prt_fild01`.
+    context.warp_random(ISOLATION_MAP)?;
+    context.give_item(BLUE_GEMSTONE, 1)?;
+    context.give_item(YELLOW_GEMSTONE, 1)?;
+
+    // Cast on our own cell. Land Protector carries only `UF_PATHCHECK` — no
+    // `UF_NOFOOTSET` — so unlike the elemental fields it places under the
+    // caster, and a cell we are already standing on is walkable by definition.
+    // That removes the guessed-neighbour-cell fragility that cost `observer.rs`
+    // a debugging round, and it is why no walk-in is needed below.
+    let target = context.position;
+
+    context.flush();
+    context
+        .net
+        .cast_ground_skill(SA_LANDPROTECTOR, SkillLevel(1), target)
+        .map_err(|error| format!("could not request the cast: {error:?}"))?;
+
+    // Wait for the field before walking in: the unit only exists once the cast
+    // completes, so stepping onto the cell early parks us there with nothing to
+    // stand in.
+    context.wait_for_within("the field to be placed", Duration::from_secs(15), &mut |event| match event {
+        NetworkEvent::AddSkillUnit { .. } => Some(()),
+        _ => None,
+    })?;
+
+    // No walk-in: at `Range: 2` the caster stands **inside** the footprint it
+    // just placed, so the status arrives on placement. (`observer-status-values`
+    // does walk, because `SA_VOLCANO`'s field is aimed clear of the caster.)
+    let result = context.wait_for_within(
+        "SC_LANDPROTECTOR once the field is standing",
+        Duration::from_secs(10),
+        &mut |event| match event {
+            NetworkEvent::StatusChange {
+                index, gained: true, ..
+            } if *index == SI_LANDPROTECTOR => Some(()),
+            _ => None,
+        },
+    );
+
+    // Leave on every path, including the failure one. Walking out of a 7×7
+    // field is not enough on its own — the *field* is what harms the next
+    // scenario, not our position in it — so the character leaves the map
+    // entirely and the field is stranded where nothing will stand in it.
+    let (venue_map, venue_x, venue_y) = CAST_VENUE;
+    let _ = context.warp(venue_map, venue_x, venue_y);
+
+    result.map_err(|error| {
+        format!(
+            "{error}\n         the field was placed but no SI_LANDPROTECTOR (1150) status arrived. \
+             This fork's SC_LANDPROTECTOR delta spans five sites and any one of them going missing \
+             fails exactly like this, with only a ShowWarning on the server: check the sc_type slot in \
+             src/map/status.h, BOTH constants in db/constants.conf, the sc_config.conf icon entry, \
+             `StatusChange: \"SC_LANDPROTECTOR\"` in db/re/skill_db.conf, and skill_unit_onplace in \
+             src/map/skill.c"
+        )
+    })
+}
+
+/// Guards the **`CZ_CANCEL_CAST` (0x0F00)** fork delta end to end — the only
+/// check that the *server* half of it works.
+///
+/// Every other test over this packet asserts bytes we assembled ourselves
+/// (`cancel_cast_packet_is_a_bare_two_byte_header`), which passes with the
+/// Hercules delta deleted. That matters more here than for most deltas because
+/// of how it fails: **a client packet with no length entry makes `clif_parse`
+/// disconnect the session** rather than warn, and the length lives in
+/// `src/common/packets_len.h`, which is hand-maintained and which
+/// `generate_packet_lengths.sh` never reads. So an upstream merge that drops it
+/// does not degrade the feature — it makes **right-click kick the player to the
+/// login screen**, and nothing else in this suite would notice.
+///
+/// Two assertions, and the second is the one with teeth: the server must
+/// acknowledge the cancel, **and the skill must not go off anyway**. Asserting
+/// only the acknowledgement would pass while the field still landed.
+fn cast_cancel(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    context.ensure_job(SAGE)?;
+    context.say("@allskill")?;
+    context.pump(Duration::from_millis(500));
+
+    let (map, x, y) = CAST_VENUE;
+    context.warp(map, x, y)?;
+    context.give_item(BLUE_GEMSTONE, 1)?;
+
+    // Two cells east: `SA_VOLCANO` has `Range: 2`, and an out-of-range ground
+    // cast is dropped with a bare `return 0` and no `clif->skill_fail`.
+    let target = TilePosition {
+        x: context.position.x + 2,
+        y: context.position.y,
+    };
+
+    context.flush();
+    let caster = context.player_id;
+    context
+        .net
+        .cast_ground_skill(SA_VOLCANO, SkillLevel(1), target)
+        .map_err(|error| format!("could not request the cast: {error:?}"))?;
+
+    context.wait_for_within("our own cast to start", Duration::from_secs(6), &mut |event| match event {
+        NetworkEvent::SkillCast {
+            source_entity_id,
+            skill_id,
+            ..
+        } if source_entity_id.0 == caster.0 && *skill_id == SA_VOLCANO => Some(()),
+        _ => None,
+    })?;
+
+    context.net.cancel_cast().map_err(|_| {
+        "disconnected while sending CZ_CANCEL_CAST (0x0F00) — this is the signature of the missing \
+         length entry: Hercules' `clif_parse` drops a session that sends a packet it has no length \
+         for. Check `packetLen(0x0f00, 2)` in Hercules `src/common/packets_len.h`, which is \
+         hand-maintained and is NOT regenerated by tools/generate_packet_lengths.sh"
+            .to_owned()
+    })?;
+
+    context
+        .wait_for_within("the server to acknowledge the cancel", Duration::from_secs(6), &mut |event| {
+            match event {
+                NetworkEvent::SkillCastCancelled { .. } => Some(()),
+                _ => None,
+            }
+        })
+        .map_err(|error| {
+            format!(
+                "{error}\n         no clif->skillcastcancel came back. The CZ_CANCEL_CAST (0x0F00) \
+                 Hercules delta has probably been lost in an upstream merge — check \
+                 `clif_parse_CancelCast` and the `clif->pCancelCast =` registration in \
+                 src/map/clif.c, the interface member in clif.h, and the packets.h entry"
+            )
+        })?;
+
+    // The cast was five seconds and we cancelled part way, so anything left of
+    // it would land inside this window.
+    let placed = context
+        .collect_for(Duration::from_secs(6))
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::AddSkillUnit { .. }));
+    if placed {
+        return Err("the cancel was acknowledged but the field was placed anyway — the skill still \
+                    went off, so `unit->skillcastcancel` did not actually stop it"
+            .to_owned());
+    }
+
+    Ok(())
+}
+
 fn skill_fail_reason_packet(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     let result = skill_fail_reason_packet_body(&mut context);

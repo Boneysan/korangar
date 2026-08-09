@@ -16,6 +16,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("character-delete-after-play", 1, character_delete_after_play),
         Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
         Scenario::new("character-slot-switch", 1, character_slot_switch),
+        Scenario::new("kick-explains-itself", 1, kick_explains_itself),
         Scenario::new("logout-relogin", 1, logout_relogin),
         Scenario::new("respawn", 1, respawn),
     ]
@@ -391,6 +392,68 @@ fn assert_baseline_unchanged(
 
 /// Log out from the map server and log back in cleanly, proving both
 /// sessions are actionable with chat markers.
+/// Guards the **map-server `SC_NOTIFY_BAN` (0x0081)** model — the reason a
+/// player is given when the server throws them out.
+///
+/// The find this protects: `0x0081` is sent by the login, character **and map**
+/// servers, and only the first two had it modelled
+/// (`LoginFailedPacket` derives `LoginServer, CharacterServer`). On the map
+/// connection it is the **only** explanation a player ever gets for a kick, a
+/// ban, a shutdown, or someone else logging into their account — and the client
+/// dropped it and bounced to character select in silence. **The same header can
+/// mean different things on different connections.**
+///
+/// It took four rounds to fix because each round failed at a different stage
+/// (wire → handler → surface lifetime → draw order), and until now it was
+/// guarded by nothing at all: it was verified by eye once, in a GUI pass.
+///
+/// This covers the **wire half only**, which is the half a merge can silently
+/// break — that the packet is modelled on the map connection and produces
+/// `MapDisconnectReason` before the socket closes. Whether the popup then
+/// survives the trip to character select is a draw-order question in
+/// `korangar/src`, which no headless scenario can reach.
+///
+/// The ordering is the delicate part and it is why this asserts on collected
+/// events rather than waiting: `clif_authfail_fd` calls `sockt->eof(fd)` in the
+/// same breath as the send, so the reason and the disconnect arrive together.
+/// `pump` swallows the poll error and leaves already-queued events pending, so
+/// the reason is still there to be found after the connection has gone.
+fn kick_explains_itself(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+
+    let target = partner.character_name.clone();
+    partner.flush();
+
+    primary.say(&format!("@kick {target}"))?;
+
+    let events = partner.collect_for(Duration::from_secs(8));
+    let message = events
+        .iter()
+        .find_map(|event| match event {
+            NetworkEvent::MapDisconnectReason { message } => Some(message.clone()),
+            _ => None,
+        })
+        .ok_or_else(|| {
+            let disconnected = events
+                .iter()
+                .any(|event| matches!(event, NetworkEvent::MapServerDisconnected { .. }));
+            format!(
+                "@kick dropped the session with no MapDisconnectReason (disconnect seen: {disconnected}). \
+                 The map-server half of 0x0081 is unmodelled again — check that the packet is registered \
+                 on the MAP connection and not only for LoginServer/CharacterServer, since the same \
+                 header carries a different reason table there"
+            )
+        })?;
+
+    if message.trim().is_empty() {
+        return Err("the kick reason arrived empty — the packet is registered but its reason did not \
+                    resolve to any text, which reaches the player as a blank popup"
+            .to_owned());
+    }
+
+    Ok(())
+}
+
 fn logout_relogin(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
 

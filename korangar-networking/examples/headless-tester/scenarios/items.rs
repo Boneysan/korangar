@@ -2,7 +2,7 @@
 
 use std::time::Duration;
 
-use korangar_networking::{NetworkEvent, ShopItem};
+use korangar_networking::{InventoryItemDetails, NetworkEvent, ShopItem};
 use ragnarok_packets::{
     BuyOrSellOption, BuyShopItemsResult, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, SellItemsResult, SkillId,
     SkillLevel, SoldItemInformation, StatType, StatUpType,
@@ -13,6 +13,7 @@ use crate::scenarios::Scenario;
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
+        Scenario::new("item-command-multi-word", 6, item_command_multi_word),
         Scenario::new("use-consumable", 6, use_consumable),
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
@@ -29,6 +30,81 @@ pub fn scenarios() -> Vec<Scenario> {
 }
 
 const BS_REPAIRWEAPON: SkillId = SkillId(108);
+
+/// `Iron Arrow` — a two-word display name whose **first word is itself an item**
+/// (`Iron`, 998). That collision is the whole point: it is what made the old
+/// parser fail quietly instead of erroring.
+const IRON_ARROW: u32 = 1770;
+const IRON: u32 = 998;
+
+/// Guards the multi-word `@item` delta in Hercules `src/map/atcommand.c`.
+///
+/// Unquoted, the stock command scans `%99s %12d`: `@item Iron Arrow 500` takes
+/// `Iron`, fails to read `Arrow` as a quantity, and **still returns ≥ 1**, so it
+/// reports success while handing over **one Iron**. Nothing in this suite would
+/// notice, because every other caller passes a numeric id.
+///
+/// The second assertion guards the regression that the *fix* introduced and
+/// which the compiler was happy with: resolving the longest name first meant the
+/// id lookup saw the whole argument string, and `atoi("1770 500")` is `1770`, so
+/// the quantity was never peeled and `@item 1770 500` silently gave **one**
+/// arrow — a regression on the most common DM usage. An id is only accepted now
+/// when the string is numeric end to end.
+///
+/// Both halves fail *quietly* and in the same direction (one item instead of
+/// many), so the amount is the assertion, not the item's presence.
+fn item_command_multi_word(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    let mut stocked = |context: &mut TestContext, command: &str, expected_id: u32| -> Result<u16, String> {
+        context.say(&format!("@delitem {IRON_ARROW} 30000"))?;
+        context.say(&format!("@delitem {IRON} 30000"))?;
+        context.pump(Duration::from_millis(400));
+        context.flush();
+
+        context.say(command)?;
+        let (item_id, amount) = context.wait_for(&format!("inventory add from {command:?}"), |event| match event {
+            NetworkEvent::IventoryItemAdded { item } => Some((item.item_id.0, match item.details {
+                InventoryItemDetails::Regular { amount, .. } => amount,
+                InventoryItemDetails::Equippable { amount, .. } => amount,
+            })),
+            _ => None,
+        })?;
+
+        if item_id != expected_id {
+            return Err(format!(
+                "{command:?} produced item {item_id}, not {expected_id} — the multi-word `@item` delta in \
+                 Hercules `src/map/atcommand.c` (atcommand_item_search / atcommand_item_parse) has \
+                 probably been lost in an upstream merge"
+            ));
+        }
+        Ok(amount)
+    };
+
+    let amount = stocked(&mut context, "@item Iron Arrow 500", IRON_ARROW)?;
+    if amount != 500 {
+        return Err(format!(
+            "`@item Iron Arrow 500` gave {amount} Iron Arrow, not 500 — the quantity was not peeled off \
+             the end of a multi-word name"
+        ));
+    }
+
+    let amount = stocked(&mut context, &format!("@item {IRON_ARROW} 500"), IRON_ARROW)?;
+    if amount != 500 {
+        return Err(format!(
+            "`@item {IRON_ARROW} 500` gave {amount}, not 500 — a bare id plus quantity regressed. The \
+             longest-name-first lookup is accepting `\"{IRON_ARROW} 500\"` as an id again (`atoi` stops \
+             at the space); it must only accept a string that is numeric end to end"
+        ));
+    }
+
+    // Arrows stack, and accumulation here is invisible until the character is
+    // overweight and every item scenario breaks at once, far from the cause.
+    let _ = context.say(&format!("@delitem {IRON_ARROW} 30000"));
+    let _ = context.say(&format!("@delitem {IRON} 30000"));
+    context.pump(Duration::from_millis(400));
+    Ok(())
+}
 
 fn prepare_repair(context: &mut TestContext) -> Result<(SkillLevel, ragnarok_packets::RepairableItemInformation), String> {
     context.ensure_job(10)?;
