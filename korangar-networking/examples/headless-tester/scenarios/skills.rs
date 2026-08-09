@@ -23,6 +23,10 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("skill-fail-reason-packet", 5, skill_fail_reason_packet),
         Scenario::new("cast-cancel", 5, cast_cancel),
         Scenario::new("land-protector-status", 5, land_protector_status),
+        Scenario::new("auto-spell-list", 5, auto_spell_list),
+        Scenario::new("spirit-spheres", 5, spirit_spheres),
+        Scenario::new("entity-snapped", 5, entity_snapped),
+        Scenario::new("ice-wall-blocks-cells", 5, ice_wall_blocks_cells),
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
@@ -220,6 +224,231 @@ const BLUE_GEMSTONE: u32 = 717;
 /// like a cancelled one, which would let this scenario pass for the wrong
 /// reason — see `observer.rs`'s `CAST_VENUE`, where that cost a debugging round.
 const CAST_VENUE: (&str, u16, u16) = ("prt_fild08", 286, 338);
+
+/// `SA_AUTOSPELL` is **"Hindsight"** in the skill window, `MO_CALLSPIRITS` is
+/// "Summon Spirit Sphere" and `MO_BODYRELOCATION` is "Snap" — ids resolved
+/// through `docs/skills.json`, never guessed from the constant names, because
+/// nine of eighteen guesses were wrong on a previous pass.
+const SA_AUTOSPELL: SkillId = SkillId(279);
+const MO_CALLSPIRITS: SkillId = SkillId(261);
+const MO_BODYRELOCATION: SkillId = SkillId(264);
+const MONK: u16 = 15;
+const CHAMPION: u16 = 4016;
+
+/// Three packets that were modelled on 2026-08-02 and never asserted on.
+///
+/// **What these add, and what they do not.** The job sweeps already *cast* all
+/// three skills, so the wire path is known not to desync — a sweep accepts any
+/// observable response, which means a failure message satisfies it just as well
+/// as the real thing. What is missing is that the *specific* event arrives with
+/// contents that make sense, which is the half that would notice a packet
+/// quietly regressing into a refusal.
+fn auto_spell_list(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(SAGE)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(500));
+    context.flush();
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == SA_AUTOSPELL)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+    let caster = context.player_id;
+    context
+        .net
+        .cast_skill(SA_AUTOSPELL, level, caster)
+        .map_err(|_| "disconnected casting Hindsight".to_owned())?;
+
+    let skills = context.wait_for_within("the Auto Spell list", Duration::from_secs(8), &mut |event| match event {
+        NetworkEvent::AutoSpellList { skills } => Some(skills.clone()),
+        _ => None,
+    })?;
+
+    // An empty list is the failure worth catching: the window would open with
+    // nothing to choose, which reads as a client bug.
+    if skills.is_empty() {
+        return Err("Auto Spell offered an empty skill list — ZC_AUTOSPELLLIST arrived but carried \
+                    nothing, so the window would open empty"
+            .to_owned());
+    }
+    Ok(())
+}
+
+fn spirit_spheres(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(MONK)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(500));
+    context.flush();
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == MO_CALLSPIRITS)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+    let caster = context.player_id;
+    context
+        .net
+        .cast_skill(MO_CALLSPIRITS, level, caster)
+        .map_err(|_| "disconnected summoning spirit spheres".to_owned())?;
+
+    let amount = context.wait_for_within("spirit spheres", Duration::from_secs(8), &mut |event| match event {
+        NetworkEvent::SpiritSpheres { entity_id, amount } if entity_id.0 == caster.0 => Some(*amount),
+        _ => None,
+    })?;
+
+    if amount == 0 {
+        return Err("ZC_SPIRITS reported zero spheres for the caster that just summoned them".to_owned());
+    }
+    Ok(())
+}
+
+fn entity_snapped(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(CHAMPION)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(500));
+
+    let (map, x, y) = CAST_VENUE;
+    context.warp(map, x, y)?;
+    let origin = context.position;
+
+    // Snap needs spheres to spend, and its own range is 18.
+    let sphere_level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == MO_CALLSPIRITS)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+    let caster = context.player_id;
+    let _ = context.net.cast_skill(MO_CALLSPIRITS, sphere_level, caster);
+    context.pump(Duration::from_millis(1200));
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == MO_BODYRELOCATION)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+
+    context.flush();
+    let target = TilePosition { x: origin.x + 6, y: origin.y };
+    context
+        .net
+        .cast_ground_skill(MO_BODYRELOCATION, level, target)
+        .map_err(|_| "disconnected casting Snap".to_owned())?;
+
+    let position = context.wait_for_within("the snap", Duration::from_secs(8), &mut |event| match event {
+        NetworkEvent::EntitySnapped { entity_id, position } if entity_id.0 == caster.0 => Some(*position),
+        _ => None,
+    })?;
+
+    // Snap is an *instant relocation*, so the packet reporting the old position
+    // would be worse than useless — the client would draw the character back
+    // where it started.
+    if position.x == origin.x && position.y == origin.y {
+        return Err(format!(
+            "Snap reported the caster still at its origin ({}, {}) — ZC_SNAP arrived but carries the \
+             pre-move position, so the client would undo the relocation",
+            origin.x, origin.y
+        ));
+    }
+    Ok(())
+}
+
+const WZ_ICEWALL: SkillId = SkillId(87);
+const WIZARD: u16 = 9;
+
+/// Ice Wall's **wire half** — the cells it blocks, and their release on expiry.
+///
+/// This is deliberately half a test, and the half that is testable at all. Ice
+/// Wall's real behaviour is that you cannot walk through it, and the pathfinder
+/// lives in `Map`/`Traversable` in the `korangar` crate — which the headless
+/// tester **does not link**. So the pixels and the pathing stay manual forever;
+/// what a scenario can hold is that the server announces the blocked cells and
+/// announces them again when they free up.
+///
+/// The **release** is the assertion worth having. A client that applies
+/// `MapCellChanged` on the way in and misses it on the way out leaves permanent
+/// phantom walls on the map, and nothing about that failure is visible until a
+/// player walks into thin air minutes later, somewhere else entirely.
+///
+/// The wall's lifetime is **measured at ~46 seconds** — `skill_db.conf` gives
+/// `WZ_ICEWALL` no `Duration1` whatsoever, so there is nothing to read and the
+/// number had to come from watching the wire. That is most of this scenario's
+/// runtime, and it is the price of asserting the release at all.
+fn ice_wall_blocks_cells(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    context.ensure_job(WIZARD)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(500));
+
+    let (map, x, y) = CAST_VENUE;
+    context.warp(map, x, y)?;
+
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id == WZ_ICEWALL)
+        .map(|skill| skill.skill_level)
+        .unwrap_or(SkillLevel(1));
+
+    context.flush();
+    let target = TilePosition {
+        x: context.position.x + 3,
+        y: context.position.y,
+    };
+    context
+        .net
+        .cast_ground_skill(WZ_ICEWALL, level, target)
+        .map_err(|error| format!("could not request the cast: {error:?}"))?;
+
+    let blocked = context
+        .wait_for_within("the cells to be blocked", Duration::from_secs(10), &mut |event| match event {
+            NetworkEvent::MapCellChanged { position, cell_type } => Some((*position, *cell_type)),
+            _ => None,
+        })
+        .map_err(|error| {
+            format!(
+                "{error}\n         no ZC_UPDATE_MAPINFO arrived. Without it the client's walkability map \
+                 never learns about the wall, so a player walks straight through it"
+            )
+        })?;
+
+    // **Measured, not assumed: the wall is set ~2s after the request and
+    // released at ~46s.** `WZ_ICEWALL` has no `Duration1` in `skill_db.conf` at
+    // all, so there is no per-level table for it to scale with and no number to
+    // read — an earlier version of this scenario took `Lv1: 5000` from a
+    // neighbouring entry, budgeted 20s, and failed on a wall that was working
+    // perfectly. 75s leaves room for load without waiting on nothing.
+    let released = context.wait_for_within(
+        "the cells to be released on expiry",
+        Duration::from_secs(75),
+        &mut |event| match event {
+            NetworkEvent::MapCellChanged { position, cell_type } if *cell_type != blocked.1 => Some(*position),
+            _ => None,
+        },
+    );
+
+    released.map_err(|error| {
+        format!(
+            "{error}\n         the wall was announced at ({}, {}) as cell type {} and never announced as \
+             cleared. A client that applies the block and misses the release keeps a phantom wall on its \
+             map for the rest of the session",
+            blocked.0.x, blocked.0.y, blocked.1
+        )
+    })?;
+    Ok(())
+}
 
 const SA_LANDPROTECTOR: SkillId = SkillId(288);
 /// A map no other scenario visits, so a long-lived field cannot reach them.

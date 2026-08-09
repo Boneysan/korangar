@@ -18,6 +18,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-sp-only-broadcast", 8, party_sp_only_broadcast),
         Scenario::new("party-persists-relog", 8, party_persists_relog),
         Scenario::new("party-invite-sender", 8, party_invite_sender),
+        Scenario::new("party-member-death", 8, party_member_death),
         Scenario::new("party-kick", 8, party_kick),
         Scenario::new("party-promote-leader", 8, party_promote_leader),
         Scenario::new("party-share-options", 8, party_share_options),
@@ -185,6 +186,71 @@ pub(super) fn leave_party_both(primary: &mut TestContext, partner: &mut TestCont
     partner.pump(Duration::from_millis(300));
     let _ = primary.net.leave_party();
     primary.pump(Duration::from_millis(300));
+}
+
+/// `ZC_GROUP_ISALIVE` — a party member dying, and coming back.
+///
+/// Modelled on 2026-08-02 and never asserted on. It drives the "dead" state in
+/// the party roster, and it is sent **`PARTY_WOS`** — "without self" — so it
+/// never describes the local player. That is the detail a scenario has to
+/// respect: the assertion belongs on the *primary* watching the partner die,
+/// and testing it from the dying seat would assert on a packet that is not sent
+/// to it at all.
+///
+/// Both halves matter. A client that learns about the death but not the revival
+/// leaves a permanently greyed-out member in the roster, which looks like a UI
+/// bug and is really a dropped packet.
+fn party_member_death(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let subject = partner.account_id;
+    primary.flush();
+
+    // **The partner kills itself.** `@kill` kills whoever runs it
+    // (`atcommand.c`: `status_kill(&sd->bl)`), so `@kill <name>` from the
+    // primary would kill the *primary* and report nothing about the partner —
+    // the char-command form is `#kill <name>`. Having the partner do it also
+    // puts the assertion on the observing seat, which is what PARTY_WOS
+    // requires.
+    partner.say("@kill")?;
+
+    let died = primary.wait_for_within("the party member to be reported dead", Duration::from_secs(10), &mut |event| {
+        match event {
+            NetworkEvent::PartyMemberAlive { account_id, is_dead: true } if account_id.0 == subject.0 => Some(()),
+            _ => None,
+        }
+    });
+    if let Err(error) = died {
+        leave_party_both(&mut primary, &mut partner);
+        let _ = partner.say("@alive");
+        return Err(format!(
+            "{error}\n         ZC_GROUP_ISALIVE did not arrive. Remember it is sent PARTY_WOS, so it is \
+             only ever seen by the *other* members — asserting on the dying seat would prove nothing"
+        ));
+    }
+
+    // And back again.
+    primary.flush();
+    partner.say("@alive")?;
+    let revived = primary.wait_for_within("the party member to be reported alive again", Duration::from_secs(10), &mut |event| {
+        match event {
+            NetworkEvent::PartyMemberAlive { account_id, is_dead: false } if account_id.0 == subject.0 => Some(()),
+            _ => None,
+        }
+    });
+
+    leave_party_both(&mut primary, &mut partner);
+    let _ = partner.say("@heal");
+    partner.pump(Duration::from_millis(300));
+
+    revived.map_err(|error| {
+        format!(
+            "{error}\n         the death was reported but the revival was not, which leaves the member \
+             greyed out in the roster for the rest of the session"
+        )
+    })?;
+    Ok(())
 }
 
 fn party_lifecycle(config: &Config) -> Result<(), String> {
