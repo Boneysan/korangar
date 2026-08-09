@@ -19,6 +19,14 @@ use crate::ledger::Ledger;
 
 pub const PACKET_VERSION: SupportedPacketVersion = SupportedPacketVersion::_20220406;
 
+/// Where [`TestContext::connect_pair`] convenes both seats.
+///
+/// Open field, well clear of NPCs and warps, and — the property that actually
+/// matters — **the same cells every run**, so a scenario that places a ground
+/// unit gets ground it can place on. See `connect_pair` for what inheriting
+/// this from the previous scenario used to cost.
+pub const PAIR_VENUE: (&str, u16, u16) = ("prt_fild08", 286, 338);
+
 /// How often the event buffer is polled while waiting.
 const POLL_INTERVAL: Duration = Duration::from_millis(30);
 /// How many recent events are kept for timeout diagnostics.
@@ -359,26 +367,30 @@ impl TestContext {
     /// Every observer-parity assertion needs both seats, because the whole bug
     /// class is invisible from the acting session.
     ///
-    /// **Both accounts are GM group 99.** This comment used to say the partner
-    /// was "deliberately non-GM and cannot use `@warp`", and that was false —
-    /// `headless2` was given GM rights during the 2026-07-30 shuffle pass so the
-    /// sex-locked job sweeps could drive `@job`/`@allskill` on it (`skills.rs`
-    /// says so explicitly, and the two files contradicted each other). The stale
-    /// claim was load-bearing: it is why the meeting place below is *inherited*
-    /// from the partner rather than chosen, which is shared mutable state and
-    /// has now caused two separate failures in `observer.rs`. **A deterministic
-    /// venue is possible here** — the partner can warp itself — and is worth
-    /// doing as its own change, verified by a full run plus a fresh shuffle
-    /// seed, since ~16 paired scenarios rest on this behaviour.
+    /// **The venue is chosen ([`PAIR_VENUE`]), not inherited.** It used to be
+    /// "wherever the partner was last left", on the stated grounds that the
+    /// partner was non-GM and could not warp itself. That was false — both
+    /// accounts are group 99 — and the false premise cost real time: the meeting
+    /// place was shared mutable state, and it broke `observer.rs` twice.
+    ///
+    /// The failure is worth knowing because it names nothing. The partner's save
+    /// point is `int_land`, so anything that sends it home (an instance closing,
+    /// a death) moved every later paired scenario to the beginner island; the
+    /// rows that merely look at each other did not care, and the rows that
+    /// placed a ground unit died silently, because Hercules drops an unplaceable
+    /// ground cast with a bare `return 0` and no `clif->skill_fail`.
+    ///
+    /// Both seats are warped explicitly, so a scenario that needs particular
+    /// ground gets the same ground every run, whatever ran before it.
     pub fn connect_pair(config: &Config) -> Result<(Self, Self), String> {
         let mut primary = Self::connect(config)?;
         let mut partner = Self::connect_partner(config)?;
-        // Meet wherever the partner was last left. See the caveat above: this is
-        // inherited state, not a chosen venue.
-        let map_name = partner.map_name.clone();
-        let x = partner.position.x.saturating_add(1);
-        let y = partner.position.y;
-        primary.warp(&map_name, x, y)?;
+        let (venue_map, venue_x, venue_y) = PAIR_VENUE;
+        // Partner first, then the primary one cell east of it. `warp` already
+        // tolerates "you are already at your destination", so the common case of
+        // the pair being here from the previous scenario costs nothing.
+        partner.warp(venue_map, venue_x, venue_y)?;
+        primary.warp(venue_map, venue_x + 1, venue_y)?;
         primary.pump(Duration::from_millis(500));
         partner.pump(Duration::from_millis(500));
         eprintln!(

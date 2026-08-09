@@ -60,7 +60,7 @@ use std::time::Duration;
 use korangar_networking::NetworkEvent;
 use ragnarok_packets::{EquipPosition, SkillId, SkillLevel, TilePosition};
 
-use crate::context::{Appearance, Config, TestContext};
+use crate::context::{Appearance, Config, PAIR_VENUE, TestContext};
 use crate::scenarios::Scenario;
 
 /// Values chosen so the "changed" state can never be confused with the default
@@ -101,6 +101,12 @@ const FAR_MAP_ALTERNATE: &str = "geffen";
 ///
 /// Found by `--shuffle 42` (`observer-look-clear`). The double-run gate cannot
 /// see this class of bug: it runs the same order twice.
+///
+/// **Since 2026-08-09 `connect_pair` convenes at a fixed [`PAIR_VENUE`]**, so in
+/// practice `home_map` is always `prt_fild08` and this always answers
+/// `prontera`. Kept as a function on purpose: it is the guard that made the
+/// dependency survivable in the first place, and it costs nothing to keep the
+/// venue and the far map from ever being the same place by construction.
 fn far_map_from(home_map: &str) -> &'static str {
     if home_map == FAR_MAP { FAR_MAP_ALTERNATE } else { FAR_MAP }
 }
@@ -135,55 +141,33 @@ const BLUE_GEMSTONE: u32 = 717;
 /// icon, so it identifies the family rather than the element.
 const SI_GROUNDMAGIC: u16 = 112;
 
-/// Where the two casting rows meet — **chosen, not inherited**.
+/// These two rows need ground a field can actually be placed on, and say so
+/// rather than assuming it.
 ///
-/// `connect_pair` meets wherever the partner was *last left*, and the partner's
-/// **save point is `int_land`** — the renewal start point it was created on and
-/// which nothing has ever changed. So any scenario that sends it home parks
-/// every later paired scenario on the beginner island; in practice
-/// `dm-instance-lifecycle` does, ejecting the partner to its save point when the
-/// instance closes, two scenarios before phase 11 begins.
+/// `connect_pair` now convenes both seats at [`PAIR_VENUE`], so the ground is
+/// the same every run. It did not always: it met wherever the partner was *last
+/// left*, and the partner's **save point is `int_land`**, so anything that sent
+/// it home — `dm-instance-lifecycle` closing an instance, two scenarios before
+/// phase 11 — parked every later paired scenario on the beginner island. The six
+/// look rows did not care. These two failed there in a way that names nothing:
+/// `SA_VOLCANO` needs a free cell two east of the caster, `int_land(80, 101)` is
+/// not one, and Hercules drops an unplaceable ground cast with a bare
+/// `return 0` and **no** `clif->skill_fail`.
 ///
-/// The six look rows do not care where they stand. These two do, and they fail
-/// there in a way that names nothing: `SA_VOLCANO` needs a free cell two east of
-/// the caster, `int_land(80, 101)` is not one, and Hercules drops an unplaceable
-/// ground cast with a bare `return 0` and **no** `clif->skill_fail`. That is the
-/// exact silence [`field_target`] warns about, arriving from a direction its
-/// comment did not cover — not the aim being too far, but the ground being
-/// wrong.
-///
-/// This is the same bug *class* as the [`far_map_from`] fix above and the second
-/// instance of it in this file: a constant assumption resting on a position that
-/// is shared mutable state. The lesson generalises past the meeting map — **any
-/// scenario that needs particular ground must choose it.**
-const CAST_VENUE: (&str, u16, u16) = ("prt_fild08", 286, 338);
-
-/// Put the pair on ground a field can actually be placed on.
-///
-/// The partner is deliberately non-GM and cannot warp itself, so the GM primary
-/// goes first and pulls it with `@recall`. When the partner is already on the
-/// venue map, `connect_pair` has by definition already met there and moving
-/// again would only risk a same-map `@recall` that sends no `ChangeMap` at all —
-/// so that case is left alone, which also keeps the common path free.
-fn meet_on_castable_ground(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
-    let (map, x, y) = CAST_VENUE;
-    if partner.map_name == map {
-        return Ok(());
+/// The assertion stays even though `connect_pair` guarantees the venue today,
+/// because the *dependency* is the point: if the venue is ever moved somewhere
+/// unsuitable, these rows should say which requirement broke instead of timing
+/// out on a missing broadcast. **Any scenario that needs particular ground must
+/// state it** — the same lesson as [`far_map_from`], one level down.
+fn require_castable_venue(context: &TestContext) -> Result<(), String> {
+    if context.map_name != PAIR_VENUE.0 {
+        return Err(format!(
+            "this row places a ground unit and needs the open field it was calibrated on, but the pair \
+             convened on {:?}. PAIR_VENUE has moved to somewhere this row cannot cast — either restore \
+             it or give this scenario a venue of its own",
+            context.map_name
+        ));
     }
-
-    primary.warp(map, x, y)?;
-    let partner_name = partner.character_name.clone();
-    primary.say(&format!("@recall {partner_name}"))?;
-
-    // The partner's own context applies the `ChangeMap` and acknowledges it, so
-    // waiting on the event is what makes the move real on this side.
-    let expected = map.to_owned();
-    partner.wait_for("partner recalled to the venue", move |event| match event {
-        NetworkEvent::ChangeMap { map_name, .. } if *map_name == expected => Some(()),
-        _ => None,
-    })?;
-    partner.pump(Duration::from_millis(500));
-    primary.pump(Duration::from_millis(500));
     Ok(())
 }
 
@@ -213,7 +197,7 @@ fn field_target(context: &TestContext) -> TilePosition {
 fn a_cast_reaches_the_observer(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = TestContext::connect_pair(config)?;
 
-    meet_on_castable_ground(&mut primary, &mut partner)?;
+    require_castable_venue(&primary)?;
     primary.ensure_job(SAGE)?;
     primary.say("@allskill")?;
     primary.pump(Duration::from_millis(500));
@@ -253,7 +237,7 @@ fn a_cast_reaches_the_observer(config: &Config) -> Result<(), String> {
 fn status_values_reach_the_observer(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = TestContext::connect_pair(config)?;
 
-    meet_on_castable_ground(&mut primary, &mut partner)?;
+    require_castable_venue(&primary)?;
     primary.ensure_job(SAGE)?;
     primary.say("@allskill")?;
     primary.pump(Duration::from_millis(500));
