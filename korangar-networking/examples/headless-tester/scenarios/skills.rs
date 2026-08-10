@@ -11,7 +11,7 @@ use std::sync::Mutex;
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
-use ragnarok_packets::{Direction, SkillId, SkillLevel, SkillType, TilePosition, WorldPosition};
+use ragnarok_packets::{Direction, EntityId, SkillId, SkillLevel, SkillType, TilePosition, WorldPosition};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::{Scenario, skipped};
@@ -991,27 +991,6 @@ fn allowlisted(skill_name: &str) -> bool {
     // here for months under a stated reason that was false (they are map-zone
     // disabled, and the refusal was invisible only because 0x0189 was unmodeled).
     const ALLOWLIST: &[&str] = &[
-        // Soul Link spirit links — **a harness limitation, not a server condition.**
-        // `Friend`-targeted skills arrive as `SkillType::Support`, and the sweep
-        // casts Support at the caster. A Soul Linker cannot link itself, the
-        // target filter rejects it, and Hercules drops the request with a bare
-        // `return 0` — the same silent path as an out-of-range ground cast.
-        // Aiming these at the partner would turn 15 silences into real coverage.
-        "SL_ALCHEMIST",
-        "SL_MONK",
-        "SL_STAR",
-        "SL_SAGE",
-        "SL_CRUSADER",
-        "SL_SUPERNOVICE",
-        "SL_KNIGHT",
-        "SL_WIZARD",
-        "SL_PRIEST",
-        "SL_BARDDANCER",
-        "SL_ROGUE",
-        "SL_ASSASIN",
-        "SL_BLACKSMITH",
-        "SL_HUNTER",
-        "SL_SOULLINKER",
         // Taekwon kicks — require an active stance/combo the sweep never enters.
         "TK_STORMKICK",
         "TK_DOWNKICK",
@@ -1090,6 +1069,39 @@ const FEMALE_ONLY_JOBS: &[u16] = &[20, 4021];
 /// visible and a future third-job addition (Minstrel/Wanderer) has a home.
 const MALE_ONLY_JOBS: &[u16] = &[19, 4020];
 
+/// Bring the partner seat next to the sweeping character, connecting it the
+/// first time it is needed.
+///
+/// **Why the sweep needs a second seat at all.** `Friend`-targeted skills arrive
+/// on the wire as [`SkillType::Support`], and the sweep casts Support at the
+/// caster. A Soul Linker cannot link itself: the target filter rejects it and
+/// Hercules drops the request with a bare `return 0` and no `clif->skill_fail`,
+/// the same silent path as an out-of-range ground cast. Fifteen Soul Link
+/// skills were therefore permanently silent, and their allowlist entries blamed
+/// a server condition ("requires target player of specific class") for what was
+/// really the harness having nobody to aim at.
+///
+/// Connected **lazily**, so the 39-job sweep only pays for a second login on the
+/// jobs that actually have Friend skills.
+fn partner_beside(
+    partner: &mut Option<TestContext>,
+    config: &Config,
+    map: &str,
+    position: TilePosition,
+) -> Result<EntityId, String> {
+    if partner.is_none() {
+        *partner = Some(TestContext::connect_partner(config)?);
+    }
+    let seat = partner.as_mut().expect("just connected");
+    // One cell east, and re-warped every time: a previous skill may have moved
+    // it, and a Friend cast fails on range without saying so.
+    if seat.map_name != map || seat.position != position {
+        seat.warp(map, position.x.saturating_add(1), position.y)?;
+    }
+    seat.pump(Duration::from_millis(200));
+    Ok(seat.player_id)
+}
+
 fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String> {
     if job_id == 0 {
         // Expected, not a gap to close: the Novice tree is passive apart from
@@ -1135,6 +1147,10 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     let sweep_map = context.map_name.clone();
     let mut off_map_recoveries = 0usize;
     let mut walk_failures = 0usize;
+    // Connected on demand by `partner_beside`, and only for jobs with Friend
+    // skills, so 38 of the 39 sweeps never pay for it.
+    let mut partner: Option<TestContext> = None;
+    let mut rescued_by_partner = 0usize;
 
     // Grant the full tree and capture it.
     context.flush();
@@ -1398,10 +1414,42 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             _ => None,
         });
 
+        // **A silent `Support` cast gets one retry against a real Friend target.**
+        // Deliberately additive: the self-cast above is left exactly as it was,
+        // so nothing that already worked can regress, and the second seat is
+        // only connected when a skill has actually gone silent. What this
+        // rescues is the Soul Link family, whose 15 skills cannot target their
+        // own caster and so could never do anything but time out.
+        let mut response = response;
+        if response.is_err() && matches!(skill.skill_type, SkillType::Support) {
+            match partner_beside(&mut partner, config, &context.map_name.clone(), context.position) {
+                Ok(friend) => {
+                    context.flush();
+                    if context.net.cast_skill(skill.skill_id, level, friend).is_ok() {
+                        response = context.wait_for_within("skill response (at partner)", Duration::from_secs(4), &mut |event| {
+                            match event {
+                                NetworkEvent::SkillCast { skill_id, cast_ms, .. } if skill_id.0 == skill.skill_id.0 => Some(("cast (partner)", *cast_ms)),
+                                NetworkEvent::StatusChange { gained: true, .. } => Some(("buff (partner)", 0)),
+                                NetworkEvent::HealEffect { .. } => Some(("heal (partner)", 0)),
+                                NetworkEvent::SkillEffectNoDamage { .. } => Some(("no-damage-effect (partner)", 0)),
+                                NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback (partner)", 0)),
+                                NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item (partner)", 0)),
+                                _ => None,
+                            }
+                        });
+                        if response.is_ok() {
+                            rescued_by_partner += 1;
+                        }
+                    }
+                }
+                Err(error) => println!("      [note] could not seat a partner for {name}: {error}"),
+            }
+        }
+
         let (result, wait) = match response {
             // If a cast bar started, wait it out so the next cast isn't
             // rejected with "still casting".
-            Ok((kind, cast_ms)) => (kind, if kind == "cast" { cast_ms.saturating_add(400) } else { 400 }),
+            Ok((kind, cast_ms)) => (kind, if kind.starts_with("cast") { cast_ms.saturating_add(400) } else { 400 }),
             Err(_) if allowlisted(&name) => ("silent (allowlisted)", 0),
             Err(_) => ("SILENT — investigate", 0),
         };
@@ -1436,6 +1484,9 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     // 6x slower than usual and still pass, and before they were printed there
     // was nothing in the output to say why. "Instrument the boundary before
     // reasoning inward" — three rounds of theorising were lost to not doing it.
+    if rescued_by_partner > 0 {
+        println!("      [note] {rescued_by_partner} Support skill(s) answered only once aimed at a real Friend target");
+    }
     if off_map_recoveries > 0 || walk_failures > 0 {
         println!(
             "      [note] {off_map_recoveries} off-map recovery(ies), {walk_failures} failed walk(s) back to the anchor — \
