@@ -1083,14 +1083,24 @@ const MALE_ONLY_JOBS: &[u16] = &[19, 4020];
 ///
 /// Connected **lazily**, so the 39-job sweep only pays for a second login on the
 /// jobs that actually have Friend skills.
+///
+/// **`sweeping_on_partner` is not optional.** The sex-locked jobs (Dancer,
+/// Gypsy) run the sweep *on the partner account itself*, so connecting "the
+/// partner" as a Friend target there opens a second session for the same
+/// account and Hercules drops one of them — `skills-gypsy: disconnected`. The
+/// Friend target is always the OTHER seat.
 fn partner_beside(
     partner: &mut Option<TestContext>,
     config: &Config,
+    sweeping_on_partner: bool,
     map: &str,
     position: TilePosition,
 ) -> Result<EntityId, String> {
     if partner.is_none() {
-        *partner = Some(TestContext::connect_partner(config)?);
+        *partner = Some(match sweeping_on_partner {
+            true => TestContext::connect(config)?,
+            false => TestContext::connect_partner(config)?,
+        });
     }
     let seat = partner.as_mut().expect("just connected");
     // One cell east, and re-warped every time: a previous skill may have moved
@@ -1116,6 +1126,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     // primary test character is male; the partner (`HeadlessTwo`) is female and
     // also GM group 99, so it can drive `@job`/`@allskill`/`@blevel`/`@warp`.
     // Everything unlocked stays on the primary, as before.
+    let sweeping_on_partner = FEMALE_ONLY_JOBS.contains(&job_id);
     let mut context = if FEMALE_ONLY_JOBS.contains(&job_id) {
         println!("    {job_name}: female-only job — sweeping on the partner character");
         TestContext::connect_partner(config)?
@@ -1422,7 +1433,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         // own caster and so could never do anything but time out.
         let mut response = response;
         if response.is_err() && matches!(skill.skill_type, SkillType::Support) {
-            match partner_beside(&mut partner, config, &context.map_name.clone(), context.position) {
+            match partner_beside(&mut partner, config, sweeping_on_partner, &context.map_name.clone(), context.position) {
                 Ok(friend) => {
                     context.flush();
                     if context.net.cast_skill(skill.skill_id, level, friend).is_ok() {
