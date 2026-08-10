@@ -1255,6 +1255,17 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         } else if context.position != start_position {
             if context.walk_to(start_position.x, start_position.y).is_err() {
                 walk_failures += 1;
+                // **Warp when walking fails, rather than carrying on mispositioned.**
+                // A failed walk is not cosmetic: every later cast is then measured
+                // from the wrong place, so attack skills fall out of range and
+                // ground casts target cells that cannot take a unit — and Hercules
+                // drops both with a bare `return 0` and NO `clif->skill_fail`, i.e.
+                // total silence. Measured on the 2026-08-10 shuffle: one sweep had
+                // 5 failed walks and reported `RG_STRIPARMOR` as silent.
+                //
+                // Walking is kept as the first attempt because it exercises the
+                // ordinary movement path; the warp is the guarantee.
+                let _ = context.warp(&sweep_map.clone(), start_position.x, start_position.y);
             }
         }
 

@@ -116,6 +116,15 @@ fn friend_lifecycle(config: &Config) -> Result<(), String> {
 
 fn friend_reject(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
+    // **Self-cleaning, like `friend_lifecycle`.** Without this the scenario is
+    // clean only because natural order happens to clean up before it: if the two
+    // are already friends, `add_friend` is refused, no `FriendRequest` ever
+    // reaches the partner, and this times out. Found by `--shuffle 20260810`,
+    // which ran it *before* `friend_lifecycle` for the first time.
+    let _ = primary.net.remove_friend(partner.account_id, partner.character_id);
+    let _ = partner.net.remove_friend(primary.account_id, primary.character_id);
+    primary.pump(Duration::from_millis(250));
+    partner.pump(Duration::from_millis(250));
     partner.flush();
     primary
         .net
@@ -143,17 +152,33 @@ pub(super) fn create_party(primary: &mut TestContext) -> Result<(), String> {
     primary.flush();
     let party_name = format!("Headless{}", std::process::id() % 100000);
     primary.net.create_party(&party_name).map_err(|_| "primary disconnected")?;
-    primary.wait_for("successful CreatePartyResult", |event| match event {
-        NetworkEvent::CreatePartyResult { result: 0 } => Some(()),
+    // **Match ANY result, not just success.** Waiting only for `result: 0` makes
+    // a refusal indistinguishable from silence: `party-kick` failed on the
+    // 2026-08-10 shuffle with "timed out waiting for successful
+    // CreatePartyResult" when the server had almost certainly answered — it just
+    // answered "no, you are already in a party". A refusal that reads as a
+    // timeout sends you looking for a lost packet instead of leftover state.
+    let result = primary.wait_for("CreatePartyResult", |event| match event {
+        NetworkEvent::CreatePartyResult { result } => Some(*result),
         _ => None,
-    })
+    })?;
+    match result {
+        0 => Ok(()),
+        code => Err(format!(
+            "party creation refused with result {code} — the character is most likely still in a party left \
+             behind by an earlier scenario; `ensure_no_party` did not clear it"
+        )),
+    }
 }
 
 /// Best-effort: leave any party a previous (possibly interrupted) run left
 /// behind, so `create_party` starts from a clean slate.
 pub(super) fn ensure_no_party(context: &mut TestContext) {
+    // 300ms was not always enough for the server to finish dissolving a party
+    // before the next `create_party` arrived, and the failure surfaces as a
+    // refusal several scenarios later rather than here.
     let _ = context.net.leave_party();
-    context.pump(Duration::from_millis(300));
+    context.pump(Duration::from_millis(800));
     context.flush();
 }
 
@@ -701,6 +726,18 @@ fn whisper_ignore(config: &Config) -> Result<(), String> {
 }
 
 fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
+    // **Self-cleaning, and it belongs here because all three trade scenarios
+    // funnel through this function.** None of them cleaned up before, so they
+    // were clean only by virtue of natural order: a trade left half-open by an
+    // earlier scenario means the next `request_trade` is refused, the partner
+    // never sees a `TradeRequest`, and the scenario times out looking like a
+    // lost packet. `trade-cancel` failed exactly that way on `--shuffle
+    // 20260810`, which put `trade-commit` a hundred scenarios ahead of it.
+    let _ = primary.net.trade_cancel();
+    let _ = partner.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+
     partner.flush();
     primary.net.request_trade(partner.account_id).map_err(|_| "primary disconnected")?;
     partner.wait_for("TradeRequest", |event| match event {
