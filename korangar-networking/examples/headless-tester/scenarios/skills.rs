@@ -1150,7 +1150,28 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     }
     context.ensure_base_level(99)?;
     context.say("@heal")?;
-    context.warp_random("prt_fild08")?;
+    // **A known-good anchor, not a random one.** `warp_random` dropped the sweep
+    // on an arbitrary cell of `prt_fild08` and the ground offsets then fired
+    // blindly around it — so whenever the draw landed near trees, water or a
+    // cliff, some target cells were unwalkable, no unit could be placed, and
+    // Hercules dropped the cast with a bare `return 0` and NO `clif->skill_fail`.
+    // Silence.
+    //
+    // That is the whole intermittent trap-silence cluster: random anchor
+    // explains why it was intermittent, hit a different job every run, never
+    // reproduced in isolation, and only ever touched ground/trap skills.
+    // Measured 2026-08-10 (shuffle 20260810): anchor (161,246), every cast from
+    // that same cell, `HT_BLASTMINE` -> (164,246) silent while (161,249) and
+    // (164,249) placed fine — terrain, not collision or range.
+    //
+    // Same lesson as `observer.rs`'s CAST_VENUE one level down: choose the
+    // ground, do not inherit or randomise it. A fixed anchor also converts the
+    // remaining failure mode from invisible to visible — two units competing for
+    // one cell produce a *refusal*, which the sweep reports, whereas unwalkable
+    // terrain produces silence, which it cannot distinguish from a lost packet.
+    const SWEEP_ANCHOR: (&str, u16, u16) = ("prt_fild08", 286, 338);
+    let (anchor_map, anchor_x, anchor_y) = SWEEP_ANCHOR;
+    context.warp(anchor_map, anchor_x, anchor_y)?;
     let start_position = context.position;
     // The map the sweep is anchored to. A skill that teleports, a knockback, or
     // a death sends the character somewhere else, and `start_position` then
