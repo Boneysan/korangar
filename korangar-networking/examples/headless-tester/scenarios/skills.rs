@@ -1211,6 +1211,13 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         let level = skill.skill_level;
 
         if matches!(skill.skill_type, SkillType::Passive) || level.0 == 0 {
+            // Counted too. Passives take this early exit, and leaving them out
+            // made the run's own distribution disagree with the table printed
+            // directly above it — 730 casts reported against 983 rows, the
+            // difference being exactly the 253 passives, while the summary line
+            // still named "a passive skill" as a category. An accuracy report
+            // that is itself inaccurate is worse than none.
+            record_outcome(&name, "passive");
             outcomes.push(SkillOutcome {
                 skill_id: skill.skill_id.0,
                 name,
