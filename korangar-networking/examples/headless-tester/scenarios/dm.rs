@@ -30,6 +30,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-hazard-periodic", 9, dm_hazard_periodic),
         Scenario::new("dm-instance-lifecycle", 9, dm_instance_lifecycle),
         Scenario::new("dm-beat-table", 9, dm_beat_table),
+        Scenario::new("dm-story-beats", 9, dm_story_beats),
     ]
 }
 
@@ -562,14 +563,18 @@ fn dm_instance_lifecycle(config: &Config) -> Result<(), String> {
 struct BeatMenu {
     npc_id: ragnarok_packets::EntityId,
     choices: Vec<String>,
+    /// Every line the menu itself shows. Kept so a beat cannot "speak" by
+    /// re-showing one — exactly how a bogus-choice run passed its first beat,
+    /// quoting the menu's prompt back as if it were the beat's message.
+    prompts: Vec<String>,
 }
 
 /// Open `@dmbeat <arc>` and walk the mes/next preamble to the choice list.
 fn open_beat_menu(context: &mut TestContext, arc: u8) -> Result<BeatMenu, String> {
     context.flush();
     context.say(&format!("@dmbeat {arc}"))?;
-    let npc_id = context.wait_for(&format!("arc {arc} beat menu OpenDialog"), |event| match event {
-        NetworkEvent::OpenDialog { npc_id, .. } => Some(*npc_id),
+    let (npc_id, prompt) = context.wait_for(&format!("arc {arc} beat menu OpenDialog"), |event| match event {
+        NetworkEvent::OpenDialog { npc_id, text } => Some((*npc_id, text.trim().to_owned())),
         _ => None,
     })?;
     context.wait_for(&format!("arc {arc} beat menu AddNextButton"), |event| match event {
@@ -577,11 +582,35 @@ fn open_beat_menu(context: &mut TestContext, arc: u8) -> Result<BeatMenu, String
         _ => None,
     })?;
     context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
-    let choices = context.wait_for(&format!("arc {arc} beat menu choices"), |event| match event {
-        NetworkEvent::AddChoiceButtons { npc_id: id, choices } if *id == npc_id => Some(choices.clone()),
-        _ => None,
-    })?;
-    Ok(BeatMenu { npc_id, choices })
+    // **Collect every line the menu itself shows, not just the first.** The menu
+    // speaks twice — an intro, then the prompt above the choice list — and
+    // capturing only the first let a beat "speak" by re-showing the second. A
+    // bogus-choice run then reported its first beat as `ok` quoting the menu's
+    // own prompt back, which is the vacuous pass this guard exists to stop.
+    let mut prompts = vec![prompt];
+    let mut choices = None;
+    let deadline = std::time::Instant::now() + Duration::from_secs(10);
+    while choices.is_none() && std::time::Instant::now() < deadline {
+        for event in context.collect_for(Duration::from_millis(200)) {
+            match event {
+                NetworkEvent::OpenDialog { npc_id: id, text } if id == npc_id => {
+                    let line = text.trim().to_owned();
+                    if !line.is_empty() {
+                        prompts.push(line);
+                    }
+                }
+                NetworkEvent::AddNextButton { npc_id: id } if id == npc_id => {
+                    let _ = context.net.next_dialog(npc_id);
+                }
+                NetworkEvent::AddChoiceButtons { npc_id: id, choices: found } if id == npc_id => {
+                    choices = Some(found);
+                }
+                _ => {}
+            }
+        }
+    }
+    let choices = choices.ok_or_else(|| format!("arc {arc} beat menu choices never arrived"))?;
+    Ok(BeatMenu { npc_id, choices, prompts })
 }
 
 /// Run one selected "Warp:" beat: assert it changes the map, tolerating the
@@ -699,4 +728,226 @@ fn dm_beat_table(config: &Config) -> Result<(), String> {
         return Err(format!("{} beat(s) failed:\n    {}", failures.len(), failures.join("\n    ")));
     }
     Ok(())
+}
+
+/// Execute every campaign **story** beat, which nothing has ever done.
+///
+/// `dm-beat-table` walks all 19 arc menus and runs the `Warp:` beats, but
+/// deliberately only *catalogues* the 103 story/encounter beats — they spawn
+/// bosses and mutate campaign flags, so they were treated as content rather
+/// than protocol surface. The result is that the suite proves the campaign's
+/// **menus** open and has never run a beat. For a fork whose stated purpose is
+/// this campaign (CLAUDE.md rule 1), that was the largest untested surface in
+/// the tree: 30 files, 10,389 lines, 66 scripted NPCs.
+///
+/// **What this asserts, and what it deliberately does not.** A story beat is
+/// content: what it *should* say and spawn is a design question no test can
+/// hold. What a test can hold is that the beat is **reachable and terminates** —
+/// the dialog opens, runs to an end, and hands control back. That catches the
+/// ways campaign script actually breaks: a renamed label, a missing NPC, a
+/// typo'd variable that aborts the script mid-dialog, a beat that hangs waiting
+/// on input nobody sends. Those are invisible until someone plays that arc.
+///
+/// **Every beat is cleaned up on every path, including failure.** These spawn
+/// mobs and set flags, and this suite's most expensive bugs have all been one
+/// scenario leaving state behind for an unrelated one much later — a 165-second
+/// Land Protector field silently killed `AL_PNEUMA` two minutes downstream on
+/// 2026-08-09, and it took a 4x timing anomaly to notice.
+fn dm_story_beats(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    say_expect(&mut context, "@dm reset confirm", "Campaign reset complete")?;
+
+    let mut failures = Vec::new();
+    let mut ran = 0;
+    let mut arcs = 0;
+
+    for arc in 1..=19u8 {
+        // A quiet town between beats: a mob-heavy map floods the menu round trip,
+        // which reads as a menu failure and is not one.
+        context.warp("prontera", 156, 191)?;
+        context.say("@heal")?;
+        context.pump(Duration::from_millis(200));
+
+        let menu = match open_beat_menu(&mut context, arc) {
+            Ok(menu) => menu,
+            Err(error) => {
+                failures.push(format!("arc {arc}: menu failed to open: {error}"));
+                continue;
+            }
+        };
+        context.net.choose_dialog_option(menu.npc_id, -1).map_err(|_| "disconnected")?;
+        context.pump(Duration::from_millis(200));
+        arcs += 1;
+
+        for (index, label) in menu.choices.iter().enumerate() {
+            let lowered = label.to_ascii_lowercase();
+            if lowered == "back" || lowered == "cancel" || label.starts_with("Warp") {
+                continue;
+            }
+
+            let result = (|| -> Result<String, String> {
+                context.warp("prontera", 156, 191)?;
+                context.say("@heal")?;
+                let reopened = open_beat_menu(&mut context, arc)?;
+                if reopened.choices != menu.choices {
+                    return Err("beat menu changed between openings".to_owned());
+                }
+                context
+                    .net
+                    .choose_dialog_option(reopened.npc_id, (index + 1) as i8)
+                    .map_err(|_| "disconnected")?;
+                run_story_beat(&mut context, reopened.npc_id, &reopened.prompts)
+            })();
+
+            // Cleanup runs whether the beat passed or failed. A boss left alive
+            // follows the character into the next beat and kills it.
+            context.kill_all_monsters();
+            let _ = context.say("@heal");
+            context.pump(Duration::from_millis(200));
+
+            match result {
+                Ok(said) => {
+                    ran += 1;
+                    let short: String = said.chars().take(64).collect();
+                    println!("      arc {arc:>2}  {label}  ok — {short:?}");
+                }
+                Err(error) => {
+                    println!("      arc {arc:>2}  {label}  FAILED: {error}");
+                    failures.push(format!("arc {arc} \"{label}\": {error}"));
+                }
+            }
+        }
+    }
+
+    // Reset before returning on every path, so a half-run arc is never inherited.
+    context.warp("prontera", 156, 191)?;
+    let _ = say_expect(&mut context, "@dm reset confirm", "Campaign reset complete");
+    println!("      story sweep: {arcs}/19 arcs, {ran} story beats executed");
+
+    if arcs < 19 {
+        return Err(format!("only {arcs}/19 arc beat menus opened"));
+    }
+    if ran == 0 {
+        return Err("no story beats were executed — the menus opened but every beat was skipped".to_owned());
+    }
+    if !failures.is_empty() {
+        return Err(format!("{} story beat(s) failed:\n    {}", failures.len(), failures.join("\n    ")));
+    }
+    Ok(())
+}
+
+/// Drive one story beat to its end.
+///
+/// A beat is a script conversation: `mes` pages behind Next buttons, sometimes a
+/// menu, ending in a Close. It may also warp, spawn, and set flags along the
+/// way. Success is **reaching an end** — the terminating close, or the dialog
+/// falling silent after the script has run.
+///
+/// The failure this is really looking for is a beat that **stalls**: a script
+/// that aborts mid-dialog leaves the client holding a dialog with no button, and
+/// the next beat then opens its menu into a session that is still busy. That
+/// presents as an unrelated later failure, which is the hardest kind to trace.
+fn run_story_beat(context: &mut TestContext, menu_npc: ragnarok_packets::EntityId, menu_prompts: &[String]) -> Result<String, String> {
+    let deadline = std::time::Instant::now() + Duration::from_secs(20);
+    let mut sawanything = false;
+    // **The beat must say something of its own.** "Events happened and then
+    // stopped" is too weak a signal: a NEGATIVE_TEST run that picked a
+    // non-existent option still reported the first beat as `ok`, because
+    // residual menu traffic satisfied it. Every beat in `dm_beats.txt` ends its
+    // case with `mes(...)`, so that text arriving is the evidence the script
+    // reached its end — and printing it proves the beat ran rather than
+    // asserting it did.
+    let mut spoke: Option<String> = None;
+    let mut closed = false;
+    // **A beat ends by going quiet, not by closing.** The scripts end a case
+    // with `mes(...)` and `break` and no `close` — so Hercules finishes the
+    // script and the client is left holding text with no button. Waiting for a
+    // terminator reports all 103 beats as hangs, which is what the first two
+    // versions of this driver did: once for answering the wrong NPC, and once
+    // for expecting a close that the campaign never sends.
+    let mut quiet_polls = 0;
+    const QUIET_POLLS_TO_FINISH: u32 = 8; // ~2s of silence at 250ms per poll
+    // **Answer whichever NPC is speaking, not the one that opened the menu.**
+    // A beat routinely hands the conversation to another actor — a spawned NPC,
+    // a set-piece script — and the first version of this driver only pressed
+    // buttons whose `npc_id` matched the *menu*. Every beat then ran, produced
+    // dialog nobody answered, and timed out: 103 beats reported as hangs when
+    // the harness was the thing not responding.
+    let mut speaking = menu_npc;
+
+    while std::time::Instant::now() < deadline && !closed {
+        let events = context.collect_for(Duration::from_millis(250));
+        if events.is_empty() {
+            if sawanything {
+                quiet_polls += 1;
+                if quiet_polls >= QUIET_POLLS_TO_FINISH {
+                    break;
+                }
+            }
+            continue;
+        }
+        quiet_polls = 0;
+        for event in events {
+            match event {
+                NetworkEvent::AddNextButton { npc_id } => {
+                    sawanything = true;
+                    speaking = npc_id;
+                    let _ = context.net.next_dialog(npc_id);
+                }
+                NetworkEvent::AddCloseButton { npc_id } => {
+                    sawanything = true;
+                    speaking = npc_id;
+                    let _ = context.net.close_dialog(npc_id);
+                    closed = true;
+                }
+                // A nested menu: take the first option so the beat can finish.
+                // Its content is not what this asserts — reachability is.
+                NetworkEvent::AddChoiceButtons { npc_id, .. } => {
+                    sawanything = true;
+                    speaking = npc_id;
+                    let _ = context.net.choose_dialog_option(npc_id, 1);
+                }
+                NetworkEvent::OpenDialog { npc_id, text } => {
+                    sawanything = true;
+                    speaking = npc_id;
+                    // Anything but the menu's own prompt: a beat re-showing the
+                    // menu is not the beat talking.
+                    let line = text.trim();
+                    if !line.is_empty() && !menu_prompts.iter().any(|prompt| prompt == line) {
+                        spoke = Some(line.to_owned());
+                    }
+                }
+                NetworkEvent::DisplayEmotion { .. } => sawanything = true,
+                NetworkEvent::ChangeMap { .. } => {
+                    sawanything = true;
+                    let _ = context.net.map_loaded();
+                }
+                _ => {}
+            }
+        }
+    }
+
+    if !sawanything {
+        return Err("the beat produced nothing at all — the menu entry is unreachable or the script aborted before its first line".to_owned());
+    }
+    let Some(said) = spoke else {
+        let _ = context.net.close_dialog(speaking);
+        return Err(
+            "the beat produced traffic but never spoke a line — every beat ends its case with `mes(...)`, so \
+             without a line of its own (the menu prompt does not count) the script did not run"
+                .to_owned(),
+        );
+    };
+    if closed || quiet_polls >= QUIET_POLLS_TO_FINISH {
+        // Close whatever is still on screen so the next beat opens its menu
+        // into a clean session rather than inheriting a live dialog.
+        let _ = context.net.close_dialog(speaking);
+        context.pump(Duration::from_millis(200));
+        return Ok(said);
+    }
+    // Ran, but never terminated. Leave the dialog closed so the next beat starts
+    // from a clean session rather than inheriting a stuck one.
+    let _ = context.net.close_dialog(speaking);
+    context.pump(Duration::from_millis(300));
+    Err("the beat started but never reached an end within 20s — a script that aborts mid-dialog leaves the session stuck, and the damage surfaces on a later, unrelated beat".to_owned())
 }

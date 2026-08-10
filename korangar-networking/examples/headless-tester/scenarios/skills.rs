@@ -1129,6 +1129,12 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     context.say("@heal")?;
     context.warp_random("prt_fild08")?;
     let start_position = context.position;
+    // The map the sweep is anchored to. A skill that teleports, a knockback, or
+    // a death sends the character somewhere else, and `start_position` then
+    // becomes unreachable — see the recovery below.
+    let sweep_map = context.map_name.clone();
+    let mut off_map_recoveries = 0usize;
+    let mut walk_failures = 0usize;
 
     // Grant the full tree and capture it.
     context.flush();
@@ -1195,9 +1201,26 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         context.net.player_stand().map_err(|_| "disconnected")?;
         context.pump(Duration::from_millis(150));
 
-        // Walk back to the starting point to prevent drifting into map obstacles.
-        if context.position != start_position {
-            let _ = context.walk_to(start_position.x, start_position.y);
+        // **Get back to the anchor, and notice when that is impossible.**
+        //
+        // This costs a `walk_to` before EVERY cast, and `walk_to` retries 12
+        // hops each waiting on a move ack — so when the anchor is unreachable
+        // the sweep pays that timeout 40-odd times over. That is the shape of
+        // the intermittent 4-6x slow sweeps: `skills-professor` took 536s
+        // against an 85s median, `skills-soul-linker` 523s against 128s, and a
+        // pass/fail count says nothing about either.
+        //
+        // The anchor becomes unreachable when the character is no longer on the
+        // sweep's map at all — a teleport skill, a warp, or a death that
+        // respawns it at its save point. Walking cannot fix that, so warp.
+        if context.map_name != sweep_map {
+            off_map_recoveries += 1;
+            println!("      [recovered] left {sweep_map} for {} mid-sweep — warping back", context.map_name);
+            context.warp(&sweep_map, start_position.x, start_position.y)?;
+        } else if context.position != start_position {
+            if context.walk_to(start_position.x, start_position.y).is_err() {
+                walk_failures += 1;
+            }
         }
 
         // A live target for attack skills (many die to one cast; respawn).
@@ -1408,6 +1431,17 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     }
 
     // Report.
+    //
+    // The two counters below are why this block exists at all: a sweep can run
+    // 6x slower than usual and still pass, and before they were printed there
+    // was nothing in the output to say why. "Instrument the boundary before
+    // reasoning inward" — three rounds of theorising were lost to not doing it.
+    if off_map_recoveries > 0 || walk_failures > 0 {
+        println!(
+            "      [note] {off_map_recoveries} off-map recovery(ies), {walk_failures} failed walk(s) back to the anchor — \
+             each failed walk costs a move-ack timeout on EVERY later cast in this job"
+        );
+    }
     let mut silent_count = 0;
     for outcome in &outcomes {
         if outcome.result.starts_with("SILENT") {
