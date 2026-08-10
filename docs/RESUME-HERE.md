@@ -1,6 +1,52 @@
 # Resume here — live pass status
 
-> **2026-08-09 — the suite re-run is DONE and the suite is now 129 scenarios.**
+> **2026-08-09 — the day turned into a rebuild of what the suite MEANS.** It
+> started as the one unfinished job (re-run `--scenario all`) and became: the
+> suite is **136 scenarios**, all 11 fork deltas are guarded, the campaign's 103
+> story beats execute for the first time, and three standing audits now enforce
+> *classify, don't silence*. Plan: **[plans/testing-completeness.md](plans/testing-completeness.md)**.
+>
+> **THE THING TO INTERNALISE, because nine of the day's findings were bugs in the
+> TESTS rather than the product:** green did not mean what it looked like.
+> Measured across a full run — 36% of skill observations were the server
+> *refusing* the skill, 26% were passive skills never cast, 43 of 81 allowlist
+> entries were dead weight that would absorb a real regression in silence, and
+> the matcher stops at the FIRST event it recognises so `cast` means "a cast bar
+> started and we stopped looking". The run now prints this distribution and says
+> in words that **a green sweep means the wire is alive, NOT that the skills
+> work**.
+>
+> **VERIFICATION DEBT — read before trusting anything below.** 14 commits landed
+> after the last full run, and that run had 2 failures from the pre-existing
+> intermittent cluster. A full run + fresh-seed shuffle was started to clear it;
+> **check its result before building on this**.
+>
+> **Still open, and none of it introduced today:** the intermittent-silence
+> cluster (`MG_NAPALMBEAT`, `MG_SAFETYWALL`, `HT_SHOCKWAVE`, `HP_BASILICA`,
+> `SL_SMA`) plus 4 scenarios that intermittently run 3-6x slow — almost certainly
+> ONE phenomenon, now instrumented but not yet caught in the act. And
+> `dm-beat-table` / `dm-story-beats` **cannot run standalone**; they fail at
+> `@dm reset confirm` and only work after earlier scenarios set something up.
+>
+> **New tools, each of which caught something the day it was written:**
+> `tools/audits/flaky.py` (cross-run inconsistency — found a 523s scenario nobody
+> had noticed), `tools/audits/event-routing.py` (server events the client
+> discards — found the quest system), `tools/audits/packetver-variants.py` (stale
+> header variants), and `tools/generate_skill_expectations.py` (664 derived
+> expectations, **deliberately not enforced** — validated against real runs it
+> would redden 217 working skills).
+>
+> **The quest system is the largest dropped feature in the tree**, found twice
+> independently: the campaign registers 78 quest ids, grants them via
+> `setquest()`, and gates 290 dialogue branches on `questprogress()` — and
+> `korangar/src/lib.rs` discards `QuestAdded`/`QuestList`/`QuestRemoved` in three
+> empty match arms. A DM hands out a quest, the server records it, the gates
+> work, and the player never sees any of it. **That is the GUI session's first
+> job.**
+
+<details>
+<summary>2026-08-09 (earlier) — the re-run that started it</summary>
+
 > The previous session's one unfinished job is closed: `--scenario all` is green,
 > and **all 11 fork deltas now have a guard** (three had none, including the most
 > valuable find of 08-08).
