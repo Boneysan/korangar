@@ -16,17 +16,47 @@
 > in words that **a green sweep means the wire is alive, NOT that the skills
 > work**.
 >
-> **VERIFICATION DEBT — read before trusting anything below.** 14 commits landed
-> after the last full run, and that run had 2 failures from the pre-existing
-> intermittent cluster. A full run + fresh-seed shuffle was started to clear it;
-> **check its result before building on this**.
+> **VERIFIED GREEN BOTH WAYS (2026-08-10):** full run **135 passed / 0 failed /
+> 1 skipped**, and shuffle seed **20260810** the same — the seed that had found
+> four defects. 22 commits validated by both.
 >
-> **Still open, and none of it introduced today:** the intermittent-silence
-> cluster (`MG_NAPALMBEAT`, `MG_SAFETYWALL`, `HT_SHOCKWAVE`, `HP_BASILICA`,
-> `SL_SMA`) plus 4 scenarios that intermittently run 3-6x slow — almost certainly
-> ONE phenomenon, now instrumented but not yet caught in the act. And
-> `dm-beat-table` / `dm-story-beats` **cannot run standalone**; they fail at
-> `@dm reset confirm` and only work after earlier scenarios set something up.
+> **THE INTERMITTENT CLUSTER IS SOLVED, AND IT WAS TERRAIN.** Five "silent
+> skills" and four "3-6x slow scenarios" were **one** root cause. `sweep_job`
+> anchored each job with `warp_random("prt_fild08")` and fired fixed ground
+> offsets around wherever it landed; a draw near trees or water put target cells
+> on unwalkable terrain, and Hercules drops an unplaceable ground cast with a
+> bare `return 0` and **no `clif->skill_fail`** — silence indistinguishable from
+> a lost packet. That explains every property it had: intermittent, a different
+> job each run, never reproducible in isolation, only ever ground/trap skills.
+> **Four earlier theories (cell collisions, radius-3 out of range, unit
+> accumulation, the ring size) were all plausible and all wrong**; the
+> instrumentation settled it in one run by printing anchor (161,246),
+> `HT_BLASTMINE -> (164,246)` SILENT while (161,249) and (164,249) placed fine.
+> Same lesson as `observer.rs`'s CAST_VENUE one level down: **choose the ground,
+> do not inherit or randomise it.**
+>
+> **What the shuffle found that a green full run could not** — it was 135/136
+> green on the same code while the shuffle was 131/136:
+> - `friend_reject` and all three trade scenarios were clean only by *position*;
+>   their `*_lifecycle` siblings self-clean and they did not.
+> - **Trading needs Basic Skill 1 and party creation Basic Skill 7**
+>   (`clif.c:13262`, `clif.c:14633`, `basic_skill_check: true`). Hercules refuses
+>   with `skill_fail(skill_id 1, cause 0)` and **returns without acting**, so no
+>   `TradeRequest` and no `CreatePartyResult` are sent at all. Any job change
+>   wipes skills; only the sweeps restore them, and natural order always happens
+>   to run one first.
+> - `create_party` waited only for `result: 0`, so a *refusal* read as silence.
+>   It now reports the code.
+>
+> **Two wrong turns worth not repeating:** "User 'korangar' is already online -
+> Rejected" in the server log looks damning and is **baseline noise** — ~135 per
+> run, once per scenario, the ordinary login-retry path. And the evidence that
+> killed that theory (the partner's context receiving `EntityMove` throughout)
+> was already in the failure output before the server log was ever opened.
+>
+> **Still open:** `dm-beat-table` / `dm-story-beats` **cannot run standalone** —
+> they fail at `@dm reset confirm` and only work after earlier scenarios set
+> something up.
 >
 > **New tools, each of which caught something the day it was written:**
 > `tools/audits/flaky.py` (cross-run inconsistency — found a 523s scenario nobody
