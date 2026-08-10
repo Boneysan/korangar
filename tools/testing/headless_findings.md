@@ -9,6 +9,86 @@ All findings are classified by layer:
 
 ---
 
+## Meaning pass — August 9/10, 2026 (what a green run actually claims)
+
+Started as one unfinished job — re-run `--scenario all` — and became a rebuild of
+what the suite *means*. Suite 125 -> 136 scenarios. **Ended green both ways:**
+full run **135 passed / 0 failed / 1 skipped** (07:21) and shuffle seed
+**20260810** the same (06:24), on the seed that had found four defects.
+
+**Read this first: green did not mean what it looked like.** Measured over 983
+skill casts — **36% of observations were the server *refusing* the skill**, 26%
+were passive skills never cast, 6% accepted silence. Only 25 of the 403 skills
+the sweep touches were checked against an outcome specific to them. And the
+matcher **stops at the first event it recognises**, with `SkillCast` checked
+first, so `cast` (12%) means "a cast bar started and we stopped looking". The run
+now prints this distribution and states in words that **a green sweep means the
+wire is alive, NOT that the skills work**.
+
+**Nine of the day's findings were bugs in the TESTS, not the product.** A test
+that lies is worse than no test.
+
+### The intermittent cluster was ONE cause, and it was terrain
+
+Five "silent skills" (`MG_NAPALMBEAT`, `MG_SAFETYWALL`, `HT_SHOCKWAVE`,
+`HP_BASILICA`, `SL_SMA`) and four scenarios that intermittently ran 3-6x slow
+(`skills-professor` 536s vs 85s median, `skills-soul-linker` 523s vs 128s,
+`skills-mage` 232s vs 58s) were **one root cause**.
+
+`sweep_job` anchored each job with `warp_random("prt_fild08")` and fired fixed
+ground offsets around wherever it landed. A draw near trees or water put target
+cells on **unwalkable terrain**, and Hercules drops an unplaceable ground cast
+with a bare `return 0` and **no `clif->skill_fail`** — silence indistinguishable
+from a lost packet. That explains every property: intermittent, a different job
+each run, never reproducible in isolation, only ever ground/trap skills.
+
+**Four earlier theories were plausible and all wrong** — cell collisions,
+radius-3 cells out of range, unit accumulation, and the ring size. The
+instrumentation settled it in one run: anchor (161,246), every cast from that
+same cell, `HT_BLASTMINE -> (164,246)` SILENT while (161,249) and (164,249)
+placed fine. **Instrument the boundary before reasoning inward.**
+
+| Issue | Scenario | Layer | Root cause & resolution |
+| --- | --- | --- | --- |
+| **Random sweep anchor fired onto unwalkable cells** | all trap/ground sweeps | Client Test Harness | See above. **Fix:** a fixed known-good anchor. Also converts the residual failure from invisible to visible — two units competing for a cell produce a *refusal* the sweep reports, where terrain produced silence. |
+| **Casting rows inherited their ground** | `observer-skill-cast`, `observer-status-values` | Client Test Harness | Recorded as "8/8 in phase11" — luck of position, not a pass. `HeadlessTwo`'s save point is `int_land`, `dm-instance-lifecycle` ejects it there, and `connect_pair` met wherever the partner was last left. The casting rows aim at `x+2`; `int_land(80,101)` cannot take a field. Measured **8/8 on prt_fild08 vs 6/8 on int_land**. **Fix:** `connect_pair` warps BOTH seats to a chosen `PAIR_VENUE`. |
+| **"Partner is non-GM" was false** | `connect_pair` | Client Test Harness | Stated in three places in `context.rs`, contradicted by `skills.rs` in the same binary; the login table says **both accounts are group 99**. That false premise is *why* the meeting place was inherited rather than chosen. |
+| **Trading and party creation are gated on Basic Skill** | `trade-cancel`, `party-kick` | Client Test Harness | Failed **only** under shuffle, timing out on a request the server appeared never to answer. It answered: `basic_skill_check: true` requires Basic Skill 1 to trade (`clif.c:13262`) and 7 to create a party (`clif.c:14633`), and Hercules replies `skill_fail(skill_id 1, cause 0)` then **returns without acting** — so no `TradeRequest` and no `CreatePartyResult` are sent at all. Any job change wipes skills; only sweeps restore them, and natural order always runs one first. **Fix:** ensure Basic Skill in `begin_trade` / `create_party`. |
+| **A refusal read as silence** | `party-kick` | Client Test Harness | `create_party` waited only for `CreatePartyResult { result: 0 }`, so a refusal was indistinguishable from no answer. **Fix:** match any result and report the code. |
+| **Scenarios clean only by position** | `friend-reject`, all 3 trade scenarios | Client Test Harness | Their `*_lifecycle` siblings open by clearing prior state; these assumed a clean slate. Shuffling put `friend-reject` before `friend-lifecycle` and `trade-commit` 100 scenarios before `trade-cancel`. **Fix:** self-cleaning preludes, placed in `begin_trade` since all three trade scenarios funnel through it. |
+| **Friend-targeted skills cast at the caster** | `skills-soul-linker` | Client Test Harness | `Friend` skills arrive as `SkillType::Support` and the sweep cast them at the caster. A Soul Linker cannot link itself, so all **15** Soul Link skills were permanently silent — and their allowlist entries blamed a server condition for a harness limitation. **Fix:** retry a silent Support cast against the other seat; all 15 now answer, and the 15 entries were removed. |
+| **Second seat raced the next login** | sweeps with a Friend target | Client Test Harness | Dropping the lazily-connected seat implicitly put its logout in a race with the next scenario's login. **Fix:** release it explicitly with a settle delay. **NOTE:** "User 'korangar' is already online - Rejected" in the server log is **baseline noise** — ~135 per run, once per scenario, the ordinary retry path. It was mistaken for a smoking gun. |
+| **`GROUND_OFFSETS` too small, justified by a miscount** | `skills-sniper` and 4 others | Client Test Harness | Eight cells were "more than the seven traps any job has", but the limit is *Ground-typed casts*, not traps — Hunter and Sniper make 14, High Wizard 12, Wizard 10, Professor 9. Casts past the eighth wrapped onto occupied cells and RO refuses to stack units. **Fix:** 16 cells across two rings. |
+| **A new guard poisoned the shared venue** | `land-protector-status` (self-inflicted) | Client Test Harness | Land Protector stands **165s** over a **7x7** area whose purpose is suppressing ground magic, cast at the shared meeting cell. `AL_PNEUMA` went silent in the Acolyte sweep two minutes downstream. Latent from the moment it was written; surfaced only when a fourth unrelated scenario shifted the timing. **"Walk away" is not cleanup — the field is what harms the next scenario, not your position in it.** **Fix:** its own map (`prt_fild01`), and cast on the caster's own cell (Land Protector has `UF_PATHCHECK` only, no `UF_NOFOOTSET`). |
+| **43 of 81 allowlist entries were dead** | skill sweeps | Client Test Harness | A dead entry is not harmless: it silently absorbs a future regression in that skill. Verified against **8 runs, not one** — a single-run cull would have removed three load-bearing entries and made the suite intermittently red. The `SG_` blanket prefix covered 18 skills where only 8 are ever silent. **Fix:** 31 verified entries, and the run now **reports stale entries** so the list cannot rot again. |
+| **Campaign story beats never executed** | new `dm-story-beats` | Client Test Harness | `dm-beat-table` catalogued 103 story beats without running them, so the suite proved the campaign's *menus* opened and had never run a beat — 30 files, 10,389 lines. **Fix:** execute all 103, each asserting it **speaks its own line**. Took four iterations, every failure in the test: answered only the menu's NPC; waited for a `close` the campaign never sends (beats end with `mes(...)` + `break`); accepted quiescence (a bogus choice still passed); then compared against the wrong prompt, because the menu speaks *twice*. It reported `ok — "Pick the NPC/location or story beat."` — success, quoting the menu back. **Printing the evidence is what caught it.** |
+
+### New standing audits
+
+Each caught something the day it was written:
+
+* `tools/audits/flaky.py` — cross-run inconsistency. Found `skills-soul-linker`
+  at 523s worst vs 128s median, which nobody had noticed by looking at runs one
+  at a time.
+* `tools/audits/event-routing.py` — server events the client discards. Found the
+  **quest system**: 157 `NetworkEvent` variants, 4 arms literally `=> {}`, three
+  of them `QuestAdded`/`QuestList`/`QuestRemoved`. The campaign registers 78
+  quest ids, grants them via `setquest()`, and gates 290 dialogue branches on
+  `questprogress()` — and the player never sees any of it.
+* `tools/audits/packetver-variants.py` — stale header variants, mechanising a
+  hand sweep. Clean at PACKETVER 20220406; proved able to fail by pointing it at
+  20140101.
+* `tools/generate_skill_expectations.py` — 664 derived expectations,
+  **deliberately not enforced**: validated against real runs it would redden 217
+  working skills, because the sweep cannot see past the first event.
+
+### The argument for making shuffle routine
+
+Same code, same commit: **135/136 green in natural order, 131/136 shuffled.**
+Three of those four were structural. A natural-order pass cannot see any of it.
+
+---
+
 ## Shuffle pass — July 29/30, 2026 (five bugs, and a tally that was wrong)
 
 Running the 114-scenario suite in a **randomised order** (`--shuffle <seed>`)
