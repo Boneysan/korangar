@@ -148,7 +148,34 @@ fn friend_reject(config: &Config) -> Result<(), String> {
     })
 }
 
+/// Guarantee the Basic Skill level that trading and party creation are gated on.
+///
+/// **This is a server rule, not a quirk of the harness.** With
+/// `basic_skill_check: true` (conf/map/battle/player.conf), Hercules requires
+/// Basic Skill 1 to send a trade request (`clif.c:13262`) and Basic Skill 7 to
+/// create a party (`clif.c:14633`). In both cases it answers with
+/// `clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, ...)` and **returns without
+/// performing the action** — so the partner never receives a `TradeRequest` and
+/// no `CreatePartyResult` is ever sent. The scenario then times out as though a
+/// packet went missing.
+///
+/// Any job change wipes skills, and only the sweeps restore them with
+/// `@allskill`. In natural order a sweep always happens to run first; shuffled,
+/// it does not — which is why `trade-cancel` and `party-kick` failed only under
+/// `--shuffle 20260810`.
+///
+/// Note what the refusal looks like on the wire: cause 0 against skill id 1.
+/// That is the overloaded fallback this fork documents in
+/// docs/protocol/server-error-channels.md — the server answered, in the one
+/// dialect that carries no information.
+fn ensure_basic_skill(context: &mut TestContext) {
+    let _ = context.say("@allskill");
+    context.pump(Duration::from_millis(400));
+    context.flush();
+}
+
 pub(super) fn create_party(primary: &mut TestContext) -> Result<(), String> {
+    ensure_basic_skill(primary);
     primary.flush();
     let party_name = format!("Headless{}", std::process::id() % 100000);
     primary.net.create_party(&party_name).map_err(|_| "primary disconnected")?;
@@ -733,6 +760,7 @@ fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(
     // never sees a `TradeRequest`, and the scenario times out looking like a
     // lost packet. `trade-cancel` failed exactly that way on `--shuffle
     // 20260810`, which put `trade-commit` a hundred scenarios ahead of it.
+    ensure_basic_skill(primary);
     let _ = primary.net.trade_cancel();
     let _ = partner.net.trade_cancel();
     primary.pump(Duration::from_millis(300));

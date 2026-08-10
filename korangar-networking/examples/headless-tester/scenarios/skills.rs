@@ -1516,6 +1516,22 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         context.pump(Duration::from_millis(300));
     }
 
+    // **Release the second seat before this scenario returns, and let the
+    // server finish the logout.**
+    //
+    // The lazily-connected Friend target is another session on one of the two
+    // shared accounts. Dropping it implicitly at the end of the function put its
+    // logout in a race with the next scenario's login, and the server answers
+    // that race with "User 'korangar' is already online - Rejected". The retry
+    // path can exhaust, leaving a context that is connected enough to send but
+    // whose requests are answered by nobody — which surfaced as `trade-cancel`
+    // and `party-kick` timing out on a request the server never saw, several
+    // scenarios later and with no hint of the cause.
+    if let Some(seat) = partner.take() {
+        drop(seat);
+        std::thread::sleep(Duration::from_millis(900));
+    }
+
     // Report.
     //
     // The two counters below are why this block exists at all: a sweep can run
