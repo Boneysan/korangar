@@ -1161,6 +1161,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     // Connected on demand by `partner_beside`, and only for jobs with Friend
     // skills, so 38 of the 39 sweeps never pay for it.
     let mut partner: Option<TestContext> = None;
+    let mut ground_targets: Vec<(String, TilePosition, TilePosition)> = Vec::new();
     let mut rescued_by_partner = 0usize;
 
     // Grant the full tree and capture it.
@@ -1319,10 +1320,18 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 let position = context.position;
                 let (dx, dy) = GROUND_OFFSETS[ground_cast_index % GROUND_OFFSETS.len()];
                 ground_cast_index += 1;
-                context.net.cast_ground_skill(skill.skill_id, level, TilePosition {
+                let cell = TilePosition {
                     x: (position.x as i16 + dx).max(5) as u16,
                     y: (position.y as i16 + dy).max(5) as u16,
-                })
+                };
+                // Record where this went. Ground casts have now produced three
+                // different wrong theories about why they go silent, because
+                // nothing recorded the cell actually targeted or where the
+                // caster was standing when it chose it — and the caster DRIFTS,
+                // since offsets are relative to `context.position`, not to the
+                // sweep anchor.
+                ground_targets.push((name.clone(), position, cell));
+                context.net.cast_ground_skill(skill.skill_id, level, cell)
             }
             SkillType::SelfCast | SkillType::Support => context.net.cast_skill(skill.skill_id, level, player_id),
             SkillType::Passive => unreachable!(),
@@ -1495,6 +1504,12 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     // 6x slower than usual and still pass, and before they were printed there
     // was nothing in the output to say why. "Instrument the boundary before
     // reasoning inward" — three rounds of theorising were lost to not doing it.
+    if outcomes.iter().any(|outcome| outcome.result.starts_with("SILENT")) && !ground_targets.is_empty() {
+        println!("      [ground casts] caster -> target cell, in cast order:");
+        for (name, from, to) in &ground_targets {
+            println!("        {name:<22} from ({:>3},{:>3})  ->  ({:>3},{:>3})", from.x, from.y, to.x, to.y);
+        }
+    }
     if rescued_by_partner > 0 {
         println!("      [note] {rescued_by_partner} Support skill(s) answered only once aimed at a real Friend target");
     }
