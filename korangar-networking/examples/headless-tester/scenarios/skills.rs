@@ -1135,11 +1135,8 @@ fn allowlisted(skill_name: &str) -> bool {
         "MO_COMBOFINISH",
         "CH_TIGERFIST",
         "CH_CHAINCRUSH",
-        // Need a target other than the caster (party member / holy target).
+        // Need a holy target other than the caster.
         "ALL_RESURRECTION",
-        "CR_DEVOTION",
-        "CR_PROVIDENCE",
-        "CG_MARIONETTE",
         // Need an existing owned trap unit as the target.
         "HT_REMOVETRAP",
         "HT_SPRINGTRAP",

@@ -62,3 +62,6 @@ jobs:
 
       - name: Run headless harness unit tests
         run: cargo test -p korangar-networking --example headless-tester
+
+      - name: Test headless run archival semantics
+        run: tools/testing/test-run-suite.sh

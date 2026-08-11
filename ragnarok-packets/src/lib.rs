@@ -2223,6 +2223,45 @@ pub struct EntityDisAppearPacket {
     pub reason: DisappearanceReason,
 }
 
+/// Hercules' synthetic dialog NPC (`clif_sendfakenpc`, 0x0078).
+///
+/// Despite using a legacy idle-unit layout, Hercules still emits this packet
+/// for modern packet versions before script dialogs. It is an invisible class
+/// 111 anchor, not a world entity; consumers should parse it to preserve packet
+/// coverage but must not add it to the entity list.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0078)]
+pub struct FakeNpcDialogAnchorPacket {
+    pub object_type: u8,
+    pub entity_id: EntityId,
+    pub movement_speed: i16,
+    pub body_state: i16,
+    pub health_state: i16,
+    pub effect_state: i16,
+    pub job_id: JobId,
+    pub head: u16,
+    pub weapon: u16,
+    pub accessory: u16,
+    pub shield: u16,
+    pub accessory2: u16,
+    pub accessory3: u16,
+    pub head_palette: i16,
+    pub body_palette: i16,
+    pub head_direction: i16,
+    pub guild_id: u32,
+    pub emblem_version: i16,
+    pub honor: i16,
+    pub virtue: i16,
+    pub is_pk_mode_on: u8,
+    pub sex: Sex,
+    pub position: WorldPosition,
+    pub x_size: u8,
+    pub y_size: u8,
+    pub state: u8,
+    pub level: i16,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x09FD)]
@@ -4340,6 +4379,17 @@ pub struct NpcDialogPacket {
     pub text: String,
 }
 
+/// Text displayed by a Hunter Talkie Box trap (`ZC_TALKBOX_CHATCONTENTS`).
+/// PACKETVER 20220406 limits the fixed message field to 21 bytes.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0191)]
+pub struct TalkieBoxMessagePacket {
+    pub entity_id: EntityId,
+    #[length(21)]
+    pub message: String,
+}
+
 #[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x007D)]
@@ -4868,6 +4918,21 @@ pub enum RestartResponseStatus {
 #[header(0x00B3)]
 pub struct RestartResponsePacket {
     pub result: RestartResponseStatus,
+}
+
+/// Result of a GM request to disconnect another character (`ZC_ACK_DISCONNECT_CHARACTER`).
+#[derive(Debug, Clone, ByteConvertable, PartialEq, Eq)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+pub enum GmKickResponseStatus {
+    Failure,
+    Success,
+}
+
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x00CD)]
+pub struct GmKickResponsePacket {
+    pub result: GmKickResponseStatus,
 }
 
 // TODO: check that this can be only 1 and 0, if not Named, ByteConvertable
@@ -6870,6 +6935,36 @@ mod tests {
             }),
             [0x03, 0x02, 0x04, 0x03, 0x02, 0x01, 0x08, 0x07, 0x06, 0x05]
         );
+    }
+
+    #[test]
+    fn reviewed_unknown_packets_match_hercules_20220406_layouts() {
+        // clif_sendfakenpc writes the legacy 55-byte 0x0078 layout even for a
+        // modern client. Most fields are deliberately zero; class 111 and the
+        // synthetic NPC id are the meaningful values.
+        let mut fake_npc = vec![0x78, 0x00, 0x00]; // header + object type
+        fake_npc.extend(0x0690_3B89u32.to_le_bytes());
+        fake_npc.resize(15, 0);
+        fake_npc.extend(111u16.to_le_bytes());
+        fake_npc.resize(47, 0);
+        fake_npc.extend([0, 0, 0, 5, 5, 0]); // position, size, state
+        fake_npc.extend(0i16.to_le_bytes());
+        assert_eq!(fake_npc.len(), 55);
+
+        let fake_npc = read_packet::<FakeNpcDialogAnchorPacket>(&fake_npc);
+        assert_eq!(fake_npc.entity_id, EntityId(0x0690_3B89));
+        assert_eq!(fake_npc.job_id, JobId(111));
+
+        let kick = read_packet::<GmKickResponsePacket>(&[0xCD, 0x00, 0x01]);
+        assert_eq!(kick.result, GmKickResponseStatus::Success);
+
+        let mut talkie = vec![0x91, 0x01];
+        talkie.extend(0x0102_0304u32.to_le_bytes());
+        talkie.extend(fixed_string("hello", 21));
+        assert_eq!(talkie.len(), 27);
+        let talkie = read_packet::<TalkieBoxMessagePacket>(&talkie);
+        assert_eq!(talkie.entity_id, EntityId(0x0102_0304));
+        assert_eq!(talkie.message, "hello");
     }
 
     #[test]

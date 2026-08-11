@@ -21,6 +21,12 @@ use crate::context::{CONNECTION_ERROR, Config, clear_recorded_connection_error, 
 use crate::ledger::{Ledger, PacketCoverageSummary};
 use crate::scenarios::{SKIPPED_PREFIX, Scenario, all_scenarios, is_expected_skip, is_skip};
 
+// Every header observed by a complete run has a dedicated packet model. Keep
+// this explicit baseline even while empty: if a deliberately opaque packet is
+// accepted later, it must be reviewed and named here rather than silently
+// weakening the gate for every future header.
+const REVIEWED_UNKNOWN_PACKET_HEADERS: &[u16] = &[];
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Arguments {
@@ -359,11 +365,26 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    let gate_failures = failures + unexpected_skips + usize::from(arguments.fail_on_flaky && flaky_passes > 0);
+    let unexpected_unknown = ledger.unexpected_unknown(REVIEWED_UNKNOWN_PACKET_HEADERS);
+    if !unexpected_unknown.is_empty() {
+        let details = unexpected_unknown
+            .iter()
+            .map(|(header, count)| format!("0x{header:04X} x{count}"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        println!("[{}] newly unmodeled packet header(s): {details}", "Error".red());
+        return ExitCode::FAILURE;
+    }
+
+    let gate_failures = gate_failure_count(failures, unexpected_skips, flaky_passes, arguments.fail_on_flaky);
     match gate_failures {
         0 => ExitCode::SUCCESS,
         count => ExitCode::from(count.min(255) as u8),
     }
+}
+
+fn gate_failure_count(failures: usize, unexpected_skips: usize, flaky_passes: usize, fail_on_flaky: bool) -> usize {
+    failures + unexpected_skips + usize::from(fail_on_flaky && flaky_passes > 0)
 }
 
 fn json_outcome(execution: &ScenarioExecution<'_>) -> &'static str {
@@ -566,7 +587,7 @@ fn print_what_the_run_proved() {
 mod tests {
     use std::time::Duration;
 
-    use super::{ScenarioExecution, json_outcome, shuffle_deterministically};
+    use super::{ScenarioExecution, gate_failure_count, json_outcome, shuffle_deterministically};
     use crate::scenarios::Scenario;
 
     #[test]
@@ -600,5 +621,16 @@ mod tests {
         };
 
         assert_eq!(json_outcome(&execution), "flaky-pass");
+    }
+
+    #[test]
+    fn unexpected_skips_are_gate_failures() {
+        assert_eq!(gate_failure_count(0, 1, 0, false), 1);
+    }
+
+    #[test]
+    fn flaky_passes_only_fail_the_strict_gate() {
+        assert_eq!(gate_failure_count(0, 0, 1, false), 0);
+        assert_eq!(gate_failure_count(0, 0, 1, true), 1);
     }
 }

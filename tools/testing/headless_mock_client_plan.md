@@ -1,12 +1,18 @@
 # Implementation Plan — Headless Mock Client & Integration Harness
 
 > **Status (2026-07-11)**: Stage 1 + the core of Stage 2 are **implemented** as
-> `korangar-networking/examples/headless-tester.rs` (login → char select → map load →
+> `korangar-networking/examples/headless-tester/` (login → char select → map load →
 > chat round-trip smoke test, passing against the live server). The full scenario
 > catalog now lives in [headless_test_plan.md](headless_test_plan.md); bugs found go in
 > [headless_findings.md](headless_findings.md). This document remains as the original
 > design rationale — scenario details below were corrected against the Hercules DBs
 > (see HF-000 in the findings log).
+>
+> **Current implementation and commands:** this is not an operating runbook.
+> Read [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) and
+> [headless_test_plan.md](headless_test_plan.md). In particular, the disposable
+> runner is `tools/testing/run-integration-tests.sh`; the §5 lifecycle below is
+> the superseded proposal.
 
 This document outlines the design and implementation roadmap for a headless mock networking client for the **Korangar Client** to automate end-to-end integration testing against a live local **Hercules Server**.
 
@@ -21,7 +27,9 @@ This document outlines the design and implementation roadmap for a headless mock
 ---
 
 ## 2. Architecture & Crate Integration
-The headless client resides at `korangar-networking/examples/headless-tester.rs`, modeled on the pre-existing `rescue-my-character.rs` example (which already implemented the full login → map connection flow headlessly).
+The headless client now resides at `korangar-networking/examples/headless-tester/`,
+originally modeled on the pre-existing `rescue-my-character.rs` example (which
+already implemented the full login → map connection flow headlessly).
 
 ```mermaid
 graph TD
@@ -90,7 +98,7 @@ To test features like spell casting and class stats, the client will utilize the
 
 ---
 
-## 5. Integration with Disposable Server Harness
+## 5. Historical proposal for a disposable server harness
 A wrapper script (e.g., `tools/run-integration-tests.sh`) will manage the test lifecycle:
 
 1. **Setup Database & Server**:

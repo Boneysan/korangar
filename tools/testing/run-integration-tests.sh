@@ -61,13 +61,36 @@ configs_installed=false
 runner_exit=1
 
 stop_servers() {
-    local pid
+    local pid attempt still_running
     for pid in "${server_pids[@]-}"; do
         if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
             kill "$pid" 2>/dev/null || true
         fi
     done
+
+    # Hercules normally exits promptly on SIGTERM, but map-server can remain
+    # alive indefinitely while tearing down a heavily exercised skill run.
+    # Never strand CI after the tester has already produced its result: allow a
+    # bounded graceful window, then stop only the exact PIDs this script owns.
+    attempt=0
+    while [ "$attempt" -lt 100 ]; do
+        still_running=false
+        for pid in "${server_pids[@]-}"; do
+            if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+                still_running=true
+                break
+            fi
+        done
+        ! $still_running && break
+        sleep 0.1
+        attempt=$((attempt + 1))
+    done
+
     for pid in "${server_pids[@]-}"; do
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            echo "warning: server pid $pid did not stop gracefully; forcing shutdown" >&2
+            kill -9 "$pid" 2>/dev/null || true
+        fi
         [ -n "$pid" ] && wait "$pid" 2>/dev/null || true
     done
     server_pids=()

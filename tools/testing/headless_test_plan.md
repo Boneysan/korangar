@@ -1,15 +1,16 @@
 # Headless Client — Full Test Plan
 
 Canonical test plan for automated protocol/gameplay testing via the headless client
-(`korangar-networking/examples/headless-tester.rs`). The goal: exercise as much of the
+(`korangar-networking/examples/headless-tester/`). The goal: exercise as much of the
 client↔server protocol as possible without graphics, at high speed, and catch packet
 mapping errors, skill/combat bugs, and server-script regressions early.
 
 **Companion documents:**
+- [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) — latest implementation handoff: allowlist cleanup, typed no-op packets, zero-unknown gate, archive tests, and reproduced full-run evidence
 - [headless_findings.md](headless_findings.md) — bug log + port-back tracking (fill this in whenever a scenario fails)
 - [headless_mock_client_plan.md](headless_mock_client_plan.md) — original design doc (implementation status updated there)
 - [testing_guide.md](testing_guide.md) — overall project testing reference
-- [headless_remaining_test_design.md](headless_remaining_test_design.md) — implementation-ready design for the remaining lifecycle, social, DM, repair, and skill-menu coverage
+- [headless_remaining_test_design.md](headless_remaining_test_design.md) — historical implementation specification for the now-complete lifecycle, social, DM, repair, and skill-menu backlog
 
 ---
 
@@ -51,11 +52,13 @@ out of reading it on 2026-08-02, both of which had been sitting in every run:
   `0 failed`. A `registered_packets_consume_their_declared_length` unit test now
   guards the whole table.
 
-**`0x0078` is deliberately left unmodeled.** It is `clif_sendfakenpc` — the
-invisible NPC (class 111) that drives script dialogs. At 78 occurrences it is by
-far the loudest entry in the backlog and it is the one entry that must stay
-there: modelling it would spawn phantom entities. **Frequency in that list ranks
-noise, not importance.**
+**`0x0078` is deliberately modeled as a no-op.** It is `clif_sendfakenpc` — the
+invisible NPC (class 111) that drives script dialogs. The typed packet keeps it
+out of the unknown backlog, while its handler intentionally does not publish an
+`AddEntity` event (which would spawn phantom entities). The GM-kick acknowledgement
+`0x00CD` and Talkie Box contents `0x0191` are likewise typed no-ops until a client
+surface consumes them. With those reviewed packets modeled, any new unknown
+header fails the headless run after its JSON evidence has been written.
 
 ### Coverage baseline (2026-07-11)
 - `NetworkingSystem` exposes **~65 client actions** (login flow, movement, combat, skills,
@@ -68,12 +71,16 @@ noise, not importance.**
 
 ---
 
-## 2. Prerequisites (verified working 2026-07-11)
+## 2. Prerequisites (verified working 2026-08-11)
 
 - MariaDB running (`brew services start mariadb`), Hercules built with
   `--enable-packetver=20220406`.
+- **Preferred:** run `tools/testing/run-integration-tests.sh`. It creates a
+  disposable database, test accounts/characters, and temporary ignored
+  Hercules import configuration, then restores/drops them on exit.
 - Test account `korangar`/`korangar` exists with **`group_id = 99`** in the `login` table
-  (verified — all `@`/`@dm*` commands available; the `@dm*` suite binds at GM level 1+).
+  only when using a manually managed server (the disposable runner provisions
+  both accounts itself).
 - Server start **from a script** must redirect stdio or the calling shell blocks on the
   inherited pipes and a timeout kills the servers:
   ```bash
@@ -272,9 +279,11 @@ dm-mode-testing-status):
 Run alongside every phase, not a separate pass:
 
 - **Unknown-packet ledger**: `NetworkingSystem::spawn_with_callback` gives a hook on every
-  packet; additionally `KORANGAR_PACKET_LOG=1` dumps hex. Record every packet consumed by
-  the length-fallback during a full run → the list of "server sends it, client ignores it"
-  headers, ranked by frequency. That is the packet-modeling backlog.
+  packet; additionally `KORANGAR_PACKET_LOG=1` dumps hex. Every current full-run
+  header is modeled. Any newly observed fallback header is written to JSON and
+  then fails the run unless it is explicitly reviewed. The baseline is empty;
+  identify a new header against Hercules before adding a model or a temporary
+  reviewed exception.
 - **Desync detection**: any framing error / connection drop mid-scenario is a P0 finding
   (main client would hard-desync too). The scenario name + preceding packet hex go in the
   findings log.
@@ -287,8 +296,8 @@ Run alongside every phase, not a separate pass:
 
 ## 4. Harness & runner design
 
-Extend `headless-tester.rs` incrementally (keep the current smoke test as scenario
-`smoke`, the default):
+Extend `korangar-networking/examples/headless-tester` incrementally (keep the
+current smoke test as scenario `smoke`, the default):
 
 ```
 cargo run --example headless-tester -p korangar-networking -- --scenario <name> [--timeout 60]
@@ -298,11 +307,20 @@ cargo run --example headless-tester -p korangar-networking -- --scenario <name> 
   against the packet structs) — no YAML/JSON runner unless scenario count outgrows this.
 - Core utility: `await_event!(matcher, timeout, stage_name)` — poll loop with deadline
   that reports the stage and the last 20 events on failure (context for the findings log).
-- `--scenario all` runs everything and prints a per-scenario PASS/FAIL table; exit code =
-  number of failures.
-- Wrapper script `tools/run-integration-tests.sh`: start MariaDB check → start Hercules
-  (with the stdio redirect from §2) → poll ports 6900/6121/5121 → run `--scenario all` →
-  `athena-start stop` → propagate exit code. CI-ready.
+- `--scenario all` runs everything and prints a per-scenario outcome table.
+  Failures and unexpected skips are red. A recovered retry is `FLAKY-PASS` and
+  is red when `--fail-on-flaky` is active. Packet deserialization failures and
+  newly unknown headers are always red.
+- `tools/testing/run-suite.sh` is the evidence wrapper. Complete full runs are
+  `runs/*.log`, complete targeted runs are `*.scoped`, and incomplete runs stay
+  `*.partial`. Complete red runs are archived, including JSON.
+- `tools/testing/test-run-suite.sh` regression-tests those archive and exit-code
+  semantics with a deterministic fake cargo process. It runs in GitHub Actions.
+- `tools/testing/run-integration-tests.sh` is the self-contained live wrapper:
+  create a unique DB → provision fixtures → install temporary ignored Hercules
+  configs → build/start/poll the three servers → run the archive wrapper with
+  strict flaky handling → stop exact owned PIDs with a bounded grace period →
+  audit fixture cleanup → drop DB and restore configs → propagate the result.
 
 ---
 

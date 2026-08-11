@@ -66,7 +66,8 @@ cd "$repo"
 # tester's. Temporarily disable `errexit`: otherwise a red-but-complete run exits
 # from the pipeline before its log can be promoted into the evidence archive.
 set +e
-cargo run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
+cargo_command="${HEADLESS_CARGO:-cargo}"
+"$cargo_command" run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
 pipeline_status=("${PIPESTATUS[@]}")
 set -e
 runner_status=${pipeline_status[0]}

@@ -167,6 +167,12 @@ One green run is one data point. The self-cleaning reporter will keep naming the
 every run until somebody has the evidence to remove them, which is exactly the
 job it exists to do.
 
+**Follow-up (2026-08-11):** a normal full run and the seeded shuffled full run
+both confirmed `CR_DEVOTION`, `CR_PROVIDENCE`, and `CG_MARIONETTE` answered with
+the partner fixture, so those three entries were removed. `TK_MISSION` remained
+load-bearing (answered twice and was silent once) and stays allowlisted, as does
+`HT_SPRINGTRAP` (silent in both jobs that expose it).
+
 ### And a correction to what §1c bought
 
 `skills-soul-linker` retries a silent `Support` cast against a real Friend seat.
@@ -394,10 +400,10 @@ and straggler additions (`weapon-refine-cancel`, `repair-list-empty`,
 Following the final fixes on July 12, 2026, the full `--scenario all` sweep
 was completed end-to-end with **100% passing results (105/105 green)**.
 
-### Acceptance gate — July 13, 2026 (current state: 106 scenarios)
+### Acceptance gate — July 13, 2026 (then-current state: 106 scenarios)
 
 The §4 destructive-lifecycle refinements added **`character-delete-after-play`**, bringing
-the suite to its current **106 active scenarios**. The acceptance gate was run as a
+the suite to its then-current **106 active scenarios**. The acceptance gate was run as a
 **double run**: run A 106/106, run B 105/106 (a single `TF_HIDING` observation-window
 flake, 3/3 green on retest), run C 106/106. **Gate green — acceptance complete.**
 
@@ -544,7 +550,7 @@ two-axis resizing from the `window!` component default.
 > The Soul Linker self-resurrection buff, **`Kaizel`**, is extremely persistent. Because there is no standard GM `@dispel` command in the default Hercules build, the only way to clear it programmatically without restarting the server or map session is to trigger a character death.
 * **Finding**: `use-consumable` failed with a timeout waiting for player death.
 * **Analysis**: When the client receives `@die`, the server processes character death but immediately resurrects the character due to Kaizel. The client never receives a `RemoveEntity` event for the player, leading to a test timeout.
-* **Resolution**: The double-death retry loop was implemented in [items.rs](../korangar-networking/examples/headless-tester/scenarios/items.rs). It attempts character death, waits for 2 seconds, checks if the character resurrected, and issues a second `@die` command if needed.
+* **Resolution**: The double-death retry loop was implemented in [items.rs](../../korangar-networking/examples/headless-tester/scenarios/items.rs). It attempts character death, waits for 2 seconds, checks if the character resurrected, and issues a second `@die` command if needed.
 
 ### 2. Random-Walk Drift & Target Accumulation
 > [!TIP]
@@ -554,7 +560,7 @@ two-axis resizing from the `window!` component default.
   1. The player character was not reset to a starting coordinate between casts, causing them to wander away.
   2. The target dummies (Pupas) remained on the map, occupying adjacent cells.
 * **Resolution**: 
-  1. In [skills.rs](../korangar-networking/examples/headless-tester/scenarios/skills.rs), the starting tile is dynamically recorded via `warp_random` as `start_position`.
+  1. In [skills.rs](../../korangar-networking/examples/headless-tester/scenarios/skills.rs), the starting tile is dynamically recorded via `warp_random` as `start_position`.
   2. Before each skill sweep, the character walks back to `start_position`.
   3. After each cast, the target dummy is removed via `kill_all_monsters()`.
 

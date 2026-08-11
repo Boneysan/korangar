@@ -120,6 +120,22 @@ impl Ledger {
     pub fn failed_count(&self) -> usize {
         self.inner.lock().unwrap().failed.len()
     }
+
+    /// Unknown/fallback headers not present in the reviewed baseline.
+    ///
+    /// Counts are returned as well as headers so the gate explains its failure
+    /// without requiring somebody to find and inspect the JSON artifact first.
+    pub fn unexpected_unknown(&self, reviewed_headers: &[u16]) -> Vec<(u16, u64)> {
+        let inner = self.inner.lock().unwrap();
+        let mut unexpected: Vec<_> = inner
+            .unknown
+            .iter()
+            .filter(|(header, _)| !reviewed_headers.contains(header))
+            .map(|(&header, &count)| (header, count))
+            .collect();
+        unexpected.sort_unstable_by_key(|(header, _)| *header);
+        unexpected
+    }
 }
 
 impl PacketCallback for Ledger {
@@ -156,5 +172,22 @@ impl PacketCallback for Ledger {
     fn failed_packet(&self, bytes: Vec<u8>, error: Box<ragnarok_bytes::ConversionError>) {
         let mut inner = self.inner.lock().unwrap();
         inner.failed.push((bytes, format!("{error:?}")));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use ragnarok_packets::handler::PacketCallback;
+
+    use super::Ledger;
+
+    #[test]
+    fn only_new_unknown_headers_fail_the_reviewed_baseline() {
+        let ledger = Ledger::default();
+        ledger.unknown_packet(vec![0x78, 0x00, 0xAA]);
+        ledger.unknown_packet(vec![0x34, 0x12, 0xBB]);
+        ledger.unknown_packet(vec![0x34, 0x12, 0xCC]);
+
+        assert_eq!(ledger.unexpected_unknown(&[0x0078]), vec![(0x1234, 2)]);
     }
 }

@@ -73,15 +73,17 @@ This directory contains all design documents, technical deep dives, implementati
 ### Testing & Verification
 
 > These live in **`tools/testing/`**, outside `docs/` — they are easy to miss. The
-> **107-scenario headless suite** is the project's main automated regression gate
-> (acceptance passed 2026-07-13, double-run green).
+> **136-scenario headless suite** is the project's main automated regression gate.
+> Acceptance was reconfirmed 2026-08-11 in normal order and shuffled: 135 passed,
+> 1 expected skip, 0 flaky, 0 failed, and 0 unknown packets.
 
 | Document | Purpose |
 |----------|---------|
+| [../tools/testing/2026-08-11-testing-handoff.md](../tools/testing/2026-08-11-testing-handoff.md) | **Latest implementation handoff:** allowlist cleanup, typed no-op packets, zero-unknown gate, archive regression tests, shutdown hardening, and exact reproduction commands. |
 | [../tools/testing/testing_guide.md](../tools/testing/testing_guide.md) | Overall project testing reference — **start here**. |
 | [../tools/testing/headless_test_plan.md](../tools/testing/headless_test_plan.md) | Canonical headless test plan: scenario inventory, what each phase covers, and why headless findings transfer to the graphical client. |
 | [../tools/testing/headless_findings.md](../tools/testing/headless_findings.md) | Bug log + port-back tracking; every finding classified by layer (shared crate / harness / server). Fill in whenever a scenario fails. |
-| [../tools/testing/headless_remaining_test_design.md](../tools/testing/headless_remaining_test_design.md) | Implementation-ready design for remaining lifecycle, social, DM, repair, and skill-menu coverage. |
+| [../tools/testing/headless_remaining_test_design.md](../tools/testing/headless_remaining_test_design.md) | Historical implementation specification for lifecycle, social, DM, repair, and skill-menu coverage; its backlog is complete. |
 | [../tools/testing/headless_mock_client_plan.md](../tools/testing/headless_mock_client_plan.md) | Original design doc; implementation status tracked there. |
 | [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | The **GUI** live-verification checklist — complements headless (see the axes note below). |
 
@@ -97,11 +99,14 @@ Headless **cannot** catch a bug in how the main client *consumes* an event (the 
 layer in `korangar/src/`) — but it does establish that the wire data is correct, which
 isolates any remaining bug to the UI layer. A row can be headless-green and still
 unchecked for GUI; that means "the protocol works, the window hasn't been driven by hand."
+The broad skill sweeps are liveness checks and do not prove that each skill's
+gameplay effect is correct.
 
-To run (servers must be up first):
+Preferred self-contained runs (MariaDB must already be listening):
 
 ```sh
-cargo run --release --example headless-tester -p korangar-networking -- --scenario all
+HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh
+HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 20260810
 ```
 
 ### Implementation Plans, Roadmaps & Specs

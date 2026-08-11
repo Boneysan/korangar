@@ -400,6 +400,10 @@ where
     packet_handler.register(|packet: ResurrectionPacket| NetworkEvent::ResurrectPlayer {
         entity_id: packet.entity_id,
     })?;
+    // Hercules emits a legacy 0x0078 entity-shaped packet solely as an
+    // invisible script-dialog anchor. Parsing it removes it from the unknown
+    // packet backlog; publishing AddEntity here would create a phantom actor.
+    packet_handler.register_noop::<FakeNpcDialogAnchorPacket>()?;
     packet_handler.register(|packet: EntityAppearPacket| NetworkEvent::AddEntity {
         entity_data: packet.into(),
     })?;
@@ -1240,6 +1244,11 @@ where
     packet_handler.register_noop::<Packet8302>()?;
     packet_handler.register_noop::<Packet0b18>()?;
     packet_handler.register_noop::<ConnectionRefusedPacket>()?;
+    // These responses are protocol evidence but do not currently drive client
+    // state: the kicked target owns the disconnect flow, and Talkie Box text is
+    // rendered at the trap rather than in a chat window.
+    packet_handler.register_noop::<GmKickResponsePacket>()?;
+    packet_handler.register_noop::<TalkieBoxMessagePacket>()?;
     packet_handler.register(|packet: MapServerLoginSuccessPacket| NetworkEvent::UpdateClientTick {
         client_tick: packet.client_tick,
         received_at: Instant::now(),

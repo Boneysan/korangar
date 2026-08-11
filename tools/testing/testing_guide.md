@@ -2,6 +2,10 @@
 
 This document serves as the canonical reference for testing the **Korangar Client** and **Hercules Server Emulator** project. It includes instructions to run tests, explanations of specialized verification binaries, and results from recent test runs.
 
+For the latest headless-testing implementation handoff, including the
+zero-unknown packet gate and archive regression suite, read
+[2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md).
+
 ---
 
 ## 1. Automated Unit Testing (Rust Workspace)
@@ -125,30 +129,52 @@ Scans the custom Campaign beats scripts against GAT terrain data to verify that 
 ## 6. Live Verification / Integration Testing
 
 ### A. Automated: Headless Client
-The headless tester (`korangar-networking/examples/headless-tester.rs`) automates protocol-level integration testing against a live server — it shares `ragnarok-packets` and `korangar-networking` with the graphical client, so packet-mapping bugs it finds (and fixes for them) apply to the main client directly.
-* **How to Run** (server must be up):
-  ```bash
-  cargo run --example headless-tester -p korangar-networking
-  ```
-* **Smoke test result (2026-07-11)**: PASS — login → character select → map load → chat round-trip, exit 0; failure paths (bad credentials, missing character, dead server) exit 1.
-* **Full scenario catalog**: [headless_test_plan.md](headless_test_plan.md) (10 phases: session, GM bootstrap, movement, combat, skill sweep, items, dialogue, multi-client social, DM campaign commands, protocol coverage).
-* **Bug documentation & port-back workflow**: [headless_findings.md](headless_findings.md) — every failed scenario gets an entry classifying the layer (shared crate / client / server) before the fix lands.
-* **Graphical-client handoff matrix**: the “Expanded-suite graphical-client handoff” section in [headless_findings.md](headless_findings.md) records what is shared automatically, what still needs UI verification, and what remains blocked.
+The headless tester (`korangar-networking/examples/headless-tester`) automates
+protocol-level integration testing against a live server. It shares
+`ragnarok-packets` and `korangar-networking` with the graphical client, so
+packet-layout and event-mapping fixes apply to the main client directly.
 
-The expanded runner currently registers **107 scenarios** across phases 1–9
-(acceptance gate green 2026-07-13 at the previous count of 106, double-run):
-session/lifecycle 8 · GM 9 (including the idempotent `provision-effect-roster`
-setup for the GUI effect roster, added 2026-07-17) · movement 5 · combat 3 ·
-skills 44 (39 job-class sweeps + teleport/weapon-refine
-menus) · items 12 · dialogue 5 · social 7 · DM tooling 14. Phase
-8 requires a pre-provisioned, non-GM `headless2` account with a `HeadlessTwo`
-character; automatic Hercules `_M` registration may be disabled in the local
-login configuration. Phase 9 covers the Seal Cascade dice and DM command
-contracts.
+The runner registers **136 scenarios** across session lifecycle, GM bootstrap,
+movement, combat, 39 job skill sweeps and focused skill flows, items, dialogue,
+multi-client social behavior, DM campaign commands, observer parity, and
+continuous protocol coverage. The verified 2026-08-11 gate is **135 passed, 1
+expected skip, 0 flaky, 0 failed, 0 unexpected skips, and 0 unknown packets** in
+both normal order and shuffle seed `20260810`.
+
+Preferred self-contained commands, with MariaDB already listening:
+
+```bash
+HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh
+HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 20260810
+```
+
+The integration runner creates and drops a unique database, installs and
+restores ignored Hercules import configuration, provisions both test accounts,
+starts only the three required servers, enables `--fail-on-flaky`, writes JSON,
+audits fixture cleanup, and bounds server shutdown. Set
+`INTEGRATION_SKIP_BUILD=1` only for already-current PACKETVER 20220406 binaries.
+
+With a manually managed Hercules stack already running, archive runs through:
+
+```bash
+tools/testing/run-suite.sh
+tools/testing/run-suite.sh --shuffle 20260810
+tools/testing/run-suite.sh --scenario skills-mage
+```
+
+Complete full runs become `tools/testing/runs/*.log`; targeted runs become
+`*.scoped`; interrupted runs stay `*.partial`. Complete red runs are still
+archived with JSON. These semantics are regression-tested by
+`tools/testing/test-run-suite.sh` and in CI.
+
+- **Full scenario catalog and policy:** [headless_test_plan.md](headless_test_plan.md)
+- **Findings and port-back workflow:** [headless_findings.md](headless_findings.md)
+- **Latest implementation details:** [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md)
 
 **Scope boundary:** headless links the same `ragnarok-packets` /
 `korangar-networking` crates as the graphical client, so green means the wire
-protocol and event mapping are correct. It cannot reach the `korangar/src/`
+protocol and event mapping are correct. The skill sweeps are liveness checks and
+do not prove gameplay correctness. Headless cannot reach the `korangar/src/`
 UI/state layer — that is what §B below and
 [../../docs/plans/M1-p0-verification.md](../../docs/plans/M1-p0-verification.md)
 are for. Never report a headless pass as "verified working in the client".

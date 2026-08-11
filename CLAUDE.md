@@ -190,9 +190,19 @@ and running the `.exe` on the Windows side (not yet set up).
 
 ## Testing — the headless suite
 
-The project's main automated regression gate is a **135-scenario headless client**
-(`korangar-networking/examples/headless-tester`). Acceptance passed 2026-07-13 with a
-double-run green gate. Docs live in **`tools/testing/`** (not `docs/`):
+> [!IMPORTANT]
+> **Latest testing handoff (2026-08-11):** read
+> [tools/testing/2026-08-11-testing-handoff.md](tools/testing/2026-08-11-testing-handoff.md)
+> before changing packet fallback policy, the skill silence allowlist, or the
+> run/archive scripts. It documents the new zero-unknown gate, three typed
+> no-op packets, runner regression suite, bounded Hercules shutdown, exact
+> validation commands, and the decisions that must not be casually reversed.
+
+The project's main automated regression gate is a **136-scenario headless client**
+(`korangar-networking/examples/headless-tester`). Acceptance was reconfirmed
+2026-08-11 in normal order and with shuffle seed `20260810`: **135 passed, 1
+expected skip, 0 flaky, 0 failed, 0 unexpected skips, and 0 unknown packets**.
+Docs live in **`tools/testing/`** (not `docs/`):
 [headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
 [headless_findings.md](tools/testing/headless_findings.md) is the bug log,
 [testing_guide.md](tools/testing/testing_guide.md) is the overall reference.
@@ -203,10 +213,11 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (135): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 51
+Coverage (135 passing scenarios): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 51
 (39 job-class sweeps + teleport/weapon-refine menus) · items 13 · dialogue 5 · social 17 ·
-DM tooling 14 · observer parity 9. One scenario (`skills-novice`) is a permanent,
-legitimate skip, so a green run reads **134 passed / 0 failed / 1 skipped**.
+DM tooling 14 · observer parity 9. One additional registered scenario
+(`skills-novice`) is a permanent, legitimate skip, so a green run reads **135
+passed / 0 failed / 1 expected skip**.
 
 **READ THIS BEFORE QUOTING THE SKILL NUMBERS.** The 39-job sweep passes a skill
 when *any* observable response arrives. That is a **liveness** check — it is what
@@ -308,7 +319,7 @@ headless pass as "verified working in the client".
 When writing code or adding features, agents must adhere to these project-specific constraints:
 
 1. **Tabletop Scope**: This fork is the "Seal Cascade" D&D campaign engine. When designing UI or features, prioritize the tabletop/DM tools outlined in `docs/DM_INTERFACE.md` over generic RO MMO features (like auction houses or matchmaking).
-2. **Packet Registration**: Due to Korangar's framing-by-deserialization design, an unregistered packet header would desync the read buffer. **Framing is now handled automatically**: `register_length_fallbacks` (called last in each of the three `register_*_server_packets` functions — login, character, and map) consumes any known-length server packet that lacks a dedicated handler, using a table auto-generated from Hercules' own length tables (`tools/generate_packet_lengths.sh` → `lengths_20220406.rs`). See `docs/protocol/packet-length-fallbacks.md`. The server **must be built with `--enable-packetver=20220406`** (a default Hercules build is 20190605 and is wire-incompatible at the map handoff — see `docs/PLATFORM_BRINGUP.md` item 0; an earlier version of this note wrongly said the server was 20190605). Regenerate the table if the server's PACKETVER ever changes. You only need to define/register a packet in `ragnarok-packets` + `version_20220406.rs` when the client actually needs its **contents** (a fallback-consumed packet produces no `NetworkEvent`); use `register_noop` for a modeled-but-unhandled packet.
+2. **Packet Registration**: Due to Korangar's framing-by-deserialization design, an unregistered packet header would desync the read buffer. **Framing is handled automatically**: `register_length_fallbacks` (called last in each of the three `register_*_server_packets` functions — login, character, and map) consumes any known-length server packet that lacks a dedicated handler, using a table auto-generated from Hercules' own length tables (`tools/generate_packet_lengths.sh` → `lengths_20220406.rs`). See `docs/protocol/packet-length-fallbacks.md`. The server **must be built with `--enable-packetver=20220406`** (a default Hercules build is 20190605 and is wire-incompatible at the map handoff — see `docs/PLATFORM_BRINGUP.md` item 0; an earlier version of this note wrongly said the server was 20190605). Regenerate the table if the server's PACKETVER ever changes. The fallback is resilience, **not accepted full-run coverage**: the headless gate now fails on every newly observed fallback header. Identify it against Hercules, add an exact layout test and typed packet, then use a real handler when the client needs the contents or `register_noop` when parsing without publishing client state is the reviewed decision. Never add a header to the reviewed-unknown baseline just to make the gate green; see the 2026-08-11 testing handoff.
 3. **Packet Obfuscation**: The server (`Hercules_RO`) is configured with `packet_obfuscation: 0`. **Do not** attempt to implement packet obfuscation in the Korangar networking layer.
 3b. **Server-source deltas (rebuild + re-apply after any upstream Hercules merge).** We keep a small number of patches in the sibling `Hercules/` tree; they are invisible from this repo, so check here first when server-sent data looks wrong. **Rebuild with `Hercules/dev.sh build`, not a bare `make`** — the map-server target is `map_sql`, and `make map` fails with *"No rule to make target"*, a message containing no "error" that slips through a grepped build log and leaves you testing a stale binary; `dev.sh build` checks the binary's mtime instead. Restart with `./dev.sh restart && ./dev.sh wait`.
    - `src/map/status.c`, `status_get_val_flag()` — added `SC_VOLCANO` / `SC_DELUGE` / `SC_VIOLENTGALE` (`val_flag |= 1 | 2`, 2026-07-24). Without it Hercules sends `val1 = 1, val2 = 0` for these, so the status window could only render "+0". All three share one icon (`SI_GROUNDMAGIC`), so their values are the only way to show what they grant. Requires `make -j8` and a server restart.
