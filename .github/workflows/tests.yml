@@ -59,3 +59,6 @@ jobs:
 
       - name: Run unit tests
         run: cargo test --all-features
+
+      - name: Run headless harness unit tests
+        run: cargo test -p korangar-networking --example headless-tester

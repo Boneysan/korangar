@@ -2027,6 +2027,7 @@ dependencies = [
  "reqwest",
  "rust-state",
  "serde",
+ "serde_json",
  "tokio",
 ]
 

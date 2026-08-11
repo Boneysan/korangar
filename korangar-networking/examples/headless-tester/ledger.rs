@@ -10,6 +10,22 @@ use std::sync::{Arc, Mutex};
 
 use ragnarok_packets::Packet;
 use ragnarok_packets::handler::PacketCallback;
+use serde::Serialize;
+
+#[derive(Debug, Serialize)]
+pub struct UnknownPacketSummary {
+    pub header: u16,
+    pub count: u64,
+    pub sample_hex: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct PacketCoverageSummary {
+    pub distinct_incoming_handled: usize,
+    pub distinct_outgoing: usize,
+    pub unknown: Vec<UnknownPacketSummary>,
+    pub deserialization_failures: Vec<String>,
+}
 
 #[derive(Default)]
 pub struct LedgerInner {
@@ -31,6 +47,38 @@ pub struct Ledger {
 }
 
 impl Ledger {
+    pub fn summary(&self) -> PacketCoverageSummary {
+        let inner = self.inner.lock().unwrap();
+        let mut unknown: Vec<_> = inner
+            .unknown
+            .iter()
+            .map(|(&header, &count)| UnknownPacketSummary {
+                header,
+                count,
+                sample_hex: inner
+                    .unknown_samples
+                    .get(&header)
+                    .map(|bytes| {
+                        bytes
+                            .iter()
+                            .take(24)
+                            .map(|byte| format!("{byte:02x}"))
+                            .collect::<Vec<_>>()
+                            .join(" ")
+                    })
+                    .unwrap_or_default(),
+            })
+            .collect();
+        unknown.sort_by(|left, right| right.count.cmp(&left.count).then(left.header.cmp(&right.header)));
+
+        PacketCoverageSummary {
+            distinct_incoming_handled: inner.incoming.len(),
+            distinct_outgoing: inner.outgoing.len(),
+            unknown,
+            deserialization_failures: inner.failed.iter().map(|(_, error)| error.clone()).collect(),
+        }
+    }
+
     pub fn report(&self) -> String {
         let inner = self.inner.lock().unwrap();
         let mut out = String::new();

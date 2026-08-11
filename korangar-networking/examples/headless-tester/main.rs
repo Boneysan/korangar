@@ -7,16 +7,19 @@ mod context;
 mod ledger;
 mod scenarios;
 
+use std::fs::File;
 use std::net::SocketAddr;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 use std::time::{Duration, Instant};
 
 use clap::Parser;
 use korangar_debug::logging::Colorize;
+use serde::Serialize;
 
-use crate::context::{CONNECTION_ERROR, Config};
-use crate::ledger::Ledger;
-use crate::scenarios::{SKIPPED_PREFIX, all_scenarios, is_skip};
+use crate::context::{CONNECTION_ERROR, Config, clear_recorded_connection_error, take_recorded_connection_error};
+use crate::ledger::{Ledger, PacketCoverageSummary};
+use crate::scenarios::{SKIPPED_PREFIX, Scenario, all_scenarios, is_expected_skip, is_skip};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -70,6 +73,43 @@ struct Arguments {
     /// reproduces the exact order.
     #[arg(long)]
     shuffle: Option<u64>,
+
+    /// Write a machine-readable result artifact for CI and run comparison.
+    #[arg(long)]
+    results_json: Option<PathBuf>,
+
+    /// Treat a scenario which only passed on retry as a gate failure.
+    #[arg(long, default_value_t = false)]
+    fail_on_flaky: bool,
+}
+
+struct ScenarioExecution<'a> {
+    scenario: &'a Scenario,
+    result: Result<(), String>,
+    elapsed: Duration,
+    retried: bool,
+    expected_skip: bool,
+}
+
+#[derive(Serialize)]
+struct JsonScenarioResult<'a> {
+    name: &'a str,
+    phase: u8,
+    outcome: &'static str,
+    message: Option<&'a str>,
+    known_issue: Option<&'a str>,
+    duration_ms: u64,
+    retried: bool,
+}
+
+#[derive(Serialize)]
+struct JsonRunResults<'a> {
+    schema_version: u8,
+    client_revision: Option<String>,
+    hercules_revision: Option<String>,
+    shuffle_seed: Option<u64>,
+    scenarios: Vec<JsonScenarioResult<'a>>,
+    packet_coverage: PacketCoverageSummary,
 }
 
 /// Fisher-Yates using a hand-rolled xorshift64 PRNG.
@@ -141,11 +181,11 @@ fn main() -> ExitCode {
     let ledger = Ledger::default();
     let config = Config {
         server: arguments.server,
-        username: arguments.username,
-        password: arguments.password,
-        character: arguments.character,
-        partner_username: arguments.partner_username,
-        partner_password: arguments.partner_password,
+        username: arguments.username.clone(),
+        password: arguments.password.clone(),
+        character: arguments.character.clone(),
+        partner_username: arguments.partner_username.clone(),
+        partner_password: arguments.partner_password.clone(),
         timeout: Duration::from_secs(arguments.timeout),
         ledger: ledger.clone(),
     };
@@ -154,8 +194,14 @@ fn main() -> ExitCode {
 
     for scenario in &selected {
         println!("\n[{}] {} (phase {})", "Running".yellow(), scenario.name, scenario.phase);
+        clear_recorded_connection_error();
+        let observations_before_attempt = scenarios::skills::observation_checkpoint();
         let start = Instant::now();
         let mut result = (scenario.run)(&config);
+        if let Some(connection_error) = take_recorded_connection_error() {
+            result = Err(connection_error);
+        }
+        let mut retried = false;
 
         // Retry once, loudly, if the map server dropped the session mid-scenario.
         //
@@ -168,34 +214,49 @@ fn main() -> ExitCode {
         // run, not a session-teardown race.
         //
         // It is deliberately narrow and deliberately noisy. Only this one error
-        // retries, the retry is printed, and the ledger gate is untouched — a
-        // genuine desync still fails the run through `ledger.failed_count()`.
-        // If these lines start appearing regularly, that is a real bug asking
-        // to be investigated, not something to raise the retry count for.
+        // retries, a recovered attempt is FLAKY-PASS (and fails strict CI), and
+        // the ledger gate is untouched — a genuine desync still fails the run
+        // through `ledger.failed_count()`. If these lines start appearing
+        // regularly, that is a real bug asking to be investigated, not something
+        // to raise the retry count for.
         if matches!(&result, Err(message) if message.starts_with(CONNECTION_ERROR)) {
+            retried = true;
             println!(
                 "[{}] {} hit a map-server connection error — retrying once",
                 "Retry".yellow(),
                 scenario.name
             );
+            scenarios::skills::restore_observation_checkpoint(observations_before_attempt);
+            clear_recorded_connection_error();
             std::thread::sleep(Duration::from_secs(3));
             result = (scenario.run)(&config);
+            if let Some(connection_error) = take_recorded_connection_error() {
+                result = Err(connection_error);
+            }
         }
 
         let elapsed = start.elapsed();
+        let expected_skip = is_expected_skip(scenario.name, &result);
 
         match (&result, scenario.known_issue) {
             // A skip is checked before everything else: it means the scenario
             // never got to assert anything, so neither PASS nor FAIL is honest.
+            _ if expected_skip => {
+                let reason = result.as_ref().err().map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
+                println!("[{}] {}: {} ({:.1?})", "EXPECTED-SKIP".yellow(), scenario.name, reason, elapsed);
+            }
             _ if is_skip(&result) => {
                 let reason = result.as_ref().err().map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
-                println!("[{}] {}: {} ({:.1?})", "SKIP".yellow(), scenario.name, reason, elapsed);
+                println!("[{}] {}: {} ({:.1?})", "UNEXPECTED-SKIP".red(), scenario.name, reason, elapsed);
+            }
+            (Ok(()), None) if retried => {
+                println!("[{}] {} ({:.1?}) — passed only after a connection retry", "FLAKY-PASS".yellow(), scenario.name, elapsed)
             }
             (Ok(()), None) => println!("[{}] {} ({:.1?})", "PASS".green(), scenario.name, elapsed),
             (Ok(()), Some(issue)) => {
                 println!(
                     "[{}] {} passed but is marked as a known issue — close it in headless_findings.md! ({issue})",
-                    "PASS".green(),
+                    "UNEXPECTED-PASS".yellow(),
                     scenario.name
                 );
             }
@@ -204,31 +265,49 @@ fn main() -> ExitCode {
                 println!("[{}] {}: {} ({:.1?})", "KNOWN-FAIL".yellow(), scenario.name, issue, elapsed);
             }
         }
-        results.push((scenario.name, result, scenario.known_issue));
+        results.push(ScenarioExecution {
+            scenario,
+            result,
+            elapsed,
+            retried,
+            expected_skip,
+        });
 
         // Give the server a moment to fully drop the session before the next
         // scenario logs in with the same account.
         std::thread::sleep(Duration::from_millis(700));
     }
 
-    // Skips are counted on their own and excluded from "passed". Folding them
-    // into the pass count is exactly what hid two permanently-red scenarios
-    // behind a green 114/114 — see `SKIPPED_PREFIX`.
-    let skips: Vec<_> = results.iter().filter(|(_, result, _)| is_skip(result)).collect();
-    let failures: Vec<_> = results
+    let expected_skips = results.iter().filter(|execution| execution.expected_skip).count();
+    let unexpected_skips = results
         .iter()
-        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_none() && !is_skip(result))
-        .collect();
+        .filter(|execution| is_skip(&execution.result) && !execution.expected_skip)
+        .count();
+    let failures = results
+        .iter()
+        .filter(|execution| {
+            execution.result.is_err() && execution.scenario.known_issue.is_none() && !is_skip(&execution.result)
+        })
+        .count();
     let known_fails = results
         .iter()
-        .filter(|(_, result, known_issue)| result.is_err() && known_issue.is_some() && !is_skip(result))
+        .filter(|execution| {
+            execution.result.is_err() && execution.scenario.known_issue.is_some() && !is_skip(&execution.result)
+        })
         .count();
+    let flaky_passes = results
+        .iter()
+        .filter(|execution| execution.result.is_ok() && execution.retried && execution.scenario.known_issue.is_none())
+        .count();
+    let passed = results.len() - failures - known_fails - expected_skips - unexpected_skips - flaky_passes;
 
     println!(
-        "\n=== Summary: {} passed, {} failed, {} skipped, {} known-fail{} ===",
-        results.len() - failures.len() - known_fails - skips.len(),
-        failures.len(),
-        skips.len(),
+        "\n=== Summary: {} passed, {} flaky-pass, {} failed, {} expected-skip, {} unexpected-skip, {} known-fail{} ===",
+        passed,
+        flaky_passes,
+        failures,
+        expected_skips,
+        unexpected_skips,
         known_fails,
         match arguments.shuffle {
             // Repeated in the summary so a failure pasted from the tail of a
@@ -237,27 +316,38 @@ fn main() -> ExitCode {
             None => String::new(),
         }
     );
-    for (name, result, known_issue) in &results {
-        match (result, known_issue) {
-            _ if is_skip(result) => println!("  {} {}", "SKIP".yellow(), name),
-            (Ok(()), _) => println!("  {} {}", "PASS".green(), name),
-            (Err(_), Some(_)) => println!("  {} {}", "KNOWN-FAIL".yellow(), name),
-            (Err(_), None) => println!("  {} {}", "FAIL".red(), name),
+    for execution in &results {
+        match (&execution.result, execution.scenario.known_issue) {
+            _ if execution.expected_skip => println!("  {} {}", "EXPECTED-SKIP".yellow(), execution.scenario.name),
+            _ if is_skip(&execution.result) => println!("  {} {}", "UNEXPECTED-SKIP".red(), execution.scenario.name),
+            (Ok(()), Some(_)) => println!("  {} {}", "UNEXPECTED-PASS".yellow(), execution.scenario.name),
+            (Ok(()), None) if execution.retried => println!("  {} {}", "FLAKY-PASS".yellow(), execution.scenario.name),
+            (Ok(()), None) => println!("  {} {}", "PASS".green(), execution.scenario.name),
+            (Err(_), Some(_)) => println!("  {} {}", "KNOWN-FAIL".yellow(), execution.scenario.name),
+            (Err(_), None) => println!("  {} {}", "FAIL".red(), execution.scenario.name),
         }
     }
 
-    if !skips.is_empty() {
+    if expected_skips > 0 {
         println!(
-            "[{}] {} scenario(s) skipped — they asserted nothing, so treat the pass count accordingly",
+            "[{}] {} reviewed scenario(s) skipped — they are visible and excluded from the pass count",
             "Note".yellow(),
-            skips.len()
+            expected_skips
         );
     }
 
-    print_what_the_run_proved(&results);
+    print_what_the_run_proved();
 
     if arguments.report_packets || selected.len() > 1 {
         println!("{}", ledger.report());
+    }
+
+    if let Some(path) = &arguments.results_json {
+        if let Err(error) = write_json_results(path, &results, arguments.shuffle, ledger.summary()) {
+            println!("[{}] could not write {}: {error}", "Error".red(), path.display());
+            return ExitCode::FAILURE;
+        }
+        println!("[{}] {}", "Results".green(), path.display());
     }
 
     if ledger.failed_count() > 0 {
@@ -269,10 +359,58 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
 
-    match failures.is_empty() {
-        true => ExitCode::SUCCESS,
-        false => ExitCode::from(failures.len().min(255) as u8),
+    let gate_failures = failures + unexpected_skips + usize::from(arguments.fail_on_flaky && flaky_passes > 0);
+    match gate_failures {
+        0 => ExitCode::SUCCESS,
+        count => ExitCode::from(count.min(255) as u8),
     }
+}
+
+fn json_outcome(execution: &ScenarioExecution<'_>) -> &'static str {
+    match (&execution.result, execution.scenario.known_issue) {
+        _ if execution.expected_skip => "expected-skip",
+        _ if is_skip(&execution.result) => "unexpected-skip",
+        (Ok(()), Some(_)) => "unexpected-pass",
+        (Ok(()), None) if execution.retried => "flaky-pass",
+        (Ok(()), None) => "pass",
+        (Err(_), Some(_)) => "known-fail",
+        (Err(_), None) => "fail",
+    }
+}
+
+fn write_json_results(
+    path: &Path,
+    results: &[ScenarioExecution<'_>],
+    shuffle_seed: Option<u64>,
+    packet_coverage: PacketCoverageSummary,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if let Some(parent) = path.parent().filter(|parent| !parent.as_os_str().is_empty()) {
+        std::fs::create_dir_all(parent)?;
+    }
+
+    let scenarios = results
+        .iter()
+        .map(|execution| JsonScenarioResult {
+            name: execution.scenario.name,
+            phase: execution.scenario.phase,
+            outcome: json_outcome(execution),
+            message: execution.result.as_ref().err().map(String::as_str),
+            known_issue: execution.scenario.known_issue,
+            duration_ms: execution.elapsed.as_millis().min(u64::MAX as u128) as u64,
+            retried: execution.retried,
+        })
+        .collect();
+    let artifact = JsonRunResults {
+        schema_version: 1,
+        client_revision: std::env::var("KORANGAR_CLIENT_REVISION").ok(),
+        hercules_revision: std::env::var("KORANGAR_HERCULES_REVISION").ok(),
+        shuffle_seed,
+        scenarios,
+        packet_coverage,
+    };
+
+    serde_json::to_writer_pretty(File::create(path)?, &artifact)?;
+    Ok(())
 }
 
 /// The "so what" block: what this run actually established, as opposed to the
@@ -292,7 +430,7 @@ fn main() -> ExitCode {
 /// 3. **Scenarios that got dramatically slower without failing.** `skills-mage`
 ///    ran 4x its usual time and pass/fail said nothing at all; it was caught by
 ///    eye, which is not a mechanism.
-fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)]) {
+fn print_what_the_run_proved() {
     use scenarios::skills::{ALLOWLIST_OBSERVATIONS, EXPECTATION_VERDICTS, KNOWN_INTERMITTENT, SWEEP_OUTCOMES, Verdict};
 
     let outcomes = SWEEP_OUTCOMES.lock().map(|guard| guard.clone()).unwrap_or_default();
@@ -422,6 +560,45 @@ fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)
             }
         }
     }
+}
 
-    let _ = results;
+#[cfg(test)]
+mod tests {
+    use std::time::Duration;
+
+    use super::{ScenarioExecution, json_outcome, shuffle_deterministically};
+    use crate::scenarios::Scenario;
+
+    #[test]
+    fn shuffle_is_deterministic_for_a_seed() {
+        let mut first: Vec<_> = (0..20).collect();
+        let mut second = first.clone();
+        shuffle_deterministically(&mut first, 20260810);
+        shuffle_deterministically(&mut second, 20260810);
+
+        assert_eq!(first, second);
+        assert_ne!(first, (0..20).collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn zero_seed_is_not_degenerate() {
+        let mut values: Vec<_> = (0..20).collect();
+        shuffle_deterministically(&mut values, 0);
+
+        assert_ne!(values, (0..20).collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn recovered_retry_is_not_reported_as_a_plain_pass() {
+        let scenario = Scenario::new("retry-example", 1, |_| Ok(()));
+        let execution = ScenarioExecution {
+            scenario: &scenario,
+            result: Ok(()),
+            elapsed: Duration::from_millis(1),
+            retried: true,
+            expected_skip: false,
+        };
+
+        assert_eq!(json_outcome(&execution), "flaky-pass");
+    }
 }

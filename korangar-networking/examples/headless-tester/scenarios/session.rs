@@ -416,12 +416,14 @@ fn assert_baseline_unchanged(
 /// The ordering is the delicate part and it is why this asserts on collected
 /// events rather than waiting: `clif_authfail_fd` calls `sockt->eof(fd)` in the
 /// same breath as the send, so the reason and the disconnect arrive together.
-/// `pump` swallows the poll error and leaves already-queued events pending, so
-/// the reason is still there to be found after the connection has gone.
+/// This context marks the disconnect as expected before the kick. Ordinary
+/// disconnects remain fatal; this one keeps the reason and disconnect events
+/// available so their ordering can be asserted together.
 fn kick_explains_itself(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = TestContext::connect_pair(config)?;
 
     let target = partner.character_name.clone();
+    partner.expect_disconnect();
     partner.flush();
 
     primary.say(&format!("@kick {target}"))?;

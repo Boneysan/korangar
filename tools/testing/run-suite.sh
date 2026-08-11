@@ -8,9 +8,9 @@
 # two or more full-run logs, and nothing was archiving any. The audit existed
 # for a day before anyone noticed it had nothing to read.
 #
-# So: same command as before, plus a timestamped log under runs/. That is the
-# whole feature. It is a directory and a redirect, deliberately — a wrapper that
-# grows options becomes a thing to learn instead of a thing to use.
+# So: the same tester command, with timestamped console and JSON evidence under
+# runs/. The wrapper also makes red-but-complete runs archival and keeps
+# interrupted or targeted runs out of flaky.py's full-suite comparison glob.
 #
 #   tools/testing/run-suite.sh                 # --scenario all
 #   tools/testing/run-suite.sh --shuffle 20260810
@@ -25,7 +25,7 @@ set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo="$(cd "$here/../.." && pwd)"
-runs="$here/runs"
+runs="${HEADLESS_RUNS_DIR:-$here/runs}"
 mkdir -p "$runs"
 
 # `--scenario all` unless the caller said otherwise. Checked on the whole
@@ -52,11 +52,24 @@ esac
 log="$runs/$(date +%Y%m%d-%H%M%S)"
 echo "logging to $log.log (kept as .partial until it completes)"
 
+# Keep structured evidence next to every archived console log. A caller may
+# supply its own destination (CI does), otherwise this wrapper owns the partial
+# file and promotes it with the log only after a complete summary appears.
+owns_results_json=true
+case " ${arguments[*]-} " in
+*" --results-json "*) owns_results_json=false ;;
+*) arguments=(${arguments[@]+"${arguments[@]}"} --results-json "$log.results.partial.json") ;;
+esac
+
 cd "$repo"
 # `tee` so a long run is still watchable, and the pipeline's exit status is the
-# tester's — `set -o pipefail` above, or a red run would exit 0 through tee.
+# tester's. Temporarily disable `errexit`: otherwise a red-but-complete run exits
+# from the pipeline before its log can be promoted into the evidence archive.
+set +e
 cargo run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
-status=$?
+pipeline_status=("${PIPESTATUS[@]}")
+set -e
+runner_status=${pipeline_status[0]}
 
 # A RED run is still a complete run, and flaky.py wants it — that is where the
 # inconsistency lives. Only an *unfinished* one is disqualified, which is what
@@ -74,8 +87,11 @@ esac
 
 if grep -q "=== Summary" "$log.partial"; then
     mv "$log.partial" "$log.$scope"
+    if $owns_results_json && [ -f "$log.results.partial.json" ]; then
+        mv "$log.results.partial.json" "$log.$scope.json"
+    fi
     [ "$scope" = "scoped" ] && echo "targeted run — kept as $log.scoped, outside the cross-run archive"
 else
     echo "run did not finish — left as $log.partial, which flaky.py will not read"
 fi
-exit "$status"
+exit "$runner_status"

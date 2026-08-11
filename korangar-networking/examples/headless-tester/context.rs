@@ -4,6 +4,7 @@
 use std::collections::HashMap;
 use std::fmt::Write as _;
 use std::net::SocketAddr;
+use std::sync::Mutex;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
@@ -18,6 +19,27 @@ use ragnarok_packets::{
 use crate::ledger::Ledger;
 
 pub const PACKET_VERSION: SupportedPacketVersion = SupportedPacketVersion::_20220406;
+
+/// A connection error seen by a context even when the immediate caller used a
+/// best-effort pump/cleanup API. The runner consumes this after every scenario,
+/// so a dropped error can never turn into PASS (or allowlisted skill silence).
+static RECORDED_CONNECTION_ERROR: Mutex<Option<String>> = Mutex::new(None);
+
+pub fn clear_recorded_connection_error() {
+    if let Ok(mut error) = RECORDED_CONNECTION_ERROR.lock() {
+        *error = None;
+    }
+}
+
+pub fn take_recorded_connection_error() -> Option<String> {
+    RECORDED_CONNECTION_ERROR.lock().ok().and_then(|mut error| error.take())
+}
+
+fn record_connection_error(error: &str) {
+    if let Ok(mut recorded) = RECORDED_CONNECTION_ERROR.lock() {
+        recorded.get_or_insert_with(|| error.to_owned());
+    }
+}
 
 /// Where [`TestContext::connect_pair`] convenes both seats.
 ///
@@ -51,6 +73,12 @@ pub struct TestContext {
     pending: Vec<NetworkEvent>,
     /// Rolling log of recent events (debug strings) for timeout diagnostics.
     event_log: Vec<String>,
+    /// Sticky because a best-effort `pump` or `flush` may be the first code to
+    /// observe the disconnect. The next checked wait must still see it.
+    connection_error: Option<String>,
+    /// One scenario (`kick-explains-itself`) deliberately asks the server to
+    /// disconnect this context after sending a reason packet.
+    expected_disconnect: bool,
     pub timeout: Duration,
 
     // --- identity ---
@@ -239,6 +267,8 @@ impl TestContext {
             buffer,
             pending: Vec::new(),
             event_log: Vec::new(),
+            connection_error: None,
+            expected_disconnect: false,
             timeout: config.timeout,
             account_id: AccountId(0),
             character_id: CharacterId(0),
@@ -458,6 +488,10 @@ impl TestContext {
 
     /// Drain the network buffer once, doing state bookkeeping on every event.
     fn poll(&mut self) -> Result<(), String> {
+        if let Some(error) = &self.connection_error {
+            return Err(error.clone());
+        }
+
         self.net.get_events(&mut self.buffer);
         let events: Vec<NetworkEvent> = self.buffer.drain().collect();
         for event in events {
@@ -468,15 +502,39 @@ impl TestContext {
             if self.event_log.len() > EVENT_LOG_CAPACITY {
                 self.event_log.remove(0);
             }
-            if let NetworkEvent::MapServerDisconnected {
+            let connection_error = if let NetworkEvent::MapServerDisconnected {
                 reason: DisconnectReason::ConnectionError,
             } = &event
             {
-                return Err(format!("{CONNECTION_ERROR} (possible desync — check ledger for failed packets)"));
-            }
+                Some(format!("{CONNECTION_ERROR} (possible desync — check ledger for failed packets)"))
+            } else {
+                None
+            };
             self.pending.push(event);
+
+            if let Some(error) = connection_error {
+                if self.expected_disconnect {
+                    continue;
+                }
+                self.connection_error = Some(error.clone());
+                record_connection_error(&error);
+                return Err(error);
+            }
         }
         Ok(())
+    }
+
+    /// Mark the next map-server disconnect as part of the scenario contract.
+    /// This is intentionally narrow: ordinary disconnects remain fatal.
+    pub fn expect_disconnect(&mut self) {
+        self.expected_disconnect = true;
+    }
+
+    pub fn check_connection(&self) -> Result<(), String> {
+        match &self.connection_error {
+            Some(error) => Err(error.clone()),
+            None => Ok(()),
+        }
     }
 
     /// Drain events for `duration`, keeping them available to later waits.
@@ -508,6 +566,7 @@ impl TestContext {
     ) -> Result<T, String> {
         let deadline = Instant::now() + timeout;
         loop {
+            self.check_connection()?;
             if let Some(index_value) = self
                 .pending
                 .iter()
@@ -547,9 +606,14 @@ impl TestContext {
     /// events that later waits in the same scenario are relying on. Pair it with a
     /// `flush()` before the action, so what is pending afterwards is that action's
     /// own output and nothing older.
-    pub fn scan_pending<T>(&mut self, duration: Duration, classify: &mut impl FnMut(&NetworkEvent) -> Option<T>) -> Vec<T> {
+    pub fn scan_pending<T>(
+        &mut self,
+        duration: Duration,
+        classify: &mut impl FnMut(&NetworkEvent) -> Option<T>,
+    ) -> Result<Vec<T>, String> {
         self.pump(duration);
-        self.pending.iter().filter_map(|event| classify(event)).collect()
+        self.check_connection()?;
+        Ok(self.pending.iter().filter_map(|event| classify(event)).collect())
     }
 
     // --- state bookkeeping ------------------------------------------------

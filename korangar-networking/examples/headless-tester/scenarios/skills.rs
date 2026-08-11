@@ -79,6 +79,36 @@ pub enum Verdict {
 /// swept it. Anything else is load-bearing somewhere, and the counts say where.
 pub static ALLOWLIST_OBSERVATIONS: Mutex<Vec<(String, usize, usize, &'static str)>> = Mutex::new(Vec::new());
 
+/// Snapshot the report-only global accumulators before a scenario attempt.
+/// A connection retry restores this snapshot so the failed partial attempt is
+/// not counted alongside the successful retry.
+#[derive(Clone, Default)]
+pub struct ObservationCheckpoint {
+    outcomes: Vec<(&'static str, usize)>,
+    verdicts: Vec<(String, Verdict, String)>,
+    allowlist: Vec<(String, usize, usize, &'static str)>,
+}
+
+pub fn observation_checkpoint() -> ObservationCheckpoint {
+    ObservationCheckpoint {
+        outcomes: SWEEP_OUTCOMES.lock().map(|rows| rows.clone()).unwrap_or_default(),
+        verdicts: EXPECTATION_VERDICTS.lock().map(|rows| rows.clone()).unwrap_or_default(),
+        allowlist: ALLOWLIST_OBSERVATIONS.lock().map(|rows| rows.clone()).unwrap_or_default(),
+    }
+}
+
+pub fn restore_observation_checkpoint(checkpoint: ObservationCheckpoint) {
+    if let Ok(mut rows) = SWEEP_OUTCOMES.lock() {
+        *rows = checkpoint.outcomes;
+    }
+    if let Ok(mut rows) = EXPECTATION_VERDICTS.lock() {
+        *rows = checkpoint.verdicts;
+    }
+    if let Ok(mut rows) = ALLOWLIST_OBSERVATIONS.lock() {
+        *rows = checkpoint.allowlist;
+    }
+}
+
 pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("teleport-select", 5, teleport_select),
@@ -1311,11 +1341,13 @@ fn observe_window(
     what: &str,
     first_timeout: Duration,
     classify: &mut impl FnMut(&NetworkEvent) -> Option<(&'static str, u32)>,
-) -> Observed {
+) -> Result<Observed, String> {
     let mut observed = Observed::default();
 
-    let Ok((label, detail)) = context.wait_for_within(what, first_timeout, classify) else {
-        return observed;
+    let (label, detail) = match context.wait_for_within(what, first_timeout, classify) {
+        Ok(observation) => observation,
+        Err(error) if error.starts_with("timed out after") => return Ok(observed),
+        Err(error) => return Err(error),
     };
     observed.record(label, detail);
 
@@ -1324,7 +1356,7 @@ fn observe_window(
     } else {
         SETTLE_MS
     };
-    for (later, detail) in context.scan_pending(Duration::from_millis(settle.into()), classify) {
+    for (later, detail) in context.scan_pending(Duration::from_millis(settle.into()), classify)? {
         observed.record(later, detail);
     }
 
@@ -1337,9 +1369,10 @@ fn observe_window(
     // already opened the window.
     if observed.cast_ms > settle {
         context.pump(Duration::from_millis((observed.cast_ms - settle).into()));
+        context.check_connection()?;
     }
 
-    observed
+    Ok(observed)
 }
 
 /// Jobs only a female character can hold: Dancer and Gypsy.
@@ -1408,7 +1441,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         // actives that are **quest-gated** (First Aid / Trick Dead), so
         // `@allskill` cannot hand them over and there is nothing to cast. This
         // is the one legitimately permanent skip in the suite — which is why a
-        // skip must not fail the gate, only be counted separately.
+        // exact reviewed skip is baseline-gated and counted separately.
         return skipped("Novice has no castable skills — its actives are quest-gated");
     }
 
@@ -1704,7 +1737,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 // destination. `teleport-select` covers the selection path.
                 NetworkEvent::WarpList { .. } => Some(("warp-list", 0)),
                 _ => None,
-            });
+            })?;
 
             let result = match placed.primary() {
                 Some(kind) => kind,
@@ -1798,7 +1831,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             // Some skills open a menu (e.g. teleport / warp portal).
             NetworkEvent::OpenDialog { .. } | NetworkEvent::AddChoiceButtons { .. } => Some(("dialog", 0)),
             _ => None,
-        });
+        })?;
 
         // **A silent `Support` cast gets one retry against a real Friend target.**
         // Deliberately additive: the self-cast above is left exactly as it was,
@@ -1830,7 +1863,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                                 NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item (partner)", 0)),
                                 _ => None,
                             }
-                        });
+                        })?;
                         if !response.labels.is_empty() {
                             rescued_by_partner += 1;
                         }

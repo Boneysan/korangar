@@ -41,7 +41,10 @@ SKILL_ROW = re.compile(r"^\s+\d+\s+([A-Z][A-Z0-9_]+)\s+(\S+)\s+\S+\s+(.+)$")
 SWEEP_JOB = re.compile(r"^\s+([A-Za-z ]+): sweeping \d+ skills")
 # `[PASS] scenario-name (12.3s)`
 SCENARIO = re.compile(r"\]\s*(\S+) \(([0-9.]+)s\)")
-VERDICT = re.compile(r"\[(PASS|FAIL|SKIP|KNOWN-FAIL)\]\s*(\S+?):?\s", re.M)
+VERDICT = re.compile(
+    r"\[(PASS|FLAKY-PASS|FAIL|SKIP|EXPECTED-SKIP|UNEXPECTED-SKIP|KNOWN-FAIL|UNEXPECTED-PASS)\]\s*(\S+?):?\s",
+    re.M,
+)
 
 
 def read(path: pathlib.Path) -> tuple[dict[str, str], dict[str, float], dict[str, str]]:

@@ -1,0 +1,96 @@
+name: Paired integration
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 8 * * *"
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Scenario selector (`smoke`, `phaseN`, or `all`)
+        required: true
+        default: all
+
+concurrency:
+  group: integration-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  paired:
+    name: Korangar + pinned Hercules
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    services:
+      mariadb:
+        image: mariadb:11.8
+        ports:
+          - 3306:3306
+        env:
+          MARIADB_ROOT_PASSWORD: integration-root
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
+
+    steps:
+      - name: Check out Korangar
+        uses: actions/checkout@v4
+        with:
+          path: korangar
+
+      - name: Resolve the paired Hercules revision
+        id: hercules
+        working-directory: korangar
+        run: echo "revision=$(tr -d '[:space:]' < tools/testing/hercules-revision)" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Hercules
+        uses: actions/checkout@v4
+        with:
+          repository: Boneysan/Hercules
+          ref: ${{ steps.hercules.outputs.revision }}
+          path: Hercules
+
+      - name: Install server build and database dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential mariadb-client libmariadb-dev libmariadb-dev-compat zlib1g-dev libpcre3-dev libzstd-dev
+
+      - name: Cache Cargo build products
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: korangar
+
+      - name: Select scenario scope
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED: ${{ inputs.scenario }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "scenario=smoke" >> "$GITHUB_OUTPUT"
+          elif [ -n "$REQUESTED" ]; then
+            echo "scenario=$REQUESTED" >> "$GITHUB_OUTPUT"
+          else
+            echo "scenario=all" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run disposable paired integration suite
+        working-directory: korangar
+        env:
+          HERCULES_DIR: ${{ github.workspace }}/Hercules
+          INTEGRATION_DB_ADMIN_PASSWORD: integration-root
+          INTEGRATION_BUILD_JOBS: 2
+        run: tools/testing/run-integration-tests.sh --scenario "${{ steps.scope.outputs.scenario }}"
+
+      - name: Upload integration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paired-integration-results
+          if-no-files-found: warn
+          path: |
+            korangar/target/headless-results.json
+            korangar/target/headless-server-logs/
+            korangar/tools/testing/runs/

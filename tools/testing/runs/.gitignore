@@ -2,9 +2,12 @@
 # regenerated constantly. `tools/audits/flaky.py` reads whatever is here, so the
 # directory must exist in a fresh clone even though its contents never do.
 *.log
+*.log.json
 # An interrupted run keeps the `.partial` suffix so `flaky.py`'s `*.log` glob
 # cannot mistake a third of a run for a whole one.
 *.partial
+*.partial.json
 # A targeted run (`--scenario skills-mage`) is complete but is not cross-run
 # material — one job compared against a full sweep reads as inconsistency.
 *.scoped
+*.scoped.json
