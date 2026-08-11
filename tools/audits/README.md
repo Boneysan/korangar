@@ -1,8 +1,49 @@
 # Audits — runbook
 
-Several audits live here. `packetver-variants.py` and `generated-drift.sh` are
-below; the observer-parity suite is the rest of this document. `flaky.py` and
+Several audits live here. `unread-state.py`, `packetver-variants.py` and
+`generated-drift.sh` are below; the observer-parity suite is the rest of this
+document. `flaky.py` and
 `event-routing.py` carry their runbooks in their own docstrings.
+
+## `unread-state.py` — does the client store anything it never reads?
+
+```sh
+cd korangar
+python3 tools/audits/unread-state.py          # exits non-zero on an unclassified hit
+python3 tools/audits/unread-state.py --list   # every hit, baseline ignored
+```
+
+**Run whenever a `NetworkEvent` handler is added or a state struct grows a
+field.** The recurring failure in this fork is *"the data arrives and nothing
+displays it"*, in four stages: wire -> handler -> surface lifetime -> draw order.
+Stage three is a field a handler dutifully writes and nothing ever reads, and
+**every other check is green while it happens**: the headless suite asserts the
+wire, `event-routing.py` asserts the arm is not empty, and the compiler counts a
+`pub` field with a setter as used.
+
+`Common.spirit_spheres` lived in that hole — ZC_SPIRITS modelled, registered,
+evented, routed, stored, and Monk spheres never drawn. It was found by hand, by
+an audit aimed at something else. This is that grep made repeatable, and it
+rediscovers it from a cold start.
+
+**Reading a field is not just `.field`.** This codebase passes field
+*identifiers* into macros (`stat_row!(.., bonus_strength, ..)`) and into
+generated state paths. Counting only `.field` reports 87 fields and the whole
+`Player.bonus_*` cluster is a **false positive** — those are drawn by the stats
+window. Counting a bare identifier as a read takes it to 42, all classifiable.
+If you tighten this heuristic, check that cluster first.
+
+**It catches stage three only.** A field read solely by dead code still passes,
+and so does a popup drawn behind character select (stage four). Those need the
+routing extraction in `docs/plans/testing-completeness.md` §2c — but run this
+first: it says how common the class actually is before anyone commits to a
+2,755-line refactor. Today it says **one**.
+
+Classify hits in `unread-state.baseline`, same rules as the observer-parity one:
+the comments are the audit, and `# OPEN:` entries are reprinted every run.
+Confidence that it works comes from watching it fail in both directions — add an
+unread field and it reports UNCLASSIFIED; make a baselined field read and it
+reports STALE.
 
 ## `generated-drift.sh` — is each generated file still what its generator makes?
 

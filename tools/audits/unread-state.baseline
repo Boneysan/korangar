@@ -1,0 +1,103 @@
+# Classified `unread-state` findings, as of 2026-08-10.
+#
+# Every line without a leading `#` is a field the client stores and never reads,
+# which has been triaged. The comments ARE the audit: a hit with no rationale
+# above it has not been classified, and the audit has not passed.
+#
+# Lines beginning `# OPEN:` are reprinted on every run. Use them for hits that
+# are correctly classified and still wrong — a green exit means "nothing new",
+# never "nothing wrong".
+#
+# --- The one real bug -----------------------------------------------------
+#
+# OPEN: Common.spirit_spheres — ZC_SPIRITS is modelled, registered, evented,
+# OPEN:   routed and stored, and NOTHING DRAWS IT. Monk spirit spheres and
+# OPEN:   Gunslinger coins have never rendered. The `spirit-spheres` headless
+# OPEN:   scenario is green because it asserts the wire; `event-routing.py` is
+# OPEN:   green because the arm stores a value. This is the fifth recorded
+# OPEN:   instance of "the data arrives and nothing displays it".
+# OPEN:   It is also absent from `EntityData`, so an `AddEntity` rebuild wipes
+# OPEN:   it with nothing to re-send — but fixing that changes nothing visible
+# OPEN:   until something renders the spheres. Needs a live pass, not a
+# OPEN:   headless one. See tools/audits/observer-parity.baseline (A2).
+Common.spirit_spheres
+#
+# --- Deserialisation targets: the field models a FILE FORMAT ---------------
+#
+# why: these structs exist to parse a document, and a field is present because
+# the document has it, not because anything consumes it. Deleting them would
+# break the parse or silently drop data we may want later. This is the largest
+# and dullest category, and it is why the audit needs a baseline at all.
+#
+# `clientinfo.xml` — the official client's service descriptor. We read the
+# server list and little else; the rest is faithfully parsed and ignored.
+ClientInfo.extended_slot
+ClientInfo.hide_account_list
+ClientInfo.password_encrypt
+ClientInfo.password_encrypt2
+ClientInfo.read_folder
+Service.balloon
+Service.game_master_accounts
+Service.game_master_yellow_ids
+Service.language_type
+Service.loading_images
+Service.registration_web
+#
+# Map sky configuration. Sky/cloud rendering is not implemented — these are the
+# parsed recipe waiting for it. **If sky rendering ever lands and these are
+# still here, that is a bug, not a baseline entry.**
+CloudEffect.alpha_dec_speed
+CloudEffect.alpha_dec_time
+CloudEffect.alpha_dec_time_extra
+CloudEffect.alpha_inc_speed
+CloudEffect.alpha_inc_time
+CloudEffect.alpha_inc_time_extra
+CloudEffect.cull_dist
+CloudEffect.expand_rate
+CloudEffect.height_extra
+CloudEffect.num
+CloudEffect.size_extra
+MapSkyData.bg_color
+MapSkyData.bg_fog
+MapSkyData.old_cloud_effect
+MapSkyData.star_effect
+#
+# DM data assets (`bestiary.json`, `items.json`, `cards.json`, see
+# docs/DM_DATA_GUIDE.md). Exported wholesale from the server databases; the DM
+# windows read a subset. `aegis_name` is the server-side identifier, kept so an
+# export can be traced back to `item_db.conf`.
+BestiaryMonster.chase_range
+BestiaryMonster.drops_count
+BestiaryMonster.view_range
+DmCard.aegis_name
+DmItem.aegis_name
+#
+# --- Reflected by a derive, not read by hand -------------------------------
+#
+# why: `#[derive(RustState, StateElement)]` renders these through the state
+# system, which reflects over the fields. There is no `.field` and no bare
+# identifier because the generated code does not spell them out. The audit
+# cannot see that, and rather than teach it to parse derives, the shape is
+# recorded here.
+#
+# The debug cache window (`ToggleCacheStatisticsWindow`) displays all eight.
+CacheStatistics.action_cache
+CacheStatistics.animation_cache
+CacheStatistics.effect_cache
+CacheStatistics.font_cache
+CacheStatistics.map_cache
+CacheStatistics.sound_cache
+CacheStatistics.sprite_cache
+CacheStatistics.texture_cache
+#
+# Stored when a trade opens. Nothing needs the partner's id yet — the window
+# keys off the name — but it is the field any "is this still the same partner"
+# check would use, and the trade scenarios have already been bitten once by
+# stale partner state.
+TradeState.partner_character_id
+#
+# --- Held to keep something alive ------------------------------------------
+#
+# why: an RAII handle. It is never read BY DESIGN; dropping it frees the GPU
+# resource. The leading underscore is the convention that says so.
+StorageTexture._texture

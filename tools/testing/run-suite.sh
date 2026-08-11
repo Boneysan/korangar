@@ -41,10 +41,41 @@ case " ${arguments[*]-} " in
 *) arguments=(--scenario all ${arguments[@]+"${arguments[@]}"}) ;;
 esac
 
-log="$runs/$(date +%Y%m%d-%H%M%S).log"
-echo "logging to $log"
+# **Written as `.partial` and only renamed to `.log` when the run finishes.**
+#
+# `flaky.py` globs `*.log` and treats each as a complete run. An interrupted run
+# — Ctrl-C, a killed background job, a server restart — otherwise leaves a file
+# that looks exactly like a short one, and the audit silently compares a full run
+# against a third of a run. That is the same silent-failure shape this whole
+# directory exists to prevent, so the script must not depend on whoever killed it
+# remembering to clean up.
+log="$runs/$(date +%Y%m%d-%H%M%S)"
+echo "logging to $log.log (kept as .partial until it completes)"
 
 cd "$repo"
 # `tee` so a long run is still watchable, and the pipeline's exit status is the
 # tester's — `set -o pipefail` above, or a red run would exit 0 through tee.
-cargo run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log"
+cargo run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
+status=$?
+
+# A RED run is still a complete run, and flaky.py wants it — that is where the
+# inconsistency lives. Only an *unfinished* one is disqualified, which is what
+# the missing summary line means.
+#
+# A TARGETED run (`--scenario skills-mage`) is complete but is not a *run*: it
+# covers one scenario, and letting it into the `*.log` archive means flaky.py
+# compares a full sweep against a single job and calls the difference
+# inconsistency. Kept as `.scoped` — the evidence is still on disk, it just is
+# not cross-run material.
+case " ${arguments[*]} " in
+*" --scenario all "*) scope="log" ;;
+*) scope="scoped" ;;
+esac
+
+if grep -q "=== Summary" "$log.partial"; then
+    mv "$log.partial" "$log.$scope"
+    [ "$scope" = "scoped" ] && echo "targeted run — kept as $log.scoped, outside the cross-run archive"
+else
+    echo "run did not finish — left as $log.partial, which flaky.py will not read"
+fi
+exit "$status"

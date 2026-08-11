@@ -259,9 +259,31 @@ It was not found by either testing layer. It came out of
 entirely — that the field has no `EntityData` slot and is therefore wiped on
 `AddEntity` rebuild (the ammunition shape). Grepping for readers while triaging
 that is what turned up the larger problem. **Two audits aimed at different
-things, and the one that hit was aimed elsewhere.** That is an argument for 2c,
-not a substitute for it: a `NetworkEvent` → state assertion would have caught
-this directly instead of by accident.
+things, and the one that hit was aimed elsewhere.**
+
+**That grep is now `tools/audits/unread-state.py`, and it changes what 2c is
+worth.** Stage three — *stored and never read* — turns out to be statically
+detectable across the whole state layer for ~130 lines, with no refactor at all.
+Run cold it reports **42 fields, of which exactly one is a bug**: the other 41
+are deserialisation targets modelling a file format, derive-reflected state, and
+one RAII handle. So **the class is rare, not common**, and the plan's stated
+justification for 2c ("three of five recorded instances were in this layer")
+is now testable rather than assumed.
+
+**Measure 2c before committing to it.** `handle_network_events`
+(`korangar/src/lib.rs:3431`) is **155 arms over 2,755 lines touching 54 distinct
+`self.<field>`**, and the coupling is lopsided:
+
+| | arms | |
+|---|---|---|
+| touch **only** `self.client_state` | **63 (40%), 709 lines** | extractable into a pure `fn apply(&mut ClientState, event)`, unit-testable with no GPU |
+| `self.interface` | 44 | window opening |
+| `library` / `async_loader` / `map` | 21 / 16 / 15 | asset and world context |
+
+So it is two jobs. The 40% is contained and immediately useful. The rest needs
+the interface and loader layers faked, which is where the cost actually lives.
+And what the cheap audit does **not** cover is the remaining argument for doing
+it: a field read only by dead code, and stage four (drawn in the wrong order).
 
 ### 2d. A harness that links `korangar`
 
