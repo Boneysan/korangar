@@ -35,7 +35,7 @@ None of that was visible from a pass/fail count, which is the point.
 | fork-delta guards (11/11) | an upstream merge did not silently drop a server patch | — | strong |
 | `packetver-variants.py` | the client registers the header active at this PACKETVER | — | strong |
 | `event-routing.py` | no server event is discarded outright | values stored but never read; draw order | new |
-| client unit tests (306) | world/state logic | how events reach that state | decent |
+| client unit tests (277 run, 17 ignored) | world/state logic | how events reach that state | decent — but `cargo test -p korangar` did not COMPILE until 2026-08-10 |
 | skill sweep | **the wire is alive**, and now *what* each cast produced | whether that is the *right* thing (§1b step 2) | was weak; the window is in, the assertion is not |
 | — | — | **campaign content** | absent |
 | GUI pass | pixels and behaviour | — | manual, mostly unrun |
@@ -282,6 +282,21 @@ which shares the refactor.
 - **GUI automation.** No viable sprite-verification path here. What *can* be
   automated is the setup, so a pass is 20 minutes of looking rather than an hour
   of provisioning.
+
+## A layer that was counted and could not run
+
+`cargo test -p korangar` **did not compile** — the trait solver overflowed on
+`StorageAccess: Sync` through wgpu-core and naga. `cargo build --release` was
+unaffected, so the client built, ran and shipped while the test profile failed,
+and the table above counted 306 tests that nobody could execute. Fixed
+2026-08-10 with the `#![recursion_limit = "256"]` the diagnostic itself asks for;
+the real numbers are 294 collected, **277 passed, 0 failed, 17 ignored**.
+
+**The general lesson, and it is the same one as everything else on this page:**
+every number in the table above is a claim, and a claim nobody re-derives decays
+into decoration. This one had been wrong long enough that its own count was
+wrong too. The audits below exist so that the *other* claims cannot rot the same
+way — and the thing that caught this was simply running it.
 
 ## The mechanism that keeps this honest
 

@@ -58,15 +58,26 @@ pub enum Verdict {
     Unmet,
 }
 
-/// Allowlisted skills that answered anyway — i.e. entries that are no longer
-/// pulling their weight.
+/// Every allowlisted skill the run touched: `(name, times it answered, times it
+/// was silent, an example of what it answered with)`.
 ///
 /// **This is what stops the allowlist rotting.** A stale entry is not harmless:
 /// it silently absorbs a future regression in that skill. 43 of 81 entries were
 /// found dead on 2026-08-09, and the precedent for the damage is on record —
 /// `BD_ETERNALCHAOS` sat in the list under a false reason until `0x0189` was
 /// modelled.
-pub static STALE_ALLOWLIST: Mutex<Vec<(String, &'static str)>> = Mutex::new(Vec::new());
+///
+/// **Both counts, not just "it answered somewhere", and that distinction is the
+/// whole point.** The reporter used to name a skill stale the moment it answered
+/// in any job. `HT_REMOVETRAP` answers as Sniper and is silent as Hunter, Rogue
+/// and Stalker — so acting on that report deletes an entry that three sweeps
+/// depend on and turns them red. That is exactly the mistake already on record
+/// ("a single-run cull would have removed three load-bearing entries"), and the
+/// reporter was walking the reader straight back into it.
+///
+/// A skill is only safe to un-allowlist when it answered in **every** job that
+/// swept it. Anything else is load-bearing somewhere, and the counts say where.
+pub static ALLOWLIST_OBSERVATIONS: Mutex<Vec<(String, usize, usize, &'static str)>> = Mutex::new(Vec::new());
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -1031,20 +1042,42 @@ fn record_outcome(name: &str, result: &'static str, observed: usize) {
     if let Ok(mut outcomes) = SWEEP_OUTCOMES.lock() {
         outcomes.push((result, observed));
     }
-    // The three known intermittents respond on most runs by definition, so
-    // reporting them every time would train the reader to ignore this block —
-    // and a warning that is always present is a warning nobody reads. They stay
-    // allowlisted, and they are tracked as open questions in the list itself.
-    const KNOWN_INTERMITTENT: &[&str] = &["MG_NAPALMBEAT", "HP_BASILICA", "SL_SMA"];
-
-    if allowlisted(name) && result != "silent (allowlisted)" && !KNOWN_INTERMITTENT.contains(&name) {
-        if let Ok(mut stale) = STALE_ALLOWLIST.lock() {
-            if !stale.iter().any(|(existing, _)| existing == name) {
-                stale.push((name.to_owned(), result));
+    if !allowlisted(name) {
+        return;
+    }
+    let silent = result == "silent (allowlisted)";
+    if let Ok(mut rows) = ALLOWLIST_OBSERVATIONS.lock() {
+        match rows.iter_mut().find(|(existing, ..)| existing == name) {
+            Some((_, answered, quiet, example)) => {
+                if silent {
+                    *quiet += 1;
+                } else {
+                    *answered += 1;
+                    if example.is_empty() {
+                        *example = result;
+                    }
+                }
             }
+            None => rows.push((
+                name.to_owned(),
+                usize::from(!silent),
+                usize::from(silent),
+                if silent { "" } else { result },
+            )),
         }
     }
 }
+
+/// The three known intermittents respond on most runs by definition, so naming
+/// them as removable every time would train the reader to ignore the block — and
+/// a warning that is always present is a warning nobody reads. They stay
+/// allowlisted, and they are tracked as open questions in the list itself.
+///
+/// Still needed after the answered/silent split: within a *single* run these can
+/// answer in every job that sweeps them, which is exactly the shape of an entry
+/// safe to delete. It is only across runs that they go quiet, and one run cannot
+/// see that. `tools/audits/flaky.py` is what does.
+pub const KNOWN_INTERMITTENT: &[&str] = &["MG_NAPALMBEAT", "HP_BASILICA", "SL_SMA"];
 
 fn allowlisted(skill_name: &str) -> bool {
     // **Every entry here is verified against 8 full runs, not one.** An entry

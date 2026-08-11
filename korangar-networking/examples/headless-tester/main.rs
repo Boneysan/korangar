@@ -293,7 +293,7 @@ fn main() -> ExitCode {
 ///    ran 4x its usual time and pass/fail said nothing at all; it was caught by
 ///    eye, which is not a mechanism.
 fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)]) {
-    use scenarios::skills::{EXPECTATION_VERDICTS, STALE_ALLOWLIST, SWEEP_OUTCOMES, Verdict};
+    use scenarios::skills::{ALLOWLIST_OBSERVATIONS, EXPECTATION_VERDICTS, KNOWN_INTERMITTENT, SWEEP_OUTCOMES, Verdict};
 
     let outcomes = SWEEP_OUTCOMES.lock().map(|guard| guard.clone()).unwrap_or_default();
     if !outcomes.is_empty() {
@@ -379,21 +379,46 @@ fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)
             println!("  {refused:5}  refused — the server said no; a legitimate outcome the sweep cannot avoid");
             println!("  {blocked:5}  blocked — the skill opened a choice the sweep cannot answer");
             println!("  {unmet:5}  unmet — something came back, but not the promised observable");
-            println!("  Enforcing today would redden the {unmet} unmet. Listing the first 20:");
-            for (name, _, detail) in verdicts.iter().filter(|(_, verdict, _)| *verdict == Verdict::Unmet).take(20) {
-                println!("    {name:22} {detail}");
+            if unmet > 0 {
+                println!("  Enforcing today would redden the {unmet} unmet. Listing the first 20:");
+                for (name, _, detail) in verdicts.iter().filter(|(_, verdict, _)| *verdict == Verdict::Unmet).take(20) {
+                    println!("    {name:22} {detail}");
+                }
             }
         }
     }
 
-    if let Ok(stale) = STALE_ALLOWLIST.lock() {
-        if !stale.is_empty() {
-            println!("\n=== Stale allowlist entries ({}) ===", stale.len());
-            println!("  These skills are allowlisted as silent but answered. Each one is a loaded gun:");
-            println!("  it will absorb a real regression in that skill without a word. Remove the entry,");
-            println!("  or record why it must stay. Known intermittents are excluded and are not listed here.");
-            for (name, result) in stale.iter() {
-                println!("    {name:22} responded with {result:?}");
+    if let Ok(rows) = ALLOWLIST_OBSERVATIONS.lock() {
+        // Safe to delete: answered in EVERY job that swept it, and not a known
+        // cross-run intermittent (one run cannot see those going quiet).
+        let dead: Vec<_> = rows
+            .iter()
+            .filter(|(name, _, silent, _)| *silent == 0 && !KNOWN_INTERMITTENT.contains(&name.as_str()))
+            .collect();
+        // Answered somewhere, silent somewhere else. **Deleting one of these
+        // reddens the jobs where it is silent** — the mistake already on record.
+        let partial: Vec<_> = rows.iter().filter(|(_, answered, silent, _)| *answered > 0 && *silent > 0).collect();
+
+        if !dead.is_empty() {
+            println!("\n=== Allowlist entries that did not earn their place ({}) ===", dead.len());
+            println!("  Answered in EVERY job that swept them. Each is a loaded gun: it will absorb a");
+            println!("  real regression in that skill without a word. Remove the entry, or record why");
+            println!("  it must stay. Known cross-run intermittents are excluded.");
+            for (name, answered, _, example) in dead {
+                println!("    {name:22} answered {answered}/{answered} jobs, e.g. {example:?}");
+            }
+        }
+        if !partial.is_empty() {
+            println!("\n=== Allowlist entries that are load-bearing in SOME jobs ({}) ===", partial.len());
+            println!("  These answered somewhere and went silent somewhere else, in this same run.");
+            println!("  DO NOT delete them on the strength of the answer alone — that reddens the jobs");
+            println!("  where they are silent, which is exactly how three load-bearing entries were");
+            println!("  nearly culled before. `tools/audits/flaky.py` shows which job is which.");
+            for (name, answered, silent, example) in partial {
+                println!(
+                    "    {name:22} answered {answered}, silent {silent} (of {} jobs), e.g. {example:?}",
+                    answered + silent
+                );
             }
         }
     }
