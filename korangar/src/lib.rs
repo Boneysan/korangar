@@ -1,3 +1,13 @@
+// **Without this, `cargo test -p korangar` does not compile at all** — the trait
+// solver overflows on `StorageAccess: Sync` and `validation::NumericDimension:
+// Sync`, reached through wgpu-core's `PendingWrites` and naga's `ImageClass`.
+// `cargo build --release` is unaffected, which is why it went unnoticed: the
+// client builds and runs, and only the *test* profile fails. The 306 client unit
+// tests could not be run.
+//
+// Purely a compiler limit — it changes what the solver is willing to look at,
+// not what is compiled. 256 is what the diagnostic itself suggests.
+#![recursion_limit = "256"]
 #![allow(incomplete_features)]
 #![feature(adt_const_params)]
 #![feature(allocator_api)]
