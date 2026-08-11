@@ -220,14 +220,40 @@ at the end so the number cannot be misread; do not report a green sweep as
 "the skills work".
 
 Two structural limits worth knowing before trusting a sweep result:
-- **The matcher stops at the first event it recognises, and `SkillCast` is checked
-  first**, so `cast` means "a cast bar started and we stopped looking", not "the
-  skill did its job". `tools/generate_skill_expectations.py` derives what each
-  skill *should* be seen to do from `skill_db` (664 skills) and is deliberately
-  **not enforced**: validated against real runs it would redden 217 working
-  skills, because the sweep cannot currently see past that first event. Enforcing
-  it means reworking the observation loop to collect a window and to accept an
-  explicit refusal as a legitimate alternative.
+- **The sweep now observes a window, not the first matching event** (2026-08-10).
+  It used to stop at the first thing it recognised with `SkillCast` checked
+  first, so `cast` meant "a bar started and we stopped looking". `observe_window`
+  keeps classifying through the settle time the sweep was already sleeping
+  through — **no extra wall clock** — the reported result is the *strongest*
+  observation rather than the first (`evidence_rank`, where `cast` and
+  `post-delay` rank **last**, below an explicit refusal), and the table prints
+  the whole window: `damage   [cast -> post-delay -> damage]`. Every Mage bolt
+  used to report `cast`; they report `damage` now.
+  **It found a test bug on its first run:** Hercules sends `SI_POSTDELAY`
+  (icon 46) to the caster on **every** skill use (`skill.c:6616` + six siblings,
+  gated only on `display_status_timers`), and the sweep was counting that as
+  `buff` — so "the caster gained a status" was true of Cold Bolt, which grants
+  nothing. That is now its own weakest label.
+- **The derived expectations are now MEASURED but deliberately NOT ENFORCED.**
+  `tools/generate_skill_expectations.py` reads `skill_db.conf` and writes
+  `scenarios/skill_expectations.rs` (**770 of 976** player skills); the sweep
+  compares each cast against it and the run prints
+  `met / refused / blocked / unmet`. **Nothing fails on it** — a check that
+  reddens working skills is worse than no check. Full green run 2026-08-10:
+  **233 met / 374 refused / 5 blocked / 21 unmet** over 633 casts, against a
+  pre-window projection of *217 would redden*. The 21 are **7 distinct skills**,
+  and every one is a precondition the sweep cannot provide (nothing to identify,
+  nothing to dispel, a target that is not undead), not a product bug — which is
+  why it still is not enforced. `refused` (the server said no) and `blocked`
+  (a modal choice the sweep cannot answer) are legitimate outcomes, not failures:
+  the sweep cannot meet every precondition — no gemstones, no arrows, no combo
+  state. Regenerate after any `skill_db` change.
+  **The generator encodes whatever assumption you wrote, and only a real run
+  tells you which one was wrong** — three derivation bugs were found by the first
+  measurement: `Hit:` does not mean damage (`DamageType: { NoDamage: true }`
+  does, and 63 skills moved), a `StatusChange:` with no `Icon:` in
+  `sc_config.conf` is **never sent by Hercules at all** (46 skills), and
+  `AL_WARP` answers a `Unit:` promise with a destination picker.
 - **The sweep covers 1st, 2nd, transcendent and expanded classes — no 3rd
   classes.** 573 player skills (Warlock, Sorcerer, Rune Knight, Arch Bishop …)
   are never swept. That is a deliberate scope boundary for a campaign fork, not a

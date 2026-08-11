@@ -9,6 +9,145 @@ All findings are classified by layer:
 
 ---
 
+## Observation window — August 10, 2026 (tier 1b step 1)
+
+**Gate: `--scenario all` → 135 passed / 0 failed / 1 skipped**, 55 minutes,
+every sweep inside its normal duration band (professor 82s against an 85s median,
+soul-linker 150s against 128s). Same 983 casts as before, classified differently.
+
+**What changed in the distribution, which is the whole point.** `cast` went from
+**12% of observations to 4 casts out of 983**. Those ~114 casts now report what
+actually happened — 81 `damage`, 94 `no-damage-effect`, 60 `buff`, 35
+`ground-unit`, 3 `heal`. And **279 of 688 answered casts (41%) produced evidence
+past the first event the sweep recognised**: those are results the old model
+stated *wrongly*, not results it was silent about.
+
+
+The meaning pass below named the sweep's central limitation and left it open: the
+matcher **stopped at the first event it recognised**, with `SkillCast` checked
+first, so anything with a cast bar reported `cast` — *a bar started and we
+stopped looking*. That is now closed.
+
+**`observe_window` (`scenarios/skills.rs`).** Two phases: wait as before for the
+first recognised event, then keep classifying for the settle time the sweep was
+**already sleeping through** (`cast_ms + 400` after a bar, 400ms otherwise). The
+window is therefore free — `skills-mage` ran 52s where it ran 54s before. The
+non-consuming half is `TestContext::scan_pending`, which pumps and then reads
+`pending` **without removing anything**, so later waits in the same scenario
+still see their events.
+
+Three consequences:
+
+1. **The reported result is the strongest observation, not the first**
+   (`evidence_rank`). Every Mage bolt used to report `cast`; they report
+   `damage`. On `skills-priest`, 9 of 27 answered casts had something after the
+   first event — results the old model stated **wrongly**, not results it was
+   silent about.
+2. **`cast` and `post-delay` rank last, below an explicit refusal.** A bar
+   starting is the weakest thing the sweep can see, and it used to outrank
+   everything by arriving first. A `fail-*` is the server telling us what
+   happened, which is strictly more.
+3. **A trap that lands now reports as landing** even when the server said
+   something first — `ground-unit` outranks `fail-feedback`, where previously
+   whichever arrived first won.
+
+### The bug it found on its first run — `SI_POSTDELAY` was being counted as a buff
+
+> [!IMPORTANT]
+> **Hercules sends `SI_POSTDELAY` (icon 46) to the caster on every single skill
+> use.** `skill_castend_id` (`skill.c:6616`) plus six sibling sites, gated only
+> on `display_status_timers`, which is on by default.
+
+The sweep classified any `StatusChange` on the caster as `buff`. So *"the caster
+gained a status"* was true of **every skill in the game** — including Cold Bolt,
+which grants the caster nothing. The first windowed run printed
+`MG_COLDBOLT  damage  [cast -> buff -> damage]` for every bolt, and one probe of
+the status index settled it.
+
+**Why it stayed hidden for the life of the sweep:** `SkillCast` won the race for
+anything with a bar, so the arm was never reached for those skills; for instant
+skills it *was* reached, and `buff` was silently wrong there.
+
+**Why it mattered more than it looks:** the `StatusChange:` half of the derived
+expectations (§1b step 2, `tools/generate_skill_expectations.py`, 664 skills) is
+exactly the assertion "the caster gains the status". Enforced against the old
+classifier it would have **passed for everything** — a green check proving
+nothing, built on top of the check that was supposed to fix the green-proves-
+nothing problem. `post-delay` is now its own label and ranked weakest of all.
+
+### The derived expectations, now measured (step 2, still not enforced)
+
+With the window in, the comparison the whole tier was blocked on became possible.
+`tools/generate_skill_expectations.py` now writes
+`scenarios/skill_expectations.rs` (**770 of 976 player skills**, up from 664), the
+sweep checks every cast against it, and the run prints
+`met / refused / blocked / unmet`. **Nothing fails on it.** The measurement is
+what decides whether enforcing is honest, and the full green run reads **233 met,
+374 refused, 5 blocked, 21 unmet** over 633 casts — against the pre-window
+projection that enforcing *would redden 217 working skills*. The real number is
+**21, and they are 7 distinct skills** repeated across jobs.
+
+**Those 7 are why it still is not enforced.** Four (`MC_IDENTIFY`, `RG_CLEANER`,
+`SA_SPELLBREAKER`, `SG_FEEL`) resolved against **nothing to act on** — no
+unidentified item, no graffiti, no cast to break — so the server did the work and
+had nothing to report. `PR_TURNUNDEAD`'s target is a Pupa, which is not undead.
+`SA_AUTOSPELL` opens a picker (it should be `blocked`; the classifier has no arm
+for that list yet). `AL_CRUCIS` is the underivable one below. The residue is
+**"the precondition was absent and the server said nothing"** — the same category
+as a refusal, minus the message.
+
+The first measurement read 2 met and 5 unmet, and every one of the five was a
+**derivation** bug, not a product bug:
+
+| Bug | Fix |
+|---|---|
+| `Hit: "BDT_SKILL"` was read as "deals damage". Decrease AGI, Lex Divina and Lex Aeterna all carry it and deal **zero** damage — they have `DamageType: { NoDamage: true }` | New `Effect` kind (observable: `ZC_USE_SKILL`); **63 skills** moved out of `Damage` |
+| A `StatusChange:` with no `Icon:` in `sc_config.conf` is **never sent** — `ZC_MSG_STATE_CHANGE` carries the `SI_`, and 147 of 694 statuses have none (`SC_SIGHT` is one) | 46 skills dropped back to the loose standard, and *named* in the generator's output |
+| `AL_WARP` promises a `Unit:` and delivers a destination picker — the portal does not exist until something answers it | Its own verdict, `blocked`: not a refusal, not a failure |
+
+**One is not derivable and is left as a reported row.** `AL_CRUCIS` is
+`Self`-typed with a `StatusChange:` that Hercules applies to the *enemies* in its
+splash. `SplashArea` cannot separate it — 114 skills carry that flag and most
+(Angelus, Impositio, Adrenaline) genuinely buff the caster. It is a fact about
+`skill_castend_nodamage_id`, not about the database.
+
+**The pattern across all four: the generator encodes whatever assumption you
+wrote, and only a real run can tell you which one was wrong.** Same lesson the
+`Enemy`-vs-`Attack` and status-lands-on-the-target bugs taught when the generator
+was first written.
+
+### Four allowlist entries reported stale — reported, not culled
+
+The green run named `CR_DEVOTION`, `CR_PROVIDENCE`, `CG_MARIONETTE` and
+`TK_MISSION`. The first three are exactly what §1c's partner seat was built to
+rescue: all three need a *target player*, and they now answer (two with a
+refusal, `CR_PROVIDENCE` with a real `buff (partner)`).
+
+**Left in place deliberately.** The rule this suite learned the hard way is that
+a cull must be verified against **many runs, not one** — a single-run cull would
+have removed three load-bearing entries and made the suite intermittently red.
+One green run is one data point. The self-cleaning reporter will keep naming them
+every run until somebody has the evidence to remove them, which is exactly the
+job it exists to do.
+
+### And a correction to what §1c bought
+
+`skills-soul-linker` retries a silent `Support` cast against a real Friend seat.
+The plan recorded that as converting 15 silences into real coverage. With the
+window reading past the first event, **14 of those 15 answer
+`cast (partner) -> post-delay (partner) -> fail-feedback (partner)`** — the
+server refusing, because the Soul Link family requires a target of a *specific
+class* and the shared partner is whatever job it last held. Only `SL_BARDDANCER`
+produced a real `buff`, and only by luck of that job.
+
+So the allowlist's original stated reason was **right**, and the plan's
+correction of it was half wrong: seating *a* partner is not seating the *right*
+one. The gain is still real but smaller and honest — 15 silences became 14
+visible refusals and 1 real cast. Left open and **stated rather than
+allowlisted**, per the rule that no layer may fail silently.
+
+---
+
 ## Meaning pass — August 9/10, 2026 (what a green run actually claims)
 
 Started as one unfinished job — re-run `--scenario all` — and became a rebuild of
@@ -81,6 +220,9 @@ Each caught something the day it was written:
 * `tools/generate_skill_expectations.py` — 664 derived expectations,
   **deliberately not enforced**: validated against real runs it would redden 217
   working skills, because the sweep cannot see past the first event.
+  *(2026-08-10: the sweep can now see past the first event, and the table is up
+  to **770** and measured every run — still not enforced. See the observation
+  window section at the top.)*
 
 ### The argument for making shuffle routine
 
