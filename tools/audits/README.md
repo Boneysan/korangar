@@ -1,7 +1,43 @@
 # Audits — runbook
 
-Two audits live here. The packetver-variant check is below; the observer-parity
-suite is the rest of this document.
+Several audits live here. `packetver-variants.py` and `generated-drift.sh` are
+below; the observer-parity suite is the rest of this document. `flaky.py` and
+`event-routing.py` carry their runbooks in their own docstrings.
+
+## `generated-drift.sh` — is each generated file still what its generator makes?
+
+```sh
+cd korangar
+tools/audits/generated-drift.sh          # exits non-zero on drift
+```
+
+**Re-run after any Hercules merge, any `skill_db`/`sc_config` edit, and any
+PACKETVER change.** Four files in this tree are generated from Hercules' own
+data, and a generated file that has quietly stopped matching its generator is
+this repo's most-repeated failure mode. The existing guards all point *upstream*
+— `generate_message_table.py` carries a `CORRECTED_UPSTREAM` sentinel and exits
+non-zero without writing if Hercules reverts our realigned glosses. Nothing
+checked the other direction: that the file **in this tree** is what the
+generator produces **today**.
+
+The symptom is never an error. It is plausible text (an Yggdrasil Berry used
+twice reporting *"Content has been saved in [SaveData_ExMacro5]"*) or a packet
+the client silently mis-frames.
+
+It found drift on its first run: `lengths_20220406.rs` predated the three
+fork packets (`0x0EFE`, `0x0EFF`, `0x0F00`) gaining entries in Hercules'
+hand-maintained `src/common/packets_len.h`, so every future regeneration would
+have produced a diff nobody could account for. All three are **inert** —
+`register_length_fallbacks` never overrides a dedicated handler
+(`handler.rs:169`) and `0x0F00` is client→server — which is why nothing broke
+and why nothing noticed.
+
+**Read-only.** Each file is snapshotted, regenerated, compared, and restored,
+including on failure and including when a generator half-writes. It does not use
+git, so an uncommitted edit to a generated file survives the run. Confidence that
+it works comes from watching it fail: append a line to any generated file and it
+reports `DRIFTED` with the diff, exits 1, and leaves the file exactly as it found
+it.
 
 ## `packetver-variants.py` — is the client registering the *live* header?
 
@@ -140,6 +176,10 @@ Not scriptable, and deliberately absent:
   the merge can silently change out from under the fork.
 - **In CI**, on every commit. It is two seconds and it has already found three
   live gaps nobody was looking for.
+- **`generated-drift.sh` after any Hercules merge**, and after editing
+  `skill_db.conf`, `sc_config.conf`, `constants.conf` or `packets_len.h` — those
+  are the four inputs, and every one of them is a file an upstream merge can
+  change without anybody in this repo noticing.
 
 ## Related
 

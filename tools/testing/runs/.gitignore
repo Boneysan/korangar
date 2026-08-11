@@ -1,0 +1,4 @@
+# Run logs are evidence, not source: they are large, machine-specific, and
+# regenerated constantly. `tools/audits/flaky.py` reads whatever is here, so the
+# directory must exist in a fresh clone even though its contents never do.
+*.log

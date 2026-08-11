@@ -7,7 +7,7 @@
 //
 // Regenerate with: tools/generate_packet_lengths.sh
 //
-// Total packets in this table: 1595.
+// Total packets in this table: 1598.
 
 /// (header, total length or -1 for variable) for every packet the server
 /// build knows how to frame. Consumed by
@@ -1608,4 +1608,7 @@ pub static PACKET_LENGTHS: &[(u16, i32)] = &[
     (0x0BB7, -1),
     (0x0BB8, 16),
     (0x0BB9, 27),
+    (0x0F00, 2),
+    (0x0EFF, 30),
+    (0x0EFE, 6),
 ];

@@ -25,7 +25,18 @@
 #   EntityStopMove  — position/movement are rebuilt from EntityData
 # That is the distinction that matters: ammunition needed an off-entity map
 # because it has NO spawn-packet slot. None of these three do.
-A1|entity-keyed-find-sites=43
+#
+# 43 -> 47 on 2026-08-10, triaged the same way. `SpiritSpheres` and
+# `EntitySnapped` arrived 2026-08-02 (6ef1bf04), `PlaySoundEffect` and
+# `ShowScript` on 2026-08-08 (d92a8892). Three recover, one does not:
+#   EntitySnapped   — position is rebuilt from EntityData
+#   PlaySoundEffect — transient, and it already handles the miss: no entity
+#                     means it plays flat instead of spatially
+#   ShowScript      — transient, and the miss only costs the speaker's name
+#   SpiritSpheres   — DOES NOT RECOVER. See the A2 entry below: no
+#                     spawn-packet slot, so a miss is permanent — the
+#                     ammunition shape exactly.
+A1|entity-keyed-find-sites=47
 #
 # --- A2 ------------------------------------------------------------------
 # why: all eight are re-derived at construction from EntityData, so an
@@ -35,12 +46,28 @@ A1|entity-keyed-find-sites=43
 #   entity_type, scale                               <- job_id at construction
 #   animation_data, in_safe_zone                     <- set explicitly after
 # A field appearing here that is NOT in that list is a rebuild-wipe bug.
+#
+# OPEN: A2 — spirit_spheres is that bug, and one stage worse. Added
+# OPEN:      2026-08-02 (6ef1bf04). It has no EntityData slot, so an
+# OPEN:      `AddEntity` rebuild wipes it and nothing re-sends it — the
+# OPEN:      ammunition shape exactly, which is why that needed an
+# OPEN:      off-entity map.
+# OPEN:      But it never gets that far: `set_spirit_spheres` is the ONLY
+# OPEN:      write and there are ZERO reads in the whole tree. Monk spheres
+# OPEN:      and Gunslinger coins are parsed, evented, routed, stored — and
+# OPEN:      never drawn. Fixing the rebuild wipe changes nothing visible
+# OPEN:      until something renders them.
+# OPEN:      This is the failure `event-routing.py` structurally cannot
+# OPEN:      catch ("an arm that stores a value nobody reads",
+# OPEN:      plans/testing-completeness.md §2c), and the `spirit-spheres`
+# OPEN:      headless scenario is green because it asserts the wire only.
 A2|common-field-not-in-entitydata=active_movement
 A2|common-field-not-in-entitydata=animation_data
 A2|common-field-not-in-entitydata=direction
 A2|common-field-not-in-entitydata=entity_type
 A2|common-field-not-in-entitydata=in_safe_zone
 A2|common-field-not-in-entitydata=scale
+A2|common-field-not-in-entitydata=spirit_spheres
 A2|common-field-not-in-entitydata=tile_position
 A2|common-field-not-in-entitydata=world_position
 #
@@ -153,13 +180,13 @@ A8|wholesale-vd-write=memcpy(&sd->vd, vd, sizeof(struct view_data))
 # clans, hunting quests, mail, market, reputation, navigation, equip-switch,
 # show-equip, personal info, open-ui, map type), and unidentified packets kept
 # only for framing (Packet0b18, Packet8302, NotifyActorInit, ChangeMapCell,
-# DisplayImage, OpenMarket, UpdateConfiguration, AmmunitionAction).
+# DisplayImage, OpenMarket, UpdateConfiguration, AmmunitionAction —
+# ChangeMapCell left this list when the dynamic cell overlay gave it a handler).
 # A new entry here is a new thing the server says and the client ignores —
 # decide deliberately, and record the decision on this line.
 B2b|noop=AchievementListPacket
 B2b|noop=AchievementUpdatePacket
 B2b|noop=AmmunitionActionPacket
-B2b|noop=ChangeMapCellPacket
 B2b|noop=CharacterBanListPacket
 B2b|noop=CharacterListPacket
 B2b|noop=CharacterSlotPagePacket
