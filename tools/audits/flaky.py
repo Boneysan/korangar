@@ -36,15 +36,44 @@ import sys
 
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 # One row of a job sweep's per-skill table: id, name, type, level, outcome.
-SKILL_ROW = re.compile(r"^\s+\d+\s+([A-Z][A-Z0-9_]+)\s+(\S+)\s+\S+\s+(.+)$", re.M)
+SKILL_ROW = re.compile(r"^\s+\d+\s+([A-Z][A-Z0-9_]+)\s+(\S+)\s+\S+\s+(.+)$")
+# `    Hunter: sweeping 23 skills` — which job's table the rows below belong to.
+SWEEP_JOB = re.compile(r"^\s+([A-Za-z ]+): sweeping \d+ skills")
 # `[PASS] scenario-name (12.3s)`
 SCENARIO = re.compile(r"\]\s*(\S+) \(([0-9.]+)s\)")
 VERDICT = re.compile(r"\[(PASS|FAIL|SKIP|KNOWN-FAIL)\]\s*(\S+?):?\s", re.M)
 
 
 def read(path: pathlib.Path) -> tuple[dict[str, str], dict[str, float], dict[str, str]]:
+    """Skills are keyed `NAME @ Job`, and that keying is load-bearing.
+
+    **260 of the 403 skills the sweep touches appear in more than one job.** This
+    used to be a flat `{name: outcome}` built with `findall` over the whole log,
+    so 65% of the rows were overwritten and only the LAST job's outcome survived.
+
+    That hid the one genuinely inconsistent skill in the run it was pointed at:
+    `HT_REMOVETRAP` was `silent (allowlisted)` as Hunter, Rogue and Stalker but
+    `damage` as Sniper, and because Stalker sweeps last, both runs looked
+    identical. An audit whose entire purpose is finding inconsistency could not
+    see it.
+
+    Worse, *which* value survived depended on job order — and `--shuffle`
+    randomises job order deliberately, so the audit's own output moved with the
+    thing it was measuring.
+    """
     text = ANSI.sub("", path.read_text(errors="replace"))
-    skills = {name: outcome.strip() for name, _type, outcome in SKILL_ROW.findall(text)}
+
+    skills: dict[str, str] = {}
+    job = None
+    for line in text.splitlines():
+        heading = SWEEP_JOB.match(line)
+        if heading:
+            job = heading.group(1).strip()
+            continue
+        row = SKILL_ROW.match(line)
+        if row and job:
+            skills[f"{row.group(1)} @ {job}"] = row.group(3).strip()
+
     durations = {name: float(seconds) for name, seconds in SCENARIO.findall(text)}
     verdicts = {name: verdict for verdict, name in VERDICT.findall(text)}
     return skills, durations, verdicts
@@ -104,16 +133,68 @@ def main() -> int:
         for name, runs in sorted(silent.items()):
             quiet = sorted(run for run, outcome in runs.items() if "ilent" in outcome or "SILENT" in outcome)
             other = sorted({outcome for outcome in runs.values() if "ilent" not in outcome and "SILENT" not in outcome})
-            print(f"  {name:22} silent in {len(quiet)}/{len(runs)} runs, otherwise {other}")
+            print(f"  {name:34} silent in {len(quiet)}/{len(runs)} runs, otherwise {other}")
         print()
 
     other_unstable = {name: runs for name, runs in unstable_skill.items() if name not in silent}
     if other_unstable:
         print(f"skills whose outcome merely varies ({len(other_unstable)}) — usually preconditions, not defects:")
         for name, runs in sorted(other_unstable.items())[:15]:
-            print(f"  {name:22} {sorted(set(runs.values()))}")
+            print(f"  {name:34} {sorted(set(runs.values()))}")
         if len(other_unstable) > 15:
             print(f"  ... and {len(other_unstable) - 15} more")
+        print()
+
+    # --- the same skill, the same run, a different answer per job -----------
+    #
+    # This needs no second run at all, and it is the finding the flat keying
+    # used to destroy. A skill swept by several jobs is the same skill against
+    # the same server seconds apart; when the answers disagree, something about
+    # the *sweep* differs — leftover state, position, an earlier job's units —
+    # and that is the order-dependence this suite keeps being bitten by.
+    #
+    # Measured before being built, because a section nobody reads is worse than
+    # no section: 260 of 403 skills are swept by more than one job, only ~30
+    # disagree, and only one or two of those involve silence. Small enough to
+    # print, and the silent ones are listed first because silence is the outcome
+    # that hides defects.
+    by_skill: dict[str, dict[str, dict[str, str]]] = collections.defaultdict(lambda: collections.defaultdict(dict))
+    for keyed, runs in skill_runs.items():
+        if " @ " not in keyed:
+            continue
+        skill, job = keyed.split(" @ ", 1)
+        for run, outcome in runs.items():
+            by_skill[skill][run][job] = outcome
+
+    # Deduplicated across runs: the same skill disagreeing the same way in every
+    # run is ONE fact, not one per log. Without that, the section grows with the
+    # size of the archive rather than with the number of problems.
+    #
+    # And only the silence-involving ones are printed. The rest are dominated by
+    # job-specific preconditions — `AC_CONCENTRATION` differs solely because
+    # Super Novice refuses it — which is a true observation and a useless one.
+    # It stays as a count so it is stated rather than hidden.
+    quiet_disagreements: dict[str, dict[str, str]] = {}
+    mundane = set()
+    for skill, runs in by_skill.items():
+        for jobs in runs.values():
+            if len(jobs) > 1 and len(set(jobs.values())) > 1:
+                if any("ilent" in outcome or "SILENT" in outcome for outcome in jobs.values()):
+                    quiet_disagreements.setdefault(skill, jobs)
+                else:
+                    mundane.add(skill)
+    if quiet_disagreements:
+        findings += len(quiet_disagreements)
+        print(f"SAME SKILL, SAME RUN, SILENT IN SOME JOBS ONLY ({len(quiet_disagreements)}):")
+        print("  One run is enough to see these — the same skill, the same server, seconds apart.")
+        for skill, jobs in sorted(quiet_disagreements.items()):
+            print(f"  {skill}")
+            for job, outcome in sorted(jobs.items()):
+                print(f"      {job:16} {outcome}")
+        print()
+    if mundane:
+        print(f"({len(mundane)} more skills answer differently per job without ever going silent —")
+        print(" job-specific preconditions, e.g. a skill Super Novice alone is refused. Not listed.)")
         print()
 
     slow = []
