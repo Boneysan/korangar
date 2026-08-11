@@ -1215,11 +1215,13 @@ impl Observed {
     ///
     /// `AL_WARP` promises a skill unit and delivers a **destination picker** —
     /// the portal does not exist until something answers it, and the sweep has
-    /// no destination to give. That is a harness limitation, not a product
-    /// failure and not a refusal, and it deserves its own name rather than being
-    /// filed under either. `teleport-select` covers the answering path.
+    /// no destination to give. `SA_AUTOSPELL` is the same shape: it grants
+    /// `SC_AUTOSPELL` only once a skill is chosen from its list. That is a
+    /// harness limitation, not a product failure and not a refusal, and it
+    /// deserves its own name rather than being filed under either.
+    /// `teleport-select` and `auto-spell-list` cover the answering paths.
     fn blocked(&self) -> bool {
-        self.saw("warp-list") || self.saw("dialog")
+        self.saw("warp-list") || self.saw("spell-list") || self.saw("dialog")
     }
 }
 
@@ -1241,6 +1243,7 @@ fn evidence_rank(label: &str) -> usize {
         "buff",
         "no-damage-effect",
         "warp-list",
+        "spell-list",
         "dialog",
         "cooldown-list",
         "weapon-list",
@@ -1735,6 +1738,16 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             NetworkEvent::VisualEffect { .. } => Some(("visual", 0)),
             NetworkEvent::MonsterInformation { .. } => Some(("monster-info", 0)),
             NetworkEvent::WarpList { .. } => Some(("warp-list", 0)),
+            // `SA_AUTOSPELL` opens a picker and grants `SC_AUTOSPELL` only once
+            // something chooses from it — which the sweep cannot do.
+            //
+            // Without this arm the list arrived and was **ignored**, so
+            // `no-damage-effect` matched instead and the derived expectation read
+            // as unmet: the sweep was looking straight at the picker and not
+            // seeing it. That is a misclassification, not a missing precondition,
+            // and the two must not sit in the same bucket. `auto-spell-list`
+            // covers the choosing path.
+            NetworkEvent::AutoSpellList { .. } => Some(("spell-list", 0)),
             NetworkEvent::SkillCooldownList { .. } => Some(("cooldown-list", 0)),
             NetworkEvent::RefinableWeaponList { .. } => Some(("weapon-list", 0)),
             NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback", 0)),
