@@ -293,13 +293,13 @@ fn main() -> ExitCode {
 ///    ran 4x its usual time and pass/fail said nothing at all; it was caught by
 ///    eye, which is not a mechanism.
 fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)]) {
-    use scenarios::skills::{STALE_ALLOWLIST, SWEEP_OUTCOMES};
+    use scenarios::skills::{EXPECTATION_VERDICTS, STALE_ALLOWLIST, SWEEP_OUTCOMES, Verdict};
 
     let outcomes = SWEEP_OUTCOMES.lock().map(|guard| guard.clone()).unwrap_or_default();
     if !outcomes.is_empty() {
         let mut tally: Vec<(&str, usize)> = {
             let mut counts: std::collections::HashMap<&str, usize> = std::collections::HashMap::new();
-            for outcome in &outcomes {
+            for (outcome, _) in &outcomes {
                 *counts.entry(*outcome).or_default() += 1;
             }
             counts.into_iter().collect()
@@ -322,6 +322,68 @@ fn print_what_the_run_proved(results: &[(&str, Result<(), String>, Option<&str>)
             "  -> {:.0}% of these were a refusal, a passive skill, or accepted silence. A green sweep means\n     the wire is alive, NOT that the skills work.",
             100.0 * refused as f64 / outcomes.len() as f64
         );
+
+        // **How weak the weakest evidence is, named rather than left to be
+        // inferred.** `cast` means a bar started; `post-delay` means the server
+        // charged an after-cast delay and does not even carry the skill id.
+        // Neither says the skill did anything, and both used to be indexed as
+        // ordinary outcomes alongside `damage`.
+        let acknowledged = tally
+            .iter()
+            .filter(|(kind, _)| kind.starts_with("cast") || kind.starts_with("post-delay"))
+            .map(|(_, count)| *count)
+            .sum::<usize>();
+        if acknowledged > 0 {
+            println!(
+                "  -> {acknowledged} were only an acknowledgement (`cast` / `post-delay`): the server took the\n     request and nothing observable followed it inside the window."
+            );
+        }
+
+        // What the observation window actually bought. The sweep used to stop at
+        // the first event it recognised; this is how many casts had something
+        // after that first event — i.e. how many results the old model got wrong
+        // or under-stated.
+        //
+        // Counted against *answered* casts, not all rows: passives are never
+        // cast and silent ones produced nothing to look past, so including them
+        // would understate the window against a denominator it never had a
+        // chance at. An accuracy report that is itself inaccurate is worse than
+        // none — this file has that lesson written into it twenty lines up.
+        let answered = outcomes.iter().filter(|(_, observed)| *observed > 0).count();
+        let deeper = outcomes.iter().filter(|(_, observed)| *observed > 1).count();
+        if answered > 0 {
+            println!(
+                "  -> {deeper} of {answered} answered casts produced evidence past the first event the sweep\n     recognised. Those are the ones the old first-match model reported wrongly.",
+            );
+        }
+    }
+
+    // **What the sweep would prove if it asserted the derived expectations.**
+    //
+    // Report-only on purpose: this is tier 1b step 2 with the assertion left
+    // off. The observation window made the comparison possible at all, and these
+    // numbers are what decide whether turning it into a failure is honest yet.
+    // A check that reddens working skills is worse than no check.
+    if let Ok(verdicts) = EXPECTATION_VERDICTS.lock() {
+        if !verdicts.is_empty() {
+            let count = |wanted: Verdict| verdicts.iter().filter(|(_, verdict, _)| *verdict == wanted).count();
+            let (met, refused, blocked, unmet) = (
+                count(Verdict::Met),
+                count(Verdict::Refused),
+                count(Verdict::Blocked),
+                count(Verdict::Unmet),
+            );
+
+            println!("\n=== Derived expectations, measured but NOT enforced ({} casts) ===", verdicts.len());
+            println!("  {met:5}  met — the skill was seen doing what skill_db says it does");
+            println!("  {refused:5}  refused — the server said no; a legitimate outcome the sweep cannot avoid");
+            println!("  {blocked:5}  blocked — the skill opened a choice the sweep cannot answer");
+            println!("  {unmet:5}  unmet — something came back, but not the promised observable");
+            println!("  Enforcing today would redden the {unmet} unmet. Listing the first 20:");
+            for (name, _, detail) in verdicts.iter().filter(|(_, verdict, _)| *verdict == Verdict::Unmet).take(20) {
+                println!("    {name:22} {detail}");
+            }
+        }
     }
 
     if let Ok(stale) = STALE_ALLOWLIST.lock() {

@@ -6,6 +6,9 @@ mod items;
 mod movement;
 mod observer;
 mod session;
+/// Generated from Hercules' own `skill_db.conf` — see
+/// `tools/generate_skill_expectations.py`. Regenerate after any skill_db change.
+mod skill_expectations;
 pub mod skills;
 mod social;
 

@@ -538,6 +538,20 @@ impl TestContext {
         std::mem::take(&mut self.pending)
     }
 
+    /// Pump for `duration`, then classify everything still pending **without
+    /// consuming any of it**.
+    ///
+    /// This is the "keep looking" half of an observation window. `wait_for_within`
+    /// removes the one event it matched and returns; a caller that wants to know
+    /// what *else* the action produced has to keep reading, and must not eat the
+    /// events that later waits in the same scenario are relying on. Pair it with a
+    /// `flush()` before the action, so what is pending afterwards is that action's
+    /// own output and nothing older.
+    pub fn scan_pending<T>(&mut self, duration: Duration, classify: &mut impl FnMut(&NetworkEvent) -> Option<T>) -> Vec<T> {
+        self.pump(duration);
+        self.pending.iter().filter_map(|event| classify(event)).collect()
+    }
+
     // --- state bookkeeping ------------------------------------------------
 
     fn track(&mut self, event: &NetworkEvent) {

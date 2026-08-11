@@ -14,6 +14,7 @@ use korangar_networking::NetworkEvent;
 use ragnarok_packets::{Direction, EntityId, SkillId, SkillLevel, SkillType, TilePosition, WorldPosition};
 
 use crate::context::{Config, TestContext};
+use crate::scenarios::skill_expectations::{Expected, SKILL_EXPECTATIONS};
 use crate::scenarios::{Scenario, skipped};
 
 /// What the sweep actually observed, aggregated across every job, so the run can
@@ -25,7 +26,37 @@ use crate::scenarios::{Scenario, skipped};
 /// a correctness check, and "39 job sweeps, green" reads like one. Measured on
 /// 2026-08-09, 36% of observations were the server *refusing* the skill and 26%
 /// were passive skills that are never cast at all.
-pub static SWEEP_OUTCOMES: Mutex<Vec<&'static str>> = Mutex::new(Vec::new());
+///
+/// The second field is how many distinct kinds of evidence that cast produced.
+/// It is here so the run can report how often the observation window saw
+/// anything **past the first event** — the number that says whether widening the
+/// window bought coverage or just changed a label.
+pub static SWEEP_OUTCOMES: Mutex<Vec<(&'static str, usize)>> = Mutex::new(Vec::new());
+
+/// How each cast measured against the expectation its own `skill_db` entry
+/// derives — `(skill name, verdict, what was seen)`.
+///
+/// **Report-only, deliberately.** This is tier 1b step 2 with the assertion left
+/// off: the observation window (step 1) made the comparison possible, and the
+/// number it produces is what decides whether enforcing it is honest yet. The
+/// recorded measurement before the window said enforcing would redden **217
+/// working skills**; a check that reddens working skills is worse than no check,
+/// so it reports and does not fail.
+pub static EXPECTATION_VERDICTS: Mutex<Vec<(String, Verdict, String)>> = Mutex::new(Vec::new());
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Verdict {
+    /// The promised observable arrived.
+    Met,
+    /// The server explicitly refused the skill. A legitimate alternative — the
+    /// sweep cannot meet every precondition — and *not* a failed expectation.
+    Refused,
+    /// The skill stopped on a modal choice the sweep cannot answer.
+    Blocked,
+    /// Something came back, but not the thing the database promised. These are
+    /// the only rows worth reading.
+    Unmet,
+}
 
 /// Allowlisted skills that answered anyway — i.e. entries that are no longer
 /// pulling their weight.
@@ -957,9 +988,48 @@ fn weapon_refine_cancel(config: &Config) -> Result<(), String> {
 /// Kept intentionally small: anything else that fails silently is a finding.
 /// Log one sweep observation, and notice when an allowlist entry did not earn
 /// its place on this run.
-fn record_outcome(name: &str, result: &'static str) {
+/// Measure one cast against what `skill_db` says the skill does, if it says
+/// anything. Records a verdict; never fails the scenario.
+fn record_expectation(skill_id: u16, name: &str, observed: &Observed) {
+    let Some((_, _, expected)) = SKILL_EXPECTATIONS.iter().find(|(id, _, _)| *id == skill_id) else {
+        return;
+    };
+    // Nothing at all came back. That is the sweep's own silence failure, already
+    // reported as `SILENT` or absorbed by the allowlist — reporting it a second
+    // time as an unmet expectation would double-count one fact.
+    if observed.labels.is_empty() {
+        return;
+    }
+
+    let (met, wanted) = match expected {
+        Expected::Unit => (observed.saw("ground-unit"), "a skill unit".to_owned()),
+        Expected::Damage => (observed.saw("damage"), "damage".to_owned()),
+        Expected::Effect => (observed.saw("no-damage-effect"), "a no-damage effect".to_owned()),
+        Expected::Status(icon, status) => (observed.status_icons.contains(icon), format!("{status} (icon {icon})")),
+    };
+
+    let verdict = if met {
+        Verdict::Met
+    } else if observed.refused() {
+        Verdict::Refused
+    } else if observed.blocked() {
+        Verdict::Blocked
+    } else {
+        Verdict::Unmet
+    };
+
+    if let Ok(mut verdicts) = EXPECTATION_VERDICTS.lock() {
+        verdicts.push((
+            name.to_owned(),
+            verdict,
+            format!("wanted {wanted}, saw {}", observed.labels.join(" -> ")),
+        ));
+    }
+}
+
+fn record_outcome(name: &str, result: &'static str, observed: usize) {
     if let Ok(mut outcomes) = SWEEP_OUTCOMES.lock() {
-        outcomes.push(result);
+        outcomes.push((result, observed));
     }
     // The three known intermittents respond on most runs by definition, so
     // reporting them every time would train the reader to ignore this block —
@@ -1050,6 +1120,190 @@ struct SkillOutcome {
     skill_type: SkillType,
     level: u16,
     result: &'static str,
+    /// Everything the cast produced, in arrival order — `result` is only the
+    /// strongest entry in here. Printed when it holds more than one thing, so
+    /// the table can say `cast -> damage` instead of `cast`.
+    observed: Vec<&'static str>,
+}
+
+/// `SI_POSTDELAY` (`db/constants.conf`), the after-cast delay icon.
+///
+/// **Hercules sends this to the caster on every single skill use** —
+/// `skill_castend_id` (`skill.c:6616`) and six sibling sites, gated only on
+/// `display_status_timers`, which is on by default. So a `StatusChange` on the
+/// caster is *not* evidence that a skill granted a status: it is evidence that a
+/// skill was used at all.
+///
+/// Found by the observation window on its first run: every Mage bolt reported
+/// `cast -> buff -> damage`, and Cold Bolt grants the caster nothing. Before the
+/// window, the arms below were raced and `SkillCast` won, so this never showed —
+/// but it means every `buff` result on an instant-cast skill was suspect, and it
+/// would have turned the `StatusChange:` half of the derived expectations
+/// (tier 1b step 2) into a check that passes for everything.
+const SI_POSTDELAY: u16 = 46;
+
+/// How long to keep watching after the first recognised event.
+///
+/// This is not a new cost: the sweep already waited exactly this long before the
+/// next cast (`cast_ms + 400` for anything with a bar, 400ms otherwise), it just
+/// threw away what arrived. The window is that same wait, read instead of slept
+/// through.
+const SETTLE_MS: u32 = 400;
+
+/// The evidence one cast produced, rather than the first event that happened to
+/// match.
+///
+/// **Why this is a set.** The sweep used to stop at the first recognised event,
+/// and `SkillCast` was checked first — so for every skill with a cast bar the
+/// recorded outcome was `cast`, which means *a bar started and we stopped
+/// looking*, not that the skill did anything. That was 12% of 983 casts measured
+/// 2026-08-09, and it is the reason `tools/generate_skill_expectations.py` could
+/// not be enforced: all 664 derived expectations ("a unit is placed", "the caster
+/// gains the status", "damage is dealt") describe events that arrive *after* the
+/// bar completes, where nothing was looking.
+#[derive(Default)]
+struct Observed {
+    labels: Vec<&'static str>,
+    /// The status icon indices seen on the caster, so a `Status` expectation can
+    /// be checked against **which** status arrived rather than against the fact
+    /// that some status did. Without this, `SI_POSTDELAY` alone would satisfy
+    /// every one of them.
+    status_icons: Vec<u16>,
+    cast_ms: u32,
+}
+
+impl Observed {
+    /// The strongest thing seen — not the first.
+    fn primary(&self) -> Option<&'static str> {
+        self.labels.iter().copied().min_by_key(|label| evidence_rank(label))
+    }
+
+    /// Labels are deduplicated (the table would be unreadable otherwise), but
+    /// **every** status icon is kept: two different buffs are two different
+    /// facts, and only one of them may be the one a skill promised.
+    fn record(&mut self, label: &'static str, detail: u32) {
+        if !self.labels.contains(&label) {
+            self.labels.push(label);
+        }
+        if label.starts_with("buff") {
+            let icon = detail as u16;
+            if !self.status_icons.contains(&icon) {
+                self.status_icons.push(icon);
+            }
+        } else if label.starts_with("cast") && self.cast_ms == 0 {
+            self.cast_ms = detail;
+        }
+    }
+
+    fn saw(&self, label: &str) -> bool {
+        self.labels.iter().any(|seen| *seen == label)
+    }
+
+    /// Did the server say, in words, that it would not do this?
+    ///
+    /// **A refusal is a legitimate outcome, not a failure of the expectation.**
+    /// The sweep cannot meet every precondition — no gemstones, no arrows, no
+    /// combo state, no party — so an expectation that treats "you need a Blue
+    /// Gemstone" as an unmet promise would redden working skills by the hundred.
+    fn refused(&self) -> bool {
+        self.labels
+            .iter()
+            .any(|label| label.starts_with("fail-feedback") || label.starts_with("fail-missing-item"))
+    }
+
+    /// Did the skill stop on a choice the sweep cannot make?
+    ///
+    /// `AL_WARP` promises a skill unit and delivers a **destination picker** —
+    /// the portal does not exist until something answers it, and the sweep has
+    /// no destination to give. That is a harness limitation, not a product
+    /// failure and not a refusal, and it deserves its own name rather than being
+    /// filed under either. `teleport-select` covers the answering path.
+    fn blocked(&self) -> bool {
+        self.saw("warp-list") || self.saw("dialog")
+    }
+}
+
+/// How much each label proves, lowest number = strongest evidence.
+///
+/// **`cast` ranks last on purpose.** A cast bar is the weakest observation the
+/// sweep can make and it used to outrank everything by arriving first; now a
+/// skill only reports `cast` when the window genuinely held nothing else, which
+/// is a statement worth making. A refusal outranks it too — an explicit
+/// `fail-*` is the server telling us what happened, which is more than a bar
+/// starting and nothing following it.
+fn evidence_rank(label: &str) -> usize {
+    // Ordered strongest first. Partner retries append " (partner)" to the same
+    // labels, so rank on the stem.
+    const ORDER: &[&str] = &[
+        "damage",
+        "heal",
+        "ground-unit",
+        "buff",
+        "no-damage-effect",
+        "warp-list",
+        "dialog",
+        "cooldown-list",
+        "weapon-list",
+        "monster-info",
+        "cooldown",
+        "visual",
+        "fail-missing-item",
+        "fail-feedback",
+        "cast",
+        // Last, and below `cast`: the after-cast delay proves the server
+        // processed *a* skill, and unlike `cast` it does not even carry the
+        // skill id. It is the weakest thing the sweep can see and still count as
+        // alive.
+        "post-delay",
+    ];
+    let stem = label.split(" (").next().unwrap_or(label);
+    ORDER.iter().position(|entry| *entry == stem).unwrap_or(ORDER.len())
+}
+
+/// Watch a cast for a window instead of returning on the first match.
+///
+/// Two phases, and the second is free: wait up to `first_timeout` for anything
+/// recognisable (exactly what the sweep did before), then keep classifying for
+/// the settle time the sweep was already sleeping through anyway. A cast bar
+/// extends the window by its own duration, because that is when the skill
+/// actually resolves.
+/// The classifier's second value is a per-label detail: the cast time for
+/// `cast`, and the **status icon index** for `buff`. The icon is what makes a
+/// `Status` expectation checkable — see `Observed::status_icons`.
+fn observe_window(
+    context: &mut TestContext,
+    what: &str,
+    first_timeout: Duration,
+    classify: &mut impl FnMut(&NetworkEvent) -> Option<(&'static str, u32)>,
+) -> Observed {
+    let mut observed = Observed::default();
+
+    let Ok((label, detail)) = context.wait_for_within(what, first_timeout, classify) else {
+        return observed;
+    };
+    observed.record(label, detail);
+
+    let settle = if label.starts_with("cast") {
+        detail.saturating_add(SETTLE_MS)
+    } else {
+        SETTLE_MS
+    };
+    for (later, detail) in context.scan_pending(Duration::from_millis(settle.into()), classify) {
+        observed.record(later, detail);
+    }
+
+    // **A cast bar that only turns up later in the window still has to be waited
+    // out**, or the next skill is refused with "you are still casting" and the
+    // sweep records that refusal against the wrong skill. Normally `SkillCast`
+    // arrives first and `settle` already covers it; this catches the case where
+    // it does not, because the bar names a different skill id than the one
+    // requested and the matcher's filter skipped it until something else had
+    // already opened the window.
+    if observed.cast_ms > settle {
+        context.pump(Duration::from_millis((observed.cast_ms - settle).into()));
+    }
+
+    observed
 }
 
 /// Jobs only a female character can hold: Dancer and Gypsy.
@@ -1238,13 +1492,14 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             // difference being exactly the 253 passives, while the summary line
             // still named "a passive skill" as a category. An accuracy report
             // that is itself inaccurate is worse than none.
-            record_outcome(&name, "passive");
+            record_outcome(&name, "passive", 0);
             outcomes.push(SkillOutcome {
                 skill_id: skill.skill_id.0,
                 name,
                 skill_type: skill.skill_type,
                 level: level.0,
                 result: "passive",
+                observed: Vec::new(),
             });
             continue;
         }
@@ -1397,7 +1652,13 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             // Gust, Magnus, Warp), and the unit only appears once the bar
             // completes. `SkillCast` is deliberately NOT accepted here — a cast
             // bar starting is what the loose standard mistook for evidence.
-            let placed = context.wait_for_within("skill unit", Duration::from_secs(12), &mut |event| match event {
+            //
+            // Observed as a window like the generic path below, which matters
+            // here for a specific reason: a refusal and a placement can both
+            // arrive, and whichever came first used to win. `ground-unit`
+            // outranks `fail-feedback`, so a trap that landed is now reported as
+            // landing even if the server said something first.
+            let placed = observe_window(&mut context, "skill unit", Duration::from_secs(12), &mut |event| match event {
                 NetworkEvent::AddSkillUnit { .. } => Some(("ground-unit", 0)),
                 NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback", 0)),
                 NetworkEvent::SkillFailedMissingItem { .. } => Some(("fail-missing-item", 0)),
@@ -1409,31 +1670,51 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 _ => None,
             });
 
-            let (result, wait) = match placed {
-                Ok((kind, _)) => (kind, 400),
-                Err(_) if allowlisted(&name) => ("silent (allowlisted)", 0),
-                Err(_) => ("SILENT — investigate", 0),
+            let result = match placed.primary() {
+                Some(kind) => kind,
+                None if allowlisted(&name) => "silent (allowlisted)",
+                None => "SILENT — investigate",
             };
-            context.pump(Duration::from_millis(wait));
-            record_outcome(&name, result);
+            record_expectation(skill.skill_id.0, &name, &placed);
+            record_outcome(&name, result, placed.labels.len());
             outcomes.push(SkillOutcome {
                 skill_id: skill.skill_id.0,
                 name,
                 skill_type: skill.skill_type,
                 level: level.0,
                 result,
+                observed: placed.labels,
             });
             continue;
         }
 
         // Any observable response counts; total silence is the failure mode.
-        let response = context.wait_for_within("skill response", Duration::from_secs(4), &mut |event| match event {
+        //
+        // **Every arm below is checked against the whole window, not raced.**
+        // These used to be tried in order against one event and the first `Some`
+        // ended the observation — with `SkillCast` first, so anything with a bar
+        // reported `cast` and the arms underneath it were unreachable for that
+        // skill. They now all get their chance, and `evidence_rank` decides which
+        // of the things that actually happened gets reported.
+        let response = observe_window(&mut context, "skill response", Duration::from_secs(4), &mut |event| match event {
             NetworkEvent::SkillCast { skill_id, cast_ms, .. } if skill_id.0 == skill.skill_id.0 => Some(("cast", *cast_ms)),
             NetworkEvent::DamageEffect { source_entity_id, .. } if source_entity_id.0 == player_id.0 => Some(("damage", 0)),
             NetworkEvent::HealEffect { .. } => Some(("heal", 0)),
+            // **Not `SI_POSTDELAY`** — see the constant. Every skill grants it,
+            // so counting it as a buff makes "the caster gained a status" true
+            // of everything and therefore evidence of nothing.
             NetworkEvent::StatusChange {
-                entity_id, gained: true, ..
-            } if entity_id.0 == player_id.0 => Some(("buff", 0)),
+                entity_id,
+                gained: true,
+                index,
+                ..
+            } if entity_id.0 == player_id.0 && *index != SI_POSTDELAY => Some(("buff", (*index).into())),
+            NetworkEvent::StatusChange {
+                entity_id,
+                gained: true,
+                index,
+                ..
+            } if entity_id.0 == player_id.0 && *index == SI_POSTDELAY => Some(("post-delay", 0)),
             NetworkEvent::AddSkillUnit { .. } => Some(("ground-unit", 0)),
             // `ZC_USE_SKILL` (0x09CB on this packetver — *not* 0x011a, which is
             // the pre-2013 header). This is the success notification for every
@@ -1480,15 +1761,23 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         // rescues is the Soul Link family, whose 15 skills cannot target their
         // own caster and so could never do anything but time out.
         let mut response = response;
-        if response.is_err() && matches!(skill.skill_type, SkillType::Support) {
+        if response.labels.is_empty() && matches!(skill.skill_type, SkillType::Support) {
             match partner_beside(&mut partner, config, sweeping_on_partner, &context.map_name.clone(), context.position) {
                 Ok(friend) => {
                     context.flush();
                     if context.net.cast_skill(skill.skill_id, level, friend).is_ok() {
-                        response = context.wait_for_within("skill response (at partner)", Duration::from_secs(4), &mut |event| {
+                        response = observe_window(&mut context, "skill response (at partner)", Duration::from_secs(4), &mut |event| {
                             match event {
                                 NetworkEvent::SkillCast { skill_id, cast_ms, .. } if skill_id.0 == skill.skill_id.0 => Some(("cast (partner)", *cast_ms)),
-                                NetworkEvent::StatusChange { gained: true, .. } => Some(("buff (partner)", 0)),
+                                // Deliberately not filtered by entity — the
+                                // point of the retry is that the status lands on
+                                // the *friend*. `SI_POSTDELAY` is still excluded:
+                                // it arrives on the caster for every skill and
+                                // would make every retry look rescued.
+                                NetworkEvent::StatusChange { gained: true, index, .. } if *index != SI_POSTDELAY => {
+                                    Some(("buff (partner)", (*index).into()))
+                                }
+                                NetworkEvent::StatusChange { gained: true, .. } => Some(("post-delay (partner)", 0)),
                                 NetworkEvent::HealEffect { .. } => Some(("heal (partner)", 0)),
                                 NetworkEvent::SkillEffectNoDamage { .. } => Some(("no-damage-effect (partner)", 0)),
                                 NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(("fail-feedback (partner)", 0)),
@@ -1496,7 +1785,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                                 _ => None,
                             }
                         });
-                        if response.is_ok() {
+                        if !response.labels.is_empty() {
                             rescued_by_partner += 1;
                         }
                     }
@@ -1505,22 +1794,24 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             }
         }
 
-        let (result, wait) = match response {
-            // If a cast bar started, wait it out so the next cast isn't
-            // rejected with "still casting".
-            Ok((kind, cast_ms)) => (kind, if kind.starts_with("cast") { cast_ms.saturating_add(400) } else { 400 }),
-            Err(_) if allowlisted(&name) => ("silent (allowlisted)", 0),
-            Err(_) => ("SILENT — investigate", 0),
+        // No pump here: `observe_window` already sat out the cast bar plus the
+        // margin, watching instead of sleeping. Adding one back would double the
+        // sweep's wall clock.
+        let result = match response.primary() {
+            Some(kind) => kind,
+            None if allowlisted(&name) => "silent (allowlisted)",
+            None => "SILENT — investigate",
         };
-        context.pump(Duration::from_millis(wait.into()));
 
-        record_outcome(&name, result);
+        record_expectation(skill.skill_id.0, &name, &response);
+        record_outcome(&name, result, response.labels.len());
         outcomes.push(SkillOutcome {
             skill_id: skill.skill_id.0,
             name,
             skill_type: skill.skill_type,
             level: level.0,
             result,
+            observed: response.labels,
         });
 
         if target.is_some() {
@@ -1575,18 +1866,37 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         );
     }
     let mut silent_count = 0;
+    // How many casts the window actually saw past their first event. This is the
+    // number that says whether widening the observation bought anything on this
+    // job — a `cast` with nothing after it looks identical to the old output, and
+    // without this line there is no way to tell the two apart.
+    let mut looked_past_first = 0;
     for outcome in &outcomes {
         if outcome.result.starts_with("SILENT") {
             silent_count += 1;
         }
+        if outcome.observed.len() > 1 {
+            looked_past_first += 1;
+        }
+        // Print the whole window when it holds more than the reported result, so
+        // the table reads `damage  [cast -> damage]` rather than hiding the
+        // sequence behind its strongest entry.
+        let window = match outcome.observed.len() {
+            0 | 1 => String::new(),
+            _ => format!("   [{}]", outcome.observed.join(" -> ")),
+        };
         println!(
-            "      {:>4}  {:<24} {:<9} lv{:<3} {}",
+            "      {:>4}  {:<24} {:<9} lv{:<3} {}{}",
             outcome.skill_id,
             outcome.name,
             format!("{:?}", outcome.skill_type),
             outcome.level,
-            outcome.result
+            outcome.result,
+            window
         );
+    }
+    if looked_past_first > 0 {
+        println!("      [note] {looked_past_first} cast(s) produced evidence past the first event the sweep recognised");
     }
 
     match silent_count {
