@@ -240,8 +240,8 @@ Two structural limits worth knowing before trusting a sweep result:
   compares each cast against it and the run prints
   `met / refused / blocked / unmet`. **Nothing fails on it** — a check that
   reddens working skills is worse than no check. Full green run 2026-08-10:
-  **233 met / 374 refused / 5 blocked / 21 unmet** over 633 casts, against a
-  pre-window projection of *217 would redden*. The 21 are **7 distinct skills**,
+  **235 met / 372 refused / 7 blocked / 19 unmet** over 633 casts, against a
+  pre-window projection of *217 would redden*. The 19 are **6 distinct skills**,
   and every one is a precondition the sweep cannot provide (nothing to identify,
   nothing to dispel, a target that is not undead), not a product bug — which is
   why it still is not enforced. `refused` (the server said no) and `blocked`

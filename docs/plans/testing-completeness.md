@@ -140,9 +140,9 @@ expectations against the *pre-window* observation model would have reddened
 sweep genuinely cannot meet every precondition — no gemstones, no arrows, no
 combo state. It does now, and `blocked` was added for the same reason.
 
-**Measured across a full green run (2026-08-10, 135/0/1): 233 met, 374 refused,
-5 blocked, 21 unmet over 633 casts.** Against the pre-window projection of *217
-would redden*, the real number is **21** — and those 21 are **7 distinct skills**
+**Measured across a full green run (2026-08-10, 135/0/1): 235 met, 372 refused,
+7 blocked, 19 unmet over 633 casts.** Against the pre-window projection of *217
+would redden*, the real number is **19** — and those 19 are **6 distinct skills**
 repeated across jobs.
 
 The refusal count is the honest ceiling on what this layer can prove without
@@ -155,15 +155,22 @@ one is a derivation bug:
 |---|---|
 | `MC_IDENTIFY`, `RG_CLEANER`, `SA_SPELLBREAKER`, `SG_FEEL` | resolved against **nothing to act on** — no unidentified item, no graffiti, no cast to break, no star to feel. The server accepts, does the work, and has nothing to report |
 | `PR_TURNUNDEAD` | the sweep's target is a Pupa, which is not undead |
-| `SA_AUTOSPELL` | opens the **auto-spell picker**; `SC_AUTOSPELL` only lands once something chooses. Should be `blocked` — the classifier has no arm for that list yet, so it falls through to `no-damage-effect` |
 | `AL_CRUCIS` | the underivable one, above |
 
-So the residue is *"the precondition was absent and the server said nothing"* —
-the same category as `refused`, minus the courtesy of a message. Enforcing today
-would redden seven working skills, which is the one outcome this staging exists
-to prevent. **The next step is not the assertion, it is classifying those seven**
-— the `SA_AUTOSPELL` arm is a one-liner and the rest want a stated exemption with
-its reason, the same shape as the allowlist.
+**`SA_AUTOSPELL` was a seventh, and it was a MISCLASSIFICATION, not a missing
+precondition.** `NetworkEvent::AutoSpellList` already existed — the
+`auto-spell-list` scenario waits on it — but the sweep's classifier had no arm,
+so the picker arrived and was *ignored* while `no-damage-effect` matched instead.
+The sweep was looking straight at the list and not seeing it. One arm later it
+reads `[cast -> post-delay -> no-damage-effect -> spell-list]` and its verdict is
+`blocked`. Worth separating from the other six: a wrong label and an absent
+precondition are not the same finding.
+
+So the residue is now one honest category: *"the precondition was absent and the
+server said nothing"* — the same as `refused`, minus the courtesy of a message.
+Enforcing today would redden six working skills, which is the one outcome this
+staging exists to prevent. **The next step is not the assertion, it is a stated
+exemption per skill with its reason**, the same shape as the allowlist.
 
 **Two derivation bugs caught by validating against real runs**, both of which
 would have produced a confidently wrong table:
@@ -239,6 +246,22 @@ arm that stores a value nobody reads — stage three of the recurring failure
 draw order). Closing it means extracting routing from the ~4,000-line consume
 method so `NetworkEvent` → state can be asserted directly. High cost, real
 payoff: three of the four recorded instances of that bug were in this layer.
+
+**A fifth instance, found 2026-08-10, and `event-routing.py` was green while it
+sat there.** `spirit_spheres` has exactly **one write and zero reads** in the
+whole tree: `ZC_SPIRITS` is modelled, registered, evented, routed, and stored on
+the entity, and **nothing draws it** — Monk spheres and Gunslinger coins have
+never appeared on screen. The `spirit-spheres` headless scenario is green,
+because it asserts the wire.
+
+It was not found by either testing layer. It came out of
+`observer-parity.sh`'s **A2** check, which was pointing at something else
+entirely — that the field has no `EntityData` slot and is therefore wiped on
+`AddEntity` rebuild (the ammunition shape). Grepping for readers while triaging
+that is what turned up the larger problem. **Two audits aimed at different
+things, and the one that hit was aimed elsewhere.** That is an argument for 2c,
+not a substitute for it: a `NetworkEvent` → state assertion would have caught
+this directly instead of by accident.
 
 ### 2d. A harness that links `korangar`
 

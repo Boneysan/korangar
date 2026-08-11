@@ -22,7 +22,6 @@ actually happened — 81 `damage`, 94 `no-damage-effect`, 60 `buff`, 35
 past the first event the sweep recognised**: those are results the old model
 stated *wrongly*, not results it was silent about.
 
-
 The meaning pass below named the sweep's central limitation and left it open: the
 matcher **stopped at the first event it recognised**, with `SkillCast` checked
 first, so anything with a cast bar reported `cast` — *a bar started and we
@@ -82,17 +81,16 @@ With the window in, the comparison the whole tier was blocked on became possible
 `scenarios/skill_expectations.rs` (**770 of 976 player skills**, up from 664), the
 sweep checks every cast against it, and the run prints
 `met / refused / blocked / unmet`. **Nothing fails on it.** The measurement is
-what decides whether enforcing is honest, and the full green run reads **233 met,
-374 refused, 5 blocked, 21 unmet** over 633 casts — against the pre-window
+what decides whether enforcing is honest, and the full green run reads **235 met,
+372 refused, 7 blocked, 19 unmet** over 633 casts — against the pre-window
 projection that enforcing *would redden 217 working skills*. The real number is
-**21, and they are 7 distinct skills** repeated across jobs.
+**19, and they are 6 distinct skills** repeated across jobs.
 
-**Those 7 are why it still is not enforced.** Four (`MC_IDENTIFY`, `RG_CLEANER`,
+**Those 6 are why it still is not enforced.** Four (`MC_IDENTIFY`, `RG_CLEANER`,
 `SA_SPELLBREAKER`, `SG_FEEL`) resolved against **nothing to act on** — no
 unidentified item, no graffiti, no cast to break — so the server did the work and
 had nothing to report. `PR_TURNUNDEAD`'s target is a Pupa, which is not undead.
-`SA_AUTOSPELL` opens a picker (it should be `blocked`; the classifier has no arm
-for that list yet). `AL_CRUCIS` is the underivable one below. The residue is
+`AL_CRUCIS` is the underivable one below. The residue is
 **"the precondition was absent and the server said nothing"** — the same category
 as a refusal, minus the message.
 
@@ -115,6 +113,45 @@ splash. `SplashArea` cannot separate it — 114 skills carry that flag and most
 wrote, and only a real run can tell you which one was wrong.** Same lesson the
 `Enemy`-vs-`Attack` and status-lands-on-the-target bugs taught when the generator
 was first written.
+
+### Spirit spheres are parsed, routed, stored — and never drawn
+
+> [!IMPORTANT]
+> `spirit_spheres` has **one write and zero reads** in the entire tree. Monk
+> spirit spheres and Gunslinger coins have never rendered.
+
+`ZC_SPIRITS` is modelled in `ragnarok-packets`, registered in
+`version_20220406.rs`, mapped to `NetworkEvent::SpiritSpheres`, handled at
+`lib.rs:5428`, and written through `Entity::set_spirit_spheres`. Nothing reads
+the field. This is stage three of the recurring failure — *the data arrives and
+nothing displays it* — and the fifth recorded instance.
+
+**Neither testing layer could see it.** The `spirit-spheres` scenario is green
+because it asserts the wire, which is exactly what the headless suite is for and
+exactly what it cannot go beyond. `event-routing.py` is green because the arm is
+not empty — it stores a value — which is the limitation the plan already states
+for it (§2c).
+
+**It was found by an audit aimed at something else.** `observer-parity.sh`'s A2
+flagged `spirit_spheres` as a `Common` field with no `EntityData` slot, i.e.
+wiped on `AddEntity` rebuild with nothing to re-send it — the ammunition shape.
+Grepping for readers while triaging *that* is what turned up the bigger problem.
+Fixing the rebuild wipe would change nothing visible until something renders the
+spheres.
+
+**Not fixed here.** Rendering orbiting spheres is visual work that needs a live
+pass, not a headless one. Recorded as an `# OPEN:` item in
+`tools/audits/observer-parity.baseline`, so it is reprinted on every audit run
+until somebody draws them.
+
+Triaged in the same pass, and the reason the audit was red: **A1 went 43 → 47**
+entity-keyed `find(...)` sites. The four new ones are `SpiritSpheres` and
+`EntitySnapped` (2026-08-02, `6ef1bf04`) and `PlaySoundEffect` and `ShowScript`
+(2026-08-08, `d92a8892`). Three recover from a miss — snap position is rebuilt
+from `EntityData`, a sound with no entity already falls back to playing flat, a
+script with no entity only loses the speaker's name. `SpiritSpheres` is the one
+that does not. `ChangeMapCellPacket` also left the B2b no-op list, having gained
+a real handler.
 
 ### Four allowlist entries reported stale — reported, not culled
 
