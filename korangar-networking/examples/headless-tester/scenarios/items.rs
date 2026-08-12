@@ -1013,22 +1013,49 @@ fn stat_skill_points(config: &Config) -> Result<(), String> {
 /// the assertion. The quantity is carried too, and asserted, so a half-written
 /// row cannot pass on its id alone.
 ///
+/// **Two cycles, because one proves less than it reads as.** The integration
+/// runner builds a disposable database per run and no fixture seeds the
+/// hotbar, so on the first cycle the slot is always unbound, the rotation never
+/// rotates, and all that is tested is *unbound → bound*. A server that recorded
+/// the first write and ignored every later one would pass. The second cycle
+/// starts from the binding the first one left, so it is the **overwrite** that
+/// is asserted — and it is the only thing that ever exercises the rotation. The
+/// two cycles are then required to differ, which is what catches the slot
+/// coming back unbound and the rotation quietly collapsing to a constant.
+///
 /// **Slot 37 is the last of the 38 and deliberately away from the F1–F9 row.**
 /// The same character carries a hand-built hotbar for the graphical skill
 /// passes (F1–F7 on the E1 Wizard), and a headless test is not entitled to
 /// clobber it.
 fn hotkeys(config: &Config) -> Result<(), String> {
+    let first = hotkey_write_cycle(config, "first")?;
+    let second = hotkey_write_cycle(config, "second")?;
+
+    if first == second {
+        return Err(format!(
+            "both cycles wrote {first:?}, so the second one started from an unbound slot and nothing here tested overwriting a bound one \
+             — the first write did not survive into the second cycle, or the rotation has stopped rotating"
+        ));
+    }
+    Ok(())
+}
+
+/// One write-and-relogin cycle against hotbar slot 37. Returns the
+/// `(item id, quantity)` it wrote, so the caller can require the two cycles to
+/// have differed.
+fn hotkey_write_cycle(config: &Config, which: &str) -> Result<(u32, u16), String> {
     const TAB: HotbarTab = HotbarTab(0);
     const SLOT: HotbarSlot = HotbarSlot(37);
     const RED_POTION: u32 = 501;
     const ORANGE_POTION: u32 = 502;
-    const QUANTITY: u16 = 7;
 
     let mut context = TestContext::connect(config)?;
     let before = read_hotkey(&mut context, TAB, SLOT)?;
-    let probe = match before {
-        Some((item_id, _)) if item_id == RED_POTION => ORANGE_POTION,
-        _ => RED_POTION,
+    // The quantity rotates with the item, so a server that persisted the id and
+    // dropped the count cannot ride through on the previous cycle's number.
+    let (probe, quantity) = match before {
+        Some((item_id, _)) if item_id == RED_POTION => (ORANGE_POTION, 3),
+        _ => (RED_POTION, 7),
     };
 
     context
@@ -1036,7 +1063,7 @@ fn hotkeys(config: &Config) -> Result<(), String> {
         .set_hotkey_data(TAB, SLOT, HotkeyData {
             hotkey_type: HotkeyType::Item,
             item_or_skill_id: probe,
-            quantity_or_skill_level: QUANTITY,
+            quantity_or_skill_level: quantity,
         })
         .map_err(|_| "disconnected")?;
     context.pump(Duration::from_millis(300));
@@ -1049,14 +1076,14 @@ fn hotkeys(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
 
     match read_hotkey(&mut context, TAB, SLOT)? {
-        Some((item_id, quantity)) if item_id == probe && quantity == QUANTITY => Ok(()),
-        Some((item_id, quantity)) => Err(format!(
-            "hotkey tab {} slot {} came back as item {item_id} x{quantity} after relogin, expected {probe} x{QUANTITY} (it held \
+        Some((item_id, got)) if item_id == probe && got == quantity => Ok((probe, quantity)),
+        Some((item_id, got)) => Err(format!(
+            "{which} cycle: hotkey tab {} slot {} came back as item {item_id} x{got} after relogin, expected {probe} x{quantity} (it held \
              {before:?} before the write)",
             TAB.0, SLOT.0
         )),
         None => Err(format!(
-            "hotkey tab {} slot {} was unbound after relogin — the write never reached the character save",
+            "{which} cycle: hotkey tab {} slot {} was unbound after relogin — the write never reached the character save",
             TAB.0, SLOT.0
         )),
     }
