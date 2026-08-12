@@ -62,6 +62,8 @@ jobs:
         with:
           workspaces: korangar
 
+      # PR runs a short multi-scenario gate (not smoke-only, not full-hour).
+      # Schedule / workflow_dispatch keep full `all` (or the requested selector).
       - name: Select scenario scope
         id: scope
         env:
@@ -69,7 +71,7 @@ jobs:
           REQUESTED: ${{ inputs.scenario }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
-            echo "scenario=smoke" >> "$GITHUB_OUTPUT"
+            echo "scenario=smoke,connection-state,character-select-invalid,dm-quest-lifecycle,quest-log-multi,dm-golden-beats,skills-mage,trade-reject,party-lifecycle" >> "$GITHUB_OUTPUT"
           elif [ -n "$REQUESTED" ]; then
             echo "scenario=$REQUESTED" >> "$GITHUB_OUTPUT"
           else

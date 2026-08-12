@@ -250,8 +250,8 @@ mod tests {
         // Guard against accidental mass-deletion of scenarios. Bump when the
         // suite legitimately grows; do not lower it to silence a drop.
         assert!(
-            all_scenarios().len() >= 143,
-            "expected at least 143 scenarios, found {}",
+            all_scenarios().len() >= 148,
+            "expected at least 148 scenarios, found {}",
             all_scenarios().len()
         );
     }

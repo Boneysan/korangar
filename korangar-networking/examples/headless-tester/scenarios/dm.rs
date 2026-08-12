@@ -24,6 +24,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-command-contract", 9, dm_command_contract),
         Scenario::new("dm-flags-status", 9, dm_flags_status),
         Scenario::new("dm-quest-lifecycle", 9, dm_quest_lifecycle),
+        Scenario::new("quest-log-multi", 9, quest_log_multi),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
         Scenario::new("dm-experience", 9, dm_experience),
         Scenario::new("dm-warp-recall", 9, dm_warp_recall),
@@ -244,6 +245,49 @@ fn dm_quest_lifecycle(config: &Config) -> Result<(), String> {
     })?;
     wait_for_text(&mut context, "quest erase feedback", "erased")?;
     say_expect(&mut context, "@dmstatus", "A01:0")?;
+    Ok(())
+}
+
+/// Two campaign quests must both survive a fresh map login and appear together
+/// on `QuestList` — the multipacket shape a quest journal UI will consume.
+///
+/// Complements `dm-quest-lifecycle` (single-id start/complete/erase). Uses one
+/// Act I and one Act II quest so the list is not a single-slot coincidence.
+fn quest_log_multi(config: &Config) -> Result<(), String> {
+    const QUEST_A: u32 = 20001; // Arc 1 anchor
+    const QUEST_B: u32 = 20101; // Arc 6-area Act II id block start
+
+    let mut context = TestContext::connect(config)?;
+    for id in [QUEST_A, QUEST_B] {
+        say_expect(&mut context, &format!("@dmquest erase {id}"), "erased")?;
+    }
+
+    for id in [QUEST_A, QUEST_B] {
+        context.flush();
+        context.say(&format!("@dmquest start {id}"))?;
+        context.wait_for(&format!("QuestAdded {id}"), |event| match event {
+            NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == id => Some(()),
+            _ => None,
+        })?;
+        wait_for_text(&mut context, &format!("quest {id} start feedback"), "started")?;
+    }
+
+    drop(context);
+    std::thread::sleep(Duration::from_millis(700));
+    let mut context = TestContext::connect(config)?;
+    context.wait_for("QuestList with both campaign quests", |event| match event {
+        NetworkEvent::QuestList { quest_ids } if quest_ids.contains(&QUEST_A) && quest_ids.contains(&QUEST_B) => Some(()),
+        _ => None,
+    })?;
+
+    for id in [QUEST_A, QUEST_B] {
+        context.flush();
+        context.say(&format!("@dmquest erase {id}"))?;
+        context.wait_for(&format!("QuestRemoved {id}"), |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == id => Some(()),
+            _ => None,
+        })?;
+    }
     Ok(())
 }
 
@@ -852,9 +896,11 @@ fn dm_story_beats(config: &Config) -> Result<(), String> {
 /// assert `@dmstatus` reflects the change. Keep the list small — each row is
 /// content that must stay true after script edits.
 ///
-/// **Coverage (2026-08-11):** Act I arcs 1–5 plus the first Act II arc (6).
-/// Expand only with content-reviewed rows; do not bulk-add all 19 arcs here.
+/// **Coverage:** Act I (1–5) + early Act II (6–10). Expand only with
+/// content-reviewed rows; do not bulk-add all 19 arcs here.
 fn dm_golden_beats(config: &Config) -> Result<(), String> {
+    const GOLDEN_ARCS: &[u8] = &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
     let mut context = TestContext::connect(config)?;
     say_expect(&mut context, "@dm reset confirm", "Campaign reset complete")?;
 
@@ -863,7 +909,7 @@ fn dm_golden_beats(config: &Config) -> Result<(), String> {
     let mut failures = Vec::new();
     let mut checked = 0usize;
 
-    for arc in [1u8, 2, 3, 4, 5, 6] {
+    for &arc in GOLDEN_ARCS {
         context.warp("prontera", 156, 191)?;
         context.say("@heal")?;
         context.pump(Duration::from_millis(200));
@@ -893,26 +939,33 @@ fn dm_golden_beats(config: &Config) -> Result<(), String> {
                 .choose_dialog_option(reopened.npc_id, (index + 1) as i8)
                 .map_err(|_| "disconnected")?;
             let said = run_story_beat(&mut context, reopened.npc_id, &reopened.prompts)?;
-            // Side-effect smoke: @dmstatus always answers with "[DM]" (see
-            // dm_console.txt OnStatus). Mode=/A01: digits prove the status surface.
+            // Correctness sample: @dmstatus prints Mode on a [DM] line, then
+            // arc progress on separate lines like `[Arcs 01-05] A01:1 …` (no
+            // [DM] prefix). Wait for this arc's token, not just the Mode line.
+            let token = if arc < 10 { format!("A0{arc}:") } else { format!("A{arc}:") };
             context.flush();
             context.say("@dmstatus")?;
-            let status = wait_for_text(&mut context, "dmstatus after golden beat", "[DM]")?;
-            if !(status.contains("Mode=") || status.contains("A0") || status.contains("flag")) {
-                // Soft: any [DM] status line is enough; log if the compact form changed.
-                println!(
-                    "      [note] @dmstatus shape unexpected: {:?}",
-                    status.chars().take(100).collect::<String>()
-                );
+            let _mode = wait_for_text(&mut context, "dmstatus Mode line", "[DM]")?;
+            let status = wait_for_text(&mut context, &format!("dmstatus arc token {token}"), &token)?;
+            let pos = status
+                .find(&token)
+                .ok_or_else(|| format!("internal: {token} missing from {status:?}"))?;
+            let progress = status[pos + token.len()..]
+                .chars()
+                .next()
+                .filter(|c| c.is_ascii_digit())
+                .ok_or_else(|| format!("{token} has no progress digit in {status:?}"))?;
+            let label_l = label.to_ascii_lowercase();
+            // Contract-start beats call DM_InstanceQuestStart on the arc anchor
+            // quest — progress must leave 0.
+            if (label_l.contains("starts contracts") || label_l.contains("start contracts")) && progress == '0' {
+                return Err(format!("arc {arc} start-contracts left {token}0 (expected in-progress)"));
             }
-            // Soft flag surface: after a story beat, try `@dmflag` help/status so
-            // campaign flag tooling stays wired. Do not hard-fail if the wording
-            // differs — `@dmstatus` above is the correctness gate.
             context.flush();
             let _ = context.say("@dmflag");
             context.pump(Duration::from_millis(300));
             println!(
-                "      golden arc {arc} {label:?} ok — dialog snip {:?}",
+                "      golden arc {arc} {label:?} ok — {token}{progress} snip {:?}",
                 said.chars().take(64).collect::<String>()
             );
             Ok(())
@@ -929,15 +982,16 @@ fn dm_golden_beats(config: &Config) -> Result<(), String> {
         }
     }
 
-    if checked < 6 {
-        return Err(format!("only {checked}/6 golden arcs checked"));
-    }
     if !failures.is_empty() {
         return Err(format!(
-            "{} golden beat(s) failed:\n    {}",
+            "{checked}/{} golden arcs ok; {} failed:\n    {}",
+            GOLDEN_ARCS.len(),
             failures.len(),
             failures.join("\n    ")
         ));
+    }
+    if checked < GOLDEN_ARCS.len() {
+        return Err(format!("only {checked}/{} golden arcs checked", GOLDEN_ARCS.len()));
     }
     Ok(())
 }
