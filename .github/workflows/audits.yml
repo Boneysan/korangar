@@ -59,10 +59,28 @@ jobs:
           path: Hercules
 
       # `generate_skill_states.py` and `generate_skill_expectations.py` rustfmt
-      # their own output, so a missing rustfmt would report drift on files that
-      # have none.
-      - name: Add Rustfmt
-        run: rustup component add rustfmt
+      # their own output, so this needs not just *a* rustfmt but the one the
+      # repo pins.
+      #
+      # It has to be installed explicitly, and the reason is worth stating: this
+      # job checks the repo out into `korangar/`, so `$GITHUB_WORKSPACE` has no
+      # `rust-toolchain.toml` and a bare `rustup component add rustfmt` there
+      # attaches rustfmt to the runner's default **stable**. The other workflows
+      # get away with it only because they check out to the workspace root.
+      #
+      # Stable rustfmt does not reject the nightly-only options in
+      # `rustfmt.toml` — it warns and formats without them — so the first run of
+      # this workflow reported two generated files as DRIFTED with entirely
+      # convincing diffs, against a Hercules checkout identical to the pinned
+      # revision. `generated-drift.sh` now probes for this and refuses to run
+      # rather than blaming the data; this step is what stops it coming up.
+      - name: Install the pinned toolchain with rustfmt
+        working-directory: korangar
+        run: |
+          channel="$(sed -n 's/^channel *= *"\(.*\)"/\1/p' rust-toolchain.toml)"
+          echo "rust-toolchain.toml pins: $channel"
+          rustup toolchain install "$channel" --component rustfmt --profile minimal
+          rustfmt --version
 
       - name: Observer parity (A1–A9, B2a–B2c)
         working-directory: korangar

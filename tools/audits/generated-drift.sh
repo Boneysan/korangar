@@ -63,6 +63,39 @@ generated=(
 
 trap restore EXIT
 
+# **Two of the four generators rustfmt their own output, so this audit is only
+# honest when rustfmt can apply `rustfmt.toml`.**
+#
+# That file uses options which are nightly-only (`wrap_comments`,
+# `format_strings`, `imports_granularity`, …), and stable rustfmt does not
+# error on them — it prints "can't set ... unstable" to stderr and formats
+# with everything else, producing output that is valid, plausible, and
+# different. Every line then reads as drift.
+#
+# It cost a red CI run to find, and the failure was maximally misleading: two
+# files reported DRIFTED with real-looking diffs (a comment unwrapped, a tuple
+# collapsed onto one line) against a Hercules checkout that was byte-identical
+# to the pinned revision. Nothing had drifted. The runner had simply resolved
+# `rustfmt` to stable, because `rust-toolchain.toml` only applies inside the
+# repo and the toolchain had been installed from outside it.
+#
+# Probed rather than version-sniffed: this asks whether the options in *this*
+# `rustfmt.toml` are actually being applied, so it keeps working if a future
+# stable rustfmt stabilises them, and it fails if someone adds a new unstable
+# option to the file.
+if [ -f "$repo/rustfmt.toml" ] && command -v rustfmt >/dev/null 2>&1; then
+    rejected="$(printf 'fn probe() {}\n' | rustfmt --config-path="$repo/rustfmt.toml" --emit stdout 2>&1 | grep -ci 'unstable' || true)"
+    if [ "$rejected" -gt 0 ]; then
+        echo "generated-drift audit — CANNOT RUN"
+        echo "  $(rustfmt --version) ignores $rejected option(s) in rustfmt.toml as unstable."
+        echo "  Two generators rustfmt their output, so every file would report DRIFTED"
+        echo "  for the formatter rather than for a real change. Use the toolchain pinned"
+        echo "  in rust-toolchain.toml ($(sed -n 's/^channel *= *"\(.*\)"/\1/p' "$repo/rustfmt.toml" 2>/dev/null)$(sed -n 's/^channel *= *"\(.*\)"/\1/p' "$repo/rust-toolchain.toml"))."
+        echo "  In CI: install that toolchain WITH rustfmt, from inside the repo directory."
+        exit 2
+    fi
+fi
+
 for entry in "${generated[@]}"; do
     cp "$repo/${entry%%|*}" "$scratch/$(basename "${entry%%|*}")"
 done
