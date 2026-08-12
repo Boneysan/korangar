@@ -1,0 +1,10 @@
+// Rename to `server.ron` and place beside the binary as `client/server.ron`
+// to point this client at a server.
+//
+// `address` is required. `port` defaults to 6900, and `name` is the label
+// shown in the server picker — both may be omitted.
+(
+    address: "ro.example.com",
+    port: 6900,
+    name: "Seal Cascade",
+)

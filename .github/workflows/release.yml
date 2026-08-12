@@ -13,7 +13,12 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   BINARY_NAME: korangar
-  SLANG_VERSION: v2026.1.1
+  # MUST match the pin in build.yml / tests.yml / lint.yml. This read v2026.1.1
+  # while every gate that actually validates the tree read v2025.18.2, so a
+  # release would have shipped shaders compiled by a version nothing had ever
+  # built or tested against — and slangc is the shader compiler, so that is the
+  # whole graphics pipeline. Bump all four together or not at all.
+  SLANG_VERSION: v2025.18.2
 
 jobs:
   build-release:
@@ -132,6 +137,35 @@ jobs:
           mkdir -p staging
           cp "target/release/${{ env.BINARY_NAME }}" staging/
           cp -r korangar/archive staging/
+
+          # The address in `archive/data/sclientinfo.xml` is `127.0.0.1`, so
+          # without this every copy of a release connects to the machine it is
+          # running on. Shipped as `.example` rather than live: a real
+          # `client/server.ron` would override the local address for anyone
+          # running their own server, which is the normal case for a fork.
+          # Copied, not written inline: `server_override_example_parses` reads
+          # this exact file through the client's own parser, so a broken example
+          # fails the build instead of shipping.
+          mkdir -p staging/client
+          cp korangar/server.ron.example staging/client/server.ron.example
+
+          # `data.grf` is deliberately absent — it is Gravity's, not ours, and
+          # cannot be redistributed. The client looks for it beside the binary.
+          cat > staging/README.txt <<'READAPP'
+          Korangar
+
+          1. Put `data.grf` (and `rdata.grf` if you have it) next to this binary.
+             They come from your own Ragnarok Online installation and are not
+             included here.
+          2. To connect somewhere other than this machine, rename
+             `client/server.ron.example` to `client/server.ron` and set the
+             address.
+          3. macOS: the binary is unsigned, so Gatekeeper blocks it on first run.
+             Right-click it and choose Open, or run:
+                 xattr -d com.apple.quarantine ./korangar
+             Windows: SmartScreen warns for the same reason — More info, then
+             Run anyway.
+          READAPP
 
 
       - name: Generate artifact name
