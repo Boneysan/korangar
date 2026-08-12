@@ -3,8 +3,21 @@ name: Paired integration
 on:
   pull_request:
     branches: [main]
+  # Weekly on Monday, 08:23 UTC — deliberately NOT the nightly this line used to
+  # claim.
+  #
+  # `cron: "23 8 * * *"` never fired once. GitHub reads `schedule` only from the
+  # **default branch**, and this file existed only on the agent branch, so the
+  # nightly full-suite run the testing docs describe as an arrangement in force
+  # had in fact never executed. Turning it on is therefore a decision, not a
+  # restoration: a full `all` run is roughly an hour of paired server time.
+  #
+  # Weekly, because pull requests already get the nine-scenario gate below in
+  # minutes. What that gate cannot see is drift with no commit behind it — the
+  # pinned Hercules revision, the runner image, the toolchain — and catching
+  # that does not need an hour every night.
   schedule:
-    - cron: "23 8 * * *"
+    - cron: "23 8 * * 1"
   workflow_dispatch:
     inputs:
       scenario:
@@ -13,8 +26,11 @@ on:
         default: all
 
 concurrency:
+  # Not cancel-in-progress for the scheduled run: it is the only full-suite run
+  # the week gets, and losing it to a push that arrives mid-flight would make the
+  # cadence a lie.
   group: integration-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
 
 jobs:
   paired:

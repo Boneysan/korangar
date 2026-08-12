@@ -32,14 +32,16 @@ on:
   # and the toolchain.
   #
   # Monday morning UTC, off the hour to miss GitHub's scheduling congestion, and
-  # clear of the nightly paired-integration slot (08:23).
+  # an hour clear of the weekly paired-integration slot (Monday 08:23).
   #
-  # ONE THING MUST STILL BE DONE FOR THIS TO EVER FIRE: GitHub reads `schedule`
-  # only from the **default branch**, so this file has to exist on `main`.
-  # Today it does not, and neither does `integration.yml` — which means that
-  # workflow's `cron: "23 8 * * *"` has never run either, despite the testing
-  # docs describing the nightly full-suite run as an arrangement in force.
-  # A scheduled cron on a non-default branch is silent, not an error.
+  # KEEP THIS FILE ON THE DEFAULT BRANCH. GitHub reads `schedule` only from the
+  # default branch, so a cron on a long-running agent branch is silent — not an
+  # error, not a warning, just nothing at all. That is not hypothetical here:
+  # this workflow and `integration.yml` both lived only on the agent branch
+  # until 2026-08-12, which is why `integration.yml`'s cron had never fired once
+  # while the testing docs described its nightly full-suite run as an
+  # arrangement in force. Let `main` fall behind again and these crons go quiet
+  # with it, saying nothing.
   schedule:
     - cron: "17 7 * * 1"
   push:

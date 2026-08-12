@@ -257,10 +257,13 @@ Not scriptable, and deliberately absent:
   — A3 and B2c are what stop it landing in the known trap.
 - **After any upstream Hercules merge** — A4, A5 and A8 read server source that
   the merge can silently change out from under the fork.
-- **In CI**, on every push and pull request —
+- **In CI**, on every push and pull request, **and weekly on Monday** —
   [`.github/workflows/audits.yml`](../../.github/workflows/audits.yml) runs all
-  five, with the pinned Hercules checked out so none of them self-skips. Wired
-  up 2026-08-12; until then this line said "in CI" and the truth was "when
+  five, with the pinned Hercules checked out so none of them self-skips. The
+  cron is the load-bearing trigger, not a backstop: push and pull_request fire
+  only for `main`, while the work in this fork lives on long-running agent
+  branches, so without it the audits go quiet the moment no PR happens to be
+  open. Wired up 2026-08-12; until then this line said "in CI" and the truth was "when
   somebody remembers", which cost exactly what you would expect: the audit was
   sitting **red** with three unclassified `register_noop` findings from the
   typed-no-op batch, and two of the three turned out to be dropped features
