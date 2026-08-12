@@ -124,6 +124,7 @@ HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 202608
 | [plans/animation-fidelity.md](plans/animation-fidelity.md) | Animation fidelity phases A–F (A–C closed; D code closed). |
 | **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)** | **NEXT: Phase D in-game checklist (Claude/Codex start here).** |
 | [plans/modern-mechanics.md](plans/modern-mechanics.md) | Technical sketches for future action RPG / tabletop mechanics (WASD camera, skill checks, gamepad, etc.). |
+| [plans/friends-distribution.md](plans/friends-distribution.md) | How to ship a **private friends-only** client via Google Drive (E8.3). Not a public release. |
 | [specs/](specs/) | Targeted implementation specs (see below). |
 
 ### Targeted Implementation Specs (in `specs/`)

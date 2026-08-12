@@ -28,6 +28,7 @@ lands.
 | [classic-effect-fidelity.md](classic-effect-fidelity.md) | Classic skill effects — E1/E2 live-verified closed; Moonlit/Hermode live work lives in gui-verification-pass |
 | [testing-completeness.md](testing-completeness.md) | What headless green means / does not mean |
 | [work-backlog.md](work-backlog.md) | Standing inventory: §1 live debt reconciled 2026-08-12; §2+ unbuilt features |
+| [friends-distribution.md](friends-distribution.md) | **Private friends pack** (E8.3): Google Drive folder, no public release. Packaging not built yet |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.
