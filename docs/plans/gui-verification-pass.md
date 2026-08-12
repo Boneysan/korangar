@@ -14,7 +14,7 @@ regression-smoking.
 | **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
 | **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
 | **5** | **Block A re-walk — party roster + trade rows only** | The one block still stale after the 2026-08-12 triage. `a552bc57` changed the roster when *we* leave; `a617834a` changed traded items leaving the giver's inventory. Both landed after the block closed. Two rows |
-| **6** | **Gospel / Fog Wall / Evil Land ground fields** | **Never on screen.** Added by `b6148b5c` on the back of Moonlit's `LayeredGroundQuad`; the commit marks their hover sizes and opacities as *estimates*. Tile colours are the table's verbatim values. New surface, not staleness |
+| **6** | **Gospel / Fog Wall / Evil Land ground fields** | **Never on screen** — steps in **§5b**. Added by `b6148b5c`; hover sizes and opacities are *estimates*. **Gospel is coded at α 0.05, the value §5 measured as not porting to this renderer** — walk it first, expect it invisible |
 | **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
 | **—** | Known-unrendered | Headgear/robe/colour, **spirit spheres**, quest UI — do **not** file as bugs; feature first |
 
@@ -863,8 +863,8 @@ made during the walk, and Hermode was never reached.
 |---|---|
 | 9×9 field appears | **PASS** — 9×9, centred on the caster |
 | Tile alpha (the calibration sample) | **PASS at α 0.6** — see §5 |
-| Tile reads flat, not patterned | **FAIL, fix shipped but NOT verified** — see below |
-| Hermode is audible and invisible | **NOT REACHED** |
+| Tile reads flat, not patterned | **CLOSED 2026-08-08** by the redesign in `b6148b5c` — see §5 |
+| Hermode is audible and invisible | **NOT REACHED — the only question left in this block** |
 
 **Setup for whoever resumes.** `test` is a **Clown (4020)** with a Violin,
 `HeadlessTwo` a **Gypsy (4021)** with a Rope, both party 280 on `prt_fild08`.
@@ -889,18 +889,30 @@ seat can use **any** skill during it. Retry discipline: **wait ~30 s**, or clear
 it with `@die` / a relog. The partner must also be within **4 cells**
 (`ensemble_range` is 4 on RENEWAL, 1 otherwise).
 
-**OPEN, and the thing to look at first: the tile drew as one solid red square.**
-It appeared *between* two observations in the same session, so it is a
-regression from the flat-colour carrier change made during the walk, not an
-original defect — the tester saw a correct translucent salmon field before it.
-The client is instrumented for this: `KORANGAR_PACKET_LOG=1` now prints one
-`[skill-unit] spawn` line per cell plus the resolved colour, the texture, and
-whether the texture reports transparent. **That log has never been read** — the
-cast that produced the square happened before the instrumentation was built, and
-every attempt afterwards was refused by the ensemble check. Read it before
-theorising; the working theory (an opaque white carrier over 81 cells reading as
-saturated pink-red) is untested, and this doc has recorded twice that reasoning
-inward before instrumenting the boundary is what wastes the session.
+**CLOSED 2026-08-08 — the red square is resolved; do not re-investigate it.**
+It was **two independent faults**, and the working theory recorded here at the
+time (an opaque white carrier reading as saturated pink-red) was wrong on the
+part that mattered. **The colour was never wrong**: the instrumentation resolved
+`0xff8abb @ 0.6`, exactly what the table specifies. The bloom was **81 point
+lights, one per cell** — the recipe's `light` second value is a **radius, not a
+brightness**, so the "keep it dim" hedge could not work — and the tile,
+faithful as it was, still read as a slab, which is simply what 81 full-coverage
+tiles are. `b6148b5c` redesigned it by decision rather than fidelity: tint off,
+colour moved into the light, per-cell bobbing, soft-edged overlapping carrier.
+Full account in §5.
+
+**What that leaves for this block is Hermode alone**, and it is cheap: hear
+`헤르모드의 지팡이.wav`, see nothing, PASS. The reason it has never been reached
+is setup, not difficulty — every earlier attempt was refused by the ensemble
+check above. Budget the 30 s between casts and do this row **before** any
+`@jobchange`.
+
+The instrumentation built for the red square is still there and still worth
+knowing: `KORANGAR_PACKET_LOG=1` prints one `[skill-unit] spawn` line per cell
+with the resolved colour, the texture, and whether that texture reports
+transparent. It is the first thing to reach for on **Gospel / Fog Wall / Evil
+Land**, whose recipes carry estimated hover sizes and opacities — the same class
+of unknown, now with a boundary already instrumented.
 
 ### 3. Support walk-into-range — **give this real attention**
 
@@ -983,6 +995,46 @@ the effect-fidelity rule, never guessed.
 | **Ensemble rules** | Both skills are `Ensemble: true` and GM 99 does **not** bypass the partner check. The partner must be opposite sex, job-mask to `MAPID_BARDDANCER`, know the same skill, wield an instrument or whip, be in the same party, not already dancing, not sitting — **and be within 4 cells** |
 | **Result (2026-08-08)** | **Moonlit CLOSED; Hermode still not reached.** The red square was two independent faults. **The colour was never wrong** — the log resolved `0xff8abb @ 0.6` exactly as the table specifies. The bloom was **81 point lights, one per cell**: the recipe's `light` second value is a **radius, not a brightness**, so "keep it dim" could not work, and overlap decides the hue (a saturated colour saturates *as its hue* — Land Protector stacks 121 blues and stays blue — while a pale one drives every channel to 1.0). Even blue whited out at radius 9. Radius also has a **floor of ~4.7**, because the light sits 4.0 above the ground; 4.0 lit nothing at all. **The tile itself was faithful and still read as a slab**, which is simply what 81 full-coverage tiles are. Redesigned by decision, not by fidelity: tint **off**, colour moved into the light, per-cell bobbing note (`melody_a.bmp`, borrowed from the sibling songs in the original's own table), soft-edged carrier with overlapping tiles (edge-to-edge soft tiles show a *grid*), staggered bloom-in and fade-out. **`UnitBody::LayeredGroundQuad` now exists**, which unblocks Gospel / Fog Wall / Evil Land. |
 | **Result** | **PARTIAL, 2026-08-06 — see Block E.** The 9×9 field draws and the **α 0.6 tile reads correctly**, which is the answer this row existed to get. Its sound played **81 times** (once per cell) — fixed and live-verified. The tile read as Land Protector's *pattern*, because it borrowed that skill's texture as a carrier; the fix (a genuine flat colour, no artwork) is shipped but **unverified**, and the tile then drew as **one solid red square**. Hermode not reached |
+
+### 5b. Gospel / Fog Wall / Evil Land — the family Moonlit unblocked, never on screen
+
+Added by `b6148b5c` on the back of `UnitBody::LayeredGroundQuad`. **Tile colours
+are the original table's verbatim values; the hover sizes and opacities are
+estimates and the commit says so.** Nobody has looked at any of the three.
+
+**Read §5 first.** These are the family Moonlit was the calibration sample for,
+and the calibration has a verdict: **the table's α 0.05 does not port to this
+renderer.** Cast each of the three *after* Moonlit in the same session if you
+can, so the comparison is on one screen and one set of eyes.
+
+| Skill | Id | How to reach it | Cast | Recipe as coded |
+|---|---|---|---|---|
+| **PA_GOSPEL** (Battle Chant) | **369** | Paladin, `@allskill` | **Self-cast toggle**, SP 80–100, 60 s. Re-cast to cancel | tile **white α 0.05**, hover `effect\cross_old.bmp` at a **full** cell, opacity 1.0 |
+| **PF_FOGWALL** (Blinding Mist) | **404** | Professor, `@allskill` | Ground target, range 9, SP 25, 20 s | tile **grey α 0.6**, hover `effect\lens_w.bmp` at a full cell |
+| **NPC_EVILLAND** | **670** | **No job learns it** — `@useskill 670 10 <your name>` | Ground-placed, range 9, 30 s | tile **grey α 0.2**, hover `effect\curse.bmp` at a **half** cell — one of only two entries the table gives an explicit size for |
+
+**Gospel is predicted to be invisible, and that prediction is the point of
+walking it first.** It is coded at **α 0.05** — the exact value §5 measured as
+not porting to this renderer, after Moonlit needed **0.6** to read as anything.
+If the tile cannot be seen, that is not a new discovery to work out on the day;
+it is this document's own rule arriving on screen, and the fix is the magnitude,
+not the artwork. Note which of the tile and the hovering texture you can see:
+`LayeredGroundQuad` is two layers, and "I see nothing" and "I see the cross but
+no tint" are different failures.
+
+**Two setup facts, so they do not cost a session the way N25's did:**
+
+- **Gospel strips the caster's buffs when it starts** (`status->change_clear_buffs(src,3)`,
+  `skill.c:12918`). Cast it **before** setting anything else up, or the setup
+  disappears and reads as a client bug.
+- **Fog Wall needs no gemstone on this server.** Its `Requirements` block is
+  `SPCost: 25` and nothing else, so do not go shopping for a Blue Gemstone —
+  official RO wants one and this build does not.
+
+Instrument before theorising, exactly as §5 had to learn: `KORANGAR_PACKET_LOG=1`
+prints one `[skill-unit] spawn` per cell with the resolved colour, the texture,
+and whether that texture reports transparent. For a field you cannot see, that
+log distinguishes "never spawned" from "spawned and drew nothing".
 
 ### 6. Rest of the 26 July batch — shipped, never seen
 
