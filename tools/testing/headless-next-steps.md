@@ -6,8 +6,8 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | **Acceptance on `9e68702e`+** — full 147/1/0 green; shuffle 146/1/1 with intermittent `incoming-damage` walk (hardened) |
-| **Resume first** | P5 client work only if product asks; optional second shuffle after walk harden |
+| **Status** | **Acceptance on `4e14101c`+** — full **147/1/0** green; shuffle 146/1 with intermittent `incoming-damage` (Desert Wolf path hardened; scoped green) |
+| **Resume first** | P5 client work only if product asks; optional re-shuffle after Desert Wolf approach harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
 | **Latest ship handoff** | [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) |
 | **CI cleanup handoff** | [2026-08-11-ci-cleanup-handoff.md](2026-08-11-ci-cleanup-handoff.md) (historical; local gates + push done) |
@@ -42,10 +42,10 @@ next, or about to claim the suite is "complete".
 
 | Run | Archive / note | Result |
 |---|---|---|
-| Full on `9e68702e` (empty exemptions, golden 1–10, quest-log-multi) | `runs/20260811-190011.log` | **147 pass**, 1 expected-skip, 0 fail, **0 unmet / 0 exemptions**, 171 in / 66 out / **0 unknown** |
-| Shuffle `20260810` on same HEAD | `runs/20260811-200007.log` | **146 pass**, **1 fail** (`incoming-damage` walk timeout — intermittent; scoped retry **PASS**), 1 expected-skip, **0 unmet**, 175 in / 66 out / **0 unknown** |
-| Prior full (pre empty-exemption) | `runs/20260811-161233.log` | 146 pass (147 scenarios then) |
-| Prior shuffle | `runs/20260811-171208.log` | 146 pass; 173 in / 66 out |
+| Full on `4e14101c` (post walk harden) | `runs/20260811-210533.log` | **147 pass**, 1 expected-skip, 0 fail, **0 unmet / 0 exemptions**, 173 in / 66 out / **0 unknown** |
+| Shuffle `20260810` on same HEAD | `runs/20260811-220535.log` | **146 pass**, **1 fail** (`incoming-damage`: natural mob one-shot → Desert Wolf retry used hard `walk_to` — path now multi-cell + warp; scoped **PASS** `20260811-230914.scoped`), 1 expected-skip, **0 unmet**, 174 in / 66 out / **0 unknown** |
+| Prior full (empty exemptions + golden 1–10 + quest-log-multi) | `runs/20260811-190011.log` | 147 pass; 171 in / 66 out |
+| Prior shuffle | `runs/20260811-200007.log` | 146 pass, 1 fail incoming-damage (first walk harden) |
 
 Load-bearing silence allowlist (do not cull from one job’s answer alone):
 `HT_REMOVETRAP` (Rogue/Stalker), `HT_SPRINGTRAP`, `TK_MISSION`.
@@ -101,7 +101,8 @@ HERCULES_DIR=../Hercules tools/audits/generated-drift.sh
 |---|---|
 | Full + shuffle (pre-P1 empty) | **Done** green |
 | Full after empty exemptions + golden 1–10 + quest-log-multi | **Done** green — `runs/20260811-190011.log` |
-| Shuffle after same | **Done** with 1 intermittent walk fail on `incoming-damage` — hardened multi-cell approach; scoped retry green |
+| Full after walk harden (`4e14101c`) | **Done** green — `runs/20260811-210533.log` |
+| Shuffle after same | **Done** with 1 intermittent fail: natural-mob one-shot → Desert Wolf hard `walk_to` (now shared multi-cell + warp helper); scoped green |
 
 ### P1 — Expectation exemptions
 
@@ -149,7 +150,7 @@ Zero-unknown, exact expected-skips, allowlist cull discipline, archive semantics
 ## 4. Suggested work order
 
 ```text
-Full suite + shuffle on current HEAD → record archives in §1
+Optional: re-shuffle after Desert Wolf approach harden (full already green on 4e14101c)
   → Watch PR #2 multi-scenario CI
   → P5 client only if product asks
   → Homun/pet/guild/cart scenarios only when client implements them

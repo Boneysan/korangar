@@ -5,6 +5,7 @@
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
+use ragnarok_packets::EntityId;
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -169,6 +170,38 @@ fn attack_out_of_range(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
+/// Approach an entity for a melee swing without failing the scenario on a
+/// single blocked neighbour. Shuffle runs leave map debris and dense packs
+/// that make one hard `walk_to` time out on PlayerMove ack; multi-cell + warp
+/// keeps the wire-assert (incoming DamageEffect) as the real gate.
+fn approach_entity_for_melee(context: &mut TestContext, entity_id: EntityId) -> Result<(), String> {
+    let entity_position = context
+        .entities
+        .get(&entity_id)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("melee target entity lost")?;
+    let adj = [
+        (entity_position.x.saturating_sub(1), entity_position.y),
+        (entity_position.x.saturating_add(1), entity_position.y),
+        (entity_position.x, entity_position.y.saturating_sub(1)),
+        (entity_position.x, entity_position.y.saturating_add(1)),
+        (entity_position.x.saturating_sub(1), entity_position.y.saturating_sub(1)),
+        (entity_position.x.saturating_add(1), entity_position.y.saturating_add(1)),
+    ];
+    for (x, y) in adj {
+        if context.walk_to(x, y).is_ok() {
+            return Ok(());
+        }
+    }
+    // Last resort: warp beside the target rather than reddening on path noise.
+    let _ = context.warp(
+        &context.map_name.clone(),
+        entity_position.x.saturating_sub(1).max(5),
+        entity_position.y.max(5),
+    );
+    Ok(())
+}
+
 /// Provoke a Desert Wolf (1106, retaliates when hit) and observe incoming
 /// damage packets (hits and misses both produce DamageEffect events with the
 /// monster as source and the player as destination).
@@ -240,41 +273,9 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
     let player_id = context.player_id;
 
     // Provoke: land (or whiff) one hit so the wolf acquires us as target.
-    // Walks use several adjacent cells — a single hard walk_to can time out on
-    // an unwalkable neighbour under shuffle (map density / prior scenario
-    // debris), which is what reddened `incoming-damage` on seed 20260810 once.
     let mut provoked = false;
     for _attempt in 0..4 {
-        let wolf_position = context
-            .entities
-            .get(&wolf)
-            .map(|entity| entity.position.tile_position())
-            .ok_or("wolf entity lost")?;
-        let adj = [
-            (wolf_position.x.saturating_sub(1), wolf_position.y),
-            (wolf_position.x.saturating_add(1), wolf_position.y),
-            (wolf_position.x, wolf_position.y.saturating_sub(1)),
-            (wolf_position.x, wolf_position.y.saturating_add(1)),
-            (wolf_position.x.saturating_sub(1), wolf_position.y.saturating_sub(1)),
-            (wolf_position.x.saturating_add(1), wolf_position.y.saturating_add(1)),
-        ];
-        let mut walked = false;
-        for (x, y) in adj {
-            if context.walk_to(x, y).is_ok() {
-                walked = true;
-                break;
-            }
-        }
-        if !walked {
-            // Last resort: warp beside the wolf rather than failing the whole
-            // scenario on a single blocked cell under load.
-            let _ = context.warp(
-                &context.map_name.clone(),
-                wolf_position.x.saturating_sub(1).max(5),
-                wolf_position.y.max(5),
-            );
-        }
-
+        approach_entity_for_melee(&mut context, wolf)?;
         context.flush();
         context.net.player_attack(wolf).map_err(|_| "disconnected")?;
 
@@ -332,17 +333,16 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
         // Fall back to the mob this scenario already keeps for the "nothing in
         // view" case: a Desert Wolf is tanky enough to survive a maxed
         // character's opener and aggressive enough to answer it.
+        //
+        // Same multi-cell approach as the natural path — the previous harden
+        // only fixed the first loop; shuffle seed 20260810 failed here when the
+        // natural mob died and the Desert Wolf retry used a hard walk_to.
         println!("    provoking blow killed the natural mob; retrying with DESERT_WOLF");
         let wolf = context.spawn_monster("DESERT_WOLF", 1106)?;
 
         let mut provoked = false;
         for _attempt in 0..4 {
-            let wolf_position = context
-                .entities
-                .get(&wolf)
-                .map(|entity| entity.position.tile_position())
-                .ok_or("Desert Wolf entity lost")?;
-            context.walk_to(wolf_position.x.saturating_sub(1), wolf_position.y)?;
+            approach_entity_for_melee(&mut context, wolf)?;
             context.flush();
             context.net.player_attack(wolf).map_err(|_| "disconnected")?;
             let landed = context.wait_for_within(
