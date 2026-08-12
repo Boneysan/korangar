@@ -44,8 +44,13 @@ on:
   # with it, saying nothing.
   schedule:
     - cron: "17 7 * * 1"
+  # `agent/**` as well as `main`, because the hazard described above is not
+  # hypothetical and merging to `main` is what triggers it: the open draft PR is
+  # the only reason these ran per-push at all, and merging closes it. The whole
+  # job is seconds, so covering the branches the work actually happens on costs
+  # nothing and does not depend on somebody keeping a PR open.
   push:
-    branches: [ main ]
+    branches: [ main, 'agent/**' ]
   pull_request:
     branches:
       - main

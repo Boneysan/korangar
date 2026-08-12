@@ -34,6 +34,10 @@ build_jobs="${INTEGRATION_BUILD_JOBS:-2}"
 scratch="$(mktemp -d)"
 server_log_dir="$client_repo/target/headless-server-logs"
 mkdir -p "$server_log_dir"
+# Where the results land, so the artifact hint on failure names the real file
+# rather than a default the caller may have overridden. Resolved properly beside
+# the suite invocation; this is the value an early failure reports.
+results_json="$client_repo/target/headless-results.json"
 
 for numeric_value in "$db_port" "$ready_timeout" "$build_jobs"; do
     case "$numeric_value" in
@@ -119,7 +123,7 @@ cleanup() {
     fi
     rm -rf "$scratch"
     if [ "$runner_exit" -ne 0 ]; then
-        echo "integration artifacts: $client_repo/target/headless-results.json and $server_log_dir" >&2
+        echo "integration artifacts: $results_json and $server_log_dir" >&2
     fi
     return "$original_exit"
 }
@@ -276,11 +280,42 @@ if [ "$elapsed" -ge "$ready_timeout" ]; then
     exit 1
 fi
 
-export KORANGAR_CLIENT_REVISION="$(git -C "$client_repo" rev-parse HEAD)"
-export KORANGAR_HERCULES_REVISION="$(git -C "$hercules_repo" rev-parse HEAD)"
+# Marked `-dirty` when the tree does not match the commit, because a bare SHA in
+# an archive is a claim that the result is reproducible from it. Suite work is
+# routinely run before it is committed — the 2026-08-12 full run was recorded
+# against a commit that contained neither of the scenarios it exercised — and a
+# stale-looking archive is worse than an honest one nobody can misread.
+revision_suffix=""
+git -C "$client_repo" diff --quiet HEAD 2>/dev/null || revision_suffix="-dirty"
+export KORANGAR_CLIENT_REVISION="$(git -C "$client_repo" rev-parse HEAD)$revision_suffix"
+
+revision_suffix=""
+git -C "$hercules_repo" diff --quiet HEAD 2>/dev/null || revision_suffix="-dirty"
+export KORANGAR_HERCULES_REVISION="$(git -C "$hercules_repo" rev-parse HEAD)$revision_suffix"
+
+# `--fail-on-flaky` is the strict gate and is always on here, but a caller who
+# passes it explicitly must not be punished for agreeing: the tester rejects a
+# repeated flag ("cannot be used multiple times") and the run dies having
+# already built Hercules and created the database, with a message about
+# argument parsing. That cost two runs on 2026-08-11.
+suite_arguments=("$@")
+case " $* " in
+*" --fail-on-flaky "*) ;;
+*) suite_arguments+=(--fail-on-flaky) ;;
+esac
+
+previous_argument=""
+for argument in "$@"; do
+    [ "$previous_argument" = "--results-json" ] && results_json="$argument"
+    previous_argument="$argument"
+done
+case " $* " in
+*" --results-json "*) ;;
+*) suite_arguments+=(--results-json "$results_json") ;;
+esac
 
 set +e
-"$here/run-suite.sh" "$@" --fail-on-flaky --results-json "$client_repo/target/headless-results.json"
+"$here/run-suite.sh" "${suite_arguments[@]}"
 runner_exit=$?
 set -e
 

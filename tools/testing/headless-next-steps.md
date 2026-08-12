@@ -6,7 +6,7 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | **Headless suite acceptance CLOSED (2026-08-11/12)** — full **147 pass / 1 skip / 0 fail**; empty exemptions; golden arcs 1–10; quest-log-multi; PR multi-scenario CI. HEAD `e4d6e6d5`+ |
+| **Status** | **Headless suite acceptance CLOSED (2026-08-12)** — full **148 pass / 1 skip / 0 fail** over **149** registered, ~59 min; 0 flaky, 0 retried, 0 unknown packets; expectations enforced with **0 unmet / 0 exemptions**. HEAD `7d38d12e`+ |
 | **Resume first** | **GUI / client**, not more suite grinding — [gui-verification-pass.md](../../docs/plans/gui-verification-pass.md) (Block E Hermode, N20 Auto Spell). Optional re-shuffle after Desert Wolf harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
 | **Meaning of green** | [../../docs/plans/testing-completeness.md](../../docs/plans/testing-completeness.md) |
@@ -35,12 +35,16 @@ next, or about to claim the suite is "complete".
 | Expected skips | Exact name + reason only (`skills-novice` today) |
 | Archives | Complete full → `runs/*.log`; targeted → `*.scoped`; interrupted → `*.partial` |
 
-**Registered scenarios:** **148+** (includes `quest-log-multi`; was 147 before that, 136 at morning baseline).
+**Registered scenarios:** **149**, counted from a real run's `headless-results.json`
+on 2026-08-12 rather than incremented by hand — the hand-maintained figures had
+drifted to 139/136/135 across `CLAUDE.md`, `testing_guide.md` and `docs/README.md`
+while the tree grew by thirteen. Count it, do not carry it forward.
 
 ### Verified live baseline
 
 | Run | Archive / note | Result |
 |---|---|---|
+| **Full on `3f704c26`+ (two-cycle hotkeys, kick confirmation)** | `runs/20260812-104814.log` | **148 pass** of 149, 1 expected-skip, 0 fail, **0 flaky / 0 retried**, **0 unmet / 0 exemptions**, 172 in / 66 out / **0 unknown**; ~59 min |
 | Full on `4e14101c` (post walk harden) | `runs/20260811-210533.log` | **147 pass**, 1 expected-skip, 0 fail, **0 unmet / 0 exemptions**, 173 in / 66 out / **0 unknown** |
 | Shuffle `20260810` on same HEAD | `runs/20260811-220535.log` | **146 pass**, **1 fail** (`incoming-damage` Desert Wolf hard walk — fixed in `e4d6e6d5`); 1 expected-skip, **0 unmet**, 174 in / 66 out / **0 unknown** |
 | Scoped `incoming-damage` after `e4d6e6d5` | `runs/20260811-230914.scoped` | **PASS** |

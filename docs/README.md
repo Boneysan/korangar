@@ -73,9 +73,9 @@ This directory contains all design documents, technical deep dives, implementati
 ### Testing & Verification
 
 > These live in **`tools/testing/`**, outside `docs/` — they are easy to miss. The
-> **headless suite** (139 registered scenarios after the 2026-08-11 depth batch;
-> 136-scenario full runs were reconfirmed green that day) is the project's main
-> automated regression gate.
+> **headless suite** (**149** registered scenarios; a full run on **2026-08-12** was
+> **148 pass / 1 expected skip / 0 fail**) is the project's main automated
+> regression gate.
 
 | Document | Purpose |
 |----------|---------|

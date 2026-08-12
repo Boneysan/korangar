@@ -137,12 +137,13 @@ protocol-level integration testing against a live server. It shares
 `ragnarok-packets` and `korangar-networking` with the graphical client, so
 packet-layout and event-mapping fixes apply to the main client directly.
 
-The runner registers **136 scenarios** across session lifecycle, GM bootstrap,
+The runner registers **149 scenarios** across session lifecycle, GM bootstrap,
 movement, combat, 39 job skill sweeps and focused skill flows, items, dialogue,
 multi-client social behavior, DM campaign commands, observer parity, and
-continuous protocol coverage. The verified 2026-08-11 gate is **135 passed, 1
+continuous protocol coverage. The verified **2026-08-12** gate is **148 passed, 1
 expected skip, 0 flaky, 0 failed, 0 unexpected skips, and 0 unknown packets** in
-both normal order and shuffle seed `20260810`.
+normal order (the shuffle-seed `20260810` confirmation is from 2026-08-11 at 147
+scenarios, two behind this figure).
 
 Preferred self-contained commands, with MariaDB already listening:
 

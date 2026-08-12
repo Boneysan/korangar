@@ -203,13 +203,15 @@ and running the `.exe` on the Windows side (not yet set up).
 > runner regression suite, bounded Hercules shutdown, and decisions that must
 > not be casually reversed.
 
-The project's main automated regression gate is a **139-scenario headless client**
+The project's main automated regression gate is a **149-scenario headless client**
 (`korangar-networking/examples/headless-tester`). Full-run acceptance was
-reconfirmed 2026-08-11 at **136** scenarios (135 passed, 1 expected skip, 0
-flaky/fail/unknown) in normal order and shuffle seed `20260810`. A later depth
-batch added three negative scenarios and **enforced** derived skill expectations
-with reviewed exemptions — re-validate live via the next-steps doc before quoting
-a new full-run count.
+reconfirmed **2026-08-12** at **149** registered scenarios — **148 passed, 1
+expected skip, 0 flaky / 0 failed / 0 unknown**, 172 distinct incoming and 66
+outgoing packets, and derived skill expectations **enforced** with **zero**
+exemptions (269 met / 358 refused / 6 blocked / **0 unmet**). Roughly an hour of
+wall clock. **Re-validate live before quoting a new count** — every figure on
+this page was stale when it was checked on 2026-08-12, reading 139/136/135
+against a tree that had had thirteen scenarios added since.
 Docs live in **`tools/testing/`** (not `docs/`):
 [headless-next-steps.md](tools/testing/headless-next-steps.md) is the forward
 priority list,
@@ -224,10 +226,10 @@ Run it with the servers already up:
 cargo run --release --example headless-tester -p korangar-networking -- --scenario all
 ```
 
-Coverage (135 passing scenarios): session/lifecycle 9 · GM commands 9 · movement 5 · combat 3 · skills 51
-(39 job-class sweeps + teleport/weapon-refine menus) · items 13 · dialogue 5 · social 17 ·
-DM tooling 14 · observer parity 9. One additional registered scenario
-(`skills-novice`) is a permanent, legitimate skip, so a green run reads **135
+Coverage (149 registered, measured 2026-08-12): session/lifecycle 12 · GM commands 9 ·
+movement 5 · combat 3 · skills 53 (39 job-class sweeps + teleport/weapon-refine menus) ·
+items 18 · dialogue 5 · social 19 · DM tooling 17 · observer parity 8. One of those
+(`skills-novice`) is a permanent, legitimate skip, so a green run reads **148
 passed / 0 failed / 1 expected skip**.
 
 **READ THIS BEFORE QUOTING THE SKILL NUMBERS.** The 39-job sweep passes a skill
