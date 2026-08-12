@@ -84,6 +84,27 @@ session outright.
 
 ---
 
+## What has already been ruled out (2026-08-12, statically)
+
+Every row was checked as far as reading code and probing the GRF can go, so a
+live failure means something these could not see. **If one of these turns out to
+be the cause anyway, that is itself the finding** — it means the static check was
+wrong, which is worth more than the row.
+
+| Row | Ruled out |
+|---|---|
+| 1 Hermode | The wav **exists** — `data\wav\effect\헤르모드의 지팡이.wav` in `data.grf` — and the path resolves: the recipe stores `effect\…` and `spawn_async_load` prepends `data\wav`. `UnitId::Hermode` is mapped, and a unit test already pins that it draws nothing. **Silence will not be a missing asset.** |
+| 5–7 ground fields | All three hover textures exist: `cross_old.bmp`, `lens_w.bmp`, `curse.bmp`. **An invisible field will not be a missing texture** — which is what makes Gospel's α 0.05 the live question. |
+| 3 · P5 | The offline roster row is implemented (`state/party.rs:114`). |
+| 4 Auto Spell | Packet → `NetworkEvent::AutoSpellList` → `AutoSpellWindow` is wired, and **names are resolved from the `Library` at the event site**, not passed through as ids. Blank rows would mean the lookup missed, not that the feature is absent. |
+| 8 · M1-009 | The `— vs equipped —` comparison block exists in `item_stats.rs`. |
+| 8 · M1-014 | The two-step `Delete {name}…` → `Really delete {name}?` exists in `character_selection.rs`. |
+
+What none of this can tell you is whether any of it **draws**, which is the
+entire reason the pass exists.
+
+---
+
 ## 1. Hermode — the oldest open row
 
 **Never reached.** Sound-only by design.
