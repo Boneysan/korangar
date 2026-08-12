@@ -23,14 +23,29 @@ impl WindowState {
         Self { anchor, size }
     }
 
-    /// Placeholder size written on first open before layout — not a real size.
+    /// Is this a real, usable window size, as opposed to the placeholder
+    /// written on first open before layout?
+    ///
+    /// **The single definition, deliberately.** This used to be stated three
+    /// times — here for reads, and again inline in `register_window` and
+    /// `update_size` for writes — and the writers were looser than the reader,
+    /// so a size could be stored that could never be read back. `update_size`
+    /// in particular compared with `<` and `>`, and **every comparison against
+    /// `NaN` is false**, so a non-finite size passed straight through a guard
+    /// that existed to stop it. The stored value was then unusable on read and
+    /// the player's window size was silently replaced by the class default.
+    /// A predicate that decides what is readable belongs in one place.
+    fn is_valid_size(size: ScreenSize) -> bool {
+        size.width.is_finite()
+            && size.height.is_finite()
+            && size.width >= 16.0
+            && size.height >= 16.0
+            && size.width < 10_000.0
+            && size.height < 10_000.0
+    }
+
     fn has_valid_size(&self) -> bool {
-        self.size.width.is_finite()
-            && self.size.height.is_finite()
-            && self.size.width >= 16.0
-            && self.size.height >= 16.0
-            && self.size.width < 10_000.0
-            && self.size.height < 10_000.0
+        Self::is_valid_size(self.size)
     }
 
     /// User has settled placement (dragged or seeded with `initializing:
@@ -262,8 +277,7 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     fn register_window(&mut self, class: WindowClass, anchor: Anchor<ClientState>, size: ScreenSize) {
         // Never persist the first-open placeholder (0 × f32::MAX) — it forces re-center
         // next launch and blows window height to max.
-        let placeholder = size.width < 1.0 || size.height > 10_000.0 || !size.width.is_finite() || !size.height.is_finite();
-        if placeholder {
+        if !WindowState::is_valid_size(size) {
             if let Some(default) = Self::default_for_class(class) {
                 self.entries.entry(class).or_insert(default);
             }
@@ -298,7 +312,7 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     }
 
     fn update_size(&mut self, class: WindowClass, size: ScreenSize) {
-        if size.width < 1.0 || size.height > 10_000.0 {
+        if !WindowState::is_valid_size(size) {
             return;
         }
         if let Some(entry) = self.entries.get_mut(&class) {
@@ -322,5 +336,121 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
 impl Drop for WindowCache {
     fn drop(&mut self) {
         self.save();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // The three methods under test are trait implementations, so the trait has
+    // to be in scope to call them at all.
+    use korangar_interface::application::WindowCache as _;
+
+    use super::*;
+
+    fn size(width: f32, height: f32) -> ScreenSize {
+        ScreenSize { width, height }
+    }
+
+    fn settled_anchor() -> Anchor<ClientState> {
+        Anchor::with_point(AnchorPoint::TopLeft, ScreenPosition { left: 40.0, top: 40.0 })
+    }
+
+    /// Exactly what `save` writes and `load` reads, without touching the disk
+    /// those two use.
+    fn round_trip(entries: &HashMap<WindowClass, WindowState>) -> Option<HashMap<WindowClass, WindowState>> {
+        let data = ron::ser::to_string_pretty(entries, PrettyConfig::new()).unwrap();
+        ron::from_str(&data).ok()
+    }
+
+    /// A size the *reader* rejects must not be one the *writer* stores.
+    ///
+    /// "Placeholder" is decided in three places — `has_valid_size` for reads,
+    /// and separate inline conditions in `register_window` and `update_size` —
+    /// and the writers are looser than the reader. This pins them together from
+    /// the reader's side, which is the one that decides what is usable.
+    #[test]
+    fn the_writers_reject_every_size_the_reader_calls_invalid() {
+        let rejected = [
+            ("NaN width", size(f32::NAN, 300.0)),
+            ("NaN height", size(400.0, f32::NAN)),
+            ("infinite height", size(400.0, f32::INFINITY)),
+            ("width over the ceiling", size(50_000.0, 300.0)),
+            ("below the 16px floor", size(8.0, 8.0)),
+        ];
+
+        for (what, bad) in rejected {
+            assert!(
+                !WindowState::new(settled_anchor(), bad).has_valid_size(),
+                "{what} should be invalid"
+            );
+
+            let mut cache = WindowCache::default();
+            cache
+                .entries
+                .insert(WindowClass::Chat, WindowState::new(settled_anchor(), size(400.0, 300.0)));
+            cache.update_size(WindowClass::Chat, bad);
+
+            let stored = cache.entries.get(&WindowClass::Chat).expect("entry vanished");
+            assert!(
+                stored.has_valid_size(),
+                "update_size stored a {what} that the reader calls invalid: {:?}",
+                stored.size
+            );
+        }
+    }
+
+    /// A tripwire on the file staying parseable, not a live bug.
+    ///
+    /// `save` is `to_string_pretty` and `load` is `from_str` followed by
+    /// `.ok()`, so a value that serialises but does not parse would not cost
+    /// the one window — `load` returns `None` and **every** window position the
+    /// player ever set is gone. That was the theory when this was written and
+    /// **it is wrong**: ron 0.12 round-trips non-finite floats, measured here
+    /// rather than assumed, which is why the guard above is about a size being
+    /// unreadable and not about losing the file. Kept because the blast radius
+    /// if a future ron ever stops round-tripping is the whole layout.
+    #[test]
+    fn a_cache_entry_cannot_be_written_in_a_form_that_wipes_the_whole_file() {
+        let mut entries = HashMap::new();
+        entries.insert(WindowClass::Chat, WindowState::new(settled_anchor(), size(400.0, 300.0)));
+        entries.insert(
+            WindowClass::Inventory,
+            WindowState::new(settled_anchor(), size(f32::NAN, 300.0)),
+        );
+
+        assert!(
+            round_trip(&entries).is_some(),
+            "a non-finite size survives serialisation but fails to parse, so `load` returns None and the whole window layout is lost"
+        );
+    }
+
+    /// The first-open placeholder must never be persisted — it re-centres every
+    /// window and blows its height to max on the next launch.
+    #[test]
+    fn the_first_open_placeholder_is_replaced_by_the_class_default() {
+        let mut cache = WindowCache::default();
+        cache.register_window(WindowClass::Chat, settled_anchor(), size(0.0, f32::MAX));
+
+        let stored = cache.entries.get(&WindowClass::Chat).expect("no entry seeded for the placeholder");
+        assert!(
+            stored.has_valid_size(),
+            "the placeholder itself was persisted: {:?}",
+            stored.size
+        );
+    }
+
+    /// An unsettled anchor means the user has not placed the window, so the
+    /// class default wins over whatever was recorded mid-layout.
+    #[test]
+    fn an_unsettled_anchor_falls_back_to_the_class_default() {
+        let mut cache = WindowCache::default();
+        cache
+            .entries
+            .insert(WindowClass::Chat, WindowState::new(Anchor::default(), size(400.0, 300.0)));
+
+        let (_, resolved) = cache.get_window_state(WindowClass::Chat).expect("Chat has a seeded default");
+        let default = WindowCache::default_for_class(WindowClass::Chat).expect("Chat has a default");
+        assert_eq!(resolved.width, default.size.width);
+        assert_eq!(resolved.height, default.size.height);
     }
 }
