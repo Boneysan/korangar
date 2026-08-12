@@ -56,25 +56,43 @@ import sys
 # do not affect the block, at which point it holds the newest commit they read
 # and the reason goes in the comment above the row.
 BLOCKS = [
+    # Read 2026-08-12. `d5eb977a` renames a debug-log loop variable in
+    # `item_info.rs` (`s` -> `source`) and puts `#[cfg(test)]` on an otherwise
+    # unused const in `skill_layout.rs`. Neither is reachable from a rendered
+    # footprint or an item name.
     {
         "name": "cheap-queue 1-4",
         "covers": "map-zone refusal message, item names, ground footprint, support walk-into-range",
         "verified": "2026-07-31",
-        "reviewed_through": "",
+        "reviewed_through": "d5eb977a",
         "paths": [
             "korangar/src/world/skill_layout.rs",
             "korangar/src/world/library/item_info.rs",
         ],
     },
+    # Read 2026-08-12. `d5eb977a` touches `entity/mod.rs` only as rustfmt line
+    # joins and doc-comment rewrapping, plus one `#[allow(dead_code)]`. Every
+    # changed statement has an identical token stream on both sides — checked
+    # line by line, since `-w` does not collapse a multi-line join.
     {
         "name": "observer rows",
         "covers": "two-seat appearance parity: weapon, shield, hair, dye, ammunition",
         "verified": "2026-08-02",
-        "reviewed_through": "",
+        "reviewed_through": "d5eb977a",
         "paths": [
             "korangar/src/world/entity/mod.rs",
         ],
     },
+    # NOT cleared, and the only block that is not. Read 2026-08-12: the eight
+    # commits dated 2026-08-04 are the pass's *own* fixes — the document records
+    # each as "PASS 2026-08-04 (after a fix, re-verified live)" — so the walk
+    # covers them. Two landed on 2026-08-05, after the block closed, and both
+    # change a behaviour a row asserts:
+    #   a552bc57  clears the whole party roster when we are the one who left
+    #   a617834a  removes traded items from the giver's own inventory
+    # (`6ff109ac` changes no code under these paths; `d5eb977a` is rustfmt.)
+    # So this needs a re-walk of the **party roster** and **trade** rows only —
+    # two rows, not nineteen. Do not set `reviewed_through` until that happens.
     {
         "name": "Block A (N1-N19)",
         "covers": "social windows: chat, whisper, friends, party, trade, class labels",
@@ -94,21 +112,31 @@ BLOCKS = [
             "korangar/src/world/library/job_name.rs",
         ],
     },
+    # Read 2026-08-12. `auto_spell.rs` is untouched by either commit. In
+    # `skill_recipe.rs`, `d2682580` adds a `no_damage_target_effects` phase and
+    # switches eleven recipes to it — every one an Acolyte/Priest support skill
+    # (28, 29, 30, 33, 34, 66, 67, 68, 73, 74, 75), none on the Sage/Wizard seat
+    # these rows walk. The new field defaults empty through `EMPTY`, and the
+    # only new branch is guarded on it being non-empty, so no other recipe
+    # changes. `d5eb977a` is rustfmt.
     {
         "name": "Block B (N20-N23)",
         "covers": "Sage / Wizard seat: Auto Spell picker, cast visuals",
         "verified": "2026-08-04",
-        "reviewed_through": "",
+        "reviewed_through": "d5eb977a",
         "paths": [
             "korangar/src/interface/windows/auto_spell.rs",
             "korangar/src/world/skill_recipe.rs",
         ],
     },
+    # Read 2026-08-12. `45d6e674` adds only a `#[cfg(test)]` module to
+    # `dialog.rs` (`DialogWindowState` start/end assertions) — no production
+    # code. `d5eb977a` changes no code at all under these paths.
     {
         "name": "Block C (N15/N19/N25)",
         "covers": "instance window, NPC weapon refine, item names in dialogs",
         "verified": "2026-08-05",
-        "reviewed_through": "",
+        "reviewed_through": "45d6e674",
         "paths": [
             "korangar/src/interface/windows/instance.rs",
             "korangar/src/interface/windows/repair_weapon.rs",
@@ -116,22 +144,36 @@ BLOCKS = [
             "korangar/src/state/instance.rs",
         ],
     },
+    # Read 2026-08-12. `d2682580` is not a change *since* this block was
+    # verified — it is the commit that verified it. Dated the same day, and its
+    # own message closes the row: "Live-verified: Blessing flashes on the
+    # target, Heal flashes and keeps its green number. N26 itself passed
+    # unchanged." A date anchor cannot express "same day, afterwards", which is
+    # why this needed a revision. `d5eb977a` is rustfmt.
     {
         "name": "Block D (N26)",
         "covers": "Priest support skills — eleven of them had no visual at all",
         "verified": "2026-08-06",
-        "reviewed_through": "",
+        "reviewed_through": "d5eb977a",
         "paths": [
             "korangar/src/world/skill_recipe.rs",
             "korangar/src/world/sprite_effect.rs",
             "korangar/src/world/special_effect.rs",
         ],
     },
+    # Read 2026-08-12. Same shape as Block D: `b6148b5c` *is* the Moonlit
+    # verification, not a change after it — "Moonlit, live 2026-08-08, in the
+    # order the screen taught us". It also adds `PA_GOSPEL`, `PF_FOGWALL` and
+    # `NPC_EVILLAND`, whose hover sizes and opacities the commit itself marks as
+    # estimates. Those are **new unverified surface, not staleness of the
+    # Moonlit row** — they belong in the open table, and the pass document
+    # already tracks them as unblocked by `LayeredGroundQuad`. `d5eb977a` is
+    # rustfmt. Hermode remains OPEN and is unaffected by either.
     {
         "name": "Block E (Moonlit)",
         "covers": "ensemble ground unit: tile texture, alpha, sound — Hermode still OPEN",
         "verified": "2026-08-08",
-        "reviewed_through": "",
+        "reviewed_through": "d5eb977a",
         "paths": [
             "korangar/src/world/unit_recipe.rs",
             "korangar/src/world/skill_unit_registry.rs",
@@ -171,13 +213,36 @@ def commits_since(repo: pathlib.Path, since: str, after_commit: str, paths: list
 
     `after_commit` wins when it is set: a reviewed-through revision is a
     stronger statement than a date, and dates are only what the pass document
-    happens to record.
+    happens to record. It is also the only one of the two git can answer
+    exactly — `A..HEAD` is a set, while a date is a walk.
+
+    **Never `--since`.** That is a traversal *cutoff*, not a filter: git stops
+    walking once it meets a commit older than the date, so any later commit
+    behind it is silently dropped. Measured on this repo 2026-08-12 — Block A's
+    own history — `--since=2026-08-04` reported **5** commits where a full walk
+    finds **11**, hiding `3226a5f2` (where the whisper channel points),
+    `57308acd` (trade windows telling the server they were dismissed) and
+    `6a60d062` (every class name reading "Adventurer") among others. Those are
+    three of the exact behaviours Block A's rows assert. The count also moved
+    between two runs on the same branch, which is the tell that it was never a
+    filter. Walk everything and compare dates here, where it is arithmetic.
     """
-    range_argument = [f"{after_commit}..HEAD"] if after_commit else [f"--since={since}"]
-    # `--no-merges`: `git show` on a merge prints no diff, so a merge would be
-    # reported with nothing to read and could never be assessed.
-    lines = git(repo, "log", "--oneline", "--no-decorate", "--no-merges", *range_argument, "--", *paths)
-    return [line for line in lines.splitlines() if line.strip() and changes_behaviour(repo, line.split()[0], paths)]
+    if after_commit:
+        lines = git(repo, "log", "--oneline", "--no-decorate", "--no-merges", f"{after_commit}..HEAD", "--", *paths).splitlines()
+    else:
+        # `%cI` is the committer date, strict ISO-8601, so a plain string
+        # comparison against a `YYYY-MM-DD` anchor is a date comparison.
+        lines = []
+        for entry in git(repo, "log", "--no-decorate", "--no-merges", "--format=%h %cI %s", "--", *paths).splitlines():
+            if not entry.strip():
+                continue
+            abbreviated, committed_at, subject = entry.split(" ", 2)
+            if committed_at >= since:
+                lines.append(f"{abbreviated} {subject}")
+
+    # `--no-merges` above: `git show` on a merge prints no diff, so a merge
+    # would be reported with nothing to read and could never be assessed.
+    return [line for line in lines if line.strip() and changes_behaviour(repo, line.split()[0], paths)]
 
 
 def main() -> int:

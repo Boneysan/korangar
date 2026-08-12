@@ -13,6 +13,8 @@ regression-smoking.
 | **2** | **Block E — Moonlit confirm** | Redesign **CLOSED 2026-08-08** after red-square/light bugs; re-confirm after any skill-unit change |
 | **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
 | **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
+| **5** | **Block A re-walk — party roster + trade rows only** | The one block still stale after the 2026-08-12 triage. `a552bc57` changed the roster when *we* leave; `a617834a` changed traded items leaving the giver's inventory. Both landed after the block closed. Two rows |
+| **6** | **Gospel / Fog Wall / Evil Land ground fields** | **Never on screen.** Added by `b6148b5c` on the back of Moonlit's `LayeredGroundQuad`; the commit marks their hover sizes and opacities as *estimates*. Tile colours are the table's verbatim values. New surface, not staleness |
 | **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
 | **—** | Known-unrendered | Headgear/robe/colour, **spirit spheres**, quest UI — do **not** file as bugs; feature first |
 
@@ -21,20 +23,42 @@ pathing, ground footprint, support walk-into-range, NPC refine / item names),
 rows 1–4 of the cheap queue, observer 10–11, Moonlit redesign (2026-08-08).
 
 > [!WARNING]
-> **"Closed" here means *verified once, against one revision* — and every one
-> of the seven closed blocks is now older than the code it covers.** Measured
-> 2026-08-12 by `tools/audits/gui-pass-staleness.py`: Block A has **eleven**
-> commits on its files since it closed, three of which changed the exact
-> behaviours its rows asserted — `a552bc57` (party roster on leaving),
-> `57308acd` (trade windows telling the server they were dismissed),
-> `3226a5f2` (where the whisper channel points). Block D and Block E each
-> carry a later commit to their own subsystem (`d2682580`, `b6148b5c`).
+> **"Closed" here means *verified once, against one revision*.** All seven
+> closed blocks were flagged stale on 2026-08-12 by
+> `tools/audits/gui-pass-staleness.py`; **six were then read and cleared, and
+> one survives.**
+>
+> **Block A is the one still stale, and it needs two rows, not nineteen.** Of
+> the eleven commits on its files, the eight dated 2026-08-04 are the pass's
+> *own* fixes — this document records each as "PASS 2026-08-04 (after a fix,
+> re-verified live)". Two landed on 2026-08-05, after it closed, and each
+> changes a behaviour a row asserts: **`a552bc57`** (the party roster when *we*
+> are the one who left) and **`a617834a`** (traded items leaving the giver's own
+> inventory). **Re-walk the party-roster and trade rows.**
+>
+> The other six carry a `reviewed_through` with its reason in the tool. Two
+> results worth knowing, because they generalise: **`d5eb977a` is rustfmt
+> everywhere it appears** — checked statement by statement, since `-w` does not
+> collapse a multi-line join — and **`d2682580` / `b6148b5c` are not changes
+> *since* Blocks D and E were verified, they are the commits that verified
+> them**, landing the same day and saying so in their own messages. A date
+> anchor cannot express "same day, afterwards"; that is what `reviewed_through`
+> is for.
 >
 > This is not a criticism of the pass; it is the one property a manual pass
 > structurally lacks. Run the tool before a GUI session so the queue starts
 > from what is *currently* unverified, and clear each stale block honestly:
 > re-walk it, or read the commits and record why they cannot reach it.
 > Do not simply carry the PASS forward.
+>
+> **The tool itself was under-reporting until 2026-08-12.** It anchored on
+> `git log --since`, which is a traversal *cutoff* rather than a filter: git
+> stops walking once it meets a commit older than the date, so anything behind
+> that is dropped silently. On Block A it reported **5** commits where a full
+> walk finds **11** — hiding `3226a5f2`, `57308acd` and `6a60d062`, three of the
+> exact behaviours its rows assert — and the count moved between two runs on the
+> same branch, which is the tell. It now walks the whole history and compares
+> dates in Python.
 
 **Improvements / bugs found during this pass** are recorded inline under each
 block’s Result cells and “Findings from the … walk” sections (empty job table,
