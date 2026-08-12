@@ -154,9 +154,20 @@ jobs:
           cat > staging/README.txt <<'READAPP'
           Korangar
 
-          1. Put `data.grf` (and `rdata.grf` if you have it) next to this binary.
-             They come from your own Ragnarok Online installation and are not
-             included here.
+          1. You need `data.grf` from a Ragnarok Online installation. It is not
+             included here and cannot be — those assets belong to Gravity.
+             Either copy it (and `rdata.grf` if you have one) next to this
+             binary, or leave it where it is and point at it by creating
+             `client/game_archives.ron`:
+
+                 (
+                     archives: [
+                         "/path/to/Ragnarok/data.grf",
+                         "archive/",
+                     ],
+                 )
+
+             Keep `"archive/"` in the list — that is this client's own data.
           2. To connect somewhere other than this machine, rename
              `client/server.ron.example` to `client/server.ron` and set the
              address.
