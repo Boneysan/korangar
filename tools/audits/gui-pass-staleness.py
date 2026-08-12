@@ -93,6 +93,14 @@ BLOCKS = [
     # (`6ff109ac` changes no code under these paths; `d5eb977a` is rustfmt.)
     # So this needs a re-walk of the **party roster** and **trade** rows only —
     # two rows, not nineteen. Do not set `reviewed_through` until that happens.
+    #
+    # **Re-walk the pixels, not the state.** Both commits shipped a regression
+    # test for the behaviour they changed — `leaving_a_party_clears_the_whole_roster`
+    # (`state/party.rs`) and `our_offer_records_the_slot_and_the_amount_actually_offered`
+    # (`state/trade.rs`) — so the data half is covered and re-derivable without a
+    # server. What no test can reach is whether the roster row actually leaves
+    # the screen and whether the item actually leaves the giver's window, which
+    # is boundary 5 and the only reason these rows are still open.
     {
         "name": "Block A (N1-N19)",
         "covers": "social windows: chat, whisper, friends, party, trade, class labels",
