@@ -21,15 +21,40 @@ name: Audits
 # by deleting the hit.
 
 on:
+  # Weekly is the load-bearing trigger, not a backstop.
+  #
+  # Push and pull_request only fire for `main`, and the work in this fork lives
+  # on long-running agent branches — the audits reached CI at all on 2026-08-12
+  # only because a draft PR happened to be open. Close that PR, or work on a
+  # branch without one, and every trigger below except this cron goes quiet
+  # while the tree keeps changing. These checks are also the ones whose subject
+  # moves without a commit here: the pinned Hercules revision, the runner image,
+  # and the toolchain.
+  #
+  # Monday morning UTC, off the hour to miss GitHub's scheduling congestion, and
+  # clear of the nightly paired-integration slot (08:23).
+  #
+  # ONE THING MUST STILL BE DONE FOR THIS TO EVER FIRE: GitHub reads `schedule`
+  # only from the **default branch**, so this file has to exist on `main`.
+  # Today it does not, and neither does `integration.yml` — which means that
+  # workflow's `cron: "23 8 * * *"` has never run either, despite the testing
+  # docs describing the nightly full-suite run as an arrangement in force.
+  # A scheduled cron on a non-default branch is silent, not an error.
+  schedule:
+    - cron: "17 7 * * 1"
   push:
     branches: [ main ]
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency:
+  # Not cancel-in-progress for a scheduled run: the weekly one is the only run
+  # some weeks get, and losing it to a push that arrives mid-flight would make
+  # the cadence a lie.
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
 
 jobs:
   audits:
@@ -37,10 +62,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # **A scheduled run has to be told which branch to audit.**
+      #
+      # GitHub only fires `schedule` from the default branch, and it checks out
+      # the default branch by default. Here that is `main`, which is 246 commits
+      # behind this fork's actual trunk and contains no `tools/audits/` at all —
+      # so the weekly run would check out a tree with nothing to audit and pass
+      # by having nothing to do, which is the worst outcome available.
+      #
+      # Named literally rather than inferred, so it is greppable and so a wrong
+      # value fails the checkout loudly instead of auditing the wrong tree.
+      # Update it when the fork's trunk branch changes.
       - name: Check out Korangar
         uses: actions/checkout@v4
         with:
           path: korangar
+          ref: ${{ github.event_name == 'schedule' && 'agent/platform-connectivity-controls' || github.ref }}
 
       # Three observer-parity audits (A4, A5, A8) read Hercules' own source, and
       # all four generated files are generated FROM Hercules data. Without this
