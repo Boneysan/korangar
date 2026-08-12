@@ -28,13 +28,39 @@ cargo run --release --bin korangar
 
 Second seat: run the client a second time and log in as the other character.
 
-| Seat | Character | Job | Notes |
-|---|---|---|---|
-| A | `test` | Clown (4020) | Violin |
-| B | `HeadlessTwo` | Gypsy (4021) | Rope |
+### Pre-flight — check this before you start, the seats drift
 
-Both in party 280 on `prt_fild08`. If either has drifted, `@jobchange 4020` /
-`@jobchange 4021`, `@allskill`, `@warp prt_fild08`.
+They had drifted by **2026-08-12**: `test` was a **Whitesmith in geffen**, and
+**no party existed at all**. Party 280 is gone. Task 1 needs a Clown and a
+Gypsy in one party, so it would have stalled on the first row — which is part of
+why Hermode keeps not getting reached.
+
+Check without starting the client (`<pw>` from `Hercules/conf/import/sql_connection.conf`):
+
+```sh
+mysql --protocol=tcp -h127.0.0.1 -uragnarok -p<pw> ragnarok -e \
+ "SELECT name, class, last_map, party_id FROM \`char\` WHERE name IN ('test','HeadlessTwo');"
+```
+
+| Seat | Character | Wanted job | Weapon | Why the weapon matters |
+|---|---|---|---|---|
+| A | `test` | Clown **4020** | Violin (**1901**) | `CG_HERMODE`'s `WeaponTypes` is `Instruments` or `Whips` — bare-handed it refuses |
+| B | `HeadlessTwo` | Gypsy **4021** | Rope (**1950**) | same |
+
+Restore, in the client, if the query disagrees:
+
+```
+A:  @jobchange 4020        B:  @jobchange 4021
+A:  @allskill              B:  @allskill
+A:  @item 1901 1           B:  @item 1950 1
+    equip it from inventory    equip it from inventory
+A:  @warp prt_fild08 320 185
+                           B:  @jumpto test
+A:  @killmonster
+```
+
+Then **make a party** — A creates one from the party window and invites B. Don't
+look for 280; the party table is empty and a new id will be issued.
 
 To see the skill-unit instrumentation, launch with `KORANGAR_PACKET_LOG=1` — it
 prints one `[skill-unit] spawn` line per cell with the resolved colour, the
