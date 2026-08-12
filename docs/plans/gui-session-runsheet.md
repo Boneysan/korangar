@@ -50,10 +50,10 @@ session outright.
 
 1. **§1 must be first.** `@jobchange` destroys the Clown/Gypsy pair that the
    ensemble needs, and rebuilding it costs more than doing the row.
-2. **§7 must be last.** The instance attempt has previously put *both* clients
+2. **§9 must be last.** The instance attempt has previously put *both* clients
    into a black screen with the interface still drawn and **no input accepted**,
    so the only way out was killing the process. Anything after it is lost.
-3. **§4 Gospel clears the caster's own buffs** when it starts. Do not set
+3. **§5 Gospel clears the caster's own buffs** when it starts. Do not set
    anything up expecting to keep it.
 
 ---
@@ -79,7 +79,7 @@ for **10 s on both partners**, and neither seat can use *any* skill during it.
 with `@die` or a relog. A refusal here is usually the fatigue, not a bug.
 
 Optional while the seats exist: re-cast **Moonlit** (`CG_MOONLIT`, **395**) as a
-calibration reference for §4–§6. It should be a soft salmon field, 9×9, bobbing,
+calibration reference for §5–§7. It should be a soft salmon field, 9×9, bobbing,
 **not** a flat slab and not a red square. Both of those were fixed on 08-08.
 
 ---
@@ -106,7 +106,22 @@ is open**. Do not re-derive the data.
 
 ---
 
-## 3. N20 — Auto Spell window
+## 3. The four refuse/remove paths
+
+Placed here deliberately: it needs both seats and a live party, which §4–§6's
+job changes break up. Recovered by the 2026-08-12 reconciliation: Block A walked
+every *accept* path and never a *refuse* one.
+
+| # | Do this | PASS looks like |
+|---|---|---|
+| P1 | B **rejects** A's party invite | A gets a rejection line; B's status line returns to "Not in a party" |
+| P5 | B logs out while partied | A's roster line for B flips to `(offline)`; the bars over B stop drawing |
+| F3 | B **rejects** A's friend request | Request window closes on B; A gets the rejection line |
+| F4 | A presses **Remove** on a friend | The row empties on **both** sides |
+
+---
+
+## 4. N20 — Auto Spell window
 
 `@jobchange 16` (Sage) on seat A, then `@allskill`.
 
@@ -122,7 +137,7 @@ is open**. Do not re-derive the data.
 
 ---
 
-## 4. Gospel — expected to be invisible
+## 5. Gospel — expected to be invisible
 
 `@jobchange 4015` (Paladin), `@allskill`, `@heal` (needs 80–100 SP).
 
@@ -145,7 +160,7 @@ The field is **two layers**, so the useful report distinguishes them:
 
 ---
 
-## 5. Fog Wall
+## 6. Fog Wall
 
 `@jobchange 4017` (Professor), `@allskill`.
 
@@ -154,11 +169,11 @@ The field is **two layers**, so the useful report distinguishes them:
   this build does not. Do not go shopping.
 - Coded at **α 0.6**, the calibrated magnitude, so this one *should* read.
 
-Same two-layer question as §4.
+Same two-layer question as §5.
 
 ---
 
-## 6. Evil Land
+## 7. Evil Land
 
 No job learns it — reach it directly:
 
@@ -172,7 +187,17 @@ size is the interesting part here.
 
 ---
 
-## 7. N24 — Instance window — DO THIS LAST
+## 8. Two confirms that were never done
+
+Both shipped 2026-07-22 as "code complete — live GUI confirm recommended", and
+the confirm never happened. Single seat, any job.
+
+| # | Do this | PASS looks like |
+|---|---|---|
+| M1-009 | Hover an inventory/equipment/storage item while wearing gear in that slot | Tooltip shows ATK/MATK/DEF/slots/req Lv/weight **and a vs-equipped delta** |
+| M1-014 | Right-click a character at character select | Tooltip documents left-click play / right-click delete; delete is **two-step** (`Delete {name}…` → `Really delete {name}?`) |
+
+## 9. N24 — Instance window — DO THIS LAST
 
 **This has hard-locked both clients before.** Expect to kill the process.
 
