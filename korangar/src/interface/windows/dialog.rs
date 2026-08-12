@@ -132,7 +132,63 @@ fn normalize_dialog_text(text: String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::normalize_dialog_text;
+    use ragnarok_packets::EntityId;
+
+    use super::{DialogWindowState, normalize_dialog_text};
+
+    /// The whole reason `active` exists, pinned.
+    ///
+    /// `reconcile_dialog_window_closed` (lib.rs) is the safety net for a player
+    /// who dismisses the dialog window without answering the NPC: Hercules
+    /// keeps `npc_id` on the session, so every later interaction comes back
+    /// `MSG_BUSY` and the player is stuck with no visible cause. The net fires
+    /// on `is_active() && !window_open`, so a conversation that starts without
+    /// setting `active` is a conversation the net cannot rescue — and nothing
+    /// else in the tree would notice, because the window still looks right.
+    #[test]
+    fn a_started_conversation_is_active_until_it_ends() {
+        let mut state = DialogWindowState::default();
+        assert!(!state.is_active(), "a fresh dialog state must not claim a conversation");
+
+        state.initialize(EntityId(4242));
+        assert!(state.is_active());
+        assert_eq!(state.npc_id(), EntityId(4242));
+
+        state.end();
+        assert!(!state.is_active());
+    }
+
+    /// `end()` must drop the npc id as well as the flag.
+    ///
+    /// The reconcile path sends `CloseDialog(npc_id)` and guards on
+    /// `npc_id.0 != 0`, so a stale id surviving `end()` is a message addressed
+    /// to an NPC we finished with — harmless today only because `active` is
+    /// cleared in the same call. Asserting both means a future change that
+    /// splits them cannot quietly leave the id behind.
+    #[test]
+    fn ending_a_dialog_forgets_which_npc_it_was_with() {
+        let mut state = DialogWindowState::default();
+        state.initialize(EntityId(4242));
+        state.end();
+
+        assert_eq!(state.npc_id(), EntityId(0), "end() left a stale npc id behind");
+    }
+
+    /// Re-initializing without an intervening `end()` must re-aim at the new
+    /// NPC rather than keeping the old one.
+    ///
+    /// This is the shape of the real sequence: talking to a second NPC while
+    /// the first conversation is still marked active. Answering the *previous*
+    /// npc id is how a dialog reply reaches the wrong script.
+    #[test]
+    fn talking_to_a_second_npc_re_aims_the_dialog() {
+        let mut state = DialogWindowState::default();
+        state.initialize(EntityId(1));
+        state.initialize(EntityId(2));
+
+        assert_eq!(state.npc_id(), EntityId(2));
+        assert!(state.is_active());
+    }
 
     #[test]
     fn normalize_dialog_text_strips_navigation_markup() {

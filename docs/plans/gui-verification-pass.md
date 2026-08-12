@@ -20,10 +20,55 @@ regression-smoking.
 pathing, ground footprint, support walk-into-range, NPC refine / item names),
 rows 1–4 of the cheap queue, observer 10–11, Moonlit redesign (2026-08-08).
 
+> [!WARNING]
+> **"Closed" here means *verified once, against one revision* — and every one
+> of the seven closed blocks is now older than the code it covers.** Measured
+> 2026-08-12 by `tools/audits/gui-pass-staleness.py`: Block A has **eleven**
+> commits on its files since it closed, three of which changed the exact
+> behaviours its rows asserted — `a552bc57` (party roster on leaving),
+> `57308acd` (trade windows telling the server they were dismissed),
+> `3226a5f2` (where the whisper channel points). Block D and Block E each
+> carry a later commit to their own subsystem (`d2682580`, `b6148b5c`).
+>
+> This is not a criticism of the pass; it is the one property a manual pass
+> structurally lacks. Run the tool before a GUI session so the queue starts
+> from what is *currently* unverified, and clear each stale block honestly:
+> re-walk it, or read the commits and record why they cannot reach it.
+> Do not simply carry the PASS forward.
+
 **Improvements / bugs found during this pass** are recorded inline under each
 block’s Result cells and “Findings from the … walk” sections (empty job table,
 whisper sender echo, trade inventory, support skill visuals, etc.) — not a
 separate changelog.
+
+### Give every finding a mechanical guard where one is possible
+
+Reviewing the pass's own findings (2026-08-12): **most of the bugs it caught
+were state-layer bugs, not pixel bugs** — the class label reading "Adventurer"
+for every job (a Lua table looked up under the wrong global, with the failure
+swallowed by an `if let Ok`), the sender's own whisper never appearing, a bare
+`/W` broadcasting a private message to the whole map, the party roster surviving
+your own departure. None of those needed a GPU to detect. They needed somebody
+to *call the function*.
+
+Two of them already got a unit test as part of the fix — `job_name.rs` pins the
+rebirth classes **and asserts the table is not empty**, which is what actually
+went wrong, and `slash_command_usage` is covered. That is the pattern; it is
+just not yet the habit.
+
+| The finding was… | Guard it with | Why |
+|---|---|---|
+| A value computed or looked up wrongly | a unit test on that function | Cheapest, and it re-runs forever |
+| A window's state machine going wrong (busy player, stale roster, wrong target) | a unit test on the `*WindowState` | `ChatWindowState` and `DialogWindowState` show the shape: `default()`, call methods, assert |
+| An event that never reaches state | a headless scenario + `event-routing.py` | Already covered by the suite |
+| State stored and never drawn | `unread-state.py` | Catches exactly this (it found `spirit_spheres`) |
+| Draw order, colour, a missing sprite, a font glyph | **eyes** — nothing else can | This is the residue that justifies the manual pass |
+
+The gap worth closing: `korangar/src/interface` is **66 files / ~13,000 lines
+with two test modules**, and it holds fourteen `*WindowState` structs whose
+methods are ordinary Rust. `korangar/src/state` is in far better shape (10 of
+17 tested). Adding a test alongside each future GUI fix costs minutes and is
+the only thing that stops a re-walk being the only way to know.
 
 ---
 
@@ -948,7 +993,12 @@ nothing and should not log a finding:
   (`UF_NOFOOTSET`) — aim bare ground 4–5 cells away.
 - The `test` character may not be the job you expect; `@jobchange 9` restores
   Wizard with the E1 hotbar intact.
-- **Do not run `rustfmt` in this repo.** The committed tree is not
-  rustfmt-clean, and pointing it at `lib.rs` rewrites 20+ unrelated files.
+- ~~**Do not run `rustfmt` in this repo.**~~ **No longer true, and following it
+  now fights CI.** The tree was formatted end to end on 2026-08-11 (`d5eb977a`,
+  ~60 files) and `.github/workflows/formatting.yml` runs
+  `cargo fmt --all --check` on every push and PR, so the committed tree *is*
+  rustfmt-clean and has to stay that way. Use `cargo fmt --all`; the old
+  warning was about `rustfmt <file>` reformatting a whole crate's worth of
+  unrelated drift, and that drift is gone.
 - The **hotbar is server-side** (Hercules hotkey table), so it cannot be edited
   from the client — change it offline.

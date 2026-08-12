@@ -692,5 +692,9 @@ the campaign ever moves to pre-renewal. Full colour/texture table is in
   caster (`UF_NOFOOTSET`) — aim bare ground 4–5 cells away.
 - The `test` character (150000) may be a Priest; `@jobchange 9` restores Wizard with
   the E1 hotbar intact.
-- **Do not run `rustfmt` in this repo.** The committed tree is not rustfmt-clean, and
-  pointing it at `lib.rs` (the crate root) rewrites 20+ unrelated files.
+- ~~**Do not run `rustfmt` in this repo.**~~ **Stale as of 2026-08-11 — following
+  it now fights CI.** The tree was formatted end to end in `d5eb977a` (~60 files)
+  and `formatting.yml` runs `cargo fmt --all --check` on every push and PR, so the
+  committed tree *is* rustfmt-clean and must stay so. Use `cargo fmt --all`. The
+  original warning was about `rustfmt <file>` dragging in a crate's worth of
+  unrelated drift; that drift no longer exists.
