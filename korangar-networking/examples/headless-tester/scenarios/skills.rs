@@ -36,12 +36,20 @@ pub static SWEEP_OUTCOMES: Mutex<Vec<(&'static str, usize)>> = Mutex::new(Vec::n
 /// How each cast measured against the expectation its own `skill_db` entry
 /// derives — `(skill name, verdict, what was seen)`.
 ///
-/// **Report-only, deliberately.** This is tier 1b step 2 with the assertion
-/// left off: the observation window (step 1) made the comparison possible, and
-/// the number it produces is what decides whether enforcing it is honest yet.
-/// The recorded measurement before the window said enforcing would redden **217
-/// working skills**; a check that reddens working skills is worse than no
-/// check, so it reports and does not fail.
+/// **ENFORCED since 2026-08-11.** Any `Unmet` row not named in
+/// [`EXPECTATION_EXEMPTIONS`] fails the run, in `main.rs` alongside the packet
+/// gates. That list is currently **empty**, so today every unmet row is a
+/// failure.
+///
+/// It was report-only first, and the staging was the point: measured against
+/// the *pre-window* observation model, enforcing would have reddened **217
+/// working skills**, and a check that reddens working skills is worse than no
+/// check. The observation window (tier 1b step 1) took the real number to 19
+/// unmet over 633 casts — 6 distinct skills, each a precondition the sweep
+/// could not provide — and closing those preconditions in `prepare_skill_cast`
+/// took it to zero. Adding a name back to `EXPECTATION_EXEMPTIONS` to quiet a
+/// new unmet reverses that: fix the precondition, fix the derivation, or open a
+/// findings entry.
 pub static EXPECTATION_VERDICTS: Mutex<Vec<(String, Verdict, String)>> = Mutex::new(Vec::new());
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -1097,13 +1105,19 @@ fn weapon_refine_cancel(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-/// Skills that legitimately produce no direct cast response headlessly
-/// (require special weapons/ammo/catalysts/companions or extended setup).
-/// Kept intentionally small: anything else that fails silently is a finding.
-/// Log one sweep observation, and notice when an allowlist entry did not earn
-/// its place on this run.
 /// Measure one cast against what `skill_db` says the skill does, if it says
-/// anything. Records a verdict; never fails the scenario.
+/// anything, and record the verdict.
+///
+/// **It does not fail the scenario, but it is not report-only either**: an
+/// `Unmet` recorded here fails the *run*, at the gate in `main.rs`, after the
+/// JSON artifact is written — the same shape and the same ordering as the
+/// packet gates. The distinction matters when reading a sweep: the job will
+/// still print PASS and the run will still exit non-zero.
+///
+/// (Three unrelated doc comments had collapsed onto this function through
+/// refactoring — the allowlist's, `record_outcome`'s, and its own, the last of
+/// which still said "never fails the scenario" a day after the gate went in.
+/// If you split a function here, take its comment with it.)
 fn record_expectation(skill_id: u16, name: &str, observed: &Observed) {
     let Some((_, _, expected)) = SKILL_EXPECTATIONS.iter().find(|(id, ..)| *id == skill_id) else {
         return;
@@ -1155,6 +1169,13 @@ fn record_expectation(skill_id: u16, name: &str, observed: &Observed) {
     }
 }
 
+/// Log one sweep observation into the run-wide distribution, and — when the
+/// skill is allowlisted — notice whether the entry earned its place on this
+/// run.
+///
+/// Both counts are kept (`answered` and `silent`), never just "it answered
+/// somewhere": see [`ALLOWLIST_OBSERVATIONS`] for why acting on the one-sided
+/// version nearly culled three load-bearing entries.
 fn record_outcome(name: &str, result: &'static str, observed: usize) {
     if let Ok(mut outcomes) = SWEEP_OUTCOMES.lock() {
         outcomes.push((result, observed));
@@ -2234,6 +2255,39 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     }
     if looked_past_first > 0 {
         println!("      [note] {looked_past_first} cast(s) produced evidence past the first event the sweep recognised");
+    }
+
+    // **A sweep that cast nothing must not pass.**
+    //
+    // The gate below is "no skill was silent", and a job with no castable
+    // skills satisfies it perfectly: zero casts, zero silences, PASS. Nothing
+    // else notices — `@allskill` is best-effort, the tree wait only requires
+    // more than five *entries* (passives count), and the printed
+    // "sweeping N skills" line is total tree size, not casts. So a Hercules
+    // change that stopped granting a job's actives, or a job whose tree came
+    // back passive-only, would report a green sweep having exercised nothing.
+    //
+    // That is the same shape as the skip-reported-as-PASS bug that hid
+    // `skills-dancer` and `skills-gypsy` behind a green 114/114 for weeks,
+    // one level down: not a scenario that failed to run, but a scenario that
+    // ran and asserted over an empty set. Novice is the one legitimate case
+    // and it returns `skipped` at the top of this function.
+    //
+    // The cast/passive split is printed on every job so the archives carry it:
+    // a per-job floor ("Wizard casts at least 30") is the stronger check, and
+    // it needs numbers from real green runs rather than numbers picked here.
+    let cast_count = outcomes.iter().filter(|outcome| outcome.result != "passive").count();
+    println!(
+        "    {job_name}: {cast_count} cast, {} passive, of {} in the tree",
+        outcomes.len() - cast_count,
+        outcomes.len()
+    );
+    if cast_count == 0 {
+        return Err(format!(
+            "{job_name}: the tree held {} skill(s) and not one of them was cast, so this sweep asserted nothing. Either the job's actives \
+             stopped being granted (`@allskill`), or every entry came back Passive/level 0",
+            outcomes.len()
+        ));
     }
 
     match silent_count {

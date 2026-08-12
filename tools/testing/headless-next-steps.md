@@ -79,6 +79,45 @@ HERCULES_DIR=../Hercules tools/audits/generated-drift.sh
 
 ---
 
+## 1a. Meaning review, 2026-08-12 — what a green run did *not* cover
+
+A read-through of the suite and the audit layer after the acceptance close.
+Five findings, all fixed on the same day. The suite itself held up well; three
+of the five were in the layer *around* it, which is where they have tended to
+be.
+
+| # | Finding | Fix |
+|---|---|---|
+| 1 | **`observer-parity.sh` was RED and nobody knew** — three unclassified `register_noop` findings from the typed-no-op batch had been sitting there. Two turned out to be dropped features whose stated reason did not survive checking (below) | Classified in the baseline; both gaps filed as `OPEN:` |
+| 2 | **None of the five standing audits ran in CI**, while `tools/audits/README.md` said "in CI, on every commit". That is what let #1 sit | New [`audits.yml`](../../.github/workflows/audits.yml): all five on every push and PR, with the pinned Hercules checked out so none self-skips |
+| 3 | **The `hotkeys` scenario asserted nothing** — connect, send, pump, `Ok(())`, under a comment claiming it "verified" the hotkey. Only a dropped connection could redden it, and `ACTION_COVERAGE` pointed `set_hotkey_data` at it as covered | Rewritten as a real round trip: rotating probe → relog → assert the slot out of `ZC_SHORTCUT_KEY_LIST` |
+| 4 | **`ACTION_COVERAGE` was a one-way gate.** It checked that every row names a real scenario, never that every real action has a row — so a new `pub fn` on `NetworkingSystem` could land untested with the suite green | `every_public_action_has_a_coverage_row` + `no_coverage_row_names_a_vanished_action`, both verified failing |
+| 5 | **A job sweep that cast nothing would have passed.** The gate is "no skill was silent"; zero casts satisfies it. `@allskill` is best-effort and the tree wait only counts *entries*, passives included | `sweep_job` now fails on zero casts and prints `N cast, M passive` per job, so a per-job floor is derivable from the archives |
+
+**The two dropped features found behind #1** — both are `register_noop` with a
+rationale that reads fine and is not true:
+
+- **`GmKickResponsePacket` (0x00CD)** is the *only* confirmation the kicking GM
+  gets. `ACMD(kick)` prints nothing on success and `clif_GM_kick`'s whole
+  feedback path is `clif->GM_kickack(sd, 1)`. So a DM types `@kick`, the target
+  vanishes, and the client says nothing — and a *failed* kick is
+  indistinguishable from a lost command. The registration comment says "the
+  kicked target owns the disconnect flow", which is true of 0x0081 and is the
+  other half of the interaction. DM tooling is this fork's stated priority.
+- **`TalkieBoxMessagePacket` (0x0191)** is noop'd because the text is
+  "rendered at the trap rather than in a chat window". Nothing in the tree
+  renders it anywhere: the only Talkie Box reference in `korangar/src` is the
+  trap's own prop model. The prop draws; the message it exists to carry does
+  not.
+
+Same shape as `BD_ETERNALCHAOS` sitting in the skill allowlist for months under
+a false reason. **Check the claim in a rationale; do not inherit it.**
+
+Also corrected: three doc comments had collapsed onto one function in
+`skills.rs` through refactoring, and the surviving one still said the
+expectation verdicts "never fail" — a day after the gate went in. A stale
+comment on a gate is how the next session decides it may add exemptions.
+
 ## 2. What shipped (2026-08-11)
 
 1. Expectation **enforcement**; `EXPECTATION_EXEMPTIONS` emptied (FeelRequest, partner Spellbreaker, Cleaner refuse)

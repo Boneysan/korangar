@@ -102,7 +102,10 @@ pub fn all_scenarios() -> Vec<Scenario> {
 /// `cancel_item_identify` sat untested while the suite reported green.
 ///
 /// When you add a public map/character action to `korangar-networking`, add a
-/// row here. `"untested"` is not an acceptable exclusion.
+/// row here. `"untested"` is not an acceptable exclusion. You do not have to
+/// remember: `every_public_action_has_a_coverage_row` reads
+/// `korangar-networking/src/lib.rs` and fails the build if you did not — see
+/// its comment for why the manifest was only half a gate until then.
 const ACTION_COVERAGE: &[(&str, &str)] = &[
     // Session / connection
     ("connect_to_login_server", "smoke"),
@@ -202,9 +205,24 @@ const ACTION_COVERAGE: &[(&str, &str)] = &[
     ("trade_commit", "trade-commit"),
 ];
 
+/// Public methods on `NetworkingSystem` (and its event buffer) that are
+/// harness plumbing rather than protocol actions, so they need no scenario.
+///
+/// Named individually and never as a pattern: "anything called `spawn*`" is
+/// how a real action slips through. Anything not on this list must appear in
+/// [`ACTION_COVERAGE`].
+#[cfg(test)]
+const NON_ACTION_FUNCTIONS: &[&str] = &[
+    "drain",               // NetworkEventBuffer — the harness drains it every poll
+    "new",                 // NetworkEventBuffer constructor
+    "spawn",               // constructs the system; exercised by every scenario
+    "spawn_with_callback", // same, with the ledger attached
+    "get_events",          // the poll itself, exercised by every scenario
+];
+
 #[cfg(test)]
 mod tests {
-    use super::{ACTION_COVERAGE, all_scenarios, is_expected_skip, skipped};
+    use super::{ACTION_COVERAGE, NON_ACTION_FUNCTIONS, all_scenarios, is_expected_skip, skipped};
 
     #[test]
     fn expected_skips_require_the_exact_reviewed_reason() {
@@ -243,6 +261,91 @@ mod tests {
                 "action {action} claims scenario {coverage:?}, which is not registered"
             );
         }
+    }
+
+    /// The other direction, and the one that was missing.
+    ///
+    /// `action_coverage_points_at_registered_scenarios_or_exclusions` checks
+    /// that every row names something real. Nothing checked that every real
+    /// action has a row — so the manifest enforced its own contents and not
+    /// the thing it exists to protect, and a new `pub fn` on
+    /// `NetworkingSystem` could land with no scenario, no exclusion and a
+    /// green suite. The doc comment asked the author to remember. This asks
+    /// the compiler.
+    ///
+    /// Reads the source rather than reflecting, because Rust has no reflection
+    /// and the alternative — a macro wrapping every action — would be a large
+    /// change to production code for a test's benefit. The parse is
+    /// deliberately dumb (four-space-indented `pub fn`), which is what the
+    /// whole file already looks like; if that stops matching, this fails loudly
+    /// with a count of zero rather than passing quietly.
+    const NETWORKING_SOURCE: &str = include_str!("../../../src/lib.rs");
+
+    /// Every four-space-indented `pub fn` in `korangar-networking/src/lib.rs`,
+    /// by name.
+    ///
+    /// **Both directions compare against this one list, on purpose.** The
+    /// first version of the stale-row check asked whether the source
+    /// `contains("    pub fn {action}")`, and that check passed when
+    /// `set_all_ignored` was renamed to `set_all_ignored_renamed` — the old
+    /// name is a *prefix* of the new one. A substring test for an identifier
+    /// is a test that cannot see a rename, which is the single thing it was
+    /// written to catch. Parse once, compare sets.
+    fn public_functions() -> Vec<&'static str> {
+        let names: Vec<&str> = NETWORKING_SOURCE
+            .lines()
+            .filter_map(|line| line.strip_prefix("    pub fn "))
+            .map(|rest| {
+                rest.split(|character: char| !character.is_alphanumeric() && character != '_')
+                    .next()
+                    .unwrap_or("")
+            })
+            .filter(|name| !name.is_empty())
+            .collect();
+
+        // A parser that finds nothing would make both callers vacuous —
+        // exactly the failure they exist to close.
+        assert!(
+            names.len() > 50,
+            "found only {} public functions in korangar-networking/src/lib.rs — the `pub fn` parse has stopped matching, so these tests \
+             are no longer checking anything",
+            names.len()
+        );
+        names
+    }
+
+    #[test]
+    fn every_public_action_has_a_coverage_row() {
+        let uncovered: Vec<&str> = public_functions()
+            .into_iter()
+            .filter(|name| !NON_ACTION_FUNCTIONS.contains(name))
+            .filter(|name| !ACTION_COVERAGE.iter().any(|(action, _)| action == name))
+            .collect();
+
+        assert!(
+            uncovered.is_empty(),
+            "these public NetworkingSystem actions have no ACTION_COVERAGE row: {uncovered:?}. Add a scenario name, or an `exclusion: \
+             <concrete reason>` — or, if it is harness plumbing rather than a protocol action, add it to NON_ACTION_FUNCTIONS with a \
+             comment saying why."
+        );
+    }
+
+    /// The mirror of the above: a coverage row for something that no longer
+    /// exists is a claim nobody can check, and it hides the fact that the
+    /// action it named was deleted or renamed.
+    #[test]
+    fn no_coverage_row_names_a_vanished_action() {
+        let existing = public_functions();
+        let stale: Vec<&str> = ACTION_COVERAGE
+            .iter()
+            .map(|(action, _)| *action)
+            .filter(|action| !existing.contains(action))
+            .collect();
+
+        assert!(
+            stale.is_empty(),
+            "these ACTION_COVERAGE rows name functions that are not in korangar-networking/src/lib.rs any more: {stale:?}"
+        );
     }
 
     #[test]

@@ -2,7 +2,7 @@
 
 use std::time::Duration;
 
-use korangar_networking::{InventoryItemDetails, NetworkEvent, NoMetadata, ShopItem};
+use korangar_networking::{HotkeyState, InventoryItemDetails, NetworkEvent, NoMetadata, ShopItem};
 use ragnarok_packets::{
     BuyOrSellOption, BuyShopItemsResult, EntityId, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, InventoryIndex,
     SellItemsResult, SkillId, SkillLevel, SoldItemInformation, StatType, StatUpType,
@@ -987,21 +987,100 @@ fn stat_skill_points(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-/// Set a hotkey and verify it is received.
+/// A hotkey written by the client survives a relogin — the hotbar is
+/// **server-side** state, not a local preference.
+///
+/// **This scenario used to assert nothing.** It connected, sent
+/// `set_hotkey_data`, pumped for 500ms and returned `Ok(())`, under a doc
+/// comment claiming it "verified" the hotkey — so the only thing that could
+/// ever redden it was the connection dropping, while `ACTION_COVERAGE` pointed
+/// `set_hotkey_data` at it as though the action were covered.
+///
+/// `CZ_SHORTCUT_KEY_CHANGE2` is fire-and-forget: Hercules writes it straight
+/// into `sd->status.hotkeys[]` and acks nothing (`clif_parse_Hotkey2`,
+/// clif.c:11854). What makes it checkable at all is the *list* — Hercules
+/// sends `ZC_SHORTCUT_KEY_LIST` (0x0B20) for every tab at login, from
+/// `clif->hotkeysAll` under `sd->state.connect_new` (clif.c:11518). So the
+/// observable is a round trip through the character save, which is also the
+/// property a player actually cares about.
+///
+/// **The probe rotates instead of being a constant, per audit rule A6**
+/// ("choose a probe value the fallback cannot produce"). All 148 scenarios
+/// share one character: writing a fixed 501 and reading back 501 would pass
+/// just as happily against a value a previous run left in that slot, or
+/// against a server that ignored the write entirely. Reading the slot first
+/// and writing *the other* potion means only a write that landed can satisfy
+/// the assertion. The quantity is carried too, and asserted, so a half-written
+/// row cannot pass on its id alone.
+///
+/// **Slot 37 is the last of the 38 and deliberately away from the F1–F9 row.**
+/// The same character carries a hand-built hotbar for the graphical skill
+/// passes (F1–F7 on the E1 Wizard), and a headless test is not entitled to
+/// clobber it.
 fn hotkeys(config: &Config) -> Result<(), String> {
-    let mut context = TestContext::connect(config)?;
+    const TAB: HotbarTab = HotbarTab(0);
+    const SLOT: HotbarSlot = HotbarSlot(37);
+    const RED_POTION: u32 = 501;
+    const ORANGE_POTION: u32 = 502;
+    const QUANTITY: u16 = 7;
 
-    let tab = HotbarTab(0);
-    let slot = HotbarSlot(0);
-    let data = HotkeyData {
-        hotkey_type: HotkeyType::Item,
-        item_or_skill_id: 501, // Red Potion id
-        quantity_or_skill_level: 0,
+    let mut context = TestContext::connect(config)?;
+    let before = read_hotkey(&mut context, TAB, SLOT)?;
+    let probe = match before {
+        Some((item_id, _)) if item_id == RED_POTION => ORANGE_POTION,
+        _ => RED_POTION,
     };
 
-    context.flush();
-    context.net.set_hotkey_data(tab, slot, data).map_err(|_| "disconnected")?;
-    context.pump(Duration::from_millis(500));
+    context
+        .net
+        .set_hotkey_data(TAB, SLOT, HotkeyData {
+            hotkey_type: HotkeyType::Item,
+            item_or_skill_id: probe,
+            quantity_or_skill_level: QUANTITY,
+        })
+        .map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(300));
 
-    Ok(())
+    // Log out cleanly and come back: the write only reaches the character save
+    // on quit, so asserting it in the same session would prove nothing beyond
+    // the packet leaving the socket.
+    drop(context);
+    std::thread::sleep(Duration::from_millis(900));
+    let mut context = TestContext::connect(config)?;
+
+    match read_hotkey(&mut context, TAB, SLOT)? {
+        Some((item_id, quantity)) if item_id == probe && quantity == QUANTITY => Ok(()),
+        Some((item_id, quantity)) => Err(format!(
+            "hotkey tab {} slot {} came back as item {item_id} x{quantity} after relogin, expected {probe} x{QUANTITY} (it held \
+             {before:?} before the write)",
+            TAB.0, SLOT.0
+        )),
+        None => Err(format!(
+            "hotkey tab {} slot {} was unbound after relogin — the write never reached the character save",
+            TAB.0, SLOT.0
+        )),
+    }
+}
+
+/// One slot out of the hotkey list the server sends at login, as
+/// `(item or skill id, quantity or level)`. `None` means the slot is unbound.
+///
+/// Reads inside the matcher rather than cloning the event: `HotkeyState` is
+/// deliberately not `Clone`, and the two numbers are the whole point.
+fn read_hotkey(context: &mut TestContext, tab: HotbarTab, slot: HotbarSlot) -> Result<Option<(u32, u16)>, String> {
+    let wanted_tab = tab.0;
+    let index = slot.0 as usize;
+    context.wait_for(&format!("SetHotkeyData for tab {wanted_tab}"), |event| match event {
+        NetworkEvent::SetHotkeyData { tab, hotkeys } if tab.0 == wanted_tab => Some(match hotkeys.get(index) {
+            Some(HotkeyState::Bound(data)) => Ok(Some((data.item_or_skill_id, data.quantity_or_skill_level))),
+            Some(HotkeyState::Unbound) => Ok(None),
+            // Not "unbound": the server sent a shorter list than the slot this
+            // scenario addresses, which is a packet-shape change, not a state.
+            None => Err(format!(
+                "the hotkey list for tab {wanted_tab} has {} slots; slot {index} is outside it",
+                hotkeys.len()
+            )),
+        }),
+        _ => None,
+    })?
 }
