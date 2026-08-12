@@ -1247,11 +1247,43 @@ where
     packet_handler.register_noop::<Packet8302>()?;
     packet_handler.register_noop::<Packet0b18>()?;
     packet_handler.register_noop::<ConnectionRefusedPacket>()?;
-    // These responses are protocol evidence but do not currently drive client
-    // state: the kicked target owns the disconnect flow, and Talkie Box text is
-    // rendered at the trap rather than in a chat window.
-    packet_handler.register_noop::<GmKickResponsePacket>()?;
-    packet_handler.register_noop::<TalkieBoxMessagePacket>()?;
+    // The only acknowledgement a kicking DM ever gets. `ACMD(kick)` prints
+    // nothing on success (`atcommand.c:3450` returns straight after
+    // `clif->GM_kick`), and that function's entire feedback path is
+    // `clif->GM_kickack(sd, 1)` (`clif.c:9410`) — so while this was a no-op a DM
+    // typed `@kick`, watched the target vanish, and was told nothing. Failure
+    // (`0`) comes only from the right-click "force to quit" path
+    // (`clif_parse_GMKick`): no such target, or no permission for the
+    // `@killmonster` / `@unloadnpc` it delegates to. The command's *own* failures
+    // — no name given, character not found, outranked — already arrive as
+    // ordinary `clif->message` lines, so this must not restate them.
+    packet_handler.register(|packet: GmKickResponsePacket| match packet.result {
+        GmKickResponseStatus::Success => NetworkEvent::ChatMessage {
+            text: "The player has been disconnected.".to_owned(),
+            color: MessageColor::Server,
+        },
+        GmKickResponseStatus::Failure => NetworkEvent::ChatMessage {
+            text: "That target could not be disconnected.".to_owned(),
+            color: MessageColor::Error,
+        },
+    })?;
+    // Hunter Talkie Box trap text (`ZC_TALKBOX_CHATCONTENTS`). This was a no-op
+    // under the claim that the text is "rendered at the trap"; nothing in this
+    // tree renders it anywhere — the only Talkie Box in `korangar/src` is the
+    // trap's own prop model, so the prop drew and the message it exists to carry
+    // was dropped.
+    //
+    // Chat, for the reason `ShowScript` and `OverheadMessagePacket` go there:
+    // there is no overhead-text surface yet. The label is not decoration. The
+    // packet's `aid` is the **skill unit's** block id (`clif_talkiebox` is called
+    // with `&src->bl`, `skill.c:14511`), not a player or anything in `entities`,
+    // so the id can name nobody and an unlabelled line would arrive from
+    // no one. The trap also never talks to its own owner (`sg->src_id == bl->id`
+    // breaks first), so whoever sees this did not write it.
+    packet_handler.register(|packet: TalkieBoxMessagePacket| NetworkEvent::ChatMessage {
+        text: format!("Talkie Box: {}", packet.message),
+        color: MessageColor::Broadcast,
+    })?;
     packet_handler.register(|packet: MapServerLoginSuccessPacket| NetworkEvent::UpdateClientTick {
         client_tick: packet.client_tick,
         received_at: Instant::now(),
@@ -2312,5 +2344,95 @@ mod length_agreement_tests {
             "packets disagree with the length table, so the reader will misalign:\n  {}",
             mismatches.join("\n  ")
         );
+    }
+}
+
+#[cfg(test)]
+mod dropped_feature_tests {
+    use ragnarok_bytes::ByteReader;
+    use ragnarok_packets::handler::{HandlerResult, NoPacketCallback, PacketHandler};
+
+    use super::*;
+
+    /// Drive raw bytes through the **real** map-server registration and return
+    /// what reaches the client.
+    ///
+    /// Registration is the thing under test, which is why this does not call
+    /// the handler closures directly: both packets below spent time registered
+    /// as `register_noop`, and that is a change no test of a closure in
+    /// isolation can see. A no-op parses the packet perfectly and publishes
+    /// nothing, so the tell is an empty event list, not an error.
+    fn events(bytes: &[u8]) -> Vec<NetworkEvent> {
+        let mut packet_handler: PacketHandler<NetworkEventList, NoPacketCallback> = PacketHandler::default();
+        register_map_server_packets(&mut packet_handler).expect("registration must not duplicate");
+
+        let mut byte_reader = ByteReader::without_metadata(bytes);
+        match packet_handler.process_one(&mut byte_reader) {
+            HandlerResult::Ok(events) => events.0,
+            HandlerResult::UnhandledPacket => panic!("no handler is registered for this header at all"),
+            HandlerResult::PacketCutOff => panic!("the test payload is shorter than the packet"),
+            HandlerResult::InternalError(error) => panic!("the packet failed to deserialize: {error:?}"),
+        }
+    }
+
+    /// `GmKickResponsePacket` (0x00CD) is the only acknowledgement a successful
+    /// `@kick` produces anywhere — `ACMD(kick)` prints nothing and
+    /// `clif_GM_kick`'s whole feedback path is `clif->GM_kickack(sd, 1)`. As a
+    /// no-op it left a DM watching the target vanish with no confirmation.
+    #[test]
+    fn a_kick_confirmation_reaches_the_kicker() {
+        match events(&[0xCD, 0x00, 0x01]).as_slice() {
+            [NetworkEvent::ChatMessage { text, color }] => {
+                assert!(
+                    matches!(color, MessageColor::Server),
+                    "a successful kick is not an error: {color:?}"
+                );
+                assert!(
+                    !text.trim().is_empty(),
+                    "the confirmation is blank, which reaches the DM as nothing at all"
+                );
+            }
+            [] => panic!("0x00CD published nothing — it is registered as a no-op again, and a kicking DM is told nothing"),
+            other => panic!("0x00CD produced {other:?}"),
+        }
+
+        // The failure result must be distinguishable, or the right-click
+        // "force to quit" path reports a refusal as a success.
+        match events(&[0xCD, 0x00, 0x00]).as_slice() {
+            [NetworkEvent::ChatMessage { color, .. }] => {
+                assert!(
+                    matches!(color, MessageColor::Error),
+                    "a refused kick must not read as a success: {color:?}"
+                )
+            }
+            other => panic!("a failed kick produced {other:?}"),
+        }
+    }
+
+    /// `TalkieBoxMessagePacket` (0x0191) carries the whole point of a Talkie
+    /// Box. As a no-op the trap's prop drew and its message was dropped.
+    #[test]
+    fn talkie_box_text_reaches_the_player() {
+        const MESSAGE: &str = "meet at the bridge";
+
+        let mut bytes: Vec<u8> = vec![0x91, 0x01];
+        bytes.extend(0x0000_2A2Au32.to_le_bytes());
+        bytes.extend(MESSAGE.as_bytes());
+        bytes.resize(2 + 4 + 21, 0);
+
+        match events(&bytes).as_slice() {
+            [NetworkEvent::ChatMessage { text, .. }] => {
+                assert!(text.contains(MESSAGE), "the message did not survive to the player: {text:?}");
+                // The packet's `aid` is the skill unit's block id, so nothing
+                // can name the speaker. Without the label the line arrives from
+                // nobody.
+                assert!(
+                    text.contains("Talkie Box"),
+                    "an unlabelled line has no attributable source: {text:?}"
+                );
+            }
+            [] => panic!("0x0191 published nothing — it is registered as a no-op again, and the trap's message is dropped"),
+            other => panic!("0x0191 produced {other:?}"),
+        }
     }
 }

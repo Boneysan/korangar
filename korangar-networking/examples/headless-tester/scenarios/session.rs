@@ -19,6 +19,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
         Scenario::new("character-slot-switch", 1, character_slot_switch),
         Scenario::new("kick-explains-itself", 1, kick_explains_itself),
+        Scenario::new("kick-confirms-to-the-kicker", 1, kick_confirms_to_the_kicker),
         Scenario::new("logout-relogin", 1, logout_relogin),
         Scenario::new("respawn", 1, respawn),
     ]
@@ -517,6 +518,56 @@ fn kick_explains_itself(config: &Config) -> Result<(), String> {
     }
 
     Ok(())
+}
+
+/// The **kicking DM's** half of the same interaction — `kick-explains-itself`
+/// covers only the target's.
+///
+/// `GmKickResponsePacket` (0x00CD) is the sole acknowledgement a successful
+/// `@kick` produces anywhere: `ACMD(kick)` returns immediately after
+/// `clif->GM_kick` and prints nothing (`atcommand.c:3450`), and that function's
+/// entire feedback path is `clif->GM_kickack(sd, 1)` (`clif.c:9410`). While the
+/// client registered it as a no-op, a DM typed the command, watched the target
+/// vanish, and was told nothing — indistinguishable from a command that never
+/// arrived.
+///
+/// **The assertion is the text, not "a message arrived".** The kicker's
+/// connection is not quiet: `@kick`'s own failure paths (no name, character not
+/// found, outranked) all print through `clif->message` and land in the same
+/// place, so "some chat appeared" would pass with the handler deleted, on a
+/// kick that failed. The literal is repeated here rather than shared with the
+/// handler on purpose — a constant imported from both sides would survive its
+/// own rename and stop testing anything.
+fn kick_confirms_to_the_kicker(config: &Config) -> Result<(), String> {
+    const CONFIRMATION: &str = "The player has been disconnected.";
+
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+
+    let target = partner.character_name.clone();
+    partner.expect_disconnect();
+    primary.flush();
+
+    primary.say(&format!("@kick {target}"))?;
+
+    let events = primary.collect_for(Duration::from_secs(8));
+    let chat: Vec<&str> = events
+        .iter()
+        .filter_map(|event| match event {
+            NetworkEvent::ChatMessage { text, .. } => Some(text.as_str()),
+            _ => None,
+        })
+        .collect();
+
+    if chat.iter().any(|text| text.contains(CONFIRMATION)) {
+        return Ok(());
+    }
+
+    Err(format!(
+        "`@kick {target}` told the kicker nothing — no chat line contained {CONFIRMATION:?}. The kicker saw: {chat:?}. Either 0x00CD is \
+         registered as a no-op again (it is the only acknowledgement a successful kick produces; the target's own 0x0081 goes to the \
+         target, not here), or the kick did not succeed at all — a failure prints its own `clif->message` line, which would appear in \
+         that list"
+    ))
 }
 
 fn logout_relogin(config: &Config) -> Result<(), String> {
