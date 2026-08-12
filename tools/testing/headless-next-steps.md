@@ -6,8 +6,8 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | **Shipped on `agent/platform-connectivity-controls`** (commit lineage includes empty exemptions + CI widen). Full+shuffle re-acceptance after latest depth is the remaining stamp. |
-| **Resume first** | Confirm full+shuffle green on current HEAD if not already recorded below; then P5 client work only if product asks |
+| **Status** | **Acceptance on `9e68702e`+** — full 147/1/0 green; shuffle 146/1/1 with intermittent `incoming-damage` walk (hardened) |
+| **Resume first** | P5 client work only if product asks; optional second shuffle after walk harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
 | **Latest ship handoff** | [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) |
 | **CI cleanup handoff** | [2026-08-11-ci-cleanup-handoff.md](2026-08-11-ci-cleanup-handoff.md) (historical; local gates + push done) |
@@ -42,10 +42,10 @@ next, or about to claim the suite is "complete".
 
 | Run | Archive / note | Result |
 |---|---|---|
-| Full (pre empty-exemption night) | `runs/20260811-161233.log` | 146 pass, 1 expected-skip, 0 fail, 0 unknown |
-| Shuffle `20260810` (same era) | `runs/20260811-171208.log` | same counts; 173 in / 66 out |
-| Scoped post-P1 | sage/professor/star-gladiator/rogue/golden | 0 exemptions, 0 unmet |
-| Full + shuffle on empty exemptions + golden 1–10 | **Record here after acceptance run** | — |
+| Full on `9e68702e` (empty exemptions, golden 1–10, quest-log-multi) | `runs/20260811-190011.log` | **147 pass**, 1 expected-skip, 0 fail, **0 unmet / 0 exemptions**, 171 in / 66 out / **0 unknown** |
+| Shuffle `20260810` on same HEAD | `runs/20260811-200007.log` | **146 pass**, **1 fail** (`incoming-damage` walk timeout — intermittent; scoped retry **PASS**), 1 expected-skip, **0 unmet**, 175 in / 66 out / **0 unknown** |
+| Prior full (pre empty-exemption) | `runs/20260811-161233.log` | 146 pass (147 scenarios then) |
+| Prior shuffle | `runs/20260811-171208.log` | 146 pass; 173 in / 66 out |
 
 Load-bearing silence allowlist (do not cull from one job’s answer alone):
 `HT_REMOVETRAP` (Rogue/Stalker), `HT_SPRINGTRAP`, `TK_MISSION`.
@@ -100,7 +100,8 @@ HERCULES_DIR=../Hercules tools/audits/generated-drift.sh
 | Item | Status |
 |---|---|
 | Full + shuffle (pre-P1 empty) | **Done** green |
-| Full + shuffle after empty exemptions + golden 1–10 + quest-log-multi | **Open until recorded** |
+| Full after empty exemptions + golden 1–10 + quest-log-multi | **Done** green — `runs/20260811-190011.log` |
+| Shuffle after same | **Done** with 1 intermittent walk fail on `incoming-damage` — hardened multi-cell approach; scoped retry green |
 
 ### P1 — Expectation exemptions
 
