@@ -4,34 +4,36 @@
 |---|---|
 | **Why** | A day of fixes came out of lists nobody was reading (the suite's unmodeled-packet ledger, discarded `NetworkEvent`s). This is the standing inventory so that stops depending on someone remembering |
 | **How it was built** | Fresh audits, not recollection — see §How to regenerate |
-| **Ordering** | §1 is debt and blocks confidence in everything else. §2–§5 are new work |
+| **Ordering** | §1 is live GUI debt (reconciled 2026-08-12). §2–§5 are new work |
+| **Headless suite** | Planned depth **closed** — [headless-next-steps.md](../../tools/testing/headless-next-steps.md) |
 
-## 1. Live verification — the debt, and it grew today
+## 1. Live verification — GUI debt (reconciled 2026-08-12)
 
-**~15 commits of UI have been built and never seen on screen.** Compiles and
-wire-verified, which by this project's own rule says nothing about whether it
-draws. This is the single largest risk in the tree.
+**Canonical open list:** top of
+[gui-verification-pass.md](gui-verification-pass.md) (open-only table).
+Do not use this section as a second unchecked checklist.
 
-- [ ] **Extend [gui-verification-pass.md](gui-verification-pass.md) §2c** — it
-      covers the party and friend windows only, and **predates every window
-      below**. Write rows before walking it.
-- [ ] Target frame (left-click a player): name, class, Whisper / Invite / Trade /
-      Add friend / Ignore; excluded on your own sprite
-- [ ] Chat channels: Say / Party / Whisper, the whisper-target field, **Reply**,
-      and the distinct colours for whisper vs party
-- [ ] Three popups name their sender: party invite (via fork packet `0x0EFF`),
-      trade request, friend request — each with Whisper
-- [ ] Trade: add item from the right-click menu, add zeny from the field
-- [ ] Party: kick / promote / share toggles (leader-gated), class in the roster,
-      dead members
-- [ ] Auto Spell window, instance window
-- [ ] **Ice Wall blocks pathing** — walk into a cast Ice Wall and confirm the
-      client refuses to path through it, then that the cells free up when it
-      expires. **No headless scenario can cover this**: the suite does not link
-      the `korangar` crate, so the pathfinder is unreachable from it
-- [ ] Row 4 (Land Protector 225: shape or slab?), row 3 (support
-      walk-into-range — *changed behaviour*), row 6 (item names), row 5
-      (Moonlit/Hermode, last — replaces gear)
+### Closed on the GUI pass (Blocks A–D / cheap queue)
+
+- [x] Target frame, chat channels, popups (party/trade/friend), trade add item/zeny
+- [x] Party kick / promote / share, roster class + DEAD
+- [x] Ice Wall pathing (N21)
+- [x] Ground footprint Land Protector / Storm Gust (N22 / row 4)
+- [x] Support walk-into-range (N26 / row 3)
+- [x] Item names in trade + NPC refine (N15/N25 / row 6)
+- [x] Moonlit redesign (2026-08-08) — re-confirm only after skill-unit changes
+
+### Still open (live GUI)
+
+- [ ] **Hermode** (Block E) — not reached; sound-only PASS criteria in GUI pass
+- [ ] **N20 Auto Spell window** — list by name, pick, server accepts
+- [ ] **N24 Instance window** — client path blocked by Hercules short map-name rule; short-name recheck optional
+- [ ] **N23 Cast circles** — expected FAIL until feature built (see §2)
+
+### Deliberately not drawn (not live-pass bugs)
+
+Spirit spheres, quest journal UI, headgear/robe/colour composition — see GUI
+pass “Known-unrendered” and §2 below.
 
 ## 2. Features that exist only as discarded data
 

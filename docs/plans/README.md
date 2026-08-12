@@ -2,9 +2,14 @@
 
 **Parent hub**: [docs/README.md](../README.md) (start here for the full documentation index).
 
-> **PAUSED 2026-07-26 — the next session is a LIVE PASS, not new plan work.**
-> Eight commits are pushed with nothing seen on screen. Read
-> [../RESUME-HERE.md](../RESUME-HERE.md) before starting anything here.
+> **2026-08-12 — two tracks are separate:**
+>
+> 1. **Headless suite** — acceptance **closed** for planned depth. Resume:
+>    [../tools/testing/headless-next-steps.md](../tools/testing/headless-next-steps.md)
+> 2. **GUI live pass** — still has open rows (Hermode, Auto Spell, …). Resume:
+>    [gui-verification-pass.md](gui-verification-pass.md) (**open-only table at top**)
+>
+> Also read [../RESUME-HERE.md](../RESUME-HERE.md).
 
 This directory contains executable implementation plans derived from the design
 docs. Keep plans short, milestone-scoped, and close them or replace them as work
@@ -15,12 +20,14 @@ lands.
 | [M0-connectivity.md](M0-connectivity.md) | First login → char → map loop against local Hercules |
 | [asset-pipeline.md](asset-pipeline.md) | GRF/archive/data sync decisions for M1 |
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |
-| [M1-p0-verification.md](M1-p0-verification.md) | E3.1 live P0 verification checklist against Hercules |
-| [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches. **Engine track A–D closed; E1/E2 closed, E4 3-of-5, E3 partial (coverage only), F not started** |
-| [gui-verification-pass.md](gui-verification-pass.md) | **NEXT — the GUI pass. NOT STARTED.** Consolidated queue for everything shipped but never seen on screen: the 26 July batch, the `0x0189` map-zone message, observer rows 10-11, and Moonlit/Hermode (unblocked — both seats already exist). Boundaries 1-4 of the wire→pixel path have good confidence; **boundary 5 has none**. Includes a known-unrendered list so phase-4 gaps are not logged as bugs |
+| [M1-p0-verification.md](M1-p0-verification.md) | E3.1 live P0 verification checklist — **34/34 closed** (macOS 2026-07) |
+| [animation-fidelity.md](animation-fidelity.md) | Post-runtime animation fidelity: layer composition, event cursor, weapon visuals, skill/status recipe batches |
+| [gui-verification-pass.md](gui-verification-pass.md) | **GUI live queue (IN PROGRESS).** Boundary 5 (event → pixel). Blocks A–D largely done; **open: Block E Hermode, N20 Auto Spell**, known fails N23/N24. Open-only table at top of file. Improvements/findings inline |
 | [phase-d-live-verification.md](phase-d-live-verification.md) | Phase D live GUI checklist — **CLOSED 2026-07-21**, all 8 rows PASS |
-| [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism; read its "Traps hit while driving this pass" before any new GUI session |
-| [classic-effect-fidelity.md](classic-effect-fidelity.md) | Classic skill effects — **E1 (7 skills) + E2 batches 1 & 2 all live-verified, CLOSED 2026-07-24 (6/6 batch 2); Hunter traps closed 2026-07-26 as runtime RSM props.** Ground-decal depth pass and status entity visuals both landed + live-verified (2026-07-24/25). **Newest item: the ground-skill aiming footprint (2026-07-26) is wired and test-verified but NOT yet live** — the cursor draws the skill's real area from Hercules' layout table. **Song/dance closed 2026-07-26 by investigation, not implementation:** 18 of 20 create no ground unit on a renewal db, so they were never an E2 job; the two that do (`CG_MOONLIT`, `CG_HERMODE`) are now mapped from the reverse-engineered table, and the full 20-row ground-tile colour/texture table is recovered in the doc. **None of it is live-verified.** Read its batch-2 NOFOOTSET trap **and** the Stone Curse cause-0 trap before testing — Hercules reports several unrelated failures as "Skill level is not high enough" |
+| [phase-e1-live-verification.md](phase-e1-live-verification.md) | Phase E1 live GUI checklist — **CLOSED 2026-07-22**, all 7 rows PASS on mechanism |
+| [classic-effect-fidelity.md](classic-effect-fidelity.md) | Classic skill effects — E1/E2 live-verified closed; Moonlit/Hermode live work lives in gui-verification-pass |
+| [testing-completeness.md](testing-completeness.md) | What headless green means / does not mean |
+| [work-backlog.md](work-backlog.md) | Standing inventory: §1 live debt reconciled 2026-08-12; §2+ unbuilt features |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.
@@ -33,6 +40,7 @@ Recent targeted specs for DM / protocol:
 Future / Phase 2 specs:
 - `hud-edit-mode.md` — foundational layout system for all modern HUD + DM elements.
 - `navigation-quest-guiding.md` — cross-map breadcrumbs, NAVI parsing, in-world ribbons, pings.
+- `campaign-quest-journal.md` — quest UI (not built; headless owns packets only).
 
 Use [docs/protocol](../protocol/) for Hercules-derived packet references and
 packet audit lookup workflows.

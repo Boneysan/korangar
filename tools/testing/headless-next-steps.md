@@ -6,15 +6,14 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | **Acceptance on `4e14101c`+** — full **147/1/0** green; shuffle 146/1 with intermittent `incoming-damage` (Desert Wolf path hardened; scoped green) |
-| **Resume first** | P5 client work only if product asks; optional re-shuffle after Desert Wolf approach harden |
+| **Status** | **Headless suite acceptance CLOSED (2026-08-11/12)** — full **147 pass / 1 skip / 0 fail**; empty exemptions; golden arcs 1–10; quest-log-multi; PR multi-scenario CI. HEAD `e4d6e6d5`+ |
+| **Resume first** | **GUI / client**, not more suite grinding — [gui-verification-pass.md](../../docs/plans/gui-verification-pass.md) (Block E Hermode, N20 Auto Spell). Optional re-shuffle after Desert Wolf harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
-| **Latest ship handoff** | [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) |
-| **CI cleanup handoff** | [2026-08-11-ci-cleanup-handoff.md](2026-08-11-ci-cleanup-handoff.md) (historical; local gates + push done) |
-| **P0 pause handoff** | [2026-08-11-p0-p4-pause-handoff.md](2026-08-11-p0-p4-pause-handoff.md) (historical) |
 | **Meaning of green** | [../../docs/plans/testing-completeness.md](../../docs/plans/testing-completeness.md) |
 | **Findings log** | [headless_findings.md](headless_findings.md) |
+| **GUI live queue** | [../../docs/plans/gui-verification-pass.md](../../docs/plans/gui-verification-pass.md) — separate from headless; open rows at top of that file |
 | **Draft PR** | https://github.com/Boneysan/korangar/pull/2 |
+| **Historical handoffs** | [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md), [ci-cleanup](2026-08-11-ci-cleanup-handoff.md), [p0-p4-pause](2026-08-11-p0-p4-pause-handoff.md) |
 
 > [!IMPORTANT]
 > **A green headless run means the wire protocol and event mapping work.**
@@ -43,9 +42,9 @@ next, or about to claim the suite is "complete".
 | Run | Archive / note | Result |
 |---|---|---|
 | Full on `4e14101c` (post walk harden) | `runs/20260811-210533.log` | **147 pass**, 1 expected-skip, 0 fail, **0 unmet / 0 exemptions**, 173 in / 66 out / **0 unknown** |
-| Shuffle `20260810` on same HEAD | `runs/20260811-220535.log` | **146 pass**, **1 fail** (`incoming-damage`: natural mob one-shot → Desert Wolf retry used hard `walk_to` — path now multi-cell + warp; scoped **PASS** `20260811-230914.scoped`), 1 expected-skip, **0 unmet**, 174 in / 66 out / **0 unknown** |
+| Shuffle `20260810` on same HEAD | `runs/20260811-220535.log` | **146 pass**, **1 fail** (`incoming-damage` Desert Wolf hard walk — fixed in `e4d6e6d5`); 1 expected-skip, **0 unmet**, 174 in / 66 out / **0 unknown** |
+| Scoped `incoming-damage` after `e4d6e6d5` | `runs/20260811-230914.scoped` | **PASS** |
 | Prior full (empty exemptions + golden 1–10 + quest-log-multi) | `runs/20260811-190011.log` | 147 pass; 171 in / 66 out |
-| Prior shuffle | `runs/20260811-200007.log` | 146 pass, 1 fail incoming-damage (first walk harden) |
 
 Load-bearing silence allowlist (do not cull from one job’s answer alone):
 `HT_REMOVETRAP` (Rogue/Stalker), `HT_SPRINGTRAP`, `TK_MISSION`.
@@ -139,21 +138,27 @@ Arcs **1–10** with status token + non-zero progress on start beats. Further ar
 | Local fmt/clippy/drift/tests | **Done** |
 | Commit + push + PR #2 refresh | **Done** |
 | PR multi-scenario gate (not smoke-only) | **Done** in workflow |
-| GitHub Actions green on latest HEAD | Confirm in PR checks |
+| GitHub Actions green on latest HEAD | Confirm in PR checks when convenient |
 
 ### P7 — Process rules
 
 Zero-unknown, exact expected-skips, allowlist cull discipline, archive semantics, never headless-green = client verified.
+
+### Explicit non-goals (do not grind)
+
+- Cull silence allowlist (`HT_SPRINGTRAP`, `TK_MISSION`, …) without better setup  
+- Expand skill sweep to every residual “cast only” skill  
+- Treat duration jitter as failures  
 
 ---
 
 ## 4. Suggested work order
 
 ```text
-Optional: re-shuffle after Desert Wolf approach harden (full already green on 4e14101c)
+Headless suite: CLOSED for planned depth — do not re-open without a product need
+  → GUI live pass: docs/plans/gui-verification-pass.md (open rows at top)
   → Watch PR #2 multi-scenario CI
-  → P5 client only if product asks
-  → Homun/pet/guild/cart scenarios only when client implements them
+  → Homun/pet/guild/cart headless scenarios only when client implements them
 ```
 
 ---

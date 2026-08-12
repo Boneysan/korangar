@@ -1,8 +1,35 @@
 # GUI verification pass — everything that has never been on screen
 
+## Open-only (read this first — 2026-08-12)
+
+**Source of truth for live GUI work.** Headless suite acceptance is closed
+([headless-next-steps.md](../../tools/testing/headless-next-steps.md)); this file
+is boundary 5 (event → pixel). Do not re-walk closed Blocks A–D unless
+regression-smoking.
+
+| Priority | Item | Notes |
+|---|---|---|
+| **1** | **Block E — Hermode** | Still **NOT REACHED**. Sound-only by design: hear wav + see nothing = PASS. Ensemble seats first; wait ~30s between casts |
+| **2** | **Block E — Moonlit confirm** | Redesign **CLOSED 2026-08-08** after red-square/light bugs; re-confirm after any skill-unit change |
+| **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
+| **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
+| **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
+| **—** | Known-unrendered | Headgear/robe/colour, **spirit spheres**, quest UI — do **not** file as bugs; feature first |
+
+**Closed for the live queue:** Blocks A–B (N1–N19 social), most of B–D (Ice Wall
+pathing, ground footprint, support walk-into-range, NPC refine / item names),
+rows 1–4 of the cheap queue, observer 10–11, Moonlit redesign (2026-08-08).
+
+**Improvements / bugs found during this pass** are recorded inline under each
+block’s Result cells and “Findings from the … walk” sections (empty job table,
+whisper sender echo, trade inventory, support skill visuals, etc.) — not a
+separate changelog.
+
+---
+
 | | |
 |---|---|
-| **Status** | **2026-08-08 (evening): rows 4b/5 revisited on two seats — Moonlit CLOSED (redesigned, see below), Hermode STILL OPEN, and six bugs fixed off-checklist.** Four of the six were invisible to any automated test and two needed a second seat to exist: a Gypsy could not log in *at all* (client panic before the character drew), Moonlit's field bloomed white, `@kick` gave no explanation, "Rejected from Server" hid behind character select, the client showed no numeric HP/SP anywhere, and Base EXP read as a bare number at max level. Separately **passed**: `ZC_ADD_SKILL` (Redemptio into the skill tree), `ZC_SKILL_FAIL_REASON` (the right one of three cause-0 paths), and the item reuse-delay message. **The static heard on one seat is not a bug** — `prt_fild08` places `se_moc_wind_little.wav` and `se_prtthewaterofabrook.wav` in its RSW. **SETUP TRAP: run the ensemble rows BEFORE the cause-0 checks** — `@jobchange 8` for Redemptio destroyed the Gypsy seat that Hermode needs. | 
+| **Status** | **2026-08-12 doc reconcile:** open-only table above. **2026-08-08 (evening):** Moonlit CLOSED (redesigned), Hermode STILL OPEN, six bugs fixed off-checklist. Four of the six were invisible to any automated test and two needed a second seat: Gypsy login panic, Moonlit white bloom, `@kick` no explanation, "Rejected from Server" behind char select, no numeric HP/SP, Base EXP bare at max level. Separately **passed**: `ZC_ADD_SKILL`, `ZC_SKILL_FAIL_REASON`, item reuse-delay. Field static on `prt_fild08` is RSW ambience, not a bug. **SETUP TRAP: ensemble rows BEFORE cause-0 checks** — `@jobchange 8` destroys the Gypsy seat Hermode needs. | 
 | **Status (previous)** | **IN PROGRESS.** Written 2026-07-31. Observer rows closed 2026-08-02. **Blocks A and B COMPLETE 2026-08-04** — A: 19/19 and 12 bugs; B: 4/4 with N23 a root-caused FAIL. **Block C COMPLETE 2026-08-05**: N15 PASS, N19 PASS, N25 PASS (**which closes row 6**), and N24 a root-caused FAIL that is **not a client bug** — Hercules truncates instanced map names past seven characters. Four bugs fixed and live-verified that day, three of them found *off* the checklist while setting up for it. **Block D COMPLETE 2026-08-06**: N26 PASS on both halves, which closes row 3 — and it surfaced a bug it was not looking for, **eleven support skills landing with no visual at all** (fixed, live-verified). **Block E STARTED 2026-08-06 and left open** — Moonlit's 9×9 field draws and **α 0.6 is confirmed correct**, which answers the calibration question the whole song family was waiting on; its sound played 81 times (once per cell) and is fixed; the tile's borrowed texture showed *Land Protector's pattern* and the fix for that is shipped but **unverified after it drew as a solid red square**. Hermode not reached. **Open: rows 4b and 5** |
 | **Branch** | `agent/platform-connectivity-controls` (korangar), `agent/map-teleport-safety` (Hercules) |
 | **Needs** | The graphical client. Some rows need two seats — both characters already exist, see §Two seats |

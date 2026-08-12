@@ -1,8 +1,17 @@
 # Resume here — live pass status
 
-> **Headless testing next steps (2026-08-11):** prioritized P0–P7 backlog lives in
-> **[../tools/testing/headless-next-steps.md](../tools/testing/headless-next-steps.md)**.
-> Agents improving the suite should open that first.
+> **2026-08-12 — where to go:**
+>
+> | Track | Status | Open first |
+> |---|---|---|
+> | **Headless suite** | **Acceptance closed** (147/1/0 full green; empty exemptions; golden 1–10; quest-log-multi; PR multi-scenario CI). HEAD `e4d6e6d5`+ | [../tools/testing/headless-next-steps.md](../tools/testing/headless-next-steps.md) |
+> | **GUI live pass** | **In progress** — Hermode, Auto Spell (N20); open-only table at top of file | [plans/gui-verification-pass.md](plans/gui-verification-pass.md) |
+> | **Meaning of green** | Wire ≠ pixels | [plans/testing-completeness.md](plans/testing-completeness.md) |
+>
+> Do **not** grind more headless scenarios for allowlist culls, cast-only skill
+> expansion, or duration jitter. Do **not** treat headless-green as client-verified.
+>
+> ---
 >
 > **2026-08-09 — the day turned into a rebuild of what the suite MEANS.** It
 > started as the one unfinished job (re-run `--scenario all`) and became: the
