@@ -172,6 +172,27 @@ A8|wholesale-vd-write=memcpy(&sd->vd, vd, sizeof(struct view_data))
 # OPEN: B2b — EquipmentEffectPacket is a no-op: that is clif_hat_effect, which
 # OPEN:       the server re-sends on enter-view (clif.c:5058). Low priority for
 # OPEN:       a classic-era fork, but it is a dropped visual.
+# OPEN: B2b — GmKickResponsePacket (0x00CD) is the ONLY confirmation the
+# OPEN:       *kicking* GM gets. `ACMD(kick)` prints nothing on success
+# OPEN:       (atcommand.c:3450) and clif_GM_kick's whole feedback path is
+# OPEN:       `clif->GM_kickack(sd, 1)` (clif.c:9410). So a DM who types
+# OPEN:       `@kick` sees the target vanish and no acknowledgement at all —
+# OPEN:       and on failure, nothing distinguishes it from a lost command.
+# OPEN:       The registration comment says "the kicked target owns the
+# OPEN:       disconnect flow", which is true of 0x0081 and irrelevant here:
+# OPEN:       that is the other half of the interaction. DM tooling is this
+# OPEN:       fork's stated priority (CLAUDE.md rule 1), so this is a feature
+# OPEN:       gap, not a deliberate drop. `kick-explains-itself` covers the
+# OPEN:       target's half only.
+# OPEN: B2b — TalkieBoxMessagePacket (0x0191, ZC_TALKBOX_CHATCONTENTS) is a
+# OPEN:       dropped visual with a rationale that does not hold. The
+# OPEN:       registration says the text is "rendered at the trap rather than
+# OPEN:       in a chat window"; nothing in this tree renders it anywhere. The
+# OPEN:       only Talkie Box reference in korangar/src is the trap's own prop
+# OPEN:       model (`UnitId::Talkiebox` in world/unit_recipe.rs) — the prop
+# OPEN:       draws, the message it exists to carry does not. Same shape as
+# OPEN:       BD_ETERNALCHAOS sitting in the skill allowlist under a stated
+# OPEN:       reason that was false: check the claim, do not inherit it.
 # ChangeDirectionPacket and EntityStopMovePacket left this list 2026-07-29 —
 # both now produce real events (EntityDirection / EntityStopMove).
 # why (all others): correctly ignored. Login/character-server bookkeeping
@@ -196,6 +217,13 @@ B2b|noop=ConnectionRefusedPacket
 B2b|noop=DisplayImagePacket
 B2b|noop=EquipmentEffectPacket
 B2b|noop=EquippableSwitchItemListPacket
+# why: FakeNpcDialogAnchorPacket is correctly ignored, and is the one of these
+# three whose stated reason survives checking. Hercules emits 0x0078 before a
+# script dialog as an invisible class-111 anchor (clif_sendfakenpc); it is
+# parsed so it leaves the unknown-packet backlog, and publishing AddEntity for
+# it would put a phantom actor in the world.
+B2b|noop=FakeNpcDialogAnchorPacket
+B2b|noop=GmKickResponsePacket
 B2b|noop=HuntingQuestNotificationPacket
 B2b|noop=HuntingQuestUpdateObjectivePacket
 B2b|noop=HuntingQuestUpdateObjectivePacket4
@@ -210,6 +238,7 @@ B2b|noop=Packet0b18
 B2b|noop=Packet8302
 B2b|noop=PersonalInformationPacket
 B2b|noop=ReputationPacket
+B2b|noop=TalkieBoxMessagePacket
 B2b|noop=UpdateConfigurationPacket
 B2b|noop=UpdateShowEquipPacket
 #

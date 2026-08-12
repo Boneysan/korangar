@@ -1,9 +1,51 @@
 # Audits — runbook
 
-Several audits live here. `unread-state.py`, `packetver-variants.py` and
-`generated-drift.sh` are below; the observer-parity suite is the rest of this
-document. `flaky.py` and
+Several audits live here. `unread-state.py`, `packetver-variants.py`,
+`generated-drift.sh` and `gui-pass-staleness.py` are below; the observer-parity
+suite is the rest of this document. `flaky.py` and
 `event-routing.py` carry their runbooks in their own docstrings.
+
+Five of the six run in CI on every push and pull request
+([`audits.yml`](../../.github/workflows/audits.yml)). `gui-pass-staleness.py`
+deliberately does not — see its section for why.
+
+## `gui-pass-staleness.py` — are the closed GUI rows still standing on the code they verified?
+
+```sh
+cd korangar
+tools/audits/gui-pass-staleness.py          # exits non-zero if a closed block is stale
+tools/audits/gui-pass-staleness.py --list   # fresh blocks too
+tools/audits/gui-pass-staleness.py --report # print only, never fail
+```
+
+**Run it when planning a GUI session**, before picking rows off
+[gui-verification-pass.md](../../docs/plans/gui-verification-pass.md).
+
+Every other layer in this project re-checks itself: a scenario re-runs each
+suite, an audit re-runs each commit. The GUI pass does not — a row is a human
+writing PASS once, and the document then says "do not re-walk closed Blocks
+A–D". Nothing notices when the code under a closed row changes, so a PASS
+silently becomes a claim about a revision nobody is running any more.
+
+It said something real on its first run: **all seven closed blocks were older
+than the code they cover**, and Block A — twelve bugs found across the social
+windows on 2026-08-04 — had eleven commits on its files since, three of them
+changing the exact behaviours its rows asserted (the party roster on leaving,
+the trade window telling the server it was dismissed, where the whisper channel
+points).
+
+It verifies nothing and cannot: only eyes on a screen close a GUI row. It tells
+you which rows you are **no longer entitled to trust**. Clear a stale block by
+re-walking it (move `verified`) or by reading the commits and deciding they
+cannot reach it (move `reviewed_through`, and say why) — the same
+classify-don't-silence contract as the observer-parity baseline.
+
+**Not in CI, deliberately.** Any commit to a UI file would redden it until
+somebody wrote a line, and this repo's own rule is that a warning which is
+always present is a warning nobody reads. The path lists are narrow on purpose
+too: mapping a block to `lib.rs` would make every block permanently stale and
+therefore meaningless, at the cost of missing changes that reach a window
+through the event plumbing. Tripwire on the obvious half, not proof of the rest.
 
 ## `unread-state.py` — does the client store anything it never reads?
 
@@ -215,8 +257,16 @@ Not scriptable, and deliberately absent:
   — A3 and B2c are what stop it landing in the known trap.
 - **After any upstream Hercules merge** — A4, A5 and A8 read server source that
   the merge can silently change out from under the fork.
-- **In CI**, on every commit. It is two seconds and it has already found three
-  live gaps nobody was looking for.
+- **In CI**, on every push and pull request —
+  [`.github/workflows/audits.yml`](../../.github/workflows/audits.yml) runs all
+  five, with the pinned Hercules checked out so none of them self-skips. Wired
+  up 2026-08-12; until then this line said "in CI" and the truth was "when
+  somebody remembers", which cost exactly what you would expect: the audit was
+  sitting **red** with three unclassified `register_noop` findings from the
+  typed-no-op batch, and two of the three turned out to be dropped features
+  whose stated reason did not survive checking (`GmKickResponsePacket` is the
+  only confirmation a DM's `@kick` produces; nothing renders Talkie Box text
+  anywhere). The audit had already found them. Nothing was running it.
 - **`generated-drift.sh` after any Hercules merge**, and after editing
   `skill_db.conf`, `sc_config.conf`, `constants.conf` or `packets_len.h` — those
   are the four inputs, and every one of them is a file an upstream merge can

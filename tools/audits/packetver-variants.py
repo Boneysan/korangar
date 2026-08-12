@@ -34,6 +34,7 @@ Exits non-zero if any mismatch is found, so it can gate a merge.
 """
 
 import argparse
+import os
 import pathlib
 import re
 import subprocess
@@ -117,7 +118,12 @@ def client_headers(korangar: pathlib.Path) -> set[int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     here = pathlib.Path(__file__).resolve().parent
-    parser.add_argument("--hercules", type=pathlib.Path, default=here.parents[2] / "Hercules")
+    # `HERCULES_DIR` before the sibling-directory guess, so this agrees with
+    # `observer-parity.sh` and `generated-drift.sh` instead of being the one
+    # audit in the directory that silently ignores the variable everything else
+    # is driven by. The sibling guess stays as the local-checkout default.
+    default_hercules = os.environ.get("HERCULES_DIR") or here.parents[2] / "Hercules"
+    parser.add_argument("--hercules", type=pathlib.Path, default=pathlib.Path(default_hercules))
     parser.add_argument("--korangar", type=pathlib.Path, default=here.parents[1])
     parser.add_argument("--packetver", type=int, default=20220406)
     parser.add_argument("--variant", choices=sorted(VARIANT_DEFINES), default="main")

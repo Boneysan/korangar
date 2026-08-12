@@ -1,0 +1,91 @@
+name: Audits
+
+# The five standing audits, run on every push and PR.
+#
+# WHY THIS WORKFLOW EXISTS. Each of these checks a boundary no other gate can
+# see, and none of them was wired into CI — `tools/audits/README.md` said "in
+# CI, on every commit" while the answer was "when somebody remembers". The cost
+# of that was measured on 2026-08-12: `observer-parity.sh` was sitting RED with
+# three unclassified findings (`FakeNpcDialogAnchorPacket`, `GmKickResponsePacket`,
+# `TalkieBoxMessagePacket`) introduced by the typed-no-op batch, and two of the
+# three turned out to be dropped features with a stated reason that did not
+# survive checking. The audit had already found them; nothing was running it.
+#
+# These are static checks: no server, no GPU, no database. The whole job is
+# seconds of work plus a checkout, which is why "run it on everything" is the
+# right setting rather than a nightly.
+#
+# An audit here passes when every hit is CLASSIFIED, not when it returns
+# nothing. A red run means "something new appeared that nobody has triaged" —
+# triage it and either fix it or baseline it with a rationale. Never silence one
+# by deleting the hit.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audits:
+    name: Standing audits
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Korangar
+        uses: actions/checkout@v4
+        with:
+          path: korangar
+
+      # Three observer-parity audits (A4, A5, A8) read Hercules' own source, and
+      # all four generated files are generated FROM Hercules data. Without this
+      # checkout they self-skip and the job would report green while checking
+      # half of what it claims to.
+      - name: Resolve the paired Hercules revision
+        id: hercules
+        working-directory: korangar
+        run: echo "revision=$(tr -d '[:space:]' < tools/testing/hercules-revision)" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the pinned Hercules
+        uses: actions/checkout@v4
+        with:
+          repository: Boneysan/Hercules
+          ref: ${{ steps.hercules.outputs.revision }}
+          path: Hercules
+
+      # `generate_skill_states.py` and `generate_skill_expectations.py` rustfmt
+      # their own output, so a missing rustfmt would report drift on files that
+      # have none.
+      - name: Add Rustfmt
+        run: rustup component add rustfmt
+
+      - name: Observer parity (A1–A9, B2a–B2c)
+        working-directory: korangar
+        env:
+          HERCULES_DIR: ${{ github.workspace }}/Hercules
+        run: ./tools/audits/observer-parity.sh
+
+      - name: Generated files still match their generators
+        working-directory: korangar
+        env:
+          HERCULES_DIR: ${{ github.workspace }}/Hercules
+        run: ./tools/audits/generated-drift.sh
+
+      - name: Client registers the live PACKETVER header
+        working-directory: korangar
+        env:
+          HERCULES_DIR: ${{ github.workspace }}/Hercules
+        run: python3 tools/audits/packetver-variants.py
+
+      - name: No server event is discarded outright
+        working-directory: korangar
+        run: python3 tools/audits/event-routing.py
+
+      - name: No state is stored and never read
+        working-directory: korangar
+        run: python3 tools/audits/unread-state.py
