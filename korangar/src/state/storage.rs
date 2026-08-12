@@ -21,6 +21,7 @@ pub struct StorageState {
     capacity_text: String,
 }
 
+#[allow(dead_code)]
 impl StorageState {
     pub fn is_open(&self) -> bool {
         self.open
@@ -50,13 +51,12 @@ impl StorageState {
     }
 
     pub fn add_item(&mut self, async_loader: &AsyncLoader, item: InventoryItem<NoMetadata>) {
-        if let Some(found) = self.items.iter_mut().find(|i| i.index == item.index) {
-            if let (InventoryItemDetails::Regular { amount, .. }, InventoryItemDetails::Regular { amount: added, .. }) =
+        if let Some(found) = self.items.iter_mut().find(|i| i.index == item.index)
+            && let (InventoryItemDetails::Regular { amount, .. }, InventoryItemDetails::Regular { amount: added, .. }) =
                 (&mut found.details, &item.details)
-            {
-                *amount = amount.saturating_add(*added);
-                return;
-            }
+        {
+            *amount = amount.saturating_add(*added);
+            return;
         }
         self.items.push(async_loader.request_inventory_item_metadata_load(item));
         self.rebuild_capacity_text();

@@ -9,7 +9,8 @@
 //!
 //! > For every observable attribute of character A, every client that can see A
 //! > reaches the same value within a bounded time — regardless of when that
-//! > client arrived, what order the packets landed in, or what happened while it
+//! > client arrived, what order the packets landed in, or what happened while
+//! > it
 //! > was away.
 //!
 //! Three quantifiers, three timing axes. The five timings below are the
@@ -40,8 +41,8 @@
 //!   seed reaching nobody.
 //! - T2/T4/T5 converge via the spawn packet too, on re-entering view. They
 //!   assert that recovery *happens*, not which of the three mechanisms
-//!   delivered it — which is the right property, but do not read a pass as
-//!   "the enter-view re-send works".
+//!   delivered it — which is the right property, but do not read a pass as "the
+//!   enter-view re-send works".
 //!
 //! **Shared-state rule, learned the hard way here.** All 114 scenarios share
 //! one test character. The first version of this file called
@@ -91,8 +92,8 @@ const FAR_MAP_ALTERNATE: &str = "geffen";
 /// The comment on [`FAR_MAP`] was right about the hazard and wrong about who
 /// could trigger it: it assumed the partner always spawns on `prt_fild08`, so a
 /// constant was enough. The partner does not stay put. `connect_pair` meets on
-/// wherever the partner character was *last left*, and that position persists in
-/// the `char` table across scenarios — so the meeting map is shared mutable
+/// wherever the partner character was *last left*, and that position persists
+/// in the `char` table across scenarios — so the meeting map is shared mutable
 /// state while `FAR_MAP` is a constant. When scenario order parked the partner
 /// on `prontera`, "warp far away" became "warp to a random cell on the
 /// observer's own map", `assert_in_view(false)` stopped holding, and the
@@ -102,8 +103,8 @@ const FAR_MAP_ALTERNATE: &str = "geffen";
 /// Found by `--shuffle 42` (`observer-look-clear`). The double-run gate cannot
 /// see this class of bug: it runs the same order twice.
 ///
-/// **Since 2026-08-09 `connect_pair` convenes at a fixed [`PAIR_VENUE`]**, so in
-/// practice `home_map` is always `prt_fild08` and this always answers
+/// **Since 2026-08-09 `connect_pair` convenes at a fixed [`PAIR_VENUE`]**, so
+/// in practice `home_map` is always `prt_fild08` and this always answers
 /// `prontera`. Kept as a function on purpose: it is the guard that made the
 /// dependency survivable in the first place, and it costs nothing to keep the
 /// venue and the far map from ever being the same place by construction.
@@ -134,11 +135,11 @@ const SA_VOLCANO: u16 = 285;
 /// when the cast completes — so a missing gemstone reads as a working cast that
 /// quietly produces nothing, which is how it presented here.
 const BLUE_GEMSTONE: u32 = 717;
-/// `SI_GROUNDMAGIC` — the icon index carried in `ZC_MSG_STATE_CHANGE`. **Must be
-/// matched on**, or the first unrelated status the subject happens to gain is
-/// asserted against instead, which reports `[0, 0, 0]` and looks exactly like
-/// the delta below having been lost. All three elemental fields share this one
-/// icon, so it identifies the family rather than the element.
+/// `SI_GROUNDMAGIC` — the icon index carried in `ZC_MSG_STATE_CHANGE`. **Must
+/// be matched on**, or the first unrelated status the subject happens to gain
+/// is asserted against instead, which reports `[0, 0, 0]` and looks exactly
+/// like the delta below having been lost. All three elemental fields share this
+/// one icon, so it identifies the family rather than the element.
 const SI_GROUNDMAGIC: u16 = 112;
 
 /// These two rows need ground a field can actually be placed on, and say so
@@ -148,11 +149,11 @@ const SI_GROUNDMAGIC: u16 = 112;
 /// the same every run. It did not always: it met wherever the partner was *last
 /// left*, and the partner's **save point is `int_land`**, so anything that sent
 /// it home — `dm-instance-lifecycle` closing an instance, two scenarios before
-/// phase 11 — parked every later paired scenario on the beginner island. The six
-/// look rows did not care. These two failed there in a way that names nothing:
-/// `SA_VOLCANO` needs a free cell two east of the caster, `int_land(80, 101)` is
-/// not one, and Hercules drops an unplaceable ground cast with a bare
-/// `return 0` and **no** `clif->skill_fail`.
+/// phase 11 — parked every later paired scenario on the beginner island. The
+/// six look rows did not care. These two failed there in a way that names
+/// nothing: `SA_VOLCANO` needs a free cell two east of the caster,
+/// `int_land(80, 101)` is not one, and Hercules drops an unplaceable ground
+/// cast with a bare `return 0` and **no** `clif->skill_fail`.
 ///
 /// The assertion stays even though `connect_pair` guarantees the venue today,
 /// because the *dependency* is the point: if the venue is ever moved somewhere
@@ -162,9 +163,8 @@ const SI_GROUNDMAGIC: u16 = 112;
 fn require_castable_venue(context: &TestContext) -> Result<(), String> {
     if context.map_name != PAIR_VENUE.0 {
         return Err(format!(
-            "this row places a ground unit and needs the open field it was calibrated on, but the pair \
-             convened on {:?}. PAIR_VENUE has moved to somewhere this row cannot cast — either restore \
-             it or give this scenario a venue of its own",
+            "this row places a ground unit and needs the open field it was calibrated on, but the pair convened on {:?}. PAIR_VENUE has \
+             moved to somewhere this row cannot cast — either restore it or give this scenario a venue of its own",
             context.map_name
         ));
     }
@@ -228,8 +228,8 @@ fn a_cast_reaches_the_observer(config: &Config) -> Result<(), String> {
 /// of it.
 ///
 /// Deliberately `SA_VOLCANO`, and deliberately asserting `values[1]`. Hercules
-/// sends value fields only when `status_get_val_flag` says to, and upstream says
-/// nothing for the three elemental fields — this fork adds them
+/// sends value fields only when `status_get_val_flag` says to, and upstream
+/// says nothing for the three elemental fields — this fork adds them
 /// (`src/map/status.c`, CLAUDE.md 3b). Without that delta the status still
 /// arrives and the icon still appears, so the loss is **silent**; only the
 /// numbers go to zero and the window can render "+0" forever. Same reasoning as
@@ -292,8 +292,8 @@ fn status_values_reach_the_observer(config: &Config) -> Result<(), String> {
     }
     if values[1] == 0 {
         return Err(format!(
-            "status reached the observer with a zero bonus ({values:?}) — the SC_VOLCANO/DELUGE/VIOLENTGALE \
-             `status_get_val_flag` delta in Hercules `src/map/status.c` has probably been lost in a merge"
+            "status reached the observer with a zero bonus ({values:?}) — the SC_VOLCANO/DELUGE/VIOLENTGALE `status_get_val_flag` delta \
+             in Hercules `src/map/status.c` has probably been lost in a merge"
         ));
     }
     Ok(())

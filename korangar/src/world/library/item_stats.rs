@@ -139,11 +139,7 @@ fn parse_loc(value: &Option<serde_json::Value>) -> Option<String> {
         Some(serde_json::Value::String(s)) if !s.is_empty() => Some(s.clone()),
         Some(serde_json::Value::Array(arr)) => {
             let parts: Vec<String> = arr.iter().filter_map(|v| v.as_str().map(str::to_owned)).collect();
-            if parts.is_empty() {
-                None
-            } else {
-                Some(parts.join("|"))
-            }
+            if parts.is_empty() { None } else { Some(parts.join("|")) }
         }
         _ => None,
     }
@@ -209,24 +205,24 @@ pub fn item_tooltip_text(
         lines.extend(rest);
     }
 
-    if let Some(eq) = equipped {
-        if stats.has_combat_stats() || eq.has_combat_stats() {
-            lines.push(String::new());
-            lines.push("— vs equipped —".to_owned());
-            push_delta(&mut lines, "ATK", stats.atk, eq.atk);
-            push_delta(&mut lines, "MATK", stats.matk, eq.matk);
-            push_delta(&mut lines, "DEF", stats.def, eq.def);
-            if let (Some(a), Some(b)) = (stats.slots, eq.slots)
-                && a != b
-            {
-                lines.push(format!("Slots {a} (eq {b})"));
-            }
-            if equipped_refinement.filter(|r| *r > 0).is_some() || refinement.filter(|r| *r > 0).is_some() {
-                let er = equipped_refinement.unwrap_or(0);
-                let tr = refinement.unwrap_or(0);
-                if er != tr {
-                    lines.push(format!("Refine +{tr} (eq +{er})"));
-                }
+    if let Some(eq) = equipped
+        && (stats.has_combat_stats() || eq.has_combat_stats())
+    {
+        lines.push(String::new());
+        lines.push("— vs equipped —".to_owned());
+        push_delta(&mut lines, "ATK", stats.atk, eq.atk);
+        push_delta(&mut lines, "MATK", stats.matk, eq.matk);
+        push_delta(&mut lines, "DEF", stats.def, eq.def);
+        if let (Some(a), Some(b)) = (stats.slots, eq.slots)
+            && a != b
+        {
+            lines.push(format!("Slots {a} (eq {b})"));
+        }
+        if equipped_refinement.filter(|r| *r > 0).is_some() || refinement.filter(|r| *r > 0).is_some() {
+            let er = equipped_refinement.unwrap_or(0);
+            let tr = refinement.unwrap_or(0);
+            if er != tr {
+                lines.push(format!("Refine +{tr} (eq +{er})"));
             }
         }
     }

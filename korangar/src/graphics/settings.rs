@@ -164,21 +164,16 @@ impl From<ShadowMethod> for u32 {
 /// normals are synthesized from the camera, so a full Lambert response makes
 /// sprite brightness follow camera orbit. Only relevant when the lighting
 /// mode is `Enhanced`.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, StateElement)]
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, StateElement)]
 pub enum SpriteLightingMode {
     /// No directional response; sprites take the full scene light.
     Classic,
     /// Wrapped diffuse; bounded directional response that stays readable
     /// from every camera angle.
+    #[default]
     Soft,
     /// Full Lambert response against the synthesized normal.
     Enhanced,
-}
-
-impl Default for SpriteLightingMode {
-    fn default() -> Self {
-        Self::Soft
-    }
 }
 
 impl DropDownItem<SpriteLightingMode> for SpriteLightingMode {

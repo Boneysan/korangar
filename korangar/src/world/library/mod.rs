@@ -24,12 +24,12 @@ pub use self::baby_job::IsBabyJob;
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
-pub use self::item_stats::{ItemStats, item_stats, item_tooltip_text};
-pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
+pub use self::item_stats::{item_stats, item_tooltip_text};
 pub use self::job_identity::JobIdentity;
 pub use self::job_name::JobName;
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
+pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
 pub(crate) use self::skill_information::skill_asset_file_names;
 pub use self::skill_tree::SkillTreeLayout;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
@@ -97,7 +97,8 @@ impl Library {
     }
 
     /// Whether the map is a town / safe map (has Towninfo facilities). Used to
-    /// relax the battle-ready stance to peaceful idle where there are no monsters.
+    /// relax the battle-ready stance to peaceful idle where there are no
+    /// monsters.
     pub fn is_town_map(&self, map_name: &str) -> bool {
         self.towninfo_table.is_town(map_name)
     }
@@ -192,5 +193,5 @@ fn fix_encoding(broken: String) -> String {
 }
 
 fn needs_ascii_fallback(value: &str) -> bool {
-    value.chars().any(|character| !character.is_ascii())
+    !value.is_ascii()
 }

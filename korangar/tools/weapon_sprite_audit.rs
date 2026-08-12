@@ -9,9 +9,7 @@ fn main() {
         println!("  {path}");
     }
 
-    println!(
-        "== per-item weapon sprites (numbered, archive listing lower bound) =="
-    );
+    println!("== per-item weapon sprites (numbered, archive listing lower bound) ==");
     println!("  count: {}", report.per_item.len());
     for path in report.per_item.iter().take(40) {
         println!("  {path}");

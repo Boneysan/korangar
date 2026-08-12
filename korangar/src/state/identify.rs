@@ -11,6 +11,7 @@ pub struct IdentifyState {
     display_text: String,
 }
 
+#[allow(dead_code)]
 impl IdentifyState {
     pub fn is_open(&self) -> bool {
         !self.indices.is_empty()

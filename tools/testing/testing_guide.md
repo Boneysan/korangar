@@ -2,9 +2,12 @@
 
 This document serves as the canonical reference for testing the **Korangar Client** and **Hercules Server Emulator** project. It includes instructions to run tests, explanations of specialized verification binaries, and results from recent test runs.
 
-For the latest headless-testing implementation handoff, including the
-zero-unknown packet gate and archive regression suite, read
-[2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md).
+**Where agents should start for headless work:**
+
+- [headless-next-steps.md](headless-next-steps.md) — prioritized P0–P7 backlog
+  and process rules (what to do next)
+- [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) — ship handoff
+  for the zero-unknown gate, archive regression suite, and validation commands
 
 ---
 
@@ -167,6 +170,7 @@ Complete full runs become `tools/testing/runs/*.log`; targeted runs become
 archived with JSON. These semantics are regression-tested by
 `tools/testing/test-run-suite.sh` and in CI.
 
+- **What to improve next (P0–P7):** [headless-next-steps.md](headless-next-steps.md)
 - **Full scenario catalog and policy:** [headless_test_plan.md](headless_test_plan.md)
 - **Findings and port-back workflow:** [headless_findings.md](headless_findings.md)
 - **Latest implementation details:** [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md)

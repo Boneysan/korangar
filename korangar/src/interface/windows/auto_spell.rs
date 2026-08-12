@@ -2,12 +2,12 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
-use crate::state::skills::{AutoSpellChoice, AutoSpellChoicePathExt};
 use rust_state::{ManuallyAssertExt, Path, State, VecIndexExt};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::state::ClientState;
+use crate::state::skills::{AutoSpellChoice, AutoSpellChoicePathExt};
 use crate::state::theme::InterfaceThemeType;
 
 /// One button per skill Auto Spell is offering.

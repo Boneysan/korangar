@@ -13,6 +13,7 @@ use crate::world::{EARTH_SPIKE_TEXTURE, NAPALM_BEAT_TEXTURE, NAPALM_BEAT_TEXTURE
 /// High-level geometry family for an effect ID (from Hercules effect_list
 /// descriptions: ball / hit / ring / spike / etc.).
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[allow(dead_code)]
 pub enum EffectShape {
     /// Soft floating orb (Soul Strike family).
     Orb,
@@ -46,6 +47,7 @@ pub enum SpecialEffectRecipe {
 }
 
 impl SpecialEffectRecipe {
+    #[allow(dead_code)]
     pub fn shape(self) -> EffectShape {
         match self {
             Self::Str { .. } => EffectShape::Str,
@@ -292,6 +294,7 @@ pub fn special_effect_recipe(effect_id: EffectId) -> Option<SpecialEffectRecipe>
 
 /// Semantic shape for an effect ID even when no recipe is wired yet.
 /// Used for diagnostics and future recipe design.
+#[allow(dead_code)]
 pub fn effect_shape_hint(effect_id: EffectId) -> Option<EffectShape> {
     if let Some(recipe) = special_effect_recipe(effect_id) {
         return Some(recipe.shape());

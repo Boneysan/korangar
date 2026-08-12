@@ -4,17 +4,18 @@ use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::FontSize;
-use crate::state::theme::InterfaceThemeType;
 use crate::state::ClientState;
+use crate::state::theme::InterfaceThemeType;
 
 /// Explains a disconnect the *server* initiated — a kick, a ban, a shutdown, or
 /// someone else logging into the account.
 ///
-/// Distinct from [`super::ErrorWindow`] because this one has to be acknowledged:
-/// the connection is already gone by the time it appears (`clif_authfail_fd`
-/// closes the socket in the same breath as sending the reason), so the player is
-/// being told what already happened, and the button drops the remaining
-/// connection rather than pretending the session can continue.
+/// Distinct from [`super::ErrorWindow`] because this one has to be
+/// acknowledged: the connection is already gone by the time it appears
+/// (`clif_authfail_fd` closes the socket in the same breath as sending the
+/// reason), so the player is being told what already happened, and the button
+/// drops the remaining connection rather than pretending the session can
+/// continue.
 pub struct DisconnectNoticeWindow {
     message: String,
 }

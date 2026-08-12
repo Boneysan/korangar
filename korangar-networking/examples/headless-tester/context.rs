@@ -214,7 +214,8 @@ impl TestContext {
     /// survived for weeks because its cleanup ran only on the happy path.
     ///
     /// Best-effort throughout: this must not turn a working scenario into a
-    /// failing one, and the partner account is not guaranteed to hold GM rights.
+    /// failing one, and the partner account is not guaranteed to hold GM
+    /// rights.
     ///
     /// Deliberately **not** normalised here:
     /// - **Job** — every scenario that cares calls `ensure_job`, which is
@@ -334,7 +335,14 @@ impl TestContext {
         let slot = match (slot, create_character) {
             (Some(slot), _) => slot,
             (None, Some(new_name)) => {
-                context.net.create_character(0, new_name.to_owned()).map_err(|_| "disconnected")?;
+                // Prefer a free slot; slot 0 is usually occupied by HeadlessOne.
+                let free_slot = (0..9usize)
+                    .find(|candidate| !context.characters.iter().any(|info| info.character_number as usize == *candidate))
+                    .ok_or("no free character slot for auto-create")?;
+                context
+                    .net
+                    .create_character(free_slot, new_name.to_owned())
+                    .map_err(|_| "disconnected")?;
                 let info = context.wait_for("CharacterCreated", |event| match event {
                     NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
                     NetworkEvent::CharacterCreationFailed { message, .. } => Some_err(format!("creation failed: {message}")),
@@ -400,15 +408,17 @@ impl TestContext {
     /// **The venue is chosen ([`PAIR_VENUE`]), not inherited.** It used to be
     /// "wherever the partner was last left", on the stated grounds that the
     /// partner was non-GM and could not warp itself. That was false — both
-    /// accounts are group 99 — and the false premise cost real time: the meeting
-    /// place was shared mutable state, and it broke `observer.rs` twice.
+    /// accounts are group 99 — and the false premise cost real time: the
+    /// meeting place was shared mutable state, and it broke `observer.rs`
+    /// twice.
     ///
-    /// The failure is worth knowing because it names nothing. The partner's save
-    /// point is `int_land`, so anything that sends it home (an instance closing,
-    /// a death) moved every later paired scenario to the beginner island; the
-    /// rows that merely look at each other did not care, and the rows that
-    /// placed a ground unit died silently, because Hercules drops an unplaceable
-    /// ground cast with a bare `return 0` and no `clif->skill_fail`.
+    /// The failure is worth knowing because it names nothing. The partner's
+    /// save point is `int_land`, so anything that sends it home (an
+    /// instance closing, a death) moved every later paired scenario to the
+    /// beginner island; the rows that merely look at each other did not
+    /// care, and the rows that placed a ground unit died silently, because
+    /// Hercules drops an unplaceable ground cast with a bare `return 0` and
+    /// no `clif->skill_fail`.
     ///
     /// Both seats are warped explicitly, so a scenario that needs particular
     /// ground gets the same ground every run, whatever ran before it.
@@ -506,7 +516,9 @@ impl TestContext {
                 reason: DisconnectReason::ConnectionError,
             } = &event
             {
-                Some(format!("{CONNECTION_ERROR} (possible desync — check ledger for failed packets)"))
+                Some(format!(
+                    "{CONNECTION_ERROR} (possible desync — check ledger for failed packets)"
+                ))
             } else {
                 None
             };
@@ -600,17 +612,14 @@ impl TestContext {
     /// Pump for `duration`, then classify everything still pending **without
     /// consuming any of it**.
     ///
-    /// This is the "keep looking" half of an observation window. `wait_for_within`
-    /// removes the one event it matched and returns; a caller that wants to know
-    /// what *else* the action produced has to keep reading, and must not eat the
-    /// events that later waits in the same scenario are relying on. Pair it with a
-    /// `flush()` before the action, so what is pending afterwards is that action's
-    /// own output and nothing older.
-    pub fn scan_pending<T>(
-        &mut self,
-        duration: Duration,
-        classify: &mut impl FnMut(&NetworkEvent) -> Option<T>,
-    ) -> Result<Vec<T>, String> {
+    /// This is the "keep looking" half of an observation window.
+    /// `wait_for_within` removes the one event it matched and returns; a
+    /// caller that wants to know what *else* the action produced has to
+    /// keep reading, and must not eat the events that later waits in the
+    /// same scenario are relying on. Pair it with a `flush()` before the
+    /// action, so what is pending afterwards is that action's own output
+    /// and nothing older.
+    pub fn scan_pending<T>(&mut self, duration: Duration, classify: &mut impl FnMut(&NetworkEvent) -> Option<T>) -> Result<Vec<T>, String> {
         self.pump(duration);
         self.check_connection()?;
         Ok(self.pending.iter().filter_map(|event| classify(event)).collect())
@@ -762,9 +771,7 @@ impl TestContext {
                     None => self.skills.push(skill_information.clone()),
                 }
             }
-            NetworkEvent::UpdateSkill {
-                skill_id, skill_level, ..
-            } => {
+            NetworkEvent::UpdateSkill { skill_id, skill_level, .. } => {
                 if let Some(skill) = self.skills.iter_mut().find(|skill| skill.skill_id == *skill_id) {
                     skill.skill_level = *skill_level;
                 }

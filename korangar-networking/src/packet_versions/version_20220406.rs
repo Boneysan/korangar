@@ -1,8 +1,7 @@
 use std::cell::RefCell;
-use std::time::Duration;
 use std::net::IpAddr;
 use std::rc::Rc;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use ragnarok_packets::handler::{DuplicateHandlerError, PacketCallback, PacketHandler};
 use ragnarok_packets::*;
@@ -13,6 +12,8 @@ use crate::{
     CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NetworkEvent,
     NoMetadata, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
+
+type PendingInventoryItems = Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>>;
 
 pub fn register_login_server_packets<Callback>(
     packet_handler: &mut PacketHandler<NetworkEventList, Callback>,
@@ -194,14 +195,15 @@ where
 {
     // Inventory / storage lists share the same Start → item* → End framing.
     // Transient buffer holds (inventory_type, items) until End.
-    let inventory_items: Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>> = Rc::new(RefCell::new(None));
+    let inventory_items: PendingInventoryItems = Rc::new(RefCell::new(None));
     // Equipped ammunition seen while a list is still being accumulated.
     //
     // Hercules sends `clif_arrowequip` from *inside* `clif_inventoryItems`, between
-    // the stackable list and the equippable list — so at login it arrives before the
-    // End packet that publishes the inventory. Emitting it immediately would apply the
-    // AMMO flag to the outgoing inventory and then lose it to the `SetInventory` that
-    // follows, leaving the Ammo slot empty every login. Hold it and apply it at End.
+    // the stackable list and the equippable list — so at login it arrives before
+    // the End packet that publishes the inventory. Emitting it immediately
+    // would apply the AMMO flag to the outgoing inventory and then lose it to
+    // the `SetInventory` that follows, leaving the Ammo slot empty every login.
+    // Hold it and apply it at End.
     let pending_equipped_ammunition: Rc<RefCell<Option<InventoryIndex>>> = Rc::new(RefCell::new(None));
     // The runtime reason for the cause-0 failure that is about to arrive
     // (`ZC_SKILL_FAIL_REASON`, our fork packet). Hercules sends it immediately
@@ -1222,11 +1224,12 @@ where
 
         NetworkEvent::OpenDialog { text, npc_id }
     })?;
-    // Yes, Hercules sends `n + 2` here (`clif_equipitemack` / `clif_unequipitemack`),
-    // but do **not** subtract it in the handler: both fields are typed
-    // `InventoryIndex`, whose `FromBytes` already does the `- 2` (see the type in
-    // `ragnarok-packets`). Subtracting again lands two slots early. Only the
-    // inventory *list* adjusts by hand, because its items carry `RawIndex`.
+    // Yes, Hercules sends `n + 2` here (`clif_equipitemack` /
+    // `clif_unequipitemack`), but do **not** subtract it in the handler: both
+    // fields are typed `InventoryIndex`, whose `FromBytes` already does the `-
+    // 2` (see the type in `ragnarok-packets`). Subtracting again lands two
+    // slots early. Only the inventory *list* adjusts by hand, because its items
+    // carry `RawIndex`.
     packet_handler.register(|packet: RequestEquipItemStatusPacket| match packet.result {
         RequestEquipItemStatus::Success => Some(NetworkEvent::UpdateEquippedPosition {
             index: packet.inventory_index,
@@ -1354,6 +1357,23 @@ where
         NetworkEvent::AddSkillUnit {
             entity_id,
             unit_id,
+            position,
+        }
+    })?;
+    // Graffiti-only skill unit (`ZC_SKILL_ENTRY2`). Maps to the same AddSkillUnit
+    // event ordinary units use so RG_GRAFFITI placement is observable.
+    packet_handler.register(|packet: NotifySkillUnitGraffitiPacket| {
+        let NotifySkillUnitGraffitiPacket {
+            entity_id,
+            position,
+            unit_id,
+            ..
+        } = packet;
+        NetworkEvent::AddSkillUnit {
+            entity_id,
+            // Only graffiti uses this header; keep the enum variant explicit so a
+            // future non-0xB0 sender is still a visible skill unit.
+            unit_id: if unit_id == 0xB0 { UnitId::Graffiti } else { UnitId::Dummyskill },
             position,
         }
     })?;
@@ -1813,15 +1833,16 @@ const PR_BENEDICTIO: u16 = 69;
 const ALL_PARTYFLEE: u16 = 693;
 const PR_REDEMPTIO: u16 = 1014;
 
-/// The `State:` precondition a skill declares in `skill_db.conf`, or `None` when
-/// it declares one whose failure Hercules reports with a real cause.
+/// The `State:` precondition a skill declares in `skill_db.conf`, or `None`
+/// when it declares one whose failure Hercules reports with a real cause.
 ///
 /// Hercules checks all of these in one shared switch and reports every one as
-/// cause 0, so the skill id is the only thing that distinguishes them. The table
-/// is generated (`tools/generate_skill_states.py`) rather than written out here,
-/// because a hand-kept copy goes stale in silence the moment a skill gains or
-/// loses a state — the previous hand-written shield list had that problem, and
-/// it also missed Brandish Spear, Blitz Beat, Raid and Cart Termination.
+/// cause 0, so the skill id is the only thing that distinguishes them. The
+/// table is generated (`tools/generate_skill_states.py`) rather than written
+/// out here, because a hand-kept copy goes stale in silence the moment a skill
+/// gains or loses a state — the previous hand-written shield list had that
+/// problem, and it also missed Brandish Spear, Blitz Beat, Raid and Cart
+/// Termination.
 fn skill_state(skill_id: u16) -> Option<super::skill_states::SkillState> {
     super::skill_states::SKILL_STATES
         .binary_search_by_key(&skill_id, |&(id, _)| id)
@@ -1867,8 +1888,8 @@ fn skill_failed_reason(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFai
 ///
 /// These are the outcomes no static table can reach — a roll that missed, an
 /// empty splash, a partner who is not there — so before this packet existed the
-/// client could only key on the skill id and enumerate every condition the skill
-/// has.
+/// client could only key on the skill id and enumerate every condition the
+/// skill has.
 fn skill_fail_reason_text(reason: SkillFailReason) -> &'static str {
     match reason {
         SkillFailReason::EnsemblePartner => concat!(
@@ -1984,35 +2005,35 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailR
         // Everything below is a cause Hercules genuinely emits (audited against
         // all 202 `clif->skill_fail` sites in `src/map/`), each worded from its
         // emitting site rather than from the enum name.
-        12 => "You are already carrying three Ancillae.".to_owned(),                   // skill.c:16174
-        17 => "That needs a partner from your party nearby.".to_owned(),               // skill.c:6539, chorus
-        19 => "You already have the maximum number of these summoned.".to_owned(),     // skill.c:16230
-        20 => "You have nothing summoned to release.".to_owned(),                      // skill.c:16224
-        21 => "No skill has been copied yet.".to_owned(),                              // clif.c:20978
-        25 => "That requires riding a dragon.".to_owned(),                             // skill.c:16537
-        31 => "That must follow Weapon Blocking.".to_owned(),                          // skill.c:5756
-        32 => "That requires a poisoned weapon.".to_owned(),                           // skill.c:12977
-        33 => "That requires a Mado Gear.".to_owned(),                                 // skill.c:16555
-        35 => "That cannot be used on monsters or boss monsters.".to_owned(),          // skill.c:11647
+        12 => "You are already carrying three Ancillae.".to_owned(), // skill.c:16174
+        17 => "That needs a partner from your party nearby.".to_owned(), // skill.c:6539, chorus
+        19 => "You already have the maximum number of these summoned.".to_owned(), // skill.c:16230
+        20 => "You have nothing summoned to release.".to_owned(),    // skill.c:16224
+        21 => "No skill has been copied yet.".to_owned(),            // clif.c:20978
+        25 => "That requires riding a dragon.".to_owned(),           // skill.c:16537
+        31 => "That must follow Weapon Blocking.".to_owned(),        // skill.c:5756
+        32 => "That requires a poisoned weapon.".to_owned(),         // skill.c:12977
+        33 => "That requires a Mado Gear.".to_owned(),               // skill.c:16555
+        35 => "That cannot be used on monsters or boss monsters.".to_owned(), // skill.c:11647
         36 => "That only works on players, and only where PvP is allowed.".to_owned(), // skill.c:11596
-        37 => "A cannonball must be equipped in the ammunition slot.".to_owned(),      // skill.c:17016
-        43 => "You have nothing to poison the weapon with.".to_owned(),                // clif.c:20927
-        51 => "You have no spellbook to read.".to_owned(),                             // clif.c:20850
+        37 => "A cannonball must be equipped in the ammunition slot.".to_owned(), // skill.c:17016
+        43 => "You have nothing to poison the weapon with.".to_owned(), // clif.c:20927
+        51 => "You have no spellbook to read.".to_owned(),           // clif.c:20850
         52 => "You do not know that spellbook's skill, and it puts you to sleep.".to_owned(), // skill.c:20924
-        53 => "That would exceed the spell points you can preserve.".to_owned(),       // skill.c:20933
-        54 => "You cannot memorise any more spells.".to_owned(),                       // skill.c:10516
-        57 => "That requires a pushcart.".to_owned(),                                  // skill.c:16491
+        53 => "That would exceed the spell points you can preserve.".to_owned(), // skill.c:20933
+        54 => "You cannot memorise any more spells.".to_owned(),     // skill.c:10516
+        57 => "That requires a pushcart.".to_owned(),                // skill.c:16491
         // Hercules emits this from exactly one site (`skill.c:16257`, Wug
         // Mastery under SC__GROOMY) and sends **no** accompanying message,
         // despite the name meaning "the server notifies manually". Printing
         // nothing would leave the player with silence, so name that one cause.
         70 => "You are too gloomy to handle your wolf.".to_owned(),
-        73 => "That must follow another skill in its combo.".to_owned(),               // skill.c:15889
-        74 => "Not enough soul spheres.".to_owned(),                                   // skill.c:16674
-        75 => "That requires Fury.".to_owned(),                                        // skill.c:16509
-        79 => "You have no elemental summoned.".to_owned(),                            // skill.c:16367
-        80 => "Your homunculus is not intimate enough.".to_owned(),                    // skill.c:1432
-        83 => "You are standing too close to an NPC.".to_owned(),                      // clif.c:13088
+        73 => "That must follow another skill in its combo.".to_owned(), // skill.c:15889
+        74 => "Not enough soul spheres.".to_owned(),                     // skill.c:16674
+        75 => "That requires Fury.".to_owned(),                          // skill.c:16509
+        79 => "You have no elemental summoned.".to_owned(),              // skill.c:16367
+        80 => "Your homunculus is not intimate enough.".to_owned(),      // skill.c:1432
+        83 => "You are standing too close to an NPC.".to_owned(),        // clif.c:13088
         // 71 / 72 (a required item / equipment) never reach here — they are
         // returned as `SkillFailure::MissingItem` so the client can name the item.
         84 => "Not enough ammunition.".to_owned(),
@@ -2167,7 +2188,10 @@ mod skill_failure_text_tests {
     #[test]
     fn generated_skill_state_table_is_sorted_and_reachable() {
         let table = super::super::skill_states::SKILL_STATES;
-        assert!(table.windows(2).all(|pair| pair[0].0 < pair[1].0), "table is not sorted by skill id");
+        assert!(
+            table.windows(2).all(|pair| pair[0].0 < pair[1].0),
+            "table is not sorted by skill id"
+        );
         for &(skill_id, state) in table {
             assert_eq!(skill_state(skill_id), Some(state), "skill {skill_id} is not findable");
         }
@@ -2198,8 +2222,8 @@ mod skill_failure_text_tests {
         // `skill_failed_reason` routes them to `MissingItem` and they never
         // reach this function.
         const EMITTED: [u8; 45] = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 25, 26, 31, 32, 33, 35, 36, 37, 43,
-            51, 52, 53, 54, 57, 73, 74, 75, 79, 80, 83, 84, 85,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 25, 26, 31, 32, 33, 35, 36, 37, 43, 51, 52,
+            53, 54, 57, 73, 74, 75, 79, 80, 83, 84, 85,
         ];
 
         for cause in EMITTED {
@@ -2230,11 +2254,12 @@ mod length_agreement_tests {
     /// A struct that is even one byte short leaves a stray byte in the read
     /// buffer, and the next header is then read misaligned. That does **not**
     /// surface as a deserialization failure: the bogus header simply is not in
-    /// the table, so `process_one` reports `UnhandledPacket` and the rest of the
-    /// buffer — real packets included — is dropped silently. A full suite run
-    /// showed exactly that, as pseudo-headers `0x8600` / `0xD700` / `0xFE00` /
-    /// `0x7F00`, each of which decodes as a leading `0x00` followed by a genuine
-    /// packet (`ZC_NOTIFY_MOVE`, `ZC_SPRITE_CHANGE2`, a spawn, `ZC_NOTIFY_TIME`).
+    /// the table, so `process_one` reports `UnhandledPacket` and the rest of
+    /// the buffer — real packets included — is dropped silently. A full
+    /// suite run showed exactly that, as pseudo-headers `0x8600` / `0xD700`
+    /// / `0xFE00` / `0x7F00`, each of which decodes as a leading `0x00`
+    /// followed by a genuine packet (`ZC_NOTIFY_MOVE`, `ZC_SPRITE_CHANGE2`,
+    /// a spawn, `ZC_NOTIFY_TIME`).
     ///
     /// Zeros are used as the payload, so packets that reject a zeroed body are
     /// skipped rather than failed — this checks framing, not validation.

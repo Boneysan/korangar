@@ -71,8 +71,8 @@ impl Table for ItemInfo {
             if sources_used.is_empty() {
                 print_debug!("[warning] no usable itemInfo source found");
             } else {
-                for s in &sources_used {
-                    print_debug!("itemInfo: {s}");
+                for source in &sources_used {
+                    print_debug!("itemInfo: {}", source);
                 }
             }
         }

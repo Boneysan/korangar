@@ -157,9 +157,7 @@ impl Inventory {
                 let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
                     return None;
                 };
-                equipped_position
-                    .contains(EquipPosition::RIGHT_HAND)
-                    .then_some(item.item_id.0)
+                equipped_position.contains(EquipPosition::RIGHT_HAND).then_some(item.item_id.0)
             })
             .unwrap_or(0)
     }
@@ -182,6 +180,7 @@ impl Inventory {
 
     /// Classic weapon class view for the equipped right-hand item (attack
     /// family only). Prefer [`Self::equipped_weapon_look`] for sprite paths.
+    #[allow(dead_code)]
     pub fn equipped_weapon_type(&self) -> u32 {
         let look = self.equipped_weapon_look();
         if look == 0 {
@@ -194,7 +193,8 @@ impl Inventory {
     /// Left-hand LOOK_SHIELD appearance for the local player.
     ///
     /// - `Some(0)` — no left-hand equippable (clear shield / off-hand).
-    /// - `Some(view 1..=4)` — classic shield item → Guard/Buckler/Shield/Mirror.
+    /// - `Some(view 1..=4)` — classic shield item →
+    ///   Guard/Buckler/Shield/Mirror.
     /// - `Some(item_id)` — off-hand weapon (Assassin dual-wield); matches
     ///   Hercules `get_weapon_view` which puts the left nameid on the shield
     ///   channel.
@@ -205,9 +205,7 @@ impl Inventory {
             let InventoryItemDetails::Equippable { equipped_position, .. } = &item.details else {
                 return None;
             };
-            equipped_position
-                .contains(EquipPosition::LEFT_HAND)
-                .then_some(item.item_id.0)
+            equipped_position.contains(EquipPosition::LEFT_HAND).then_some(item.item_id.0)
         });
 
         match left_hand_id {
@@ -230,6 +228,7 @@ impl Inventory {
     /// Prefer [`Self::equipped_left_hand_look`] for full dual-wield support.
     /// This keeps the Phase C shield-only helper for callers that only care
     /// about Guard/Buckler/Shield/Mirror.
+    #[allow(dead_code)]
     pub fn equipped_shield_view(&self) -> Option<u32> {
         match self.equipped_left_hand_look() {
             Some(0) => Some(0),

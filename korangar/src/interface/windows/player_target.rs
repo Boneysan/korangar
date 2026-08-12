@@ -10,9 +10,9 @@ use crate::state::theme::InterfaceThemeType;
 /// them.
 ///
 /// Opened by left-clicking a player, which previously did **nothing** — the
-/// `PlayerInteract` match fell through to `_ => Ok(())` for `EntityType::Player`.
-/// That empty slot is why this is on left-click rather than right, which is
-/// already bound to both camera rotation and cast cancel.
+/// `PlayerInteract` match fell through to `_ => Ok(())` for
+/// `EntityType::Player`. That empty slot is why this is on left-click rather
+/// than right, which is already bound to both camera rotation and cast cancel.
 ///
 /// It exists because whisper, invite and trade all needed the same missing
 /// primitive: a way to act on a named player. Trade is the starkest — the only

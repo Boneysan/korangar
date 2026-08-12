@@ -75,10 +75,12 @@ impl SkillCooldowns {
         self.remaining_ms(skill_id, self.last_now)
     }
 
+    #[allow(dead_code)]
     pub fn display_text(&self) -> &str {
         &self.display_text
     }
 
+    #[allow(dead_code)]
     pub fn is_empty(&self) -> bool {
         self.entries.is_empty()
     }

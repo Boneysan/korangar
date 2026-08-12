@@ -71,10 +71,10 @@ const OPT2_DEADLY_POISON: u16 = 0x0080;
 ///
 /// Hercules blocks movement for **every** `opt1` state except `OPT1_STONEWAIT`
 /// and `OPT1_BURNING` (`unit.c:1304`), so a stunned or sleeping entity is
-/// standing still server-side — its sprite must not keep walking through an idle
-/// loop. `STONEWAIT` is deliberately excluded: the *petrifying* phase still moves
-/// and attacks until the wait timer flips it to `OPT1_STONE`, which is the same
-/// distinction [`Common::status_tint`] draws.
+/// standing still server-side — its sprite must not keep walking through an
+/// idle loop. `STONEWAIT` is deliberately excluded: the *petrifying* phase
+/// still moves and attacks until the wait timer flips it to `OPT1_STONE`, which
+/// is the same distinction [`Common::status_tint`] draws.
 pub fn status_freezes_animation(body_state: u16) -> bool {
     matches!(body_state, OPT1_STONE | OPT1_FREEZE | OPT1_STUN | OPT1_SLEEP)
 }
@@ -217,25 +217,26 @@ pub struct Common {
     pub sex: Sex,
     /// Hair style id, from the spawn packet's `head` field.
     ///
-    /// Lives here rather than on [`Player`] because **remote players are built as
-    /// `Entity::Npc`**, which uses this struct. While it was Player-only, every
-    /// observer resolved head `1` (the `_ => 1` fallback in
-    /// `get_entity_part_files`) for everybody else — permanently, not just after
-    /// a change — and `set_hair` silently no-opped for them.
+    /// Lives here rather than on [`Player`] because **remote players are built
+    /// as `Entity::Npc`**, which uses this struct. While it was
+    /// Player-only, every observer resolved head `1` (the `_ => 1` fallback
+    /// in `get_entity_part_files`) for everybody else — permanently, not
+    /// just after a change — and `set_hair` silently no-opped for them.
     pub head: usize,
     pub weapon: u32,
     pub shield: u32,
     /// Lower headgear view id (`vd->head_bottom`).
     ///
-    /// This and the six fields below live on `Common` for the same reason `head`
-    /// does — remote players are `Entity::Npc` — and they are seeded from
-    /// [`EntityData`], so an `AddEntity` rebuild reproduces them instead of
-    /// wiping them. That is why they do **not** need the off-entity map
-    /// `remote_ammunition` uses: ammunition is the one attribute the spawn
-    /// packet does not carry, so it alone has no rebuild-safe home.
+    /// This and the six fields below live on `Common` for the same reason
+    /// `head` does — remote players are `Entity::Npc` — and they are seeded
+    /// from [`EntityData`], so an `AddEntity` rebuild reproduces them
+    /// instead of wiping them. That is why they do **not** need the
+    /// off-entity map `remote_ammunition` uses: ammunition is the one
+    /// attribute the spawn packet does not carry, so it alone has no
+    /// rebuild-safe home.
     ///
-    /// Wire names, like `head` and `option` above, so the observer-parity audits
-    /// can diff these field names against `EntityData`'s directly.
+    /// Wire names, like `head` and `option` above, so the observer-parity
+    /// audits can diff these field names against `EntityData`'s directly.
     ///
     /// Stored but not yet drawn — sprite composition is still body + head +
     /// weapon + shield. Rendering them needs accessory sprite paths and palette
@@ -491,7 +492,8 @@ fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: Job
 
 /// Upper bound of classic weapon *class* view IDs (roBrowser `WeaponType.MAX`).
 /// Hercules `PACKETVER >= 4` sends raw item IDs (≥ this) as LOOK_WEAPON /
-/// LOOK_SHIELD for equipped weapons; class views stay in `0..WEAPON_VIEW_CLASS_MAX`.
+/// LOOK_SHIELD for equipped weapons; class views stay in
+/// `0..WEAPON_VIEW_CLASS_MAX`.
 pub const WEAPON_VIEW_CLASS_MAX: u32 = 31;
 
 /// Weapon appearance class → classic weapon sprite name. Verified against the
@@ -559,10 +561,7 @@ pub fn weapon_view_from_item_id(item_id: u32) -> u32 {
     if matches!(item_id, 13157 | 13158 | 13159 | 13172 | 13177) {
         return 19; // gatling
     }
-    if matches!(
-        item_id,
-        13154 | 13155 | 13156 | 13167 | 13168 | 13169 | 13173 | 13178
-    ) {
+    if matches!(item_id, 13154 | 13155 | 13156 | 13167 | 13168 | 13169 | 13173 | 13178) {
         return 20; // shotgun
     }
     if matches!(item_id, 13160 | 13161 | 13162 | 13174 | 13179) {
@@ -573,22 +572,22 @@ pub fn weapon_view_from_item_id(item_id: u32) -> u32 {
         1100..=1149 | 13400..=13499 => 2,  // 1H sword
         1150..=1199 | 21000..=21999 => 3,  // 2H sword
         1200..=1249 | 13000..=13099 => 1,  // dagger
-        1250..=1299 => 16,                // katar
-        1300..=1349 => 6,                 // 1H axe
-        1350..=1399 => 7,                 // 2H axe
-        1400..=1449 => 4,                 // 1H spear
-        1450..=1499 => 5,                 // 2H spear
-        1500..=1549 => 8,                 // mace
-        1550..=1599 => 15,                // book
-        1600..=1699 => 10,                // rod
+        1250..=1299 => 16,                 // katar
+        1300..=1349 => 6,                  // 1H axe
+        1350..=1399 => 7,                  // 2H axe
+        1400..=1449 => 4,                  // 1H spear
+        1450..=1499 => 5,                  // 2H spear
+        1500..=1549 => 8,                  // mace
+        1550..=1599 => 15,                 // book
+        1600..=1699 => 10,                 // rod
         1700..=1749 | 18100..=18499 => 11, // bow
-        1800..=1849 => 12,                // knuckle
-        1900..=1949 => 13,                // instrument
-        1950..=1999 => 14,                // whip
+        1800..=1849 => 12,                 // knuckle
+        1900..=1949 => 13,                 // instrument
+        1950..=1999 => 14,                 // whip
         2000..=2049 | 20000..=20999 => 23, // 2H rod
-        13100..=13149 => 17,              // handgun
-        13150..=13199 => 18,              // rifle (exceptions above)
-        13300..=13399 => 22,              // shuriken
+        13100..=13149 => 17,               // handgun
+        13150..=13199 => 18,               // rifle (exceptions above)
+        13300..=13399 => 22,               // shuriken
         _ => 0,
     }
 }
@@ -609,9 +608,9 @@ pub fn weapon_view_from_appearance(appearance: u32) -> u32 {
 /// `25..=30`. Returns `None` when the pair is not a dual-wieldable combo.
 pub fn combine_dual_wield_view(right_view: u32, left_view: u32) -> Option<u32> {
     match (right_view, left_view) {
-        (1, 1) => Some(25), // dagger + dagger
-        (2, 2) => Some(26), // sword + sword
-        (6, 6) => Some(27), // axe + axe
+        (1, 1) => Some(25),          // dagger + dagger
+        (2, 2) => Some(26),          // sword + sword
+        (6, 6) => Some(27),          // axe + axe
         (1, 2) | (2, 1) => Some(28), // dagger + sword
         (1, 6) | (6, 1) => Some(29), // dagger + axe
         (2, 6) | (6, 2) => Some(30), // sword + axe
@@ -657,6 +656,7 @@ pub fn effective_weapon_view(weapon_appearance: u32, left_appearance: u32) -> u3
 }
 
 /// True when the path is a `_검광` sword-trail layer (not the base weapon).
+#[allow(dead_code)]
 pub fn is_weapon_trail_path(path: &str) -> bool {
     let normalized = path.replace('/', "\\");
     normalized.ends_with("_검광")
@@ -725,23 +725,20 @@ fn weapon_part_candidates(folder: &str, sex: &str, appearance: u32, prefer_dual_
 }
 
 fn first_existing_part(game_file_loader: &GameFileLoader, candidates: &[String]) -> Option<String> {
-    candidates
-        .iter()
-        .find(|part| sprite_part_exists(game_file_loader, part))
-        .cloned()
+    candidates.iter().find(|part| sprite_part_exists(game_file_loader, part)).cloned()
 }
 
 /// Item sprite path for an ammunition item resource name, e.g. `철화살` (Iron
-/// Arrow) → `아이템\철화살.spr`. Classic RO draws the flying projectile with the
-/// ammo *item*'s own sprite, which is why the per-type variants read differently
-/// in flight.
+/// Arrow) → `아이템\철화살.spr`. Classic RO draws the flying projectile with
+/// the ammo *item*'s own sprite, which is why the per-type variants read
+/// differently in flight.
 pub fn ammunition_projectile_sprite_path(resource_name: &str) -> String {
     format!("아이템\\{resource_name}.spr")
 }
 
 /// The generic arrow resource. `iteminfo` hands this back for most ammunition,
-/// including arrows that ship a distinct sprite of their own, which is why every
-/// elemental arrow otherwise flies looking identical.
+/// including arrows that ship a distinct sprite of their own, which is why
+/// every elemental arrow otherwise flies looking identical.
 pub const GENERIC_ARROW_RESOURCE: &str = "화살";
 
 /// Distinct sprite resource for the **elemental** arrows, used only where
@@ -759,20 +756,20 @@ pub const GENERIC_ARROW_RESOURCE: &str = "화살";
 /// item↔sprite pairing is a translation of the Korean resource names and is the
 /// part to re-check if one looks wrong in flight.
 ///
-/// Frozen Arrow (1759, Water), Arrow of Counter Evil (1766, Holy) and Holy Arrow
-/// (1772, Holy) are elemental but ship **no** distinct sprite, so they are
-/// deliberately absent and keep whatever `iteminfo` gives them.
+/// Frozen Arrow (1759, Water), Arrow of Counter Evil (1766, Holy) and Holy
+/// Arrow (1772, Holy) are elemental but ship **no** distinct sprite, so they
+/// are deliberately absent and keep whatever `iteminfo` gives them.
 pub fn elemental_ammunition_resource(item_id: ItemId) -> Option<&'static str> {
     match item_id.0 {
-        1751 => Some("은화살"),         // Silver Arrow — Holy
-        1752 => Some("불화살"),         // Fire Arrow — Fire
-        1754 => Some("수정화살"),       // Crystal Arrow — Water
-        1755 => Some("바람의화살"),     // Arrow of Wind — Wind
-        1756 => Some("돌화살"),         // Stone Arrow — Earth
-        1757 => Some("무형의화살"),     // Immaterial Arrow — Ghost
-        1762 => Some("녹슨화살"),       // Rusty Arrow — Poison
-        1763 => Some("독화살"),         // Poison Arrow — Poison
-        1767 => Some("그림자의화살"),   // Arrow of Shadow — Dark
+        1751 => Some("은화살"),       // Silver Arrow — Holy
+        1752 => Some("불화살"),       // Fire Arrow — Fire
+        1754 => Some("수정화살"),     // Crystal Arrow — Water
+        1755 => Some("바람의화살"),   // Arrow of Wind — Wind
+        1756 => Some("돌화살"),       // Stone Arrow — Earth
+        1757 => Some("무형의화살"),   // Immaterial Arrow — Ghost
+        1762 => Some("녹슨화살"),     // Rusty Arrow — Poison
+        1763 => Some("독화살"),       // Poison Arrow — Poison
+        1767 => Some("그림자의화살"), // Arrow of Shadow — Dark
         _ => None,
     }
 }
@@ -795,8 +792,9 @@ pub enum AmmunitionElement {
 
 impl AmmunitionElement {
     /// Colour of the in-flight glow. Drawn additively and used for the point
-    /// light, so these are light colours rather than surface colours: bright and
-    /// unsaturated enough to stay visible against both dark maps and daylight.
+    /// light, so these are light colours rather than surface colours: bright
+    /// and unsaturated enough to stay visible against both dark maps and
+    /// daylight.
     pub const fn glow_color(self) -> Color {
         match self {
             Self::Fire => Color::rgb_u8(255, 120, 40),
@@ -814,8 +812,8 @@ impl AmmunitionElement {
 /// Attack element of an ammunition item, or `None` for neutral ammo.
 ///
 /// Taken from each item's `bonus bAtkEle,Ele_*` script in Hercules
-/// `db/re/item_db.conf` — mechanical, not name matching, so Rusty Arrow (Poison)
-/// and Silver Arrow (Holy) land correctly rather than by guesswork.
+/// `db/re/item_db.conf` — mechanical, not name matching, so Rusty Arrow
+/// (Poison) and Silver Arrow (Holy) land correctly rather than by guesswork.
 ///
 /// Deliberately wider than [`elemental_ammunition_resource`]: Frozen Arrow
 /// (1759), Arrow of Counter Evil (1766) and Holy Arrow (1772) are elemental but
@@ -918,10 +916,7 @@ fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
     let right = common.weapon;
     let left = common.shield;
     let dual_view = if appearance_is_offhand_weapon(left) {
-        combine_dual_wield_view(
-            weapon_view_from_appearance(right),
-            weapon_view_from_appearance(left),
-        )
+        combine_dual_wield_view(weapon_view_from_appearance(right), weapon_view_from_appearance(left))
     } else {
         None
     };
@@ -936,17 +931,10 @@ fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
         .and_then(weapon_resource_suffix)
         .is_some_and(|suffix| right_part.ends_with(&format!("_{suffix}")));
     let right_view = dual_view.unwrap_or_else(|| weapon_view_from_appearance(right));
-    let right_is_per_item = right >= WEAPON_VIEW_CLASS_MAX
-        && right_part.ends_with(&format!("_{right}"));
+    let right_is_per_item = right >= WEAPON_VIEW_CLASS_MAX && right_part.ends_with(&format!("_{right}"));
 
     files.push(right_part.clone());
-    push_weapon_trail_part(
-        files,
-        game_file_loader,
-        &right_part,
-        right_view,
-        right_is_per_item,
-    );
+    push_weapon_trail_part(files, game_file_loader, &right_part, right_view, right_is_per_item);
 
     // Second weapon layer for dual-wield when we did not already load the
     // combined pair sprite (per-item right + class/item left).
@@ -957,16 +945,9 @@ fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
             && !files.iter().any(|p| p == &left_part)
         {
             let left_view = weapon_view_from_appearance(left);
-            let left_is_per_item = left >= WEAPON_VIEW_CLASS_MAX
-                && left_part.ends_with(&format!("_{left}"));
+            let left_is_per_item = left >= WEAPON_VIEW_CLASS_MAX && left_part.ends_with(&format!("_{left}"));
             files.push(left_part.clone());
-            push_weapon_trail_part(
-                files,
-                game_file_loader,
-                &left_part,
-                left_view,
-                left_is_per_item,
-            );
+            push_weapon_trail_part(files, game_file_loader, &left_part, left_view, left_is_per_item);
         }
     }
 }
@@ -975,12 +956,13 @@ fn push_weapon_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
 ///
 /// Job name table entries are compound (`기사\\기사`), so:
 /// - class: `방패\%s_%s%s.%s` → `방패\기사\기사_남_가드.spr`
-/// - item (view ≥ 5 and special job check at `0x9A2430`):  
+/// - item (view ≥ 5 and special job check at `0x9A2430`):
 ///   `방패\%s_%s_%d_방패.%s` → `방패\기사\기사_남_{view}_방패.spr`
 ///
 /// Class suffixes (with leading `_` in the binary name table at `0x72796C`):
 /// `_가드`, `_쉴드`, `_미러쉴드`, `_버클러`. Item ViewSprite 1..4 maps to those
-/// names in classic DB order (Guard/Buckler/Shield/Mirror), not table storage order.
+/// names in classic DB order (Guard/Buckler/Shield/Mirror), not table storage
+/// order.
 ///
 /// Job ids `> 0xF6E` (3950) are remapped `job - 3950` for the name table index.
 fn native_shield_class_suffix(shield_view: u32) -> Option<&'static str> {
@@ -1012,22 +994,14 @@ fn shield_part_candidates(job_folder: &str, sex: &str, shield_view: u32) -> Vec<
     // allowed by 0x9A2430). We always probe it for view ≥ 5; missing SPR is
     // harmless.
     if shield_view >= 5 {
-        out.push(format!(
-            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"
-        ));
+        out.push(format!("방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"));
     }
     if let Some(class_name) = native_shield_class_suffix(shield_view) {
-        out.push(format!(
-            "방패\\{job_folder}\\{job_folder}_{sex}_{class_name}"
-        ));
+        out.push(format!("방패\\{job_folder}\\{job_folder}_{sex}_{class_name}"));
     } else if shield_view > 0 {
         // Non-classic view that still has a class-style file under some packs.
-        out.push(format!(
-            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"
-        ));
-        out.push(format!(
-            "방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}"
-        ));
+        out.push(format!("방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}_방패"));
+        out.push(format!("방패\\{job_folder}\\{job_folder}_{sex}_{shield_view}"));
     }
     out
 }
@@ -1303,7 +1277,8 @@ impl Common {
         self.world_position = world_position;
         self.active_movement = None;
         if !self.action_request_locked() {
-            self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
+            self.animation_state
+                .idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
         }
     }
 
@@ -1416,7 +1391,8 @@ impl Common {
             .set_status_paused(status_freezes_animation(body_state), client_tick);
 
         if pk_changed && self.animation_state.is_neutral() && !self.action_request_locked() {
-            self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
+            self.animation_state
+                .idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
         }
     }
 
@@ -1429,7 +1405,8 @@ impl Common {
                 if gained {
                     self.animation_state.trick_dead(self.entity_type, client_tick);
                 } else if !self.animation_state.is_dead() {
-                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
+                    self.animation_state
+                        .idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             SI_SUHIDE => {
@@ -1442,7 +1419,8 @@ impl Common {
                 } else if self.su_stoop {
                     self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
                 } else {
-                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
+                    self.animation_state
+                        .idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             SI_SU_STOOP => {
@@ -1453,7 +1431,8 @@ impl Common {
                 if gained {
                     self.animation_state.status_pose(self.entity_type, self.job_id, 47, client_tick);
                 } else {
-                    self.animation_state.idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
+                    self.animation_state
+                        .idle(self.entity_type, self.wants_ready_fight_stance(), client_tick);
                 }
             }
             _ => {}
@@ -1720,9 +1699,9 @@ impl Common {
 
     /// How a status effect recolours this entity's sprite.
     ///
-    /// `opt1` is exclusive and takes precedence over the `opt2` bitmask, matching
-    /// the server: `status.c` keeps them in separate fields and opt1 states are
-    /// the incapacitating ones.
+    /// `opt1` is exclusive and takes precedence over the `opt2` bitmask,
+    /// matching the server: `status.c` keeps them in separate fields and
+    /// opt1 states are the incapacitating ones.
     fn status_tint(&self) -> StatusTint {
         match self.body_state {
             // Petrification turns the sprite to stone, which is a LOSS of colour,
@@ -2191,8 +2170,8 @@ impl Npc {
         );
     }
 
-    /// Ally / party-member bars: HP, SP and cast progress (other player entities
-    /// appear as `Npc` with `EntityType::Player`).
+    /// Ally / party-member bars: HP, SP and cast progress (other player
+    /// entities appear as `Npc` with `EntityType::Player`).
     ///
     /// `health` and `spell` are passed in rather than read off `Common` because
     /// a party member's vitals arrive on `ZC_NOTIFY_HP_TO_GROUPM` and live in
@@ -2203,6 +2182,7 @@ impl Npc {
     ///
     /// Each bar is skipped independently when its data is unknown, so a member
     /// whose SP has not arrived yet still gets an HP bar.
+    #[allow(clippy::too_many_arguments)]
     pub fn render_ally_status(
         &self,
         renderer: &GameInterfaceRenderer,
@@ -2385,8 +2365,8 @@ impl Entity {
     }
 
     /// Written through [`Common`] so it applies to any variant. Gating this on
-    /// `Self::Player` meant it silently did nothing for remote players, which are
-    /// `Entity::Npc`.
+    /// `Self::Player` meant it silently did nothing for remote players, which
+    /// are `Entity::Npc`.
     pub fn set_hair(&mut self, hair_id: usize) {
         self.get_common_mut().head = hair_id;
     }
@@ -2583,11 +2563,7 @@ impl Entity {
             if common.action_request_locked() {
                 return;
             }
-            let (job_id, sex, weapon) = (
-                common.job_id,
-                common.sex,
-                effective_weapon_view(common.weapon, common.shield),
-            );
+            let (job_id, sex, weapon) = (common.job_id, common.sex, effective_weapon_view(common.weapon, common.shield));
             common
                 .animation_state
                 .skill_attack(entity_type, job_id, sex, weapon, skill_id, common.su_hide, client_tick);
@@ -2601,11 +2577,7 @@ impl Entity {
             if common.action_request_locked() {
                 return;
             }
-            let (job_id, sex, weapon) = (
-                common.job_id,
-                common.sex,
-                effective_weapon_view(common.weapon, common.shield),
-            );
+            let (job_id, sex, weapon) = (common.job_id, common.sex, effective_weapon_view(common.weapon, common.shield));
             common.animation_state.weapon_attack(entity_type, job_id, sex, weapon, client_tick);
         } else {
             // Monster/NPC ACT layouts expose only their single attack group;
@@ -2698,8 +2670,8 @@ impl Entity {
     }
 
     /// Whether a cast bar is still running at `client_tick`. Keyed off the same
-    /// state the cast bar draws from, so "there is a bar on screen" and "a cancel
-    /// would do something" can never disagree.
+    /// state the cast bar draws from, so "there is a bar on screen" and "a
+    /// cancel would do something" can never disagree.
     pub fn is_casting(&self, client_tick: ClientTick) -> bool {
         self.get_common().cast_bar(client_tick).is_some()
     }
@@ -2823,8 +2795,10 @@ impl StateWindow<ClientState> for Entity {
 
 #[cfg(test)]
 mod status_effect_asset_tests {
-    use super::{status_effect_asset, status_freezes_animation, OPT1_FREEZE, OPT1_SLEEP, OPT1_STONE, OPT1_STONEWAIT, OPT1_STUN};
-    use super::{OPT2_BLIND, OPT2_CURSE, OPT2_DEADLY_POISON, OPT2_POISON, OPT2_SILENCE};
+    use super::{
+        OPT1_FREEZE, OPT1_SLEEP, OPT1_STONE, OPT1_STONEWAIT, OPT1_STUN, OPT2_BLIND, OPT2_CURSE, OPT2_DEADLY_POISON, OPT2_POISON,
+        OPT2_SILENCE, status_effect_asset, status_freezes_animation,
+    };
 
     /// Hercules blocks movement for every opt1 state bar STONEWAIT/BURNING
     /// (`unit.c:1304`), so all of these are standing still server-side.
@@ -2896,9 +2870,9 @@ mod weapon_layer_tests {
     use ragnarok_packets::{ItemId, JobId};
 
     use super::{
-        appearance_is_offhand_weapon, combine_dual_wield_view, effective_weapon_view, get_weapon_sprite_folder,
-        is_weapon_trail_path, shield_part_candidates, weapon_part_candidates, weapon_resource_suffix,
-        weapon_view_from_appearance, weapon_view_from_item_id, WEAPON_VIEW_CLASS_MAX,
+        WEAPON_VIEW_CLASS_MAX, appearance_is_offhand_weapon, combine_dual_wield_view, effective_weapon_view, get_weapon_sprite_folder,
+        is_weapon_trail_path, shield_part_candidates, weapon_part_candidates, weapon_resource_suffix, weapon_view_from_appearance,
+        weapon_view_from_item_id,
     };
 
     #[test]
@@ -3007,17 +2981,11 @@ mod weapon_layer_tests {
     fn native_geom_trail_views_match_ragexe_switch_table() {
         // Melee blades/spears/axes + katar/guns + dual pairs.
         for view in [1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 25, 26, 27, 28, 29, 30] {
-            assert!(
-                super::native_weapon_view_has_geom_trail(view),
-                "view {view} should trail"
-            );
+            assert!(super::native_weapon_view_has_geom_trail(view), "view {view} should trail");
         }
         // Mace, rod, bow, book, etc. — no class trail in native.
         for view in [8, 9, 10, 11, 12, 13, 14, 15, 19, 20, 22, 23] {
-            assert!(
-                !super::native_weapon_view_has_geom_trail(view),
-                "view {view} should not trail"
-            );
+            assert!(!super::native_weapon_view_has_geom_trail(view), "view {view} should not trail");
         }
     }
 
@@ -3082,15 +3050,15 @@ mod weapon_layer_tests {
         // db/re/item_db.conf, not from its name. All nine sprites were confirmed
         // present in data.grf with tools/grf_list.py.
         let expected = [
-            (1751u32, "은화살"),       // Silver Arrow — Holy
-            (1752, "불화살"),          // Fire Arrow — Fire
-            (1754, "수정화살"),        // Crystal Arrow — Water
-            (1755, "바람의화살"),      // Arrow of Wind — Wind
-            (1756, "돌화살"),          // Stone Arrow — Earth
-            (1757, "무형의화살"),      // Immaterial Arrow — Ghost
-            (1762, "녹슨화살"),        // Rusty Arrow — Poison
-            (1763, "독화살"),          // Poison Arrow — Poison
-            (1767, "그림자의화살"),    // Arrow of Shadow — Dark
+            (1751u32, "은화살"),    // Silver Arrow — Holy
+            (1752, "불화살"),       // Fire Arrow — Fire
+            (1754, "수정화살"),     // Crystal Arrow — Water
+            (1755, "바람의화살"),   // Arrow of Wind — Wind
+            (1756, "돌화살"),       // Stone Arrow — Earth
+            (1757, "무형의화살"),   // Immaterial Arrow — Ghost
+            (1762, "녹슨화살"),     // Rusty Arrow — Poison
+            (1763, "독화살"),       // Poison Arrow — Poison
+            (1767, "그림자의화살"), // Arrow of Shadow — Dark
         ];
 
         for (item_id, resource) in expected {
@@ -3117,18 +3085,18 @@ mod weapon_layer_tests {
 
         // From `bonus bAtkEle,Ele_*` in db/re/item_db.conf.
         let expected = [
-            (1751u32, Holy),  // Silver Arrow
-            (1752, Fire),     // Fire Arrow
-            (1754, Water),    // Crystal Arrow
-            (1755, Wind),     // Arrow of Wind
-            (1756, Earth),    // Stone Arrow
-            (1757, Ghost),    // Immaterial Arrow
-            (1759, Water),    // Frozen Arrow — no distinct sprite, glow only
-            (1762, Poison),   // Rusty Arrow
-            (1763, Poison),   // Poison Arrow
-            (1766, Holy),     // Arrow of Counter Evil — no distinct sprite, glow only
-            (1767, Dark),     // Arrow of Shadow
-            (1772, Holy),     // Holy Arrow — no distinct sprite, glow only
+            (1751u32, Holy), // Silver Arrow
+            (1752, Fire),    // Fire Arrow
+            (1754, Water),   // Crystal Arrow
+            (1755, Wind),    // Arrow of Wind
+            (1756, Earth),   // Stone Arrow
+            (1757, Ghost),   // Immaterial Arrow
+            (1759, Water),   // Frozen Arrow — no distinct sprite, glow only
+            (1762, Poison),  // Rusty Arrow
+            (1763, Poison),  // Poison Arrow
+            (1766, Holy),    // Arrow of Counter Evil — no distinct sprite, glow only
+            (1767, Dark),    // Arrow of Shadow
+            (1772, Holy),    // Holy Arrow — no distinct sprite, glow only
         ];
 
         for (item_id, element) in expected {
@@ -3157,22 +3125,12 @@ mod weapon_layer_tests {
     #[test]
     fn native_shield_paths_match_ragexe_sprintf_forms() {
         // Class form: 방패\%s_%s%s with job token "기사\기사", sex "남", name "_가드"
-        assert_eq!(
-            shield_part_candidates("기사", "남", 1),
-            vec!["방패\\기사\\기사_남_가드".to_owned()]
-        );
-        assert_eq!(
-            shield_part_candidates("기사", "남", 2)[0],
-            "방패\\기사\\기사_남_버클러"
-        );
-        assert_eq!(
-            shield_part_candidates("기사", "여", 3)[0],
-            "방패\\기사\\기사_여_쉴드"
-        );
-        assert_eq!(
-            shield_part_candidates("기사", "남", 4)[0],
-            "방패\\기사\\기사_남_미러쉴드"
-        );
+        assert_eq!(shield_part_candidates("기사", "남", 1), vec![
+            "방패\\기사\\기사_남_가드".to_owned()
+        ]);
+        assert_eq!(shield_part_candidates("기사", "남", 2)[0], "방패\\기사\\기사_남_버클러");
+        assert_eq!(shield_part_candidates("기사", "여", 3)[0], "방패\\기사\\기사_여_쉴드");
+        assert_eq!(shield_part_candidates("기사", "남", 4)[0], "방패\\기사\\기사_남_미러쉴드");
         // Item form first when view ≥ 5: 방패\%s_%s_%d_방패
         let high = shield_part_candidates("기사", "남", 28901);
         assert_eq!(high[0], "방패\\기사\\기사_남_28901_방패");

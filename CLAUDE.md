@@ -191,19 +191,30 @@ and running the `.exe` on the Windows side (not yet set up).
 ## Testing — the headless suite
 
 > [!IMPORTANT]
-> **Latest testing handoff (2026-08-11):** read
+> **What to improve next in headless testing:** read
+> [tools/testing/headless-next-steps.md](tools/testing/headless-next-steps.md)
+> first (P0–P7 priorities, exemptions to shrink, negative scenarios still
+> missing, process rules not to weaken).
+>
+> **Latest ship handoff (2026-08-11):** also read
 > [tools/testing/2026-08-11-testing-handoff.md](tools/testing/2026-08-11-testing-handoff.md)
 > before changing packet fallback policy, the skill silence allowlist, or the
-> run/archive scripts. It documents the new zero-unknown gate, three typed
-> no-op packets, runner regression suite, bounded Hercules shutdown, exact
-> validation commands, and the decisions that must not be casually reversed.
+> run/archive scripts. It documents the zero-unknown gate, typed no-op packets,
+> runner regression suite, bounded Hercules shutdown, and decisions that must
+> not be casually reversed.
 
-The project's main automated regression gate is a **136-scenario headless client**
-(`korangar-networking/examples/headless-tester`). Acceptance was reconfirmed
-2026-08-11 in normal order and with shuffle seed `20260810`: **135 passed, 1
-expected skip, 0 flaky, 0 failed, 0 unexpected skips, and 0 unknown packets**.
+The project's main automated regression gate is a **139-scenario headless client**
+(`korangar-networking/examples/headless-tester`). Full-run acceptance was
+reconfirmed 2026-08-11 at **136** scenarios (135 passed, 1 expected skip, 0
+flaky/fail/unknown) in normal order and shuffle seed `20260810`. A later depth
+batch added three negative scenarios and **enforced** derived skill expectations
+with reviewed exemptions — re-validate live via the next-steps doc before quoting
+a new full-run count.
 Docs live in **`tools/testing/`** (not `docs/`):
-[headless_test_plan.md](tools/testing/headless_test_plan.md) is canonical,
+[headless-next-steps.md](tools/testing/headless-next-steps.md) is the forward
+priority list,
+[headless_test_plan.md](tools/testing/headless_test_plan.md) is the scenario
+catalog,
 [headless_findings.md](tools/testing/headless_findings.md) is the bug log,
 [testing_guide.md](tools/testing/testing_guide.md) is the overall reference.
 

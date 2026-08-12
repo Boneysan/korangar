@@ -120,8 +120,8 @@ fn layout_cells(layout: i64) -> Option<u32> {
     (layout >= 0).then(|| (layout as u32) * 2 + 1)
 }
 
-/// Raw `Layout` value for a skill at `level`, or `None` when the skill places no
-/// ground unit. `-1` is passed through unchanged so callers can tell "custom
+/// Raw `Layout` value for a skill at `level`, or `None` when the skill places
+/// no ground unit. `-1` is passed through unchanged so callers can tell "custom
 /// shape" apart from "no ground unit" — the aiming cursor needs that
 /// distinction, the tooltip does not.
 pub fn skill_layout_value(skill_id: u16, level: u16) -> Option<i64> {
@@ -283,11 +283,8 @@ mod tests {
 
         assert_eq!(
             text,
-            "Magnetic Earth  Lv 5/5\n\
-             Magic · Ground target\n\
-             Range 2 · SP 50 · Cast 5.0s\n\
-             Lasts 345s · 11x11 cells\n\
-             Requires: Blue Gemstone, Yellow Gemstone"
+            "Magnetic Earth  Lv 5/5\nMagic · Ground target\nRange 2 · SP 50 · Cast 5.0s\nLasts 345s · 11x11 cells\nRequires: Blue \
+             Gemstone, Yellow Gemstone"
         );
         assert!(text.lines().count() <= 5, "tooltip should stay short: {text}");
         assert!(

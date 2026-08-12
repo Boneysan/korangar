@@ -41,8 +41,8 @@ pub enum InputEvent {
     LogOut,
     /// Log out of the character server.
     LogOutCharacter,
-    /// Dismiss the notice explaining a server-initiated disconnect, and drop the
-    /// remaining connection so the player lands back at the login form.
+    /// Dismiss the notice explaining a server-initiated disconnect, and drop
+    /// the remaining connection so the player lands back at the login form.
     AcknowledgeDisconnect,
     /// Exit Korangar.
     Exit,

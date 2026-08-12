@@ -351,13 +351,7 @@ where
                     }
                     _ => (None, None),
                 };
-                let text = item_tooltip_text(
-                    item.item_id.0,
-                    &item.metadata.name,
-                    refinement,
-                    equipped_stats,
-                    equipped_refine,
-                );
+                let text = item_tooltip_text(item.item_id.0, &item.metadata.name, refinement, equipped_stats, equipped_refine);
                 // Same pattern as character-slot display strings: keep the
                 // tooltip buffer on the element so the layout borrow is stable.
                 unsafe {
@@ -394,9 +388,7 @@ where
                     InventoryItemDetails::Regular { .. } => true,
                     InventoryItemDetails::Equippable { amount, .. } => amount > 1,
                 };
-                if show_amount
-                    && let Some(amount_string) = self.amount_display.string.as_ref()
-                {
+                if show_amount && let Some(amount_string) = self.amount_display.string.as_ref() {
                     layout.add_text(
                         layout_info.area,
                         amount_string,

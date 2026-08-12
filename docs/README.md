@@ -73,18 +73,20 @@ This directory contains all design documents, technical deep dives, implementati
 ### Testing & Verification
 
 > These live in **`tools/testing/`**, outside `docs/` — they are easy to miss. The
-> **136-scenario headless suite** is the project's main automated regression gate.
-> Acceptance was reconfirmed 2026-08-11 in normal order and shuffled: 135 passed,
-> 1 expected skip, 0 flaky, 0 failed, and 0 unknown packets.
+> **headless suite** (139 registered scenarios after the 2026-08-11 depth batch;
+> 136-scenario full runs were reconfirmed green that day) is the project's main
+> automated regression gate.
 
 | Document | Purpose |
 |----------|---------|
-| [../tools/testing/2026-08-11-testing-handoff.md](../tools/testing/2026-08-11-testing-handoff.md) | **Latest implementation handoff:** allowlist cleanup, typed no-op packets, zero-unknown gate, archive regression tests, shutdown hardening, and exact reproduction commands. |
-| [../tools/testing/testing_guide.md](../tools/testing/testing_guide.md) | Overall project testing reference — **start here**. |
+| [../tools/testing/headless-next-steps.md](../tools/testing/headless-next-steps.md) | **What to improve next (P0–P7)** — start here for agents/humans extending the suite. |
+| [../tools/testing/2026-08-11-testing-handoff.md](../tools/testing/2026-08-11-testing-handoff.md) | Ship handoff: allowlist cleanup, typed no-op packets, zero-unknown gate, archive regression tests, shutdown hardening, reproduction commands. |
+| [../tools/testing/testing_guide.md](../tools/testing/testing_guide.md) | Overall project testing reference — how to run unit, headless, and server checks. |
 | [../tools/testing/headless_test_plan.md](../tools/testing/headless_test_plan.md) | Canonical headless test plan: scenario inventory, what each phase covers, and why headless findings transfer to the graphical client. |
 | [../tools/testing/headless_findings.md](../tools/testing/headless_findings.md) | Bug log + port-back tracking; every finding classified by layer (shared crate / harness / server). Fill in whenever a scenario fails. |
 | [../tools/testing/headless_remaining_test_design.md](../tools/testing/headless_remaining_test_design.md) | Historical implementation specification for lifecycle, social, DM, repair, and skill-menu coverage; its backlog is complete. |
 | [../tools/testing/headless_mock_client_plan.md](../tools/testing/headless_mock_client_plan.md) | Original design doc; implementation status tracked there. |
+| [plans/testing-completeness.md](plans/testing-completeness.md) | What each testing layer proves and what nothing proves. |
 | [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | The **GUI** live-verification checklist — complements headless (see the axes note below). |
 
 **Three different axes — do not conflate them:**

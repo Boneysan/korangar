@@ -245,12 +245,11 @@ where
 
         // Enter does whichever of the two is possible right now: you cannot
         // invite before you have a party, and the server refuses a second one.
-        let submit = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-            match !state.get(&party_path).members().is_empty() {
+        let submit =
+            move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| match !state.get(&party_path).members().is_empty() {
                 true => with_name(name_path, |character_name| InputEvent::InviteToParty { character_name })(state, queue),
                 false => with_name(name_path, |party_name| InputEvent::CreateParty { party_name })(state, queue),
-            }
-        };
+            };
 
         let cannot_create = ComputedSelector::new_default(move |state: &ClientState| {
             !party_path.members().follow_safe(state).is_empty() || name_path.follow_safe(state).trim().is_empty()

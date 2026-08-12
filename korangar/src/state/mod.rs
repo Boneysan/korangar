@@ -22,14 +22,15 @@ use std::collections::HashMap;
 /// Inline colour codes for presence indicators in roster and friend-list rows.
 ///
 /// `^RRGGBB` is parsed by `ColorSpanIterator`, which every text element goes
-/// through, so these work in any label. **`^000000` and `^000001` are reserved**
-/// -- they mean reset-to-default and highlight, not black and near-black -- so
-/// never pick a colour that collides with them.
+/// through, so these work in any label. **`^000000` and `^000001` are
+/// reserved** -- they mean reset-to-default and highlight, not black and
+/// near-black -- so never pick a colour that collides with them.
 ///
 /// These exist because a *shape* difference was not enough to read at a glance:
 /// the friend list distinguished presence with `●` against `○`, which the
-/// bundled font could draw as neither, and even the working `•`/`·` pair was too
-/// subtle. Colour carries the signal; the glyph is now only a dot to hang it on.
+/// bundled font could draw as neither, and even the working `•`/`·` pair was
+/// too subtle. Colour carries the signal; the glyph is now only a dot to hang
+/// it on.
 pub const COLOR_ONLINE: &str = "^00C000";
 pub const COLOR_OFFLINE: &str = "^B03030";
 pub const COLOR_LEADER: &str = "^FFC800";
@@ -86,9 +87,9 @@ use crate::state::character_slots::CharacterSlots;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
+use crate::state::instance::InstanceState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
-use crate::state::instance::InstanceState;
 use crate::state::party::PartyState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
@@ -241,16 +242,17 @@ pub struct ClientState {
     entities: Vec<Entity>,
     /// Ammunition each remote player has loaded, keyed by account id.
     ///
-    /// Deliberately **not** stored on the [`Entity`]. The server broadcasts this
-    /// (fork-only `LOOK_AMMO`) independently of the spawn packet, so the value
-    /// routinely arrives *before* the entity exists, and a later respawn packet
-    /// replaces the entity wholesale — both of which silently discarded it when
-    /// it lived on the entity, leaving observers drawing the generic arrow.
-    /// Keyed by account id so entity lifetime cannot lose it.
+    /// Deliberately **not** stored on the [`Entity`]. The server broadcasts
+    /// this (fork-only `LOOK_AMMO`) independently of the spawn packet, so
+    /// the value routinely arrives *before* the entity exists, and a later
+    /// respawn packet replaces the entity wholesale — both of which
+    /// silently discarded it when it lived on the entity, leaving observers
+    /// drawing the generic arrow. Keyed by account id so entity lifetime
+    /// cannot lose it.
     ///
     /// Entries are cleared on map change rather than when an entity disappears:
-    /// the server re-sends on enter-view, so a stale entry is overwritten, while
-    /// evicting on removal would reopen the same hole.
+    /// the server re-sends on enter-view, so a stale entry is overwritten,
+    /// while evicting on removal would reopen the same hole.
     #[hidden_element]
     remote_ammunition: HashMap<AccountId, ItemId>,
     /// All dead entities on the map.

@@ -22,6 +22,7 @@ pub(crate) struct SpatialTrackBuilder {
 
 /// How a spatial track's volume falls off with distance.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[allow(dead_code)]
 pub(crate) enum AttenuationFunction {
     /// Constant volume at any distance.
     ///

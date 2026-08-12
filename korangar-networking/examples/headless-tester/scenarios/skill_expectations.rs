@@ -2,7 +2,8 @@
 //
 // What each skill's own `skill_db.conf` entry says it must be seen to do, so
 // the sweep can assert the specific outcome instead of accepting any response.
-// Skills whose entry says nothing useful are absent and keep the loose standard.
+// Skills whose entry says nothing useful are absent and keep the loose
+// standard.
 //
 // Regenerate after any skill_db change: tools/generate_skill_expectations.py
 
@@ -553,9 +554,17 @@ pub static SKILL_EXPECTATIONS: &[(u16, &str, Expected)] = &[
     (2343, "SR_GATEOFHELL", Expected::Damage),
     (2344, "SR_GENTLETOUCH_QUIET", Expected::Damage),
     (2345, "SR_GENTLETOUCH_CURE", Expected::Effect),
-    (2346, "SR_GENTLETOUCH_ENERGYGAIN", Expected::Status(425, "SC_GENTLETOUCH_ENERGYGAIN")),
+    (
+        2346,
+        "SR_GENTLETOUCH_ENERGYGAIN",
+        Expected::Status(425, "SC_GENTLETOUCH_ENERGYGAIN"),
+    ),
     (2347, "SR_GENTLETOUCH_CHANGE", Expected::Status(426, "SC_GENTLETOUCH_CHANGE")),
-    (2348, "SR_GENTLETOUCH_REVITALIZE", Expected::Status(427, "SC_GENTLETOUCH_REVITALIZE")),
+    (
+        2348,
+        "SR_GENTLETOUCH_REVITALIZE",
+        Expected::Status(427, "SC_GENTLETOUCH_REVITALIZE"),
+    ),
     (2350, "WA_SWING_DANCE", Expected::Status(429, "SC_SWING")),
     (2351, "WA_SYMPHONY_OF_LOVER", Expected::Status(430, "SC_SYMPHONY_LOVE")),
     (2352, "WA_MOONLIT_SERENADE", Expected::Status(447, "SC_MOONLIT_SERENADE")),
@@ -575,11 +584,19 @@ pub static SKILL_EXPECTATIONS: &[(u16, &str, Expected)] = &[
     (2425, "WM_GLOOMYDAY", Expected::Status(438, "SC_GLOOMYDAY")),
     (2427, "WM_SONG_OF_MANA", Expected::Status(439, "SC_SONG_OF_MANA")),
     (2428, "WM_DANCE_WITH_WUG", Expected::Status(441, "SC_DANCE_WITH_WUG")),
-    (2430, "WM_SATURDAY_NIGHT_FEVER", Expected::Status(448, "SC_SATURDAY_NIGHT_FEVER")),
+    (
+        2430,
+        "WM_SATURDAY_NIGHT_FEVER",
+        Expected::Status(448, "SC_SATURDAY_NIGHT_FEVER"),
+    ),
     (2431, "WM_LERADS_DEW", Expected::Status(451, "SC_LERADS_DEW")),
     (2432, "WM_MELODYOFSINK", Expected::Status(452, "SC_MELODYOFSINK")),
     (2433, "WM_BEYOND_OF_WARCRY", Expected::Status(453, "SC_BEYOND_OF_WARCRY")),
-    (2434, "WM_UNLIMITED_HUMMING_VOICE", Expected::Status(454, "SC_UNLIMITED_HUMMING_VOICE")),
+    (
+        2434,
+        "WM_UNLIMITED_HUMMING_VOICE",
+        Expected::Status(454, "SC_UNLIMITED_HUMMING_VOICE"),
+    ),
     (2443, "SO_FIREWALK", Expected::Unit),
     (2444, "SO_ELECTRICWALK", Expected::Unit),
     (2445, "SO_SPELLFIST", Expected::Status(432, "SC_SPELLFIST")),

@@ -13,9 +13,9 @@
 //!
 //! So the server's own header wins: `hercules_messages.tsv` is generated from
 //! `messages_main.h` by `tools/generate_message_table.py`, pairing each id with
-//! the gloss Hercules documents for it. The shipped table stays the fallback for
-//! ids Hercules glosses only in Korean, where it is at least in the player's
-//! language.
+//! the gloss Hercules documents for it. The shipped table stays the fallback
+//! for ids Hercules glosses only in Korean, where it is at least in the
+//! player's language.
 
 use korangar_loaders::FileLoader;
 
@@ -71,10 +71,10 @@ impl MsgStringTable {
         if let Some(text) = hercules_message(message_id) {
             return text.to_owned();
         }
-        if let Some(text) = self.get(message_id) {
-            if !text.is_empty() {
-                return text.to_owned();
-            }
+        if let Some(text) = self.get(message_id)
+            && !text.is_empty()
+        {
+            return text.to_owned();
         }
         format!("Server message #{message_id} (see msgstringtable).")
     }
@@ -221,9 +221,10 @@ mod tests {
         assert!(table.resolve(0x746).contains("%d"));
     }
 
-    /// 0x576..0x582 was a thirteen-id run whose English lagged its Korean by one
-    /// slot, so every id reported its predecessor's message and the run's last
-    /// gloss had fallen off the end entirely. Both ends are pinned here.
+    /// 0x576..0x582 was a thirteen-id run whose English lagged its Korean by
+    /// one slot, so every id reported its predecessor's message and the
+    /// run's last gloss had fallen off the end entirely. Both ends are
+    /// pinned here.
     #[test]
     fn shifted_gloss_run_stays_realigned() {
         let table = MsgStringTable::default();
@@ -234,14 +235,17 @@ mod tests {
         assert_eq!(table.resolve(0x582), "Mobile authentication has failed."); // MSG_FAILED_MOBILE_LOCKSERVER
     }
 
-    /// Multi-line English glosses used to be truncated to their closing line, so
-    /// this one lost the sentence that says what was created.
+    /// Multi-line English glosses used to be truncated to their closing line,
+    /// so this one lost the sentence that says what was created.
     #[test]
     fn multi_line_gloss_keeps_its_first_sentence() {
         let table = MsgStringTable::default();
 
         // MSG_MDUNGEON_SUBSCRIPTION_ERROR_EXIST
-        assert_eq!(table.resolve(0x52A), "Memorial Dungeon, '%s' is created. Please enter in 5 minutes.");
+        assert_eq!(
+            table.resolve(0x52A),
+            "Memorial Dungeon, '%s' is created. Please enter in 5 minutes."
+        );
     }
 
     /// Falling through to the shipped table only helps for ids the shipped

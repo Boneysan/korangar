@@ -216,10 +216,12 @@ mod diagnostics {
     use crate::loaders::GameFileLoader;
 
     /// Locate the authentic classic Mage/Wizard effect scripts for the Phase E1
-    /// skills, which currently use procedural stand-ins. `get_files_with_extension`
-    /// under-reports the GRFs, so probe candidate names with `file_exists`.
+    /// skills, which currently use procedural stand-ins.
+    /// `get_files_with_extension` under-reports the GRFs, so probe
+    /// candidate names with `file_exists`.
     ///
-    /// Run: cargo test -p korangar probes_classic_mage_wizard_effects -- --ignored --nocapture
+    /// Run: cargo test -p korangar probes_classic_mage_wizard_effects --
+    /// --ignored --nocapture
     #[test]
     #[ignore]
     fn probes_classic_mage_wizard_effects() {
@@ -227,21 +229,56 @@ mod diagnostics {
         game_file_loader.load_archives_from_settings();
 
         let candidates: &[(&str, &[&str])] = &[
-            ("11 Napalm Beat", &["napalmbeat.str", "napalm.str", "napalmbit.str", "ghost.str", "ghosthit.str"]),
-            ("13 Soul Strike", &["soulstrike.str", "soul.str", "soulstrike1.str", "ghostring.str"]),
+            ("11 Napalm Beat", &[
+                "napalmbeat.str",
+                "napalm.str",
+                "napalmbit.str",
+                "ghost.str",
+                "ghosthit.str",
+            ]),
+            ("13 Soul Strike", &[
+                "soulstrike.str",
+                "soul.str",
+                "soulstrike1.str",
+                "ghostring.str",
+            ]),
             ("15 Frost Diver", &[
-                "frostdiver.str", "frostdiver1.str", "frostdriver.str", "freeze.str", "icearrow.str", "frost.str",
+                "frostdiver.str",
+                "frostdiver1.str",
+                "frostdriver.str",
+                "freeze.str",
+                "icearrow.str",
+                "frost.str",
             ]),
             ("17 Fire Ball", &["fireball.str", "fball.str", "firearrow.str", "fireball1.str"]),
             ("84 Jupitel Thunder", &[
-                "jupitel.str", "jupitelthunder.str", "jupiter.str", "jupitel1.str", "thunder.str",
+                "jupitel.str",
+                "jupitelthunder.str",
+                "jupiter.str",
+                "jupitel1.str",
+                "thunder.str",
             ]),
-            ("90 Earth Spike", &["earthspike.str", "spike.str", "earth.str", "earthspike1.str", "digout.str"]),
+            ("90 Earth Spike", &[
+                "earthspike.str",
+                "spike.str",
+                "earth.str",
+                "earthspike1.str",
+                "digout.str",
+            ]),
             ("91 Heaven's Drive", &[
-                "heavensdrive.str", "heavendrive.str", "hevendrive.str", "heavensdrive1.str", "earthspike2.str",
+                "heavensdrive.str",
+                "heavendrive.str",
+                "hevendrive.str",
+                "heavensdrive1.str",
+                "earthspike2.str",
             ]),
             ("already-working reference", &[
-                "stormgust.str", "thunderstorm.str", "sanctuary.str", "firepillar.str", "quagmire.str", "lord.str",
+                "stormgust.str",
+                "thunderstorm.str",
+                "sanctuary.str",
+                "firepillar.str",
+                "quagmire.str",
+                "lord.str",
             ]),
         ];
 

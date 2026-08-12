@@ -16,10 +16,8 @@ use wgpu::BlendFactor;
 pub use self::bolts::FallingBolts;
 pub use self::burst::{SkillBurst, SkillBurstStyle};
 pub use self::portal::{PORTAL_TEXTURE_PATH, PortalVortex};
-pub use self::projectile::{SkillProjectile, SoulStrikeOrbs};
-pub use self::unit::{
-    UnitCylinderSpec, UnitCylinders, UnitGroundQuad, UnitIceHorns, UnitLayeredGroundQuad, UnitPointLight, UnitPulse,
-};
+pub use self::projectile::SkillProjectile;
+pub use self::unit::{UnitCylinderSpec, UnitCylinders, UnitGroundQuad, UnitIceHorns, UnitLayeredGroundQuad, UnitPointLight, UnitPulse};
 use crate::graphics::{Color, Texture};
 use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
@@ -644,9 +642,9 @@ pub enum UniqueEffectSlot {
 /// What owns an effect, and therefore what removes it.
 ///
 /// Both variants key on an `EntityId`, but they must not share a channel: a
-/// skill unit is removed by `RemoveSkillUnit` on the *unit's* id, while a status
-/// visual is removed when the afflicted entity's opt1/opt2 clears. Keying both
-/// on a bare id would let one delete the other.
+/// skill unit is removed by `RemoveSkillUnit` on the *unit's* id, while a
+/// status visual is removed when the afflicted entity's opt1/opt2 clears.
+/// Keying both on a bare id would let one delete the other.
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 enum EffectAnchor {
     Unit(EntityId),
@@ -691,14 +689,15 @@ impl EffectHolder {
         slot: UniqueEffectSlot,
         duration: f32,
     ) -> bool {
-        if self.unique_skill_effects.iter().any(|(source, skill, existing_slot, _)| {
-            *source == source_entity_id && *skill == skill_id && *existing_slot == slot
-        }) {
+        if self
+            .unique_skill_effects
+            .iter()
+            .any(|(source, skill, existing_slot, _)| *source == source_entity_id && *skill == skill_id && *existing_slot == slot)
+        {
             return false;
         }
 
-        self.unique_skill_effects
-            .push((source_entity_id, skill_id, slot, duration));
+        self.unique_skill_effects.push((source_entity_id, skill_id, slot, duration));
         true
     }
 

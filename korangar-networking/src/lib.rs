@@ -918,7 +918,8 @@ where
         ))
     }
 
-    /// Add (`true`) or remove (`false`) a character from the whisper ignore list.
+    /// Add (`true`) or remove (`false`) a character from the whisper ignore
+    /// list.
     pub fn set_player_ignored(&mut self, character_name: &str, ignored: bool) -> Result<(), NotConnectedError> {
         // The wire encoding is inverted from the flag: 0 adds, 1 removes.
         self.send_map_server_packet(IgnorePlayerPacket::new(character_name.to_owned(), u8::from(!ignored)))
@@ -1375,7 +1376,6 @@ mod packet_handlers {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;
 
-
         let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
 
         for look_type in 0..=13u8 {
@@ -1398,8 +1398,8 @@ mod packet_handlers {
     #[test]
     fn unmapped_look_types_arrive_as_change_look() {
         use ragnarok_bytes::ByteReader;
-        use ragnarok_packets::handler::HandlerResult;
         use ragnarok_packets::SpriteChangeType;
+        use ragnarok_packets::handler::HandlerResult;
 
         use crate::NetworkEvent;
 
@@ -1413,11 +1413,13 @@ mod packet_handlers {
                 panic!("sprite change {look_type} did not parse");
             };
             match events.0.as_slice() {
-                [NetworkEvent::ChangeLook {
-                    account_id,
-                    look_type: actual,
-                    value: 3,
-                }] => {
+                [
+                    NetworkEvent::ChangeLook {
+                        account_id,
+                        look_type: actual,
+                        value: 3,
+                    },
+                ] => {
                     assert_eq!(account_id.0, 2000000);
                     assert_eq!(
                         std::mem::discriminant(actual),
@@ -1463,14 +1465,14 @@ mod packet_handlers {
         }
     }
 
-    /// `ZC_CHANGE_DIRECTION` (0x009C) was a no-op, so a remote player turning in
-    /// place never reached an observer. Hercules broadcasts it `AREA_WOS` from
-    /// the parse handler and `AREA` from `unit_setdir`.
+    /// `ZC_CHANGE_DIRECTION` (0x009C) was a no-op, so a remote player turning
+    /// in place never reached an observer. Hercules broadcasts it
+    /// `AREA_WOS` from the parse handler and `AREA` from `unit_setdir`.
     #[test]
     fn turning_in_place_reaches_the_client() {
         use ragnarok_bytes::ByteReader;
-        use ragnarok_packets::handler::HandlerResult;
         use ragnarok_packets::Direction;
+        use ragnarok_packets::handler::HandlerResult;
 
         use crate::NetworkEvent;
 
@@ -1813,7 +1815,10 @@ mod packet_handlers {
         }
 
         // 8 = SKILLFAILREASON_SUPPRESSED_BY_KYOMU.
-        assert!(text_of(&mut handler, &reason(252, 8)).is_none(), "the reason packet is not itself a message");
+        assert!(
+            text_of(&mut handler, &reason(252, 8)).is_none(),
+            "the reason packet is not itself a message"
+        );
         let text = text_of(&mut handler, &fail(252)).expect("no failure message");
         assert!(text.contains("Kyomu"), "reason was not applied: {text}");
 
@@ -1834,8 +1839,8 @@ mod packet_handlers {
     ///
     /// Feeding real bytes matters here beyond the layouts: each was consumed
     /// *cleanly* by the length fallback before being modelled, which is why
-    /// nothing ever appeared in the packet ledger and why an audit of registered
-    /// families could not see them.
+    /// nothing ever appeared in the packet ledger and why an audit of
+    /// registered families could not see them.
     #[test]
     fn script_driven_packets_reach_the_client() {
         use ragnarok_bytes::ByteReader;
@@ -1886,7 +1891,10 @@ mod packet_handlers {
         bytes.extend_from_slice(&((message.len() + 8) as u16).to_le_bytes());
         bytes.extend_from_slice(&2000000u32.to_le_bytes());
         bytes.extend_from_slice(message);
-        assert!(matches!(events(&mut handler, &bytes).first(), Some(NetworkEvent::ShowScript { .. })));
+        assert!(matches!(
+            events(&mut handler, &bytes).first(),
+            Some(NetworkEvent::ShowScript { .. })
+        ));
 
         // ZC_PROGRESS / ZC_PROGRESS_CANCEL.
         let mut bytes = vec![0xF0, 0x02];
@@ -1908,17 +1916,21 @@ mod packet_handlers {
         bytes.extend_from_slice(&1u32.to_le_bytes());
         bytes.extend_from_slice(&7u64.to_le_bytes());
         assert_eq!(bytes.len(), 18);
-        assert!(matches!(events(&mut handler, &bytes).first(), Some(NetworkEvent::SpecialEffect { .. })));
+        assert!(matches!(
+            events(&mut handler, &bytes).first(),
+            Some(NetworkEvent::SpecialEffect { .. })
+        ));
     }
 
     /// A reason from a server newer than this build must cost nothing.
     ///
-    /// This was wrong when the packet first landed: the reason was modelled as a
-    /// `ByteConvertable` enum, so an unknown value failed the whole packet and
-    /// `HandlerResult::InternalError` discarded the entire read buffer — every
-    /// packet batched behind it. Since the enum is documented append-only, the
-    /// server gaining a reason first is the *expected* path, which made adding
-    /// one a wire-breaking change against any older client.
+    /// This was wrong when the packet first landed: the reason was modelled as
+    /// a `ByteConvertable` enum, so an unknown value failed the whole
+    /// packet and `HandlerResult::InternalError` discarded the entire read
+    /// buffer — every packet batched behind it. Since the enum is
+    /// documented append-only, the server gaining a reason first is the
+    /// *expected* path, which made adding one a wire-breaking change
+    /// against any older client.
     #[test]
     fn an_unknown_skill_fail_reason_does_not_cost_the_read_buffer() {
         use ragnarok_bytes::ByteReader;
@@ -1973,7 +1985,8 @@ mod packet_handlers {
 
         let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
 
-        // header 0x0110 | skill 19 (Fire Bolt) | btype 0 | item 0 | flag 0 | cause 1 (SP)
+        // header 0x0110 | skill 19 (Fire Bolt) | btype 0 | item 0 | flag 0 | cause 1
+        // (SP)
         let mut bytes = vec![0x10, 0x01];
         bytes.extend_from_slice(&19u16.to_le_bytes());
         bytes.extend_from_slice(&0i32.to_le_bytes());
@@ -2060,8 +2073,8 @@ mod packet_handlers {
         }
     }
 
-    /// Party-create / basic-skill rejections reuse 0x0110 with skill 1 / cause 0
-    /// (see packet-gap-party-whisper.md).
+    /// Party-create / basic-skill rejections reuse 0x0110 with skill 1 / cause
+    /// 0 (see packet-gap-party-whisper.md).
     #[test]
     fn skill_fail_basic_skill_gate_has_readable_text() {
         use ragnarok_bytes::ByteReader;
@@ -2118,13 +2131,10 @@ mod packet_handlers {
         };
 
         assert!(
-            matches!(
-                events.0.as_slice(),
-                [NetworkEvent::MessageTable {
-                    message_id: 0xD92,
-                    color: MessageColor::Error,
-                }]
-            ),
+            matches!(events.0.as_slice(), [NetworkEvent::MessageTable {
+                message_id: 0xD92,
+                color: MessageColor::Error,
+            }]),
             "expected MessageTable for ZC_MSG, got {:?}",
             events.0
         );
@@ -2135,8 +2145,8 @@ mod packet_handlers {
     #[test]
     fn special_effect_0x01f3_surfaces_entity_and_effect_id() {
         use ragnarok_bytes::ByteReader;
-        use ragnarok_packets::handler::HandlerResult;
         use ragnarok_packets::EffectId;
+        use ragnarok_packets::handler::HandlerResult;
 
         use crate::NetworkEvent;
 
@@ -2186,17 +2196,14 @@ mod packet_handlers {
         };
 
         assert!(
-            matches!(
-                events.0.as_slice(),
-                [NetworkEvent::MessageTable {
-                    message_id: 0xD92,
-                    color: MessageColor::Rgb {
-                        red: 0xFF,
-                        green: 0x00,
-                        blue: 0x00,
-                    },
-                }]
-            ),
+            matches!(events.0.as_slice(), [NetworkEvent::MessageTable {
+                message_id: 0xD92,
+                color: MessageColor::Rgb {
+                    red: 0xFF,
+                    green: 0x00,
+                    blue: 0x00,
+                },
+            }]),
             "expected RGB MessageTable, got {:?}",
             events.0
         );

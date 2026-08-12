@@ -228,5 +228,7 @@ tools/testing/run-suite.sh --scenario skills-mage
   dialog anchor.
 - It did not exercise the graphical client’s UI/state consumption layer.
 - It did not change tracked Hercules source, scripts, configuration, or SQL.
-- It did not make derived skill expectations enforceable; the known precondition
-  gaps are still reported rather than failed.
+- Derived skill expectations were still report-only in *this* handoff; a later
+  depth batch (same day) enforced them with reviewed exemptions — see
+  [headless-next-steps.md](headless-next-steps.md) for that work and the
+  forward P0–P7 priority list agents should follow next.

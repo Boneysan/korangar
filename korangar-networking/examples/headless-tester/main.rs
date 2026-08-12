@@ -19,6 +19,7 @@ use serde::Serialize;
 
 use crate::context::{CONNECTION_ERROR, Config, clear_recorded_connection_error, take_recorded_connection_error};
 use crate::ledger::{Ledger, PacketCoverageSummary};
+use crate::scenarios::skills::{EXPECTATION_EXEMPTIONS, unexpected_expectation_unmets};
 use crate::scenarios::{SKIPPED_PREFIX, Scenario, all_scenarios, is_expected_skip, is_skip};
 
 // Every header observed by a complete run has a dedicated packet model. Keep
@@ -162,10 +163,12 @@ fn main() -> ExitCode {
         .iter()
         .filter(|scenario| match arguments.scenario.as_str() {
             "all" => true,
-            name if name.starts_with("phase") => name
+            name if name.starts_with("phase") && !name.contains(',') => name
                 .strip_prefix("phase")
                 .and_then(|number| number.parse::<u8>().ok())
                 .is_some_and(|number| scenario.phase == number),
+            // Comma-separated list: `--scenario smoke,trade-reject,skills-mage`
+            name if name.contains(',') => name.split(',').map(str::trim).any(|part| part == scenario.name),
             name => scenario.name == name,
         })
         .collect();
@@ -181,7 +184,10 @@ fn main() -> ExitCode {
 
     if let Some(seed) = arguments.shuffle {
         shuffle_deterministically(&mut selected, seed);
-        println!("[{}] seed {seed} — replay this exact order with --shuffle {seed}", "Shuffled".yellow());
+        println!(
+            "[{}] seed {seed} — replay this exact order with --shuffle {seed}",
+            "Shuffled".yellow()
+        );
     }
 
     let ledger = Ledger::default();
@@ -248,15 +254,26 @@ fn main() -> ExitCode {
             // A skip is checked before everything else: it means the scenario
             // never got to assert anything, so neither PASS nor FAIL is honest.
             _ if expected_skip => {
-                let reason = result.as_ref().err().map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
+                let reason = result
+                    .as_ref()
+                    .err()
+                    .map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
                 println!("[{}] {}: {} ({:.1?})", "EXPECTED-SKIP".yellow(), scenario.name, reason, elapsed);
             }
             _ if is_skip(&result) => {
-                let reason = result.as_ref().err().map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
+                let reason = result
+                    .as_ref()
+                    .err()
+                    .map_or("", |message| message.trim_start_matches(SKIPPED_PREFIX));
                 println!("[{}] {}: {} ({:.1?})", "UNEXPECTED-SKIP".red(), scenario.name, reason, elapsed);
             }
             (Ok(()), None) if retried => {
-                println!("[{}] {} ({:.1?}) — passed only after a connection retry", "FLAKY-PASS".yellow(), scenario.name, elapsed)
+                println!(
+                    "[{}] {} ({:.1?}) — passed only after a connection retry",
+                    "FLAKY-PASS".yellow(),
+                    scenario.name,
+                    elapsed
+                )
             }
             (Ok(()), None) => println!("[{}] {} ({:.1?})", "PASS".green(), scenario.name, elapsed),
             (Ok(()), Some(issue)) => {
@@ -291,15 +308,11 @@ fn main() -> ExitCode {
         .count();
     let failures = results
         .iter()
-        .filter(|execution| {
-            execution.result.is_err() && execution.scenario.known_issue.is_none() && !is_skip(&execution.result)
-        })
+        .filter(|execution| execution.result.is_err() && execution.scenario.known_issue.is_none() && !is_skip(&execution.result))
         .count();
     let known_fails = results
         .iter()
-        .filter(|execution| {
-            execution.result.is_err() && execution.scenario.known_issue.is_some() && !is_skip(&execution.result)
-        })
+        .filter(|execution| execution.result.is_err() && execution.scenario.known_issue.is_some() && !is_skip(&execution.result))
         .count();
     let flaky_passes = results
         .iter()
@@ -376,6 +389,22 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
 
+    // Derived skill expectations are measured every sweep cast and now gated:
+    // reviewed residual unmet skills stay visible, everything else fails the
+    // run. Same ordering as the packet gates — JSON evidence is already on disk.
+    let unexpected_unmets = unexpected_expectation_unmets();
+    if !unexpected_unmets.is_empty() {
+        println!(
+            "[{}] {} unexpected unmet skill expectation(s) (not in EXPECTATION_EXEMPTIONS):",
+            "Error".red(),
+            unexpected_unmets.len()
+        );
+        for (name, detail) in unexpected_unmets.iter().take(20) {
+            println!("    {name:22} {detail}");
+        }
+        return ExitCode::FAILURE;
+    }
+
     let gate_failures = gate_failure_count(failures, unexpected_skips, flaky_passes, arguments.fail_on_flaky);
     match gate_failures {
         0 => ExitCode::SUCCESS,
@@ -444,7 +473,8 @@ fn write_json_results(
 ///    response arrived" — a liveness check that catches unregistered and
 ///    misparsed packets, which is what it is for. It is not a correctness
 ///    check, and "39 job sweeps, green" reads like one. When a third of the
-///    observations are the server refusing the skill, the reader should be told.
+///    observations are the server refusing the skill, the reader should be
+///    told.
 /// 2. **Allowlist entries that did not earn their place.** A stale entry
 ///    silently absorbs a future regression in that skill; 43 of 81 were found
 ///    dead in one audit.
@@ -478,7 +508,8 @@ fn print_what_the_run_proved() {
             .map(|(_, count)| *count)
             .sum::<usize>();
         println!(
-            "  -> {:.0}% of these were a refusal, a passive skill, or accepted silence. A green sweep means\n     the wire is alive, NOT that the skills work.",
+            "  -> {:.0}% of these were a refusal, a passive skill, or accepted silence. A green sweep means\n     the wire is alive, NOT \
+             that the skills work.",
             100.0 * refused as f64 / outcomes.len() as f64
         );
 
@@ -494,7 +525,8 @@ fn print_what_the_run_proved() {
             .sum::<usize>();
         if acknowledged > 0 {
             println!(
-                "  -> {acknowledged} were only an acknowledgement (`cast` / `post-delay`): the server took the\n     request and nothing observable followed it inside the window."
+                "  -> {acknowledged} were only an acknowledgement (`cast` / `post-delay`): the server took the\n     request and nothing \
+                 observable followed it inside the window."
             );
         }
 
@@ -512,17 +544,15 @@ fn print_what_the_run_proved() {
         let deeper = outcomes.iter().filter(|(_, observed)| *observed > 1).count();
         if answered > 0 {
             println!(
-                "  -> {deeper} of {answered} answered casts produced evidence past the first event the sweep\n     recognised. Those are the ones the old first-match model reported wrongly.",
+                "  -> {deeper} of {answered} answered casts produced evidence past the first event the sweep\n     recognised. Those are \
+                 the ones the old first-match model reported wrongly.",
             );
         }
     }
 
-    // **What the sweep would prove if it asserted the derived expectations.**
-    //
-    // Report-only on purpose: this is tier 1b step 2 with the assertion left
-    // off. The observation window made the comparison possible at all, and these
-    // numbers are what decide whether turning it into a failure is honest yet.
-    // A check that reddens working skills is worse than no check.
+    // Derived expectations are **enforced**: non-exempt `Unmet` rows fail the
+    // gate after this report. Reviewed residual skills stay in
+    // `EXPECTATION_EXEMPTIONS` with stated reasons rather than silently passing.
     if let Ok(verdicts) = EXPECTATION_VERDICTS.lock() {
         if !verdicts.is_empty() {
             let count = |wanted: Verdict| verdicts.iter().filter(|(_, verdict, _)| *verdict == wanted).count();
@@ -532,15 +562,48 @@ fn print_what_the_run_proved() {
                 count(Verdict::Blocked),
                 count(Verdict::Unmet),
             );
+            let exempt: Vec<_> = verdicts
+                .iter()
+                .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
+                .filter(|(name, ..)| EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
+                .collect();
+            let unexpected = unmet.saturating_sub(exempt.len());
 
-            println!("\n=== Derived expectations, measured but NOT enforced ({} casts) ===", verdicts.len());
+            println!(
+                "\n=== Derived expectations, ENFORCED ({} casts; {} reviewed exemptions) ===",
+                verdicts.len(),
+                EXPECTATION_EXEMPTIONS.len()
+            );
             println!("  {met:5}  met — the skill was seen doing what skill_db says it does");
             println!("  {refused:5}  refused — the server said no; a legitimate outcome the sweep cannot avoid");
             println!("  {blocked:5}  blocked — the skill opened a choice the sweep cannot answer");
-            println!("  {unmet:5}  unmet — something came back, but not the promised observable");
-            if unmet > 0 {
-                println!("  Enforcing today would redden the {unmet} unmet. Listing the first 20:");
-                for (name, _, detail) in verdicts.iter().filter(|(_, verdict, _)| *verdict == Verdict::Unmet).take(20) {
+            println!(
+                "  {unmet:5}  unmet — {unexpected} unexpected, {} reviewed exemption(s)",
+                exempt.len()
+            );
+            if !exempt.is_empty() {
+                println!("  Reviewed residual unmet (do not expand this list casually):");
+                let mut seen = std::collections::BTreeSet::new();
+                for (name, _, detail) in &exempt {
+                    if seen.insert(name.as_str()) {
+                        let reason = EXPECTATION_EXEMPTIONS
+                            .iter()
+                            .find(|(exempt, _)| *exempt == name.as_str())
+                            .map(|(_, reason)| *reason)
+                            .unwrap_or("?");
+                        println!("    {name:22} {reason}");
+                        println!("                         e.g. {detail}");
+                    }
+                }
+            }
+            if unexpected > 0 {
+                println!("  Unexpected unmet (these fail the gate):");
+                for (name, _, detail) in verdicts
+                    .iter()
+                    .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
+                    .filter(|(name, ..)| !EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
+                    .take(20)
+                {
                     println!("    {name:22} {detail}");
                 }
             }
@@ -556,7 +619,10 @@ fn print_what_the_run_proved() {
             .collect();
         // Answered somewhere, silent somewhere else. **Deleting one of these
         // reddens the jobs where it is silent** — the mistake already on record.
-        let partial: Vec<_> = rows.iter().filter(|(_, answered, silent, _)| *answered > 0 && *silent > 0).collect();
+        let partial: Vec<_> = rows
+            .iter()
+            .filter(|(_, answered, silent, _)| *answered > 0 && *silent > 0)
+            .collect();
 
         if !dead.is_empty() {
             println!("\n=== Allowlist entries that did not earn their place ({}) ===", dead.len());
@@ -568,7 +634,10 @@ fn print_what_the_run_proved() {
             }
         }
         if !partial.is_empty() {
-            println!("\n=== Allowlist entries that are load-bearing in SOME jobs ({}) ===", partial.len());
+            println!(
+                "\n=== Allowlist entries that are load-bearing in SOME jobs ({}) ===",
+                partial.len()
+            );
             println!("  These answered somewhere and went silent somewhere else, in this same run.");
             println!("  DO NOT delete them on the strength of the answer alone — that reddens the jobs");
             println!("  where they are silent, which is exactly how three load-bearing entries were");

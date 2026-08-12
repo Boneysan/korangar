@@ -139,21 +139,14 @@ impl AsyncLoader {
     /// dual-wield off-hand) on an existing player `AnimationData`. Returns
     /// `None` if body/head are missing (caller should fall back to a full
     /// reload). Identical path lists are a no-op.
-    pub fn apply_weapon_layer_swap(
-        &self,
-        current: &AnimationData,
-        weapon_path: Option<&str>,
-    ) -> Option<Arc<AnimationData>> {
+    #[allow(dead_code)]
+    pub fn apply_weapon_layer_swap(&self, current: &AnimationData, weapon_path: Option<&str>) -> Option<Arc<AnimationData>> {
         let paths: Vec<&str> = weapon_path.into_iter().collect();
         self.apply_weapon_layers_swap(current, &paths)
     }
 
     /// Replace all weapon-family layers from an ordered path list.
-    pub fn apply_weapon_layers_swap(
-        &self,
-        current: &AnimationData,
-        weapon_paths: &[&str],
-    ) -> Option<Arc<AnimationData>> {
+    pub fn apply_weapon_layers_swap(&self, current: &AnimationData, weapon_paths: &[&str]) -> Option<Arc<AnimationData>> {
         if !current.has_player_base_layers() {
             return None;
         }
@@ -206,12 +199,9 @@ impl AsyncLoader {
         Some(Arc::new(current.clone().with_head_layer(layer)))
     }
 
-    /// Phase C5: set or clear the shield layer without reloading body/head/weapon.
-    pub fn apply_shield_layer_swap(
-        &self,
-        current: &AnimationData,
-        shield_path: Option<&str>,
-    ) -> Option<Arc<AnimationData>> {
+    /// Phase C5: set or clear the shield layer without reloading
+    /// body/head/weapon.
+    pub fn apply_shield_layer_swap(&self, current: &AnimationData, shield_path: Option<&str>) -> Option<Arc<AnimationData>> {
         if !current.has_player_base_layers() {
             return None;
         }

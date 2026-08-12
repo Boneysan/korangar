@@ -199,12 +199,12 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
         }
     }
 
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            roots.push(dir.to_path_buf());
-            if let Some(parent) = dir.parent() {
-                roots.push(parent.to_path_buf());
-            }
+    if let Ok(exe) = std::env::current_exe()
+        && let Some(dir) = exe.parent()
+    {
+        roots.push(dir.to_path_buf());
+        if let Some(parent) = dir.parent() {
+            roots.push(parent.to_path_buf());
         }
     }
 

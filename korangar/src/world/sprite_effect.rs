@@ -41,8 +41,9 @@ const LINGER_MS: u32 = 120;
 const FALLBACK_LIFETIME_MS: u32 = 3000;
 
 /// Sentinel entity IDs routing async animation-data loads back here. Counts
-/// down from just below [`EMOTE_ANIMATION_ENTITY_ID`](super::EMOTE_ANIMATION_ENTITY_ID)
-/// (`u32::MAX`) so the two sentinel spaces can never collide.
+/// down from just below
+/// [`EMOTE_ANIMATION_ENTITY_ID`](super::EMOTE_ANIMATION_ENTITY_ID) (`u32::MAX`)
+/// so the two sentinel spaces can never collide.
 const SENTINEL_BASE: u32 = u32::MAX - 1;
 
 /// Diagnostics for the sprite-effect pipeline, enabled by setting the
@@ -120,10 +121,7 @@ impl SpriteEffects {
 
     pub fn set_animation_data(&mut self, path: &'static str, animation_data: Arc<AnimationData>) {
         if sprite_effect_debug_enabled() {
-            eprintln!(
-                "[sprite-effect] loaded {path}: {} actions",
-                animation_data.body_action_count()
-            );
+            eprintln!("[sprite-effect] loaded {path}: {} actions", animation_data.body_action_count());
         }
 
         self.loaded.insert(path, animation_data);
@@ -188,6 +186,7 @@ impl SpriteEffects {
     /// and still land near the impact boundary when durations match the
     /// procedural Soul Strike packing. `alpha` dims trail ghosts (1.0 for the
     /// lead sprite).
+    #[allow(clippy::too_many_arguments)]
     pub fn spawn_travel(
         &mut self,
         path: &'static str,
@@ -201,8 +200,7 @@ impl SpriteEffects {
     ) {
         if sprite_effect_debug_enabled() {
             eprintln!(
-                "[sprite-effect] travel {path} action={action_index} \
-                 from=({:.1},{:.1},{:.1}) to=({:.1},{:.1},{:.1}) \
+                "[sprite-effect] travel {path} action={action_index} from=({:.1},{:.1},{:.1}) to=({:.1},{:.1},{:.1}) \
                  duration_ms={duration_ms} delay_ms={start_delay_ms}",
                 from.x, from.y, from.z, to.x, to.y, to.z
             );
@@ -319,14 +317,7 @@ impl SpriteEffects {
             // per-entity state off this ID. Reuse the sentinel space so an
             // effect can never be mistaken for a real entity.
             let first_new_instruction = instructions.len();
-            animation_data.render_action_frame(
-                instructions,
-                camera,
-                Self::sentinel(index),
-                position,
-                effect.action_index,
-                time,
-            );
+            animation_data.render_action_frame(instructions, camera, Self::sentinel(index), position, effect.action_index, time);
 
             // Dim trail ghosts after the fact — the shared render path has no
             // per-call tint parameter.

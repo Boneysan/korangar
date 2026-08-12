@@ -341,6 +341,7 @@ supports.
 
 ## Related
 
+- [../../tools/testing/headless-next-steps.md](../../tools/testing/headless-next-steps.md) — **prioritized next steps (P0–P7)** after the 2026-08-11 depth batch (enforced expectations, negative scenarios still missing, CI hygiene)
 - [work-backlog.md](work-backlog.md) — the standing inventory
 - [gui-verification-pass.md](gui-verification-pass.md) — the manual layer
 - [../../tools/audits/README.md](../../tools/audits/README.md) — audit runbook

@@ -138,8 +138,8 @@ where
 ///
 /// Separate from [`ExpPairSelector`] because these are `usize` rather than
 /// `u64`, and because a maximum of zero means "not known yet" here rather than
-/// "already at the cap" — showing `(MAX)` for an unpopulated maximum would be an
-/// outright lie about the player's health.
+/// "already at the cap" — showing `(MAX)` for an unpopulated maximum would be
+/// an outright lie about the player's health.
 struct VitalPairSelector<A, B> {
     current: A,
     maximum: B,

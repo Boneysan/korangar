@@ -167,6 +167,17 @@ def main() -> int:
         return 0
 
     out.write_text(generated, encoding="utf-8")
+    # Match `cargo fmt` so generated-drift does not fight rustfmt on CI.
+    import shutil
+    import subprocess
+
+    rustfmt_toml = Path(__file__).parent.parent / "rustfmt.toml"
+    if shutil.which("rustfmt"):
+        cmd = ["rustfmt"]
+        if rustfmt_toml.is_file():
+            cmd.append(f"--config-path={rustfmt_toml}")
+        cmd.append(str(out))
+        subprocess.run(cmd, check=False, capture_output=True)
     print(f"wrote {out} ({len(rows)} skills, {len(states)} states)")
     return 0
 

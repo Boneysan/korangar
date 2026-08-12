@@ -24,6 +24,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-share-options", 8, party_share_options),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
+        Scenario::new("trade-reject", 8, trade_reject),
+        Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
     ]
@@ -148,7 +150,8 @@ fn friend_reject(config: &Config) -> Result<(), String> {
     })
 }
 
-/// Guarantee the Basic Skill level that trading and party creation are gated on.
+/// Guarantee the Basic Skill level that trading and party creation are gated
+/// on.
 ///
 /// **This is a server rule, not a quirk of the harness.** With
 /// `basic_skill_check: true` (conf/map/battle/player.conf), Hercules requires
@@ -192,8 +195,8 @@ pub(super) fn create_party(primary: &mut TestContext) -> Result<(), String> {
     match result {
         0 => Ok(()),
         code => Err(format!(
-            "party creation refused with result {code} — the character is most likely still in a party left \
-             behind by an earlier scenario; `ensure_no_party` did not clear it"
+            "party creation refused with result {code} — the character is most likely still in a party left behind by an earlier \
+             scenario; `ensure_no_party` did not clear it"
         )),
     }
 }
@@ -267,30 +270,37 @@ fn party_member_death(config: &Config) -> Result<(), String> {
     // requires.
     partner.say("@kill")?;
 
-    let died = primary.wait_for_within("the party member to be reported dead", Duration::from_secs(10), &mut |event| {
-        match event {
+    let died = primary.wait_for_within(
+        "the party member to be reported dead",
+        Duration::from_secs(10),
+        &mut |event| match event {
             NetworkEvent::PartyMemberAlive { account_id, is_dead: true } if account_id.0 == subject.0 => Some(()),
             _ => None,
-        }
-    });
+        },
+    );
     if let Err(error) = died {
         leave_party_both(&mut primary, &mut partner);
         let _ = partner.say("@alive");
         return Err(format!(
-            "{error}\n         ZC_GROUP_ISALIVE did not arrive. Remember it is sent PARTY_WOS, so it is \
-             only ever seen by the *other* members — asserting on the dying seat would prove nothing"
+            "{error}\n         ZC_GROUP_ISALIVE did not arrive. Remember it is sent PARTY_WOS, so it is only ever seen by the *other* \
+             members — asserting on the dying seat would prove nothing"
         ));
     }
 
     // And back again.
     primary.flush();
     partner.say("@alive")?;
-    let revived = primary.wait_for_within("the party member to be reported alive again", Duration::from_secs(10), &mut |event| {
-        match event {
-            NetworkEvent::PartyMemberAlive { account_id, is_dead: false } if account_id.0 == subject.0 => Some(()),
+    let revived = primary.wait_for_within(
+        "the party member to be reported alive again",
+        Duration::from_secs(10),
+        &mut |event| match event {
+            NetworkEvent::PartyMemberAlive {
+                account_id,
+                is_dead: false,
+            } if account_id.0 == subject.0 => Some(()),
             _ => None,
-        }
-    });
+        },
+    );
 
     leave_party_both(&mut primary, &mut partner);
     let _ = partner.say("@heal");
@@ -298,8 +308,8 @@ fn party_member_death(config: &Config) -> Result<(), String> {
 
     revived.map_err(|error| {
         format!(
-            "{error}\n         the death was reported but the revival was not, which leaves the member \
-             greyed out in the roster for the rest of the session"
+            "{error}\n         the death was reported but the revival was not, which leaves the member greyed out in the roster for the \
+             rest of the session"
         )
     })?;
     Ok(())
@@ -391,12 +401,12 @@ fn party_reject_block(config: &Config) -> Result<(), String> {
 /// Hercules sends the narrow 14-byte `ZC_NOTIFY_HP_TO_GROUPM` (0x080E) with no
 /// SP at all; ours sends the wide 22-byte 0x0BAB form. **If an upstream merge
 /// drops the delta, `spell_points` silently becomes `None`** — the client keeps
-/// working, the party SP bar just never appears again, which is exactly the kind
-/// of quiet regression no other test would catch.
+/// working, the party SP bar just never appears again, which is exactly the
+/// kind of quiet regression no other test would catch.
 ///
 /// The vitals packet is sent `PARTY_AREA_WOS` — party, in area, *excluding
-/// self* — so the assertion has to be made from the partner seat, and both seats
-/// have to be near each other. `connect_pair` guarantees that.
+/// self* — so the assertion has to be made from the partner seat, and both
+/// seats have to be near each other. `connect_pair` guarantees that.
 fn party_member_vitals(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
     form_party(&mut primary, &mut partner)?;
@@ -436,8 +446,8 @@ fn party_member_vitals(config: &Config) -> Result<(), String> {
 
     let Some((spell_points, maximum_spell_points)) = spell_points else {
         return Err(
-            "party vitals carried no SP: the server sent the narrow 0x080E form, so the Hercules \
-             KORANGAR_PARTY_SP_TO_GROUPM delta is missing or was lost in an upstream merge"
+            "party vitals carried no SP: the server sent the narrow 0x080E form, so the Hercules KORANGAR_PARTY_SP_TO_GROUPM delta is \
+             missing or was lost in an upstream merge"
                 .to_owned(),
         );
     };
@@ -456,15 +466,15 @@ fn party_member_vitals(config: &Config) -> Result<(), String> {
 
 /// An SP change **on its own** broadcasts to the party.
 ///
-/// Narrower than [`party_member_vitals`] and aimed at one line: the `case SP_SP:`
-/// arm of `clif_updatestatus` (`clif.c:3861`), which is what *triggers*
+/// Narrower than [`party_member_vitals`] and aimed at one line: the `case
+/// SP_SP:` arm of `clif_updatestatus` (`clif.c:3861`), which is what *triggers*
 /// `clif->party_hp`. Widening only the packet layout and forgetting the trigger
 /// leaves SP riding along on HP updates, so the bar freezes between hits and
 /// looks like a client bug.
 ///
 /// Full-heals first and asserts HP stays at maximum: at full HP there is no
-/// natural HP regeneration, so any vitals packet that arrives can only have been
-/// triggered by the SP change.
+/// natural HP regeneration, so any vitals packet that arrives can only have
+/// been triggered by the SP change.
 fn party_sp_only_broadcast(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
     form_party(&mut primary, &mut partner)?;
@@ -494,8 +504,7 @@ fn party_sp_only_broadcast(config: &Config) -> Result<(), String> {
 
     if health_points != maximum_health_points {
         return Err(format!(
-            "HP moved during an SP-only probe ({health_points}/{maximum_health_points}), so this run \
-             cannot prove the SP_SP trigger fired"
+            "HP moved during an SP-only probe ({health_points}/{maximum_health_points}), so this run cannot prove the SP_SP trigger fired"
         ));
     }
     if spell_points.is_none() {
@@ -598,7 +607,8 @@ fn party_invite_sender(config: &Config) -> Result<(), String> {
     match invite {
         Some(invite_party_id) if invite_party_id == sender_party_id => Ok(()),
         Some(invite_party_id) => Err(format!(
-            "sender packet was for party {sender_party_id:?} but the invite was for {invite_party_id:?};              the client pairs them by id, so a mismatch would show the wrong name"
+            "sender packet was for party {sender_party_id:?} but the invite was for {invite_party_id:?};              the client pairs \
+             them by id, so a mismatch would show the wrong name"
         )),
         None => Err("the sender packet arrived but the invite itself never did".to_owned()),
     }
@@ -633,7 +643,8 @@ fn party_kick(config: &Config) -> Result<(), String> {
     seen_by_leader
 }
 
-/// Leadership can be handed to another member (`CZ_CHANGE_GROUP_MASTER`, 0x07DA).
+/// Leadership can be handed to another member (`CZ_CHANGE_GROUP_MASTER`,
+/// 0x07DA).
 ///
 /// `ZC_CHANGE_GROUP_MASTER` is sent to the whole party, so the *promoted* seat
 /// is the honest place to assert: it proves the broadcast reached someone other
@@ -663,12 +674,14 @@ fn party_promote_leader(config: &Config) -> Result<(), String> {
     }
 }
 
-/// Share rules can be changed and are broadcast back (`CZ_GROUPINFO_CHANGE_V2`).
+/// Share rules can be changed and are broadcast back
+/// (`CZ_GROUPINFO_CHANGE_V2`).
 ///
 /// The reply is **either** the rich 0x07D8 form or the 6-byte 0x0101 depending
 /// on `send_party_options` in `conf/map/battle/party.conf`, so the item fields
 /// are `Option` and only the EXP rule is asserted -- the one field both forms
-/// carry. A run against a server configured to send only 0x0101 must still pass.
+/// carry. A run against a server configured to send only 0x0101 must still
+/// pass.
 fn party_share_options(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
     form_party(&mut primary, &mut partner)?;
@@ -705,7 +718,8 @@ fn party_share_options(config: &Config) -> Result<(), String> {
 ///
 /// The ignore list is persistent server-side, so this always clears it again --
 /// left behind it would silently break any later whisper scenario, which is
-/// exactly the slow-motion shared-state failure `observer-ammo-disguise` caused.
+/// exactly the slow-motion shared-state failure `observer-ammo-disguise`
+/// caused.
 fn whisper_ignore(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
 
@@ -797,10 +811,7 @@ fn trade_add_item(config: &Config) -> Result<(), String> {
     begin_trade(&mut primary, &mut partner)?;
 
     partner.flush();
-    primary
-        .net
-        .trade_add_item(index, 1)
-        .map_err(|_| "primary disconnected")?;
+    primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
 
     let accepted = primary.wait_for("TradeAddItemResult for the offered item", |event| match event {
         NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
@@ -836,6 +847,143 @@ fn trade_add_item(config: &Config) -> Result<(), String> {
         )),
         None => Err("the item was accepted but never described to the partner".to_owned()),
     }
+}
+
+/// Partner explicitly rejects a trade request.
+///
+/// Complements `trade-cancel` (which cancels an already-accepted trade) and
+/// covers `reject_trade` — previously only the happy path and mid-trade cancel
+/// were exercised. Asserts the requester sees a non-start outcome, no trade
+/// window opens, and both seats remain usable for a follow-up whisper.
+fn trade_reject(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    ensure_basic_skill(&mut primary);
+    let _ = primary.net.trade_cancel();
+    let _ = partner.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+
+    partner.flush();
+    primary.net.request_trade(partner.account_id).map_err(|_| "primary disconnected")?;
+    partner.wait_for("TradeRequest", |event| match event {
+        NetworkEvent::TradeRequest { name, .. } if name == &primary.character_name => Some(()),
+        _ => None,
+    })?;
+    partner.net.reject_trade().map_err(|_| "partner disconnected")?;
+
+    // Hercules reports the refusal to the requester as TradeStart with a
+    // non-success result code (not TradeCancelled — that is mid-trade only).
+    primary.wait_for("trade rejection on requester", |event| match event {
+        NetworkEvent::TradeStart { result, .. } if *result != 3 => Some(*result),
+        NetworkEvent::TradeCancelled => Some(u8::MAX),
+        _ => None,
+    })?;
+
+    // Quiet window: no successful trade start, no partner-item offers.
+    let late = primary.collect_for(Duration::from_secs(1));
+    if late.iter().any(|event| {
+        matches!(
+            event,
+            NetworkEvent::TradeStart { result: 3, .. } | NetworkEvent::TradePartnerItem { .. } | NetworkEvent::TradeCompleted { .. }
+        )
+    }) {
+        return Err("a rejected trade still opened or completed".to_owned());
+    }
+
+    // Both seats must still be actionable — the rejection path used to leave
+    // sessions half-stuck in older clients.
+    partner.flush();
+    primary
+        .net
+        .send_whisper_message(&partner.character_name, "post-reject whisper")
+        .map_err(|_| "primary disconnected after reject")?;
+    partner.wait_for("whisper after trade reject", |event| match event {
+        NetworkEvent::WhisperReceived { message, .. } if message.contains("post-reject whisper") => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+/// Invalid trade offers are refused without mutating either inventory.
+///
+/// Hercules accepts a zero-amount add with result 0 on some builds (it is a
+/// no-op), so zero is only checked for "does not deliver a partner item".
+/// Excess stack, bogus index, and excess zeny must not report success.
+fn trade_invalid_offers(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(RED_POTION, 2)?;
+    begin_trade(&mut primary, &mut partner)?;
+
+    // Zero amount — must not show a partner offer.
+    partner.flush();
+    primary.flush();
+    primary.net.trade_add_item(index, 0).map_err(|_| "primary disconnected")?;
+    let zero_partner = partner.collect_for(Duration::from_millis(800));
+    if zero_partner
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::TradePartnerItem { amount, .. } if *amount > 0))
+    {
+        return Err("zero-amount trade add was shown to the partner".to_owned());
+    }
+
+    // Excess amount.
+    primary.flush();
+    primary.net.trade_add_item(index, 99).map_err(|_| "primary disconnected")?;
+    let excess = primary.wait_for_within("TradeAddItemResult excess", Duration::from_secs(2), &mut |event| match event {
+        NetworkEvent::TradeAddItemResult { result, .. } => Some(*result),
+        _ => None,
+    });
+
+    // Nonexistent inventory index.
+    primary.flush();
+    primary
+        .net
+        .trade_add_item(ragnarok_packets::InventoryIndex(u16::MAX), 1)
+        .map_err(|_| "primary disconnected")?;
+    let bogus = primary.wait_for_within(
+        "TradeAddItemResult bogus index",
+        Duration::from_secs(2),
+        &mut |event| match event {
+            NetworkEvent::TradeAddItemResult { result, .. } => Some(*result),
+            _ => None,
+        },
+    );
+
+    // Excess zeny.
+    primary.flush();
+    primary.net.trade_add_zeny(u32::MAX).map_err(|_| "primary disconnected")?;
+    let zeny = primary.wait_for_within("zeny offer response", Duration::from_secs(2), &mut |event| match event {
+        NetworkEvent::TradeAddItemResult { result, .. } => Some(*result),
+        NetworkEvent::ChatMessage { .. } | NetworkEvent::MessageTable { .. } => Some(u8::MAX),
+        _ => None,
+    });
+
+    let _ = primary.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+
+    for (label, outcome) in [("excess", excess), ("bogus", bogus), ("zeny", zeny)] {
+        match outcome {
+            Ok(0) => return Err(format!("invalid trade offer ({label}) was accepted")),
+            Ok(_) | Err(_) => {}
+        }
+    }
+
+    // Valid trade still works after the refusals.
+    begin_trade(&mut primary, &mut partner)?;
+    primary.flush();
+    primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
+    primary.wait_for("TradeAddItemResult valid after invalids", |event| match event {
+        NetworkEvent::TradeAddItemResult {
+            inventory_index,
+            result: 0,
+        } if *inventory_index == index => Some(()),
+        _ => None,
+    })?;
+    let _ = primary.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    Ok(())
 }
 
 fn trade_cancel(config: &Config) -> Result<(), String> {

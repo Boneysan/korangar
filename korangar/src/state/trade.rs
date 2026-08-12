@@ -62,6 +62,7 @@ impl TradeState {
         self.active
     }
 
+    #[allow(dead_code)]
     pub fn has_pending(&self) -> bool {
         self.pending_character_id.is_some()
     }
@@ -70,6 +71,7 @@ impl TradeState {
         &self.pending_name
     }
 
+    #[allow(dead_code)]
     pub fn request_text(&self) -> &str {
         &self.request_text
     }
@@ -77,10 +79,14 @@ impl TradeState {
     fn rebuild_request_text(&mut self) {
         self.request_text = match self.pending_name.is_empty() {
             true => "A player wants to trade with you.".to_owned(),
-            false => format!("^000001{}^000000 (Lv{}) wants to trade with you.", self.pending_name, self.pending_base_level),
+            false => format!(
+                "^000001{}^000000 (Lv{}) wants to trade with you.",
+                self.pending_name, self.pending_base_level
+            ),
         };
     }
 
+    #[allow(dead_code)]
     pub fn display_text(&self) -> &str {
         &self.display_text
     }
@@ -149,8 +155,9 @@ impl TradeState {
         self.pending_adds.push(PendingTradeAdd { inventory_index, amount });
     }
 
-    /// Claim the amount for an acked add. Returns `None` if we have no record of
-    /// it, which the caller falls back from rather than dropping the item.
+    /// Claim the amount for an acked add. Returns `None` if we have no record
+    /// of it, which the caller falls back from rather than dropping the
+    /// item.
     pub fn take_pending_add(&mut self, inventory_index: InventoryIndex) -> Option<u32> {
         let position = self
             .pending_adds
@@ -185,7 +192,7 @@ impl TradeState {
     }
 
     fn rebuild_display(&mut self) {
-        if let Some(_) = self.pending_character_id {
+        if self.pending_character_id.is_some() {
             self.display_text = format!(
                 "Trade request from {} (Lv{}).\nAccept or reject.",
                 self.pending_name, self.pending_base_level
@@ -254,8 +261,9 @@ mod tests {
     /// locally, because Hercules deliberately sends no delete for them
     /// (`trade.c:600` passes `type = 1`, which `pc.c:4960` reads as "do not
     /// notify"). That removal needs the slot and the amount, so losing either
-    /// here leaves a phantom item in the inventory with **nothing in any log** —
-    /// and a stale count then reads as though unrelated trades transferred.
+    /// here leaves a phantom item in the inventory with **nothing in any log**
+    /// — and a stale count then reads as though unrelated trades
+    /// transferred.
     #[test]
     fn our_offer_records_the_slot_and_the_amount_actually_offered() {
         let mut state = TradeState::default();

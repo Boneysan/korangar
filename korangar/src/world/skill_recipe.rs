@@ -30,6 +30,7 @@ pub enum EffectAsset {
     Fixed(&'static str),
     /// A classic sprite effect. `action_index` selects the ACT action, which
     /// for most effect sheets is 0.
+    #[allow(dead_code)]
     Sprite {
         path: &'static str,
         action_index: usize,
@@ -43,6 +44,7 @@ pub enum EffectAsset {
 impl EffectAsset {
     /// Convenience for the common case of a sprite sheet whose effect is its
     /// first ACT action.
+    #[allow(dead_code)]
     pub const fn sprite(path: &'static str) -> Self {
         Self::Sprite { path, action_index: 0 }
     }
@@ -99,6 +101,7 @@ impl EffectAsset {
     }
 
     /// The sprite sheet backing this asset, if it is a sprite effect.
+    #[allow(dead_code)]
     pub fn sprite_path(self) -> Option<&'static str> {
         match self {
             Self::Sprite { path, .. } => Some(path),
@@ -260,6 +263,7 @@ impl TravelBallKind {
 }
 
 /// Soul Strike orb texture (soft particle). Confirmed in GRF probe.
+#[cfg(test)]
 pub const SOUL_STRIKE_ORB_TEXTURE: &str = "effect\\pok1.tga";
 /// Napalm Beat lens streaks. The original client's hit effect for
 /// MG_NAPALMBEAT is eight `lens1`/`lens2` streaks converging on the target in

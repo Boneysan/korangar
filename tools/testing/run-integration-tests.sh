@@ -140,10 +140,13 @@ database_created=true
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/logs.sql"
 
 "${mysql_admin[@]}" "$db_name" <<'SQL'
+-- Email must be `a@a.com` (or match DeleteCharacterPacket): Hercules rejects
+-- deletion when the confirmation email does not match login.email, and the
+-- headless client always sends a@a.com (see NetworkingSystem::delete_character).
 INSERT INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`, `group_id`, `character_slots`)
 VALUES
-    (2000000, 'korangar', 'korangar', 'M', 'headless@example.invalid', 99, 9),
-    (2000001, 'headless2', 'headless2pw', 'F', 'headless2@example.invalid', 99, 9);
+    (2000000, 'korangar', 'korangar', 'M', 'a@a.com', 99, 9),
+    (2000001, 'headless2', 'headless2pw', 'F', 'a@a.com', 99, 9);
 
 INSERT INTO `char`
     (`char_id`, `account_id`, `char_num`, `name`, `class`, `base_level`, `job_level`,
@@ -180,18 +183,36 @@ cat > "$hercules_repo/conf/import/login-server.conf" <<'EOF'
 login_configuration: {
     account: {
         @include "conf/import/integration-sql.conf"
-        ipban: { @include "conf/import/integration-sql.conf" }
+        ipban: {
+            @include "conf/import/integration-sql.conf"
+        }
     }
 }
 EOF
 cat > "$hercules_repo/conf/import/char-server.conf" <<'EOF'
-char_configuration: { @include "conf/import/integration-sql.conf" }
+char_configuration: {
+    @include "conf/import/integration-sql.conf"
+    // Headless lifecycle tests create and delete characters immediately.
+    enable_char_creation: true
+    player: {
+        deletion: {
+            delay: 0
+            level: 0
+        }
+    }
+}
 EOF
 cat > "$hercules_repo/conf/import/map-server.conf" <<'EOF'
-map_configuration: { @include "conf/import/integration-sql.conf" }
+map_configuration: {
+    @include "conf/import/integration-sql.conf"
+}
 EOF
 cat > "$hercules_repo/conf/import/inter-server.conf" <<'EOF'
-inter_configuration: { log: { @include "conf/import/integration-sql.conf" } }
+inter_configuration: {
+    log: {
+        @include "conf/import/integration-sql.conf"
+    }
+}
 EOF
 
 if [ "${INTEGRATION_SKIP_BUILD:-0}" != "1" ]; then
@@ -242,7 +263,7 @@ while [ "$elapsed" -lt "$ready_timeout" ]; do
     for pid in "${server_pids[@]}"; do
         if ! kill -0 "$pid" 2>/dev/null; then
             echo "error: a Hercules server died during startup" >&2
-            tail -40 "$server_log_dir"/*.log >&2 || true
+            tail -n 40 -- "$server_log_dir"/*.log >&2 || true
             exit 1
         fi
     done
@@ -251,7 +272,7 @@ while [ "$elapsed" -lt "$ready_timeout" ]; do
 done
 if [ "$elapsed" -ge "$ready_timeout" ]; then
     echo "error: Hercules did not become ready within ${ready_timeout}s" >&2
-    tail -40 "$server_log_dir"/*.log >&2 || true
+    tail -n 40 -- "$server_log_dir"/*.log >&2 || true
     exit 1
 fi
 

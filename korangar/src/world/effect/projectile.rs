@@ -119,6 +119,7 @@ impl SkillProjectile {
 
     /// Phase E1 — magic travel ball (Fire Ball / Frost Diver / Jupitel).
     /// Carries a mid-flight point light matching the elemental tint.
+    #[allow(clippy::too_many_arguments)]
     pub fn travel_ball(
         texture: Arc<Texture>,
         source: Point3<f32>,
@@ -157,8 +158,8 @@ impl SkillProjectile {
     /// The stock elemental arrow sprites are only small recolours of the plain
     /// arrow — at projectile size and speed a Fire Arrow reads as "an arrow",
     /// not as fire. The halo is our own embellishment: it re-draws the arrow's
-    /// own texture larger, additively, in the element's colour, so no new art is
-    /// needed and the shape always matches whatever sprite was chosen.
+    /// own texture larger, additively, in the element's colour, so no new art
+    /// is needed and the shape always matches whatever sprite was chosen.
     ///
     /// It also covers the three elemental arrows that ship *no* distinct sprite
     /// (Frozen, Counter Evil, Holy), which the sprite path alone cannot reach.
@@ -343,6 +344,7 @@ impl EffectBase for SkillProjectile {
 
 /// Phase E1 — MG_SOULSTRIKE: one ghost orb per hit, staggered, caster → target.
 /// Classic Soul Strike is code-drawn orbs, not a modern nested STR for travel.
+#[allow(dead_code)]
 pub struct SoulStrikeOrbs {
     texture: Arc<Texture>,
     source: Point3<f32>,
@@ -355,10 +357,14 @@ pub struct SoulStrikeOrbs {
 }
 
 /// Default single-orb travel when the impact delay is unknown.
+#[allow(dead_code)]
 const DEFAULT_ORB_TRAVEL: f32 = 0.32;
+#[allow(dead_code)]
 const SOUL_LIGHT: Color = Color::rgb_u8(190, 120, 255);
+#[allow(dead_code)]
 const SOUL_LIGHT_INTENSITY: f32 = 38.0;
 
+#[allow(dead_code)]
 impl SoulStrikeOrbs {
     /// `arrival_secs` is the impact due boundary (seconds). Orbs are packed so
     /// the last one lands near that boundary instead of overshooting it.

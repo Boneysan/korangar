@@ -15,6 +15,7 @@ pub struct InstanceState {
     display_text: String,
 }
 
+#[allow(dead_code)]
 impl InstanceState {
     pub fn instance_name(&self) -> &str {
         &self.instance_name

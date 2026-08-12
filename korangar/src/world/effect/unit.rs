@@ -409,10 +409,10 @@ impl UnitLayeredGroundQuad {
     /// Bob midpoint and swing, in cells, straight from the original's
     /// `z + 0.4 - 0.2·sin(…)`.
     const BOB_CENTER_CELLS: f32 = 0.4;
-    const BOB_SWING_CELLS: f32 = 0.2;
     /// `tick/540π` is radians per millisecond, so a second advances the sine by
     /// `1000/540π`.
     const BOB_SPEED: f32 = 0.589;
+    const BOB_SWING_CELLS: f32 = 0.2;
 
     pub fn new(
         tile_texture: Arc<Texture>,

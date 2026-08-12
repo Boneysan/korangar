@@ -122,7 +122,8 @@ impl<A, B, C, D> SkillTreeTab<A, B, C, D> {
 
 impl<A, B, C, D> Element<ClientState> for SkillTreeTab<A, B, C, D>
 where
-    // Optional: tab skills path is None when skill_tree was cleared (M1-017 LoggedOut race).
+    // Optional: tab skills path is None when skill_tree was cleared (M1-017
+    // LoggedOut race).
     A: Path<ClientState, HashMap<usize, LearnableSkill>, false>,
     B: Path<ClientState, Vec<LearnedSkill>>,
     C: Path<ClientState, SkillTreeWindowState>,

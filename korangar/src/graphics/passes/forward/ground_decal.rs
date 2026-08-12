@@ -27,7 +27,8 @@ const INITIAL_INSTRUCTION_SIZE: usize = 64;
 struct InstanceData {
     /// Four world-space corners (tl, tr, bl, br); `w` is padding.
     corners: [[f32; 4]; 4],
-    /// Corner UVs packed two per row: `[0] = (tl.uv, tr.uv)`, `[1] = (bl.uv, br.uv)`.
+    /// Corner UVs packed two per row: `[0] = (tl.uv, tr.uv)`, `[1] = (bl.uv,
+    /// br.uv)`.
     texture_coordinates: [[f32; 4]; 2],
     color: [f32; 4],
     texture_index: i32,
@@ -311,10 +312,7 @@ impl ForwardGroundDecalDrawer {
 
         InstanceData {
             corners: [corner(0), corner(1), corner(2), corner(3)],
-            texture_coordinates: [
-                [uv[0].x, uv[0].y, uv[1].x, uv[1].y],
-                [uv[2].x, uv[2].y, uv[3].x, uv[3].y],
-            ],
+            texture_coordinates: [[uv[0].x, uv[0].y, uv[1].x, uv[1].y], [uv[2].x, uv[2].y, uv[3].x, uv[3].y]],
             color: instruction.color.components_linear(),
             texture_index,
             padding: Default::default(),

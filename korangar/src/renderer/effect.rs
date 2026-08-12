@@ -141,8 +141,8 @@ impl EffectRenderer {
     /// rather than composited on top like [`render_effect_world_quad`]. Use for
     /// ground-parallel tiles (Land Protector) where an entity standing on the
     /// tile must occlude it. Corners and texture coordinates are ordered
-    /// `[top_left, top_right, bottom_left, bottom_right]`; the world corners are
-    /// kept as-is so the forward pass can project and depth-test them.
+    /// `[top_left, top_right, bottom_left, bottom_right]`; the world corners
+    /// are kept as-is so the forward pass can project and depth-test them.
     ///
     /// [`render_effect_world_quad`]: Self::render_effect_world_quad
     pub fn render_ground_decal(

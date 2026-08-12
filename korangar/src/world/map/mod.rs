@@ -6,6 +6,7 @@ use std::mem::size_of;
 use std::sync::{Arc, Mutex, RwLock};
 
 use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector2, Vector3};
+use hashbrown::HashMap;
 use korangar_audio::AudioEngine;
 use korangar_collision::{AABB, Frustum, KDTree, Sphere};
 use korangar_container::{Cacheable, SimpleKey, SimpleSlab, create_simple_key};
@@ -17,7 +18,6 @@ use option_ext::OptionExt;
 use ragnarok_formats::map::EffectSource;
 #[cfg(feature = "debug")]
 use ragnarok_formats::map::MapData;
-use hashbrown::HashMap;
 use ragnarok_formats::map::{LightSource, SoundSource, Tile, TileFlags};
 use ragnarok_formats::transform::Transform;
 use ragnarok_packets::{ClientTick, EntityId, TilePosition};
@@ -25,9 +25,7 @@ use rust_state::RustState;
 use wgpu::Queue;
 
 pub use self::lighting::Lighting;
-use super::{
-    Camera, Entity, GroundItem, Model, Object, PointLightId, PointLightManager, ResourceSet, ResourceSetBuffer, SubMesh, Video,
-};
+use super::{Camera, Entity, GroundItem, Model, Object, PointLightId, PointLightManager, ResourceSet, ResourceSetBuffer, SubMesh, Video};
 #[cfg(feature = "debug")]
 use super::{LightSourceExt, PointLightSet};
 #[cfg(feature = "debug")]
@@ -465,9 +463,10 @@ impl Map {
     }
 
     /// Draw runtime-placed props (Hunter traps). Deliberately *not* culled
-    /// through the object kd-tree: that tree is built at load from the map's own
-    /// objects and a trap appears afterwards. There are only ever a handful of
-    /// live traps, so per-frame frustum work would cost more than it saves.
+    /// through the object kd-tree: that tree is built at load from the map's
+    /// own objects and a trap appears afterwards. There are only ever a
+    /// handful of live traps, so per-frame frustum work would cost more
+    /// than it saves.
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn render_props(
         &self,
@@ -644,9 +643,9 @@ impl Map {
     /// [`skill_footprint`], which mirrors Hercules' own layout table.
     ///
     /// Uses the depth-tested decal path rather than [`IndicatorInstruction`]
-    /// (which is a single `Option`, so it cannot express a multi-cell shape) and
-    /// rides the terrain via each tile's own corner heights, exactly like
-    /// [`Self::render_walk_indicator`].
+    /// (which is a single `Option`, so it cannot express a multi-cell shape)
+    /// and rides the terrain via each tile's own corner heights, exactly
+    /// like [`Self::render_walk_indicator`].
     ///
     /// [`skill_footprint`]: crate::world::skill_footprint
     #[cfg_attr(feature = "debug", korangar_debug::profile)]

@@ -11,6 +11,8 @@ use ragnarok_formats::map::{GatData, GroundData, MapData};
 use ragnarok_formats::version::MapFormatMetadata;
 use walkdir::WalkDir;
 
+type TeleportPoint = (String, usize, usize, usize, PathBuf);
+
 #[path = "../src/loaders/archive/native/mixcrypt.rs"]
 mod mixcrypt;
 
@@ -96,7 +98,7 @@ fn enabled_maps(path: &Path) -> Result<BTreeSet<String>, String> {
         .collect())
 }
 
-fn teleport_points(path: &Path) -> Result<Vec<(String, usize, usize, usize, PathBuf)>, String> {
+fn teleport_points(path: &Path) -> Result<Vec<TeleportPoint>, String> {
     let files: Vec<PathBuf> = if path.is_dir() {
         WalkDir::new(path)
             .into_iter()
@@ -114,7 +116,7 @@ fn teleport_points(path: &Path) -> Result<Vec<(String, usize, usize, usize, Path
     Ok(points)
 }
 
-fn teleport_points_in_file(path: &Path) -> Result<Vec<(String, usize, usize, usize, PathBuf)>, String> {
+fn teleport_points_in_file(path: &Path) -> Result<Vec<TeleportPoint>, String> {
     let bytes = std::fs::read(path).map_err(|error| format!("{}: {error}", path.display()))?;
     let text = String::from_utf8_lossy(&bytes);
     let mut points = Vec::new();

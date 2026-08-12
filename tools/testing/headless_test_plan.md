@@ -6,7 +6,8 @@ client↔server protocol as possible without graphics, at high speed, and catch 
 mapping errors, skill/combat bugs, and server-script regressions early.
 
 **Companion documents:**
-- [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) — latest implementation handoff: allowlist cleanup, typed no-op packets, zero-unknown gate, archive tests, and reproduced full-run evidence
+- [headless-next-steps.md](headless-next-steps.md) — **forward priority list (P0–P7)** for agents and humans improving the suite; start here for "what next"
+- [2026-08-11-testing-handoff.md](2026-08-11-testing-handoff.md) — implementation handoff: allowlist cleanup, typed no-op packets, zero-unknown gate, archive tests, and reproduced full-run evidence
 - [headless_findings.md](headless_findings.md) — bug log + port-back tracking (fill this in whenever a scenario fails)
 - [headless_mock_client_plan.md](headless_mock_client_plan.md) — original design doc (implementation status updated there)
 - [testing_guide.md](testing_guide.md) — overall project testing reference

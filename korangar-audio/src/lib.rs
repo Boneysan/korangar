@@ -801,7 +801,10 @@ impl<F: FileLoader> EngineContext<F> {
                 // together name the file responsible for a noise on screen.
                 if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                     let position = self.ambient_sound.get(playing.key).map(|config| config.bounds.center());
-                    eprintln!("[ambient] restart key={:?} at {:?} cycle={}", playing.key, position, playing.cycle);
+                    eprintln!(
+                        "[ambient] restart key={:?} at {:?} cycle={}",
+                        playing.key, position, playing.cycle
+                    );
                 }
 
                 match spatial_track.play(playing.data.clone()) {
@@ -990,9 +993,9 @@ fn difference<T: Ord + Copy>(vector_1: &mut [T], vector_2: &mut [T], result: &mu
     result.extend_from_slice(&vector_1[i..]);
 }
 
-/// A per-emitter fraction of the cycle, so identical ambient samples drift apart
-/// instead of pulsing together. Deterministic in the key and the round, so a
-/// given emitter behaves the same way across runs.
+/// A per-emitter fraction of the cycle, so identical ambient samples drift
+/// apart instead of pulsing together. Deterministic in the key and the round,
+/// so a given emitter behaves the same way across runs.
 fn ambient_jitter(key: AmbientKey, round: u32, cycle: f32) -> f32 {
     use korangar_container::SimpleKey;
 

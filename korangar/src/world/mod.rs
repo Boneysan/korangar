@@ -17,10 +17,10 @@ mod pathing;
 mod skill_layout;
 mod skill_recipe;
 mod skill_unit_registry;
-mod unit_recipe;
+mod sound;
 mod special_effect;
 mod sprite_effect;
-mod sound;
+mod unit_recipe;
 mod video;
 
 use std::sync::Arc;
@@ -44,10 +44,10 @@ pub use self::pathing::*;
 pub use self::skill_layout::*;
 pub use self::skill_recipe::*;
 pub use self::skill_unit_registry::*;
-pub use self::unit_recipe::*;
 pub use self::sound::*;
 pub use self::special_effect::*;
 pub use self::sprite_effect::*;
+pub use self::unit_recipe::*;
 pub use self::video::*;
 use crate::graphics::Texture;
 

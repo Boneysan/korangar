@@ -38,6 +38,7 @@ impl FriendEntry {
         &self.name
     }
 
+    #[allow(dead_code)]
     pub fn online(&self) -> bool {
         self.online
     }
@@ -95,12 +96,7 @@ mod tests {
             )
         };
 
-        let mut friends = vec![
-            entry("zoe", false),
-            entry("Bob", true),
-            entry("alice", false),
-            entry("Carol", true),
-        ];
+        let mut friends = vec![entry("zoe", false), entry("Bob", true), entry("alice", false), entry("Carol", true)];
         sort_friends(&mut friends);
 
         let order: Vec<_> = friends.iter().map(|friend| friend.name.as_str()).collect();

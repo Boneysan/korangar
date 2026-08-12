@@ -36,6 +36,7 @@ const MAX_SQUARE_LAYOUT: i64 = 7;
 /// generic path.
 mod ids {
     pub const MG_FIREWALL: u16 = 18;
+    #[cfg(test)]
     pub const AL_PNEUMA: u16 = 25;
     pub const PR_SANCTUARY: u16 = 70;
     pub const PR_MAGNUS: u16 = 79;

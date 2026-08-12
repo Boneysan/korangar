@@ -319,14 +319,18 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
             context.walk_to(wolf_position.x.saturating_sub(1), wolf_position.y)?;
             context.flush();
             context.net.player_attack(wolf).map_err(|_| "disconnected")?;
-            let landed = context.wait_for_within("our swing at the Desert Wolf", Duration::from_secs(5), &mut |event| match event {
-                NetworkEvent::DamageEffect {
-                    source_entity_id,
-                    destination_entity_id,
-                    ..
-                } if source_entity_id.0 == player_id.0 && destination_entity_id.0 == wolf.0 => Some(()),
-                _ => None,
-            });
+            let landed = context.wait_for_within(
+                "our swing at the Desert Wolf",
+                Duration::from_secs(5),
+                &mut |event| match event {
+                    NetworkEvent::DamageEffect {
+                        source_entity_id,
+                        destination_entity_id,
+                        ..
+                    } if source_entity_id.0 == player_id.0 && destination_entity_id.0 == wolf.0 => Some(()),
+                    _ => None,
+                },
+            );
             if landed.is_ok() {
                 provoked = true;
                 break;
@@ -339,19 +343,20 @@ fn incoming_damage(config: &Config) -> Result<(), String> {
         let position = context.position;
         let _ = context.walk_to(position.x.saturating_sub(1), position.y);
 
-        context.wait_for_within(
-            "incoming DamageEffect from the Desert Wolf",
-            Duration::from_secs(15),
-            &mut |event| match event {
-                NetworkEvent::DamageEffect {
-                    source_entity_id,
-                    destination_entity_id,
-                    ..
-                } if source_entity_id.0 == wolf.0 && destination_entity_id.0 == player_id.0 => Some(()),
-                _ => None,
-            },
-        )
-        .map_err(|error| format!("Desert Wolf never swung back after being provoked.\n{error}"))?;
+        context
+            .wait_for_within(
+                "incoming DamageEffect from the Desert Wolf",
+                Duration::from_secs(15),
+                &mut |event| match event {
+                    NetworkEvent::DamageEffect {
+                        source_entity_id,
+                        destination_entity_id,
+                        ..
+                    } if source_entity_id.0 == wolf.0 && destination_entity_id.0 == player_id.0 => Some(()),
+                    _ => None,
+                },
+            )
+            .map_err(|error| format!("Desert Wolf never swung back after being provoked.\n{error}"))?;
     }
 
     context.kill_all_monsters();

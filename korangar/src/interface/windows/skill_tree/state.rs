@@ -116,7 +116,8 @@ where
 
 impl<A> Path<ClientState, LearnableSkill, false> for LearnableSkillPath<A>
 where
-    // Parent tab map is optional — missing during logout skill_tree clear (M1-017).
+    // Parent tab map is optional — missing during logout skill_tree
+    // clear (M1-017).
     A: Path<ClientState, HashMap<usize, LearnableSkill>, false>,
 {
     fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a LearnableSkill> {

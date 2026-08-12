@@ -15,10 +15,10 @@ fn main() {
     let arguments = Arguments::parse();
     let event_loop = (!arguments.sync_cache).then(Client::create_event_loop);
 
-    if let Some(mut client) = Client::init(arguments.sync_cache, event_loop.as_ref()) {
-        if let Some(event_loop) = event_loop {
-            client.run(event_loop);
-        }
+    if let Some(mut client) = Client::init(arguments.sync_cache, event_loop.as_ref())
+        && let Some(event_loop) = event_loop
+    {
+        client.run(event_loop);
     }
 }
 

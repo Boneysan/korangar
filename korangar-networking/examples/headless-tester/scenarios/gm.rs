@@ -140,57 +140,14 @@ fn provision_effect_roster(config: &Config) -> Result<(), String> {
     ];
 
     for setup in ROSTER {
-        // Create the roster character on a free slot if it does not exist yet.
-        let mut context = match TestContext::connect_as(
-            config,
-            &config.username,
-            &config.password,
-            Some(setup.name),
-            None,
-        ) {
-            Ok(context) => context,
-            Err(error) if error.contains("not found") => {
-                println!("    {}: creating character ({error})", setup.name);
-                let mut bootstrap =
-                    TestContext::connect_as(config, &config.username, &config.password, None, None)?;
-                let free_slot = (0..9u8)
-                    .find(|slot| {
-                        !bootstrap
-                            .characters
-                            .iter()
-                            .any(|info| info.character_number == *slot)
-                    })
-                    .ok_or_else(|| format!("no free character slot for {}", setup.name))?;
-                bootstrap
-                    .net
-                    .create_character(free_slot as usize, setup.name.to_owned())
-                    .map_err(|_| format!("disconnected creating {}", setup.name))?;
-                let info = bootstrap.wait_for("CharacterCreated", |event| match event {
-                    NetworkEvent::CharacterCreated { character_information } => {
-                        Some(Ok(character_information.clone()))
-                    }
-                    NetworkEvent::CharacterCreationFailed { message, .. } => {
-                        Some(Err(format!("creation failed for {}: {message}", setup.name)))
-                    }
-                    _ => None,
-                })??;
-                println!(
-                    "    {}: created in slot {}",
-                    setup.name, info.character_number
-                );
-                // Drop bootstrap session cleanly, then log in as the new character.
-                drop(bootstrap);
-                std::thread::sleep(Duration::from_millis(700));
-                TestContext::connect_as(
-                    config,
-                    &config.username,
-                    &config.password,
-                    Some(setup.name),
-                    None,
-                )?
-            }
-            Err(error) => return Err(error),
-        };
+        // Create on the character server before map login when missing.
+        //
+        // An earlier path mapped in as HeadlessOne then called create_character
+        // — but map login already drops the character-server socket, so create
+        // always "disconnected". `connect_as(..., Some(name), Some(name))`
+        // creates at char-select when the name is absent.
+        println!("    {}: ensuring character exists", setup.name);
+        let mut context = TestContext::connect_as(config, &config.username, &config.password, Some(setup.name), Some(setup.name))?;
 
         context.ensure_base_level(99)?;
         context.ensure_job(setup.job_id)?;

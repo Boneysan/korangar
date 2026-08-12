@@ -12,6 +12,8 @@ pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("smoke", 1, smoke),
         Scenario::new("bad-password", 1, bad_password),
+        Scenario::new("connection-state", 1, connection_state),
+        Scenario::new("character-select-invalid", 1, character_select_invalid),
         Scenario::new("character-create-delete", 1, character_create_delete),
         Scenario::new("character-delete-after-play", 1, character_delete_after_play),
         Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
@@ -155,6 +157,66 @@ fn smoke(config: &Config) -> Result<(), String> {
     })?;
 
     context.net.disconnect_from_map_server();
+    Ok(())
+}
+
+/// Connection getters track map login and explicit disconnects without
+/// panicking. Login/character sockets are often already closed after map
+/// handoff on this PACKETVER — only map connectivity is required post-connect.
+fn connection_state(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    if !context.net.is_map_server_connected() {
+        return Err("map server should be connected after TestContext::connect".to_owned());
+    }
+    // Safe to call; may already be false after map login.
+    let _ = context.net.is_character_server_connected();
+    let _ = context.net.is_login_server_connected();
+
+    context.net.disconnect_from_map_server();
+    context.pump(Duration::from_millis(300));
+    if context.net.is_map_server_connected() {
+        return Err("map server still reports connected after disconnect_from_map_server".to_owned());
+    }
+
+    // Explicit disconnects must not panic even when already closed.
+    context.net.disconnect_from_character_server();
+    context.net.disconnect_from_login_server();
+    context.pump(Duration::from_millis(200));
+    let _ = context.net.is_character_server_connected();
+    let _ = context.net.is_login_server_connected();
+    Ok(())
+}
+
+/// Selecting an empty / out-of-range character slot must fail typed, then a
+/// valid select must still succeed without restarting the process.
+fn character_select_invalid(config: &Config) -> Result<(), String> {
+    let (mut session, characters) = connect_to_character_select(config)?;
+    if characters.is_empty() {
+        return Err("no characters available for select-failure test".to_owned());
+    }
+    let valid_slot = characters[0].character_number as usize;
+
+    // Empty slot (assuming not all 9 are filled — pick a free one).
+    let used: Vec<usize> = characters.iter().map(|c| c.character_number as usize).collect();
+    let empty = (0..9usize).find(|slot| !used.contains(slot));
+    if let Some(empty_slot) = empty {
+        session.0.select_character(empty_slot).map_err(|_| "disconnected")?;
+        wait_char_event(&mut session, config.timeout, &mut |event| match event {
+            NetworkEvent::CharacterSelectionFailed { .. } => Some(Ok(())),
+            NetworkEvent::CharacterSelected { .. } => Some(Err("empty slot selection unexpectedly succeeded".to_owned())),
+            _ => None,
+        })
+        .map_err(|error| format!("empty-slot select: {error}"))??;
+    }
+
+    // Valid retry on the same session.
+    session.0.select_character(valid_slot).map_err(|_| "disconnected")?;
+    wait_char_event(&mut session, config.timeout, &mut |event| match event {
+        NetworkEvent::CharacterSelected { .. } => Some(Ok(())),
+        NetworkEvent::CharacterSelectionFailed { message, .. } => Some(Err(format!("valid select failed: {message}"))),
+        _ => None,
+    })
+    .map_err(|error| format!("valid select retry: {error}"))??;
     Ok(())
 }
 
@@ -440,17 +502,18 @@ fn kick_explains_itself(config: &Config) -> Result<(), String> {
                 .iter()
                 .any(|event| matches!(event, NetworkEvent::MapServerDisconnected { .. }));
             format!(
-                "@kick dropped the session with no MapDisconnectReason (disconnect seen: {disconnected}). \
-                 The map-server half of 0x0081 is unmodelled again — check that the packet is registered \
-                 on the MAP connection and not only for LoginServer/CharacterServer, since the same \
-                 header carries a different reason table there"
+                "@kick dropped the session with no MapDisconnectReason (disconnect seen: {disconnected}). The map-server half of 0x0081 \
+                 is unmodelled again — check that the packet is registered on the MAP connection and not only for \
+                 LoginServer/CharacterServer, since the same header carries a different reason table there"
             )
         })?;
 
     if message.trim().is_empty() {
-        return Err("the kick reason arrived empty — the packet is registered but its reason did not \
-                    resolve to any text, which reaches the player as a blank popup"
-            .to_owned());
+        return Err(
+            "the kick reason arrived empty — the packet is registered but its reason did not resolve to any text, which reaches the \
+             player as a blank popup"
+                .to_owned(),
+        );
     }
 
     Ok(())

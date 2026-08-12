@@ -1000,14 +1000,14 @@ pub struct MessageTablePacket {
 ///
 /// The same header the login and character servers use for
 /// [`LoginFailedPacket`], but reached through a different connection and with a
-/// far wider reason table (`clif.c:770-800`), so it is modeled separately rather
-/// than widening that packet's three-variant enum — an unmodeled variant there
-/// would fail to deserialize and drop the read buffer.
+/// far wider reason table (`clif.c:770-800`), so it is modeled separately
+/// rather than widening that packet's three-variant enum — an unmodeled variant
+/// there would fail to deserialize and drop the read buffer.
 ///
 /// `clif_authfail_fd` calls `sockt->eof(fd)` immediately afterwards, so this is
-/// the *only* explanation the player ever gets for a kick, a ban, a shutdown, or
-/// someone else logging into their account. Without it the client simply bounces
-/// to character select in silence.
+/// the *only* explanation the player ever gets for a kick, a ban, a shutdown,
+/// or someone else logging into their account. Without it the client simply
+/// bounces to character select in silence.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0081)]
@@ -1030,7 +1030,8 @@ pub struct MessageTableNumberPacket {
     pub value: u32,
 }
 
-/// `ZC_ACK_WHISPER_LIST` (0x00D2) — result of ignoring or unignoring *everyone*.
+/// `ZC_ACK_WHISPER_LIST` (0x00D2) — result of ignoring or unignoring
+/// *everyone*.
 ///
 /// The sibling of [`IgnorePlayerResultPacket`], and it was missed when that one
 /// was fixed: `/exall` and `/inall` are answered here (`clif_wisall`), never on
@@ -1075,10 +1076,10 @@ pub struct ServiceMessagePacket {
 
 /// `ZC_MOVE_ITEM_FAILED` (0x0AA7) — an item could not be moved.
 ///
-/// Sent by `clif_item_movefailed` (`clif.c:2912`) when a storage or guild-storage
-/// deposit is refused (`storage.c:301`, `storage.c:687`) — a full storage, or an
-/// item the storage will not take. Without it the item simply stays where it
-/// was, with no explanation at all.
+/// Sent by `clif_item_movefailed` (`clif.c:2912`) when a storage or
+/// guild-storage deposit is refused (`storage.c:301`, `storage.c:687`) — a full
+/// storage, or an item the storage will not take. Without it the item simply
+/// stays where it was, with no explanation at all.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0AA7)]
@@ -1235,13 +1236,14 @@ pub enum SpriteChangeType {
     Shield,
     Shoes,
     Body,
-    /// Equipped ammunition item id — a **Korangar fork addition**, not official.
+    /// Equipped ammunition item id — a **Korangar fork addition**, not
+    /// official.
     ///
     /// Hercules calls this slot `LOOK_FLOOR` and never sends it ("unknown
-    /// purpose"), so the fork reuses it to broadcast what ammunition a player has
-    /// loaded; official Ragnarok reports that for nobody but yourself. See
-    /// `LOOK_AMMO` in the server's `map/map.h` for why this rides an existing
-    /// look type instead of a new packet.
+    /// purpose"), so the fork reuses it to broadcast what ammunition a player
+    /// has loaded; official Ragnarok reports that for nobody but yourself.
+    /// See `LOOK_AMMO` in the server's `map/map.h` for why this rides an
+    /// existing look type instead of a new packet.
     Ammunition,
     Robe,
     Body2,
@@ -1311,10 +1313,12 @@ pub struct RegularItemInformation {
     ///
     /// The wire field is called `WearState`, but for stackable items Hercules
     /// fills it from `id->equip`, the item database's slot mask
-    /// (`clif_item_normal`). It is identical for every stack of a given item and
-    /// never reflects the character. Contrast [`EquippableItemInformation`],
-    /// which has *two* fields: `equip_position` (`location` = `pc->equippoint`)
-    /// and `equipped_position` (`WearState` = `it->equip`, the real worn state).
+    /// (`clif_item_normal`). It is identical for every stack of a given item
+    /// and never reflects the character. Contrast
+    /// [`EquippableItemInformation`], which has *two* fields:
+    /// `equip_position` (`location` = `pc->equippoint`)
+    /// and `equipped_position` (`WearState` = `it->equip`, the real worn
+    /// state).
     ///
     /// Consequence: every arrow stack reports `AMMO` here, equipped or not, so
     /// treating this as worn state makes them all look equipped and picks the
@@ -4920,7 +4924,8 @@ pub struct RestartResponsePacket {
     pub result: RestartResponseStatus,
 }
 
-/// Result of a GM request to disconnect another character (`ZC_ACK_DISCONNECT_CHARACTER`).
+/// Result of a GM request to disconnect another character
+/// (`ZC_ACK_DISCONNECT_CHARACTER`).
 #[derive(Debug, Clone, ByteConvertable, PartialEq, Eq)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub enum GmKickResponseStatus {
@@ -5018,14 +5023,16 @@ pub struct UseSkillAckPacket {
 /// Abort the caster's own in-progress cast (`CZ_CANCEL_CAST` 0x0F00).
 ///
 /// **This packet does not exist in official Ragnarok** — it is a Korangar fork
-/// addition, matched by a companion Hercules delta (`clif_parse_CancelCast`, see
-/// korangar `CLAUDE.md` §3b). Official RO offers no player-initiated cast cancel
-/// at all, and forbids moving while casting, so there was nothing to reuse.
+/// addition, matched by a companion Hercules delta (`clif_parse_CancelCast`,
+/// see korangar `CLAUDE.md` §3b). Official RO offers no player-initiated cast
+/// cancel at all, and forbids moving while casting, so there was nothing to
+/// reuse.
 ///
-/// `0x0F00` is deliberate: it is exactly Hercules' `MAX_PACKET_DB` ceiling, so it
-/// is in bounds for `packets->db[]` while sitting far above every real packet id.
-/// A client packet with no length entry makes Hercules **disconnect the session**,
-/// so the length lives in the non-generated `common/packets_len.h`.
+/// `0x0F00` is deliberate: it is exactly Hercules' `MAX_PACKET_DB` ceiling, so
+/// it is in bounds for `packets->db[]` while sitting far above every real
+/// packet id. A client packet with no length entry makes Hercules **disconnect
+/// the session**, so the length lives in the non-generated
+/// `common/packets_len.h`.
 #[derive(Debug, Clone, Default, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0F00)]
@@ -5286,6 +5293,30 @@ pub struct NotifySkillUnitPacket {
     pub skill_level: u8,
 }
 
+/// `ZC_SKILL_ENTRY2` — graffiti skill-unit placement (97 bytes).
+///
+/// Hercules only sends this header for `UNT_GRAFFITI` (`clif_graffiti_entry` /
+/// `clif_getareachar_skillunit`). Ordinary skill units use `0x09CA` /
+/// `NotifySkillUnitPacket`. Observed live by the Rogue graffiti setup path;
+/// without a model the headless zero-unknown gate fails.
+///
+/// Layout (PACKETVER 20220406):
+/// `01c9 <id>.L <creator>.L <x>.W <y>.W <unit id>.B <visible>.B <has msg>.B
+/// <msg>.80B`
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x01C9)]
+pub struct NotifySkillUnitGraffitiPacket {
+    pub entity_id: EntityId,
+    pub creator_id: EntityId,
+    pub position: TilePosition,
+    pub unit_id: u8,
+    pub visible: u8,
+    pub has_message: u8,
+    #[length(80)]
+    pub message: String,
+}
+
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0117)]
@@ -5528,14 +5559,15 @@ pub struct PartyMemberHealthPacket {
 
 /// Party member's HP **and SP** (`ZC_NOTIFY_HP_TO_GROUPM`, wide form).
 ///
-/// Official main-branch servers send the narrow 14-byte [`PartyMemberHealthPacket`]
-/// (0x080E) and never report a party member's SP at all; only the Zero branch
-/// sends this 22-byte form. Our Hercules delta selects it on every branch so the
-/// client can draw an SP bar over party members — see `KORANGAR_PARTY_SP_TO_GROUPM`
-/// in `src/map/packets_struct.h` and korangar `CLAUDE.md` §3b.
+/// Official main-branch servers send the narrow 14-byte
+/// [`PartyMemberHealthPacket`] (0x080E) and never report a party member's SP at
+/// all; only the Zero branch sends this 22-byte form. Our Hercules delta
+/// selects it on every branch so the client can draw an SP bar over party
+/// members — see `KORANGAR_PARTY_SP_TO_GROUPM` in `src/map/packets_struct.h`
+/// and korangar `CLAUDE.md` §3b.
 ///
-/// Both packets stay registered: 0x0BAB is what our server now sends, and 0x080E
-/// remains correct against a stock server.
+/// Both packets stay registered: 0x0BAB is what our server now sends, and
+/// 0x080E remains correct against a stock server.
 /// NPC refiner result (`ZC_ACK_ITEMREFINING` 0x0188).
 ///
 /// Distinct from [`WeaponRefineResultPacket`] (0x0223), which answers the
@@ -5807,14 +5839,14 @@ pub struct PartyInviteSenderPacket {
 ///
 /// **This packet does not exist in official Ragnarok.** `ZC_ACK_TOUSESKILL`
 /// carries a `useskill_fail_cause`, and Hercules sends `USESKILL_FAIL_LEVEL`
-/// (cause 0) for a great many outcomes that have nothing to do with skill level,
-/// because Gravity never numbered them — 21 of the 33 states in
-/// `skill_check_condition_castbegin`'s switch report 0 and only one of those has
-/// a dedicated cause. The official client says "Skill level is not high enough"
-/// to all of them.
+/// (cause 0) for a great many outcomes that have nothing to do with skill
+/// level, because Gravity never numbered them — 21 of the 33 states in
+/// `skill_check_condition_castbegin`'s switch report 0 and only one of those
+/// has a dedicated cause. The official client says "Skill level is not high
+/// enough" to all of them.
 ///
-/// Static preconditions do not need this: which skills want a shield or a falcon
-/// is in `skill_db.conf`, so both ends already know it (see
+/// Static preconditions do not need this: which skills want a shield or a
+/// falcon is in `skill_db.conf`, so both ends already know it (see
 /// `tools/generate_skill_states.py`). This packet carries the other half — the
 /// **runtime** outcomes only the server can know as it decides.
 ///
@@ -6317,8 +6349,8 @@ pub struct ProgressBarPacket {
 pub struct ProgressBarAbortPacket {}
 
 /// An effect on an entity *with a number* (`ZC_NOTIFY_EFFECT3`), from
-/// `specialeffectnum`. The plain `specialeffect` command rides 0x01F3, which was
-/// already registered — which is precisely how this gap stayed hidden.
+/// `specialeffectnum`. The plain `specialeffect` command rides 0x01F3, which
+/// was already registered — which is precisely how this gap stayed hidden.
 ///
 /// `num` is 8 bytes at this packetver (`PACKETVER >= 20191127`), not 4.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -6341,8 +6373,8 @@ pub struct SpecialEffectValuePacket {
 /// and this server is `main`, so both are 0.
 ///
 /// Reached by `pc->skill` with `SKILL_GRANT_PERMANENT` or `_TEMPORARY` — quest
-/// rewards, the `skill` script command, `@questskill`, item-granted skills — and
-/// by Plagiarism / Reproduce copying a skill.
+/// rewards, the `skill` script command, `@questskill`, item-granted skills —
+/// and by Plagiarism / Reproduce copying a skill.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0111)]
@@ -6783,10 +6815,10 @@ mod tests {
     }
 
     /// `ZC_NOTIFY_HP_TO_GROUPM` in the wide 22-byte form our Hercules delta
-    /// selects (`KORANGAR_PARTY_SP_TO_GROUPM`). The length must stay 22 to match
-    /// `packetLen(0x0bab, 22)` in Hercules' own main table and the generated
-    /// `lengths_20220406.rs` — a mismatch would desync the read buffer rather
-    /// than fail loudly.
+    /// selects (`KORANGAR_PARTY_SP_TO_GROUPM`). The length must stay 22 to
+    /// match `packetLen(0x0bab, 22)` in Hercules' own main table and the
+    /// generated `lengths_20220406.rs` — a mismatch would desync the read
+    /// buffer rather than fail loudly.
     #[test]
     fn party_member_vitals_packet_matches_wide_layout() {
         let bytes = [
@@ -6965,6 +6997,24 @@ mod tests {
         let talkie = read_packet::<TalkieBoxMessagePacket>(&talkie);
         assert_eq!(talkie.entity_id, EntityId(0x0102_0304));
         assert_eq!(talkie.message, "hello");
+
+        // ZC_SKILL_ENTRY2 / graffiti unit (0x01C9), 97 bytes.
+        let mut graffiti = vec![0xC9, 0x01];
+        graffiti.extend(0x0102_0304u32.to_le_bytes()); // entity
+        graffiti.extend(0x0A0B_0C0Du32.to_le_bytes()); // creator
+        graffiti.extend(120u16.to_le_bytes());
+        graffiti.extend(140u16.to_le_bytes());
+        graffiti.push(0xB0); // UNT_GRAFFITI
+        graffiti.push(1); // visible
+        graffiti.push(1); // has message
+        graffiti.extend(fixed_string("wall text", 80));
+        assert_eq!(graffiti.len(), 97);
+        let graffiti = read_packet::<NotifySkillUnitGraffitiPacket>(&graffiti);
+        assert_eq!(graffiti.entity_id, EntityId(0x0102_0304));
+        assert_eq!(graffiti.creator_id, EntityId(0x0A0B_0C0D));
+        assert_eq!(graffiti.position, TilePosition { x: 120, y: 140 });
+        assert_eq!(graffiti.unit_id, 0xB0);
+        assert_eq!(graffiti.message, "wall text");
     }
 
     #[test]

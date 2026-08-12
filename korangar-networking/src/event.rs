@@ -193,22 +193,33 @@ pub enum NetworkEvent {
     },
     /// A message-table line carrying a number (`ZC_MSG_VALUE`). The table lives
     /// in the client crate, and the id's text holds the `%d` this fills.
-    MessageTableNumber { message_id: u16, value: u32 },
+    MessageTableNumber {
+        message_id: u16,
+        value: u32,
+    },
     /// Why the map server is about to drop this connection (`SC_NOTIFY_BAN`) —
     /// a kick, a ban, a shutdown, or someone else taking the account.
     ///
-    /// **Deliberately not a chat message.** `clif_authfail_fd` closes the socket
-    /// in the same breath, so the client leaves for character select instantly
-    /// and takes the chat window with it; the text has to outlive the screen it
-    /// arrived on. The client holds this until the disconnect lands and then
-    /// shows it as a popup.
-    MapDisconnectReason { message: String },
+    /// **Deliberately not a chat message.** `clif_authfail_fd` closes the
+    /// socket in the same breath, so the client leaves for character select
+    /// instantly and takes the chat window with it; the text has to outlive
+    /// the screen it arrived on. The client holds this until the disconnect
+    /// lands and then shows it as a popup.
+    MapDisconnectReason {
+        message: String,
+    },
     /// Result of ignoring or unignoring everyone (`ZC_ACK_WHISPER_LIST`).
-    IgnoreAllResult { ignore_type: u8, result: u8 },
+    IgnoreAllResult {
+        ignore_type: u8,
+        result: u8,
+    },
     /// A storage deposit was refused (`ZC_MOVE_ITEM_FAILED`). Hercules sends
     /// only the inventory slot, so — as with [`Self::SkillFailedMissingItem`] —
     /// the client finishes the message, since the item table lives there.
-    ItemMoveFailed { item_index: InventoryIndex, amount: u16 },
+    ItemMoveFailed {
+        item_index: InventoryIndex,
+        amount: u16,
+    },
     CharacterSlotSwitched,
     CharacterSlotSwitchFailed,
     /// Update entity details. Mostly received when the client sends
@@ -372,8 +383,8 @@ pub enum NetworkEvent {
         skill_information: Vec<SkillInformation>,
     },
     /// Play a sound file (`ZC_SOUND`) — the `soundeffect` script command.
-    /// `entity_id` is `None` for a repeating sound, which Hercules sends with no
-    /// position so it plays flat rather than in space.
+    /// `entity_id` is `None` for a repeating sound, which Hercules sends with
+    /// no position so it plays flat rather than in space.
     PlaySoundEffect {
         file_name: String,
         entity_id: Option<EntityId>,
@@ -419,8 +430,8 @@ pub enum NetworkEvent {
     /// Another character's equipped ammunition changed, so their arrows can be
     /// drawn as the ammo they actually loaded rather than the generic one.
     ///
-    /// A Korangar-fork broadcast — official Ragnarok never reports anyone else's
-    /// ammunition. `item_id` is `0` when they unequip.
+    /// A Korangar-fork broadcast — official Ragnarok never reports anyone
+    /// else's ammunition. `item_id` is `0` when they unequip.
     ChangeAmmunition {
         account_id: AccountId,
         item_id: ItemId,
@@ -429,15 +440,16 @@ pub enum NetworkEvent {
     /// their own (headgear, hair colour, clothes colour, shoes, robe, body
     /// style).
     ///
-    /// This variant exists so the `SpriteChangeType` match can be **exhaustive**.
-    /// It used to end in `_ => None`, which silently discarded nine of the
-    /// fourteen look types the server broadcasts — the widest hole on the
-    /// wire→event boundary, and one no amount of client-side testing could see,
-    /// because the value never crossed the crate boundary at all.
+    /// This variant exists so the `SpriteChangeType` match can be
+    /// **exhaustive**. It used to end in `_ => None`, which silently
+    /// discarded nine of the fourteen look types the server broadcasts —
+    /// the widest hole on the wire→event boundary, and one no amount of
+    /// client-side testing could see, because the value never crossed the
+    /// crate boundary at all.
     ///
-    /// Do not reintroduce a catch-all arm. The whole point is that adding a look
-    /// type to `SpriteChangeType` now fails to compile until somebody decides
-    /// what it means.
+    /// Do not reintroduce a catch-all arm. The whole point is that adding a
+    /// look type to `SpriteChangeType` now fails to compile until somebody
+    /// decides what it means.
     ChangeLook {
         account_id: AccountId,
         look_type: SpriteChangeType,
@@ -527,7 +539,8 @@ pub enum NetworkEvent {
         entity_id: EntityId,
         amount: u16,
     },
-    /// A trap or other skill unit changed state (Ankle Snare catching something).
+    /// A trap or other skill unit changed state (Ankle Snare catching
+    /// something).
     SkillUnitUpdated {
         entity_id: EntityId,
     },

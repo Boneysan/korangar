@@ -13,7 +13,9 @@ mod sub;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 pub(crate) use main::{MainTrack, MainTrackBuilder, MainTrackHandle};
-pub(crate) use sub::{AttenuationFunction, SpatialTrackBuilder, SpatialTrackDistances, SpatialTrackHandle, Track, TrackBuilder, TrackHandle};
+pub(crate) use sub::{
+    AttenuationFunction, SpatialTrackBuilder, SpatialTrackDistances, SpatialTrackHandle, Track, TrackBuilder, TrackHandle,
+};
 
 pub(crate) struct TrackShared {
     removed: AtomicBool,

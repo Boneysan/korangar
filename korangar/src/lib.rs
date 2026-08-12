@@ -1,9 +1,9 @@
-// **Without this, `cargo test -p korangar` does not compile at all** — the trait
-// solver overflows on `StorageAccess: Sync` and `validation::NumericDimension:
-// Sync`, reached through wgpu-core's `PendingWrites` and naga's `ImageClass`.
-// `cargo build --release` is unaffected, which is why it went unnoticed: the
-// client builds and runs, and only the *test* profile fails. The 306 client unit
-// tests could not be run.
+// **Without this, `cargo test -p korangar` does not compile at all** — the
+// trait solver overflows on `StorageAccess: Sync` and
+// `validation::NumericDimension: Sync`, reached through wgpu-core's
+// `PendingWrites` and naga's `ImageClass`. `cargo build --release` is
+// unaffected, which is why it went unnoticed: the client builds and runs, and
+// only the *test* profile fails. The 306 client unit tests could not be run.
 //
 // Purely a compiler limit — it changes what the solver is willing to look at,
 // not what is compiled. 256 is what the diagnostic itself suggests.
@@ -56,7 +56,6 @@ mod world;
 
 use std::collections::HashMap;
 use std::io::Cursor;
-use ragnarok_formats::transform::Transform;
 use std::net::{SocketAddr, ToSocketAddrs};
 use std::ops::Deref;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
@@ -81,6 +80,7 @@ use korangar_networking::{
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
+use ragnarok_formats::transform::Transform;
 #[cfg(not(feature = "debug"))]
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
@@ -514,7 +514,8 @@ pub fn audit_animation_structure() -> Result<Vec<String>, String> {
 
 /// Whisper and party lines are otherwise `MessageColor::Information`, which is
 /// what every system notice uses -- so private and party talk read as server
-/// chatter in a busy log. Distinct colours make the channel obvious at a glance.
+/// chatter in a busy log. Distinct colours make the channel obvious at a
+/// glance.
 const WHISPER_COLOR: MessageColor = MessageColor::Rgb {
     red: 255,
     green: 140,
@@ -987,6 +988,7 @@ fn is_within_skill_range(player: TilePosition, target: TilePosition, attack_rang
 /// two fields it needs by reference rather than `&mut self` so callers can hold
 /// unrelated field borrows (e.g. the per-frame point-light borrow in the render
 /// path).
+#[allow(clippy::too_many_arguments)]
 fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
     networking_system: &mut NetworkingSystem<Callback>,
     state: &mut State<ClientState>,
@@ -1058,10 +1060,11 @@ fn resolve_pending_ground_tile(state: &State<ClientState>, resolution: PendingCa
 ///
 /// Without this the cast was simply *lost*: Hercules drops an out-of-range
 /// `CZ_USE_SKILL_TOGROUND` with a bare `return 0` and **no** `clif->skill_fail`
-/// (`unit.c` `unit_skilluse_pos2`, the `battle->check_range` arm), so the player
-/// pressed the key, spent nothing, and saw nothing at all. Hercules re-checks
-/// the range from `unit_walk_toxy_timer` when the caster is already walking, so
-/// approaching and re-issuing is what the server expects.
+/// (`unit.c` `unit_skilluse_pos2`, the `battle->check_range` arm), so the
+/// player pressed the key, spent nothing, and saw nothing at all. Hercules
+/// re-checks the range from `unit_walk_toxy_timer` when the caster is already
+/// walking, so approaching and re-issuing is what the server expects.
+#[allow(clippy::too_many_arguments)]
 fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
     networking_system: &mut NetworkingSystem<Callback>,
     state: &mut State<ClientState>,
@@ -1170,30 +1173,29 @@ fn format_missing_skill_item(name: Option<&str>, item_id: ItemId, amount: u16, e
     }
 }
 
-/// Ask the server to abort our own in-progress cast, returning whether there was
-/// one to abort — so the caller knows whether to fall through to the gesture's
-/// normal meaning (open the menu, rotate the camera).
+/// Ask the server to abort our own in-progress cast, returning whether there
+/// was one to abort — so the caller knows whether to fall through to the
+/// gesture's normal meaning (open the menu, rotate the camera).
 ///
 /// **Fork behaviour, not RO's.** Official Ragnarok has no player-initiated cast
 /// cancel; this pairs with the `clif_parse_CancelCast` Hercules delta. Movement
 /// deliberately does *not* cancel — casting still roots the character, which is
 /// authentic.
 ///
-/// The cast bar is left alone here: Hercules broadcasts `clif->skillcastcancel`,
-/// which arrives back as `SkillCastCancelled` and clears it. Clearing
-/// optimistically would show a cancel that might not have happened.
+/// The cast bar is left alone here: Hercules broadcasts
+/// `clif->skillcastcancel`, which arrives back as `SkillCastCancelled` and
+/// clears it. Clearing optimistically would show a cancel that might not have
+/// happened.
 ///
 /// Takes its two fields by reference rather than `&mut self` because both call
-/// sites already hold unrelated borrows of `self` (the input-event drain and the
-/// per-frame point-light borrow).
+/// sites already hold unrelated borrows of `self` (the input-event drain and
+/// the per-frame point-light borrow).
 fn cancel_own_cast<Callback: PacketCallback + Send>(
     networking_system: &mut NetworkingSystem<Callback>,
     state: &State<ClientState>,
     client_tick: ClientTick,
 ) -> bool {
-    let is_casting = state
-        .try_follow(this_entity())
-        .is_some_and(|player| player.is_casting(client_tick));
+    let is_casting = state.try_follow(this_entity()).is_some_and(|player| player.is_casting(client_tick));
 
     if is_casting {
         let _ = networking_system.cancel_cast();
@@ -1216,9 +1218,10 @@ fn cancel_own_cast<Callback: PacketCallback + Send>(
 /// [`cancel_own_cast`]: both call sites are inside the input-event drain, which
 /// already holds a mutable borrow of `self`.
 fn echo_own_whisper(state: &mut State<ClientState>, target_name: &str, message: &str) {
-    state
-        .follow_mut(client_state().chat_messages())
-        .push(ChatMessage::new(format!("[Whisper] To {target_name}: {message}"), WHISPER_COLOR));
+    state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+        format!("[Whisper] To {target_name}: {message}"),
+        WHISPER_COLOR,
+    ));
 }
 
 /// Usage line for one of our client-side chat commands, or `None` when the word
@@ -1260,9 +1263,9 @@ pub struct Client {
     sprite_loader: Arc<SpriteLoader>,
     texture_loader: Arc<TextureLoader>,
     library: Arc<Library>,
-    /// One opaque white texel, built on first use, so a `FlatColorTile` unit can
-    /// draw its colour without borrowing another skill's artwork. Cached because
-    /// a 9x9 ensemble would otherwise create 81 of them.
+    /// One opaque white texel, built on first use, so a `FlatColorTile` unit
+    /// can draw its colour without borrowing another skill's artwork.
+    /// Cached because a 9x9 ensemble would otherwise create 81 of them.
     flat_tile_texture: Option<Arc<Texture>>,
 
     interface_renderer: InterfaceRenderer,
@@ -1310,8 +1313,9 @@ pub struct Client {
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
-    /// disconnect itself lands. The packet arrives immediately before the socket
-    /// closes, so it cannot be shown on the map screen we are already leaving.
+    /// disconnect itself lands. The packet arrives immediately before the
+    /// socket closes, so it cannot be shown on the map screen we are
+    /// already leaving.
     pending_disconnect_reason: Option<String>,
     /// Set when the server dropped us rather than the player leaving, so the
     /// notice is opened after the event batch instead of inside whichever arm
@@ -1339,8 +1343,9 @@ pub struct Client {
     saved_username: String,
     // TODO: Move or remove this.
     saved_packet_version: SupportedPacketVersion,
-    /// Wall-clock deadline for using the login auth token (Hercules AUTH_TIMEOUT).
-    /// Only used when the player must pick among multiple character servers.
+    /// Wall-clock deadline for using the login auth token (Hercules
+    /// AUTH_TIMEOUT). Only used when the player must pick among multiple
+    /// character servers.
     login_auth_expires_at: Option<Instant>,
 
     particle_holder: ParticleHolder,
@@ -1444,8 +1449,8 @@ impl Client {
 
     /// Carrier for a `FlatColorTile`: one opaque white texel, so the quad's
     /// colour reaches the screen unmodulated. The original draws these with no
-    /// artwork at all — borrowing another skill's tile shows *its* pattern, which
-    /// is exactly how this was caught live.
+    /// artwork at all — borrowing another skill's tile shows *its* pattern,
+    /// which is exactly how this was caught live.
     /// Carrier for the table's `FlatColorTile` — artwork-free, so the recipe's
     /// colour is the whole appearance.
     ///
@@ -1625,8 +1630,8 @@ impl Client {
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
             eprintln!(
-                "[ranged-attack] view={view} local_player={is_local_player} ammo_item={ammunition:?} \
-                 ammo_sprite={ammunition_sprite:?} used_fallback={used_fallback}"
+                "[ranged-attack] view={view} local_player={is_local_player} ammo_item={ammunition:?} ammo_sprite={ammunition_sprite:?} \
+                 used_fallback={used_fallback}"
             );
         }
 
@@ -1711,6 +1716,7 @@ impl Client {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn spawn_damage_caster_skill_effect(
         &mut self,
         skill_id: SkillId,
@@ -1747,18 +1753,14 @@ impl Client {
         // Short gate: multi-hit packets arrive in the same few frames; recasts
         // after ~cast time must not be blocked for long.
         let spawn_travel = !once_per_cast_travel
-            || self.effect_holder.claim_unique_skill_effect_slot(
-                source_entity_id,
-                skill_id,
-                UniqueEffectSlot::TravelProjectile,
-                0.22,
-            );
+            || self
+                .effect_holder
+                .claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::TravelProjectile, 0.22);
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
             eprintln!(
-                "[skill-effect] damage-caster skill={} source={} spawn_caster={spawn_caster_layer} \
-                 spawn_travel={spawn_travel} impact_delay_ms={impact_delay_ms} \
-                 source_pos={source_position:?} target_pos={target_position:?}",
+                "[skill-effect] damage-caster skill={} source={} spawn_caster={spawn_caster_layer} spawn_travel={spawn_travel} \
+                 impact_delay_ms={impact_delay_ms} source_pos={source_position:?} target_pos={target_position:?}",
                 skill_id.0, source_entity_id.0
             );
         }
@@ -1897,7 +1899,8 @@ impl Client {
         } else {
             kind.duration()
         };
-        // Stable-ish id from endpoints so concurrent balls don't always share one light.
+        // Stable-ish id from endpoints so concurrent balls don't always share one
+        // light.
         let light_id = PointLightId::new(
             (source_position.x.to_bits())
                 .wrapping_add(target_position.z.to_bits())
@@ -2091,23 +2094,21 @@ impl Client {
         }
 
         match presentation.body {
-            Some(UnitBody::Cylinders { texture, specs, color }) => {
-                match self.texture_loader.get_or_load(texture, ImageType::Color) {
-                    Ok(loaded) => self.effect_holder.add_unit(
-                        Box::new(UnitCylinders::new(
-                            loaded,
-                            position,
-                            specs,
-                            color,
-                            point_light_id,
-                            light_color,
-                            light_intensity,
-                        )),
-                        entity_id,
-                    ),
-                    Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
-                }
-            }
+            Some(UnitBody::Cylinders { texture, specs, color }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
+                Ok(loaded) => self.effect_holder.add_unit(
+                    Box::new(UnitCylinders::new(
+                        loaded,
+                        position,
+                        specs,
+                        color,
+                        point_light_id,
+                        light_color,
+                        light_intensity,
+                    )),
+                    entity_id,
+                ),
+                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+            },
             Some(UnitBody::IceHorns { texture }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
                 Ok(loaded) => self
                     .effect_holder
@@ -2127,8 +2128,7 @@ impl Client {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         let texture = texture.unwrap_or("<flat colour>");
                         eprintln!(
-                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, \
-                             transparent={}",
+                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, transparent={}",
                             loaded.is_transparent()
                         );
                     }
@@ -2186,9 +2186,9 @@ impl Client {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
                 // already in the cache comes back from the request immediately.
                 if let Some(sentinel) = self.sprite_effects.request_slot(path)
-                    && let Some(animation_data) =
-                        self.async_loader
-                            .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
+                    && let Some(animation_data) = self
+                        .async_loader
+                        .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
                 {
                     self.sprite_effects.set_animation_data(path, animation_data);
                 }
@@ -2223,11 +2223,11 @@ impl Client {
         }
     }
 
-    /// Fly classic `이팩트\*.spr` sprites from caster to target. Multi-hit skills
-    /// pack staggered copies so the last lands near the impact boundary.
-    /// `trail_ghosts` adds dimmed duplicates close behind the lead sprite —
-    /// the original Fire Ball is five low-alpha copies of the sheet flying as
-    /// a comet trail.
+    /// Fly classic `이팩트\*.spr` sprites from caster to target. Multi-hit
+    /// skills pack staggered copies so the last lands near the impact
+    /// boundary. `trail_ghosts` adds dimmed duplicates close behind the
+    /// lead sprite — the original Fire Ball is five low-alpha copies of the
+    /// sheet flying as a comet trail.
     #[allow(clippy::too_many_arguments)]
     fn add_sprite_travel_projectile(
         &mut self,
@@ -2259,9 +2259,9 @@ impl Client {
 
         // Lazy-load the sheet (first cast may draw nothing until it lands).
         if let Some(sentinel) = self.sprite_effects.request_slot(path)
-            && let Some(animation_data) =
-                self.async_loader
-                    .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
+            && let Some(animation_data) = self
+                .async_loader
+                .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
         {
             self.sprite_effects.set_animation_data(path, animation_data);
         }
@@ -2273,16 +2273,8 @@ impl Client {
 
             for ghost in 1..=u32::from(trail_ghosts) {
                 let ghost_alpha = 0.45 * (1.0 - ghost as f32 / (u32::from(trail_ghosts) + 1) as f32);
-                self.sprite_effects.spawn_travel(
-                    path,
-                    from,
-                    to,
-                    0,
-                    client_tick,
-                    travel_ms,
-                    delay_ms + ghost * 40,
-                    ghost_alpha,
-                );
+                self.sprite_effects
+                    .spawn_travel(path, from, to, 0, client_tick, travel_ms, delay_ms + ghost * 40, ghost_alpha);
             }
         }
     }
@@ -2290,9 +2282,9 @@ impl Client {
     /// Attach, swap, or drop the looping visual for an entity's status effect.
     ///
     /// Driven off the same opt1/opt2 the tints use, so the two never disagree.
-    /// Keyed per entity through `add_status_effect`, which replaces any existing
-    /// status visual — a poisoned entity that then gets stunned shows only the
-    /// stun, never both stacked.
+    /// Keyed per entity through `add_status_effect`, which replaces any
+    /// existing status visual — a poisoned entity that then gets stunned
+    /// shows only the stun, never both stacked.
     fn update_status_effect_visual(&mut self, entity_id: EntityId, body_state: u16, health_state: u16) {
         let Some(path) = status_effect_asset(body_state, health_state) else {
             self.effect_holder.remove_status_effect(entity_id);
@@ -2378,11 +2370,7 @@ impl Client {
                     Err(error) => eprintln!("[skill-effect] special-effect STR {path} failed: {error:?}"),
                 }
             }
-            SpecialEffectRecipe::Burst {
-                style,
-                texture,
-                secondary,
-            } => match secondary {
+            SpecialEffectRecipe::Burst { style, texture, secondary } => match secondary {
                 Some(secondary) => self.add_layered_procedural_skill_effect(texture, secondary, position, point_light_id, style),
                 None => self.add_procedural_skill_effect(texture, position, point_light_id, style),
             },
@@ -3383,16 +3371,13 @@ impl Client {
         let now = Instant::now();
         if now >= expires_at {
             eprintln!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
-            self.return_to_login_with_error(
-                "Login session expired before server select (30s) — please log in again",
-            );
+            self.return_to_login_with_error("Login session expired before server select (30s) — please log in again");
             return;
         }
 
         let remaining = expires_at.saturating_duration_since(now);
         let secs = remaining.as_secs().max(1);
-        *self.client_state.follow_mut(client_state().server_select_status()) =
-            format!("Select a server — session expires in {secs}s");
+        *self.client_state.follow_mut(client_state().server_select_status()) = format!("Select a server — session expires in {secs}s");
     }
 
     /// Enter the character server using the same path as a manual server click.
@@ -3419,11 +3404,8 @@ impl Client {
             .saved_login_data
             .as_ref()
             .expect("character server entry requires a successful login");
-        self.networking_system.connect_to_character_server(
-            self.saved_packet_version,
-            login_data,
-            character_server_information,
-        );
+        self.networking_system
+            .connect_to_character_server(self.saved_packet_version, login_data, character_server_information);
     }
 
     #[inline(always)]
@@ -3475,17 +3457,12 @@ impl Client {
                     // goes account → character list with no flash.
                     if character_servers.len() == 1 {
                         let sole = character_servers.into_iter().next().unwrap();
-                        eprintln!(
-                            "[login] sole character server '{}' — auto-entering",
-                            sole.server_name
-                        );
+                        eprintln!("[login] sole character server '{}' — auto-entering", sole.server_name);
                         self.enter_character_server(sole);
                     } else {
                         self.login_auth_expires_at = Some(Instant::now() + LOGIN_AUTH_TIMEOUT);
-                        *self.client_state.follow_mut(client_state().server_select_status()) = format!(
-                            "Select a server — session expires in {}s",
-                            LOGIN_AUTH_TIMEOUT.as_secs()
-                        );
+                        *self.client_state.follow_mut(client_state().server_select_status()) =
+                            format!("Select a server — session expires in {}s", LOGIN_AUTH_TIMEOUT.as_secs());
                         self.interface
                             .open_window(ServerSelectionWindow::new(client_state().character_servers()));
                     }
@@ -3537,16 +3514,12 @@ impl Client {
                                 self.show_login_error("Could not connect to login server");
                             }
                         } else {
-                            eprintln!(
-                                "[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition"
-                            );
+                            eprintln!("[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition");
                         }
                     }
                 }
                 NetworkEvent::CharacterServerConnected { normal_slot_count } => {
-                    eprintln!(
-                        "[login] CharacterServerConnected slots={normal_slot_count} — requesting character list"
-                    );
+                    eprintln!("[login] CharacterServerConnected slots={normal_slot_count} — requesting character list");
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .set_slot_count(normal_slot_count);
@@ -3566,20 +3539,14 @@ impl Client {
                         if on_map {
                             #[cfg(feature = "debug")]
                             print_debug!("Character server dropped while on map — reconnecting");
-                            if let (Some(login_data), Some(server)) =
-                                (self.saved_login_data.as_ref(), self.saved_character_server.clone())
+                            if let (Some(login_data), Some(server)) = (self.saved_login_data.as_ref(), self.saved_character_server.clone())
                             {
-                                self.networking_system.connect_to_character_server(
-                                    self.saved_packet_version,
-                                    login_data,
-                                    server,
-                                );
+                                self.networking_system
+                                    .connect_to_character_server(self.saved_packet_version, login_data, server);
                             }
                         } else {
                             eprintln!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
-                            self.return_to_login_with_error(
-                                "Lost connection to character server (auth may have expired — log in again)",
-                            );
+                            self.return_to_login_with_error("Lost connection to character server (auth may have expired — log in again)");
                         }
                     } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
                         // Intentional char disconnect without map (e.g. log out character).
@@ -3619,9 +3586,7 @@ impl Client {
                     // game). If they are gone we are on the login screen by design,
                     // so there is nothing to reconnect to. Mirrors the guard the
                     // `CharacterServerDisconnected` arm already uses.
-                    if let (Some(login_data), Some(server)) =
-                        (self.saved_login_data.as_ref(), self.saved_character_server.clone())
-                    {
+                    if let (Some(login_data), Some(server)) = (self.saved_login_data.as_ref(), self.saved_character_server.clone()) {
                         self.networking_system
                             .connect_to_character_server(self.saved_packet_version, login_data, server);
                     }
@@ -3863,7 +3828,8 @@ impl Client {
                         this_player().manually_asserted(),
                         client_state().skill_cooldowns(),
                     ));
-                    self.interface.open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
+                    self.interface
+                        .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
                     // Minimap is filled when the map resource finishes loading; open a placeholder
                     // only if the player wants it visible (Game Settings / Map button / Alt+M).
                     let show_minimap = *self.client_state.follow(client_state().game_settings().show_minimap());
@@ -4464,9 +4430,7 @@ impl Client {
                     // Their `hit_effects` are unreachable — that track only
                     // fires from a damage impact — so a buff or an ally heal
                     // rendered nothing at all before this.
-                    if successful
-                        && let Some(target_position) = self.entity_world_position(destination_entity_id)
-                    {
+                    if successful && let Some(target_position) = self.entity_world_position(destination_entity_id) {
                         for (resolved, light_color, start_delay) in skill_no_damage_target_effects(skill_id) {
                             self.spawn_resolved_effect(
                                 resolved,
@@ -4684,9 +4648,7 @@ impl Client {
                         }
                         let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!(
-                                "[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}"
-                            );
+                            eprintln!("[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}");
                         }
                         Self::refresh_entity_player_gear(
                             &self.async_loader,
@@ -4820,9 +4782,13 @@ impl Client {
                     ..
                 } => {
                     let name = resolve_item_name(&self.library, item_id, identified);
-                    self.client_state
-                        .follow_mut(client_state().trade_state())
-                        .add_partner_item(item_id, amount, identified, refine, name.as_deref());
+                    self.client_state.follow_mut(client_state().trade_state()).add_partner_item(
+                        item_id,
+                        amount,
+                        identified,
+                        refine,
+                        name.as_deref(),
+                    );
                 }
                 NetworkEvent::TradeAddItemResult { inventory_index, result } => {
                     // Claim the requested amount either way: a failed add must not
@@ -4851,9 +4817,12 @@ impl Client {
                                 (item_id, amount, trade_item_label(name.as_deref(), item_id, amount, 0))
                             });
                         if let Some((item_id, amount, label)) = ours {
-                            self.client_state
-                                .follow_mut(client_state().trade_state())
-                                .note_our_item(inventory_index, item_id, amount, label);
+                            self.client_state.follow_mut(client_state().trade_state()).note_our_item(
+                                inventory_index,
+                                item_id,
+                                amount,
+                                label,
+                            );
                         }
                     } else {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -5013,13 +4982,7 @@ impl Client {
                             player.set_shield(left);
                         }
                         let parts = player.get_entity_part_files(&self.library, &self.game_file_loader);
-                        Self::refresh_entity_player_gear(
-                            &self.async_loader,
-                            &self.library,
-                            &self.game_file_loader,
-                            player,
-                            &parts,
-                        );
+                        Self::refresh_entity_player_gear(&self.async_loader, &self.library, &self.game_file_loader, player, &parts);
                         player.refresh_neutral_stance(client_tick);
                     }
                 }
@@ -5037,8 +5000,7 @@ impl Client {
                         // Same guard as the skill tree: this event fires for any entity's
                         // base-sprite change, including monster looks and disguises whose
                         // ids are not player jobs at all.
-                        *self.client_state.follow_mut(client_state().player_class_name()) =
-                            JobName::get(&self.library, job_id).to_string();
+                        *self.client_state.follow_mut(client_state().player_class_name()) = JobName::get(&self.library, job_id).to_string();
 
                         let layout = self.async_loader.request_skill_tree_layout_load(job_id, client_tick);
                         *self.client_state.follow_mut(client_state().skill_tree_window().selected_tab()) =
@@ -5093,9 +5055,7 @@ impl Client {
                     // because the server's force-unequip guards on
                     // `equip_index[EQI_AMMO] > 0`, and inventory slot 0 is valid,
                     // and because it does not cover huuma weapons at all.
-                    self.client_state
-                        .follow_mut(client_state().remote_ammunition())
-                        .remove(&account_id);
+                    self.client_state.follow_mut(client_state().remote_ammunition()).remove(&account_id);
 
                     if let Some(entity) = self
                         .client_state
@@ -5117,24 +5077,14 @@ impl Client {
                         .find(|entity| entity.get_entity_id().0 == account_id.0)
                     {
                         entity.set_shield(shield_id);
-                        Self::refresh_entity_shield_layer(
-                            &self.async_loader,
-                            &self.library,
-                            &self.game_file_loader,
-                            entity,
-                        );
+                        Self::refresh_entity_shield_layer(&self.async_loader, &self.library, &self.game_file_loader, entity);
                     } else if let Some(player) = self
                         .client_state
                         .try_follow_mut(this_entity())
                         .filter(|entity| entity.get_entity_id().0 == account_id.0)
                     {
                         player.set_shield(shield_id);
-                        Self::refresh_entity_shield_layer(
-                            &self.async_loader,
-                            &self.library,
-                            &self.game_file_loader,
-                            player,
-                        );
+                        Self::refresh_entity_shield_layer(&self.async_loader, &self.library, &self.game_file_loader, player);
                     }
                 }
                 NetworkEvent::ChangeAmmunition { account_id, item_id } => {
@@ -5182,7 +5132,10 @@ impl Client {
                     // will be picked up when rendering lands. Logged under the
                     // existing packet-log switch so the coverage is observable.
                     if changed == Some(true) && std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[packet-log] look change account={} type={look_type:?} value={value}", account_id.0);
+                        eprintln!(
+                            "[packet-log] look change account={} type={look_type:?} value={value}",
+                            account_id.0
+                        );
                     }
                 }
                 NetworkEvent::EntityDirection {
@@ -5262,9 +5215,7 @@ impl Client {
                     // the list -- below offline entries -- until a relog or the next
                     // status change happens to reorder it. The other two mutation
                     // points (`SetFriendList`, `FriendOnlineStatus`) already do this.
-                    crate::state::friends::sort_friends(
-                        self.client_state.follow_mut(client_state().friend_list()).as_mut_slice(),
-                    );
+                    crate::state::friends::sort_friends(self.client_state.follow_mut(client_state().friend_list()).as_mut_slice());
                 }
                 NetworkEvent::FriendOnlineStatus {
                     character_id,
@@ -5279,9 +5230,7 @@ impl Client {
                         // list arrives at login, so without this a friend who
                         // logs in mid-session gets the right glyph but stays in
                         // the wrong position until the next relog.
-                        crate::state::friends::sort_friends(
-                            self.client_state.follow_mut(client_state().friend_list()).as_mut_slice(),
-                        );
+                        crate::state::friends::sort_friends(self.client_state.follow_mut(client_state().friend_list()).as_mut_slice());
                     }
                     let status = if online { "online" } else { "offline" };
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -5339,9 +5288,7 @@ impl Client {
                     };
 
                     // The answer landed, so the window stops saying "waiting".
-                    self.client_state
-                        .follow_mut(client_state().party_state())
-                        .clear_outgoing_invite();
+                    self.client_state.follow_mut(client_state().party_state()).clear_outgoing_invite();
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message, MessageColor::Information));
@@ -5357,9 +5304,7 @@ impl Client {
                         item_division_share,
                     );
                 }
-                NetworkEvent::PartyLeaderChanged {
-                    new_leader_account_id, ..
-                } => {
+                NetworkEvent::PartyLeaderChanged { new_leader_account_id, .. } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .set_leader(new_leader_account_id);
@@ -5411,7 +5356,10 @@ impl Client {
                     // Same three outcomes as the skill path, but this is the
                     // blacksmith NPC and previously said nothing at all.
                     let (message, color) = match result {
-                        0 => (format!("{item_name} was refined to +{refine_level}."), MessageColor::Information),
+                        0 => (
+                            format!("{item_name} was refined to +{refine_level}."),
+                            MessageColor::Information,
+                        ),
                         2 => (
                             format!("{item_name} lost a refine level and is now +{refine_level}."),
                             MessageColor::Error,
@@ -5447,8 +5395,9 @@ impl Client {
                 }
                 NetworkEvent::SkillUnitUpdated { .. } => {
                     // Ankle Snare and friends changing state. The unit's own
-                    // visual is already driven by AddSkillUnit / RemoveSkillUnit;
-                    // this only says "something is caught", which we do not draw
+                    // visual is already driven by AddSkillUnit /
+                    // RemoveSkillUnit; this only says
+                    // "something is caught", which we do not draw
                     // differently yet.
                 }
                 NetworkEvent::EntitySnapped { entity_id, position } => {
@@ -5466,10 +5415,7 @@ impl Client {
                 }
                 NetworkEvent::EntityEffectState { .. } => {}
                 NetworkEvent::StarPlace {
-                    map_name,
-                    star,
-                    result,
-                    ..
+                    map_name, star, result, ..
                 } => {
                     let target = match star {
                         0 => "Sun",
@@ -5632,10 +5578,9 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_window())
                         .note_whisper_from(sender_name.clone());
-                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("[Whisper] {sender_name}: {message}"),
-                        WHISPER_COLOR,
-                    ));
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("[Whisper] {sender_name}: {message}"), WHISPER_COLOR));
                 }
                 NetworkEvent::WhisperResult { result } => {
                     if result != 0 {
@@ -5696,7 +5641,7 @@ impl Client {
                     self.effect_holder.remove_unit(entity_id);
                     self.sprite_effects.remove_unit(entity_id);
                     self.skill_unit_registry.remove(entity_id);
-                    self.active_trap_props.retain(|(id, _, _)| *id != entity_id);
+                    self.active_trap_props.retain(|(id, ..)| *id != entity_id);
                 }
                 NetworkEvent::GroundSkillEffect {
                     skill_id,
@@ -6011,8 +5956,8 @@ impl Client {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         eprintln!(
                             "[attack-range] too far: target={target_entity_id:?} target_pos={target_position:?} \
-                             player_pos={player_position:?} range={} on_screen={target_on_screen} have_player={have_player} \
-                             have_map={} -> {}",
+                             player_pos={player_position:?} range={} on_screen={target_on_screen} have_player={have_player} have_map={} \
+                             -> {}",
                             attack_range.0,
                             self.map.is_some(),
                             match walking {
@@ -6125,8 +6070,7 @@ impl Client {
                 }
                 NetworkEvent::WeaponRefineResult { result, item_id } => {
                     self.interface.close_window_with_class(WindowClass::WeaponRefine);
-                    let item_name =
-                        resolve_item_name(&self.library, item_id, true).unwrap_or_else(|| format!("item #{}", item_id.0));
+                    let item_name = resolve_item_name(&self.library, item_id, true).unwrap_or_else(|| format!("item #{}", item_id.0));
                     let (message, color) = match result {
                         0 => (format!("Weapon refine succeeded for {item_name}."), MessageColor::Information),
                         1 => (format!("Weapon refine failed for {item_name}."), MessageColor::Error),
@@ -6529,13 +6473,11 @@ impl Client {
                         Some(packet_version) => match packet_version {
                             PacketVersion::_20220406 => SupportedPacketVersion::_20220406,
                             PacketVersion::Unsupported(packet_version) => {
-                                let message =
-                                    format!("Selected server has an unsupported package version: {packet_version}");
+                                let message = format!("Selected server has an unsupported package version: {packet_version}");
                                 // Inline (don't call show_login_error): this loop
                                 // already mutably borrows self via drain.
                                 eprintln!("[login] show_login_error: {message}");
-                                *self.client_state.follow_mut(client_state().login_window().status_message()) =
-                                    message;
+                                *self.client_state.follow_mut(client_state().login_window().status_message()) = message;
                                 self.interface.close_window_with_class(WindowClass::Error);
                                 continue;
                             }
@@ -6689,10 +6631,9 @@ impl Client {
                     if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Party) {
                             true => self.interface.close_window_with_class(WindowClass::Party),
-                            false => self.interface.open_window(PartyWindow::new(
-                                client_state().party_window(),
-                                client_state().party_state(),
-                            )),
+                            false => self
+                                .interface
+                                .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state())),
                         }
                     }
                 }
@@ -6789,11 +6730,8 @@ impl Client {
                                     .unwrap_or_else(|| "Unknown".to_owned());
                                 let class_name = JobName::get(&self.library, entity.get_job_id()).to_string();
 
-                                self.interface.open_window(PlayerTargetWindow::new(
-                                    AccountId(entity_id.0),
-                                    character_name,
-                                    class_name,
-                                ));
+                                self.interface
+                                    .open_window(PlayerTargetWindow::new(AccountId(entity_id.0), character_name, class_name));
                                 Ok(())
                             }
                             EntityType::Warp => self.networking_system.player_move({
@@ -6894,7 +6832,7 @@ impl Client {
                     }
 
                     if let Some(rest) = text.strip_prefix("/store ") {
-                        let mut parts = rest.trim().split_whitespace();
+                        let mut parts = rest.split_whitespace();
                         if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
                             let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
                             let _ = self
@@ -6910,7 +6848,7 @@ impl Client {
                     }
 
                     if let Some(rest) = text.strip_prefix("/retrieve ") {
-                        let mut parts = rest.trim().split_whitespace();
+                        let mut parts = rest.split_whitespace();
                         if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
                             let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
                             let _ = self
@@ -7015,10 +6953,9 @@ impl Client {
                                 true => "Ignoring",
                                 false => "No longer ignoring",
                             };
-                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                                format!("{verb} {character_name}."),
-                                MessageColor::Information,
-                            ));
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(format!("{verb} {character_name}."), MessageColor::Information));
                         }
                         continue;
                     }
@@ -7362,7 +7299,7 @@ impl Client {
                     // for is known.
                     self.client_state
                         .follow_mut(client_state().trade_state())
-                        .note_pending_add(inventory_index, u32::from(amount));
+                        .note_pending_add(inventory_index, amount);
                     let _ = self.networking_system.trade_add_item(inventory_index, amount);
                 }
                 InputEvent::TradeAddZeny { amount } => {
@@ -7463,11 +7400,13 @@ impl Client {
                     // Resolve the slot to owned data under an immutable borrow, then act — so the
                     // cast / arm / chat-feedback below can borrow self mutably without conflict.
                     let learnable_skill = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).clone();
-                    // Cast at the character's CURRENT learned level, never `learnable_skill.maximum_level`
-                    // — that field is whatever level got persisted into the hotkey slot at drag-time
-                    // (see `Hotbar::update_slot`), which can momentarily disagree with the live skill
-                    // list right after a job change / `@allskill` (server then rejects with "Skill Level
-                    // is not high enough", intermittent — a retry works only because the client's skill
+                    // Cast at the character's CURRENT learned level, never
+                    // `learnable_skill.maximum_level` — that field is whatever
+                    // level got persisted into the hotkey slot at drag-time
+                    // (see `Hotbar::update_slot`), which can momentarily disagree with the live
+                    // skill list right after a job change / `@allskill` (server
+                    // then rejects with "Skill Level is not high enough",
+                    // intermittent — a retry works only because the client's skill
                     // list catches up by then). The learned-skill list is the live source of truth.
                     let skill_targeting = learnable_skill.as_ref().and_then(|learnable_skill| {
                         self.client_state
@@ -7491,11 +7430,9 @@ impl Client {
                                         );
                                     }
                                     false => {
-                                        let _ = self.networking_system.cast_skill(
-                                            learnable_skill.skill_id,
-                                            skill_level,
-                                            this_entity_id,
-                                        );
+                                        let _ = self
+                                            .networking_system
+                                            .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id);
                                     }
                                 }
                             }
@@ -7715,10 +7652,9 @@ impl Client {
                         true => "Ignoring",
                         false => "No longer ignoring",
                     };
-                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("{verb} {character_name}."),
-                        MessageColor::Information,
-                    ));
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("{verb} {character_name}."), MessageColor::Information));
                 }
                 InputEvent::SetPartyInvitationBlock { blocked } => {
                     let _ = self.networking_system.set_party_invitation_block(blocked);
@@ -8058,11 +7994,9 @@ impl Client {
             entity.set_animation_data(updated);
             return;
         }
-        if let Some(animation_data) = async_loader.request_animation_data_load(
-            entity.get_entity_id(),
-            entity.get_entity_type(),
-            entity_part_files.to_vec(),
-        ) {
+        if let Some(animation_data) =
+            async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), entity_part_files.to_vec())
+        {
             entity.set_animation_data(animation_data);
         }
     }
@@ -8083,11 +8017,9 @@ impl Client {
     /// Phase C4: swap only the head layer on hair change.
     fn refresh_entity_head_layer(async_loader: &AsyncLoader, entity: &mut Entity, entity_part_files: &[String]) {
         let Some(head_path) = entity_part_files.get(1).map(|path| path.as_str()) else {
-            if let Some(animation_data) = async_loader.request_animation_data_load(
-                entity.get_entity_id(),
-                entity.get_entity_type(),
-                entity_part_files.to_vec(),
-            ) {
+            if let Some(animation_data) =
+                async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), entity_part_files.to_vec())
+            {
                 entity.set_animation_data(animation_data);
             }
             return;
@@ -8098,24 +8030,18 @@ impl Client {
             entity.set_animation_data(updated);
             return;
         }
-        if let Some(animation_data) = async_loader.request_animation_data_load(
-            entity.get_entity_id(),
-            entity.get_entity_type(),
-            entity_part_files.to_vec(),
-        ) {
+        if let Some(animation_data) =
+            async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), entity_part_files.to_vec())
+        {
             entity.set_animation_data(animation_data);
         }
     }
 
     /// Phase C5: swap only the shield layer (`방패\…`).
     /// After the shield swap, re-apply the weapon layer from the same part list
-    /// so a prior mis-classified `parts[2]` refresh cannot leave the sword gone.
-    fn refresh_entity_shield_layer(
-        async_loader: &AsyncLoader,
-        library: &Library,
-        game_file_loader: &GameFileLoader,
-        entity: &mut Entity,
-    ) {
+    /// so a prior mis-classified `parts[2]` refresh cannot leave the sword
+    /// gone.
+    fn refresh_entity_shield_layer(async_loader: &AsyncLoader, library: &Library, game_file_loader: &GameFileLoader, entity: &mut Entity) {
         let parts = entity.get_entity_part_files(library, game_file_loader);
         let shield_path = crate::world::shield_path_from_entity_parts(&parts);
         if let Some(current) = entity.animation_data()
@@ -8126,9 +8052,7 @@ impl Client {
             Self::refresh_entity_weapon_layer(async_loader, entity, &parts);
             return;
         }
-        if let Some(animation_data) =
-            async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), parts)
-        {
+        if let Some(animation_data) = async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), parts) {
             entity.set_animation_data(animation_data);
         }
     }
@@ -8140,8 +8064,9 @@ impl Client {
     ///
     /// Called as late as possible in the frame to give the loader thread the
     /// Play a resolved effect at `position`, dispatching to whichever pipeline
-    /// its family needs: the STR keyframe player for `data\texture\effect\*.str`,
-    /// or the classic sprite player for `data\sprite\이팩트\*.spr`.
+    /// its family needs: the STR keyframe player for
+    /// `data\texture\effect\*.str`, or the classic sprite player for
+    /// `data\sprite\이팩트\*.spr`.
     ///
     /// Sprite effects load lazily on first use, exactly like the emote sheet —
     /// the first cast of a skill spawns nothing visible while its sprite is in
@@ -8182,9 +8107,9 @@ impl Client {
                 // A cached sheet comes back from the request immediately; only
                 // a genuine miss goes through the sentinel routing.
                 if let Some(sentinel) = self.sprite_effects.request_slot(path)
-                    && let Some(animation_data) =
-                        self.async_loader
-                            .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
+                    && let Some(animation_data) = self
+                        .async_loader
+                        .request_animation_data_load(sentinel, EntityType::Npc, vec![path.to_string()])
                 {
                     self.sprite_effects.set_animation_data(path, animation_data);
                 }
@@ -8933,7 +8858,8 @@ impl Client {
                             // clears the target and does not start a camera rotation.
                             self.pending_skill = None;
                         } else if cancel_own_cast(&mut self.networking_system, &self.client_state, client_tick) {
-                            // Then an in-progress cast, for the same reason: aborting must not
+                            // Then an in-progress cast, for the same reason:
+                            // aborting must not
                             // also start swinging the camera around.
                         } else if currently_playing {
                             #[cfg_attr(feature = "debug", korangar_debug::debug_condition(!render_options.use_debug_camera))]
@@ -9626,7 +9552,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         self.emote_bubbles.render(
             self.entity_instructions,
             entities,
-            player.as_deref(),
+            player,
             dead_entities,
             entity_camera,
             self.client_tick,
@@ -9673,10 +9599,11 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
 
     /// Draws the ground area an armed skill will cover, under the cursor.
     ///
-    /// The shape is the server's own layout (see [`skill_footprint`]), including
-    /// the direction-dependent walls, so what the player aims is what they get.
-    /// Tinted red when the target is out of range — the ground-cast path has no
-    /// client-side range check, so without this the cast just fails silently.
+    /// The shape is the server's own layout (see [`skill_footprint`]),
+    /// including the direction-dependent walls, so what the player aims is
+    /// what they get. Tinted red when the target is out of range — the
+    /// ground-cast path has no client-side range check, so without this the
+    /// cast just fails silently.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn render_skill_aiming_footprint(&mut self) {
@@ -9776,8 +9703,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             if !members.is_empty() {
                 let theme = self.client_state.follow(client_state().world_theme());
                 for entity in self.client_state.follow(client_state().entities()).iter().skip(1) {
-                    if let Some((_, health, spell)) = members.iter().find(|(account_id, _, _)| *account_id == entity.get_entity_id().0)
-                    {
+                    if let Some((_, health, spell)) = members.iter().find(|(account_id, ..)| *account_id == entity.get_entity_id().0) {
                         entity.render_ally_status(
                             self.middle_interface_renderer,
                             self.current_camera,
@@ -9883,7 +9809,17 @@ mod slash_command_tests {
     #[test]
     fn known_commands_have_a_usage_line() {
         for command in [
-            "/w", "/whisper", "/r", "/reply", "/p", "/party", "/trade", "/store", "/retrieve", "/ignore", "/unignore",
+            "/w",
+            "/whisper",
+            "/r",
+            "/reply",
+            "/p",
+            "/party",
+            "/trade",
+            "/store",
+            "/retrieve",
+            "/ignore",
+            "/unignore",
         ] {
             assert!(slash_command_usage(command).is_some(), "{command} has no usage line");
         }
@@ -10046,7 +9982,6 @@ mod skill_effect_asset_tests {
             .collect();
         assert!(missing.is_empty(), "missing skill effect assets: {missing:#?}");
     }
-
 }
 
 #[cfg(test)]

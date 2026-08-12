@@ -3,7 +3,9 @@ use std::sync::Arc;
 mod native_motion;
 mod native_skill;
 
-use cgmath::{Array, Matrix4, Point3, SquareMatrix, Transform, Vector2, Vector3, Zero};
+#[cfg(feature = "debug")]
+use cgmath::One;
+use cgmath::{Array, Matrix4, Point3, Transform, Vector2, Vector3, Zero};
 use korangar_container::Cacheable;
 use korangar_interface::element::StateElement;
 use ragnarok_packets::{ClientTick, Direction, EntityId, JobId, Sex, SkillId};
@@ -461,6 +463,7 @@ impl AnimationState {
         self.weapon_attack_for_state(entity_type, job_id, sex, weapon, 2, random_tenth, client_tick);
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn weapon_attack_for_state(
         &mut self,
         entity_type: EntityType,
@@ -496,6 +499,7 @@ impl AnimationState {
     /// skill-state lookup, player intercept, and shared flat-action mapping.
     /// Returns false when a native no-action or precedence guard preserves the
     /// current action.
+    #[allow(clippy::too_many_arguments)]
     pub fn skill_attack(
         &mut self,
         entity_type: EntityType,
@@ -748,7 +752,6 @@ impl AnimationState {
         self.motion_program.as_ref().map(|program| program.current_step().motion_index)
     }
 
-
     pub fn update(&mut self, client_tick: ClientTick) {
         if self.paused {
             return;
@@ -816,6 +819,7 @@ pub fn is_weapon_part_path(path: &str) -> bool {
 ///
 /// Prefer [`weapon_paths_from_entity_parts`] when trails / dual-wield off-hands
 /// may add multiple weapon-family layers.
+#[allow(dead_code)]
 pub fn weapon_path_from_entity_parts(parts: &[String]) -> Option<&str> {
     weapon_paths_from_entity_parts(parts).into_iter().next()
 }
@@ -823,19 +827,12 @@ pub fn weapon_path_from_entity_parts(parts: &[String]) -> Option<&str> {
 /// All weapon-family paths in a player part list (base weapon, `_검광` trails,
 /// dual-wield off-hand), in draw order. Never includes `방패\…` shields.
 pub fn weapon_paths_from_entity_parts(parts: &[String]) -> Vec<&str> {
-    parts
-        .iter()
-        .map(String::as_str)
-        .filter(|path| is_weapon_part_path(path))
-        .collect()
+    parts.iter().map(String::as_str).filter(|path| is_weapon_part_path(path)).collect()
 }
 
 /// First shield path in a player part list.
 pub fn shield_path_from_entity_parts(parts: &[String]) -> Option<&str> {
-    parts
-        .iter()
-        .map(String::as_str)
-        .find(|path| is_shield_part_path(path))
+    parts.iter().map(String::as_str).find(|path| is_shield_part_path(path))
 }
 
 /// Whether the shield should be drawn *behind* the body for this camera-
@@ -901,8 +898,8 @@ pub struct Animation {
 #[derive(Clone)]
 pub struct AnimationFrame {
     pub event: Option<ActionEvent>,
-    /// ACT attach point for this motion, if authored (`attach_point_count == 1`).
-    /// Body supplies the parent; secondary layers use
+    /// ACT attach point for this motion, if authored (`attach_point_count ==
+    /// 1`). Body supplies the parent; secondary layers use
     /// `offset += -child + body` at compose time (Phase C2).
     pub attach_point: Option<Vector2<i32>>,
     pub offset: Vector2<i32>,
@@ -1095,7 +1092,8 @@ impl AnimationData {
         body.animations.get(action_index % body.animations.len().max(1))
     }
 
-    /// True when this data has at least body + head (player partial-swap ready).
+    /// True when this data has at least body + head (player partial-swap
+    /// ready).
     pub fn has_player_base_layers(&self) -> bool {
         self.layers.len() >= 2 && self.entity_type == EntityType::Player
     }
@@ -1137,7 +1135,9 @@ impl AnimationData {
         self
     }
 
-    /// Keep only the first `len` layers (e.g. drop weapon: `truncate_layers(2)`).
+    /// Keep only the first `len` layers (e.g. drop weapon:
+    /// `truncate_layers(2)`).
+    #[allow(dead_code)]
     pub fn with_layers_truncated(mut self, len: usize) -> Self {
         if len < self.layers.len() {
             self.layers.truncate(len);
@@ -1147,7 +1147,8 @@ impl AnimationData {
         self
     }
 
-    /// Split optional gear layers (after body/head) into weapon-family vs shield.
+    /// Split optional gear layers (after body/head) into weapon-family vs
+    /// shield.
     ///
     /// Weapon-family includes the base weapon, `_검광` trails, and dual-wield
     /// off-hand weapons — every non-shield path after body/head.
@@ -1195,6 +1196,7 @@ impl AnimationData {
 
     /// Set or clear a single weapon layer (Phase C API). Prefer
     /// [`Self::with_weapon_layers`] when trails / dual-wield are present.
+    #[allow(dead_code)]
     pub fn with_weapon_layer(self, weapon: Option<AnimationLayer>) -> Self {
         self.with_weapon_layers(weapon.into_iter().collect())
     }
@@ -1218,11 +1220,13 @@ impl AnimationData {
     }
 
     /// Path of the first weapon-family layer, if any (never the shield path).
+    #[allow(dead_code)]
     pub fn weapon_layer_path(&self) -> Option<&str> {
         self.weapon_layer_paths().into_iter().next()
     }
 
-    /// Paths of all weapon-family layers (base, trails, off-hand) in draw order.
+    /// Paths of all weapon-family layers (base, trails, off-hand) in draw
+    /// order.
     pub fn weapon_layer_paths(&self) -> Vec<&str> {
         self.layers
             .iter()
@@ -1367,16 +1371,12 @@ impl AnimationData {
         }
 
         let mut composed = merge_frame(&mut layer_frames);
-        let layout = self
-            .action_layouts
-            .get(body_action_index)
-            .copied()
-            .unwrap_or(ActionLayout {
-                min_top: 0,
-                max_bottom: 0,
-                min_left: 0,
-                max_right: 0,
-            });
+        let layout = self.action_layouts.get(body_action_index).copied().unwrap_or(ActionLayout {
+            min_top: 0,
+            max_bottom: 0,
+            min_left: 0,
+            max_right: 0,
+        });
         finalize_frame_layout(&mut composed, layout);
         composed
     }
@@ -1517,7 +1517,16 @@ impl AnimationData {
         finalize_frame_layout(&mut composed, layout);
 
         let world_matrix = self.calculate_world_matrix(camera, &composed, entity_position, 1.0);
-        self.push_frame_instructions(instructions, camera, &composed, world_matrix, entity_id, false, 1.0, StatusTint::NONE);
+        self.push_frame_instructions(
+            instructions,
+            camera,
+            &composed,
+            world_matrix,
+            entity_id,
+            false,
+            1.0,
+            StatusTint::NONE,
+        );
         true
     }
 
@@ -1537,7 +1546,16 @@ impl AnimationData {
     ) {
         let frame = self.get_frame(animation_state, camera, direction);
         let world_matrix = self.calculate_world_matrix(camera, &frame, entity_position, scale);
-        self.push_frame_instructions(instructions, camera, &frame, world_matrix, entity_id, add_to_picker, fade_alpha, tint);
+        self.push_frame_instructions(
+            instructions,
+            camera,
+            &frame,
+            world_matrix,
+            entity_id,
+            add_to_picker,
+            fade_alpha,
+            tint,
+        );
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -1650,9 +1668,9 @@ fn empty_animation_frame() -> AnimationFrame {
         offset: Vector2::zero(),
         frame_parts: Vec::new(),
         #[cfg(feature = "debug")]
-        horizontal_matrix: Matrix4::identity(),
+        horizontal_matrix: Matrix4::one(),
         #[cfg(feature = "debug")]
-        vertical_matrix: Matrix4::identity(),
+        vertical_matrix: Matrix4::one(),
     }
 }
 
@@ -1708,9 +1726,9 @@ pub(crate) fn merge_frame(frames: &mut [AnimationFrame]) -> AnimationFrame {
         offset: Vector2::new(top_left_x + (new_width - 1) / 2, top_left_y + (new_height - 1) / 2),
         frame_parts: new_frame_parts,
         #[cfg(feature = "debug")]
-        horizontal_matrix: Matrix4::identity(),
+        horizontal_matrix: Matrix4::one(),
         #[cfg(feature = "debug")]
-        vertical_matrix: Matrix4::identity(),
+        vertical_matrix: Matrix4::one(),
     }
 }
 
@@ -1822,8 +1840,7 @@ pub(crate) fn finalize_frame_layout(frame: &mut AnimationFrame, layout: ActionLa
         let frame_top_left = Vector2::new(-frame_size.x / 2.0, -frame_size.y + 0.5);
         let frame_part_top_left_shift = vector2_i32_to_f32(-((frame_part.size - Vector2::new(1, 1)) / 2));
         let frame_part_offset = vector2_i32_to_f32(frame_part.offset);
-        let frame_part_top_left =
-            (frame_origin + frame_part_offset + frame_part_top_left_shift) - Vector2::<f32>::from_value(0.5);
+        let frame_part_top_left = (frame_origin + frame_part_offset + frame_part_top_left_shift) - Vector2::<f32>::from_value(0.5);
 
         let texture_frame_center = Vector2::new(0.0, 1.0);
         let new_vector = vector2_i32_to_f32(frame_part.size);
@@ -1852,8 +1869,8 @@ pub(crate) fn compute_action_layouts(layers: &[AnimationLayer]) -> Vec<ActionLay
     for action_index in 0..body.animations.len() {
         let body_frames = &body.animations[action_index].frames;
         let mut layout = empty_action_layout();
-        for body_motion in 0..body_frames.len() {
-            let body_attach = body_frames[body_motion].attach_point;
+        for (body_motion, body_frame) in body_frames.iter().enumerate() {
+            let body_attach = body_frame.attach_point;
             let mut layer_frames = Vec::with_capacity(layers.len());
             for (layer_index, layer) in layers.iter().enumerate() {
                 let Some(layer_animation) = layer.animations.get(action_index) else {
@@ -2547,18 +2564,18 @@ mod golden_timeline_tests {
     }
 }
 
-/// Phase C1: runtime layer composition — body clock + secondary motion-0 fallback.
+/// Phase C1: runtime layer composition — body clock + secondary motion-0
+/// fallback.
 #[cfg(test)]
 mod runtime_compose_tests {
-    use cgmath::{Vector2, Zero};
     #[cfg(feature = "debug")]
     use cgmath::Matrix4;
+    use cgmath::{Vector2, Zero};
     use ragnarok_packets::ClientTick;
 
     use super::{
-        ActionLayout, Animation, AnimationData, AnimationFrame, AnimationFramePart, AnimationLayer, AnimationState,
-        is_weapon_part_path, native_layer_motion_index, shield_draws_behind_body, shield_path_from_entity_parts,
-        weapon_path_from_entity_parts,
+        ActionLayout, Animation, AnimationData, AnimationFrame, AnimationFramePart, AnimationLayer, AnimationState, is_weapon_part_path,
+        native_layer_motion_index, shield_draws_behind_body, shield_path_from_entity_parts, weapon_path_from_entity_parts,
     };
     use crate::EntityType;
     use crate::graphics::Color;
@@ -2677,9 +2694,7 @@ mod runtime_compose_tests {
                     path_key: Some("head".into()),
                     sprites: None,
                     actions: None,
-                    animations: vec![Animation {
-                        frames: vec![head],
-                    }],
+                    animations: vec![Animation { frames: vec![head] }],
                 },
             ],
             delays: vec![4.0],
@@ -2724,13 +2739,10 @@ mod runtime_compose_tests {
             }],
             entity_type: EntityType::Player,
         };
-        assert_eq!(
-            base.weapon_layer_paths(),
-            vec![
-                "인간족\\기사\\기사_남_검",
-                "인간족\\기사\\기사_남_검_검광",
-            ]
-        );
+        assert_eq!(base.weapon_layer_paths(), vec![
+            "인간족\\기사\\기사_남_검",
+            "인간족\\기사\\기사_남_검_검광",
+        ]);
         assert_eq!(base.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
 
         let mut spear = make_layer(2, 2);
@@ -2846,12 +2858,15 @@ mod runtime_compose_tests {
         let data = AnimationData {
             layers: vec![body, head, sword, guard],
             delays: vec![4.0; 8],
-            action_layouts: vec![ActionLayout {
-                min_top: 0,
-                max_bottom: 1,
-                min_left: 0,
-                max_right: 1,
-            }; 8],
+            action_layouts: vec![
+                ActionLayout {
+                    min_top: 0,
+                    max_bottom: 1,
+                    min_left: 0,
+                    max_right: 1,
+                };
+                8
+            ],
             entity_type: EntityType::Player,
         };
 
@@ -2883,10 +2898,7 @@ mod runtime_compose_tests {
             "방패\\기사\\기사_남_가드".into(),
         ];
         assert_eq!(weapon_path_from_entity_parts(&shield_only), None);
-        assert_eq!(
-            shield_path_from_entity_parts(&shield_only),
-            Some("방패\\기사\\기사_남_가드")
-        );
+        assert_eq!(shield_path_from_entity_parts(&shield_only), Some("방패\\기사\\기사_남_가드"));
 
         // body, head, sword, shield — weapon is not "whatever is at [2]" alone;
         // both paths must resolve independently.
@@ -2896,14 +2908,8 @@ mod runtime_compose_tests {
             "인간족\\기사\\기사_남_검".into(),
             "방패\\기사\\기사_남_가드".into(),
         ];
-        assert_eq!(
-            weapon_path_from_entity_parts(&both),
-            Some("인간족\\기사\\기사_남_검")
-        );
-        assert_eq!(
-            shield_path_from_entity_parts(&both),
-            Some("방패\\기사\\기사_남_가드")
-        );
+        assert_eq!(weapon_path_from_entity_parts(&both), Some("인간족\\기사\\기사_남_검"));
+        assert_eq!(shield_path_from_entity_parts(&both), Some("방패\\기사\\기사_남_가드"));
 
         assert!(is_weapon_part_path("인간족\\기사\\기사_남_검"));
         assert!(!is_weapon_part_path("방패\\기사\\기사_남_가드"));
@@ -2939,10 +2945,7 @@ mod runtime_compose_tests {
         let after_bad_refresh = equipped.with_weapon_layer(None).with_shield_layer(Some(guard));
         // Caller must re-apply the real sword; the shield alone must not replace it.
         assert_eq!(after_bad_refresh.weapon_layer_path(), None);
-        assert_eq!(
-            after_bad_refresh.shield_layer_path(),
-            Some("방패\\기사\\기사_남_가드")
-        );
+        assert_eq!(after_bad_refresh.shield_layer_path(), Some("방패\\기사\\기사_남_가드"));
 
         let mut sword_again = make_layer(2, 2);
         sword_again.path_key = Some("인간족\\기사\\기사_남_검".into());
@@ -2991,10 +2994,7 @@ mod frame_event_cursor_tests {
     /// `event_at[i]` is true when motion `i` authors an `Attack` event.
     fn animation(event_at: &[bool]) -> Animation {
         Animation {
-            frames: event_at
-                .iter()
-                .map(|&has| frame(has.then_some(ActionEvent::Attack)))
-                .collect(),
+            frames: event_at.iter().map(|&has| frame(has.then_some(ActionEvent::Attack))).collect(),
         }
     }
 

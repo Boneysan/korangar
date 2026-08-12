@@ -6,8 +6,8 @@ use rust_state::{PathExt, State};
 use crate::input::InputEvent;
 use crate::interface::resource::ItemSource;
 use crate::interface::windows::WindowClass;
-use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::state::theme::InterfaceThemeType;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::world::ResourceMetadata;
 
 /// Compact right-click menu for an inventory item.

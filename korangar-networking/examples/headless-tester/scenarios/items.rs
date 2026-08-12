@@ -2,10 +2,10 @@
 
 use std::time::Duration;
 
-use korangar_networking::{InventoryItemDetails, NetworkEvent, ShopItem};
+use korangar_networking::{InventoryItemDetails, NetworkEvent, NoMetadata, ShopItem};
 use ragnarok_packets::{
-    BuyOrSellOption, BuyShopItemsResult, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, SellItemsResult, SkillId,
-    SkillLevel, SoldItemInformation, StatType, StatUpType,
+    BuyOrSellOption, BuyShopItemsResult, EntityId, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, InventoryIndex,
+    SellItemsResult, SkillId, SkillLevel, SoldItemInformation, StatType, StatUpType,
 };
 
 use crate::context::{Config, TestContext};
@@ -18,8 +18,13 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
         Scenario::new("identify", 6, identify),
+        Scenario::new("identify-cancel", 6, identify_cancel),
+        Scenario::new("equip-wrong-job", 6, equip_wrong_job),
         Scenario::new("shop-buy-sell", 6, shop_buy_sell),
+        Scenario::new("shop-close", 6, shop_close),
+        Scenario::new("use-drop-failures", 6, use_drop_failures),
         Scenario::new("storage", 6, storage),
+        Scenario::new("storage-persistence", 6, storage_persistence),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
@@ -31,32 +36,32 @@ pub fn scenarios() -> Vec<Scenario> {
 
 const BS_REPAIRWEAPON: SkillId = SkillId(108);
 
-/// `Iron Arrow` — a two-word display name whose **first word is itself an item**
-/// (`Iron`, 998). That collision is the whole point: it is what made the old
-/// parser fail quietly instead of erroring.
+/// `Iron Arrow` — a two-word display name whose **first word is itself an
+/// item** (`Iron`, 998). That collision is the whole point: it is what made the
+/// old parser fail quietly instead of erroring.
 const IRON_ARROW: u32 = 1770;
 const IRON: u32 = 998;
 
 /// Guards the multi-word `@item` delta in Hercules `src/map/atcommand.c`.
 ///
 /// Unquoted, the stock command scans `%99s %12d`: `@item Iron Arrow 500` takes
-/// `Iron`, fails to read `Arrow` as a quantity, and **still returns ≥ 1**, so it
-/// reports success while handing over **one Iron**. Nothing in this suite would
-/// notice, because every other caller passes a numeric id.
+/// `Iron`, fails to read `Arrow` as a quantity, and **still returns ≥ 1**, so
+/// it reports success while handing over **one Iron**. Nothing in this suite
+/// would notice, because every other caller passes a numeric id.
 ///
 /// The second assertion guards the regression that the *fix* introduced and
-/// which the compiler was happy with: resolving the longest name first meant the
-/// id lookup saw the whole argument string, and `atoi("1770 500")` is `1770`, so
-/// the quantity was never peeled and `@item 1770 500` silently gave **one**
-/// arrow — a regression on the most common DM usage. An id is only accepted now
-/// when the string is numeric end to end.
+/// which the compiler was happy with: resolving the longest name first meant
+/// the id lookup saw the whole argument string, and `atoi("1770 500")` is
+/// `1770`, so the quantity was never peeled and `@item 1770 500` silently gave
+/// **one** arrow — a regression on the most common DM usage. An id is only
+/// accepted now when the string is numeric end to end.
 ///
 /// Both halves fail *quietly* and in the same direction (one item instead of
 /// many), so the amount is the assertion, not the item's presence.
 fn item_command_multi_word(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
 
-    let mut stocked = |context: &mut TestContext, command: &str, expected_id: u32| -> Result<u16, String> {
+    let stocked = |context: &mut TestContext, command: &str, expected_id: u32| -> Result<u16, String> {
         context.say(&format!("@delitem {IRON_ARROW} 30000"))?;
         context.say(&format!("@delitem {IRON} 30000"))?;
         context.pump(Duration::from_millis(400));
@@ -73,9 +78,8 @@ fn item_command_multi_word(config: &Config) -> Result<(), String> {
 
         if item_id != expected_id {
             return Err(format!(
-                "{command:?} produced item {item_id}, not {expected_id} — the multi-word `@item` delta in \
-                 Hercules `src/map/atcommand.c` (atcommand_item_search / atcommand_item_parse) has \
-                 probably been lost in an upstream merge"
+                "{command:?} produced item {item_id}, not {expected_id} — the multi-word `@item` delta in Hercules `src/map/atcommand.c` \
+                 (atcommand_item_search / atcommand_item_parse) has probably been lost in an upstream merge"
             ));
         }
         Ok(amount)
@@ -84,17 +88,16 @@ fn item_command_multi_word(config: &Config) -> Result<(), String> {
     let amount = stocked(&mut context, "@item Iron Arrow 500", IRON_ARROW)?;
     if amount != 500 {
         return Err(format!(
-            "`@item Iron Arrow 500` gave {amount} Iron Arrow, not 500 — the quantity was not peeled off \
-             the end of a multi-word name"
+            "`@item Iron Arrow 500` gave {amount} Iron Arrow, not 500 — the quantity was not peeled off the end of a multi-word name"
         ));
     }
 
     let amount = stocked(&mut context, &format!("@item {IRON_ARROW} 500"), IRON_ARROW)?;
     if amount != 500 {
         return Err(format!(
-            "`@item {IRON_ARROW} 500` gave {amount}, not 500 — a bare id plus quantity regressed. The \
-             longest-name-first lookup is accepting `\"{IRON_ARROW} 500\"` as an id again (`atoi` stops \
-             at the space); it must only accept a string that is numeric end to end"
+            "`@item {IRON_ARROW} 500` gave {amount}, not 500 — a bare id plus quantity regressed. The longest-name-first lookup is \
+             accepting `\"{IRON_ARROW} 500\"` as an id again (`atoi` stops at the space); it must only accept a string that is numeric \
+             end to end"
         ));
     }
 
@@ -406,6 +409,137 @@ fn identify(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
+/// Open the identify list and cancel without selecting an item.
+///
+/// Mirrors `weapon-refine-cancel` / `repair-weapon-cancel`: cancel must not
+/// identify anything, and a second identify attempt in the same session must
+/// still work (proves Hercules cleared pending menu state).
+fn identify_cancel(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    context.flush();
+    context.say("@item2 1101 1 0 0 0 0 0 0 0")?;
+    let sword_index = context.wait_for("unidentified item added", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == 1101 && !item.is_identified() => Some(item.index),
+        _ => None,
+    })?;
+
+    let magnifier_index = context.give_item(611, 1)?;
+    context.flush();
+    context
+        .net
+        .use_item(magnifier_index, context.account_id)
+        .map_err(|_| "disconnected")?;
+    let (skill_id, skill_level) = context.wait_for("AutoRunSkill", |event| match event {
+        NetworkEvent::AutoRunSkill { skill_id, skill_level, .. } => Some((*skill_id, *skill_level)),
+        _ => None,
+    })?;
+    context.flush();
+    context
+        .net
+        .cast_skill(skill_id, skill_level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("ItemIdentifyList", |event| match event {
+        NetworkEvent::ItemIdentifyList { indices } if indices.contains(&sword_index) => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.net.cancel_item_identify().map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_secs(1));
+    if events
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::ItemIdentified { success: true, .. }))
+    {
+        return Err("identify cancel produced a successful ItemIdentified".to_owned());
+    }
+
+    // Second path: open again and complete identification.
+    let magnifier_index = context.give_item(611, 1)?;
+    context.flush();
+    context
+        .net
+        .use_item(magnifier_index, context.account_id)
+        .map_err(|_| "disconnected")?;
+    let (skill_id, skill_level) = context.wait_for("AutoRunSkill after cancel", |event| match event {
+        NetworkEvent::AutoRunSkill { skill_id, skill_level, .. } => Some((*skill_id, *skill_level)),
+        _ => None,
+    })?;
+    context.flush();
+    context
+        .net
+        .cast_skill(skill_id, skill_level, context.player_id)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("ItemIdentifyList after cancel", |event| match event {
+        NetworkEvent::ItemIdentifyList { indices } if indices.contains(&sword_index) => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.request_item_identify(sword_index).map_err(|_| "disconnected")?;
+    context.wait_for("ItemIdentified after cancel path", |event| match event {
+        NetworkEvent::ItemIdentified { inventory_index, success } if *inventory_index == sword_index && *success => Some(()),
+        _ => None,
+    })?;
+
+    context.say("@delitem 1101 1")?;
+    context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// A job that cannot wear a sword must not equip it.
+///
+/// Negative equip path: Mage + Town Sword. Asserts no successful
+/// `UpdateEquippedPosition` for the right hand, then a valid equip on Lord
+/// Knight still works so the session is not stuck.
+fn equip_wrong_job(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(2)?; // Mage
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(300));
+
+    let index = context.give_item(1101, 1)?;
+    context.flush();
+    context
+        .net
+        .request_item_equip(index, EquipPosition::RIGHT_HAND)
+        .map_err(|_| "disconnected")?;
+
+    let events = context.collect_for(Duration::from_secs(1));
+    if events.iter().any(|event| {
+        matches!(
+            event,
+            NetworkEvent::UpdateEquippedPosition {
+                index: event_index,
+                equipped_position,
+            } if *event_index == index && equipped_position.contains(EquipPosition::RIGHT_HAND)
+        )
+    }) {
+        return Err("Mage successfully equipped a Town Sword".to_owned());
+    }
+
+    // Prove the session can still equip legally.
+    context.ensure_job(4008)?; // Lord Knight
+    context.say("@delitem 1101 999")?;
+    context.pump(Duration::from_millis(300));
+    let index = context.give_item(1101, 1)?;
+    context.flush();
+    context
+        .net
+        .request_item_equip(index, EquipPosition::RIGHT_HAND)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("legal equip after failed equip", |event| match event {
+        NetworkEvent::UpdateEquippedPosition {
+            index: event_index,
+            equipped_position,
+        } if *event_index == index && equipped_position.contains(EquipPosition::RIGHT_HAND) => Some(()),
+        _ => None,
+    })?;
+
+    context.say("@delitem 1101 1")?;
+    context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
 /// Find the Pet Groomer shop in Prontera, select Buy, purchase Pet Food, then
 /// sell it back.
 fn shop_buy_sell(config: &Config) -> Result<(), String> {
@@ -530,6 +664,234 @@ fn shop_buy_sell(config: &Config) -> Result<(), String> {
     })?;
 
     Ok(())
+}
+
+/// Open a shop, close it with `close_shop`, and assert a subsequent purchase
+/// does not complete successfully. Then reopen and complete a valid buy so the
+/// session is not stuck.
+fn shop_close(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.say("@zeny 1000000")?;
+    context.pump(Duration::from_millis(200));
+    context.warp("prontera", 218, 209)?;
+
+    let groomer_id = find_pet_groomer(&mut context)?;
+    let (_shop_id, pet_food) = open_groomer_buy(&mut context, groomer_id)?;
+
+    context.flush();
+    context.net.close_shop().map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(300));
+
+    // Purchase after close must not succeed. `metadata` is the buy quantity.
+    let purchase_item = ShopItem {
+        metadata: 1u32,
+        item_id: pet_food.item_id,
+        item_type: pet_food.item_type,
+        price: pet_food.price,
+        quantity: pet_food.quantity.clone(),
+        weight: pet_food.weight,
+        location: pet_food.location,
+    };
+    context.flush();
+    context
+        .net
+        .purchase_items(vec![purchase_item.clone()])
+        .map_err(|_| "disconnected")?;
+    let events = context.collect_for(Duration::from_secs(1));
+    if events.iter().any(|event| {
+        matches!(event, NetworkEvent::BuyingCompleted {
+            result: BuyShopItemsResult::Success
+        })
+    }) {
+        return Err("purchase after close_shop reported success".to_owned());
+    }
+
+    // Reopen and complete a real buy so the menu path is still usable.
+    let (_, pet_food) = open_groomer_buy(&mut context, groomer_id)?;
+    let purchase_item = ShopItem {
+        metadata: 1u32,
+        item_id: pet_food.item_id,
+        item_type: pet_food.item_type,
+        price: pet_food.price,
+        quantity: pet_food.quantity.clone(),
+        weight: pet_food.weight,
+        location: pet_food.location,
+    };
+    context.flush();
+    context.net.purchase_items(vec![purchase_item]).map_err(|_| "disconnected")?;
+    context.wait_for("BuyingCompleted after reopen", |event| match event {
+        NetworkEvent::BuyingCompleted {
+            result: BuyShopItemsResult::Success,
+        } => Some(()),
+        _ => None,
+    })?;
+    context.say("@delitem 537 99")?;
+    context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// Invalid use/drop must not corrupt inventory; a valid use follows.
+fn use_drop_failures(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let potion_id = 501u32;
+    let index = context.give_item(potion_id, 2)?;
+    let bogus = InventoryIndex(u16::MAX);
+
+    context.flush();
+    context.net.use_item(bogus, context.account_id).map_err(|_| "disconnected")?;
+    let after_bad_use = context.collect_for(Duration::from_millis(800));
+    if after_bad_use.iter().any(|event| {
+        matches!(
+            event,
+            NetworkEvent::InventoryItemRemoved { index: removed, .. } if *removed == index
+        )
+    }) {
+        return Err("use of invalid index removed a real stack".to_owned());
+    }
+
+    context.flush();
+    context.net.drop_item(index, 0).map_err(|_| "disconnected")?;
+    let after_zero = context.collect_for(Duration::from_millis(800));
+    if after_zero.iter().any(|event| matches!(event, NetworkEvent::AddGroundItem { .. })) {
+        return Err("drop of zero amount created a ground item".to_owned());
+    }
+
+    context.flush();
+    context.net.drop_item(index, 99).map_err(|_| "disconnected")?;
+    let after_excess = context.collect_for(Duration::from_millis(800));
+    // Excess drop is either refused or clamped; never invent a phantom stack.
+    let ground_count = after_excess
+        .iter()
+        .filter(|event| matches!(event, NetworkEvent::AddGroundItem { item_id, .. } if item_id.0 == potion_id))
+        .count();
+    if ground_count > 1 {
+        return Err(format!("excess drop created {ground_count} ground items"));
+    }
+
+    // Valid drop still works in the same session (avoids death/heal races that
+    // made a "use while damaged" follow-up flaky on a fresh disposable DB).
+    let index = context
+        .inventory
+        .iter()
+        .find(|item| item.item_id.0 == potion_id)
+        .map(|item| item.index)
+        .ok_or("no potion left for valid drop after failure cases")?;
+    context.flush();
+    context.net.drop_item(index, 1).map_err(|_| "disconnected")?;
+    context.wait_for("valid AddGroundItem after failures", |event| match event {
+        NetworkEvent::AddGroundItem { item_id, .. } if item_id.0 == potion_id => Some(()),
+        _ => None,
+    })?;
+    let _ = context.say("@delitem 501 99");
+    context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// Item deposited in storage survives close + full relog.
+fn storage_persistence(config: &Config) -> Result<(), String> {
+    let item_id = 501u32;
+    let marker_amount = 3u16;
+
+    {
+        let mut context = TestContext::connect(config)?;
+        let _ = context.say(&format!("@delitem {item_id} 30000"));
+        context.pump(Duration::from_millis(300));
+        let index = context.give_item(item_id, marker_amount)?;
+        context.flush();
+        context.say("@storage")?;
+        context.wait_for("SetStorage", |event| match event {
+            NetworkEvent::SetStorage { .. } => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context
+            .net
+            .move_item_to_storage(index, marker_amount as u32)
+            .map_err(|_| "disconnected")?;
+        context.wait_for("StorageItemAdded marker", |event| match event {
+            NetworkEvent::StorageItemAdded { item } if item.item_id.0 == item_id => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context.net.close_storage().map_err(|_| "disconnected")?;
+        context.wait_for("StorageClosed", |event| match event {
+            NetworkEvent::StorageClosed => Some(()),
+            _ => None,
+        })?;
+        // Drop runs logout; give the server a beat before the next login.
+    }
+    std::thread::sleep(Duration::from_millis(900));
+
+    let mut context = TestContext::connect(config)?;
+    context.flush();
+    context.say("@storage")?;
+    let items = context.wait_for("SetStorage after relog", |event| match event {
+        NetworkEvent::SetStorage { items } => Some(items.clone()),
+        _ => None,
+    })?;
+    let Some(item) = items.into_iter().find(|item| item.item_id.0 == item_id) else {
+        return Err("storage lost the marker item across relog".to_owned());
+    };
+    let amount = match item.details {
+        InventoryItemDetails::Regular { amount, .. } | InventoryItemDetails::Equippable { amount, .. } => amount,
+    };
+    if amount < marker_amount {
+        return Err(format!("storage item amount {amount} < expected {marker_amount} after relog"));
+    }
+    context.flush();
+    context
+        .net
+        .move_item_from_storage(item.index, marker_amount as u32)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("StorageItemRemoved after persistence", |event| match event {
+        NetworkEvent::StorageItemRemoved { .. } => Some(()),
+        _ => None,
+    })?;
+    context.net.close_storage().map_err(|_| "disconnected")?;
+    let _ = context.say(&format!("@delitem {item_id} 99"));
+    context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+fn find_pet_groomer(context: &mut TestContext) -> Result<EntityId, String> {
+    let entities = context.entities.clone();
+    for &id in entities.keys() {
+        context.flush();
+        context.net.entity_details(id).map_err(|_| "disconnected")?;
+        let name = context.wait_for_within("UpdateEntityDetails", Duration::from_millis(400), &mut |event| match event {
+            NetworkEvent::UpdateEntityDetails { entity_id, name } if *entity_id == id => Some(name.clone()),
+            _ => None,
+        });
+        if let Ok(name) = name {
+            if name.contains("Pet Groomer") {
+                return Ok(id);
+            }
+        }
+    }
+    Err("Pet Groomer NPC not found near prontera,218,211".to_owned())
+}
+
+fn open_groomer_buy(context: &mut TestContext, groomer_id: EntityId) -> Result<(ragnarok_packets::ShopId, ShopItem<NoMetadata>), String> {
+    context.flush();
+    context.net.start_dialog(groomer_id).map_err(|_| "disconnected")?;
+    let shop_id = context.wait_for("AskBuyOrSell", |event| match event {
+        NetworkEvent::AskBuyOrSell { shop_id } => Some(*shop_id),
+        _ => None,
+    })?;
+    context.flush();
+    context
+        .net
+        .select_buy_or_sell(shop_id, BuyOrSellOption::Buy)
+        .map_err(|_| "disconnected")?;
+    let shop_items = context.wait_for("OpenShop", |event| match event {
+        NetworkEvent::OpenShop { items } => Some(items.clone()),
+        _ => None,
+    })?;
+    let pet_food = shop_items
+        .into_iter()
+        .find(|item| item.item_id.0 == 537)
+        .ok_or("Pet Food item (537) not found in Groomer shop")?;
+    Ok((shop_id, pet_food))
 }
 
 /// Open storage, move a Red Potion to it, then retrieve it, and close storage.

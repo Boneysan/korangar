@@ -30,6 +30,7 @@ pub struct PartyMemberState {
     display_label: String,
 }
 
+#[allow(dead_code)]
 impl PartyMemberState {
     pub fn account_id(&self) -> AccountId {
         self.account_id
@@ -245,6 +246,7 @@ impl Default for PartyState {
     }
 }
 
+#[allow(dead_code)]
 impl PartyState {
     pub fn party_name(&self) -> &str {
         &self.party_name
@@ -253,7 +255,6 @@ impl PartyState {
     pub fn members(&self) -> &[PartyMemberState] {
         &self.members
     }
-
 
     pub fn display_text(&self) -> &str {
         &self.display_text
@@ -272,10 +273,11 @@ impl PartyState {
     /// the first member packet lands.
     /// Also gates inviting, because Hercules requires the *inviter* to already
     /// be in a party and refuses **silently** when they are not: `party.c:382`
-    /// returns a bare `0` if `party->search(sd->status.party_id)` finds nothing,
-    /// and it is the only failure path in `party_invite` that sends the client
-    /// nothing at all — every branch below it answers with `party_inviteack` or
-    /// a message. Sending anyway leaves no reply to key any feedback off.
+    /// returns a bare `0` if `party->search(sd->status.party_id)` finds
+    /// nothing, and it is the only failure path in `party_invite` that
+    /// sends the client nothing at all — every branch below it answers with
+    /// `party_inviteack` or a message. Sending anyway leaves no reply to
+    /// key any feedback off.
     pub fn in_party(&self) -> bool {
         !self.members.is_empty()
     }
@@ -511,7 +513,7 @@ impl PartyState {
         }
 
         self.status_text = match (&self.pending_invite_name, &self.outgoing_invite, self.members.is_empty()) {
-            (name, _, _) if !name.is_empty() => match &self.pending_inviter {
+            (name, ..) if !name.is_empty() => match &self.pending_inviter {
                 Some(inviter) => format!("{inviter} invited you to {name} — Accept or Reject."),
                 None => format!("{name} invited you — Accept or Reject."),
             },
@@ -649,7 +651,9 @@ mod tests {
     #[test]
     fn roster_builds_display_text() {
         let mut state = PartyState::default();
-        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| "Wizard".to_owned());
+        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| {
+            "Wizard".to_owned()
+        });
         assert!(state.display_text().contains("Seal Cascade"));
         let label = state.members()[0].display_label();
         assert!(label.contains("Alice"));

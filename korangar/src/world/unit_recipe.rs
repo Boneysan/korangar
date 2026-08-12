@@ -16,9 +16,9 @@ use crate::world::{UnitCylinderSpec, UnitPulse};
 /// express: their originals are RSM **models**, not textures or sprites.
 ///
 /// Paths are relative to `data\model\`. Mapping recovered from the same
-/// reverse-engineered unit table as the rest of this file — roBrowser names them
-/// `ef_trap_NN`, which is its romanisation of these exact files. All ten are
-/// GRF-verified present (2026-07-26) and the mapping is 1:1 with no reuse.
+/// reverse-engineered unit table as the rest of this file — roBrowser names
+/// them `ef_trap_NN`, which is its romanisation of these exact files. All ten
+/// are GRF-verified present (2026-07-26) and the mapping is 1:1 with no reuse.
 pub fn trap_model_file(unit_id: UnitId) -> Option<&'static str> {
     let file = match unit_id {
         UnitId::Anklesnare => "외부소품\\트랩01.rsm",
@@ -76,8 +76,8 @@ pub enum UnitBody {
     /// The classic two-layer ground tile: a flat tint with a textured layer
     /// hovering and bobbing above it. This is the shape *every* entry in the
     /// original's song/ground-tile table takes, and it is what
-    /// [`UnitBody::GroundQuad`] cannot express — a single quad loses the bob and
-    /// merges tint with artwork.
+    /// [`UnitBody::GroundQuad`] cannot express — a single quad loses the bob
+    /// and merges tint with artwork.
     LayeredGroundQuad {
         /// Lower layer: a `FlatColorTile`, drawn with no artwork. `None` draws
         /// no tint at all, leaving only the hovering layer over bare ground —
@@ -701,10 +701,7 @@ mod tests {
             half_size > GAT_TILE_SIZE / 2.0,
             "tiles must overlap so the soft carrier's feather does not show as a grid"
         );
-        assert!(
-            half_size < GAT_TILE_SIZE * 0.7,
-            "overlap is a seam fix, not a bigger field"
-        );
+        assert!(half_size < GAT_TILE_SIZE * 0.7, "overlap is a seam fix, not a bigger field");
         // Effect 394 has no second layer; the hovering note is ours, borrowed
         // from the sibling songs in the original's own table.
         assert_eq!(hover_texture, "effect\\melody_a.bmp");

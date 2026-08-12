@@ -389,7 +389,8 @@ mod resolve_map_name_tests {
         }
     }
 
-    /// Diagnostic: body vs sword vs shield ACT action/clip counts (Knight male).
+    /// Diagnostic: body vs sword vs shield ACT action/clip counts (Knight
+    /// male).
     #[test]
     #[ignore]
     fn dumps_sword_and_shield_action_counts() {
@@ -762,9 +763,10 @@ mod resolve_map_name_tests {
     }
 
     /// Phase E1 texture hunt: probe classic effect TGA/BMP candidates for
-    /// travel balls, soul orbs, and ground spikes. `file_exists` is authoritative
-    /// (archive listing under-reports). Run:
-    /// `cargo test -p korangar --lib probes_e1_procedural_effect_textures -- --ignored --nocapture`
+    /// travel balls, soul orbs, and ground spikes. `file_exists` is
+    /// authoritative (archive listing under-reports). Run:
+    /// `cargo test -p korangar --lib probes_e1_procedural_effect_textures --
+    /// --ignored --nocapture`
     #[test]
     #[ignore]
     fn probes_e1_procedural_effect_textures() {
@@ -922,8 +924,29 @@ mod resolve_map_name_tests {
                 continue;
             }
             let keywords = [
-                "ball", "sphere", "orb", "spike", "soul", "spirit", "ghost", "ice", "fire", "thunder", "electric",
-                "stone", "earth", "plasma", "particle", "ring_", "구슬", "영혼", "전기", "파이어", "아이스", "돌", "번개",
+                "ball",
+                "sphere",
+                "orb",
+                "spike",
+                "soul",
+                "spirit",
+                "ghost",
+                "ice",
+                "fire",
+                "thunder",
+                "electric",
+                "stone",
+                "earth",
+                "plasma",
+                "particle",
+                "ring_",
+                "구슬",
+                "영혼",
+                "전기",
+                "파이어",
+                "아이스",
+                "돌",
+                "번개",
             ];
             if keywords.iter().any(|k| lower.contains(k)) {
                 listed += 1;

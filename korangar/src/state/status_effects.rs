@@ -46,11 +46,7 @@ fn status_icon_glyph(index: u16, name: &str) -> String {
         .filter_map(|w| w.chars().next())
         .map(|c| c.to_ascii_uppercase())
         .collect();
-    let monogram = if monogram.is_empty() {
-        format!("{index}")
-    } else {
-        monogram
-    };
+    let monogram = if monogram.is_empty() { format!("{index}") } else { monogram };
     let role = status_role_tag(index, name);
     format!("[{monogram}{role}]")
 }
@@ -94,7 +90,8 @@ fn status_role_tag(index: u16, name: &str) -> char {
         || lower.contains("stonehard")
         || lower.contains("stone shield")
         || lower.contains("freeze sp")
-        || lower.contains("slow poison") // support skill icon
+        || lower.contains("slow poison")
+    // support skill icon
     {
         return '+';
     }

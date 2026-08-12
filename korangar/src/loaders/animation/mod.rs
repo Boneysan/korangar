@@ -1,9 +1,9 @@
 use std::num::{NonZeroU32, NonZeroUsize};
 use std::sync::{Arc, Mutex};
 
+use cgmath::Vector2;
 #[cfg(feature = "debug")]
-use cgmath::SquareMatrix;
-use cgmath::{Matrix4, Vector2};
+use cgmath::{Matrix4, SquareMatrix};
 #[cfg(feature = "debug")]
 use korangar_container::CacheStatistics;
 use korangar_container::SimpleCache;
@@ -65,10 +65,7 @@ impl AnimationLoader {
             layers.push(decode_animation_layer(animation_pair, animation_index, path_key));
         }
 
-        let delays = animation_pairs
-            .first()
-            .map(|pair| pair.actions.delays.clone())
-            .unwrap_or_default();
+        let delays = animation_pairs.first().map(|pair| pair.actions.delays.clone()).unwrap_or_default();
         let action_layouts = compute_action_layouts(&layers);
 
         let animation_data = Arc::new(AnimationData {
