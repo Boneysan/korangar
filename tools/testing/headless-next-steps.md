@@ -98,8 +98,11 @@ be.
 | 4 | **`ACTION_COVERAGE` was a one-way gate.** It checked that every row names a real scenario, never that every real action has a row — so a new `pub fn` on `NetworkingSystem` could land untested with the suite green | `every_public_action_has_a_coverage_row` + `no_coverage_row_names_a_vanished_action`, both verified failing |
 | 5 | **A job sweep that cast nothing would have passed.** The gate is "no skill was silent"; zero casts satisfies it. `@allskill` is best-effort and the tree wait only counts *entries*, passives included | `sweep_job` now fails on zero casts and prints `N cast, M passive` per job, so a per-job floor is derivable from the archives |
 
-**The two dropped features found behind #1** — both are `register_noop` with a
-rationale that reads fine and is not true:
+**The two dropped features found behind #1** — each was a `register_noop` with a
+rationale that reads fine and is not true. **Both FIXED and live-verified later
+the same day** (`7d38d12e`); they are real handlers emitting `ChatMessage` now,
+and they left the observer-parity baseline. Kept here because the *reasoning* is
+the reusable part:
 
 - **`GmKickResponsePacket` (0x00CD)** is the *only* confirmation the kicking GM
   gets. `ACMD(kick)` prints nothing on success and `clif_GM_kick`'s whole
@@ -116,6 +119,14 @@ rationale that reads fine and is not true:
 
 Same shape as `BD_ETERNALCHAOS` sitting in the skill allowlist for months under
 a false reason. **Check the claim in a rationale; do not inherit it.**
+
+Both now carry two guards, and **every guard was watched failing before it was
+trusted**. The handler tests drive raw bytes through the *real* map-server
+registration rather than calling the closures, because a no-op parses the packet
+perfectly and publishes nothing — the tell is an **empty event list**, which no
+test of a closure in isolation can see. `kick-confirms-to-the-kicker` covers the
+DM's half live; reverted to a no-op it reports `The kicker saw: []`, which is the
+measurement that the kicker's connection is otherwise entirely silent.
 
 Also corrected: three doc comments had collapsed onto one function in
 `skills.rs` through refactoring, and the surviving one still said the
@@ -179,9 +190,12 @@ Arcs **1–10** with status token + non-zero progress on start beats. Further ar
 | Item | Status |
 |---|---|
 | Local fmt/clippy/drift/tests | **Done** |
-| Commit + push + PR #2 refresh | **Done** |
 | PR multi-scenario gate (not smoke-only) | **Done** in workflow |
-| GitHub Actions green on latest HEAD | Confirm in PR checks when convenient |
+| GitHub Actions green on latest HEAD | **Done 2026-08-12** — all six green on `b42dfe30` |
+| Five standing audits in CI | **Done** — `audits.yml`, and it fires on `agent/**` as well as `main`, so it no longer depends on a PR being open |
+| **PR #2 MERGED, `main` fast-forwarded to `b42dfe30`** | **Done 2026-08-12.** `main` was 247 commits behind and carried no `tools/audits/` at all, so a scheduled run would have checked out the default branch and passed by having nothing to do |
+| Weekly crons *able* to fire | **Done** — a `schedule:` on a non-default branch is silent, which is why `integration.yml`'s nightly had never run once. Audits Mon 07:17, integration Mon 08:23 |
+| Weekly cron *observed* firing on schedule | **NOT YET.** Proven only by `workflow_dispatch` on `main` (paired integration, 4m20s — its first ever non-PR execution). The first Monday settles the schedule itself |
 
 ### P7 — Process rules
 
@@ -200,7 +214,10 @@ Zero-unknown, exact expected-skips, allowlist cull discipline, archive semantics
 ```text
 Headless suite: CLOSED for planned depth — do not re-open without a product need
   → GUI live pass: docs/plans/gui-verification-pass.md (open rows at top)
-  → Watch PR #2 multi-scenario CI
+      run tools/audits/gui-pass-staleness.py FIRST — all 7 closed blocks are
+      older than the code they cover, so the queue does not start where the
+      table says it does
+  → Check the first Monday that the weekly crons actually fired
   → Homun/pet/guild/cart headless scenarios only when client implements them
 ```
 
