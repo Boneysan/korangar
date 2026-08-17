@@ -1,5 +1,73 @@
 # Resume here — live pass status
 
+> **2026-08-16 — the GUI pass finally moved, and five rows closed in one sitting.**
+>
+> **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
+> **§1–§5 are DONE.** Next is **§6 Fog Wall**, then §7 Evil Land, §8 the two
+> confirms, §9 the instance window (**last, it can hard-lock both clients**).
+>
+> | Row | Result |
+> |---|---|
+> | §1 Hermode | **PASS — the oldest open row, never once reached before today** |
+> | §2 Party roster + trade | PASS both halves; Block A is no longer stale |
+> | §3 P1/P5/F3/F4 | **4/4 PASS**, and found a real bug on the way |
+> | §4 Auto Spell (N20) | PASS end to end, proc observed |
+> | §5 Gospel | PASS after three visual fixes **plus a dropped feature recovered** |
+>
+> **The session did not start with testing — it started with the environment
+> lying.** The servers were running against `korangar_integration_9784`, a
+> disposable database left by a run killed on 08-12. The seats were read from
+> `ragnarok` and looked healthy; the characters on screen were two Novices from a
+> fixture. **Nothing done in that session would have counted.** `cleanup()` hangs
+> off an EXIT trap and no trap survives SIGKILL — and worse, `restore_configs()`
+> would back up the *previous run's artifacts* as "the developer's original" and
+> faithfully restore them, so **one `kill -9` cemented the override permanently**.
+> Fixed by sweeping at startup (`reclaim_orphans`), and
+> **`tools/testing/preflight-seats.sh`** now resolves the database from the
+> running servers' own connections instead of naming the one it hopes for.
+>
+> **Four product bugs, three of them invisible to any automated test:**
+> 1. **`ZC_GOSPEL_INFO` (0x0215) silently dropped** for the client's whole life —
+>    a party under Gospel receives a major effect every 10s and was told which by
+>    nothing. The fallback consumed it *cleanly*, so it never reached the
+>    unknown-packet ledger.
+> 2. **Dismissing the party-invite popup sent nothing**, stranding
+>    `tsd->party_invite`, after which every later invite told the inviter
+>    **"<name> is already in a party"** — false, and false until relog. The
+>    friend-request popup had the identical defect. Both `closable: false` now.
+> 3. **Gospel had no light at all** while 17 other units do, so its greyscale
+>    cross read as **grey metal**; and its α 0.05 tint was **completely
+>    invisible**, confirming 0.05 is dead in this renderer.
+> 4. **Hermode's warp-portal refusal sent bare cause 0** — "skill level is not
+>    high enough" for standing in the wrong place — fifteen lines below a site
+>    that already had a real reason.
+>
+> **Two deliberate fork deltas, at the user's decision** (CLAUDE.md §3b): Hermode
+> is no longer banned in the Normal zone, and its warp requirement sits behind
+> `hermode_requires_warp` (default **off**). It was **dead content** here — the
+> only zones permitting it were towns and sieges, neither of which this campaign
+> plays.
+>
+> **What kept being true all night: most things that looked like failures were
+> correct.** An empty status window twice (`SC_HERMODE` and `SC_GOSPEL` have no
+> `Icon:`, so Hercules never sends the state change), a frozen caster
+> (`SC_DANCING` roots for ~31s), no damage from Gospel (it debuffs), no message
+> when a friend is removed (upstream sends `0x020A` and no text, and says so in a
+> comment). **Check what the server is supposed to send before calling it a bug.**
+>
+> **Traps that cost time tonight, so they do not again:**
+> - **The ensemble partner needs the instrument equipped too**, not just the
+>   caster (`skill.c:15402`). Invisible in the DB mid-session; visible in the
+>   client's `[packet-log] local equipped weapon=` line.
+> - **`inventory` is a save snapshot and disagreed with live state by a whole
+>   trade.** Read `picklog`.
+> - **RO ships training dummies**: `@monster 2410` ("Lv 100") is immobile, never
+>   attacks, 99,999,999 HP. Far better than porings for proc rates and animation.
+> - **Gospel excludes its own caster** (`ss == bl`), so testing its buffs needs a
+>   second seat standing in the field.
+>
+> ---
+>
 > **2026-08-12 — where to go:**
 >
 > | Track | Status | Open first |

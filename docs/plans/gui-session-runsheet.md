@@ -5,11 +5,21 @@ type and what to look for. The findings archive is
 [gui-verification-pass.md](gui-verification-pass.md) — this is the thing you
 follow; that is the thing you read afterwards.
 
+> **2026-08-16 — §1 through §5 are DONE.** Start at **§6 Fog Wall**. §1 Hermode
+> passed for the first time ever; §2, §3, §4 and §5 all passed, and §3 and §5
+> each turned up a real bug that is now fixed. Detail in
+> [gui-verification-pass.md](gui-verification-pass.md).
+
 **Run this first**, so the queue starts from what is actually unverified:
 
 ```sh
 python3 tools/audits/gui-pass-staleness.py
+tools/testing/preflight-seats.sh     # seats AND which database the servers use
 ```
+
+**A punching bag, for any row about proc rates or animation:** `@monster 2410`
+spawns "Lv 100", one of RO's own training dummies — immobile, never attacks,
+99,999,999 HP. Ids 2408/2409/2410/2411 are the Lv 10/50/100/150 set.
 
 ---
 
@@ -203,8 +213,15 @@ every *accept* path and never a *refuse* one.
 
 `@jobchange 4015` (Paladin), `@allskill`, `@heal` (needs 80–100 SP).
 
-**Self-cast toggle**, `PA_GOSPEL` **369**, 60 s. Re-cast to cancel.
-**It strips your own buffs when it starts.**
+**Self-cast toggle**, `PA_GOSPEL` **369**, 60 s, 10 s interval = **6 rolls**.
+Re-cast to cancel. **It strips your own buffs when it starts.**
+
+> **DONE 2026-08-16 — PASS after three fixes.** Kept for re-walks. **Two setup
+> traps:** Gospel **excludes its own caster** (`ss == bl` breaks first), so the
+> Paladin gets no buffs and no messages — testing it needs a **second seat
+> standing in the field**. And only **ten of thirteen** effects announce
+> themselves; heal, Blessing and Increase AGI send no packet by design, so a
+> silent buff is not a missing message.
 
 **We expect you to see nothing, and that is the point of this row.** Gospel is
 coded at **α 0.05** — the exact value we measured as *not* porting to this
