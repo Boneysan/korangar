@@ -13,9 +13,9 @@ regression-smoking.
 | **2** | **Block E — Moonlit confirm** | Redesign **CLOSED 2026-08-08** after red-square/light bugs; re-confirm after any skill-unit change |
 | **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
 | **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
-| **5** | **Block A re-walk — party roster + trade rows only** | The one block still stale after the 2026-08-12 triage. `a552bc57` changed the roster when *we* leave; `a617834a` changed traded items leaving the giver's inventory. Both landed after the block closed. Two rows |
+| ~~5~~ | ~~**Block A re-walk — party roster + trade rows only**~~ | **PASS 2026-08-16 — Block A is no longer stale.** `a552bc57`: A left, A's own roster emptied to "Not in a party", B's roster dropped A, HP/SP bars stopped on both sides (A clearing itself and B being told are different paths; both fired). `a617834a`: verified in **two** steps, because a decrement and a row deletion are different branches — trading 1 of 3 decremented correctly (`T -1`), then trading the remaining 2 removed the row entirely (`T -2`), with no ghost row or 0-count entry. **Read `picklog`, never `inventory`** — the latter is a save snapshot and disagreed with the live state by a full trade during this walk |
 | **6** | **Gospel / Fog Wall / Evil Land ground fields** | **Never on screen** — steps in **§5b**. Added by `b6148b5c`; hover sizes and opacities are *estimates*. **Gospel is coded at α 0.05, the value §5 measured as not porting to this renderer** — walk it first, expect it invisible |
-| **7** | **The four refuse/remove paths** | P1 reject a party invite · P5 a member going offline · F3 reject a friend request · F4 remove a friend. Recovered by the 2026-08-12 reconciliation below — Block A walked every *accept* path and no *refuse* path |
+| ~~7~~ | ~~**The four refuse/remove paths**~~ | **ALL FOUR PASS 2026-08-16.** P1 · P5 · F3 · F4, detail in the tables below. **The block's real yield was a bug found off-checklist:** dismissing the party-invite popup with its **close button** sent nothing, and this framework has no close hook — so Hercules kept `tsd->party_invite` set and `party.c:424` then refused *every later invite* with ack 0, telling the inviter **"<name> is already in a party"**, which was false until the target relogged. Confidently wrong text, not silence. The friend-request popup had the identical defect. Both are now `closable: false`, matching `57308acd`'s fix for the trade windows. **Follow-up worth doing:** that is a workaround for a missing framework capability, not a repair — nothing stops the next must-answer popup being written `closable: true` |
 | **8** | **M1-009 and M1-014 live confirms** | Both shipped 2026-07-22 marked "code complete — live GUI confirm recommended" and never confirmed: gear stat tooltips with vs-equipped deltas, and the two-step character delete |
 | **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
 | **—** | Known-unrendered | Headgear/robe/colour, **spirit spheres**, quest UI — do **not** file as bugs; feature first |
@@ -328,11 +328,11 @@ only. Still unverified:
 
 | # | Check | Watch for | Result |
 |---|---|---|---|
-| P1 | **Reject** button on the invited seat | Inviter gets the rejection line; the invited seat's status line returns to "Not in a party" | ☐ **STILL OPEN** — N8 proved the popup appears, never that Reject answers |
+| P1 | **Reject** button on the invited seat | Inviter gets the rejection line; the invited seat's status line returns to "Not in a party" | ✔ **PASS 2026-08-16** — message arrived on the inviter; server left the rejecting seat out of the party entirely |
 | P2 | **Leave** button | Roster empties on *both* seats, status line resets, bars over the ex-member disappear | ☐ **STILL OPEN**, and reopened by `a552bc57` — this is the Block A re-walk row |
 | P3 | Status line during an outgoing invite | **CLOSED 2026-08-05** off-checklist — the line was printed off a successful *socket write*, and Hercules refuses an invite from outside a party silently (`party.c:382`). Fixed in `6ff109ac`. Original: inviter shows *"Invited X; waiting for an answer…"*, and it **clears** when the answer lands — either answer | ☐ |
 | P4 | Disabled states | Create greys out once in a party, Invite until in one, Accept/Reject with no invite, Leave when party-less — each with its tooltip | **SUPERSEDED by N11** (2026-08-04) — non-leader controls greyed with their message |
-| P5 | A member going **offline** | Roster line flips to `(offline)`; bars over them stop drawing | ☐ **STILL OPEN** — N13 walked `DEAD`, never offline |
+| P5 | A member going **offline** | Roster line flips to `(offline)`; bars over them stop drawing | ✔ **PASS 2026-08-16** — red offline status, and the line **stays listed** rather than vanishing, which is the distinction that matters (vanishing = left the party) |
 | P6 | Party chat | Sent from one seat, shown in the other's chat window | **SUPERSEDED by N3** (2026-08-04) |
 
 #### Friends — nothing has ever been on screen
@@ -341,8 +341,8 @@ only. Still unverified:
 |---|---|---|---|
 | F1 | Add by name from the friend list text box | `FriendRequestWindow` **pops automatically** on the other seat (`lib.rs:4797`) | **SUPERSEDED by N17** (2026-08-04) |
 | F2 | Accept | Both lists gain the friend with **no relog** | **SUPERSEDED by N18** (2026-08-04) — its sorting finding could only have been seen by accepting one live |
-| F3 | Reject | Request window closes; requester gets the rejection line | ☐ **STILL OPEN** — same gap as P1: the accept path was walked, the refuse path never |
-| F4 | Remove | Per-friend Remove button empties the row on both sides | ☐ **STILL OPEN** — N18 confirmed the button *exists*, never that pressing it removes on both sides |
+| F3 | Reject | Request window closes; requester gets the rejection line | ✔ **PASS 2026-08-16** — rejection line landed, and the `friends` table stayed at **0 rows**: a rejected request that persists a row is invisible until a relog |
+| F4 | Remove | Per-friend Remove button empties the row on both sides | ✔ **PASS 2026-08-16** — gone on **both** sides, both DB rows deleted. **No chat message on the removed side is CORRECT**: Hercules sends `0x020A` to drop the row and no text, and its own source comments *"should the guy be notified of some message? we should add it here if so"* — upstream never answered it |
 | F5 | **Online glyph flips live** | Friend logs out → `○`, back in → `●`, without reopening the window | **SUPERSEDED by N19** (2026-08-05) |
 | F6 | List survives relog | Friends still listed after logging out and back in | **SUPERSEDED by N19** (2026-08-05) |
 

@@ -24,7 +24,18 @@ impl CustomWindow<ClientState> for FriendRequestWindow {
             title: "Friend request",
             class: Some(WindowClass::FriendRequest),
             theme: InterfaceThemeType::InGame,
-            closable: true,
+            // **Deliberately not closable: a friend request must be answered.**
+            // Same class as the party invite popup beside it and the trade
+            // windows in `57308acd` -- this framework has no close hook, so the
+            // close button sends nothing. `clif.c:17109` sets `friend_req` on
+            // **both** sides when the request goes out, and `clif.c:17144` only
+            // honours a reply while both still match, so dismissing this popup
+            // leaves the requester with no answer at all: no accept, no reject,
+            // nothing to report.
+            //
+            // Reject is the close button and it tells the server, so this cannot
+            // strand the player.
+            closable: false,
             elements: (
                 text! {
                     text: format!("^000001{}^000000 wants to be friends with you", self.friend.name),
