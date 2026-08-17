@@ -17,13 +17,6 @@ if [ -z "$hercules_repo" ] || [ ! -d "$hercules_repo/.git" ]; then
     exit 2
 fi
 
-for command_name in mysql nc cargo git; do
-    command -v "$command_name" >/dev/null 2>&1 || {
-        echo "error: required command not found: $command_name" >&2
-        exit 2
-    }
-done
-
 db_host="${INTEGRATION_DB_HOST:-127.0.0.1}"
 db_port="${INTEGRATION_DB_PORT:-3306}"
 db_admin="${INTEGRATION_DB_ADMIN:-root}"
@@ -63,6 +56,126 @@ server_pids=()
 database_created=false
 configs_installed=false
 runner_exit=1
+
+# The four static import overrides, defined once so that installing them and
+# recognising our own leftovers cannot drift apart. `integration-sql.conf` is
+# not here because its contents depend on the database name.
+static_override() {
+    case "$1" in
+    login-server)
+        cat <<'EOF'
+login_configuration: {
+    account: {
+        @include "conf/import/integration-sql.conf"
+        ipban: {
+            @include "conf/import/integration-sql.conf"
+        }
+    }
+}
+EOF
+        ;;
+    char-server)
+        cat <<'EOF'
+char_configuration: {
+    @include "conf/import/integration-sql.conf"
+    // Headless lifecycle tests create and delete characters immediately.
+    enable_char_creation: true
+    player: {
+        deletion: {
+            delay: 0
+            level: 0
+        }
+    }
+}
+EOF
+        ;;
+    map-server)
+        cat <<'EOF'
+map_configuration: {
+    @include "conf/import/integration-sql.conf"
+}
+EOF
+        ;;
+    inter-server)
+        cat <<'EOF'
+inter_configuration: {
+    log: {
+        @include "conf/import/integration-sql.conf"
+    }
+}
+EOF
+        ;;
+    esac
+}
+
+# True when the file at $2 is one this runner wrote for name $1, rather than a
+# config a developer put there. The static four are compared byte-for-byte;
+# integration-sql.conf is identified by the database namespace we own.
+is_our_artifact() {
+    local name="$1" path="$2"
+    [ -f "$path" ] || return 1
+    if [ "$name" = integration-sql ]; then
+        grep -q 'db_database: "korangar_integration_[0-9]\+"' "$path"
+    else
+        static_override "$name" | cmp -s - "$path"
+    fi
+}
+
+# Reclaim what a killed run left behind. `cleanup` hangs off an EXIT trap, and
+# no trap runs on SIGKILL or a power loss, so orphans are not a hypothetical —
+# five leaked databases and a stale override set were found in the tree on
+# 2026-08-16.
+#
+# The dangerous orphan is the config, not the database. A leftover override
+# silently repoints a *manual* session at a disposable database: the servers
+# come up looking perfectly healthy while every character created in them is
+# waiting to be dropped. Worse, without this sweep the next run would back the
+# artifacts up as if they were the developer's own config and restore them
+# faithfully on exit, so a single kill -9 cements the override permanently and
+# every later run keeps it alive.
+reclaim_orphans() {
+    local name target reclaimed=false leaked pid
+
+    for name in login-server char-server map-server inter-server integration-sql; do
+        target="$hercules_repo/conf/import/$name.conf"
+        if is_our_artifact "$name" "$target"; then
+            # Restore Hercules' own empty template where one exists, rather than
+            # deleting. conf/import/*.conf are *expected* to be present: a
+            # missing one is an [Error] on every server start (12 of them in the
+            # 2026-08-16 incident), and error noise that is normal trains people
+            # to ignore the log. Only integration-sql.conf has no template,
+            # because it is entirely ours.
+            if [ -f "$hercules_repo/conf/import-tmpl/$name.conf" ]; then
+                echo "restoring Hercules' template over an orphaned import config: conf/import/$name.conf" >&2
+                cp "$hercules_repo/conf/import-tmpl/$name.conf" "$target"
+            else
+                echo "reclaiming orphaned import config from a killed run: conf/import/$name.conf" >&2
+                rm -f "$target"
+            fi
+            reclaimed=true
+        fi
+    done
+
+    # Databases are ours by name: korangar_integration_<pid of the runner that
+    # made it>. A live pid means a concurrent run owns it, so leave it alone —
+    # pid reuse can only make us skip a drop, never take one that is in use.
+    leaked="$("${mysql_admin[@]}" --batch --skip-column-names --execute="
+        SELECT schema_name FROM information_schema.schemata
+         WHERE schema_name REGEXP '^korangar_integration_[0-9]+$';" 2>/dev/null || true)"
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        pid="${name##*_}"
+        if kill -0 "$pid" 2>/dev/null; then
+            continue
+        fi
+        echo "dropping orphaned database from a killed run: $name" >&2
+        "${mysql_admin[@]}" --execute="DROP DATABASE IF EXISTS \`$name\`;" >/dev/null 2>&1 || true
+        reclaimed=true
+    done <<<"$leaked"
+
+    $reclaimed && echo "orphan sweep complete; continuing with a clean tree" >&2
+    return 0
+}
 
 stop_servers() {
     local pid attempt still_running
@@ -127,8 +240,27 @@ cleanup() {
     fi
     return "$original_exit"
 }
+# Test seam: everything above is definitions and argument validation, so a test
+# can source this file to exercise the orphan sweep without standing up servers.
+# Nothing below this line may run when sourced — in particular the traps, which
+# a sourcing test would otherwise inherit and fire on its own exit.
+if [ "${INTEGRATION_RUNNER_SOURCE_ONLY:-0}" = 1 ]; then
+    return 0
+fi
+
+# Prerequisites for actually standing up a run. Checked below the seam because
+# a test that only sources this file for its functions needs none of them.
+for command_name in mysql nc cargo git; do
+    command -v "$command_name" >/dev/null 2>&1 || {
+        echo "error: required command not found: $command_name" >&2
+        exit 2
+    }
+done
+
 trap cleanup EXIT
 trap 'exit 130' INT TERM
+
+reclaim_orphans
 
 for port in 6900 6121 5121; do
     if nc -z 127.0.0.1 "$port" 2>/dev/null; then
@@ -183,41 +315,9 @@ sql_connection: {
     db_database: "$db_name"
 }
 EOF
-cat > "$hercules_repo/conf/import/login-server.conf" <<'EOF'
-login_configuration: {
-    account: {
-        @include "conf/import/integration-sql.conf"
-        ipban: {
-            @include "conf/import/integration-sql.conf"
-        }
-    }
-}
-EOF
-cat > "$hercules_repo/conf/import/char-server.conf" <<'EOF'
-char_configuration: {
-    @include "conf/import/integration-sql.conf"
-    // Headless lifecycle tests create and delete characters immediately.
-    enable_char_creation: true
-    player: {
-        deletion: {
-            delay: 0
-            level: 0
-        }
-    }
-}
-EOF
-cat > "$hercules_repo/conf/import/map-server.conf" <<'EOF'
-map_configuration: {
-    @include "conf/import/integration-sql.conf"
-}
-EOF
-cat > "$hercules_repo/conf/import/inter-server.conf" <<'EOF'
-inter_configuration: {
-    log: {
-        @include "conf/import/integration-sql.conf"
-    }
-}
-EOF
+for name in login-server char-server map-server inter-server; do
+    static_override "$name" > "$hercules_repo/conf/import/$name.conf"
+done
 
 if [ "${INTEGRATION_SKIP_BUILD:-0}" != "1" ]; then
     echo "building Hercules for PACKETVER 20220406"

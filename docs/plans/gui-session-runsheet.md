@@ -30,17 +30,32 @@ Second seat: run the client a second time and log in as the other character.
 
 ### Pre-flight — check this before you start, the seats drift
 
-They had drifted by **2026-08-12**: `test` was a **Whitesmith in geffen**, and
-**no party existed at all**. Party 280 is gone. Task 1 needs a Clown and a
-Gypsy in one party, so it would have stalled on the first row — which is part of
-why Hermode keeps not getting reached.
-
-Check without starting the client (`<pw>` from `Hercules/conf/import/sql_connection.conf`):
+Run this **before logging in**, and read its first three lines before its table:
 
 ```sh
-mysql --protocol=tcp -h127.0.0.1 -uragnarok -p<pw> ragnarok -e \
- "SELECT name, class, last_map, party_id FROM \`char\` WHERE name IN ('test','HeadlessTwo');"
+tools/testing/preflight-seats.sh      # exits non-zero if anything is wrong
 ```
+
+It reports the job, position, party and instrument for both seats — and, first,
+**which database it read them from**, resolved from what the running servers are
+actually connected to rather than from a config file.
+
+**Why it leads with the database.** On **2026-08-16** a session was brought up
+against a leftover `korangar_integration_*` database. A killed integration run
+had left its overrides installed in `Hercules/conf/import/`, so every server
+silently pointed at a disposable database while the seats were being read out of
+`ragnarok`. The report looked healthy; the characters on screen were two Novices
+from a test fixture, and nothing done in that session would have counted. The old
+version of this check — a bare `mysql … ragnarok -e …` — could not see it,
+because it named the database it wanted rather than the one in use. If the script
+reports an override, stop and clear it; the runner reclaims orphans now, but only
+when it runs.
+
+The seats also **drift on their own**. They had by **2026-08-12** (`test` a
+**Whitesmith in geffen**) and were still drifted on **2026-08-16**, with both
+instruments sitting unequipped in the bag and **no party at all** — party 280 is
+long gone. §1 needs a Clown and a Gypsy in one party, so it stalls on the first
+row, which is part of why Hermode keeps not getting reached.
 
 | Seat | Character | Wanted job | Weapon | Why the weapon matters |
 |---|---|---|---|---|
