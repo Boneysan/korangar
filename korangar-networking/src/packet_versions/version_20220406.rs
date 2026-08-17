@@ -1937,6 +1937,7 @@ fn skill_fail_reason_text(reason: SkillFailReason) -> &'static str {
         SkillFailReason::NothingToSteal => "There was nothing to steal.",
         SkillFailReason::SuppressedByKyomu => "Kyomu suppressed the skill.",
         SkillFailReason::TargetImmune => "The target cannot be affected by that.",
+        SkillFailReason::NeedsWarpPortal => "That has to be cast beside a warp portal.",
     }
 }
 
@@ -2163,6 +2164,7 @@ mod skill_failure_text_tests {
             NothingToSteal,
             SuppressedByKyomu,
             TargetImmune,
+            NeedsWarpPortal,
         ] {
             assert!(super::skill_fail_reason_text(reason).ends_with('.'), "{reason:?}");
         }
@@ -2185,6 +2187,7 @@ mod skill_failure_text_tests {
             (7, R::NothingToSteal),
             (8, R::SuppressedByKyomu),
             (9, R::TargetImmune),
+            (10, R::NeedsWarpPortal),
         ] {
             assert_eq!(R::from_wire(wire), Some(expected), "wire value {wire}");
         }
@@ -2192,8 +2195,10 @@ mod skill_failure_text_tests {
         // 0 is SKILLFAILREASON_NONE, and anything above the last known reason is
         // a server newer than this build. Both must resolve to `None` — *not* to
         // a deserialization failure, which would cost the whole read buffer.
+        // NOTE: this boundary moves every time a reason is appended. Adding one
+        // without moving it leaves the guard asserting the opposite of the truth.
         assert_eq!(R::from_wire(0), Option::None);
-        assert_eq!(R::from_wire(10), Option::None);
+        assert_eq!(R::from_wire(11), Option::None);
         assert_eq!(R::from_wire(u16::MAX), Option::None);
     }
 

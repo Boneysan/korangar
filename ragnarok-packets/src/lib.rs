@@ -5893,6 +5893,7 @@ pub enum SkillFailReason {
     NothingToSteal,
     SuppressedByKyomu,
     TargetImmune,
+    NeedsWarpPortal,
 }
 
 impl SkillFailReason {
@@ -5910,6 +5911,7 @@ impl SkillFailReason {
             7 => Self::NothingToSteal,
             8 => Self::SuppressedByKyomu,
             9 => Self::TargetImmune,
+            10 => Self::NeedsWarpPortal,
             // 0 is `SKILLFAILREASON_NONE`; anything else is from a server newer
             // than this client.
             _ => return None,
