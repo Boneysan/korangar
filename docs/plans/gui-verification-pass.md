@@ -9,7 +9,7 @@ regression-smoking.
 
 | Priority | Item | Notes |
 |---|---|---|
-| **1** | **Block E — Hermode** | Still **NOT REACHED**. Sound-only by design: hear wav + see nothing = PASS. Ensemble seats first; wait ~30s between casts |
+| ~~1~~ | ~~**Block E — Hermode**~~ | **PASS 2026-08-16 — reached for the first time, and the block is now closed.** Sound heard on **both** seats, 49 units across the 7×7 of `Layout: 3`, all `body=none str=None`. **Three things that looked like failures were correct:** the empty status window (`SC_HERMODE` has no `Icon:` in `sc_config.conf`, so Hercules never sends the state change), the rooted caster (`SC_DANCING` blocks `unit_can_move`, ~31 s at Lv5, and Hermode is named as a case `SC_LONGING` cannot free), and the invisible field. **Why it had never been reached:** the runsheet sent people to `prt_fild08`, where the skill is refused twice over — upstream bans `CG_HERMODE` in the **Normal** zone, *and* `skill.c` demands a warp portal within 1 cell. Both gates are now fork deltas (see CLAUDE.md §3b) |
 | **2** | **Block E — Moonlit confirm** | Redesign **CLOSED 2026-08-08** after red-square/light bugs; re-confirm after any skill-unit change |
 | **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
 | **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
@@ -879,10 +879,18 @@ made during the walk, and Hermode was never reached.
 | 9×9 field appears | **PASS** — 9×9, centred on the caster |
 | Tile alpha (the calibration sample) | **PASS at α 0.6** — see §5 |
 | Tile reads flat, not patterned | **CLOSED 2026-08-08** by the redesign in `b6148b5c` — see §5 |
-| Hermode is audible and invisible | **NOT REACHED — the only question left in this block** |
+| Hermode is audible and invisible | **PASS 2026-08-16** — wav heard on both seats, 49 units all `body=none str=None`. **This closes Block E.** The empty status window and the ~31 s rooted caster are both correct (no `Icon:` for `SC_HERMODE`; `SC_DANCING` blocks `unit_can_move`) — the character freed itself on schedule |
 
 **Setup for whoever resumes.** `test` is a **Clown (4020)** with a Violin,
-`HeadlessTwo` a **Gypsy (4021)** with a Rope, both party 280 on `prt_fild08`.
+`HeadlessTwo` a **Gypsy (4021)** with a Rope, both partied on `prt_fild08`.
+(Party **280 is long gone** — the seats drift and the party is recreated each
+session; `tools/testing/preflight-seats.sh` reports the live state, including
+**which database** the servers are actually on.) **The partner needs the
+instrument equipped too, not just the caster** — `skill.c:15402` requires
+`tsd->weapontype1 == W_MUSICAL || W_WHIP` of the *partner*, and a bare-handed
+Gypsy fails the row with the ensemble-partner message. That cost a cast on
+2026-08-16 and is invisible in the DB mid-session, but shows in the client's
+`[packet-log] local equipped weapon=` line.
 Both know the skills — `CG_MOONLIT` is on **both** job trees (Clown via Musical
 Lesson, Gypsy via Dancing Lesson), so either seat can cast.
 
