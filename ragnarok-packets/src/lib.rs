@@ -4383,6 +4383,22 @@ pub struct NpcDialogPacket {
     pub text: String,
 }
 
+/// Which effect Gospel just granted (`ZC_GOSPEL_INFO`).
+///
+/// Sent to a party member each time the field rolls a buff for them — one of
+/// thirteen, every interval, and at Lv10 the roll never fails. Only the
+/// *supportive* branch reports: the offensive branch that debuffs enemies sends
+/// nothing at all, so this packet always means "you received something".
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0215)]
+pub struct GospelInfoPacket {
+    /// Effect code, 0x15..=0x20. Deliberately raw rather than an enum: an
+    /// unknown value must not fail deserialization, since a failed packet costs
+    /// the whole read buffer rather than just this message.
+    pub info_type: u32,
+}
+
 /// Text displayed by a Hunter Talkie Box trap (`ZC_TALKBOX_CHATCONTENTS`).
 /// PACKETVER 20220406 limits the fixed message field to 21 bytes.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]

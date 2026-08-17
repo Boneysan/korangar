@@ -1284,6 +1284,25 @@ where
         text: format!("Talkie Box: {}", packet.message),
         color: MessageColor::Broadcast,
     })?;
+    // Gospel names the buff it just handed you (`ZC_GOSPEL_INFO`). This was
+    // consumed by the length fallback and dropped, so a Paladin running Gospel
+    // was silently receiving a stream of major effects -- +100% ATK, +100% MaxHP,
+    // a Holy weapon -- with nothing on screen to say which. The fallback ate it
+    // *cleanly*, so it never appeared in the unknown-packet ledger either, and no
+    // headless scenario casts Gospel with a party to expose it.
+    //
+    // An unrecognised code is reported rather than swallowed: the codes are
+    // Gravity's and a gap here should be visible, not silent.
+    packet_handler.register(|packet: GospelInfoPacket| NetworkEvent::ChatMessage {
+        text: match gospel_info_text(packet.info_type) {
+            Some(text) => text.to_owned(),
+            // Deliberately does not name Gospel: 0x28 already proves this packet
+            // carries non-Gospel notices, so an unknown code must not be
+            // attributed to a skill that may have nothing to do with it.
+            None => format!("Unrecognised server notice ({:#04x}).", packet.info_type),
+        },
+        color: MessageColor::Information,
+    })?;
     packet_handler.register(|packet: MapServerLoginSuccessPacket| NetworkEvent::UpdateClientTick {
         client_tick: packet.client_tick,
         received_at: Instant::now(),
@@ -1941,6 +1960,43 @@ fn skill_fail_reason_text(reason: SkillFailReason) -> &'static str {
     }
 }
 
+/// The whole sentence behind a `ZC_GOSPEL_INFO` code, or `None` for one this
+/// build does not know.
+///
+/// **Despite the name, this packet is not Gospel-only.** Upstream reuses it as
+/// a general info channel: `skill.c:8613` sends `0x28` from `ST_FULLSTRIP` when
+/// Full Chemical Protection blocks a strip, which has nothing to do with
+/// Gospel. So the text is returned complete, prefix included, rather than the
+/// caller pasting "Gospel:" in front of whatever arrives -- doing that
+/// announced a Stripper's failure as a Gospel buff, which is the
+/// confidently-wrong-message failure this tree keeps repeating.
+///
+/// The Gospel codes come from `skill.c`'s `UNT_GOSPEL` support branch, which
+/// rolls one of thirteen effects. **Only ten report:** the heal, Blessing and
+/// Increase AGI cases send no packet, because each already announces itself --
+/// a heal number floats and both statuses have their own icon. So a silent buff
+/// is not necessarily a missing code. The offensive branch reports nothing at
+/// all, so a Gospel line always means *you received* something.
+fn gospel_info_text(info_type: u32) -> Option<&'static str> {
+    let text = match info_type {
+        0x15 => "Gospel: all negative statuses cleared.",
+        0x16 => "Gospel: immune to all status effects.",
+        0x17 => "Gospel: max HP doubled.",
+        0x18 => "Gospel: max SP doubled.",
+        0x19 => "Gospel: all stats +20.",
+        0x1C => "Gospel: your weapon is enchanted with Holy.",
+        0x1D => "Gospel: your armour is enchanted with Holy.",
+        0x1E => "Gospel: DEF +25%.",
+        0x1F => "Gospel: ATK +100%.",
+        0x20 => "Gospel: HIT and Flee +50.",
+        // Not Gospel: Full Chemical Protection blocked a strip attempt.
+        0x28 => "Full Chemical Protection blocked the strip.",
+        _ => return None,
+    };
+
+    Some(text)
+}
+
 /// Text for every `ZC_ACK_TOUSESKILL` cause the networking crate can render on
 /// its own (i.e. everything that needs no item lookup).
 fn skill_failed_text(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailReason>) -> String {
@@ -2377,6 +2433,58 @@ mod dropped_feature_tests {
             HandlerResult::UnhandledPacket => panic!("no handler is registered for this header at all"),
             HandlerResult::PacketCutOff => panic!("the test payload is shorter than the packet"),
             HandlerResult::InternalError(error) => panic!("the packet failed to deserialize: {error:?}"),
+        }
+    }
+
+    /// Gospel's buff announcements (`ZC_GOSPEL_INFO`, 0x0215) were dropped by
+    /// the length fallback, so a party under Gospel silently received one of
+    /// ten major effects per interval with nothing on screen naming it.
+    ///
+    /// Driven through the **real registration** rather than the mapping
+    /// function alone: a no-op parses perfectly and publishes nothing, and
+    /// the only tell is an empty event list, which no test of the text
+    /// table in isolation can see.
+    #[test]
+    fn gospel_names_the_buff_it_granted() {
+        // 0x1f is ATK +100% -- one of the largest effects in the table.
+        match events(&[0x15, 0x02, 0x1F, 0x00, 0x00, 0x00]).as_slice() {
+            [NetworkEvent::ChatMessage { text, .. }] => {
+                assert!(text.contains("ATK"), "0x1f should name the ATK buff, got {text:?}");
+            }
+            [] => panic!("0x0215 published nothing — Gospel's buffs are being dropped again"),
+            other => panic!("0x0215 produced {other:?}"),
+        }
+
+        // An unknown code must still reach the player. The codes are Gravity's,
+        // so a gap in our table should be visible rather than swallowed.
+        match events(&[0x15, 0x02, 0xFE, 0x00, 0x00, 0x00]).as_slice() {
+            [NetworkEvent::ChatMessage { text, .. }] => {
+                assert!(text.contains("nrecognised"), "an unmapped code should say so: {text:?}");
+                // It must NOT blame Gospel: this packet carries non-Gospel
+                // notices too, so an unknown code has no attribution to give.
+                assert!(
+                    !text.contains("Gospel"),
+                    "an unknown code must not be blamed on Gospel: {text:?}"
+                );
+            }
+            other => panic!("an unknown code produced {other:?}"),
+        }
+
+        // 0x28 is NOT Gospel -- `ST_FULLSTRIP` sends it when Full Chemical
+        // Protection blocks a strip. Announcing it as a Gospel buff is the
+        // plausible-wrong-text failure, so it is pinned.
+        match events(&[0x15, 0x02, 0x28, 0x00, 0x00, 0x00]).as_slice() {
+            [NetworkEvent::ChatMessage { text, .. }] => {
+                assert!(!text.contains("Gospel"), "0x28 is a strip failure, not Gospel: {text:?}");
+                assert!(text.contains("Chemical"), "0x28 should name FCP: {text:?}");
+            }
+            other => panic!("0x28 produced {other:?}"),
+        }
+
+        // Every mapped code must produce a real sentence.
+        for code in [0x15, 0x16, 0x17, 0x18, 0x19, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x28] {
+            let text = super::gospel_info_text(code).unwrap_or_else(|| panic!("{code:#04x} has no text"));
+            assert!(text.ends_with('.'), "{code:#04x}: {text:?}");
         }
     }
 

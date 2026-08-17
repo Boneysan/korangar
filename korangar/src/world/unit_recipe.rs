@@ -580,14 +580,34 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
         // size per entry but the recovered table only preserved the two sizes
         // that deviate, so the default size and every opacity here are
         // estimates and want the same live calibration Moonlit got.
+        // PA_GOSPEL. The footprint is itself a cross -- 33 cells, 7 wide across
+        // the middle three rows and 3 at the ends (`skill_init_unit_layout`) --
+        // so the artwork does not have to carry the shape.
+        //
+        // Walked live 2026-08-16, and the α 0.05 prediction held: **the tint was
+        // completely invisible**, confirming that 0.05 does not survive this
+        // renderer, the same finding Moonlit produced at 0.6. Without it the
+        // greyscale cross had nothing colouring it and read as *grey metal*.
         UnitId::Gospel => Some(UnitPresentation {
             body: Some(UnitBody::LayeredGroundQuad {
-                tile_color: Some(Color::rgba(1.0, 1.0, 1.0, 0.05)),
+                // Raised from the table's 0.05, which measured as nothing at all.
+                tile_color: Some(Color::rgba(1.0, 0.93, 0.70, 0.35)),
                 half_size: GAT_TILE_SIZE / 2.0,
                 hover_texture: "effect\\cross_old.bmp",
-                hover_half_size: GAT_TILE_SIZE,
-                hover_opacity: 1.0,
+                // Halved from GAT_TILE_SIZE: at a full tile each quad spans two
+                // cells, and 33 of them overlapped into a mass of crosses rather
+                // than a field. Matches Moonlit's calibrated hover size.
+                hover_half_size: GAT_TILE_SIZE / 2.0,
+                hover_opacity: 0.9,
             }),
+            // Saturated gold, not pale: per Land Protector's note, a pale light
+            // accumulates across overlapping cells and clips toward white, so the
+            // field only reads gold if each light is distinctly gold to begin
+            // with. 33 cells here against Land Protector's 121, so less
+            // accumulation to work with. **Radius is a starting point and wants
+            // dialing live** -- Land Protector took three passes (26 dim, 40 hot,
+            // 30 settled).
+            light: Some((Color::rgb_u8(255, 185, 60), 26.0)),
             ..NONE
         }),
         UnitId::Fogwall => Some(UnitPresentation {
