@@ -20,6 +20,27 @@ being true.
 | **H2** — credentials in clear on the wire | The attacker would have to already be on your network. Friends are told to use a throwaway password (§7.3 step 0), and the VPN closes it properly |
 | **M4** — client stores passwords if asked | Opt-in, off by default, and now labelled "(saved unencrypted)" |
 
+### Tailscale does NOT close the LAN path — do not assume it does
+
+The servers bind to **all** interfaces (`*:6900`, `*:6121`, `*:5121`; `bind_ip`
+is commented out in all three configs). Bringing up the tailnet **adds** an
+encrypted route for remote friends; it leaves `192.168.20.49` reachable by
+anyone on the wifi exactly as before.
+
+To genuinely restrict access to tailnet members you need one of:
+
+- **`bind_ip` on the Tailscale address** — but char, map and api reach the login
+  server over `127.0.0.1`, so binding to `100.x` alone breaks the inter-server
+  path. That is the same class of change that caused the 2026-08-17
+  `Connection to Login Server lost` hunt.
+- **A `pf` rule** blocking the three ports on `en0` while allowing `utun*` and
+  `lo0`. Cleaner: it never touches Hercules and loopback keeps working.
+
+**Neither is done, deliberately.** The LAN exposure is already the accepted risk
+above, and `pf` would defend against someone already on the home wifi — the
+attacker judged tolerable. It becomes worth doing the moment the tailnet
+includes anyone not fully trusted, because then "on the network" includes them.
+
 ### What revokes this acceptance
 
 Any **one** of these, and C1 becomes urgent rather than tolerable:
