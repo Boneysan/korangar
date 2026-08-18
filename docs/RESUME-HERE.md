@@ -1,5 +1,11 @@
 # Resume here — live pass status
 
+> **2026-08-17 — security passes 2 and 3** are in
+> [plans/security-audit-2.md](plans/security-audit-2.md) and
+> [plans/security-audit-3.md](plans/security-audit-3.md).
+> C1 is still open. Newest highs: unsandboxed Lua + unsigned `lua_files.7z`,
+> session tokens not bound to IP, campaign mule-farm, `DM_TriggerEvent` id+1.
+
 > **2026-08-17 — §6, §6b and §7 all PASSED. The ground-field family is CLOSED**,
 > after being open since 2026-08-08 — and the two rows found **three** bugs that
 > none of them were aimed at.

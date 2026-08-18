@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | **First audit ever run on this project.** Findings below are unfixed unless marked otherwise |
+| **Status** | First pass. Six findings were fixed the same day; **C1 is still open**. Later passes: [security-audit-2.md](security-audit-2.md), [security-audit-3.md](security-audit-3.md) |
 | **Trigger** | The client is about to be handed to friends and the server exposed beyond localhost |
 | **Scope of THIS pass** | Credentials and privilege, server exposure config, Rust dependency CVEs, fork script gating, pack hygiene |
-| **NOT covered — say so rather than imply coverage** | Memory safety of the C server (Hercules is C, and our 11 fork deltas touch `clif.c` packet parsing), fuzzing of korangar's packet decoders, upstream Hercules CVEs, the Lua/GRF asset path |
+| **NOT covered — say so rather than imply coverage** | Memory safety of the C server (Hercules is C, and our 11 fork deltas touch `clif.c` packet parsing), fuzzing of korangar's packet decoders, upstream Hercules CVEs, the Lua/GRF asset path. **Covered by the second pass:** API server, MariaDB bind, loaded DM/NPC scripts, fork packet deltas, host tools |
 
 ## Risk accepted for the beta — 2026-08-17, by the operator
 
