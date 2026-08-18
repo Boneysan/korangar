@@ -65,3 +65,6 @@ jobs:
 
       - name: Test headless run archival semantics
         run: tools/testing/test-run-suite.sh
+
+      - name: Test integration-runner orphan reclamation
+        run: tools/testing/test-orphan-reclaim.sh

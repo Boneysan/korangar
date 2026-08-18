@@ -5,11 +5,30 @@ type and what to look for. The findings archive is
 [gui-verification-pass.md](gui-verification-pass.md) — this is the thing you
 follow; that is the thing you read afterwards.
 
+> **2026-08-17 — §1 through §6 are DONE.** Start at **§7 Evil Land**, which
+> should be the cheap one: `curse.bmp` is 76.4% magenta, so it is the keyed
+> family and needs nothing that §6 just built.
+>
+> **§6 Fog Wall passed after four live passes and found a bug in Land
+> Protector**, which had already been verified back on 2026-07-24 — its texture
+> is the additive family too and had been alpha-blended the whole time, laying a
+> dark backing under all 121 cells. **Re-walk Land Protector**
+> (`@useskill 288 5 <your name>`) before closing the ground-field family.
+>
+> **2026-08-16 — §1 through §5.** §1 Hermode passed for the first time ever; §2,
+> §3, §4 and §5 all passed, and §3 and §5 each turned up a real bug that is now
+> fixed. Detail in [gui-verification-pass.md](gui-verification-pass.md).
+
 **Run this first**, so the queue starts from what is actually unverified:
 
 ```sh
 python3 tools/audits/gui-pass-staleness.py
+tools/testing/preflight-seats.sh     # seats AND which database the servers use
 ```
+
+**A punching bag, for any row about proc rates or animation:** `@monster 2410`
+spawns "Lv 100", one of RO's own training dummies — immobile, never attacks,
+99,999,999 HP. Ids 2408/2409/2410/2411 are the Lv 10/50/100/150 set.
 
 ---
 
@@ -30,17 +49,32 @@ Second seat: run the client a second time and log in as the other character.
 
 ### Pre-flight — check this before you start, the seats drift
 
-They had drifted by **2026-08-12**: `test` was a **Whitesmith in geffen**, and
-**no party existed at all**. Party 280 is gone. Task 1 needs a Clown and a
-Gypsy in one party, so it would have stalled on the first row — which is part of
-why Hermode keeps not getting reached.
-
-Check without starting the client (`<pw>` from `Hercules/conf/import/sql_connection.conf`):
+Run this **before logging in**, and read its first three lines before its table:
 
 ```sh
-mysql --protocol=tcp -h127.0.0.1 -uragnarok -p<pw> ragnarok -e \
- "SELECT name, class, last_map, party_id FROM \`char\` WHERE name IN ('test','HeadlessTwo');"
+tools/testing/preflight-seats.sh      # exits non-zero if anything is wrong
 ```
+
+It reports the job, position, party and instrument for both seats — and, first,
+**which database it read them from**, resolved from what the running servers are
+actually connected to rather than from a config file.
+
+**Why it leads with the database.** On **2026-08-16** a session was brought up
+against a leftover `korangar_integration_*` database. A killed integration run
+had left its overrides installed in `Hercules/conf/import/`, so every server
+silently pointed at a disposable database while the seats were being read out of
+`ragnarok`. The report looked healthy; the characters on screen were two Novices
+from a test fixture, and nothing done in that session would have counted. The old
+version of this check — a bare `mysql … ragnarok -e …` — could not see it,
+because it named the database it wanted rather than the one in use. If the script
+reports an override, stop and clear it; the runner reclaims orphans now, but only
+when it runs.
+
+The seats also **drift on their own**. They had by **2026-08-12** (`test` a
+**Whitesmith in geffen**) and were still drifted on **2026-08-16**, with both
+instruments sitting unequipped in the bag and **no party at all** — party 280 is
+long gone. §1 needs a Clown and a Gypsy in one party, so it stalls on the first
+row, which is part of why Hermode keeps not getting reached.
 
 | Seat | Character | Wanted job | Weapon | Why the weapon matters |
 |---|---|---|---|---|
@@ -188,8 +222,15 @@ every *accept* path and never a *refuse* one.
 
 `@jobchange 4015` (Paladin), `@allskill`, `@heal` (needs 80–100 SP).
 
-**Self-cast toggle**, `PA_GOSPEL` **369**, 60 s. Re-cast to cancel.
-**It strips your own buffs when it starts.**
+**Self-cast toggle**, `PA_GOSPEL` **369**, 60 s, 10 s interval = **6 rolls**.
+Re-cast to cancel. **It strips your own buffs when it starts.**
+
+> **DONE 2026-08-16 — PASS after three fixes.** Kept for re-walks. **Two setup
+> traps:** Gospel **excludes its own caster** (`ss == bl` breaks first), so the
+> Paladin gets no buffs and no messages — testing it needs a **second seat
+> standing in the field**. And only **ten of thirteen** effects announce
+> themselves; heal, Blessing and Increase AGI send no packet by design, so a
+> silent buff is not a missing message.
 
 **We expect you to see nothing, and that is the point of this row.** Gospel is
 coded at **α 0.05** — the exact value we measured as *not* porting to this
@@ -207,20 +248,49 @@ The field is **two layers**, so the useful report distinguishes them:
 
 ---
 
-## 6. Fog Wall
+## 6. Fog Wall — DONE 2026-08-17
 
 `@jobchange 4017` (Professor), `@allskill`.
 
 - `PF_FOGWALL` **404**, ground target, range 9, 25 SP, 20 s.
 - **No gemstone needed on this server** — official RO wants a Blue Gemstone and
   this build does not. Do not go shopping.
-- Coded at **α 0.6**, the calibrated magnitude, so this one *should* read.
 
-Same two-layer question as §5.
+> **PASS after four passes.** It drew 15 opaque **black squares** first: RO has
+> two texture families and the ground-decal pass only knew one. `lens_w.bmp` is
+> greyscale-on-black (0% magenta, 40% near-black) and has to be *added*, not
+> alpha-blended. Then the artwork itself proved wrong for a field — a 32x128
+> gradient reads as three hard stripes — so it now draws the original's own
+> `fog1/2/3.tga` cycling at 4 fps, per-cell phase offset, with a light.
+>
+> **It also caught Land Protector**, which has the same additive texture and had
+> been alpha-blended since it shipped. **That row is now stale — re-walk it.**
+>
+> **Two things to carry forward.** The `[skill-unit]` log no longer prints
+> `transparent=`: that field is hard-coded `false` for every BMP and could never
+> have answered anything. It prints `blend=` instead. And when counting cells on
+> screen, **count blocks, not the seams between them** — this row was reported as
+> 18 squares twice against a server that sends 15, and the screenshot showed six
+> seam lines with five cells between them.
+
+## 6b. Land Protector — re-walk, caused by §6
+
+`@useskill 288 5 <your name>` (`SA_LANDPROTECTOR`, 288). Any job.
+
+| Look for | Verdict |
+|---|---|
+| The blue magic circle reads brighter, with no dark backing under the pattern | PASS — the additive fix landed |
+| The circles blow out to white where they overlap | FAIL — additive is accumulating too hard; say how many cells deep it goes |
+| Unchanged from before | Worth saying — it would mean the dark backing was never visible against this terrain |
 
 ---
 
-## 7. Evil Land
+> **§6b PASS 2026-08-17** — 121 cells, and the field now reads as pulsing magic
+> symbols with **no dark square behind each one**, which is exactly what the
+> additive blend removes. One symbol per cell at 0.8 of a cell is the original's
+> own `LPEffect` shape, not a gap.
+
+## 7. Evil Land — DONE 2026-08-17
 
 No job learns it — reach it directly:
 
@@ -230,11 +300,28 @@ No job learns it — reach it directly:
 
 `NPC_EVILLAND` **670**, 30 s, tile α 0.2, hover `curse.bmp` at a **half** cell —
 one of only two entries the original table gives an explicit size for, so the
-size is the interesting part here.
+size is the interesting part here. 9 cells, a 3x3 (`Layout: 1`).
+
+> **2026-08-17 — the artwork draws, 9 cells, and it caught a bug nothing else
+> could: every ground decal was drawing UPSIDE DOWN.** The camera sits at -z
+> looking toward +z (`DEFAULT_ANGLE` 180, `CAMERA_PITCH` -55), so screen-up on
+> the ground is +z, but the UVs put the picture's top on the -z corners. Nothing
+> had revealed it because nothing asymmetric had been drawn flat — Gospel's cross
+> is symmetric, Land Protector's circle radial, Fog Wall's puff a blob.
+> **Moonlit's hovering note had been inverted since 2026-08-08, through a live
+> pass that closed the row.** Fixed once, in
+> `GROUND_DECAL_TEXTURE_COORDINATES`, with the derivation in a test.
+>
+> **PASS 2026-08-17.** It shipped with no `light` — the third of three in this
+> family without one, after Gospel read as grey metal and Fog Wall was hard to
+> see. Saturated violet at radius 9 (Fog Wall's settled value, not the 22 that
+> over-lit it), and the tint raised from **α 0.2 to 0.35** and tilted violet.
+> 0.2 is below everything that has ever read in this renderer. **This closes the
+> ground-field family.**
 
 ---
 
-## 8. Two confirms that were never done
+## 8. Two confirms that were never done — DONE 2026-08-17
 
 Both shipped 2026-07-22 as "code complete — live GUI confirm recommended", and
 the confirm never happened. Single seat, any job.
@@ -244,7 +331,44 @@ the confirm never happened. Single seat, any job.
 | M1-009 | Hover an inventory/equipment/storage item while wearing gear in that slot | Tooltip shows ATK/MATK/DEF/slots/req Lv/weight **and a vs-equipped delta** |
 | M1-014 | Right-click a character at character select | Tooltip documents left-click play / right-click delete; delete is **two-step** (`Delete {name}…` → `Really delete {name}?`) |
 
-## 9. N24 — Instance window — DO THIS LAST
+> **Both PASS 2026-08-17.** M1-009 showed the stats **and the vs-equipped
+> comparison**, which is the half that had never been on screen.
+>
+> **M1-014 passed on mechanism and failed on legibility, which is a real bug:**
+> the confirmation is an **overlay** drawn over the character-select art, and
+> `text!` draws glyphs with nothing behind them — fine inside a window that has
+> its own background, unreadable here. It is also the last thing standing between
+> a right-click and a destroyed character, so it has to *look* like a warning.
+> Now a `WarningBanner`: the same rounded plate the slot buttons in that file
+> already draw, with red text. **Confirmed readable live.**
+>
+> The lesson generalises: **text on an overlay needs its own plate.** Nothing
+> stops the next overlay being written with a bare `text!`.
+
+## 9. N24 — Instance window — PASS 2026-08-17
+
+> **PASS on both seats, and it did NOT hard-lock.** The window opened at the
+> top, named **"Seal Cascade - izlude"** — the label `dm_console.txt` builds
+> (`"Seal Cascade - " + map`), **not the map name**, which is easy to mistake for
+> a failure — and `end` closed it and warped the party to their save points,
+> which is `instance_destroy` behaving correctly. The short map name dodged the
+> 08-05 truncation that cost a session.
+>
+> **Two bugs, both in the timer, both from one design.** `display_text` was a
+> string built once when the join packet arrived and cached, so it could only
+> ever show the instant of entry.
+> 1. **It showed "496397h 45m"** — 1,787,031,900 seconds, which is the **Unix
+>    clock**. Hercules stores `progress_timeout`/`idle_timeout` as `now + value`
+>    (`instance.c:709`, `:685`) and `clif_instance_join` sends the field raw, so
+>    **both timers are absolute timestamps** and the client must subtract. The
+>    subtraction saturates at zero, so a duration sent by mistake degrades to
+>    `0s` rather than to another 56-year figure.
+> 2. **Then it was correct and frozen.** The state now keeps the raw timeouts
+>    and re-renders against the wall clock in `update_client_state`, gated on
+>    `is_counting_down()` and rebuilt only when the displayed second changes.
+>
+> **Verified on both seats**, which also confirms the instance packets reach
+> every party member and not just the DM who created it.
 
 **This has hard-locked both clients before.** Expect to kill the process.
 

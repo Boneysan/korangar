@@ -128,7 +128,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt,
+    WORLD_THEMES_PATH,
 };
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -658,7 +659,13 @@ fn is_vmware_virtual_platform() -> bool {
     std::fs::read_to_string("/sys/class/dmi/id/product_name").is_ok_and(|product_name| product_name.to_lowercase().contains("vmware"))
 }
 
-fn create_window_attributes() -> WindowAttributes {
+/// Build the window, restoring the geometry the player left it at.
+///
+/// `saved_size` is **logical** pixels from `GameSettings`, so a window that
+/// moves between monitors of different scale factors comes back the same
+/// apparent size rather than the same pixel count. `None` opens at
+/// `INITIAL_SCREEN_SIZE`, which is what a fresh install gets.
+fn create_window_attributes(saved_size: Option<(u32, u32)>, maximized: bool) -> WindowAttributes {
     let reader = ImageReader::with_format(Cursor::new(ICON_DATA), ImageFormat::Png);
     let image_buffer = reader.decode().unwrap().to_rgba8();
     let image_data = image_buffer.as_bytes().to_vec();
@@ -666,11 +673,16 @@ fn create_window_attributes() -> WindowAttributes {
     assert_eq!(image_buffer.width(), image_buffer.height(), "icon must be square");
     let icon = Icon::from_rgba(image_data, image_buffer.width(), image_buffer.height()).unwrap();
 
+    // A saved size of zero in either axis would open an unusable window, and a
+    // settings file is hand-editable, so clamp rather than trust it.
+    let (width, height) = match saved_size {
+        Some((width, height)) if width > 0 && height > 0 => (width as f32, height as f32),
+        _ => (INITIAL_SCREEN_SIZE.width, INITIAL_SCREEN_SIZE.height),
+    };
+
     Window::default_attributes()
-        .with_inner_size(LogicalSize {
-            width: INITIAL_SCREEN_SIZE.width,
-            height: INITIAL_SCREEN_SIZE.height,
-        })
+        .with_inner_size(LogicalSize { width, height })
+        .with_maximized(maximized)
         .with_title(CLIENT_NAME)
         .with_window_icon(Some(icon))
         .with_visible(false)
@@ -2120,6 +2132,7 @@ impl Client {
                 half_size,
                 color,
                 pulse,
+                blend,
             }) => match match texture {
                 Some(texture) => self.texture_loader.get_or_load(texture, ImageType::Color),
                 None => Ok(self.flat_tile_texture()),
@@ -2128,12 +2141,11 @@ impl Client {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         let texture = texture.unwrap_or("<flat colour>");
                         eprintln!(
-                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, transparent={}",
-                            loaded.is_transparent()
+                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, blend={blend:?}"
                         );
                     }
                     self.effect_holder.add_unit(
-                        Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse)),
+                        Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse, blend)),
                         entity_id,
                     );
                     // The quad renders no light of its own; honor the
@@ -2148,30 +2160,43 @@ impl Client {
             Some(UnitBody::LayeredGroundQuad {
                 tile_color,
                 half_size,
-                hover_texture,
+                hover_frames,
+                hover_fps,
                 hover_half_size,
                 hover_opacity,
-            }) => match self.texture_loader.get_or_load(hover_texture, ImageType::Color) {
+                hover_blend,
+            }) => match hover_frames
+                .iter()
+                .map(|frame| self.texture_loader.get_or_load(frame, ImageType::Color))
+                .collect::<Result<Vec<_>, _>>()
+            {
                 Ok(hover) => {
                     let tile = self.flat_tile_texture();
 
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        // `is_transparent()` is NOT reported here: it is hard-coded
+                        // false for every non-TGA in `load_texture_data`, so for
+                        // these BMPs it could only ever print `false` and read as
+                        // a finding. The blend family is the answerable question.
                         eprintln!(
-                            "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_texture} \
-                             half_size={hover_half_size} opacity={hover_opacity}, transparent={}",
-                            hover.is_transparent()
+                            "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_frames:?} \
+                             @{hover_fps}fps half_size={hover_half_size} opacity={hover_opacity}, blend={hover_blend:?}"
                         );
                     }
 
                     self.effect_holder.add_unit(
                         Box::new(UnitLayeredGroundQuad::new(
                             tile,
-                            hover,
+                            HoverLayer {
+                                frames: hover,
+                                fps: hover_fps,
+                                half_size: hover_half_size,
+                                opacity: hover_opacity,
+                                blend: hover_blend,
+                            },
                             position,
                             half_size,
                             tile_color,
-                            hover_half_size,
-                            hover_opacity,
                         )),
                         entity_id,
                     );
@@ -2180,7 +2205,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {hover_texture}: {error:?}"),
+                Err(error) => eprintln!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -2534,8 +2559,17 @@ impl Client {
         });
 
         time_phase!("create initial window", {
+            // Read straight off disk: the client state that owns `GameSettings`
+            // does not exist yet at this point in start-up.
+            let (saved_window_size, window_maximized) = GameSettings::saved_window_geometry();
             #[allow(deprecated)]
-            let window = event_loop.map(|event_loop| Arc::new(event_loop.create_window(create_window_attributes()).unwrap()));
+            let window = event_loop.map(|event_loop| {
+                Arc::new(
+                    event_loop
+                        .create_window(create_window_attributes(saved_window_size, window_maximized))
+                        .unwrap(),
+                )
+            });
         });
 
         time_phase!("create adapter", {
@@ -3030,6 +3064,19 @@ impl Client {
         self.client_state
             .follow_mut(client_state().status_effects())
             .tick(std::time::Instant::now());
+
+        // Re-render the instance countdown against the wall clock. Gated on the
+        // window having a timer at all, so a session with no instance open never
+        // dirties the state for it — and the label itself only rebuilds when the
+        // displayed second changes, not every frame.
+        if self.client_state.follow(client_state().instance_state()).is_counting_down() {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|since_epoch| since_epoch.as_secs())
+                .unwrap_or_default();
+
+            self.client_state.follow_mut(client_state().instance_state()).tick(now);
+        }
 
         // Apply the game state after all the UI work + rendering is done.
         if let Err(_errors) = self.client_state.apply() {
@@ -9120,7 +9167,13 @@ impl ApplicationHandler for Client {
         // graphics backend after the first resume event is received.
         if self.window.is_none() {
             time_phase!("create window", {
-                let window = Arc::new(event_loop.create_window(create_window_attributes()).unwrap());
+                let saved_window_size = *self.client_state.follow(client_state().game_settings().window_size());
+                let window_maximized = *self.client_state.follow(client_state().game_settings().window_maximized());
+                let window = Arc::new(
+                    event_loop
+                        .create_window(create_window_attributes(saved_window_size, window_maximized))
+                        .unwrap(),
+                );
 
                 let backend_name = self.graphics_engine.get_backend_name();
                 window.set_title(&format!("{CLIENT_NAME} ({})", str::to_uppercase(&backend_name)));
@@ -9182,6 +9235,21 @@ impl ApplicationHandler for Client {
                 event_loop.exit();
             }
             WindowEvent::Resized(screen_size) => {
+                // Remember it for the next launch, in logical pixels so a move
+                // between monitors of different scale factors restores the same
+                // apparent size. A maximized window's size is not worth saving —
+                // the maximized flag restores that, and storing it would leave
+                // nothing sensible to un-maximize back to.
+                if let Some(window) = self.window.as_ref() {
+                    let maximized = window.is_maximized();
+                    *self.client_state.follow_mut(client_state().game_settings().window_maximized()) = maximized;
+
+                    if !maximized {
+                        let logical: LogicalSize<u32> = screen_size.to_logical(window.scale_factor());
+                        *self.client_state.follow_mut(client_state().game_settings().window_size()) = Some((logical.width, logical.height));
+                    }
+                }
+
                 let screen_size = screen_size.max(PhysicalSize::new(1, 1)).into();
                 *self.client_state.follow_mut(client_state().window_size()) = screen_size;
                 self.graphics_engine.on_resize(screen_size);
@@ -9936,8 +10004,10 @@ mod skill_effect_asset_tests {
                 }
                 // Only the hovering layer has artwork; the tint below it is a
                 // flat colour on the generated carrier.
-                Some(UnitBody::LayeredGroundQuad { hover_texture, .. }) => {
-                    paths.insert(format!("data\\texture\\{hover_texture}"));
+                Some(UnitBody::LayeredGroundQuad { hover_frames, .. }) => {
+                    for frame in hover_frames {
+                        paths.insert(format!("data\\texture\\{frame}"));
+                    }
                 }
                 Some(UnitBody::LoopingSprite { path, .. }) => {
                     paths.insert(format!("data\\sprite\\{path}.spr"));

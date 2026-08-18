@@ -507,6 +507,55 @@ When writing code or adding features, agents must adhere to these project-specif
      anchors (`SaveData_ExMacro`, the digits in "3시간"/"5시간") that must
      reappear in its own gloss — if they land on a *neighbour's* gloss instead,
      the run is shifted, and no translation is required to see it.
+   - **Hermode is a free-standing anti-magic field here, not a siege tool**
+     (2026-08-16) — **two** deltas plus a reason, all in service of a skill that
+     was **dead content on this server**. Upstream gates `CG_HERMODE` twice:
+     `db/re/map_zone_db.conf` bans it for players in the **Normal** zone (every
+     ordinary map), and `skill.c` requires a **warp portal** within
+     `skill_get_splash` (1) of the caster — "an encore with a warp", per
+     Hercules' own comment. What that leaves is towns (no combat) and siege
+     zones (never played by a friends-group campaign), so the skill could be
+     cast nowhere that mattered.
+     1. **Zone** (`db/re/map_zone_db.conf`) — `CG_HERMODE` removed from the
+        Normal zone's `disabled_skills`. It stays banned in **PvP and CvC**,
+        which is upstream's own line between arena duelling and siege: every
+        siege zone (GvG, GvG2, WoE TE, Battlegrounds) permits it.
+     2. **Warp requirement** (`conf/map/battle/skill.conf` +
+        `src/map/battle.{c,h}` + `src/map/skill.c`) — behind a new
+        `hermode_requires_warp`, default **false**. **Deliberately a config key
+        rather than a deleted `if`:** a named setting is visible in a merge diff
+        and greppable afterwards, where a missing condition is invisible — which
+        is this project's most expensive recurring failure.
+     3. **`SKILLFAILREASON_NEEDS_WARP_PORTAL = 10`** (`src/map/clif.h`,
+        `src/map/skill.c`) — the call site sent bare `USESKILL_FAIL_LEVEL`, so
+        with the requirement **on**, the client said *"Skill level is not high
+        enough"* to someone standing in the wrong place. That is the exact
+        cause-0 overload 0x0EFE exists to kill, and this site was missed in that
+        pass despite sitting **15 lines below** `SKILLFAILREASON_BENEDICTIO_HELPERS`
+        in the same switch. Kept numbered unconditionally so the wire value never
+        depends on a config value.
+     Client half: `SkillFailReason::NeedsWarpPortal` + `from_wire(10)`, pinned by
+     `wire_reasons_match_the_server_enum` — **and that test's boundary assertion
+     moves with every append** (`from_wire(11)` is now the "newer server" case).
+     Adding a reason without moving it leaves the guard asserting the opposite of
+     the truth. **Balance note, so this is not re-litigated as an oversight:** it
+     taxes itself — nobody inside the 7×7 can use **any** `INF_SUPPORT_SKILL`, so
+     the field cannot be healed or buffed from within, and it costs two players
+     plus 10 s of `SC_ENSEMBLEFATIGUE` on both. **And it dispels its own side:**
+     `skill.c:14043` calls `status->change_clear_buffs` on every party/guild
+     member who enters except the caster, so dropping one on your own party
+     strips their buffs. Know that before using it as protection.
+     **To restore official behaviour, both gates must go back** — they are
+     independent, and restoring one alone changes nothing: set
+     `hermode_requires_warp: true` (+ `@reloadbattleconf`) **and** re-add
+     `CG_HERMODE: "PLAYER"` to the Normal zone (+ `@reloadmapzonedb` or a
+     restart). Full instructions sit beside the setting in
+     `conf/map/battle/skill.conf`.
+     **NOT LIVE-VERIFIED — deliberately:** with the toggle off,
+     `NEEDS_WARP_PORTAL` is unreachable, so the message has never been seen on
+     screen. Unit-tested and enum-pinned only. **Watch it once if you ever
+     re-enable the warp rule** — this fork has been bitten repeatedly by guards
+     nobody watched fail. Requires `dev.sh build` and a server restart.
    Type `0` is deliberate in the `skillcastcancel` call: a voluntary abort must not be blocked by the skill's `castcancel` flag or by Phen / `no_castcancel` (that is `type&2`, for damage interrupts), and the skill to drop is `ud->skill_id`, not `SA_CASTCANCEL`'s `skill_id_old` (`type&1`). SP is untouched because it is charged at cast *end*. Requires `make -j8` and a server restart.
 4. **Rebaseability**: Keep custom UI features isolated in `korangar/src/interface/windows/dm/` (and state in `korangar/src/dm/`) as much as possible to ensure the fork remains rebaseable against upstream Korangar.
 5. **No Upstream IP**: Per `wiki/Contributing.md`, do not include code taken directly from or inspired by GRAVITY's intellectual property.

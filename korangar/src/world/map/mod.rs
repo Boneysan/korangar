@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use std::mem::size_of;
 use std::sync::{Arc, Mutex, RwLock};
 
-use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector2, Vector3};
+use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector3};
 use hashbrown::HashMap;
 use korangar_audio::AudioEngine;
 use korangar_collision::{AABB, Frustum, KDTree, Sphere};
@@ -32,11 +32,13 @@ use super::{LightSourceExt, PointLightSet};
 use crate::graphics::{
     DebugAabbInstruction, DebugCircleInstruction, DebugRectangleInstruction, ModelBatch, RenderOptions, ScreenPosition, ScreenSize,
 };
-use crate::graphics::{EntityInstruction, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex};
+use crate::graphics::{
+    EntityInstruction, GroundDecalBlend, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex,
+};
 use crate::loaders::GAT_TILE_SIZE;
-use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
+use crate::renderer::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 use crate::world::pathing::Traversable;
 use crate::{Buffer, Color, GameFileLoader, ModelVertex, TileVertex};
 
@@ -700,13 +702,9 @@ impl Map {
                     ),
                 ],
                 texture.clone(),
-                [
-                    Vector2::new(0.0, 0.0),
-                    Vector2::new(1.0, 0.0),
-                    Vector2::new(0.0, 1.0),
-                    Vector2::new(1.0, 1.0),
-                ],
+                GROUND_DECAL_TEXTURE_COORDINATES,
                 color,
+                GroundDecalBlend::Alpha,
             );
         }
     }

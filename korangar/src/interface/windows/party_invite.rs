@@ -64,7 +64,20 @@ impl CustomWindow<ClientState> for PartyInviteWindow {
             title: "Party invite",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
-            closable: true,
+            // **Deliberately not closable: an invite must be answered.** This
+            // framework has no close hook, so the close button sends nothing --
+            // the same defect `57308acd` fixed on the trade windows. Hercules
+            // sets `tsd->party_invite` when the invite goes out and only a reply
+            // clears it, so dismissing this popup strands that flag and
+            // `party.c:424` then refuses **every later invite** to this player
+            // with ack code 0. The inviter is told "<name> is already in a
+            // party", which is false and stays false until the target relogs --
+            // a confidently wrong message, which is worse than silence.
+            //
+            // This cannot strand the popup: Decline is always available and it
+            // tells the server, so there is an exit even if the inviter has
+            // already logged out.
+            closable: false,
             elements: (
                 text! {
                     text: message,

@@ -1,5 +1,156 @@
 # Resume here — live pass status
 
+> **2026-08-17 — §6, §6b and §7 all PASSED. The ground-field family is CLOSED**,
+> after being open since 2026-08-08 — and the two rows found **three** bugs that
+> none of them were aimed at.
+>
+> **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
+> **THE RUNSHEET IS COMPLETE — §1 through §9 all DONE.**
+>
+> **§9 N24 PASS on both seats, and it did not hard-lock** — the short map name
+> (`izlude`) dodged the Hercules truncation that cost the 08-05 session. The
+> window names the *label* `dm_console.txt` builds, **"Seal Cascade - izlude"**,
+> not the map. Its timer had **two** bugs from one design: the label was built
+> once on join and cached, so it first showed **the Unix clock** as a duration
+> ("496397h 45m" — Hercules sends `now + value` and `clif_instance_join` sends it
+> raw, so both timers are **absolute timestamps**), and then, once corrected,
+> sat frozen. It now re-renders against the wall clock, gated so a session with
+> no instance open never pays for it.
+>
+> **§8 both PASS** — M1-009 showed the vs-equipped comparison, and M1-014's
+> two-step delete works but was **unreadable**: the confirmation is an overlay
+> over the character-select art and `text!` draws glyphs with nothing behind
+> them. It is the last thing between a right-click and a destroyed character, so
+> it now draws its own plate (`WarningBanner`) in red. **Text on an overlay needs
+> its own plate** — nothing stops the next one being written with a bare `text!`.
+>
+> **Moonlit is DEFERRED by decision (2026-08-17), not cleared.** Its note had
+> been drawing upside down since the 08-08 pass that closed the row; today's fix
+> corrects it but nobody has seen it. Re-walking needs the Clown/Gypsy pair
+> rebuilt and the combo is judged unlikely to be played. `gui-pass-staleness.py`
+> deliberately still reports Block E as STALE, with the reason in its comment.
+>
+> **§1–§7 were DONE earlier today.** What is left is **§8** (the two confirms that shipped
+> 2026-07-22 and were never looked at) and **§9 the instance window**, which
+> stays **last because it can hard-lock both clients**.
+>
+> **EVERY GROUND DECAL WAS DRAWING UPSIDE DOWN**, and only Evil Land could show
+> it. The camera sits at -z looking toward +z (`DEFAULT_ANGLE` 180,
+> `CAMERA_PITCH` -55), so screen-up on the ground is +z, but the UVs put the
+> picture's top on the -z corners. Nothing revealed it because nothing
+> asymmetric had ever been drawn flat — Gospel's cross is symmetric, Land
+> Protector's circle radial, Fog Wall's puff a blob. **Moonlit's note had been
+> inverted since 2026-08-08, through a live pass that closed its row.** The
+> convention is now one constant, `GROUND_DECAL_TEXTURE_COORDINATES`, with the
+> camera derivation pinned in a test.
+>
+> **All three of Gospel, Fog Wall and Evil Land shipped with no light**, and all
+> three needed one. That is now a rule worth applying before walking a new
+> ground unit rather than after: **check for a `light` first.** Radius 9 for a
+> small field — Fog Wall's 22 lit twice the area of its own effect.
+>
+> **RO has two effect-texture families and the ground-decal pass knew one.** Fog
+> Wall drew 15 **opaque black squares**: `lens_w.bmp` is greyscale-on-black (0%
+> magenta, 40% near-black) — additive artwork, where black means *add nothing* —
+> and the pass hard-coded `ALPHA_BLENDING`. There are now two pipelines and a
+> `GroundDecalBlend` on every decal, with instances stable-partitioned by family.
+>
+> **The same defect was sitting in Land Protector, verified back on 2026-07-24.**
+> `aaa copy.bmp` is 0% magenta, 45.7% near-black, alpha-blended since it shipped,
+> so all 121 cells at Lv5 laid a dark backing under the magic circle — very
+> likely why its light needed three passes to stop reading as dim (26 → 40 → 30).
+> **Measure every sibling when you find a bug of this class, not just the one
+> that failed.**
+>
+> **Then the artwork was wrong for a field, which no blend could fix.**
+> `lens_w.bmp` is a 32×128 one-dimensional gradient, so flat on a cell it paints
+> a bar and the wall read as three hard stripes. It now draws the original's own
+> **`fog1/2/3.tga`** — three frames of one soft puff, real alpha channel —
+> cycling at 4 fps with **each cell offset by its own phase**, so fifteen cells
+> boil instead of flickering in unison. Recipes take a frame list and an fps now.
+>
+> **Traps this row cost time on:**
+> - **The `[skill-unit]` log's `transparent=` field was a lie** for every BMP —
+>   `load_texture_data` only measures TGAs and hard-codes `false` otherwise — and
+>   the runsheet told people to read it. It prints `blend=` now.
+> - **Count blocks, not seams.** The field was reported as 18 squares twice
+>   against a server that sends 15 every time; profiling the screenshot showed
+>   six seam lines with five cells between them. Two wrong explanations came from
+>   trusting the count over the wire.
+> - **`tools/grf_extract.py` cannot read these textures** (DES-encrypted). The
+>   `grf_extract` ignored test in `lib.rs` uses the client's own reader:
+>   `KORANGAR_EXTRACT='data\texture\effect\fog1.tga' KORANGAR_EXTRACT_OUT=/tmp/x
+>   cargo test -p korangar --lib grf_extract -- --ignored --nocapture`.
+>   Measuring the pixels is what settled every question here.
+
+> **2026-08-16 — the GUI pass finally moved, and five rows closed in one sitting.**
+>
+> **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
+> **§1–§5 are DONE.** Next is **§6 Fog Wall**, then §7 Evil Land, §8 the two
+> confirms, §9 the instance window (**last, it can hard-lock both clients**).
+>
+> | Row | Result |
+> |---|---|
+> | §1 Hermode | **PASS — the oldest open row, never once reached before today** |
+> | §2 Party roster + trade | PASS both halves; Block A is no longer stale |
+> | §3 P1/P5/F3/F4 | **4/4 PASS**, and found a real bug on the way |
+> | §4 Auto Spell (N20) | PASS end to end, proc observed |
+> | §5 Gospel | PASS after three visual fixes **plus a dropped feature recovered** |
+>
+> **The session did not start with testing — it started with the environment
+> lying.** The servers were running against `korangar_integration_9784`, a
+> disposable database left by a run killed on 08-12. The seats were read from
+> `ragnarok` and looked healthy; the characters on screen were two Novices from a
+> fixture. **Nothing done in that session would have counted.** `cleanup()` hangs
+> off an EXIT trap and no trap survives SIGKILL — and worse, `restore_configs()`
+> would back up the *previous run's artifacts* as "the developer's original" and
+> faithfully restore them, so **one `kill -9` cemented the override permanently**.
+> Fixed by sweeping at startup (`reclaim_orphans`), and
+> **`tools/testing/preflight-seats.sh`** now resolves the database from the
+> running servers' own connections instead of naming the one it hopes for.
+>
+> **Four product bugs, three of them invisible to any automated test:**
+> 1. **`ZC_GOSPEL_INFO` (0x0215) silently dropped** for the client's whole life —
+>    a party under Gospel receives a major effect every 10s and was told which by
+>    nothing. The fallback consumed it *cleanly*, so it never reached the
+>    unknown-packet ledger.
+> 2. **Dismissing the party-invite popup sent nothing**, stranding
+>    `tsd->party_invite`, after which every later invite told the inviter
+>    **"<name> is already in a party"** — false, and false until relog. The
+>    friend-request popup had the identical defect. Both `closable: false` now.
+> 3. **Gospel had no light at all** while 17 other units do, so its greyscale
+>    cross read as **grey metal**; and its α 0.05 tint was **completely
+>    invisible**, confirming 0.05 is dead in this renderer.
+> 4. **Hermode's warp-portal refusal sent bare cause 0** — "skill level is not
+>    high enough" for standing in the wrong place — fifteen lines below a site
+>    that already had a real reason.
+>
+> **Two deliberate fork deltas, at the user's decision** (CLAUDE.md §3b): Hermode
+> is no longer banned in the Normal zone, and its warp requirement sits behind
+> `hermode_requires_warp` (default **off**). It was **dead content** here — the
+> only zones permitting it were towns and sieges, neither of which this campaign
+> plays.
+>
+> **What kept being true all night: most things that looked like failures were
+> correct.** An empty status window twice (`SC_HERMODE` and `SC_GOSPEL` have no
+> `Icon:`, so Hercules never sends the state change), a frozen caster
+> (`SC_DANCING` roots for ~31s), no damage from Gospel (it debuffs), no message
+> when a friend is removed (upstream sends `0x020A` and no text, and says so in a
+> comment). **Check what the server is supposed to send before calling it a bug.**
+>
+> **Traps that cost time tonight, so they do not again:**
+> - **The ensemble partner needs the instrument equipped too**, not just the
+>   caster (`skill.c:15402`). Invisible in the DB mid-session; visible in the
+>   client's `[packet-log] local equipped weapon=` line.
+> - **`inventory` is a save snapshot and disagreed with live state by a whole
+>   trade.** Read `picklog`.
+> - **RO ships training dummies**: `@monster 2410` ("Lv 100") is immobile, never
+>   attacks, 99,999,999 HP. Far better than porings for proc rates and animation.
+> - **Gospel excludes its own caster** (`ss == bl`), so testing its buffs needs a
+>   second seat standing in the field.
+>
+> ---
+>
 > **2026-08-12 — where to go:**
 >
 > | Track | Status | Open first |

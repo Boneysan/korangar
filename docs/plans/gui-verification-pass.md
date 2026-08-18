@@ -9,14 +9,14 @@ regression-smoking.
 
 | Priority | Item | Notes |
 |---|---|---|
-| **1** | **Block E — Hermode** | Still **NOT REACHED**. Sound-only by design: hear wav + see nothing = PASS. Ensemble seats first; wait ~30s between casts |
-| **2** | **Block E — Moonlit confirm** | Redesign **CLOSED 2026-08-08** after red-square/light bugs; re-confirm after any skill-unit change |
-| **3** | **N20 — Auto Spell window** | Still **☐** — list spells by name, pick one, server accepts |
-| **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
-| **5** | **Block A re-walk — party roster + trade rows only** | The one block still stale after the 2026-08-12 triage. `a552bc57` changed the roster when *we* leave; `a617834a` changed traded items leaving the giver's inventory. Both landed after the block closed. Two rows |
-| **6** | **Gospel / Fog Wall / Evil Land ground fields** | **Never on screen** — steps in **§5b**. Added by `b6148b5c`; hover sizes and opacities are *estimates*. **Gospel is coded at α 0.05, the value §5 measured as not porting to this renderer** — walk it first, expect it invisible |
-| **7** | **The four refuse/remove paths** | P1 reject a party invite · P5 a member going offline · F3 reject a friend request · F4 remove a friend. Recovered by the 2026-08-12 reconciliation below — Block A walked every *accept* path and no *refuse* path |
-| **8** | **M1-009 and M1-014 live confirms** | Both shipped 2026-07-22 marked "code complete — live GUI confirm recommended" and never confirmed: gear stat tooltips with vs-equipped deltas, and the two-step character delete |
+| ~~1~~ | ~~**Block E — Hermode**~~ | **PASS 2026-08-16 — reached for the first time, and the block is now closed.** Sound heard on **both** seats, 49 units across the 7×7 of `Layout: 3`, all `body=none str=None`. **Three things that looked like failures were correct:** the empty status window (`SC_HERMODE` has no `Icon:` in `sc_config.conf`, so Hercules never sends the state change), the rooted caster (`SC_DANCING` blocks `unit_can_move`, ~31 s at Lv5, and Hermode is named as a case `SC_LONGING` cannot free), and the invisible field. **Why it had never been reached:** the runsheet sent people to `prt_fild08`, where the skill is refused twice over — upstream bans `CG_HERMODE` in the **Normal** zone, *and* `skill.c` demands a warp portal within 1 cell. Both gates are now fork deltas (see CLAUDE.md §3b) |
+| **2** | **Block E — Moonlit confirm** | **DEFERRED by decision 2026-08-17** (the Clown/Gypsy combo is judged unlikely to be played), **not cleared** — its hovering note had been drawing **upside down** since the 08-08 pass that closed the row, and today's fix is unseen. `gui-pass-staleness.py` still reports Block E STALE on purpose |
+| ~~3~~ | ~~**N20 — Auto Spell window**~~ | **PASS 2026-08-16** — cast bar, then the list **by name** (Fire Bolt, Cold Bolt, …), selection accepted and `SC_AUTOSPELL` applied (confirmed by its `SI_AUTOSPELL` icon). **Do not read a melee swing that fails to proc as a failure** — Auto Spell fires on a chance. **The trap if this ever reads as broken:** `skill_autospell_spell_selected` has **four silent `return 0` paths** and `clif_parse_AutoSpell` a fifth on `menuskill_id`, none of which send `clif->skill_fail`, so a rejected choice looks exactly like a dead button. Check the status icon, not the melee |
+| ~~4~~ | ~~**N24 — Instance window**~~ | **PASS 2026-08-17 on both seats, and it did not hard-lock** — `izlude` dodges the truncation. Window names the *label* (`"Seal Cascade - izlude"`), not the map. **Two timer bugs, one design:** the label was built once on join and cached, so it first showed the **Unix clock** as a duration (Hercules sends `now + value` raw — both timers are absolute), then sat frozen once corrected. Now re-rendered against the wall clock |
+| ~~5~~ | ~~**Block A re-walk — party roster + trade rows only**~~ | **PASS 2026-08-16 — Block A is no longer stale.** `a552bc57`: A left, A's own roster emptied to "Not in a party", B's roster dropped A, HP/SP bars stopped on both sides (A clearing itself and B being told are different paths; both fired). `a617834a`: verified in **two** steps, because a decrement and a row deletion are different branches — trading 1 of 3 decremented correctly (`T -1`), then trading the remaining 2 removed the row entirely (`T -2`), with no ghost row or 0-count entry. **Read `picklog`, never `inventory`** — the latter is a save snapshot and disagreed with the live state by a full trade during this walk |
+| ~~6~~ | ~~**Gospel ✔ / Fog Wall ✔ / Evil Land ✔ ground fields**~~ | **THE FAMILY IS CLOSED 2026-08-17.** Evil Land PASS: 9 cells, and it caught the bug none of its siblings could — **every ground decal was drawing upside down**, invisible until artwork with a top and a bottom was drawn flat. It also shipped with no light, the third of three, fixed the same way. | **Fog Wall PASS 2026-08-17 after four passes — and it found a second bug in a unit that had already passed. See the Fog Wall section below.** **Gospel PASS 2026-08-16 after three fixes.** The α 0.05 prediction held — **the tint was completely invisible**, so 0.05 is now confirmed dead in this renderer (Moonlit needed 0.6). Raised to 0.35, hover halved to `GAT_TILE_SIZE / 2.0` (at a full tile each quad spans **two** cells and 33 of them overlapped into a mass of crosses), and **a light added** — it had none, while 17 other units do, so a greyscale cross had nothing colouring it and read as **grey metal**. Saturated gold at radius 26, good on the first pass. **Also found here: `ZC_GOSPEL_INFO` (0x0215) was silently dropped** — see the note below. Evil Land still open |
+| ~~7~~ | ~~**The four refuse/remove paths**~~ | **ALL FOUR PASS 2026-08-16.** P1 · P5 · F3 · F4, detail in the tables below. **The block's real yield was a bug found off-checklist:** dismissing the party-invite popup with its **close button** sent nothing, and this framework has no close hook — so Hercules kept `tsd->party_invite` set and `party.c:424` then refused *every later invite* with ack 0, telling the inviter **"<name> is already in a party"**, which was false until the target relogged. Confidently wrong text, not silence. The friend-request popup had the identical defect. Both are now `closable: false`, matching `57308acd`'s fix for the trade windows. **Follow-up worth doing:** that is a workaround for a missing framework capability, not a repair — nothing stops the next must-answer popup being written `closable: true` |
+| ~~8~~ | ~~**M1-009 and M1-014 live confirms**~~ | **BOTH PASS 2026-08-17.** M1-009 including the vs-equipped comparison. M1-014's two-step works but its confirmation was **unreadable** — it is an overlay over the character-select art and `text!` draws glyphs with nothing behind them. Now a `WarningBanner` plate in red. **Text on an overlay needs its own plate** |
 | **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
 | **—** | Known-unrendered | Headgear/robe/colour, **spirit spheres**, quest UI — do **not** file as bugs; feature first |
 
@@ -328,11 +328,11 @@ only. Still unverified:
 
 | # | Check | Watch for | Result |
 |---|---|---|---|
-| P1 | **Reject** button on the invited seat | Inviter gets the rejection line; the invited seat's status line returns to "Not in a party" | ☐ **STILL OPEN** — N8 proved the popup appears, never that Reject answers |
+| P1 | **Reject** button on the invited seat | Inviter gets the rejection line; the invited seat's status line returns to "Not in a party" | ✔ **PASS 2026-08-16** — message arrived on the inviter; server left the rejecting seat out of the party entirely |
 | P2 | **Leave** button | Roster empties on *both* seats, status line resets, bars over the ex-member disappear | ☐ **STILL OPEN**, and reopened by `a552bc57` — this is the Block A re-walk row |
 | P3 | Status line during an outgoing invite | **CLOSED 2026-08-05** off-checklist — the line was printed off a successful *socket write*, and Hercules refuses an invite from outside a party silently (`party.c:382`). Fixed in `6ff109ac`. Original: inviter shows *"Invited X; waiting for an answer…"*, and it **clears** when the answer lands — either answer | ☐ |
 | P4 | Disabled states | Create greys out once in a party, Invite until in one, Accept/Reject with no invite, Leave when party-less — each with its tooltip | **SUPERSEDED by N11** (2026-08-04) — non-leader controls greyed with their message |
-| P5 | A member going **offline** | Roster line flips to `(offline)`; bars over them stop drawing | ☐ **STILL OPEN** — N13 walked `DEAD`, never offline |
+| P5 | A member going **offline** | Roster line flips to `(offline)`; bars over them stop drawing | ✔ **PASS 2026-08-16** — red offline status, and the line **stays listed** rather than vanishing, which is the distinction that matters (vanishing = left the party) |
 | P6 | Party chat | Sent from one seat, shown in the other's chat window | **SUPERSEDED by N3** (2026-08-04) |
 
 #### Friends — nothing has ever been on screen
@@ -341,8 +341,8 @@ only. Still unverified:
 |---|---|---|---|
 | F1 | Add by name from the friend list text box | `FriendRequestWindow` **pops automatically** on the other seat (`lib.rs:4797`) | **SUPERSEDED by N17** (2026-08-04) |
 | F2 | Accept | Both lists gain the friend with **no relog** | **SUPERSEDED by N18** (2026-08-04) — its sorting finding could only have been seen by accepting one live |
-| F3 | Reject | Request window closes; requester gets the rejection line | ☐ **STILL OPEN** — same gap as P1: the accept path was walked, the refuse path never |
-| F4 | Remove | Per-friend Remove button empties the row on both sides | ☐ **STILL OPEN** — N18 confirmed the button *exists*, never that pressing it removes on both sides |
+| F3 | Reject | Request window closes; requester gets the rejection line | ✔ **PASS 2026-08-16** — rejection line landed, and the `friends` table stayed at **0 rows**: a rejected request that persists a row is invisible until a relog |
+| F4 | Remove | Per-friend Remove button empties the row on both sides | ✔ **PASS 2026-08-16** — gone on **both** sides, both DB rows deleted. **No chat message on the removed side is CORRECT**: Hercules sends `0x020A` to drop the row and no text, and its own source comments *"should the guy be notified of some message? we should add it here if so"* — upstream never answered it |
 | F5 | **Online glyph flips live** | Friend logs out → `○`, back in → `●`, without reopening the window | **SUPERSEDED by N19** (2026-08-05) |
 | F6 | List survives relog | Friends still listed after logging out and back in | **SUPERSEDED by N19** (2026-08-05) |
 
@@ -879,10 +879,18 @@ made during the walk, and Hermode was never reached.
 | 9×9 field appears | **PASS** — 9×9, centred on the caster |
 | Tile alpha (the calibration sample) | **PASS at α 0.6** — see §5 |
 | Tile reads flat, not patterned | **CLOSED 2026-08-08** by the redesign in `b6148b5c` — see §5 |
-| Hermode is audible and invisible | **NOT REACHED — the only question left in this block** |
+| Hermode is audible and invisible | **PASS 2026-08-16** — wav heard on both seats, 49 units all `body=none str=None`. **This closes Block E.** The empty status window and the ~31 s rooted caster are both correct (no `Icon:` for `SC_HERMODE`; `SC_DANCING` blocks `unit_can_move`) — the character freed itself on schedule |
 
 **Setup for whoever resumes.** `test` is a **Clown (4020)** with a Violin,
-`HeadlessTwo` a **Gypsy (4021)** with a Rope, both party 280 on `prt_fild08`.
+`HeadlessTwo` a **Gypsy (4021)** with a Rope, both partied on `prt_fild08`.
+(Party **280 is long gone** — the seats drift and the party is recreated each
+session; `tools/testing/preflight-seats.sh` reports the live state, including
+**which database** the servers are actually on.) **The partner needs the
+instrument equipped too, not just the caster** — `skill.c:15402` requires
+`tsd->weapontype1 == W_MUSICAL || W_WHIP` of the *partner*, and a bare-handed
+Gypsy fails the row with the ensemble-partner message. That cost a cast on
+2026-08-16 and is invisible in the DB mid-session, but shows in the client's
+`[packet-log] local equipped weapon=` line.
 Both know the skills — `CG_MOONLIT` is on **both** job trees (Clown via Musical
 Lesson, Gypsy via Dancing Lesson), so either seat can cast.
 
@@ -1047,9 +1055,67 @@ no tint" are different failures.
   official RO wants one and this build does not.
 
 Instrument before theorising, exactly as §5 had to learn: `KORANGAR_PACKET_LOG=1`
-prints one `[skill-unit] spawn` per cell with the resolved colour, the texture,
-and whether that texture reports transparent. For a field you cannot see, that
-log distinguishes "never spawned" from "spawned and drew nothing".
+prints one `[skill-unit] spawn` per cell with the resolved colour, the frames,
+and the blend family. For a field you cannot see, that log distinguishes
+"never spawned" from "spawned and drew nothing".
+
+> **The `transparent=` field this log used to print was worthless and is gone.**
+> `load_texture_data` measures transparency for TGAs only and hard-codes `false`
+> for everything else, so for a BMP it could report nothing but `false` — and
+> this document told people to read it. It now prints `blend=`, which is the
+> answerable question.
+
+#### Fog Wall — PASS 2026-08-17, in four passes, and it caught Land Protector too
+
+**Two product bugs, one of them in a unit that had already been verified.**
+
+**1. The ground-decal pass knew only one of RO's two texture families.** Cast
+one and every cell drew an **opaque black square**. `lens_w.bmp` carries **0%
+magenta and 40% near-black**: it is greyscale-on-black artwork, meant to be
+*added*, where black means "add nothing". The BMP loader keys **magenta only**
+(`texture/mod.rs:600`), a BMP has α=1 everywhere so the shader's `α < 0.02`
+discard never fires, and `ForwardGroundDecalDrawer` hard-coded
+`BlendState::ALPHA_BLENDING` — so the background painted as black. It had never
+mattered because every previous ground unit is magenta-keyed. Fixed with
+`GroundDecalBlend`: two pipelines differing only in blend state, instances
+stable-partitioned alpha-first in `prepare` so each family is one contiguous
+slice and relative order still resolves inside a family.
+
+**2. Land Protector has had the same defect since it shipped.** Measuring *every*
+ground unit rather than only the failing one found `aaa copy.bmp` at **0%
+magenta, 45.7% near-black** — the additive family, alpha-blended since 2026-07-24.
+All 121 cells at Lv5 were laying a dark backing under the magic circle, which is
+the likeliest reason its companion light needed three live passes to stop
+reading as dim (26 → 40 → 30). **It is now `Additive`, which changes a row that
+had already PASSed — Land Protector wants re-walking.** Every other ground unit
+measured clean: `magic_green`, `ring_red`, `ice` are TGAs with real alpha.
+
+**Then the artwork itself was wrong for a field, which no blend could fix.**
+`lens_w.bmp` is a 32x128 one-dimensional gradient — a lens streak, dark at both
+ends. Flat on a cell it paints a bar; bars merge along a row and the dark ends
+gap between rows, so the wall read as **three hard white stripes**. Measured off
+the user's screenshot: three bands peaking 29 px apart, each rising over ~10 px
+and falling over ~18. **Replaced by the original's own `fog1.tga`** — 256x256,
+pure white, carried entirely in a real alpha channel (23% clear, 77% partial,
+none opaque) — a deliberate fork substitution in the same spirit as Moonlit's
+hovering note. `fog2`/`fog3` are near-identical frames of the same puff (mean
+alpha difference ~5 of 255), so **the recipe now takes a frame list and an fps**
+and Fog Wall cycles all three at 4 fps, **offset by each cell's own phase** so
+fifteen cells boil instead of flickering in unison.
+
+**What the live passes actually changed, in order:** additive blend → the black
+went; texture and size (1.6 cells, since a round puff inscribed in one cell
+leaves the corners bare) → stripes became a bank; opacity 0.8 → 1.0 plus a light
+at all → "hard to see" fixed; light radius **22 → 9** → the glow had been
+lighting about twice the area of the fog, announcing a wall wider than the wall.
+
+**A miscount worth recording, because the diagnosis chased it twice.** The field
+was reported as "six rows of three, 18 squares" both before and after the size
+fix, against a server that sends 15 cells in 5x3 every single time. Profiling
+the screenshot settled it: **six seam lines with five cells between them**, at
+~34.4 px per cell across a 172 px field. Count blocks, not boundaries — and when
+a report and the wire disagree, measure the picture rather than theorising about
+the renderer, which is where two wrong explanations came from.
 
 ### 6. Rest of the 26 July batch — shipped, never seen
 

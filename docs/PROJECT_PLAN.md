@@ -342,7 +342,7 @@ the DM console lands alongside M2/M3.
 |---|---|---|
 | E8.1 | Decide single Hercules source of truth (WSL vs `H:\RO\server`) and archive the other (§5-D4) | S |
 | E8.2 | DB backup routine for MariaDB (laragon stack) | S |
-| E8.3 | Client distribution: build pipeline for Windows binary + assets (replaces PatchClient/`HerculesRO-client.zip`) | M |
+| E8.3 | Client distribution: **private friends pack** via Google Drive (not a public release). Plan: [plans/friends-distribution.md](plans/friends-distribution.md). Replaces PatchClient/`HerculesRO-client.zip` | M |
 | E8.4 | Auto-update story (simple manifest + downloader, or rpatchur-style) | L |
 | E8.5 | Optional: control panel (FluxCP-equivalent) on the laragon stack; account registration flow | L |
 | E8.6 | Upstream strategy: rebase cadence on vE5li/korangar, PR generic fixes upstream | S, recurring |

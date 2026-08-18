@@ -4,7 +4,7 @@ use cgmath::{Matrix2, Point3, Rad, Vector2};
 use korangar_interface::application::Position;
 use wgpu::BlendFactor;
 
-use crate::graphics::{Color, EffectInstruction, GroundDecalInstruction, ScreenPosition, ScreenSize, Texture};
+use crate::graphics::{Color, EffectInstruction, GroundDecalBlend, GroundDecalInstruction, ScreenPosition, ScreenSize, Texture};
 use crate::world::Camera;
 
 pub struct EffectRenderer {
@@ -12,6 +12,28 @@ pub struct EffectRenderer {
     ground_decals: Vec<GroundDecalInstruction>,
     window_size: ScreenSize,
 }
+
+/// Texture coordinates for a ground decal, for corners ordered
+/// `[(-x,-z), (+x,-z), (-x,+z), (+x,+z)]`.
+///
+/// **v is flipped**, and that is the whole point of this constant. The player
+/// camera sits at `DEFAULT_ANGLE` 180 degrees yaw and `CAMERA_PITCH` -55, so
+/// its offset `(0, 0, d)` rotates to `(0, +0.819d, -0.574d)`: the camera is
+/// above and at **-z**, looking toward +z. Screen-up on the ground plane is
+/// therefore **+z**, and a picture's top belongs on the `+z` corners. The
+/// identity mapping puts it on `-z` and draws every decal upside down.
+///
+/// Nothing caught this until 2026-08-17 because nothing asymmetric had been
+/// drawn flat: Gospel's cross is vertically symmetric, Land Protector's circle
+/// is radial, Fog Wall's puff is a blob. Evil Land's figure is not, and it
+/// arrived on screen inverted. **Moonlit's hovering note had been upside down
+/// since 2026-08-08.**
+pub const GROUND_DECAL_TEXTURE_COORDINATES: [Vector2<f32>; 4] = [
+    Vector2::new(0.0, 1.0),
+    Vector2::new(1.0, 1.0),
+    Vector2::new(0.0, 0.0),
+    Vector2::new(1.0, 0.0),
+];
 
 impl EffectRenderer {
     pub fn new(window_size: ScreenSize) -> Self {
@@ -144,6 +166,10 @@ impl EffectRenderer {
     /// `[top_left, top_right, bottom_left, bottom_right]`; the world corners
     /// are kept as-is so the forward pass can project and depth-test them.
     ///
+    /// `blend` must match the artwork's family — see [`GroundDecalBlend`]. Flat
+    /// tints and magenta-keyed textures want `Alpha`; greyscale-on-black effect
+    /// textures want `Additive` or their background draws as opaque black.
+    ///
     /// [`render_effect_world_quad`]: Self::render_effect_world_quad
     pub fn render_ground_decal(
         &mut self,
@@ -151,12 +177,48 @@ impl EffectRenderer {
         texture: Arc<Texture>,
         texture_coordinates: [Vector2<f32>; 4],
         color: Color,
+        blend: GroundDecalBlend,
     ) {
         self.ground_decals.push(GroundDecalInstruction {
             corners,
             texture_coordinates,
             color,
             texture,
+            blend,
         });
+    }
+}
+
+#[cfg(test)]
+mod ground_decal_orientation_tests {
+    use super::GROUND_DECAL_TEXTURE_COORDINATES;
+
+    /// The decal UVs must put a picture's top on the **+z** corners.
+    ///
+    /// Derived, not chosen: `PlayerCamera` yaws 180 degrees with a -55 pitch,
+    /// so its `(0, 0, d)` offset lands at `(0, +0.819d, -0.574d)` — the
+    /// camera sits at -z looking toward +z, which makes +z the far side of
+    /// the ground and so screen-up. The identity mapping draws every ground
+    /// decal upside down, which is how Evil Land arrived on 2026-08-17, and
+    /// how Moonlit's hovering note had been drawing since 2026-08-08
+    /// without anyone noticing.
+    #[test]
+    fn ground_decal_uvs_put_the_picture_top_away_from_the_camera() {
+        let [top_left, top_right, bottom_left, bottom_right] = GROUND_DECAL_TEXTURE_COORDINATES;
+
+        // Corners are ordered [(-x,-z), (+x,-z), (-x,+z), (+x,+z)]. The two -z
+        // corners are nearest the camera, so they carry the bottom of the
+        // picture, v = 1.
+        assert_eq!(top_left.y, 1.0, "the -x/-z corner is nearest the camera");
+        assert_eq!(top_right.y, 1.0, "the +x/-z corner is nearest the camera");
+        assert_eq!(bottom_left.y, 0.0, "the -x/+z corner is furthest away");
+        assert_eq!(bottom_right.y, 0.0, "the +x/+z corner is furthest away");
+
+        // u is *not* flipped: looking along +z with up +y, screen-right is +x,
+        // so the picture's left edge belongs on -x.
+        assert_eq!(top_left.x, 0.0);
+        assert_eq!(bottom_left.x, 0.0);
+        assert_eq!(top_right.x, 1.0);
+        assert_eq!(bottom_right.x, 1.0);
     }
 }
