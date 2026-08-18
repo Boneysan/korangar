@@ -191,7 +191,29 @@ korangar parses `sclientinfo.xml` through it. Practical risk is low because that
 file ships inside our own archive rather than arriving from the network — but it
 is a version bump to `>=0.41.0`, so there is no reason to carry it.
 
-### M4. The client stores passwords in plaintext
+### M4. Client password storage (MITIGATED 2026-08-17, not eliminated)
+
+**Less severe than first written, and the correction matters:** storage is
+**opt-in and off by default**. `remember_password` defaults to `false` and the
+custom `Serialize` writes an empty string unless it is ticked, so nothing is
+stored unless a player chooses it — and `make-pack.sh` refuses to ship ours.
+
+**What was actually wrong was the label.** The checkbox read "Remember
+password" and said nothing about the file being unencrypted, so the choice was
+not informed. It now reads **"Remember password (saved unencrypted)"** (and the
+German equivalent). That is the proportionate fix for an opt-in feature whose
+threat is someone who already has access to the player's machine.
+
+**The real fix, if it is ever wanted, is the OS keychain** — Windows Credential
+Manager (DPAPI) and macOS Keychain, via the `keyring` crate. That is genuine
+encryption at rest tied to the user account rather than a file anyone can read.
+It is real work: a new dependency in the auth path, per-platform backends, a
+fallback for when no keychain exists, and it has to survive the Windows
+cross-build. **Deliberately not done**, because obfuscating the file instead —
+base64, XOR, a hard-coded key — would be worse than the current state: identical
+protection, plus false confidence.
+
+### M4 (original finding). The client stores passwords in plaintext
 
 `settings/login.rs` writes `password` verbatim into `client/login_settings.ron`
 when "remember password" is ticked. Every friend's machine will hold one.

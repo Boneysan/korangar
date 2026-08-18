@@ -5,7 +5,7 @@
     username_text: "Username",
     password_text: "Password",
     remember_username_text: "Remember username",
-    remember_password_text: "Remember password",
+    remember_password_text: "Remember password (saved unencrypted)",
     log_in_button_text: "Log in",
     log_in_button_tooltip: "Enter a username and password",
     menu_window_title: "Menu",
