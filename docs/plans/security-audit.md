@@ -7,6 +7,33 @@
 | **Scope of THIS pass** | Credentials and privilege, server exposure config, Rust dependency CVEs, fork script gating, pack hygiene |
 | **NOT covered — say so rather than imply coverage** | Memory safety of the C server (Hercules is C, and our 11 fork deltas touch `clif.c` packet parsing), fuzzing of korangar's packet decoders, upstream Hercules CVEs, the Lua/GRF asset path |
 
+## Risk accepted for the beta — 2026-08-17, by the operator
+
+**The remaining open findings are accepted for a friends-only LAN beta.** This is
+a decision, not an oversight, and it is recorded so the next person does not
+re-litigate it — or, more importantly, carry it past the point where it stops
+being true.
+
+| Still open | Why it is tolerable here |
+|---|---|
+| **C1** — admin passwords published in a public repo | Bounded by **reachability**: an attacker must reach port 6900, which means being on the LAN. The damage ceiling is a game world that can be restored — verified: no atcommand reaches the OS or raw SQL |
+| **H2** — credentials in clear on the wire | The attacker would have to already be on your network. Friends are told to use a throwaway password (§7.3 step 0), and the VPN closes it properly |
+| **M4** — client stores passwords if asked | Opt-in, off by default, and now labelled "(saved unencrypted)" |
+
+### What revokes this acceptance
+
+Any **one** of these, and C1 becomes urgent rather than tolerable:
+
+1. **Port-forwarding anything** to the internet. The credentials are published, so
+   this converts a LAN-bounded issue into a remotely exploitable one for anyone
+   who reads the repo. **Use the VPN instead** — it is installed.
+2. **Adding anyone to the tailnet you would not hand your laptop to.** The mesh
+   removes the network boundary that is currently doing the work.
+3. **The server holding anything worth stealing** — real money, real identities,
+   a character roster people would be upset to lose.
+
+Until then the effort is better spent on the game.
+
 ## Threat model, stated first
 
 Everything below is graded against **the deployment that actually exists**: a
