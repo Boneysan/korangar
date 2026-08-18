@@ -27,11 +27,27 @@ several MEDIUMs become CRITICAL the day it is.
 | `korangar` | `korangar` | **99 (Admin, level 99)** |
 | `headless2` | `headless2pw` | **99 (Admin, level 99)** |
 
-Group 99 is every command the server has. The password is the username in one
-case, and **both pairs appear in this repository's own documentation and in the
-client's `login_settings.ron`**, so this is not even a guessing problem. Anyone
-who reaches port 6900 owns the server: `@item`, `@warp`, `@kick`, script
-execution, and read access to every character.
+Group 99 carries `all_commands: true` and `hchsys_admin`. The password is the
+username in one case, and **`Boneysan/korangar` is a PUBLIC repository with
+`headless2pw` in tracked files** — `headless-tester/main.rs`,
+`run-integration-tests.sh` and two docs — so the credential is on the internet
+and indexed, not merely weak.
+
+**What an attacker gets, stated precisely.** They reach 6900 with any RO client,
+authenticate, are handed 6121 and 5121 (both open), and arrive in-game with every
+GM command: `@kick` / `@charban` any player, `@item`, `@monster`, `@delitem` off
+other characters, `@accinfo` on other accounts, and `@reloadscript` /
+`@unloadnpcfile` to change server behaviour mid-session.
+
+**What they do NOT get, because an earlier draft of this document overstated it:
+the machine.** No atcommand shells out, runs raw SQL, or reads arbitrary files —
+checked against every `ACMD()` in `atcommand.c`. This is total control of the
+game and its data, **not** remote code execution and not root on the host. Grade
+it as the former.
+
+**Reachability is the only thing keeping this bounded**, and it is bounded by the
+LAN, not by the password. Port-forward anything and this becomes remotely
+exploitable by anyone who reads the repo.
 
 **Fix:** change both passwords, and drop `headless2` to group 0 or delete it.
 **Blocker to check first:** the headless suite authenticates as these accounts,
