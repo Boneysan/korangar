@@ -1,0 +1,53 @@
+name: Security
+
+# Stolen from OWASP SAMM's Implementation and Verification practices without
+# adopting the model: the two checks below are the ones that catch real defects
+# on a project this size, and unlike a self-assessment they re-run themselves.
+#
+# Deliberately NOT here: a SAMM or ASVS scorecard. SAMM measures an
+# organisation's security programme -- training, champions, incident response --
+# and this is one person and a friends server, so the score would be noise.
+# See docs/plans/security-audit.md.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # The load-bearing trigger. Advisories are published against code that has not
+  # changed, so a scan that only runs on a push finds them late or never -- and
+  # this fork's long-running agent branches can go days without a PR open.
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  dependency-advisories:
+    name: Dependency advisories
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      # Fails the job on a vulnerability. Unmaintained-crate warnings do not
+      # fail: cgmath, paste and ttf-parser are all unmaintained, all reached
+      # through wgpu and cosmic-text rather than chosen here, and reddening the
+      # build over something we cannot act on trains people to ignore it.
+      - name: cargo audit
+        run: cargo audit --deny warnings --ignore RUSTSEC-2026-0196 --ignore RUSTSEC-2024-0436 --ignore RUSTSEC-2026-0192
+
+  committed-secrets:
+    name: Committed secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # This repository is PUBLIC and has already shipped working credentials in
+      # tracked files -- the 2026-08-17 audit found an admin password in
+      # headless-tester/main.rs and run-integration-tests.sh. This check exists
+      # so the next one is caught by CI rather than by an audit a year later.
+      - name: Scan for known-bad credentials
+        run: tools/audits/committed-secrets.sh

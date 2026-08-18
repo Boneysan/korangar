@@ -181,6 +181,55 @@ review.**
 
 ---
 
+## Frameworks — which ones earn their place
+
+**CWE Top 25 is the best fit and the findings map onto it cleanly**, which is
+the test of whether a taxonomy is doing work or decorating:
+
+| Finding | CWE | |
+|---|---|---|
+| C1 admin passwords in tracked files | **CWE-798** Use of Hard-coded Credentials | open |
+| H1 plaintext `user_pass` column | **CWE-256 / CWE-257** Plaintext Storage of a Password | open |
+| H2 credentials on the wire | **CWE-319** Cleartext Transmission of Sensitive Information | won't fix (protocol) |
+| M1 `ip_rules: enable: false` | **CWE-770** Allocation Without Limits or Throttling | open |
+| M3 `quick-xml` advisories | **CWE-400** Uncontrolled Resource Consumption | open |
+| M5 `.unwrap()` on a short read | **CWE-248** Uncaught Exception → crash | **FIXED** |
+| Verified absent in the DM scripts | **CWE-89** SQL Injection | clean |
+| Verified bounded in the `@item` parser | **CWE-787 / CWE-120** Buffer Write | clean |
+
+**Why not the others.** **SAMM** measures an *organisation's* security programme
+— training, champions, policy, incident response — and this is one person and a
+friends server, so every score would be a zero that means nothing. **ASVS** is a
+*web application* verification standard: no browser, no HTML, no cookies, no
+sessions in the web sense. Running either would produce a long document that
+assures nothing, and the effort is better spent on checks that re-run themselves.
+
+**What is worth stealing from SAMM without adopting it** is three practices, and
+all three are now automated rather than assessed
+([`.github/workflows/security.yml`](../../.github/workflows/security.yml)):
+
+- **Dependency scanning** — `cargo audit` on push, PR, and a **weekly cron**.
+  The cron is the load-bearing trigger: advisories are published against code
+  that has not changed, so a push-only scan finds them late or never.
+  Unmaintained-crate warnings are explicitly ignored (`cgmath`, `paste`,
+  `ttf-parser` all arrive through `wgpu`/`cosmic-text` and are not ours to fix)
+  because reddening a build over something nobody can action trains people to
+  ignore the build.
+- **Secret detection** — [`committed-secrets.sh`](../../tools/audits/committed-secrets.sh),
+  targeted at known credentials rather than entropy, because this codebase is
+  full of packet hex and GRF hashes and a generic scanner would drown in false
+  positives. It carries a **baseline** of the three sites the audit found, so it
+  passes today and fails on any *new* leak — known debt stays visible instead of
+  making CI permanently red. Verified in both directions.
+- **Defect management** — this document, with severities and an explicit
+  "not reviewed" section.
+
+**SLSA is the gap worth naming.** We hand friends an unsigned binary built on a
+developer laptop, over Drive, with no checksum and no provenance. Nobody can tell
+a good download from a corrupted or swapped one. That is the next supply-chain
+step, and it is cheap: publish `SHA256SUMS` beside the pack, and prefer the CI
+`windows-2025` build over a laptop build as the artifact's source.
+
 ## On OWASP, honestly
 
 **The OWASP Top 10 is a web-application list and this is not a web
