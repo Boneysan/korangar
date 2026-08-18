@@ -165,13 +165,37 @@ that already merge Assets + Client. Keep the split folders for updates.
 
 ## 5. Launchers
 
-Windows `Play.bat` (same directory as the exe):
+Live in [`tools/packaging/windows/`](../../tools/packaging/windows/).
 
-```bat
-@echo off
-cd /d "%~dp0"
-start "" korangar.exe
-```
+**Windows is a `Play.bat` that calls a `Play.ps1`, and the split is deliberate.**
+A bare `.ps1` is *worse* than a `.bat` for this audience: double-clicking one
+**opens it in Notepad** (that is the default file association), Windows' default
+execution policy on client SKUs is `Restricted`, and anything downloaded from
+Drive carries Mark-of-the-Web, which blocks scripts under `RemoteSigned` too. The
+`.bat` double-clicks and runs anywhere, so it is the door; PowerShell does the
+work behind it, launched `-ExecutionPolicy Bypass` so no friend is ever told to
+change a machine setting.
+
+**Written for Windows PowerShell 5.1**, the one in the box — `Play.bat` invokes
+`powershell`, not `pwsh`, because a friend's machine has 5.1 and may not have 7.
+Nothing newer than PowerShell 3.0 cmdlets, no ternaries, no `??`, no `&&`, no
+three-argument `Join-Path`, and **pure ASCII with no BOM**, because 5.1 decodes a
+BOM-less script as ANSI and would turn a stray typographic dash into mojibake
+inside the error messages.
+
+What the checks buy, which is the reason not to just `start korangar.exe`: the
+two realistic first-launch failures both produce useless symptoms. **The Assets
+download is separate and enormous**, so the likely miss is running the OS folder
+without copying Assets in beside it — the script names the missing GRFs and says
+where to put them. And **every path the client reads is CWD-relative**, so a
+wrong working directory sends `Client::init` into its `cd korangar` checkout
+heuristic, which means nothing on a friend's machine.
+
+Verified 2026-08-17 by running all six paths (no exe / no assets / partial assets
+/ no `archive` / no `server.ron` / complete) against fake pack folders. **Caveat:
+those runs used pwsh 7.6 on macOS — the 5.1 compatibility is by construction and
+review, not by execution.** Run it once on a real Windows box before the pack
+ships; that is the same §10 gate the `.exe` needs anyway.
 
 macOS `Play.command` (chmod +x before zipping):
 
