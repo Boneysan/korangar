@@ -64,7 +64,8 @@ mkdir -p "$windows/client"
 
 echo "==> Windows/"
 cp "$exe" "$windows/korangar.exe"
-cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 "$windows/"
+cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
+   tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 "$windows/"
 cp -R korangar/archive "$windows/archive"
 
 # Written, never copied: the working copy points outside the pack.
@@ -97,7 +98,32 @@ if [ "$skip_assets" -eq 0 ]; then
         cp "$extra_grf_dir/$grf" "$assets/"
     done
     cp -R korangar/BGM "$assets/BGM"
+    # The 3.6 GB half is the one that arrives subtly incomplete, so it needs the
+    # verifier more than the client folder does.
+    cp tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 "$assets/"
 fi
+
+# Integrity manifests, so a friend can tell a good download from a corrupted or
+# swapped one. Drive downloads truncate, resume badly and get re-shared, and
+# without these the only symptom is the client failing in some unrelated way.
+#
+# One manifest per folder rather than one for the pack, because the two halves
+# are downloaded separately and updated on completely different schedules.
+write_manifest() {
+    local dir="$1"
+    [ -d "$dir" ] || return 0
+    echo "==> $dir/SHA256SUMS"
+    (
+        cd "$dir"
+        # Sorted for a stable file, and excluding the manifest itself.
+        find . -type f ! -name 'SHA256SUMS' -print0 \
+            | LC_ALL=C sort -z \
+            | xargs -0 shasum -a 256 > SHA256SUMS
+    )
+}
+
+write_manifest "$windows"
+[ "$skip_assets" -eq 0 ] && write_manifest "$assets"
 
 # A pack that leaks credentials is worse than no pack. login_settings.ron holds
 # a real username and password in plaintext, so this is an assertion, not a
