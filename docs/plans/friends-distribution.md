@@ -340,6 +340,35 @@ Friend install is three sentences — that is all they need in the Drive Doc:
 
 They never type an IP.
 
+### 7.4a CURRENT SETUP (2026-08-17): same-LAN, no Tailscale yet
+
+The pack on disk ships **`192.168.20.49`**, this host's LAN address, which is
+the same-network arrangement §2 allows for a physical game night. Applied and
+verified:
+
+| | |
+|---|---|
+| `conf/import/char-server.conf` | `inter.char_ip: "192.168.20.49"` |
+| `conf/import/map-server.conf` | `inter.map_ip: "192.168.20.49"` |
+| Verified | `Map-Server connected: 1156 maps, from IP 192.168.20.49 port 5121`, and all three ports accept connections on that address, not just loopback |
+| Pack | `dist/Windows/client/server.ron` → `address: "192.168.20.49"` |
+
+**Deliberately NOT changed:** `login_ip`, and the map-server's own
+`inter.char_ip`. Both describe how the servers reach *each other* on this one
+box; pointing them outward would route local traffic over the network for
+nothing.
+
+> [!WARNING]
+> **`conf/import/**/*.conf` is gitignored upstream**, so this address lives in
+> an untracked file. It does not survive a fresh clone and no commit records it
+> — this table is the only durable copy. Re-apply it after any re-clone.
+
+**This only works for friends on the same network.** A LAN address is
+unreachable from the internet, and a DHCP lease can move it — if the router
+reassigns `192.168.20.49`, every client breaks at once with a connection
+refused. Reserve it in the router, or move to Tailscale, which is what the rest
+of this section is for.
+
 ### 7.4 Hercules: advertise the Tailscale IP
 
 Edit **import files only**. Do not touch the stock
