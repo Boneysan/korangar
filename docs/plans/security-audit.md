@@ -78,17 +78,50 @@ currently missing.
 
 ## MEDIUM
 
-### M1. Connection-flood protection is disabled (OWASP A05 — Security Misconfiguration)
+### M1. Connection-flood protection — TRIED, REVERTED, and it stays off
+
+Re-enabled on 2026-08-17 and **it broke the server within seconds.** The
+char-server's own connection to the login server comes from `127.0.0.1`, trips
+the DDoS heuristic on reconnect, and is refused: `Connection to Login Server
+lost`, then a reconnect loop.
+
+**The `allow_list` for `127.0.0.1` does not exempt localhost from the
+heuristic** — which `CLAUDE.md` had recorded since 2026-07-30 and which was
+re-learned the hard way. A comment was written asserting the allow_list would
+keep the harness working; the note saying otherwise was already there.
+
+It stays **off**, with the reason now in `conf/import/socket.conf` beside the
+setting. Re-enabling needs a mechanism that genuinely exempts inter-server
+connections, and the allow_list is not it. **The real mitigation is not making
+the box flood-tolerant but keeping it off hostile networks** — a mesh VPN
+instead of a port-forward.
+
+### M1 (original finding). `ip_rules: enable: false` (OWASP A05)
 
 `conf/common/socket.conf` has `ip_rules: { enable: false }`. It was turned off
 deliberately (see `CLAUDE.md`) because the headless harness reconnects rapidly
 from localhost and tripped the DDoS heuristic. The reasoning was sound for a
 localhost-only box and stops being sound the moment anything else can connect.
 
-### M2. Interserver account is at Hercules defaults
+### M2. Interserver account at Hercules defaults (FIXED 2026-08-17)
 
-`s1` / `p1`, unchanged from the shipped example. Low impact while the three
-servers are on one machine, and free to fix.
+`s1` / `p1` rotated to `korangar_inter` + a 20-character random password, in the
+login table and in the **import** configs. Verified: all four components
+authenticate and a `smoke` scenario logs in end to end.
+
+**Two traps, both of which cost a broken server before they were understood:**
+
+1. **The password is capped at 23 characters.** The config field is
+   `NAME_LENGTH` (24) *including the null terminator*, so a 24-character password
+   is silently truncated and then never matches the database. The refusal it
+   produces is logged as **"Account sex must be 'S'"**, which is a lie — the sex
+   column was correct throughout.
+2. **There are FOUR components that authenticate, not three.** The `api-server`
+   has its own `conf/api/api-server.conf` and was missed. Its failure reads as
+   `Can not connect to login-server` / `Connection to Login Server lost`, which
+   looks exactly like the char-server failing — and the char-server was fine.
+
+### M2 (context). Why this was worth doing
 
 ### M3. `quick-xml` — two advisories rated 7.5 (FIXED 2026-08-17)
 
@@ -185,6 +218,32 @@ korangar's remaining non-test `unwrap`s outside event handling (asset loaders,
 graphics init) — these run on local files rather than network input, so they are
 a robustness question rather than a security one. The `SC_LANDPROTECTOR` and
 Hermode deltas are logic and configuration with no buffer handling.
+
+## H1 / H2 — the two password findings are entangled, and the fix is transport
+
+Hercules offers two mechanisms and **they are mutually exclusive**:
+
+| | Fixes | Costs |
+|---|---|---|
+| `use_MD5_passwords: true` | **H1** — stores hashes, not plaintext | Password still crosses the wire in clear |
+| `<passwordencrypt>` (`PWENC_ENCRYPT`) | **H2** — client sends `md5(session_key + password)`, a genuine challenge-response | Server needs the plaintext to verify, so the DB **must** stay plaintext |
+
+You cannot have both, and **korangar implements neither**: it sends `CA_LOGIN`
+(0x0064) with a plaintext 24-byte password field. Challenge-response would be
+new client work — the md5key exchange packets plus the hashing.
+
+**And it would be the wrong target.** It protects one field. The account name,
+chat, character names and every other byte still cross the wire in clear, so a
+LAN sniffer learns almost as much either way. **A WireGuard-based mesh VPN
+encrypts all three connections with modern crypto for zero protocol work** — and
+it is already the plan (`friends-distribution.md` §7).
+
+**Recommended order:** Tailscale first, which closes H2 properly at the transport
+layer; then `use_MD5_passwords` for H1, since the wire no longer needs the
+plaintext. **Not yet done** — flipping it requires migrating every stored
+password to MD5 in the same step, and getting that wrong locks everyone out,
+including the test harness. It wants doing deliberately, not at the end of a
+session.
 
 ## LOW / INFORMATIONAL
 
