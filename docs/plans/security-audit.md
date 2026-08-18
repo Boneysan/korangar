@@ -107,6 +107,51 @@ from theirs.
 
 ---
 
+## Code review — first pass over the fork's own code
+
+Reviewed the code that touches attacker-reachable bytes, since that is where a
+C server's real risk lives. **One defect found and fixed; the rest verified
+clean rather than assumed clean.**
+
+### M5. Client panicked on a short first read (FIXED 2026-08-17)
+
+`korangar-networking/src/lib.rs` opened the map-server connection by reading a
+bare four-byte account id and **`.unwrap()`ing it**. `stream.read()` returns
+whatever the OS has — as little as one byte — and the only guard was
+`received_bytes == 0`, so a first TCP segment carrying 1-3 bytes **panicked the
+entire client on connect**.
+
+This needs no attacker: it is ordinary TCP segmentation, invisible over loopback
+(where every dev session runs) and perfectly possible on wifi or a LAN. It is an
+availability bug, not a memory-safety one — Rust — but a friend would see "the
+game crashes when I log in".
+
+Fixed by retaining the fragment and waiting for the rest, reusing the same
+machinery `PacketCutOff` already uses for partial packets. **Not covered by a
+test** — the read loop lives in a tokio task with no seam for injecting a short
+read, and inventing one was out of scope for this pass.
+
+### Verified clean
+
+- **`clif_parse_CancelCast` (0x0F00)**, the fork's only client-facing parser:
+  zero payload, no buffer access, one call. Nothing to get wrong.
+- **The `@item` multi-word parser**, our own and the most string-handling code in
+  the fork: `safestrncpy` bounded, `Assert_retr` pinning `peeled[16]` against
+  `max_numbers`, a `count == max_numbers` guard before every write, `strtol` with
+  endptr validation rather than `atoi`, and `sscanf` bounded at `%99[^\"]` into a
+  100-byte buffer.
+- **`ZC_PARTY_INVITE_SENDER` (0x0EFF)** writer: `safestrncpy(..., NAME_LENGTH)`
+  into `char[NAME_LENGTH]`, matching the client's `#[length(24)]`.
+- **`ragnarok-bytes`**, the wire decoder: every `unwrap` is in test code, no
+  slicing or indexing of wire data, everything returns `Result`.
+
+### Still not reviewed
+
+The remaining C deltas (`LOOK_AMMO`'s five touch points, the party-SP widening,
+`clif_skill_fail_reason`) and korangar's ~80 other non-test `unwrap`s outside the
+byte layer. **A pass that stopped after finding one bug is not a completed
+review.**
+
 ## LOW / INFORMATIONAL
 
 - **L1.** `crossbeam-epoch` invalid pointer dereference (`RUSTSEC-2026-0204`),

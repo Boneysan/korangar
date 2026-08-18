@@ -348,13 +348,28 @@ where
                     let mut byte_reader = ByteReader::without_metadata(data);
                     byte_reader.set_encoding(UTF_8);
 
+                    // The map-server opens with a bare four-byte account id, and
+                    // `read` hands back whatever the OS has -- as little as one
+                    // byte. Unwrapping here panicked the whole client if the first
+                    // TCP segment was short, which never happens over loopback and
+                    // can happen on a real network. Retain the fragment and wait
+                    // for the rest, exactly as `PacketCutOff` does below.
+                    let mut awaiting_account_id = false;
+
                     if read_account_id {
-                        let account_id = AccountId::from_bytes(&mut byte_reader).unwrap();
-                        events.push(NetworkEvent::AccountId { account_id });
-                        read_account_id = false;
+                        match AccountId::from_bytes(&mut byte_reader) {
+                            Ok(account_id) => {
+                                events.push(NetworkEvent::AccountId { account_id });
+                                read_account_id = false;
+                            }
+                            Err(_) => {
+                                cut_off_buffer_base += received_bytes;
+                                awaiting_account_id = true;
+                            }
+                        }
                     }
 
-                    while !byte_reader.is_empty() {
+                    while !awaiting_account_id && !byte_reader.is_empty() {
                         match packet_handler.process_one(&mut byte_reader) {
                             HandlerResult::Ok(packet_events) => events.extend(packet_events.0.into_iter()),
                             HandlerResult::PacketCutOff => {
