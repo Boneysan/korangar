@@ -613,6 +613,13 @@ launcher checks against the result.
 `/dist/` is in `.gitignore`; 3.7 GB of Gravity assets must never be offered to
 git.
 
+**Every pack ships `SHA256SUMS` plus `Verify.bat` / `Verify.ps1`.** Windows has
+no `sha256sum`, so without the verifier the manifest would be unreadable to the
+people it exists for. Tell friends to run `Verify` if the game behaves strangely
+after downloading: Drive truncates large files and resumes badly, and a 3.7 GB
+asset folder is exactly the kind of thing that arrives subtly incomplete. It
+reports `All N files match`, or names each corrupt file.
+
 **Zip `Windows/`; upload `Assets/` as a folder.** GRFs are already compressed, so
 re-zipping 3.6 GB costs a long wait and saves almost nothing.
 
