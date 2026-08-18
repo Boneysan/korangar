@@ -1362,6 +1362,18 @@ where
             return NetworkEventList::default();
         }
 
+        // A refusal that names its reason is usually the whole diagnosis, and
+        // until 2026-08-17 none of this reached the log at all -- a live pass
+        // could see the message on screen but had no way to tell which cause
+        // produced it, which is the difference between "the server refused" and
+        // "we worded it wrong". Cause and item id are the raw wire values.
+        if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+            eprintln!(
+                "[skill-fail] skill={} cause={} btype={} item={} reason={:?}",
+                packet.skill_id.0, packet.cause, packet.btype, packet.item_id.0, reason
+            );
+        }
+
         let reported = match skill_failed_reason(&packet, reason) {
             SkillFailure::Text(text) => NetworkEvent::ChatMessage {
                 text,

@@ -5,7 +5,7 @@ use std::collections::HashSet;
 use std::mem::size_of;
 use std::sync::{Arc, Mutex, RwLock};
 
-use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector2, Vector3};
+use cgmath::{Deg, Matrix4, Point3, SquareMatrix, Vector3};
 use hashbrown::HashMap;
 use korangar_audio::AudioEngine;
 use korangar_collision::{AABB, Frustum, KDTree, Sphere};
@@ -36,7 +36,7 @@ use crate::graphics::{
     EntityInstruction, GroundDecalBlend, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex,
 };
 use crate::loaders::GAT_TILE_SIZE;
-use crate::renderer::EffectRenderer;
+use crate::renderer::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
 use crate::world::pathing::Traversable;
@@ -702,12 +702,7 @@ impl Map {
                     ),
                 ],
                 texture.clone(),
-                [
-                    Vector2::new(0.0, 0.0),
-                    Vector2::new(1.0, 0.0),
-                    Vector2::new(0.0, 1.0),
-                    Vector2::new(1.0, 1.0),
-                ],
+                GROUND_DECAL_TEXTURE_COORDINATES,
                 color,
                 GroundDecalBlend::Alpha,
             );

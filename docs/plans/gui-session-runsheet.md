@@ -285,6 +285,11 @@ The field is **two layers**, so the useful report distinguishes them:
 
 ---
 
+> **§6b PASS 2026-08-17** — 121 cells, and the field now reads as pulsing magic
+> symbols with **no dark square behind each one**, which is exactly what the
+> additive blend removes. One symbol per cell at 0.8 of a cell is the original's
+> own `LPEffect` shape, not a gap.
+
 ## 7. Evil Land
 
 No job learns it — reach it directly:
@@ -295,7 +300,21 @@ No job learns it — reach it directly:
 
 `NPC_EVILLAND` **670**, 30 s, tile α 0.2, hover `curse.bmp` at a **half** cell —
 one of only two entries the original table gives an explicit size for, so the
-size is the interesting part here.
+size is the interesting part here. 9 cells, a 3x3 (`Layout: 1`).
+
+> **2026-08-17 — the artwork draws, 9 cells, and it caught a bug nothing else
+> could: every ground decal was drawing UPSIDE DOWN.** The camera sits at -z
+> looking toward +z (`DEFAULT_ANGLE` 180, `CAMERA_PITCH` -55), so screen-up on
+> the ground is +z, but the UVs put the picture's top on the -z corners. Nothing
+> had revealed it because nothing asymmetric had been drawn flat — Gospel's cross
+> is symmetric, Land Protector's circle radial, Fog Wall's puff a blob.
+> **Moonlit's hovering note had been inverted since 2026-08-08, through a live
+> pass that closed the row.** Fixed once, in
+> `GROUND_DECAL_TEXTURE_COORDINATES`, with the derivation in a test.
+>
+> **Still open on this row:** whether the α 0.2 tint reads at all, and it has no
+> `light` — the third of three in this family without one, after both the others
+> needed one added.
 
 ---
 

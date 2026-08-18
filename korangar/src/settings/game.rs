@@ -16,6 +16,20 @@ pub struct GameSettings {
     /// Persisted so closing it stays closed across map changes and restarts.
     #[serde(default = "default_true")]
     pub show_minimap: bool,
+    /// Last window size in **logical** pixels, restored on the next launch.
+    ///
+    /// Logical rather than physical so moving between monitors of different
+    /// scale factors restores the same apparent size rather than the same pixel
+    /// count. `None` means "never resized", and the window opens at
+    /// `INITIAL_SCREEN_SIZE`.
+    #[serde(default)]
+    #[hidden_element]
+    pub window_size: Option<(u32, u32)>,
+    /// Whether the window was maximized when it last closed. Kept separate from
+    /// `window_size`, which keeps the size to restore when un-maximized.
+    #[serde(default)]
+    #[hidden_element]
+    pub window_maximized: bool,
 }
 
 impl Default for GameSettings {
@@ -23,6 +37,8 @@ impl Default for GameSettings {
         Self {
             auto_attack: true,
             show_minimap: true,
+            window_size: None,
+            window_maximized: false,
         }
     }
 }
@@ -36,6 +52,18 @@ impl GameSettings {
             print_debug!("failed to load game settings from {}", Self::FILE_NAME.magenta());
             Default::default()
         })
+    }
+
+    /// The saved window geometry, without leaving a `GameSettings` to drop.
+    ///
+    /// The first window is created before the client state exists, so this is
+    /// read straight off disk. It deliberately does **not** hand back a
+    /// `GameSettings`: dropping one writes the file (see the `Drop` impl), so a
+    /// throwaway instance here would rewrite settings during startup, before
+    /// anything has been loaded that could have changed them.
+    pub fn saved_window_geometry() -> (Option<(u32, u32)>, bool) {
+        let settings = std::mem::ManuallyDrop::new(Self::load().unwrap_or_default());
+        (settings.window_size, settings.window_maximized)
     }
 
     pub fn load() -> Option<Self> {

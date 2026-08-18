@@ -128,7 +128,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt,
+    WORLD_THEMES_PATH,
 };
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -658,7 +659,13 @@ fn is_vmware_virtual_platform() -> bool {
     std::fs::read_to_string("/sys/class/dmi/id/product_name").is_ok_and(|product_name| product_name.to_lowercase().contains("vmware"))
 }
 
-fn create_window_attributes() -> WindowAttributes {
+/// Build the window, restoring the geometry the player left it at.
+///
+/// `saved_size` is **logical** pixels from `GameSettings`, so a window that
+/// moves between monitors of different scale factors comes back the same
+/// apparent size rather than the same pixel count. `None` opens at
+/// `INITIAL_SCREEN_SIZE`, which is what a fresh install gets.
+fn create_window_attributes(saved_size: Option<(u32, u32)>, maximized: bool) -> WindowAttributes {
     let reader = ImageReader::with_format(Cursor::new(ICON_DATA), ImageFormat::Png);
     let image_buffer = reader.decode().unwrap().to_rgba8();
     let image_data = image_buffer.as_bytes().to_vec();
@@ -666,11 +673,16 @@ fn create_window_attributes() -> WindowAttributes {
     assert_eq!(image_buffer.width(), image_buffer.height(), "icon must be square");
     let icon = Icon::from_rgba(image_data, image_buffer.width(), image_buffer.height()).unwrap();
 
+    // A saved size of zero in either axis would open an unusable window, and a
+    // settings file is hand-editable, so clamp rather than trust it.
+    let (width, height) = match saved_size {
+        Some((width, height)) if width > 0 && height > 0 => (width as f32, height as f32),
+        _ => (INITIAL_SCREEN_SIZE.width, INITIAL_SCREEN_SIZE.height),
+    };
+
     Window::default_attributes()
-        .with_inner_size(LogicalSize {
-            width: INITIAL_SCREEN_SIZE.width,
-            height: INITIAL_SCREEN_SIZE.height,
-        })
+        .with_inner_size(LogicalSize { width, height })
+        .with_maximized(maximized)
         .with_title(CLIENT_NAME)
         .with_window_icon(Some(icon))
         .with_visible(false)
@@ -2545,8 +2557,17 @@ impl Client {
         });
 
         time_phase!("create initial window", {
+            // Read straight off disk: the client state that owns `GameSettings`
+            // does not exist yet at this point in start-up.
+            let (saved_window_size, window_maximized) = GameSettings::saved_window_geometry();
             #[allow(deprecated)]
-            let window = event_loop.map(|event_loop| Arc::new(event_loop.create_window(create_window_attributes()).unwrap()));
+            let window = event_loop.map(|event_loop| {
+                Arc::new(
+                    event_loop
+                        .create_window(create_window_attributes(saved_window_size, window_maximized))
+                        .unwrap(),
+                )
+            });
         });
 
         time_phase!("create adapter", {
@@ -9131,7 +9152,13 @@ impl ApplicationHandler for Client {
         // graphics backend after the first resume event is received.
         if self.window.is_none() {
             time_phase!("create window", {
-                let window = Arc::new(event_loop.create_window(create_window_attributes()).unwrap());
+                let saved_window_size = *self.client_state.follow(client_state().game_settings().window_size());
+                let window_maximized = *self.client_state.follow(client_state().game_settings().window_maximized());
+                let window = Arc::new(
+                    event_loop
+                        .create_window(create_window_attributes(saved_window_size, window_maximized))
+                        .unwrap(),
+                );
 
                 let backend_name = self.graphics_engine.get_backend_name();
                 window.set_title(&format!("{CLIENT_NAME} ({})", str::to_uppercase(&backend_name)));
@@ -9193,6 +9220,22 @@ impl ApplicationHandler for Client {
                 event_loop.exit();
             }
             WindowEvent::Resized(screen_size) => {
+                // Remember it for the next launch, in logical pixels so a move
+                // between monitors of different scale factors restores the same
+                // apparent size. A maximized window's size is not worth saving —
+                // the maximized flag restores that, and storing it would leave
+                // nothing sensible to un-maximize back to.
+                if let Some(window) = self.window.as_ref() {
+                    let maximized = window.is_maximized();
+                    *self.client_state.follow_mut(client_state().game_settings().window_maximized()) = maximized;
+
+                    if !maximized {
+                        let logical: LogicalSize<u32> = screen_size.to_logical(window.scale_factor());
+                        *self.client_state.follow_mut(client_state().game_settings().window_size()) =
+                            Some((logical.width, logical.height));
+                    }
+                }
+
                 let screen_size = screen_size.max(PhysicalSize::new(1, 1)).into();
                 *self.client_state.follow_mut(client_state().window_size()) = screen_size;
                 self.graphics_engine.on_resize(screen_size);

@@ -18,7 +18,7 @@ use super::EffectBase;
 use super::burst::hash01;
 use crate::graphics::{Color, GroundDecalBlend, Texture};
 use crate::loaders::GAT_TILE_SIZE;
-use crate::renderer::EffectRenderer;
+use crate::renderer::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 use crate::world::{Camera, PointLightId, PointLightManager};
 
 /// Breathing size animation. The original's elemental field units (Volcano,
@@ -379,12 +379,7 @@ impl EffectBase for UnitGroundQuad {
         renderer.render_ground_decal(
             [corner(-1.0, -1.0), corner(1.0, -1.0), corner(-1.0, 1.0), corner(1.0, 1.0)],
             self.texture.clone(),
-            [
-                Vector2::new(0.0, 0.0),
-                Vector2::new(1.0, 0.0),
-                Vector2::new(0.0, 1.0),
-                Vector2::new(1.0, 1.0),
-            ],
+            GROUND_DECAL_TEXTURE_COORDINATES,
             color,
             self.blend,
         );
@@ -500,13 +495,6 @@ impl EffectBase for UnitLayeredGroundQuad {
             return;
         }
 
-        const TEXTURE_COORDINATES: [Vector2<f32>; 4] = [
-            Vector2::new(0.0, 0.0),
-            Vector2::new(1.0, 0.0),
-            Vector2::new(0.0, 1.0),
-            Vector2::new(1.0, 1.0),
-        ];
-
         let quad = |center: Point3<f32>, half: f32| {
             let corner = |x: f32, z: f32| center + Vector3::new(x * half, 0.0, z * half);
             [corner(-1.0, -1.0), corner(1.0, -1.0), corner(-1.0, 1.0), corner(1.0, 1.0)]
@@ -519,7 +507,7 @@ impl EffectBase for UnitLayeredGroundQuad {
             renderer.render_ground_decal(
                 quad(tile_center, self.half_size),
                 self.tile_texture.clone(),
-                TEXTURE_COORDINATES,
+                GROUND_DECAL_TEXTURE_COORDINATES,
                 Color {
                     alpha: tile_color.alpha * opacity,
                     ..tile_color
@@ -535,7 +523,7 @@ impl EffectBase for UnitLayeredGroundQuad {
         renderer.render_ground_decal(
             quad(hover_center, self.hover_half_size),
             self.hover_frame().clone(),
-            TEXTURE_COORDINATES,
+            GROUND_DECAL_TEXTURE_COORDINATES,
             Color::rgba(1.0, 1.0, 1.0, self.hover_opacity * opacity),
             self.hover_blend,
         );
