@@ -29,3 +29,7 @@ korangar/*.7z
 # Python bytecode from tools/
 __pycache__/
 *.pyc
+
+# Friends distribution pack (tools/packaging/make-pack.sh) -- 3.7 GB of
+# Gravity assets and a built exe. Never committed.
+/dist/

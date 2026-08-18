@@ -557,13 +557,37 @@ client or `clientinfo.xml`.
 
 ## 9. Packaging work (not built yet)
 
-One operator command should produce the Drive uploads. Suggested:
+One operator command produces the Drive uploads. **Built and verified
+2026-08-17** as [`tools/packaging/make-pack.sh`](../../tools/packaging/make-pack.sh):
 
-```
-tools/package-client.sh --os windows|macos|both --server 100.x.x.x
+```sh
+tools/packaging/make-pack.sh --server 100.x.y.z            # full pack
+tools/packaging/make-pack.sh --server 100.x.y.z --build    # cross-build first
+tools/packaging/make-pack.sh --server 100.x.y.z --skip-assets   # update pack
 ```
 
-It should:
+Measured output: **`dist/Windows` 56 MB, `dist/Assets` 3.7 GB.** Verified by
+assembling both halves, merging them the way a friend will, and running the
+launcher checks against the result.
+
+**Three things it refuses to get wrong, each of which fails silently otherwise:**
+
+- **`client/game_archives.ron` is written, never copied.** The working copy
+  points at `../../../RO/client/renewal2021.grf` — paths that escape the pack and
+  break only on someone else's machine. The script then *asserts* no `..`
+  survived.
+- **It aborts if `login_settings.ron` or `window_cache*.ron` reach `dist/`.**
+  That file holds a real username and password in plaintext.
+- **`--build` puts Homebrew LLVM on `PATH` itself**, so the keg-only trap in §9
+  cannot bite whoever runs it next.
+
+`/dist/` is in `.gitignore`; 3.7 GB of Gravity assets must never be offered to
+git.
+
+**Zip `Windows/`; upload `Assets/` as a folder.** GRFs are already compressed, so
+re-zipping 3.6 GB costs a long wait and saves almost nothing.
+
+macOS is not built yet — the script is Windows-only today. It should:
 
 1. `cargo build --release -p korangar --features unicode` (no `debug`).
 2. Copy the four GRFs into `dist/Assets/` (including the two that today live
