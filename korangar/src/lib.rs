@@ -3063,6 +3063,19 @@ impl Client {
             .follow_mut(client_state().status_effects())
             .tick(std::time::Instant::now());
 
+        // Re-render the instance countdown against the wall clock. Gated on the
+        // window having a timer at all, so a session with no instance open never
+        // dirties the state for it — and the label itself only rebuilds when the
+        // displayed second changes, not every frame.
+        if self.client_state.follow(client_state().instance_state()).is_counting_down() {
+            let now = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|since_epoch| since_epoch.as_secs())
+                .unwrap_or_default();
+
+            self.client_state.follow_mut(client_state().instance_state()).tick(now);
+        }
+
         // Apply the game state after all the UI work + rendering is done.
         if let Err(_errors) = self.client_state.apply() {
             #[cfg(feature = "debug")]

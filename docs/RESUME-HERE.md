@@ -5,7 +5,17 @@
 > none of them were aimed at.
 >
 > **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
-> **§1–§8 are DONE. Only §9 remains, and it can hard-lock both clients.**
+> **THE RUNSHEET IS COMPLETE — §1 through §9 all DONE.**
+>
+> **§9 N24 PASS on both seats, and it did not hard-lock** — the short map name
+> (`izlude`) dodged the Hercules truncation that cost the 08-05 session. The
+> window names the *label* `dm_console.txt` builds, **"Seal Cascade - izlude"**,
+> not the map. Its timer had **two** bugs from one design: the label was built
+> once on join and cached, so it first showed **the Unix clock** as a duration
+> ("496397h 45m" — Hercules sends `now + value` and `clif_instance_join` sends it
+> raw, so both timers are **absolute timestamps**), and then, once corrected,
+> sat frozen. It now re-renders against the wall clock, gated so a session with
+> no instance open never pays for it.
 >
 > **§8 both PASS** — M1-009 showed the vs-equipped comparison, and M1-014's
 > two-step delete works but was **unreadable**: the confirmation is an overlay

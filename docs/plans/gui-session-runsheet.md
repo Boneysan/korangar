@@ -345,7 +345,30 @@ the confirm never happened. Single seat, any job.
 > The lesson generalises: **text on an overlay needs its own plate.** Nothing
 > stops the next overlay being written with a bare `text!`.
 
-## 9. N24 — Instance window — DO THIS LAST
+## 9. N24 — Instance window — PASS 2026-08-17
+
+> **PASS on both seats, and it did NOT hard-lock.** The window opened at the
+> top, named **"Seal Cascade - izlude"** — the label `dm_console.txt` builds
+> (`"Seal Cascade - " + map`), **not the map name**, which is easy to mistake for
+> a failure — and `end` closed it and warped the party to their save points,
+> which is `instance_destroy` behaving correctly. The short map name dodged the
+> 08-05 truncation that cost a session.
+>
+> **Two bugs, both in the timer, both from one design.** `display_text` was a
+> string built once when the join packet arrived and cached, so it could only
+> ever show the instant of entry.
+> 1. **It showed "496397h 45m"** — 1,787,031,900 seconds, which is the **Unix
+>    clock**. Hercules stores `progress_timeout`/`idle_timeout` as `now + value`
+>    (`instance.c:709`, `:685`) and `clif_instance_join` sends the field raw, so
+>    **both timers are absolute timestamps** and the client must subtract. The
+>    subtraction saturates at zero, so a duration sent by mistake degrades to
+>    `0s` rather than to another 56-year figure.
+> 2. **Then it was correct and frozen.** The state now keeps the raw timeouts
+>    and re-renders against the wall clock in `update_client_state`, gated on
+>    `is_counting_down()` and rebuilt only when the displayed second changes.
+>
+> **Verified on both seats**, which also confirms the instance packets reach
+> every party member and not just the DM who created it.
 
 **This has hard-locked both clients before.** Expect to kill the process.
 
