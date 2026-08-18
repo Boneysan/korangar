@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Planned (2026-08-12) — packaging not built; this is the source of truth |
+| **Status** | Planned (2026-08-12) — packaging not built; this is the source of truth. **Windows cross-build PROVEN 2026-08-17** (§9), not yet run on Windows |
 | **Audience** | The operator (you). Not a player handout. |
 | **Milestone** | E8.3 in [PROJECT_PLAN.md](../PROJECT_PLAN.md) — the *friends* reading of it, not a public release |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E8, [asset-pipeline.md](asset-pipeline.md), [MACOS_WORKFLOW.md](../MACOS_WORKFLOW.md) |
@@ -557,10 +557,54 @@ It should:
 macOS: `chmod +x` the binary and `Play.command` before zipping. Consider
 `codesign --sign -` (ad-hoc) so Gatekeeper is slightly less angry.
 
-Windows: building the `.exe` from this Mac is still the `cargo-xwin` path
-noted in `CLAUDE.md` (native Windows toolchain was blocked by BitDefender).
-The first friends pack can be macOS-only if every friend is on a Mac; do not
-pretend a Mac binary will run on Windows.
+### Windows — the cross-build works, and here is the recipe
+
+**Proven 2026-08-17 on this Mac**: `korangar.exe`, 50 MB, `PE32+ executable
+(console) x86-64`, built from macOS with **no code changes, no patched
+dependencies and no features removed**. `CLAUDE.md`'s "not yet set up" is now
+only true of the packaging around it.
+
+```sh
+rustup target add x86_64-pc-windows-msvc
+brew install llvm nasm          # see the traps below
+cargo install cargo-xwin
+
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+cargo xwin build --release --target x86_64-pc-windows-msvc \
+  --bin korangar --features unicode --xwin-include-atl
+```
+
+**Four traps, each of which cost an attempt:**
+
+1. **Homebrew LLVM is keg-only**, so `clang-cl` and `llvm-lib` are *not* on
+   `PATH` in a fresh shell. Without them `blake3`, `mlua-sys` and `rav1d` all
+   fail in their build scripts — three failures, one cause. Apple's clang does
+   not provide either tool.
+2. **`--xwin-include-atl` is required** (something in the graph, almost certainly
+   `mach-dxcompiler-rs`, needs `atls.lib`) **and it is silently ignored when the
+   xwin cache already has a `DONE` marker.** The flag looks broken; it is not.
+   Delete `~/Library/Caches/cargo-xwin/xwin/DONE` and re-run — the extracted
+   files are reused, so this is not another 1.1 GB download.
+3. **`nasm` must be linked, not merely installed.** `rav1d` assembles x86 asm and
+   a `brew install` that reports "already installed, it's just not linked" leaves
+   you with an assembler error that reads nothing like a packaging problem.
+4. **`--features unicode` only** (decision S6). Not `unicode,debug`.
+
+**What is NOT proven: that the `.exe` runs.** A cross-compiled binary that links
+is not a binary that works, and nothing here can execute it. That is the §10
+second-machine gate, and for Windows it is the *only* evidence that counts.
+
+**Consider the CI path instead.** `release.yml` already has a **native**
+`windows-2025` job, which is more reproducible than one developer's Mac and needs
+no xwin cache at all. It currently builds `--features "unicode,debug"`, so it
+ships the packet inspector — fix that (or add a friends-pack job) and CI becomes
+the better source for the pack's `.exe`. Keep the cross-build for quick local
+iteration.
+
+**Open decision — the console window.** The binary is *console* subsystem, so
+Windows opens a terminal behind the game. `#![windows_subsystem = "windows"]`
+removes it and also removes the only place a panic message would ever appear.
+Worth choosing deliberately before friends see it.
 
 Do **not** teach friends to clone the repo as a fallback. If someone cannot
 run the pack, you run it for them on a call.
