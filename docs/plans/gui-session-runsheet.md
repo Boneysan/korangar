@@ -321,7 +321,7 @@ size is the interesting part here. 9 cells, a 3x3 (`Layout: 1`).
 
 ---
 
-## 8. Two confirms that were never done
+## 8. Two confirms that were never done — DONE 2026-08-17
 
 Both shipped 2026-07-22 as "code complete — live GUI confirm recommended", and
 the confirm never happened. Single seat, any job.
@@ -330,6 +330,20 @@ the confirm never happened. Single seat, any job.
 |---|---|---|
 | M1-009 | Hover an inventory/equipment/storage item while wearing gear in that slot | Tooltip shows ATK/MATK/DEF/slots/req Lv/weight **and a vs-equipped delta** |
 | M1-014 | Right-click a character at character select | Tooltip documents left-click play / right-click delete; delete is **two-step** (`Delete {name}…` → `Really delete {name}?`) |
+
+> **Both PASS 2026-08-17.** M1-009 showed the stats **and the vs-equipped
+> comparison**, which is the half that had never been on screen.
+>
+> **M1-014 passed on mechanism and failed on legibility, which is a real bug:**
+> the confirmation is an **overlay** drawn over the character-select art, and
+> `text!` draws glyphs with nothing behind them — fine inside a window that has
+> its own background, unreadable here. It is also the last thing standing between
+> a right-click and a destroyed character, so it has to *look* like a warning.
+> Now a `WarningBanner`: the same rounded plate the slot buttons in that file
+> already draw, with red text. **Confirmed readable live.**
+>
+> The lesson generalises: **text on an overlay needs its own plate.** Nothing
+> stops the next overlay being written with a bare `text!`.
 
 ## 9. N24 — Instance window — DO THIS LAST
 

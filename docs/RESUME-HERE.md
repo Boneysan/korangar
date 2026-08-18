@@ -5,7 +5,22 @@
 > none of them were aimed at.
 >
 > **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
-> **§1–§7 are DONE.** What is left is **§8** (the two confirms that shipped
+> **§1–§8 are DONE. Only §9 remains, and it can hard-lock both clients.**
+>
+> **§8 both PASS** — M1-009 showed the vs-equipped comparison, and M1-014's
+> two-step delete works but was **unreadable**: the confirmation is an overlay
+> over the character-select art and `text!` draws glyphs with nothing behind
+> them. It is the last thing between a right-click and a destroyed character, so
+> it now draws its own plate (`WarningBanner`) in red. **Text on an overlay needs
+> its own plate** — nothing stops the next one being written with a bare `text!`.
+>
+> **Moonlit is DEFERRED by decision (2026-08-17), not cleared.** Its note had
+> been drawing upside down since the 08-08 pass that closed the row; today's fix
+> corrects it but nobody has seen it. Re-walking needs the Clown/Gypsy pair
+> rebuilt and the combo is judged unlikely to be played. `gui-pass-staleness.py`
+> deliberately still reports Block E as STALE, with the reason in its comment.
+>
+> **§1–§7 were DONE earlier today.** What is left is **§8** (the two confirms that shipped
 > 2026-07-22 and were never looked at) and **§9 the instance window**, which
 > stays **last because it can hard-lock both clients**.
 >

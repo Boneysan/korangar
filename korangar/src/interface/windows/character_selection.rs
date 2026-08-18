@@ -96,7 +96,7 @@ mod character_slot_preview {
                             let confirm = ErasedElement::new(fragment! {
                                 gaps: 4.0,
                                 children: (
-                                    text! { text: confirm_text },
+                                    WarningBanner::new(confirm_text),
                                     button! {
                                         text: "Yes, delete",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
@@ -178,6 +178,71 @@ mod character_slot_preview {
                 slot,
                 hover_tip: UnsafeCell::new(String::new()),
             }
+        }
+    }
+
+    /// A line of text on its own rounded plate.
+    ///
+    /// The interface's `text!` component draws glyphs and nothing behind them,
+    /// which is fine inside a window that already has a background. The delete
+    /// confirmation is an **overlay** over the character-select art, so white
+    /// text on it was reported unreadable live on 2026-08-17 — and it is the last
+    /// thing standing between a right-click and a destroyed character, so it has
+    /// to be legible and has to look like a warning. Same plate the slot buttons
+    /// in this file draw for the same reason.
+    pub struct WarningBanner {
+        text: String,
+    }
+
+    impl WarningBanner {
+        const BACKGROUND: Color = Color::rgba_u8(20, 10, 10, 235);
+        const HEIGHT: f32 = 32.0;
+        const TEXT: Color = Color::rgb_u8(255, 90, 90);
+
+        pub fn new(text: String) -> Self {
+            Self { text }
+        }
+    }
+
+    impl Element<ClientState> for WarningBanner {
+        type LayoutInfo = BaseLayoutInfo;
+
+        fn create_layout_info(
+            &mut self,
+            _: &State<ClientState>,
+            _: ElementStoreMut,
+            resolvers: &mut dyn Resolvers<ClientState>,
+        ) -> Self::LayoutInfo {
+            with_single_resolver(resolvers, |resolver| Self::LayoutInfo {
+                area: resolver.with_height(Self::HEIGHT),
+            })
+        }
+
+        fn lay_out<'a>(
+            &'a self,
+            _: &'a State<ClientState>,
+            _: ElementStore<'a>,
+            layout_info: &'a Self::LayoutInfo,
+            layout: &mut WindowLayout<'a, ClientState>,
+        ) {
+            layout.add_rectangle(
+                layout_info.area,
+                CornerDiameter::uniform(25.0),
+                Self::BACKGROUND,
+                Color::rgba_u8(0, 0, 0, 100),
+                ShadowPadding::diagonal(2.0, 5.0),
+            );
+
+            layout.add_text(
+                layout_info.area,
+                &self.text,
+                FontSize(14.0),
+                Self::TEXT,
+                Self::TEXT,
+                HorizontalAlignment::Center { offset: 0.0, border: 5.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+                OverflowBehavior::Shrink,
+            );
         }
     }
 

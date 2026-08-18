@@ -177,9 +177,21 @@ BLOCKS = [
     # Moonlit row** — they belong in the open table, and the pass document
     # already tracks them as unblocked by `LayeredGroundQuad`. `d5eb977a` is
     # rustfmt. Hermode remains OPEN and is unaffected by either.
+    # 2026-08-17: **this block is knowingly stale, and the reason is recorded
+    # rather than cleared.** Today's ground-decal work reaches Moonlit directly:
+    # `c87cc46b` flips the decal UVs, which means its hovering note **had been
+    # drawing upside down since the 08-08 pass that closed this row**, and
+    # `7b5fa092` moved every layered recipe onto a frame list. Both are fixes,
+    # but neither has been seen on screen.
+    #
+    # Re-walking it needs the Clown/Gypsy ensemble pair rebuilt, and the user's
+    # call (2026-08-17) is that the combo is unlikely to be played, so the row is
+    # **deferred, not cleared**. `reviewed_through` is deliberately NOT advanced
+    # past those commits: this is the one block whose PASS is known to overstate
+    # what has been verified, and the audit should keep saying so.
     {
         "name": "Block E (Moonlit)",
-        "covers": "ensemble ground unit: tile texture, alpha, sound — Hermode still OPEN",
+        "covers": "ensemble ground unit: tile texture, alpha, sound — DEFERRED 2026-08-17, note orientation fixed but unseen",
         "verified": "2026-08-08",
         "reviewed_through": "d5eb977a",
         "paths": [
