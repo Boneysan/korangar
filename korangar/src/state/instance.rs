@@ -76,11 +76,11 @@ impl InstanceState {
     ///
     /// **Both arrive as absolute Unix seconds, not durations.** Hercules stores
     /// `progress_timeout = now + value` (`instance.c:709`) and
-    /// `idle_timeout = now + value` (`instance.c:685`), and `clif_instance_join`
-    /// puts the field on the wire untouched, so the client has to do the
-    /// subtraction. Printing the raw value read as **"Time remaining: 496397h
-    /// 45m"** live on 2026-08-17 — 1.787 billion seconds, which is simply the
-    /// clock.
+    /// `idle_timeout = now + value` (`instance.c:685`), and
+    /// `clif_instance_join` puts the field on the wire untouched, so the
+    /// client has to do the subtraction. Printing the raw value read as
+    /// **"Time remaining: 496397h 45m"** live on 2026-08-17 — 1.787 billion
+    /// seconds, which is simply the clock.
     pub fn set_joined(&mut self, instance_name: String, progress_timeout: u32, idle_timeout: u32) {
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)

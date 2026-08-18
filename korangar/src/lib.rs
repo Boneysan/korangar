@@ -2187,14 +2187,16 @@ impl Client {
                     self.effect_holder.add_unit(
                         Box::new(UnitLayeredGroundQuad::new(
                             tile,
-                            hover,
-                            hover_fps,
+                            HoverLayer {
+                                frames: hover,
+                                fps: hover_fps,
+                                half_size: hover_half_size,
+                                opacity: hover_opacity,
+                                blend: hover_blend,
+                            },
                             position,
                             half_size,
                             tile_color,
-                            hover_half_size,
-                            hover_opacity,
-                            hover_blend,
                         )),
                         entity_id,
                     );
@@ -9244,8 +9246,7 @@ impl ApplicationHandler for Client {
 
                     if !maximized {
                         let logical: LogicalSize<u32> = screen_size.to_logical(window.scale_factor());
-                        *self.client_state.follow_mut(client_state().game_settings().window_size()) =
-                            Some((logical.width, logical.height));
+                        *self.client_state.follow_mut(client_state().game_settings().window_size()) = Some((logical.width, logical.height));
                     }
                 }
 

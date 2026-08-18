@@ -398,17 +398,28 @@ impl EffectBase for UnitGroundQuad {
 /// separation between tint and artwork, which is why it needed its own body.
 /// Unblocks `PA_GOSPEL`, `PF_FOGWALL` and `NPC_EVILLAND`, whose only missing
 /// piece was this.
+/// The hovering half of a layered ground unit — the artwork riding above the
+/// tint, and everything that decides how it draws.
+///
+/// Grouped rather than passed loose: these five travel together, `new` was at
+/// nine arguments once the frame list and the blend family joined them, and
+/// "hover layer" is a concept the type is already named for.
+pub struct HoverLayer {
+    /// One entry draws a still layer; several cycle at `fps`.
+    pub frames: Vec<Arc<Texture>>,
+    pub fps: f32,
+    /// Half-width in world units.
+    pub half_size: f32,
+    pub opacity: f32,
+    pub blend: GroundDecalBlend,
+}
+
 pub struct UnitLayeredGroundQuad {
     tile_texture: Arc<Texture>,
-    /// One entry draws a still layer; several cycle at `hover_fps`.
-    hover_frames: Vec<Arc<Texture>>,
-    hover_fps: f32,
+    hover: HoverLayer,
     position: Point3<f32>,
     half_size: f32,
     tile_color: Option<Color>,
-    hover_half_size: f32,
-    hover_opacity: f32,
-    hover_blend: GroundDecalBlend,
     phase: f32,
     fade: CellFade,
 }
@@ -422,29 +433,15 @@ impl UnitLayeredGroundQuad {
     const BOB_SPEED: f32 = 0.589;
     const BOB_SWING_CELLS: f32 = 0.2;
 
-    pub fn new(
-        tile_texture: Arc<Texture>,
-        hover_frames: Vec<Arc<Texture>>,
-        hover_fps: f32,
-        position: Point3<f32>,
-        half_size: f32,
-        tile_color: Option<Color>,
-        hover_half_size: f32,
-        hover_opacity: f32,
-        hover_blend: GroundDecalBlend,
-    ) -> Self {
+    pub fn new(tile_texture: Arc<Texture>, hover: HoverLayer, position: Point3<f32>, half_size: f32, tile_color: Option<Color>) -> Self {
         let phase = cell_phase(position);
 
         Self {
             tile_texture,
-            hover_frames,
-            hover_fps,
+            hover,
             position,
             half_size,
             tile_color,
-            hover_half_size,
-            hover_opacity,
-            hover_blend,
             phase: phase * TAU,
             fade: CellFade::new(phase),
         }
@@ -456,14 +453,14 @@ impl UnitLayeredGroundQuad {
     /// unison — the same trick the bob uses, and the reason a 15-cell wall does
     /// not look like one animation played fifteen times.
     fn hover_frame(&self) -> &Arc<Texture> {
-        if self.hover_frames.len() < 2 || self.hover_fps <= 0.0 {
-            return &self.hover_frames[0];
+        if self.hover.frames.len() < 2 || self.hover.fps <= 0.0 {
+            return &self.hover.frames[0];
         }
 
-        let count = self.hover_frames.len() as f32;
-        let advance = self.fade.age * self.hover_fps + self.phase * count / TAU;
+        let count = self.hover.frames.len() as f32;
+        let advance = self.fade.age * self.hover.fps + self.phase * count / TAU;
         let index = (advance.rem_euclid(count)) as usize;
-        &self.hover_frames[index.min(self.hover_frames.len() - 1)]
+        &self.hover.frames[index.min(self.hover.frames.len() - 1)]
     }
 
     /// Height of the hovering layer above the terrain, in world units.
@@ -485,7 +482,7 @@ impl EffectBase for UnitLayeredGroundQuad {
     fn register_point_lights(&self, _point_light_manager: &mut PointLightManager, _camera: &dyn Camera) {}
 
     fn render(&self, renderer: &mut EffectRenderer, camera: &dyn Camera) {
-        let widest = self.half_size.max(self.hover_half_size);
+        let widest = self.half_size.max(self.hover.half_size);
         if !Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(self.position, widest)) {
             return;
         }
@@ -521,11 +518,11 @@ impl EffectBase for UnitLayeredGroundQuad {
         // Upper layer: the artwork, riding above the tint.
         let hover_center = self.position + Vector3::new(0.0, self.hover_lift(), 0.0);
         renderer.render_ground_decal(
-            quad(hover_center, self.hover_half_size),
+            quad(hover_center, self.hover.half_size),
             self.hover_frame().clone(),
             GROUND_DECAL_TEXTURE_COORDINATES,
-            Color::rgba(1.0, 1.0, 1.0, self.hover_opacity * opacity),
-            self.hover_blend,
+            Color::rgba(1.0, 1.0, 1.0, self.hover.opacity * opacity),
+            self.hover.blend,
         );
     }
 }

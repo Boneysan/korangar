@@ -36,9 +36,9 @@ use crate::graphics::{
     EntityInstruction, GroundDecalBlend, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex,
 };
 use crate::loaders::GAT_TILE_SIZE;
-use crate::renderer::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
+use crate::renderer::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 use crate::world::pathing::Traversable;
 use crate::{Buffer, Color, GameFileLoader, ModelVertex, TileVertex};
 

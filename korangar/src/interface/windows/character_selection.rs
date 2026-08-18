@@ -186,10 +186,10 @@ mod character_slot_preview {
     /// The interface's `text!` component draws glyphs and nothing behind them,
     /// which is fine inside a window that already has a background. The delete
     /// confirmation is an **overlay** over the character-select art, so white
-    /// text on it was reported unreadable live on 2026-08-17 — and it is the last
-    /// thing standing between a right-click and a destroyed character, so it has
-    /// to be legible and has to look like a warning. Same plate the slot buttons
-    /// in this file draw for the same reason.
+    /// text on it was reported unreadable live on 2026-08-17 — and it is the
+    /// last thing standing between a right-click and a destroyed character,
+    /// so it has to be legible and has to look like a warning. Same plate
+    /// the slot buttons in this file draw for the same reason.
     pub struct WarningBanner {
         text: String,
     }

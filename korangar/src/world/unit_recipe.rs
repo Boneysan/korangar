@@ -101,12 +101,13 @@ pub enum UnitBody {
         /// Half-width of the hovering layer in world units.
         hover_half_size: f32,
         hover_opacity: f32,
-        /// Which family the hover artwork belongs to. **Read the texture, do not
-        /// guess**: a magenta-keyed BMP wants `Alpha`, a greyscale-on-black one
-        /// wants `Additive` or its background draws as an opaque black square.
-        /// `tools/` cannot extract these — they are DES-encrypted — but the
-        /// `grf_extract` ignored test in `lib.rs` pulls them out through the
-        /// client's own reader, and the magenta share settles it.
+        /// Which family the hover artwork belongs to. **Read the texture, do
+        /// not guess**: a magenta-keyed BMP wants `Alpha`, a
+        /// greyscale-on-black one wants `Additive` or its background
+        /// draws as an opaque black square. `tools/` cannot extract
+        /// these — they are DES-encrypted — but the `grf_extract`
+        /// ignored test in `lib.rs` pulls them out through the client's
+        /// own reader, and the magenta share settles it.
         hover_blend: GroundDecalBlend,
     },
     /// A `data\sprite\이팩트\*` animation repeating for the unit's lifetime
@@ -906,11 +907,12 @@ mod tests {
     ///
     /// Shares measured 2026-08-17 by pulling each file out of `data.grf` with
     /// the `grf_extract` ignored test — the python tooling cannot, they are
-    /// DES-encrypted — and counting pixels. The client keys **magenta only**, so
-    /// a BMP with no magenta and a black background carries no transparency at
-    /// all and has to be added rather than alpha-blended, or it draws its
-    /// background as an opaque square. Fog Wall did exactly that live, and Land
-    /// Protector had been doing it silently since it shipped.
+    /// DES-encrypted — and counting pixels. The client keys **magenta only**,
+    /// so a BMP with no magenta and a black background carries no
+    /// transparency at all and has to be added rather than alpha-blended,
+    /// or it draws its background as an opaque square. Fog Wall did exactly
+    /// that live, and Land Protector had been doing it silently since it
+    /// shipped.
     ///
     /// A new recipe belongs in this list. Measure the file; do not infer the
     /// family from how the effect is described, and do not trust the loader's

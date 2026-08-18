@@ -8,10 +8,9 @@ use wgpu::util::StagingBelt;
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingResource,
     BindingType, BlendComponent, BlendFactor, BlendOperation, BlendState, BufferBindingType, BufferUsages, ColorTargetState, ColorWrites,
-    CommandEncoder, CompareFunction,
-    DepthBiasState, DepthStencilState, Device, FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
-    PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor, ShaderStages, StencilState, TextureSampleType,
-    TextureView, TextureViewDimension, VertexState,
+    CommandEncoder, CompareFunction, DepthBiasState, DepthStencilState, Device, FragmentState, MultisampleState,
+    PipelineCompilationOptions, PipelineLayoutDescriptor, PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor,
+    ShaderStages, StencilState, TextureSampleType, TextureView, TextureViewDimension, VertexState,
 };
 
 use crate::graphics::passes::{
@@ -167,57 +166,59 @@ impl Drawer<{ BindGroupCount::Two }, { ColorAttachmentCount::Three }, { DepthAtt
         // Built twice, differing *only* in the blend state, because RO's effect
         // textures come in two families and one pipeline cannot serve both: see
         // `GroundDecalBlend`.
-        let pipeline_for = |label: &str, blend: BlendState| device.create_render_pipeline(&RenderPipelineDescriptor {
-            label: Some(label),
-            layout: Some(&pipeline_layout),
-            vertex: VertexState {
-                module: &shader_module,
-                entry_point: Some("vs_main"),
-                compilation_options: PipelineCompilationOptions::default(),
-                buffers: &[],
-            },
-            fragment: Some(FragmentState {
-                module: &shader_module,
-                entry_point: Some("fs_main"),
-                compilation_options: PipelineCompilationOptions::default(),
-                targets: &[
-                    Some(ColorTargetState {
-                        format: color_attachment_formats[0],
-                        blend: Some(blend),
-                        write_mask: ColorWrites::ALL,
-                    }),
-                    Some(ColorTargetState {
-                        format: color_attachment_formats[1],
-                        blend: None,
-                        write_mask: ColorWrites::empty(),
-                    }),
-                    Some(ColorTargetState {
-                        format: color_attachment_formats[2],
-                        blend: None,
-                        write_mask: ColorWrites::empty(),
-                    }),
-                ],
-            }),
-            // Flat ground tile viewed from above — no back-face culling so winding
-            // never matters.
-            primitive: PrimitiveState::default(),
-            multisample: MultisampleState {
-                count: global_context.msaa.sample_count(),
-                ..Default::default()
-            },
-            // Depth-test against the scene (reverse-Z: Greater = closer) so terrain
-            // occludes the tile, but do not write depth — the tile is translucent
-            // and entities drawn afterwards must still compose over it.
-            depth_stencil: Some(DepthStencilState {
-                format: render_pass_context.depth_attachment_output_format()[0],
-                depth_write_enabled: Some(false),
-                depth_compare: Some(CompareFunction::Greater),
-                stencil: StencilState::default(),
-                bias: DepthBiasState::default(),
-            }),
-            cache: None,
-            multiview_mask: None,
-        });
+        let pipeline_for = |label: &str, blend: BlendState| {
+            device.create_render_pipeline(&RenderPipelineDescriptor {
+                label: Some(label),
+                layout: Some(&pipeline_layout),
+                vertex: VertexState {
+                    module: &shader_module,
+                    entry_point: Some("vs_main"),
+                    compilation_options: PipelineCompilationOptions::default(),
+                    buffers: &[],
+                },
+                fragment: Some(FragmentState {
+                    module: &shader_module,
+                    entry_point: Some("fs_main"),
+                    compilation_options: PipelineCompilationOptions::default(),
+                    targets: &[
+                        Some(ColorTargetState {
+                            format: color_attachment_formats[0],
+                            blend: Some(blend),
+                            write_mask: ColorWrites::ALL,
+                        }),
+                        Some(ColorTargetState {
+                            format: color_attachment_formats[1],
+                            blend: None,
+                            write_mask: ColorWrites::empty(),
+                        }),
+                        Some(ColorTargetState {
+                            format: color_attachment_formats[2],
+                            blend: None,
+                            write_mask: ColorWrites::empty(),
+                        }),
+                    ],
+                }),
+                // Flat ground tile viewed from above — no back-face culling so winding
+                // never matters.
+                primitive: PrimitiveState::default(),
+                multisample: MultisampleState {
+                    count: global_context.msaa.sample_count(),
+                    ..Default::default()
+                },
+                // Depth-test against the scene (reverse-Z: Greater = closer) so terrain
+                // occludes the tile, but do not write depth — the tile is translucent
+                // and entities drawn afterwards must still compose over it.
+                depth_stencil: Some(DepthStencilState {
+                    format: render_pass_context.depth_attachment_output_format()[0],
+                    depth_write_enabled: Some(false),
+                    depth_compare: Some(CompareFunction::Greater),
+                    stencil: StencilState::default(),
+                    bias: DepthBiasState::default(),
+                }),
+                cache: None,
+                multiview_mask: None,
+            })
+        };
 
         let pipelines = [
             pipeline_for(DRAWER_NAME, BlendState::ALPHA_BLENDING),

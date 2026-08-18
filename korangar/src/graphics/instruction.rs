@@ -339,9 +339,9 @@ pub struct GroundDecalInstruction {
 /// **keyed** texture carries its transparency as magenta (`cross_old.bmp` is
 /// 69.7% magenta, `curse.bmp` 76.4%), which the BMP loader rewrites to α 0, so
 /// ordinary alpha blending draws it correctly. An **additive** texture is
-/// greyscale on black (`lens_w.bmp` — 0% magenta, 40% near-black) and carries no
-/// transparency at all: black means *add nothing*. Alpha-blending one of those
-/// paints its background as opaque black, which is what Fog Wall did on
+/// greyscale on black (`lens_w.bmp` — 0% magenta, 40% near-black) and carries
+/// no transparency at all: black means *add nothing*. Alpha-blending one of
+/// those paints its background as opaque black, which is what Fog Wall did on
 /// 2026-08-17 — 15 black squares where the fog should be.
 ///
 /// Adding the family here rather than sniffing the texture is deliberate: a BMP

@@ -17,11 +17,11 @@ pub struct EffectRenderer {
 /// `[(-x,-z), (+x,-z), (-x,+z), (+x,+z)]`.
 ///
 /// **v is flipped**, and that is the whole point of this constant. The player
-/// camera sits at `DEFAULT_ANGLE` 180 degrees yaw and `CAMERA_PITCH` -55, so its
-/// offset `(0, 0, d)` rotates to `(0, +0.819d, -0.574d)`: the camera is above
-/// and at **-z**, looking toward +z. Screen-up on the ground plane is therefore
-/// **+z**, and a picture's top belongs on the `+z` corners. The identity mapping
-/// puts it on `-z` and draws every decal upside down.
+/// camera sits at `DEFAULT_ANGLE` 180 degrees yaw and `CAMERA_PITCH` -55, so
+/// its offset `(0, 0, d)` rotates to `(0, +0.819d, -0.574d)`: the camera is
+/// above and at **-z**, looking toward +z. Screen-up on the ground plane is
+/// therefore **+z**, and a picture's top belongs on the `+z` corners. The
+/// identity mapping puts it on `-z` and draws every decal upside down.
 ///
 /// Nothing caught this until 2026-08-17 because nothing asymmetric had been
 /// drawn flat: Gospel's cross is vertically symmetric, Land Protector's circle
@@ -195,12 +195,13 @@ mod ground_decal_orientation_tests {
 
     /// The decal UVs must put a picture's top on the **+z** corners.
     ///
-    /// Derived, not chosen: `PlayerCamera` yaws 180 degrees with a -55 pitch, so
-    /// its `(0, 0, d)` offset lands at `(0, +0.819d, -0.574d)` — the camera sits
-    /// at -z looking toward +z, which makes +z the far side of the ground and so
-    /// screen-up. The identity mapping draws every ground decal upside down,
-    /// which is how Evil Land arrived on 2026-08-17, and how Moonlit's hovering
-    /// note had been drawing since 2026-08-08 without anyone noticing.
+    /// Derived, not chosen: `PlayerCamera` yaws 180 degrees with a -55 pitch,
+    /// so its `(0, 0, d)` offset lands at `(0, +0.819d, -0.574d)` — the
+    /// camera sits at -z looking toward +z, which makes +z the far side of
+    /// the ground and so screen-up. The identity mapping draws every ground
+    /// decal upside down, which is how Evil Land arrived on 2026-08-17, and
+    /// how Moonlit's hovering note had been drawing since 2026-08-08
+    /// without anyone noticing.
     #[test]
     fn ground_decal_uvs_put_the_picture_top_away_from_the_camera() {
         let [top_left, top_right, bottom_left, bottom_right] = GROUND_DECAL_TEXTURE_COORDINATES;
