@@ -332,8 +332,15 @@ Either way: a friend who has Tailscale installed but has **not** accepted
 an invite/share cannot reach `100.x`. The game will look like “can’t
 connect to server.”
 
-Friend install is three sentences — that is all they need in the Drive Doc:
+Friend install is four sentences — that is all they need in the Drive Doc:
 
+0. **Use a password you use nowhere else.** One sentence, and it belongs in the
+   Doc verbatim rather than paraphrased: *"Please pick a password you don't use
+   for anything else -- this is a hobby game server, not a bank, and the login is
+   not encrypted."* Ragnarok's login protocol sends the password in clear, and
+   `<passwordencrypt>` cannot be combined with the hashed storage this server
+   uses. **The VPN is what encrypts it in transit**; this sentence covers anyone
+   who plays before the tailnet exists, or on a LAN.
 1. Install Tailscale from https://tailscale.com/download
 2. Click the invite the GM sent and sign in
 3. Wait until the GM’s machine shows as Connected, then launch Play
