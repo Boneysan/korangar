@@ -1292,7 +1292,8 @@ impl FixedByteSize for RegularItemFlags {
 
 impl FromBytes for RegularItemFlags {
     fn from_bytes(byte_reader: &mut ByteReader) -> ConversionResult<Self> {
-        <Self as bitflags::Flags>::Bits::from_bytes(byte_reader).map(|raw| Self::from_bits(raw).expect("Invalid equip position"))
+        let raw = <Self as bitflags::Flags>::Bits::from_bytes(byte_reader)?;
+        Self::from_bits(raw).ok_or_else(|| ConversionError::from_message(format!("invalid RegularItemFlags bits {raw:#x}")))
     }
 }
 
@@ -1358,7 +1359,8 @@ impl FixedByteSize for EquippableItemFlags {
 
 impl FromBytes for EquippableItemFlags {
     fn from_bytes(byte_reader: &mut ByteReader) -> ConversionResult<Self> {
-        <Self as bitflags::Flags>::Bits::from_bytes(byte_reader).map(|raw| Self::from_bits(raw).expect("Invalid equip position"))
+        let raw = <Self as bitflags::Flags>::Bits::from_bytes(byte_reader)?;
+        Self::from_bits(raw).ok_or_else(|| ConversionError::from_message(format!("invalid EquippableItemFlags bits {raw:#x}")))
     }
 }
 
@@ -4536,7 +4538,8 @@ impl FixedByteSize for EquipPosition {
 
 impl FromBytes for EquipPosition {
     fn from_bytes(byte_reader: &mut ByteReader) -> ConversionResult<Self> {
-        <Self as bitflags::Flags>::Bits::from_bytes(byte_reader).map(|raw| Self::from_bits(raw).expect("Invalid equip position"))
+        let raw = <Self as bitflags::Flags>::Bits::from_bytes(byte_reader)?;
+        Self::from_bits(raw).ok_or_else(|| ConversionError::from_message(format!("invalid EquipPosition bits {raw:#x}")))
     }
 }
 
@@ -6450,6 +6453,26 @@ mod tests {
         // 175 bytes at PACKETVER >= 20201007 (64-bit hp and sp).
         assert_eq!(<CharacterInformationLegacy as FixedByteSize>::size_in_bytes(), 155);
         assert_eq!(<CharacterInformation as FixedByteSize>::size_in_bytes(), 175);
+    }
+
+    #[test]
+    fn item_flag_bits_reject_unknown_masks() {
+        let mut reader = ByteReader::without_metadata(&[0b1000_0000]);
+        assert!(RegularItemFlags::from_bytes(&mut reader).is_err());
+
+        let mut reader = ByteReader::without_metadata(&[0b1000_0000]);
+        assert!(EquippableItemFlags::from_bytes(&mut reader).is_err());
+
+        let mut reader = ByteReader::without_metadata(&[0xFF, 0xFF, 0xFF, 0xFF]);
+        assert!(EquipPosition::from_bytes(&mut reader).is_err());
+    }
+
+    #[test]
+    fn item_flag_bits_accept_known_masks() {
+        let mut reader = ByteReader::without_metadata(&[0b001]);
+        assert!(RegularItemFlags::from_bytes(&mut reader)
+            .unwrap()
+            .contains(RegularItemFlags::IDENTIFIED));
     }
 
     #[test]

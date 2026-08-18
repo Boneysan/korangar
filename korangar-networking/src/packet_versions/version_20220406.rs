@@ -543,7 +543,9 @@ where
 
         move |packet: RegularItemListPacket| {
             let mut borrowed = inventory_items.borrow_mut();
-            let (inv_type, items) = borrowed.as_mut().expect("Unexpected inventory packet");
+            let Some((inv_type, items)) = borrowed.as_mut() else {
+                return NoNetworkEvents;
+            };
             let is_storage = matches!(*inv_type, inventory_type::STORAGE | inventory_type::GUILD_STORAGE);
 
             items.extend(packet.item_information.into_iter().map(|item_information| {
@@ -600,7 +602,9 @@ where
 
         move |packet: EquippableItemListPacket| {
             let mut borrowed = inventory_items.borrow_mut();
-            let (inv_type, items) = borrowed.as_mut().expect("Unexpected inventory packet");
+            let Some((inv_type, items)) = borrowed.as_mut() else {
+                return NoNetworkEvents;
+            };
             let is_storage = matches!(*inv_type, inventory_type::STORAGE | inventory_type::GUILD_STORAGE);
 
             items.extend(packet.item_information.into_iter().map(|item| {
@@ -657,7 +661,9 @@ where
         let pending_equipped_ammunition = pending_equipped_ammunition.clone();
 
         move |_packet: InventoyEndPacket| {
-            let (inv_type, mut items) = inventory_items.borrow_mut().take().expect("Unexpected inventory end packet");
+            let Some((inv_type, mut items)) = inventory_items.borrow_mut().take() else {
+                return None;
+            };
 
             // Apply the ammo equip that arrived mid-list (see the buffer's comment).
             // Storage lists never carry one, and taking it unconditionally would strand
@@ -670,10 +676,10 @@ where
                 *equipped_position = EquipPosition::AMMO;
             }
 
-            match inv_type {
+            Some(match inv_type {
                 inventory_type::STORAGE | inventory_type::GUILD_STORAGE => NetworkEvent::SetStorage { items },
                 _ => NetworkEvent::SetInventory { items },
-            }
+            })
         }
     })?;
     packet_handler.register_noop::<EquippableSwitchItemListPacket>()?;

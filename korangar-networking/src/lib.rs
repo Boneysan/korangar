@@ -355,6 +355,7 @@ where
                     // can happen on a real network. Retain the fragment and wait
                     // for the rest, exactly as `PacketCutOff` does below.
                     let mut awaiting_account_id = false;
+                    let mut packet_cutoff = false;
 
                     if read_account_id {
                         match AccountId::from_bytes(&mut byte_reader) {
@@ -386,6 +387,7 @@ where
 
                                 buffer.copy_within(packet_start..packet_end, 0);
                                 cut_off_buffer_base = packet_end - packet_start;
+                                packet_cutoff = true;
 
                                 break;
                             },
@@ -399,6 +401,10 @@ where
                                 break
                             },
                         }
+                    }
+
+                    if !awaiting_account_id && !packet_cutoff {
+                        cut_off_buffer_base = 0;
                     }
 
                     for event in events.drain(..) {

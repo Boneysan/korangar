@@ -18,7 +18,7 @@ use std::hash::Hash;
 use encoding_rs::EUC_KR;
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::Lua;
+use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::baby_job::IsBabyJob;
 pub use self::item_info::ItemInfo;
@@ -152,9 +152,18 @@ trait LuaExt: Sized {
     fn load_from_game_files(game_file_loader: &GameFileLoader, files: &[&str]) -> mlua::Result<Self>;
 }
 
+pub(crate) fn new_sandboxed_lua() -> mlua::Result<Lua> {
+    // Official RO lua is tables, strings, and math. io/os/package would make a
+    // swapped lua_files.7z into host code execution.
+    Lua::new_with(
+        StdLib::TABLE | StdLib::STRING | StdLib::MATH,
+        LuaOptions::default(),
+    )
+}
+
 impl LuaExt for Lua {
     fn load_from_game_files(game_file_loader: &GameFileLoader, files: &[&str]) -> mlua::Result<Self> {
-        let state = Lua::new();
+        let state = new_sandboxed_lua()?;
 
         for file in files {
             let data = game_file_loader

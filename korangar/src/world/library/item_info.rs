@@ -8,7 +8,7 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::Lua;
+
 use ragnarok_packets::ItemId;
 
 use super::{HashMapExt, ItemName, ItemResource, Library, Table, fix_encoding};
@@ -173,7 +173,7 @@ fn looks_like_english_name(name: &str) -> bool {
 }
 
 fn parse_iteminfo_table(data: &[u8]) -> mlua::Result<HashMap<ItemId, ItemInfo>> {
-    let state = Lua::new();
+    let state = super::new_sandboxed_lua()?;
     let data = data.strip_prefix(&[0xEF, 0xBB, 0xBF]).unwrap_or(data);
     state.load(data).exec()?;
 

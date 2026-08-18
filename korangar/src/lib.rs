@@ -3807,20 +3807,30 @@ impl Client {
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
 
-                    let saved_login_data = self.saved_login_data.as_ref().unwrap();
+                    let Some(saved_login_data) = self.saved_login_data.as_ref() else {
+                        self.interface.open_window(ErrorWindow::new(
+                            "Lost login state before connecting to the map server.".to_owned(),
+                        ));
+                        continue;
+                    };
+                    let Some(character_information) = self
+                        .client_state
+                        .follow(client_state().character_slots())
+                        .with_id(login_data.character_id)
+                        .cloned()
+                    else {
+                        self.interface.open_window(ErrorWindow::new(
+                            "The server selected a character that is not in your slot list.".to_owned(),
+                        ));
+                        continue;
+                    };
+
                     self.networking_system.disconnect_from_character_server();
                     self.networking_system
                         .connect_to_map_server(self.saved_packet_version, saved_login_data, login_data);
                     // Ask for the client tick right away, so that the player isn't de-synced when
                     // they spawn on the map.
                     let _ = self.networking_system.request_client_tick();
-
-                    let character_information = self
-                        .client_state
-                        .follow(client_state().character_slots())
-                        .with_id(login_data.character_id)
-                        .cloned()
-                        .unwrap();
 
                     let mut player = Entity::Player(Player::new(
                         &self.library,

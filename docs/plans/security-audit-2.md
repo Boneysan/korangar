@@ -2,11 +2,13 @@
 
 | | |
 |---|---|
-| **Status** | Independent re-audit. Findings below are unfixed unless marked otherwise. A third pass is in [security-audit-3.md](security-audit-3.md) |
+| **Status** | Independent re-audit. Remediations 2026-08-18. Later passes: [security-audit-3.md](security-audit-3.md), [security-audit-4.md](security-audit-4.md) |
 | **Auditor** | Second pass, after [security-audit.md](security-audit.md). Not a re-read of that document — the live tree, the live processes, and the live `login` table were checked again |
 | **Trigger** | The first pass had been written and six findings fixed. A second set of eyes before friends arrive |
 | **Scope of THIS pass** | Re-verify every first-pass claim against current code and the running box. Then cover what the first pass left out: API server, MariaDB bind, loaded NPC/DM scripts, fork packet deltas, host tools |
 | **NOT covered — say so rather than imply coverage** | Fuzzing of korangar decoders, upstream Hercules CVEs in `clif.c` beyond this fork's deltas, the Lua/GRF asset path, a Windows run of the pack |
+
+**Remediated 2026-08-18:** C1 rotated (see first-pass note); N1 session party 0; N2 `dm_*` flag names; N3 API `bind_ip` 127.0.0.1; N4 MariaDB loopback; N5 logs locked and the pre-MD5 dump removed; N7 test NPCs unloaded; N8 spawn cap; N9 group 5 no longer inherits `@ban`/`@item`; N10 `network.conf` loopback; N11 fail-ban on; N12 leftover buffer reset; T4-adjacent `DM_TriggerEvent` id-1 is in pass 3.
 
 The first pass's **risk acceptance for the LAN beta still stands**, with the same revoke conditions (port-forward, untrusted tailnet member, anything worth stealing). This document does not re-litigate that. It records what the first pass got right, what it missed, and what is still live.
 
@@ -31,7 +33,7 @@ Checked against the box as it was running on 2026-08-17:
 
 | ID | First-pass claim | This pass |
 |---|---|---|
-| **C1** | Two group-99 accounts, passwords in the public repo | **CONFIRMS, still open.** Live MD5 hashes match the published strings. See below |
+| **C1** | Two group-99 accounts, passwords in the public repo | **Remediated 2026-08-18.** Live hashes no longer match the published strings. `headless2` is group 0 |
 | **H1** | Plaintext `user_pass` | **CONFIRMS fixed.** `use_MD5_passwords: true` in import; all four rows are 32-char hashes |
 | **H2** | Password on the wire in the clear | **CONFIRMS.** Korangar still sends `CA_LOGIN` 0x0064 with a 24-byte plaintext field |
 | **M1** | `ip_rules` off | **CONFIRMS fixed.** Import has `enable: true` and allow-lists `127.0.0.1`. The allow-list **does** exempt localhost from the DDoS heuristic (`connect_ok == 2`) |

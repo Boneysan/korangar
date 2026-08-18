@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | First pass. Six findings were fixed the same day; **C1 is still open**. Later passes: [security-audit-2.md](security-audit-2.md), [security-audit-3.md](security-audit-3.md) |
+| **Status** | First pass. Six findings were fixed the same day; **C1 rotated 2026-08-18**. Later passes: [security-audit-2.md](security-audit-2.md), [security-audit-3.md](security-audit-3.md), [security-audit-4.md](security-audit-4.md) |
 | **Trigger** | The client is about to be handed to friends and the server exposed beyond localhost |
 | **Scope of THIS pass** | Credentials and privilege, server exposure config, Rust dependency CVEs, fork script gating, pack hygiene |
 | **NOT covered — say so rather than imply coverage** | Memory safety of the C server (Hercules is C, and our 11 fork deltas touch `clif.c` packet parsing), fuzzing of korangar's packet decoders, upstream Hercules CVEs, the Lua/GRF asset path. **Covered by the second pass:** API server, MariaDB bind, loaded DM/NPC scripts, fork packet deltas, host tools |
@@ -16,7 +16,7 @@ being true.
 
 | Still open | Why it is tolerable here |
 |---|---|
-| **C1** — admin passwords published in a public repo | Bounded by **reachability**: an attacker must reach port 6900, which means being on the LAN. The damage ceiling is a game world that can be restored — verified: no atcommand reaches the OS or raw SQL |
+| **C1** — admin passwords published in a public repo | **Rotated 2026-08-18.** The published strings no longer authenticate. `headless2` is group 0. New passwords are gitignored. |
 | **H2** — credentials in clear on the wire | The attacker would have to already be on your network. Friends are told to use a throwaway password (§7.3 step 0), and the VPN closes it properly |
 | **M4** — client stores passwords if asked | Opt-in, off by default, and now labelled "(saved unencrypted)" |
 
@@ -68,7 +68,11 @@ several MEDIUMs become CRITICAL the day it is.
 
 ## CRITICAL
 
-### C1. Two full-admin accounts with guessable passwords, and the credentials are published
+### C1. Two full-admin accounts with guessable passwords, and the credentials are published (REMEDIATED 2026-08-18)
+
+Live passwords were rotated and are **not** in this repository. `headless2` is group 0. The tester requires `--password` / `--partner-password`; integration generates ephemeral ones. `committed-secrets.sh` pins the old SQL pair so it cannot come back. The operator file is gitignored `Hercules/conf/import/operator-credentials.conf`.
+
+**Historical finding, kept for the record:**
 
 | account | password | group |
 |---|---|---|
@@ -401,7 +405,7 @@ the test of whether a taxonomy is doing work or decorating:
 
 | Finding | CWE | |
 |---|---|---|
-| C1 admin passwords in tracked files | **CWE-798** Use of Hard-coded Credentials | open |
+| C1 admin passwords in tracked files | **CWE-798** Use of Hard-coded Credentials | **remediated 2026-08-18** |
 | H1 plaintext `user_pass` column | **CWE-256 / CWE-257** Plaintext Storage of a Password | open |
 | H2 credentials on the wire | **CWE-319** Cleartext Transmission of Sensitive Information | won't fix (protocol) |
 | M1 `ip_rules: enable: false` | **CWE-770** Allocation Without Limits or Throttling | open |

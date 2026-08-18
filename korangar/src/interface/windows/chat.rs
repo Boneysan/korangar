@@ -15,7 +15,7 @@ use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::{ChatThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
-use crate::state::{ChatMessage, ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
 
 const MAXIMUM_CHAT_MESSAGE_LENGTH: usize = 80;
 /// Ragnarok character names cap at 24.
@@ -46,7 +46,7 @@ impl<A> ChatElement<A> {
 
 impl<A> Element<ClientState> for ChatElement<A>
 where
-    A: Path<ClientState, Vec<ChatMessage>>,
+    A: Path<ClientState, crate::state::ChatHistory>,
 {
     type LayoutInfo = ChatLayoutInfo;
 
@@ -236,7 +236,7 @@ impl<A, B> ChatWindow<A, B> {
 impl<A, B> CustomWindow<ClientState> for ChatWindow<A, B>
 where
     A: Path<ClientState, ChatWindowState>,
-    B: Path<ClientState, Vec<ChatMessage>>,
+    B: Path<ClientState, crate::state::ChatHistory>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Chat)

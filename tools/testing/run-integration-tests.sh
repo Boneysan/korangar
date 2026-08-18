@@ -275,19 +275,23 @@ database_created=true
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/main.sql"
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/logs.sql"
 
-"${mysql_admin[@]}" "$db_name" <<'SQL'
--- Email must be `a@a.com` (or match DeleteCharacterPacket): Hercules rejects
+admin_pass="$(openssl rand -hex 16)"
+partner_pass="$(openssl rand -hex 16)"
+
+"${mysql_admin[@]}" "$db_name" <<SQL
+-- Email must be a@a.com (or match DeleteCharacterPacket): Hercules rejects
 -- deletion when the confirmation email does not match login.email, and the
 -- headless client always sends a@a.com (see NetworkingSystem::delete_character).
-INSERT INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`, `group_id`, `character_slots`)
+-- Passwords are generated per run and passed to the tester on the CLI.
+INSERT INTO login (account_id, userid, user_pass, sex, email, group_id, character_slots)
 VALUES
-    (2000000, 'korangar', 'korangar', 'M', 'a@a.com', 99, 9),
-    (2000001, 'headless2', 'headless2pw', 'F', 'a@a.com', 99, 9);
+    (2000000, 'korangar', '${admin_pass}', 'M', 'a@a.com', 99, 9),
+    (2000001, 'headless2', '${partner_pass}', 'F', 'a@a.com', 0, 9);
 
-INSERT INTO `char`
-    (`char_id`, `account_id`, `char_num`, `name`, `class`, `base_level`, `job_level`,
-     `max_hp`, `hp`, `max_sp`, `sp`, `last_map`, `last_x`, `last_y`,
-     `save_map`, `save_x`, `save_y`, `slotchange`, `sex`)
+INSERT INTO \`char\`
+    (char_id, account_id, char_num, name, class, base_level, job_level,
+     max_hp, hp, max_sp, sp, last_map, last_x, last_y,
+     save_map, save_x, save_y, slotchange, sex)
 VALUES
     (150000, 2000000, 0, 'HeadlessOne', 0, 99, 10,
      1000, 1000, 100, 100, 'prontera', 155, 180, 'prontera', 155, 180, 0, 'M'),
@@ -399,6 +403,7 @@ export KORANGAR_HERCULES_REVISION="$(git -C "$hercules_repo" rev-parse HEAD)$rev
 # already built Hercules and created the database, with a message about
 # argument parsing. That cost two runs on 2026-08-11.
 suite_arguments=("$@")
+suite_arguments+=(--password "$admin_pass" --partner-password "$partner_pass")
 case " $* " in
 *" --fail-on-flaky "*) ;;
 *) suite_arguments+=(--fail-on-flaky) ;;

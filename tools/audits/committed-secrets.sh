@@ -17,6 +17,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 patterns=(
     "headless2""pw"
     "headless3""pw"
+    # Username-as-password pair from the published admin account. Not a generic
+    # "korangar" match — that word is the project name.
+    "(2000000, 'korangar', 'korangar'"
 )
 
 status=0
@@ -37,7 +40,7 @@ for pattern in "${patterns[@]}"; do
 
         printf '\nNEW CREDENTIAL COMMITTED: %s\n  %s\n' "$pattern" "$hit"
         status=1
-    done <<< "$(git grep -n --fixed-strings -- "$pattern" -- . ':!tools/audits/committed-secrets.sh' ':!tools/audits/committed-secrets.baseline' ':!docs/plans/security-audit.md' 2>/dev/null || true)"
+    done <<< "$(git grep -n --fixed-strings -- "$pattern" -- . ':!tools/audits/committed-secrets.sh' ':!tools/audits/committed-secrets.baseline' ':!docs/plans/security-audit.md' ':!docs/plans/security-audit-2.md' ':!docs/plans/security-audit-3.md' ':!docs/plans/security-audit-4.md' 2>/dev/null || true)"
 done
 
 if [ "$status" -ne 0 ]; then

@@ -120,6 +120,37 @@ impl ChatMessage {
     }
 }
 
+/// Bounded chat log. The server can flood public chat; keep a hard cap so
+/// layout and memory cannot grow with total historical input.
+#[derive(Debug, Clone, Default, RustState, StateElement)]
+pub struct ChatHistory {
+    messages: Vec<ChatMessage>,
+}
+
+impl ChatHistory {
+    const MAX: usize = 500;
+
+    pub fn from_welcome(message: ChatMessage) -> Self {
+        Self { messages: vec![message] }
+    }
+
+    pub fn push(&mut self, message: ChatMessage) {
+        if self.messages.len() >= Self::MAX {
+            let overflow = self.messages.len() + 1 - Self::MAX;
+            self.messages.drain(..overflow);
+        }
+        self.messages.push(message);
+    }
+}
+
+impl std::ops::Deref for ChatHistory {
+    type Target = [ChatMessage];
+
+    fn deref(&self) -> &Self::Target {
+        &self.messages
+    }
+}
+
 #[derive(Debug, Clone, Copy, RustState, StateElement)]
 pub enum BufferedAction {
     AttackEntity {
@@ -261,7 +292,7 @@ pub struct ClientState {
     ground_items: Vec<GroundItem>,
 
     /// List of all received chat messages.
-    chat_messages: Vec<ChatMessage>,
+    chat_messages: ChatHistory,
     /// List of all friends (with online presence).
     friend_list: Vec<FriendEntry>,
     /// Current party roster and pending party invitation state.
@@ -436,7 +467,7 @@ impl ClientState {
                 "Welcome to ^ff8800Korangar^000000 version ^ff8800{}^000000!",
                 env!("CARGO_PKG_VERSION")
             );
-            let chat_messages = vec![ChatMessage::new(welcome_string, MessageColor::Server)];
+            let chat_messages = ChatHistory::from_welcome(ChatMessage::new(welcome_string, MessageColor::Server));
 
             let chat_window = ChatWindowState::default();
             let dice_window = DiceWindowState::default();

@@ -5,8 +5,6 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::Lua;
-
 use crate::loaders::GameFileLoader;
 
 /// Facility kind used by `Towninfo.lub` (`TYPE` field).
@@ -266,7 +264,7 @@ mapNPCInfoTable = {
 }
 
 fn parse_towninfo(data: &[u8]) -> mlua::Result<TownInfoTable> {
-    let state = Lua::new();
+    let state = super::new_sandboxed_lua()?;
     // Provide a no-op `AddTownInfo` so calling `main()` (if present) does not fail.
     state.globals().set(
         "AddTownInfo",

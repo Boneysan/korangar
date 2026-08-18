@@ -162,9 +162,11 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
                 };
 
                 quote!({
-                    let repeat_count = #repeat_count_inner;
-                    // TODO: Add check to make sure this allocation is not too big.
-                    let mut vector = Vec::with_capacity(repeat_count as usize);
+                    let repeat_count = #repeat_count_inner as usize;
+                    if repeat_count > 4096 {
+                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    }
+                    let mut vector = Vec::with_capacity(repeat_count);
 
                     for _ in 0..repeat_count {
                         vector.push(#from_implementation);
@@ -183,7 +185,9 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
                     }
 
                     let repeat_count = (remaining_bytes / struct_size) as usize;
-                    // TODO: Add check to make sure this allocation is not too big.
+                    if repeat_count > 4096 {
+                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    }
                     let mut vector = Vec::with_capacity(repeat_count);
 
                     for _ in 0..repeat_count {
@@ -198,8 +202,9 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
 
                 quote!({
                     let repeat_count = (#repeating_expr) as usize;
-
-                    // TODO: Add check to make sure this allocation is not too big.
+                    if repeat_count > 4096 {
+                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    }
                     let mut vector = Vec::with_capacity(repeat_count);
 
                     for _ in 0..repeat_count {

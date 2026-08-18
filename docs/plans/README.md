@@ -29,9 +29,10 @@ lands.
 | [testing-completeness.md](testing-completeness.md) | What headless green means / does not mean |
 | [work-backlog.md](work-backlog.md) | Standing inventory: §1 live debt reconciled 2026-08-12; §2+ unbuilt features |
 | [friends-distribution.md](friends-distribution.md) | **Private friends pack** (E8.3): Google Drive folder, no public release. Packaging not built yet |
-| [security-audit.md](security-audit.md) | First security pass (2026-08-17). C1 still open; six other findings fixed that day |
-| [security-audit-2.md](security-audit-2.md) | Independent second pass (2026-08-17). Re-verifies the first pass; adds API / MariaDB / DM-script findings |
-| [security-audit-3.md](security-audit-3.md) | Third pass (2026-08-17). Lua/GRF, session tokens, official NPCs, campaign economy |
+| [security-audit.md](security-audit.md) | First security pass (2026-08-17). C1 rotated 2026-08-18; six other findings fixed the same day as the audit |
+| [security-audit-2.md](security-audit-2.md) | Independent second pass (2026-08-17). Re-verifies the first pass; adds API / MariaDB / DM-script findings. Remediations 2026-08-18 |
+| [security-audit-3.md](security-audit-3.md) | Third pass (2026-08-17). Lua/GRF, session tokens, official NPCs, campaign economy. Remediations 2026-08-18 |
+| [security-audit-4.md](security-audit-4.md) | Fourth pass (2026-08-17). API memory safety/resource limits, chat exhaustion, concrete client packet panics. Remediations 2026-08-18 |
 
 Use [docs/specs](../specs/) for implementation specs that describe a specific
 feature slice in code-level detail.

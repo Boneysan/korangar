@@ -1905,7 +1905,6 @@ pub(crate) fn compute_action_layouts(layers: &[AnimationLayer]) -> Vec<ActionLay
 #[cfg(test)]
 mod weapon_action_tests {
     use korangar_loaders::FileLoader;
-    use mlua::Lua;
     use ragnarok_packets::{ClientTick, JobId, Sex, SkillId};
 
     use super::{
@@ -2380,7 +2379,7 @@ mod weapon_action_tests {
         game_file_loader.load_archives_from_settings();
         game_file_loader.load_patched_lua_files();
 
-        let lua = Lua::new();
+        let lua = crate::world::library::new_sandboxed_lua().expect("failed to create sandboxed lua");
         for path in [
             "data\\luafiles514\\lua files\\datainfo\\weapontable.lub",
             "data\\luafiles514\\lua files\\datainfo\\weapontable_f.lub",

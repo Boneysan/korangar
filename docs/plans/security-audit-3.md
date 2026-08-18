@@ -2,11 +2,13 @@
 
 | | |
 |---|---|
-| **Status** | Independent third pass. Findings below are unfixed unless marked otherwise |
+| **Status** | Independent third pass. Remediations 2026-08-18. A fourth pass is in [security-audit-4.md](security-audit-4.md) |
 | **Parent** | [security-audit.md](security-audit.md) (first), [security-audit-2.md](security-audit-2.md) (second) |
 | **Trigger** | Look for surfaces the first two passes left unnamed, not re-litigate C1 |
 | **Scope of THIS pass** | Loaded official NPCs, login/char session tokens, Lua/GRF/pack integrity, campaign economy and instance isolation |
 | **NOT covered** | Fuzzing korangar decoders, a Windows run of the pack, upstream Hercules CVEs in `clif.c` outside session/auth |
+
+**Remediated 2026-08-18:** T1 Lua sandbox (no `io`/`os`/`package`); T2 auth IP bind + token log stripped; T3 party-scoped grant latch on named sites and boss deaths; T4 `DM_TriggerEvent` uses stored id − 1; T5 `load_gm_scripts: false`; T6 Izlude Hypnotist level-50 gate; T7 GRF inflate cap, `lua_files.7z` hashed at load against `SHA256SUMS`, `Play.ps1` refuses a missing or mismatching copy; T8 campaign map/quest allowlists; T9 `nowarp`/`noteleport` on set-piece maps.
 
 The LAN-beta risk acceptance still stands, with the same revoke list. This pass does not re-open C1, H2, `@dmmode`/`@dmflag`, the API server, or MariaDB bind. Those remain as written.
 
@@ -165,7 +167,7 @@ Pincode is **off** in this fork (`char-server.conf:219`). If it is ever turned o
 
 - **Release GM panel** (`CommandsWindow`, Ctrl+O) and the loot/bestiary windows send hardcoded `@item` / `@monster` / `@blvl`. Server group still enforces. Packet inspector and map-warp UI are `debug`-only. Chat is the arbitrary `@` path, which is normal RO.
 - **`min_chat_delay: 0`.** Color codes are not stripped. Group 0 cannot run atcommands. No `OnWhisperGlobal` NPC is loaded.
-- **Emblem upload** is SQL-only, guild-master gated, token required. GIF frame-size check is commented out — cheap API CPU DoS, and the API should not be running (second pass N3).
+- **Emblem upload** is SQL-only and token required. The guild-master check occurs only after GIF decoding, whose frame-size check is commented out. Fourth-pass [P4-1](security-audit-4.md#p4-1-emblemupload-performs-attacker-amplified-gif-allocation-before-resource-and-guild-checks) reclassifies this as a high allocation/decode DoS; the API should not be running on a non-loopback interface (second-pass N3).
 - **Cash shop** is stock dummy fruit/potions. No loaded NPC writes `#CASHPOINTS`. Campaign never touches it.
 - **`item_db2.conf`** live custom item is only 50001 Sigil Ring, fully trade-locked. Sample GM gear above it is commented out.
 - **Quest IDs 20001–20233** exist only in the campaign block. Last-hit cannot complete job-change quests. `@dmquest` can (T8).
