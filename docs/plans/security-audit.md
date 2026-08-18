@@ -58,7 +58,36 @@ suite red. Fix both together.
 
 ## HIGH
 
-### H1. Passwords are stored in plaintext (OWASP A02 — Cryptographic Failures)
+### H1. Plaintext password storage (FIXED 2026-08-17)
+
+`use_MD5_passwords: true`, with the existing rows migrated in the same step
+(`UPDATE login SET user_pass = MD5(user_pass)`). All four rows are 32-character
+hashes now.
+
+**The migration had to include the interserver account.** `login_mmo_auth` runs
+the same `check_password` path for char/map/api as for players, so leaving that
+row plaintext would have locked the servers out of each other — and it presents
+as `Connection to Login Server lost`, which reads like a network fault rather
+than an auth one.
+
+Verified: all four components authenticate, `smoke` logs in end to end, and
+`bad-password` still **rejects** a wrong password — the second check matters,
+because a broken comparison that accepts everything would also pass the first.
+
+**MD5 is unsalted and fast, and that is a deliberate acceptance, not an
+oversight.** It defends against someone casually reading the database or a stray
+backup; it does not defend against offline cracking. Hercules ships no other
+primitive — `src/common/md5calc.c` is the entire crypto surface, with no SHA-2
+anywhere — and SHA256 would not have helped: it is equally fast and equally
+unsalted, so it buys nothing an attacker would notice while costing a permanent
+fork delta in **auth code**, the worst place to carry one. A real upgrade means a
+salted KDF (argon2/bcrypt), which is its own project.
+
+**This does NOT mitigate C1.** Hashing `korangar` in the database is irrelevant
+when the password `korangar` is published in this repository — an attacker types
+it at the login screen and the server hashes it for them.
+
+### H1 (original finding). Passwords are stored in plaintext (OWASP A02)
 
 `login.user_pass` holds the literal password — `LENGTH('korangar') = 8`. There
 is no MD5, no bcrypt, no salt. Anyone with a moment at the DB, a stolen backup,
