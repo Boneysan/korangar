@@ -107,7 +107,28 @@ currently missing.
 
 ## MEDIUM
 
-### M1. Connection-flood protection — TRIED, REVERTED, and it stays off
+### M1. Connection-flood protection (FIXED 2026-08-17, on the second attempt)
+
+**`ip_rules` is enabled.** Verified: all four components authenticate, `smoke`
+and `bad-password` pass, and **six rapid reconnect cycles produced zero DDoS
+detections and zero connection losses** — the exact load that was believed to
+break it.
+
+**The first attempt was reverted on a misdiagnosis, and that is the lesson.**
+Two things were changed in one batch — the interserver credentials and
+`ip_rules` — and when the server fell into a reconnect loop, `ip_rules` was
+blamed. The evidence said otherwise and was read past: **the loop continued
+after `ip_rules` was turned back off**, and stopped only when the api-server's
+stale credentials were fixed. Change one thing at a time, and when a revert does
+not fix it, the revert was not the cause.
+
+The allow_list does exempt localhost: `connect_check` returns
+`connect_ok == 2 ? 1 : 0` for a flagged address and an allow-listed IP is
+`connect_ok == 2`, which the stock config states in its own comment. So the
+inter-server connections are unconditionally accepted while real clients are
+rate-limited at 5 connections per 3 s.
+
+### M1 (first attempt). Tried and reverted
 
 Re-enabled on 2026-08-17 and **it broke the server within seconds.** The
 char-server's own connection to the login server comes from `127.0.0.1`, trips

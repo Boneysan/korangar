@@ -400,7 +400,20 @@ When writing code or adding features, agents must adhere to these project-specif
      which is the tell — a connection-flavoured failure plus `0 failed` in the
      ledger is an environment problem, never a protocol one. One partial suite
      run: 38 DDoS warnings / 126 char-server refusals / 105 link losses / 16
-     failures. After disabling: 0 / 0 / 0 and 113 passed. **Two traps:** the
+     failures. After disabling: 0 / 0 / 0 and 113 passed.
+     **CORRECTED 2026-08-17 — `ip_rules` is ENABLED again and the suite is
+     fine.** The claim below that the `allow_list` does not prevent this was
+     **wrong**. `connect_check` in `src/common/socket.c` returns
+     `connect_ok == 2 ? 1 : 0` for an address flagged as DDoS, and an
+     allow-listed IP *is* `connect_ok == 2` — the stock config says so itself:
+     "allow : Accepts connections from the ip range (**even if flagged as
+     DDoS**)". With `order: "deny,allow"` and an empty deny list, `127.0.0.1`
+     resolves to unconditional accept. Verified live: four components connected,
+     `smoke` and `bad-password` pass, and six rapid reconnect cycles produced
+     **zero** DDoS detections. The original 2026-07-30 disabling was almost
+     certainly right at the time — the allow_list entry may not have been
+     active — but the *inference* that it could never work was not tested.
+     **Old, incorrect note kept below so the correction is legible:** the
      `allow_list` entry for 127.0.0.1 in `conf/import/socket.conf` has existed
      since 2026-07-11 and does **not** prevent it; and the DDoS *warning* is
      printed whether or not the flag is honoured, so comparing warning counts
