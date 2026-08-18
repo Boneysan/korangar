@@ -39,7 +39,7 @@ option-ext = "0.2"
 pcap = "2"
 pollster = "0.4"
 proc-macro2 = "1"
-quick-xml = "0.39"
+quick-xml = "0.41"
 quote = "1"
 ragnarok-bytes = { path = "ragnarok-bytes" }
 ragnarok-formats = { path = "ragnarok-formats" }

@@ -90,7 +90,17 @@ localhost-only box and stops being sound the moment anything else can connect.
 `s1` / `p1`, unchanged from the shipped example. Low impact while the three
 servers are on one machine, and free to fix.
 
-### M3. `quick-xml 0.39.2` — two advisories rated 7.5 (OWASP A06)
+### M3. `quick-xml` — two advisories rated 7.5 (FIXED 2026-08-17)
+
+Bumped to `0.41`; 577 tests pass. **`cargo audit` still reports it**, and the
+reason matters: the residual `0.39.2` comes from `wayland-scanner`, a
+**build-time proc-macro** reached through `winit` on Linux only. It parses
+Wayland protocol XML that ships with the build — not network input, not present
+in the Windows or macOS client, and not ours to bump. Our own use is on 0.41.
+
+*Original finding:*
+
+### M3 (historical). `quick-xml 0.39.2` — two advisories rated 7.5 (OWASP A06)
 
 `RUSTSEC-2026-0195` (unbounded namespace allocation → memory exhaustion) and
 `RUSTSEC-2026-0194` (quadratic time on duplicate attribute names). **Reachable**:
