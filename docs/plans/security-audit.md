@@ -145,12 +145,36 @@ read, and inventing one was out of scope for this pass.
 - **`ragnarok-bytes`**, the wire decoder: every `unwrap` is in test code, no
   slicing or indexing of wire data, everything returns `Result`.
 
+### M6. Client crashed when a visual effect asset was missing (FIXED 2026-08-17)
+
+`NetworkEvent::VisualEffect` unwrapped the result of loading the effect asset.
+`effect_path` is one of our own static strings chosen from a closed enum, so it
+is **not** attacker-controlled — but the load fails whenever the asset is absent,
+which is exactly the state a player is in after an incomplete GRF download.
+**Levelling up would crash a friend whose `Assets` folder arrived truncated**,
+which is the single most likely way a 3.7 GB Drive download goes wrong. Now logs
+and skips the effect.
+
+### Second pass — every remaining fork delta reviewed 2026-08-17
+
+**Nothing further found. The C side is clean, and structurally so:** the fork's
+server additions are almost entirely packet *writers*, and there is exactly one
+client-facing parser, which takes no payload.
+
+| Delta | Result |
+|---|---|
+| **Party-SP packet widening** | **Clean, and the documented hazard was avoided.** The widened struct and its writes sit inside the same `#if`, both sites size with `sizeof(...)` rather than a literal, and `WFIFOHEAD` reserves the widened size before any write. `ZC_BATTLEFIELD_NOTIFY_HP` — which CLAUDE.md warns must not be widened, because it has no `sp` fields — is guarded by `PACKETVER_ZERO_NUM` only, so on this `main` server its struct and its `p.sp` write compile out together |
+| **`LOOK_AMMO`** (5 touch points) | Clean. Never used as an array index anywhere, and the inventory dereference sits inside the same `equip_index[EQI_AMMO] >= 0` guard as the upstream line above it |
+| **`clif_skill_fail_reason`** | Clean. `nullpo_retv`, `fd != 0`, `sizeof` on both reserve and set, no string handling |
+| **Client: string slicing of player data** | **None exists.** The only byte-slice on network data is guarded by a length check and operates on `[u8]`, not `str` — so the char-boundary panic class (a crafted multibyte character name crashing other players' clients) is absent |
+| **Client: `AttackFailed`'s `path.last().unwrap()`** | Safe. `reconstruct_path` always pushes `start` before returning `true`, so the returned path is never empty |
+
 ### Still not reviewed
 
-The remaining C deltas (`LOOK_AMMO`'s five touch points, the party-SP widening,
-`clif_skill_fail_reason`) and korangar's ~80 other non-test `unwrap`s outside the
-byte layer. **A pass that stopped after finding one bug is not a completed
-review.**
+korangar's remaining non-test `unwrap`s outside event handling (asset loaders,
+graphics init) — these run on local files rather than network input, so they are
+a robustness question rather than a security one. The `SC_LANDPROTECTOR` and
+Hermode deltas are logic and configuration with no buffer handling.
 
 ## LOW / INFORMATIONAL
 

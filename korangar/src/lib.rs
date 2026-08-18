@@ -5644,7 +5644,18 @@ impl Client {
                     }
                 }
                 NetworkEvent::VisualEffect { effect_path, entity_id } => {
-                    let effect = self.effect_loader.get_or_load(effect_path, &self.texture_loader).unwrap();
+                    // Degrade to a missing effect rather than killing the client.
+                    // `effect_path` is one of our own static strings, so this
+                    // cannot fail on server input -- but it fails whenever the
+                    // asset is absent, which is precisely the state a player is
+                    // in after an incomplete GRF download. Levelling up should
+                    // not crash someone whose Assets folder arrived truncated.
+                    let Ok(effect) = self.effect_loader.get_or_load(effect_path, &self.texture_loader) else {
+                        #[cfg(feature = "debug")]
+                        print_debug!("[{}] failed to load visual effect {}", "error".red(), effect_path.magenta());
+
+                        continue;
+                    };
                     let frame_timer = effect.new_frame_timer();
 
                     self.effect_holder.add_effect(Box::new(EffectWithLight::new(
