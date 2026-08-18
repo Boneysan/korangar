@@ -290,7 +290,7 @@ The field is **two layers**, so the useful report distinguishes them:
 > additive blend removes. One symbol per cell at 0.8 of a cell is the original's
 > own `LPEffect` shape, not a gap.
 
-## 7. Evil Land
+## 7. Evil Land — DONE 2026-08-17
 
 No job learns it — reach it directly:
 
@@ -312,9 +312,12 @@ size is the interesting part here. 9 cells, a 3x3 (`Layout: 1`).
 > pass that closed the row.** Fixed once, in
 > `GROUND_DECAL_TEXTURE_COORDINATES`, with the derivation in a test.
 >
-> **Still open on this row:** whether the α 0.2 tint reads at all, and it has no
-> `light` — the third of three in this family without one, after both the others
-> needed one added.
+> **PASS 2026-08-17.** It shipped with no `light` — the third of three in this
+> family without one, after Gospel read as grey metal and Fog Wall was hard to
+> see. Saturated violet at radius 9 (Fog Wall's settled value, not the 22 that
+> over-lit it), and the tint raised from **α 0.2 to 0.35** and tilted violet.
+> 0.2 is below everything that has ever read in this renderer. **This closes the
+> ground-field family.**
 
 ---
 

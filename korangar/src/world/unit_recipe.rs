@@ -721,7 +721,13 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
         }),
         UnitId::Evilland => Some(UnitPresentation {
             body: Some(UnitBody::LayeredGroundQuad {
-                tile_color: Some(Color::rgba(0.627, 0.627, 0.627, 0.2)),
+                // The table's grey at α 0.2, tilted violet and raised to the
+                // 0.35 Gospel calibrated to. 0.2 sits below everything that has
+                // ever read in this renderer -- 0.05 measured as invisible,
+                // Moonlit needed 0.6 -- and unlike fog this tint *should*
+                // darken: it is cursed ground, so deadening the grass under it
+                // is the effect rather than a loss.
+                tile_color: Some(Color::rgba(0.42, 0.30, 0.47, 0.35)),
                 half_size: GAT_TILE_SIZE / 2.0,
                 // One of the two entries the table records an explicit size for.
                 hover_frames: &["effect\\curse.bmp"],
@@ -731,6 +737,14 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
                 // 76.4% magenta.
                 hover_blend: GroundDecalBlend::Alpha,
             }),
+            // The third of three in this family to ship with no light, after
+            // Gospel read as grey metal without one and Fog Wall could barely be
+            // seen. Saturated violet, per Land Protector's rule -- a pale light
+            // accumulates toward white and would bleach the figures rather than
+            // curse the ground. Radius 9, the value Fog Wall settled on after 22
+            // lit roughly twice the area of its own field; this field is smaller
+            // still at 3x3, so 9 is if anything generous.
+            light: Some((Color::rgb_u8(150, 70, 210), 9.0)),
             ..NONE
         }),
         _ => None,

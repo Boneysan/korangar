@@ -1,13 +1,28 @@
 # Resume here — live pass status
 
-> **2026-08-17 — §6 Fog Wall PASSED, and it found a bug in a unit that had
-> already passed.**
+> **2026-08-17 — §6, §6b and §7 all PASSED. The ground-field family is CLOSED**,
+> after being open since 2026-08-08 — and the two rows found **three** bugs that
+> none of them were aimed at.
 >
 > **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
-> **§1–§6 are DONE.** Next is **§7 Evil Land** (cheap — `curse.bmp` is 76.4%
-> magenta, the keyed family, so it needs nothing §6 just built), then §8 the two
-> confirms, §9 the instance window (**last, it can hard-lock both clients**).
-> **Plus a new §6b: re-walk Land Protector**, `@useskill 288 5 <your name>`.
+> **§1–§7 are DONE.** What is left is **§8** (the two confirms that shipped
+> 2026-07-22 and were never looked at) and **§9 the instance window**, which
+> stays **last because it can hard-lock both clients**.
+>
+> **EVERY GROUND DECAL WAS DRAWING UPSIDE DOWN**, and only Evil Land could show
+> it. The camera sits at -z looking toward +z (`DEFAULT_ANGLE` 180,
+> `CAMERA_PITCH` -55), so screen-up on the ground is +z, but the UVs put the
+> picture's top on the -z corners. Nothing revealed it because nothing
+> asymmetric had ever been drawn flat — Gospel's cross is symmetric, Land
+> Protector's circle radial, Fog Wall's puff a blob. **Moonlit's note had been
+> inverted since 2026-08-08, through a live pass that closed its row.** The
+> convention is now one constant, `GROUND_DECAL_TEXTURE_COORDINATES`, with the
+> camera derivation pinned in a test.
+>
+> **All three of Gospel, Fog Wall and Evil Land shipped with no light**, and all
+> three needed one. That is now a rule worth applying before walking a new
+> ground unit rather than after: **check for a `light` first.** Radius 9 for a
+> small field — Fog Wall's 22 lit twice the area of its own effect.
 >
 > **RO has two effect-texture families and the ground-decal pass knew one.** Fog
 > Wall drew 15 **opaque black squares**: `lens_w.bmp` is greyscale-on-black (0%
