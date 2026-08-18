@@ -5,10 +5,19 @@ type and what to look for. The findings archive is
 [gui-verification-pass.md](gui-verification-pass.md) — this is the thing you
 follow; that is the thing you read afterwards.
 
-> **2026-08-16 — §1 through §5 are DONE.** Start at **§6 Fog Wall**. §1 Hermode
-> passed for the first time ever; §2, §3, §4 and §5 all passed, and §3 and §5
-> each turned up a real bug that is now fixed. Detail in
-> [gui-verification-pass.md](gui-verification-pass.md).
+> **2026-08-17 — §1 through §6 are DONE.** Start at **§7 Evil Land**, which
+> should be the cheap one: `curse.bmp` is 76.4% magenta, so it is the keyed
+> family and needs nothing that §6 just built.
+>
+> **§6 Fog Wall passed after four live passes and found a bug in Land
+> Protector**, which had already been verified back on 2026-07-24 — its texture
+> is the additive family too and had been alpha-blended the whole time, laying a
+> dark backing under all 121 cells. **Re-walk Land Protector**
+> (`@useskill 288 5 <your name>`) before closing the ground-field family.
+>
+> **2026-08-16 — §1 through §5.** §1 Hermode passed for the first time ever; §2,
+> §3, §4 and §5 all passed, and §3 and §5 each turned up a real bug that is now
+> fixed. Detail in [gui-verification-pass.md](gui-verification-pass.md).
 
 **Run this first**, so the queue starts from what is actually unverified:
 
@@ -239,16 +248,40 @@ The field is **two layers**, so the useful report distinguishes them:
 
 ---
 
-## 6. Fog Wall
+## 6. Fog Wall — DONE 2026-08-17
 
 `@jobchange 4017` (Professor), `@allskill`.
 
 - `PF_FOGWALL` **404**, ground target, range 9, 25 SP, 20 s.
 - **No gemstone needed on this server** — official RO wants a Blue Gemstone and
   this build does not. Do not go shopping.
-- Coded at **α 0.6**, the calibrated magnitude, so this one *should* read.
 
-Same two-layer question as §5.
+> **PASS after four passes.** It drew 15 opaque **black squares** first: RO has
+> two texture families and the ground-decal pass only knew one. `lens_w.bmp` is
+> greyscale-on-black (0% magenta, 40% near-black) and has to be *added*, not
+> alpha-blended. Then the artwork itself proved wrong for a field — a 32x128
+> gradient reads as three hard stripes — so it now draws the original's own
+> `fog1/2/3.tga` cycling at 4 fps, per-cell phase offset, with a light.
+>
+> **It also caught Land Protector**, which has the same additive texture and had
+> been alpha-blended since it shipped. **That row is now stale — re-walk it.**
+>
+> **Two things to carry forward.** The `[skill-unit]` log no longer prints
+> `transparent=`: that field is hard-coded `false` for every BMP and could never
+> have answered anything. It prints `blend=` instead. And when counting cells on
+> screen, **count blocks, not the seams between them** — this row was reported as
+> 18 squares twice against a server that sends 15, and the screenshot showed six
+> seam lines with five cells between them.
+
+## 6b. Land Protector — re-walk, caused by §6
+
+`@useskill 288 5 <your name>` (`SA_LANDPROTECTOR`, 288). Any job.
+
+| Look for | Verdict |
+|---|---|
+| The blue magic circle reads brighter, with no dark backing under the pattern | PASS — the additive fix landed |
+| The circles blow out to white where they overlap | FAIL — additive is accumulating too hard; say how many cells deep it goes |
+| Unchanged from before | Worth saying — it would mean the dark backing was never visible against this terrain |
 
 ---
 

@@ -330,6 +330,30 @@ pub struct GroundDecalInstruction {
     pub texture_coordinates: [Vector2<f32>; 4],
     pub color: Color,
     pub texture: Arc<Texture>,
+    pub blend: GroundDecalBlend,
+}
+
+/// Which of RO's two effect-texture families a decal belongs to.
+///
+/// The artwork itself decides this, and the two are not interchangeable. A
+/// **keyed** texture carries its transparency as magenta (`cross_old.bmp` is
+/// 69.7% magenta, `curse.bmp` 76.4%), which the BMP loader rewrites to α 0, so
+/// ordinary alpha blending draws it correctly. An **additive** texture is
+/// greyscale on black (`lens_w.bmp` — 0% magenta, 40% near-black) and carries no
+/// transparency at all: black means *add nothing*. Alpha-blending one of those
+/// paints its background as opaque black, which is what Fog Wall did on
+/// 2026-08-17 — 15 black squares where the fog should be.
+///
+/// Adding the family here rather than sniffing the texture is deliberate: a BMP
+/// reports `is_transparent() == false` no matter what it contains, because
+/// `load_texture_data` only ever measures TGAs.
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
+pub enum GroundDecalBlend {
+    /// Magenta-keyed artwork and flat tints: `src·α + dst·(1−α)`.
+    #[default]
+    Alpha,
+    /// Greyscale-on-black artwork: `src·α + dst`, so black contributes nothing.
+    Additive,
 }
 
 #[cfg(feature = "debug")]

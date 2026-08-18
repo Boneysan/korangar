@@ -9,6 +9,7 @@
 use ragnarok_packets::UnitId;
 
 use crate::Color;
+use crate::graphics::GroundDecalBlend;
 use crate::loaders::GAT_TILE_SIZE;
 use crate::world::{UnitCylinderSpec, UnitPulse};
 
@@ -72,6 +73,10 @@ pub enum UnitBody {
         half_size: f32,
         color: Color,
         pulse: UnitPulse,
+        /// Which family `texture` belongs to — same rule as
+        /// [`UnitBody::LayeredGroundQuad::hover_blend`]. `None` textures are a
+        /// flat colour and always `Alpha`.
+        blend: GroundDecalBlend,
     },
     /// The classic two-layer ground tile: a flat tint with a textured layer
     /// hovering and bobbing above it. This is the shape *every* entry in the
@@ -87,11 +92,22 @@ pub enum UnitBody {
         tile_color: Option<Color>,
         /// Half-width of the tint layer in world units.
         half_size: f32,
-        /// Upper layer artwork, under `data\texture\`.
-        hover_texture: &'static str,
+        /// Upper layer artwork, under `data\texture\`. More than one entry
+        /// animates: the frames cycle at `hover_fps`, offset per cell by the
+        /// cell's own phase so a field shimmers instead of flickering in step.
+        hover_frames: &'static [&'static str],
+        /// Frames per second for `hover_frames`. Ignored for a single frame.
+        hover_fps: f32,
         /// Half-width of the hovering layer in world units.
         hover_half_size: f32,
         hover_opacity: f32,
+        /// Which family the hover artwork belongs to. **Read the texture, do not
+        /// guess**: a magenta-keyed BMP wants `Alpha`, a greyscale-on-black one
+        /// wants `Additive` or its background draws as an opaque black square.
+        /// `tools/` cannot extract these — they are DES-encrypted — but the
+        /// `grf_extract` ignored test in `lib.rs` pulls them out through the
+        /// client's own reader, and the magenta share settles it.
+        hover_blend: GroundDecalBlend,
     },
     /// A `data\sprite\이팩트\*` animation repeating for the unit's lifetime
     /// (Venom Dust, Demonstration) — these have no `.str` equivalent.
@@ -444,6 +460,15 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
                     max_scale: 1.0,
                     speed: 2.5,
                 },
+                // `aaa copy.bmp` is 0% magenta and 45.7% near-black -- the
+                // greyscale-on-black family, measured 2026-08-17 while chasing
+                // Fog Wall's black squares. It had been alpha-blended since it
+                // shipped, so every one of the 121 cells was laying down a dark
+                // backing under the magic circle. That is very likely why the
+                // companion light needed three passes to stop reading as dim.
+                // **Changed after the 2026-07-24 live verification, so Land
+                // Protector wants re-walking.**
+                blend: GroundDecalBlend::Additive,
             }),
             // Soft blue glow: one companion point light per cell (keyed on the
             // cell's server entity id, so all 121 register). The colour is a
@@ -493,9 +518,12 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
                 // "Moonlight Serenade", so a drifting note is the family's own
                 // vocabulary rather than a guess. One cell wide, so the notes
                 // read as individual marks over the field instead of a wash.
-                hover_texture: "effect\\melody_a.bmp",
+                hover_frames: &["effect\\melody_a.bmp"],
+                hover_fps: 0.0,
                 hover_half_size: GAT_TILE_SIZE / 2.0,
                 hover_opacity: 0.7,
+                // 80.9% magenta.
+                hover_blend: GroundDecalBlend::Alpha,
             }),
             sound: Some("effect\\달빛세레나데.wav"),
             // The glow is korangar's addition (the original `FlatColorTile`
@@ -593,12 +621,15 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
                 // Raised from the table's 0.05, which measured as nothing at all.
                 tile_color: Some(Color::rgba(1.0, 0.93, 0.70, 0.35)),
                 half_size: GAT_TILE_SIZE / 2.0,
-                hover_texture: "effect\\cross_old.bmp",
+                hover_frames: &["effect\\cross_old.bmp"],
+                hover_fps: 0.0,
                 // Halved from GAT_TILE_SIZE: at a full tile each quad spans two
                 // cells, and 33 of them overlapped into a mass of crosses rather
                 // than a field. Matches Moonlit's calibrated hover size.
                 hover_half_size: GAT_TILE_SIZE / 2.0,
                 hover_opacity: 0.9,
+                // `cross_old.bmp` is 69.7% magenta, so the key carries it.
+                hover_blend: GroundDecalBlend::Alpha,
             }),
             // Saturated gold, not pale: per Land Protector's note, a pale light
             // accumulates across overlapping cells and clips toward white, so the
@@ -610,14 +641,82 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
             light: Some((Color::rgb_u8(255, 185, 60), 26.0)),
             ..NONE
         }),
+        // PF_FOGWALL. 15 cells, 5 wide by 3 deep (`FOG_WALL` in `skill_layout`).
+        //
+        // Walked live 2026-08-17 and it failed twice, teaching a different thing
+        // each time.
+        //
+        // **First: `lens_w.bmp` is the other texture family.** No magenta at all
+        // and 40% near-black -- greyscale on black, meant to be *added*. The
+        // decal pass only alpha-blended, so all 15 quads painted their
+        // background as opaque black squares. That is fixed for good now
+        // (`GroundDecalBlend`), and it turned out Land Protector had the same
+        // defect.
+        //
+        // **Second: even drawn correctly, `lens_w.bmp` is the wrong artwork for
+        // a field.** It is a 32x128 one-dimensional gradient -- a lens streak,
+        // dark at both ends, bright through the middle. Laid flat on a cell it
+        // paints a bar; the bars merge along a row and the dark ends leave a gap
+        // between rows, so the wall read on screen as three hard white stripes
+        // with a bright top edge. Measured off the user's own screenshot: three
+        // bands peaking 29px apart, each rising over ~10px and falling over ~18.
+        //
+        // **So the artwork here is a deliberate fork substitution**, in the same
+        // spirit as Moonlit's hovering note (and recorded as loudly): the
+        // original's own `fog1.tga`. It is what the asset set offers for exactly
+        // this -- 256x256, pure white, a soft round puff carried entirely in a
+        // real alpha channel (23% fully clear, 77% partial, nothing opaque), and
+        // `fog2`/`fog3` are near-identical frames of the same puff. A fog wall
+        // that reads as fog is worth more here than a faithful lens streak that
+        // reads as three stripes, and the streak is one line away if a fidelity
+        // pass disagrees.
         UnitId::Fogwall => Some(UnitPresentation {
             body: Some(UnitBody::LayeredGroundQuad {
-                tile_color: Some(Color::rgba(0.667, 0.667, 0.667, 0.6)),
+                // Dropped from the table's 0.6. At 0.6 the grey was carrying the
+                // whole effect and read as a slab; now that real fog sits on top
+                // of it, it is only there to dull the grass under the bank.
+                tile_color: Some(Color::rgba(0.80, 0.82, 0.86, 0.30)),
                 half_size: GAT_TILE_SIZE / 2.0,
-                hover_texture: "effect\\lens_w.bmp",
-                hover_half_size: GAT_TILE_SIZE,
+                // fog1/fog2/fog3 are three frames of one puff (mean alpha
+                // difference between any pair is ~5 of 255), which is exactly
+                // what a slow cycle wants: the bank boils rather than cuts.
+                hover_frames: &["effect\\fog1.tga", "effect\\fog2.tga", "effect\\fog3.tga"],
+                // Slow on purpose. The frames are near-identical, so a fast
+                // cycle reads as noise; at 4 the puff visibly breathes.
+                hover_fps: 4.0,
+                // 1.6 cells, wider than the one cell every other layered unit
+                // uses, and the one place that rule should bend: the puff is
+                // round and covers about 60% of its frame, so quads sized to a
+                // single cell would leave the corners bare and the field would
+                // read as a grid of blobs. Overlapping soft round alpha is how a
+                // fog bank is drawn. Two cells is still too far -- that is what
+                // spilled the footprint to 6x4 before.
+                hover_half_size: GAT_TILE_SIZE * 0.8,
+                // Full strength. 0.8 was the cautious first guess against 15
+                // overlapping puffs stacking into a white slab; live 2026-08-17
+                // the opposite happened -- fog1's own alpha is faint enough
+                // (block means 40-120 of 255) that the bank was hard to see at
+                // all, so nothing here should hold it back.
                 hover_opacity: 1.0,
+                // A TGA with a real alpha channel, so this one genuinely is the
+                // keyed family -- and alpha, not additive, is right for fog:
+                // additive would blow the overlaps out to pure white.
+                hover_blend: GroundDecalBlend::Alpha,
             }),
+            // Fog Wall was the only ground field with no light of its own, and
+            // it showed twice: reported "a bit flat" on the first walk and
+            // "hard to see" on the second. A near-white light is the exception
+            // to Land Protector's saturation rule -- that rule exists because a
+            // pale light accumulates across overlapping cells and clips toward
+            // white, and here white **is** the effect, so clipping is the look
+            // rather than the failure. Cool rather than warm so it reads as
+            // mist and not as sunlight. 15 cells, so less accumulation than
+            // Gospel's 33 or Land Protector's 121.
+            // Radius 9, not the 22 first tried: live 2026-08-17 that lit about
+            // twice the area of the fog itself, so the glow announced the wall
+            // well outside where the wall actually stops. 9 keeps each cell's
+            // light roughly inside its own puff (the quad is 1.6 cells across).
+            light: Some((Color::rgb_u8(226, 236, 255), 9.0)),
             ..NONE
         }),
         UnitId::Evilland => Some(UnitPresentation {
@@ -625,9 +724,12 @@ pub fn unit_presentation(unit_id: UnitId) -> Option<UnitPresentation> {
                 tile_color: Some(Color::rgba(0.627, 0.627, 0.627, 0.2)),
                 half_size: GAT_TILE_SIZE / 2.0,
                 // One of the two entries the table records an explicit size for.
-                hover_texture: "effect\\curse.bmp",
+                hover_frames: &["effect\\curse.bmp"],
+                hover_fps: 0.0,
                 hover_half_size: GAT_TILE_SIZE / 2.0,
                 hover_opacity: 1.0,
+                // 76.4% magenta.
+                hover_blend: GroundDecalBlend::Alpha,
             }),
             ..NONE
         }),
@@ -698,7 +800,7 @@ mod tests {
         let Some(UnitBody::LayeredGroundQuad {
             tile_color,
             half_size,
-            hover_texture,
+            hover_frames,
             hover_half_size,
             ..
         }) = unit_presentation(UnitId::Moonlit).unwrap().body
@@ -724,7 +826,7 @@ mod tests {
         assert!(half_size < GAT_TILE_SIZE * 0.7, "overlap is a seam fix, not a bigger field");
         // Effect 394 has no second layer; the hovering note is ours, borrowed
         // from the sibling songs in the original's own table.
-        assert_eq!(hover_texture, "effect\\melody_a.bmp");
+        assert_eq!(hover_frames, &["effect\\melody_a.bmp"]);
         assert_eq!(hover_half_size, GAT_TILE_SIZE / 2.0);
     }
 
@@ -784,5 +886,72 @@ mod tests {
         assert_eq!(firewall.looping_str, Some("firewall.str"));
         let pneuma = unit_presentation(UnitId::Pneuma).unwrap();
         assert_eq!(pneuma.looping_str, Some("pneuma1.str"));
+    }
+
+    /// Every unit's blend must match what is actually inside its texture.
+    ///
+    /// Shares measured 2026-08-17 by pulling each file out of `data.grf` with
+    /// the `grf_extract` ignored test — the python tooling cannot, they are
+    /// DES-encrypted — and counting pixels. The client keys **magenta only**, so
+    /// a BMP with no magenta and a black background carries no transparency at
+    /// all and has to be added rather than alpha-blended, or it draws its
+    /// background as an opaque square. Fog Wall did exactly that live, and Land
+    /// Protector had been doing it silently since it shipped.
+    ///
+    /// A new recipe belongs in this list. Measure the file; do not infer the
+    /// family from how the effect is described, and do not trust the loader's
+    /// `is_transparent()` — it is hard-coded false for every BMP.
+    #[test]
+    fn units_blend_the_way_their_texture_is_authored() {
+        let blend_of = |unit_id| match unit_presentation(unit_id).and_then(|presentation| presentation.body) {
+            Some(UnitBody::LayeredGroundQuad { hover_blend, .. }) => hover_blend,
+            Some(UnitBody::GroundQuad { blend, .. }) => blend,
+            _ => panic!("{unit_id:?} draws no ground quad"),
+        };
+
+        // Magenta-keyed BMPs: melody_a 80.9%, cross_old 69.7%, curse 76.4%.
+        assert_eq!(blend_of(UnitId::Moonlit), GroundDecalBlend::Alpha);
+        assert_eq!(blend_of(UnitId::Gospel), GroundDecalBlend::Alpha);
+        assert_eq!(blend_of(UnitId::Evilland), GroundDecalBlend::Alpha);
+
+        // fog1.tga carries a real alpha channel — 23% clear, 77% partial, none
+        // opaque — so Fog Wall is keyed *because of the substitution*. Were it
+        // still on lens_w.bmp (0% magenta, 39.9% near-black) it would have to be
+        // additive.
+        assert_eq!(blend_of(UnitId::Fogwall), GroundDecalBlend::Alpha);
+
+        // `aaa copy.bmp`: 0% magenta, 45.7% near-black.
+        assert_eq!(blend_of(UnitId::Landprotector), GroundDecalBlend::Additive);
+    }
+
+    /// Hovering artwork stays within 1.6 cells, and keyed artwork within one.
+    ///
+    /// Moonlit landed on a half tile live on 08-08 and Gospel on 08-16, both
+    /// after a full tile put two cells under every quad and turned the field
+    /// into overlapping artwork. Fog Wall shipped at a full tile and was
+    /// reported live on 08-17 as a field one column wider than it is.
+    ///
+    /// Fog Wall is the deliberate exception at 1.6: its puff is round and fills
+    /// only the middle of its frame, so a one-cell quad would leave the corners
+    /// of every cell bare. **Two cells remains the line nothing may cross** —
+    /// that is the width that visibly spilled the footprint.
+    #[test]
+    fn hovering_artwork_never_spans_two_cells() {
+        let hover_half_size_of = |unit_id| match unit_presentation(unit_id).and_then(|presentation| presentation.body) {
+            Some(UnitBody::LayeredGroundQuad { hover_half_size, .. }) => hover_half_size,
+            _ => panic!("{unit_id:?} is not a layered ground quad"),
+        };
+
+        for unit_id in [UnitId::Moonlit, UnitId::Gospel, UnitId::Evilland] {
+            assert_eq!(
+                hover_half_size_of(unit_id),
+                GAT_TILE_SIZE / 2.0,
+                "{unit_id:?} spans more than its own cell"
+            );
+        }
+
+        let fogwall = hover_half_size_of(UnitId::Fogwall);
+        assert!(fogwall > GAT_TILE_SIZE / 2.0, "Fog Wall's puff needs to overlap its neighbours");
+        assert!(fogwall < GAT_TILE_SIZE, "no hovering quad may span two cells");
     }
 }

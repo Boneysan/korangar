@@ -1,5 +1,48 @@
 # Resume here — live pass status
 
+> **2026-08-17 — §6 Fog Wall PASSED, and it found a bug in a unit that had
+> already passed.**
+>
+> **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).
+> **§1–§6 are DONE.** Next is **§7 Evil Land** (cheap — `curse.bmp` is 76.4%
+> magenta, the keyed family, so it needs nothing §6 just built), then §8 the two
+> confirms, §9 the instance window (**last, it can hard-lock both clients**).
+> **Plus a new §6b: re-walk Land Protector**, `@useskill 288 5 <your name>`.
+>
+> **RO has two effect-texture families and the ground-decal pass knew one.** Fog
+> Wall drew 15 **opaque black squares**: `lens_w.bmp` is greyscale-on-black (0%
+> magenta, 40% near-black) — additive artwork, where black means *add nothing* —
+> and the pass hard-coded `ALPHA_BLENDING`. There are now two pipelines and a
+> `GroundDecalBlend` on every decal, with instances stable-partitioned by family.
+>
+> **The same defect was sitting in Land Protector, verified back on 2026-07-24.**
+> `aaa copy.bmp` is 0% magenta, 45.7% near-black, alpha-blended since it shipped,
+> so all 121 cells at Lv5 laid a dark backing under the magic circle — very
+> likely why its light needed three passes to stop reading as dim (26 → 40 → 30).
+> **Measure every sibling when you find a bug of this class, not just the one
+> that failed.**
+>
+> **Then the artwork was wrong for a field, which no blend could fix.**
+> `lens_w.bmp` is a 32×128 one-dimensional gradient, so flat on a cell it paints
+> a bar and the wall read as three hard stripes. It now draws the original's own
+> **`fog1/2/3.tga`** — three frames of one soft puff, real alpha channel —
+> cycling at 4 fps with **each cell offset by its own phase**, so fifteen cells
+> boil instead of flickering in unison. Recipes take a frame list and an fps now.
+>
+> **Traps this row cost time on:**
+> - **The `[skill-unit]` log's `transparent=` field was a lie** for every BMP —
+>   `load_texture_data` only measures TGAs and hard-codes `false` otherwise — and
+>   the runsheet told people to read it. It prints `blend=` now.
+> - **Count blocks, not seams.** The field was reported as 18 squares twice
+>   against a server that sends 15 every time; profiling the screenshot showed
+>   six seam lines with five cells between them. Two wrong explanations came from
+>   trusting the count over the wire.
+> - **`tools/grf_extract.py` cannot read these textures** (DES-encrypted). The
+>   `grf_extract` ignored test in `lib.rs` uses the client's own reader:
+>   `KORANGAR_EXTRACT='data\texture\effect\fog1.tga' KORANGAR_EXTRACT_OUT=/tmp/x
+>   cargo test -p korangar --lib grf_extract -- --ignored --nocapture`.
+>   Measuring the pixels is what settled every question here.
+
 > **2026-08-16 — the GUI pass finally moved, and five rows closed in one sitting.**
 >
 > **Start here:** [plans/gui-session-runsheet.md](plans/gui-session-runsheet.md).

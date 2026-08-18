@@ -7,7 +7,8 @@ use hashbrown::HashMap;
 use wgpu::util::StagingBelt;
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingResource,
-    BindingType, BlendState, BufferBindingType, BufferUsages, ColorTargetState, ColorWrites, CommandEncoder, CompareFunction,
+    BindingType, BlendComponent, BlendFactor, BlendOperation, BlendState, BufferBindingType, BufferUsages, ColorTargetState, ColorWrites,
+    CommandEncoder, CompareFunction,
     DepthBiasState, DepthStencilState, Device, FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
     PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor, ShaderStages, StencilState, TextureSampleType,
     TextureView, TextureViewDimension, VertexState,
@@ -17,9 +18,12 @@ use crate::graphics::passes::{
     BindGroupCount, ColorAttachmentCount, DepthAttachmentCount, Drawer, ForwardRenderPassContext, RenderPassContext,
 };
 use crate::graphics::shader_compiler::ShaderCompiler;
-use crate::graphics::{BindlessSupport, Buffer, Capabilities, GlobalContext, GroundDecalInstruction, Prepare, RenderInstruction, Texture};
+use crate::graphics::{
+    BindlessSupport, Buffer, Capabilities, GlobalContext, GroundDecalBlend, GroundDecalInstruction, Prepare, RenderInstruction, Texture,
+};
 
 const DRAWER_NAME: &str = "forward ground decal";
+const ADDITIVE_DRAWER_NAME: &str = "forward ground decal (additive)";
 const INITIAL_INSTRUCTION_SIZE: usize = 64;
 
 #[derive(Copy, Clone, Pod, Zeroable)]
@@ -41,8 +45,15 @@ pub(crate) struct ForwardGroundDecalDrawer {
     instance_data_buffer: Buffer<InstanceData>,
     bind_group_layout: BindGroupLayout,
     bind_group: BindGroup,
-    pipeline: RenderPipeline,
+    /// One pipeline per texture family; they differ only in `BlendState`.
+    pipelines: [RenderPipeline; 2],
     draw_count: usize,
+    /// Instruction indices in the order they were uploaded: every `Alpha` decal
+    /// first, then every `Additive` one, each keeping its original relative
+    /// order so overlapping translucent quads still resolve back to front.
+    order: Vec<usize>,
+    /// Where the additive partition starts inside `order`.
+    additive_start: usize,
     instance_data: Vec<InstanceData>,
     bump: Bump,
     lookup: HashMap<u64, i32>,
@@ -152,8 +163,12 @@ impl Drawer<{ BindGroupCount::Two }, { ColorAttachmentCount::Three }, { DepthAtt
 
         // Only the main color buffer is written; the two WBOIT buffers are left
         // untouched (masked empty), so the tile blends straight onto the scene.
-        let pipeline = device.create_render_pipeline(&RenderPipelineDescriptor {
-            label: Some(DRAWER_NAME),
+        //
+        // Built twice, differing *only* in the blend state, because RO's effect
+        // textures come in two families and one pipeline cannot serve both: see
+        // `GroundDecalBlend`.
+        let pipeline_for = |label: &str, blend: BlendState| device.create_render_pipeline(&RenderPipelineDescriptor {
+            label: Some(label),
             layout: Some(&pipeline_layout),
             vertex: VertexState {
                 module: &shader_module,
@@ -168,7 +183,7 @@ impl Drawer<{ BindGroupCount::Two }, { ColorAttachmentCount::Three }, { DepthAtt
                 targets: &[
                     Some(ColorTargetState {
                         format: color_attachment_formats[0],
-                        blend: Some(BlendState::ALPHA_BLENDING),
+                        blend: Some(blend),
                         write_mask: ColorWrites::ALL,
                     }),
                     Some(ColorTargetState {
@@ -204,14 +219,35 @@ impl Drawer<{ BindGroupCount::Two }, { ColorAttachmentCount::Three }, { DepthAtt
             multiview_mask: None,
         });
 
+        let pipelines = [
+            pipeline_for(DRAWER_NAME, BlendState::ALPHA_BLENDING),
+            // `src·α + dst`. The source factor is the alpha rather than One so a
+            // unit still fades out: these textures are opaque everywhere, and
+            // their brightness has to come from the instruction colour.
+            pipeline_for(ADDITIVE_DRAWER_NAME, BlendState {
+                color: BlendComponent {
+                    src_factor: BlendFactor::SrcAlpha,
+                    dst_factor: BlendFactor::One,
+                    operation: BlendOperation::Add,
+                },
+                alpha: BlendComponent {
+                    src_factor: BlendFactor::One,
+                    dst_factor: BlendFactor::One,
+                    operation: BlendOperation::Add,
+                },
+            }),
+        ];
+
         Self {
             bindless_support,
             solid_pixel_texture: global_context.solid_pixel_texture.clone(),
             instance_data_buffer,
             bind_group_layout,
             bind_group,
-            pipeline,
+            pipelines,
             draw_count: 0,
+            order: Vec::default(),
+            additive_start: 0,
             instance_data: Vec::default(),
             bump: Bump::default(),
             lookup: HashMap::default(),
@@ -223,30 +259,47 @@ impl Drawer<{ BindGroupCount::Two }, { ColorAttachmentCount::Three }, { DepthAtt
             return;
         }
 
-        pass.set_pipeline(&self.pipeline);
         pass.set_bind_group(2, &self.bind_group, &[]);
 
-        if self.bindless_support {
-            pass.draw(0..6, 0..self.draw_count as u32);
-        } else {
+        // Instances were uploaded partitioned by family, so each family is one
+        // contiguous slice and switching pipelines costs two binds a frame.
+        let families = [
+            (&self.pipelines[0], 0..self.additive_start),
+            (&self.pipelines[1], self.additive_start..self.draw_count),
+        ];
+
+        for (pipeline, range) in families {
+            if range.is_empty() {
+                continue;
+            }
+
+            pass.set_pipeline(pipeline);
+
+            if self.bindless_support {
+                pass.draw(0..6, range.start as u32..range.end as u32);
+                continue;
+            }
+
             // Batch contiguous same-texture runs into one instanced draw. Ground
             // effects (Land Protector's 121 tiles) all share a texture, so this is
             // usually a single draw.
-            let decals = &draw_data[0..self.draw_count];
-            let mut run_start = 0usize;
-            let mut current_texture_id = decals[0].texture.get_id();
-            pass.set_bind_group(3, decals[0].texture.get_bind_group(), &[]);
+            let decal_at = |slot: usize| &draw_data[self.order[slot]];
+            let mut run_start = range.start;
+            let mut current_texture_id = decal_at(range.start).texture.get_id();
+            pass.set_bind_group(3, decal_at(range.start).texture.get_bind_group(), &[]);
 
-            for (index, decal) in decals.iter().enumerate() {
+            for slot in range.clone() {
+                let decal = decal_at(slot);
+
                 if decal.texture.get_id() != current_texture_id {
-                    pass.draw(0..6, run_start as u32..index as u32);
+                    pass.draw(0..6, run_start as u32..slot as u32);
                     current_texture_id = decal.texture.get_id();
                     pass.set_bind_group(3, decal.texture.get_bind_group(), &[]);
-                    run_start = index;
+                    run_start = slot;
                 }
             }
 
-            pass.draw(0..6, run_start as u32..self.draw_count as u32);
+            pass.draw(0..6, run_start as u32..range.end as u32);
         }
     }
 }
@@ -261,12 +314,35 @@ impl Prepare for ForwardGroundDecalDrawer {
 
         self.instance_data.clear();
 
+        // Stable partition by family: `Alpha` first, `Additive` after. Within a
+        // family the submission order is preserved, which is what keeps
+        // overlapping translucent quads resolving the way they were queued.
+        self.order.clear();
+        self.order.extend(
+            instructions
+                .ground_decals
+                .iter()
+                .enumerate()
+                .filter(|(_, instruction)| instruction.blend == GroundDecalBlend::Alpha)
+                .map(|(index, _)| index),
+        );
+        self.additive_start = self.order.len();
+        self.order.extend(
+            instructions
+                .ground_decals
+                .iter()
+                .enumerate()
+                .filter(|(_, instruction)| instruction.blend == GroundDecalBlend::Additive)
+                .map(|(index, _)| index),
+        );
+
         if self.bindless_support {
             self.bump.reset();
             self.lookup.clear();
             let mut texture_views = Vec::with_capacity_in(self.draw_count, &self.bump);
 
-            for instruction in instructions.ground_decals.iter() {
+            for &index in self.order.iter() {
+                let instruction = &instructions.ground_decals[index];
                 let mut texture_index = texture_views.len() as i32;
                 let id = instruction.texture.get_id();
 
@@ -287,8 +363,8 @@ impl Prepare for ForwardGroundDecalDrawer {
             self.instance_data_buffer.reserve(device, self.instance_data.len());
             self.bind_group = Self::create_bind_group_bindless(device, &self.bind_group_layout, &self.instance_data_buffer, &texture_views)
         } else {
-            for instruction in instructions.ground_decals.iter() {
-                self.instance_data.push(Self::instance(instruction, 0));
+            for &index in self.order.iter() {
+                self.instance_data.push(Self::instance(&instructions.ground_decals[index], 0));
             }
 
             self.instance_data_buffer.reserve(device, self.instance_data.len());

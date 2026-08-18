@@ -32,7 +32,9 @@ use super::{LightSourceExt, PointLightSet};
 use crate::graphics::{
     DebugAabbInstruction, DebugCircleInstruction, DebugRectangleInstruction, ModelBatch, RenderOptions, ScreenPosition, ScreenSize,
 };
-use crate::graphics::{EntityInstruction, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex};
+use crate::graphics::{
+    EntityInstruction, GroundDecalBlend, IndicatorInstruction, ModelInstruction, Texture, TextureSet, WaterInstruction, WaterVertex,
+};
 use crate::loaders::GAT_TILE_SIZE;
 use crate::renderer::EffectRenderer;
 #[cfg(feature = "debug")]
@@ -707,6 +709,7 @@ impl Map {
                     Vector2::new(1.0, 1.0),
                 ],
                 color,
+                GroundDecalBlend::Alpha,
             );
         }
     }

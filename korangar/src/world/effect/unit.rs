@@ -16,7 +16,7 @@ use wgpu::BlendFactor;
 
 use super::EffectBase;
 use super::burst::hash01;
-use crate::graphics::{Color, Texture};
+use crate::graphics::{Color, GroundDecalBlend, Texture};
 use crate::loaders::GAT_TILE_SIZE;
 use crate::renderer::EffectRenderer;
 use crate::world::{Camera, PointLightId, PointLightManager};
@@ -308,6 +308,7 @@ pub struct UnitGroundQuad {
     half_size: f32,
     color: Color,
     pulse: UnitPulse,
+    blend: GroundDecalBlend,
     /// Per-cell animation offset in radians.
     phase: f32,
     fade: CellFade,
@@ -317,7 +318,14 @@ impl UnitGroundQuad {
     /// Lift off the terrain so the tile never z-fights the ground mesh.
     const GROUND_LIFT: f32 = 0.6;
 
-    pub fn new(texture: Arc<Texture>, position: Point3<f32>, half_size: f32, color: Color, pulse: UnitPulse) -> Self {
+    pub fn new(
+        texture: Arc<Texture>,
+        position: Point3<f32>,
+        half_size: f32,
+        color: Color,
+        pulse: UnitPulse,
+        blend: GroundDecalBlend,
+    ) -> Self {
         let phase = cell_phase(position);
 
         Self {
@@ -326,6 +334,7 @@ impl UnitGroundQuad {
             half_size,
             color,
             pulse,
+            blend,
             phase: phase * TAU,
             fade: CellFade::new(phase),
         }
@@ -377,6 +386,7 @@ impl EffectBase for UnitGroundQuad {
                 Vector2::new(1.0, 1.0),
             ],
             color,
+            self.blend,
         );
     }
 }
@@ -395,12 +405,15 @@ impl EffectBase for UnitGroundQuad {
 /// piece was this.
 pub struct UnitLayeredGroundQuad {
     tile_texture: Arc<Texture>,
-    hover_texture: Arc<Texture>,
+    /// One entry draws a still layer; several cycle at `hover_fps`.
+    hover_frames: Vec<Arc<Texture>>,
+    hover_fps: f32,
     position: Point3<f32>,
     half_size: f32,
     tile_color: Option<Color>,
     hover_half_size: f32,
     hover_opacity: f32,
+    hover_blend: GroundDecalBlend,
     phase: f32,
     fade: CellFade,
 }
@@ -416,26 +429,46 @@ impl UnitLayeredGroundQuad {
 
     pub fn new(
         tile_texture: Arc<Texture>,
-        hover_texture: Arc<Texture>,
+        hover_frames: Vec<Arc<Texture>>,
+        hover_fps: f32,
         position: Point3<f32>,
         half_size: f32,
         tile_color: Option<Color>,
         hover_half_size: f32,
         hover_opacity: f32,
+        hover_blend: GroundDecalBlend,
     ) -> Self {
         let phase = cell_phase(position);
 
         Self {
             tile_texture,
-            hover_texture,
+            hover_frames,
+            hover_fps,
             position,
             half_size,
             tile_color,
             hover_half_size,
             hover_opacity,
+            hover_blend,
             phase: phase * TAU,
             fade: CellFade::new(phase),
         }
+    }
+
+    /// The frame to draw this instant.
+    ///
+    /// Offset by the cell's own phase so a field boils rather than blinking in
+    /// unison — the same trick the bob uses, and the reason a 15-cell wall does
+    /// not look like one animation played fifteen times.
+    fn hover_frame(&self) -> &Arc<Texture> {
+        if self.hover_frames.len() < 2 || self.hover_fps <= 0.0 {
+            return &self.hover_frames[0];
+        }
+
+        let count = self.hover_frames.len() as f32;
+        let advance = self.fade.age * self.hover_fps + self.phase * count / TAU;
+        let index = (advance.rem_euclid(count)) as usize;
+        &self.hover_frames[index.min(self.hover_frames.len() - 1)]
     }
 
     /// Height of the hovering layer above the terrain, in world units.
@@ -491,6 +524,9 @@ impl EffectBase for UnitLayeredGroundQuad {
                     alpha: tile_color.alpha * opacity,
                     ..tile_color
                 },
+                // The tint is a flat colour, never artwork, so it is always the
+                // ordinary blend whatever family the hover layer belongs to.
+                GroundDecalBlend::Alpha,
             );
         }
 
@@ -498,9 +534,10 @@ impl EffectBase for UnitLayeredGroundQuad {
         let hover_center = self.position + Vector3::new(0.0, self.hover_lift(), 0.0);
         renderer.render_ground_decal(
             quad(hover_center, self.hover_half_size),
-            self.hover_texture.clone(),
+            self.hover_frame().clone(),
             TEXTURE_COORDINATES,
             Color::rgba(1.0, 1.0, 1.0, self.hover_opacity * opacity),
+            self.hover_blend,
         );
     }
 }

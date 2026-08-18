@@ -14,7 +14,7 @@ regression-smoking.
 | ~~3~~ | ~~**N20 — Auto Spell window**~~ | **PASS 2026-08-16** — cast bar, then the list **by name** (Fire Bolt, Cold Bolt, …), selection accepted and `SC_AUTOSPELL` applied (confirmed by its `SI_AUTOSPELL` icon). **Do not read a melee swing that fails to proc as a failure** — Auto Spell fires on a chance. **The trap if this ever reads as broken:** `skill_autospell_spell_selected` has **four silent `return 0` paths** and `clif_parse_AutoSpell` a fifth on `menuskill_id`, none of which send `clif->skill_fail`, so a rejected choice looks exactly like a dead button. Check the status icon, not the melee |
 | **4** | **N24 — Instance window** | **FAIL** mostly Hercules map-name truncation; retry short name (`izlude`) for window-only check |
 | ~~5~~ | ~~**Block A re-walk — party roster + trade rows only**~~ | **PASS 2026-08-16 — Block A is no longer stale.** `a552bc57`: A left, A's own roster emptied to "Not in a party", B's roster dropped A, HP/SP bars stopped on both sides (A clearing itself and B being told are different paths; both fired). `a617834a`: verified in **two** steps, because a decrement and a row deletion are different branches — trading 1 of 3 decremented correctly (`T -1`), then trading the remaining 2 removed the row entirely (`T -2`), with no ghost row or 0-count entry. **Read `picklog`, never `inventory`** — the latter is a save snapshot and disagreed with the live state by a full trade during this walk |
-| **6** | **Gospel ✔ / Fog Wall ☐ / Evil Land ☐ ground fields** | **Gospel PASS 2026-08-16 after three fixes.** The α 0.05 prediction held — **the tint was completely invisible**, so 0.05 is now confirmed dead in this renderer (Moonlit needed 0.6). Raised to 0.35, hover halved to `GAT_TILE_SIZE / 2.0` (at a full tile each quad spans **two** cells and 33 of them overlapped into a mass of crosses), and **a light added** — it had none, while 17 other units do, so a greyscale cross had nothing colouring it and read as **grey metal**. Saturated gold at radius 26, good on the first pass. **Also found here: `ZC_GOSPEL_INFO` (0x0215) was silently dropped** — see the note below. Fog Wall (α 0.6) and Evil Land still open |
+| **6** | **Gospel ✔ / Fog Wall ✔ / Evil Land ☐ ground fields** | **Fog Wall PASS 2026-08-17 after four passes — and it found a second bug in a unit that had already passed. See the Fog Wall section below.** **Gospel PASS 2026-08-16 after three fixes.** The α 0.05 prediction held — **the tint was completely invisible**, so 0.05 is now confirmed dead in this renderer (Moonlit needed 0.6). Raised to 0.35, hover halved to `GAT_TILE_SIZE / 2.0` (at a full tile each quad spans **two** cells and 33 of them overlapped into a mass of crosses), and **a light added** — it had none, while 17 other units do, so a greyscale cross had nothing colouring it and read as **grey metal**. Saturated gold at radius 26, good on the first pass. **Also found here: `ZC_GOSPEL_INFO` (0x0215) was silently dropped** — see the note below. Evil Land still open |
 | ~~7~~ | ~~**The four refuse/remove paths**~~ | **ALL FOUR PASS 2026-08-16.** P1 · P5 · F3 · F4, detail in the tables below. **The block's real yield was a bug found off-checklist:** dismissing the party-invite popup with its **close button** sent nothing, and this framework has no close hook — so Hercules kept `tsd->party_invite` set and `party.c:424` then refused *every later invite* with ack 0, telling the inviter **"<name> is already in a party"**, which was false until the target relogged. Confidently wrong text, not silence. The friend-request popup had the identical defect. Both are now `closable: false`, matching `57308acd`'s fix for the trade windows. **Follow-up worth doing:** that is a workaround for a missing framework capability, not a repair — nothing stops the next must-answer popup being written `closable: true` |
 | **8** | **M1-009 and M1-014 live confirms** | Both shipped 2026-07-22 marked "code complete — live GUI confirm recommended" and never confirmed: gear stat tooltips with vs-equipped deltas, and the two-step character delete |
 | **—** | **N23 — Cast circles** | **Expected FAIL** until feature is built (cast *bar* works). Not a live-pass grind item |
@@ -1055,9 +1055,67 @@ no tint" are different failures.
   official RO wants one and this build does not.
 
 Instrument before theorising, exactly as §5 had to learn: `KORANGAR_PACKET_LOG=1`
-prints one `[skill-unit] spawn` per cell with the resolved colour, the texture,
-and whether that texture reports transparent. For a field you cannot see, that
-log distinguishes "never spawned" from "spawned and drew nothing".
+prints one `[skill-unit] spawn` per cell with the resolved colour, the frames,
+and the blend family. For a field you cannot see, that log distinguishes
+"never spawned" from "spawned and drew nothing".
+
+> **The `transparent=` field this log used to print was worthless and is gone.**
+> `load_texture_data` measures transparency for TGAs only and hard-codes `false`
+> for everything else, so for a BMP it could report nothing but `false` — and
+> this document told people to read it. It now prints `blend=`, which is the
+> answerable question.
+
+#### Fog Wall — PASS 2026-08-17, in four passes, and it caught Land Protector too
+
+**Two product bugs, one of them in a unit that had already been verified.**
+
+**1. The ground-decal pass knew only one of RO's two texture families.** Cast
+one and every cell drew an **opaque black square**. `lens_w.bmp` carries **0%
+magenta and 40% near-black**: it is greyscale-on-black artwork, meant to be
+*added*, where black means "add nothing". The BMP loader keys **magenta only**
+(`texture/mod.rs:600`), a BMP has α=1 everywhere so the shader's `α < 0.02`
+discard never fires, and `ForwardGroundDecalDrawer` hard-coded
+`BlendState::ALPHA_BLENDING` — so the background painted as black. It had never
+mattered because every previous ground unit is magenta-keyed. Fixed with
+`GroundDecalBlend`: two pipelines differing only in blend state, instances
+stable-partitioned alpha-first in `prepare` so each family is one contiguous
+slice and relative order still resolves inside a family.
+
+**2. Land Protector has had the same defect since it shipped.** Measuring *every*
+ground unit rather than only the failing one found `aaa copy.bmp` at **0%
+magenta, 45.7% near-black** — the additive family, alpha-blended since 2026-07-24.
+All 121 cells at Lv5 were laying a dark backing under the magic circle, which is
+the likeliest reason its companion light needed three live passes to stop
+reading as dim (26 → 40 → 30). **It is now `Additive`, which changes a row that
+had already PASSed — Land Protector wants re-walking.** Every other ground unit
+measured clean: `magic_green`, `ring_red`, `ice` are TGAs with real alpha.
+
+**Then the artwork itself was wrong for a field, which no blend could fix.**
+`lens_w.bmp` is a 32x128 one-dimensional gradient — a lens streak, dark at both
+ends. Flat on a cell it paints a bar; bars merge along a row and the dark ends
+gap between rows, so the wall read as **three hard white stripes**. Measured off
+the user's screenshot: three bands peaking 29 px apart, each rising over ~10 px
+and falling over ~18. **Replaced by the original's own `fog1.tga`** — 256x256,
+pure white, carried entirely in a real alpha channel (23% clear, 77% partial,
+none opaque) — a deliberate fork substitution in the same spirit as Moonlit's
+hovering note. `fog2`/`fog3` are near-identical frames of the same puff (mean
+alpha difference ~5 of 255), so **the recipe now takes a frame list and an fps**
+and Fog Wall cycles all three at 4 fps, **offset by each cell's own phase** so
+fifteen cells boil instead of flickering in unison.
+
+**What the live passes actually changed, in order:** additive blend → the black
+went; texture and size (1.6 cells, since a round puff inscribed in one cell
+leaves the corners bare) → stripes became a bank; opacity 0.8 → 1.0 plus a light
+at all → "hard to see" fixed; light radius **22 → 9** → the glow had been
+lighting about twice the area of the fog, announcing a wall wider than the wall.
+
+**A miscount worth recording, because the diagnosis chased it twice.** The field
+was reported as "six rows of three, 18 squares" both before and after the size
+fix, against a server that sends 15 cells in 5x3 every single time. Profiling
+the screenshot settled it: **six seam lines with five cells between them**, at
+~34.4 px per cell across a 172 px field. Count blocks, not boundaries — and when
+a report and the wire disagree, measure the picture rather than theorising about
+the renderer, which is where two wrong explanations came from.
 
 ### 6. Rest of the 26 July batch — shipped, never seen
 

@@ -2120,6 +2120,7 @@ impl Client {
                 half_size,
                 color,
                 pulse,
+                blend,
             }) => match match texture {
                 Some(texture) => self.texture_loader.get_or_load(texture, ImageType::Color),
                 None => Ok(self.flat_tile_texture()),
@@ -2128,12 +2129,11 @@ impl Client {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         let texture = texture.unwrap_or("<flat colour>");
                         eprintln!(
-                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, transparent={}",
-                            loaded.is_transparent()
+                            "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, blend={blend:?}"
                         );
                     }
                     self.effect_holder.add_unit(
-                        Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse)),
+                        Box::new(UnitGroundQuad::new(loaded, position, half_size, color, pulse, blend)),
                         entity_id,
                     );
                     // The quad renders no light of its own; honor the
@@ -2148,18 +2148,27 @@ impl Client {
             Some(UnitBody::LayeredGroundQuad {
                 tile_color,
                 half_size,
-                hover_texture,
+                hover_frames,
+                hover_fps,
                 hover_half_size,
                 hover_opacity,
-            }) => match self.texture_loader.get_or_load(hover_texture, ImageType::Color) {
+                hover_blend,
+            }) => match hover_frames
+                .iter()
+                .map(|frame| self.texture_loader.get_or_load(frame, ImageType::Color))
+                .collect::<Result<Vec<_>, _>>()
+            {
                 Ok(hover) => {
                     let tile = self.flat_tile_texture();
 
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
+                        // `is_transparent()` is NOT reported here: it is hard-coded
+                        // false for every non-TGA in `load_texture_data`, so for
+                        // these BMPs it could only ever print `false` and read as
+                        // a finding. The blend family is the answerable question.
                         eprintln!(
-                            "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_texture} \
-                             half_size={hover_half_size} opacity={hover_opacity}, transparent={}",
-                            hover.is_transparent()
+                            "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_frames:?} \
+                             @{hover_fps}fps half_size={hover_half_size} opacity={hover_opacity}, blend={hover_blend:?}"
                         );
                     }
 
@@ -2167,11 +2176,13 @@ impl Client {
                         Box::new(UnitLayeredGroundQuad::new(
                             tile,
                             hover,
+                            hover_fps,
                             position,
                             half_size,
                             tile_color,
                             hover_half_size,
                             hover_opacity,
+                            hover_blend,
                         )),
                         entity_id,
                     );
@@ -2180,7 +2191,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {hover_texture}: {error:?}"),
+                Err(error) => eprintln!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -9936,8 +9947,10 @@ mod skill_effect_asset_tests {
                 }
                 // Only the hovering layer has artwork; the tint below it is a
                 // flat colour on the generated carrier.
-                Some(UnitBody::LayeredGroundQuad { hover_texture, .. }) => {
-                    paths.insert(format!("data\\texture\\{hover_texture}"));
+                Some(UnitBody::LayeredGroundQuad { hover_frames, .. }) => {
+                    for frame in hover_frames {
+                        paths.insert(format!("data\\texture\\{frame}"));
+                    }
                 }
                 Some(UnitBody::LoopingSprite { path, .. }) => {
                     paths.insert(format!("data\\sprite\\{path}.spr"));

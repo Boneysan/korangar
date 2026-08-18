@@ -4,7 +4,7 @@ use cgmath::{Matrix2, Point3, Rad, Vector2};
 use korangar_interface::application::Position;
 use wgpu::BlendFactor;
 
-use crate::graphics::{Color, EffectInstruction, GroundDecalInstruction, ScreenPosition, ScreenSize, Texture};
+use crate::graphics::{Color, EffectInstruction, GroundDecalBlend, GroundDecalInstruction, ScreenPosition, ScreenSize, Texture};
 use crate::world::Camera;
 
 pub struct EffectRenderer {
@@ -144,6 +144,10 @@ impl EffectRenderer {
     /// `[top_left, top_right, bottom_left, bottom_right]`; the world corners
     /// are kept as-is so the forward pass can project and depth-test them.
     ///
+    /// `blend` must match the artwork's family — see [`GroundDecalBlend`]. Flat
+    /// tints and magenta-keyed textures want `Alpha`; greyscale-on-black effect
+    /// textures want `Additive` or their background draws as opaque black.
+    ///
     /// [`render_effect_world_quad`]: Self::render_effect_world_quad
     pub fn render_ground_decal(
         &mut self,
@@ -151,12 +155,14 @@ impl EffectRenderer {
         texture: Arc<Texture>,
         texture_coordinates: [Vector2<f32>; 4],
         color: Color,
+        blend: GroundDecalBlend,
     ) {
         self.ground_decals.push(GroundDecalInstruction {
             corners,
             texture_coordinates,
             color,
             texture,
+            blend,
         });
     }
 }
