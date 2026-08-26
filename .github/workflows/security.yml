@@ -31,12 +31,39 @@ jobs:
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
 
-      # Fails the job on a vulnerability. Unmaintained-crate warnings do not
-      # fail: cgmath, paste and ttf-parser are all unmaintained, all reached
-      # through wgpu and cosmic-text rather than chosen here, and reddening the
-      # build over something we cannot act on trains people to ignore it.
+      # Fails the job on a vulnerability. Warnings that cannot be acted on are
+      # ignored by id with a reason, because reddening the build over something
+      # nobody can fix trains people to ignore it.
+      #
+      # Unmaintained: paste and ttf-parser, both reached through wgpu and
+      # cosmic-text rather than chosen here. (An earlier version of this note
+      # listed cgmath among them, which was wrong -- see below.)
+      #
+      # RUSTSEC-2026-0194 / RUSTSEC-2026-0195 (quick-xml 0.39.2, both 7.5):
+      # quadratic parse time on duplicate attributes, and unbounded namespace
+      # allocation. Neither is reachable. Our own quick-xml is 0.41 already;
+      # 0.39.2 arrives only through wayland-scanner, a *proc-macro* that parses
+      # the Wayland protocol XML shipped inside the crate at build time. The
+      # input is a fixed file in a build dependency, not anything an attacker
+      # supplies, and it is Linux/Wayland only. It cannot be moved either:
+      # wayland-scanner 0.31.10 requires ^0.39, so this clears when winit's
+      # smithay-client-toolkit updates, not before.
+      #
+      # RUSTSEC-2026-0197 (cgmath, unsound): Matrix::swap_columns is undefined
+      # behaviour when both indices are the same. cgmath IS a direct dependency
+      # here -- the note this replaces claimed otherwise -- and being
+      # unmaintained there is no fixed release to move to. The specific API is
+      # never called: `grep -rn swap_columns` across the workspace is empty.
+      # Recheck that grep before extending this ignore.
       - name: cargo audit
-        run: cargo audit --deny warnings --ignore RUSTSEC-2026-0196 --ignore RUSTSEC-2024-0436 --ignore RUSTSEC-2026-0192
+        run: >-
+          cargo audit --deny warnings
+          --ignore RUSTSEC-2026-0196
+          --ignore RUSTSEC-2024-0436
+          --ignore RUSTSEC-2026-0192
+          --ignore RUSTSEC-2026-0194
+          --ignore RUSTSEC-2026-0195
+          --ignore RUSTSEC-2026-0197
 
   committed-secrets:
     name: Committed secrets
