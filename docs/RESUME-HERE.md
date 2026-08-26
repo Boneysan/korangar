@@ -21,13 +21,47 @@
 > bundled from the server's own master file rather than added to the wire
 > protocol, the same way `hercules_item_names.tsv` is.
 >
-> **Formatting CI was already red on this branch** before any of this: five files
-> from the 08-17/08-18 security and Windows-pack work fail `cargo fmt --all
-> --check` under the pinned nightly (`archive/native/mod.rs`,
-> `gamefile/mod.rs`, `towninfo.rs`, `item_info.rs`, `ragnarok-packets/lib.rs`).
-> `formatting.yml` checks out to the workspace root, so it *does* pick up
-> `rust-toolchain.toml` — this is real drift, not the stable-rustfmt phantom.
-> Fixed here.
+> **PR #4 is open and all 12 checks are GREEN** —
+> <https://github.com/Boneysan/korangar/pull/4>. Getting there took seven fixes,
+> and none of them were today's work.
+>
+> **The branch had been invisible to CI since 2026-08-11.** `build.yml`,
+> `formatting.yml`, `lint.yml` and `tests.yml` list `push: [main]` and
+> `pull_request: → main` only. `audits.yml` is the sole workflow with
+> `'agent/**'`, which is why it was the only one running on every push. An
+> agent branch gets **one twelfth** of CI until a PR exists. Open the PR early
+> next time; everything below is what four weeks of no coverage accumulated.
+>
+> | Broken by | What | Fixed in |
+> |---|---|---|
+> | 08-17/18 pack + security | 5 files failing `cargo fmt` under the pinned nightly | `88f9d664` |
+> | `80bee66c` | clippy `question_mark` under `-D warnings` | `61631852` |
+> | upstream advisories | 4 crates bumped; 2 unfixable ones ignored with reasons | `7d420548` |
+> | disposable-cred work | `openssl rand -hex 16` = 32 chars vs a 24-byte password field | `bf118970` |
+> | `80bee66c` | `headless2` dropped to group 0, breaking both paired scenarios | `ba2f7a01` |
+> | `ba2f7a01` (mine) | re-committed the leaked password inside a comment about it | `ca766816` |
+> | `80bee66c` | run-suite test only passed with live operator creds on disk | `bfd591ae` |
+>
+> **The paired integration suite has now passed for the first time ever** — 9/9,
+> 92 distinct incoming packets, 0 unknown/fallback — and reproduced green on the
+> next run. It had never executed: `integration.yml` is `schedule:`-triggered
+> and a cron never fires off the default branch. Its first run died on its own
+> generated credentials; its second on `headless2` being group 0.
+>
+> **Two of those are worth carrying forward as lessons.**
+> - *A security fix can reach one place too many.* `80bee66c` dropped
+>   `headless2` to group 0 in the **disposable** CI database as well as on the
+>   live server. `connect_pair` warps the partner itself, which needs `@warp`.
+>   `context.rs:410` and `plans/observer-view-verification.md:279` both already
+>   recorded "both accounts are group 99" as a correction to an earlier wrong
+>   note — and the security pass made the wrong version true without
+>   reconciling either. Live server keeps group 0; the ephemeral DB does not.
+> - *A test that passes locally may be asserting something about your machine.*
+>   `test-run-suite.sh` never reached the code under test in CI: `run-suite.sh`
+>   exits 2 when it cannot build a `--password`, falling back to the gitignored
+>   `Hercules/conf/import/operator-credentials.conf`. It effectively asserted
+>   "this developer has live credentials on disk". **Verify a fix with the
+>   local advantage removed** — here, `HERCULES_DIR=/nonexistent`.
 >
 > **What needs playing:** a contract offer, a hand-in, the standing ledger, and
 > the quest log window against a live inventory. Also worth watching: quest
