@@ -5,6 +5,7 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
+
 use crate::loaders::GameFileLoader;
 
 /// Facility kind used by `Towninfo.lub` (`TYPE` field).

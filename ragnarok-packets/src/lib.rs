@@ -6470,9 +6470,11 @@ mod tests {
     #[test]
     fn item_flag_bits_accept_known_masks() {
         let mut reader = ByteReader::without_metadata(&[0b001]);
-        assert!(RegularItemFlags::from_bytes(&mut reader)
-            .unwrap()
-            .contains(RegularItemFlags::IDENTIFIED));
+        assert!(
+            RegularItemFlags::from_bytes(&mut reader)
+                .unwrap()
+                .contains(RegularItemFlags::IDENTIFIED)
+        );
     }
 
     #[test]

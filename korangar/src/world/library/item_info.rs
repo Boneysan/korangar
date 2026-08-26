@@ -8,7 +8,6 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-
 use ragnarok_packets::ItemId;
 
 use super::{HashMapExt, ItemName, ItemResource, Library, Table, fix_encoding};

@@ -12,10 +12,10 @@ use std::path::Path;
 use std::sync::RwLock;
 
 use blake3::Hash;
-use sha2::{Digest, Sha256};
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, Timer, print_debug};
 use korangar_loaders::{FileLoader, FileNotFoundError};
+use sha2::{Digest, Sha256};
 
 pub use self::cache::{sync_cache_archive, texture_file_dds_name, video_file_ivf_name};
 use self::list::GameArchiveList;
@@ -148,8 +148,8 @@ impl GameFileLoader {
             }
         } else if sha256sums_lists(LUA_ARCHIVE_FILE_NAME) {
             panic!(
-                "{LUA_ARCHIVE_FILE_NAME} is listed in {SHA256SUMS_FILE_NAME} but is missing. \
-                 Copy it from the Assets folder next to the executable."
+                "{LUA_ARCHIVE_FILE_NAME} is listed in {SHA256SUMS_FILE_NAME} but is missing. Copy it from the Assets folder next to the \
+                 executable."
             );
         } else {
             self.patch_lua_files();
@@ -1126,8 +1126,7 @@ fn verify_lua_archive_against_manifest() -> Result<(), String> {
     let actual = sha256_file(Path::new(LUA_ARCHIVE_FILE_NAME))?;
     if actual != expected {
         return Err(format!(
-            "{LUA_ARCHIVE_FILE_NAME} does not match {SHA256SUMS_FILE_NAME}. \
-             The file was swapped or the download is corrupt. Copy a fresh \
+            "{LUA_ARCHIVE_FILE_NAME} does not match {SHA256SUMS_FILE_NAME}. The file was swapped or the download is corrupt. Copy a fresh \
              lua_files.7z and SHA256SUMS from the Assets folder."
         ));
     }
@@ -1143,7 +1142,7 @@ mod tests {
         let line = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  ./lua_files.7z";
         let (digest, name) = parse_sha256sums_entry(line).expect("line");
         assert_eq!(digest[0], 0x01);
-        assert_eq!(digest[31], 0xef);
+        assert_eq!(digest[31], 0xEF);
         assert_eq!(name, "lua_files.7z");
 
         let win = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  .\\lua_files.7z";

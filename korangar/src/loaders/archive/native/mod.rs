@@ -35,10 +35,7 @@ fn decode_grf_payload(decoder: &mut impl Read, advertised: u32) -> std::io::Resu
     let mut decompressed = Vec::new();
     decoder.take(advertised as u64).read_to_end(&mut decompressed)?;
     if decompressed.len() as u32 > MAX_GRF_UNCOMPRESSED {
-        return Err(std::io::Error::new(
-            std::io::ErrorKind::InvalidData,
-            "grf inflate exceeded cap",
-        ));
+        return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "grf inflate exceeded cap"));
     }
     Ok(decompressed)
 }
