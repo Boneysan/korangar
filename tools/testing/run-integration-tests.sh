@@ -275,8 +275,16 @@ database_created=true
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/main.sql"
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/logs.sql"
 
-admin_pass="$(openssl rand -hex 16)"
-partner_pass="$(openssl rand -hex 16)"
+# 10 bytes -> 20 hex characters. The bound is the protocol, not taste:
+# LoginServerLoginPacket::password is #[length(24)], and the client serializes
+# it with an unwrap (korangar-networking/src/lib.rs:467), so anything longer
+# panics the tester at login before a single scenario runs. `-hex 16` gave 32
+# characters and did exactly that. A 24-character password would fit only
+# through the exact-fit fallback in ragnarok-bytes (which drops the trailing
+# zero byte); 20 leaves room and is still 80 bits for an account that exists
+# for one CI run.
+admin_pass="$(openssl rand -hex 10)"
+partner_pass="$(openssl rand -hex 10)"
 
 "${mysql_admin[@]}" "$db_name" <<SQL
 -- Email must be a@a.com (or match DeleteCharacterPacket): Hercules rejects
