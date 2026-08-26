@@ -661,9 +661,7 @@ where
         let pending_equipped_ammunition = pending_equipped_ammunition.clone();
 
         move |_packet: InventoyEndPacket| {
-            let Some((inv_type, mut items)) = inventory_items.borrow_mut().take() else {
-                return None;
-            };
+            let (inv_type, mut items) = inventory_items.borrow_mut().take()?;
 
             // Apply the ammo equip that arrived mid-list (see the buffer's comment).
             // Storage lists never carry one, and taking it unconditionally would strand
