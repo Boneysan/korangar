@@ -131,6 +131,7 @@ use crate::settings::{
     GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt,
     WORLD_THEMES_PATH,
 };
+use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
@@ -4685,11 +4686,22 @@ impl Client {
                     }
                 }
                 NetworkEvent::RemoveQuestEffect { entity_id } => self.particle_holder.remove_quest_icon(entity_id),
-                // The quest log has no UI yet; these events exist for the
-                // headless tester and a future quest-log window.
-                NetworkEvent::QuestAdded { .. } => {}
-                NetworkEvent::QuestRemoved { .. } => {}
-                NetworkEvent::QuestList { .. } => {}
+                // Hercules sends only kill objectives, and a Seal Cascade
+                // hunting contract has none - it is filled by handing in
+                // items. The item list comes from the bundled campaign table
+                // instead, resolved to names here because the interface layer
+                // holds no `Library`.
+                NetworkEvent::QuestAdded { quest_id, .. } => {
+                    let quest = self.resolve_quest_entry(quest_id);
+                    self.client_state.follow_mut(client_state().quest_log()).add(quest);
+                }
+                NetworkEvent::QuestRemoved { quest_id } => {
+                    self.client_state.follow_mut(client_state().quest_log()).remove(quest_id);
+                }
+                NetworkEvent::QuestList { quest_ids } => {
+                    let quests = quest_ids.into_iter().map(|quest_id| self.resolve_quest_entry(quest_id)).collect();
+                    self.client_state.follow_mut(client_state().quest_log()).replace(quests);
+                }
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
                         .follow_mut(client_state().inventory())
@@ -5241,6 +5253,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
+                    self.client_state.follow_mut(client_state().quest_log()).clear();
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
@@ -7927,6 +7940,16 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleQuestLogWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::QuestLog) {
+                            true => self.interface.close_window_with_class(WindowClass::QuestLog),
+                            false => self
+                                .interface
+                                .open_window(QuestLogWindow::new(client_state().quest_log(), client_state().inventory())),
+                        }
+                    }
+                }
                 InputEvent::ToggleDiceWindow => {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
@@ -8378,6 +8401,40 @@ impl Client {
 
     /// Per-frame tick for all entities, dead entities, and ground items.
     ///
+    /// Build a quest-log entry for a quest id.
+    ///
+    /// A campaign hunting contract contributes its name and its turn-in list;
+    /// anything else (a story quest, or a quest outside the campaign) is listed
+    /// by id, which is still more than the log showed before it existed.
+    fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
+        match self.library.campaign_quest(quest_id) {
+            Some(contract) => QuestEntry {
+                quest_id,
+                name: contract.name.clone(),
+                requirements: contract
+                    .requirements
+                    .iter()
+                    .map(|requirement| QuestRequirementEntry {
+                        item_id: requirement.item_id,
+                        item_name: self
+                            .library
+                            .get::<ItemName>(ItemNameKey {
+                                item_id: requirement.item_id,
+                                is_identified: true,
+                            })
+                            .to_string(),
+                        needed: requirement.needed,
+                    })
+                    .collect(),
+            },
+            None => QuestEntry {
+                quest_id,
+                name: format!("Quest {quest_id}"),
+                requirements: Vec::new(),
+            },
+        }
+    }
+
     /// Must be called after [`Self::handle_network_events`] so the entity
     /// set reflects the latest spawn/despawn/move packets. Running this
     /// with a stale entity list would tick entities that the network has

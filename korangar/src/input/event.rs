@@ -451,6 +451,8 @@ pub enum InputEvent {
     ToggleDiceWindow,
     /// Open or close the player emote palette. Only works while playing.
     ToggleEmoteWindow,
+    /// Open or close the quest log. Only works while playing.
+    ToggleQuestLogWindow,
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.

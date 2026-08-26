@@ -1,5 +1,39 @@
 # Resume here — live pass status
 
+> **2026-08-25 — the campaign's hunting layer is now item turn-ins, and the
+> client finally has a quest log. NOTHING BELOW IS LIVE-VERIFIED.**
+>
+> All 41 non-boss Seal Cascade hunts ask for drops instead of kills. Master data
+> is `Hercules/db/dm_hunt_db.json`; `Hercules/tools/gen-hunts.py` derives the
+> rates and turn-in counts and writes all three artifacts, including this repo's
+> `korangar/src/world/library/campaign_quests.tsv`. Do not hand-edit any of the
+> three — `tools/check-campaign.sh` fails on drift.
+>
+> **The quest log had no UI at all.** `QuestAdded` / `QuestRemoved` / `QuestList`
+> were registered and then discarded with empty match arms, and
+> `HuntingQuestUpdateObjectivePacket` is still a `register_noop`. So every quest
+> in a 19-arc campaign was invisible outside NPC dialogue. There is now a quest
+> log window (Ctrl+Q or the menu) that lists each contract's items and how many
+> the player is carrying, counted live off the inventory rather than cached.
+>
+> **Hercules never sends item requirements** — the quest packets carry kill
+> objectives only, and a converted contract has none. The requirement list is
+> bundled from the server's own master file rather than added to the wire
+> protocol, the same way `hercules_item_names.tsv` is.
+>
+> **Formatting CI was already red on this branch** before any of this: five files
+> from the 08-17/08-18 security and Windows-pack work fail `cargo fmt --all
+> --check` under the pinned nightly (`archive/native/mod.rs`,
+> `gamefile/mod.rs`, `towninfo.rs`, `item_info.rs`, `ragnarok-packets/lib.rs`).
+> `formatting.yml` checks out to the workspace root, so it *does* pick up
+> `rust-toolchain.toml` — this is real drift, not the stable-rustfmt phantom.
+> Fixed here.
+>
+> **What needs playing:** a contract offer, a hand-in, the standing ledger, and
+> the quest log window against a live inventory. Also worth watching: quest
+> drops roll per party member in range, so a party should see them pool.
+
+
 > **2026-08-18 — remediations landed** for the four security passes. C1 is
 > rotated: published admin passwords no longer work, `headless2` is group 0,
 > and the tester no longer ships a default password. Live creds are in the

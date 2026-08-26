@@ -1,4 +1,5 @@
 mod baby_job;
+mod campaign_quest;
 mod item_info;
 mod item_name;
 mod item_resource;
@@ -21,6 +22,7 @@ use korangar_loaders::FileLoader;
 use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::baby_job::IsBabyJob;
+pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
@@ -47,6 +49,7 @@ pub struct Library {
     skill_tree_table: <SkillTreeLayout as Table>::Storage,
     baby_job_table: <IsBabyJob as Table>::Storage,
     towninfo_table: TownInfoTable,
+    campaign_quest_table: CampaignQuestTable,
     msgstringtable: MsgStringTable,
 }
 
@@ -61,6 +64,7 @@ impl Library {
         let skill_tree_table = SkillTreeLayout::load(game_file_loader)?;
         let baby_job_table = IsBabyJob::load(game_file_loader)?;
         let towninfo_table = TownInfoTable::load(game_file_loader);
+        let campaign_quest_table = CampaignQuestTable::load();
         let msgstringtable = MsgStringTable::load(game_file_loader);
 
         Ok(Self {
@@ -73,6 +77,7 @@ impl Library {
             skill_tree_table,
             baby_job_table,
             towninfo_table,
+            campaign_quest_table,
             msgstringtable,
         })
     }
@@ -101,6 +106,12 @@ impl Library {
     /// monsters.
     pub fn is_town_map(&self, map_name: &str) -> bool {
         self.towninfo_table.is_town(map_name)
+    }
+
+    /// The Seal Cascade hunting contract for a quest id, if it is one.
+    #[inline]
+    pub fn campaign_quest(&self, quest_id: u32) -> Option<&CampaignQuest> {
+        self.campaign_quest_table.get(quest_id)
     }
 
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.
@@ -155,10 +166,7 @@ trait LuaExt: Sized {
 pub(crate) fn new_sandboxed_lua() -> mlua::Result<Lua> {
     // Official RO lua is tables, strings, and math. io/os/package would make a
     // swapped lua_files.7z into host code execution.
-    Lua::new_with(
-        StdLib::TABLE | StdLib::STRING | StdLib::MATH,
-        LuaOptions::default(),
-    )
+    Lua::new_with(StdLib::TABLE | StdLib::STRING | StdLib::MATH, LuaOptions::default())
 }
 
 impl LuaExt for Lua {

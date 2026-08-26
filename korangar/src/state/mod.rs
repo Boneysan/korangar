@@ -9,6 +9,7 @@ pub mod inventory;
 pub mod localization;
 pub mod minimap;
 pub mod party;
+pub mod quests;
 pub mod skill_cooldowns;
 pub mod skills;
 pub mod status_effects;
@@ -91,6 +92,7 @@ use crate::state::instance::InstanceState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
+use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
@@ -268,6 +270,9 @@ pub struct ClientState {
     loot_window: LootWindowState,
     /// Seal Cascade campaign progress (bestiary unlocks).
     dm_campaign: DmCampaignState,
+    /// Active quests and, for campaign hunting contracts, what they want
+    /// handed in.
+    quest_log: QuestLogState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -475,6 +480,7 @@ impl ClientState {
             let bestiary_window = BestiaryWindowState::default();
             let loot_window = LootWindowState::default();
             let dm_campaign = DmCampaignState::default();
+            let quest_log = QuestLogState::default();
         });
 
         time_phase!("create character server resources", {
@@ -575,6 +581,7 @@ impl ClientState {
             bestiary_window,
             loot_window,
             dm_campaign,
+            quest_log,
             friend_list_window,
             party_window,
             instance_state,
