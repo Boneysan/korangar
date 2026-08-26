@@ -300,8 +300,9 @@ partner_pass="$(openssl rand -hex 10)"
 -- fires off the default branch, so the suite had not run since.
 --
 -- The security finding that commit was answering is untouched: what leaked was
--- the hardcoded 'korangar'/'headless2pw' passwords, and those are still
--- generated per run above. This database is created empty, filled with random
+-- the pair of hardcoded passwords that used to sit on these two lines, and
+-- they are still generated per run above. (Naming the old values here would
+-- re-commit them -- committed-secrets.sh rejects exactly that, and did.) This database is created empty, filled with random
 -- credentials, and dropped when the run ends; a privilege level inside it is
 -- not exposure.
 INSERT INTO login (account_id, userid, user_pass, sex, email, group_id, character_slots)
