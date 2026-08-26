@@ -291,10 +291,23 @@ partner_pass="$(openssl rand -hex 10)"
 -- deletion when the confirmation email does not match login.email, and the
 -- headless client always sends a@a.com (see NetworkingSystem::delete_character).
 -- Passwords are generated per run and passed to the tester on the CLI.
+-- Both seats are group 99, and the suite is built on that: connect_pair
+-- warps the PARTNER to the rendezvous itself (context.rs), which needs @warp.
+-- Dropping headless2 to group 0 in 80bee66c was over-correction and broke
+-- every paired scenario -- party-lifecycle and trade-reject both timed out
+-- waiting for a ChangeMap that a group-0 account can never produce. It went
+-- unnoticed because integration.yml is schedule-triggered and a cron never
+-- fires off the default branch, so the suite had not run since.
+--
+-- The security finding that commit was answering is untouched: what leaked was
+-- the hardcoded 'korangar'/'headless2pw' passwords, and those are still
+-- generated per run above. This database is created empty, filled with random
+-- credentials, and dropped when the run ends; a privilege level inside it is
+-- not exposure.
 INSERT INTO login (account_id, userid, user_pass, sex, email, group_id, character_slots)
 VALUES
     (2000000, 'korangar', '${admin_pass}', 'M', 'a@a.com', 99, 9),
-    (2000001, 'headless2', '${partner_pass}', 'F', 'a@a.com', 0, 9);
+    (2000001, 'headless2', '${partner_pass}', 'F', 'a@a.com', 99, 9);
 
 INSERT INTO \`char\`
     (char_id, account_id, char_num, name, class, base_level, job_level,

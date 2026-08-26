@@ -16,7 +16,7 @@ being true.
 
 | Still open | Why it is tolerable here |
 |---|---|
-| **C1** — admin passwords published in a public repo | **Rotated 2026-08-18.** The published strings no longer authenticate. `headless2` is group 0. New passwords are gitignored. |
+| **C1** — admin passwords published in a public repo | **Rotated 2026-08-18.** The published strings no longer authenticate. `headless2` is group 0 **on the live server**; it stays group 99 in the disposable CI database, which the paired scenarios require. New passwords are gitignored. |
 | **H2** — credentials in clear on the wire | The attacker would have to already be on your network. Friends are told to use a throwaway password (§7.3 step 0), and the VPN closes it properly |
 | **M4** — client stores passwords if asked | Opt-in, off by default, and now labelled "(saved unencrypted)" |
 
@@ -70,7 +70,27 @@ several MEDIUMs become CRITICAL the day it is.
 
 ### C1. Two full-admin accounts with guessable passwords, and the credentials are published (REMEDIATED 2026-08-18)
 
-Live passwords were rotated and are **not** in this repository. `headless2` is group 0. The tester requires `--password` / `--partner-password`; integration generates ephemeral ones. `committed-secrets.sh` pins the old SQL pair so it cannot come back. The operator file is gitignored `Hercules/conf/import/operator-credentials.conf`.
+Live passwords were rotated and are **not** in this repository. `headless2` is group 0 **on the live server**. The tester requires `--password` / `--partner-password`; integration generates ephemeral ones. `committed-secrets.sh` pins the old SQL pair so it cannot come back. The operator file is gitignored `Hercules/conf/import/operator-credentials.conf`.
+
+**Correction 2026-08-25 — the group drop was applied one place too many.**
+`80bee66c` also set `headless2` to group 0 in the *disposable* integration
+database, and that broke every paired scenario: `connect_pair` warps the
+partner to the rendezvous itself, which needs `@warp`, so `party-lifecycle`
+and `trade-reject` timed out waiting for a `ChangeMap` a group-0 account
+cannot produce. Nothing caught it because `integration.yml` is
+schedule-triggered and a cron never fires off the default branch — the suite
+had not run since. It is back to group 99 there, and the reason is written
+beside the SQL.
+
+The distinction is the point: what leaked was two *hardcoded published*
+passwords. The disposable database is created empty, filled with credentials
+generated per run, and dropped when the run ends, so a privilege level inside
+it is not exposure. The live server keeps group 0.
+
+Note also that `docs/plans/observer-view-verification.md` already recorded
+"both accounts are group 99" as a hard-won correction to an earlier wrong
+note. That line was right; this one made it false in one place without
+reconciling the two.
 
 **Historical finding, kept for the record:**
 
@@ -101,7 +121,9 @@ it as the former.
 LAN, not by the password. Port-forward anything and this becomes remotely
 exploitable by anyone who reads the repo.
 
-**Fix:** change both passwords, and drop `headless2` to group 0 or delete it.
+**Fix:** change both passwords, and drop `headless2` to group 0 or delete it
+(on the live server — see the correction above for why the disposable CI
+database is different).
 **Blocker to check first:** the headless suite authenticates as these accounts,
 so changing them without updating the harness fixtures turns the entire test
 suite red. Fix both together.

@@ -35,7 +35,9 @@
 
 
 > **2026-08-18 — remediations landed** for the four security passes. C1 is
-> rotated: published admin passwords no longer work, `headless2` is group 0,
+> rotated: published admin passwords no longer work, `headless2` is group 0
+> (on the live server only — see the 2026-08-25 correction in
+> plans/security-audit.md; the disposable CI database needs group 99),
 > and the tester no longer ships a default password. Live creds are in the
 > gitignored `Hercules/conf/import/operator-credentials.conf`. Restart
 > login/char/map/api to pick up the C and config changes. H2 (cleartext
