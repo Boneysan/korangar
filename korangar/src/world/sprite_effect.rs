@@ -121,7 +121,7 @@ impl SpriteEffects {
 
     pub fn set_animation_data(&mut self, path: &'static str, animation_data: Arc<AnimationData>) {
         if sprite_effect_debug_enabled() {
-            eprintln!("[sprite-effect] loaded {path}: {} actions", animation_data.body_action_count());
+            client_log!("[sprite-effect] loaded {path}: {} actions", animation_data.body_action_count());
         }
 
         self.loaded.insert(path, animation_data);
@@ -132,9 +132,11 @@ impl SpriteEffects {
     /// matching how emotes behave on first use.
     pub fn spawn(&mut self, path: &'static str, position: Point3<f32>, action_index: usize, client_tick: ClientTick) {
         if sprite_effect_debug_enabled() {
-            eprintln!(
+            client_log!(
                 "[sprite-effect] spawn {path} action={action_index} at ({:.1},{:.1},{:.1})",
-                position.x, position.y, position.z
+                position.x,
+                position.y,
+                position.z
             );
         }
 
@@ -160,9 +162,12 @@ impl SpriteEffects {
         entity_id: EntityId,
     ) {
         if sprite_effect_debug_enabled() {
-            eprintln!(
+            client_log!(
                 "[sprite-effect] unit {path} action={action_index} entity={} at ({:.1},{:.1},{:.1})",
-                entity_id.0, position.x, position.y, position.z
+                entity_id.0,
+                position.x,
+                position.y,
+                position.z
             );
         }
 
@@ -199,10 +204,15 @@ impl SpriteEffects {
         alpha: f32,
     ) {
         if sprite_effect_debug_enabled() {
-            eprintln!(
+            client_log!(
                 "[sprite-effect] travel {path} action={action_index} from=({:.1},{:.1},{:.1}) to=({:.1},{:.1},{:.1}) \
                  duration_ms={duration_ms} delay_ms={start_delay_ms}",
-                from.x, from.y, from.z, to.x, to.y, to.z
+                from.x,
+                from.y,
+                from.z,
+                to.x,
+                to.y,
+                to.z
             );
         }
 

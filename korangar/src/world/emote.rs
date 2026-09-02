@@ -140,7 +140,7 @@ impl EmoteBubbles {
 
     pub fn set_animation_data(&mut self, animation_data: Arc<AnimationData>) {
         if emote_debug_enabled() {
-            eprintln!(
+            client_log!(
                 "[emote] animation data ready: {} actions, {} delays",
                 animation_data.body_action_count(),
                 animation_data.delays.len()
@@ -186,7 +186,7 @@ impl EmoteBubbles {
     ) {
         let Some(animation_data) = self.animation_data.as_ref() else {
             if emote_debug_enabled() && !self.bubbles.is_empty() {
-                eprintln!(
+                client_log!(
                     "[emote] {} bubble(s) pending but animation data not loaded yet",
                     self.bubbles.len()
                 );
@@ -221,9 +221,14 @@ impl EmoteBubbles {
 
             if emote_debug_enabled() && time < 50 {
                 let position = entity.get_position();
-                eprintln!(
+                client_log!(
                     "[emote] render action={} rendered={rendered} entity={} position=({:.1},{:.1},{:.1}) anchor_y={:.1}",
-                    bubble.action_index, bubble.entity_id.0, position.x, position.y, position.z, anchor_position.y
+                    bubble.action_index,
+                    bubble.entity_id.0,
+                    position.x,
+                    position.y,
+                    position.z,
+                    anchor_position.y
                 );
             }
         }

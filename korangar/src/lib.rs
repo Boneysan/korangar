@@ -39,6 +39,9 @@ macro_rules! time_phase {
     }
 }
 
+#[macro_use]
+pub mod logging;
+
 mod dm;
 mod graphics;
 use crate::dm::DmCampaignStatePathExt;
@@ -649,7 +652,7 @@ pub fn init_tls_rand() {
 
 fn initialize_shutdown_signal() {
     ctrlc::set_handler(|| {
-        println!("CTRL-C received. Shutting down");
+        client_log!("CTRL-C received. Shutting down");
         SHUTDOWN_SIGNAL.store(true, Ordering::SeqCst);
     })
     .expect("Error setting Ctrl-C handler");
@@ -1456,7 +1459,7 @@ impl Client {
                     0.0,
                 )));
             }
-            Err(error) => eprintln!("[skill-effect] failed to load {path}: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load {path}: {error:?}"),
         }
     }
 
@@ -1523,7 +1526,7 @@ impl Client {
             Ok(texture) => self
                 .effect_holder
                 .add_effect(Box::new(SkillBurst::new(texture, position, style, point_light_id))),
-            Err(error) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load {texture_path}: {error:?}"),
         }
     }
 
@@ -1541,8 +1544,8 @@ impl Client {
             (Ok(primary), Ok(secondary)) => self.effect_holder.add_effect(Box::new(
                 SkillBurst::new(primary, position, style, point_light_id).with_secondary_texture(secondary),
             )),
-            (Err(error), _) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
-            (_, Err(error)) => eprintln!("[skill-effect] failed to load {secondary_texture_path}: {error:?}"),
+            (Err(error), _) => client_log!("[skill-effect] failed to load {texture_path}: {error:?}"),
+            (_, Err(error)) => client_log!("[skill-effect] failed to load {secondary_texture_path}: {error:?}"),
         }
     }
 
@@ -1554,9 +1557,9 @@ impl Client {
                     source_position,
                     target_position,
                 ))),
-                None => eprintln!("[skill-effect] spear projectile sprite contains no frames"),
+                None => client_log!("[skill-effect] spear projectile sprite contains no frames"),
             },
-            Err(error) => eprintln!("[skill-effect] failed to load spear projectile: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load spear projectile: {error:?}"),
         }
     }
 
@@ -1642,7 +1645,7 @@ impl Client {
         let texture = ammunition_texture.or_else(|| self.first_sprite_frame(fallback_sprite));
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!(
+            client_log!(
                 "[ranged-attack] view={view} local_player={is_local_player} ammo_item={ammunition:?} ammo_sprite={ammunition_sprite:?} \
                  used_fallback={used_fallback}"
             );
@@ -1667,7 +1670,7 @@ impl Client {
 
                 self.effect_holder.add_effect(Box::new(projectile));
             }
-            None => eprintln!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
+            None => client_log!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
         }
     }
 
@@ -1771,10 +1774,11 @@ impl Client {
                 .claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::TravelProjectile, 0.22);
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!(
+            client_log!(
                 "[skill-effect] damage-caster skill={} source={} spawn_caster={spawn_caster_layer} spawn_travel={spawn_travel} \
                  impact_delay_ms={impact_delay_ms} source_pos={source_position:?} target_pos={target_position:?}",
-                skill_id.0, source_entity_id.0
+                skill_id.0,
+                source_entity_id.0
             );
         }
 
@@ -1923,7 +1927,7 @@ impl Client {
         let texture = match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
             Ok(texture) => texture,
             Err(error) => {
-                eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path());
+                client_log!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path());
                 return;
             }
         };
@@ -1971,7 +1975,7 @@ impl Client {
         let core = match self.texture_loader.get_or_load(JUPITEL_BALL_CORE_TEXTURE, ImageType::Color) {
             Ok(core) => core,
             Err(error) => {
-                eprintln!("[skill-effect] failed to load {JUPITEL_BALL_CORE_TEXTURE}: {error:?}");
+                client_log!("[skill-effect] failed to load {JUPITEL_BALL_CORE_TEXTURE}: {error:?}");
                 return;
             }
         };
@@ -2005,7 +2009,7 @@ impl Client {
         self.skill_unit_registry.insert(entity_id, unit_id, position);
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!("[skill-unit] spawn {unit_id:?} entity={entity_id:?} at {position:?}");
+            client_log!("[skill-unit] spawn {unit_id:?} entity={entity_id:?} at {position:?}");
         }
 
         // Hunter traps are RSM props rather than procedural bodies, so they take
@@ -2024,14 +2028,14 @@ impl Client {
                     transform.scale = Vector3::new(TRAP_PROP_SCALE, TRAP_PROP_SCALE, TRAP_PROP_SCALE);
                     self.active_trap_props.push((entity_id, model, transform));
                 }
-                None => eprintln!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
+                None => client_log!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
             }
             return;
         }
 
         let Some(presentation) = unit_presentation(unit_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
+                client_log!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
             }
             return;
         };
@@ -2051,7 +2055,7 @@ impl Client {
                 Some(UnitBody::LoopingSprite { .. }) => "looping-sprite",
                 None => "none",
             };
-            eprintln!(
+            client_log!(
                 "[skill-unit] spawn {unit_id:?} entity={} body={body} str={:?} at ({:.1},{:.1},{:.1})",
                 entity_id.0,
                 presentation.looping_str.or(presentation.intro_str),
@@ -2078,7 +2082,7 @@ impl Client {
                         0.0,
                     )));
                 }
-                Err(error) => eprintln!("[skill-unit] intro STR {path} failed: {error:?}"),
+                Err(error) => client_log!("[skill-unit] intro STR {path} failed: {error:?}"),
             }
         }
 
@@ -2102,7 +2106,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] looping STR {path} failed: {error:?}"),
+                Err(error) => client_log!("[skill-unit] looping STR {path} failed: {error:?}"),
             }
         }
 
@@ -2120,13 +2124,13 @@ impl Client {
                     )),
                     entity_id,
                 ),
-                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture}: {error:?}"),
             },
             Some(UnitBody::IceHorns { texture }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
                 Ok(loaded) => self
                     .effect_holder
                     .add_unit(Box::new(UnitIceHorns::new(loaded, position)), entity_id),
-                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture}: {error:?}"),
             },
             Some(UnitBody::GroundQuad {
                 texture,
@@ -2141,7 +2145,7 @@ impl Client {
                 Ok(loaded) => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         let texture = texture.unwrap_or("<flat colour>");
-                        eprintln!(
+                        client_log!(
                             "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, blend={blend:?}"
                         );
                     }
@@ -2156,7 +2160,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {texture:?}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture:?}: {error:?}"),
             },
             Some(UnitBody::LayeredGroundQuad {
                 tile_color,
@@ -2179,7 +2183,7 @@ impl Client {
                         // false for every non-TGA in `load_texture_data`, so for
                         // these BMPs it could only ever print `false` and read as
                         // a finding. The blend family is the answerable question.
-                        eprintln!(
+                        client_log!(
                             "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_frames:?} \
                              @{hover_fps}fps half_size={hover_half_size} opacity={hover_opacity}, blend={hover_blend:?}"
                         );
@@ -2206,7 +2210,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -2241,7 +2245,7 @@ impl Client {
         if let Some(sound) = presentation.sound {
             let claimed = self.effect_holder.claim_unit_sound(unit_id, UNIT_SOUND_GROUP_WINDOW);
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-unit] sound {sound} claimed={claimed}");
+                client_log!("[skill-unit] sound {sound} claimed={claimed}");
             }
             if claimed {
                 self.play_spatial_skill_sound(sound, position);
@@ -2346,14 +2350,14 @@ impl Client {
                 );
                 self.active_status_effects.insert(entity_id, path);
             }
-            Err(error) => eprintln!("[status-effect] {path} failed to load: {error:?}"),
+            Err(error) => client_log!("[status-effect] {path} failed to load: {error:?}"),
         }
     }
 
     fn spawn_special_effect(&mut self, entity_id: EntityId, effect_id: ragnarok_packets::EffectId) {
         let Some(recipe) = special_effect_recipe(effect_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-effect] unmapped special effect id={effect_id:?} entity={}", entity_id.0);
+                client_log!("[skill-effect] unmapped special effect id={effect_id:?} entity={}", entity_id.0);
             }
             return;
         };
@@ -2393,7 +2397,7 @@ impl Client {
                             0.0,
                         )));
                     }
-                    Err(error) => eprintln!("[skill-effect] special-effect STR {path} failed: {error:?}"),
+                    Err(error) => client_log!("[skill-effect] special-effect STR {path} failed: {error:?}"),
                 }
             }
             SpecialEffectRecipe::Burst { style, texture, secondary } => match secondary {
@@ -2463,8 +2467,8 @@ impl Client {
                                     .with_frames(frames),
                             ));
                         }
-                        (Err(error), _) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE}: {error:?}"),
-                        (_, Err(error)) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE_SECONDARY}: {error:?}"),
+                        (Err(error), _) => client_log!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE}: {error:?}"),
+                        (_, Err(error)) => client_log!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE_SECONDARY}: {error:?}"),
                     }
                 }
             }
@@ -2503,7 +2507,7 @@ impl Client {
                             SkillBurst::new(pang, target_position, SkillBurstStyle::JupitelHit, target_light_id).with_frames(frames),
                         ));
                     }
-                    Err(error) => eprintln!("[skill-effect] failed to load {JUPITEL_HIT_PANG_TEXTURE}: {error:?}"),
+                    Err(error) => client_log!("[skill-effect] failed to load {JUPITEL_HIT_PANG_TEXTURE}: {error:?}"),
                 }
             }
             None => {}
@@ -3343,7 +3347,7 @@ impl Client {
         let due = self.pending_impacts.drain_due(client_tick);
         for impact in due {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!(
+                client_log!(
                     "[packet-log] impact source={} target={} skill={:?} hits={} packet_tick={} due={} now={}",
                     impact.damage.source_entity_id.0,
                     impact.damage.destination_entity_id.0,
@@ -3361,7 +3365,7 @@ impl Client {
     /// Surface a login-time error on the login form status line only (no
     /// separate Error popup — the form line is enough and stays in place).
     fn show_login_error(&mut self, message: &str) {
-        eprintln!("[login] show_login_error: {message}");
+        client_log!("[login] show_login_error: {message}");
         *self.client_state.follow_mut(client_state().login_window().status_message()) = message.to_owned();
 
         if !self.interface.is_window_with_class_open(WindowClass::Login) {
@@ -3381,7 +3385,7 @@ impl Client {
     /// the player is never left staring at a dead server-select window.
     fn return_to_login_with_error(&mut self, message: &str) {
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!("[disconnect] return_to_login_with_error closes all windows: {message}");
+            client_log!("[disconnect] return_to_login_with_error closes all windows: {message}");
         }
         self.networking_system.disconnect_from_login_server();
         self.networking_system.disconnect_from_character_server();
@@ -3418,7 +3422,7 @@ impl Client {
 
         let now = Instant::now();
         if now >= expires_at {
-            eprintln!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
+            client_log!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
             self.return_to_login_with_error("Login session expired before server select (30s) — please log in again");
             return;
         }
@@ -3434,7 +3438,7 @@ impl Client {
             std::net::IpAddr::V4(character_server_information.server_ip.into()),
             character_server_information.server_port,
         );
-        eprintln!(
+        client_log!(
             "[login] SelectServer '{}' → {address}",
             character_server_information.server_name
         );
@@ -3505,7 +3509,7 @@ impl Client {
                     // goes account → character list with no flash.
                     if character_servers.len() == 1 {
                         let sole = character_servers.into_iter().next().unwrap();
-                        eprintln!("[login] sole character server '{}' — auto-entering", sole.server_name);
+                        client_log!("[login] sole character server '{}' — auto-entering", sole.server_name);
                         self.enter_character_server(sole);
                     } else {
                         self.login_auth_expires_at = Some(Instant::now() + LOGIN_AUTH_TIMEOUT);
@@ -3520,7 +3524,7 @@ impl Client {
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
                     // both login/character sockets before showing the error.
-                    eprintln!("[login] LoginServerConnectionFailed: {message}");
+                    client_log!("[login] LoginServerConnectionFailed: {message}");
                     self.login_auth_expires_at = None;
                     self.networking_system.disconnect_from_login_server();
                     self.networking_system.disconnect_from_character_server();
@@ -3545,7 +3549,7 @@ impl Client {
                             print_debug!("Login server dropped after auth — reconnecting");
 
                             if let Some(socket_address) = self.saved_login_server_address {
-                                eprintln!("[login] login socket dropped after auth — reconnecting");
+                                client_log!("[login] login socket dropped after auth — reconnecting");
                                 self.networking_system.connect_to_login_server(
                                     self.saved_packet_version,
                                     socket_address,
@@ -3558,16 +3562,16 @@ impl Client {
                             // something if the login form has no status yet.
                             let status = self.client_state.follow(client_state().login_window().status_message());
                             if status.is_empty() {
-                                eprintln!("[login] LoginServerDisconnected before auth ({reason:?})");
+                                client_log!("[login] LoginServerDisconnected before auth ({reason:?})");
                                 self.show_login_error("Could not connect to login server");
                             }
                         } else {
-                            eprintln!("[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition");
+                            client_log!("[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition");
                         }
                     }
                 }
                 NetworkEvent::CharacterServerConnected { normal_slot_count } => {
-                    eprintln!("[login] CharacterServerConnected slots={normal_slot_count} — requesting character list");
+                    client_log!("[login] CharacterServerConnected slots={normal_slot_count} — requesting character list");
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .set_slot_count(normal_slot_count);
@@ -3575,7 +3579,7 @@ impl Client {
                     let _ = self.networking_system.request_character_list();
                 }
                 NetworkEvent::CharacterServerConnectionFailed { message, .. } => {
-                    eprintln!("[login] CharacterServerConnectionFailed: {message}");
+                    client_log!("[login] CharacterServerConnectionFailed: {message}");
                     self.return_to_login_with_error(message);
                 }
                 NetworkEvent::CharacterServerDisconnected { reason } => {
@@ -3593,13 +3597,13 @@ impl Client {
                                     .connect_to_character_server(self.saved_packet_version, login_data, server);
                             }
                         } else {
-                            eprintln!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
+                            client_log!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
                             self.return_to_login_with_error("Lost connection to character server (auth may have expired — log in again)");
                         }
                     } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
                         // Intentional char disconnect without map (e.g. log out character).
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!("[disconnect] CharacterServerDisconnected(intentional) closes all windows");
+                            client_log!("[disconnect] CharacterServerDisconnected(intentional) closes all windows");
                         }
                         #[cfg(not(feature = "debug"))]
                         self.interface.close_all_windows();
@@ -3684,7 +3688,7 @@ impl Client {
                 }
                 NetworkEvent::MapDisconnectReason { message } => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[disconnect] server reason: {message}");
+                        client_log!("[disconnect] server reason: {message}");
                     }
                     self.pending_disconnect_reason = Some(message);
                     // A reason implies a server-initiated drop even if the
@@ -4308,7 +4312,7 @@ impl Client {
                 } => {
                     let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[packet-log] damage source={} target={} skill={:?} hits={hit_count} duration={attack_duration}",
                             source_entity_id.0,
                             destination_entity_id.0,
@@ -4717,7 +4721,7 @@ impl Client {
                         }
                         let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!("[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}");
+                            client_log!("[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}");
                         }
                         Self::refresh_entity_player_gear(
                             &self.async_loader,
@@ -5201,7 +5205,7 @@ impl Client {
                     // will be picked up when rendering lands. Logged under the
                     // existing packet-log switch so the coverage is observable.
                     if changed == Some(true) && std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[packet-log] look change account={} type={look_type:?} value={value}",
                             account_id.0
                         );
@@ -5237,7 +5241,7 @@ impl Client {
                 }
                 NetworkEvent::LoggedOut => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[disconnect] LoggedOut closes all windows");
+                        client_log!("[disconnect] LoggedOut closes all windows");
                     }
                     // Close character UI *before* clearing character-scoped state.
                     // Skill Tree holds ManuallyAsserted paths into layout tabs; if we
@@ -5766,7 +5770,7 @@ impl Client {
                 }
                 NetworkEvent::DisplayEmotion { entity_id, emotion } => {
                     if emote_debug_enabled() {
-                        eprintln!(
+                        client_log!(
                             "[emote] DisplayEmotion entity={} emotion={} data_loaded={}",
                             entity_id.0,
                             emotion,
@@ -5823,9 +5827,10 @@ impl Client {
                     cast_ms,
                 } => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[skill-cast] skill={} source={} cast_ms={cast_ms}",
-                            skill_id.0, source_entity_id.0
+                            skill_id.0,
+                            source_entity_id.0
                         );
                     }
                     if let Some(entity) = self
@@ -6035,7 +6040,7 @@ impl Client {
                     }
 
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[attack-range] too far: target={target_entity_id:?} target_pos={target_position:?} \
                              player_pos={player_position:?} range={} on_screen={target_on_screen} have_player={have_player} have_map={} \
                              -> {}",
@@ -6237,7 +6242,7 @@ impl Client {
                 self.disconnect_notice_delay = 0;
 
                 if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                    eprintln!("[disconnect] opening pending popups (landed={landed})");
+                    client_log!("[disconnect] opening pending popups (landed={landed})");
                 }
 
                 // Error first, notice second: both must clear the screen below,
@@ -6332,7 +6337,7 @@ impl Client {
             })
             .collect();
 
-        eprintln!(
+        client_log!(
             "[minimap] map={base} size={map_width}x{map_height} bmp={} pois={}",
             texture.is_some(),
             pois.len()
@@ -6557,7 +6562,7 @@ impl Client {
                                 let message = format!("Selected server has an unsupported package version: {packet_version}");
                                 // Inline (don't call show_login_error): this loop
                                 // already mutably borrows self via drain.
-                                eprintln!("[login] show_login_error: {message}");
+                                client_log!("[login] show_login_error: {message}");
                                 *self.client_state.follow_mut(client_state().login_window().status_message()) = message;
                                 self.interface.close_window_with_class(WindowClass::Error);
                                 continue;
@@ -6571,7 +6576,7 @@ impl Client {
                     self.saved_password = password.clone();
                     self.saved_packet_version = packet_version;
 
-                    eprintln!("[login] connecting to {socket_address} as {username}");
+                    client_log!("[login] connecting to {socket_address} as {username}");
                     self.networking_system
                         .connect_to_login_server(packet_version, socket_address, username, password);
                 }
@@ -8191,7 +8196,7 @@ impl Client {
                     )));
                 }
                 Err(error) => {
-                    eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                    client_log!("[skill-effect] failed to load {effect_path}: {error:?}");
                 }
             },
             ResolvedEffect::Sprite { path, action_index } => {

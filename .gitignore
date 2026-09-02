@@ -35,3 +35,5 @@ __pycache__/
 /dist/
 
 tools/packaging/windows/VC_redist.x64.exe
+korangar.log
+korangar.log.previous

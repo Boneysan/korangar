@@ -752,10 +752,33 @@ ships the packet inspector — fix that (or add a friends-pack job) and CI becom
 the better source for the pack's `.exe`. Keep the cross-build for quick local
 iteration.
 
-**Open decision — the console window.** The binary is *console* subsystem, so
-Windows opens a terminal behind the game. `#![windows_subsystem = "windows"]`
-removes it and also removes the only place a panic message would ever appear.
-Worth choosing deliberately before friends see it.
+**The console window — half decided 2026-09-02.** The binary is *console*
+subsystem, so Windows opens a terminal behind the game.
+`#![windows_subsystem = "windows"]` removes it.
+
+The reason not to just do that was that the console was the **only** diagnostic
+channel the client had: no log file anywhere, no panic hook, so a panic went to
+stderr and nowhere else. And it is not only panics — the unconditional
+diagnostics are 101 sites tagged `[login]`, `[disconnect]`, `[skill-effect]`,
+`[towninfo]`, which is exactly what you want when a friend says "it will not
+connect". (A further 60 `println!`s turned out to be `#[cfg(test)]` scaffolding,
+not runtime output — worth knowing before anyone counts them again.)
+
+**Done:** `korangar/src/logging.rs`. Every one of those 101 sites now goes
+through `client_log!`, which writes to the console **and** to `korangar.log`
+beside the executable; one previous run is kept as `korangar.log.previous`,
+because the first thing anybody does after a crash is try again. A panic hook
+writes the payload and location before deferring to the default handler. The
+hook opens its own file handle rather than sharing the mutex — a deadlock
+inside a panic hook would replace a readable crash with a hang.
+
+**Still open, deliberately:** whether to set `windows_subsystem = "windows"`.
+**Keep the console for the first Windows session**, because nothing in that
+binary has ever executed and three §10 rows (the AVX2 check, the bundled
+redist, the IP-bound auth) are unexercised code whose failures you will want to
+read live. Flip it afterwards — the log file is what makes that safe, and
+`READ ME FIRST.txt` already tells friends to send `korangar.log`, so the
+support workflow does not change when the terminal goes away.
 
 Do **not** teach friends to clone the repo as a fallback. If someone cannot
 run the pack, you run it for them on a call.

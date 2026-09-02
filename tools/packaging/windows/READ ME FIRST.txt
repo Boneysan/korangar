@@ -145,12 +145,34 @@ IF SOMETHING GOES WRONG
       That is just the size. Click "Download anyway".
 
   The game opens and immediately closes
-      Run Verify. If everything matches, tell the host and send them the black
-      window's text if one appeared.
+      Run Verify. If everything matches, send the host the log file -- see
+      SENDING A LOG below. That file is the whole reason it exists.
 
   "Cannot connect" / it hangs on the login screen
       The server is probably not running, or you are not on the right network.
       Ask the host. See CONNECTING below.
+
+
+--------------------------------------------------------------------------------
+SENDING A LOG
+--------------------------------------------------------------------------------
+
+  The game writes what it is doing to a file in this folder:
+
+      korangar.log            what happened this time
+      korangar.log.previous   what happened the run before
+
+  If anything goes wrong -- it will not start, it crashed, it could not
+  connect, something looked broken -- send the host korangar.log. It is a
+  plain text file; you can open it yourself if you are curious.
+
+  If the game crashed and you already started it again, the useful one is
+  korangar.log.previous, because starting again overwrote the other. Send both
+  and let the host sort it out.
+
+  There is nothing private in it: what map you were on, which files loaded,
+  and any error the game ran into. No password, and nothing is sent anywhere
+  automatically -- the file just sits on your PC until you attach it.
 
 
 --------------------------------------------------------------------------------

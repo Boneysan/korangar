@@ -78,9 +78,9 @@ impl Table for ItemInfo {
 
         // Always print a short one-liner so non-debug builds still confirm source.
         if !sources_used.is_empty() {
-            eprintln!("[itemInfo] {}", sources_used.join(" + "));
+            client_log!("[itemInfo] {}", sources_used.join(" + "));
         } else {
-            eprintln!("[itemInfo] WARNING: no itemInfo loaded — names will be NOTFOUND");
+            client_log!("[itemInfo] WARNING: no itemInfo loaded — names will be NOTFOUND");
         }
         Ok(map.compact())
     }

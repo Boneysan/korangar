@@ -476,7 +476,7 @@ impl PacketCallback for PacketHistoryCallback {
     fn unknown_packet(&self, bytes: Vec<u8>) {
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
             let hex: String = bytes.iter().take(96).map(|byte| format!("{byte:02x} ")).collect();
-            eprintln!("[packet-log] unknown incoming {} bytes: {hex}", bytes.len());
+            client_log!("[packet-log] unknown incoming {} bytes: {hex}", bytes.len());
         }
 
         let packet = UnknownPacket { bytes };
@@ -505,7 +505,7 @@ impl PacketCallback for PacketHistoryCallback {
     fn failed_packet(&self, bytes: Vec<u8>, error: Box<ConversionError>) {
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
             let hex: String = bytes.iter().take(96).map(|byte| format!("{byte:02x} ")).collect();
-            eprintln!("[packet-log] failed incoming {} bytes: {hex}; error={error:?}", bytes.len());
+            client_log!("[packet-log] failed incoming {} bytes: {hex}; error={error:?}", bytes.len());
         }
 
         let packet = ErrorPacket { bytes, error };
