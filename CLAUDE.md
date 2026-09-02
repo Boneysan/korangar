@@ -184,9 +184,31 @@ two pieces is missing.
 ## Windows builds
 
 Native Windows toolchain development is blocked by BitDefender flagging build
-tooling. The intended path for native-performance testing and distribution is
-cross-compiling from WSL with `cargo-xwin` (target `x86_64-pc-windows-msvc`)
-and running the `.exe` on the Windows side (not yet set up).
+tooling. The path for distribution is **cross-compiling from this Mac** with
+`cargo-xwin` (target `x86_64-pc-windows-msvc`) — proven 2026-08-17, re-proven
+2026-09-02 against current HEAD. Run it through
+[`tools/packaging/make-pack.sh`](tools/packaging/make-pack.sh), never by hand;
+the plan and every trap are in
+[docs/plans/friends-distribution.md](docs/plans/friends-distribution.md).
+
+**Three facts about the Windows binary that are not obvious from the source:**
+
+- **It requires AVX2.** `.cargo/config.toml` scopes `target_cpu=x86-64-v3` to
+  `cfg(target_arch="x86_64")`, which matches the *Windows* target too, not just
+  this Mac. Without AVX2 the process dies on its first vectorised instruction —
+  no window, no message, no log. `Setup.ps1` / `Play.ps1` check for it and say so
+  (decision S10). Lower the target if that baseline ever stops holding.
+- **It cannot be statically linked.** `+crt-static` fails with `undefined symbol:
+  __declspec(dllimport) nearbyint` from `libmach_dxcompiler_rs` — wgpu's prebuilt
+  DX12 shader compiler is built against the dynamic CRT. So the exe imports
+  `MSVCP140.dll` / `VCRUNTIME140.dll` / `VCRUNTIME140_1.dll` and the pack ships
+  `VC_redist.x64.exe` (S11). Do not "fix" the imports; that was tried.
+- **Shaders are compiled in**, via `include_bytes!` in `shader_compiler.rs:8`.
+  No slangc or Vulkan SDK on the player's machine.
+
+**The pack has never been run on Windows.** Every security audit excludes it by
+name, and a binary that links is not a binary that works. That is §10 of the plan
+doc, and for Windows it is the only evidence that counts.
 
 ## Testing — the headless suite
 

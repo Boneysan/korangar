@@ -6,11 +6,11 @@
 #
 # Produces (see docs/plans/friends-distribution.md):
 #
-#   dist/Windows/     the ~50 MB half that changes every build
-#   dist/Assets/      the ~3.6 GB half that almost never changes
+#   dist/Windows/     the ~82 MB half that changes every build
+#   dist/Assets/      the ~3.7 GB half that almost never changes
 #
 # Friends drop both into ONE folder, so data.grf ends up beside Play.bat.
-# Splitting them is the whole point: a client update must not cost 3.6 GB.
+# Splitting them is the whole point: a client update must not cost 3.7 GB.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && cd .. && pwd)"
@@ -24,6 +24,8 @@ extra_grf_dir="/Volumes/T7/GitHub/RO/client"
 skip_assets=0
 do_build=0
 target="x86_64-pc-windows-msvc"
+redist_url="https://aka.ms/vs/17/release/vc_redist.x64.exe"
+redist="tools/packaging/windows/VC_redist.x64.exe"
 
 die() { printf '\nerror: %s\n\n' "$1" >&2; exit 1; }
 
@@ -57,6 +59,18 @@ fi
 exe="target/$target/release/korangar.exe"
 [ -f "$exe" ] || die "$exe not found. Pass --build, or see docs/plans/friends-distribution.md section 9."
 
+# The client links the MSVC C++ runtime dynamically and cannot do otherwise:
+# `+crt-static` fails to link because the vendored mach-dxcompiler (wgpu's DX12
+# shader compiler) is a prebuilt static lib built against the dynamic CRT
+# (`undefined symbol: __declspec(dllimport) nearbyint`). So the redistributable
+# has to ship, or a friend on a fresh Windows gets a DLL dialog with no context.
+# It is a Microsoft-redistributable component; ~25 MB, gitignored, fetched once.
+if [ ! -f "$redist" ]; then
+    echo "==> fetching the Visual C++ redistributable (once, ~25 MB)"
+    curl -fsSL --max-time 300 -o "$redist" "$redist_url" \
+        || die "could not download $redist_url -- fetch it by hand to $redist"
+fi
+
 windows="$out/Windows"
 assets="$out/Assets"
 rm -rf "$windows"
@@ -65,7 +79,9 @@ mkdir -p "$windows/client"
 echo "==> Windows/"
 cp "$exe" "$windows/korangar.exe"
 cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
-   tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 "$windows/"
+   tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+   tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+   "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 cp -R korangar/archive "$windows/archive"
 
 # Written, never copied: the working copy points outside the pack.
@@ -90,40 +106,53 @@ cat > "$windows/client/server.ron" <<RON
 RON
 
 if [ "$skip_assets" -eq 0 ]; then
-    echo "==> Assets/ (~3.6 GB, slowest step)"
+    echo "==> Assets/ (~3.7 GB, slowest step)"
     mkdir -p "$assets"
     cp korangar/data.grf korangar/rdata.grf korangar/lua_files.7z "$assets/"
     for grf in renewal2021.grf resources2021.grf; do
         [ -f "$extra_grf_dir/$grf" ] || die "$extra_grf_dir/$grf not found (override with --assets-from)"
         cp "$extra_grf_dir/$grf" "$assets/"
     done
+    rm -rf "$assets/BGM"
     cp -R korangar/BGM "$assets/BGM"
-    # The 3.6 GB half is the one that arrives subtly incomplete, so it needs the
+    # The 3.7 GB half is the one that arrives subtly incomplete, so it needs the
     # verifier more than the client folder does.
     cp tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 "$assets/"
 fi
+
+[ -d "$assets" ] || die "$assets does not exist -- run once without --skip-assets"
 
 # Integrity manifests, so a friend can tell a good download from a corrupted or
 # swapped one. Drive downloads truncate, resume badly and get re-shared, and
 # without these the only symptom is the client failing in some unrelated way.
 #
-# One manifest per folder rather than one for the pack, because the two halves
-# are downloaded separately and updated on completely different schedules.
+# ONE MANIFEST PER HALF, AND THE NAMES MUST DIFFER. The two halves are merged
+# into a single folder by design, so a shared `SHA256SUMS` meant Explorer
+# offering Replace-or-Skip and whichever copy lost taking its half's coverage
+# with it -- either Play.ps1's lua_files.7z check ("SHA256SUMS does not list
+# lua_files.7z", a dead end on a perfectly good download) or every client file
+# going unverified. Distinct names survive the merge and Verify.ps1 reads both.
+#
+# Always rewritten, even under --skip-assets: a manifest that lags the folder it
+# describes is worse than none, because it reports a good download as corrupt.
+# The pack that shipped 2026-08-17 did exactly that.
 write_manifest() {
     local dir="$1"
+    local name="$2"
     [ -d "$dir" ] || return 0
-    echo "==> $dir/SHA256SUMS"
+    echo "==> $dir/$name"
     (
         cd "$dir"
+        rm -f SHA256SUMS "$name"
         # Sorted for a stable file, and excluding the manifest itself.
-        find . -type f ! -name 'SHA256SUMS' -print0 \
+        find . -type f ! -name 'SHA256SUMS*' -print0 \
             | LC_ALL=C sort -z \
-            | xargs -0 shasum -a 256 > SHA256SUMS
+            | xargs -0 shasum -a 256 > "$name"
     )
 }
 
-write_manifest "$windows"
-[ "$skip_assets" -eq 0 ] && write_manifest "$assets"
+write_manifest "$windows" SHA256SUMS-client
+write_manifest "$assets" SHA256SUMS-assets
 
 # A pack that leaks credentials is worse than no pack. login_settings.ron holds
 # a real username and password in plaintext, so this is an assertion, not a
@@ -133,10 +162,47 @@ leaked="$(find "$out" -name 'login_settings.ron' -o -name 'window_cache*.ron' 2>
 
 grep -q '\.\.' "$windows/client/game_archives.ron" && die "game_archives.ron still points outside the pack"
 
+# THE CONTENTS CHECKLIST. Every entry here is a file whose absence a friend
+# discovers instead of us: a missing launcher is a folder they cannot start, a
+# missing READ ME is a support call, a missing redistributable is a DLL dialog.
+# Add to this list whenever the pack gains a file -- that is the whole point of
+# it, and it is cheaper than remembering.
+require() {
+    [ -e "$1" ] || die "the pack is missing $1 -- see the contents checklist in $0"
+}
+
+for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 \
+         "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
+         archive client/server.ron client/game_archives.ron; do
+    require "$windows/$f"
+done
+
+for f in data.grf rdata.grf renewal2021.grf resources2021.grf lua_files.7z \
+         BGM SHA256SUMS-assets Verify.bat Verify.ps1; do
+    require "$assets/$f"
+done
+
+# The launchers name these; a rename on one side only is silent until a friend
+# hits it. Cheap to pin, so pin it.
+grep -q 'SHA256SUMS-assets' "$windows/Play.ps1" \
+    || die "Play.ps1 does not read SHA256SUMS-assets -- the manifest names have drifted"
+grep -q 'SHA256SUMS-assets' "$windows/Setup.ps1" \
+    || die "Setup.ps1 does not read SHA256SUMS-assets -- the manifest names have drifted"
+
+# BGM is loaded off the filesystem (case-insensitively), not out of a GRF, so a
+# manifest that stops at the top level silently leaves 345 MB unverified. That
+# also shipped in the 2026-08-17 pack.
+bgm_lines="$(grep -c 'BGM/' "$assets/SHA256SUMS-assets" || true)"
+[ "$bgm_lines" -gt 100 ] || die "SHA256SUMS-assets lists only $bgm_lines BGM files -- the manifest is not covering the folder"
+
 echo
 echo "pack ready:"
 du -sh "$windows" 2>/dev/null || true
-[ "$skip_assets" -eq 0 ] && du -sh "$assets" 2>/dev/null || true
+du -sh "$assets" 2>/dev/null || true
+echo
+echo "  server:  $address:$port"
+echo "  client:  $(grep -c . "$windows/SHA256SUMS-client") files"
+echo "  assets:  $(grep -c . "$assets/SHA256SUMS-assets") files"
 echo
 echo "zip Windows/ and upload it; upload Assets/ as a folder."
 echo "Do NOT re-compress the GRFs -- they are already compressed, so zipping"

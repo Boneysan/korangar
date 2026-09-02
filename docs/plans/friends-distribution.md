@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Planned (2026-08-12) — packaging not built; this is the source of truth. **Windows cross-build PROVEN 2026-08-17** (§9), not yet run on Windows |
+| **Status** | **Pack rebuilt 2026-09-02** from current `agent/platform-connectivity-controls` — fresh `.exe`, VC++ runtime bundled, split manifests, `Setup` script, in-pack README. Cross-build re-proven the same day. **Still never run on Windows** (§10) |
 | **Audience** | The operator (you). Not a player handout. |
 | **Milestone** | E8.3 in [PROJECT_PLAN.md](../PROJECT_PLAN.md) — the *friends* reading of it, not a public release |
 | **Parent** | [PROJECT_PLAN.md](../PROJECT_PLAN.md) E8, [asset-pipeline.md](asset-pipeline.md), [MACOS_WORKFLOW.md](../MACOS_WORKFLOW.md) |
@@ -64,6 +64,9 @@ Later updates are a ~30 MB re-download of the binary + `archive/`, not another
 | **S7** | Server address in the pack | Pre-filled `client/server.ron` with the host’s Tailscale / LAN IP. Friends do not edit it | `sclientinfo.xml` is EUC-KR and baked to `127.0.0.1`. The override exists exactly for this |
 | **S8** | Accounts | `_m` / `_f` self-registration, documented in the Drive Doc. Pre-create GM accounts yourself | No control panel for v0 |
 | **S9** | Link stability | **Never delete-and-reupload** a shared file. Use Drive “Manage versions”, or overwrite files *inside* the shared folder | A new upload mints a new link; every old text is dead |
+| **S10** | CPU baseline | **AVX2 required** (`x86-64-v3` + `+aes`, from `.cargo/config.toml`). Documented, checked by the launcher, not lowered | Confirmed in the binary: 10,265 `vpaddd`, 5,273 `vpbroadcastd`, 2,144 `vinserti128`, 168 `vpermd`, plus FMA. Without AVX2 the process dies on its first vectorised instruction — `STATUS_ILLEGAL_INSTRUCTION`, no window, no message, nothing to read. Operator decision 2026-09-02: every PC in this group is post-2013 Intel or Ryzen, so ship v3 and *say so* rather than rebuild at `x86-64-v2` |
+| **S11** | Visual C++ runtime | **Bundle `VC_redist.x64.exe`** in the client half; `Setup` installs it, `Play` refuses with a readable message if it is missing | The exe imports `MSVCP140.dll`, `VCRUNTIME140.dll`, `VCRUNTIME140_1.dll`, which are **not** part of a clean Windows (the `api-ms-win-crt-*` imports are — those are the Universal CRT). Static linking was tried first and **cannot work**: `+crt-static` fails with `undefined symbol: __declspec(dllimport) nearbyint` from `libmach_dxcompiler_rs`, wgpu's prebuilt DX12 shader compiler, which is built against the dynamic CRT |
+| **S12** | Manifest naming | **`SHA256SUMS-client` and `SHA256SUMS-assets`** — never a shared `SHA256SUMS` | The halves are merged into one folder by design, so a shared name is a collision. Explorer offers Replace-or-Skip and the loser takes its half's coverage with it: keep the client copy and `Play.ps1` dead-ends on *"SHA256SUMS does not list lua_files.7z"* (unfixable by re-downloading, which is what it tells you to do); keep the assets copy and the exe, launchers and all 49 `archive/` files go unverified forever |
 
 Revisit S4 if the whole group is on the same LAN for a physical game night —
 then `192.168.x.x` and a firewall hole on 6900 / 6121 / 5121 is simpler than
@@ -268,6 +271,34 @@ router. This section is the implementation runbook (decision **S4**).
 
 Do **not** turn the host into an exit node or a subnet router. Friends only
 need to reach three ports on the machine that runs Hercules.
+
+### 7.0 Where the server address lives — all three of them
+
+Asked often enough to belong at the top. The address appears in **three** files
+and **all three must agree**, or a friend authenticates and then fails the
+char-server handoff with a symptom that names nothing:
+
+| What | File | Set by | Survives a re-clone? |
+|---|---|---|---|
+| What the **client** dials | `dist/Windows/client/server.ron` → `address:` / `port:` | `make-pack.sh --server <ip[:port]>` writes it; port defaults to 6900 | n/a — regenerated with the pack |
+| What **char-server** advertises | `Hercules/conf/import/char-server.conf` → `inter.char_ip` | you, by hand | **NO — gitignored** |
+| What **map-server** advertises | `Hercules/conf/import/map-server.conf` → `inter.map_ip` | you, by hand | **NO — gitignored** |
+
+Currently all three read `192.168.20.49`.
+
+Friends never type an address and never edit `server.ron`. Moving the server
+means re-running `make-pack.sh --server <new>` and re-sending the 80 MB client
+half — which is exactly why the pack is split.
+
+**Deliberately NOT changed when you move:** `login_ip`, and the map-server's own
+`inter.char_ip`. Both describe how the servers reach *each other* on one box;
+pointing them outward routes local traffic over the network for nothing.
+
+> [!WARNING]
+> The two Hercules values live in **gitignored** files. No commit records them,
+> a fresh clone loses them silently, and the symptom is every friend failing at
+> character select. The tables here and in §7.4a are the only durable copy —
+> re-apply them after any re-clone.
 
 ### 7.1 What you are building
 
@@ -591,7 +622,7 @@ client or `clientinfo.xml`.
 
 ---
 
-## 9. Packaging work (not built yet)
+## 9. Packaging — built
 
 One operator command produces the Drive uploads. **Built and verified
 2026-08-17** as [`tools/packaging/make-pack.sh`](../../tools/packaging/make-pack.sh):
@@ -602,11 +633,51 @@ tools/packaging/make-pack.sh --server 100.x.y.z --build    # cross-build first
 tools/packaging/make-pack.sh --server 100.x.y.z --skip-assets   # update pack
 ```
 
-Measured output: **`dist/Windows` 56 MB, `dist/Assets` 3.7 GB.** Verified by
-assembling both halves, merging them the way a friend will, and running the
-launcher checks against the result.
+Measured output **2026-09-02**: **`dist/Windows` 80 MB (60 files), `dist/Assets`
+3.7 GB (199 files)**, both manifests verifying clean. The whole run takes ~22
+seconds, because APFS clones the GRFs instead of copying them and Apple Silicon
+hashes SHA-256 in hardware — so there is no reason to skip a regeneration.
 
-**Three things it refuses to get wrong, each of which fails silently otherwise:**
+### What is in the pack, and why each piece is there
+
+| `dist/Windows/` | Why it ships |
+|---|---|
+| `korangar.exe` | The client. Shaders are `include_bytes!`-compiled in (`shader_compiler.rs:8`), so no slangc, no Vulkan SDK, nothing for a friend to install |
+| `Setup.bat` + `Setup.ps1` | **The one thing a friend runs first.** Checks AVX2, installs the VC++ runtime, finds the Assets download and merges it in, verifies all 259 files, clears the mark-of-the-web, offers to launch |
+| `Play.bat` + `Play.ps1` | Every launch. Only the cheap checks — AVX2, runtime, assets present, `lua_files.7z` hash, `archive/`, `client/server.ron` |
+| `Verify.bat` + `Verify.ps1` | On demand. Reads **both** manifests and names every corrupt or missing file |
+| `READ ME FIRST.txt` | Requirements, install, `_m`/`_f` accounts, the throwaway-password warning, troubleshooting |
+| `VC_redist.x64.exe` | S11 — the client cannot be statically linked. ~25 MB, gitignored, fetched from `aka.ms` on first pack |
+| `archive/` | 49 files: fonts, UI textures, language RONs, `msgstringtable.txt`, `sclientinfo.xml`, Lua scaffolding |
+| `client/server.ron` | Written from `--server`. **This is the only place a friend's client learns the address** |
+| `client/game_archives.ron` | Written, never copied — the working copy points outside the pack |
+| `SHA256SUMS-client` | S12 |
+
+| `dist/Assets/` | Why it ships |
+|---|---|
+| `data.grf`, `rdata.grf` | 3.2 GB + 307 MB of Gravity assets |
+| `renewal2021.grf`, `resources2021.grf` | Not in this tree — copied from `RO/client/` |
+| `lua_files.7z` | Hashed at load against the manifest (security audit 3, T7) |
+| `BGM/` | 192 mp3s, 345 MB. Loaded **off the filesystem** case-insensitively, not out of a GRF, so it cannot be folded into an archive |
+| `Verify.bat`, `Verify.ps1` | Byte-identical to the client copies, so the merge collision is harmless |
+| `SHA256SUMS-assets` | S12 |
+
+**Six things it refuses to get wrong, each of which fails silently otherwise:**
+
+- **A contents checklist runs at the end of every pack.** Every file above is
+  asserted present. This exists because the failure mode is not a broken build —
+  it is a friend discovering the gap. Add to the list whenever the pack gains a
+  file; that is cheaper than remembering.
+- **Both manifests are rewritten every run, including under `--skip-assets`.**
+  A manifest that lags the folder it describes is worse than none: it reports a
+  good download as corrupt. The pack that sat on disk from 2026-08-17 did exactly
+  that — `Play.ps1` had been edited after the manifest was written, so
+  `shasum -c` failed on it, and the first thing a friend runs would have called a
+  perfectly good download broken.
+- **The assets manifest is asserted to cover `BGM/`.** The 2026-08-17 manifest
+  listed five files and left 345 MB unverified.
+- **The launcher/manifest names are pinned to each other.** Renaming one side
+  only is silent until a friend hits it.
 
 - **`client/game_archives.ron` is written, never copied.** The working copy
   points at `../../../RO/client/renewal2021.grf` — paths that escape the pack and
@@ -630,20 +701,9 @@ reports `All N files match`, or names each corrupt file.
 **Zip `Windows/`; upload `Assets/` as a folder.** GRFs are already compressed, so
 re-zipping 3.6 GB costs a long wait and saves almost nothing.
 
-macOS is not built yet — the script is Windows-only today. It should:
-
-1. `cargo build --release -p korangar --features unicode` (no `debug`).
-2. Copy the four GRFs into `dist/Assets/` (including the two that today live
-   under `RO/client/`).
-3. Copy `BGM/`, `lua_files.7z`, `archive/`.
-4. Write a clean relative `client/game_archives.ron`.
-5. Write `client/server.ron` from `--server`.
-6. Omit `login_settings.ron` and every other `client/*.ron` that is a
-   personal setting. Themes can ship as defaults if they are not
-   machine-specific.
-7. Drop `Play.bat` / `Play.command` next to the binary.
-8. Emit `dist/Windows/`, `dist/macOS/`, `dist/Assets/`.
-9. Optionally zip a merged first-time archive per OS.
+**macOS is still not built** — the script is Windows-only. When it is, it needs
+the same shape: a `Setup.command`, a `Play.command`, the same two manifests, and
+the same contents checklist extended with the macOS entries.
 
 macOS: `chmod +x` the binary and `Play.command` before zipping. Consider
 `codesign --sign -` (ad-hoc) so Gatekeeper is slightly less angry.
@@ -706,16 +766,43 @@ run the pack, you run it for them on a call.
 
 A pack that has not been opened on a **second machine** is not shipped.
 
+Nothing below can be checked from the Mac. The `.exe` cross-compiles, links, and
+carries the right imports — and none of that is evidence that it *runs*. Three
+of these rows exist specifically because their failure is invisible here.
+
 On a friend’s laptop (or a second account / second OS):
 
 - [ ] Friend accepted the Tailscale invite; `tailscale status` on the host shows them
 - [ ] Friend can `nc` (or equivalent) to host `100.x` ports 6900, 6121, 5121
 - [ ] Drive download hits the virus-scan interstitial; they click through.
+- [ ] **`Setup` runs start to finish and prints "Ready to play."** This is the
+      one that covers the most ground: CPU check, runtime install, asset merge,
+      259-file verification.
+- [ ] **The AVX2 check answers correctly on a machine that HAS AVX2** — i.e. it
+      does not false-positive and refuse a good PC. `IsProcessorFeaturePresent`
+      is unexercised code; it returns false on Windows 7 by design, and nobody
+      has watched it return true.
+- [ ] **The client starts on a PC that never had the VC++ runtime.** Test on a
+      machine that has not had a game or dev tool installed, or the bundled
+      redist is untested by construction — most PCs already have it.
 - [ ] Launcher starts the client without a terminal `cd`.
 - [ ] Login with a fresh `Name_m` creates an account.
 - [ ] Character create → Prontera (login-only is not enough — that hides a bad `char_ip`).
+- [ ] **Two friends on two machines log in at once.** The auth path is now
+      IP-bound (`node->ip == ip`, from the security-audit remediations), which
+      loopback testing structurally cannot exercise. If it misbehaves, *every*
+      remote tester is rejected at char-select.
 - [ ] You (on the host) can see them, whisper works, party invite works.
 - [ ] One fight, one NPC shop. Logout and back in.
+
+Before any of that, on the host:
+
+- [ ] **Rebuild Hercules** (`dev.sh build`). The binaries on disk were compiled
+      2026-08-18 00:54:42; the security remediations landed at 01:05:07, eleven
+      minutes later, so the running server does not contain them.
+- [ ] **Bump `tools/testing/hercules-revision`.** It pins `c07c4b235` (2026-08-07),
+      nine commits behind, so the paired-integration CI has never once exercised
+      the IP-bound auth change it would be the natural place to catch.
 
 If that pass fails, fix the pack or the advertised IPs. Do not add a fourth
 friend to a broken handoff.

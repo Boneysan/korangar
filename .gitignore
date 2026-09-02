@@ -33,3 +33,5 @@ __pycache__/
 # Friends distribution pack (tools/packaging/make-pack.sh) -- 3.7 GB of
 # Gravity assets and a built exe. Never committed.
 /dist/
+
+tools/packaging/windows/VC_redist.x64.exe
