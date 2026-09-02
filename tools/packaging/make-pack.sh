@@ -3,6 +3,7 @@
 #
 #   tools/packaging/make-pack.sh --server 100.x.y.z
 #   tools/packaging/make-pack.sh --server ro.example.com --skip-assets   # update pack
+#   tools/packaging/make-pack.sh --server 100.x.y.z --merged             # + one zip
 #
 # Produces (see docs/plans/friends-distribution.md):
 #
@@ -23,6 +24,7 @@ out="dist"
 extra_grf_dir="/Volumes/T7/GitHub/RO/client"
 skip_assets=0
 do_build=0
+do_merged=0
 target="x86_64-pc-windows-msvc"
 redist_url="https://aka.ms/vs/17/release/vc_redist.x64.exe"
 redist="tools/packaging/windows/VC_redist.x64.exe"
@@ -36,6 +38,7 @@ while [ $# -gt 0 ]; do
         --assets-from) extra_grf_dir="${2:-}"; shift 2 ;;
         --skip-assets) skip_assets=1; shift ;;
         --build) do_build=1; shift ;;
+        --merged) do_merged=1; shift ;;
         -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
         *) die "unknown argument: $1" ;;
     esac
@@ -195,6 +198,38 @@ grep -q 'SHA256SUMS-assets' "$windows/Setup.ps1" \
 bgm_lines="$(grep -c 'BGM/' "$assets/SHA256SUMS-assets" || true)"
 [ "$bgm_lines" -gt 100 ] || die "SHA256SUMS-assets lists only $bgm_lines BGM files -- the manifest is not covering the folder"
 
+# The first-time download: ONE zip a friend unpacks and plays from, with no
+# merging step of their own. Decision S3's "optional merged first-time zip".
+#
+# Built here rather than by hand, so it inherits the contents checklist above --
+# a hand-assembled upload is exactly the artifact nobody checks. Updates still
+# use the small Windows half; that is the whole reason the split exists.
+if [ "$do_merged" -eq 1 ]; then
+    merged="$out/Seal Cascade"
+    echo "==> $merged/"
+    rm -rf "$merged" "$out/Seal Cascade.zip"
+    mkdir -p "$merged"
+    # -c clones on APFS, so staging 3.7 GB costs no space and no time.
+    cp -Rc "$windows/." "$merged/"
+    cp -Rc "$assets/." "$merged/"
+
+    # Both manifests have to survive the merge -- that is the entire reason
+    # they are named apart (S12). If this ever fails, the rename regressed.
+    require "$merged/SHA256SUMS-client"
+    require "$merged/SHA256SUMS-assets"
+
+    merged_files="$(find "$merged" -type f | wc -l | tr -d ' ')"
+    expected_files="$(( $(grep -c . "$windows/SHA256SUMS-client") + $(grep -c . "$assets/SHA256SUMS-assets") ))"
+    [ "$merged_files" = "$expected_files" ] \
+        || die "merged folder has $merged_files files, both manifests describe $expected_files"
+
+    # Storing the already-compressed payload instead of deflating it: the GRFs,
+    # the 7z and the mp3s do not shrink, and compressing 3.7 GB of them costs
+    # many minutes to save nothing. The exe and archive/ still compress.
+    echo "==> $out/Seal Cascade.zip"
+    ( cd "$out" && zip -r -X -q -n .grf:.7z:.mp3 "Seal Cascade.zip" "Seal Cascade" -x '*.DS_Store' )
+fi
+
 echo
 echo "pack ready:"
 du -sh "$windows" 2>/dev/null || true
@@ -204,6 +239,13 @@ echo "  server:  $address:$port"
 echo "  client:  $(grep -c . "$windows/SHA256SUMS-client") files"
 echo "  assets:  $(grep -c . "$assets/SHA256SUMS-assets") files"
 echo
-echo "zip Windows/ and upload it; upload Assets/ as a folder."
-echo "Do NOT re-compress the GRFs -- they are already compressed, so zipping"
-echo "Assets costs a long wait and saves almost nothing."
+if [ "$do_merged" -eq 1 ]; then
+    du -sh "$out/Seal Cascade.zip" 2>/dev/null || true
+    echo
+    echo "first-time download: upload 'Seal Cascade.zip' -- one file, they unzip and play."
+    echo "updates: zip Windows/ on its own (80 MB), so nobody re-downloads 3.7 GB."
+else
+    echo "zip Windows/ and upload it; upload Assets/ as a folder."
+    echo "Do NOT re-compress the GRFs -- they are already compressed, so zipping"
+    echo "Assets costs a long wait and saves almost nothing."
+fi

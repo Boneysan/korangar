@@ -29,27 +29,36 @@ WHAT YOUR PC NEEDS
   * A graphics card that supports Vulkan or DirectX 12. Anything from the last
     ten years is fine, including built-in Intel graphics.
 
-  * About 4 GB of free disk space.
+  * About 8 GB of free disk space to install (4 GB once you delete
+    the .zip afterwards).
 
 
 --------------------------------------------------------------------------------
 INSTALLING - THE SHORT VERSION
 --------------------------------------------------------------------------------
 
-  1. Download BOTH folders from the shared Drive folder:
+  1. Download the file the host sent you:
 
-       Windows   (small, about 56 MB - this one, the game program)
-       Assets    (large, about 3.7 GB - the artwork, maps and music)
+       Seal Cascade.zip        about 3.7 GB - everything, in one download
 
-     Unzip them if they arrived as .zip files.
+     It is large. Let it finish completely before touching it. If Drive warns
+     that it "can't scan this file for viruses", that is just the size --
+     click Download anyway.
 
-  2. Double-click  Setup  in this folder.
+  2. Right-click the .zip and choose "Extract All...".
 
-     It finds the Assets folder, moves the game data in beside the program,
-     checks every file against a checksum list, and tells you when it is done.
-     It only needs to be run once.
+     Put it somewhere you will find again -- your Desktop or Documents is
+     fine. Do NOT try to play from inside the .zip: Windows will happily show
+     you the files without ever unpacking them, and the game will fail in
+     confusing ways.
 
-  3. Double-click  Play  to start the game.
+  3. Open the folder it created and double-click  Setup.
+
+     It checks that this PC can run the game, installs one Microsoft component
+     if it is missing, and verifies all 259 files against a checksum list.
+     Run it once, the first time.
+
+  4. Double-click  Play  to start the game.
 
   4. At the login screen, type a username ending in _m or _f and a password:
 
@@ -65,16 +74,25 @@ INSTALLING - THE SHORT VERSION
 
 
 --------------------------------------------------------------------------------
-IF YOU WOULD RATHER DO IT BY HAND
+IF YOU WERE SENT TWO DOWNLOADS INSTEAD
 --------------------------------------------------------------------------------
 
-  Setup is only doing this:
+  Some people get the split version -- a small Windows download and a large
+  Assets one. That exists so a game update costs 80 MB instead of 3.7 GB, and
+  it is also what you will get for updates after the first install.
 
-    Copy everything inside the Assets folder into THIS folder, so that
-    data.grf, rdata.grf, renewal2021.grf, resources2021.grf, lua_files.7z,
-    the BGM folder and SHA256SUMS-assets all sit right next to Play.
+  If that is what you have: download both, unzip both, and then either run
+  Setup (it looks for the Assets folder nearby and moves it in for you), or do
+  it by hand as below. Everything has to end up in ONE folder.
 
-  When you are done this folder should contain, at minimum:
+  By hand, Setup is only doing this:
+
+    Copy everything inside the Assets folder into the folder holding Play, so
+    that data.grf, rdata.grf, renewal2021.grf, resources2021.grf,
+    lua_files.7z, the BGM folder and SHA256SUMS-assets all sit right next to
+    Play.
+
+  Either way, when you are done the folder should contain, at minimum:
 
     Play.bat            korangar.exe        data.grf
     Setup.bat           archive\            rdata.grf
@@ -213,7 +231,7 @@ UPDATES
 --------------------------------------------------------------------------------
 
   When the game is updated you will be sent a new Windows folder only, about
-  56 MB. Replace the program files with the new ones and keep your game data --
+  80 MB. Replace the program files with the new ones and keep your game data --
   the 3.7 GB half almost never changes, and you should not have to download it
   twice.
 
