@@ -74,6 +74,17 @@ impl SpriteLoader {
                     print_debug!("Replacing with fallback");
                 }
 
+                // The fallback is what a failed load falls back TO, so asking
+                // for it again when it is the thing that failed recurses until
+                // the stack gives out -- and a blown stack writes nothing to
+                // the log, which makes the one asset whose job is to explain a
+                // failure the one that hides it.
+                if path == FALLBACK_SPRITE_FILE {
+                    return Err(LoadError::UnsupportedFormat(format!(
+                        "the fallback sprite {FALLBACK_SPRITE_FILE} could not be loaded either; the client's archive folder is damaged"
+                    )));
+                }
+
                 return self.get_or_load(FALLBACK_SPRITE_FILE);
             }
         };
@@ -86,6 +97,17 @@ impl SpriteLoader {
                 {
                     print_debug!("Failed to load sprite: {:?}", _error);
                     print_debug!("Replacing with fallback");
+                }
+
+                // The fallback is what a failed load falls back TO, so asking
+                // for it again when it is the thing that failed recurses until
+                // the stack gives out -- and a blown stack writes nothing to
+                // the log, which makes the one asset whose job is to explain a
+                // failure the one that hides it.
+                if path == FALLBACK_SPRITE_FILE {
+                    return Err(LoadError::UnsupportedFormat(format!(
+                        "the fallback sprite {FALLBACK_SPRITE_FILE} could not be loaded either; the client's archive folder is damaged"
+                    )));
                 }
 
                 return self.get_or_load(FALLBACK_SPRITE_FILE);
