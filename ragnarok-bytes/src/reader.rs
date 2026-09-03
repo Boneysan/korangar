@@ -134,6 +134,17 @@ impl<'a> ByteReader<'a> {
         self.offset >= self.limit
     }
 
+    /// Bytes still available to read, without consuming any.
+    ///
+    /// [`Self::remaining_bytes`] answers the same question but takes the data
+    /// with it, which makes it useless for validating a length field before
+    /// acting on it. That is what this is for: no element decodes from zero
+    /// bytes, so a repeating count larger than this cannot be real, whatever
+    /// the file or packet claims.
+    pub fn remaining_length(&self) -> usize {
+        self.limit.saturating_sub(self.offset)
+    }
+
     pub fn get_metadata<Caller, As>(&self) -> ConversionResult<&As>
     where
         As: ?Sized + 'static,

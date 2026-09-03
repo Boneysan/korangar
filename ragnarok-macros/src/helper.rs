@@ -163,8 +163,22 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
 
                 quote!({
                     let repeat_count = #repeat_count_inner as usize;
-                    if repeat_count > 4096 {
-                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    // Bound the count by the data actually present, not by a
+                    // constant. No element decodes from zero bytes, so a count
+                    // larger than what the reader still holds cannot be real --
+                    // which refuses the corrupt or hostile length this guard
+                    // exists for, without inventing a ceiling.
+                    //
+                    // It replaces a flat 4096, which was an order of magnitude
+                    // under real data and made every map in the game unloadable
+                    // from 2026-08-18 until it was found on 2026-09-02: a
+                    // 240x240 GAT is 57,600 entries and Geffen's ground alone is
+                    // 14,581. Any fixed number here is a future outage waiting
+                    // for whichever file first exceeds it.
+                    if repeat_count > byte_reader.remaining_length() {
+                        return Err(ragnarok_bytes::ConversionError::from_message(
+                            "repeating count is larger than the remaining data",
+                        ));
                     }
                     let mut vector = Vec::with_capacity(repeat_count);
 
@@ -185,8 +199,22 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
                     }
 
                     let repeat_count = (remaining_bytes / struct_size) as usize;
-                    if repeat_count > 4096 {
-                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    // Bound the count by the data actually present, not by a
+                    // constant. No element decodes from zero bytes, so a count
+                    // larger than what the reader still holds cannot be real --
+                    // which refuses the corrupt or hostile length this guard
+                    // exists for, without inventing a ceiling.
+                    //
+                    // It replaces a flat 4096, which was an order of magnitude
+                    // under real data and made every map in the game unloadable
+                    // from 2026-08-18 until it was found on 2026-09-02: a
+                    // 240x240 GAT is 57,600 entries and Geffen's ground alone is
+                    // 14,581. Any fixed number here is a future outage waiting
+                    // for whichever file first exceeds it.
+                    if repeat_count > byte_reader.remaining_length() {
+                        return Err(ragnarok_bytes::ConversionError::from_message(
+                            "repeating count is larger than the remaining data",
+                        ));
                     }
                     let mut vector = Vec::with_capacity(repeat_count);
 
@@ -202,8 +230,22 @@ pub fn byte_convertable_helper(data_struct: DataStruct) -> (TokenStream, Vec<Tok
 
                 quote!({
                     let repeat_count = (#repeating_expr) as usize;
-                    if repeat_count > 4096 {
-                        return Err(ragnarok_bytes::ConversionError::from_message("repeating count exceeds 4096"));
+                    // Bound the count by the data actually present, not by a
+                    // constant. No element decodes from zero bytes, so a count
+                    // larger than what the reader still holds cannot be real --
+                    // which refuses the corrupt or hostile length this guard
+                    // exists for, without inventing a ceiling.
+                    //
+                    // It replaces a flat 4096, which was an order of magnitude
+                    // under real data and made every map in the game unloadable
+                    // from 2026-08-18 until it was found on 2026-09-02: a
+                    // 240x240 GAT is 57,600 entries and Geffen's ground alone is
+                    // 14,581. Any fixed number here is a future outage waiting
+                    // for whichever file first exceeds it.
+                    if repeat_count > byte_reader.remaining_length() {
+                        return Err(ragnarok_bytes::ConversionError::from_message(
+                            "repeating count is larger than the remaining data",
+                        ));
                     }
                     let mut vector = Vec::with_capacity(repeat_count);
 

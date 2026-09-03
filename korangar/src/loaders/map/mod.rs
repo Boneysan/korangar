@@ -15,7 +15,7 @@ use korangar_container::{SimpleCache, SimpleSlab};
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, Timer, print_debug};
 use korangar_loaders::FileLoader;
-use ragnarok_bytes::{ByteReader, FromBytes};
+use ragnarok_bytes::{ByteReader, ConversionResultExt, FromBytes};
 use ragnarok_formats::map::{GatData, GroundData, MapData, MapResources};
 use ragnarok_formats::version::MapFormatMetadata;
 use wgpu::{BufferUsages, Device, Queue};
@@ -423,7 +423,12 @@ fn parse_generic_data<Data: FromBytes>(resource_file: &str, game_file_loader: &G
     let bytes = game_file_loader.get(resource_file).map_err(LoadError::File)?;
     let mut byte_reader: ByteReader = ByteReader::with_default_metadata::<MapFormatMetadata>(&bytes);
 
-    let data = Data::from_bytes(&mut byte_reader).map_err(LoadError::Conversion)?;
+    // `.trace::<Data>()` is what puts the type into the error. Without it a
+    // failure in here reads "Conversion(... in )" -- a trailing "in" with
+    // nothing after it, naming neither the file nor the type. That is exactly
+    // how the 4096 repeating-count bug presented, and one call would have
+    // turned a long investigation into reading one line.
+    let data = ConversionResultExt::trace::<Data>(Data::from_bytes(&mut byte_reader)).map_err(LoadError::Conversion)?;
 
     #[cfg(feature = "debug")]
     assert_byte_reader_empty(byte_reader, resource_file);
