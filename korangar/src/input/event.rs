@@ -76,6 +76,8 @@ pub enum InputEvent {
     ToggleInterfaceSettingsWindow,
     /// Open or close the graphics settings window.
     ToggleGraphicsSettingsWindow,
+    /// Switch between windowed and the configured fullscreen mode.
+    ToggleFullscreen,
     /// Open or close the audio settings window.
     ToggleAudioSettingsWindow,
     /// Open or close the friend list window. Only works while playing.

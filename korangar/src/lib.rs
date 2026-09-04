@@ -119,7 +119,7 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::{KeyCode, PhysicalKey};
 #[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
 use winit::platform::x11::EventLoopBuilderExtX11;
-use winit::window::{Icon, Window, WindowAttributes, WindowId};
+use winit::window::{Fullscreen, Icon, Window, WindowAttributes, WindowId};
 
 use crate::graphics::*;
 use crate::input::{InputEvent, InputReport, InputSystem};
@@ -131,8 +131,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt,
-    WORLD_THEMES_PATH,
+    DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
+    ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
@@ -690,6 +690,40 @@ fn create_window_attributes(saved_size: Option<(u32, u32)>, maximized: bool) -> 
         .with_title(CLIENT_NAME)
         .with_window_icon(Some(icon))
         .with_visible(false)
+}
+
+/// Translate a [`DisplayMode`] into the winit fullscreen state it asks for.
+///
+/// Exclusive fullscreen is not a flag: winit wants a concrete video mode, and
+/// only the modes the monitor actually reports are valid. We keep the
+/// resolution the desktop is already at and take the highest refresh rate
+/// offered for it, so the switch does not resize the player's other windows
+/// while a 144 Hz panel still stops running the game at 60.
+///
+/// A monitor that reports no mode at its own size — Wayland reports none at all
+/// — falls back to borderless. Leaving the player in a window with "Exclusive
+/// Fullscreen" selected would look like the setting did nothing.
+fn resolve_fullscreen(window: &Window, display_mode: DisplayMode) -> Option<Fullscreen> {
+    match display_mode {
+        DisplayMode::Windowed => None,
+        DisplayMode::BorderlessFullscreen => Some(Fullscreen::Borderless(None)),
+        DisplayMode::ExclusiveFullscreen => {
+            let monitor = window.current_monitor().or_else(|| window.primary_monitor());
+
+            let video_mode = monitor.as_ref().and_then(|monitor| {
+                let monitor_size = monitor.size();
+                monitor
+                    .video_modes()
+                    .filter(|video_mode| video_mode.size() == monitor_size)
+                    .max_by_key(|video_mode| video_mode.refresh_rate_millihertz())
+            });
+
+            match video_mode {
+                Some(video_mode) => Some(Fullscreen::Exclusive(video_mode)),
+                None => Some(Fullscreen::Borderless(monitor)),
+            }
+        }
+    }
 }
 
 async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, compatible_surface: Option<&wgpu::Surface<'_>>) -> Adapter {
@@ -1401,6 +1435,10 @@ pub struct Client {
     audio_engine: Arc<AudioEngine<GameFileLoader>>,
     active_interface_settings: InterfaceSettings,
     active_graphics_settings: GraphicsSettings,
+    /// Which fullscreen mode Alt+Enter goes back to. Deliberately not
+    /// persisted: it only has to outlive the toggle, and the mode the player
+    /// actually chose already lives in `GraphicsSettings`.
+    preferred_fullscreen_mode: DisplayMode,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -2996,6 +3034,10 @@ impl Client {
             networking_system,
             audio_engine,
             active_interface_settings,
+            preferred_fullscreen_mode: match graphics_settings.display_mode {
+                DisplayMode::Windowed => DisplayMode::BorderlessFullscreen,
+                mode => mode,
+            },
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -3108,6 +3150,16 @@ impl Client {
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn update_settings(&mut self) {
         let graphics_settings = self.client_state.follow(client_state().graphics_settings());
+
+        // Marked active only once it has actually been applied: with no window
+        // yet there is nothing to put fullscreen, and recording it anyway would
+        // drop the change on the floor instead of retrying next frame.
+        if self.active_graphics_settings.display_mode != graphics_settings.display_mode
+            && let Some(window) = self.window.as_ref()
+        {
+            window.set_fullscreen(resolve_fullscreen(window, graphics_settings.display_mode));
+            self.active_graphics_settings.display_mode = graphics_settings.display_mode;
+        }
 
         if self.active_graphics_settings.vsync != graphics_settings.vsync {
             self.graphics_engine.set_vsync(graphics_settings.vsync);
@@ -6696,6 +6748,23 @@ impl Client {
                         client_state().graphics_settings_capabilities(),
                     )),
                 },
+                InputEvent::ToggleFullscreen => {
+                    let path = client_state().graphics_settings().display_mode();
+                    let display_mode = *self.client_state.follow(path);
+
+                    let next_display_mode = match display_mode {
+                        DisplayMode::Windowed => self.preferred_fullscreen_mode,
+                        mode => {
+                            // Remember which fullscreen they were in, so Alt+Enter
+                            // puts them back there rather than quietly demoting an
+                            // exclusive setup to borderless.
+                            self.preferred_fullscreen_mode = mode;
+                            DisplayMode::Windowed
+                        }
+                    };
+
+                    *self.client_state.follow_mut(path) = next_display_mode;
+                }
                 InputEvent::ToggleAudioSettingsWindow => match self.interface.is_window_with_class_open(WindowClass::AudioSettings) {
                     true => self.interface.close_window_with_class(WindowClass::AudioSettings),
                     false => self
@@ -9299,6 +9368,13 @@ impl ApplicationHandler for Client {
                     self.graphics_engine.get_present_mode_info(),
                 );
 
+            // The window is created invisible, so applying the saved mode here
+            // means a player who plays fullscreen never sees a windowed frame
+            // first. This runs on every resume rather than only on creation,
+            // because the window may already exist by the time we get here.
+            let display_mode = *self.client_state.follow(client_state().graphics_settings().display_mode());
+            window.set_fullscreen(resolve_fullscreen(window, display_mode));
+
             window.set_visible(true);
 
             // Kick off the self-sustaining redraw loop. Without this, if the only
@@ -9323,7 +9399,11 @@ impl ApplicationHandler for Client {
                 // apparent size. A maximized window's size is not worth saving —
                 // the maximized flag restores that, and storing it would leave
                 // nothing sensible to un-maximize back to.
-                if let Some(window) = self.window.as_ref() {
+                // Skipped while fullscreen: the resize reports the monitor size and
+                // `is_maximized()` is false, so saving here would record the
+                // fullscreen resolution as the windowed size and leave nothing
+                // sensible to restore on the way back out.
+                if let Some(window) = self.window.as_ref().filter(|window| window.fullscreen().is_none()) {
                     let maximized = window.is_maximized();
                     *self.client_state.follow_mut(client_state().game_settings().window_maximized()) = maximized;
 

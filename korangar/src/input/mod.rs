@@ -327,6 +327,12 @@ impl InputSystem {
             events.push(InputEvent::ToggleAudioSettingsWindow);
         }
 
+        // Alt+Enter is the reflex on Windows. F11 — the other reflex — is not
+        // available: the binding right below already owns it.
+        if alt_down && self.get_key(KeyCode::Enter).pressed() {
+            events.push(InputEvent::ToggleFullscreen);
+        }
+
         if self.get_key(KeyCode::F11).pressed() {
             events.push(InputEvent::CloseAllOrdinaryWindows);
         }
