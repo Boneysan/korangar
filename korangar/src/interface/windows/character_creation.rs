@@ -5,7 +5,7 @@ use rust_state::{Path, PathExt, State};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
-use crate::state::character_creation::{CharacterCreation, CharacterCreationPathExt, STARTING_STATUS_POINTS};
+use crate::state::character_creation::{CharacterCreation, CharacterCreationPathExt, CreationStat, STARTING_STATUS_POINTS};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
@@ -70,6 +70,41 @@ where
             )
         });
 
+        // Points not yet spent. Derived from the allocation rather than tracked
+        // beside it, so the two cannot disagree.
+        let points_remaining = ComputedSelector::new_default(move |state: &ClientState| {
+            let remaining = self.creation_path.stats().follow_safe(state).remaining();
+
+            format!("Points remaining: {remaining} of {STARTING_STATUS_POINTS}")
+        });
+
+        macro_rules! stat_row {
+            ($stat:expr) => {
+                split! {
+                    children: (
+                        text! {
+                            text: $stat.label(),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        button! {
+                            text: "-",
+                            event: InputEvent::AdjustCreationStat { stat: $stat, raise: false },
+                        },
+                        text! {
+                            text: ComputedSelector::new_default(move |state: &ClientState| {
+                                self.creation_path.stats().follow_safe(state).get($stat).to_string()
+                            }),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        button! {
+                            text: "+",
+                            event: InputEvent::AdjustCreationStat { stat: $stat, raise: true },
+                        }
+                    )
+                }
+            };
+        }
+
         let create_action = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
             let name = state.get(&self.character_name_path).clone();
             let sex = *state.get(&self.creation_path.sex());
@@ -88,6 +123,11 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::Menu,
             closable: true,
+            // The theme's default cap is sized for the short form this window
+            // used to be. With sex, hair, the six stat rows and the help panel
+            // it needs room, and anything past the cap is simply cut off rather
+            // than scrolled.
+            maximum_height: 900.0,
             elements: (
                 text_box! {
                     ghost_text: client_state().localization().character_name_text(),
@@ -120,6 +160,16 @@ where
                         }
                     )
                 },
+                text! {
+                    text: points_remaining,
+                    overflow_behavior: OverflowBehavior::Shrink,
+                },
+                stat_row!(CreationStat::Strength),
+                stat_row!(CreationStat::Agility),
+                stat_row!(CreationStat::Vitality),
+                stat_row!(CreationStat::Intelligence),
+                stat_row!(CreationStat::Dexterity),
+                stat_row!(CreationStat::Luck),
                 state_button! {
                     text: "Help me choose my stats",
                     state: self.creation_path.show_recommendation(),
@@ -151,6 +201,10 @@ where
                         text! {
                             text: recommendation_budget,
                             overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        button! {
+                            text: "Use this build",
+                            event: InputEvent::UseRecommendedStats,
                         }
                     ),
                     on_false: EmptyElement,

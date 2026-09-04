@@ -14,7 +14,7 @@
 
 use korangar_interface::components::drop_down::DropDownItem;
 use korangar_interface::element::StateElement;
-use ragnarok_packets::Sex;
+use ragnarok_packets::{Sex, StatUpType};
 use rust_state::RustState;
 
 /// Hair styles present in the archive, as drop-down labels. A dedicated table
@@ -157,8 +157,58 @@ impl StartingClass {
     }
 }
 
+/// One of the six stats, as the creation screen refers to it.
+#[derive(Copy, Clone, Debug, PartialEq, Eq, StateElement)]
+pub enum CreationStat {
+    Strength,
+    Agility,
+    Vitality,
+    Intelligence,
+    Dexterity,
+    Luck,
+}
+
+impl CreationStat {
+    pub const ALL: [Self; 6] = [
+        Self::Strength,
+        Self::Agility,
+        Self::Vitality,
+        Self::Intelligence,
+        Self::Dexterity,
+        Self::Luck,
+    ];
+
+    pub fn label(&self) -> &'static str {
+        match self {
+            Self::Strength => "STR",
+            Self::Agility => "AGI",
+            Self::Vitality => "VIT",
+            Self::Intelligence => "INT",
+            Self::Dexterity => "DEX",
+            Self::Luck => "LUK",
+        }
+    }
+
+    /// The wire request that raises this stat by `amount`.
+    ///
+    /// Hercules takes the amount rather than insisting on one point per
+    /// packet -- `clif_parse_StatusUp` passes it straight to `pc->statusup`,
+    /// and the comment there notes clients from 2013-12-23 send the real
+    /// amount. So a whole build is six requests, not twenty-four.
+    pub fn stat_up(&self, amount: u8) -> StatUpType {
+        match self {
+            Self::Strength => StatUpType::Strength { amount },
+            Self::Agility => StatUpType::Agility { amount },
+            Self::Vitality => StatUpType::Vitality { amount },
+            Self::Intelligence => StatUpType::Intelligence { amount },
+            Self::Dexterity => StatUpType::Dexterity { amount },
+            Self::Luck => StatUpType::Luck { amount },
+        }
+    }
+}
+
 /// Six target stat values for a level-1 character.
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, RustState, StateElement)]
 pub struct StatSpread {
     pub strength: u16,
     pub agility: u16,
@@ -169,6 +219,67 @@ pub struct StatSpread {
 }
 
 impl StatSpread {
+    /// Every stat at 1, which is what the server creates a character with.
+    pub const BASE: Self = Self::new(1, 1, 1, 1, 1, 1);
+
+    pub fn get(&self, stat: CreationStat) -> u16 {
+        match stat {
+            CreationStat::Strength => self.strength,
+            CreationStat::Agility => self.agility,
+            CreationStat::Vitality => self.vitality,
+            CreationStat::Intelligence => self.intelligence,
+            CreationStat::Dexterity => self.dexterity,
+            CreationStat::Luck => self.luck,
+        }
+    }
+
+    fn set(&mut self, stat: CreationStat, value: u16) {
+        match stat {
+            CreationStat::Strength => self.strength = value,
+            CreationStat::Agility => self.agility = value,
+            CreationStat::Vitality => self.vitality = value,
+            CreationStat::Intelligence => self.intelligence = value,
+            CreationStat::Dexterity => self.dexterity = value,
+            CreationStat::Luck => self.luck = value,
+        }
+    }
+
+    /// Points not yet spent.
+    pub fn remaining(&self) -> u32 {
+        STARTING_STATUS_POINTS.saturating_sub(self.cost())
+    }
+
+    /// Raise a stat if the remaining points cover the next one.
+    ///
+    /// Checked against the cost of the *whole* spread rather than the step in
+    /// isolation, so this can never leave the player over budget -- which the
+    /// server would reject at apply time, silently, one stat at a time.
+    pub fn raise(&mut self, stat: CreationStat) {
+        let mut candidate = *self;
+        candidate.set(stat, self.get(stat) + 1);
+
+        if candidate.cost() <= STARTING_STATUS_POINTS {
+            *self = candidate;
+        }
+    }
+
+    /// Lower a stat, never below the 1 every character starts at.
+    pub fn lower(&mut self, stat: CreationStat) {
+        let value = self.get(stat);
+
+        if value > 1 {
+            self.set(stat, value - 1);
+        }
+    }
+
+    /// What each stat needs to be raised by to reach this spread.
+    pub fn deltas_from_base(&self) -> impl Iterator<Item = (CreationStat, u8)> + '_ {
+        CreationStat::ALL
+            .into_iter()
+            .map(|stat| (stat, (self.get(stat).saturating_sub(1)) as u8))
+            .filter(|(_, amount)| *amount > 0)
+    }
+
     const fn new(strength: u16, agility: u16, vitality: u16, intelligence: u16, dexterity: u16, luck: u16) -> Self {
         Self {
             strength,
@@ -256,6 +367,9 @@ pub struct CharacterCreation {
     /// Whether the "help me choose" panel is showing.
     pub show_recommendation: bool,
     pub starting_class: StartingClass,
+    /// What the player has allocated so far. Cannot ride the creation packet,
+    /// so it is applied for them once the character reaches the map.
+    pub stats: StatSpread,
     pub sexes: Vec<CharacterSex>,
     pub hair_styles: Vec<HairStyle>,
     pub starting_classes: Vec<StartingClass>,
@@ -268,6 +382,7 @@ impl Default for CharacterCreation {
             hair_style: HairStyle::DEFAULT,
             show_recommendation: false,
             starting_class: StartingClass::Swordsman,
+            stats: StatSpread::BASE,
             sexes: CharacterSex::all(),
             hair_styles: HairStyle::all(),
             starting_classes: StartingClass::all(),
@@ -283,6 +398,7 @@ impl CharacterCreation {
         self.hair_style = HairStyle::DEFAULT;
         self.show_recommendation = false;
         self.starting_class = StartingClass::Swordsman;
+        self.stats = StatSpread::BASE;
     }
 }
 

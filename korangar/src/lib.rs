@@ -88,8 +88,8 @@ use ragnarok_formats::transform::Transform;
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
-    AccountId, AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId,
-    ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
+    AccountId, AttackRange, BuyShopItemsResult, CharacterId, CharacterServerInformation, ClientTick, Direction, DisappearanceReason,
+    EntityId, ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
     WorldPosition,
 };
 use renderer::InterfaceRenderer;
@@ -135,7 +135,7 @@ use crate::settings::{
     DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
     ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
-use crate::state::character_creation::{CharacterSex, HairStyle};
+use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -537,14 +537,25 @@ const PARTY_CHAT_COLOR: MessageColor = MessageColor::Rgb {
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
-/// Entity id for the character-creation preview. `u32::MAX` cannot collide with
-/// a server-assigned account id, so the preview can be found and removed by id
-/// rather than by an index a spawn could invalidate.
-const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX);
-/// The tile under [`START_CAMERA_FOCUS_POINT`] -- world units over
-/// `GAT_TILE_SIZE` -- so the preview stands where the character-select camera
-/// is already pointing.
-const CHARACTER_PREVIEW_TILE: (u16, u16) = (120, 48);
+/// Entity id for the character-creation preview, so it can be found and removed
+/// by id rather than by an index a spawn could invalidate.
+///
+/// **Deliberately not `u32::MAX`.** That is [`EMOTE_ANIMATION_ENTITY_ID`], and
+/// the sprite effects count their own sentinels down from `u32::MAX - 1`. The
+/// first version of this used `u32::MAX`, so when the preview's sprite finished
+/// loading, `update_loaded_resources` matched the emote branch first and handed
+/// a novice body to the emote bubble sheet -- the preview stayed invisible and
+/// the emote sheet was quietly wrong. Far enough below the sprite-effect
+/// sentinels to leave that space room to grow, and far above any account id
+/// Hercules hands out.
+const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX - 65536);
+/// Where the preview stands.
+///
+/// Offset from the tile under [`START_CAMERA_FOCUS_POINT`] (world units over
+/// `GAT_TILE_SIZE`, so 120x48) because the camera points at that tile and the
+/// character-select and creation windows sit on top of it -- a preview dead
+/// centre is a preview behind a dialog.
+const CHARACTER_PREVIEW_TILE: (u16, u16) = (108, 40);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
@@ -1453,6 +1464,15 @@ pub struct Client {
     /// the window is closed. Compared against the player's choices each frame
     /// to decide whether the preview entity needs rebuilding.
     character_preview: Option<(CharacterSex, HairStyle)>,
+    /// A stat spread chosen at character creation, waiting for the character it
+    /// belongs to. Stats cannot ride the creation packet, so the allocation is
+    /// replayed as ordinary `StatUp` requests once that character is in the
+    /// world -- which is also why this is keyed by id: creating one character
+    /// and then playing another must not apply the wrong build.
+    pending_stat_plan: Option<(CharacterId, StatSpread)>,
+    /// The plan above, once the matching character has been selected and is on
+    /// its way into the map.
+    armed_stat_plan: Option<StatSpread>,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -3053,6 +3073,8 @@ impl Client {
                 mode => mode,
             },
             character_preview: None,
+            pending_stat_plan: None,
+            armed_stat_plan: None,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -4007,6 +4029,16 @@ impl Client {
                     // they spawn on the map.
                     let _ = self.networking_system.request_client_tick();
 
+                    // Arm a creation-time stat plan only for the character it was
+                    // made for. Selecting a different character discards it --
+                    // otherwise a build chosen for a new Acolyte would land on
+                    // whichever character was played next.
+                    self.armed_stat_plan = self
+                        .pending_stat_plan
+                        .take()
+                        .filter(|(character_id, _)| *character_id == login_data.character_id)
+                        .map(|(_, spread)| spread);
+
                     let mut player = Entity::Player(Player::new(
                         &self.library,
                         saved_login_data.account_id,
@@ -4083,6 +4115,13 @@ impl Client {
                     self.audio_engine.clear_ambient_sound();
                 }
                 NetworkEvent::CharacterCreated { character_information } => {
+                    // Bind the allocation to the character it was made for.
+                    let planned = *self.client_state.follow(client_state().character_creation().stats());
+
+                    if planned != StatSpread::BASE {
+                        self.pending_stat_plan = Some((character_information.character_id, planned));
+                    }
+
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .add_character(character_information);
@@ -4346,6 +4385,19 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
+                    // The map server has accepted this character, so the status
+                    // points exist and `pc_statusup` has a session to act on.
+                    // Sending any earlier would be dropped in the handshake.
+                    //
+                    // One request per stat rather than one per point: Hercules
+                    // takes the amount (`clif_parse_StatusUp` hands it straight
+                    // to `pc->statusup`), so a whole build is at most six.
+                    if let Some(spread) = self.armed_stat_plan.take() {
+                        for (stat, amount) in spread.deltas_from_base() {
+                            let _ = self.networking_system.request_stat_up(stat.stat_up(amount));
+                        }
+                    }
+
                     self.map = None;
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -6866,6 +6918,22 @@ impl Client {
                         client_state().graphics_settings_capabilities(),
                     )),
                 },
+                InputEvent::AdjustCreationStat { stat, raise } => {
+                    let stats = self.client_state.follow_mut(client_state().character_creation().stats());
+
+                    match raise {
+                        true => stats.raise(stat),
+                        false => stats.lower(stat),
+                    }
+                }
+                InputEvent::UseRecommendedStats => {
+                    let recommended = self
+                        .client_state
+                        .follow(client_state().character_creation().starting_class())
+                        .recommended_stats();
+
+                    *self.client_state.follow_mut(client_state().character_creation().stats()) = recommended;
+                }
                 InputEvent::ToggleFullscreen => {
                     let path = client_state().graphics_settings().display_mode();
                     let display_mode = *self.client_state.follow(path);
