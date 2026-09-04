@@ -111,6 +111,13 @@ impl NetworkingSystem<NoPacketCallback> {
     }
 }
 
+/// Hair style to use when the caller has no opinion.
+///
+/// **Not zero.** Hair sprites in `data.grf` are `<style>_<sex>.spr` and run
+/// 1..=42; there is no style 0, so a character created with 0 asks for a sprite
+/// that does not exist. Style 1 exists for both sexes.
+pub const DEFAULT_HAIR_STYLE: u16 = 1;
+
 impl<Callback> NetworkingSystem<Callback>
 where
     Callback: PacketCallback + Send,
@@ -707,6 +714,9 @@ where
     /// `hair_style` is 1-based, matching the sprite files in `data.grf`. There
     /// is no style 0 in the archive, which is what this used to send along with
     /// a hardcoded male novice -- every character came out identical.
+    ///
+    /// [`DEFAULT_HAIR_STYLE`] is the safe value for a caller that has no
+    /// opinion.
     pub fn create_character(&mut self, slot: usize, name: String, sex: Sex, hair_style: u16) -> Result<(), NotConnectedError> {
         // Not yet chosen by the player: the client stores `head_palette` but
         // nothing reads it back when composing a sprite, so a colour picker
