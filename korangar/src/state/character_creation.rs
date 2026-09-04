@@ -44,10 +44,6 @@ impl HairStyle {
     /// Style 1 exists for both sexes and is the classic default.
     pub const DEFAULT: Self = Self { id: 1 };
 
-    fn all() -> Vec<Self> {
-        (1..=HAIR_STYLE_LABELS.len() as u16).map(|id| Self { id }).collect()
-    }
-
     /// Step to the next or previous style, wrapping at both ends.
     ///
     /// Wrapping rather than clamping because these are cycled with arrows: a
@@ -404,7 +400,6 @@ pub struct CharacterCreation {
     /// look at the back of a hairstyle as well as the front.
     pub preview_direction: usize,
     pub sexes: Vec<CharacterSex>,
-    pub hair_styles: Vec<HairStyle>,
     pub starting_classes: Vec<StartingClass>,
 }
 
@@ -420,7 +415,6 @@ impl Default for CharacterCreation {
             preview_animation: SpriteAnimationState::new(ClientTick(0)),
             preview_direction: 0,
             sexes: CharacterSex::all(),
-            hair_styles: HairStyle::all(),
             starting_classes: StartingClass::all(),
         }
     }
