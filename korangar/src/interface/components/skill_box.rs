@@ -291,7 +291,15 @@ where
                 && let Some(sprite) = &learnable_skill.sprite
             {
                 layout.with_clip(layout_info.area, |layout| {
-                    layout.add_sprite(layout_info.area, actions, sprite, &learnable_skill.animation_state, color, 1.0);
+                    layout.add_sprite(
+                        layout_info.area,
+                        actions,
+                        sprite,
+                        &learnable_skill.animation_state,
+                        0,
+                        color,
+                        1.0,
+                    );
                 });
             }
 

@@ -449,7 +449,13 @@ pub(crate) fn get_sprite_path_for_player_job(job_id: JobId) -> &'static str {
     }
 }
 
-fn get_entity_part_files(library: &Library, entity_type: EntityType, job_id: JobId, sex: Sex, head: Option<usize>) -> Vec<String> {
+pub(crate) fn get_entity_part_files(
+    library: &Library,
+    entity_type: EntityType,
+    job_id: JobId,
+    sex: Sex,
+    head: Option<usize>,
+) -> Vec<String> {
     let sex_sprite_path = match sex == Sex::Female {
         true => "여",
         false => "남",

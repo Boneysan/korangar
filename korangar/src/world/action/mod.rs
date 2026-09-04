@@ -102,9 +102,24 @@ impl Actions {
         let motion = &action.motions[frame_index % action.motions.len()];
 
         for sprite_clip in &motion.sprite_clips {
-            // `get` instead of a direct index in case a fallback was loaded
-            let Some(texture) = sprite.textures.get(sprite_clip.sprite_number as usize) else {
-                return;
+            // `continue`, not `return`: a motion may legitimately hold empty
+            // slots, and RO writes those as sprite number -1. Cast to `usize`
+            // that becomes `usize::MAX`, `get` misses, and returning here threw
+            // away every *remaining* clip in the motion as well.
+            //
+            // Every head sprite has this shape -- its idle motion is
+            // `[-1, 0]` -- so bailing on the first clip meant no head ever
+            // drew, while a body (`[0]`) was unaffected. Found when the
+            // character-creation preview became the first caller of
+            // `add_sprite`.
+            //
+            // `get` rather than a direct index also covers a fallback sprite
+            // having fewer textures than the ACT expects.
+            let Some(texture) = usize::try_from(sprite_clip.sprite_number)
+                .ok()
+                .and_then(|sprite_number| sprite.textures.get(sprite_number))
+            else {
+                continue;
             };
 
             let offset = sprite_clip.position.map(|component| component as f32);
@@ -119,6 +134,14 @@ impl Actions {
             let zoom2 = sprite_clip.zoom2.unwrap_or_else(|| Vector2::from_value(1.0));
 
             let final_size = dimensions.zip(zoom2, f32::mul) * zoom;
+
+            // NOTE: `offset` is deliberately NOT multiplied by `zoom`, even
+            // though the size is. Scaling it (which reads as the obvious fix,
+            // since a part authored 69 units above another should move 138 at
+            // 2x) pushes the sprite outside the element's clip and it vanishes.
+            // Left as-is rather than "corrected": every caller but the
+            // character preview draws at ~1.0 where it makes no difference, and
+            // the preview compensates with its own offset instead.
             let final_position = Vector2::new(position.left, position.top) + offset - final_size / 2.0;
 
             let final_size = ScreenSize {
@@ -131,7 +154,15 @@ impl Actions {
                 top: final_position.y,
             };
 
-            renderer.render_sprite(texture.clone(), final_position, final_size, screen_clip, color, false);
+            renderer.render_sprite(
+                texture.clone(),
+                final_position,
+                final_size,
+                screen_clip,
+                color,
+                false,
+                sprite_clip.mirror_on != 0,
+            );
         }
     }
 }

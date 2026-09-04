@@ -26,6 +26,7 @@ use crate::world::MarkerIdentifier;
 
 /// Trait to render sprite data.
 pub trait SpriteRenderer {
+    #[allow(clippy::too_many_arguments)]
     fn render_sprite(
         &self,
         texture: Arc<Texture>,
@@ -34,6 +35,7 @@ pub trait SpriteRenderer {
         screen_clip: ScreenClip,
         color: Color,
         smooth: bool,
+        mirror: bool,
     );
 
     fn render_sdf(&self, texture: Arc<Texture>, position: ScreenPosition, size: ScreenSize, screen_clip: ScreenClip, color: Color);

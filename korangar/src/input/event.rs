@@ -13,7 +13,7 @@ use rust_state::State;
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
 use crate::state::ClientState;
-use crate::state::character_creation::{CharacterSex, HairStyle};
+use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
 use crate::state::skills::LearnableSkill;
 #[cfg(feature = "debug")]
 use crate::world::MarkerIdentifier;
@@ -79,6 +79,25 @@ pub enum InputEvent {
     ToggleGraphicsSettingsWindow,
     /// Switch between windowed and the configured fullscreen mode.
     ToggleFullscreen,
+    /// Raise or lower one stat on the character creation screen.
+    AdjustCreationStat {
+        stat: CreationStat,
+        /// `true` raises, `false` lowers.
+        raise: bool,
+    },
+    /// Copy the recommended spread for the selected first job into the
+    /// allocation.
+    UseRecommendedStats,
+    /// Step the character creation hair style one forward or back.
+    CycleHairStyle {
+        /// `true` steps forward, `false` back.
+        forward: bool,
+    },
+    /// Turn the character creation preview one eighth of a turn.
+    RotateCharacterPreview {
+        /// `true` turns one way, `false` the other.
+        clockwise: bool,
+    },
     /// Open or close the audio settings window.
     ToggleAudioSettingsWindow,
     /// Open or close the friend list window. Only works while playing.

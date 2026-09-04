@@ -104,7 +104,7 @@ use crate::state::trade::TradeState;
 #[cfg(feature = "debug")]
 use crate::world::Object;
 use crate::world::{Entity, GroundItem, Player, ResourceMetadata};
-use crate::{AudioSettings, GraphicsSettings};
+use crate::{AudioSettings, CHARACTER_PREVIEW_ENTITY_ID, GraphicsSettings};
 
 /// A message in the in-game chat.
 ///
@@ -761,6 +761,22 @@ pub fn client_theme() -> impl Path<ClientState, InterfaceTheme> {
     ThemePath
 }
 
+/// The first entity that could be the local player.
+///
+/// Skips the character-creation preview, which shares the entity list while
+/// that window is open purely so it renders through the same path. Without the
+/// skip it would be handed out as "us" on the character-select screen, where it
+/// is the only entity in the list.
+fn first_candidate(entities: &[Entity]) -> Option<&Entity> {
+    entities.iter().find(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID)
+}
+
+fn first_candidate_mut(entities: &mut [Entity]) -> Option<&mut Entity> {
+    entities
+        .iter_mut()
+        .find(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID)
+}
+
 /// Path to the player as [`Player`].
 pub fn this_player() -> impl Path<ClientState, Player, false> {
     #[derive(Clone, Copy)]
@@ -775,17 +791,23 @@ pub fn this_player() -> impl Path<ClientState, Player, false> {
     impl Path<ClientState, Player, false> for CustomPath {
         fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a Player> {
             // TODO: Select our player better.
-            match state.entities.first()? {
+            match first_candidate(&state.entities)? {
                 Entity::Player(player) => Some(player),
-                _ => unreachable!(),
+                // Not a panic. This used to be `unreachable!()`, on the
+                // assumption that a non-player could never be first -- until
+                // the character-creation preview became an entity, and at that
+                // screen it is the *only* entity. A first entity that is not a
+                // player means we have no local player, which is the honest
+                // answer for a path that already returns an `Option`.
+                _ => None,
             }
         }
 
         fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut Player> {
             // TODO: Select our player better.
-            match state.entities.first_mut()? {
+            match first_candidate_mut(&mut state.entities)? {
                 Entity::Player(player) => Some(player),
-                _ => unreachable!(),
+                _ => None,
             }
         }
     }
@@ -807,12 +829,12 @@ pub fn this_entity() -> impl Path<ClientState, Entity, false> {
     impl Path<ClientState, Entity, false> for CustomPath {
         fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a Entity> {
             // TODO: Select our player better.
-            state.entities.first()
+            first_candidate(&state.entities)
         }
 
         fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut Entity> {
             // TODO: Select our player better.
-            state.entities.first_mut()
+            first_candidate_mut(&mut state.entities)
         }
     }
 

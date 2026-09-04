@@ -141,6 +141,7 @@ impl MouseCursor {
                     ScreenClip::unbound(),
                     Color::WHITE,
                     false,
+                    false,
                 ),
                 Grabbed::Action(sprite, actions, animation_state) => actions.render_sprite(
                     renderer,

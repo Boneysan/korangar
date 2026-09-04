@@ -509,7 +509,7 @@ where
                 && let Some(sprite) = &skill.sprite
             {
                 layout.with_clip(sprite_area, |layout| {
-                    layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, color, 1.3);
+                    layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, 0, color, 1.3);
                 });
             }
 

@@ -78,8 +78,8 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, EntityData, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
-    SellItem, SupportedPacketVersion,
+    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
+    SupportedPacketVersion,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -88,8 +88,8 @@ use ragnarok_formats::transform::Transform;
 use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
-    AccountId, AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId,
-    ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
+    AccountId, AttackRange, BuyShopItemsResult, CharacterId, CharacterServerInformation, ClientTick, Direction, DisappearanceReason,
+    EntityId, ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
     WorldPosition,
 };
 use renderer::InterfaceRenderer;
@@ -135,7 +135,7 @@ use crate::settings::{
     DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
     ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
-use crate::state::character_creation::{CharacterSex, HairStyle};
+use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -537,14 +537,18 @@ const PARTY_CHAT_COLOR: MessageColor = MessageColor::Rgb {
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
-/// Entity id for the character-creation preview. `u32::MAX` cannot collide with
-/// a server-assigned account id, so the preview can be found and removed by id
-/// rather than by an index a spawn could invalidate.
-const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX);
-/// The tile under [`START_CAMERA_FOCUS_POINT`] -- world units over
-/// `GAT_TILE_SIZE` -- so the preview stands where the character-select camera
-/// is already pointing.
-const CHARACTER_PREVIEW_TILE: (u16, u16) = (120, 48);
+/// Entity id for the character-creation preview, so it can be found and removed
+/// by id rather than by an index a spawn could invalidate.
+///
+/// **Deliberately not `u32::MAX`.** That is [`EMOTE_ANIMATION_ENTITY_ID`], and
+/// the sprite effects count their own sentinels down from `u32::MAX - 1`. The
+/// first version of this used `u32::MAX`, so when the preview's sprite finished
+/// loading, `update_loaded_resources` matched the emote branch first and handed
+/// a novice body to the emote bubble sheet -- the preview stayed invisible and
+/// the emote sheet was quietly wrong. Far enough below the sprite-effect
+/// sentinels to leave that space room to grow, and far above any account id
+/// Hercules hands out.
+const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX - 65536);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
@@ -1453,6 +1457,15 @@ pub struct Client {
     /// the window is closed. Compared against the player's choices each frame
     /// to decide whether the preview entity needs rebuilding.
     character_preview: Option<(CharacterSex, HairStyle)>,
+    /// A stat spread chosen at character creation, waiting for the character it
+    /// belongs to. Stats cannot ride the creation packet, so the allocation is
+    /// replayed as ordinary `StatUp` requests once that character is in the
+    /// world -- which is also why this is keyed by id: creating one character
+    /// and then playing another must not apply the wrong build.
+    pending_stat_plan: Option<(CharacterId, StatSpread)>,
+    /// The plan above, once the matching character has been selected and is on
+    /// its way into the map.
+    armed_stat_plan: Option<StatSpread>,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -3053,6 +3066,8 @@ impl Client {
                 mode => mode,
             },
             character_preview: None,
+            pending_stat_plan: None,
+            armed_stat_plan: None,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -3262,15 +3277,11 @@ impl Client {
 
     /// Keep the character-creation preview in step with the drop-downs.
     ///
-    /// Appearance is baked into the sprite layers when the entity is built, so
-    /// a different sex or hair style means building a new entity rather than
-    /// mutating the old one. That only happens when the player picks from a
-    /// drop-down, so the cost is not per frame.
-    ///
-    /// The preview is an `Npc` rather than a `Player` purely because that
-    /// constructor takes [`EntityData`] directly; what it renders as comes from
-    /// the job id, and `JobId(0)` is the Novice -- so this composes exactly the
-    /// player sprite the character will have.
+    /// Loads the composed sprite layers for the character being designed and
+    /// parks them in the client state, where the creation window's preview
+    /// element draws them. Deliberately *not* an entity in the world: the
+    /// interface is drawn on top of the scene, so a character standing on the
+    /// map can only ever be behind the window asking about it.
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn update_character_preview(&mut self, client_tick: ClientTick) {
         let wanted = self.interface.is_window_with_class_open(WindowClass::CharacterCreation).then(|| {
@@ -3282,67 +3293,50 @@ impl Client {
             return;
         }
 
-        self.client_state
-            .follow_mut(client_state().entities())
-            .retain(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID);
-
-        // Recorded even when the build below fails, so a map that cannot host
-        // the preview is not retried every single frame.
         self.character_preview = wanted;
 
         let Some((sex, hair_style)) = wanted else {
-            return;
-        };
-        let Some(map) = self.map.as_ref() else {
-            return;
-        };
-
-        let entity_data = EntityData {
-            entity_id: CHARACTER_PREVIEW_ENTITY_ID,
-            movement_speed: 150,
-            job_id: JobId(0),
-            head: hair_style.id,
-            weapon: 0,
-            shield: 0,
-            position: WorldPosition {
-                x: CHARACTER_PREVIEW_TILE.0,
-                y: CHARACTER_PREVIEW_TILE.1,
-                direction: Direction::South,
-            },
-            destination: None,
-            health_points: 40,
-            maximum_health_points: 40,
-            head_direction: 0,
-            sex: sex.into(),
-            body_state: 0,
-            health_state: 0,
-            option: 0,
-            is_pk_mode_on: false,
-            state: 0,
-            accessory: 0,
-            accessory2: 0,
-            accessory3: 0,
-            head_palette: 0,
-            body_palette: 0,
-            robe: 0,
-            body: 0,
-        };
-
-        let Some(preview) = Npc::new(&self.library, map, &mut self.path_finder, entity_data, client_tick) else {
+            *self.client_state.follow_mut(client_state().character_creation().preview()) = None;
             return;
         };
 
-        let mut preview = Entity::Npc(preview);
-        let entity_part_files = preview.get_entity_part_files(&self.library, &self.game_file_loader);
+        // `JobId(0)` is the Novice, which is what every character is created as.
+        let part_files = get_entity_part_files(
+            &self.library,
+            EntityType::Player,
+            JobId(0),
+            sex.into(),
+            Some(hair_style.id as usize),
+        );
 
-        if let Some(animation_data) =
-            self.async_loader
-                .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, preview.get_entity_type(), entity_part_files)
-        {
-            preview.set_animation_data(animation_data);
-        }
+        // `None` here means the load is in flight; `update_loaded_resources`
+        // routes it back by the same sentinel id.
+        let loaded = self
+            .async_loader
+            .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, EntityType::Player, part_files);
 
-        self.client_state.follow_mut(client_state().entities()).push(preview);
+        *self.client_state.follow_mut(client_state().character_creation().preview()) = loaded;
+        *self
+            .client_state
+            .follow_mut(client_state().character_creation().preview_animation()) = SpriteAnimationState::new(client_tick);
+    }
+
+    /// Point everything that caches the window size at a new one.
+    ///
+    /// Shared by `WindowEvent::Resized` and start-up so the two cannot drift:
+    /// a renderer left out here keeps rendering to the previous size, which
+    /// looks like a scaling bug rather than a missing update.
+    fn apply_window_size(&mut self, size: PhysicalSize<u32>) {
+        let screen_size: ScreenSize = size.max(PhysicalSize::new(1, 1)).into();
+
+        *self.client_state.follow_mut(client_state().window_size()) = screen_size;
+        self.graphics_engine.on_resize(screen_size);
+        self.interface.update_window_size(screen_size);
+        self.interface_renderer.update_window_size(screen_size);
+        self.bottom_interface_renderer.update_window_size(screen_size);
+        self.middle_interface_renderer.update_window_size(screen_size);
+        self.top_interface_renderer.update_window_size(screen_size);
+        self.effect_renderer.update_window_size(screen_size);
     }
 
     #[inline(always)]
@@ -3989,6 +3983,16 @@ impl Client {
                     // they spawn on the map.
                     let _ = self.networking_system.request_client_tick();
 
+                    // Arm a creation-time stat plan only for the character it was
+                    // made for. Selecting a different character discards it --
+                    // otherwise a build chosen for a new Acolyte would land on
+                    // whichever character was played next.
+                    self.armed_stat_plan = self
+                        .pending_stat_plan
+                        .take()
+                        .filter(|(character_id, _)| *character_id == login_data.character_id)
+                        .map(|(_, spread)| spread);
+
                     let mut player = Entity::Player(Player::new(
                         &self.library,
                         saved_login_data.account_id,
@@ -4065,6 +4069,13 @@ impl Client {
                     self.audio_engine.clear_ambient_sound();
                 }
                 NetworkEvent::CharacterCreated { character_information } => {
+                    // Bind the allocation to the character it was made for.
+                    let planned = *self.client_state.follow(client_state().character_creation().stats());
+
+                    if planned != StatSpread::BASE {
+                        self.pending_stat_plan = Some((character_information.character_id, planned));
+                    }
+
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .add_character(character_information);
@@ -4328,6 +4339,19 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
+                    // The map server has accepted this character, so the status
+                    // points exist and `pc_statusup` has a session to act on.
+                    // Sending any earlier would be dropped in the handshake.
+                    //
+                    // One request per stat rather than one per point: Hercules
+                    // takes the amount (`clif_parse_StatusUp` hands it straight
+                    // to `pc->statusup`), so a whole build is at most six.
+                    if let Some(spread) = self.armed_stat_plan.take() {
+                        for (stat, amount) in spread.deltas_from_base() {
+                            let _ = self.networking_system.request_stat_up(stat.stat_up(amount));
+                        }
+                    }
+
                     self.map = None;
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -6848,6 +6872,38 @@ impl Client {
                         client_state().graphics_settings_capabilities(),
                     )),
                 },
+                InputEvent::AdjustCreationStat { stat, raise } => {
+                    let stats = self.client_state.follow_mut(client_state().character_creation().stats());
+
+                    match raise {
+                        true => stats.raise(stat),
+                        false => stats.lower(stat),
+                    }
+                }
+                InputEvent::CycleHairStyle { forward } => {
+                    let path = client_state().character_creation().hair_style();
+                    let hair_style = *self.client_state.follow(path);
+
+                    *self.client_state.follow_mut(path) = hair_style.cycle(forward);
+                }
+                InputEvent::RotateCharacterPreview { clockwise } => {
+                    let path = client_state().character_creation().preview_direction();
+                    let direction = *self.client_state.follow(path);
+
+                    // Eight ACT facings, wrapping both ways.
+                    *self.client_state.follow_mut(path) = match clockwise {
+                        true => (direction + 1) % 8,
+                        false => (direction + 7) % 8,
+                    };
+                }
+                InputEvent::UseRecommendedStats => {
+                    let recommended = self
+                        .client_state
+                        .follow(client_state().character_creation().starting_class())
+                        .recommended_stats();
+
+                    *self.client_state.follow_mut(client_state().character_creation().stats()) = recommended;
+                }
                 InputEvent::ToggleFullscreen => {
                     let path = client_state().graphics_settings().display_mode();
                     let display_mode = *self.client_state.follow(path);
@@ -8412,7 +8468,9 @@ impl Client {
         for completed in completed_loads {
             match completed {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
-                    if entity_id == EMOTE_ANIMATION_ENTITY_ID {
+                    if entity_id == CHARACTER_PREVIEW_ENTITY_ID {
+                        *self.client_state.follow_mut(client_state().character_creation().preview()) = Some(animation_data);
+                    } else if entity_id == EMOTE_ANIMATION_ENTITY_ID {
                         self.emote_bubbles.set_animation_data(animation_data);
                     } else if let Some(path) = self.sprite_effects.path_for_sentinel(entity_id) {
                         // Classic sprite effects route their loads through a
@@ -9453,6 +9511,8 @@ impl ApplicationHandler for Client {
 
         // Android devices need to drop the surface on suspend, so we might need to
         // re-create it.
+        let mut startup_size = None;
+
         if let Some(window) = self.window.as_ref() {
             let path = client_state().graphics_settings();
             let graphics_settings = self.client_state.follow(path);
@@ -9488,12 +9548,27 @@ impl ApplicationHandler for Client {
             let display_mode = *self.client_state.follow(client_state().graphics_settings().display_mode());
             window.set_fullscreen(resolve_fullscreen(window, display_mode));
 
+            startup_size = Some(window.inner_size());
+
             window.set_visible(true);
 
             // Kick off the self-sustaining redraw loop. Without this, if the only
             // OS-initiated `RedrawRequested` arrived before the surface existed (and
             // was skipped by the guard in `window_event`), nothing would ever render.
             window.request_redraw();
+        }
+
+        // Seed the real size before the first frame. `window_size` starts at
+        // `ScreenSize::default()`, which is 0x0, and until now only
+        // `WindowEvent::Resized` ever filled it in -- so on a platform that sends
+        // no resize when a window opens at the size it asked for (macOS), the
+        // whole interface laid out against a zero-sized window and looked wrong
+        // until the player dragged an edge.
+        //
+        // Applied out here because `apply_window_size` takes `&mut self` and the
+        // block above holds a borrow of `self.window`.
+        if let Some(size) = startup_size {
+            self.apply_window_size(size);
         }
 
         if *self.client_state.follow(client_state().audio_settings().mute_on_focus_loss()) {
@@ -9526,15 +9601,7 @@ impl ApplicationHandler for Client {
                     }
                 }
 
-                let screen_size = screen_size.max(PhysicalSize::new(1, 1)).into();
-                *self.client_state.follow_mut(client_state().window_size()) = screen_size;
-                self.graphics_engine.on_resize(screen_size);
-                self.interface.update_window_size(screen_size);
-                self.interface_renderer.update_window_size(screen_size);
-                self.bottom_interface_renderer.update_window_size(screen_size);
-                self.middle_interface_renderer.update_window_size(screen_size);
-                self.top_interface_renderer.update_window_size(screen_size);
-                self.effect_renderer.update_window_size(screen_size);
+                self.apply_window_size(screen_size);
 
                 if let Some(window) = self.window.as_ref() {
                     window.request_redraw();
