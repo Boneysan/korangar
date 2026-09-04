@@ -80,8 +80,17 @@ where
         // an idle animation swaying behind the form is a distraction rather
         // than a feature.
 
-        // The frame the pose is on, by the same arithmetic `Actions::render_sprite`
-        // uses -- the two have to agree or the head lags the body by a frame.
+        // Motion 0, always -- which is what the game does for a standing player.
+        //
+        // `compose_action_motion` pins player idle to motion 0 with the comment
+        // "suppress Doridori": the idle action's later motions are RO's
+        // head-shake, and the real client does not play them while standing.
+        // Advancing the frame here reproduced exactly that wobble, which reads
+        // as the head coming loose rather than as an animation.
+        //
+        // It also keeps the head placement honest for free: the attach points
+        // below are read from this same frame, so body and head can never fall
+        // out of step.
         let frame_index = 0;
 
         // Read the attach point off the *raw* ACT rather than the processed
@@ -106,30 +115,16 @@ where
 
             let mut area = layout_info.area;
 
-            // Secondary layers -- the head, and later a hat or weapon -- are
-            // positioned by the ACT attach points, not by their own origin.
-            // `delta = -child + body` is the classic head/body rule, the same
-            // one `apply_child_attach` uses for the world renderer. Without it
-            // the head draws at the body's centre and is lost inside it.
-            // Secondary layers -- the head, and later a hat or garment -- are
-            // placed by the body's attach point, which is the ACT saying where
-            // the child's origin belongs.
+            // Lift secondary layers by the body's attach point.
             //
-            // Subtracting the child's own attach point as well (the rule
-            // `apply_child_attach` uses) reads as the principled version, and
-            // it looked worse. Trusting the eye over the derivation here: this
-            // draws from the raw ACT, at one frame, at a scale the world
-            // renderer never uses, so the tidy rule does not transfer cleanly.
-            // `PREVIEW_HEAD_NUDGE` is the honest fudge that closes the gap.
+            // The head's own ACT already places it above the body, but
+            // `render_sprite_frame` adds clip offsets unscaled while scaling the
+            // sprite, so at 2x the head only rises half as far as it should and
+            // lands on the chest. This closes that gap. Measured against the
+            // real thing rather than derived -- see PREVIEW_HEAD_NUDGE.
             if index > 0
                 && let Some(body_attach) = body_attach
             {
-                // The body's attach point alone, plus a nudge. Subtracting
-                // the child's as well -- the rule the world renderer uses --
-                // drops the head to chest height here, measured both ways.
-                // The world path applies it to merged frame geometry, not to
-                // a raw ACT drawn at a fixed frame and scale, so it does not
-                // transfer. Measured, not derived.
                 area.left += body_attach.x as f32;
                 area.top += body_attach.y as f32 + PREVIEW_HEAD_NUDGE;
             }

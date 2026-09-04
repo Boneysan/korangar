@@ -56,6 +56,8 @@ impl SpriteRenderer for GameInterfaceRenderer {
         _screen_clip: ScreenClip,
         color: Color,
         smooth: bool,
+        // The world sprite path bakes mirroring into its own transform.
+        _mirror: bool,
     ) {
         self.render_indexed(texture, position, size, color, 1, 0, smooth);
     }

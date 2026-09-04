@@ -224,6 +224,9 @@ pub enum InterfaceRectangleInstruction {
         corner_diameter: CornerDiameter,
         texture: Arc<Texture>,
         smooth: bool,
+        /// Flip horizontally. RO authors half the facings and mirrors the
+        /// rest, so this is how a sprite faces the other way.
+        mirror: bool,
     },
     Sdf {
         screen_position: ScreenPosition,

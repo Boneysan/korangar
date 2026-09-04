@@ -207,6 +207,7 @@ impl QuestIcon {
             ScreenClip::unbound(),
             self.color,
             true,
+            false,
         );
     }
 }

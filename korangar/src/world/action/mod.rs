@@ -134,6 +134,14 @@ impl Actions {
             let zoom2 = sprite_clip.zoom2.unwrap_or_else(|| Vector2::from_value(1.0));
 
             let final_size = dimensions.zip(zoom2, f32::mul) * zoom;
+
+            // NOTE: `offset` is deliberately NOT multiplied by `zoom`, even
+            // though the size is. Scaling it (which reads as the obvious fix,
+            // since a part authored 69 units above another should move 138 at
+            // 2x) pushes the sprite outside the element's clip and it vanishes.
+            // Left as-is rather than "corrected": every caller but the
+            // character preview draws at ~1.0 where it makes no difference, and
+            // the preview compensates with its own offset instead.
             let final_position = Vector2::new(position.left, position.top) + offset - final_size / 2.0;
 
             let final_size = ScreenSize {
@@ -146,7 +154,15 @@ impl Actions {
                 top: final_position.y,
             };
 
-            renderer.render_sprite(texture.clone(), final_position, final_size, screen_clip, color, false);
+            renderer.render_sprite(
+                texture.clone(),
+                final_position,
+                final_size,
+                screen_clip,
+                color,
+                false,
+                sprite_clip.mirror_on != 0,
+            );
         }
     }
 }

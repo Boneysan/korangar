@@ -304,8 +304,17 @@ impl Prepare for InterfaceRectangleDrawer {
                         corner_diameter,
                         texture,
                         smooth,
+                        mirror,
                     } => {
                         let rectangle_type = if *smooth { 1 } else { 2 };
+
+                        // The shader reads `texture_position + uv * texture_size`,
+                        // so starting at the right edge with a negative width
+                        // samples the texture backwards. No shader change needed.
+                        let (texture_position, texture_size) = match *mirror {
+                            true => ([1.0, 0.0], [-1.0, 1.0]),
+                            false => ([0.0, 0.0], [1.0, 1.0]),
+                        };
 
                         let mut texture_index = texture_views.len() as i32;
                         let id = texture.get_id();
@@ -326,8 +335,8 @@ impl Prepare for InterfaceRectangleDrawer {
                             shadow_padding: [0.0, 0.0, 0.0, 0.0],
                             screen_position: (*screen_position).into(),
                             screen_size: (*screen_size).into(),
-                            texture_position: [0.0, 0.0],
-                            texture_size: [1.0, 1.0],
+                            texture_position,
+                            texture_size,
                             rectangle_type,
                             texture_index,
                             padding: Default::default(),
@@ -441,8 +450,14 @@ impl Prepare for InterfaceRectangleDrawer {
                         corner_diameter,
                         texture: _,
                         smooth,
+                        mirror,
                     } => {
                         let rectangle_type = if *smooth { 1 } else { 2 };
+
+                        let (texture_position, texture_size) = match *mirror {
+                            true => ([1.0, 0.0], [-1.0, 1.0]),
+                            false => ([0.0, 0.0], [1.0, 1.0]),
+                        };
 
                         self.instance_data.push(InstanceData {
                             color: color.components_linear(),
@@ -452,8 +467,8 @@ impl Prepare for InterfaceRectangleDrawer {
                             shadow_padding: [0.0, 0.0, 0.0, 0.0],
                             screen_position: (*screen_position).into(),
                             screen_size: (*screen_size).into(),
-                            texture_position: [0.0, 0.0],
-                            texture_size: [1.0, 1.0],
+                            texture_position,
+                            texture_size,
                             rectangle_type,
                             texture_index: 0,
                             padding: Default::default(),

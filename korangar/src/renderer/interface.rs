@@ -437,6 +437,7 @@ impl SpriteRenderer for InterfaceRenderer {
         mut screen_clip: ScreenClip,
         color: Color,
         smooth: bool,
+        mirror: bool,
     ) {
         // If the sprite is not even within the bounds of the clip, discard it early
         // saving GPU resources.
@@ -497,6 +498,7 @@ impl SpriteRenderer for InterfaceRenderer {
             corner_diameter,
             texture,
             smooth,
+            mirror,
         });
     }
 
@@ -684,7 +686,7 @@ impl RenderLayer<ClientState> for InterfaceRenderer {
                 };
                 let screen_clip = clips[clip_id.as_index()];
 
-                self.render_sprite(texture, position, size, screen_clip, color, smooth);
+                self.render_sprite(texture, position, size, screen_clip, color, smooth, false);
             }
         }
     }
