@@ -1,5 +1,6 @@
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
+pub mod character_creation;
 pub mod character_slots;
 pub mod friends;
 pub mod hotbar;
@@ -84,6 +85,7 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
@@ -365,6 +367,9 @@ pub struct ClientState {
     switch_request: Option<usize>,
     /// Name of the character being created currently.
     create_character_name: String,
+    /// Sex and hair chosen in the character creation window, plus the lists
+    /// they are chosen from.
+    character_creation: CharacterCreation,
 
     /// Size of the Korangar window.
     window_size: ScreenSize,
@@ -493,6 +498,7 @@ impl ClientState {
             // TODO: This could be in a single struct.
             let switch_request = None;
             let create_character_name = String::new();
+            let character_creation = CharacterCreation::default();
         });
 
         time_phase!("create friend list state", {
@@ -617,6 +623,7 @@ impl ClientState {
             currently_deleting,
             switch_request,
             create_character_name,
+            character_creation,
             window_size,
             buffered_action,
             #[cfg(feature = "debug")]

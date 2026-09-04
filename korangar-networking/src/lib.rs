@@ -704,11 +704,16 @@ where
         }
     }
 
-    pub fn create_character(&mut self, slot: usize, name: String) -> Result<(), NotConnectedError> {
-        let hair_color = 0;
-        let hair_style = 0;
+    /// `hair_style` is 1-based, matching the sprite files in `data.grf`. There
+    /// is no style 0 in the archive, which is what this used to send along with
+    /// a hardcoded male novice -- every character came out identical.
+    pub fn create_character(&mut self, slot: usize, name: String, sex: Sex, hair_style: u16) -> Result<(), NotConnectedError> {
+        // Not yet chosen by the player: the client stores `head_palette` but
+        // nothing reads it back when composing a sprite, so a colour picker
+        // would be a control with no visible effect. Palette 1 rather than 0
+        // because 0 is missing from the archive for seven style/sex pairs.
+        let hair_color = 1;
         let start_job_id = JobId(0);
-        let sex = Sex::Male;
 
         match self.character_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_character_server_packet(CreateCharacterPacket::new(

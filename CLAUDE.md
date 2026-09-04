@@ -408,6 +408,7 @@ When writing code or adding features, agents must adhere to these project-specif
      both feed `NetworkEvent::PartyMemberHealth { spell_points: Option<..> }`
      where `None` **keeps** any SP already known rather than blanking it.
      Requires `dev.sh build` and a server restart.
+   - **`_create` account suffix** (2026-09-03) — `src/login/login.c`, `login_mmo_auth`. Upstream's `_M`/`_F` does two jobs with one suffix: it signals "create this account" *and* sets the account's sex. Since **PACKETVER 20151001** the client picks sex **per character** (`CH_MAKE_CHAR` carries it — `char_parse_char_create_new_char` reads byte 35 and *denies creation* for anything that is not `SEX_MALE`/`SEX_FEMALE`), so the account's sex is vestigial. `Name_create` now registers without asking. Stored sex is `'M'`, **not `'S'`** — `'S'` marks a server account and is not a value a human login should carry. `_M`/`_F` is deliberately left working: it is what every RO guide says, and the shipped packs document it. Requires `dev.sh build` and a server restart.
    - **`ip_rules` disabled** (2026-07-30) — `conf/common/socket.conf`. Hercules'
      anti-flood counts connections **per IP**, and on this box everything is
      127.0.0.1 — the headless suite *and* the servers. The suite opens three

@@ -78,8 +78,8 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion,
+    DisconnectReason, EntityData, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
+    SellItem, SupportedPacketVersion,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -89,7 +89,8 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AccountId, AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId,
-    ExperienceType, HotbarSlot, ItemId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
+    WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -134,6 +135,7 @@ use crate::settings::{
     DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
     ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
+use crate::state::character_creation::{CharacterSex, HairStyle};
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -535,6 +537,14 @@ const PARTY_CHAT_COLOR: MessageColor = MessageColor::Rgb {
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
+/// Entity id for the character-creation preview. `u32::MAX` cannot collide with
+/// a server-assigned account id, so the preview can be found and removed by id
+/// rather than by an index a spawn could invalidate.
+const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX);
+/// The tile under [`START_CAMERA_FOCUS_POINT`] -- world units over
+/// `GAT_TILE_SIZE` -- so the preview stands where the character-select camera
+/// is already pointing.
+const CHARACTER_PREVIEW_TILE: (u16, u16) = (120, 48);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
@@ -1439,6 +1449,10 @@ pub struct Client {
     /// persisted: it only has to outlive the toggle, and the mode the player
     /// actually chose already lives in `GraphicsSettings`.
     preferred_fullscreen_mode: DisplayMode,
+    /// What the character-creation preview is currently showing, or `None` when
+    /// the window is closed. Compared against the player's choices each frame
+    /// to decide whether the preview entity needs rebuilding.
+    character_preview: Option<(CharacterSex, HairStyle)>,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -3038,6 +3052,7 @@ impl Client {
                 DisplayMode::Windowed => DisplayMode::BorderlessFullscreen,
                 mode => mode,
             },
+            character_preview: None,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -3243,6 +3258,91 @@ impl Client {
             *self.client_state.follow_mut(client_state().world_theme()) = theme;
             self.active_interface_settings.world_theme = world_theme;
         }
+    }
+
+    /// Keep the character-creation preview in step with the drop-downs.
+    ///
+    /// Appearance is baked into the sprite layers when the entity is built, so
+    /// a different sex or hair style means building a new entity rather than
+    /// mutating the old one. That only happens when the player picks from a
+    /// drop-down, so the cost is not per frame.
+    ///
+    /// The preview is an `Npc` rather than a `Player` purely because that
+    /// constructor takes [`EntityData`] directly; what it renders as comes from
+    /// the job id, and `JobId(0)` is the Novice -- so this composes exactly the
+    /// player sprite the character will have.
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn update_character_preview(&mut self, client_tick: ClientTick) {
+        let wanted = self.interface.is_window_with_class_open(WindowClass::CharacterCreation).then(|| {
+            let creation = self.client_state.follow(client_state().character_creation());
+            (creation.sex, creation.hair_style)
+        });
+
+        if wanted == self.character_preview {
+            return;
+        }
+
+        self.client_state
+            .follow_mut(client_state().entities())
+            .retain(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID);
+
+        // Recorded even when the build below fails, so a map that cannot host
+        // the preview is not retried every single frame.
+        self.character_preview = wanted;
+
+        let Some((sex, hair_style)) = wanted else {
+            return;
+        };
+        let Some(map) = self.map.as_ref() else {
+            return;
+        };
+
+        let entity_data = EntityData {
+            entity_id: CHARACTER_PREVIEW_ENTITY_ID,
+            movement_speed: 150,
+            job_id: JobId(0),
+            head: hair_style.id,
+            weapon: 0,
+            shield: 0,
+            position: WorldPosition {
+                x: CHARACTER_PREVIEW_TILE.0,
+                y: CHARACTER_PREVIEW_TILE.1,
+                direction: Direction::South,
+            },
+            destination: None,
+            health_points: 40,
+            maximum_health_points: 40,
+            head_direction: 0,
+            sex: sex.into(),
+            body_state: 0,
+            health_state: 0,
+            option: 0,
+            is_pk_mode_on: false,
+            state: 0,
+            accessory: 0,
+            accessory2: 0,
+            accessory3: 0,
+            head_palette: 0,
+            body_palette: 0,
+            robe: 0,
+            body: 0,
+        };
+
+        let Some(preview) = Npc::new(&self.library, map, &mut self.path_finder, entity_data, client_tick) else {
+            return;
+        };
+
+        let mut preview = Entity::Npc(preview);
+        let entity_part_files = preview.get_entity_part_files(&self.library, &self.game_file_loader);
+
+        if let Some(animation_data) =
+            self.async_loader
+                .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, preview.get_entity_type(), entity_part_files)
+        {
+            preview.set_animation_data(animation_data);
+        }
+
+        self.client_state.follow_mut(client_state().entities()).push(preview);
     }
 
     #[inline(always)]
@@ -6813,14 +6913,25 @@ impl Client {
                     let _ = self.networking_system.select_character(slot);
                 }
                 InputEvent::OpenCharacterCreationWindow { slot } => {
-                    // Clear the name before opening the window.
+                    // Clear the name and the appearance before opening the
+                    // window, so it does not open showing the last character's
+                    // choices.
                     self.client_state.follow_mut(client_state().create_character_name()).clear();
+                    self.client_state.follow_mut(client_state().character_creation()).reset();
 
-                    self.interface
-                        .open_window(CharacterCreationWindow::new(client_state().create_character_name(), slot))
+                    self.interface.open_window(CharacterCreationWindow::new(
+                        client_state().create_character_name(),
+                        client_state().character_creation(),
+                        slot,
+                    ))
                 }
-                InputEvent::CreateCharacter { slot, name } => {
-                    let _ = self.networking_system.create_character(slot, name);
+                InputEvent::CreateCharacter {
+                    slot,
+                    name,
+                    sex,
+                    hair_style,
+                } => {
+                    let _ = self.networking_system.create_character(slot, name, sex.into(), hair_style.id);
                 }
                 InputEvent::DeleteCharacter { character_id } => {
                     if self.client_state.follow(client_state().currently_deleting()).is_none() {
@@ -8775,6 +8886,8 @@ impl Client {
             client_tick,
             animation_timer_ms,
         } = self.game_timer.update();
+
+        self.update_character_preview(client_tick);
 
         let input_report = self.input_system.update_delta(client_tick);
 
