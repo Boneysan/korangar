@@ -1,5 +1,6 @@
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
+pub mod character_creation;
 pub mod character_slots;
 pub mod friends;
 pub mod hotbar;
@@ -9,6 +10,7 @@ pub mod inventory;
 pub mod localization;
 pub mod minimap;
 pub mod party;
+pub mod quests;
 pub mod skill_cooldowns;
 pub mod skills;
 pub mod status_effects;
@@ -83,6 +85,7 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
@@ -91,6 +94,7 @@ use crate::state::instance::InstanceState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
+use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
@@ -117,6 +121,37 @@ pub struct ChatMessage {
 impl ChatMessage {
     pub fn new(text: String, color: MessageColor) -> Self {
         Self { text, color }
+    }
+}
+
+/// Bounded chat log. The server can flood public chat; keep a hard cap so
+/// layout and memory cannot grow with total historical input.
+#[derive(Debug, Clone, Default, RustState, StateElement)]
+pub struct ChatHistory {
+    messages: Vec<ChatMessage>,
+}
+
+impl ChatHistory {
+    const MAX: usize = 500;
+
+    pub fn from_welcome(message: ChatMessage) -> Self {
+        Self { messages: vec![message] }
+    }
+
+    pub fn push(&mut self, message: ChatMessage) {
+        if self.messages.len() >= Self::MAX {
+            let overflow = self.messages.len() + 1 - Self::MAX;
+            self.messages.drain(..overflow);
+        }
+        self.messages.push(message);
+    }
+}
+
+impl std::ops::Deref for ChatHistory {
+    type Target = [ChatMessage];
+
+    fn deref(&self) -> &Self::Target {
+        &self.messages
     }
 }
 
@@ -237,6 +272,9 @@ pub struct ClientState {
     loot_window: LootWindowState,
     /// Seal Cascade campaign progress (bestiary unlocks).
     dm_campaign: DmCampaignState,
+    /// Active quests and, for campaign hunting contracts, what they want
+    /// handed in.
+    quest_log: QuestLogState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -261,7 +299,7 @@ pub struct ClientState {
     ground_items: Vec<GroundItem>,
 
     /// List of all received chat messages.
-    chat_messages: Vec<ChatMessage>,
+    chat_messages: ChatHistory,
     /// List of all friends (with online presence).
     friend_list: Vec<FriendEntry>,
     /// Current party roster and pending party invitation state.
@@ -329,6 +367,9 @@ pub struct ClientState {
     switch_request: Option<usize>,
     /// Name of the character being created currently.
     create_character_name: String,
+    /// Sex and hair chosen in the character creation window, plus the lists
+    /// they are chosen from.
+    character_creation: CharacterCreation,
 
     /// Size of the Korangar window.
     window_size: ScreenSize,
@@ -436,7 +477,7 @@ impl ClientState {
                 "Welcome to ^ff8800Korangar^000000 version ^ff8800{}^000000!",
                 env!("CARGO_PKG_VERSION")
             );
-            let chat_messages = vec![ChatMessage::new(welcome_string, MessageColor::Server)];
+            let chat_messages = ChatHistory::from_welcome(ChatMessage::new(welcome_string, MessageColor::Server));
 
             let chat_window = ChatWindowState::default();
             let dice_window = DiceWindowState::default();
@@ -444,6 +485,7 @@ impl ClientState {
             let bestiary_window = BestiaryWindowState::default();
             let loot_window = LootWindowState::default();
             let dm_campaign = DmCampaignState::default();
+            let quest_log = QuestLogState::default();
         });
 
         time_phase!("create character server resources", {
@@ -456,6 +498,7 @@ impl ClientState {
             // TODO: This could be in a single struct.
             let switch_request = None;
             let create_character_name = String::new();
+            let character_creation = CharacterCreation::default();
         });
 
         time_phase!("create friend list state", {
@@ -544,6 +587,7 @@ impl ClientState {
             bestiary_window,
             loot_window,
             dm_campaign,
+            quest_log,
             friend_list_window,
             party_window,
             instance_state,
@@ -579,6 +623,7 @@ impl ClientState {
             currently_deleting,
             switch_request,
             create_character_name,
+            character_creation,
             window_size,
             buffered_action,
             #[cfg(feature = "debug")]

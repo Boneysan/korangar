@@ -41,6 +41,7 @@ mod party_invite;
 mod player_target;
 #[cfg(feature = "debug")]
 mod profiler;
+mod quest_log;
 #[cfg(feature = "debug")]
 mod render_options;
 mod repair_weapon;
@@ -104,6 +105,7 @@ pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
+pub use self::quest_log::QuestLogWindow;
 #[cfg(feature = "debug")]
 pub use self::render_options::RenderOptionsWindow;
 pub use self::repair_weapon::RepairWeaponWindow;
@@ -153,6 +155,8 @@ pub enum WindowClass {
     Menu,
     Minimap,
     Party,
+    /// Quest log: active quests and campaign contract requirements.
+    QuestLog,
     /// Incoming party invite popup (Accept / Decline).
     PartyInvite,
     /// Auto Spell skill chooser.

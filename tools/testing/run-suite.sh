@@ -62,6 +62,27 @@ case " ${arguments[*]-} " in
 esac
 
 cd "$repo"
+# Live passwords are no longer defaults in source. Integration generates
+# ephemeral ones. A local run against the operator box can read the
+# gitignored credentials file written by the 2026-08-18 rotation.
+case " ${arguments[*]-} " in
+*" --password "*) ;;
+*)
+    creds="${HERCULES_DIR:-$repo/../Hercules}/conf/import/operator-credentials.conf"
+    if [ -f "$creds" ]; then
+        admin_pw=$(awk -F'"' '/^korangar_password:/ {print $2}' "$creds")
+        partner_pw=$(awk -F'"' '/^headless2_password:/ {print $2}' "$creds")
+        if [ -n "$admin_pw" ] && [ -n "$partner_pw" ]; then
+            arguments+=(--password "$admin_pw" --partner-password "$partner_pw")
+        fi
+    fi
+    ;;
+esac
+if ! printf ' %s ' "${arguments[*]-}" | grep -q ' --password '; then
+    echo "error: pass --password / --partner-password, or create Hercules/conf/import/operator-credentials.conf" >&2
+    exit 2
+fi
+
 # `tee` so a long run is still watchable, and the pipeline's exit status is the
 # tester's. Temporarily disable `errexit`: otherwise a red-but-complete run exits
 # from the pipeline before its log can be promoted into the evidence archive.

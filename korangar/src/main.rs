@@ -10,6 +10,10 @@ struct Arguments {
 }
 
 fn main() {
+    // First, before anything that can fail: a panic during startup is exactly
+    // the one a player cannot otherwise report.
+    korangar::logging::init();
+
     configure_graphics_environment();
 
     let arguments = Arguments::parse();

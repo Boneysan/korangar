@@ -38,6 +38,18 @@ where
             split! {
                 children: (
                     text! {
+                        text: "Display mode",
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    },
+                    drop_down! {
+                        selected: self.settings_path.display_mode(),
+                        options: self.capabilities_path.display_modes(),
+                    }
+                )
+            },
+            split! {
+                children: (
+                    text! {
                         text: "Lighting mode",
                         overflow_behavior: OverflowBehavior::Shrink,
                     },

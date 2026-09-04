@@ -1,0 +1,240 @@
+================================================================================
+  SEAL CASCADE - Ragnarok Online
+  Read this first. It takes two minutes and saves a support call.
+================================================================================
+
+WHAT THIS IS
+
+  A private Ragnarok Online server for friends, with a custom client. It is not
+  the official game and it does not touch anything the official game installs.
+  You do not need the official RO client, Steam, or an account with Gravity.
+
+
+--------------------------------------------------------------------------------
+WHAT YOUR PC NEEDS
+--------------------------------------------------------------------------------
+
+  * Windows 10 or Windows 11, 64-bit.
+
+  * A CPU with AVX2. In practice that means an Intel Core from 2013 (4th gen,
+    "Haswell") or newer, or an AMD Ryzen (any). Setup checks this for you and
+    says so plainly if your machine is too old -- it is a hard requirement, not
+    a performance suggestion. Without it the game closes instantly with no
+    message.
+
+    Note that some budget laptop chips sold well after 2013 -- Celeron,
+    Pentium Silver/Gold, Atom -- do NOT have AVX2 even though they are recent.
+    If Setup says your CPU is unsupported, that is why.
+
+  * A graphics card that supports Vulkan or DirectX 12. Anything from the last
+    ten years is fine, including built-in Intel graphics.
+
+  * About 8 GB of free disk space to install (4 GB once you delete
+    the .zip afterwards).
+
+
+--------------------------------------------------------------------------------
+INSTALLING - THE SHORT VERSION
+--------------------------------------------------------------------------------
+
+  1. Download the file the host sent you:
+
+       Seal Cascade.zip        about 3.7 GB - everything, in one download
+
+     It is large. Let it finish completely before touching it. If Drive warns
+     that it "can't scan this file for viruses", that is just the size --
+     click Download anyway.
+
+  2. Right-click the .zip and choose "Extract All...".
+
+     Put it somewhere you will find again -- your Desktop or Documents is
+     fine. Do NOT try to play from inside the .zip: Windows will happily show
+     you the files without ever unpacking them, and the game will fail in
+     confusing ways.
+
+  3. Open the folder it created and double-click  Setup.
+
+     It checks that this PC can run the game, installs one Microsoft component
+     if it is missing, and verifies all 259 files against a checksum list.
+     Run it once, the first time.
+
+  4. Double-click  Play  to start the game.
+
+  4. At the login screen, type a username ending in _m or _f and a password:
+
+       BobSmith_m      for a male character
+       BobSmith_f      for a female character
+
+     There is no sign-up page. Typing a name that does not exist creates the
+     account right there. The _m or _f suffix is not part of your name in game,
+     it just tells the server which gender to use.
+
+     IMPORTANT: use a throwaway password you do not use anywhere else. See the
+     PRIVACY note at the bottom of this file for why.
+
+
+--------------------------------------------------------------------------------
+IF YOU WERE SENT TWO DOWNLOADS INSTEAD
+--------------------------------------------------------------------------------
+
+  Some people get the split version -- a small Windows download and a large
+  Assets one. That exists so a game update costs 80 MB instead of 3.7 GB, and
+  it is also what you will get for updates after the first install.
+
+  If that is what you have: download both, unzip both, and then either run
+  Setup (it looks for the Assets folder nearby and moves it in for you), or do
+  it by hand as below. Everything has to end up in ONE folder.
+
+  By hand, Setup is only doing this:
+
+    Copy everything inside the Assets folder into the folder holding Play, so
+    that data.grf, rdata.grf, renewal2021.grf, resources2021.grf,
+    lua_files.7z, the BGM folder and SHA256SUMS-assets all sit right next to
+    Play.
+
+  Either way, when you are done the folder should contain, at minimum:
+
+    Play.bat            korangar.exe        data.grf
+    Setup.bat           archive\            rdata.grf
+    Verify.bat          client\             renewal2021.grf
+    READ ME FIRST.txt   BGM\                resources2021.grf
+    SHA256SUMS-client   SHA256SUMS-assets   lua_files.7z
+
+  Do not put the game inside the Assets folder, and do not leave the two
+  halves in separate folders. They have to end up merged into one.
+
+
+--------------------------------------------------------------------------------
+THE THREE PROGRAMS IN THIS FOLDER
+--------------------------------------------------------------------------------
+
+  Setup    Run once, first. Merges in the game data and checks it is intact.
+
+  Play     Starts the game. It quietly re-checks the important files first, so
+           if something has gone missing it tells you which file instead of
+           failing in a way nobody can read.
+
+  Verify   Checks every single file against the checksum lists and prints what
+           is wrong. Run this if the game starts behaving strangely, or if a
+           download looked like it was interrupted. It changes nothing -- it
+           only looks and reports.
+
+
+--------------------------------------------------------------------------------
+WHY THE FILE CHECKING MATTERS
+--------------------------------------------------------------------------------
+
+  The Assets download is 3.7 GB. Large downloads from Drive fail in a specific
+  and nasty way: instead of failing outright, they arrive slightly incomplete
+  or subtly truncated, and every symptom afterwards looks like a bug in the
+  game rather than a bad download.
+
+  So each half of the download ships a list of checksums:
+
+    SHA256SUMS-client   covers the program half (this folder)
+    SHA256SUMS-assets   covers the game data half (the Assets folder)
+
+  They have different names on purpose, so that when you merge the two folders
+  neither one overwrites the other and both halves stay checkable afterwards.
+  Verify reads both. If it prints "All ... files match", your download is
+  byte-for-byte what was built for you.
+
+
+--------------------------------------------------------------------------------
+IF SOMETHING GOES WRONG
+--------------------------------------------------------------------------------
+
+  "Your processor is too old / does not support AVX2"
+      Nothing to be done on that machine, sorry. See WHAT YOUR PC NEEDS.
+
+  "The game data is missing"
+      You have not merged in the Assets folder yet. Run Setup.
+
+  "... does not match the checksum list" / Verify says CORRUPT
+      That file downloaded badly. Download that half again from Drive and run
+      Setup or Verify once more.
+
+  Windows says "Windows protected your PC" on a blue box
+      Click "More info", then "Run anyway". This happens because the program is
+      not signed by a company Microsoft recognises, which costs money we did
+      not spend for a game night among friends.
+
+  Drive warns it "can't scan this file for viruses"
+      That is just the size. Click "Download anyway".
+
+  The game opens and immediately closes
+      Run Verify. If everything matches, send the host the log file -- see
+      SENDING A LOG below. That file is the whole reason it exists.
+
+  "Cannot connect" / it hangs on the login screen
+      The server is probably not running, or you are not on the right network.
+      Ask the host. See CONNECTING below.
+
+
+--------------------------------------------------------------------------------
+SENDING A LOG
+--------------------------------------------------------------------------------
+
+  The game writes what it is doing to a file in this folder:
+
+      korangar.log            what happened this time
+      korangar.log.previous   what happened the run before
+
+  If anything goes wrong -- it will not start, it crashed, it could not
+  connect, something looked broken -- send the host korangar.log. It is a
+  plain text file; you can open it yourself if you are curious.
+
+  If the game crashed and you already started it again, the useful one is
+  korangar.log.previous, because starting again overwrote the other. Send both
+  and let the host sort it out.
+
+  There is nothing private in it: what map you were on, which files loaded,
+  and any error the game ran into. No password, and nothing is sent anywhere
+  automatically -- the file just sits on your PC until you attach it.
+
+
+--------------------------------------------------------------------------------
+CONNECTING
+--------------------------------------------------------------------------------
+
+  The server address is already filled in for you, in client\server.ron. You do
+  not need to type an address anywhere, and you should not edit that file --
+  if the host moves the server they will send you a new copy of the small
+  Windows folder.
+
+  Right now the server is on the host's home network, which means you have to
+  be on that same network to play. If you are joining from your own house, ask
+  the host -- that needs a change on their end first.
+
+
+--------------------------------------------------------------------------------
+PRIVACY - PLEASE READ THIS ONE
+--------------------------------------------------------------------------------
+
+  Your password is sent to the server without encryption, and it is stored on
+  the server in a form that is not meant to resist a determined attacker. This
+  is normal for a small private RO server and it is not worth fixing for a
+  group of friends, but it does mean one thing:
+
+      Use a throwaway password. Not your email password, not a password you
+      use anywhere else, not a variation of one.
+
+  The client can remember your password for you. That is off by default, and
+  if you turn it on it is saved unencrypted on your own PC. Your choice.
+
+  Nobody is collecting anything about you. There is no telemetry, no analytics
+  and no account website.
+
+
+--------------------------------------------------------------------------------
+UPDATES
+--------------------------------------------------------------------------------
+
+  When the game is updated you will be sent a new Windows folder only, about
+  80 MB. Replace the program files with the new ones and keep your game data --
+  the 3.7 GB half almost never changes, and you should not have to download it
+  twice.
+
+  If an update ever does change the game data, you will be told explicitly.
+
+================================================================================

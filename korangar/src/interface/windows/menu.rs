@@ -53,6 +53,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleCommandsWindow,
                 },
                 button! {
+                    text: "Quest Log",
+                    tooltip: "Active quests, and what each hunting contract still wants handed in (^000001Ctrl+Q^000000)",
+                    event: InputEvent::ToggleQuestLogWindow,
+                },
+                button! {
                     text: "Dice Roller",
                     tooltip: "Roll dice via @roll — standard dice, common combos, and custom NdX+mod (^000001Ctrl+D^000000)",
                     event: InputEvent::ToggleDiceWindow,

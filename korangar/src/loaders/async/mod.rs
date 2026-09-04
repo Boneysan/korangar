@@ -399,7 +399,7 @@ impl AsyncLoader {
         // A job without a tree entry must degrade to an empty window, never
         // crash — hit live via warp-portal map change as a @jobchange'd job.
         let Some(layout) = self.library.try_get::<crate::world::SkillTreeLayout>(job_id) else {
-            eprintln!("[skill-tree] no skill tree layout for job {job_id:?}; showing empty tree");
+            client_log!("[skill-tree] no skill tree layout for job {job_id:?}; showing empty tree");
             return SkillTreeLayout::default();
         };
 
@@ -474,7 +474,7 @@ impl AsyncLoader {
                             // input handling, so chat cannot even be used to warp
                             // out, and the process has to be killed. Cost is one
                             // line per failed load, not per frame.
-                            eprintln!("[async-load] {id:?} failed: {error:?}");
+                            client_log!("[async-load] {id:?} failed: {error:?}");
                             #[cfg(feature = "debug")]
                             print_debug!("Async load error: {:?}", error);
                             None

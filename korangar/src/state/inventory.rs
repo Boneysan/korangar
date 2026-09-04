@@ -144,6 +144,19 @@ impl Inventory {
         &self.items
     }
 
+    /// How many of an item the character is carrying, across every stack.
+    ///
+    /// A stackable item normally occupies one slot, but the server is free to
+    /// split it (a partial pickup on a full stack does), so this sums rather
+    /// than finding the first match.
+    pub fn count_of(&self, item_id: ItemId) -> u32 {
+        self.items
+            .iter()
+            .filter(|item| item.item_id == item_id)
+            .map(|item| u32::from(item.amount()))
+            .sum()
+    }
+
     /// Right-hand LOOK_WEAPON appearance for the local player.
     ///
     /// Character selection commonly reports weapon look 0. After map login the

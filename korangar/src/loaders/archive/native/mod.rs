@@ -20,6 +20,26 @@ pub use self::builder::NativeArchiveBuilder;
 use crate::loaders::archive::Archive;
 use crate::loaders::archive::native::mixcrypt::decrypt_file;
 
+/// Official GRF assets stay well under this. A malicious archive can advertise
+/// an uncompressed size of gigabytes; refuse the allocation before inflate.
+const MAX_GRF_UNCOMPRESSED: u32 = 64 * 1024 * 1024;
+
+fn decode_grf_payload(decoder: &mut impl Read, advertised: u32) -> std::io::Result<Vec<u8>> {
+    if advertised == 0 || advertised > MAX_GRF_UNCOMPRESSED {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            format!("grf uncompressed size {advertised} exceeds {MAX_GRF_UNCOMPRESSED}"),
+        ));
+    }
+
+    let mut decompressed = Vec::new();
+    decoder.take(advertised as u64).read_to_end(&mut decompressed)?;
+    if decompressed.len() as u32 > MAX_GRF_UNCOMPRESSED {
+        return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "grf inflate exceeded cap"));
+    }
+    Ok(decompressed)
+}
+
 /// Represents a GRF file. GRF Files are an archive to store game assets.
 /// Each GRF contains a [`Header`] with metadata (number of files, size,
 /// etc.) and a table [`AssetTable`] with information about individual assets.
@@ -58,8 +78,7 @@ impl Archive for NativeArchive {
         file.read_exact(&mut compressed_file_table_buffer).unwrap();
 
         let mut decoder = ZlibDecoder::new(compressed_file_table_buffer.as_slice());
-        let mut decompressed = Vec::with_capacity(file_table.uncompressed_size as usize);
-        decoder.read_to_end(&mut decompressed).expect("can't decompress file table");
+        let decompressed = decode_grf_payload(&mut decoder, file_table.uncompressed_size).expect("can't decompress file table");
 
         let file_count = file_header.get_file_count();
 
@@ -107,10 +126,7 @@ impl Archive for NativeArchive {
             decrypt_file(file_information, &mut compressed_file_buffer);
 
             let mut decoder = ZlibDecoder::new(compressed_file_buffer.as_slice());
-            let mut decompressed = Vec::with_capacity(file_information.uncompressed_size as usize);
-            decoder.read_to_end(&mut decompressed).expect("can't decompress archive content");
-
-            decompressed
+            decode_grf_payload(&mut decoder, file_information.uncompressed_size).expect("can't decompress archive content")
         })
     }
 

@@ -3,7 +3,8 @@
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
-use korangar_networking::{NetworkEvent, NetworkingSystem};
+use korangar_networking::{DEFAULT_HAIR_STYLE, NetworkEvent, NetworkingSystem};
+use ragnarok_packets::Sex;
 
 use crate::context::{Config, PACKET_VERSION, TestContext};
 use crate::scenarios::Scenario;
@@ -43,7 +44,10 @@ fn character_slot_switch_rejected(config: &Config) -> Result<(), String> {
             .find(|slot| !used_slots.contains(slot))
             .ok_or("no free character slot")?;
         let name = format!("HlSwap{}", std::process::id() % 100000);
-        session.0.create_character(free_slot, name).map_err(|_| "disconnected")?;
+        session
+            .0
+            .create_character(free_slot, name, Sex::Male, DEFAULT_HAIR_STYLE)
+            .map_err(|_| "disconnected")?;
         wait_char_event(&mut session, config.timeout, &mut |event| match event {
             NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
             NetworkEvent::CharacterCreationFailed { message, .. } => Some(Err(format!("creation failed: {message}"))),
@@ -314,7 +318,7 @@ fn create_temporary_character(
 
     session
         .0
-        .create_character(free_slot as usize, temp_name.to_owned())
+        .create_character(free_slot as usize, temp_name.to_owned(), Sex::Male, DEFAULT_HAIR_STYLE)
         .map_err(|_| "disconnected")?;
     let created = wait_char_event(&mut session, config.timeout, &mut |event| match event {
         NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
@@ -363,7 +367,7 @@ fn character_create_checks(config: &Config, created: &ragnarok_packets::Characte
         .ok_or("no free character slot for the duplicate-name attempt")?;
     session
         .0
-        .create_character(second_slot as usize, temp_name.to_owned())
+        .create_character(second_slot as usize, temp_name.to_owned(), Sex::Male, DEFAULT_HAIR_STYLE)
         .map_err(|_| "disconnected")?;
     wait_char_event(&mut session, config.timeout, &mut |event| match event {
         NetworkEvent::CharacterCreationFailed { .. } => Some(Ok(())),

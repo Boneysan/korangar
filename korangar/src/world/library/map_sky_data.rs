@@ -1,6 +1,6 @@
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::{Lua, Value};
+use mlua::Value;
 
 use super::{Library, Table};
 use crate::graphics::Color;
@@ -42,7 +42,7 @@ impl Table for MapSkyData {
     fn load(game_file_loader: &GameFileLoader) -> mlua::Result<Self::Storage> {
         let map_sky_data_table = match game_file_loader.get("data\\luafiles514\\lua files\\mapskydata\\mapskydata.lub") {
             Ok(data) => {
-                let state = Lua::new();
+                let state = super::new_sandboxed_lua()?;
                 state.load(&data).exec()?;
 
                 let globals = state.globals();

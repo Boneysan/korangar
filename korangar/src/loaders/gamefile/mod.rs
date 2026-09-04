@@ -6,6 +6,8 @@ mod cache;
 mod list;
 
 use core::panic;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::path::Path;
 use std::sync::RwLock;
 
@@ -13,6 +15,7 @@ use blake3::Hash;
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, Timer, print_debug};
 use korangar_loaders::{FileLoader, FileNotFoundError};
+use sha2::{Digest, Sha256};
 
 pub use self::cache::{sync_cache_archive, texture_file_dds_name, video_file_ivf_name};
 use self::list::GameArchiveList;
@@ -23,6 +26,19 @@ use crate::loaders::archive::seven_zip::{SevenZipArchive, SevenZipArchiveBuilder
 
 pub(crate) const CACHE_FILE_NAME: &str = "cache.7z";
 pub(crate) const LUA_ARCHIVE_FILE_NAME: &str = "lua_files.7z";
+/// Manifest names the pack may ship, newest first.
+///
+/// The pack splits its checksums per half -- `-assets` covers the GRFs and
+/// `lua_files.7z`, `-client` covers the executable and launchers -- because
+/// both halves get merged into one folder and a shared `SHA256SUMS` meant one
+/// silently replacing the other.
+///
+/// The bare name stays last for dev checkouts and any pack built before that
+/// split. Reading only `SHA256SUMS` is what made this list necessary: after the
+/// rename the lookup below found no manifest, took its "no manifest, nothing to
+/// check" branch, and the lua verification became a no-op in exactly the
+/// shipped configuration it was written to protect.
+pub(crate) const SHA256SUMS_FILE_NAMES: &[&str] = &["SHA256SUMS-assets", "SHA256SUMS-client", "SHA256SUMS"];
 
 pub(crate) const TEMPORARY_CACHE_FILE_NAME: &str = "cache.7z.tmp";
 pub(crate) const HASH_FILE_PATH: &str = "game_file_hash.txt";
@@ -123,6 +139,11 @@ impl GameFileLoader {
             .iter()
             .filter(|archive| archive.is_game_archive)
             .for_each(|archive| archive.archive.hash(&mut hasher));
+        // lua_files.7z is not a game archive (is_game_archive = false), so a
+        // swapped copy used to leave cache.7z valid. Hash the file bytes too.
+        if let Ok(mut file) = File::open(LUA_ARCHIVE_FILE_NAME) {
+            let _ = hasher.update_reader(&mut file);
+        }
         hasher.finalize()
     }
 
@@ -133,7 +154,16 @@ impl GameFileLoader {
     }
 
     pub fn load_patched_lua_files(&self) {
-        if !Path::new(LUA_ARCHIVE_FILE_NAME).exists() {
+        if Path::new(LUA_ARCHIVE_FILE_NAME).exists() {
+            if let Err(error) = verify_lua_archive_against_manifest() {
+                panic!("{error}");
+            }
+        } else if sha256sums_lists(LUA_ARCHIVE_FILE_NAME) {
+            panic!(
+                "{LUA_ARCHIVE_FILE_NAME} is listed in the checksum manifest but is missing. Copy it from the Assets folder next to the \
+                 executable."
+            );
+        } else {
             self.patch_lua_files();
         }
 
@@ -1053,6 +1083,126 @@ impl GameFileLoader {
         }
 
         self.add_archive(archive, false);
+    }
+}
+
+fn sha256_file(path: &Path) -> Result<[u8; 32], String> {
+    let mut file = File::open(path).map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+    let mut hasher = Sha256::new();
+    std::io::copy(&mut file, &mut hasher).map_err(|error| format!("cannot hash {}: {error}", path.display()))?;
+    Ok(hasher.finalize().into())
+}
+
+fn parse_sha256sums_entry(line: &str) -> Option<([u8; 32], String)> {
+    let line = line.trim();
+    if line.is_empty() || line.starts_with('#') {
+        return None;
+    }
+    let mut parts = line.split_whitespace();
+    let hex = parts.next()?;
+    let name = parts.next()?;
+    if hex.len() != 64 {
+        return None;
+    }
+    let mut digest = [0u8; 32];
+    for (index, chunk) in hex.as_bytes().chunks_exact(2).enumerate() {
+        digest[index] = u8::from_str_radix(std::str::from_utf8(chunk).ok()?, 16).ok()?;
+    }
+    let name = name.replace('\\', "/").trim_start_matches("./").to_owned();
+    Some((digest, name))
+}
+
+fn sha256sums_expected(filename: &str) -> Option<[u8; 32]> {
+    for manifest in SHA256SUMS_FILE_NAMES {
+        let Ok(file) = File::open(manifest) else {
+            continue;
+        };
+        for line in BufReader::new(file).lines().map_while(Result::ok) {
+            let Some((digest, name)) = parse_sha256sums_entry(&line) else {
+                continue;
+            };
+            if name == filename || name.ends_with(&format!("/{filename}")) {
+                return Some(digest);
+            }
+        }
+    }
+    None
+}
+
+fn sha256sums_lists(filename: &str) -> bool {
+    sha256sums_expected(filename).is_some()
+}
+
+fn verify_lua_archive_against_manifest() -> Result<(), String> {
+    let Some(expected) = sha256sums_expected(LUA_ARCHIVE_FILE_NAME) else {
+        // Dev checkouts have no pack manifest at all. A shipped pack always
+        // has one, so reaching here in a pack means the name drifted -- keep
+        // SHA256SUMS_FILE_NAMES in step with what make-pack.sh writes.
+        return Ok(());
+    };
+    let actual = sha256_file(Path::new(LUA_ARCHIVE_FILE_NAME))?;
+    if actual != expected {
+        return Err(format!(
+            "{LUA_ARCHIVE_FILE_NAME} does not match the checksum manifest. The file was swapped or the download is corrupt. Copy a fresh \
+             lua_files.7z and SHA256SUMS-assets from the Assets folder."
+        ));
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_sha256sums_entry;
+
+    #[test]
+    fn parse_sha256sums_unix_and_windows_paths() {
+        let line = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  ./lua_files.7z";
+        let (digest, name) = parse_sha256sums_entry(line).expect("line");
+        assert_eq!(digest[0], 0x01);
+        assert_eq!(digest[31], 0xEF);
+        assert_eq!(name, "lua_files.7z");
+
+        let win = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef  .\\lua_files.7z";
+        let (_, name) = parse_sha256sums_entry(win).expect("win line");
+        assert_eq!(name, "lua_files.7z");
+    }
+
+    /// The client verifies `lua_files.7z` against the pack's manifest before
+    /// loading it. That check is only as good as the filename it looks for:
+    /// when the pack renamed `SHA256SUMS` to `SHA256SUMS-client` /
+    /// `SHA256SUMS-assets` and this list was not updated, the lookup found
+    /// nothing, took its no-manifest branch, and verified nothing at all --
+    /// silently, in exactly the shipped configuration the check exists for.
+    ///
+    /// So this reads the packaging script and asserts every manifest it writes
+    /// is one the client knows how to read. A rename on one side now fails here
+    /// instead of in someone's hands.
+    #[test]
+    fn client_reads_every_manifest_the_packer_writes() {
+        let script = concat!(env!("CARGO_MANIFEST_DIR"), "/../tools/packaging/make-pack.sh");
+        let Ok(script) = std::fs::read_to_string(script) else {
+            // The crate is vendored or the script moved; nothing to compare.
+            return;
+        };
+
+        let written: Vec<&str> = script
+            .lines()
+            .filter_map(|line| line.trim().strip_prefix("write_manifest "))
+            .filter_map(|rest| rest.split_whitespace().nth(1))
+            .collect();
+
+        assert!(
+            !written.is_empty(),
+            "found no write_manifest calls in make-pack.sh -- this test is no longer checking anything"
+        );
+
+        for name in written {
+            assert!(
+                super::SHA256SUMS_FILE_NAMES.contains(&name),
+                "make-pack.sh writes {name}, which the client never looks for. Add it to SHA256SUMS_FILE_NAMES, or the lua_files.7z \
+                 verification silently passes on every pack."
+            );
+        }
     }
 }
 

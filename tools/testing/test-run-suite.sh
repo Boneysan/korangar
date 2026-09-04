@@ -28,9 +28,18 @@ run_case() {
     case_dir="$test_root/$name"
     mkdir -p "$case_dir/runs"
 
+    # Credentials are passed explicitly, and HERCULES_DIR is aimed at nothing,
+    # so the case cannot pick up a real operator-credentials.conf. Without this
+    # the test only passes on a machine that happens to have live credentials
+    # beside the repo: run-suite.sh exits 2 when it cannot build a --password
+    # argument, long before the fake cargo runs. It passed locally and failed
+    # in CI for exactly that reason. What is under test here is the archive
+    # contract, not credential resolution.
     set +e
     HEADLESS_RUNS_DIR="$case_dir/runs" HEADLESS_CARGO="$fake_cargo" HEADLESS_FAKE_MODE="$mode" \
-        "$runner" "$@" > "$case_dir/output" 2>&1
+        HERCULES_DIR="$test_root/no-hercules" \
+        "$runner" --password test-password --partner-password test-partner-password "$@" \
+        > "$case_dir/output" 2>&1
     case_status=$?
     set -e
 }

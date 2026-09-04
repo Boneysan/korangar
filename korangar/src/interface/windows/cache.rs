@@ -128,6 +128,8 @@ impl WindowCache {
             WindowClass::Stats => state(AnchorPoint::CenterRight, -(280.0 + MARGIN), -120.0, 280.0, 360.0),
             WindowClass::SkillTree => state(AnchorPoint::CenterLeft, MARGIN, -200.0, 420.0, 400.0),
             WindowClass::FriendList => state(AnchorPoint::CenterLeft, MARGIN, 80.0, 280.0, 360.0),
+            // Quest log sits in the same left column as the skill tree.
+            WindowClass::QuestLog => state(AnchorPoint::CenterLeft, MARGIN, -260.0, 340.0, 380.0),
             // Minimap top-right (above inventory).
             WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 210.0),
             // Buff bar top-center.

@@ -349,14 +349,14 @@ impl Map {
 
         let log_ambient = std::env::var_os("KORANGAR_PACKET_LOG").is_some();
         if log_ambient {
-            eprintln!("[ambient] {} sound sources on this map", self.sound_sources.len());
+            client_log!("[ambient] {} sound sources on this map", self.sound_sources.len());
         }
 
         for sound in self.sound_sources.iter() {
             let sound_effect_key = audio_engine.load(&sound.sound_file);
 
             if log_ambient {
-                eprintln!(
+                client_log!(
                     "[ambient] {} at ({:.1},{:.1},{:.1}) inner={} range={:.1} volume={:.2} cycle={:?}",
                     sound.sound_file,
                     sound.position.x,

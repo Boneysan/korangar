@@ -39,6 +39,9 @@ macro_rules! time_phase {
     }
 }
 
+#[macro_use]
+pub mod logging;
+
 mod dm;
 mod graphics;
 use crate::dm::DmCampaignStatePathExt;
@@ -75,8 +78,8 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion,
+    DisconnectReason, EntityData, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
+    SellItem, SupportedPacketVersion,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -86,7 +89,8 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AccountId, AttackRange, BuyShopItemsResult, CharacterServerInformation, ClientTick, Direction, DisappearanceReason, EntityId,
-    ExperienceType, HotbarSlot, ItemId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId, WorldPosition,
+    ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
+    WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -116,7 +120,7 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::keyboard::{KeyCode, PhysicalKey};
 #[cfg(all(target_os = "linux", not(target_arch = "wasm32")))]
 use winit::platform::x11::EventLoopBuilderExtX11;
-use winit::window::{Icon, Window, WindowAttributes, WindowId};
+use winit::window::{Fullscreen, Icon, Window, WindowAttributes, WindowId};
 
 use crate::graphics::*;
 use crate::input::{InputEvent, InputReport, InputSystem};
@@ -128,9 +132,11 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt,
-    WORLD_THEMES_PATH,
+    DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
+    ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
+use crate::state::character_creation::{CharacterSex, HairStyle};
+use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
@@ -531,6 +537,14 @@ const PARTY_CHAT_COLOR: MessageColor = MessageColor::Rgb {
 const ROLLING_CUTTER_ID: SkillId = SkillId(2036);
 const DEFAULT_MAP: &str = "geffen";
 const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
+/// Entity id for the character-creation preview. `u32::MAX` cannot collide with
+/// a server-assigned account id, so the preview can be found and removed by id
+/// rather than by an index a spawn could invalidate.
+const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX);
+/// The tile under [`START_CAMERA_FOCUS_POINT`] -- world units over
+/// `GAT_TILE_SIZE` -- so the preview stands where the character-select camera
+/// is already pointing.
+const CHARACTER_PREVIEW_TILE: (u16, u16) = (120, 48);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
@@ -648,7 +662,7 @@ pub fn init_tls_rand() {
 
 fn initialize_shutdown_signal() {
     ctrlc::set_handler(|| {
-        println!("CTRL-C received. Shutting down");
+        client_log!("CTRL-C received. Shutting down");
         SHUTDOWN_SIGNAL.store(true, Ordering::SeqCst);
     })
     .expect("Error setting Ctrl-C handler");
@@ -686,6 +700,40 @@ fn create_window_attributes(saved_size: Option<(u32, u32)>, maximized: bool) -> 
         .with_title(CLIENT_NAME)
         .with_window_icon(Some(icon))
         .with_visible(false)
+}
+
+/// Translate a [`DisplayMode`] into the winit fullscreen state it asks for.
+///
+/// Exclusive fullscreen is not a flag: winit wants a concrete video mode, and
+/// only the modes the monitor actually reports are valid. We keep the
+/// resolution the desktop is already at and take the highest refresh rate
+/// offered for it, so the switch does not resize the player's other windows
+/// while a 144 Hz panel still stops running the game at 60.
+///
+/// A monitor that reports no mode at its own size — Wayland reports none at all
+/// — falls back to borderless. Leaving the player in a window with "Exclusive
+/// Fullscreen" selected would look like the setting did nothing.
+fn resolve_fullscreen(window: &Window, display_mode: DisplayMode) -> Option<Fullscreen> {
+    match display_mode {
+        DisplayMode::Windowed => None,
+        DisplayMode::BorderlessFullscreen => Some(Fullscreen::Borderless(None)),
+        DisplayMode::ExclusiveFullscreen => {
+            let monitor = window.current_monitor().or_else(|| window.primary_monitor());
+
+            let video_mode = monitor.as_ref().and_then(|monitor| {
+                let monitor_size = monitor.size();
+                monitor
+                    .video_modes()
+                    .filter(|video_mode| video_mode.size() == monitor_size)
+                    .max_by_key(|video_mode| video_mode.refresh_rate_millihertz())
+            });
+
+            match video_mode {
+                Some(video_mode) => Some(Fullscreen::Exclusive(video_mode)),
+                None => Some(Fullscreen::Borderless(monitor)),
+            }
+        }
+    }
 }
 
 async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, compatible_surface: Option<&wgpu::Surface<'_>>) -> Adapter {
@@ -1397,6 +1445,14 @@ pub struct Client {
     audio_engine: Arc<AudioEngine<GameFileLoader>>,
     active_interface_settings: InterfaceSettings,
     active_graphics_settings: GraphicsSettings,
+    /// Which fullscreen mode Alt+Enter goes back to. Deliberately not
+    /// persisted: it only has to outlive the toggle, and the mode the player
+    /// actually chose already lives in `GraphicsSettings`.
+    preferred_fullscreen_mode: DisplayMode,
+    /// What the character-creation preview is currently showing, or `None` when
+    /// the window is closed. Compared against the player's choices each frame
+    /// to decide whether the preview entity needs rebuilding.
+    character_preview: Option<(CharacterSex, HairStyle)>,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -1455,7 +1511,7 @@ impl Client {
                     0.0,
                 )));
             }
-            Err(error) => eprintln!("[skill-effect] failed to load {path}: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load {path}: {error:?}"),
         }
     }
 
@@ -1522,7 +1578,7 @@ impl Client {
             Ok(texture) => self
                 .effect_holder
                 .add_effect(Box::new(SkillBurst::new(texture, position, style, point_light_id))),
-            Err(error) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load {texture_path}: {error:?}"),
         }
     }
 
@@ -1540,8 +1596,8 @@ impl Client {
             (Ok(primary), Ok(secondary)) => self.effect_holder.add_effect(Box::new(
                 SkillBurst::new(primary, position, style, point_light_id).with_secondary_texture(secondary),
             )),
-            (Err(error), _) => eprintln!("[skill-effect] failed to load {texture_path}: {error:?}"),
-            (_, Err(error)) => eprintln!("[skill-effect] failed to load {secondary_texture_path}: {error:?}"),
+            (Err(error), _) => client_log!("[skill-effect] failed to load {texture_path}: {error:?}"),
+            (_, Err(error)) => client_log!("[skill-effect] failed to load {secondary_texture_path}: {error:?}"),
         }
     }
 
@@ -1553,9 +1609,9 @@ impl Client {
                     source_position,
                     target_position,
                 ))),
-                None => eprintln!("[skill-effect] spear projectile sprite contains no frames"),
+                None => client_log!("[skill-effect] spear projectile sprite contains no frames"),
             },
-            Err(error) => eprintln!("[skill-effect] failed to load spear projectile: {error:?}"),
+            Err(error) => client_log!("[skill-effect] failed to load spear projectile: {error:?}"),
         }
     }
 
@@ -1641,7 +1697,7 @@ impl Client {
         let texture = ammunition_texture.or_else(|| self.first_sprite_frame(fallback_sprite));
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!(
+            client_log!(
                 "[ranged-attack] view={view} local_player={is_local_player} ammo_item={ammunition:?} ammo_sprite={ammunition_sprite:?} \
                  used_fallback={used_fallback}"
             );
@@ -1666,7 +1722,7 @@ impl Client {
 
                 self.effect_holder.add_effect(Box::new(projectile));
             }
-            None => eprintln!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
+            None => client_log!("[ranged-attack] no projectile sprite loaded for weapon view {view}"),
         }
     }
 
@@ -1770,10 +1826,11 @@ impl Client {
                 .claim_unique_skill_effect_slot(source_entity_id, skill_id, UniqueEffectSlot::TravelProjectile, 0.22);
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!(
+            client_log!(
                 "[skill-effect] damage-caster skill={} source={} spawn_caster={spawn_caster_layer} spawn_travel={spawn_travel} \
                  impact_delay_ms={impact_delay_ms} source_pos={source_position:?} target_pos={target_position:?}",
-                skill_id.0, source_entity_id.0
+                skill_id.0,
+                source_entity_id.0
             );
         }
 
@@ -1922,7 +1979,7 @@ impl Client {
         let texture = match self.texture_loader.get_or_load(kind.texture_path(), ImageType::Color) {
             Ok(texture) => texture,
             Err(error) => {
-                eprintln!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path());
+                client_log!("[skill-effect] failed to load travel ball {}: {error:?}", kind.texture_path());
                 return;
             }
         };
@@ -1970,7 +2027,7 @@ impl Client {
         let core = match self.texture_loader.get_or_load(JUPITEL_BALL_CORE_TEXTURE, ImageType::Color) {
             Ok(core) => core,
             Err(error) => {
-                eprintln!("[skill-effect] failed to load {JUPITEL_BALL_CORE_TEXTURE}: {error:?}");
+                client_log!("[skill-effect] failed to load {JUPITEL_BALL_CORE_TEXTURE}: {error:?}");
                 return;
             }
         };
@@ -2004,7 +2061,7 @@ impl Client {
         self.skill_unit_registry.insert(entity_id, unit_id, position);
 
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!("[skill-unit] spawn {unit_id:?} entity={entity_id:?} at {position:?}");
+            client_log!("[skill-unit] spawn {unit_id:?} entity={entity_id:?} at {position:?}");
         }
 
         // Hunter traps are RSM props rather than procedural bodies, so they take
@@ -2023,14 +2080,14 @@ impl Client {
                     transform.scale = Vector3::new(TRAP_PROP_SCALE, TRAP_PROP_SCALE, TRAP_PROP_SCALE);
                     self.active_trap_props.push((entity_id, model, transform));
                 }
-                None => eprintln!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
+                None => client_log!("[skill-unit] trap prop {model_file} was not preloaded for this map"),
             }
             return;
         }
 
         let Some(presentation) = unit_presentation(unit_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
+                client_log!("[skill-unit] unmapped unit {unit_id:?} entity={}", entity_id.0);
             }
             return;
         };
@@ -2050,7 +2107,7 @@ impl Client {
                 Some(UnitBody::LoopingSprite { .. }) => "looping-sprite",
                 None => "none",
             };
-            eprintln!(
+            client_log!(
                 "[skill-unit] spawn {unit_id:?} entity={} body={body} str={:?} at ({:.1},{:.1},{:.1})",
                 entity_id.0,
                 presentation.looping_str.or(presentation.intro_str),
@@ -2077,7 +2134,7 @@ impl Client {
                         0.0,
                     )));
                 }
-                Err(error) => eprintln!("[skill-unit] intro STR {path} failed: {error:?}"),
+                Err(error) => client_log!("[skill-unit] intro STR {path} failed: {error:?}"),
             }
         }
 
@@ -2101,7 +2158,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] looping STR {path} failed: {error:?}"),
+                Err(error) => client_log!("[skill-unit] looping STR {path} failed: {error:?}"),
             }
         }
 
@@ -2119,13 +2176,13 @@ impl Client {
                     )),
                     entity_id,
                 ),
-                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture}: {error:?}"),
             },
             Some(UnitBody::IceHorns { texture }) => match self.texture_loader.get_or_load(texture, ImageType::Color) {
                 Ok(loaded) => self
                     .effect_holder
                     .add_unit(Box::new(UnitIceHorns::new(loaded, position)), entity_id),
-                Err(error) => eprintln!("[skill-unit] failed to load {texture}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture}: {error:?}"),
             },
             Some(UnitBody::GroundQuad {
                 texture,
@@ -2140,7 +2197,7 @@ impl Client {
                 Ok(loaded) => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         let texture = texture.unwrap_or("<flat colour>");
-                        eprintln!(
+                        client_log!(
                             "[skill-unit] ground-quad texture {texture} loaded, half_size={half_size}, color={color:?}, blend={blend:?}"
                         );
                     }
@@ -2155,7 +2212,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {texture:?}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {texture:?}: {error:?}"),
             },
             Some(UnitBody::LayeredGroundQuad {
                 tile_color,
@@ -2178,7 +2235,7 @@ impl Client {
                         // false for every non-TGA in `load_texture_data`, so for
                         // these BMPs it could only ever print `false` and read as
                         // a finding. The blend family is the answerable question.
-                        eprintln!(
+                        client_log!(
                             "[skill-unit] layered ground-quad tile={tile_color:?} half_size={half_size}, hover={hover_frames:?} \
                              @{hover_fps}fps half_size={hover_half_size} opacity={hover_opacity}, blend={hover_blend:?}"
                         );
@@ -2205,7 +2262,7 @@ impl Client {
                         entity_id,
                     );
                 }
-                Err(error) => eprintln!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
+                Err(error) => client_log!("[skill-unit] failed to load {hover_frames:?}: {error:?}"),
             },
             Some(UnitBody::LoopingSprite { path, action_index, lift }) => {
                 // Same sentinel routing as the one-shot sprite effects; a sheet
@@ -2240,7 +2297,7 @@ impl Client {
         if let Some(sound) = presentation.sound {
             let claimed = self.effect_holder.claim_unit_sound(unit_id, UNIT_SOUND_GROUP_WINDOW);
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-unit] sound {sound} claimed={claimed}");
+                client_log!("[skill-unit] sound {sound} claimed={claimed}");
             }
             if claimed {
                 self.play_spatial_skill_sound(sound, position);
@@ -2345,14 +2402,14 @@ impl Client {
                 );
                 self.active_status_effects.insert(entity_id, path);
             }
-            Err(error) => eprintln!("[status-effect] {path} failed to load: {error:?}"),
+            Err(error) => client_log!("[status-effect] {path} failed to load: {error:?}"),
         }
     }
 
     fn spawn_special_effect(&mut self, entity_id: EntityId, effect_id: ragnarok_packets::EffectId) {
         let Some(recipe) = special_effect_recipe(effect_id) else {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!("[skill-effect] unmapped special effect id={effect_id:?} entity={}", entity_id.0);
+                client_log!("[skill-effect] unmapped special effect id={effect_id:?} entity={}", entity_id.0);
             }
             return;
         };
@@ -2392,7 +2449,7 @@ impl Client {
                             0.0,
                         )));
                     }
-                    Err(error) => eprintln!("[skill-effect] special-effect STR {path} failed: {error:?}"),
+                    Err(error) => client_log!("[skill-effect] special-effect STR {path} failed: {error:?}"),
                 }
             }
             SpecialEffectRecipe::Burst { style, texture, secondary } => match secondary {
@@ -2462,8 +2519,8 @@ impl Client {
                                     .with_frames(frames),
                             ));
                         }
-                        (Err(error), _) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE}: {error:?}"),
-                        (_, Err(error)) => eprintln!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE_SECONDARY}: {error:?}"),
+                        (Err(error), _) => client_log!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE}: {error:?}"),
+                        (_, Err(error)) => client_log!("[skill-effect] failed to load {NAPALM_BEAT_TEXTURE_SECONDARY}: {error:?}"),
                     }
                 }
             }
@@ -2502,7 +2559,7 @@ impl Client {
                             SkillBurst::new(pang, target_position, SkillBurstStyle::JupitelHit, target_light_id).with_frames(frames),
                         ));
                     }
-                    Err(error) => eprintln!("[skill-effect] failed to load {JUPITEL_HIT_PANG_TEXTURE}: {error:?}"),
+                    Err(error) => client_log!("[skill-effect] failed to load {JUPITEL_HIT_PANG_TEXTURE}: {error:?}"),
                 }
             }
             None => {}
@@ -2991,6 +3048,11 @@ impl Client {
             networking_system,
             audio_engine,
             active_interface_settings,
+            preferred_fullscreen_mode: match graphics_settings.display_mode {
+                DisplayMode::Windowed => DisplayMode::BorderlessFullscreen,
+                mode => mode,
+            },
+            character_preview: None,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -3104,6 +3166,16 @@ impl Client {
     fn update_settings(&mut self) {
         let graphics_settings = self.client_state.follow(client_state().graphics_settings());
 
+        // Marked active only once it has actually been applied: with no window
+        // yet there is nothing to put fullscreen, and recording it anyway would
+        // drop the change on the floor instead of retrying next frame.
+        if self.active_graphics_settings.display_mode != graphics_settings.display_mode
+            && let Some(window) = self.window.as_ref()
+        {
+            window.set_fullscreen(resolve_fullscreen(window, graphics_settings.display_mode));
+            self.active_graphics_settings.display_mode = graphics_settings.display_mode;
+        }
+
         if self.active_graphics_settings.vsync != graphics_settings.vsync {
             self.graphics_engine.set_vsync(graphics_settings.vsync);
             self.active_graphics_settings.vsync = graphics_settings.vsync;
@@ -3186,6 +3258,91 @@ impl Client {
             *self.client_state.follow_mut(client_state().world_theme()) = theme;
             self.active_interface_settings.world_theme = world_theme;
         }
+    }
+
+    /// Keep the character-creation preview in step with the drop-downs.
+    ///
+    /// Appearance is baked into the sprite layers when the entity is built, so
+    /// a different sex or hair style means building a new entity rather than
+    /// mutating the old one. That only happens when the player picks from a
+    /// drop-down, so the cost is not per frame.
+    ///
+    /// The preview is an `Npc` rather than a `Player` purely because that
+    /// constructor takes [`EntityData`] directly; what it renders as comes from
+    /// the job id, and `JobId(0)` is the Novice -- so this composes exactly the
+    /// player sprite the character will have.
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn update_character_preview(&mut self, client_tick: ClientTick) {
+        let wanted = self.interface.is_window_with_class_open(WindowClass::CharacterCreation).then(|| {
+            let creation = self.client_state.follow(client_state().character_creation());
+            (creation.sex, creation.hair_style)
+        });
+
+        if wanted == self.character_preview {
+            return;
+        }
+
+        self.client_state
+            .follow_mut(client_state().entities())
+            .retain(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID);
+
+        // Recorded even when the build below fails, so a map that cannot host
+        // the preview is not retried every single frame.
+        self.character_preview = wanted;
+
+        let Some((sex, hair_style)) = wanted else {
+            return;
+        };
+        let Some(map) = self.map.as_ref() else {
+            return;
+        };
+
+        let entity_data = EntityData {
+            entity_id: CHARACTER_PREVIEW_ENTITY_ID,
+            movement_speed: 150,
+            job_id: JobId(0),
+            head: hair_style.id,
+            weapon: 0,
+            shield: 0,
+            position: WorldPosition {
+                x: CHARACTER_PREVIEW_TILE.0,
+                y: CHARACTER_PREVIEW_TILE.1,
+                direction: Direction::South,
+            },
+            destination: None,
+            health_points: 40,
+            maximum_health_points: 40,
+            head_direction: 0,
+            sex: sex.into(),
+            body_state: 0,
+            health_state: 0,
+            option: 0,
+            is_pk_mode_on: false,
+            state: 0,
+            accessory: 0,
+            accessory2: 0,
+            accessory3: 0,
+            head_palette: 0,
+            body_palette: 0,
+            robe: 0,
+            body: 0,
+        };
+
+        let Some(preview) = Npc::new(&self.library, map, &mut self.path_finder, entity_data, client_tick) else {
+            return;
+        };
+
+        let mut preview = Entity::Npc(preview);
+        let entity_part_files = preview.get_entity_part_files(&self.library, &self.game_file_loader);
+
+        if let Some(animation_data) =
+            self.async_loader
+                .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, preview.get_entity_type(), entity_part_files)
+        {
+            preview.set_animation_data(animation_data);
+        }
+
+        self.client_state.follow_mut(client_state().entities()).push(preview);
     }
 
     #[inline(always)]
@@ -3342,7 +3499,7 @@ impl Client {
         let due = self.pending_impacts.drain_due(client_tick);
         for impact in due {
             if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                eprintln!(
+                client_log!(
                     "[packet-log] impact source={} target={} skill={:?} hits={} packet_tick={} due={} now={}",
                     impact.damage.source_entity_id.0,
                     impact.damage.destination_entity_id.0,
@@ -3360,7 +3517,7 @@ impl Client {
     /// Surface a login-time error on the login form status line only (no
     /// separate Error popup — the form line is enough and stays in place).
     fn show_login_error(&mut self, message: &str) {
-        eprintln!("[login] show_login_error: {message}");
+        client_log!("[login] show_login_error: {message}");
         *self.client_state.follow_mut(client_state().login_window().status_message()) = message.to_owned();
 
         if !self.interface.is_window_with_class_open(WindowClass::Login) {
@@ -3380,7 +3537,7 @@ impl Client {
     /// the player is never left staring at a dead server-select window.
     fn return_to_login_with_error(&mut self, message: &str) {
         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-            eprintln!("[disconnect] return_to_login_with_error closes all windows: {message}");
+            client_log!("[disconnect] return_to_login_with_error closes all windows: {message}");
         }
         self.networking_system.disconnect_from_login_server();
         self.networking_system.disconnect_from_character_server();
@@ -3417,7 +3574,7 @@ impl Client {
 
         let now = Instant::now();
         if now >= expires_at {
-            eprintln!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
+            client_log!("[login] AUTH_TIMEOUT elapsed on server select — returning to login");
             self.return_to_login_with_error("Login session expired before server select (30s) — please log in again");
             return;
         }
@@ -3433,7 +3590,7 @@ impl Client {
             std::net::IpAddr::V4(character_server_information.server_ip.into()),
             character_server_information.server_port,
         );
-        eprintln!(
+        client_log!(
             "[login] SelectServer '{}' → {address}",
             character_server_information.server_name
         );
@@ -3504,7 +3661,7 @@ impl Client {
                     // goes account → character list with no flash.
                     if character_servers.len() == 1 {
                         let sole = character_servers.into_iter().next().unwrap();
-                        eprintln!("[login] sole character server '{}' — auto-entering", sole.server_name);
+                        client_log!("[login] sole character server '{}' — auto-entering", sole.server_name);
                         self.enter_character_server(sole);
                     } else {
                         self.login_auth_expires_at = Some(Instant::now() + LOGIN_AUTH_TIMEOUT);
@@ -3519,7 +3676,7 @@ impl Client {
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
                     // both login/character sockets before showing the error.
-                    eprintln!("[login] LoginServerConnectionFailed: {message}");
+                    client_log!("[login] LoginServerConnectionFailed: {message}");
                     self.login_auth_expires_at = None;
                     self.networking_system.disconnect_from_login_server();
                     self.networking_system.disconnect_from_character_server();
@@ -3544,7 +3701,7 @@ impl Client {
                             print_debug!("Login server dropped after auth — reconnecting");
 
                             if let Some(socket_address) = self.saved_login_server_address {
-                                eprintln!("[login] login socket dropped after auth — reconnecting");
+                                client_log!("[login] login socket dropped after auth — reconnecting");
                                 self.networking_system.connect_to_login_server(
                                     self.saved_packet_version,
                                     socket_address,
@@ -3557,16 +3714,16 @@ impl Client {
                             // something if the login form has no status yet.
                             let status = self.client_state.follow(client_state().login_window().status_message());
                             if status.is_empty() {
-                                eprintln!("[login] LoginServerDisconnected before auth ({reason:?})");
+                                client_log!("[login] LoginServerDisconnected before auth ({reason:?})");
                                 self.show_login_error("Could not connect to login server");
                             }
                         } else {
-                            eprintln!("[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition");
+                            client_log!("[login] LoginServerDisconnected ({reason:?}) ignored during char/map transition");
                         }
                     }
                 }
                 NetworkEvent::CharacterServerConnected { normal_slot_count } => {
-                    eprintln!("[login] CharacterServerConnected slots={normal_slot_count} — requesting character list");
+                    client_log!("[login] CharacterServerConnected slots={normal_slot_count} — requesting character list");
                     self.client_state
                         .follow_mut(client_state().character_slots())
                         .set_slot_count(normal_slot_count);
@@ -3574,7 +3731,7 @@ impl Client {
                     let _ = self.networking_system.request_character_list();
                 }
                 NetworkEvent::CharacterServerConnectionFailed { message, .. } => {
-                    eprintln!("[login] CharacterServerConnectionFailed: {message}");
+                    client_log!("[login] CharacterServerConnectionFailed: {message}");
                     self.return_to_login_with_error(message);
                 }
                 NetworkEvent::CharacterServerDisconnected { reason } => {
@@ -3592,13 +3749,13 @@ impl Client {
                                     .connect_to_character_server(self.saved_packet_version, login_data, server);
                             }
                         } else {
-                            eprintln!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
+                            client_log!("[login] CharacterServerDisconnected ({reason:?}) before map — return to login");
                             self.return_to_login_with_error("Lost connection to character server (auth may have expired — log in again)");
                         }
                     } else if !self.networking_system.is_map_server_connected() && self.saved_login_data.is_some() {
                         // Intentional char disconnect without map (e.g. log out character).
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!("[disconnect] CharacterServerDisconnected(intentional) closes all windows");
+                            client_log!("[disconnect] CharacterServerDisconnected(intentional) closes all windows");
                         }
                         #[cfg(not(feature = "debug"))]
                         self.interface.close_all_windows();
@@ -3683,7 +3840,7 @@ impl Client {
                 }
                 NetworkEvent::MapDisconnectReason { message } => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[disconnect] server reason: {message}");
+                        client_log!("[disconnect] server reason: {message}");
                     }
                     self.pending_disconnect_reason = Some(message);
                     // A reason implies a server-initiated drop even if the
@@ -3807,20 +3964,30 @@ impl Client {
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
 
-                    let saved_login_data = self.saved_login_data.as_ref().unwrap();
+                    let Some(saved_login_data) = self.saved_login_data.as_ref() else {
+                        self.interface.open_window(ErrorWindow::new(
+                            "Lost login state before connecting to the map server.".to_owned(),
+                        ));
+                        continue;
+                    };
+                    let Some(character_information) = self
+                        .client_state
+                        .follow(client_state().character_slots())
+                        .with_id(login_data.character_id)
+                        .cloned()
+                    else {
+                        self.interface.open_window(ErrorWindow::new(
+                            "The server selected a character that is not in your slot list.".to_owned(),
+                        ));
+                        continue;
+                    };
+
                     self.networking_system.disconnect_from_character_server();
                     self.networking_system
                         .connect_to_map_server(self.saved_packet_version, saved_login_data, login_data);
                     // Ask for the client tick right away, so that the player isn't de-synced when
                     // they spawn on the map.
                     let _ = self.networking_system.request_client_tick();
-
-                    let character_information = self
-                        .client_state
-                        .follow(client_state().character_slots())
-                        .with_id(login_data.character_id)
-                        .cloned()
-                        .unwrap();
 
                     let mut player = Entity::Player(Player::new(
                         &self.library,
@@ -4297,7 +4464,7 @@ impl Client {
                 } => {
                     let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[packet-log] damage source={} target={} skill={:?} hits={hit_count} duration={attack_duration}",
                             source_entity_id.0,
                             destination_entity_id.0,
@@ -4675,11 +4842,22 @@ impl Client {
                     }
                 }
                 NetworkEvent::RemoveQuestEffect { entity_id } => self.particle_holder.remove_quest_icon(entity_id),
-                // The quest log has no UI yet; these events exist for the
-                // headless tester and a future quest-log window.
-                NetworkEvent::QuestAdded { .. } => {}
-                NetworkEvent::QuestRemoved { .. } => {}
-                NetworkEvent::QuestList { .. } => {}
+                // Hercules sends only kill objectives, and a Seal Cascade
+                // hunting contract has none - it is filled by handing in
+                // items. The item list comes from the bundled campaign table
+                // instead, resolved to names here because the interface layer
+                // holds no `Library`.
+                NetworkEvent::QuestAdded { quest_id, .. } => {
+                    let quest = self.resolve_quest_entry(quest_id);
+                    self.client_state.follow_mut(client_state().quest_log()).add(quest);
+                }
+                NetworkEvent::QuestRemoved { quest_id } => {
+                    self.client_state.follow_mut(client_state().quest_log()).remove(quest_id);
+                }
+                NetworkEvent::QuestList { quest_ids } => {
+                    let quests = quest_ids.into_iter().map(|quest_id| self.resolve_quest_entry(quest_id)).collect();
+                    self.client_state.follow_mut(client_state().quest_log()).replace(quests);
+                }
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
                         .follow_mut(client_state().inventory())
@@ -4695,7 +4873,7 @@ impl Client {
                         }
                         let entity_part_files = player.get_entity_part_files(&self.library, &self.game_file_loader);
                         if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                            eprintln!("[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}");
+                            client_log!("[packet-log] local equipped weapon={weapon} left={left_hand:?} parts={entity_part_files:?}");
                         }
                         Self::refresh_entity_player_gear(
                             &self.async_loader,
@@ -5179,7 +5357,7 @@ impl Client {
                     // will be picked up when rendering lands. Logged under the
                     // existing packet-log switch so the coverage is observable.
                     if changed == Some(true) && std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[packet-log] look change account={} type={look_type:?} value={value}",
                             account_id.0
                         );
@@ -5215,7 +5393,7 @@ impl Client {
                 }
                 NetworkEvent::LoggedOut => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!("[disconnect] LoggedOut closes all windows");
+                        client_log!("[disconnect] LoggedOut closes all windows");
                     }
                     // Close character UI *before* clearing character-scoped state.
                     // Skill Tree holds ManuallyAsserted paths into layout tabs; if we
@@ -5231,6 +5409,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
+                    self.client_state.follow_mut(client_state().quest_log()).clear();
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
@@ -5644,7 +5823,18 @@ impl Client {
                     }
                 }
                 NetworkEvent::VisualEffect { effect_path, entity_id } => {
-                    let effect = self.effect_loader.get_or_load(effect_path, &self.texture_loader).unwrap();
+                    // Degrade to a missing effect rather than killing the client.
+                    // `effect_path` is one of our own static strings, so this
+                    // cannot fail on server input -- but it fails whenever the
+                    // asset is absent, which is precisely the state a player is
+                    // in after an incomplete GRF download. Levelling up should
+                    // not crash someone whose Assets folder arrived truncated.
+                    let Ok(effect) = self.effect_loader.get_or_load(effect_path, &self.texture_loader) else {
+                        #[cfg(feature = "debug")]
+                        print_debug!("[{}] failed to load visual effect {}", "error".red(), effect_path.magenta());
+
+                        continue;
+                    };
                     let frame_timer = effect.new_frame_timer();
 
                     self.effect_holder.add_effect(Box::new(EffectWithLight::new(
@@ -5732,7 +5922,7 @@ impl Client {
                 }
                 NetworkEvent::DisplayEmotion { entity_id, emotion } => {
                     if emote_debug_enabled() {
-                        eprintln!(
+                        client_log!(
                             "[emote] DisplayEmotion entity={} emotion={} data_loaded={}",
                             entity_id.0,
                             emotion,
@@ -5789,9 +5979,10 @@ impl Client {
                     cast_ms,
                 } => {
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[skill-cast] skill={} source={} cast_ms={cast_ms}",
-                            skill_id.0, source_entity_id.0
+                            skill_id.0,
+                            source_entity_id.0
                         );
                     }
                     if let Some(entity) = self
@@ -6001,7 +6192,7 @@ impl Client {
                     }
 
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                        eprintln!(
+                        client_log!(
                             "[attack-range] too far: target={target_entity_id:?} target_pos={target_position:?} \
                              player_pos={player_position:?} range={} on_screen={target_on_screen} have_player={have_player} have_map={} \
                              -> {}",
@@ -6203,7 +6394,7 @@ impl Client {
                 self.disconnect_notice_delay = 0;
 
                 if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
-                    eprintln!("[disconnect] opening pending popups (landed={landed})");
+                    client_log!("[disconnect] opening pending popups (landed={landed})");
                 }
 
                 // Error first, notice second: both must clear the screen below,
@@ -6298,7 +6489,7 @@ impl Client {
             })
             .collect();
 
-        eprintln!(
+        client_log!(
             "[minimap] map={base} size={map_width}x{map_height} bmp={} pois={}",
             texture.is_some(),
             pois.len()
@@ -6523,7 +6714,7 @@ impl Client {
                                 let message = format!("Selected server has an unsupported package version: {packet_version}");
                                 // Inline (don't call show_login_error): this loop
                                 // already mutably borrows self via drain.
-                                eprintln!("[login] show_login_error: {message}");
+                                client_log!("[login] show_login_error: {message}");
                                 *self.client_state.follow_mut(client_state().login_window().status_message()) = message;
                                 self.interface.close_window_with_class(WindowClass::Error);
                                 continue;
@@ -6537,7 +6728,7 @@ impl Client {
                     self.saved_password = password.clone();
                     self.saved_packet_version = packet_version;
 
-                    eprintln!("[login] connecting to {socket_address} as {username}");
+                    client_log!("[login] connecting to {socket_address} as {username}");
                     self.networking_system
                         .connect_to_login_server(packet_version, socket_address, username, password);
                 }
@@ -6657,6 +6848,23 @@ impl Client {
                         client_state().graphics_settings_capabilities(),
                     )),
                 },
+                InputEvent::ToggleFullscreen => {
+                    let path = client_state().graphics_settings().display_mode();
+                    let display_mode = *self.client_state.follow(path);
+
+                    let next_display_mode = match display_mode {
+                        DisplayMode::Windowed => self.preferred_fullscreen_mode,
+                        mode => {
+                            // Remember which fullscreen they were in, so Alt+Enter
+                            // puts them back there rather than quietly demoting an
+                            // exclusive setup to borderless.
+                            self.preferred_fullscreen_mode = mode;
+                            DisplayMode::Windowed
+                        }
+                    };
+
+                    *self.client_state.follow_mut(path) = next_display_mode;
+                }
                 InputEvent::ToggleAudioSettingsWindow => match self.interface.is_window_with_class_open(WindowClass::AudioSettings) {
                     true => self.interface.close_window_with_class(WindowClass::AudioSettings),
                     false => self
@@ -6705,14 +6913,25 @@ impl Client {
                     let _ = self.networking_system.select_character(slot);
                 }
                 InputEvent::OpenCharacterCreationWindow { slot } => {
-                    // Clear the name before opening the window.
+                    // Clear the name and the appearance before opening the
+                    // window, so it does not open showing the last character's
+                    // choices.
                     self.client_state.follow_mut(client_state().create_character_name()).clear();
+                    self.client_state.follow_mut(client_state().character_creation()).reset();
 
-                    self.interface
-                        .open_window(CharacterCreationWindow::new(client_state().create_character_name(), slot))
+                    self.interface.open_window(CharacterCreationWindow::new(
+                        client_state().create_character_name(),
+                        client_state().character_creation(),
+                        slot,
+                    ))
                 }
-                InputEvent::CreateCharacter { slot, name } => {
-                    let _ = self.networking_system.create_character(slot, name);
+                InputEvent::CreateCharacter {
+                    slot,
+                    name,
+                    sex,
+                    hair_style,
+                } => {
+                    let _ = self.networking_system.create_character(slot, name, sex.into(), hair_style.id);
                 }
                 InputEvent::DeleteCharacter { character_id } => {
                     if self.client_state.follow(client_state().currently_deleting()).is_none() {
@@ -7906,6 +8125,16 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleQuestLogWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::QuestLog) {
+                            true => self.interface.close_window_with_class(WindowClass::QuestLog),
+                            false => self
+                                .interface
+                                .open_window(QuestLogWindow::new(client_state().quest_log(), client_state().inventory())),
+                        }
+                    }
+                }
                 InputEvent::ToggleDiceWindow => {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
@@ -8147,7 +8376,7 @@ impl Client {
                     )));
                 }
                 Err(error) => {
-                    eprintln!("[skill-effect] failed to load {effect_path}: {error:?}");
+                    client_log!("[skill-effect] failed to load {effect_path}: {error:?}");
                 }
             },
             ResolvedEffect::Sprite { path, action_index } => {
@@ -8357,6 +8586,40 @@ impl Client {
 
     /// Per-frame tick for all entities, dead entities, and ground items.
     ///
+    /// Build a quest-log entry for a quest id.
+    ///
+    /// A campaign hunting contract contributes its name and its turn-in list;
+    /// anything else (a story quest, or a quest outside the campaign) is listed
+    /// by id, which is still more than the log showed before it existed.
+    fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
+        match self.library.campaign_quest(quest_id) {
+            Some(contract) => QuestEntry {
+                quest_id,
+                name: contract.name.clone(),
+                requirements: contract
+                    .requirements
+                    .iter()
+                    .map(|requirement| QuestRequirementEntry {
+                        item_id: requirement.item_id,
+                        item_name: self
+                            .library
+                            .get::<ItemName>(ItemNameKey {
+                                item_id: requirement.item_id,
+                                is_identified: true,
+                            })
+                            .to_string(),
+                        needed: requirement.needed,
+                    })
+                    .collect(),
+            },
+            None => QuestEntry {
+                quest_id,
+                name: format!("Quest {quest_id}"),
+                requirements: Vec::new(),
+            },
+        }
+    }
+
     /// Must be called after [`Self::handle_network_events`] so the entity
     /// set reflects the latest spawn/despawn/move packets. Running this
     /// with a stale entity list would tick entities that the network has
@@ -8623,6 +8886,8 @@ impl Client {
             client_tick,
             animation_timer_ms,
         } = self.game_timer.update();
+
+        self.update_character_preview(client_tick);
 
         let input_report = self.input_system.update_delta(client_tick);
 
@@ -9216,6 +9481,13 @@ impl ApplicationHandler for Client {
                     self.graphics_engine.get_present_mode_info(),
                 );
 
+            // The window is created invisible, so applying the saved mode here
+            // means a player who plays fullscreen never sees a windowed frame
+            // first. This runs on every resume rather than only on creation,
+            // because the window may already exist by the time we get here.
+            let display_mode = *self.client_state.follow(client_state().graphics_settings().display_mode());
+            window.set_fullscreen(resolve_fullscreen(window, display_mode));
+
             window.set_visible(true);
 
             // Kick off the self-sustaining redraw loop. Without this, if the only
@@ -9240,7 +9512,11 @@ impl ApplicationHandler for Client {
                 // apparent size. A maximized window's size is not worth saving —
                 // the maximized flag restores that, and storing it would leave
                 // nothing sensible to un-maximize back to.
-                if let Some(window) = self.window.as_ref() {
+                // Skipped while fullscreen: the resize reports the monitor size and
+                // `is_maximized()` is false, so saving here would record the
+                // fullscreen resolution as the windowed size and leave nothing
+                // sensible to restore on the way back out.
+                if let Some(window) = self.window.as_ref().filter(|window| window.fullscreen().is_none()) {
                     let maximized = window.is_maximized();
                     *self.client_state.follow_mut(client_state().game_settings().window_maximized()) = maximized;
 

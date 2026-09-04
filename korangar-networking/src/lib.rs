@@ -111,6 +111,13 @@ impl NetworkingSystem<NoPacketCallback> {
     }
 }
 
+/// Hair style to use when the caller has no opinion.
+///
+/// **Not zero.** Hair sprites in `data.grf` are `<style>_<sex>.spr` and run
+/// 1..=42; there is no style 0, so a character created with 0 asks for a sprite
+/// that does not exist. Style 1 exists for both sexes.
+pub const DEFAULT_HAIR_STYLE: u16 = 1;
+
 impl<Callback> NetworkingSystem<Callback>
 where
     Callback: PacketCallback + Send,
@@ -348,13 +355,29 @@ where
                     let mut byte_reader = ByteReader::without_metadata(data);
                     byte_reader.set_encoding(UTF_8);
 
+                    // The map-server opens with a bare four-byte account id, and
+                    // `read` hands back whatever the OS has -- as little as one
+                    // byte. Unwrapping here panicked the whole client if the first
+                    // TCP segment was short, which never happens over loopback and
+                    // can happen on a real network. Retain the fragment and wait
+                    // for the rest, exactly as `PacketCutOff` does below.
+                    let mut awaiting_account_id = false;
+                    let mut packet_cutoff = false;
+
                     if read_account_id {
-                        let account_id = AccountId::from_bytes(&mut byte_reader).unwrap();
-                        events.push(NetworkEvent::AccountId { account_id });
-                        read_account_id = false;
+                        match AccountId::from_bytes(&mut byte_reader) {
+                            Ok(account_id) => {
+                                events.push(NetworkEvent::AccountId { account_id });
+                                read_account_id = false;
+                            }
+                            Err(_) => {
+                                cut_off_buffer_base += received_bytes;
+                                awaiting_account_id = true;
+                            }
+                        }
                     }
 
-                    while !byte_reader.is_empty() {
+                    while !awaiting_account_id && !byte_reader.is_empty() {
                         match packet_handler.process_one(&mut byte_reader) {
                             HandlerResult::Ok(packet_events) => events.extend(packet_events.0.into_iter()),
                             HandlerResult::PacketCutOff => {
@@ -371,6 +394,7 @@ where
 
                                 buffer.copy_within(packet_start..packet_end, 0);
                                 cut_off_buffer_base = packet_end - packet_start;
+                                packet_cutoff = true;
 
                                 break;
                             },
@@ -384,6 +408,10 @@ where
                                 break
                             },
                         }
+                    }
+
+                    if !awaiting_account_id && !packet_cutoff {
+                        cut_off_buffer_base = 0;
                     }
 
                     for event in events.drain(..) {
@@ -683,11 +711,19 @@ where
         }
     }
 
-    pub fn create_character(&mut self, slot: usize, name: String) -> Result<(), NotConnectedError> {
-        let hair_color = 0;
-        let hair_style = 0;
+    /// `hair_style` is 1-based, matching the sprite files in `data.grf`. There
+    /// is no style 0 in the archive, which is what this used to send along with
+    /// a hardcoded male novice -- every character came out identical.
+    ///
+    /// [`DEFAULT_HAIR_STYLE`] is the safe value for a caller that has no
+    /// opinion.
+    pub fn create_character(&mut self, slot: usize, name: String, sex: Sex, hair_style: u16) -> Result<(), NotConnectedError> {
+        // Not yet chosen by the player: the client stores `head_palette` but
+        // nothing reads it back when composing a sprite, so a colour picker
+        // would be a control with no visible effect. Palette 1 rather than 0
+        // because 0 is missing from the archive for seven style/sex pairs.
+        let hair_color = 1;
         let start_job_id = JobId(0);
-        let sex = Sex::Male;
 
         match self.character_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_character_server_packet(CreateCharacterPacket::new(

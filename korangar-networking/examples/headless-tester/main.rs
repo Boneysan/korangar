@@ -39,8 +39,9 @@ struct Arguments {
     #[arg(short, long, default_value = "korangar")]
     username: String,
 
-    /// Password of the test account.
-    #[arg(short, long, default_value = "korangar")]
+    /// Password of the test account. Required. Do not put a live password in
+    /// source; pass `--password`.
+    #[arg(short, long)]
     password: String,
 
     /// Character name to use. Defaults to the first character.
@@ -52,7 +53,7 @@ struct Arguments {
     #[arg(long, default_value = "headless2")]
     partner_username: String,
 
-    #[arg(long, default_value = "headless2pw")]
+    #[arg(long)]
     partner_password: String,
 
     /// Per-wait timeout in seconds.

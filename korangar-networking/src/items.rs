@@ -66,6 +66,14 @@ impl InventoryItemDetails {
 }
 
 impl<Meta> InventoryItem<Meta> {
+    /// Stack size. Real gear is always 1; stackables and ammo carry a count.
+    pub fn amount(&self) -> u16 {
+        match &self.details {
+            InventoryItemDetails::Regular { amount, .. } => *amount,
+            InventoryItemDetails::Equippable { amount, .. } => *amount,
+        }
+    }
+
     pub fn is_identified(&self) -> bool {
         match &self.details {
             InventoryItemDetails::Regular { flags, .. } => flags.contains(RegularItemFlags::IDENTIFIED),

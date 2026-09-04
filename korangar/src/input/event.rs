@@ -13,6 +13,7 @@ use rust_state::State;
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
 use crate::state::ClientState;
+use crate::state::character_creation::{CharacterSex, HairStyle};
 use crate::state::skills::LearnableSkill;
 #[cfg(feature = "debug")]
 use crate::world::MarkerIdentifier;
@@ -76,6 +77,8 @@ pub enum InputEvent {
     ToggleInterfaceSettingsWindow,
     /// Open or close the graphics settings window.
     ToggleGraphicsSettingsWindow,
+    /// Switch between windowed and the configured fullscreen mode.
+    ToggleFullscreen,
     /// Open or close the audio settings window.
     ToggleAudioSettingsWindow,
     /// Open or close the friend list window. Only works while playing.
@@ -106,6 +109,11 @@ pub enum InputEvent {
         slot: usize,
         /// Name of the new character.
         name: String,
+        /// Sex the player picked. Hercules denies creation for anything that is
+        /// not male or female, so this is not optional.
+        sex: CharacterSex,
+        /// Hair style the player picked, 1-based to match the sprite files.
+        hair_style: HairStyle,
     },
     /// Delete a character.
     DeleteCharacter {
@@ -451,6 +459,8 @@ pub enum InputEvent {
     ToggleDiceWindow,
     /// Open or close the player emote palette. Only works while playing.
     ToggleEmoteWindow,
+    /// Open or close the quest log. Only works while playing.
+    ToggleQuestLogWindow,
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.

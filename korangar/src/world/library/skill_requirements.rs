@@ -386,7 +386,7 @@ impl Table for SkillListRequirements {
         // already applies to a job with no tree at all. Logged rather than
         // swallowed, because the gap is in the game data and is worth naming.
         Self::try_get(library, key).unwrap_or_else(|| {
-            eprintln!("[skill-tree] no requirements entry for {key:?}; treating it as having none");
+            client_log!("[skill-tree] no requirements entry for {key:?}; treating it as having none");
             &NOT_FOUND_ENTRY
         })
     }

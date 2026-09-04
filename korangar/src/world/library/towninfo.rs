@@ -5,7 +5,6 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::Lua;
 
 use crate::loaders::GameFileLoader;
 
@@ -104,7 +103,7 @@ impl TownInfoTable {
             Ok(table) => {
                 let maps = table.by_map.len();
                 let pois: usize = table.by_map.values().map(Vec::len).sum();
-                eprintln!("[towninfo] parsed {maps} maps, {pois} POIs");
+                client_log!("[towninfo] parsed {maps} maps, {pois} POIs");
                 #[cfg(feature = "debug")]
                 {
                     use korangar_debug::logging::print_debug;
@@ -113,7 +112,7 @@ impl TownInfoTable {
                 table
             }
             Err(error) => {
-                eprintln!("[towninfo] parse failed: {error:?}");
+                client_log!("[towninfo] parse failed: {error:?}");
                 #[cfg(feature = "debug")]
                 {
                     use korangar_debug::logging::{Colorize, print_debug};
@@ -157,7 +156,7 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
     ];
     for path in GAME_PATHS {
         if let Ok(data) = game_file_loader.get(path) {
-            eprintln!("[towninfo] loaded from game archive: {path}");
+            client_log!("[towninfo] loaded from game archive: {path}");
             return Some(data);
         }
     }
@@ -216,7 +215,7 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
         for name in RELATIVE_NAMES {
             let path = root.join(name);
             if let Ok(data) = std::fs::read(&path) {
-                eprintln!("[towninfo] loaded from {}", path.display());
+                client_log!("[towninfo] loaded from {}", path.display());
                 return Some(data);
             }
         }
@@ -224,13 +223,13 @@ fn load_towninfo_bytes(game_file_loader: &GameFileLoader) -> Option<Vec<u8>> {
         for file in ["Towninfo_EN.lub", "Towninfo.lub", "Towninfo_EN.lua", "Towninfo.lua"] {
             let path = root.join(file);
             if let Ok(data) = std::fs::read(&path) {
-                eprintln!("[towninfo] loaded from {}", path.display());
+                client_log!("[towninfo] loaded from {}", path.display());
                 return Some(data);
             }
         }
     }
 
-    eprintln!(
+    client_log!(
         "[towninfo] not found — minimap facility POIs disabled (looked in GRF System\\ and on disk under cwd/parents/KORANGAR_CLIENT_ROOT)"
     );
     None
@@ -266,7 +265,7 @@ mapNPCInfoTable = {
 }
 
 fn parse_towninfo(data: &[u8]) -> mlua::Result<TownInfoTable> {
-    let state = Lua::new();
+    let state = super::new_sandboxed_lua()?;
     // Provide a no-op `AddTownInfo` so calling `main()` (if present) does not fail.
     state.globals().set(
         "AddTownInfo",

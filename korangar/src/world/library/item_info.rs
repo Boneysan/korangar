@@ -8,7 +8,6 @@
 
 use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
-use mlua::Lua;
 use ragnarok_packets::ItemId;
 
 use super::{HashMapExt, ItemName, ItemResource, Library, Table, fix_encoding};
@@ -79,9 +78,9 @@ impl Table for ItemInfo {
 
         // Always print a short one-liner so non-debug builds still confirm source.
         if !sources_used.is_empty() {
-            eprintln!("[itemInfo] {}", sources_used.join(" + "));
+            client_log!("[itemInfo] {}", sources_used.join(" + "));
         } else {
-            eprintln!("[itemInfo] WARNING: no itemInfo loaded — names will be NOTFOUND");
+            client_log!("[itemInfo] WARNING: no itemInfo loaded — names will be NOTFOUND");
         }
         Ok(map.compact())
     }
@@ -173,7 +172,7 @@ fn looks_like_english_name(name: &str) -> bool {
 }
 
 fn parse_iteminfo_table(data: &[u8]) -> mlua::Result<HashMap<ItemId, ItemInfo>> {
-    let state = Lua::new();
+    let state = super::new_sandboxed_lua()?;
     let data = data.strip_prefix(&[0xEF, 0xBB, 0xBF]).unwrap_or(data);
     state.load(data).exec()?;
 

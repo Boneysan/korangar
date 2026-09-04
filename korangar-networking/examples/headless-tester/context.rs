@@ -9,11 +9,12 @@ use std::thread::sleep;
 use std::time::{Duration, Instant};
 
 use korangar_networking::{
-    DisconnectReason, EntityData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SupportedPacketVersion,
+    DEFAULT_HAIR_STYLE, DisconnectReason, EntityData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
+    SupportedPacketVersion,
 };
 use ragnarok_packets::{
-    AccountId, CharacterId, CharacterInformation, Direction, EntityId, InventoryIndex, ItemId, JobId, SkillInformation, SpriteChangeType,
-    TilePosition, WorldPosition,
+    AccountId, CharacterId, CharacterInformation, Direction, EntityId, InventoryIndex, ItemId, JobId, Sex, SkillInformation,
+    SpriteChangeType, TilePosition, WorldPosition,
 };
 
 use crate::ledger::Ledger;
@@ -341,7 +342,7 @@ impl TestContext {
                     .ok_or("no free character slot for auto-create")?;
                 context
                     .net
-                    .create_character(free_slot, new_name.to_owned())
+                    .create_character(free_slot, new_name.to_owned(), Sex::Male, DEFAULT_HAIR_STYLE)
                     .map_err(|_| "disconnected")?;
                 let info = context.wait_for("CharacterCreated", |event| match event {
                     NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
