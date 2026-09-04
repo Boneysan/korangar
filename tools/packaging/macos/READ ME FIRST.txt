@@ -1,0 +1,175 @@
+================================================================================
+  SEAL CASCADE - Ragnarok Online for a few friends            (macOS)
+================================================================================
+
+WHAT THIS IS
+
+  A private Ragnarok Online server and a custom game client, for this group
+  of friends only. Everything you need is in this folder.
+
+  You do not need the official RO client, Steam, or an account with Gravity.
+
+
+--------------------------------------------------------------------------------
+WHAT YOUR MAC NEEDS
+--------------------------------------------------------------------------------
+
+  An Apple Silicon Mac  -  M1, M2, M3, M4 or later.
+
+  This build does NOT run on an Intel Mac. If your Mac has an Intel
+  processor (Apple menu > About This Mac), tell the host - an Intel build
+  is possible, it just is not in this download.
+
+  macOS 11 Big Sur or newer, and about 4 GB of free disk space.
+
+  You do NOT need to install anything else. No runtime, no Rosetta,
+  no Java.
+
+
+--------------------------------------------------------------------------------
+FIRST TIME - DO THIS ONCE
+--------------------------------------------------------------------------------
+
+  1. Download the file the host sent you.
+
+  2. Double-click the .zip. Finder unzips it into a folder beside it.
+
+     Move that folder somewhere sensible first - your Desktop, or your home
+     folder. Do not run it from inside the Downloads folder if you can help
+     it; things get lost there.
+
+  3. RIGHT-CLICK  Setup  and choose "Open".
+
+     This step matters. macOS blocks anything downloaded from the internet
+     that is not signed by a registered Apple developer, and this game is
+     not. A plain double-click gives you a dialog with no way forward.
+     Right-click and choose Open gives you the same dialog WITH an Open
+     button. You only have to do this once - Setup clears the block for
+     everything else in the folder.
+
+     Setup unblocks the download, merges in the game data, checks every
+     file, and starts the game. It can take a few minutes.
+
+  4. From then on, just double-click  Play.
+
+  5. At the login screen, type a username ending in _m or _f and a password:
+
+       BobSmith_m      for a male character
+       BobSmith_f      for a female character
+
+     There is no sign-up page. Typing a name that does not exist creates the
+     account right there. The _m or _f suffix is not part of your name in
+     game, it just tells the server which gender to use.
+
+     IMPORTANT: use a throwaway password you do not use anywhere else. See
+     the PRIVACY note at the bottom of this file for why.
+
+
+--------------------------------------------------------------------------------
+IF YOU WERE SENT TWO DOWNLOADS INSTEAD
+--------------------------------------------------------------------------------
+
+  Some people get the game in two pieces, because the artwork is large and
+  almost never changes:
+
+      macOS     about 80 MB  - the game program. Changes with every update.
+      Assets    about 3.7 GB - artwork, maps and music. Download once.
+
+  Download both, unzip both, put the Assets folder NEXT TO the macOS folder,
+  then right-click Setup inside the macOS folder and choose Open. Setup
+  finds Assets and merges it in for you.
+
+  When the host sends an update later, you only re-download the small one.
+
+
+--------------------------------------------------------------------------------
+THE THREE PROGRAMS IN THIS FOLDER
+--------------------------------------------------------------------------------
+
+  Setup     Run once, first. Unblocks the download, merges in the game data,
+            checks every file, starts the game.
+
+  Play      Starts the game. This is the one you use from then on.
+
+  Verify    Checks every file against the checksum lists. Run it if the game
+            behaves strangely after a download.
+
+  Do not double-click the file called "korangar" directly. It looks like the
+  game and it is, but started that way it cannot find any of its own data -
+  Finder starts it in the wrong place. Play exists to fix exactly that.
+
+
+--------------------------------------------------------------------------------
+WHY THE FILE CHECKING MATTERS
+--------------------------------------------------------------------------------
+
+  Google Drive truncates large downloads, resumes them badly, and hands back
+  a file that looks complete. A 3.7 GB folder is exactly the kind of thing
+  that arrives subtly broken.
+
+  When that happens, the game does not say "your download is damaged". It
+  crashes somewhere unrelated, or a map is missing, or your character is
+  invisible. You would report a bug that does not exist.
+
+  So the folder ships two checksum lists - SHA256SUMS-client for the small
+  half, SHA256SUMS-assets for the big one - and Setup and Verify check them.
+
+
+--------------------------------------------------------------------------------
+IF SOMETHING GOES WRONG
+--------------------------------------------------------------------------------
+
+  "Apple could not verify..." or "cannot be opened"
+      Right-click the file and choose Open, instead of double-clicking.
+      If Setup already ran, this should not happen again.
+
+  Nothing happens when I double-click Play
+      Open Terminal, drag the Play file into the window, press return. The
+      error will be readable there. Send the host what it says.
+
+  "the game data is missing"
+      You have the small download but not Assets. See the two-downloads
+      section above.
+
+  The game starts but the screen is black or the window is tiny
+      In game, open the menu and choose Graphics Settings. Display mode
+      offers Windowed, Windowed Fullscreen and Exclusive Fullscreen.
+      Option+Enter switches in and out of fullscreen at any time.
+
+  I cannot connect
+      The server has to be running, and you have to be on the same network
+      as the host, or on the mesh VPN they set up. Ask them.
+
+
+--------------------------------------------------------------------------------
+SENDING A LOG
+--------------------------------------------------------------------------------
+
+  If the host asks for a log: open Terminal, drag  Play  into the window,
+  press return, and copy everything it prints. That is the whole log - no
+  password is in it, and nothing is sent anywhere automatically.
+
+
+--------------------------------------------------------------------------------
+PRIVACY - PLEASE READ
+--------------------------------------------------------------------------------
+
+  Your password is sent to the server without encryption, and it is stored
+  on the server in a form that is not meant to resist a determined attacker.
+  This is normal for a small private RO server and it is not worth fixing
+  for a group of friends, but it does mean one thing:
+
+      Use a throwaway password. Not your email password, not a password you
+      use anywhere else, not a variation of one.
+
+  The client can remember your password for you. That is off by default, and
+  if you turn it on it is saved unencrypted on your own Mac. Your choice.
+
+  Nobody is collecting anything about you. There is no telemetry, no
+  analytics and no account website.
+
+
+--------------------------------------------------------------------------------
+  This is a private server for friends. Please do not share the download or
+  the address with anyone outside the group.
+================================================================================

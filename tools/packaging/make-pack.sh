@@ -4,11 +4,13 @@
 #   tools/packaging/make-pack.sh --server 100.x.y.z
 #   tools/packaging/make-pack.sh --server ro.example.com --skip-assets   # update pack
 #   tools/packaging/make-pack.sh --server 100.x.y.z --merged             # + one zip
+#   tools/packaging/make-pack.sh --server 100.x.y.z --os macos --merged  # the Mac pack
 #
 # Produces (see docs/plans/friends-distribution.md):
 #
-#   dist/Windows/     the ~82 MB half that changes every build
-#   dist/Assets/      the ~3.7 GB half that almost never changes
+#   dist/Windows/     the ~82 MB half that changes every build   (--os windows, default)
+#   dist/macOS/       the same half for Apple Silicon            (--os macos)
+#   dist/Assets/      the ~3.7 GB half that almost never changes (shared by both)
 #
 # Friends drop both into ONE folder, so data.grf ends up beside Play.bat.
 # Splitting them is the whole point: a client update must not cost 3.7 GB.
@@ -25,7 +27,7 @@ extra_grf_dir="/Volumes/T7/GitHub/RO/client"
 skip_assets=0
 do_build=0
 do_merged=0
-target="x86_64-pc-windows-msvc"
+os="windows"
 redist_url="https://aka.ms/vs/17/release/vc_redist.x64.exe"
 redist="tools/packaging/windows/VC_redist.x64.exe"
 
@@ -39,6 +41,7 @@ while [ $# -gt 0 ]; do
         --skip-assets) skip_assets=1; shift ;;
         --build) do_build=1; shift ;;
         --merged) do_merged=1; shift ;;
+        --os) os="${2:-}"; shift 2 ;;
         -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
         *) die "unknown argument: $1" ;;
     esac
@@ -46,20 +49,43 @@ done
 
 [ -n "$server" ] || die "--server is required. Friends never edit server.ron, so it ships filled in."
 
+# One pack per OS. The Assets half is shared -- it is the same 3.7 GB of
+# Gravity artwork either way -- so only the small half is OS-specific.
+case "$os" in
+    windows)
+        target="x86_64-pc-windows-msvc"
+        exe_name="korangar.exe"
+        half_name="Windows"
+        ;;
+    macos)
+        # Apple Silicon only. An Intel Mac needs x86_64-apple-darwin and a
+        # `lipo` step; say so in the READ ME rather than shipping a binary
+        # that dies with "Bad CPU type in executable".
+        target="aarch64-apple-darwin"
+        exe_name="korangar"
+        half_name="macOS"
+        ;;
+    *) die "unknown --os: $os (expected windows or macos)" ;;
+esac
+
 address="${server%%:*}"
 port="${server#*:}"
 [ "$port" = "$server" ] && port=6900
 
 if [ "$do_build" -eq 1 ]; then
-    # Homebrew LLVM is keg-only, so clang-cl/llvm-lib are not on PATH by
-    # default and three build scripts fail without them.
-    export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
     echo "==> building $target (this is slow the first time)"
-    cargo xwin build --release --target "$target" --bin korangar \
-        --features unicode --xwin-include-atl
+    if [ "$os" = "windows" ]; then
+        # Homebrew LLVM is keg-only, so clang-cl/llvm-lib are not on PATH by
+        # default and three build scripts fail without them.
+        export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+        cargo xwin build --release --target "$target" --bin korangar \
+            --features unicode --xwin-include-atl
+    else
+        cargo build --release --target "$target" --bin korangar --features unicode
+    fi
 fi
 
-exe="target/$target/release/korangar.exe"
+exe="target/$target/release/$exe_name"
 [ -f "$exe" ] || die "$exe not found. Pass --build, or see docs/plans/friends-distribution.md section 9."
 
 # The client links the MSVC C++ runtime dynamically and cannot do otherwise:
@@ -68,23 +94,35 @@ exe="target/$target/release/korangar.exe"
 # (`undefined symbol: __declspec(dllimport) nearbyint`). So the redistributable
 # has to ship, or a friend on a fresh Windows gets a DLL dialog with no context.
 # It is a Microsoft-redistributable component; ~25 MB, gitignored, fetched once.
-if [ ! -f "$redist" ]; then
+if [ "$os" = "windows" ] && [ ! -f "$redist" ]; then
     echo "==> fetching the Visual C++ redistributable (once, ~25 MB)"
     curl -fsSL --max-time 300 -o "$redist" "$redist_url" \
         || die "could not download $redist_url -- fetch it by hand to $redist"
 fi
 
-windows="$out/Windows"
+windows="$out/$half_name"
 assets="$out/Assets"
 rm -rf "$windows"
 mkdir -p "$windows/client"
 
-echo "==> Windows/"
-cp "$exe" "$windows/korangar.exe"
-cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
-   tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
-   tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
-   "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
+echo "==> $half_name/"
+cp "$exe" "$windows/$exe_name"
+
+if [ "$os" = "windows" ]; then
+    cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
+       tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+       tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
+else
+    cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
+       tools/packaging/macos/Verify.command \
+       "tools/packaging/macos/READ ME FIRST.txt" "$windows/"
+    # A .command without the execute bit opens in TextEdit, which looks exactly
+    # like "nothing happened". zip preserves the mode; Finder's unzip restores
+    # it. The binary needs it for the same reason.
+    chmod +x "$windows"/*.command "$windows/$exe_name"
+fi
+
 cp -R korangar/archive "$windows/archive"
 
 # Written, never copied: the working copy points outside the pack.
@@ -118,12 +156,19 @@ if [ "$skip_assets" -eq 0 ]; then
     done
     rm -rf "$assets/BGM"
     cp -R korangar/BGM "$assets/BGM"
-    # The 3.7 GB half is the one that arrives subtly incomplete, so it needs the
-    # verifier more than the client folder does.
-    cp tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 "$assets/"
 fi
 
 [ -d "$assets" ] || die "$assets does not exist -- run once without --skip-assets"
+
+# The 3.7 GB half is the one that arrives subtly incomplete, so it needs the
+# verifier more than the client folder does. Both OSes' verifiers ship, because
+# Assets is downloaded once and shared by every friend whatever they run.
+#
+# Refreshed even under --skip-assets: a verifier that lags the script it was
+# copied from is the same class of bug as a manifest that lags its folder.
+cp tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+   tools/packaging/macos/Verify.command "$assets/"
+chmod +x "$assets/Verify.command"
 
 # Integrity manifests, so a friend can tell a good download from a corrupted or
 # swapped one. Drive downloads truncate, resume badly and get re-shared, and
@@ -174,23 +219,42 @@ require() {
     [ -e "$1" ] || die "the pack is missing $1 -- see the contents checklist in $0"
 }
 
-for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 \
-         "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
-         archive client/server.ron client/game_archives.ron; do
-    require "$windows/$f"
-done
+if [ "$os" = "windows" ]; then
+    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 \
+             "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
+             archive client/server.ron client/game_archives.ron; do
+        require "$windows/$f"
+    done
+else
+    for f in korangar Play.command Setup.command Verify.command \
+             "READ ME FIRST.txt" SHA256SUMS-client \
+             archive client/server.ron client/game_archives.ron; do
+        require "$windows/$f"
+    done
+
+    # A launcher without the execute bit opens in TextEdit. Silent, and it
+    # looks like the download is broken.
+    for f in Play.command Setup.command Verify.command korangar; do
+        [ -x "$windows/$f" ] || die "$windows/$f is not executable -- Finder would open it as text"
+    done
+fi
 
 for f in data.grf rdata.grf renewal2021.grf resources2021.grf lua_files.7z \
-         BGM SHA256SUMS-assets Verify.bat Verify.ps1; do
+         BGM SHA256SUMS-assets Verify.bat Verify.ps1 Verify.command; do
     require "$assets/$f"
 done
 
 # The launchers name these; a rename on one side only is silent until a friend
 # hits it. Cheap to pin, so pin it.
-grep -q 'SHA256SUMS-assets' "$windows/Play.ps1" \
-    || die "Play.ps1 does not read SHA256SUMS-assets -- the manifest names have drifted"
-grep -q 'SHA256SUMS-assets' "$windows/Setup.ps1" \
-    || die "Setup.ps1 does not read SHA256SUMS-assets -- the manifest names have drifted"
+if [ "$os" = "windows" ]; then
+    launcher="Play.ps1"; setup="Setup.ps1"
+else
+    launcher="Play.command"; setup="Setup.command"
+fi
+grep -q 'SHA256SUMS-assets' "$windows/$launcher" \
+    || die "$launcher does not read SHA256SUMS-assets -- the manifest names have drifted"
+grep -q 'SHA256SUMS-assets' "$windows/$setup" \
+    || die "$setup does not read SHA256SUMS-assets -- the manifest names have drifted"
 
 # BGM is loaded off the filesystem (case-insensitively), not out of a GRF, so a
 # manifest that stops at the top level silently leaves 345 MB unverified. That
@@ -205,9 +269,17 @@ bgm_lines="$(grep -c 'BGM/' "$assets/SHA256SUMS-assets" || true)"
 # a hand-assembled upload is exactly the artifact nobody checks. Updates still
 # use the small Windows half; that is the whole reason the split exists.
 if [ "$do_merged" -eq 1 ]; then
-    merged="$out/Seal Cascade"
+    # Named per OS so both packs can sit in dist/ at once. Windows keeps the
+    # bare name it has always had, because that link is already shared.
+    if [ "$os" = "windows" ]; then
+        merged_name="Seal Cascade"
+    else
+        merged_name="Seal Cascade (macOS)"
+    fi
+
+    merged="$out/$merged_name"
     echo "==> $merged/"
-    rm -rf "$merged" "$out/Seal Cascade.zip"
+    rm -rf "$merged" "$out/$merged_name.zip"
     mkdir -p "$merged"
     # -c clones on APFS, so staging 3.7 GB costs no space and no time.
     cp -Rc "$windows/." "$merged/"
@@ -218,16 +290,31 @@ if [ "$do_merged" -eq 1 ]; then
     require "$merged/SHA256SUMS-client"
     require "$merged/SHA256SUMS-assets"
 
+    # The two halves deliberately SHARE a few files -- the verifier ships in
+    # both, so a friend can check the big download before merging it. A shared
+    # file must therefore be byte-identical, or the merge silently keeps one
+    # copy and the other half's manifest now describes a file that is not there.
+    for shared in $(cd "$windows" && find . -type f ! -name 'SHA256SUMS*' | sed 's|^\./||'); do
+        [ -f "$assets/$shared" ] || continue
+        cmp -s "$windows/$shared" "$assets/$shared" \
+            || die "$shared differs between the two halves -- merging would break one manifest"
+    done
+
+    # Count DISTINCT paths, not the sum of the two manifests: a file listed in
+    # both is one file on disk after the merge. Summing happened to be right
+    # for Windows, where two shared files cancelled the two manifest files
+    # exactly, and was off by one the moment the macOS half shared only one.
     merged_files="$(find "$merged" -type f | wc -l | tr -d ' ')"
-    expected_files="$(( $(grep -c . "$windows/SHA256SUMS-client") + $(grep -c . "$assets/SHA256SUMS-assets") ))"
+    distinct="$(cat "$windows/SHA256SUMS-client" "$assets/SHA256SUMS-assets" | cut -c67- | sort -u | grep -c .)"
+    expected_files="$(( distinct + 2 ))"
     [ "$merged_files" = "$expected_files" ] \
-        || die "merged folder has $merged_files files, both manifests describe $expected_files"
+        || die "merged folder has $merged_files files, the manifests describe $distinct distinct paths (+2 manifests)"
 
     # Storing the already-compressed payload instead of deflating it: the GRFs,
     # the 7z and the mp3s do not shrink, and compressing 3.7 GB of them costs
     # many minutes to save nothing. The exe and archive/ still compress.
-    echo "==> $out/Seal Cascade.zip"
-    ( cd "$out" && zip -r -X -q -n .grf:.7z:.mp3 "Seal Cascade.zip" "Seal Cascade" -x '*.DS_Store' )
+    echo "==> $out/$merged_name.zip"
+    ( cd "$out" && zip -r -X -q -n .grf:.7z:.mp3 "$merged_name.zip" "$merged_name" -x '*.DS_Store' )
 fi
 
 echo
@@ -240,12 +327,12 @@ echo "  client:  $(grep -c . "$windows/SHA256SUMS-client") files"
 echo "  assets:  $(grep -c . "$assets/SHA256SUMS-assets") files"
 echo
 if [ "$do_merged" -eq 1 ]; then
-    du -sh "$out/Seal Cascade.zip" 2>/dev/null || true
+    du -sh "$out/$merged_name.zip" 2>/dev/null || true
     echo
-    echo "first-time download: upload 'Seal Cascade.zip' -- one file, they unzip and play."
-    echo "updates: zip Windows/ on its own (80 MB), so nobody re-downloads 3.7 GB."
+    echo "first-time download: upload '$merged_name.zip' -- one file, they unzip and play."
+    echo "updates: zip $half_name/ on its own (80 MB), so nobody re-downloads 3.7 GB."
 else
-    echo "zip Windows/ and upload it; upload Assets/ as a folder."
+    echo "zip $half_name/ and upload it; upload Assets/ as a folder."
     echo "Do NOT re-compress the GRFs -- they are already compressed, so zipping"
     echo "Assets costs a long wait and saves almost nothing."
 fi
