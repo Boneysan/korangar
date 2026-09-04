@@ -88,6 +88,16 @@ pub enum InputEvent {
     /// Copy the recommended spread for the selected first job into the
     /// allocation.
     UseRecommendedStats,
+    /// Step the character creation hair style one forward or back.
+    CycleHairStyle {
+        /// `true` steps forward, `false` back.
+        forward: bool,
+    },
+    /// Turn the character creation preview one eighth of a turn.
+    RotateCharacterPreview {
+        /// `true` turns one way, `false` the other.
+        clockwise: bool,
+    },
     /// Open or close the audio settings window.
     ToggleAudioSettingsWindow,
     /// Open or close the friend list window. Only works while playing.

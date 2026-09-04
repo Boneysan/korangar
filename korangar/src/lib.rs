@@ -78,8 +78,8 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, EntityData, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
-    SellItem, SupportedPacketVersion,
+    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
+    SupportedPacketVersion,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -549,13 +549,6 @@ const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
 /// sentinels to leave that space room to grow, and far above any account id
 /// Hercules hands out.
 const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX - 65536);
-/// Where the preview stands.
-///
-/// Offset from the tile under [`START_CAMERA_FOCUS_POINT`] (world units over
-/// `GAT_TILE_SIZE`, so 120x48) because the camera points at that tile and the
-/// character-select and creation windows sit on top of it -- a preview dead
-/// centre is a preview behind a dialog.
-const CHARACTER_PREVIEW_TILE: (u16, u16) = (108, 40);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
@@ -3284,15 +3277,11 @@ impl Client {
 
     /// Keep the character-creation preview in step with the drop-downs.
     ///
-    /// Appearance is baked into the sprite layers when the entity is built, so
-    /// a different sex or hair style means building a new entity rather than
-    /// mutating the old one. That only happens when the player picks from a
-    /// drop-down, so the cost is not per frame.
-    ///
-    /// The preview is an `Npc` rather than a `Player` purely because that
-    /// constructor takes [`EntityData`] directly; what it renders as comes from
-    /// the job id, and `JobId(0)` is the Novice -- so this composes exactly the
-    /// player sprite the character will have.
+    /// Loads the composed sprite layers for the character being designed and
+    /// parks them in the client state, where the creation window's preview
+    /// element draws them. Deliberately *not* an entity in the world: the
+    /// interface is drawn on top of the scene, so a character standing on the
+    /// map can only ever be behind the window asking about it.
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn update_character_preview(&mut self, client_tick: ClientTick) {
         let wanted = self.interface.is_window_with_class_open(WindowClass::CharacterCreation).then(|| {
@@ -3304,67 +3293,32 @@ impl Client {
             return;
         }
 
-        self.client_state
-            .follow_mut(client_state().entities())
-            .retain(|entity| entity.get_entity_id() != CHARACTER_PREVIEW_ENTITY_ID);
-
-        // Recorded even when the build below fails, so a map that cannot host
-        // the preview is not retried every single frame.
         self.character_preview = wanted;
 
         let Some((sex, hair_style)) = wanted else {
-            return;
-        };
-        let Some(map) = self.map.as_ref() else {
-            return;
-        };
-
-        let entity_data = EntityData {
-            entity_id: CHARACTER_PREVIEW_ENTITY_ID,
-            movement_speed: 150,
-            job_id: JobId(0),
-            head: hair_style.id,
-            weapon: 0,
-            shield: 0,
-            position: WorldPosition {
-                x: CHARACTER_PREVIEW_TILE.0,
-                y: CHARACTER_PREVIEW_TILE.1,
-                direction: Direction::South,
-            },
-            destination: None,
-            health_points: 40,
-            maximum_health_points: 40,
-            head_direction: 0,
-            sex: sex.into(),
-            body_state: 0,
-            health_state: 0,
-            option: 0,
-            is_pk_mode_on: false,
-            state: 0,
-            accessory: 0,
-            accessory2: 0,
-            accessory3: 0,
-            head_palette: 0,
-            body_palette: 0,
-            robe: 0,
-            body: 0,
-        };
-
-        let Some(preview) = Npc::new(&self.library, map, &mut self.path_finder, entity_data, client_tick) else {
+            *self.client_state.follow_mut(client_state().character_creation().preview()) = None;
             return;
         };
 
-        let mut preview = Entity::Npc(preview);
-        let entity_part_files = preview.get_entity_part_files(&self.library, &self.game_file_loader);
+        // `JobId(0)` is the Novice, which is what every character is created as.
+        let part_files = get_entity_part_files(
+            &self.library,
+            EntityType::Player,
+            JobId(0),
+            sex.into(),
+            Some(hair_style.id as usize),
+        );
 
-        if let Some(animation_data) =
-            self.async_loader
-                .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, preview.get_entity_type(), entity_part_files)
-        {
-            preview.set_animation_data(animation_data);
-        }
+        // `None` here means the load is in flight; `update_loaded_resources`
+        // routes it back by the same sentinel id.
+        let loaded = self
+            .async_loader
+            .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, EntityType::Player, part_files);
 
-        self.client_state.follow_mut(client_state().entities()).push(preview);
+        *self.client_state.follow_mut(client_state().character_creation().preview()) = loaded;
+        *self
+            .client_state
+            .follow_mut(client_state().character_creation().preview_animation()) = SpriteAnimationState::new(client_tick);
     }
 
     /// Point everything that caches the window size at a new one.
@@ -6926,6 +6880,22 @@ impl Client {
                         false => stats.lower(stat),
                     }
                 }
+                InputEvent::CycleHairStyle { forward } => {
+                    let path = client_state().character_creation().hair_style();
+                    let hair_style = *self.client_state.follow(path);
+
+                    *self.client_state.follow_mut(path) = hair_style.cycle(forward);
+                }
+                InputEvent::RotateCharacterPreview { clockwise } => {
+                    let path = client_state().character_creation().preview_direction();
+                    let direction = *self.client_state.follow(path);
+
+                    // Eight ACT facings, wrapping both ways.
+                    *self.client_state.follow_mut(path) = match clockwise {
+                        true => (direction + 1) % 8,
+                        false => (direction + 7) % 8,
+                    };
+                }
                 InputEvent::UseRecommendedStats => {
                     let recommended = self
                         .client_state
@@ -8498,7 +8468,9 @@ impl Client {
         for completed in completed_loads {
             match completed {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
-                    if entity_id == EMOTE_ANIMATION_ENTITY_ID {
+                    if entity_id == CHARACTER_PREVIEW_ENTITY_ID {
+                        *self.client_state.follow_mut(client_state().character_creation().preview()) = Some(animation_data);
+                    } else if entity_id == EMOTE_ANIMATION_ENTITY_ID {
                         self.emote_bubbles.set_animation_data(animation_data);
                     } else if let Some(path) = self.sprite_effects.path_for_sentinel(entity_id) {
                         // Classic sprite effects route their loads through a

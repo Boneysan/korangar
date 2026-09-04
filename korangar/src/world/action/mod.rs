@@ -102,9 +102,24 @@ impl Actions {
         let motion = &action.motions[frame_index % action.motions.len()];
 
         for sprite_clip in &motion.sprite_clips {
-            // `get` instead of a direct index in case a fallback was loaded
-            let Some(texture) = sprite.textures.get(sprite_clip.sprite_number as usize) else {
-                return;
+            // `continue`, not `return`: a motion may legitimately hold empty
+            // slots, and RO writes those as sprite number -1. Cast to `usize`
+            // that becomes `usize::MAX`, `get` misses, and returning here threw
+            // away every *remaining* clip in the motion as well.
+            //
+            // Every head sprite has this shape -- its idle motion is
+            // `[-1, 0]` -- so bailing on the first clip meant no head ever
+            // drew, while a body (`[0]`) was unaffected. Found when the
+            // character-creation preview became the first caller of
+            // `add_sprite`.
+            //
+            // `get` rather than a direct index also covers a fallback sprite
+            // having fewer textures than the ACT expects.
+            let Some(texture) = usize::try_from(sprite_clip.sprite_number)
+                .ok()
+                .and_then(|sprite_number| sprite.textures.get(sprite_number))
+            else {
+                continue;
             };
 
             let offset = sprite_clip.position.map(|component| component as f32);

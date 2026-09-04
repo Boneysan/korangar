@@ -12,10 +12,14 @@
 //!     combinations (male 35/37/39/40, female 36/40/41), so it is not a safe
 //!     default.
 
+use std::sync::Arc;
+
 use korangar_interface::components::drop_down::DropDownItem;
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{Sex, StatUpType};
+use ragnarok_packets::{ClientTick, Sex, StatUpType};
 use rust_state::RustState;
+
+use crate::world::{AnimationData, SpriteAnimationState};
 
 /// Hair styles present in the archive, as drop-down labels. A dedicated table
 /// rather than a formatted number, because `DropDownItem::text` hands back a
@@ -42,6 +46,25 @@ impl HairStyle {
 
     fn all() -> Vec<Self> {
         (1..=HAIR_STYLE_LABELS.len() as u16).map(|id| Self { id }).collect()
+    }
+
+    /// Step to the next or previous style, wrapping at both ends.
+    ///
+    /// Wrapping rather than clamping because these are cycled with arrows: a
+    /// player holding one direction to browse should come back around rather
+    /// than stop dead at 42 with no indication why.
+    pub fn cycle(self, forward: bool) -> Self {
+        let count = HAIR_STYLE_LABELS.len() as u16;
+
+        let id = match forward {
+            true => self.id % count + 1,
+            false => match self.id <= 1 {
+                true => count,
+                false => self.id - 1,
+            },
+        };
+
+        Self { id }
     }
 }
 
@@ -370,6 +393,16 @@ pub struct CharacterCreation {
     /// What the player has allocated so far. Cannot ride the creation packet,
     /// so it is applied for them once the character reaches the map.
     pub stats: StatSpread,
+    /// Composed sprite layers for the character being designed, once they have
+    /// loaded. Lives here rather than on an entity because the preview is drawn
+    /// *inside* the window -- an entity in the world would sit behind it.
+    #[hidden_element]
+    pub preview: Option<Arc<AnimationData>>,
+    /// Playback clock for the preview's standing pose.
+    pub preview_animation: SpriteAnimationState,
+    /// Which of the eight ACT facings the preview is turned to, so a player can
+    /// look at the back of a hairstyle as well as the front.
+    pub preview_direction: usize,
     pub sexes: Vec<CharacterSex>,
     pub hair_styles: Vec<HairStyle>,
     pub starting_classes: Vec<StartingClass>,
@@ -383,6 +416,9 @@ impl Default for CharacterCreation {
             show_recommendation: false,
             starting_class: StartingClass::Swordsman,
             stats: StatSpread::BASE,
+            preview: None,
+            preview_animation: SpriteAnimationState::new(ClientTick(0)),
+            preview_direction: 0,
             sexes: CharacterSex::all(),
             hair_styles: HairStyle::all(),
             starting_classes: StartingClass::all(),
@@ -399,6 +435,8 @@ impl CharacterCreation {
         self.show_recommendation = false;
         self.starting_class = StartingClass::Swordsman;
         self.stats = StatSpread::BASE;
+        self.preview = None;
+        self.preview_direction = 0;
     }
 }
 

@@ -582,6 +582,9 @@ struct TextureInstruction {
 /// [`CustomInstruction`]. Thus we explicitly allow a private interface.
 #[allow(private_interfaces)]
 struct SpriteInstruction<'a> {
+    /// Which of the eight ACT facings to draw. The world renderer derives this
+    /// from the camera; an interface sprite has no camera, so the caller says.
+    direction: usize,
     actions: &'a Actions,
     sprite: &'a Sprite,
     animation_state: &'a SpriteAnimationState,
@@ -647,6 +650,7 @@ impl RenderLayer<ClientState> for InterfaceRenderer {
     fn render_custom(&self, instruction: Self::CustomInstruction<'_>, clips: &[ScreenClip]) {
         match instruction {
             CustomInstruction::Sprite(SpriteInstruction {
+                direction,
                 actions,
                 sprite,
                 animation_state,
@@ -661,7 +665,7 @@ impl RenderLayer<ClientState> for InterfaceRenderer {
                 };
                 let screen_clip = clips[clip_id.as_index()];
 
-                actions.render_sprite(self, sprite, animation_state, position, 0, screen_clip, color, scaling);
+                actions.render_sprite(self, sprite, animation_state, position, direction, screen_clip, color, scaling);
             }
             CustomInstruction::Texture(TextureInstruction {
                 texture,
@@ -693,12 +697,14 @@ pub trait LayoutExt<'a> {
     fn add_texture(&mut self, area: Area, texture: Arc<Texture>, color: Color, smooth: bool);
 
     /// Add an instruction to render a sprite.
+    #[allow(clippy::too_many_arguments)]
     fn add_sprite(
         &mut self,
         area: Area,
         actions: &'a Actions,
         sprite: &'a Sprite,
         animation_state: &'a SpriteAnimationState,
+        direction: usize,
         color: Color,
         scale: f32,
     );
@@ -724,6 +730,7 @@ impl<'a> LayoutExt<'a> for WindowLayout<'a, ClientState> {
         actions: &'a Actions,
         sprite: &'a Sprite,
         animation_state: &'a SpriteAnimationState,
+        direction: usize,
         color: Color,
         scale: f32,
     ) {
@@ -732,6 +739,7 @@ impl<'a> LayoutExt<'a> for WindowLayout<'a, ClientState> {
         let scaling = scale * self.get_interface_scaling();
 
         self.add_custom_instruction(CustomInstruction::Sprite(SpriteInstruction {
+            direction,
             actions,
             sprite,
             animation_state,
