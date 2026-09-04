@@ -3345,6 +3345,24 @@ impl Client {
         self.client_state.follow_mut(client_state().entities()).push(preview);
     }
 
+    /// Point everything that caches the window size at a new one.
+    ///
+    /// Shared by `WindowEvent::Resized` and start-up so the two cannot drift:
+    /// a renderer left out here keeps rendering to the previous size, which
+    /// looks like a scaling bug rather than a missing update.
+    fn apply_window_size(&mut self, size: PhysicalSize<u32>) {
+        let screen_size: ScreenSize = size.max(PhysicalSize::new(1, 1)).into();
+
+        *self.client_state.follow_mut(client_state().window_size()) = screen_size;
+        self.graphics_engine.on_resize(screen_size);
+        self.interface.update_window_size(screen_size);
+        self.interface_renderer.update_window_size(screen_size);
+        self.bottom_interface_renderer.update_window_size(screen_size);
+        self.middle_interface_renderer.update_window_size(screen_size);
+        self.top_interface_renderer.update_window_size(screen_size);
+        self.effect_renderer.update_window_size(screen_size);
+    }
+
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn update_interface_scaling(&mut self, scaling: Scaling) {
@@ -9453,6 +9471,8 @@ impl ApplicationHandler for Client {
 
         // Android devices need to drop the surface on suspend, so we might need to
         // re-create it.
+        let mut startup_size = None;
+
         if let Some(window) = self.window.as_ref() {
             let path = client_state().graphics_settings();
             let graphics_settings = self.client_state.follow(path);
@@ -9488,12 +9508,27 @@ impl ApplicationHandler for Client {
             let display_mode = *self.client_state.follow(client_state().graphics_settings().display_mode());
             window.set_fullscreen(resolve_fullscreen(window, display_mode));
 
+            startup_size = Some(window.inner_size());
+
             window.set_visible(true);
 
             // Kick off the self-sustaining redraw loop. Without this, if the only
             // OS-initiated `RedrawRequested` arrived before the surface existed (and
             // was skipped by the guard in `window_event`), nothing would ever render.
             window.request_redraw();
+        }
+
+        // Seed the real size before the first frame. `window_size` starts at
+        // `ScreenSize::default()`, which is 0x0, and until now only
+        // `WindowEvent::Resized` ever filled it in -- so on a platform that sends
+        // no resize when a window opens at the size it asked for (macOS), the
+        // whole interface laid out against a zero-sized window and looked wrong
+        // until the player dragged an edge.
+        //
+        // Applied out here because `apply_window_size` takes `&mut self` and the
+        // block above holds a borrow of `self.window`.
+        if let Some(size) = startup_size {
+            self.apply_window_size(size);
         }
 
         if *self.client_state.follow(client_state().audio_settings().mute_on_focus_loss()) {
@@ -9526,15 +9561,7 @@ impl ApplicationHandler for Client {
                     }
                 }
 
-                let screen_size = screen_size.max(PhysicalSize::new(1, 1)).into();
-                *self.client_state.follow_mut(client_state().window_size()) = screen_size;
-                self.graphics_engine.on_resize(screen_size);
-                self.interface.update_window_size(screen_size);
-                self.interface_renderer.update_window_size(screen_size);
-                self.bottom_interface_renderer.update_window_size(screen_size);
-                self.middle_interface_renderer.update_window_size(screen_size);
-                self.top_interface_renderer.update_window_size(screen_size);
-                self.effect_renderer.update_window_size(screen_size);
+                self.apply_window_size(screen_size);
 
                 if let Some(window) = self.window.as_ref() {
                     window.request_redraw();
