@@ -14,7 +14,7 @@ use crate::graphics::{
 use crate::loaders::{FontLoader, FontSize, GlyphInstruction, ImageType, OverflowBehavior, Sprite, TextureLoader};
 use crate::renderer::SpriteRenderer;
 use crate::state::ClientState;
-use crate::world::{Actions, SpriteAnimationState};
+use crate::world::{Actions, AnimationData, AnimationFrame, AnimationFramePart, SpriteAnimationState};
 
 /// Renders the interface provided by [`korangar_interface`].
 pub struct InterfaceRenderer {
@@ -596,6 +596,54 @@ struct SpriteInstruction<'a> {
     scaling: f32,
 }
 
+/// A complete layered ACT frame rendered as one interface object.
+///
+/// Unlike [`SpriteInstruction`], this goes through [`AnimationData`]'s normal
+/// body/head composition before emitting rectangles. That keeps attachment,
+/// layer ordering, mirroring, and scaling identical for every facing.
+#[allow(private_interfaces)]
+struct AnimationInstruction<'a> {
+    animation_data: &'a AnimationData,
+    direction: usize,
+    clip_id: ClipId,
+    area: Area,
+    color: Color,
+    maximum_scaling: f32,
+}
+
+fn animation_scaling(area: Area, frame: &AnimationFrame, maximum_scaling: f32) -> f32 {
+    if frame.size.x <= 0 || frame.size.y <= 0 {
+        return 0.0;
+    }
+
+    maximum_scaling
+        .min(area.width / frame.size.x as f32)
+        .min(area.height / frame.size.y as f32)
+}
+
+/// Convert the same pixel geometry used by `finalize_frame_layout` back into
+/// an axis-aligned interface rectangle. Standing player frames do not rotate
+/// their clips, so position, size, and the ACT mirror bit completely describe
+/// the preview draw.
+fn animation_part_area(area: Area, frame: &AnimationFrame, part: &AnimationFramePart, scaling: f32) -> Area {
+    let frame_width = frame.size.x as f32 * scaling;
+    let frame_height = frame.size.y as f32 * scaling;
+    let frame_screen_left = area.left + (area.width - frame_width) / 2.0;
+    let frame_screen_top = area.top + (area.height - frame_height) / 2.0;
+
+    let frame_left = -(frame.size.x as f32) / 2.0;
+    let frame_top = -(frame.size.y as f32) + 0.5;
+    let part_left = (frame.offset.x + part.offset.x - (part.size.x - 1) / 2) as f32 - 0.5;
+    let part_top = (frame.offset.y + part.offset.y - (part.size.y - 1) / 2) as f32 - 0.5;
+
+    Area {
+        left: frame_screen_left + (part_left - frame_left) * scaling,
+        top: frame_screen_top + (part_top - frame_top) * scaling,
+        width: part.size.x as f32 * scaling,
+        height: part.size.y as f32 * scaling,
+    }
+}
+
 /// A custom layout instruction.
 ///
 /// Only pub to make the compiler happy, its not used outside of this module.
@@ -605,6 +653,8 @@ pub enum CustomInstruction<'a> {
     Texture(TextureInstruction),
     /// An instruction to render a sprite.
     Sprite(SpriteInstruction<'a>),
+    /// An instruction to render a layered sprite composition.
+    Animation(AnimationInstruction<'a>),
 }
 
 impl RenderLayer<ClientState> for InterfaceRenderer {
@@ -669,6 +719,46 @@ impl RenderLayer<ClientState> for InterfaceRenderer {
 
                 actions.render_sprite(self, sprite, animation_state, position, direction, screen_clip, color, scaling);
             }
+            CustomInstruction::Animation(AnimationInstruction {
+                animation_data,
+                direction,
+                clip_id,
+                area,
+                color,
+                maximum_scaling,
+            }) => {
+                let frame = animation_data.compose_idle_frame(direction);
+                let scaling = animation_scaling(area, &frame, maximum_scaling);
+                let screen_clip = clips[clip_id.as_index()];
+
+                for part in frame.frame_parts.iter() {
+                    let Some(texture) = animation_data
+                        .layers
+                        .get(part.animation_index)
+                        .and_then(|layer| layer.sprites.as_ref())
+                        .and_then(|sprite| sprite.textures.get(part.sprite_number))
+                    else {
+                        continue;
+                    };
+
+                    let part_area = animation_part_area(area, &frame, part, scaling);
+                    self.render_sprite(
+                        texture.clone(),
+                        ScreenPosition {
+                            left: part_area.left,
+                            top: part_area.top,
+                        },
+                        ScreenSize {
+                            width: part_area.width,
+                            height: part_area.height,
+                        },
+                        screen_clip,
+                        part.color * color,
+                        false,
+                        part.mirror,
+                    );
+                }
+            }
             CustomInstruction::Texture(TextureInstruction {
                 texture,
                 clip_id,
@@ -710,6 +800,9 @@ pub trait LayoutExt<'a> {
         color: Color,
         scale: f32,
     );
+
+    /// Add a complete layered animation in a fixed idle pose.
+    fn add_animation(&mut self, area: Area, animation_data: &'a AnimationData, direction: usize, color: Color, maximum_scale: f32);
 }
 
 impl<'a> LayoutExt<'a> for WindowLayout<'a, ClientState> {
@@ -750,5 +843,86 @@ impl<'a> LayoutExt<'a> for WindowLayout<'a, ClientState> {
             color,
             scaling,
         }));
+    }
+
+    fn add_animation(&mut self, area: Area, animation_data: &'a AnimationData, direction: usize, color: Color, maximum_scale: f32) {
+        let clip_id = self.get_active_clip_id();
+        let area = self.scale_area(area);
+        let maximum_scaling = maximum_scale * self.get_interface_scaling();
+
+        self.add_custom_instruction(CustomInstruction::Animation(AnimationInstruction {
+            animation_data,
+            direction,
+            clip_id,
+            area,
+            color,
+            maximum_scaling,
+        }));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use cgmath::{Matrix4, Vector2, Zero};
+    use korangar_interface::layout::area::Area;
+
+    use super::{animation_part_area, animation_scaling};
+    use crate::graphics::Color;
+    use crate::world::{AnimationFrame, AnimationFramePart};
+
+    fn part(offset: Vector2<i32>) -> AnimationFramePart {
+        AnimationFramePart {
+            animation_index: 0,
+            sprite_number: 0,
+            offset,
+            size: Vector2::new(21, 31),
+            mirror: false,
+            angle: 0.0,
+            color: Color::WHITE,
+            affine_matrix: Matrix4::from_scale(1.0),
+        }
+    }
+
+    fn frame() -> AnimationFrame {
+        AnimationFrame {
+            event: None,
+            attach_point: None,
+            offset: Vector2::new(0, -20),
+            top_left: Vector2::zero(),
+            size: Vector2::new(81, 101),
+            frame_parts: Vec::new(),
+            #[cfg(feature = "debug")]
+            horizontal_matrix: Matrix4::from_scale(1.0),
+            #[cfg(feature = "debug")]
+            vertical_matrix: Matrix4::from_scale(1.0),
+        }
+    }
+
+    #[test]
+    fn composed_parts_scale_their_offsets_together() {
+        let area = Area {
+            left: 10.0,
+            top: 20.0,
+            width: 300.0,
+            height: 300.0,
+        };
+        let frame = frame();
+        let body = animation_part_area(area, &frame, &part(Vector2::new(0, 0)), 2.0);
+        let head = animation_part_area(area, &frame, &part(Vector2::new(4, -18)), 2.0);
+
+        assert_eq!(head.left - body.left, 8.0);
+        assert_eq!(head.top - body.top, -36.0);
+    }
+
+    #[test]
+    fn composed_animation_shrinks_to_fit_the_preview_area() {
+        let area = Area {
+            left: 0.0,
+            top: 0.0,
+            width: 120.0,
+            height: 150.0,
+        };
+
+        assert_eq!(animation_scaling(area, &frame(), 2.0), 120.0 / 81.0);
     }
 }

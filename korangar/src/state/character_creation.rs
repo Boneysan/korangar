@@ -16,10 +16,10 @@ use std::sync::Arc;
 
 use korangar_interface::components::drop_down::DropDownItem;
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{ClientTick, Sex, StatUpType};
+use ragnarok_packets::{Sex, StatUpType};
 use rust_state::RustState;
 
-use crate::world::{AnimationData, SpriteAnimationState};
+use crate::world::AnimationData;
 
 /// Hair styles present in the archive, as drop-down labels. A dedicated table
 /// rather than a formatted number, because `DropDownItem::text` hands back a
@@ -394,8 +394,6 @@ pub struct CharacterCreation {
     /// *inside* the window -- an entity in the world would sit behind it.
     #[hidden_element]
     pub preview: Option<Arc<AnimationData>>,
-    /// Playback clock for the preview's standing pose.
-    pub preview_animation: SpriteAnimationState,
     /// Which of the eight ACT facings the preview is turned to, so a player can
     /// look at the back of a hairstyle as well as the front.
     pub preview_direction: usize,
@@ -412,7 +410,6 @@ impl Default for CharacterCreation {
             starting_class: StartingClass::Swordsman,
             stats: StatSpread::BASE,
             preview: None,
-            preview_animation: SpriteAnimationState::new(ClientTick(0)),
             preview_direction: 0,
             sexes: CharacterSex::all(),
             starting_classes: StartingClass::all(),

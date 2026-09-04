@@ -15,7 +15,6 @@ use crate::state::character_creation::{CharacterCreation, CharacterCreationPathE
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::AnimationLayer;
 
 /// How tall the preview reserves, and how much the sprite is enlarged.
 ///
@@ -23,17 +22,14 @@ use crate::world::AnimationLayer;
 /// thumbnail, so it is scaled up to something worth looking at.
 const PREVIEW_HEIGHT: f32 = 180.0;
 const PREVIEW_SCALE: f32 = 2.0;
-/// Downward correction for secondary layers, in interface pixels. Positive
-/// moves the head down.
-const PREVIEW_HEAD_NUDGE: f32 = 4.0;
 
 /// Draws the character being designed, inside the window.
 ///
 /// The renderer has been able to draw a sprite in the interface all along --
 /// `LayoutExt::add_sprite` and `CustomInstruction::Sprite` are both
-/// implemented -- but nothing called it. Each layer of a composed player
-/// (body, then head) is drawn into the same area; the ACT files carry their own
-/// offsets, so they line up without this code knowing anything about anatomy.
+/// implemented -- but nothing called it. The preview is submitted as one
+/// composed animation so the normal world-sprite attachment rules keep the
+/// body and head together for all eight facings.
 struct CharacterPreview<A> {
     creation_path: A,
 }
@@ -74,71 +70,16 @@ where
             return;
         };
 
-        let animation_state = &creation.preview_animation;
-        let action_index = animation_state.get_action_index(creation.preview_direction);
-        // Frame 0, always: this is a portrait to judge a hairstyle against, and
-        // an idle animation swaying behind the form is a distraction rather
-        // than a feature.
-
-        // Motion 0, always -- which is what the game does for a standing player.
-        //
-        // `compose_action_motion` pins player idle to motion 0 with the comment
-        // "suppress Doridori": the idle action's later motions are RO's
-        // head-shake, and the real client does not play them while standing.
-        // Advancing the frame here reproduced exactly that wobble, which reads
-        // as the head coming loose rather than as an animation.
-        //
-        // It also keeps the head placement honest for free: the attach points
-        // below are read from this same frame, so body and head can never fall
-        // out of step.
-        let frame_index = 0;
-
-        // Read the attach point off the *raw* ACT rather than the processed
-        // frames. The processed ones come back with the child's normalised to
-        // the parent's, so they are always equal and their difference is always
-        // zero -- which put the head on the chest.
-        let attach_point_of = |layer: &AnimationLayer| {
-            let actions = layer.actions.as_ref()?;
-            let action = actions.actions.get(action_index % actions.actions.len().max(1))?;
-            let motion = action.motions.get(frame_index % action.motions.len().max(1))?;
-
-            motion.attach_points.first().map(|attach_point| attach_point.position)
-        };
-
-        // The body is the parent every other layer hangs off.
-        let body_attach = animation_data.layers.first().and_then(attach_point_of);
-
-        for (index, layer) in animation_data.layers.iter().enumerate() {
-            let (Some(actions), Some(sprite)) = (layer.actions.as_ref(), layer.sprites.as_ref()) else {
-                continue;
-            };
-
-            let mut area = layout_info.area;
-
-            // Lift secondary layers by the body's attach point.
-            //
-            // The head's own ACT already places it above the body, but
-            // `render_sprite_frame` adds clip offsets unscaled while scaling the
-            // sprite, so at 2x the head only rises half as far as it should and
-            // lands on the chest. This closes that gap. Measured against the
-            // real thing rather than derived -- see PREVIEW_HEAD_NUDGE.
-            if index > 0
-                && let Some(body_attach) = body_attach
-            {
-                area.left += body_attach.x as f32;
-                area.top += body_attach.y as f32 + PREVIEW_HEAD_NUDGE;
-            }
-
-            layout.add_sprite(
-                area,
-                actions,
-                sprite,
-                animation_state,
-                creation.preview_direction,
-                Color::WHITE,
-                PREVIEW_SCALE,
-            );
-        }
+        // Motion zero matches the in-world idle compositor's Doridori
+        // suppression. The renderer fits the complete frame into this area,
+        // so scaling never separates or clips one layer independently.
+        layout.add_animation(
+            layout_info.area,
+            animation_data,
+            creation.preview_direction,
+            Color::WHITE,
+            PREVIEW_SCALE,
+        );
     }
 }
 

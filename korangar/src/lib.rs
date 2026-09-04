@@ -3283,7 +3283,7 @@ impl Client {
     /// interface is drawn on top of the scene, so a character standing on the
     /// map can only ever be behind the window asking about it.
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    fn update_character_preview(&mut self, client_tick: ClientTick) {
+    fn update_character_preview(&mut self) {
         let wanted = self.interface.is_window_with_class_open(WindowClass::CharacterCreation).then(|| {
             let creation = self.client_state.follow(client_state().character_creation());
             (creation.sex, creation.hair_style)
@@ -3316,9 +3316,6 @@ impl Client {
             .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, EntityType::Player, part_files);
 
         *self.client_state.follow_mut(client_state().character_creation().preview()) = loaded;
-        *self
-            .client_state
-            .follow_mut(client_state().character_creation().preview_animation()) = SpriteAnimationState::new(client_tick);
     }
 
     /// Point everything that caches the window size at a new one.
@@ -8945,7 +8942,7 @@ impl Client {
             animation_timer_ms,
         } = self.game_timer.update();
 
-        self.update_character_preview(client_tick);
+        self.update_character_preview();
 
         let input_report = self.input_system.update_delta(client_tick);
 
