@@ -1297,6 +1297,21 @@ impl AnimationData {
         self.compose_frame(animation_state, camera, direction)
     }
 
+    /// Compose motion zero of the idle action for a camera-independent UI
+    /// preview.
+    ///
+    /// Character creation has no world camera or actor state, but it still
+    /// needs the normal player-layer composition. In particular, heads must
+    /// be translated by `body_attach - head_attach` for the selected facing.
+    /// Keeping that work here prevents interface previews from developing a
+    /// second, subtly different implementation of ACT attachment rules.
+    pub fn compose_idle_frame(&self, view_direction: usize) -> AnimationFrame {
+        let animation_state = AnimationState::new(self.entity_type, ClientTick(0));
+        let view_direction = view_direction & 7;
+
+        self.compose_action_motion(&animation_state, view_direction, view_direction)
+    }
+
     fn compose_action_motion(
         &self,
         animation_state: &AnimationState,
@@ -2714,6 +2729,55 @@ mod runtime_compose_tests {
         // Head should be shifted by body attach (0, 20) − head attach (0, 0).
         let head_part = frame.frame_parts.iter().find(|p| p.animation_index == 1).unwrap();
         assert_eq!(head_part.offset.y, 20, "head follows body attach of motion 2");
+    }
+
+    #[test]
+    fn idle_preview_composes_attachment_for_every_facing() {
+        let make_directional_layer = |layer_index: usize, is_head: bool| AnimationLayer {
+            path_key: Some(if is_head { "head" } else { "body" }.into()),
+            sprites: None,
+            actions: None,
+            animations: (0..8)
+                .map(|direction| {
+                    let mut frame = layer_frame(layer_index);
+                    if is_head {
+                        frame.attach_point = Some(Vector2::new(2, 3));
+                        frame.offset = Vector2::new(5, -20);
+                        frame.frame_parts[0].offset = frame.offset;
+                    } else {
+                        frame.attach_point = Some(Vector2::new(direction * 3, 10 + direction));
+                    }
+                    Animation { frames: vec![frame] }
+                })
+                .collect(),
+        };
+
+        let data = AnimationData {
+            layers: vec![make_directional_layer(0, false), make_directional_layer(1, true)],
+            delays: vec![4.0; 8],
+            action_layouts: vec![
+                ActionLayout {
+                    min_top: -32,
+                    max_bottom: 12,
+                    min_left: -8,
+                    max_right: 24,
+                };
+                8
+            ],
+            entity_type: EntityType::Player,
+        };
+
+        for direction in 0..8 {
+            let frame = data.compose_idle_frame(direction);
+            let head = frame.frame_parts.iter().find(|part| part.animation_index == 1).unwrap();
+
+            assert_eq!(head.offset, Vector2::new(3 + direction as i32 * 3, -13 + direction as i32));
+        }
+
+        // UI callers may increment freely; facings are always modulo eight.
+        let wrapped = data.compose_idle_frame(10);
+        let head = wrapped.frame_parts.iter().find(|part| part.animation_index == 1).unwrap();
+        assert_eq!(head.offset, Vector2::new(9, -11));
     }
 
     #[test]

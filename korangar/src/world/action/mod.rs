@@ -135,13 +135,16 @@ impl Actions {
 
             let final_size = dimensions.zip(zoom2, f32::mul) * zoom;
 
-            // NOTE: `offset` is deliberately NOT multiplied by `zoom`, even
-            // though the size is. Scaling it (which reads as the obvious fix,
-            // since a part authored 69 units above another should move 138 at
-            // 2x) pushes the sprite outside the element's clip and it vanishes.
-            // Left as-is rather than "corrected": every caller but the
-            // character preview draws at ~1.0 where it makes no difference, and
-            // the preview compensates with its own offset instead.
+            // NOTE: `offset` is NOT multiplied by `zoom`, even though the size
+            // is. That only holds because every caller of this function draws a
+            // single-layer sprite at roughly 1:1 -- skill icons, the cursor,
+            // particles -- where the discrepancy is invisible.
+            //
+            // It is not a general-purpose scaler. Anything drawing a composed,
+            // multi-layer actor at a real zoom must scale part offsets and
+            // sizes together, or the parts collapse toward the centre; that is
+            // what `CustomInstruction::Animation` does in the interface
+            // renderer, via `AnimationData::compose_idle_frame`.
             let final_position = Vector2::new(position.left, position.top) + offset - final_size / 2.0;
 
             let final_size = ScreenSize {
