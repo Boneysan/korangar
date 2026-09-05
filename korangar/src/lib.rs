@@ -4343,11 +4343,6 @@ impl Client {
                     // One request per stat rather than one per point: Hercules
                     // takes the amount (`clif_parse_StatusUp` hands it straight
                     // to `pc->statusup`), so a whole build is at most six.
-                    if let Some(spread) = self.armed_stat_plan.take() {
-                        for (stat, amount) in spread.deltas_from_base() {
-                            let _ = self.networking_system.request_stat_up(stat.stat_up(amount));
-                        }
-                    }
 
                     self.map = None;
                     self.particle_holder.clear();
@@ -8571,6 +8566,22 @@ impl Client {
                             let map_name = map_file_name.clone();
                             self.refresh_minimap(&map_name, map_w, map_h);
                             let _ = self.networking_system.map_loaded();
+
+                            // Replay a creation-time stat allocation, now that the
+                            // player is genuinely in the world.
+                            //
+                            // NOT on `ChangeMap`: that is ZC_ACCEPT_ENTER, the map
+                            // server telling the client which map to load. The
+                            // client has not loaded it yet and has not sent
+                            // LoadEndAck, so `pc_statusup` has no player to act on
+                            // and the requests are dropped -- silently, with the
+                            // character left at 1/1/1/1/1/1 and 48 unspent points.
+                            // `map_loaded()` above IS that acknowledgement.
+                            if let Some(spread) = self.armed_stat_plan.take() {
+                                for (stat, amount) in spread.deltas_from_base() {
+                                    let _ = self.networking_system.request_stat_up(stat.stat_up(amount));
+                                }
+                            }
                         }
                     }
                 }

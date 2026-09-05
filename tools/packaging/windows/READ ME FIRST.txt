@@ -32,6 +32,14 @@ WHAT YOUR PC NEEDS
   * About 8 GB of free disk space to install (4 GB once you delete
     the .zip afterwards).
 
+  * Tailscale, a free program that lets your PC reach the host's machine.
+    The game server is not on the public internet -- it runs on the host's
+    computer at their house, and Tailscale is how you get to it without them
+    opening their home router to the world. It is a few clicks to install and
+    you sign in with a Google or Microsoft account. It is not a game launcher,
+    there is no account with us, and it does not send your normal web
+    browsing anywhere.
+
 
 --------------------------------------------------------------------------------
 INSTALLING - THE SHORT VERSION
@@ -58,16 +66,27 @@ INSTALLING - THE SHORT VERSION
      if it is missing, and verifies all 259 files against a checksum list.
      Run it once, the first time.
 
-  4. Double-click  Play  to start the game.
+  4. Install Tailscale and accept the host's invite.
 
-  4. At the login screen, type a username ending in _m or _f and a password:
+     Get it from  https://tailscale.com/download  and sign in. The host sends
+     you an invite link; open it and accept, and their machine appears in your
+     Tailscale list. Leave Tailscale running whenever you play -- if it is not
+     connected, the game reaches the login screen and then fails when it tries
+     to enter the world.
 
-       BobSmith_m      for a male character
-       BobSmith_f      for a female character
+  5. Double-click  Play  to start the game.
+
+  6. At the login screen, type a username ending in _create and a password:
+
+       BobSmith_create
 
      There is no sign-up page. Typing a name that does not exist creates the
-     account right there. The _m or _f suffix is not part of your name in game,
-     it just tells the server which gender to use.
+     account right there. The _create suffix is not part of your name and you
+     only ever type it once: the account is called BobSmith, and that is what
+     you log in with from then on.
+
+     You pick your character's gender and appearance on the next screen, when
+     you make the character.
 
      IMPORTANT: use a throwaway password you do not use anywhere else. See the
      PRIVACY note at the bottom of this file for why.
@@ -167,8 +186,15 @@ IF SOMETHING GOES WRONG
       SENDING A LOG below. That file is the whole reason it exists.
 
   "Cannot connect" / it hangs on the login screen
-      The server is probably not running, or you are not on the right network.
-      Ask the host. See CONNECTING below.
+      Check Tailscale first: it must be running and signed in, and the host's
+      machine must show up in its list. If Tailscale is fine, the server is
+      probably not running -- ask the host. See CONNECTING below.
+
+  I log in fine, then it fails when I pick my character
+      This is almost always Tailscale. Logging in and entering the world are
+      two separate connections, and the second one is the one that needs the
+      host's machine reachable. Open Tailscale, check it says Connected, and
+      try again.
 
 
 --------------------------------------------------------------------------------
@@ -202,9 +228,16 @@ CONNECTING
   if the host moves the server they will send you a new copy of the small
   Windows folder.
 
-  Right now the server is on the host's home network, which means you have to
-  be on that same network to play. If you are joining from your own house, ask
-  the host -- that needs a change on their end first.
+  The address is a Tailscale one, which is why Tailscale has to be running.
+  It is not reachable from the ordinary internet -- only from machines that
+  have joined the host's Tailscale network by invite. That is the point: the
+  host does not have to open their home router to anyone.
+
+  This works the same whether you are across the country or sitting in the
+  host's house on their Wi-Fi. If you are on the same network as the host,
+  Tailscale notices and sends the traffic straight across the local network
+  rather than out to the internet and back, so being nearby is still faster.
+  You still need Tailscale running either way.
 
 
 --------------------------------------------------------------------------------

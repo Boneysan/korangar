@@ -1,7 +1,7 @@
 //! Phase 1 — session lifecycle.
 
 use std::thread::sleep;
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use korangar_networking::{DEFAULT_HAIR_STYLE, NetworkEvent, NetworkingSystem};
 use ragnarok_packets::Sex;
@@ -13,6 +13,7 @@ pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("smoke", 1, smoke),
         Scenario::new("bad-password", 1, bad_password),
+        Scenario::new("account-registration", 1, account_registration),
         Scenario::new("connection-state", 1, connection_state),
         Scenario::new("character-select-invalid", 1, character_select_invalid),
         Scenario::new("character-create-delete", 1, character_create_delete),
@@ -244,6 +245,79 @@ fn bad_password(config: &Config) -> Result<(), String> {
         }
         if Instant::now() > deadline {
             return Err("no failure event for bad credentials".to_owned());
+        }
+        sleep(Duration::from_millis(30));
+    }
+}
+
+/// Registration is how every account on this server comes into existence, and
+/// nothing else in the suite touches it: every other scenario logs in as a row
+/// that `run-integration-tests.sh` inserted with SQL. That gap mattered little
+/// while upstream's `_M`/`_F` sat behind our `_create` as a fallback. `_M`/`_F`
+/// was removed on 2026-09-05, so `_create` is now the only way in and a
+/// regression here locks out every new player with nothing to fall back on.
+///
+/// The bare name is checked *before* registering as well as after. Without the
+/// "before", a `_create` that stored the account under its full suffixed name
+/// would still pass step two, and a name that somehow already existed would
+/// make the whole scenario vacuous.
+fn account_registration(config: &Config) -> Result<(), String> {
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|_| "system clock is before the unix epoch".to_owned())?
+        .as_nanos();
+
+    // NAME_LENGTH is 24 on the server and `_create` costs 7 of it, so the base
+    // name has to stay at 16 characters or under for the suffixed form to
+    // survive `safestrncpy` intact.
+    let account = format!("reg{:013}", stamp % 10_000_000_000_000);
+    let legacy = format!("leg{:013}", stamp % 10_000_000_000_000);
+    let password = "regpass";
+
+    if login_is_accepted(config, &account, password)? {
+        return Err(format!("`{account}` already exists, so this run proves nothing"));
+    }
+    if !login_is_accepted(config, &format!("{account}_create"), password)? {
+        return Err(format!("`{account}_create` was rejected; registration is broken"));
+    }
+    if !login_is_accepted(config, &account, password)? {
+        return Err(format!(
+            "`{account}` does not exist after registering `{account}_create`; the suffix is being stored instead of stripped"
+        ));
+    }
+    if login_is_accepted(config, &format!("{legacy}_m"), password)? {
+        return Err(format!(
+            "`{legacy}_m` created an account; upstream's _M/_F registration was supposed to be gone"
+        ));
+    }
+
+    Ok(())
+}
+
+/// One login-server attempt. `Ok(true)` means the server accepted it. Reaching
+/// the character server is deliberately not part of this: the question is
+/// whether the account exists, and `login_auth_ok` wipes a previous
+/// login-only session (`char_server == -1`) rather than rejecting the next
+/// attempt, which is what makes checking the same account twice safe.
+fn login_is_accepted(config: &Config, username: &str, password: &str) -> Result<bool, String> {
+    let (mut net, mut buffer) = NetworkingSystem::spawn_with_callback(config.ledger.clone());
+    net.connect_to_login_server(PACKET_VERSION, config.server, username.to_owned(), password.to_owned());
+
+    let deadline = Instant::now() + config.timeout;
+    loop {
+        net.get_events(&mut buffer);
+        for event in buffer.drain() {
+            match event {
+                NetworkEvent::LoginServerConnected { .. } => {
+                    net.disconnect_from_login_server();
+                    return Ok(true);
+                }
+                NetworkEvent::LoginServerConnectionFailed { .. } => return Ok(false),
+                _ => {}
+            }
+        }
+        if Instant::now() > deadline {
+            return Err(format!("no login result for `{username}`"));
         }
         sleep(Duration::from_millis(30));
     }

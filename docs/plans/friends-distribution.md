@@ -30,7 +30,7 @@ A friend who has never opened a terminal:
 2. Downloads two things the first time (Assets + their OS folder), or one
    first-time zip that already merges them.
 3. Double-clicks `Play`.
-4. Types `TheirName_m` or `TheirName_f` and a password, and lands in Prontera.
+4. Types `TheirName_create` and a password, and lands in Prontera.
 
 They never install Rust, nightly, slangc, Git, or the official RO client. They
 never edit `sclientinfo.xml`. They never type `cargo`. If any of those leak into
@@ -42,7 +42,7 @@ Later updates are a ~30 MB re-download of the binary + `archive/`, not another
 **Non-goals for the first pack**
 
 - Auto-updater / patcher (E8.4). Drive replace-in-place is the updater.
-- Account website / FluxCP (E8.5). `_m` / `_f` registration is enough.
+- Account website / FluxCP (E8.5). `_create` self-registration is enough.
 - Apple Developer / Authenticode signing. Ad-hoc + “right-click Open” is enough.
 - Feature parity (quest journal, party chat polish, status icons, remaining DM
   chrome). Those are playability, not installability. First session can use a
@@ -62,7 +62,7 @@ Later updates are a ~30 MB re-download of the binary + `archive/`, not another
 | **S5** | What they launch | `Play.bat` (Windows) / `Play.command` or a `.app` (macOS) that `cd`s to its own directory, then starts the binary | Every path the client reads is **CWD-relative**. Finder’s CWD is `/`. Explorer is usually the exe folder, but a launcher is still cheaper than a support thread |
 | **S6** | Build flavour | `--release`, feature `unicode` only. **No `debug`** | `release.yml` currently builds `--features "unicode,debug"` — that ships the packet inspector to friends |
 | **S7** | Server address in the pack | Pre-filled `client/server.ron` with the host’s Tailscale / LAN IP. Friends do not edit it | `sclientinfo.xml` is EUC-KR and baked to `127.0.0.1`. The override exists exactly for this |
-| **S8** | Accounts | `_m` / `_f` self-registration, documented in the Drive Doc. Pre-create GM accounts yourself | No control panel for v0 |
+| **S8** | Accounts | `_create` self-registration, documented in the Drive Doc. Pre-create GM accounts yourself | No control panel for v0. The fork replaced upstream's `_M`/`_F` with `_create` (2026-09-05) — the client asks for sex per character, so registration should not |
 | **S9** | Link stability | **Never delete-and-reupload** a shared file. Use Drive “Manage versions”, or overwrite files *inside* the shared folder | A new upload mints a new link; every old text is dead |
 | **S10** | CPU baseline | **AVX2 required** (`x86-64-v3` + `+aes`, from `.cargo/config.toml`). Documented, checked by the launcher, not lowered | Confirmed in the binary: 10,265 `vpaddd`, 5,273 `vpbroadcastd`, 2,144 `vinserti128`, 168 `vpermd`, plus FMA. Without AVX2 the process dies on its first vectorised instruction — `STATUS_ILLEGAL_INSTRUCTION`, no window, no message, nothing to read. Operator decision 2026-09-02: every PC in this group is post-2013 Intel or Ryzen, so ship v3 and *say so* rather than rebuild at `x86-64-v2` |
 | **S11** | Visual C++ runtime | **Bundle `VC_redist.x64.exe`** in the client half; `Setup` installs it, `Play` refuses with a readable message if it is missing | The exe imports `MSVCP140.dll`, `VCRUNTIME140.dll`, `VCRUNTIME140_1.dll`, which are **not** part of a clean Windows (the `api-ms-win-crt-*` imports are — those are the Universal CRT). Static linking was tried first and **cannot work**: `+crt-static` fails with `undefined symbol: __declspec(dllimport) nearbyint` from `libmach_dxcompiler_rs`, wgpu's prebuilt DX12 shader compiler, which is built against the dynamic CRT |
@@ -284,7 +284,7 @@ char-server handoff with a symptom that names nothing:
 | What **char-server** advertises | `Hercules/conf/import/char-server.conf` → `inter.char_ip` | you, by hand | **NO — gitignored** |
 | What **map-server** advertises | `Hercules/conf/import/map-server.conf` → `inter.map_ip` | you, by hand | **NO — gitignored** |
 
-Currently all three read `192.168.20.49`.
+Currently all three read `100.96.4.37` — this host's Tailscale address. See §7.4a.
 
 Friends never type an address and never edit `server.ron`. Moving the server
 means re-running `make-pack.sh --server <new>` and re-sending the 80 MB client
@@ -378,18 +378,40 @@ Friend install is four sentences — that is all they need in the Drive Doc:
 
 They never type an IP.
 
-### 7.4a CURRENT SETUP (2026-08-17): same-LAN, no Tailscale yet
+### 7.4a CURRENT SETUP (2026-09-05): Tailscale, everyone
 
-The pack on disk ships **`192.168.20.49`**, this host's LAN address, which is
-the same-network arrangement §2 allows for a physical game night. Applied and
-verified:
+**Operator decision 2026-09-05: every player joins the tailnet, including
+anyone sitting on the host's own LAN.** The group has remote friends, and a
+LAN address cannot serve them. One address, one pack, one config.
 
 | | |
 |---|---|
-| `conf/import/char-server.conf` | `inter.char_ip: "192.168.20.49"` |
-| `conf/import/map-server.conf` | `inter.map_ip: "192.168.20.49"` |
-| Verified | `Map-Server connected: 1156 maps, from IP 192.168.20.49 port 5121`, and all three ports accept connections on that address, not just loopback |
-| Pack | `dist/Windows/client/server.ron` → `address: "192.168.20.49"` |
+| `conf/import/char-server.conf` | `inter.char_ip: "100.96.4.37"` |
+| `conf/import/map-server.conf` | `inter.map_ip: "100.96.4.37"` |
+| `conf/network.conf` | `lan_subnets` gained `"192.168.20.49:255.255.255.0"` |
+| Pack | `dist/*/client/server.ron` → `address: "100.96.4.37"` |
+| Tailnet | `100.96.4.37` — this Mac, the only node as of 2026-09-05; no subnet routes advertised |
+| Verified | **not yet** — no peer has ever joined the tailnet, so no client has made the char/map handoff over it |
+
+**Why a LAN player joins the tailnet too.** `server.ron` holds exactly one
+login address per pack, so serving both would mean two packs kept in sync
+forever, and a pack that fails confusingly if it reaches the wrong person. The
+cost to them is close to nothing: Tailscale connects same-subnet peers
+**directly across the LAN**, not through a relay, so the added latency is a
+fraction of a millisecond of WireGuard encryption and a userspace hop. It is
+not *zero* — if a direct connection cannot be established (AP isolation and
+guest Wi-Fi are the usual culprits) Tailscale falls back to a DERP relay, which
+sends LAN traffic out to the internet and back. `tailscale status` names the
+path per peer (`direct` vs `relay`), and `tailscale ping <host>` reports which
+one a packet took. Check it once on game night rather than assuming.
+
+**The `lan_subnets` entry is inert today** and is there on purpose. A tailnet
+client's source address is its `100.x`, which does not match the LAN subnet, so
+it takes the WAN branch and is handed `100.96.4.37` — correct. The entry only
+fires for a client whose source address really is on `192.168.20.0/24`, i.e.
+one dialling the LAN address directly. It costs nothing and means that if the
+group ever does want a LAN-only pack, only the pack needs rebuilding and not
+the server config.
 
 **Deliberately NOT changed:** `login_ip`, and the map-server's own
 `inter.char_ip`. Both describe how the servers reach *each other* on this one
@@ -397,15 +419,17 @@ box; pointing them outward would route local traffic over the network for
 nothing.
 
 > [!WARNING]
-> **`conf/import/**/*.conf` is gitignored upstream**, so this address lives in
-> an untracked file. It does not survive a fresh clone and no commit records it
-> — this table is the only durable copy. Re-apply it after any re-clone.
+> **`conf/import/**/*.conf` is gitignored upstream**, so `char_ip` and `map_ip`
+> live in untracked files. They do not survive a fresh clone and no commit
+> records them — this table is the only durable copy. Re-apply it after any
+> re-clone. (`conf/network.conf` *is* tracked, so the `lan_subnets` line
+> survives on its own.)
 
-**This only works for friends on the same network.** A LAN address is
-unreachable from the internet, and a DHCP lease can move it — if the router
-reassigns `192.168.20.49`, every client breaks at once with a connection
-refused. Reserve it in the router, or move to Tailscale, which is what the rest
-of this section is for.
+**What this replaced:** `192.168.20.49`, this host's LAN address, set
+2026-08-17 for a physical game night. It was unreachable from the internet, and
+it was a DHCP lease — if the router had reassigned it, every pack already handed
+out would have broken at once with a connection refused. The tailnet address is
+assigned per node and stays put, which removes that failure mode as well.
 
 ### 7.4 Hercules: advertise the Tailscale IP
 
@@ -549,7 +573,7 @@ nc -vz 100.x.x.x 6121
 nc -vz 100.x.x.x 5121
 ```
 
-All three ports must accept. Then they launch Play, register `Name_m`,
+All three ports must accept. Then they launch Play, register `Name_create`,
 and must reach **Prontera**, not just the login window. Login-only success
 with a hang at char select almost always means `char_ip` is still
 `127.0.0.1`.
@@ -567,7 +591,10 @@ with a hang at char select almost always means `char_ip` is still
 
 ### 7.9 Same-LAN game night instead
 
-If everyone is on your Wi-Fi, skip Tailscale:
+**Not the current arrangement** — see §7.4a, where the 2026-09-05 decision was
+that everyone joins the tailnet including LAN players. Kept because it is the
+fallback if Tailscale is ever unavailable, and because step 2 is already
+applied. If everyone is on your Wi-Fi, you could skip Tailscale:
 
 1. Your LAN IPv4 (`ipconfig getifaddr en0`) goes in `inter.char_ip` /
    `inter.map_ip`.
@@ -591,7 +618,10 @@ Seal Cascade — first time
 1. Install Tailscale from https://tailscale.com/download
    and click the invite the GM sent you. Wait until the
    GM's computer shows as Connected.
-   (Skip this if the GM said you are on the same Wi-Fi.)
+   Everyone needs this, including anyone on the GM's own
+   Wi-Fi. Leave it running whenever you play -- without it
+   you reach the login screen and then fail at character
+   select.
 
 2. Download the Assets folder (once — it is large) and the
    Windows or macOS folder.
@@ -607,9 +637,11 @@ Seal Cascade — first time
    Windows: if SmartScreen appears, More info → Run anyway.
    Mac: right-click Play.command → Open the first time.
 
-5. At the login screen type a username ending in _m or _f
-   (for example Sam_m) and any password. That creates your
-   account. Then make a character.
+5. At the login screen type a username ending in _create
+   (for example Sam_create) and any password. That creates
+   your account, which is just "Sam" -- you type _create once
+   and log in as Sam from then on. Then make a character;
+   you pick its gender and look on that screen.
 
 If something breaks, send the GM a screenshot of the window
 and what you clicked. Do not edit any files.
@@ -646,7 +678,7 @@ hashes SHA-256 in hardware — so there is no reason to skip a regeneration.
 | `Setup.bat` + `Setup.ps1` | **The one thing a friend runs first.** Checks AVX2, installs the VC++ runtime, finds the Assets download and merges it in, verifies all 259 files, clears the mark-of-the-web, offers to launch |
 | `Play.bat` + `Play.ps1` | Every launch. Only the cheap checks — AVX2, runtime, assets present, `lua_files.7z` hash, `archive/`, `client/server.ron` |
 | `Verify.bat` + `Verify.ps1` | On demand. Reads **both** manifests and names every corrupt or missing file |
-| `READ ME FIRST.txt` | Requirements, install, `_m`/`_f` accounts, the throwaway-password warning, troubleshooting |
+| `READ ME FIRST.txt` | Requirements, install, `_create` accounts, the throwaway-password warning, troubleshooting |
 | `VC_redist.x64.exe` | S11 — the client cannot be statically linked. ~25 MB, gitignored, fetched from `aka.ms` on first pack |
 | `archive/` | 49 files: fonts, UI textures, language RONs, `msgstringtable.txt`, `sclientinfo.xml`, Lua scaffolding |
 | `client/server.ron` | Written from `--server`. **This is the only place a friend's client learns the address** |
@@ -808,8 +840,18 @@ On a friend’s laptop (or a second account / second OS):
 - [ ] **The client starts on a PC that never had the VC++ runtime.** Test on a
       machine that has not had a game or dev tool installed, or the bundled
       redist is untested by construction — most PCs already have it.
+- [ ] **Every player is on the tailnet**, including anyone on your own Wi-Fi.
+      As of 2026-09-05 the tailnet has exactly one node (this Mac) and no peer
+      has ever joined, so the char/map handoff over Tailscale is **completely
+      unexercised** — this row is the first time it will ever run.
+- [ ] **`tailscale status` says `direct`, not `relay`, for the LAN player.**
+      A relayed peer sends LAN traffic out to the internet and back. If it says
+      `relay`, suspect AP isolation or blocked client-to-client UDP on the
+      router before blaming the game. `tailscale ping <host>` names the path.
 - [ ] Launcher starts the client without a terminal `cd`.
-- [ ] Login with a fresh `Name_m` creates an account.
+- [ ] Login with a fresh `Name_create` creates an account. (`_M`/`_F` is gone:
+      a fresh `Name_m` must now be *rejected* as an unknown account, not
+      silently registered.)
 - [ ] Character create → Prontera (login-only is not enough — that hides a bad `char_ip`).
 - [ ] **Two friends on two machines log in at once.** The auth path is now
       IP-bound (`node->ip == ip`, from the security-audit remediations), which
@@ -851,7 +893,7 @@ Sizes match the rest of E8 (S ≤ ½ day, M ≤ 2 days).
 | F7 | Two-machine smoke test (§10) | S | F5 |
 | F8 | (Later) resolve client data paths from `current_exe()` so CWD no longer matters | M | not required for v0 |
 
-E8.4 (auto-update) and E8.5 (FluxCP) stay deferred. Drive + `_m`/`_f` cover
+E8.4 (auto-update) and E8.5 (FluxCP) stay deferred. Drive + `_create` cover
 them for a friends group.
 
 ---

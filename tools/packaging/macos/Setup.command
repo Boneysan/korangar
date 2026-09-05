@@ -127,6 +127,25 @@ for manifest in SHA256SUMS-client SHA256SUMS-assets; do
     fi
 done
 
+# 4. Tailscale. Not fatal -- Setup should still leave a playable folder if it
+# is merely not installed yet. Checked here because the failure lands one
+# screen late: login is a separate connection and succeeds, and it is character
+# select that fails, which reads as a broken game rather than a missing VPN.
+if [ -x /Applications/Tailscale.app/Contents/MacOS/Tailscale ] \
+    || [ -x /usr/local/bin/tailscale ] || [ -x /opt/homebrew/bin/tailscale ] \
+    || command -v tailscale > /dev/null 2>&1; then
+    good 'Tailscale is installed -- make sure it is signed in and connected'
+else
+    say 'Tailscale is NOT installed.'
+    say ''
+    say 'The game server is not on the public internet: it runs on the host'\''s'
+    say 'computer, and Tailscale is how you reach it. Install it from'
+    say 'https://tailscale.com/download, sign in, and accept the host'\''s invite.'
+    say ''
+    say 'You can play once that is done. Without it you will reach the login'
+    say 'screen and then fail when you pick a character.'
+fi
+
 printf '\n'
 good 'Ready. Starting the game -- from now on, just double-click Play.'
 printf '\n'
