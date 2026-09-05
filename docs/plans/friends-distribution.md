@@ -865,9 +865,11 @@ Before any of that, on the host:
 - [ ] **Rebuild Hercules** (`dev.sh build`). The binaries on disk were compiled
       2026-08-18 00:54:42; the security remediations landed at 01:05:07, eleven
       minutes later, so the running server does not contain them.
-- [ ] **Bump `tools/testing/hercules-revision`.** It pins `c07c4b235` (2026-08-07),
-      nine commits behind, so the paired-integration CI has never once exercised
-      the IP-bound auth change it would be the natural place to catch.
+- [x] **Bump `tools/testing/hercules-revision`.** Done 2026-09-05: it had gone
+      from `c07c4b235` (2026-08-07, nine commits behind) to `cda581b12`, the
+      `stable` merge of Hercules PR #3. It now tracks **`stable` rather than an
+      agent branch**, so it stops drifting every time a branch moves and the
+      paired suite pairs with the fork that is actually released.
 
 If that pass fails, fix the pack or the advertised IPs. Do not add a fourth
 friend to a broken handoff.

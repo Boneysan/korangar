@@ -261,6 +261,14 @@ fn bad_password(config: &Config) -> Result<(), String> {
 /// "before", a `_create` that stored the account under its full suffixed name
 /// would still pass step two, and a name that somehow already existed would
 /// make the whole scenario vacuous.
+///
+/// **This leaves a real account behind.** Harmless under
+/// `run-integration-tests.sh`, which drops its whole database afterwards, but
+/// pointed at a live server it registers into the actual `login` table with a
+/// known weak password. Verified against the live server on 2026-09-05 (the
+/// only way to exercise `use_MD5_passwords: true`, which the harness leaves at
+/// its default of false) and the row was deleted by hand afterwards. If you run
+/// it that way again, clean up: the accounts are the ones named `reg<digits>`.
 fn account_registration(config: &Config) -> Result<(), String> {
     let stamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)

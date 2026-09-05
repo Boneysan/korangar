@@ -80,6 +80,25 @@ Whenever you add new packet structures or modify existing network protocols in t
 ---
 
 ## 4. Server-Side Campaign & Script Validation (Hercules)
+
+### 0. Which Hercules the paired CI uses (`tools/testing/hercules-revision`)
+
+`audits.yml` and `integration.yml` both check out Hercules at the commit named
+in `tools/testing/hercules-revision`, so that file decides which server the
+paired suite is really testing against.
+
+* **It must contain a bare 40-character SHA and nothing else.** Both workflows
+  read it as `tr -d '[:space:]' < tools/testing/hercules-revision`, which strips
+  whitespace from the *whole file* — so a comment line would be concatenated
+  onto the SHA and the checkout would fail on a revision that never existed.
+  Put explanatory notes here, not in the file.
+* **Point it at a `stable` commit, not an agent branch.** It pinned an agent
+  branch until 2026-09-05, which meant it drifted every time that branch moved
+  and could name a commit that later got rebased away. It now tracks `stable`.
+* **A stale pin blinds the only job that runs both halves together.** It sat
+  nine commits behind for a month, and un-blinding it is what surfaced
+  `@dm reset confirm` having been half-broken since 2026-08-18.
+
 When developing custom tabletop scenarios, bestiaries, or NPC scripts, validate script syntax and load integrity prior to spawning the server.
 
 ### A. Campaign Script Check (`check-campaign.sh`)
