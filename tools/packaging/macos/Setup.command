@@ -5,6 +5,8 @@
 # says exactly what to do next. Every check exists because its failure would
 # otherwise be silent or unreadable:
 #
+#   processor   this build is arm64 only; on an Intel Mac the binary dies with
+#               "bad CPU type in executable", which names nothing to act on
 #   quarantine  an unsigned binary from Drive dies on a dialog with no Open
 #               button, and nothing explains why
 #   assets      the 3.7 GB half downloads separately and is the likely miss
@@ -32,6 +34,23 @@ printf '\n  Seal Cascade setup\n\n'
 say 'This runs once. It unblocks the download, merges in the game data,'
 say 'checks the files, and starts the game.'
 printf '\n'
+
+# 0. The processor. Checked first because nothing later matters if the binary
+#    cannot execute at all, and because the native failure -- "bad CPU type in
+#    executable" -- tells a player nothing.
+#
+#    `uname -m` alone is NOT enough: a Terminal running under Rosetta on an
+#    Apple Silicon Mac also reports x86_64, and that machine is perfectly
+#    capable. hw.optional.arm64 is 1 on Apple Silicon whether or not this shell
+#    is being translated, so it is the honest answer to "is this an Intel Mac".
+if [ "$(uname -m 2>/dev/null)" != "arm64" ] \
+    && [ "$(sysctl -n hw.optional.arm64 2>/dev/null || echo 0)" != "1" ]; then
+    fail 'this Mac has an Intel processor, and this build is Apple Silicon only.' \
+        'Nothing you can install fixes this -- the game has to be rebuilt for' \
+        'Intel. Tell the host you have an Intel Mac (Apple menu > About This' \
+        'Mac); an Intel build is possible, it just is not in this download.'
+fi
+good 'Apple Silicon'
 
 # 1. Quarantine. Everything from Drive carries it, including this script; the
 #    player had to right-click -> Open just to get here. Clearing the whole

@@ -18,7 +18,9 @@ WHAT YOUR MAC NEEDS
 
   This build does NOT run on an Intel Mac. If your Mac has an Intel
   processor (Apple menu > About This Mac), tell the host - an Intel build
-  is possible, it just is not in this download.
+  is possible, it just is not in this download. Setup checks this first
+  and says so plainly, rather than letting the game fail with a message
+  that explains nothing.
 
   macOS 11 Big Sur or newer, and about 4 GB of free disk space.
 
