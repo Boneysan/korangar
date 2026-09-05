@@ -22,8 +22,14 @@ WHAT YOUR MAC NEEDS
 
   macOS 11 Big Sur or newer, and about 4 GB of free disk space.
 
-  You do NOT need to install anything else. No runtime, no Rosetta,
-  no Java.
+  One free program: Tailscale. The game server is not on the public
+  internet - it runs on the host's computer at their house, and Tailscale
+  is how your Mac reaches it without them opening their home router to the
+  world. A few clicks to install, and you sign in with a Google or
+  Microsoft account. It is not a game launcher, there is no account with
+  us, and it does not send your normal web browsing anywhere.
+
+  Nothing else. No runtime, no Rosetta, no Java.
 
 
 --------------------------------------------------------------------------------
@@ -50,9 +56,17 @@ FIRST TIME - DO THIS ONCE
      Setup unblocks the download, merges in the game data, checks every
      file, and starts the game. It can take a few minutes.
 
-  4. From then on, just double-click  Play.
+  4. Install Tailscale and accept the host's invite.
 
-  5. At the login screen, type a username ending in _create and a password:
+     Get it from  https://tailscale.com/download  and sign in. The host sends
+     you an invite link; open it and accept, and their machine appears in your
+     Tailscale list. Leave Tailscale running whenever you play - if it is not
+     connected, the game reaches the login screen and then fails when it tries
+     to enter the world.
+
+  5. From then on, just double-click  Play.
+
+  6. At the login screen, type a username ending in _create and a password:
 
        BobSmith_create
 
@@ -140,8 +154,15 @@ IF SOMETHING GOES WRONG
       Option+Enter switches in and out of fullscreen at any time.
 
   I cannot connect
-      The server has to be running, and you have to be on the same network
-      as the host, or on the mesh VPN they set up. Ask them.
+      Check Tailscale first: it must be running and signed in, and the host's
+      machine must show up in its list. If Tailscale is fine, the server is
+      probably not running - ask the host.
+
+  I log in fine, then it fails when I pick my character
+      This is almost always Tailscale. Logging in and entering the world are
+      two separate connections, and the second one is the one that needs the
+      host's machine reachable. Open Tailscale, check it says Connected, and
+      try again.
 
 
 --------------------------------------------------------------------------------
@@ -151,6 +172,27 @@ SENDING A LOG
   If the host asks for a log: open Terminal, drag  Play  into the window,
   press return, and copy everything it prints. That is the whole log - no
   password is in it, and nothing is sent anywhere automatically.
+
+
+--------------------------------------------------------------------------------
+CONNECTING
+--------------------------------------------------------------------------------
+
+  The server address is already filled in for you, in client/server.ron. You
+  do not need to type an address anywhere, and you should not edit that file -
+  if the host moves the server they will send you a new copy of the small
+  macOS folder.
+
+  The address is a Tailscale one, which is why Tailscale has to be running.
+  It is not reachable from the ordinary internet - only from machines that
+  have joined the host's Tailscale network by invite. That is the point: the
+  host does not have to open their home router to anyone.
+
+  This works the same whether you are across the country or sitting in the
+  host's house on their Wi-Fi. If you are on the same network as the host,
+  Tailscale notices and sends the traffic straight across the local network
+  rather than out to the internet and back, so being nearby is still faster.
+  You still need Tailscale running either way.
 
 
 --------------------------------------------------------------------------------

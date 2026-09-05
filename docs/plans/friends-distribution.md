@@ -284,7 +284,7 @@ char-server handoff with a symptom that names nothing:
 | What **char-server** advertises | `Hercules/conf/import/char-server.conf` → `inter.char_ip` | you, by hand | **NO — gitignored** |
 | What **map-server** advertises | `Hercules/conf/import/map-server.conf` → `inter.map_ip` | you, by hand | **NO — gitignored** |
 
-Currently all three read `192.168.20.49`.
+Currently all three read `100.96.4.37` — this host's Tailscale address. See §7.4a.
 
 Friends never type an address and never edit `server.ron`. Moving the server
 means re-running `make-pack.sh --server <new>` and re-sending the 80 MB client
@@ -378,18 +378,40 @@ Friend install is four sentences — that is all they need in the Drive Doc:
 
 They never type an IP.
 
-### 7.4a CURRENT SETUP (2026-08-17): same-LAN, no Tailscale yet
+### 7.4a CURRENT SETUP (2026-09-05): Tailscale, everyone
 
-The pack on disk ships **`192.168.20.49`**, this host's LAN address, which is
-the same-network arrangement §2 allows for a physical game night. Applied and
-verified:
+**Operator decision 2026-09-05: every player joins the tailnet, including
+anyone sitting on the host's own LAN.** The group has remote friends, and a
+LAN address cannot serve them. One address, one pack, one config.
 
 | | |
 |---|---|
-| `conf/import/char-server.conf` | `inter.char_ip: "192.168.20.49"` |
-| `conf/import/map-server.conf` | `inter.map_ip: "192.168.20.49"` |
-| Verified | `Map-Server connected: 1156 maps, from IP 192.168.20.49 port 5121`, and all three ports accept connections on that address, not just loopback |
-| Pack | `dist/Windows/client/server.ron` → `address: "192.168.20.49"` |
+| `conf/import/char-server.conf` | `inter.char_ip: "100.96.4.37"` |
+| `conf/import/map-server.conf` | `inter.map_ip: "100.96.4.37"` |
+| `conf/network.conf` | `lan_subnets` gained `"192.168.20.49:255.255.255.0"` |
+| Pack | `dist/*/client/server.ron` → `address: "100.96.4.37"` |
+| Tailnet | `100.96.4.37` — this Mac, the only node as of 2026-09-05; no subnet routes advertised |
+| Verified | **not yet** — no peer has ever joined the tailnet, so no client has made the char/map handoff over it |
+
+**Why a LAN player joins the tailnet too.** `server.ron` holds exactly one
+login address per pack, so serving both would mean two packs kept in sync
+forever, and a pack that fails confusingly if it reaches the wrong person. The
+cost to them is close to nothing: Tailscale connects same-subnet peers
+**directly across the LAN**, not through a relay, so the added latency is a
+fraction of a millisecond of WireGuard encryption and a userspace hop. It is
+not *zero* — if a direct connection cannot be established (AP isolation and
+guest Wi-Fi are the usual culprits) Tailscale falls back to a DERP relay, which
+sends LAN traffic out to the internet and back. `tailscale status` names the
+path per peer (`direct` vs `relay`), and `tailscale ping <host>` reports which
+one a packet took. Check it once on game night rather than assuming.
+
+**The `lan_subnets` entry is inert today** and is there on purpose. A tailnet
+client's source address is its `100.x`, which does not match the LAN subnet, so
+it takes the WAN branch and is handed `100.96.4.37` — correct. The entry only
+fires for a client whose source address really is on `192.168.20.0/24`, i.e.
+one dialling the LAN address directly. It costs nothing and means that if the
+group ever does want a LAN-only pack, only the pack needs rebuilding and not
+the server config.
 
 **Deliberately NOT changed:** `login_ip`, and the map-server's own
 `inter.char_ip`. Both describe how the servers reach *each other* on this one
@@ -397,15 +419,17 @@ box; pointing them outward would route local traffic over the network for
 nothing.
 
 > [!WARNING]
-> **`conf/import/**/*.conf` is gitignored upstream**, so this address lives in
-> an untracked file. It does not survive a fresh clone and no commit records it
-> — this table is the only durable copy. Re-apply it after any re-clone.
+> **`conf/import/**/*.conf` is gitignored upstream**, so `char_ip` and `map_ip`
+> live in untracked files. They do not survive a fresh clone and no commit
+> records them — this table is the only durable copy. Re-apply it after any
+> re-clone. (`conf/network.conf` *is* tracked, so the `lan_subnets` line
+> survives on its own.)
 
-**This only works for friends on the same network.** A LAN address is
-unreachable from the internet, and a DHCP lease can move it — if the router
-reassigns `192.168.20.49`, every client breaks at once with a connection
-refused. Reserve it in the router, or move to Tailscale, which is what the rest
-of this section is for.
+**What this replaced:** `192.168.20.49`, this host's LAN address, set
+2026-08-17 for a physical game night. It was unreachable from the internet, and
+it was a DHCP lease — if the router had reassigned it, every pack already handed
+out would have broken at once with a connection refused. The tailnet address is
+assigned per node and stays put, which removes that failure mode as well.
 
 ### 7.4 Hercules: advertise the Tailscale IP
 
@@ -567,7 +591,10 @@ with a hang at char select almost always means `char_ip` is still
 
 ### 7.9 Same-LAN game night instead
 
-If everyone is on your Wi-Fi, skip Tailscale:
+**Not the current arrangement** — see §7.4a, where the 2026-09-05 decision was
+that everyone joins the tailnet including LAN players. Kept because it is the
+fallback if Tailscale is ever unavailable, and because step 2 is already
+applied. If everyone is on your Wi-Fi, you could skip Tailscale:
 
 1. Your LAN IPv4 (`ipconfig getifaddr en0`) goes in `inter.char_ip` /
    `inter.map_ip`.
@@ -591,7 +618,10 @@ Seal Cascade — first time
 1. Install Tailscale from https://tailscale.com/download
    and click the invite the GM sent you. Wait until the
    GM's computer shows as Connected.
-   (Skip this if the GM said you are on the same Wi-Fi.)
+   Everyone needs this, including anyone on the GM's own
+   Wi-Fi. Leave it running whenever you play -- without it
+   you reach the login screen and then fail at character
+   select.
 
 2. Download the Assets folder (once — it is large) and the
    Windows or macOS folder.
@@ -810,6 +840,14 @@ On a friend’s laptop (or a second account / second OS):
 - [ ] **The client starts on a PC that never had the VC++ runtime.** Test on a
       machine that has not had a game or dev tool installed, or the bundled
       redist is untested by construction — most PCs already have it.
+- [ ] **Every player is on the tailnet**, including anyone on your own Wi-Fi.
+      As of 2026-09-05 the tailnet has exactly one node (this Mac) and no peer
+      has ever joined, so the char/map handoff over Tailscale is **completely
+      unexercised** — this row is the first time it will ever run.
+- [ ] **`tailscale status` says `direct`, not `relay`, for the LAN player.**
+      A relayed peer sends LAN traffic out to the internet and back. If it says
+      `relay`, suspect AP isolation or blocked client-to-client UDP on the
+      router before blaming the game. `tailscale ping <host>` names the path.
 - [ ] Launcher starts the client without a terminal `cd`.
 - [ ] Login with a fresh `Name_create` creates an account. (`_M`/`_F` is gone:
       a fresh `Name_m` must now be *rejected* as an unknown account, not

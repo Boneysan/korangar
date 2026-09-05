@@ -18,6 +18,9 @@
 #   assets    the 3.7 GB half downloaded separately is the likely miss
 #   hashes    Drive truncates big files, and every later symptom looks like
 #             a bug in the game instead of a bad download
+#   tailscale the server address is on the host's tailnet, so without it the
+#             client reaches the LOGIN screen and only then fails, at character
+#             select -- a symptom that names nothing and reads like a game bug
 
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -46,7 +49,7 @@ function Fail($what, $fix) {
 
 function Step($number, $text) {
     Write-Host ''
-    Write-Host ("  [" + $number + "/5] " + $text) -ForegroundColor Cyan
+    Write-Host ("  [" + $number + "/6] " + $text) -ForegroundColor Cyan
 }
 
 Write-Host ''
@@ -338,11 +341,67 @@ Get-ChildItem -LiteralPath $here -Recurse -File -ErrorAction SilentlyContinue |
 
 Good 'Done.'
 
+
+# ------------------------------------------------------------- 6. the tailnet
+#
+# Not fatal: Setup should still finish and leave a playable folder if Tailscale
+# is merely not installed YET. But it is checked here rather than left to the
+# game, because the failure lands one screen late -- login succeeds (that is a
+# separate connection) and character select is what fails. Friends read that as
+# a broken game, not a missing VPN.
+Step 6 'Checking Tailscale'
+
+$tailscale = $null
+foreach ($candidate in @(
+    (Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe'),
+    (Join-Path ${env:ProgramFiles(x86)} 'Tailscale\tailscale.exe'))) {
+    if ($candidate -and (Test-Path -LiteralPath $candidate)) { $tailscale = $candidate; break }
+}
+if (-not $tailscale) {
+    $onPath = Get-Command tailscale.exe -ErrorAction SilentlyContinue
+    if ($onPath) { $tailscale = $onPath.Source }
+}
+
+if (-not $tailscale) {
+    Warn 'Tailscale is not installed.'
+    Say ''
+    Say 'The game server is not on the public internet -- it runs on the'
+    Say 'host''s computer, and Tailscale is how you reach it. Install it from'
+    Say 'https://tailscale.com/download, sign in, and accept the invite the'
+    Say 'host sent you.'
+    Say ''
+    Say 'You can finish Setup now and do this afterwards. Without it you will'
+    Say 'reach the login screen and then fail when you pick a character.'
+} else {
+    $state = $null
+    try {
+        $raw = & $tailscale status --json 2>$null
+        if ($LASTEXITCODE -eq 0 -and $raw) {
+            $state = ($raw | ConvertFrom-Json).BackendState
+        }
+    } catch {
+        $state = $null
+    }
+
+    if ($state -eq 'Running') {
+        Good 'Tailscale is installed and connected.'
+    } elseif ($state) {
+        Warn ('Tailscale is installed but not connected (it says: ' + $state + ').')
+        Say 'Open Tailscale and sign in before you play.'
+    } else {
+        Say 'Tailscale is installed. Make sure it is signed in and connected'
+        Say 'before you play.'
+    }
+}
+
 Write-Host ''
 Write-Host '  ============================================' -ForegroundColor Green
 Write-Host '   Ready to play.' -ForegroundColor Green
 Write-Host '  ============================================' -ForegroundColor Green
 Say 'From now on just double-click Play.'
+Say ''
+Say 'Leave Tailscale running whenever you play. If it is not connected you'
+Say 'will reach the login screen and then fail at character select.'
 Say ''
 Say 'At the login screen, type a name ending in _create -- for example'
 Say 'BobSmith_create -- and a password you do not use anywhere else.'
