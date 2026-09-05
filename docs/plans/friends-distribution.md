@@ -30,7 +30,7 @@ A friend who has never opened a terminal:
 2. Downloads two things the first time (Assets + their OS folder), or one
    first-time zip that already merges them.
 3. Double-clicks `Play`.
-4. Types `TheirName_m` or `TheirName_f` and a password, and lands in Prontera.
+4. Types `TheirName_create` and a password, and lands in Prontera.
 
 They never install Rust, nightly, slangc, Git, or the official RO client. They
 never edit `sclientinfo.xml`. They never type `cargo`. If any of those leak into
@@ -42,7 +42,7 @@ Later updates are a ~30 MB re-download of the binary + `archive/`, not another
 **Non-goals for the first pack**
 
 - Auto-updater / patcher (E8.4). Drive replace-in-place is the updater.
-- Account website / FluxCP (E8.5). `_m` / `_f` registration is enough.
+- Account website / FluxCP (E8.5). `_create` self-registration is enough.
 - Apple Developer / Authenticode signing. Ad-hoc + “right-click Open” is enough.
 - Feature parity (quest journal, party chat polish, status icons, remaining DM
   chrome). Those are playability, not installability. First session can use a
@@ -62,7 +62,7 @@ Later updates are a ~30 MB re-download of the binary + `archive/`, not another
 | **S5** | What they launch | `Play.bat` (Windows) / `Play.command` or a `.app` (macOS) that `cd`s to its own directory, then starts the binary | Every path the client reads is **CWD-relative**. Finder’s CWD is `/`. Explorer is usually the exe folder, but a launcher is still cheaper than a support thread |
 | **S6** | Build flavour | `--release`, feature `unicode` only. **No `debug`** | `release.yml` currently builds `--features "unicode,debug"` — that ships the packet inspector to friends |
 | **S7** | Server address in the pack | Pre-filled `client/server.ron` with the host’s Tailscale / LAN IP. Friends do not edit it | `sclientinfo.xml` is EUC-KR and baked to `127.0.0.1`. The override exists exactly for this |
-| **S8** | Accounts | `_m` / `_f` self-registration, documented in the Drive Doc. Pre-create GM accounts yourself | No control panel for v0 |
+| **S8** | Accounts | `_create` self-registration, documented in the Drive Doc. Pre-create GM accounts yourself | No control panel for v0. The fork replaced upstream's `_M`/`_F` with `_create` (2026-09-05) — the client asks for sex per character, so registration should not |
 | **S9** | Link stability | **Never delete-and-reupload** a shared file. Use Drive “Manage versions”, or overwrite files *inside* the shared folder | A new upload mints a new link; every old text is dead |
 | **S10** | CPU baseline | **AVX2 required** (`x86-64-v3` + `+aes`, from `.cargo/config.toml`). Documented, checked by the launcher, not lowered | Confirmed in the binary: 10,265 `vpaddd`, 5,273 `vpbroadcastd`, 2,144 `vinserti128`, 168 `vpermd`, plus FMA. Without AVX2 the process dies on its first vectorised instruction — `STATUS_ILLEGAL_INSTRUCTION`, no window, no message, nothing to read. Operator decision 2026-09-02: every PC in this group is post-2013 Intel or Ryzen, so ship v3 and *say so* rather than rebuild at `x86-64-v2` |
 | **S11** | Visual C++ runtime | **Bundle `VC_redist.x64.exe`** in the client half; `Setup` installs it, `Play` refuses with a readable message if it is missing | The exe imports `MSVCP140.dll`, `VCRUNTIME140.dll`, `VCRUNTIME140_1.dll`, which are **not** part of a clean Windows (the `api-ms-win-crt-*` imports are — those are the Universal CRT). Static linking was tried first and **cannot work**: `+crt-static` fails with `undefined symbol: __declspec(dllimport) nearbyint` from `libmach_dxcompiler_rs`, wgpu's prebuilt DX12 shader compiler, which is built against the dynamic CRT |
@@ -549,7 +549,7 @@ nc -vz 100.x.x.x 6121
 nc -vz 100.x.x.x 5121
 ```
 
-All three ports must accept. Then they launch Play, register `Name_m`,
+All three ports must accept. Then they launch Play, register `Name_create`,
 and must reach **Prontera**, not just the login window. Login-only success
 with a hang at char select almost always means `char_ip` is still
 `127.0.0.1`.
@@ -607,9 +607,11 @@ Seal Cascade — first time
    Windows: if SmartScreen appears, More info → Run anyway.
    Mac: right-click Play.command → Open the first time.
 
-5. At the login screen type a username ending in _m or _f
-   (for example Sam_m) and any password. That creates your
-   account. Then make a character.
+5. At the login screen type a username ending in _create
+   (for example Sam_create) and any password. That creates
+   your account, which is just "Sam" -- you type _create once
+   and log in as Sam from then on. Then make a character;
+   you pick its gender and look on that screen.
 
 If something breaks, send the GM a screenshot of the window
 and what you clicked. Do not edit any files.
@@ -646,7 +648,7 @@ hashes SHA-256 in hardware — so there is no reason to skip a regeneration.
 | `Setup.bat` + `Setup.ps1` | **The one thing a friend runs first.** Checks AVX2, installs the VC++ runtime, finds the Assets download and merges it in, verifies all 259 files, clears the mark-of-the-web, offers to launch |
 | `Play.bat` + `Play.ps1` | Every launch. Only the cheap checks — AVX2, runtime, assets present, `lua_files.7z` hash, `archive/`, `client/server.ron` |
 | `Verify.bat` + `Verify.ps1` | On demand. Reads **both** manifests and names every corrupt or missing file |
-| `READ ME FIRST.txt` | Requirements, install, `_m`/`_f` accounts, the throwaway-password warning, troubleshooting |
+| `READ ME FIRST.txt` | Requirements, install, `_create` accounts, the throwaway-password warning, troubleshooting |
 | `VC_redist.x64.exe` | S11 — the client cannot be statically linked. ~25 MB, gitignored, fetched from `aka.ms` on first pack |
 | `archive/` | 49 files: fonts, UI textures, language RONs, `msgstringtable.txt`, `sclientinfo.xml`, Lua scaffolding |
 | `client/server.ron` | Written from `--server`. **This is the only place a friend's client learns the address** |
@@ -809,7 +811,9 @@ On a friend’s laptop (or a second account / second OS):
       machine that has not had a game or dev tool installed, or the bundled
       redist is untested by construction — most PCs already have it.
 - [ ] Launcher starts the client without a terminal `cd`.
-- [ ] Login with a fresh `Name_m` creates an account.
+- [ ] Login with a fresh `Name_create` creates an account. (`_M`/`_F` is gone:
+      a fresh `Name_m` must now be *rejected* as an unknown account, not
+      silently registered.)
 - [ ] Character create → Prontera (login-only is not enough — that hides a bad `char_ip`).
 - [ ] **Two friends on two machines log in at once.** The auth path is now
       IP-bound (`node->ip == ip`, from the security-audit remediations), which
@@ -851,7 +855,7 @@ Sizes match the rest of E8 (S ≤ ½ day, M ≤ 2 days).
 | F7 | Two-machine smoke test (§10) | S | F5 |
 | F8 | (Later) resolve client data paths from `current_exe()` so CWD no longer matters | M | not required for v0 |
 
-E8.4 (auto-update) and E8.5 (FluxCP) stay deferred. Drive + `_m`/`_f` cover
+E8.4 (auto-update) and E8.5 (FluxCP) stay deferred. Drive + `_create` cover
 them for a friends group.
 
 ---

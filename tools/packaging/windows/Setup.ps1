@@ -344,9 +344,10 @@ Write-Host '   Ready to play.' -ForegroundColor Green
 Write-Host '  ============================================' -ForegroundColor Green
 Say 'From now on just double-click Play.'
 Say ''
-Say 'At the login screen, type a name ending in _m or _f -- for example'
-Say 'BobSmith_m -- and a password you do not use anywhere else. There is'
-Say 'no sign-up; typing a new name creates the account.'
+Say 'At the login screen, type a name ending in _create -- for example'
+Say 'BobSmith_create -- and a password you do not use anywhere else.'
+Say 'There is no sign-up; typing a new name creates the account. You only'
+Say 'type _create once; after that you log in as just BobSmith.'
 Write-Host ''
 
 $answer = Read-Host '  Start the game now? [Y/n]'

@@ -60,14 +60,17 @@ INSTALLING - THE SHORT VERSION
 
   4. Double-click  Play  to start the game.
 
-  4. At the login screen, type a username ending in _m or _f and a password:
+  5. At the login screen, type a username ending in _create and a password:
 
-       BobSmith_m      for a male character
-       BobSmith_f      for a female character
+       BobSmith_create
 
      There is no sign-up page. Typing a name that does not exist creates the
-     account right there. The _m or _f suffix is not part of your name in game,
-     it just tells the server which gender to use.
+     account right there. The _create suffix is not part of your name and you
+     only ever type it once: the account is called BobSmith, and that is what
+     you log in with from then on.
+
+     You pick your character's gender and appearance on the next screen, when
+     you make the character.
 
      IMPORTANT: use a throwaway password you do not use anywhere else. See the
      PRIVACY note at the bottom of this file for why.

@@ -87,7 +87,7 @@ jobs:
           REQUESTED: ${{ inputs.scenario }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
-            echo "scenario=smoke,connection-state,character-select-invalid,dm-quest-lifecycle,quest-log-multi,dm-golden-beats,skills-mage,trade-reject,party-lifecycle" >> "$GITHUB_OUTPUT"
+            echo "scenario=smoke,account-registration,connection-state,character-select-invalid,dm-quest-lifecycle,quest-log-multi,dm-golden-beats,skills-mage,trade-reject,party-lifecycle" >> "$GITHUB_OUTPUT"
           elif [ -n "$REQUESTED" ]; then
             echo "scenario=$REQUESTED" >> "$GITHUB_OUTPUT"
           else
