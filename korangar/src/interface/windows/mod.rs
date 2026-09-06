@@ -143,7 +143,8 @@ pub enum WindowClass {
     ItemActions,
     Equipment,
     Emotes,
-    /// Login / network error popup (wrong password, disconnect, outdated client, …).
+    /// Login / network error popup (wrong password, disconnect, outdated
+    /// client, …).
     Error,
     DisconnectNotice,
     StatusBar,
