@@ -14,6 +14,11 @@
 #
 # Friends drop both into ONE folder, so data.grf ends up beside Play.bat.
 # Splitting them is the whole point: a client update must not cost 3.7 GB.
+#
+# Pack version: bump tools/packaging/PACK_VERSION (a positive integer, YYYYMMDD
+# is a good scheme) whenever friends must take the new zip. make-pack copies it
+# to VERSION, and the login server refuses any other number. Rebuild the client
+# so the baked number matches, upload the zip, then restart the login server.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && cd .. && pwd)"
@@ -105,17 +110,29 @@ assets="$out/Assets"
 rm -rf "$windows"
 mkdir -p "$windows/client"
 
-echo "==> $half_name/"
+pack_version_file="tools/packaging/PACK_VERSION"
+[ -f "$pack_version_file" ] || die "$pack_version_file is missing -- it is the number the login server checks"
+pack_version="$(tr -d '[:space:]' < "$pack_version_file")"
+case "$pack_version" in
+    ''|*[!0-9]*) die "$pack_version_file must be a positive integer (got '$pack_version')" ;;
+esac
+[ "$pack_version" -gt 0 ] || die "$pack_version_file must be a positive integer"
+
+echo "==> $half_name/  (pack version $pack_version)"
 cp "$exe" "$windows/$exe_name"
+# Friends see this in Play; the login server compares the same number.
+cp "$pack_version_file" "$windows/VERSION"
 
 if [ "$os" = "windows" ]; then
     cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
        tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+       tools/packaging/windows/Update.bat tools/packaging/windows/Update.ps1 \
        tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
        tools/packaging/windows/Troubleshoot.bat \
        "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 else
     cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
+       tools/packaging/macos/Update.command \
        tools/packaging/macos/Verify.command \
        "tools/packaging/macos/READ ME FIRST.txt" "$windows/"
     # A .command without the execute bit opens in TextEdit, which looks exactly
@@ -221,7 +238,8 @@ require() {
 }
 
 if [ "$os" = "windows" ]; then
-    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 Troubleshoot.bat \
+    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Update.bat Update.ps1 \
+             Verify.bat Verify.ps1 Troubleshoot.bat VERSION \
              "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
@@ -239,15 +257,15 @@ if [ "$os" = "windows" ]; then
         die "Troubleshoot.bat has bare-LF lines; it must be pure CRLF (cmd seeks batch files by byte offset)"
     fi
 else
-    for f in korangar Play.command Setup.command Verify.command \
-             "READ ME FIRST.txt" SHA256SUMS-client \
+    for f in korangar Play.command Setup.command Update.command Verify.command \
+             VERSION "READ ME FIRST.txt" SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
     done
 
     # A launcher without the execute bit opens in TextEdit. Silent, and it
     # looks like the download is broken.
-    for f in Play.command Setup.command Verify.command korangar; do
+    for f in Play.command Setup.command Update.command Verify.command korangar; do
         [ -x "$windows/$f" ] || die "$windows/$f is not executable -- Finder would open it as text"
     done
 fi
@@ -268,6 +286,32 @@ grep -q 'SHA256SUMS-assets' "$windows/$launcher" \
     || die "$launcher does not read SHA256SUMS-assets -- the manifest names have drifted"
 grep -q 'SHA256SUMS-assets' "$windows/$setup" \
     || die "$setup does not read SHA256SUMS-assets -- the manifest names have drifted"
+grep -q 'VERSION' "$windows/$launcher" \
+    || die "$launcher does not print VERSION -- friends would not see the pack number"
+
+# Keep the running login server in lockstep with this zip. Import overrides
+# conf/login/login-server.conf; missing the bump means new clients are refused
+# or old ones are still let in.
+hercules_import="$repo_root/../Hercules/conf/import/login-server.conf"
+if [ -f "$hercules_import" ]; then
+    python3 - "$hercules_import" "$pack_version" <<'PY'
+import pathlib, re, sys
+path = pathlib.Path(sys.argv[1])
+version = sys.argv[2]
+text = path.read_text()
+new, n = re.subn(r"(client_version_to_connect:\s*)\d+", r"\g<1>" + version, text, count=1)
+if n != 1:
+    sys.exit(f"{path} has {n} client_version_to_connect entries; expected 1")
+if new != text:
+    path.write_text(new)
+    print(f"==> {path} client_version_to_connect: {version}")
+else:
+    print(f"==> {path} already at pack version {version}")
+PY
+    echo "==> restart the login server so it expects pack version $pack_version"
+else
+    echo "==> Hercules import not next to this repo; set client_version_to_connect: $pack_version by hand"
+fi
 
 # BGM is loaded off the filesystem (case-insensitively), not out of a GRF, so a
 # manifest that stops at the top level silently leaves 345 MB unverified. That

@@ -134,8 +134,8 @@ where
                 text! {
                     text: status_message_path,
                     color: Color::rgb_u8(255, 90, 90),
-                    height: 28.0,
                     font_size: FontSize(18.0),
+                    overflow_behavior: OverflowBehavior::LineBreak,
                 },
                 text! { text: client_state().localization().select_service_text() },
                 drop_down! {

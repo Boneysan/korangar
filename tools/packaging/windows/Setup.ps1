@@ -52,12 +52,26 @@ function Step($number, $text) {
     Write-Host ("  [" + $number + "/6] " + $text) -ForegroundColor Cyan
 }
 
+function Format-Size([long]$bytes) {
+    if ($bytes -ge 1073741824) {
+        return ([math]::Round(($bytes / 1073741824), 1).ToString() + ' GB')
+    }
+    if ($bytes -ge 1048576) {
+        return ([math]::Round(($bytes / 1048576), 0).ToString() + ' MB')
+    }
+    if ($bytes -ge 1024) {
+        return ([math]::Round(($bytes / 1024), 0).ToString() + ' KB')
+    }
+    return ($bytes.ToString() + ' B')
+}
+
 Write-Host ''
 Write-Host '  ============================================' -ForegroundColor Cyan
 Write-Host '   Seal Cascade - setup' -ForegroundColor Cyan
 Write-Host '  ============================================' -ForegroundColor Cyan
 Say 'This runs once. It checks your PC, merges in the game data,'
 Say 'and verifies every file. Nothing is sent anywhere.'
+Say 'If a line sits still, it is still working -- hashing a GRF can take a minute.'
 
 # ---------------------------------------------------------------- 1. the CPU
 #
@@ -255,12 +269,21 @@ if ($alreadyHere) {
             continue
         }
 
-        Say ('  ' + $name)
+        $item = Get-Item -LiteralPath $from
+        $sizeText = Format-Size ([long]$item.Length)
+        if ($item.PSIsContainer) {
+            Say ('  ' + $name + ' (folder) ...')
+        } elseif ([long]$item.Length -gt 104857600) {
+            Say ('  ' + $name + ' (' + $sizeText + ') -- large, this can take a few minutes. Leave the window open.')
+        } else {
+            Say ('  ' + $name + ' (' + $sizeText + ')')
+        }
         if ($sameVolume) {
             Move-Item -LiteralPath $from -Destination $to
         } else {
             Copy-Item -LiteralPath $from -Destination $to -Recurse
         }
+        Good ('  ' + $name + ' is in place.')
     }
 
     Good 'Game data is in place.'
@@ -272,17 +295,38 @@ Step 4 'Checking every file'
 function Test-Manifest($manifestPath) {
     $result = New-Object psobject -Property @{ Ok = 0; Bad = 0; Missing = 0; Names = @() }
 
+    $entries = @()
     foreach ($line in Get-Content -LiteralPath $manifestPath) {
+        if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+        $entries = $entries + $line
+    }
+
+    $total = $entries.Count
+    $n = 0
+    Say ('  ' + $total.ToString() + ' files in this list. Large ones can take a minute each.')
+
+    foreach ($line in $entries) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
 
         $expected = $Matches[1].ToUpperInvariant()
         $relative = $Matches[2] -replace '/', '\'
         $path = Join-Path $here $relative
+        $n = $n + 1
+        $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
 
         if (-not (Test-Path -LiteralPath $path)) {
             $result.Missing = $result.Missing + 1
             $result.Names = $result.Names + ('MISSING  ' + $relative)
+            Say ($prefix + ' -- missing')
             continue
+        }
+
+        $bytes = [long](Get-Item -LiteralPath $path).Length
+        $sizeText = Format-Size $bytes
+        if ($bytes -gt 104857600) {
+            Say ($prefix + ' (' + $sizeText + ') -- large file, please wait...')
+        } else {
+            Say ($prefix + ' (' + $sizeText + ')')
         }
 
         $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToUpperInvariant()
@@ -335,6 +379,7 @@ Good ($totalOk.ToString() + ' files checked, all correct.')
 # --------------------------------------------------------- 5. the mark of the web
 Step 5 'Clearing the downloaded-file warnings'
 
+Say 'Walking this folder for Windows download flags...'
 Get-ChildItem -LiteralPath $here -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { @('.exe', '.bat', '.ps1', '.ron', '.txt') -contains $_.Extension } |
     Unblock-File -ErrorAction SilentlyContinue

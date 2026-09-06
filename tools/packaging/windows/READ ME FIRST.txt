@@ -128,14 +128,20 @@ UPDATING AN EXISTING INSTALL
 --------------------------------------------------------------------------------
 
   Close the game. Download only Seal-Cascade-Windows.zip, the small client
-  update. Extract it to a temporary folder, then copy its CONTENTS into your
-  existing game folder, beside korangar.exe. Replace matching files and merge
-  the archive and client subfolders. Keep your existing .grf files, BGM folder,
-  lua_files.7z and SHA256SUMS-assets. Run Verify, then Play.
+  update. Unzip it to a TEMPORARY folder (Downloads is fine -- not inside your
+  existing game folder). Open that unzipped folder and double-click  Update.
+
+  Update looks for a folder that already has data.grf: first in the same
+  directory as the zip, then outward up the disk, then other drives (D:, E:,
+  USB). It prints each place it searches. It will not replace your .grf files,
+  BGM, lua_files.7z, or personal settings in client. Then run Verify in the
+  game folder, then Play.
+
+  If Update cannot find the install, paste the full path to the folder that
+  already contains data.grf and Play.bat.
 
   Do not delete your old game folder or replace it with the small download.
-  Your characters and progress are on the server. Personal settings are kept
-  in client; update packs do not include saved passwords or interface settings.
+  Your characters and progress are on the server.
 
   Text too small? During character creation click "Text size / interface
   scale", or open Menu > Interface Settings > Scaling. Try 1.3 or 1.5.
@@ -154,6 +160,9 @@ THE PROGRAMS IN THIS FOLDER
   Play     Starts the game. It quietly re-checks the important files first, so
            if something has gone missing it tells you which file instead of
            failing in a way nobody can read.
+
+  Update   For later patches. Run this from the unzipped small zip; it finds
+           your existing game folder and copies the new files in.
 
   Verify   Checks every single file against the checksum lists and prints what
            is wrong. Run this if the game starts behaving strangely, or if a
@@ -294,10 +303,13 @@ PRIVACY - PLEASE READ THIS ONE
 UPDATES
 --------------------------------------------------------------------------------
 
-  When the game is updated you will be sent a new Windows folder only, about
-  80 MB. Replace the program files with the new ones and keep your game data --
-  the 3.7 GB half almost never changes, and you should not have to download it
+  When the game is updated you will be sent Seal-Cascade-Windows.zip only,
+  about 80 MB. Unzip it and double-click Update. Keep your game data -- the
+  3.7 GB half almost never changes, and you should not have to download it
   twice.
+
+  If the login screen says this client is out of date, you are on an old
+  copy. Close the game, download that small zip, and run Update.
 
   If an update ever does change the game data, you will be told explicitly.
 

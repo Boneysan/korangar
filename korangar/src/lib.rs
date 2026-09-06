@@ -79,7 +79,7 @@ use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
     DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion,
+    SupportedPacketVersion, UnifiedLoginFailedReason,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -3121,6 +3121,14 @@ impl Client {
             crate::client_state().client_info(),
         ));
 
+        // Operator-only: open the outdated-client popup on top of login so we
+        // can confirm it renders without needing a version mismatch.
+        if std::env::var_os("KORANGAR_TEST_OUTDATED_POPUP").is_some() {
+            interface.open_window(OutdatedClientWindow::new(
+                korangar_networking::OUTDATED_CLIENT_MESSAGE.to_owned(),
+            ));
+        }
+
         Some(Self {
             game_file_loader,
             #[cfg(feature = "debug")]
@@ -3884,7 +3892,7 @@ impl Client {
                             .open_window(ServerSelectionWindow::new(client_state().character_servers()));
                     }
                 }
-                NetworkEvent::LoginServerConnectionFailed { message, .. } => {
+                NetworkEvent::LoginServerConnectionFailed { reason, message } => {
                     // M1-015: a failed re-login must not leave a stale server-select
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
@@ -3897,6 +3905,14 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::CharacterSelection);
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                     self.show_login_error(message);
+                    if reason == UnifiedLoginFailedReason::GameOutdated {
+                        // show_login_error closes WindowClass::Error (the status
+                        // line is the default for password mistakes). Re-open a
+                        // titled popup so "out of date" cannot hide as a red
+                        // line on the form.
+                        client_log!("[login] opening OutdatedClientWindow");
+                        self.interface.open_window(OutdatedClientWindow::new(message.to_owned()));
+                    }
                 }
                 NetworkEvent::LoginServerDisconnected { reason } => {
                     if reason != DisconnectReason::ClosedByClient {
@@ -9116,8 +9132,8 @@ impl Client {
     /// Build a quest-log entry for a quest id.
     ///
     /// A campaign hunting contract contributes its name and its turn-in list;
-    /// anything else (a story quest, or a quest outside the campaign) is listed
-    /// by id, which is still more than the log showed before it existed.
+    /// other quests use the bundled server name table, with an ID fallback
+    /// only when the server has a quest that this client does not know yet.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
@@ -9141,7 +9157,9 @@ impl Client {
             },
             None => QuestEntry {
                 quest_id,
-                name: format!("Quest {quest_id}"),
+                name: crate::world::quest_display_name(quest_id)
+                    .map(str::to_owned)
+                    .unwrap_or_else(|| format!("Quest {quest_id}")),
                 requirements: Vec::new(),
             },
         }
