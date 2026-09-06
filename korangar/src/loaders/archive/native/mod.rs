@@ -134,7 +134,9 @@ impl Archive for NativeArchive {
         let found_files = self
             .file_table
             .iter()
-            .filter(|(file_name, row)| row.flags == 0x01 && extensions.iter().any(|extension| file_name.ends_with(extension)))
+            // Encryption flags (0x02/0x04) supplement the file bit. Requiring
+            // exactly 0x01 hid valid encrypted sprites from every asset audit.
+            .filter(|(file_name, row)| row.flags & 0x01 != 0 && extensions.iter().any(|extension| file_name.ends_with(extension)))
             .map(|(file_name, _)| file_name.clone());
 
         files.extend(found_files);

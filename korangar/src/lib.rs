@@ -41,6 +41,7 @@ macro_rules! time_phase {
 
 #[macro_use]
 pub mod logging;
+pub mod playtest_audit;
 
 mod dm;
 mod graphics;

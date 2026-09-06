@@ -175,7 +175,11 @@ fn main() -> Result<(), String> {
     if args.len() < 2 {
         return Err("usage: map-asset-audit <Hercules maps.conf> <archive.grf> [archive.grf ...] [NPC file or directory ...]".to_owned());
     }
-    let maps = enabled_maps(Path::new(&args[0]))?;
+    let mut maps = enabled_maps(Path::new(&args[0]))?;
+    let selected_maps = env::var("KORANGAR_AUDIT_MAPS").ok();
+    if let Some(selected) = &selected_maps {
+        maps.retain(|map| selected.split(',').any(|name| name == map));
+    }
     let archive_args: Vec<_> = args[1..]
         .iter()
         .filter(|path| Path::new(path).extension().is_some_and(|ext| ext == "grf"))
@@ -190,6 +194,22 @@ fn main() -> Result<(), String> {
             .map(|path| Grf::open(PathBuf::from(path)))
             .collect::<Result<_, _>>()?,
     );
+    if selected_maps.is_some() {
+        for map in &maps {
+            for archive in &archives.0 {
+                if let Some(bytes) = archive.get(&format!("data\\{map}.gat"))? {
+                    let gat: GatData = parse(&bytes)?;
+                    println!(
+                        "{map}: {} GAT {}x{} walkable={}",
+                        archive.path.display(),
+                        gat.map_width,
+                        gat.map_height,
+                        gat.tiles.iter().filter(|tile| tile.flags.bits() & 1 != 0).count()
+                    );
+                }
+            }
+        }
+    }
 
     let mut failures = BTreeMap::new();
     for map in &maps {
@@ -221,6 +241,9 @@ fn main() -> Result<(), String> {
     let mut gat_cache: BTreeMap<String, Option<(usize, usize, Vec<u8>)>> = BTreeMap::new();
     for source in teleport_sources {
         for (map, x, y, line, file) in teleport_points(Path::new(source))? {
+            if selected_maps.is_some() && !maps.contains(&map) {
+                continue;
+            }
             checked_warps += 1;
             if !gat_cache.contains_key(&map) {
                 let gat_path = format!("data\\{map}.gat");

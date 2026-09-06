@@ -12,9 +12,9 @@ use korangar_debug::logging::{Colorize, print_debug};
 use num::Zero;
 
 use super::error::LoadError;
-use crate::loaders::{ActionLoader, SpriteLoader};
+use crate::loaders::{ActionLoader, Sprite, SpriteLoader};
 use crate::world::animation::{compute_action_layouts, merge_frame};
-use crate::world::{ActionEvent, Animation, AnimationData, AnimationFrame, AnimationFramePart, AnimationLayer, AnimationPair};
+use crate::world::{ActionEvent, Actions, Animation, AnimationData, AnimationFrame, AnimationFramePart, AnimationLayer, AnimationPair};
 use crate::{Color, EntityType};
 
 const MAX_CACHE_COUNT: u32 = 256;
@@ -119,9 +119,38 @@ impl AnimationLoader {
 /// Decode one SPR+ACT pair into an [`AnimationLayer`]. `layer_index` stamps
 /// frame-part indices and whether ACT events are kept (body only).
 fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, path_key: Option<String>) -> AnimationLayer {
+    let sprites = animation_pair.sprites.clone();
+    decode_animation_layer_with_sizes(
+        &animation_pair.actions,
+        animation_pair.sprites.palette_size,
+        |sprite_number| {
+            let size = sprites.textures[sprite_number].get_size();
+            Vector2::new(size.width as i32, size.height as i32)
+        },
+        layer_index,
+        path_key,
+        Some(animation_pair.sprites.clone()),
+    )
+}
+
+/// The decode itself, with the texture dimensions supplied by the caller.
+///
+/// Splitting the size lookup out is what lets an asset audit run this exact
+/// code with no GPU: SPR image dimensions are in the file, but a [`Sprite`]
+/// only exposes them through uploaded textures. A second, "equivalent" decode
+/// written for diagnostics would be free to disagree with the real one, which
+/// is precisely the disagreement a geometry dump exists to rule out.
+pub(crate) fn decode_animation_layer_with_sizes(
+    actions: &Arc<Actions>,
+    palette_size: usize,
+    texture_size: impl Fn(usize) -> Vector2<i32>,
+    layer_index: usize,
+    path_key: Option<String>,
+    sprites: Option<Arc<Sprite>>,
+) -> AnimationLayer {
     let mut animations: Vec<Animation> = Vec::new();
 
-    for action in animation_pair.actions.actions.iter() {
+    for action in actions.actions.iter() {
         let mut action_frames: Vec<AnimationFrame> = Vec::new();
 
         for motion in action.motions.iter() {
@@ -131,7 +160,7 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
             // motion indices stay aligned with CActRes.
             let event: Option<ActionEvent> = if let Some(event_id) = motion.event_id
                 && event_id != -1
-                && let Some(event) = animation_pair.actions.events.get(event_id as usize).copied()
+                && let Some(event) = actions.events.get(event_id as usize).copied()
             {
                 Some(event)
             } else {
@@ -150,12 +179,12 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
                 };
 
                 if sprite_type == 1 {
-                    sprite_number += animation_pair.sprites.palette_size;
+                    sprite_number += palette_size;
                 }
 
-                let texture_size = animation_pair.sprites.textures[sprite_number].get_size();
-                let mut height = texture_size.height;
-                let mut width = texture_size.width;
+                let texture_size = texture_size(sprite_number);
+                let mut height = texture_size.y;
+                let mut width = texture_size.x;
 
                 let color = match sprite_clip.color {
                     Some(color) => {
@@ -179,8 +208,8 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
                     None => sprite_clip.zoom2.unwrap_or_else(|| (1.0, 1.0).into()),
                 };
                 if zoom != (1.0, 1.0).into() {
-                    width = (width as f32 * zoom.x).ceil() as u32;
-                    height = (height as f32 * zoom.y).ceil() as u32;
+                    width = (width as f32 * zoom.x).ceil() as i32;
+                    height = (height as f32 * zoom.y).ceil() as i32;
                 }
 
                 let angle = match sprite_clip.angle {
@@ -192,7 +221,7 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
                 let offset = sprite_clip.position.map(|component| component);
                 let mirror = sprite_clip.mirror_on != 0;
 
-                let size = Vector2::new(width as i32, height as i32);
+                let size = Vector2::new(width, height);
                 let frame_part = AnimationFramePart {
                     animation_index: layer_index,
                     sprite_number,
@@ -226,10 +255,11 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
             };
             // Only the body layer keeps ACT events.
             frame.event = if layer_index == 0 { event } else { None };
-            frame.attach_point = match motion.attach_point_count {
-                Some(1) if !motion.attach_points.is_empty() => Some(motion.attach_points[0].position),
-                _ => None,
-            };
+            // Native (roBrowser EntityRender.renderElement): if `animation.pos.length`
+            // use pos[0]. Requiring `attach_point_count == 1` dropped parenting on
+            // motions that author two points (or a zero count with a leftover
+            // first point), which is facing-dependent on real hair/body ACTs.
+            frame.attach_point = motion_attach_point(&motion.attach_points);
 
             action_frames.push(frame);
         }
@@ -239,10 +269,14 @@ fn decode_animation_layer(animation_pair: &AnimationPair, layer_index: usize, pa
 
     AnimationLayer {
         path_key,
-        sprites: Some(animation_pair.sprites.clone()),
-        actions: Some(animation_pair.actions.clone()),
+        sprites,
+        actions: Some(actions.clone()),
         animations,
     }
+}
+
+fn motion_attach_point(attach_points: &[ragnarok_formats::action::AttachPoint]) -> Option<Vector2<i32>> {
+    attach_points.first().map(|point| point.position)
 }
 
 #[cfg(test)]
@@ -254,6 +288,27 @@ mod layer_sync_tests {
         assert_eq!(native_layer_motion_index(3, 4), Some(3));
         assert_eq!(native_layer_motion_index(4, 4), Some(0));
         assert_eq!(native_layer_motion_index(8, 4), Some(0));
+    }
+
+    #[test]
+    fn attach_uses_the_first_authored_point_even_when_count_is_not_one() {
+        use cgmath::Vector2;
+        use ragnarok_formats::action::AttachPoint;
+
+        let points = [
+            AttachPoint {
+                ignored: 0,
+                position: Vector2::new(4, -10),
+                attribute: 0,
+            },
+            AttachPoint {
+                ignored: 0,
+                position: Vector2::new(99, 99),
+                attribute: 0,
+            },
+        ];
+        assert_eq!(super::motion_attach_point(&points), Some(Vector2::new(4, -10)));
+        assert_eq!(super::motion_attach_point(&[]), None);
     }
 
     #[test]
