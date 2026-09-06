@@ -390,6 +390,7 @@ LAN address cannot serve them. One address, one pack, one config.
 | `conf/import/map-server.conf` | `inter.map_ip: "100.96.4.37"` |
 | `conf/network.conf` | `lan_subnets` gained `"192.168.20.49:255.255.255.0"` |
 | `conf/import/char-server.conf` | `char_configuration.player.deletion.delay: 60` (stock is **86400**) |
+| `conf/import/socket.conf` | `ip_rules.allow_list` gained `"100.64.0.0/10"` — the tailnet |
 | Pack | `dist/*/client/server.ron` → `address: "100.96.4.37"` |
 | Tailnet | `100.96.4.37` — this Mac, the only node as of 2026-09-05; no subnet routes advertised |
 | Verified | **not yet** — no peer has ever joined the tailnet, so no client has made the char/map handoff over it |
@@ -418,6 +419,22 @@ the server config.
 `inter.char_ip`. Both describe how the servers reach *each other* on this one
 box; pointing them outward would route local traffic over the network for
 nothing.
+
+**Flood protection versus your own friends.** `connect_check` trips at **10
+connections in 3 seconds** and then refuses that IP for **ten minutes**
+(`ddos_count`, `ddos_interval`, `ddos_autoreset` in `src/common/socket.c`). A
+client that retries on a failed login reaches ten in seconds, so on 2026-09-05 a
+friend who kept re-entering `Name_create` after his account already existed
+locked himself out entirely — the log shows `DDoS Attack detected` followed by
+`Connection refused: IP isn't authorized`.
+
+The tailnet range is now in `allow_list`, and an allow-list match is an
+**unconditional** accept: `connect_check_` returns 1 for `connect_ok == 2` even
+for an IP flagged as DDoS. Safe, because nothing reaches `100.64.0.0/10` without
+the host adding it in the Tailscale admin console, and the protection still
+applies to every other source. **The flag lives in the login server's memory**,
+so clearing an existing one means restarting *that* server — which does not
+disturb anyone already in the world, since the map server holds those sessions.
 
 **Character deletion delay.** Stock Hercules makes a player wait a full day
 before a character can be deleted — an anti-theft measure for a public server,
