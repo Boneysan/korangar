@@ -124,7 +124,29 @@ IF YOU WERE SENT TWO DOWNLOADS INSTEAD
 
 
 --------------------------------------------------------------------------------
-THE THREE PROGRAMS IN THIS FOLDER
+UPDATING AN EXISTING INSTALL
+--------------------------------------------------------------------------------
+
+  Close the game. Download only Seal-Cascade-Windows.zip, the small client
+  update. Extract it to a temporary folder, then copy its CONTENTS into your
+  existing game folder, beside korangar.exe. Replace matching files and merge
+  the archive and client subfolders. Keep your existing .grf files, BGM folder,
+  lua_files.7z and SHA256SUMS-assets. Run Verify, then Play.
+
+  Do not delete your old game folder or replace it with the small download.
+  Your characters and progress are on the server. Personal settings are kept
+  in client; update packs do not include saved passwords or interface settings.
+
+  Text too small? During character creation click "Text size / interface
+  scale", or open Menu > Interface Settings > Scaling. Try 1.3 or 1.5.
+  Quest log: Ctrl+Q (available to every player). Close top window: Ctrl+W.
+  Party: Alt+Z or Alt+P. Inventory: Alt+E. Commands: Ctrl+O.
+  Auto-pickup: ask the host to enable @autoloot 100 for your character;
+  the number is a drop-rate threshold, not the percentage of loot to keep.
+
+
+--------------------------------------------------------------------------------
+THE PROGRAMS IN THIS FOLDER
 --------------------------------------------------------------------------------
 
   Setup    Run once, first. Merges in the game data and checks it is intact.
@@ -137,6 +159,10 @@ THE THREE PROGRAMS IN THIS FOLDER
            is wrong. Run this if the game starts behaving strangely, or if a
            download looked like it was interrupted. It changes nothing -- it
            only looks and reports.
+
+  Troubleshoot   For a white screen, missing graphics, or a startup failure.
+                 Try Vulkan, then DirectX 12. Option 7 creates diagnostics.txt.
+                 Send that report and troubleshoot-launch.log to the host.
 
 
 --------------------------------------------------------------------------------
@@ -206,6 +232,10 @@ SENDING A LOG
       korangar.log            what happened this time
       korangar.log.previous   what happened the run before
 
+  If the folder cannot be written to, the fallback is
+  %TEMP%\korangar\korangar.log. Troubleshoot also captures the process exit
+  code when the program fails before it can create its own log.
+
   If anything goes wrong -- it will not start, it crashed, it could not
   connect, something looked broken -- send the host korangar.log. It is a
   plain text file; you can open it yourself if you are curious.
@@ -214,8 +244,9 @@ SENDING A LOG
   korangar.log.previous, because starting again overwrote the other. Send both
   and let the host sort it out.
 
-  There is nothing private in it: what map you were on, which files loaded,
-  and any error the game ran into. No password, and nothing is sent anywhere
+  Logs can contain your local file paths, account/character names, map and
+  connection details. They do not intentionally record passwords. Read them
+  before sharing publicly; nothing is sent anywhere
   automatically -- the file just sits on your PC until you attach it.
 
 

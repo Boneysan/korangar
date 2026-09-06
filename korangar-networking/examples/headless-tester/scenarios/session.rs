@@ -18,6 +18,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("character-select-invalid", 1, character_select_invalid),
         Scenario::new("character-create-delete", 1, character_create_delete),
         Scenario::new("character-delete-after-play", 1, character_delete_after_play),
+        Scenario::new("character-starting-stats", 1, character_starting_stats),
+        Scenario::new("party-job-level-refresh", 8, party_job_level_refresh),
         Scenario::new("character-slot-switch-rejected", 1, character_slot_switch_rejected),
         Scenario::new("character-slot-switch", 1, character_slot_switch),
         Scenario::new("kick-explains-itself", 1, kick_explains_itself),
@@ -374,6 +376,118 @@ fn character_delete_after_play(config: &Config) -> Result<(), String> {
     }
     assert_baseline_unchanged(&characters, &Some(created.clone()), &baseline)?;
     Ok(())
+}
+
+/// The Acolyte preset in the creation window, applied at exactly the same
+/// protocol boundary as the GUI and checked after a fresh login.
+fn character_starting_stats(config: &Config) -> Result<(), String> {
+    use ragnarok_packets::StatUpType;
+    let name = format!("HlStats{}", std::process::id() % 100000);
+    let (created, baseline) = create_temporary_character(config, &name)?;
+    let check = (|| {
+        if created.stat_points != 48 {
+            return Err(format!("expected 48 starting points, got {}", created.stat_points));
+        }
+        let context = TestContext::connect_with_starting_stats(config, &name, &[
+            StatUpType::Agility { amount: 2 },
+            StatUpType::Vitality { amount: 8 },
+            StatUpType::Intelligence { amount: 8 },
+            StatUpType::Dexterity { amount: 6 },
+        ])?;
+        drop(context);
+        sleep(Duration::from_millis(700));
+        let (_, characters) = connect_to_character_select(config)?;
+        let actual = characters
+            .iter()
+            .find(|c| c.character_id == created.character_id)
+            .ok_or("created character missing")?;
+        let stats = [
+            actual.strength,
+            actual.agility,
+            actual.vitality,
+            actual.intelligence,
+            actual.dexterity,
+            actual.luck,
+        ];
+        println!("         persisted starting stats: {stats:?}, unspent={}", actual.stat_points);
+        if stats != [1, 3, 9, 9, 7, 1] || actual.stat_points != 0 {
+            return Err(format!(
+                "starting allocation was not persisted: {stats:?}, unspent={}",
+                actual.stat_points
+            ));
+        }
+        Ok(())
+    })();
+    let cleanup = delete_and_verify_absent(config, &created, &name, &baseline);
+    check.and(cleanup)
+}
+
+/// Observe the actual job/level broadcasts after both kinds of change.
+/// No shared test character's job, stats or existing party is changed.
+fn party_job_level_refresh(config: &Config) -> Result<(), String> {
+    let name = format!("HlParty{}", std::process::id() % 100000);
+    let (created, baseline) = create_temporary_character(config, &name)?;
+    let partner_config = Config {
+        username: config.partner_username.clone(),
+        password: config.partner_password.clone(),
+        ..config.clone()
+    };
+    let partner_name = format!("HlRoster{}", std::process::id() % 100000);
+    let partner_created = create_temporary_character(&partner_config, &partner_name);
+    let (partner_created, partner_baseline) = match partner_created {
+        Ok(value) => value,
+        Err(error) => {
+            let _ = delete_and_verify_absent(config, &created, &name, &baseline);
+            return Err(error);
+        }
+    };
+    let check = (|| {
+        let mut context = TestContext::connect_as(config, &config.username, &config.password, Some(&name), None)?;
+        let mut partner = TestContext::connect_with_starting_stats(&partner_config, &partner_name, &[])?;
+        super::social::form_party(&mut context, &mut partner)?;
+        context.flush();
+        context.say("@jobchange 4")?;
+        let subject = context.account_id;
+        context.wait_for("0x0ABD acolyte update", |event| match event {
+            NetworkEvent::PartyMemberJobAndLevel {
+                account_id,
+                job_id,
+                base_level,
+            } if *account_id == subject && job_id.0 == 4 => {
+                println!("         0x0ABD job={} level={base_level}", job_id.0);
+                Some(())
+            }
+            _ => None,
+        })?;
+        // Changing leader broadcasts the full cached roster without a level
+        // update/relogin first repairing the cached job through the char server.
+        context.flush();
+        context.net.change_party_leader(partner.account_id).map_err(|_| "disconnected")?;
+        let roster_job = context.wait_for("full roster after job change", |event| match event {
+            NetworkEvent::PartyList { members, .. } => members.iter().find(|m| m.account_id == subject).map(|m| m.job_id.0),
+            _ => None,
+        })?;
+        println!("         full roster job={roster_job} (expected 4)");
+        if roster_job != 4 {
+            super::social::leave_party_both(&mut context, &mut partner);
+            return Err(format!("full party roster reverted Acolyte to job {roster_job}"));
+        }
+        context.flush();
+        context.say("@baselevel 1")?;
+        context.wait_for("0x0ABD level update", |event| match event {
+            NetworkEvent::PartyMemberJobAndLevel {
+                account_id,
+                job_id,
+                base_level,
+            } if *account_id == subject && job_id.0 == 4 && *base_level == 2 => Some(()),
+            _ => None,
+        })?;
+        super::social::leave_party_both(&mut context, &mut partner);
+        Ok(())
+    })();
+    let cleanup = delete_and_verify_absent(config, &created, &name, &baseline);
+    let partner_cleanup = delete_and_verify_absent(&partner_config, &partner_created, &partner_name, &partner_baseline);
+    check.and(cleanup).and(partner_cleanup)
 }
 
 /// Connect to character select, pick a free slot, and create `temp_name`

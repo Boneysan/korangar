@@ -112,6 +112,7 @@ if [ "$os" = "windows" ]; then
     cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
        tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
        tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Troubleshoot.bat \
        "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 else
     cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
@@ -220,7 +221,7 @@ require() {
 }
 
 if [ "$os" = "windows" ]; then
-    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 \
+    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 Troubleshoot.bat \
              "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"

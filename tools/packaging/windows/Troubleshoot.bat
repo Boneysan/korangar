@@ -11,6 +11,8 @@ rem Each option runs the game in the SAME window, so whatever the game prints
 rem stays on screen instead of vanishing with it.
 setlocal
 cd /d "%~dp0"
+set "RUST_BACKTRACE=full"
+set "KORANGAR_ANIMATION_LOG=1"
 
 if not exist "korangar.exe" (
     echo.
@@ -83,10 +85,9 @@ goto run
 :reset
 rem The game saves your graphics choices and re-reads them next time, so a bad
 rem setting survives a restart and looks like the game broke by itself.
-rem Deleting the file puts everything back to defaults; it is written again
-rem when you next close the game.
+rem Keep the old settings so the host can inspect them or restore them.
 if exist "client\graphics_settings.ron" (
-    del /q "client\graphics_settings.ron"
+    move /y "client\graphics_settings.ron" "client\graphics_settings.ron.previous" >nul
     echo   Graphics settings reset to defaults.
 ) else (
     echo   No saved graphics settings found, so there was nothing to reset.
@@ -118,6 +119,10 @@ pause
 
 > "%REPORT%" echo Seal Cascade diagnostics
 >> "%REPORT%" echo Generated %DATE% %TIME%
+>> "%REPORT%" echo Folder: %~dp0
+>> "%REPORT%" echo == Logs before diagnostics ==
+if exist "korangar.log" type "korangar.log" >> "%REPORT%"
+if exist "korangar.log.previous" type "korangar.log.previous" >> "%REPORT%"
 >> "%REPORT%" echo.
 
 >> "%REPORT%" echo == System ==
@@ -186,6 +191,9 @@ set "code=%ERRORLEVEL%"
 call :explain "%code%"
 >> "%REPORT%" echo     output:
 if exist "%RAW%" type "%RAW%" >> "%REPORT%"
+>> "%REPORT%" echo     file log for this backend:
+if exist "korangar.log" type "korangar.log" >> "%REPORT%"
+if exist "%TEMP%\korangar\korangar.log" type "%TEMP%\korangar\korangar.log" >> "%REPORT%"
 >> "%REPORT%" echo.
 exit /b 0
 
@@ -207,7 +215,15 @@ exit /b 0
 echo.
 echo   Starting the game. Leave this window open.
 echo   ------------------------------------------------------------
-korangar.exe
+rem Stamp a SEPARATE launcher log before running the executable. Missing DLLs
+rem and unsupported CPU instructions can kill it before Rust main executes.
+set "LAUNCHLOG=%~dp0troubleshoot-launch.log"
+>> "%LAUNCHLOG%" echo Starting %DATE% %TIME% backend=%WGPU_BACKEND% adapter=%WGPU_ADAPTER_NAME%
+korangar.exe >> "%LAUNCHLOG%" 2>&1
+set "code=%ERRORLEVEL%"
+>> "%LAUNCHLOG%" echo Finished %DATE% %TIME% exit code: %code%
+echo   Exit code: %code%
+echo   Output saved in troubleshoot-launch.log beside the game.
 echo   ------------------------------------------------------------
 echo.
 echo   The game has closed. If the screen was still white, come back
