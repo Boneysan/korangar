@@ -824,14 +824,47 @@ fn is_software_adapter(adapter_info: &AdapterInfo) -> bool {
         || adapter_name.contains("swiftshader")
 }
 
+/// PCI vendor id for AMD, as reported in `AdapterInfo::vendor`.
+const VENDOR_AMD: u32 = 0x1002;
+
+/// How much we would rather have this backend, for one particular card.
+///
+/// The same GPU is enumerated once per backend, and every one of those entries
+/// reports the same `device_type`. So without this term the scores tie, and
+/// `max_by_key` -- which returns the LAST maximum -- lets enumeration order
+/// decide which graphics API the game runs on. That is not a choice anybody
+/// made, and on 2026-09-05 it cost two friends an evening: both on AMD cards,
+/// one getting a white window and the other no window at all, both fixed
+/// outright by `WGPU_BACKEND=vulkan`.
+///
+/// Deliberately AMD-only. One vendor is where the evidence is, and scoring 0
+/// everywhere else leaves those machines exactly as they were rather than
+/// rearranging backends for people who reported nothing.
+fn backend_preference(adapter_info: &AdapterInfo) -> u8 {
+    if adapter_info.vendor != VENDOR_AMD {
+        return 0;
+    }
+
+    match adapter_info.backend {
+        wgpu::Backend::Vulkan => 2,
+        wgpu::Backend::Dx12 => 1,
+        _ => 0,
+    }
+}
+
 fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
-    match adapter_info.device_type {
+    let device_score: u8 = match adapter_info.device_type {
         DeviceType::DiscreteGpu => 5,
         DeviceType::IntegratedGpu => 4,
         DeviceType::VirtualGpu => 3,
         DeviceType::Other => 2,
         DeviceType::Cpu => 0,
-    }
+    };
+
+    // The kind of device still dominates: a discrete card on a mediocre backend
+    // beats an integrated one on a good backend. The preference only breaks
+    // ties between entries for the same physical GPU.
+    device_score * 4 + backend_preference(adapter_info)
 }
 
 /// Strip extensions / padding from a server or loader map name (`izlude_in.gat`
@@ -848,6 +881,59 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .trim_end_matches(".rsw")
         .trim_end_matches(".RSW")
         .to_lowercase()
+}
+
+#[cfg(test)]
+mod adapter_score_tests {
+    use wgpu::{AdapterInfo, Backend, DeviceType};
+
+    use super::{VENDOR_AMD, adapter_score};
+
+    fn info(vendor: u32, backend: Backend, device_type: DeviceType) -> AdapterInfo {
+        AdapterInfo {
+            name: String::new(),
+            vendor,
+            device: 0,
+            device_type,
+            device_pci_bus_id: String::new(),
+            driver: String::new(),
+            driver_info: String::new(),
+            backend,
+            subgroup_min_size: 0,
+            subgroup_max_size: 0,
+            transient_saves_memory: false,
+        }
+    }
+
+    /// The bug this whole function exists to prevent: two entries for the SAME
+    /// card scoring equally, leaving `max_by_key` to pick by enumeration order.
+    #[test]
+    fn vulkan_outranks_dx12_on_an_amd_card() {
+        let vulkan = adapter_score(&info(VENDOR_AMD, Backend::Vulkan, DeviceType::DiscreteGpu));
+        let dx12 = adapter_score(&info(VENDOR_AMD, Backend::Dx12, DeviceType::DiscreteGpu));
+        assert!(vulkan > dx12, "AMD should prefer Vulkan ({vulkan}) over DX12 ({dx12})");
+    }
+
+    /// Nobody else reported anything, so nobody else's ordering may move.
+    #[test]
+    fn a_non_amd_card_scores_the_same_on_every_backend() {
+        const NVIDIA: u32 = 0x10DE;
+        let vulkan = adapter_score(&info(NVIDIA, Backend::Vulkan, DeviceType::DiscreteGpu));
+        let dx12 = adapter_score(&info(NVIDIA, Backend::Dx12, DeviceType::DiscreteGpu));
+        assert_eq!(vulkan, dx12, "a non-AMD card must not be reordered by backend");
+    }
+
+    /// The backend term is a tie-break, never a promotion: a discrete card on
+    /// the worst backend still beats an integrated one on the best.
+    #[test]
+    fn device_type_still_dominates_the_backend_preference() {
+        let discrete_worst = adapter_score(&info(VENDOR_AMD, Backend::Gl, DeviceType::DiscreteGpu));
+        let integrated_best = adapter_score(&info(VENDOR_AMD, Backend::Vulkan, DeviceType::IntegratedGpu));
+        assert!(
+            discrete_worst > integrated_best,
+            "discrete ({discrete_worst}) must outrank integrated ({integrated_best})"
+        );
+    }
 }
 
 #[cfg(test)]
@@ -2671,12 +2757,17 @@ impl Client {
             let compatible_surface = window.as_ref().map(|window| instance.create_surface(window.clone()).unwrap());
             let adapter = pollster::block_on(async { initialize_hardware_adapter(&instance, backends, compatible_surface.as_ref()).await });
 
-            #[cfg(feature = "debug")]
             {
+                // `client_log!`, not `print_debug!`: the packs ship without the
+                // `debug` feature, so these were compiled out of every build a
+                // friend actually runs. A white screen then arrives with a log
+                // that names neither the card nor the graphics API, which is
+                // how 2026-09-05 was spent guessing. This is the definition of
+                // "anything a player might have to report".
                 let adapter_info = adapter.get_info();
-                print_debug!("using adapter {} ({})", adapter_info.name, adapter_info.backend);
-                print_debug!("using device {} ({})", adapter_info.device, adapter_info.vendor);
-                print_debug!("using driver {} ({})", adapter_info.driver, adapter_info.driver_info);
+                client_log!("[gpu] adapter {} ({:?})", adapter_info.name, adapter_info.backend);
+                client_log!("[gpu] device {} vendor 0x{:04x}", adapter_info.device, adapter_info.vendor);
+                client_log!("[gpu] driver {} ({})", adapter_info.driver, adapter_info.driver_info);
             }
         });
 
