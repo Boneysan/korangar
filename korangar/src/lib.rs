@@ -793,6 +793,28 @@ async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, co
     }
 
     let adapters = instance.enumerate_adapters(backends).await;
+
+    // The whole candidate table, with the score that decides between them.
+    // A white screen is usually the wrong entry winning, and until this
+    // existed the only way to learn that was `Troubleshoot.bat` starting the
+    // game once per backend and comparing four exit codes -- a friend's job,
+    // taking an evening, to recover something the client knew all along.
+    client_log!("[gpu] {} adapter(s) enumerated for {backends:?}", adapters.len());
+    for adapter in adapters.iter() {
+        let info = adapter.get_info();
+        client_log!(
+            "[gpu]   {} ({:?} {:?}) driver={} {} score={} surface={} software={}",
+            info.name,
+            info.device_type,
+            info.backend,
+            info.driver,
+            info.driver_info,
+            adapter_score(&info),
+            supports_surface(adapter, compatible_surface),
+            is_software_adapter(&info)
+        );
+    }
+
     if let Some(adapter) = adapters
         .iter()
         .filter(|adapter| supports_surface(adapter, compatible_surface))
@@ -800,6 +822,13 @@ async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, co
         .max_by_key(|adapter| adapter_score(&adapter.get_info()))
         .cloned()
     {
+        let info = adapter.get_info();
+        client_log!(
+            "[gpu] chosen {} on {:?} (score {})",
+            info.name,
+            info.backend,
+            adapter_score(&info)
+        );
         return adapter;
     }
 
@@ -3781,6 +3810,17 @@ impl Client {
             .saved_login_data
             .as_ref()
             .expect("character server entry requires a successful login");
+        // The address here is the one the LOGIN server handed back, not the one
+        // the player typed, and those differ: `lan_subnets` hands each client
+        // the address for its own source network. When a friend authenticates
+        // and then dies at character select, this line is the answer -- they
+        // were pointed at a LAN address they cannot route to.
+        client_log!(
+            "[login] connecting to character server '{}' at {}:{}",
+            character_server_information.server_name,
+            std::net::Ipv4Addr::from(character_server_information.server_ip.0),
+            character_server_information.server_port
+        );
         self.networking_system
             .connect_to_character_server(self.saved_packet_version, login_data, character_server_information);
     }
@@ -4156,6 +4196,15 @@ impl Client {
                     };
 
                     self.networking_system.disconnect_from_character_server();
+                    // Same reason as the character-server line above: this
+                    // address comes from the server, and a friend who reaches
+                    // character select and then hangs is being sent somewhere
+                    // they cannot reach.
+                    client_log!(
+                        "[login] connecting to map server at {}:{}",
+                        login_data.server_ip,
+                        login_data.server_port
+                    );
                     self.networking_system
                         .connect_to_map_server(self.saved_packet_version, saved_login_data, login_data);
                     // Ask for the client tick right away, so that the player isn't de-synced when
@@ -10075,6 +10124,10 @@ impl ApplicationHandler for Client {
                 // self-sustained by the `request_redraw` below, so silently dropping
                 // this event would leave the window permanently blank.
                 if !self.graphics_engine.is_ready_to_render() {
+                    // A window that stays here forever IS the white screen, and
+                    // it used to produce no output at all -- the loop just kept
+                    // asking for redraws in silence.
+                    logging::note_frame_waiting();
                     if let Some(window) = self.window.as_ref() {
                         window.request_redraw();
                     }
@@ -10085,6 +10138,7 @@ impl ApplicationHandler for Client {
                 let _measurement = threads::Main::start_frame();
 
                 self.update_and_render(event_loop);
+                logging::note_frame_rendered();
 
                 if let Some(window) = self.window.as_mut() {
                     window.request_redraw();

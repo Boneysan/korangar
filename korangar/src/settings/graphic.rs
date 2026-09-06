@@ -63,21 +63,55 @@ impl GraphicsSettings {
     const FILE_NAME: &'static str = "client/graphics_settings.ron";
 
     pub fn new() -> Self {
-        Self::load().unwrap_or_else(|| {
-            #[cfg(feature = "debug")]
-            print_debug!("failed to load graphics settings from {}", Self::FILE_NAME.magenta());
-
-            Default::default()
-        })
+        let settings = Self::load().unwrap_or_default();
+        settings.log_active();
+        settings
     }
 
+    /// Writes the settings actually in force as one RON line.
+    ///
+    /// Serialized rather than written field by field: these enums do not derive
+    /// `Debug`, and a hand-maintained summary is one more thing to forget to
+    /// extend when a setting is added. This one cannot go stale.
+    fn log_active(&self) {
+        match ron::ser::to_string(self) {
+            Ok(summary) => client_log!("[graphics] active {summary}"),
+            Err(error) => client_log!("[graphics] active settings could not be summarised: {error}"),
+        }
+    }
+
+    /// Every branch says which one it took.
+    ///
+    /// These settings persist and are re-read at startup, so a bad choice
+    /// survives a restart and presents as the game breaking by itself. And a
+    /// file that no longer parses discards **every** saved setting rather than
+    /// the one field that broke -- see the `display_mode` note above, which is
+    /// that exact bug, found only because somebody noticed their settings had
+    /// reset. A log that cannot tell "defaults because there is no file" from
+    /// "defaults because your file was thrown away" diagnoses neither.
     pub fn load() -> Option<Self> {
         #[cfg(feature = "debug")]
         print_debug!("loading graphics settings from {}", Self::FILE_NAME.magenta());
 
-        std::fs::read_to_string(Self::FILE_NAME)
-            .ok()
-            .and_then(|data| ron::from_str(&data).ok())
+        match std::fs::read_to_string(Self::FILE_NAME) {
+            Ok(data) => match ron::from_str::<Self>(&data) {
+                Ok(settings) => {
+                    client_log!("[graphics] loaded settings from {}", Self::FILE_NAME);
+                    Some(settings)
+                }
+                Err(error) => {
+                    client_log!(
+                        "[graphics] {} could not be parsed ({error}); ALL saved graphics settings were discarded and defaults are in use",
+                        Self::FILE_NAME
+                    );
+                    None
+                }
+            },
+            Err(error) => {
+                client_log!("[graphics] no saved settings at {} ({error}); using defaults", Self::FILE_NAME);
+                None
+            }
+        }
     }
 
     pub fn save(&self) {

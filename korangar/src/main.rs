@@ -24,7 +24,10 @@ fn main() {
     {
         client.run(event_loop);
     }
-    korangar::client_log!("[shutdown] client exited normally");
+    korangar::client_log!(
+        "[shutdown] client exited normally after {} rendered frames",
+        korangar::logging::frames_rendered()
+    );
 }
 
 #[cfg(target_os = "linux")]
