@@ -357,7 +357,11 @@ impl InputSystem {
             events.push(InputEvent::ToggleShowInterface);
         }
 
-        if control_down && self.get_key(KeyCode::KeyQ).pressed() {
+        // Ctrl+W, not Ctrl+Q. Ctrl+Q gained a second meaning when the quest log
+        // arrived, and both fired in the same frame: the log opened and this
+        // immediately closed it again, so the quest window could never be seen.
+        // Found in the first day of real play, 2026-09-05.
+        if control_down && self.get_key(KeyCode::KeyW).pressed() {
             events.push(InputEvent::CloseTopWindow);
         }
 
