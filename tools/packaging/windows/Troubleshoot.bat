@@ -120,6 +120,15 @@ pause
 > "%REPORT%" echo Seal Cascade diagnostics
 >> "%REPORT%" echo Generated %DATE% %TIME%
 >> "%REPORT%" echo Folder: %~dp0
+>> "%REPORT%" echo == How to read this report ==
+>> "%REPORT%" echo [frame] first frame rendered - the client IS drawing, so a white
+>> "%REPORT%" echo    picture is a shader or content problem, not a startup one.
+>> "%REPORT%" echo [frame] surface not ready - the window never got a drawable surface;
+>> "%REPORT%" echo    the blank window is the graphics backend or the driver.
+>> "%REPORT%" echo neither [frame] line at all - it died before reaching the render loop.
+>> "%REPORT%" echo [gpu] chosen - which card and graphics API actually won.
+>> "%REPORT%" echo [graphics] active - the saved settings in force this run.
+>> "%REPORT%" echo.
 >> "%REPORT%" echo == Logs before diagnostics ==
 if exist "korangar.log" type "korangar.log" >> "%REPORT%"
 if exist "korangar.log.previous" type "korangar.log.previous" >> "%REPORT%"
@@ -151,7 +160,20 @@ call :trybackend gl
 set "WGPU_BACKEND="
 
 >> "%REPORT%" echo == korangar.log (this run) ==
-if exist "korangar.log" (type "korangar.log" >> "%REPORT%") else (>> "%REPORT%" echo no korangar.log found)
+rem The client falls back to %TEMP%\korangar when it cannot write beside its
+rem own exe -- Program Files, a synced OneDrive folder, a locked file. Looking
+rem only next to the game reports "no log" for a run that logged perfectly well.
+if exist "korangar.log" (type "korangar.log" >> "%REPORT%") else (>> "%REPORT%" echo no korangar.log beside the game)
+if exist "%TEMP%\korangar\korangar.log" (
+    >> "%REPORT%" echo -- fallback log from the temp folder --
+    type "%TEMP%\korangar\korangar.log" >> "%REPORT%"
+)
+>> "%REPORT%" echo.
+
+>> "%REPORT%" echo == troubleshoot-launch.log ==
+rem Written by this script around each launch from the menu, so it survives a
+rem death that happens before Rust runs and can write anything of its own.
+if exist "troubleshoot-launch.log" (type "troubleshoot-launch.log" >> "%REPORT%") else (>> "%REPORT%" echo none)
 >> "%REPORT%" echo.
 
 >> "%REPORT%" echo == korangar.log.previous ==

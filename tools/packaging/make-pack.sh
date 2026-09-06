@@ -226,6 +226,18 @@ if [ "$os" = "windows" ]; then
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
     done
+
+    # Troubleshoot.bat is the one batch file built out of labels, `call`,
+    # `exit /b` and parenthesised blocks -- the constructs where cmd's
+    # byte-offset seeking through the file actually matters. Its own header
+    # says CRLF is deliberate, and it had drifted to 26 bare-LF lines among
+    # 207, two of them inside the `if (` block in :reset. A mixed file is the
+    # worst of both, and nothing would have said so.
+    # -qv, not a "[^\r]$" match: a blank line with a bare LF has no last
+    # character at all, so a positive pattern would let exactly that case past.
+    if LC_ALL=C grep -qv $'\r$' "$windows/Troubleshoot.bat"; then
+        die "Troubleshoot.bat has bare-LF lines; it must be pure CRLF (cmd seeks batch files by byte offset)"
+    fi
 else
     for f in korangar Play.command Setup.command Verify.command \
              "READ ME FIRST.txt" SHA256SUMS-client \
