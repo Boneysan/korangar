@@ -18,7 +18,9 @@ WHAT YOUR MAC NEEDS
 
   This build does NOT run on an Intel Mac. If your Mac has an Intel
   processor (Apple menu > About This Mac), tell the host - an Intel build
-  is possible, it just is not in this download.
+  is possible, it just is not in this download. Setup checks this first
+  and says so plainly, rather than letting the game fail with a message
+  that explains nothing.
 
   macOS 11 Big Sur or newer, and about 4 GB of free disk space.
 
@@ -100,6 +102,31 @@ IF YOU WERE SENT TWO DOWNLOADS INSTEAD
 
 
 --------------------------------------------------------------------------------
+UPDATING AN EXISTING INSTALL
+--------------------------------------------------------------------------------
+
+  Close the game. Download only Seal-Cascade-macOS.zip, the small client
+  update. Unzip it separately. Copy the new korangar, .command launchers,
+  READ ME FIRST.txt and SHA256SUMS-client into your existing game folder.
+  For archive and client, merge their contents into the corresponding old
+  subfolders. Do NOT choose Finder's Replace for the entire game or client
+  folder; it can discard the files that the small update does not include.
+  Keep the .grf files, BGM, lua_files.7z and SHA256SUMS-assets. Right-click
+  Setup and choose Open to unblock the new files and verify the installation.
+
+  Your characters and progress are on the server. The client update does not
+  include saved passwords or personal interface settings.
+
+  Text too small? During character creation click "Text size / interface
+  scale", or open Menu > Interface Settings > Scaling. Try 1.3 or 1.5.
+  Alt means the Option key on Mac. Ctrl means Control, not Command.
+  Quest log: Ctrl+Q (all players). Party: Option+Z or Option+P.
+  Inventory: Option+E. Commands: Ctrl+O. Close top window: Ctrl+W.
+  Auto-pickup: ask the host to enable @autoloot 100 for your character;
+  the number is a drop-rate threshold, not the percentage of loot to keep.
+
+
+--------------------------------------------------------------------------------
 THE THREE PROGRAMS IN THIS FOLDER
 --------------------------------------------------------------------------------
 
@@ -169,9 +196,13 @@ IF SOMETHING GOES WRONG
 SENDING A LOG
 --------------------------------------------------------------------------------
 
-  If the host asks for a log: open Terminal, drag  Play  into the window,
-  press return, and copy everything it prints. That is the whole log - no
-  password is in it, and nothing is sent anywhere automatically.
+  Send korangar.log and korangar.log.previous from the game folder. They
+  record startup stages, graphics details and errors, including panic
+  backtraces. If the game folder is unwritable, look in $TMPDIR/korangar.
+  If neither log exists, open Terminal, drag Play into the window and press
+  return, then copy the error it prints. The failure may be before startup.
+  Logs can contain local paths, account/character names and connection
+  details. Review them before sharing publicly. Nothing is sent automatically.
 
 
 --------------------------------------------------------------------------------

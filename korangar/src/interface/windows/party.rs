@@ -109,6 +109,11 @@ where
                             !party.local_is_leader() || party.is_local(member_path.follow_safe(state).account_id())
                         });
                         let label_path = member_path.display_label();
+                        let jump_blocked = ComputedSelector::new_default(move |state: &ClientState| {
+                            let party = party_path.follow_safe(state);
+                            let member = member_path.follow_safe(state);
+                            party.is_local(member.account_id()) || !member.online()
+                        });
 
                         self.elements.push(ErasedElement::new(collapsible! {
                             text: label_path,
@@ -116,6 +121,16 @@ where
                                 split! {
                                 gaps: theme().window().gaps(),
                                 children: (
+                                    button! {
+                                        text: "Go to",
+                                        tooltip: "Warp to this party member [^000001@partyjump <name>^000000]",
+                                        disabled: jump_blocked,
+                                        disabled_tooltip: "They must be online, and you cannot jump to yourself",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let character_name = state.get(&member_path).name().to_owned();
+                                            queue.queue(InputEvent::JumpToPartyMember { character_name });
+                                        },
+                                    },
                                     button! {
                                         text: "Whisper",
                                         tooltip: "Aim the chat box at this member [^000001/w <name>^000000]",

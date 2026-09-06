@@ -112,6 +112,7 @@ if [ "$os" = "windows" ]; then
     cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
        tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
        tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Troubleshoot.bat \
        "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 else
     cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
@@ -220,11 +221,23 @@ require() {
 }
 
 if [ "$os" = "windows" ]; then
-    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 \
+    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 Troubleshoot.bat \
              "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
     done
+
+    # Troubleshoot.bat is the one batch file built out of labels, `call`,
+    # `exit /b` and parenthesised blocks -- the constructs where cmd's
+    # byte-offset seeking through the file actually matters. Its own header
+    # says CRLF is deliberate, and it had drifted to 26 bare-LF lines among
+    # 207, two of them inside the `if (` block in :reset. A mixed file is the
+    # worst of both, and nothing would have said so.
+    # -qv, not a "[^\r]$" match: a blank line with a bare LF has no last
+    # character at all, so a positive pattern would let exactly that case past.
+    if LC_ALL=C grep -qv $'\r$' "$windows/Troubleshoot.bat"; then
+        die "Troubleshoot.bat has bare-LF lines; it must be pure CRLF (cmd seeks batch files by byte offset)"
+    fi
 else
     for f in korangar Play.command Setup.command Verify.command \
              "READ ME FIRST.txt" SHA256SUMS-client \
@@ -317,6 +330,26 @@ if [ "$do_merged" -eq 1 ]; then
     ( cd "$out" && zip -r -X -q -n .grf:.7z:.mp3 "$merged_name.zip" "$merged_name" -x '*.DS_Store' )
 fi
 
+# The update download. Both READ MEs name this file by hand -- "download only
+# Seal-Cascade-Windows.zip" -- and until now nothing produced it, so the one
+# artifact a returning player actually fetches was assembled outside the
+# contents checklist above. Build it here instead.
+#
+# Flat on purpose: the READ ME says to copy the zip's CONTENTS into the
+# existing game folder. A zip that unpacks to a "Windows" directory makes that
+# sentence mean the wrong thing, and a nested Windows/ folder beside
+# korangar.exe looks like it worked.
+update_zip="$out/Seal-Cascade-$half_name.zip"
+echo "==> $update_zip"
+rm -f "$update_zip"
+# zip is run from inside the half, so it needs an absolute destination. --out
+# may be given as either an absolute or a relative path.
+case "$out" in
+    /*) update_zip_absolute="$update_zip" ;;
+    *)  update_zip_absolute="$repo_root/$update_zip" ;;
+esac
+( cd "$windows" && zip -r -X -q "$update_zip_absolute" . -x '*.DS_Store' )
+
 echo
 echo "pack ready:"
 du -sh "$windows" 2>/dev/null || true
@@ -330,9 +363,9 @@ if [ "$do_merged" -eq 1 ]; then
     du -sh "$out/$merged_name.zip" 2>/dev/null || true
     echo
     echo "first-time download: upload '$merged_name.zip' -- one file, they unzip and play."
-    echo "updates: zip $half_name/ on its own (80 MB), so nobody re-downloads 3.7 GB."
+    echo "updates:            upload 'Seal-Cascade-$half_name.zip', so nobody re-downloads 3.7 GB."
 else
-    echo "zip $half_name/ and upload it; upload Assets/ as a folder."
+    echo "updates: upload 'Seal-Cascade-$half_name.zip'; upload Assets/ as a folder."
     echo "Do NOT re-compress the GRFs -- they are already compressed, so zipping"
     echo "Assets costs a long wait and saves almost nothing."
 fi

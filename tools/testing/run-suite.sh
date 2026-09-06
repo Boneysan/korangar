@@ -88,7 +88,9 @@ fi
 # from the pipeline before its log can be promoted into the evidence archive.
 set +e
 cargo_command="${HEADLESS_CARGO:-cargo}"
-"$cargo_command" run --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
+# Cargo's normal "Running ..." banner repeats the password arguments into
+# the archived log. Quiet suppresses that banner; scenario diagnostics remain.
+"$cargo_command" run --quiet --release --example headless-tester -p korangar-networking -- "${arguments[@]}" 2>&1 | tee "$log.partial"
 pipeline_status=("${PIPESTATUS[@]}")
 set -e
 runner_status=${pipeline_status[0]}

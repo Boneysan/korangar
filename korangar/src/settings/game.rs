@@ -16,6 +16,9 @@ pub struct GameSettings {
     /// Persisted so closing it stays closed across map changes and restarts.
     #[serde(default = "default_true")]
     pub show_minimap: bool,
+    /// Camera-relative WASD movement. Click-to-move stays available either way.
+    #[serde(default = "default_true")]
+    pub wasd_movement: bool,
     /// Last window size in **logical** pixels, restored on the next launch.
     ///
     /// Logical rather than physical so moving between monitors of different
@@ -37,6 +40,7 @@ impl Default for GameSettings {
         Self {
             auto_attack: true,
             show_minimap: true,
+            wasd_movement: true,
             window_size: None,
             window_maximized: false,
         }

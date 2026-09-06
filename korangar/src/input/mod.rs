@@ -248,8 +248,16 @@ impl InputSystem {
             KeyCode::F8,
             KeyCode::F9,
         ];
+        let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+        let row_offset = if alt_down {
+            18
+        } else if control_down {
+            9
+        } else {
+            0
+        };
         for (index, key) in HOTBAR_KEYS.into_iter().enumerate() {
-            let slot = HotbarSlot(index as u16);
+            let slot = HotbarSlot((index + row_offset) as u16);
             if self.get_key(key).pressed() {
                 events.push(InputEvent::CastSkill { slot });
             }
@@ -357,8 +365,61 @@ impl InputSystem {
             events.push(InputEvent::ToggleShowInterface);
         }
 
-        if control_down && self.get_key(KeyCode::KeyQ).pressed() {
+        // Ctrl+W, not Ctrl+Q. Ctrl+Q gained a second meaning when the quest log
+        // arrived, and both fired in the same frame: the log opened and this
+        // immediately closed it again, so the quest window could never be seen.
+        // Found in the first day of real play, 2026-09-05.
+        if control_down && self.get_key(KeyCode::KeyW).pressed() {
             events.push(InputEvent::CloseTopWindow);
+        }
+
+        // Number-row hotbar. Only here, not in push_game_action_keys: while
+        // chat is focused these keys must type digits rather than fire skills.
+        const NUMBER_KEYS: [KeyCode; 9] = [
+            KeyCode::Digit1,
+            KeyCode::Digit2,
+            KeyCode::Digit3,
+            KeyCode::Digit4,
+            KeyCode::Digit5,
+            KeyCode::Digit6,
+            KeyCode::Digit7,
+            KeyCode::Digit8,
+            KeyCode::Digit9,
+        ];
+        let number_row = if alt_down {
+            18
+        } else if control_down {
+            9
+        } else {
+            0
+        };
+        for (index, key) in NUMBER_KEYS.into_iter().enumerate() {
+            let slot = HotbarSlot((index + number_row) as u16);
+            if self.get_key(key).pressed() {
+                events.push(InputEvent::CastSkill { slot });
+            }
+            if self.get_key(key).released() {
+                events.push(InputEvent::StopSkill { slot });
+            }
+        }
+
+        #[cfg(feature = "debug")]
+        let wasd_free = !use_debug_camera;
+        #[cfg(not(feature = "debug"))]
+        let wasd_free = true;
+        if wasd_free && !alt_down && !control_down && !shift_down {
+            let forward = self.get_key(KeyCode::KeyW).down();
+            let back = self.get_key(KeyCode::KeyS).down();
+            let left = self.get_key(KeyCode::KeyA).down();
+            let right = self.get_key(KeyCode::KeyD).down();
+            if forward || back || left || right {
+                events.push(InputEvent::KeyboardMove {
+                    forward,
+                    back,
+                    left,
+                    right,
+                });
+            }
         }
 
         // Sit + hotbar always work (also when a UI element has focus — see

@@ -209,6 +209,10 @@ where
                             CharacterPreview {
                                 creation_path: self.creation_path,
                             },
+                            button! {
+                                text: "Text size / interface scale",
+                                event: InputEvent::ToggleInterfaceSettingsWindow,
+                            },
                             split! {
                                 children: (
                                     button! {

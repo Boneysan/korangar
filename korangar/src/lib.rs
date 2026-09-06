@@ -29,18 +29,18 @@
 // Helper macro to time and print the startup time of Korangar
 macro_rules! time_phase {
     ($message:expr, { $($statements:tt)* }) => {
-        #[cfg(feature = "debug")]
-        let _statement_timer = korangar_debug::logging::Timer::new($message);
+        crate::client_log!("[startup] {}: starting", $message);
+        let phase_started = std::time::Instant::now();
 
         $($statements)*
 
-        #[cfg(feature = "debug")]
-        _statement_timer.stop();
+        crate::client_log!("[startup] {}: ready in {:?}", $message, phase_started.elapsed());
     }
 }
 
 #[macro_use]
 pub mod logging;
+pub mod playtest_audit;
 
 mod dm;
 mod graphics;
@@ -89,8 +89,8 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AccountId, AttackRange, BuyShopItemsResult, CharacterId, CharacterServerInformation, ClientTick, Direction, DisappearanceReason,
-    EntityId, ExperienceType, HotbarSlot, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType, TilePosition, UnitId,
-    WorldPosition,
+    EntityId, ExperienceType, HotbarSlot, HotkeyType, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType,
+    SpriteChangeType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -99,7 +99,7 @@ use rust_state::{VecIndexExt, VecLookupExt};
 use settings::{
     AudioSettings, AudioSettingsPathExt, GraphicsSettingsCapabilities, GraphicsSettingsPathExt, InterfaceSettings, InterfaceSettingsPathExt,
 };
-use state::hotbar::HotbarPathExt;
+use state::hotbar::{HOTBAR_SLOTS, HotbarBinding};
 use state::inventory::InventoryPathExt;
 use state::localization::Localization;
 use state::skills::SkillTreePathExt;
@@ -553,6 +553,34 @@ const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
 
+fn direction_from_ground_vector(east: f32, north: f32) -> Direction {
+    let step_east = if east > 0.4 {
+        1
+    } else if east < -0.4 {
+        -1
+    } else {
+        0
+    };
+    let step_north = if north > 0.4 {
+        1
+    } else if north < -0.4 {
+        -1
+    } else {
+        0
+    };
+    match (step_east, step_north) {
+        (0, 1) => Direction::North,
+        (1, 1) => Direction::NorthEast,
+        (1, 0) => Direction::East,
+        (1, -1) => Direction::SouthEast,
+        (0, -1) => Direction::South,
+        (-1, -1) => Direction::SouthWest,
+        (-1, 0) => Direction::West,
+        (-1, 1) => Direction::NorthWest,
+        _ => Direction::North,
+    }
+}
+
 /// M1-008: per-hit STR effects at the struck entity, wired like the original
 /// client (roBrowser's skill/effect tables were the reference — semantics
 /// only). The pending-impact queue owns the target-phase delay, so offsets in
@@ -765,6 +793,28 @@ async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, co
     }
 
     let adapters = instance.enumerate_adapters(backends).await;
+
+    // The whole candidate table, with the score that decides between them.
+    // A white screen is usually the wrong entry winning, and until this
+    // existed the only way to learn that was `Troubleshoot.bat` starting the
+    // game once per backend and comparing four exit codes -- a friend's job,
+    // taking an evening, to recover something the client knew all along.
+    client_log!("[gpu] {} adapter(s) enumerated for {backends:?}", adapters.len());
+    for adapter in adapters.iter() {
+        let info = adapter.get_info();
+        client_log!(
+            "[gpu]   {} ({:?} {:?}) driver={} {} score={} surface={} software={}",
+            info.name,
+            info.device_type,
+            info.backend,
+            info.driver,
+            info.driver_info,
+            adapter_score(&info),
+            supports_surface(adapter, compatible_surface),
+            is_software_adapter(&info)
+        );
+    }
+
     if let Some(adapter) = adapters
         .iter()
         .filter(|adapter| supports_surface(adapter, compatible_surface))
@@ -772,6 +822,13 @@ async fn initialize_hardware_adapter(instance: &Instance, backends: Backends, co
         .max_by_key(|adapter| adapter_score(&adapter.get_info()))
         .cloned()
     {
+        let info = adapter.get_info();
+        client_log!(
+            "[gpu] chosen {} on {:?} (score {})",
+            info.name,
+            info.backend,
+            adapter_score(&info)
+        );
         return adapter;
     }
 
@@ -824,14 +881,47 @@ fn is_software_adapter(adapter_info: &AdapterInfo) -> bool {
         || adapter_name.contains("swiftshader")
 }
 
+/// PCI vendor id for AMD, as reported in `AdapterInfo::vendor`.
+const VENDOR_AMD: u32 = 0x1002;
+
+/// How much we would rather have this backend, for one particular card.
+///
+/// The same GPU is enumerated once per backend, and every one of those entries
+/// reports the same `device_type`. So without this term the scores tie, and
+/// `max_by_key` -- which returns the LAST maximum -- lets enumeration order
+/// decide which graphics API the game runs on. That is not a choice anybody
+/// made, and on 2026-09-05 it cost two friends an evening: both on AMD cards,
+/// one getting a white window and the other no window at all, both fixed
+/// outright by `WGPU_BACKEND=vulkan`.
+///
+/// Deliberately AMD-only. One vendor is where the evidence is, and scoring 0
+/// everywhere else leaves those machines exactly as they were rather than
+/// rearranging backends for people who reported nothing.
+fn backend_preference(adapter_info: &AdapterInfo) -> u8 {
+    if adapter_info.vendor != VENDOR_AMD {
+        return 0;
+    }
+
+    match adapter_info.backend {
+        wgpu::Backend::Vulkan => 2,
+        wgpu::Backend::Dx12 => 1,
+        _ => 0,
+    }
+}
+
 fn adapter_score(adapter_info: &AdapterInfo) -> u8 {
-    match adapter_info.device_type {
+    let device_score: u8 = match adapter_info.device_type {
         DeviceType::DiscreteGpu => 5,
         DeviceType::IntegratedGpu => 4,
         DeviceType::VirtualGpu => 3,
         DeviceType::Other => 2,
         DeviceType::Cpu => 0,
-    }
+    };
+
+    // The kind of device still dominates: a discrete card on a mediocre backend
+    // beats an integrated one on a good backend. The preference only breaks
+    // ties between entries for the same physical GPU.
+    device_score * 4 + backend_preference(adapter_info)
 }
 
 /// Strip extensions / padding from a server or loader map name (`izlude_in.gat`
@@ -848,6 +938,59 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .trim_end_matches(".rsw")
         .trim_end_matches(".RSW")
         .to_lowercase()
+}
+
+#[cfg(test)]
+mod adapter_score_tests {
+    use wgpu::{AdapterInfo, Backend, DeviceType};
+
+    use super::{VENDOR_AMD, adapter_score};
+
+    fn info(vendor: u32, backend: Backend, device_type: DeviceType) -> AdapterInfo {
+        AdapterInfo {
+            name: String::new(),
+            vendor,
+            device: 0,
+            device_type,
+            device_pci_bus_id: String::new(),
+            driver: String::new(),
+            driver_info: String::new(),
+            backend,
+            subgroup_min_size: 0,
+            subgroup_max_size: 0,
+            transient_saves_memory: false,
+        }
+    }
+
+    /// The bug this whole function exists to prevent: two entries for the SAME
+    /// card scoring equally, leaving `max_by_key` to pick by enumeration order.
+    #[test]
+    fn vulkan_outranks_dx12_on_an_amd_card() {
+        let vulkan = adapter_score(&info(VENDOR_AMD, Backend::Vulkan, DeviceType::DiscreteGpu));
+        let dx12 = adapter_score(&info(VENDOR_AMD, Backend::Dx12, DeviceType::DiscreteGpu));
+        assert!(vulkan > dx12, "AMD should prefer Vulkan ({vulkan}) over DX12 ({dx12})");
+    }
+
+    /// Nobody else reported anything, so nobody else's ordering may move.
+    #[test]
+    fn a_non_amd_card_scores_the_same_on_every_backend() {
+        const NVIDIA: u32 = 0x10DE;
+        let vulkan = adapter_score(&info(NVIDIA, Backend::Vulkan, DeviceType::DiscreteGpu));
+        let dx12 = adapter_score(&info(NVIDIA, Backend::Dx12, DeviceType::DiscreteGpu));
+        assert_eq!(vulkan, dx12, "a non-AMD card must not be reordered by backend");
+    }
+
+    /// The backend term is a tie-break, never a promotion: a discrete card on
+    /// the worst backend still beats an integrated one on the best.
+    #[test]
+    fn device_type_still_dominates_the_backend_preference() {
+        let discrete_worst = adapter_score(&info(VENDOR_AMD, Backend::Gl, DeviceType::DiscreteGpu));
+        let integrated_best = adapter_score(&info(VENDOR_AMD, Backend::Vulkan, DeviceType::IntegratedGpu));
+        assert!(
+            discrete_worst > integrated_best,
+            "discrete ({discrete_worst}) must outrank integrated ({integrated_best})"
+        );
+    }
 }
 
 #[cfg(test)]
@@ -1457,6 +1600,8 @@ pub struct Client {
     /// the window is closed. Compared against the player's choices each frame
     /// to decide whether the preview entity needs rebuilding.
     character_preview: Option<(CharacterSex, HairStyle)>,
+    /// Last WASD destination packet, so we do not trip flood protection.
+    keyboard_move_last_tick: ClientTick,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -2671,12 +2816,17 @@ impl Client {
             let compatible_surface = window.as_ref().map(|window| instance.create_surface(window.clone()).unwrap());
             let adapter = pollster::block_on(async { initialize_hardware_adapter(&instance, backends, compatible_surface.as_ref()).await });
 
-            #[cfg(feature = "debug")]
             {
+                // `client_log!`, not `print_debug!`: the packs ship without the
+                // `debug` feature, so these were compiled out of every build a
+                // friend actually runs. A white screen then arrives with a log
+                // that names neither the card nor the graphics API, which is
+                // how 2026-09-05 was spent guessing. This is the definition of
+                // "anything a player might have to report".
                 let adapter_info = adapter.get_info();
-                print_debug!("using adapter {} ({})", adapter_info.name, adapter_info.backend);
-                print_debug!("using device {} ({})", adapter_info.device, adapter_info.vendor);
-                print_debug!("using driver {} ({})", adapter_info.driver, adapter_info.driver_info);
+                client_log!("[gpu] adapter {} ({:?})", adapter_info.name, adapter_info.backend);
+                client_log!("[gpu] device {} vendor 0x{:04x}", adapter_info.device, adapter_info.vendor);
+                client_log!("[gpu] driver {} ({})", adapter_info.driver, adapter_info.driver_info);
             }
         });
 
@@ -3066,6 +3216,7 @@ impl Client {
                 mode => mode,
             },
             character_preview: None,
+            keyboard_move_last_tick: ClientTick(0),
             pending_stat_plan: None,
             armed_stat_plan: None,
             active_graphics_settings: graphics_settings,
@@ -3316,6 +3467,66 @@ impl Client {
             .request_animation_data_load(CHARACTER_PREVIEW_ENTITY_ID, EntityType::Player, part_files);
 
         *self.client_state.follow_mut(client_state().character_creation().preview()) = loaded;
+    }
+
+    fn character_select_preview_id(slot: usize) -> EntityId {
+        EntityId(CHARACTER_PREVIEW_ENTITY_ID.0.saturating_sub(1 + slot as u32))
+    }
+
+    fn character_select_preview_slot(entity_id: EntityId) -> Option<usize> {
+        let base = CHARACTER_PREVIEW_ENTITY_ID.0;
+        if entity_id.0 >= base || base - entity_id.0 > 16 {
+            return None;
+        }
+        Some((base - 1 - entity_id.0) as usize)
+    }
+
+    fn update_character_select_previews(&mut self) {
+        if !self.interface.is_window_with_class_open(WindowClass::CharacterSelection) {
+            return;
+        }
+
+        // The character list carries the three headgear view ids, so a slot
+        // card can show the hats the character is actually wearing rather than
+        // a bare head.
+        let needed: Vec<(usize, JobId, ragnarok_packets::Sex, i16, [i16; 3])> = {
+            let slots = self.client_state.follow(client_state().character_slots());
+            slots
+                .characters()
+                .iter()
+                .enumerate()
+                .filter_map(|(index, slot)| {
+                    let character = slot.as_ref()?;
+                    if slots.preview(index).is_some() {
+                        return None;
+                    }
+                    Some((index, character.job_id, character.sex, character.head, [
+                        character.accessory,
+                        character.accessory3,
+                        character.accessory2,
+                    ]))
+                })
+                .collect()
+        };
+
+        for (index, job_id, sex, head, headgear) in needed {
+            let mut part_files = get_entity_part_files(&self.library, EntityType::Player, job_id, sex, Some(head.max(1) as usize));
+            push_headgear_part_files_for_views(
+                &mut part_files,
+                &self.library,
+                &self.game_file_loader,
+                sex,
+                headgear.map(|view| view.max(0) as u16),
+            );
+            let loaded =
+                self.async_loader
+                    .request_animation_data_load(Self::character_select_preview_id(index), EntityType::Player, part_files);
+            if let Some(animation_data) = loaded {
+                self.client_state
+                    .follow_mut(client_state().character_slots())
+                    .set_preview(index, animation_data);
+            }
+        }
     }
 
     /// Point everything that caches the window size at a new one.
@@ -3599,6 +3810,17 @@ impl Client {
             .saved_login_data
             .as_ref()
             .expect("character server entry requires a successful login");
+        // The address here is the one the LOGIN server handed back, not the one
+        // the player typed, and those differ: `lan_subnets` hands each client
+        // the address for its own source network. When a friend authenticates
+        // and then dies at character select, this line is the answer -- they
+        // were pointed at a LAN address they cannot route to.
+        client_log!(
+            "[login] connecting to character server '{}' at {}:{}",
+            character_server_information.server_name,
+            std::net::Ipv4Addr::from(character_server_information.server_ip.0),
+            character_server_information.server_port
+        );
         self.networking_system
             .connect_to_character_server(self.saved_packet_version, login_data, character_server_information);
     }
@@ -3974,6 +4196,15 @@ impl Client {
                     };
 
                     self.networking_system.disconnect_from_character_server();
+                    // Same reason as the character-server line above: this
+                    // address comes from the server, and a friend who reaches
+                    // character select and then hangs is being sent somewhere
+                    // they cannot reach.
+                    client_log!(
+                        "[login] connecting to map server at {}:{}",
+                        login_data.server_ip,
+                        login_data.server_port
+                    );
                     self.networking_system
                         .connect_to_map_server(self.saved_packet_version, saved_login_data, login_data);
                     // Ask for the client tick right away, so that the player isn't de-synced when
@@ -3989,6 +4220,12 @@ impl Client {
                         .take()
                         .filter(|(character_id, _)| *character_id == login_data.character_id)
                         .map(|(_, spread)| spread);
+                    if let Some(spread) = self.armed_stat_plan {
+                        client_log!(
+                            "[creation-stats] armed character={} target={spread:?}",
+                            login_data.character_id.0
+                        );
+                    }
 
                     let mut player = Entity::Player(Player::new(
                         &self.library,
@@ -4034,10 +4271,8 @@ impl Client {
                     ));
                     self.interface
                         .open_window(ChatWindow::new(client_state().chat_window(), client_state().chat_messages()));
-                    self.interface.open_window(HotbarWindow::new(
-                        client_state().hotbar().skills(),
-                        client_state().skill_tree().skills(),
-                    ));
+                    self.interface
+                        .open_window(HotbarWindow::new(client_state().hotbar(), client_state().skill_tree().skills()));
                     self.interface.open_window(StatusBarWindow::new(client_state().status_effects()));
                     self.interface.open_window(HudWindow::new(
                         this_player().manually_asserted(),
@@ -4068,6 +4303,11 @@ impl Client {
                 NetworkEvent::CharacterCreated { character_information } => {
                     // Bind the allocation to the character it was made for.
                     let planned = *self.client_state.follow(client_state().character_creation().stats());
+                    client_log!(
+                        "[creation-stats] created character={} target={planned:?} cost={}",
+                        character_information.character_id.0,
+                        planned.cost()
+                    );
 
                     if planned != StatSpread::BASE {
                         self.pending_stat_plan = Some((character_information.character_id, planned));
@@ -5355,23 +5595,40 @@ impl Client {
                     // spawn packet, so an entity that has not spawned yet gets the
                     // current value from `EntityData` when it does. No off-entity
                     // map needed.
-                    let changed = self
+                    // Headgear is composed into the sprite now, so a change to
+                    // one of the three hat slots has to rebuild the layers. The
+                    // other look types (robe, palettes) still have no layer of
+                    // their own; for those the value is stored and picked up
+                    // when rendering lands.
+                    let rebuilds_layers = matches!(
+                        look_type,
+                        SpriteChangeType::HeadBottom | SpriteChangeType::HeadTop | SpriteChangeType::HeadMiddle
+                    );
+
+                    let mut changed = None;
+                    if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
                         .iter_mut()
                         .find(|entity| entity.get_entity_id().0 == account_id.0)
-                        .map(|entity| entity.set_look(&look_type, value))
-                        .or_else(|| {
-                            self.client_state
-                                .try_follow_mut(this_entity())
-                                .filter(|entity| entity.get_entity_id().0 == account_id.0)
-                                .map(|player| player.set_look(&look_type, value))
-                        });
+                    {
+                        changed = Some(entity.set_look(&look_type, value));
+                        if changed == Some(true) && rebuilds_layers {
+                            Self::refresh_entity_headgear_layers(&self.async_loader, &self.library, &self.game_file_loader, entity);
+                        }
+                    } else if let Some(player) = self
+                        .client_state
+                        .try_follow_mut(this_entity())
+                        .filter(|entity| entity.get_entity_id().0 == account_id.0)
+                    {
+                        changed = Some(player.set_look(&look_type, value));
+                        if changed == Some(true) && rebuilds_layers {
+                            Self::refresh_entity_headgear_layers(&self.async_loader, &self.library, &self.game_file_loader, player);
+                        }
+                    }
 
-                    // Nothing composes headgear, robes or palettes into the sprite
-                    // yet, so there is no layer to rebuild — the value is stored and
-                    // will be picked up when rendering lands. Logged under the
-                    // existing packet-log switch so the coverage is observable.
+                    // Logged under the existing packet-log switch so the
+                    // coverage stays observable.
                     if changed == Some(true) && std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         client_log!(
                             "[packet-log] look change account={} type={look_type:?} value={value}",
@@ -5719,6 +5976,14 @@ impl Client {
                         .set_deny_invites(deny_party_invites);
                 }
                 NetworkEvent::PartyList { party_name, members } => {
+                    client_log!(
+                        "[party] roster {} members={:?}",
+                        party_name,
+                        members
+                            .iter()
+                            .map(|m| (m.account_id.0, m.job_id.0, m.base_level))
+                            .collect::<Vec<_>>()
+                    );
                     // Bound before the mutable follow: `library` and
                     // `client_state` are disjoint fields, so both borrows coexist.
                     let library = &self.library;
@@ -5755,6 +6020,11 @@ impl Client {
                     job_id,
                     base_level,
                 } => {
+                    client_log!(
+                        "[party] 0x0ABD account={} job={} base_level={base_level}",
+                        account_id.0,
+                        job_id.0
+                    );
                     let class_name = JobName::get(&self.library, job_id).to_string();
                     self.client_state
                         .follow_mut(client_state().party_state())
@@ -6044,23 +6314,27 @@ impl Client {
                     }
 
                     if let Some(job_id) = self.client_state.try_follow(this_entity()).map(Entity::get_job_id) {
-                        for (index, hotkey) in hotkeys.into_iter().take(10).enumerate() {
+                        for (index, hotkey) in hotkeys.into_iter().take(HOTBAR_SLOTS).enumerate() {
+                            let slot = HotbarSlot(index as u16);
                             match hotkey {
-                                HotkeyState::Bound(hotkey) => {
-                                    // TODO: Properly distinguish between skill and item.
-                                    let skill_id = SkillId(hotkey.item_or_skill_id as u16);
-
-                                    let mut skill = self.async_loader.request_learnable_skill_load(job_id, skill_id, client_tick);
-                                    skill.maximum_level.0 = hotkey.quantity_or_skill_level;
-
-                                    self.client_state
-                                        .follow_mut(client_state().hotbar())
-                                        .set_slot(HotbarSlot(index as u16), skill);
-                                }
-                                HotkeyState::Unbound => self
-                                    .client_state
-                                    .follow_mut(client_state().hotbar())
-                                    .unset_slot(HotbarSlot(index as u16)),
+                                HotkeyState::Bound(hotkey) => match hotkey.hotkey_type {
+                                    HotkeyType::Skill => {
+                                        let skill_id = SkillId(hotkey.item_or_skill_id as u16);
+                                        let mut skill = self.async_loader.request_learnable_skill_load(job_id, skill_id, client_tick);
+                                        skill.maximum_level.0 = hotkey.quantity_or_skill_level;
+                                        self.client_state
+                                            .follow_mut(client_state().hotbar())
+                                            .set_slot(slot, HotbarBinding::Skill(skill));
+                                    }
+                                    HotkeyType::Item => {
+                                        self.client_state
+                                            .follow_mut(client_state().hotbar())
+                                            .set_slot(slot, HotbarBinding::Item {
+                                                item_id: ItemId(hotkey.item_or_skill_id),
+                                            });
+                                    }
+                                },
+                                HotkeyState::Unbound => self.client_state.follow_mut(client_state().hotbar()).unset_slot(slot),
                             }
                         }
                     }
@@ -6631,6 +6905,25 @@ impl Client {
                         };
                         let _ = self.networking_system.move_item_from_storage(item.index, amount);
                     }
+                    (ItemSource::Inventory, ItemSource::Hotbar { slot }) => {
+                        self.client_state.follow_mut(client_state().hotbar()).update_slot(
+                            &mut self.networking_system,
+                            slot,
+                            HotbarBinding::Item { item_id: item.item_id },
+                        );
+                    }
+                    (ItemSource::Hotbar { slot: source_slot }, ItemSource::Hotbar { slot: destination_slot }) => {
+                        self.client_state.follow_mut(client_state().hotbar()).swap_slot(
+                            &mut self.networking_system,
+                            source_slot,
+                            destination_slot,
+                        );
+                    }
+                    (ItemSource::Hotbar { slot }, ItemSource::Inventory) => {
+                        self.client_state
+                            .follow_mut(client_state().hotbar())
+                            .clear_slot(&mut self.networking_system, slot);
+                    }
                     _ => {}
                 },
                 InputEvent::OpenItemActions { item } => {
@@ -6653,6 +6946,89 @@ impl Client {
         }
 
         self.input_event_buffer = remaining;
+    }
+
+    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool) {
+        if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
+            return;
+        }
+        let Some(map) = self.map.as_deref() else {
+            return;
+        };
+        let Some(start) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
+            return;
+        };
+        if client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < 200 {
+            return;
+        }
+
+        let view = self.player_camera.view_direction();
+        let mut forward_x = view.x;
+        let mut forward_z = view.z;
+        let length = (forward_x * forward_x + forward_z * forward_z).sqrt();
+        if length < 0.001 {
+            return;
+        }
+        forward_x /= length;
+        forward_z /= length;
+        let right_x = forward_z;
+        let right_z = -forward_x;
+
+        let mut move_x = 0.0;
+        let mut move_z = 0.0;
+        if forward {
+            move_x += forward_x;
+            move_z += forward_z;
+        }
+        if back {
+            move_x -= forward_x;
+            move_z -= forward_z;
+        }
+        if right {
+            move_x += right_x;
+            move_z += right_z;
+        }
+        if left {
+            move_x -= right_x;
+            move_z -= right_z;
+        }
+        let move_length = (move_x * move_x + move_z * move_z).sqrt();
+        if move_length < 0.001 {
+            return;
+        }
+        move_x /= move_length;
+        move_z /= move_length;
+
+        let mut destination = None;
+        for distance in (1..=4).rev() {
+            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
+            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
+            if tile_x < 0 || tile_y < 0 {
+                continue;
+            }
+            let tile = TilePosition {
+                x: tile_x as u16,
+                y: tile_y as u16,
+            };
+            if map.is_walkable(tile) {
+                destination = Some(tile);
+                break;
+            }
+        }
+        let Some(destination) = destination else {
+            return;
+        };
+        if destination == start {
+            return;
+        }
+
+        let _ = self.networking_system.player_move(WorldPosition {
+            x: destination.x,
+            y: destination.y,
+            direction: direction_from_ground_vector(move_x, move_z),
+        });
+        self.keyboard_move_last_tick = client_tick;
+        *self.client_state.follow_mut(client_state().buffered_action()) = None;
     }
 
     /// Returns whether or not the interface is focused.
@@ -6700,6 +7076,7 @@ impl Client {
 
         let mut toggle_sit = false;
         let mut sync_minimap = false;
+        let mut keyboard_move = None;
         // Deferred: `enter_character_server` needs &mut self while this loop
         // already mutably drains `input_event_buffer`.
         let mut select_server: Option<CharacterServerInformation> = None;
@@ -7004,6 +7381,23 @@ impl Client {
 
                     // Unbuffer any buffered action.
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
+                }
+                InputEvent::KeyboardMove {
+                    forward,
+                    back,
+                    left,
+                    right,
+                } => {
+                    keyboard_move = Some((forward, back, left, right));
+                }
+                InputEvent::JumpToPartyMember { character_name } => {
+                    let command = format!("@partyjump {character_name}");
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("> {command}"), MessageColor::Information));
+                    let _ = self
+                        .networking_system
+                        .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
                 InputEvent::PlayerInteract { entity_id } => {
                     let is_local_player = self
@@ -7521,6 +7915,25 @@ impl Client {
                         };
                         let _ = self.networking_system.move_item_from_storage(item.index, amount);
                     }
+                    (ItemSource::Inventory, ItemSource::Hotbar { slot }) => {
+                        self.client_state.follow_mut(client_state().hotbar()).update_slot(
+                            &mut self.networking_system,
+                            slot,
+                            HotbarBinding::Item { item_id: item.item_id },
+                        );
+                    }
+                    (ItemSource::Hotbar { slot: source_slot }, ItemSource::Hotbar { slot: destination_slot }) => {
+                        self.client_state.follow_mut(client_state().hotbar()).swap_slot(
+                            &mut self.networking_system,
+                            source_slot,
+                            destination_slot,
+                        );
+                    }
+                    (ItemSource::Hotbar { slot }, ItemSource::Inventory) => {
+                        self.client_state
+                            .follow_mut(client_state().hotbar())
+                            .clear_slot(&mut self.networking_system, slot);
+                    }
                     _ => {}
                 },
                 InputEvent::UseItem { inventory_index } => {
@@ -7648,9 +8061,11 @@ impl Client {
                     skill,
                 } => match (source, destination) {
                     (SkillSource::SkillTree, SkillSource::Hotbar { slot }) => {
-                        self.client_state
-                            .follow_mut(client_state().hotbar())
-                            .update_slot(&mut self.networking_system, slot, skill);
+                        self.client_state.follow_mut(client_state().hotbar()).update_slot(
+                            &mut self.networking_system,
+                            slot,
+                            HotbarBinding::Skill(skill),
+                        );
                     }
                     (SkillSource::Hotbar { slot }, SkillSource::SkillTree) => {
                         self.client_state
@@ -7669,11 +8084,11 @@ impl Client {
                 InputEvent::AssignSkillToHotbar { skill } => {
                     let slot = self.client_state.follow(client_state().hotbar()).first_empty_slot();
                     match slot {
-                        Some(slot) => {
-                            self.client_state
-                                .follow_mut(client_state().hotbar())
-                                .update_slot(&mut self.networking_system, slot, skill)
-                        }
+                        Some(slot) => self.client_state.follow_mut(client_state().hotbar()).update_slot(
+                            &mut self.networking_system,
+                            slot,
+                            HotbarBinding::Skill(skill),
+                        ),
                         None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             "The hotbar is full. Clear a slot or drag the skill onto a slot to replace it.".to_owned(),
                             MessageColor::Error,
@@ -7713,7 +8128,30 @@ impl Client {
                 InputEvent::CastSkill { slot } => {
                     // Resolve the slot to owned data under an immutable borrow, then act — so the
                     // cast / arm / chat-feedback below can borrow self mutably without conflict.
-                    let learnable_skill = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).clone();
+                    let binding = self.client_state.follow(client_state().hotbar()).get_slot(slot).clone();
+                    if let Some(HotbarBinding::Item { item_id }) = &binding {
+                        if let Some(item) = self
+                            .client_state
+                            .follow(client_state().inventory())
+                            .items()
+                            .iter()
+                            .find(|item| item.item_id == *item_id)
+                        {
+                            if let Some(account_id) = self.saved_login_data.as_ref().map(|data| data.account_id) {
+                                let _ = self.networking_system.use_item(item.index, account_id);
+                            }
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "That item is not in your inventory.".to_owned(),
+                                MessageColor::Error,
+                            ));
+                        }
+                        continue;
+                    }
+                    let learnable_skill = match binding {
+                        Some(HotbarBinding::Skill(skill)) => Some(skill),
+                        _ => None,
+                    };
                     // Cast at the character's CURRENT learned level, never
                     // `learnable_skill.maximum_level` — that field is whatever
                     // level got persisted into the hotkey slot at drag-time
@@ -7818,7 +8256,7 @@ impl Client {
                     }
                 }
                 InputEvent::StopSkill { slot } => {
-                    if let Some(skill) = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot).as_ref()
+                    if let Some(skill) = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot)
                         && skill.skill_id == ROLLING_CUTTER_ID
                     {
                         let _ = self.networking_system.stop_channeling_skill(skill.skill_id);
@@ -8255,6 +8693,10 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
+        if let Some((forward, back, left, right)) = keyboard_move {
+            self.apply_keyboard_move(client_tick, forward, back, left, right);
+        }
+
         if sync_minimap {
             self.sync_minimap_window_size();
         }
@@ -8361,6 +8803,25 @@ impl Client {
         }
     }
 
+    /// Rebuild every layer after a headgear change.
+    ///
+    /// Unlike weapon, head and shield there is no partial swap for hats: the
+    /// three slots are independent, any of them may appear or disappear, and
+    /// each one that appears shifts the layers after it. A full part-list
+    /// reload is what the other helpers fall back to anyway, and equipping a
+    /// hat is rare enough that the cost does not matter.
+    fn refresh_entity_headgear_layers(
+        async_loader: &AsyncLoader,
+        library: &Library,
+        game_file_loader: &GameFileLoader,
+        entity: &mut Entity,
+    ) {
+        let parts = entity.get_entity_part_files(library, game_file_loader);
+        if let Some(animation_data) = async_loader.request_animation_data_load(entity.get_entity_id(), entity.get_entity_type(), parts) {
+            entity.set_animation_data(animation_data);
+        }
+    }
+
     /// Phase C5: swap only the shield layer (`방패\…`).
     /// After the shield swap, re-apply the weapon layer from the same part list
     /// so a prior mis-classified `parts[2]` refresh cannot leave the sword
@@ -8462,6 +8923,10 @@ impl Client {
                 (LoaderId::AnimationData(entity_id), LoadableResource::AnimationData(animation_data)) => {
                     if entity_id == CHARACTER_PREVIEW_ENTITY_ID {
                         *self.client_state.follow_mut(client_state().character_creation().preview()) = Some(animation_data);
+                    } else if let Some(slot) = Self::character_select_preview_slot(entity_id) {
+                        self.client_state
+                            .follow_mut(client_state().character_slots())
+                            .set_preview(slot, animation_data);
                     } else if entity_id == EMOTE_ANIMATION_ENTITY_ID {
                         self.emote_bubbles.set_animation_data(animation_data);
                     } else if let Some(path) = self.sprite_effects.path_for_sentinel(entity_id) {
@@ -8578,22 +9043,21 @@ impl Client {
                             // character left at 1/1/1/1/1/1 and 48 unspent points.
                             // `map_loaded()` above IS that acknowledgement.
                             if let Some(spread) = self.armed_stat_plan.take() {
+                                client_log!("[creation-stats] map loaded; applying target={spread:?}");
                                 for (stat, amount) in spread.deltas_from_base() {
-                                    let _ = self.networking_system.request_stat_up(stat.stat_up(amount));
+                                    let result = self.networking_system.request_stat_up(stat.stat_up(amount));
+                                    client_log!("[creation-stats] {stat:?} +{amount}: {result:?}");
                                 }
                             }
                         }
                     }
                 }
                 (LoaderId::SkillSprite(skill_id), LoadableResource::SkillSprite { sprite }) => {
-                    self.client_state
-                        .follow_mut(client_state().hotbar().skills())
-                        .iter_mut()
-                        .filter_map(|slot| slot.as_mut())
-                        .filter(|skill| skill.skill_id == skill_id)
-                        .for_each(|skill| {
+                    self.client_state.follow_mut(client_state().hotbar()).for_each_skill_mut(|skill| {
+                        if skill.skill_id == skill_id {
                             skill.sprite = Some(sprite.clone());
-                        });
+                        }
+                    });
 
                     if let Some(skill) = self
                         .client_state
@@ -8606,14 +9070,11 @@ impl Client {
                     }
                 }
                 (LoaderId::SkillActions(skill_id), LoadableResource::SkillActions { actions }) => {
-                    self.client_state
-                        .follow_mut(client_state().hotbar().skills())
-                        .iter_mut()
-                        .filter_map(|slot| slot.as_mut())
-                        .filter(|skill| skill.skill_id == skill_id)
-                        .for_each(|skill| {
+                    self.client_state.follow_mut(client_state().hotbar()).for_each_skill_mut(|skill| {
+                        if skill.skill_id == skill_id {
                             skill.actions = Some(actions.clone());
-                        });
+                        }
+                    });
 
                     if let Some(skill) = self
                         .client_state
@@ -8954,6 +9415,7 @@ impl Client {
         } = self.game_timer.update();
 
         self.update_character_preview();
+        self.update_character_select_previews();
 
         let input_report = self.input_system.update_delta(client_tick);
 
@@ -9662,6 +10124,10 @@ impl ApplicationHandler for Client {
                 // self-sustained by the `request_redraw` below, so silently dropping
                 // this event would leave the window permanently blank.
                 if !self.graphics_engine.is_ready_to_render() {
+                    // A window that stays here forever IS the white screen, and
+                    // it used to produce no output at all -- the loop just kept
+                    // asking for redraws in silence.
+                    logging::note_frame_waiting();
                     if let Some(window) = self.window.as_ref() {
                         window.request_redraw();
                     }
@@ -9672,6 +10138,7 @@ impl ApplicationHandler for Client {
                 let _measurement = threads::Main::start_frame();
 
                 self.update_and_render(event_loop);
+                logging::note_frame_rendered();
 
                 if let Some(window) = self.window.as_mut() {
                     window.request_redraw();

@@ -46,6 +46,12 @@ where
                     state: self.game_settings_path.show_minimap(),
                     event: InputEvent::ToggleMinimapWindow,
                 },
+                state_button! {
+                    text: "WASD movement",
+                    tooltip: "Walk with W A S D relative to the camera. Click-to-move still works.",
+                    state: self.game_settings_path.wasd_movement(),
+                    event: Toggle(self.game_settings_path.wasd_movement()),
+                },
             ),
         }
     }

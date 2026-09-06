@@ -94,6 +94,26 @@ impl Surface {
             print_debug!("Surface format is {:?}", config.format);
         }
 
+        // Unconditional, not `debug`-gated. A white window is as often a
+        // surface configuration as an adapter choice, and the packs ship
+        // without the `debug` feature -- so the two lines above have never once
+        // appeared in a log anybody sent us.
+        client_log!(
+            "[gpu] surface {}x{} format={:?} present={:?} alpha={:?} frame_latency={}",
+            config.width,
+            config.height,
+            config.format,
+            config.present_mode,
+            config.alpha_mode,
+            config.desired_maximum_frame_latency
+        );
+        client_log!(
+            "[gpu] surface offers formats={:?} mailbox={} immediate={}",
+            surfaces_formats,
+            present_mode_info.supports_mailbox,
+            present_mode_info.supports_immediate
+        );
+
         surface.configure(&device, &config);
 
         Self {

@@ -1,3 +1,5 @@
+#![allow(dead_code)] // Still the skill-tree drop source; the hotbar now draws its own slots.
+
 use std::cell::UnsafeCell;
 
 use korangar_interface::MouseMode;

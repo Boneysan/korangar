@@ -190,7 +190,7 @@ impl TestContext {
                 // after combat) which delays the previous session's release.
                 sleep(Duration::from_secs(4));
             }
-            match Self::try_connect(config, username, password, character, create_character) {
+            match Self::try_connect(config, username, password, character, create_character, &[]) {
                 Ok(mut context) => {
                     context.normalize();
                     return Ok(context);
@@ -255,12 +255,19 @@ impl TestContext {
         self.pump(Duration::from_millis(500));
     }
 
+    /// Replay the creation UI's requests immediately after LoadEndAck, before
+    /// any settling delay. Only used with a newly created disposable character.
+    pub fn connect_with_starting_stats(config: &Config, character: &str, stats: &[ragnarok_packets::StatUpType]) -> Result<Self, String> {
+        Self::try_connect(config, &config.username, &config.password, Some(character), None, stats)
+    }
+
     fn try_connect(
         config: &Config,
         username: &str,
         password: &str,
         character: Option<&str>,
         create_character: Option<&str>,
+        starting_stats: &[ragnarok_packets::StatUpType],
     ) -> Result<Self, String> {
         let (net, buffer) = NetworkingSystem::spawn_with_callback(config.ledger.clone());
 
@@ -382,6 +389,12 @@ impl TestContext {
             _ => None,
         })?;
         context.net.map_loaded().map_err(|_| "disconnected")?;
+        for stat in starting_stats {
+            context
+                .net
+                .request_stat_up(stat.clone())
+                .map_err(|_| "disconnected applying starting stats")?;
+        }
 
         // Let the initial burst (inventory, skill tree, stats, entities) land.
         context.pump(Duration::from_millis(800));
@@ -468,6 +481,7 @@ impl TestContext {
                     &config.partner_password,
                     Some(CHARACTER_NAME),
                     Some(CHARACTER_NAME),
+                    &[],
                 ) {
                     Ok(context) => Ok(context),
                     Err(registration_result) => {

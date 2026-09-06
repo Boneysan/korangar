@@ -161,7 +161,14 @@ fn dm_command_contract(config: &Config) -> Result<(), String> {
         ("@dm", "@dm mode <on|off>"),
         ("@dm bogussub", "Unknown subcommand"),
         ("@dmflag", "Usage: @dmflag"),
-        ("@dmflag bogusaction some_flag", "Unknown flag action"),
+        // The flag NAME is validated before the action is dispatched, so this
+        // row has to pass a well-formed `dm_*` name or it never reaches the
+        // unknown-action branch. It used to say `some_flag` and silently
+        // asserted the wrong message from 2026-08-18, when the security pass
+        // added DM_ValidFlagName, until the first full-suite run found it.
+        ("@dmflag bogusaction dm_bogus", "Unknown flag action"),
+        // And the validation itself, which nothing covered.
+        ("@dmflag get some_flag", "Flag names must match"),
         ("@dmquest", "Usage: @dmquest"),
         ("@dmquest start notanumber", "Usage: @dmquest"),
         ("@dmwarp", "Usage: @dm warp"),

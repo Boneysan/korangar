@@ -34,8 +34,8 @@ use crate::renderer::MarkerRenderer;
 use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
-    ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity, Library, MAX_WALK_PATH_SIZE, Map,
-    PathFinder, StatusTint, native_real_weapon_id,
+    AccessoryName, AccessoryNameKey, ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity,
+    Library, MAX_WALK_PATH_SIZE, Map, PathFinder, StatusTint, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -1040,6 +1040,81 @@ fn push_shield_part_file(files: &mut Vec<String>, common: &Common, game_file_loa
     }
 }
 
+/// Headgear sprite path for one view id, if the archive has it.
+///
+/// Hats live beside the head under
+/// `data\\sprite\\악세사리\\{sex}\\{sex}_{name}` and are authored in the head's
+/// own coordinate frame: measured against the archive, a headgear ACT carries
+/// the *same* body-relative attach point the head does for the same facing.
+/// That makes a hat a sibling of the head, not its child: the ordinary
+/// `-child + body` parenting every secondary layer already gets is what lands
+/// it on the head.
+fn headgear_part_file(library: &Library, game_file_loader: &GameFileLoader, sex: Sex, view_id: u16) -> Option<String> {
+    if view_id == 0 {
+        return None;
+    }
+
+    let name = library.try_get::<AccessoryName>(AccessoryNameKey {
+        view_id,
+        female: sex == Sex::Female,
+    })?;
+    let name = name.as_str();
+    if name.is_empty() {
+        return None;
+    }
+
+    let part_file = headgear_sprite_path(sex_path_token(sex), name);
+    sprite_part_exists(game_file_loader, &part_file).then_some(part_file)
+}
+
+/// Join the sex token and the `accname.lub` sprite name.
+///
+/// The table stores the name with its own leading underscore (`_고글`), so the
+/// separator must not be added twice — `남__고글` resolves to nothing, and
+/// silently: a hat whose sprite is not found looks exactly like no hat.
+/// Verified against the archive with `playtest-sprite-audit hat-lookup`:
+/// 1706 of 1984 mapped ids resolve, the remainder being regional headgear
+/// these GRFs do not ship.
+fn headgear_sprite_path(sex_token: &str, name: &str) -> String {
+    match name.starts_with('_') {
+        true => format!("악세사리\\{sex_token}\\{sex_token}{name}"),
+        false => format!("악세사리\\{sex_token}\\{sex_token}_{name}"),
+    }
+}
+
+/// Append the three headgear slots in classic stacking order.
+///
+/// Order is bottom → middle → top, and it must stay directly after the head so
+/// the compositor's layer order paints hats over the head but under the weapon.
+/// Takes raw view ids so the character-select cards, which have the ids from
+/// the character list but no [`Common`], resolve hats by the same rule as a
+/// spawned entity.
+pub(crate) fn push_headgear_part_files_for_views(
+    files: &mut Vec<String>,
+    library: &Library,
+    game_file_loader: &GameFileLoader,
+    sex: Sex,
+    view_ids: [u16; 3],
+) {
+    for view_id in view_ids {
+        if let Some(part_file) = headgear_part_file(library, game_file_loader, sex, view_id) {
+            files.push(part_file);
+        }
+    }
+}
+
+fn push_headgear_part_files(files: &mut Vec<String>, common: &Common, library: &Library, game_file_loader: &GameFileLoader) {
+    if common.entity_type != EntityType::Player {
+        return;
+    }
+
+    push_headgear_part_files_for_views(files, library, game_file_loader, common.sex, [
+        common.accessory,
+        common.accessory3,
+        common.accessory2,
+    ]);
+}
+
 fn weapon_sound(weapon_view: u32) -> &'static str {
     match native_real_weapon_id(weapon_view) {
         1 => "attack_short_sword.wav",
@@ -1167,6 +1242,7 @@ impl Common {
 
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
         let mut files = get_entity_part_files(library, self.entity_type, self.job_id, self.sex, Some(self.head));
+        push_headgear_part_files(&mut files, self, library, game_file_loader);
         push_weapon_part_file(&mut files, self, game_file_loader);
         push_shield_part_file(&mut files, self, game_file_loader);
         files
@@ -3140,5 +3216,35 @@ mod weapon_layer_tests {
         // Item form first when view ≥ 5: 방패\%s_%s_%d_방패
         let high = shield_part_candidates("기사", "남", 28901);
         assert_eq!(high[0], "방패\\기사\\기사_남_28901_방패");
+    }
+}
+
+#[cfg(test)]
+mod headgear_tests {
+    use super::headgear_sprite_path;
+    use crate::world::animation::{is_shield_part_path, is_weapon_part_path};
+
+    #[test]
+    fn accname_entries_keep_their_own_separator() {
+        // Every entry in the shipped table looks like this: the underscore is
+        // part of the stored name, so joining with another one produced
+        // `남__고글` and every hat silently resolved to nothing.
+        assert_eq!(headgear_sprite_path("남", "_고글"), "악세사리\\남\\남_고글");
+        assert_eq!(headgear_sprite_path("여", "_10식안경"), "악세사리\\여\\여_10식안경");
+    }
+
+    #[test]
+    fn a_name_without_a_separator_still_gets_one() {
+        assert_eq!(headgear_sprite_path("남", "고글"), "악세사리\\남\\남_고글");
+    }
+
+    #[test]
+    fn headgear_is_neither_weapon_nor_shield() {
+        // Both matchers gate on their own prefix (`인간족\`, `방패\`), which is
+        // what keeps a hat in the ordinary layer order — after the head and
+        // before the weapon — instead of being reordered behind the body.
+        let path = headgear_sprite_path("남", "_고글");
+        assert!(!is_weapon_part_path(&path));
+        assert!(!is_shield_part_path(&path));
     }
 }

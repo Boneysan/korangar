@@ -121,6 +121,36 @@ is_our_artifact() {
     fi
 }
 
+# The two headless fixtures (dialogue + identify NPCs) are disabled in Hercules'
+# npc/scripts_dev.conf on purpose: headless_dialog_test.txt contains a warp, and
+# the 2026-08-18 security pass took both out of the production list for that
+# reason. Five `dialogue-*` scenarios need them, so this runner enables them for
+# the length of one disposable run and puts the file back afterwards.
+#
+# Unlike conf/import/*.conf this file is TRACKED, so a leftover is worse than a
+# stale override: it would be committed. Hence the marker line, and the reclaim
+# below restoring from git rather than from a backup that a killed run poisoned.
+dev_npc_list="npc/scripts_dev.conf"
+dev_npc_marker="// managed by korangar run-integration-tests.sh -- restored when the run ends"
+
+# True when scripts_dev.conf is one WE wrote, not the developer's own file.
+is_our_dev_npc_list() {
+    [ -f "$hercules_repo/$dev_npc_list" ] || return 1
+    grep -qF "$dev_npc_marker" "$hercules_repo/$dev_npc_list"
+}
+
+# Rewrite scripts_dev.conf with the fixtures enabled, from the pristine backup.
+enable_dev_npcs() {
+    {
+        printf '%s\n' "$dev_npc_marker"
+        # `#` as the delimiter, NOT `|`: the alternation below would otherwise
+        # terminate the s command and sed would abort, leaving this file as just
+        # the marker line.
+        sed -E 's#^//("npc/custom/(headless_dialog_test|identify_test)\.txt",)#\1#' \
+            "$scratch/scripts_dev.conf"
+    } > "$hercules_repo/$dev_npc_list"
+}
+
 # Reclaim what a killed run left behind. `cleanup` hangs off an EXIT trap, and
 # no trap runs on SIGKILL or a power loss, so orphans are not a hypothetical —
 # five leaked databases and a stale override set were found in the tree on
@@ -155,6 +185,15 @@ reclaim_orphans() {
             reclaimed=true
         fi
     done
+
+    # A tracked file, so restore from git rather than a backup: by definition the
+    # backup taken by THIS run would already be the poisoned copy.
+    if is_our_dev_npc_list; then
+        echo "restoring $dev_npc_list left enabled by a killed run" >&2
+        git -C "$hercules_repo" checkout -- "$dev_npc_list" 2>/dev/null \
+            || echo "warning: could not git-restore $dev_npc_list; check it by hand" >&2
+        reclaimed=true
+    fi
 
     # Databases are ours by name: korangar_integration_<pid of the runner that
     # made it>. A live pid means a concurrent run owns it, so leave it alone —
@@ -224,6 +263,9 @@ restore_configs() {
             rm -f "$target"
         fi
     done
+    if [ -f "$scratch/scripts_dev.conf" ]; then
+        cp "$scratch/scripts_dev.conf" "$hercules_repo/$dev_npc_list"
+    fi
     configs_installed=false
 }
 
@@ -330,6 +372,7 @@ for name in login-server char-server map-server inter-server integration-sql; do
         : > "$scratch/$name.missing"
     fi
 done
+cp "$hercules_repo/$dev_npc_list" "$scratch/scripts_dev.conf"
 configs_installed=true
 
 cat > "$hercules_repo/conf/import/integration-sql.conf" <<EOF
@@ -344,6 +387,7 @@ EOF
 for name in login-server char-server map-server inter-server; do
     static_override "$name" > "$hercules_repo/conf/import/$name.conf"
 done
+enable_dev_npcs
 
 if [ "${INTEGRATION_SKIP_BUILD:-0}" != "1" ]; then
     echo "building Hercules for PACKETVER 20220406"

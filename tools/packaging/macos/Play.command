@@ -23,6 +23,14 @@ fail() {
     exit 1
 }
 
+# Cheapest possible check, and the most fundamental: an Intel Mac cannot run
+# this binary at all. See Setup.command for why `uname -m` alone is not enough.
+if [ "$(uname -m 2>/dev/null)" != "arm64" ] \
+    && [ "$(sysctl -n hw.optional.arm64 2>/dev/null || echo 0)" != "1" ]; then
+    fail 'this Mac has an Intel processor, and this build is Apple Silicon only.' \
+        'Tell the host you have an Intel Mac -- an Intel build is possible, it is just not in this download.'
+fi
+
 [ -f ./korangar ] || fail 'the game program is not in this folder.' \
     'Keep Play next to the korangar program. Download the macOS folder again if it has gone.'
 

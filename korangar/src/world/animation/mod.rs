@@ -898,9 +898,9 @@ pub struct Animation {
 #[derive(Clone)]
 pub struct AnimationFrame {
     pub event: Option<ActionEvent>,
-    /// ACT attach point for this motion, if authored (`attach_point_count ==
-    /// 1`). Body supplies the parent; secondary layers use
-    /// `offset += -child + body` at compose time (Phase C2).
+    /// ACT attach point for this motion, if authored (first `attach_points`
+    /// entry, matching native `animation.pos[0]`). Body supplies the parent;
+    /// secondary layers use `offset += -child + body` at compose time.
     pub attach_point: Option<Vector2<i32>>,
     pub offset: Vector2<i32>,
     pub top_left: Vector2<i32>,
@@ -1312,7 +1312,7 @@ impl AnimationData {
         self.compose_action_motion(&animation_state, view_direction, view_direction)
     }
 
-    fn compose_action_motion(
+    pub(crate) fn compose_action_motion(
         &self,
         animation_state: &AnimationState,
         animation_action_index: usize,
@@ -2778,6 +2778,71 @@ mod runtime_compose_tests {
         let wrapped = data.compose_idle_frame(10);
         let head = wrapped.frame_parts.iter().find(|part| part.animation_index == 1).unwrap();
         assert_eq!(head.offset, Vector2::new(9, -11));
+    }
+
+    #[test]
+    fn headgear_parents_to_the_body_attach_like_the_head() {
+        // Measured, not assumed: a headgear ACT carries the *same*
+        // body-relative attach point the head does for the same facing
+        // (`playtest-sprite-audit hat-attach` — 619/1853 male and 1527/1864
+        // female hats match hair 1 exactly, the rest by a pixel). That makes a
+        // hat a sibling of the head, not its child. Parenting it to the head's
+        // attach instead would apply the head's own shift twice.
+        let directional_layer = |layer_index: usize, attach: Option<Vector2<i32>>, offset: Vector2<i32>| AnimationLayer {
+            path_key: Some(match layer_index {
+                0 => "인간족\\몸통\\남\\초보자_남".to_owned(),
+                1 => "인간족\\머리통\\남\\1_남".to_owned(),
+                _ => "악세사리\\남\\남_고글".to_owned(),
+            }),
+            sprites: None,
+            actions: None,
+            animations: (0..8)
+                .map(|direction| {
+                    let mut frame = layer_frame(layer_index);
+                    frame.attach_point = attach.map(|point| point + Vector2::new(direction as i32, 0));
+                    if layer_index != 0 {
+                        frame.offset = offset;
+                        frame.frame_parts[0].offset = offset;
+                    }
+                    Animation { frames: vec![frame] }
+                })
+                .collect(),
+        };
+
+        let data = AnimationData {
+            layers: vec![
+                directional_layer(0, Some(Vector2::new(1, -56)), Vector2::zero()),
+                directional_layer(1, Some(Vector2::new(-6, -57)), Vector2::new(-2, -68)),
+                directional_layer(2, Some(Vector2::new(-6, -57)), Vector2::new(-3, -74)),
+            ],
+            delays: vec![4.0; 8],
+            action_layouts: vec![
+                ActionLayout {
+                    min_top: -80,
+                    max_bottom: 12,
+                    min_left: -18,
+                    max_right: 19,
+                };
+                8
+            ],
+            entity_type: EntityType::Player,
+        };
+
+        for direction in 0..8 {
+            let frame = data.compose_idle_frame(direction);
+            let head = frame.frame_parts.iter().find(|part| part.animation_index == 1).unwrap();
+            let hat = frame.frame_parts.iter().find(|part| part.animation_index == 2).unwrap();
+
+            // Both take the same `-child + body` delta, so the hat keeps its
+            // authored distance above the head at every facing.
+            assert_eq!(hat.offset - head.offset, Vector2::new(-1, -6), "facing {direction}");
+        }
+
+        // Layer order survives composition: head over body, hat over head, so
+        // a hat is never painted behind the hair it sits on.
+        let frame = data.compose_idle_frame(0);
+        let order: Vec<usize> = frame.frame_parts.iter().map(|part| part.animation_index).collect();
+        assert_eq!(order, vec![0, 1, 2]);
     }
 
     #[test]

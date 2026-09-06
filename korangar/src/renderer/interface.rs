@@ -611,7 +611,7 @@ struct AnimationInstruction<'a> {
     maximum_scaling: f32,
 }
 
-fn animation_scaling(area: Area, frame: &AnimationFrame, maximum_scaling: f32) -> f32 {
+pub(crate) fn animation_scaling(area: Area, frame: &AnimationFrame, maximum_scaling: f32) -> f32 {
     if frame.size.x <= 0 || frame.size.y <= 0 {
         return 0.0;
     }
@@ -625,7 +625,7 @@ fn animation_scaling(area: Area, frame: &AnimationFrame, maximum_scaling: f32) -
 /// an axis-aligned interface rectangle. Standing player frames do not rotate
 /// their clips, so position, size, and the ACT mirror bit completely describe
 /// the preview draw.
-fn animation_part_area(area: Area, frame: &AnimationFrame, part: &AnimationFramePart, scaling: f32) -> Area {
+pub(crate) fn animation_part_area(area: Area, frame: &AnimationFrame, part: &AnimationFramePart, scaling: f32) -> Area {
     let frame_width = frame.size.x as f32 * scaling;
     let frame_height = frame.size.y as f32 * scaling;
     let frame_screen_left = area.left + (area.width - frame_width) / 2.0;
