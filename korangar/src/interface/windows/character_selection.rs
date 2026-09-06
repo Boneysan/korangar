@@ -28,7 +28,8 @@ mod character_slot_preview {
     use crate::graphics::{Color, CornerDiameter, ScreenPosition, ScreenSize, ShadowPadding};
     use crate::input::InputEvent;
     use crate::loaders::{FontSize, OverflowBehavior};
-    use crate::state::ClientState;
+    use crate::renderer::LayoutExt;
+    use crate::state::{ClientState, ClientStatePathExt, client_state};
 
     pub struct OverlayHandler<A, B> {
         position: ScreenPosition,
@@ -160,6 +161,7 @@ mod character_slot_preview {
         overlay_handler: OverlayHandler<M, P>,
         slot: usize,
         hover_tip: UnsafeCell<String>,
+        preview: UnsafeCell<Option<std::sync::Arc<crate::world::AnimationData>>>,
     }
 
     impl<P, M, B> CharacterSlotPreview<P, M, B> {
@@ -177,6 +179,7 @@ mod character_slot_preview {
                 overlay_handler,
                 slot,
                 hover_tip: UnsafeCell::new(String::new()),
+                preview: UnsafeCell::new(None),
             }
         }
     }
@@ -350,6 +353,23 @@ mod character_slot_preview {
                     Color::rgba_u8(0, 0, 0, 100),
                     ShadowPadding::diagonal(2.0, 5.0),
                 );
+
+                {
+                    let slots_path = client_state().character_slots();
+                    let cloned = state.get(&slots_path).preview(self.slot).cloned();
+                    unsafe {
+                        *self.preview.get() = cloned;
+                    }
+                }
+                if let Some(preview) = unsafe { self.preview.as_ref_unchecked().as_ref() } {
+                    let sprite_area = korangar_interface::layout::area::Area {
+                        left: layout_info.area.left + 8.0,
+                        top: layout_info.area.top + 28.0,
+                        width: layout_info.area.width - 16.0,
+                        height: layout_info.area.height - 36.0,
+                    };
+                    layout.add_animation(sprite_area, preview, 0, Color::WHITE, 2.0);
+                }
 
                 layout.add_text(
                     layout_info.area,

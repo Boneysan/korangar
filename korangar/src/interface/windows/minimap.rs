@@ -1,7 +1,10 @@
+use std::cell::UnsafeCell;
+
 use korangar_interface::element::Element;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::event::{EventQueue, ScrollHandler};
 use korangar_interface::layout::area::Area;
+use korangar_interface::layout::tooltip::TooltipExt;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_interface::window::{CustomWindow, Window};
@@ -26,7 +29,7 @@ const ZOOM_ROW_HEIGHT: f32 = 28.0;
 const SCROLL_ZOOM_STEP: f32 = 18.0;
 
 /// A blip drawn after the map texture (must use textures so it sits on top).
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 struct MinimapBlip {
     x: f32,
     y: f32,
@@ -37,6 +40,7 @@ struct MinimapBlip {
     alpha: u8,
     /// Scale relative to the default player marker size.
     size_scale: f32,
+    name: String,
 }
 
 /// Map area layout plus live blips (player, party, compass).
@@ -56,7 +60,11 @@ struct MinimapViewLayout {
 /// Important: UI **textures** are flushed after all **rectangles**. Drawing the
 /// player as a rectangle would put it under the map bitmap and make it
 /// invisible — the blip must be a texture instruction (or similar custom).
-struct MinimapView;
+struct MinimapView {
+    hover_tip: UnsafeCell<String>,
+}
+
+struct MinimapBlipTooltip;
 
 struct MinimapScrollZoom;
 
@@ -124,6 +132,7 @@ impl Element<ClientState> for MinimapView {
                     blue: 120,
                     alpha: 255,
                     size_scale: 0.85,
+                    name: member.name().to_owned(),
                 });
             }
 
@@ -137,6 +146,7 @@ impl Element<ClientState> for MinimapView {
                     blue: mark.blue,
                     alpha: mark.alpha.max(200),
                     size_scale: 1.05,
+                    name: "Mark".to_owned(),
                 });
             }
 
@@ -245,6 +255,12 @@ impl Element<ClientState> for MinimapView {
                     ShadowPadding::uniform(0.0),
                 );
             }
+            if !blip.name.is_empty() && marker.check().run(layout) {
+                unsafe {
+                    *self.hover_tip.get() = blip.name.clone();
+                    layout.add_tooltip(self.hover_tip.as_ref_unchecked().as_str(), MinimapBlipTooltip.tooltip_id());
+                }
+            }
         }
 
         // Live player blip — must be a texture so it draws above the map bitmap.
@@ -256,6 +272,17 @@ impl Element<ClientState> for MinimapView {
                 width: player_size,
                 height: player_size,
             };
+
+            if marker.check().run(layout) {
+                let name = state
+                    .try_follow(this_entity())
+                    .and_then(|player| player.get_details().map(String::as_str))
+                    .unwrap_or("You");
+                unsafe {
+                    *self.hover_tip.get() = name.to_owned();
+                    layout.add_tooltip(self.hover_tip.as_ref_unchecked().as_str(), MinimapBlipTooltip.tooltip_id());
+                }
+            }
 
             if let Some(texture) = minimap.player_marker() {
                 // Soft shadow under the blip (texture tint) for contrast on bright maps.
@@ -384,7 +411,9 @@ impl CustomWindow<ClientState> for MinimapWindow {
             minimum_height: MIN_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
             maximum_height: MAX_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
             elements: (
-                MinimapView,
+                MinimapView {
+                    hover_tip: UnsafeCell::new(String::new()),
+                },
                 MinimapCoords,
                 split! {
                     gaps: theme().window().gaps(),

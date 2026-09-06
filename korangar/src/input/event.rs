@@ -294,6 +294,17 @@ pub enum InputEvent {
     AssignSkillToHotbar {
         skill: LearnableSkill,
     },
+    /// Camera-relative keyboard movement (WASD).
+    KeyboardMove {
+        forward: bool,
+        back: bool,
+        left: bool,
+        right: bool,
+    },
+    /// Warp to an online party member (`@partyjump`).
+    JumpToPartyMember {
+        character_name: String,
+    },
     /// Cast a skill.
     CastSkill {
         /// Slot of the hotbar that the skill is bound to.

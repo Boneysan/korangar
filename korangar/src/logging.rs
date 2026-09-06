@@ -39,6 +39,7 @@ const PREVIOUS_LOG_FILE_NAME: &str = "korangar.log.previous";
 /// a locked file, a sandbox. That is not worth refusing to start over, so the
 /// client keeps running and the console keeps being the only sink.
 static LOG_FILE: OnceLock<Option<Mutex<File>>> = OnceLock::new();
+static LOG_PATH: OnceLock<PathBuf> = OnceLock::new();
 
 fn log_directory() -> Option<PathBuf> {
     std::env::current_exe().ok().and_then(|path| path.parent().map(Path::to_path_buf))
@@ -46,6 +47,9 @@ fn log_directory() -> Option<PathBuf> {
 
 /// Where this run is writing. Also what the friend-facing instructions name.
 pub fn log_path() -> PathBuf {
+    if let Some(path) = LOG_PATH.get() {
+        return path.clone();
+    }
     match log_directory() {
         Some(directory) => directory.join(LOG_FILE_NAME),
         None => PathBuf::from(LOG_FILE_NAME),
@@ -60,20 +64,34 @@ pub fn log_path() -> PathBuf {
 /// otherwise report.
 pub fn init() {
     LOG_FILE.get_or_init(|| {
-        let path = log_path();
-
-        // Keep exactly one older run. Failure is fine: a missing previous log
-        // is not a reason to start without a current one.
-        if path.exists() {
-            let previous = match log_directory() {
-                Some(directory) => directory.join(PREVIOUS_LOG_FILE_NAME),
-                None => PathBuf::from(PREVIOUS_LOG_FILE_NAME),
-            };
-            let _ = std::fs::rename(&path, previous);
+        let preferred = log_path();
+        let fallback = std::env::temp_dir().join("korangar").join(LOG_FILE_NAME);
+        for path in [preferred, fallback] {
+            if let Some(directory) = path.parent() {
+                let _ = std::fs::create_dir_all(directory);
+            }
+            if path.exists() {
+                let previous = path.with_file_name(PREVIOUS_LOG_FILE_NAME);
+                // Windows rename does not replace the destination. Remove only
+                // our older backup before rotating the most recent run.
+                let _ = std::fs::remove_file(&previous);
+                let _ = std::fs::rename(&path, previous);
+            }
+            match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+                Ok(mut file) => {
+                    // No formatting libraries before the first persisted byte.
+                    // A later native startup fault still leaves this breadcrumb.
+                    let _ = file.write_all(b"[startup] log opened\n");
+                    let _ = file.flush();
+                    let _ = LOG_PATH.set(path);
+                    return Some(Mutex::new(file));
+                }
+                Err(error) => {
+                    let _ = writeln!(std::io::stderr().lock(), "[log] cannot open {}: {error}", path.display());
+                }
+            }
         }
-
-        let file = OpenOptions::new().create(true).write(true).truncate(true).open(&path).ok()?;
-        Some(Mutex::new(file))
+        None
     });
 
     install_panic_hook();
@@ -83,6 +101,28 @@ pub fn init() {
         chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
         env!("CARGO_PKG_VERSION")
     ));
+    write_line(format_args!(
+        "[startup] platform={}/{} log={}",
+        std::env::consts::OS,
+        std::env::consts::ARCH,
+        log_path().display()
+    ));
+    write_line(format_args!(
+        "[startup] executable={:?} working_directory={:?}",
+        std::env::current_exe(),
+        std::env::current_dir()
+    ));
+    for name in [
+        "WGPU_BACKEND",
+        "WGPU_ADAPTER_NAME",
+        "KORANGAR_ALLOW_SOFTWARE_RENDERING",
+        "KORANGAR_PACKET_LOG",
+    ] {
+        write_line(format_args!(
+            "[startup] {name}={}",
+            std::env::var(name).unwrap_or_else(|_| "<default>".to_owned())
+        ));
+    }
 }
 
 /// The hook writes to the log and then defers to the default one, so a
@@ -110,6 +150,7 @@ fn install_panic_hook() {
                     location,
                     payload_message(info)
                 );
+                let _ = writeln!(file, "{}", std::backtrace::Backtrace::force_capture());
                 let _ = file.flush();
             }
 
@@ -136,14 +177,15 @@ fn payload_message(info: &std::panic::PanicHookInfo<'_>) -> String {
 /// and never blocks on a poisoned lock: a diagnostic that can take the client
 /// down with it is worse than a missing diagnostic.
 pub fn write_line(arguments: Arguments<'_>) {
-    eprintln!("{arguments}");
-
     if let Some(Some(file)) = LOG_FILE.get()
         && let Ok(mut file) = file.lock()
     {
         let _ = writeln!(file, "{} {}", chrono::Local::now().format("%H:%M:%S%.3f"), arguments);
         let _ = file.flush();
     }
+    // A detached/closed Windows console must not prevent the file write or
+    // turn a harmless diagnostic into a panic.
+    let _ = writeln!(std::io::stderr().lock(), "{arguments}");
 }
 
 /// Like `eprintln!`, but the line also survives in `korangar.log`.

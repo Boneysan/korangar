@@ -15,6 +15,7 @@ pub use effect::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
 pub use game_interface::AlignHorizontal;
 pub use game_interface::GameInterfaceRenderer;
 pub use interface::{InterfaceRenderer, LayoutExt};
+pub(crate) use interface::{animation_part_area, animation_scaling};
 #[cfg(feature = "debug")]
 pub use marker::DebugMarkerRenderer;
 

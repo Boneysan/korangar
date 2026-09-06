@@ -1,21 +1,42 @@
+use std::sync::Arc;
+
 use korangar_interface::element::StateElement;
 use ragnarok_packets::{CharacterId, CharacterInformation};
 use rust_state::{Path, PathExt, RustState, Selector};
 
 use crate::state::ClientState;
+use crate::world::AnimationData;
 
 #[derive(Default, RustState, StateElement)]
 pub struct CharacterSlots {
     slots: Vec<Option<CharacterInformation>>,
+    #[hidden_element]
+    previews: Vec<Option<Arc<AnimationData>>>,
 }
 
 impl CharacterSlots {
     pub fn set_slot_count(&mut self, slot_count: usize) {
         self.slots.resize(slot_count, None);
+        self.previews.resize(slot_count, None);
     }
 
     pub fn get_slot_count(&self) -> usize {
         self.slots.len()
+    }
+
+    pub fn preview(&self, slot: usize) -> Option<&Arc<AnimationData>> {
+        self.previews.get(slot).and_then(|preview| preview.as_ref())
+    }
+
+    pub fn set_preview(&mut self, slot: usize, preview: Arc<AnimationData>) {
+        if slot >= self.previews.len() {
+            self.previews.resize(slot + 1, None);
+        }
+        self.previews[slot] = Some(preview);
+    }
+
+    pub fn characters(&self) -> &[Option<CharacterInformation>] {
+        &self.slots
     }
 
     pub fn add_character(&mut self, character_information: CharacterInformation) {
@@ -70,6 +91,7 @@ impl CharacterSlots {
 
         // Clear the character list.
         self.slots.iter_mut().for_each(|slot| *slot = None);
+        self.previews.iter_mut().for_each(|preview| *preview = None);
 
         characters
             .into_iter()

@@ -1,3 +1,4 @@
+mod accessory_name;
 mod baby_job;
 mod campaign_quest;
 mod item_info;
@@ -21,6 +22,7 @@ use hashbrown::HashMap;
 use korangar_loaders::FileLoader;
 use mlua::{Lua, LuaOptions, StdLib};
 
+pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
 pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable};
 pub use self::item_info::ItemInfo;
@@ -40,6 +42,7 @@ pub use crate::world::library::skill_information::SkillListInformation;
 pub use crate::world::library::skill_requirements::{SkillListKey, SkillListRequirements};
 
 pub struct Library {
+    accessory_name_table: <AccessoryName as Table>::Storage,
     job_identity_table: <JobIdentity as Table>::Storage,
     job_name_table: <JobName as Table>::Storage,
     item_info_table: <ItemInfo as Table>::Storage,
@@ -55,6 +58,7 @@ pub struct Library {
 
 impl Library {
     pub fn new(game_file_loader: &GameFileLoader) -> mlua::Result<Self> {
+        let accessory_name_table = AccessoryName::load(game_file_loader)?;
         let job_identity_table = JobIdentity::load(game_file_loader)?;
         let job_name_table = JobName::load(game_file_loader)?;
         let item_info_table = ItemInfo::load(game_file_loader)?;
@@ -68,6 +72,7 @@ impl Library {
         let msgstringtable = MsgStringTable::load(game_file_loader);
 
         Ok(Self {
+            accessory_name_table,
             job_identity_table,
             job_name_table,
             item_info_table,

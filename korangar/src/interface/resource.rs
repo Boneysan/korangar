@@ -5,6 +5,7 @@ pub enum ItemSource {
     Inventory,
     Equipment { position: EquipPosition },
     Storage,
+    Hotbar { slot: HotbarSlot },
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

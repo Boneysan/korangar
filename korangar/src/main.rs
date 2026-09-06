@@ -24,6 +24,7 @@ fn main() {
     {
         client.run(event_loop);
     }
+    korangar::client_log!("[shutdown] client exited normally");
 }
 
 #[cfg(target_os = "linux")]

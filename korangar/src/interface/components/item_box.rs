@@ -175,6 +175,13 @@ where
                     item,
                 });
             }
+            ItemSource::Hotbar { slot } => {
+                queue.queue(InputEvent::MoveItem {
+                    source: ItemSource::Hotbar { slot },
+                    destination: ItemSource::Inventory,
+                    item,
+                });
+            }
         }
     }
 }

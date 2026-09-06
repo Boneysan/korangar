@@ -649,6 +649,24 @@ mod tests {
     }
 
     #[test]
+    fn job_change_updates_the_roster_label() {
+        let mut state = PartyState::default();
+        state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| {
+            "Novice".to_owned()
+        });
+        assert!(state.members()[0].display_label().contains("Novice"));
+
+        state.update_job_and_level(AccountId(1), JobId(4), 12, "Acolyte".to_owned());
+        let label = state.members()[0].display_label();
+        assert!(
+            label.contains("Acolyte"),
+            "job packet must rewrite the cached class name: {label}"
+        );
+        assert!(label.contains("Lv12"));
+        assert!(!label.contains("Novice"));
+    }
+
+    #[test]
     fn roster_builds_display_text() {
         let mut state = PartyState::default();
         state.set_roster("Seal Cascade".to_owned(), vec![sample_member("Alice", true)], |_| {
