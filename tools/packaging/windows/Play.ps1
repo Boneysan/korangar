@@ -31,6 +31,9 @@ $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
 
+function Say($text)  { Write-Host ("  " + $text) }
+function Good($text) { Write-Host ("  " + $text) -ForegroundColor Green }
+
 function Fail($what, $fix) {
     Write-Host ''
     Write-Host "  Seal Cascade cannot start: $what" -ForegroundColor Red
@@ -40,10 +43,27 @@ function Fail($what, $fix) {
     exit 1
 }
 
+Write-Host ''
+Write-Host '  Seal Cascade' -ForegroundColor Cyan
+Write-Host ''
+$packVersionFile = Join-Path $here 'VERSION'
+if (Test-Path -LiteralPath $packVersionFile) {
+    $packVersion = (Get-Content -LiteralPath $packVersionFile -Raw).Trim()
+    Say ('Pack version ' + $packVersion)
+} else {
+    Say 'Pack version unknown (no VERSION file -- this is an old download).'
+}
+Say 'Checking this folder before starting. Nothing is sent anywhere.'
+Say 'If a line sits still, it is still working -- large files take a minute.'
+Write-Host ''
+
+Say 'Looking for korangar.exe...'
 if (-not (Test-Path -LiteralPath (Join-Path $here 'korangar.exe'))) {
     Fail 'korangar.exe is not in this folder.' `
          'Keep Play.bat and korangar.exe together -- do not move one out on its own.'
 }
+
+Good 'korangar.exe is here'
 
 # The client is compiled for x86-64-v3 (AVX2, FMA, BMI). Without it the process
 # dies on its first vectorised instruction and a friend sees nothing at all, so
@@ -52,6 +72,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $here 'korangar.exe'))) {
 # Framework, which has no System.Runtime.Intrinsics, so this P/Invoke is the
 # only way to ask. It answers false on Windows 7 regardless; the client needs
 # Windows 10 anyway.
+Say 'Checking your processor...'
 $avx2 = $null
 try {
     $signature = '[DllImport("kernel32.dll")] public static extern bool IsProcessorFeaturePresent(uint feature);'
@@ -69,8 +90,13 @@ if ($avx2 -eq $false) {
           "  There is no way around this one. See READ ME FIRST.txt.")
 }
 
+if ($avx2 -ne $false) {
+    Good 'Processor is fine.'
+}
+
 # Only ask if the pack ships the installer -- its presence is what says this
 # build has a runtime dependency at all.
+Say 'Checking the Visual C++ runtime...'
 if (Test-Path -LiteralPath (Join-Path $here 'VC_redist.x64.exe')) {
     $runtime = Join-Path (Join-Path $env:WINDIR 'System32') 'VCRUNTIME140_1.dll'
     if (-not (Test-Path -LiteralPath $runtime)) {
@@ -80,7 +106,10 @@ if (Test-Path -LiteralPath (Join-Path $here 'VC_redist.x64.exe')) {
     }
 }
 
+Good 'Runtime is fine.'
+
 # The Assets download is separate and enormous, so this is the likely miss.
+Say 'Looking for game data...'
 $assets = @('data.grf', 'rdata.grf', 'renewal2021.grf', 'resources2021.grf', 'lua_files.7z')
 $missing = @($assets | Where-Object { -not (Test-Path -LiteralPath (Join-Path $here $_)) })
 
@@ -88,6 +117,8 @@ if ($missing.Count -gt 0) {
     Fail "the game data is missing ($($missing -join ', '))." `
          "Double-click Setup in this folder. It finds the Assets download and moves it in for you."
 }
+
+Good 'Game data is here.'
 
 # The two halves of the pack ship SEPARATELY NAMED manifests on purpose: they
 # are merged into one folder, and a shared name would mean one silently
@@ -116,11 +147,13 @@ if ($null -eq $expected) {
          'Re-download Assets. The manifest must name lua_files.7z.'
 }
 
+Say 'Spot-checking lua_files.7z (a few seconds)...'
 $actual = (Get-FileHash -LiteralPath $luaPath -Algorithm SHA256).Hash.ToUpperInvariant()
 if ($actual -ne $expected) {
     Fail 'lua_files.7z does not match the checksum list.' `
          'The file was swapped or the download is corrupt. Run Verify, then copy a fresh lua_files.7z and SHA256SUMS-assets from Assets.'
 }
+Good 'lua_files.7z matches.'
 
 if (-not (Test-Path -LiteralPath (Join-Path $here 'archive'))) {
     Fail 'the archive folder is missing.' `
@@ -132,11 +165,79 @@ if (-not (Test-Path -LiteralPath (Join-Path (Join-Path $here 'client') 'server.r
          'Re-download this OS folder -- server.ron ships already filled in, and is not something you write.'
 }
 
+# A friend whose PC only works on one graphics API needs that to STICK. The
+# client reads WGPU_BACKEND (wgpu's own variable) when it picks an adapter, and
+# Troubleshoot.bat sets it for a single run -- but a single run is not a fix if
+# the game has to be started from the troubleshooter every evening.
+#
+# So: one word in client\graphics-api.txt, applied here. That path is chosen
+# deliberately. It is not shipped and not listed in SHA256SUMS-client, so Verify
+# ignores it; and Update merges client\ rather than replacing it, so a friend's
+# setting survives the next patch.
+#
+# A value we do not recognise is reported and DROPPED rather than passed on:
+# wgpu given a backend name it cannot parse can end up selecting nothing at all,
+# which fails as a blank window -- the exact symptom this file exists to cure.
+Say 'Checking the graphics API setting...'
+$backendFile = Join-Path (Join-Path $here 'client') 'graphics-api.txt'
+$choice = ''
+if (Test-Path -LiteralPath $backendFile) {
+    foreach ($line in Get-Content -LiteralPath $backendFile) {
+        # TrimStart on the BOM as well: Notepad can save this file as UTF-8
+        # with a byte-order mark, and 5.1's Get-Content hands that mark back as
+        # the first character of the first line. Without this, 'vulkan' saved by
+        # a friend in Notepad reads as an unknown API and gets ignored.
+        $trimmed = $line.Trim().TrimStart([char]0xFEFF).Trim()
+        if ($trimmed -eq '') { continue }
+        if ($trimmed.StartsWith('#')) { continue }
+        $choice = $trimmed.ToLower()
+        break
+    }
+}
+
+$backend = ''
+$backendLabel = ''
+if ($choice -eq 'vulkan' -or $choice -eq 'vk') {
+    $backend = 'vulkan'
+    $backendLabel = 'Vulkan'
+} elseif ($choice -eq 'dx12' -or $choice -eq 'directx12' -or $choice -eq 'd3d12') {
+    $backend = 'dx12'
+    $backendLabel = 'DirectX 12'
+} elseif ($choice -eq 'gl' -or $choice -eq 'opengl') {
+    $backend = 'gl'
+    $backendLabel = 'OpenGL'
+} elseif ($choice -eq '' -or $choice -eq 'auto' -or $choice -eq 'automatic' -or $choice -eq 'default') {
+    $backend = ''
+} else {
+    Write-Host ("  Ignoring client\graphics-api.txt: '" + $choice + "' is not a graphics API this game knows.") -ForegroundColor Yellow
+    Say 'Use vulkan, dx12, gl, or auto. Letting the game choose for now.'
+    $backend = ''
+}
+
+if ($backend -ne '') {
+    $env:WGPU_BACKEND = $backend
+    Good ('Graphics API: ' + $backendLabel + ' (set in client\graphics-api.txt).')
+} else {
+    # Remove it, in case the console this was launched from has one set: an
+    # inherited WGPU_BACKEND nobody remembers setting is a bad way to spend an
+    # evening. Remove-Item and not `$env:WGPU_BACKEND = ''` -- an assignment
+    # leaves the variable PRESENT and empty, and an empty backend list is not
+    # the same as no preference.
+    Remove-Item Env:WGPU_BACKEND -ErrorAction SilentlyContinue
+    Good 'Graphics API: chosen automatically.'
+}
+
 # Files from Drive arrive tagged as downloaded; clearing the tag on our own
 # files makes Windows less suspicious. Harmless if the tag is not there.
+Say 'Clearing Windows download flags...'
 Get-ChildItem -LiteralPath $here -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { @('.exe', '.bat', '.ps1', '.ron', '.txt') -contains $_.Extension } |
     Unblock-File -ErrorAction SilentlyContinue
+Good 'Ready.'
 
+Write-Host ''
 Write-Host '  Starting Seal Cascade...' -ForegroundColor Green
+Say 'The window can take a minute to appear, especially the first time.'
+Say 'You can close this console once the game is open.'
+Write-Host ''
 Start-Process -FilePath (Join-Path $here 'korangar.exe') -WorkingDirectory $here

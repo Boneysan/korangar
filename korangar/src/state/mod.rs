@@ -474,8 +474,8 @@ impl ClientState {
 
         time_phase!("create window state", {
             let welcome_string = format!(
-                "Welcome to ^ff8800Korangar^000000 version ^ff8800{}^000000!",
-                env!("CARGO_PKG_VERSION")
+                "Welcome to ^ff8800Seal Cascade^000000 pack ^ff8800{}^000000.",
+                korangar_networking::PACK_VERSION
             );
             let chat_messages = ChatHistory::from_welcome(ChatMessage::new(welcome_string, MessageColor::Server));
 

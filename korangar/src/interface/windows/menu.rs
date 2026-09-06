@@ -53,8 +53,8 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleCommandsWindow,
                 },
                 button! {
-                    text: "Quest Log",
-                    tooltip: "Active quests, and what each hunting contract still wants handed in (^000001Ctrl+Q^000000)",
+                    text: "Quest Journal",
+                    tooltip: "Search campaign and regular quests, pin favorites, and check collection progress (^000001Ctrl+Q^000000)",
                     event: InputEvent::ToggleQuestLogWindow,
                 },
                 button! {

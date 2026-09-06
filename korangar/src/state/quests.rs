@@ -35,6 +35,19 @@ pub struct QuestEntry {
 }
 
 impl QuestEntry {
+    /// Inventory readiness is not server-confirmed quest completion. Quests
+    /// without known item objectives must never appear ready by vacuous truth.
+    pub fn items_ready(&self, count: impl Fn(ItemId) -> u32) -> bool {
+        !self.requirements.is_empty() && self.requirements.iter().all(|item| count(item.item_id) >= item.needed)
+    }
+
+    pub fn matches_search(&self, query: &str) -> bool {
+        let query = query.trim().to_lowercase();
+        self.name.to_lowercase().contains(&query)
+            || self.quest_id.to_string().contains(&query)
+            || self.requirements.iter().any(|item| item.item_name.to_lowercase().contains(&query))
+    }
+
     pub fn name(&self) -> &str {
         &self.name
     }
@@ -48,6 +61,11 @@ impl QuestEntry {
 #[derive(Clone, Debug, Default, RustState, StateElement)]
 pub struct QuestLogState {
     quests: Vec<QuestEntry>,
+    /// Journal preferences survive closing the window and map-list refreshes,
+    /// but are cleared on character switch. Pins order this journal, not a HUD.
+    pub search: String,
+    pub ready_only: bool,
+    pinned: Vec<u32>,
 }
 
 impl QuestLogState {
@@ -59,8 +77,21 @@ impl QuestLogState {
         self.quests.is_empty()
     }
 
+    pub fn is_pinned(&self, quest_id: u32) -> bool {
+        self.pinned.contains(&quest_id)
+    }
+
+    pub fn toggle_pin(&mut self, quest_id: u32) {
+        if self.is_pinned(quest_id) {
+            self.pinned.retain(|id| *id != quest_id);
+        } else if self.quests.iter().any(|quest| quest.quest_id == quest_id) {
+            self.pinned.push(quest_id);
+        }
+    }
+
     /// Replace the whole log, as `ZC_ALL_QUEST_LIST` does on map login.
     pub fn replace(&mut self, quests: Vec<QuestEntry>) {
+        self.pinned.retain(|id| quests.iter().any(|quest| quest.quest_id == *id));
         self.quests = quests;
     }
 
@@ -77,11 +108,12 @@ impl QuestLogState {
 
     pub fn remove(&mut self, quest_id: u32) {
         self.quests.retain(|entry| entry.quest_id != quest_id);
+        self.pinned.retain(|id| *id != quest_id);
     }
 
     /// Drop everything, for a logout or a character switch.
     pub fn clear(&mut self) {
-        self.quests.clear();
+        *self = Self::default();
     }
 }
 
@@ -133,5 +165,74 @@ mod tests {
 
         assert_eq!(log.quests().len(), 1);
         assert_eq!(log.quests()[0].quest_id, 20008);
+    }
+
+    #[test]
+    fn readiness_tracks_inventory_in_both_directions() {
+        let quest = entry(20002, "Contract");
+        assert!(!quest.items_ready(|_| 6));
+        assert!(quest.items_ready(|_| 7));
+        assert!(quest.items_ready(|_| 100));
+        assert!(!quest.items_ready(|_| 0));
+        let mut story = quest;
+        story.requirements.clear();
+        assert!(!story.items_ready(|_| 100));
+    }
+
+    #[test]
+    fn readiness_requires_every_objective() {
+        let mut quest = entry(20002, "Contract");
+        quest.requirements.push(QuestRequirementEntry {
+            item_id: ItemId(1052),
+            item_name: "Single Cell".into(),
+            needed: 7,
+        });
+        assert!(!quest.items_ready(|id| if id == ItemId(1016) { 100 } else { 6 }));
+        assert!(quest.items_ready(|_| 7));
+    }
+
+    #[test]
+    fn search_matches_names_items_and_ids_without_case_or_outer_spaces() {
+        let quest = entry(20002, "Contract: Cellar Vermin");
+        for query in ["", "  CELLAR  ", "rat tail", "20002"] {
+            assert!(quest.matches_search(query));
+        }
+        assert!(!quest.matches_search("Mushroom"));
+    }
+
+    #[test]
+    fn pins_follow_quest_ids_across_refresh_and_are_removed_with_quests() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.add(entry(20003, "Second"));
+        log.toggle_pin(20002);
+        log.toggle_pin(99999);
+        assert!(!log.is_pinned(99999));
+        log.search = "First".into();
+        log.replace(vec![entry(20003, "Second"), entry(20002, "First")]);
+        assert!(log.is_pinned(20002));
+        assert_eq!(log.search, "First");
+        log.remove(20002);
+        assert!(!log.is_pinned(20002));
+        log.toggle_pin(20003);
+        log.replace(vec![]);
+        assert!(!log.is_pinned(20003));
+    }
+
+    #[test]
+    fn unpin_and_character_switch_reset_journal_preferences() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.toggle_pin(20002);
+        log.toggle_pin(20002);
+        assert!(!log.is_pinned(20002));
+        log.toggle_pin(20002);
+        log.search = "Rat".into();
+        log.ready_only = true;
+        log.clear();
+        assert!(log.is_empty());
+        assert!(!log.is_pinned(20002));
+        assert!(log.search.is_empty());
+        assert!(!log.ready_only);
     }
 }
