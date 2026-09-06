@@ -156,6 +156,8 @@ THE PROGRAMS IN THIS FOLDER
 --------------------------------------------------------------------------------
 
   Setup    Run once, first. Merges in the game data and checks it is intact.
+           The last thing it asks is which graphics API to use -- press Enter
+           for automatic unless the host told you otherwise.
 
   Play     Starts the game. It quietly re-checks the important files first, so
            if something has gone missing it tells you which file instead of
@@ -170,8 +172,10 @@ THE PROGRAMS IN THIS FOLDER
            only looks and reports.
 
   Troubleshoot   For a white screen, missing graphics, or a startup failure.
-                 Try Vulkan, then DirectX 12. Option 7 creates diagnostics.txt.
-                 Send that report and troubleshoot-launch.log to the host.
+                 Try Vulkan, then DirectX 12. Option 8 makes the one that
+                 worked stick, so Play uses it from then on. Option 7 creates
+                 diagnostics.txt -- send that and troubleshoot-launch.log to
+                 the host.
 
 
 --------------------------------------------------------------------------------
@@ -215,6 +219,18 @@ IF SOMETHING GOES WRONG
 
   Drive warns it "can't scan this file for viruses"
       That is just the size. Click "Download anyway".
+
+  A white screen, or a window with nothing in it
+      The PC has more than one way to draw the game -- Vulkan and DirectX 12 --
+      and on some graphics cards only one of them works. Run Troubleshoot, try
+      option 2 (Vulkan), then option 3 (DirectX 12). When one of them looks
+      right, come back and pick option 8 to keep it: Play will start with that
+      graphics API every time afterwards, including after an update.
+
+      Setup asks the same question at the end, so you can change it there
+      too. Either way the answer is a one-word file, client\graphics-api.txt,
+      holding vulkan, dx12, gl, or auto. You can edit or delete it yourself;
+      deleting it puts the game back to choosing on its own.
 
   The game opens and immediately closes
       Run Verify. If everything matches, send the host the log file -- see

@@ -165,6 +165,68 @@ if (-not (Test-Path -LiteralPath (Join-Path (Join-Path $here 'client') 'server.r
          'Re-download this OS folder -- server.ron ships already filled in, and is not something you write.'
 }
 
+# A friend whose PC only works on one graphics API needs that to STICK. The
+# client reads WGPU_BACKEND (wgpu's own variable) when it picks an adapter, and
+# Troubleshoot.bat sets it for a single run -- but a single run is not a fix if
+# the game has to be started from the troubleshooter every evening.
+#
+# So: one word in client\graphics-api.txt, applied here. That path is chosen
+# deliberately. It is not shipped and not listed in SHA256SUMS-client, so Verify
+# ignores it; and Update merges client\ rather than replacing it, so a friend's
+# setting survives the next patch.
+#
+# A value we do not recognise is reported and DROPPED rather than passed on:
+# wgpu given a backend name it cannot parse can end up selecting nothing at all,
+# which fails as a blank window -- the exact symptom this file exists to cure.
+Say 'Checking the graphics API setting...'
+$backendFile = Join-Path (Join-Path $here 'client') 'graphics-api.txt'
+$choice = ''
+if (Test-Path -LiteralPath $backendFile) {
+    foreach ($line in Get-Content -LiteralPath $backendFile) {
+        # TrimStart on the BOM as well: Notepad can save this file as UTF-8
+        # with a byte-order mark, and 5.1's Get-Content hands that mark back as
+        # the first character of the first line. Without this, 'vulkan' saved by
+        # a friend in Notepad reads as an unknown API and gets ignored.
+        $trimmed = $line.Trim().TrimStart([char]0xFEFF).Trim()
+        if ($trimmed -eq '') { continue }
+        if ($trimmed.StartsWith('#')) { continue }
+        $choice = $trimmed.ToLower()
+        break
+    }
+}
+
+$backend = ''
+$backendLabel = ''
+if ($choice -eq 'vulkan' -or $choice -eq 'vk') {
+    $backend = 'vulkan'
+    $backendLabel = 'Vulkan'
+} elseif ($choice -eq 'dx12' -or $choice -eq 'directx12' -or $choice -eq 'd3d12') {
+    $backend = 'dx12'
+    $backendLabel = 'DirectX 12'
+} elseif ($choice -eq 'gl' -or $choice -eq 'opengl') {
+    $backend = 'gl'
+    $backendLabel = 'OpenGL'
+} elseif ($choice -eq '' -or $choice -eq 'auto' -or $choice -eq 'automatic' -or $choice -eq 'default') {
+    $backend = ''
+} else {
+    Write-Host ("  Ignoring client\graphics-api.txt: '" + $choice + "' is not a graphics API this game knows.") -ForegroundColor Yellow
+    Say 'Use vulkan, dx12, gl, or auto. Letting the game choose for now.'
+    $backend = ''
+}
+
+if ($backend -ne '') {
+    $env:WGPU_BACKEND = $backend
+    Good ('Graphics API: ' + $backendLabel + ' (set in client\graphics-api.txt).')
+} else {
+    # Remove it, in case the console this was launched from has one set: an
+    # inherited WGPU_BACKEND nobody remembers setting is a bad way to spend an
+    # evening. Remove-Item and not `$env:WGPU_BACKEND = ''` -- an assignment
+    # leaves the variable PRESENT and empty, and an empty backend list is not
+    # the same as no preference.
+    Remove-Item Env:WGPU_BACKEND -ErrorAction SilentlyContinue
+    Good 'Graphics API: chosen automatically.'
+}
+
 # Files from Drive arrive tagged as downloaded; clearing the tag on our own
 # files makes Windows less suspicious. Harmless if the tag is not there.
 Say 'Clearing Windows download flags...'
