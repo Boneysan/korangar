@@ -7067,8 +7067,14 @@ impl Client {
         // close enough that the character would otherwise stop. `fresh` comes
         // from the input layer (a key that went down this frame), because timing
         // cannot tell a fast double-tap from a key that was never released.
-        const HELD_PATH: i32 = 8;
-        const REFRESH_WITHIN: u16 = 2;
+        // Every refresh is a correction: the server answers with a walk from ITS
+        // authoritative position, and the client snaps to it. That snap is the
+        // rubber banding, so the cure is to refresh as rarely as the walk allows
+        // -- a long path, extended only when the character has all but arrived.
+        // 15 stays under the server's `max_walk_path` (17 stock), and the path
+        // is straight by construction, so its length is its distance.
+        const HELD_PATH: i32 = 15;
+        const REFRESH_WITHIN: u16 = 1;
 
         let step_x = move_x.round() as i32;
         let step_y = move_z.round() as i32;
@@ -7490,15 +7496,28 @@ impl Client {
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
                 }
                 InputEvent::KeyboardMoveStop => {
-                    // Walking to where you already are is how this protocol
-                    // says stop. Only sent when a path was actually in flight,
-                    // so standing still costs nothing.
-                    if self.keyboard_move_target.take().is_some()
+                    // Naming a tile is how this protocol spells stop, and the
+                    // tile named is one step AHEAD, never the one underfoot: the
+                    // client's idea of where the character is trails the
+                    // server's during a walk, so asking for the tile underfoot
+                    // can ask the server to walk backwards -- which looks
+                    // exactly like the rubber banding this is trying to avoid.
+                    // One step ahead is either where the server already is, or
+                    // just in front of it. Costs at most one cell of coast.
+                    if let Some((_, step_x, step_y)) = self.keyboard_move_target.take()
                         && let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position())
                     {
+                        let ahead_x = (here.x as i32 + step_x).max(0) as u16;
+                        let ahead_y = (here.y as i32 + step_y).max(0) as u16;
+                        let ahead = TilePosition { x: ahead_x, y: ahead_y };
+                        let stop = match self.map.as_deref().is_some_and(|map| map.is_walkable(ahead)) {
+                            true => ahead,
+                            false => here,
+                        };
+
                         let _ = self.networking_system.player_move(WorldPosition {
-                            x: here.x,
-                            y: here.y,
+                            x: stop.x,
+                            y: stop.y,
                             direction: ragnarok_packets::Direction::North,
                         });
                     }
