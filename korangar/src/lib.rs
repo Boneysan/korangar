@@ -7046,25 +7046,49 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        // Exactly one tile per press, and one diagonal tile when two keys are
-        // held together. The move vector is normalised, so at least one
-        // component is >= 0.707 and rounding can never produce a zero step.
+        // A tap places you exactly one cell; holding the key covers ground.
         //
-        // This used to try four tiles first and walk down to one, taking the
-        // farthest walkable tile -- which meant that on open ground every tap
-        // sent the character three or four cells (three on a diagonal, where
-        // 0.707 * 4 rounds to 3). Smooth while a key was held, unusable for
-        // standing anywhere in particular.
-        let tile_x = start.x as i32 + move_x.round() as i32;
-        let tile_y = start.y as i32 + move_z.round() as i32;
-        if tile_x < 0 || tile_y < 0 {
-            return;
-        }
-        let destination = TilePosition {
-            x: tile_x as u16,
-            y: tile_y as u16,
+        // Both are wanted, and they are not the same request: standing on a
+        // particular tile needs a single step, crossing a field does not. The
+        // throttle above means a held key produces a move every 200ms, so a
+        // longer gap than that is a fresh press -- which is the whole test.
+        //
+        // It used to stride four unconditionally, taking the farthest walkable
+        // tile, so every tap sent the character three or four cells (three on a
+        // diagonal, where a normalised 0.707 times four rounds to 3).
+        const HOLD_WINDOW_MS: u32 = 400;
+        const HOLD_STRIDE: i32 = 3;
+
+        let stride = match client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < HOLD_WINDOW_MS {
+            true => HOLD_STRIDE,
+            false => 1,
         };
-        if destination == start || !map.is_walkable(destination) {
+
+        // Shorter distances are tried in turn so a stride that would end in a
+        // wall still moves as far as it can, rather than stopping dead. The
+        // move vector is normalised, so at distance 1 at least one component is
+        // >= 0.707 and the rounding can never produce a zero step.
+        let mut destination = None;
+        for distance in (1..=stride).rev() {
+            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
+            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
+            if tile_x < 0 || tile_y < 0 {
+                continue;
+            }
+            let tile = TilePosition {
+                x: tile_x as u16,
+                y: tile_y as u16,
+            };
+            if map.is_walkable(tile) {
+                destination = Some(tile);
+                break;
+            }
+        }
+
+        let Some(destination) = destination else {
+            return;
+        };
+        if destination == start {
             return;
         }
 
