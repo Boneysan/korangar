@@ -12,12 +12,20 @@ pub struct CharacterSlots {
     slots: Vec<Option<CharacterInformation>>,
     #[hidden_element]
     previews: Vec<Option<Arc<AnimationData>>>,
+    /// Class name per slot, resolved by the caller.
+    ///
+    /// Parallel to `slots` for the same reason `previews` is: the interface
+    /// layer holds no `Library`, so a job id cannot become a name there --
+    /// exactly as party rosters and trade item names are resolved at the
+    /// boundary and handed over as text.
+    class_names: Vec<Option<String>>,
 }
 
 impl CharacterSlots {
     pub fn set_slot_count(&mut self, slot_count: usize) {
         self.slots.resize(slot_count, None);
         self.previews.resize(slot_count, None);
+        self.class_names.resize(slot_count, None);
     }
 
     pub fn get_slot_count(&self) -> usize {
@@ -39,6 +47,17 @@ impl CharacterSlots {
         &self.slots
     }
 
+    pub fn class_name(&self, slot: usize) -> Option<&str> {
+        self.class_names.get(slot).and_then(|name| name.as_deref())
+    }
+
+    pub fn set_class_name(&mut self, slot: usize, class_name: String) {
+        if slot >= self.class_names.len() {
+            self.class_names.resize(slot + 1, None);
+        }
+        self.class_names[slot] = Some(class_name);
+    }
+
     pub fn add_character(&mut self, character_information: CharacterInformation) {
         let Some(slot) = self.slots.get_mut(character_information.character_number as usize) else {
             panic!("attempted to add character to a slot that doesn't exist");
@@ -57,7 +76,15 @@ impl CharacterSlots {
             {
                 *slot = None;
             }
-        })
+        });
+
+        self.slots.iter().enumerate().for_each(|(index, slot)| {
+            if slot.is_none()
+                && let Some(name) = self.class_names.get_mut(index)
+            {
+                *name = None;
+            }
+        });
     }
 
     pub fn with_id(&self, character_id: CharacterId) -> Option<&CharacterInformation> {
@@ -92,6 +119,7 @@ impl CharacterSlots {
         // Clear the character list.
         self.slots.iter_mut().for_each(|slot| *slot = None);
         self.previews.iter_mut().for_each(|preview| *preview = None);
+        self.class_names.iter_mut().for_each(|name| *name = None);
 
         characters
             .into_iter()
@@ -134,8 +162,53 @@ where
     }
 }
 
+/// Path to one slot's class name, so the window can hold it as a field.
+///
+/// A borrow taken inline in `lay_out` does not live long enough for
+/// `add_text`, which is why every other string drawn there comes from a path
+/// stored on the element rather than from a lookup at draw time.
+#[derive(Clone, Copy)]
+struct SlotClassPath<P>
+where
+    P: Copy,
+{
+    path: P,
+    slot: usize,
+}
+
+impl<P> Path<ClientState, String, false> for SlotClassPath<P>
+where
+    P: Path<ClientState, CharacterSlots>,
+{
+    fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a String> {
+        self.path
+            .follow_safe(state)
+            .class_names
+            .get(self.slot)
+            .and_then(|name| name.as_ref())
+    }
+
+    fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut String> {
+        self.path
+            .follow_mut_safe(state)
+            .class_names
+            .get_mut(self.slot)
+            .and_then(|name| name.as_mut())
+    }
+}
+
+impl<P> Selector<ClientState, String, false> for SlotClassPath<P>
+where
+    P: Path<ClientState, CharacterSlots>,
+{
+    fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a String> {
+        self.follow(state)
+    }
+}
+
 pub trait CharacterSlotsExt {
     fn in_slot(self, slot: usize) -> impl Path<ClientState, CharacterInformation, false>;
+    fn class_in_slot(self, slot: usize) -> impl Path<ClientState, String, false>;
 }
 
 impl<P> CharacterSlotsExt for P
@@ -144,6 +217,10 @@ where
 {
     fn in_slot(self, slot: usize) -> impl Path<ClientState, CharacterInformation, false> {
         SlotPath { path: self, slot }
+    }
+
+    fn class_in_slot(self, slot: usize) -> impl Path<ClientState, String, false> {
+        SlotClassPath { path: self, slot }
     }
 }
 
