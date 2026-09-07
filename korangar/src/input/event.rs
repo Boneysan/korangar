@@ -295,11 +295,15 @@ pub enum InputEvent {
         skill: LearnableSkill,
     },
     /// Camera-relative keyboard movement (WASD).
+    /// Camera-relative keyboard movement. `fresh` is true when one of the four
+    /// keys went down THIS frame, which is what separates a tap from a key that
+    /// is simply still held -- and therefore a single step from a stride.
     KeyboardMove {
         forward: bool,
         back: bool,
         left: bool,
         right: bool,
+        fresh: bool,
     },
     /// Warp to an online party member (`@partyjump`).
     JumpToPartyMember {

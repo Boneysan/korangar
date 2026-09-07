@@ -6995,7 +6995,7 @@ impl Client {
         self.input_event_buffer = remaining;
     }
 
-    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool) {
+    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
         }
@@ -7050,18 +7050,19 @@ impl Client {
         //
         // Both are wanted, and they are not the same request: standing on a
         // particular tile needs a single step, crossing a field does not. The
-        // throttle above means a held key produces a move every 200ms, so a
-        // longer gap than that is a fresh press -- which is the whole test.
+        // input layer says which this is -- `fresh` means a key went down this
+        // frame. Timing cannot answer it: two quick taps and one held key
+        // produce the same 200ms intervals, so a timing test would stride on
+        // the second tap of a double-tap.
         //
         // It used to stride four unconditionally, taking the farthest walkable
         // tile, so every tap sent the character three or four cells (three on a
         // diagonal, where a normalised 0.707 times four rounds to 3).
-        const HOLD_WINDOW_MS: u32 = 400;
         const HOLD_STRIDE: i32 = 3;
 
-        let stride = match client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < HOLD_WINDOW_MS {
-            true => HOLD_STRIDE,
-            false => 1,
+        let stride = match fresh {
+            true => 1,
+            false => HOLD_STRIDE,
         };
 
         // Shorter distances are tried in turn so a stride that would end in a
@@ -7457,8 +7458,9 @@ impl Client {
                     back,
                     left,
                     right,
+                    fresh,
                 } => {
-                    keyboard_move = Some((forward, back, left, right));
+                    keyboard_move = Some((forward, back, left, right, fresh));
                 }
                 InputEvent::JumpToPartyMember { character_name } => {
                     let command = format!("@partyjump {character_name}");
@@ -8763,8 +8765,8 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
-        if let Some((forward, back, left, right)) = keyboard_move {
-            self.apply_keyboard_move(client_tick, forward, back, left, right);
+        if let Some((forward, back, left, right, fresh)) = keyboard_move {
+            self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
         }
 
         if sync_minimap {
