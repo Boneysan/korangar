@@ -18,6 +18,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
         Scenario::new("autopickup-radius", 6, autopickup_radius),
+        Scenario::new("autopickup-party-override", 6, autopickup_party_override),
         Scenario::new("identify", 6, identify),
         Scenario::new("identify-cancel", 6, identify_cancel),
         Scenario::new("equip-wrong-job", 6, equip_wrong_job),
@@ -352,12 +353,16 @@ fn drop_pickup(config: &Config) -> Result<(), String> {
     context.flush();
     context.net.pick_up_item(ground_entity_id).map_err(|_| "disconnected")?;
 
-    context.wait_for("RemoveGroundItem", |event| match event {
+    let taken = context.wait_for("RemoveGroundItem", |event| match event {
         NetworkEvent::RemoveGroundItem { entity_id } if *entity_id == ground_entity_id => Some(()),
         _ => None,
-    })?;
+    });
 
-    Ok(())
+    // The choice is stored per character now, so leaving it off would follow
+    // this account into every later scenario and every later session.
+    let _ = context.gm_expect_feedback("@autopickup 2");
+
+    taken
 }
 
 /// Did anything take the ground item, and did the bag gain it back?
@@ -430,7 +435,7 @@ fn autopickup_radius(config: &Config) -> Result<(), String> {
     // error, so a silently rejected argument would otherwise look like a
     // feature that does not work.
     let reply = context.gm_expect_feedback("@autopickup 2")?;
-    if !reply.contains("Automatic pickup is on") {
+    if !reply.contains("Automatic pickup: on") {
         return Err(format!("@autopickup 2 was not accepted; the server said: {reply}"));
     }
 
@@ -461,6 +466,77 @@ fn autopickup_radius(config: &Config) -> Result<(), String> {
 
     if !added {
         return Err("the drop left the ground two cells away but never arrived in the inventory".to_owned());
+    }
+
+    Ok(())
+}
+
+/// A party overrides a member's own "off" (`pc_autopickup_radius`).
+///
+/// The rule the server enforces: your own setting is yours for solo play, and a
+/// party takes it over. Loot in a group is shared -- `party_default_share`
+/// turns both item rules on when the party is formed -- so a member opting out
+/// keeps nothing for themselves, they only leave drops lying on the floor for
+/// everybody.
+///
+/// The personal OFF is established first against a real drop, so the second
+/// half cannot pass by the setting having quietly failed to apply.
+fn autopickup_party_override(config: &Config) -> Result<(), String> {
+    const MAP: &str = "prontera";
+    const X: u16 = 155;
+    const Y: u16 = 180;
+
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501; // Red Potion
+
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(600));
+
+    let reply = context.gm_expect_feedback("@autopickup 0")?;
+    if !reply.contains("Automatic pickup: off") {
+        return Err(format!("@autopickup 0 was not accepted; the server said: {reply}"));
+    }
+
+    context.warp(MAP, X, Y)?;
+    let index = context.give_item(item_id, 1)?;
+    context.flush();
+    context.net.drop_item(index, 1).map_err(|_| "disconnected")?;
+
+    let (ground_entity_id, _) = context.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id,
+            item_id: id,
+            position,
+            ..
+        } if id.0 == item_id => Some((*entity_id, *position)),
+        _ => None,
+    })?;
+
+    // Solo, switched off: the drop stays where it fell.
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken while the character had automatic pickup off".to_owned());
+    }
+
+    // A party of one is still a party, and it is the party that decides.
+    let name = format!("pick{}", std::process::id() % 10000);
+    context.flush();
+    context.say(&format!("@party {name}"))?;
+    context.pump(Duration::from_millis(800));
+
+    let (removed, added) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+    // Put everything back before reporting: the party would follow this account
+    // into the next scenario, and so would the stored setting.
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(300));
+    let _ = context.gm_expect_feedback("@autopickup 2");
+
+    if !removed {
+        return Err("joining a party did not override the character's own off setting".to_owned());
+    }
+    if !added {
+        return Err("the drop left the ground once in a party but never arrived in the inventory".to_owned());
     }
 
     Ok(())

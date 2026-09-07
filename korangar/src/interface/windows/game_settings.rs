@@ -1,5 +1,5 @@
 use korangar_interface::window::{CustomWindow, Window};
-use rust_state::Path;
+use rust_state::{Path, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -51,6 +51,25 @@ where
                     tooltip: "Walk with W A S D relative to the camera. Click-to-move still works.",
                     state: self.game_settings_path.wasd_movement(),
                     event: Toggle(self.game_settings_path.wasd_movement()),
+                },
+                // The one toggle here the client does not own. The server keeps
+                // this setting -- per character, across sessions -- so the
+                // button reads the server's answer and asks it to change, rather
+                // than flipping a local value the server has never heard of. In
+                // a party the server refuses to turn it off, and says so; the
+                // button then simply stays on, which is the truth.
+                state_button! {
+                    text: "Automatic pickup",
+                    tooltip: "Loot within two squares goes straight into your bag. Kept by the server; in a party it stays on for everyone [^000001@autopickup^000000]",
+                    state: client_state().auto_pickup(),
+                    event: |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                        let text = match *state.get(&client_state().auto_pickup()) {
+                            true => "@autopickup 0".to_owned(),
+                            false => "@autopickup 2".to_owned(),
+                        };
+
+                        queue.queue(InputEvent::SendMessage { text });
+                    },
                 },
             ),
         }

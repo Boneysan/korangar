@@ -298,6 +298,12 @@ pub struct ClientState {
     /// All ground items on the map.
     ground_items: Vec<GroundItem>,
 
+    /// Automatic pickup, as the SERVER reports it (`@autopickup`). The server
+    /// owns this setting -- it is per character, it persists, and being in a
+    /// party overrides it -- so the toggle shows what came back from the server
+    /// rather than what was last clicked. Queried once on entering the world.
+    auto_pickup: bool,
+
     /// List of all received chat messages.
     chat_messages: ChatHistory,
     /// List of all friends (with online presence).
@@ -599,6 +605,7 @@ impl ClientState {
             remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
+            auto_pickup: false,
             chat_messages,
             friend_list,
             party_state,

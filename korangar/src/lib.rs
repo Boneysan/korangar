@@ -145,6 +145,11 @@ use crate::system::{FrameTimers, GameTimer};
 use crate::world::MarkerIdentifier;
 use crate::world::*;
 
+/// The fixed opening of every `@autopickup` reply. The server writes it
+/// deliberately so the client can read its own setting back instead of
+/// guessing; see `ACMD(autopickup)` in the server's `atcommand.c`.
+const AUTO_PICKUP_REPLY_PREFIX: &str = "Automatic pickup: ";
+
 const CLIENT_NAME: &str = "Korangar";
 
 /// Matches Hercules `AUTH_TIMEOUT` in `login.c` — the login-server auth token
@@ -1611,6 +1616,13 @@ pub struct Client {
     /// The plan above, once the matching character has been selected and is on
     /// its way into the map.
     armed_stat_plan: Option<StatSpread>,
+    /// Whether this session has already asked the server what automatic pickup
+    /// is set to. Once per login, not once per map: the answer only changes
+    /// when the player changes it, or when they join or leave a party.
+    auto_pickup_queried: bool,
+    /// A reply to OUR query is on its way, and should not be printed in chat --
+    /// the player did not ask for it. Anything they type still prints.
+    auto_pickup_query_pending: bool,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -3227,6 +3239,8 @@ impl Client {
             keyboard_move_last_tick: ClientTick(0),
             pending_stat_plan: None,
             armed_stat_plan: None,
+            auto_pickup_queried: false,
+            auto_pickup_query_pending: false,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -4643,6 +4657,23 @@ impl Client {
                     self.game_timer.set_client_tick(client_tick, received_at);
                 }
                 NetworkEvent::ChatMessage { text, color } => {
+                    // The server owns automatic pickup, so the settings toggle
+                    // has to be told rather than assumed: `@autopickup` always
+                    // answers with a line opening `Automatic pickup: `, giving
+                    // the radius actually in force -- which is not necessarily
+                    // what this character asked for, because a party overrides
+                    // it. Reading the answer is what keeps the button honest.
+                    if let Some(rest) = text.strip_prefix(AUTO_PICKUP_REPLY_PREFIX) {
+                        *self.client_state.follow_mut(client_state().auto_pickup()) = rest.starts_with("on");
+
+                        // Swallow the reply to the query WE sent on entering the
+                        // world; nobody asked to read it. Anything the player
+                        // typed, or the toggle sent, still prints.
+                        if std::mem::take(&mut self.auto_pickup_query_pending) {
+                            continue;
+                        }
+                    }
+
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, color));
@@ -9047,6 +9078,17 @@ impl Client {
                             let map_name = map_file_name.clone();
                             self.refresh_minimap(&map_name, map_w, map_h);
                             let _ = self.networking_system.map_loaded();
+
+                            // Ask the server what automatic pickup is doing, once
+                            // per session, so the settings toggle starts out
+                            // showing the truth instead of a guess. `status`
+                            // reports without changing anything.
+                            if !self.auto_pickup_queried {
+                                self.auto_pickup_queried = true;
+                                self.auto_pickup_query_pending = true;
+                                let name = self.client_state.follow(client_state().player_name()).to_owned();
+                                let _ = self.networking_system.send_chat_message(&name, "@autopickup status");
+                            }
 
                             // Replay a creation-time stat allocation, now that the
                             // player is genuinely in the world.
