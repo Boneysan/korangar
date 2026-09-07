@@ -1605,6 +1605,16 @@ pub struct Client {
     /// the window is closed. Compared against the player's choices each frame
     /// to decide whether the preview entity needs rebuilding.
     character_preview: Option<(CharacterSex, HairStyle)>,
+    /// Trace every keyboard-move packet and every walk the server sends back,
+    /// with what the client believed its own position was at that moment.
+    /// `KORANGAR_WASD_TRACE=1`, off otherwise.
+    ///
+    /// Kept rather than deleted after it did its job: it is the only thing that
+    /// can tell "the client is stuttering" apart from "the client is sending
+    /// twice as many packets as it thinks". It found exactly that -- a one-cell
+    /// packet and then the real path, 200ms apart, at the start of every single
+    /// movement -- where reading the code had suggested three other causes.
+    wasd_trace: bool,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
     /// Where the last held-key walk was sent to, and the unit step it was going
@@ -3243,6 +3253,7 @@ impl Client {
                 mode => mode,
             },
             character_preview: None,
+            wasd_trace: std::env::var("KORANGAR_WASD_TRACE").is_ok(),
             keyboard_move_last_tick: ClientTick(0),
             keyboard_move_target: None,
             pending_stat_plan: None,
@@ -4599,6 +4610,16 @@ impl Client {
                     destination,
                     starting_timestamp,
                 } => {
+                    if self.wasd_trace {
+                        let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                        client_log!(
+                            "[wasd] server walk {:?} -> {:?}, client believed {:?}",
+                            origin.tile_position(),
+                            destination.tile_position(),
+                            here
+                        );
+                    }
+
                     if let Some(map) = &self.map
                         && let Some(player) = self.client_state.try_follow_mut(this_entity())
                     {
@@ -7095,42 +7116,59 @@ impl Client {
             map.is_walkable(tile).then_some(tile)
         };
 
-        let destination = match fresh {
-            // One cell, and it replaces whatever walk was in progress.
-            true => match walkable_at(1) {
-                Some(tile) => tile,
-                None => return,
-            },
-            false => {
-                // Still holding. Say nothing while the current path is being
-                // walked in the direction the player still wants.
-                if let Some((target, held_x, held_y)) = self.keyboard_move_target
-                    && held_x == step_x
-                    && held_y == step_y
-                    && start.x.abs_diff(target.x).max(start.y.abs_diff(target.y)) > REFRESH_WITHIN
-                {
-                    return;
-                }
-
-                // Reach as far as the ground allows, so one packet buys as many
-                // cells of walking as possible.
-                let mut furthest = None;
-                for distance in 1..=HELD_PATH {
-                    match walkable_at(distance) {
-                        Some(tile) => furthest = Some(tile),
-                        None => break,
-                    }
-                }
-
-                match furthest {
-                    Some(tile) => tile,
-                    None => return,
-                }
+        // Every press walks a path. There is no separate one-cell packet, and
+        // that removal is the point: a press used to send a one-cell tap and
+        // then, 200ms later when the throttle allowed, the real path -- two
+        // packets and two corrections at the start of every single movement.
+        // The trace showed 57 of those in one session of walking around.
+        //
+        // A tap still moves one cell, because releasing the key stops the
+        // character one step ahead of where it is. The tap is the press and the
+        // release together, not a special packet.
+        //
+        // So the only question left is whether there is anything new to say:
+        // nothing is in flight, a key just went down, the direction changed, or
+        // the path is about to run out.
+        let repath = match self.keyboard_move_target {
+            None => true,
+            Some((target, held_x, held_y)) => {
+                fresh
+                    || held_x != step_x
+                    || held_y != step_y
+                    || start.x.abs_diff(target.x).max(start.y.abs_diff(target.y)) <= REFRESH_WITHIN
             }
+        };
+
+        if !repath {
+            return;
+        }
+
+        // Reach as far as the ground allows, so one packet buys as many cells of
+        // walking as possible.
+        let mut furthest = None;
+        for distance in 1..=HELD_PATH {
+            match walkable_at(distance) {
+                Some(tile) => furthest = Some(tile),
+                None => break,
+            }
+        }
+
+        let Some(destination) = furthest else {
+            return;
         };
 
         if destination == start {
             return;
+        }
+
+        if self.wasd_trace {
+            client_log!(
+                "[wasd] send {} from {:?} to {:?} (tick {})",
+                if fresh { "press" } else { "extend" },
+                start,
+                destination,
+                client_tick.0
+            );
         }
 
         self.keyboard_move_target = Some((destination, step_x, step_y));
