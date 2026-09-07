@@ -4185,9 +4185,24 @@ impl Client {
                 NetworkEvent::CharacterList { characters } => {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .set_characters(characters);
+                    // Job id to class name here, not in the window: the interface
+                    // layer holds no `Library`. Same reason party rosters and
+                    // trade item names are resolved by the caller.
+                    let class_names: Vec<(usize, String)> = characters
+                        .iter()
+                        .map(|character| {
+                            (
+                                character.character_number as usize,
+                                JobName::get(&self.library, character.job_id).to_string(),
+                            )
+                        })
+                        .collect();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.set_characters(characters);
+                    class_names
+                        .into_iter()
+                        .for_each(|(slot, class_name)| slots.set_class_name(slot, class_name));
 
                     if !self.interface.is_window_with_class_open(WindowClass::CharacterSelection) {
                         // TODO: this will do one unnecessary restore_focus. check
@@ -4362,9 +4377,12 @@ impl Client {
                         self.pending_stat_plan = Some((character_information.character_id, planned));
                     }
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .add_character(character_information);
+                    let slot = character_information.character_number as usize;
+                    let class_name = JobName::get(&self.library, character_information.job_id).to_string();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.add_character(character_information);
+                    slots.set_class_name(slot, class_name);
 
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                 }
