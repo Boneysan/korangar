@@ -261,7 +261,9 @@ pub enum Sex {
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0064)]
 pub struct LoginServerLoginPacket {
-    /// Unused
+    /// Seal Cascade pack version (`PACK_VERSION`), little-endian. Official
+    /// clients put sclientinfo `<version>` here; we use it so the login
+    /// server can refuse an outdated friends pack.
     #[new_default]
     pub version: [u8; 4],
     #[length(24)]

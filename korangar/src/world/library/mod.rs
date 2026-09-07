@@ -24,7 +24,7 @@ use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
-pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable};
+pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, quest_display_name};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};

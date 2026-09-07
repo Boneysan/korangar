@@ -22,6 +22,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-kick", 8, party_kick),
         Scenario::new("party-promote-leader", 8, party_promote_leader),
         Scenario::new("party-share-options", 8, party_share_options),
+        Scenario::new("party-share-default", 8, party_share_default),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
         Scenario::new("trade-reject", 8, trade_reject),
@@ -706,6 +707,56 @@ fn party_share_options(config: &Config) -> Result<(), String> {
     match observed? {
         true => Ok(()),
         false => Err("the server reported EXP sharing still off after enabling it".to_owned()),
+    }
+}
+
+/// A party formed here starts with sharing already on, and the client is TOLD
+/// (`party_default_share`, Hercules `party_create` / `party_created`).
+///
+/// Two halves, and the second is the one with teeth. `create_party` sends
+/// `CreatePartyPacket::new(name, 0, 0)`, so the server decides the starting
+/// share flags instead -- but a rule the client never hears about is a rule the
+/// party window draws as OFF while the server shares everything, and the next
+/// toggle of any one option would then send those stale values back and turn
+/// the others off. So the broadcast matters as much as the flags.
+///
+/// One client, because `@party` creates a party by itself and the paired helper
+/// needs `@warp` on the partner account, which is group 0 on the live server.
+fn party_share_default(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    // Whatever ran before may have left this character in a party, and `@party`
+    // refuses when it has one.
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(600));
+
+    // `say`, not `gm_expect_feedback`: `@party` answers with no chat line at
+    // all when it succeeds -- the party packets are the only reply.
+    let name = format!("share{}", std::process::id() % 10000);
+    context.flush();
+    context.say(&format!("@party {name}"))?;
+
+    let observed = context.wait_for("PartyShareOptions for the new party", |event| match event {
+        NetworkEvent::PartyShareOptions {
+            experience_share,
+            item_pickup_share,
+            item_division_share,
+        } => Some((*experience_share, *item_pickup_share, *item_division_share)),
+        _ => None,
+    });
+
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(300));
+
+    match observed? {
+        (true, Some(true), Some(true)) => Ok(()),
+        // The short 0x0101 form carries only the EXP rule; the item rules then
+        // reach the client through the member-info packet instead, so absent is
+        // not wrong here -- present and false is.
+        (true, None, None) => Ok(()),
+        (experience, pickup, division) => Err(format!(
+            "a new party reported EXP share {experience}, pickup {pickup:?}, division {division:?}; expected all on"
+        )),
     }
 }
 

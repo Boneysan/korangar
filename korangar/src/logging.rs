@@ -105,9 +105,10 @@ pub fn init() {
     let _ = PROCESS_START.set(Instant::now());
 
     write_line(format_args!(
-        "[korangar] {} starting -- version {}",
+        "[korangar] {} starting -- crate {} pack {}",
         chrono::Local::now().format("%Y-%m-%d %H:%M:%S"),
-        env!("CARGO_PKG_VERSION")
+        env!("CARGO_PKG_VERSION"),
+        korangar_networking::PACK_VERSION
     ));
     write_line(format_args!(
         "[startup] platform={}/{} log={}",

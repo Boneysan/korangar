@@ -295,12 +295,20 @@ pub enum InputEvent {
         skill: LearnableSkill,
     },
     /// Camera-relative keyboard movement (WASD).
+    /// Camera-relative keyboard movement. `fresh` is true when one of the four
+    /// keys went down THIS frame, which is what separates a tap from a key that
+    /// is simply still held -- and therefore a single step from a stride.
     KeyboardMove {
         forward: bool,
         back: bool,
         left: bool,
         right: bool,
+        fresh: bool,
     },
+    /// Every WASD key came up. A held key walks a long path, so the release has
+    /// to be said out loud -- otherwise the character coasts to the end of a
+    /// path the player has already stopped asking for.
+    KeyboardMoveStop,
     /// Warp to an online party member (`@partyjump`).
     JumpToPartyMember {
         character_name: String,

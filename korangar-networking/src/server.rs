@@ -14,7 +14,7 @@ pub struct LoginServerLoginData {
     pub sex: Sex,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UnifiedLoginFailedReason {
     ServerClosed,
     AlreadyLoggedIn,

@@ -79,7 +79,7 @@ pub use self::disconnect_notice::DisconnectNoticeWindow;
 pub use self::dm::{BestiaryWindow, BestiaryWindowState, LootGeneratorWindow, LootWindowState};
 pub use self::emote::EmoteWindow;
 pub use self::equipment::EquipmentWindow;
-pub use self::error::ErrorWindow;
+pub use self::error::{ErrorWindow, OutdatedClientWindow};
 #[cfg(feature = "debug")]
 pub use self::frame_inspector::FrameInspectorWindow;
 pub use self::friend_list::{FriendListWindow, FriendListWindowState};
@@ -143,7 +143,8 @@ pub enum WindowClass {
     ItemActions,
     Equipment,
     Emotes,
-    /// Login / network error popup (wrong password, disconnect, …).
+    /// Login / network error popup (wrong password, disconnect, outdated
+    /// client, …).
     Error,
     DisconnectNotice,
     StatusBar,

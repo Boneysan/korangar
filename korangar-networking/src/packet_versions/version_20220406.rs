@@ -75,7 +75,7 @@ fn unify_login_failed_reason2(reason: LoginFailedReason2) -> (UnifiedLoginFailed
         LoginFailedReason2::IdExpired => (UnifiedLoginFailedReason::IdExpired, "Id has expired"),
         LoginFailedReason2::RejectedFromServer => (UnifiedLoginFailedReason::RejectedFromServer, "Rejected from server"),
         LoginFailedReason2::BlockedByGMTeam => (UnifiedLoginFailedReason::BlockedByGMTeam, "Blocked by gm team"),
-        LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, "Game outdated"),
+        LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, crate::OUTDATED_CLIENT_MESSAGE),
         LoginFailedReason2::LoginProhibitedUntil => (UnifiedLoginFailedReason::LoginProhibitedUntil, "Login prohibited until"),
         LoginFailedReason2::ServerFull => (UnifiedLoginFailedReason::ServerFull, "Server is full"),
         LoginFailedReason2::CompanyAccountLimitReached => (

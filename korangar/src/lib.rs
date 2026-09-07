@@ -79,7 +79,7 @@ use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
     DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion,
+    SupportedPacketVersion, UnifiedLoginFailedReason,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -144,6 +144,11 @@ use crate::system::{FrameTimers, GameTimer};
 #[cfg(feature = "debug")]
 use crate::world::MarkerIdentifier;
 use crate::world::*;
+
+/// The fixed opening of every `@autopickup` reply. The server writes it
+/// deliberately so the client can read its own setting back instead of
+/// guessing; see `ACMD(autopickup)` in the server's `atcommand.c`.
+const AUTO_PICKUP_REPLY_PREFIX: &str = "Automatic pickup: ";
 
 const CLIENT_NAME: &str = "Korangar";
 
@@ -1600,8 +1605,25 @@ pub struct Client {
     /// the window is closed. Compared against the player's choices each frame
     /// to decide whether the preview entity needs rebuilding.
     character_preview: Option<(CharacterSex, HairStyle)>,
+    /// Trace every keyboard-move packet and every walk the server sends back,
+    /// with what the client believed its own position was at that moment.
+    /// `KORANGAR_WASD_TRACE=1`, off otherwise.
+    ///
+    /// Kept rather than deleted after it did its job: it is the only thing that
+    /// can tell "the client is stuttering" apart from "the client is sending
+    /// twice as many packets as it thinks". It found exactly that -- a one-cell
+    /// packet and then the real path, 200ms apart, at the start of every single
+    /// movement -- where reading the code had suggested three other causes.
+    wasd_trace: bool,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Where the last held-key walk was sent to, and the unit step it was going
+    /// in. A held key does NOT re-send every frame: it sends one long path and
+    /// leaves the character walking it, refreshing only when the direction
+    /// changes or the end is close. Re-issuing a short move on a timer is what
+    /// made holding a key stutter -- every packet restarted the walk from the
+    /// server's authoritative position.
+    keyboard_move_target: Option<(TilePosition, i32, i32)>,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -1611,6 +1633,13 @@ pub struct Client {
     /// The plan above, once the matching character has been selected and is on
     /// its way into the map.
     armed_stat_plan: Option<StatSpread>,
+    /// Whether this session has already asked the server what automatic pickup
+    /// is set to. Once per login, not once per map: the answer only changes
+    /// when the player changes it, or when they join or leave a party.
+    auto_pickup_queried: bool,
+    /// A reply to OUR query is on its way, and should not be printed in chat --
+    /// the player did not ask for it. Anything they type still prints.
+    auto_pickup_query_pending: bool,
     graphics_engine: GraphicsEngine,
     queue: Queue,
     #[cfg(feature = "debug")]
@@ -3121,6 +3150,14 @@ impl Client {
             crate::client_state().client_info(),
         ));
 
+        // Operator-only: open the outdated-client popup on top of login so we
+        // can confirm it renders without needing a version mismatch.
+        if std::env::var_os("KORANGAR_TEST_OUTDATED_POPUP").is_some() {
+            interface.open_window(OutdatedClientWindow::new(
+                korangar_networking::OUTDATED_CLIENT_MESSAGE.to_owned(),
+            ));
+        }
+
         Some(Self {
             game_file_loader,
             #[cfg(feature = "debug")]
@@ -3216,9 +3253,13 @@ impl Client {
                 mode => mode,
             },
             character_preview: None,
+            wasd_trace: std::env::var("KORANGAR_WASD_TRACE").is_ok(),
             keyboard_move_last_tick: ClientTick(0),
+            keyboard_move_target: None,
             pending_stat_plan: None,
             armed_stat_plan: None,
+            auto_pickup_queried: false,
+            auto_pickup_query_pending: false,
             active_graphics_settings: graphics_settings,
             graphics_engine,
             queue,
@@ -3884,7 +3925,7 @@ impl Client {
                             .open_window(ServerSelectionWindow::new(client_state().character_servers()));
                     }
                 }
-                NetworkEvent::LoginServerConnectionFailed { message, .. } => {
+                NetworkEvent::LoginServerConnectionFailed { reason, message } => {
                     // M1-015: a failed re-login must not leave a stale server-select
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
@@ -3897,6 +3938,14 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::CharacterSelection);
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                     self.show_login_error(message);
+                    if reason == UnifiedLoginFailedReason::GameOutdated {
+                        // show_login_error closes WindowClass::Error (the status
+                        // line is the default for password mistakes). Re-open a
+                        // titled popup so "out of date" cannot hide as a red
+                        // line on the form.
+                        client_log!("[login] opening OutdatedClientWindow");
+                        self.interface.open_window(OutdatedClientWindow::new(message.to_owned()));
+                    }
                 }
                 NetworkEvent::LoginServerDisconnected { reason } => {
                     if reason != DisconnectReason::ClosedByClient {
@@ -4136,9 +4185,24 @@ impl Client {
                 NetworkEvent::CharacterList { characters } => {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .set_characters(characters);
+                    // Job id to class name here, not in the window: the interface
+                    // layer holds no `Library`. Same reason party rosters and
+                    // trade item names are resolved by the caller.
+                    let class_names: Vec<(usize, String)> = characters
+                        .iter()
+                        .map(|character| {
+                            (
+                                character.character_number as usize,
+                                JobName::get(&self.library, character.job_id).to_string(),
+                            )
+                        })
+                        .collect();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.set_characters(characters);
+                    class_names
+                        .into_iter()
+                        .for_each(|(slot, class_name)| slots.set_class_name(slot, class_name));
 
                     if !self.interface.is_window_with_class_open(WindowClass::CharacterSelection) {
                         // TODO: this will do one unnecessary restore_focus. check
@@ -4313,9 +4377,12 @@ impl Client {
                         self.pending_stat_plan = Some((character_information.character_id, planned));
                     }
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .add_character(character_information);
+                    let slot = character_information.character_number as usize;
+                    let class_name = JobName::get(&self.library, character_information.job_id).to_string();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.add_character(character_information);
+                    slots.set_class_name(slot, class_name);
 
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                 }
@@ -4561,6 +4628,16 @@ impl Client {
                     destination,
                     starting_timestamp,
                 } => {
+                    if self.wasd_trace {
+                        let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                        client_log!(
+                            "[wasd] server walk {:?} -> {:?}, client believed {:?}",
+                            origin.tile_position(),
+                            destination.tile_position(),
+                            here
+                        );
+                    }
+
                     if let Some(map) = &self.map
                         && let Some(player) = self.client_state.try_follow_mut(this_entity())
                     {
@@ -4627,6 +4704,23 @@ impl Client {
                     self.game_timer.set_client_tick(client_tick, received_at);
                 }
                 NetworkEvent::ChatMessage { text, color } => {
+                    // The server owns automatic pickup, so the settings toggle
+                    // has to be told rather than assumed: `@autopickup` always
+                    // answers with a line opening `Automatic pickup: `, giving
+                    // the radius actually in force -- which is not necessarily
+                    // what this character asked for, because a party overrides
+                    // it. Reading the answer is what keeps the button honest.
+                    if let Some(rest) = text.strip_prefix(AUTO_PICKUP_REPLY_PREFIX) {
+                        *self.client_state.follow_mut(client_state().auto_pickup()) = rest.starts_with("on");
+
+                        // Swallow the reply to the query WE sent on entering the
+                        // world; nobody asked to read it. Anything the player
+                        // typed, or the toggle sent, still prints.
+                        if std::mem::take(&mut self.auto_pickup_query_pending) {
+                            continue;
+                        }
+                    }
+
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, color));
@@ -6948,7 +7042,7 @@ impl Client {
         self.input_event_buffer = remaining;
     }
 
-    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool) {
+    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
         }
@@ -6999,28 +7093,103 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        let mut destination = None;
-        for distance in (1..=4).rev() {
-            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
-            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
+        // A tap steps one cell. A held key walks, and keeps walking.
+        //
+        // The two need different packets, not different distances. Re-issuing a
+        // short move every 200ms -- which is what this did -- restarts the walk
+        // from the server's authoritative position each time, and that is the
+        // stutter: the character never gets to finish a step before being told
+        // to go somewhere again.
+        //
+        // So a held key sends ONE long path and then says nothing until it has
+        // something new to say: the direction changed, or the end of the path is
+        // close enough that the character would otherwise stop. `fresh` comes
+        // from the input layer (a key that went down this frame), because timing
+        // cannot tell a fast double-tap from a key that was never released.
+        // Every refresh is a correction: the server answers with a walk from ITS
+        // authoritative position, and the client snaps to it. That snap is the
+        // rubber banding, so the cure is to refresh as rarely as the walk allows
+        // -- a long path, extended only when the character has all but arrived.
+        // 15 stays under the server's `max_walk_path` (17 stock), and the path
+        // is straight by construction, so its length is its distance.
+        const HELD_PATH: i32 = 15;
+        const REFRESH_WITHIN: u16 = 1;
+
+        let step_x = move_x.round() as i32;
+        let step_y = move_z.round() as i32;
+        if step_x == 0 && step_y == 0 {
+            return;
+        }
+
+        let walkable_at = |distance: i32| -> Option<TilePosition> {
+            let tile_x = start.x as i32 + step_x * distance;
+            let tile_y = start.y as i32 + step_y * distance;
             if tile_x < 0 || tile_y < 0 {
-                continue;
+                return None;
             }
             let tile = TilePosition {
                 x: tile_x as u16,
                 y: tile_y as u16,
             };
-            if map.is_walkable(tile) {
-                destination = Some(tile);
-                break;
+            map.is_walkable(tile).then_some(tile)
+        };
+
+        // Every press walks a path. There is no separate one-cell packet, and
+        // that removal is the point: a press used to send a one-cell tap and
+        // then, 200ms later when the throttle allowed, the real path -- two
+        // packets and two corrections at the start of every single movement.
+        // The trace showed 57 of those in one session of walking around.
+        //
+        // A tap still moves one cell, because releasing the key stops the
+        // character one step ahead of where it is. The tap is the press and the
+        // release together, not a special packet.
+        //
+        // So the only question left is whether there is anything new to say:
+        // nothing is in flight, a key just went down, the direction changed, or
+        // the path is about to run out.
+        let repath = match self.keyboard_move_target {
+            None => true,
+            Some((target, held_x, held_y)) => {
+                fresh
+                    || held_x != step_x
+                    || held_y != step_y
+                    || start.x.abs_diff(target.x).max(start.y.abs_diff(target.y)) <= REFRESH_WITHIN
+            }
+        };
+
+        if !repath {
+            return;
+        }
+
+        // Reach as far as the ground allows, so one packet buys as many cells of
+        // walking as possible.
+        let mut furthest = None;
+        for distance in 1..=HELD_PATH {
+            match walkable_at(distance) {
+                Some(tile) => furthest = Some(tile),
+                None => break,
             }
         }
-        let Some(destination) = destination else {
+
+        let Some(destination) = furthest else {
             return;
         };
+
         if destination == start {
             return;
         }
+
+        if self.wasd_trace {
+            client_log!(
+                "[wasd] send {} from {:?} to {:?} (tick {})",
+                if fresh { "press" } else { "extend" },
+                start,
+                destination,
+                client_tick.0
+            );
+        }
+
+        self.keyboard_move_target = Some((destination, step_x, step_y));
 
         let _ = self.networking_system.player_move(WorldPosition {
             x: destination.x,
@@ -7382,13 +7551,41 @@ impl Client {
                     // Unbuffer any buffered action.
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
                 }
+                InputEvent::KeyboardMoveStop => {
+                    // Naming a tile is how this protocol spells stop, and the
+                    // tile named is one step AHEAD, never the one underfoot: the
+                    // client's idea of where the character is trails the
+                    // server's during a walk, so asking for the tile underfoot
+                    // can ask the server to walk backwards -- which looks
+                    // exactly like the rubber banding this is trying to avoid.
+                    // One step ahead is either where the server already is, or
+                    // just in front of it. Costs at most one cell of coast.
+                    if let Some((_, step_x, step_y)) = self.keyboard_move_target.take()
+                        && let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position())
+                    {
+                        let ahead_x = (here.x as i32 + step_x).max(0) as u16;
+                        let ahead_y = (here.y as i32 + step_y).max(0) as u16;
+                        let ahead = TilePosition { x: ahead_x, y: ahead_y };
+                        let stop = match self.map.as_deref().is_some_and(|map| map.is_walkable(ahead)) {
+                            true => ahead,
+                            false => here,
+                        };
+
+                        let _ = self.networking_system.player_move(WorldPosition {
+                            x: stop.x,
+                            y: stop.y,
+                            direction: ragnarok_packets::Direction::North,
+                        });
+                    }
+                }
                 InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 } => {
-                    keyboard_move = Some((forward, back, left, right));
+                    keyboard_move = Some((forward, back, left, right, fresh));
                 }
                 InputEvent::JumpToPartyMember { character_name } => {
                     let command = format!("@partyjump {character_name}");
@@ -8693,8 +8890,8 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
-        if let Some((forward, back, left, right)) = keyboard_move {
-            self.apply_keyboard_move(client_tick, forward, back, left, right);
+        if let Some((forward, back, left, right, fresh)) = keyboard_move {
+            self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
         }
 
         if sync_minimap {
@@ -9032,6 +9229,17 @@ impl Client {
                             self.refresh_minimap(&map_name, map_w, map_h);
                             let _ = self.networking_system.map_loaded();
 
+                            // Ask the server what automatic pickup is doing, once
+                            // per session, so the settings toggle starts out
+                            // showing the truth instead of a guess. `status`
+                            // reports without changing anything.
+                            if !self.auto_pickup_queried {
+                                self.auto_pickup_queried = true;
+                                self.auto_pickup_query_pending = true;
+                                let name = self.client_state.follow(client_state().player_name()).to_owned();
+                                let _ = self.networking_system.send_chat_message(&name, "@autopickup status");
+                            }
+
                             // Replay a creation-time stat allocation, now that the
                             // player is genuinely in the world.
                             //
@@ -9116,8 +9324,8 @@ impl Client {
     /// Build a quest-log entry for a quest id.
     ///
     /// A campaign hunting contract contributes its name and its turn-in list;
-    /// anything else (a story quest, or a quest outside the campaign) is listed
-    /// by id, which is still more than the log showed before it existed.
+    /// other quests use the bundled server name table, with an ID fallback
+    /// only when the server has a quest that this client does not know yet.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
@@ -9141,7 +9349,9 @@ impl Client {
             },
             None => QuestEntry {
                 quest_id,
-                name: format!("Quest {quest_id}"),
+                name: crate::world::quest_display_name(quest_id)
+                    .map(str::to_owned)
+                    .unwrap_or_else(|| format!("Quest {quest_id}")),
                 requirements: Vec::new(),
             },
         }

@@ -37,6 +37,36 @@ pub use self::server::{
     CharacterServerLoginData, LoginServerLoginData, NotConnectedError, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
+/// Decimal integer from `tools/packaging/PACK_VERSION`. Sent as CA_LOGIN's
+/// version field so the login server can refuse an old friends pack. Bump that
+/// file (and Hercules `client_version_to_connect`) whenever friends must
+/// update; YYYYMMDD is a good scheme.
+const fn parse_pack_version(raw: &str) -> u32 {
+    let bytes = raw.as_bytes();
+    let mut n = 0u32;
+    let mut i = 0;
+    let mut seen = false;
+    while i < bytes.len() {
+        let b = bytes[i];
+        i += 1;
+        if b == b' ' || b == b'\t' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        assert!(b.is_ascii_digit(), "PACK_VERSION must be a decimal integer");
+        let digit = (b - b'0') as u32;
+        n = n * 10 + digit;
+        seen = true;
+    }
+    assert!(seen && n > 0, "PACK_VERSION must be a positive integer");
+    n
+}
+
+pub const PACK_VERSION: u32 = parse_pack_version(include_str!("../../tools/packaging/PACK_VERSION"));
+
+/// Login-window popup body when the server refuses this pack as too old.
+pub const OUTDATED_CLIENT_MESSAGE: &str =
+    "This client is out of date. Close the game, download the latest Seal-Cascade zip, and run Update.";
+
 const fn weapon_refine_wire_index(inventory_index: InventoryIndex) -> u32 {
     inventory_index.0 as u32 + 2
 }
@@ -466,7 +496,8 @@ where
             })
             .expect("network thread dropped");
 
-        let login_packet = LoginServerLoginPacket::new(username.into(), password.into());
+        let mut login_packet = LoginServerLoginPacket::new(username.into(), password.into());
+        login_packet.version = PACK_VERSION.to_le_bytes();
 
         self.packet_callback.outgoing_packet(&login_packet);
 
