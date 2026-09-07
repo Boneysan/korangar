@@ -17,6 +17,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("use-consumable", 6, use_consumable),
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
+        Scenario::new("autopickup-radius", 6, autopickup_radius),
         Scenario::new("identify", 6, identify),
         Scenario::new("identify-cancel", 6, identify_cancel),
         Scenario::new("equip-wrong-job", 6, equip_wrong_job),
@@ -332,6 +333,11 @@ fn drop_pickup(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     let item_id = 501; // Red Potion
 
+    // Automatic pickup is on by default (`autopickup_radius`), and it would
+    // take this drop off the floor within 400ms -- leaving the scenario green
+    // while asserting nothing about the click path it exists to cover.
+    context.gm_expect_feedback("@autopickup 0")?;
+
     let index = context.give_item(item_id, 1)?;
     context.flush();
     context.net.drop_item(index, 1).map_err(|_| "disconnected")?;
@@ -350,6 +356,112 @@ fn drop_pickup(config: &Config) -> Result<(), String> {
         NetworkEvent::RemoveGroundItem { entity_id } if *entity_id == ground_entity_id => Some(()),
         _ => None,
     })?;
+
+    Ok(())
+}
+
+/// Did anything take the ground item, and did the bag gain it back?
+fn ground_item_taken(context: &mut TestContext, entity_id: EntityId, item_id: u32, window: Duration) -> (bool, bool) {
+    let mut removed = false;
+    let mut added = false;
+
+    for event in context.collect_for(window) {
+        match event {
+            NetworkEvent::RemoveGroundItem { entity_id: id } if id == entity_id => removed = true,
+            NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id => added = true,
+            _ => {}
+        }
+    }
+
+    (removed, added)
+}
+
+/// Loot within two cells walks into the bag with no click
+/// (`autopickup_radius`, Hercules `pc_autopickup_*`).
+///
+/// Positioned by `@warp` and not by walking: `walk_to` reports success once it
+/// is within one cell of its target, and the exact cell where the behaviour
+/// changes is the entire subject of this test. Distances are measured from the
+/// position `AddGroundItem` reports rather than from where the item was
+/// dropped -- `map_addflooritem` calls `search_freecell`, so a drop lands on a
+/// free cell NEAR the dropper, not necessarily under them.
+///
+/// Four stages, because only the negatives make the positive mean anything:
+/// with the feature off the item survives being stood next to; at three cells
+/// it survives; at two -- the edge of the radius, and of the reach
+/// `pc_takeitem` has always enforced -- it is taken. The last stage only runs
+/// when the third fails, and it separates "the radius is wrong" from "the
+/// sweep never ran at all".
+fn autopickup_radius(config: &Config) -> Result<(), String> {
+    const MAP: &str = "prontera";
+    const X: u16 = 155;
+    const Y: u16 = 180;
+
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501; // Red Potion
+
+    // Off first, or the drop below never reaches the ground at all.
+    context.gm_expect_feedback("@autopickup 0")?;
+    context.warp(MAP, X, Y)?;
+
+    let index = context.give_item(item_id, 1)?;
+    context.flush();
+    context.net.drop_item(index, 1).map_err(|_| "disconnected")?;
+
+    let (ground_entity_id, item_position) = context.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id,
+            item_id: id,
+            position,
+            ..
+        } if id.0 == item_id => Some((*entity_id, *position)),
+        _ => None,
+    })?;
+
+    // Standing next to it, switched off. A server where none of this was wired
+    // up would pass every later stage without this one.
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken off the floor while @autopickup was off".to_owned());
+    }
+
+    // The command's own reply is the assertion that it was understood:
+    // gm_expect_feedback is satisfied by ANY server line, including a usage
+    // error, so a silently rejected argument would otherwise look like a
+    // feature that does not work.
+    let reply = context.gm_expect_feedback("@autopickup 2")?;
+    if !reply.contains("Automatic pickup is on") {
+        return Err(format!("@autopickup 2 was not accepted; the server said: {reply}"));
+    }
+
+    // One cell outside the radius.
+    context.warp(MAP, item_position.x + 3, item_position.y)?;
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken from three cells away, outside the two cell radius".to_owned());
+    }
+
+    // The edge of the radius.
+    context.warp(MAP, item_position.x + 2, item_position.y)?;
+    let (removed, added) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+    if !removed {
+        // Which failure is this? Standing on the item is the same code path at
+        // distance zero, so if that works the sweep runs and the radius is
+        // short; if it does not, the sweep is not running at all.
+        context.warp(MAP, item_position.x, item_position.y)?;
+        let (removed_on_top, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+        if removed_on_top {
+            return Err("the drop was taken standing on it but not from two cells away: the radius is shorter than it claims".to_owned());
+        }
+
+        return Err("the drop was never taken, even standing on it: the pickup sweep is not running".to_owned());
+    }
+
+    if !added {
+        return Err("the drop left the ground two cells away but never arrived in the inventory".to_owned());
+    }
 
     Ok(())
 }
