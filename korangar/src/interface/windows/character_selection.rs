@@ -409,11 +409,16 @@ mod character_slot_preview {
                     );
                 }
 
+                // Four facts, four colours, and the labels stepped back so the
+                // values carry the card: identity blue, base level gold, job
+                // level green, place lavender. A slot is read at a glance while
+                // deciding which character to play, and a block of one khaki
+                // made every line cost the same effort as every other.
                 layout.add_text(
                     layout_info.area,
                     "Base level",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(155, 155, 140),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 44.0 },
@@ -426,7 +431,7 @@ mod character_slot_preview {
                         .base_level_str
                         .get_str(self.character_information.manually_asserted().base_level(), state),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(255, 215, 120),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 58.0 },
@@ -437,7 +442,7 @@ mod character_slot_preview {
                     layout_info.area,
                     "Job level",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(155, 155, 140),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 80.0 },
@@ -450,7 +455,7 @@ mod character_slot_preview {
                         .job_level_str
                         .get_str(self.character_information.manually_asserted().job_level(), state),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(170, 230, 150),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 94.0 },
@@ -461,7 +466,7 @@ mod character_slot_preview {
                     layout_info.area,
                     "Map",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(155, 155, 140),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 116.0 },
@@ -476,7 +481,7 @@ mod character_slot_preview {
                         .strip_suffix(".gat")
                         .unwrap_or(&character_information.map_name),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(215, 175, 255),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 130.0 },
