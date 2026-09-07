@@ -409,16 +409,18 @@ mod character_slot_preview {
                     );
                 }
 
-                // Four facts, four colours, and the labels stepped back so the
-                // values carry the card: identity blue, base level gold, job
-                // level green, place lavender. A slot is read at a glance while
-                // deciding which character to play, and a block of one khaki
-                // made every line cost the same effort as every other.
+                // Four facts, four colours: identity blue, base level gold, job
+                // level green, place lavender. The labels are near-white rather
+                // than a fifth hue -- they are the brightest thing on the card
+                // and read as its structure, while the colour carries meaning.
+                // A slot is scanned while deciding which character to play, and
+                // a block of one khaki made every line cost the same effort as
+                // every other.
                 layout.add_text(
                     layout_info.area,
                     "Base level",
                     FontSize(14.0),
-                    Color::rgb_u8(155, 155, 140),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 44.0 },
@@ -442,7 +444,7 @@ mod character_slot_preview {
                     layout_info.area,
                     "Job level",
                     FontSize(14.0),
-                    Color::rgb_u8(155, 155, 140),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 80.0 },
@@ -466,7 +468,7 @@ mod character_slot_preview {
                     layout_info.area,
                     "Map",
                     FontSize(14.0),
-                    Color::rgb_u8(155, 155, 140),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     VerticalAlignment::Top { offset: 116.0 },
