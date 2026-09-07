@@ -429,6 +429,12 @@ impl InputSystem {
                     right,
                     fresh,
                 });
+            } else if self.get_key(KeyCode::KeyW).released()
+                || self.get_key(KeyCode::KeyS).released()
+                || self.get_key(KeyCode::KeyA).released()
+                || self.get_key(KeyCode::KeyD).released()
+            {
+                events.push(InputEvent::KeyboardMoveStop);
             }
         }
 

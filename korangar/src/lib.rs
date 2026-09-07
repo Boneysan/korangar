@@ -1607,6 +1607,13 @@ pub struct Client {
     character_preview: Option<(CharacterSex, HairStyle)>,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Where the last held-key walk was sent to, and the unit step it was going
+    /// in. A held key does NOT re-send every frame: it sends one long path and
+    /// leaves the character walking it, refreshing only when the direction
+    /// changes or the end is close. Re-issuing a short move on a timer is what
+    /// made holding a key stutter -- every packet restarted the walk from the
+    /// server's authoritative position.
+    keyboard_move_target: Option<(TilePosition, i32, i32)>,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -3237,6 +3244,7 @@ impl Client {
             },
             character_preview: None,
             keyboard_move_last_tick: ClientTick(0),
+            keyboard_move_target: None,
             pending_stat_plan: None,
             armed_stat_plan: None,
             auto_pickup_queried: false,
@@ -7046,52 +7054,80 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        // A tap places you exactly one cell; holding the key covers ground.
+        // A tap steps one cell. A held key walks, and keeps walking.
         //
-        // Both are wanted, and they are not the same request: standing on a
-        // particular tile needs a single step, crossing a field does not. The
-        // input layer says which this is -- `fresh` means a key went down this
-        // frame. Timing cannot answer it: two quick taps and one held key
-        // produce the same 200ms intervals, so a timing test would stride on
-        // the second tap of a double-tap.
+        // The two need different packets, not different distances. Re-issuing a
+        // short move every 200ms -- which is what this did -- restarts the walk
+        // from the server's authoritative position each time, and that is the
+        // stutter: the character never gets to finish a step before being told
+        // to go somewhere again.
         //
-        // It used to stride four unconditionally, taking the farthest walkable
-        // tile, so every tap sent the character three or four cells (three on a
-        // diagonal, where a normalised 0.707 times four rounds to 3).
-        const HOLD_STRIDE: i32 = 3;
+        // So a held key sends ONE long path and then says nothing until it has
+        // something new to say: the direction changed, or the end of the path is
+        // close enough that the character would otherwise stop. `fresh` comes
+        // from the input layer (a key that went down this frame), because timing
+        // cannot tell a fast double-tap from a key that was never released.
+        const HELD_PATH: i32 = 8;
+        const REFRESH_WITHIN: u16 = 2;
 
-        let stride = match fresh {
-            true => 1,
-            false => HOLD_STRIDE,
-        };
+        let step_x = move_x.round() as i32;
+        let step_y = move_z.round() as i32;
+        if step_x == 0 && step_y == 0 {
+            return;
+        }
 
-        // Shorter distances are tried in turn so a stride that would end in a
-        // wall still moves as far as it can, rather than stopping dead. The
-        // move vector is normalised, so at distance 1 at least one component is
-        // >= 0.707 and the rounding can never produce a zero step.
-        let mut destination = None;
-        for distance in (1..=stride).rev() {
-            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
-            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
+        let walkable_at = |distance: i32| -> Option<TilePosition> {
+            let tile_x = start.x as i32 + step_x * distance;
+            let tile_y = start.y as i32 + step_y * distance;
             if tile_x < 0 || tile_y < 0 {
-                continue;
+                return None;
             }
             let tile = TilePosition {
                 x: tile_x as u16,
                 y: tile_y as u16,
             };
-            if map.is_walkable(tile) {
-                destination = Some(tile);
-                break;
-            }
-        }
-
-        let Some(destination) = destination else {
-            return;
+            map.is_walkable(tile).then_some(tile)
         };
+
+        let destination = match fresh {
+            // One cell, and it replaces whatever walk was in progress.
+            true => match walkable_at(1) {
+                Some(tile) => tile,
+                None => return,
+            },
+            false => {
+                // Still holding. Say nothing while the current path is being
+                // walked in the direction the player still wants.
+                if let Some((target, held_x, held_y)) = self.keyboard_move_target
+                    && held_x == step_x
+                    && held_y == step_y
+                    && start.x.abs_diff(target.x).max(start.y.abs_diff(target.y)) > REFRESH_WITHIN
+                {
+                    return;
+                }
+
+                // Reach as far as the ground allows, so one packet buys as many
+                // cells of walking as possible.
+                let mut furthest = None;
+                for distance in 1..=HELD_PATH {
+                    match walkable_at(distance) {
+                        Some(tile) => furthest = Some(tile),
+                        None => break,
+                    }
+                }
+
+                match furthest {
+                    Some(tile) => tile,
+                    None => return,
+                }
+            }
+        };
+
         if destination == start {
             return;
         }
+
+        self.keyboard_move_target = Some((destination, step_x, step_y));
 
         let _ = self.networking_system.player_move(WorldPosition {
             x: destination.x,
@@ -7452,6 +7488,20 @@ impl Client {
 
                     // Unbuffer any buffered action.
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
+                }
+                InputEvent::KeyboardMoveStop => {
+                    // Walking to where you already are is how this protocol
+                    // says stop. Only sent when a path was actually in flight,
+                    // so standing still costs nothing.
+                    if self.keyboard_move_target.take().is_some()
+                        && let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position())
+                    {
+                        let _ = self.networking_system.player_move(WorldPosition {
+                            x: here.x,
+                            y: here.y,
+                            direction: ragnarok_packets::Direction::North,
+                        });
+                    }
                 }
                 InputEvent::KeyboardMove {
                     forward,
