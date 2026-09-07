@@ -7046,26 +7046,25 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        let mut destination = None;
-        for distance in (1..=4).rev() {
-            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
-            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
-            if tile_x < 0 || tile_y < 0 {
-                continue;
-            }
-            let tile = TilePosition {
-                x: tile_x as u16,
-                y: tile_y as u16,
-            };
-            if map.is_walkable(tile) {
-                destination = Some(tile);
-                break;
-            }
-        }
-        let Some(destination) = destination else {
+        // Exactly one tile per press, and one diagonal tile when two keys are
+        // held together. The move vector is normalised, so at least one
+        // component is >= 0.707 and rounding can never produce a zero step.
+        //
+        // This used to try four tiles first and walk down to one, taking the
+        // farthest walkable tile -- which meant that on open ground every tap
+        // sent the character three or four cells (three on a diagonal, where
+        // 0.707 * 4 rounds to 3). Smooth while a key was held, unusable for
+        // standing anywhere in particular.
+        let tile_x = start.x as i32 + move_x.round() as i32;
+        let tile_y = start.y as i32 + move_z.round() as i32;
+        if tile_x < 0 || tile_y < 0 {
             return;
+        }
+        let destination = TilePosition {
+            x: tile_x as u16,
+            y: tile_y as u16,
         };
-        if destination == start {
+        if destination == start || !map.is_walkable(destination) {
             return;
         }
 
