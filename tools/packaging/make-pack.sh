@@ -128,12 +128,14 @@ if [ "$os" = "windows" ]; then
        tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
        tools/packaging/windows/Update.bat tools/packaging/windows/Update.ps1 \
        tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Repair.bat tools/packaging/windows/Repair.ps1 \
        tools/packaging/windows/Troubleshoot.bat \
        "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 else
     cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
        tools/packaging/macos/Update.command \
        tools/packaging/macos/Verify.command \
+       tools/packaging/macos/Repair.command \
        "tools/packaging/macos/READ ME FIRST.txt" "$windows/"
     # A .command without the execute bit opens in TextEdit, which looks exactly
     # like "nothing happened". zip preserves the mode; Finder's unzip restores
@@ -205,20 +207,36 @@ chmod +x "$assets/Verify.command"
 write_manifest() {
     local dir="$1"
     local name="$2"
+    shift 2
     [ -d "$dir" ] || return 0
     echo "==> $dir/$name"
     (
         cd "$dir"
         rm -f SHA256SUMS "$name"
-        # Sorted for a stable file, and excluding the manifest itself.
-        find . -type f ! -name 'SHA256SUMS*' -print0 \
+        # Sorted for a stable file, and excluding the manifest itself and extra excludes.
+        local find_args=( . -type f ! -name 'SHA256SUMS*' )
+        while [ $# -gt 0 ]; do
+            find_args+=( ! -name "$1" )
+            shift
+        done
+        find "${find_args[@]}" -print0 \
             | LC_ALL=C sort -z \
             | xargs -0 shasum -a 256 > "$name"
     )
 }
 
+# SHA256SUMS-client owns the executables, scripts, and launcher/verifier files.
+# SHA256SUMS-assets owns ONLY asset payloads (GRFs, lua_files.7z, BGM).
+# Shared verifier files (Verify.*) are excluded from SHA256SUMS-assets so they
+# are owned by exactly one manifest (SHA256SUMS-client), preventing cross-release divergence.
 write_manifest "$windows" SHA256SUMS-client
-write_manifest "$assets" SHA256SUMS-assets
+write_manifest "$assets" SHA256SUMS-assets 'Verify.*'
+
+if [ -f "$assets/SHA256SUMS-assets" ]; then
+    if grep -E 'Verify\.(bat|ps1|command)' "$assets/SHA256SUMS-assets"; then
+        die "SHA256SUMS-assets contains Verify files -- shared verifiers must be owned only by client manifest"
+    fi
+fi
 
 # A pack that leaks credentials is worse than no pack. login_settings.ron holds
 # a real username and password in plaintext, so this is an assertion, not a
@@ -239,7 +257,7 @@ require() {
 
 if [ "$os" = "windows" ]; then
     for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Update.bat Update.ps1 \
-             Verify.bat Verify.ps1 Troubleshoot.bat VERSION \
+             Verify.bat Verify.ps1 Repair.bat Repair.ps1 Troubleshoot.bat VERSION \
              "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
@@ -258,14 +276,14 @@ if [ "$os" = "windows" ]; then
     fi
 else
     for f in korangar Play.command Setup.command Update.command Verify.command \
-             VERSION "READ ME FIRST.txt" SHA256SUMS-client \
+             Repair.command VERSION "READ ME FIRST.txt" SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
     done
 
     # A launcher without the execute bit opens in TextEdit. Silent, and it
     # looks like the download is broken.
-    for f in Play.command Setup.command Update.command Verify.command korangar; do
+    for f in Play.command Setup.command Update.command Verify.command Repair.command korangar; do
         [ -x "$windows/$f" ] || die "$windows/$f is not executable -- Finder would open it as text"
     done
 fi
@@ -342,6 +360,14 @@ if [ "$do_merged" -eq 1 ]; then
     cp -Rc "$windows/." "$merged/"
     cp -Rc "$assets/." "$merged/"
 
+    # Remove the other OS's verifier that came from Assets, ensuring the merged
+    # folder contains only the current OS's verifier files matching SHA256SUMS-client.
+    if [ "$os" = "windows" ]; then
+        rm -f "$merged/Verify.command"
+    else
+        rm -f "$merged/Verify.bat" "$merged/Verify.ps1"
+    fi
+
     # Both manifests have to survive the merge -- that is the entire reason
     # they are named apart (S12). If this ever fails, the rename regressed.
     require "$merged/SHA256SUMS-client"
@@ -393,6 +419,40 @@ case "$out" in
     *)  update_zip_absolute="$repo_root/$update_zip" ;;
 esac
 ( cd "$windows" && zip -r -X -q "$update_zip_absolute" . -x '*.DS_Store' )
+
+# Minimal script repair bundle:
+# Contains launch, setup, update, verify, and repair scripts, version, and their manifest.
+# Allows repairing damaged/corrupted scripts without downloading the 47 MB client binary or 3.7 GB assets.
+repair_name="Seal-Cascade-$half_name-Repair"
+repair_dir="$out/$repair_name"
+repair_zip="$out/$repair_name.zip"
+echo "==> $repair_zip"
+rm -rf "$repair_dir" "$repair_zip"
+mkdir -p "$repair_dir"
+
+if [ "$os" = "windows" ]; then
+    cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
+       tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+       tools/packaging/windows/Update.bat tools/packaging/windows/Update.ps1 \
+       tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Repair.bat tools/packaging/windows/Repair.ps1 \
+       tools/packaging/windows/Troubleshoot.bat \
+       "tools/packaging/windows/READ ME FIRST.txt" "$windows/VERSION" "$repair_dir/"
+else
+    cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
+       tools/packaging/macos/Update.command tools/packaging/macos/Verify.command \
+       tools/packaging/macos/Repair.command \
+       "tools/packaging/macos/READ ME FIRST.txt" "$windows/VERSION" "$repair_dir/"
+    chmod +x "$repair_dir"/*.command
+fi
+
+write_manifest "$repair_dir" SHA256SUMS-repair
+
+case "$out" in
+    /*) repair_zip_absolute="$repair_zip" ;;
+    *)  repair_zip_absolute="$repo_root/$repair_zip" ;;
+esac
+( cd "$repair_dir" && zip -r -X -q "$repair_zip_absolute" . -x '*.DS_Store' )
 
 echo
 echo "pack ready:"

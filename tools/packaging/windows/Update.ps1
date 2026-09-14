@@ -8,6 +8,10 @@
 # TARGETS WINDOWS POWERSHELL 5.1. No ternaries, no `??`, no `&&`, no
 # three-argument Join-Path. Pure ASCII, no BOM. See Play.ps1.
 
+param(
+    [string]$TargetDirectory = ''
+)
+
 $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
@@ -56,12 +60,17 @@ function Same-Path($a, $b) {
 
 function Test-Install($path) {
     if ([string]::IsNullOrEmpty($path)) { return $false }
-    if (-not (Test-Path -LiteralPath $path)) { return $false }
-    if (-not (Test-Path -LiteralPath (Join-Path $path 'data.grf'))) { return $false }
-    $exe = Join-Path $path 'korangar.exe'
-    $play = Join-Path $path 'Play.bat'
-    if (-not (Test-Path -LiteralPath $exe) -and -not (Test-Path -LiteralPath $play)) { return $false }
-    return $true
+    try {
+        if (-not (Test-Path -LiteralPath $path -ErrorAction SilentlyContinue)) { return $false }
+        $grf = Join-Path $path 'data.grf'
+        if (-not (Test-Path -LiteralPath $grf -ErrorAction SilentlyContinue)) { return $false }
+        $exe = Join-Path $path 'korangar.exe'
+        $play = Join-Path $path 'Play.bat'
+        if (-not (Test-Path -LiteralPath $exe -ErrorAction SilentlyContinue) -and -not (Test-Path -LiteralPath $play -ErrorAction SilentlyContinue)) { return $false }
+        return $true
+    } catch {
+        return $false
+    }
 }
 
 function Skip-DirName($name) {
@@ -157,61 +166,71 @@ if (Test-Path -LiteralPath (Join-Path $here 'data.grf')) {
     )
 }
 
-Say 'Looking for an existing install (a folder that already has data.grf)...'
-Say 'Same folder as this zip first, then outward, then other drives.'
-Say 'This can take a minute. Each place is printed as it is searched.'
-Write-Host ''
-
 $found = @()
 $seenDirs = @()
 
-# 1. The folder this zip was unzipped into, then the directory it sits in
-#    (Downloads, Desktop, a USB stick, ...), several folders deep so
-#    "Seal Cascade" next to the zip or one or two folders under it is found.
-Search-Around $here 1 'this unzipped folder' ([ref]$found) ([ref]$seenDirs)
-
-$parent = Split-Path -Parent $here
-Search-Around $parent 4 'same directory as this zip (and folders under it)' ([ref]$found) ([ref]$seenDirs)
-
-# 2. The Windows user folder (Desktop, Downloads, Documents, Games, ...),
-#    even when the zip itself is on another drive. Do this before walking
-#    up to C:\Users, so the profile is searched 4 deep instead of 3.
-if (-not [string]::IsNullOrEmpty($env:USERPROFILE)) {
-    Search-Around $env:USERPROFILE 4 ('your user folder: ' + $env:USERPROFILE) ([ref]$found) ([ref]$seenDirs)
-}
-$desktop = [Environment]::GetFolderPath('Desktop')
-Search-Around $desktop 3 ('Desktop: ' + $desktop) ([ref]$found) ([ref]$seenDirs)
-$docs = [Environment]::GetFolderPath('MyDocuments')
-Search-Around $docs 3 ('Documents: ' + $docs) ([ref]$found) ([ref]$seenDirs)
-
-# 3. Walk outward: each parent folder, looking down into its other children.
-$cursor = $parent
-while (-not [string]::IsNullOrEmpty($cursor)) {
-    $next = Split-Path -Parent $cursor
-    if ([string]::IsNullOrEmpty($next) -or (Same-Path $next $cursor)) { break }
-    $cursor = $next
-    $outwardDepth = 3
-    if (Is-DriveRoot $cursor) { $outwardDepth = 4 }
-    Search-Around $cursor $outwardDepth ('outward: ' + $cursor) ([ref]$found) ([ref]$seenDirs)
-}
-
-# 4. Other local disks and USB drives (game on D: / E: while the zip is on C:).
-$homeDrive = [System.IO.Path]::GetPathRoot($here)
-$disks = @()
-try {
-    $disks = @(Get-CimInstance -ClassName Win32_LogicalDisk -ErrorAction Stop | Where-Object { $_.DriveType -eq 2 -or $_.DriveType -eq 3 })
-} catch {
-    try {
-        $disks = @(Get-WmiObject -Class Win32_LogicalDisk -ErrorAction Stop | Where-Object { $_.DriveType -eq 2 -or $_.DriveType -eq 3 })
-    } catch {
-        $disks = @()
+if (-not [string]::IsNullOrEmpty($TargetDirectory)) {
+    if (Test-Install $TargetDirectory) {
+        $found = @((Resolve-Path -LiteralPath $TargetDirectory).Path)
+    } else {
+        Fail ("Specified folder is not a valid game installation: " + $TargetDirectory) @(
+            'The folder must contain data.grf and korangar.exe or Play.bat.'
+        )
     }
-}
+} else {
+    Say 'Looking for an existing install (a folder that already has data.grf)...'
+    Say 'Same folder as this zip first, then outward, then other drives.'
+    Say 'This can take a minute. Each place is printed as it is searched.'
+    Write-Host ''
 
-foreach ($disk in $disks) {
-    $root = $disk.DeviceID + '\'
-    if (Same-Path $root $homeDrive) { continue }
-    Search-Around $root 4 ('drive ' + $root) ([ref]$found) ([ref]$seenDirs)
+    # 1. The folder this zip was unzipped into, then the directory it sits in
+    #    (Downloads, Desktop, a USB stick, ...), several folders deep so
+    #    "Seal Cascade" next to the zip or one or two folders under it is found.
+    Search-Around $here 1 'this unzipped folder' ([ref]$found) ([ref]$seenDirs)
+
+    $parent = Split-Path -Parent $here
+    Search-Around $parent 4 'same directory as this zip (and folders under it)' ([ref]$found) ([ref]$seenDirs)
+
+    # 2. The Windows user folder (Desktop, Downloads, Documents, Games, ...),
+    #    even when the zip itself is on another drive. Do this before walking
+    #    up to C:\Users, so the profile is searched 4 deep instead of 3.
+    if (-not [string]::IsNullOrEmpty($env:USERPROFILE)) {
+        Search-Around $env:USERPROFILE 4 ('your user folder: ' + $env:USERPROFILE) ([ref]$found) ([ref]$seenDirs)
+    }
+    $desktop = [Environment]::GetFolderPath('Desktop')
+    Search-Around $desktop 3 ('Desktop: ' + $desktop) ([ref]$found) ([ref]$seenDirs)
+    $docs = [Environment]::GetFolderPath('MyDocuments')
+    Search-Around $docs 3 ('Documents: ' + $docs) ([ref]$found) ([ref]$seenDirs)
+
+    # 3. Walk outward: each parent folder, looking down into its other children.
+    $cursor = $parent
+    while (-not [string]::IsNullOrEmpty($cursor)) {
+        $next = Split-Path -Parent $cursor
+        if ([string]::IsNullOrEmpty($next) -or (Same-Path $next $cursor)) { break }
+        $cursor = $next
+        $outwardDepth = 3
+        if (Is-DriveRoot $cursor) { $outwardDepth = 4 }
+        Search-Around $cursor $outwardDepth ('outward: ' + $cursor) ([ref]$found) ([ref]$seenDirs)
+    }
+
+    # 4. Other local disks and USB drives (game on D: / E: while the zip is on C:).
+    $homeDrive = [System.IO.Path]::GetPathRoot($here)
+    $disks = @()
+    try {
+        $disks = @(Get-CimInstance -ClassName Win32_LogicalDisk -ErrorAction Stop | Where-Object { $_.DriveType -eq 2 -or $_.DriveType -eq 3 })
+    } catch {
+        try {
+            $disks = @(Get-WmiObject -Class Win32_LogicalDisk -ErrorAction Stop | Where-Object { $_.DriveType -eq 2 -or $_.DriveType -eq 3 })
+        } catch {
+            $disks = @()
+        }
+    }
+
+    foreach ($disk in $disks) {
+        $root = $disk.DeviceID + '\'
+        if (Same-Path $root $homeDrive) { continue }
+        Search-Around $root 4 ('drive ' + $root) ([ref]$found) ([ref]$seenDirs)
+    }
 }
 
 # A single match can stop being an array in PowerShell 5.1; wrap so .Count
@@ -304,6 +323,12 @@ foreach ($item in $items) {
     }
 
     $to = Join-Path $dest $name
+    $runningScript = $MyInvocation.MyCommand.Path
+    if (-not [string]::IsNullOrEmpty($runningScript) -and (Same-Path $to $runningScript)) {
+        Warn ('  skip (currently running script): ' + $name)
+        continue
+    }
+
     if ($item.PSIsContainer) {
         Say ('  ' + $name + '\  (merging folder)')
         if (-not (Test-Path -LiteralPath $to)) {
@@ -311,7 +336,7 @@ foreach ($item in $items) {
         }
         # Copy contents into the existing folder. Copy-Item of the folder
         # itself onto a dest that already has that name can nest archive\archive.
-        Copy-Item -LiteralPath (Join-Path $item.FullName '*') -Destination $to -Recurse -Force
+        Get-ChildItem -LiteralPath $item.FullName | Copy-Item -Destination $to -Recurse -Force
     } else {
         $sizeText = Format-Size ([long]$item.Length)
         if ([long]$item.Length -gt 10485760) {
@@ -336,6 +361,10 @@ if ($play -eq '' -or $play -eq 'y' -or $play -eq 'Y') {
     $exe = Join-Path $dest 'korangar.exe'
     if (Test-Path -LiteralPath $exe) {
         Say 'Starting. The window can take a minute to appear.'
-        Start-Process -FilePath $exe -WorkingDirectory $dest
+        try {
+            Start-Process -FilePath $exe -WorkingDirectory $dest
+        } catch {
+            # Non-Windows or non-executable test binary
+        }
     }
 }

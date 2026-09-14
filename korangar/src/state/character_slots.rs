@@ -47,10 +47,6 @@ impl CharacterSlots {
         &self.slots
     }
 
-    pub fn class_name(&self, slot: usize) -> Option<&str> {
-        self.class_names.get(slot).and_then(|name| name.as_deref())
-    }
-
     pub fn set_class_name(&mut self, slot: usize, class_name: String) {
         if slot >= self.class_names.len() {
             self.class_names.resize(slot + 1, None);

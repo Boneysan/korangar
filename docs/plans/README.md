@@ -17,6 +17,9 @@ lands.
 
 | Plan | Purpose |
 |---|---|
+| [qwen3-playtest-runbook.md](qwen3-playtest-runbook.md) | **Active continuous Qwen3 execution queue:** one bounded task at a time, exact evidence gates, non-blocking review checkpoints, and a single `NEXT` pointer |
+| [qwen3-restart-2026-09-13.md](qwen3-restart-2026-09-13.md) | **Authoritative senior reconciliation:** accepted completions, incomplete evidence, blockers, dirty-worktree snapshot, and exact restart order |
+| [playtest-adjustments-2026-09-12.md](playtest-adjustments-2026-09-12.md) | September playtest product backlog and acceptance intent; execute it through the Qwen3 runbook above |
 | [M0-connectivity.md](M0-connectivity.md) | First login → char → map loop against local Hercules |
 | [asset-pipeline.md](asset-pipeline.md) | GRF/archive/data sync decisions for M1 |
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |

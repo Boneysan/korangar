@@ -91,9 +91,17 @@ pub struct TestContext {
 
     // --- tracked client state (updated for every drained event) ---
     pub base_level: u32,
+    pub job_level: u32,
     pub job_id: JobId,
     pub zeny: u32,
+    pub base_experience: u64,
+    pub job_experience: u64,
     pub health_points: u32,
+    pub max_health_points: u32,
+    pub spell_points: u32,
+    pub max_spell_points: u32,
+    pub weight: u32,
+    pub max_weight: u32,
     pub map_name: String,
     pub position: TilePosition,
     pub entities: HashMap<EntityId, EntityData>,
@@ -285,9 +293,17 @@ impl TestContext {
             character_name: String::new(),
             characters: Vec::new(),
             base_level: 0,
+            job_level: 0,
             job_id: JobId(0),
             zeny: 0,
+            base_experience: 0,
+            job_experience: 0,
             health_points: 0,
+            max_health_points: 0,
+            spell_points: 0,
+            max_spell_points: 0,
+            weight: 0,
+            max_weight: 0,
             map_name: String::new(),
             position: TilePosition { x: 0, y: 0 },
             entities: HashMap::new(),
@@ -373,6 +389,10 @@ impl TestContext {
         context.character_id = info.character_id;
         context.job_id = info.job_id;
         context.base_level = info.base_level as u32;
+        context.job_level = info.job_level as u32;
+        context.zeny = info.money.max(0) as u32;
+        context.base_experience = info.experience.max(0) as u64;
+        context.job_experience = info.job_experience.max(0) as u64;
 
         context.net.select_character(slot).map_err(|_| "disconnected")?;
         let map_login_data = context.wait_for("CharacterSelected", |event| match event {
@@ -500,6 +520,39 @@ impl TestContext {
                             format!(
                                 "partner login failed ({first_error}); registration returned ({registration_result}); retry failed \
                                  ({error})"
+                            )
+                        })
+                    }
+                }
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    /// Connect a third account ("headless3", "HeadlessThree") for 3-client
+    /// scenarios, registering it via `_M` on first use if needed.
+    pub fn connect_third(config: &Config) -> Result<Self, String> {
+        const USERNAME: &str = "headless3";
+        const CHARACTER_NAME: &str = "HeadlessThree";
+        let password = &config.partner_password;
+        match Self::connect_as(config, USERNAME, password, Some(CHARACTER_NAME), Some(CHARACTER_NAME)) {
+            Ok(context) => Ok(context),
+            Err(first_error) if first_error.contains("login failed") => {
+                let registration_name = format!("{USERNAME}_M");
+                match Self::try_connect(
+                    config,
+                    &registration_name,
+                    password,
+                    Some(CHARACTER_NAME),
+                    Some(CHARACTER_NAME),
+                    &[],
+                ) {
+                    Ok(context) => Ok(context),
+                    Err(registration_result) => {
+                        sleep(Duration::from_secs(1));
+                        Self::connect_as(config, USERNAME, password, Some(CHARACTER_NAME), Some(CHARACTER_NAME)).map_err(|error| {
+                            format!(
+                                "third login failed ({first_error}); registration returned ({registration_result}); retry failed ({error})"
                             )
                         })
                     }
@@ -648,8 +701,16 @@ impl TestContext {
         match event {
             NetworkEvent::UpdateStat { stat_type } => match stat_type {
                 StatType::BaseLevel(value) => self.base_level = *value,
+                StatType::JobLevel(value) => self.job_level = *value,
                 StatType::Zeny(value) => self.zeny = *value,
                 StatType::HealthPoints(value) => self.health_points = *value,
+                StatType::MaximumHealthPoints(value) => self.max_health_points = *value,
+                StatType::SpellPoints(value) => self.spell_points = *value,
+                StatType::MaximumSpellPoints(value) => self.max_spell_points = *value,
+                StatType::Weight(value) => self.weight = *value,
+                StatType::MaximumWeight(value) => self.max_weight = *value,
+                StatType::BaseExperience(value) => self.base_experience = *value,
+                StatType::JobExperience(value) => self.job_experience = *value,
                 _ => {}
             },
             NetworkEvent::ChangeJob { account_id, job_id } if account_id.0 == self.account_id.0 => {
@@ -764,7 +825,23 @@ impl TestContext {
             }
             NetworkEvent::IventoryItemAdded { item } => {
                 if let Some(existing) = self.inventory.iter_mut().find(|existing| existing.index == item.index) {
-                    *existing = item.clone();
+                    let merged = match (&mut existing.details, &item.details) {
+                        (
+                            korangar_networking::InventoryItemDetails::Regular { amount, .. },
+                            korangar_networking::InventoryItemDetails::Regular { amount: added, .. },
+                        )
+                        | (
+                            korangar_networking::InventoryItemDetails::Equippable { amount, .. },
+                            korangar_networking::InventoryItemDetails::Equippable { amount: added, .. },
+                        ) => {
+                            *amount = amount.saturating_add(*added);
+                            true
+                        }
+                        _ => false,
+                    };
+                    if !merged {
+                        *existing = item.clone();
+                    }
                 } else {
                     self.inventory.push(item.clone());
                 }

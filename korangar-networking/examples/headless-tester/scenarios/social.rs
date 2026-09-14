@@ -29,6 +29,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
+        Scenario::new("blue-potion-trade", 8, blue_potion_trade),
     ]
 }
 
@@ -172,7 +173,7 @@ fn friend_reject(config: &Config) -> Result<(), String> {
 /// That is the overloaded fallback this fork documents in
 /// docs/protocol/server-error-channels.md — the server answered, in the one
 /// dialect that carries no information.
-fn ensure_basic_skill(context: &mut TestContext) {
+pub(super) fn ensure_basic_skill(context: &mut TestContext) {
     let _ = context.say("@allskill");
     context.pump(Duration::from_millis(400));
     context.flush();
@@ -231,6 +232,26 @@ pub(super) fn form_party(primary: &mut TestContext, partner: &mut TestContext) -
     partner.net.accept_party_invite(party_id).map_err(|_| "partner disconnected")?;
     primary.wait_for("PartyMemberAdded", |event| match event {
         NetworkEvent::PartyMemberAdded { member } if member.player_name == partner.character_name => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+/// Invite and add an additional member into an existing party on primary.
+pub(super) fn add_party_member(primary: &mut TestContext, member: &mut TestContext) -> Result<(), String> {
+    ensure_no_party(member);
+    member.flush();
+    primary
+        .net
+        .invite_to_party(&member.character_name)
+        .map_err(|_| "primary disconnected")?;
+    let party_id = member.wait_for("PartyInvite", |event| match event {
+        NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+        _ => None,
+    })?;
+    member.net.accept_party_invite(party_id).map_err(|_| "member disconnected")?;
+    primary.wait_for("PartyMemberAdded", |event| match event {
+        NetworkEvent::PartyMemberAdded { member: m } if m.player_name == member.character_name => Some(()),
         _ => None,
     })?;
     Ok(())
@@ -817,7 +838,7 @@ fn whisper_ignore(config: &Config) -> Result<(), String> {
     }
 }
 
-fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
+pub(super) fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
     // **Self-cleaning, and it belongs here because all three trade scenarios
     // funnel through this function.** None of them cleaned up before, so they
     // were clean only by virtue of natural order: a trade left half-open by an
@@ -1065,4 +1086,186 @@ fn trade_commit(config: &Config) -> Result<(), String> {
         NetworkEvent::TradeCompleted { success: true } => Some(()),
         _ => None,
     })
+}
+
+fn count_item(ctx: &TestContext, target_id: u32) -> u32 {
+    ctx.inventory
+        .iter()
+        .filter(|item| item.item_id.0 == target_id)
+        .map(|item| match &item.details {
+            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+            _ => 1,
+        })
+        .sum()
+}
+
+fn execute_trade_trial(
+    primary: &mut TestContext,
+    partner: &mut TestContext,
+    item_id: u32,
+    trade_amount: u16,
+    item_name: &str,
+    trial_idx: usize,
+) -> Result<String, String> {
+    let pre_primary_count = count_item(primary, item_id);
+    let pre_partner_count = count_item(partner, item_id);
+
+    let index = primary.give_item(item_id, trade_amount)?;
+    primary.pump(Duration::from_millis(100));
+
+    begin_trade(primary, partner)?;
+
+    partner.flush();
+    primary.flush();
+
+    // Send 0x00E8 (CZ_ADD_EXCHANGE_ITEM)
+    primary
+        .net
+        .trade_add_item(index, u32::from(trade_amount))
+        .map_err(|_| "primary disconnected during trade_add_item")?;
+
+    let accepted = primary.wait_for_within("TradeAddItemResult", Duration::from_secs(3), &mut |event| match event {
+        NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+        _ => None,
+    });
+
+    let result_code = match accepted {
+        Ok(code) => code,
+        Err(e) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!("Trial {trial_idx}: Failed to receive TradeAddItemResult: {e}"));
+        }
+    };
+
+    if result_code != 0 {
+        let _ = primary.net.trade_cancel();
+        let _ = partner.net.trade_cancel();
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        return Ok(format!(
+            "Trial {trial_idx}: {item_name} (ID {item_id}) refused by server with result {result_code} (UI text: \"Could not add item to \
+             trade (result {result_code}).\")"
+        ));
+    }
+
+    let partner_seen = partner.wait_for_within("TradePartnerItem", Duration::from_secs(3), &mut |event| match event {
+        NetworkEvent::TradePartnerItem {
+            item_id: p_item_id,
+            amount: p_amount,
+            ..
+        } if p_item_id.0 == item_id => Some(*p_amount),
+        _ => None,
+    });
+
+    match partner_seen {
+        Ok(amt) if amt == u32::from(trade_amount) => {}
+        Ok(amt) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!(
+                "Trial {trial_idx}: Partner received incorrect amount: {amt}, expected {trade_amount}"
+            ));
+        }
+        Err(e) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!("Trial {trial_idx}: Partner never received TradePartnerItem: {e}"));
+        }
+    }
+
+    primary.net.trade_ok().map_err(|_| "primary disconnected during trade_ok")?;
+    partner.net.trade_ok().map_err(|_| "partner disconnected during trade_ok")?;
+
+    primary.wait_for("TradeLocked by primary", |event| match event {
+        NetworkEvent::TradeLocked { who: 0 } => Some(()),
+        _ => None,
+    })?;
+    partner.wait_for("TradeLocked by primary on partner", |event| match event {
+        NetworkEvent::TradeLocked { who: 1 } => Some(()),
+        _ => None,
+    })?;
+
+    primary.net.trade_commit().map_err(|_| "primary disconnected during trade_commit")?;
+    partner.net.trade_commit().map_err(|_| "partner disconnected during trade_commit")?;
+
+    primary.wait_for("TradeCompleted on primary", |event| match event {
+        NetworkEvent::TradeCompleted { success: true } => Some(()),
+        _ => None,
+    })?;
+    partner.wait_for("TradeCompleted on partner", |event| match event {
+        NetworkEvent::TradeCompleted { success: true } => Some(()),
+        _ => None,
+    })?;
+
+    primary.pump(Duration::from_millis(500));
+    partner.pump(Duration::from_millis(500));
+
+    // The Hercules server deliberately suppresses the deletion notification to the
+    // giver (trade.c:600 type=1, pc.c:4960). The client GUI removes the offered
+    // items locally upon TradeCompleted (korangar/src/lib.rs:5450-5460). Mirror
+    // that client update here:
+    if let Some(item) = primary.inventory.iter_mut().find(|i| i.index == index) {
+        match &mut item.details {
+            korangar_networking::InventoryItemDetails::Regular { amount, .. } => {
+                if *amount <= trade_amount {
+                    primary.inventory.retain(|i| i.index != index);
+                } else {
+                    *amount -= trade_amount;
+                }
+            }
+            _ => {
+                primary.inventory.retain(|i| i.index != index);
+            }
+        }
+    }
+
+    let post_primary_count = count_item(primary, item_id);
+    let post_partner_count = count_item(partner, item_id);
+
+    if post_primary_count != pre_primary_count {
+        return Err(format!(
+            "Trial {trial_idx}: Primary inventory mismatch: started {pre_primary_count}, received {trade_amount}, traded {trade_amount}, \
+             ended with {post_primary_count}"
+        ));
+    }
+    if post_partner_count != pre_partner_count + u32::from(trade_amount) {
+        return Err(format!(
+            "Trial {trial_idx}: Partner inventory mismatch: started {pre_partner_count}, expected {}, ended with {post_partner_count}",
+            pre_partner_count + u32::from(trade_amount)
+        ));
+    }
+
+    Ok(format!(
+        "Trial {trial_idx}: {item_name} (ID {item_id}) x{trade_amount} (index {index:?}) successfully added via 0x00E8 (result \
+         {result_code}), displayed on partner as \"{item_name} x{trade_amount}\", committed cleanly. Final inventories: \
+         primary={post_primary_count}, partner={post_partner_count}."
+    ))
+}
+
+fn blue_potion_trade(config: &Config) -> Result<(), String> {
+    const BLUE_POTION: u32 = 505;
+    const RED_POTION: u32 = 501;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+
+    let mut trial_results = Vec::new();
+
+    // 3 Trials with Blue Potion (item 505)
+    for trial in 1..=3 {
+        let res = execute_trade_trial(&mut primary, &mut partner, BLUE_POTION, 1, "Blue Potion", trial)?;
+        trial_results.push(res);
+    }
+
+    // 3 Control Trials with Red Potion (item 501)
+    for trial in 1..=3 {
+        let res = execute_trade_trial(&mut primary, &mut partner, RED_POTION, 1, "Red Potion (control)", trial)?;
+        trial_results.push(res);
+    }
+
+    for res in &trial_results {
+        println!("    [QW-021 evidence] {res}");
+    }
+
+    Ok(())
 }

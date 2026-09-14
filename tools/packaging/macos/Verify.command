@@ -50,7 +50,10 @@ fmt_size() {
 }
 
 for name in $found; do
-    printf '\n  Checking against %s ...\n' "$name"
+    pkg_half="Client"
+    [ "$name" = "SHA256SUMS-assets" ] && pkg_half="Assets"
+
+    printf '\n  Checking against %s [%s] ...\n' "$name" "$pkg_half"
     printf '  Each file is named before it is hashed. Large GRFs can take a minute.\n'
 
     total=$(awk '/^[0-9a-fA-F]{64}/ { c++ } END { print c+0 }' "$name")
@@ -62,9 +65,23 @@ for name in $found; do
         esac
         [ -n "$path" ] || continue
         path=${path#./}
+
+        # Shared verifier files are owned exclusively by SHA256SUMS-client.
+        base=$(basename "$path")
+        if [ "$pkg_half" = "Assets" ]; then
+            case "$base" in
+                Verify.ps1|Verify.bat|Verify.command) continue ;;
+            esac
+        fi
+
         n=$((n + 1))
         if [ ! -e "$path" ]; then
-            printf '  [%s/%s] MISSING  %s\n' "$n" "$total" "$path"
+            printf '  [%s/%s] [%s] MISSING  %s\n' "$n" "$total" "$pkg_half" "$path"
+            printf '    Package Half:   %s\n' "$pkg_half"
+            printf '    Manifest Path:  %s/%s\n' "$here" "$name"
+            printf '    Expected Hash:  %s\n' "$hash"
+            printf '    Actual Hash:    <none> (file missing)\n'
+            printf '    Installed Path: %s/%s\n' "$here" "$path"
             bad=$((bad + 1))
             continue
         fi
@@ -75,11 +92,17 @@ for name in $found; do
         else
             printf '  [%s/%s] %s (%s)\n' "$n" "$total" "$path" "$size"
         fi
-        actual=$(shasum -a 256 "$path" | awk '{ print $1 }')
-        if [ "$actual" = "$hash" ]; then
+        actual=$(shasum -a 256 "$path" | awk '{ print tolower($1) }')
+        hash_lower=$(echo "$hash" | tr '[:upper:]' '[:lower:]')
+        if [ "$actual" = "$hash_lower" ]; then
             ok=$((ok + 1))
         else
-            printf '  CORRUPT  %s\n' "$path"
+            printf '  [%s] CORRUPT: %s\n' "$pkg_half" "$path"
+            printf '    Package Half:   %s\n' "$pkg_half"
+            printf '    Manifest Path:  %s/%s\n' "$here" "$name"
+            printf '    Expected Hash:  %s\n' "$hash"
+            printf '    Actual Hash:    %s\n' "$actual"
+            printf '    Installed Path: %s/%s\n' "$here" "$path"
             bad=$((bad + 1))
         fi
     done < "$name"

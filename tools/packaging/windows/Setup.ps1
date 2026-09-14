@@ -186,18 +186,25 @@ if ($alreadyHere) {
     Good 'Already in place.'
 } else {
     $parent = Split-Path -Parent $here
-    $downloads = Join-Path $env:USERPROFILE 'Downloads'
+    $userHome = if (-not [string]::IsNullOrEmpty($env:USERPROFILE)) { $env:USERPROFILE } elseif (-not [string]::IsNullOrEmpty($env:HOME)) { $env:HOME } else { '' }
+    $downloads = if (-not [string]::IsNullOrEmpty($userHome)) { Join-Path $userHome 'Downloads' } else { '' }
 
     $candidates = @(
         (Join-Path $here 'Assets'),
-        (Join-Path $parent 'Assets'),
-        (Join-Path $downloads 'Assets')
+        (Join-Path $parent 'Assets')
     )
+    if (-not [string]::IsNullOrEmpty($downloads)) {
+        $candidates = $candidates + (Join-Path $downloads 'Assets')
+    }
 
     # Drive folders arrive with all sorts of names, and a zip that was unpacked
     # twice nests one inside another. So after the obvious spots, look for any
     # nearby folder that simply HAS a data.grf in it.
-    foreach ($root in @($parent, $downloads, $here)) {
+    $searchRoots = @($parent, $here)
+    if (-not [string]::IsNullOrEmpty($downloads)) {
+        $searchRoots = $searchRoots + $downloads
+    }
+    foreach ($root in $searchRoots) {
         if (-not (Test-Path -LiteralPath $root)) { continue }
         $children = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue
         foreach ($child in $children) {
@@ -305,18 +312,38 @@ function Test-Manifest($manifestPath) {
     $n = 0
     Say ('  ' + $total.ToString() + ' files in this list. Large ones can take a minute each.')
 
+    $manifestName = Split-Path -Leaf $manifestPath
+    $pkgHalf = if ($manifestName -match 'client') { 'Client' } elseif ($manifestName -match 'assets') { 'Assets' } else { $manifestName }
+
     foreach ($line in $entries) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
 
         $expected = $Matches[1].ToUpperInvariant()
         $relative = $Matches[2] -replace '/', '\'
+        if ($relative.StartsWith('.\')) {
+            $relative = $relative.Substring(2)
+        }
+
+        # Shared verifier files are owned exclusively by SHA256SUMS-client.
+        # Stale or cross-release Verify.* entries in SHA256SUMS-assets are ignored.
+        $leafName = Split-Path -Leaf $relative
+        if ($pkgHalf -eq 'Assets' -and ($leafName -eq 'Verify.ps1' -or $leafName -eq 'Verify.bat' -or $leafName -eq 'Verify.command')) {
+            continue
+        }
+
         $path = Join-Path $here $relative
         $n = $n + 1
         $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
 
         if (-not (Test-Path -LiteralPath $path)) {
             $result.Missing = $result.Missing + 1
-            $result.Names = $result.Names + ('MISSING  ' + $relative)
+            $nameStr = '[' + $pkgHalf + '] MISSING: ' + $relative + "`n" +
+                       '        Package Half:   ' + $pkgHalf + "`n" +
+                       '        Manifest Path:  ' + $manifestPath + "`n" +
+                       '        Expected Hash:  ' + $expected + "`n" +
+                       '        Actual Hash:    <none> (file missing)' + "`n" +
+                       '        Installed Path: ' + $path
+            $result.Names = $result.Names + $nameStr
             Say ($prefix + ' -- missing')
             continue
         }
@@ -332,7 +359,13 @@ function Test-Manifest($manifestPath) {
         $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToUpperInvariant()
         if ($actual -ne $expected) {
             $result.Bad = $result.Bad + 1
-            $result.Names = $result.Names + ('CORRUPT  ' + $relative)
+            $nameStr = '[' + $pkgHalf + '] CORRUPT: ' + $relative + "`n" +
+                       '        Package Half:   ' + $pkgHalf + "`n" +
+                       '        Manifest Path:  ' + $manifestPath + "`n" +
+                       '        Expected Hash:  ' + $expected + "`n" +
+                       '        Actual Hash:    ' + $actual + "`n" +
+                       '        Installed Path: ' + $path
+            $result.Names = $result.Names + $nameStr
         } else {
             $result.Ok = $result.Ok + 1
         }
@@ -367,10 +400,10 @@ if ($problems.Count -gt 0) {
     Write-Host ''
     foreach ($problem in $problems) { Write-Host ("    " + $problem) -ForegroundColor Red }
     Fail ($problems.Count.ToString() + ' file(s) are missing or damaged.') @(
-        'Those files did not download correctly. Download the half they belong',
-        'to again from the shared Drive folder -- the big Assets one if the',
-        'names above are .grf or BGM, this small one otherwise -- and run',
-        'Setup again.'
+        'Those files did not download correctly. Check the Package Half lines above:',
+        '  - If Assets is listed, re-download the 3.7 GB Assets folder.',
+        '  - If only Client is listed, re-download only the small Windows client zip.',
+        'Then run Setup again.'
     )
 }
 
@@ -397,10 +430,16 @@ Good 'Done.'
 Step 6 'Checking Tailscale'
 
 $tailscale = $null
-foreach ($candidate in @(
-    (Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe'),
-    (Join-Path ${env:ProgramFiles(x86)} 'Tailscale\tailscale.exe'))) {
-    if ($candidate -and (Test-Path -LiteralPath $candidate)) { $tailscale = $candidate; break }
+$tailscaleCandidates = @()
+if (-not [string]::IsNullOrEmpty($env:ProgramFiles)) {
+    $tailscaleCandidates = $tailscaleCandidates + (Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe')
+}
+$progFilesX86 = ${env:ProgramFiles(x86)}
+if (-not [string]::IsNullOrEmpty($progFilesX86)) {
+    $tailscaleCandidates = $tailscaleCandidates + (Join-Path $progFilesX86 'Tailscale\tailscale.exe')
+}
+foreach ($candidate in $tailscaleCandidates) {
+    if (Test-Path -LiteralPath $candidate) { $tailscale = $candidate; break }
 }
 if (-not $tailscale) {
     $onPath = Get-Command tailscale.exe -ErrorAction SilentlyContinue
@@ -529,5 +568,9 @@ Write-Host ''
 
 $answer = Read-Host '  Start the game now? [Y/n]'
 if ($answer -eq '' -or $answer -eq 'y' -or $answer -eq 'Y') {
-    Start-Process -FilePath (Join-Path $here 'korangar.exe') -WorkingDirectory $here
+    try {
+        Start-Process -FilePath (Join-Path $here 'korangar.exe') -WorkingDirectory $here
+    } catch {
+        # Non-Windows or non-executable test binary
+    }
 }

@@ -15,8 +15,6 @@ use crate::world::{EARTH_SPIKE_TEXTURE, NAPALM_BEAT_TEXTURE, NAPALM_BEAT_TEXTURE
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[allow(dead_code)]
 pub enum EffectShape {
-    /// Soft floating orb (Soul Strike family).
-    Orb,
     /// Expanding ring / psychic shock (Napalm).
     Ring,
     /// Rising ground spike (Earth Spike / Heaven's Drive).
@@ -55,7 +53,10 @@ impl SpecialEffectRecipe {
                 SkillBurstStyle::NapalmBeat => EffectShape::Ring,
                 SkillBurstStyle::EarthSpike | SkillBurstStyle::HeavensDrive => EffectShape::Spike,
                 SkillBurstStyle::MagnumBreak | SkillBurstStyle::Raid | SkillBurstStyle::SonicBlow => EffectShape::Ring,
-                SkillBurstStyle::MeteorAssault | SkillBurstStyle::MeleeHit | SkillBurstStyle::JupitelHit => EffectShape::Flash,
+                SkillBurstStyle::MeteorAssault
+                | SkillBurstStyle::MeleeHit
+                | SkillBurstStyle::JupitelHit
+                | SkillBurstStyle::IncreaseAgility => EffectShape::Flash,
             },
         }
     }
@@ -232,13 +233,16 @@ pub fn special_effect_recipe(effect_id: EffectId) -> Option<SpecialEffectRecipe>
             light_color: Color::rgb_u8(255, 245, 190),
             light_intensity: 40.0,
         }),
-        EffectId::Blessing | EffectId::Incagility | EffectId::Angelus | EffectId::Gloria | EffectId::Magnificat => {
-            Some(SpecialEffectRecipe::Str {
-                path: "holyhit.str",
-                light_color: Color::rgb_u8(255, 245, 190),
-                light_intensity: 35.0,
-            })
-        }
+        EffectId::Incagility => Some(SpecialEffectRecipe::Burst {
+            style: SkillBurstStyle::IncreaseAgility,
+            texture: "effect\\ac_center2.tga",
+            secondary: Some("effect\\agi_up.bmp"),
+        }),
+        EffectId::Blessing | EffectId::Angelus | EffectId::Gloria | EffectId::Magnificat => Some(SpecialEffectRecipe::Str {
+            path: "holyhit.str",
+            light_color: Color::rgb_u8(255, 245, 190),
+            light_intensity: 35.0,
+        }),
         EffectId::Resurrection => Some(SpecialEffectRecipe::Str {
             path: "holyhit.str",
             light_color: Color::rgb_u8(255, 255, 220),
@@ -300,17 +304,12 @@ pub fn effect_shape_hint(effect_id: EffectId) -> Option<EffectShape> {
         return Some(recipe.shape());
     }
     match effect_id {
-        EffectId::Soulstrike | EffectId::Soulstrike2 | EffectId::Cone | EffectId::Sphere => Some(EffectShape::Orb),
+        EffectId::Soulstrike | EffectId::Soulstrike2 => Some(EffectShape::Str),
         EffectId::Napalmbeat | EffectId::Magnumbreak | EffectId::Barrier => Some(EffectShape::Ring),
         EffectId::Earthspike | EffectId::Heavensdrive | EffectId::Icewall => Some(EffectShape::Spike),
-        EffectId::Fireball
-        | EffectId::Fireball2
-        | EffectId::Fireball3
-        | EffectId::Frostdiver
-        | EffectId::Yufitel
-        | EffectId::Yufitel2
-        | EffectId::Waterball
-        | EffectId::Waterball2 => Some(EffectShape::Ball),
+        EffectId::Fireball | EffectId::Fireball2 | EffectId::Fireball3 | EffectId::Frostdiver | EffectId::Yufitel | EffectId::Yufitel2 => {
+            Some(EffectShape::Ball)
+        }
         EffectId::Firehit
         | EffectId::Coldhit
         | EffectId::Windhit
@@ -322,9 +321,124 @@ pub fn effect_shape_hint(effect_id: EffectId) -> Option<EffectShape> {
     }
 }
 
+/// Native effect IDs with a presentation recipe in this build. Kept
+/// explicit so archive audits and catalog tests can enumerate them without
+/// random sampling.
+#[cfg(test)]
+pub const MAPPED_EFFECT_IDS: &[EffectId] = &[
+    EffectId::Soulstrike,
+    EffectId::Fireball,
+    EffectId::Fireball2,
+    EffectId::Fireball3,
+    EffectId::Frostdiver,
+    EffectId::Frostdiver2,
+    EffectId::Freeze,
+    EffectId::Freezed,
+    EffectId::Napalmbeat,
+    EffectId::Earthspike,
+    EffectId::Heavensdrive,
+    EffectId::Yufitel,
+    EffectId::Yufitel2,
+    EffectId::Yufitelhit,
+    EffectId::Magnumbreak,
+    EffectId::Stormgust,
+    EffectId::Firewall,
+    EffectId::Sanctuary,
+    EffectId::Magnus,
+    EffectId::Quagmire,
+    EffectId::Meteorstorm,
+    EffectId::Lord,
+    EffectId::Firehit,
+    EffectId::Firesplashhit,
+    EffectId::Coldhit,
+    EffectId::Windhit,
+    EffectId::Earthhit,
+    EffectId::Holyhit,
+    EffectId::Thunderstorm,
+    EffectId::Lightbolt,
+    EffectId::Sonicblow,
+    EffectId::Sonicblow2,
+    EffectId::Brandishspear,
+    EffectId::Brandish2,
+    EffectId::Pierce,
+    EffectId::Pierceself,
+    EffectId::Lockon,
+    EffectId::Beginspell,
+    EffectId::Beginspell2,
+    EffectId::Beginspell3,
+    EffectId::Beginspell4,
+    EffectId::Beginspell5,
+    EffectId::Beginspell6,
+    EffectId::Beginspell7,
+    EffectId::Healsp,
+    EffectId::Recovery,
+    EffectId::Incagility,
+    EffectId::Blessing,
+    EffectId::Angelus,
+    EffectId::Gloria,
+    EffectId::Magnificat,
+    EffectId::Resurrection,
+    EffectId::Bowlingbash,
+    EffectId::Bowlingself,
+    EffectId::Spearbmr,
+    EffectId::Spearbmrself,
+    EffectId::Bash,
+    EffectId::Crashearth,
+    EffectId::Venomdust,
+    EffectId::Skidtrap,
+    EffectId::Blastminebomb,
+    EffectId::Claymore,
+    EffectId::Freezing,
+    EffectId::Sandman,
+    EffectId::Pneuma,
+    EffectId::Icewall,
+];
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn every_declared_mapped_special_effect_has_a_recipe() {
+        for effect_id in MAPPED_EFFECT_IDS {
+            assert!(
+                special_effect_recipe(*effect_id).is_some(),
+                "{effect_id:?} is declared in MAPPED_EFFECT_IDS but has no recipe"
+            );
+        }
+    }
+
+    #[test]
+    fn increase_agility_special_effect_recipe_contracts() {
+        let recipe = special_effect_recipe(EffectId::Incagility).expect("EffectId::Incagility must have a special-effect recipe");
+        match recipe {
+            SpecialEffectRecipe::Burst { style, texture, secondary } => {
+                assert_eq!(style, SkillBurstStyle::IncreaseAgility);
+                assert_eq!(texture, "effect\\ac_center2.tga");
+                assert_eq!(secondary, Some("effect\\agi_up.bmp"));
+            }
+            SpecialEffectRecipe::Str { .. } => {
+                panic!("Increase AGI must use procedural burst with texture loader, not .str");
+            }
+        }
+        assert_eq!(EffectId::Incagility as u32, 37, "EF_INCAGILITY must match protocol ID 37");
+        assert_eq!(effect_shape_hint(EffectId::Incagility), Some(EffectShape::Flash));
+    }
+
+    #[test]
+    fn heal_support_effects_remain_on_holyhit_str() {
+        for heal_effect_id in [EffectId::Healsp, EffectId::Recovery, EffectId::Resurrection] {
+            let recipe = special_effect_recipe(heal_effect_id).unwrap_or_else(|| panic!("{heal_effect_id:?} must have a recipe"));
+            match recipe {
+                SpecialEffectRecipe::Str { path, .. } => {
+                    assert_eq!(path, "holyhit.str", "{heal_effect_id:?} must remain on holyhit.str");
+                }
+                SpecialEffectRecipe::Burst { .. } => {
+                    panic!("{heal_effect_id:?} must use STR loader with holyhit.str, not procedural burst");
+                }
+            }
+        }
+    }
 
     #[test]
     fn e1_native_ids_are_mapped() {
@@ -345,13 +459,13 @@ mod tests {
         assert_eq!(effect_shape_hint(EffectId::Earthspike), Some(EffectShape::Spike));
         assert_eq!(effect_shape_hint(EffectId::Fireball), Some(EffectShape::Str));
         assert_eq!(effect_shape_hint(EffectId::Yufitelhit), Some(EffectShape::Str));
-        // Unmapped-but-known families fall back to the semantic table.
-        assert_eq!(effect_shape_hint(EffectId::Waterball), Some(EffectShape::Ball));
-        assert_eq!(effect_shape_hint(EffectId::Cone), Some(EffectShape::Orb));
     }
 
     #[test]
     fn unmapped_id_stays_explicit_none() {
+        // Waterball, Cone, Sphere no longer have recipes
+        assert!(special_effect_recipe(EffectId::Waterball).is_none());
+        assert!(special_effect_recipe(EffectId::Cone).is_none());
         assert!(special_effect_recipe(EffectId::Max).is_none());
     }
 }

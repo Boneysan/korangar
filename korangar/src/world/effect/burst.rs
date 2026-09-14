@@ -14,7 +14,7 @@ use crate::world::{Camera, PointLightId, PointLightManager};
 const SEGMENT_COUNT: usize = 24;
 const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SkillBurstStyle {
     MagnumBreak,
     Raid,
@@ -33,6 +33,8 @@ pub enum SkillBurstStyle {
     /// Phase E1 — WZ_JUPITEL impact: a growing thunder_pang flash under a
     /// plasma-blast frame cycle (the original client's effect 94).
     JupitelHit,
+    /// EF_INCAGILITY (37): rising light motes and the AGI-up sigil.
+    IncreaseAgility,
 }
 
 impl SkillBurstStyle {
@@ -50,6 +52,7 @@ impl SkillBurstStyle {
             Self::EarthSpike => 3.5,
             Self::HeavensDrive => 1.1,
             Self::JupitelHit => 0.45,
+            Self::IncreaseAgility => 1.0,
         }
     }
 
@@ -64,6 +67,7 @@ impl SkillBurstStyle {
             Self::EarthSpike => (Color::rgb_u8(210, 170, 90), 40.0),
             Self::HeavensDrive => (Color::rgb_u8(200, 160, 80), 50.0),
             Self::JupitelHit => (Color::rgb_u8(255, 245, 170), 55.0),
+            Self::IncreaseAgility => (Color::rgb_u8(190, 255, 145), 35.0),
         }
     }
 }
@@ -530,6 +534,63 @@ impl SkillBurst {
             );
         }
     }
+
+    /// Original EF_INCAGILITY (37), translated from the classic effect table:
+    /// twenty `ac_center2` motes rise around the actor while `agi_up` lifts
+    /// through the body. Both layers fade during the one-second effect.
+    fn render_increase_agility(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32) {
+        for index in 0..20u32 {
+            let delay = (index % 3) as f32 * 0.08 + hash01(index.wrapping_add(71)) * 0.16;
+            if progress < delay {
+                continue;
+            }
+
+            let local = ((progress - delay) / (1.0 - delay)).clamp(0.0, 1.0);
+            let x = (hash01(index.wrapping_add(11)) * 2.0 - 1.0) * 62.0;
+            let start_y = 28.0 + hash01(index.wrapping_add(29)) * 30.0;
+            let rise = 95.0 + hash01(index.wrapping_add(43)) * 55.0;
+            let width = 5.0 + hash01(index.wrapping_add(59)) * 5.0;
+            let height = 28.0 + hash01(index.wrapping_add(83)) * 42.0;
+            self.render_sprite(
+                renderer,
+                camera,
+                Vector2::new(x, start_y - local * rise),
+                Vector2::new(width, height),
+                0.0,
+                Color::rgba(0.8, 1.0, 0.65, (1.0 - local) * 0.9),
+            );
+        }
+
+        if let Some(sigil) = &self.secondary_texture {
+            let fade_in = (progress / 0.12).min(1.0);
+            let fade_out = ((1.0 - progress) / 0.28).min(1.0);
+            let alpha = fade_in.min(fade_out);
+            let half_width = 50.0;
+            let half_height = 22.5;
+            renderer.render_effect(
+                camera,
+                self.position,
+                sigil.clone(),
+                [
+                    Vector2::new(-half_width, -half_height),
+                    Vector2::new(half_width, -half_height),
+                    Vector2::new(-half_width, half_height),
+                    Vector2::new(half_width, half_height),
+                ],
+                [
+                    Vector2::new(1.0, 1.0),
+                    Vector2::new(1.0, 0.0),
+                    Vector2::new(0.0, 0.0),
+                    Vector2::new(0.0, 1.0),
+                ],
+                EFFECT_ORIGIN + Vector2::new(0.0, 5.0 - progress * 75.0),
+                Rad(0.0),
+                Color::rgba(1.0, 1.0, 1.0, alpha),
+                BlendFactor::SrcAlpha,
+                BlendFactor::One,
+            );
+        }
+    }
 }
 
 impl EffectBase for SkillBurst {
@@ -566,6 +627,7 @@ impl EffectBase for SkillBurst {
             SkillBurstStyle::EarthSpike => self.render_earth_spikes(renderer, camera, progress, false),
             SkillBurstStyle::HeavensDrive => self.render_earth_spikes(renderer, camera, progress, true),
             SkillBurstStyle::JupitelHit => self.render_jupitel_hit(renderer, camera, progress),
+            SkillBurstStyle::IncreaseAgility => self.render_increase_agility(renderer, camera, progress),
         }
     }
 }

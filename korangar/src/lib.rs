@@ -79,7 +79,7 @@ use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
     DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion, UnifiedLoginFailedReason,
+    SupportedPacketVersion, UnifiedLoginFailedReason, filter_sell_items,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -3866,6 +3866,24 @@ impl Client {
             .connect_to_character_server(self.saved_packet_version, login_data, character_server_information);
     }
 
+    pub(crate) fn handle_selling_completed(
+        sell_cart: &mut Vec<SellItem<(ResourceMetadata, u16)>>,
+        result: SellItemsResult,
+        mut close_window: impl FnMut(WindowClass),
+    ) -> Option<ChatMessage> {
+        match result {
+            SellItemsResult::Success => {
+                // Clear the cart.
+                sell_cart.clear();
+
+                close_window(WindowClass::Sell);
+                close_window(WindowClass::SellCart);
+                None
+            }
+            SellItemsResult::Error => Some(ChatMessage::new("Failed to sell items".to_owned(), MessageColor::Error)),
+        }
+    }
+
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn handle_network_events(&mut self, client_tick: ClientTick) {
@@ -6489,28 +6507,7 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
                     let inventory_items = self.client_state.follow(client_state().inventory().items());
-                    let sell_items: Vec<_> = items
-                        .into_iter()
-                        .filter_map(|item| {
-                            let inventory_item = inventory_items
-                                .iter()
-                                .find(|inventory_item| inventory_item.index == item.inventory_index)?;
-
-                            let name = inventory_item.metadata.name.clone();
-                            let texture = inventory_item.metadata.texture.clone();
-                            let quantity = match &inventory_item.details {
-                                korangar_networking::InventoryItemDetails::Regular { amount, .. } => *amount,
-                                korangar_networking::InventoryItemDetails::Equippable { .. } => 1,
-                            };
-
-                            Some(SellItem {
-                                metadata: (ResourceMetadata { name, texture }, quantity),
-                                inventory_index: item.inventory_index,
-                                price: item.price,
-                                overcharge_price: item.overcharge_price,
-                            })
-                        })
-                        .collect();
+                    let sell_items = filter_sell_items(items, inventory_items);
 
                     if sell_items.is_empty() {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -6525,20 +6522,15 @@ impl Client {
                         .open_window(SellWindow::new(client_state().sell_items(), client_state().sell_cart()));
                     self.interface.open_window(SellCartWindow::new(client_state().sell_cart()));
                 }
-                NetworkEvent::SellingCompleted { result } => match result {
-                    SellItemsResult::Success => {
-                        // Clear the cart.
-                        self.client_state.follow_mut(client_state().buy_cart()).clear();
-
-                        self.interface.close_window_with_class(WindowClass::Sell);
-                        self.interface.close_window_with_class(WindowClass::SellCart);
+                NetworkEvent::SellingCompleted { result } => {
+                    if let Some(error_message) = Self::handle_selling_completed(
+                        self.client_state.follow_mut(client_state().sell_cart()),
+                        result,
+                        |window_class| self.interface.close_window_with_class(window_class),
+                    ) {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(error_message);
                     }
-                    SellItemsResult::Error => {
-                        self.client_state
-                            .follow_mut(client_state().chat_messages())
-                            .push(ChatMessage::new("Failed to sell items".to_owned(), MessageColor::Error));
-                    }
-                },
+                }
                 NetworkEvent::AttackFailed {
                     target_entity_id,
                     target_position,
@@ -9105,6 +9097,13 @@ impl Client {
 
                 self.sprite_effects.spawn(path, position, action_index, client_tick);
             }
+            ResolvedEffect::IncreaseAgility => self.add_layered_procedural_skill_effect(
+                "effect\\ac_center2.tga",
+                "effect\\agi_up.bmp",
+                position,
+                point_light_id,
+                SkillBurstStyle::IncreaseAgility,
+            ),
         }
     }
 
@@ -10936,6 +10935,8 @@ mod slash_command_tests {
 
 #[cfg(test)]
 mod skill_effect_asset_tests {
+    use ragnarok_packets::EffectId;
+
     use super::*;
 
     #[test]
@@ -10943,6 +10944,80 @@ mod skill_effect_asset_tests {
         let hit_effects = skill_hit_effects(SkillId(19));
         assert!(!hit_effects.is_empty());
         assert!(hit_effects.iter().all(|(_, _, start_delay)| *start_delay == 0.0));
+    }
+
+    #[test]
+    fn increase_agility_dual_routes_loader_target_and_audio_invariants() {
+        // Route 1: Skill presentation route (SkillId 29 / AL_INCAGI via
+        // SkillEffectNoDamage)
+        let skill_id = SkillId(29);
+        let recipe = skill_presentation_recipe(skill_id);
+
+        // Exactly one target effect track.
+        assert_eq!(
+            recipe.no_damage_target_effects.len(),
+            1,
+            "Increase AGI must declare exactly one target effect"
+        );
+        let no_damage_effects = skill_no_damage_target_effects(skill_id);
+        assert_eq!(no_damage_effects.len(), 1);
+        let (resolved, _light_color, start_delay) = no_damage_effects[0];
+        assert_eq!(start_delay, 0.0);
+
+        // Selected loader type: procedural burst (texture loader), NOT .str effect
+        // loader and NOT sprite loader.
+        assert_eq!(resolved, ResolvedEffect::IncreaseAgility);
+        assert!(
+            !matches!(resolved, ResolvedEffect::Str(_) | ResolvedEffect::Sprite { .. }),
+            "Increase AGI must not use .str or sprite loader"
+        );
+
+        // Target anchoring & no duplicate visual:
+        // Caster visual must be None so only the target entity visual spawns.
+        assert!(
+            recipe.successful_caster_effect.is_none(),
+            "Caster visual must be None to prevent duplicate visual spawn"
+        );
+        assert!(recipe.hit_effects.is_empty(), "Increase AGI must not declare hit_effects");
+
+        // Audio: exactly one sound at caster, no duplicate audio across other tracks.
+        assert_eq!(recipe.successful_caster_sounds.len(), 1);
+        assert_eq!(recipe.successful_caster_sounds[0].resolve(), "effect\\ef_incagility.wav");
+        assert!(recipe.damage_caster_sounds.is_empty(), "no duplicate audio");
+        assert!(recipe.damage_target_sounds.is_empty(), "no duplicate audio");
+        assert!(recipe.hit_sounds.is_empty(), "no duplicate audio");
+        assert!(recipe.ground_sounds.is_empty(), "no duplicate audio");
+
+        // Route 2: Special effect route (EffectId::Incagility / 37 via SpecialEffect)
+        let special_recipe =
+            special_effect_recipe(EffectId::Incagility).expect("EffectId::Incagility must resolve to a special-effect recipe");
+        match special_recipe {
+            SpecialEffectRecipe::Burst { style, texture, secondary } => {
+                assert_eq!(style, SkillBurstStyle::IncreaseAgility);
+                assert_eq!(texture, "effect\\ac_center2.tga");
+                assert_eq!(secondary, Some("effect\\agi_up.bmp"));
+            }
+            SpecialEffectRecipe::Str { .. } => {
+                panic!("EF_INCAGILITY must use procedural burst (texture loader), not .str loader");
+            }
+        }
+
+        // Heal regression guard: Heal remains strictly on holyhit.str across all
+        // routes.
+        let heal_skill = skill_presentation_recipe(SkillId(28));
+        assert_eq!(heal_skill.no_damage_target_effects.len(), 1);
+        assert_eq!(
+            heal_skill.no_damage_target_effects[0].asset.resolve(),
+            ResolvedEffect::Str("holyhit.str")
+        );
+        assert_eq!(heal_skill.hit_effects.len(), 1);
+        assert_eq!(heal_skill.hit_effects[0].asset.resolve(), ResolvedEffect::Str("holyhit.str"));
+
+        let heal_special = special_effect_recipe(EffectId::Healsp).expect("Healsp recipe");
+        match heal_special {
+            SpecialEffectRecipe::Str { path, .. } => assert_eq!(path, "holyhit.str"),
+            SpecialEffectRecipe::Burst { .. } => panic!("Healsp must use holyhit.str, not burst"),
+        }
     }
 
     /// Every asset a mapped skill recipe can reference must ship in the
@@ -10962,6 +11037,15 @@ mod skill_effect_asset_tests {
         for skill_id in MAPPED_SKILL_IDS {
             let recipe = skill_presentation_recipe(*skill_id);
             for track in recipe.hit_effects {
+                for effect_path in track.asset.variants() {
+                    paths.insert(format!("data\\texture\\effect\\{effect_path}"));
+                }
+                if let Some(sprite_path) = track.asset.sprite_path() {
+                    paths.insert(format!("data\\sprite\\{sprite_path}.spr"));
+                    paths.insert(format!("data\\sprite\\{sprite_path}.act"));
+                }
+            }
+            for track in recipe.no_damage_target_effects {
                 for effect_path in track.asset.variants() {
                     paths.insert(format!("data\\texture\\effect\\{effect_path}"));
                 }
@@ -11074,6 +11158,37 @@ mod skill_effect_asset_tests {
             paths.insert(format!("data\\texture\\{path}"));
         }
 
+        // Native special-effect recipes (ZC_NOTIFY_EFFECT2 / 0x01F3).
+        for effect_id in MAPPED_EFFECT_IDS {
+            if let Some(recipe) = special_effect_recipe(*effect_id) {
+                match recipe {
+                    SpecialEffectRecipe::Str { path, .. } => {
+                        paths.insert(format!("data\\texture\\effect\\{path}"));
+                    }
+                    SpecialEffectRecipe::Burst { texture, secondary, .. } => {
+                        paths.insert(format!("data\\texture\\{texture}"));
+                        if let Some(secondary) = secondary {
+                            paths.insert(format!("data\\texture\\{secondary}"));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Increase AGI assets must be validated in their exact directories.
+        assert!(
+            paths.contains("data\\texture\\effect\\ac_center2.tga"),
+            "ac_center2.tga must be audited"
+        );
+        assert!(
+            paths.contains("data\\texture\\effect\\agi_up.bmp"),
+            "agi_up.bmp must be audited"
+        );
+        assert!(
+            paths.contains("data\\wav\\effect\\ef_incagility.wav"),
+            "ef_incagility.wav must be audited"
+        );
+
         let missing: Vec<String> = paths
             .into_iter()
             .filter(|path| !game_file_loader.file_exists(&path.to_lowercase()))
@@ -11125,5 +11240,91 @@ mod grf_extract {
                 Err(error) => println!("{path}: NOT FOUND ({error:?})"),
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod selling_completed_tests {
+    use korangar_networking::{ItemQuantity, ShopItem};
+    use ragnarok_packets::{InventoryIndex, Price};
+
+    use super::*;
+
+    #[test]
+    fn successful_sale_clears_only_sell_cart_and_closes_windows() {
+        let dummy_metadata = ResourceMetadata {
+            texture: None,
+            name: "Pet Food".to_owned(),
+        };
+        let mut sell_cart = vec![SellItem {
+            metadata: (dummy_metadata.clone(), 1),
+            inventory_index: InventoryIndex(5),
+            price: Price(100),
+            overcharge_price: Price(124),
+        }];
+        let buy_cart = vec![ShopItem {
+            metadata: (dummy_metadata.clone(), 1),
+            item_id: ItemId(537),
+            item_type: 0,
+            price: Price(1000),
+            quantity: ItemQuantity::Fixed(10),
+            weight: 10,
+            location: 0,
+        }];
+        let mut closed_windows = Vec::new();
+
+        let error = Client::handle_selling_completed(&mut sell_cart, SellItemsResult::Success, |window_class| {
+            closed_windows.push(window_class)
+        });
+
+        // Proves successful SellingCompleted clears only the sell cart
+        assert!(sell_cart.is_empty());
+        // Proves successful SellingCompleted closes sell windows
+        assert_eq!(closed_windows, vec![WindowClass::Sell, WindowClass::SellCart]);
+        // Proves buy-cart state is untouched
+        assert_eq!(buy_cart.len(), 1);
+        assert_eq!(buy_cart[0].item_id, ItemId(537));
+        // No error returned
+        assert!(error.is_none());
+    }
+
+    #[test]
+    fn failed_sale_retains_selection_and_leaves_windows_open() {
+        let dummy_metadata = ResourceMetadata {
+            texture: None,
+            name: "Pet Food".to_owned(),
+        };
+        let mut sell_cart = vec![SellItem {
+            metadata: (dummy_metadata.clone(), 1),
+            inventory_index: InventoryIndex(5),
+            price: Price(100),
+            overcharge_price: Price(124),
+        }];
+        let buy_cart = vec![ShopItem {
+            metadata: (dummy_metadata.clone(), 1),
+            item_id: ItemId(537),
+            item_type: 0,
+            price: Price(1000),
+            quantity: ItemQuantity::Fixed(10),
+            weight: 10,
+            location: 0,
+        }];
+        let mut closed_windows = Vec::new();
+
+        let error = Client::handle_selling_completed(&mut sell_cart, SellItemsResult::Error, |window_class| {
+            closed_windows.push(window_class)
+        });
+
+        // Proves an error retains the selection for retry
+        assert_eq!(sell_cart.len(), 1);
+        assert_eq!(sell_cart[0].inventory_index, InventoryIndex(5));
+        // Proves windows remain open
+        assert!(closed_windows.is_empty());
+        // Proves buy-cart state is untouched
+        assert_eq!(buy_cart.len(), 1);
+        // Proves error message informs user of failure
+        let error_msg = error.expect("should return an error message on failure");
+        assert_eq!(error_msg.text, "Failed to sell items");
+        assert!(matches!(error_msg.color, MessageColor::Error));
     }
 }

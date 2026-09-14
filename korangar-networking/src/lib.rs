@@ -30,7 +30,9 @@ use tokio::task::JoinHandle;
 pub use self::entity::EntityData;
 pub use self::event::{DisconnectReason, NetworkEvent};
 pub use self::hotkey::HotkeyState;
-pub use self::items::{InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem};
+pub use self::items::{
+    InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem, can_sell_item, filter_sell_items,
+};
 pub use self::message::MessageColor;
 pub use self::packet_versions::SupportedPacketVersion;
 pub use self::server::{
@@ -1670,7 +1672,7 @@ mod packet_handlers {
 
         let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
 
-        let mut build = |damage: u32, damage_type: u8| {
+        let build = |damage: u32, damage_type: u8| {
             let mut bytes = vec![0xC8, 0x08];
             bytes.extend_from_slice(&2000000u32.to_le_bytes());
             bytes.extend_from_slice(&110000001u32.to_le_bytes());
@@ -2238,6 +2240,70 @@ mod packet_handlers {
                 }] if entity_id.0 == 2000000
             ),
             "expected SpecialEffect Fireball, got {:?}",
+            events.0
+        );
+    }
+
+    /// Normal AL_INCAGI arrives through SkillEffectNoDamage (0x09CB), while
+    /// explicit EF_INCAGILITY arrives through SpecialEffect (0x01F3).
+    #[test]
+    fn increase_agility_dual_route_packets_reach_the_client() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::{EffectId, EntityId, SkillId};
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // Route 1: Normal AL_INCAGI cast terminal result via 0x09CB (ZC_NOTIFY_SKILL2 /
+        // DisplaySkillEffectNoDamagePacket) 17 bytes: header (0x09CB) |
+        // skill_id 29 | heal_amount 0 | dest_entity 2000001 | src_entity 2000000 |
+        // result 1 (success)
+        let mut skill_bytes = vec![0xCB, 0x09];
+        skill_bytes.extend_from_slice(&29u16.to_le_bytes());
+        skill_bytes.extend_from_slice(&0u32.to_le_bytes());
+        skill_bytes.extend_from_slice(&2000001u32.to_le_bytes());
+        skill_bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        skill_bytes.push(1);
+        assert_eq!(skill_bytes.len(), 17);
+
+        let mut reader = ByteReader::without_metadata(&skill_bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x09CB (AL_INCAGI) did not parse");
+        };
+
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::SkillEffectNoDamage {
+                skill_id: SkillId(29),
+                source_entity_id: EntityId(2000000),
+                destination_entity_id: EntityId(2000001),
+                effect_value: 0,
+                successful: true,
+            }]),
+            "expected SkillEffectNoDamage for AL_INCAGI (SkillId 29), got {:?}",
+            events.0
+        );
+
+        // Route 2: Explicit EF_INCAGILITY visual via 0x01F3 (ZC_NOTIFY_EFFECT2 /
+        // DisplaySpecialEffectPacket) 10 bytes: header (0x01F3) | entity
+        // 2000001 | effect 37 (Incagility)
+        let mut effect_bytes = vec![0xF3, 0x01];
+        effect_bytes.extend_from_slice(&2000001u32.to_le_bytes());
+        effect_bytes.extend_from_slice(&37u32.to_le_bytes());
+        assert_eq!(effect_bytes.len(), 10);
+
+        let mut reader = ByteReader::without_metadata(&effect_bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x01F3 (EF_INCAGILITY) did not parse");
+        };
+
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::SpecialEffect {
+                entity_id: EntityId(2000001),
+                effect_id: EffectId::Incagility,
+            }]),
+            "expected SpecialEffect for EF_INCAGILITY (EffectId 37), got {:?}",
             events.0
         );
     }

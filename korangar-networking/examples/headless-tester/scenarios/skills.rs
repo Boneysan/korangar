@@ -133,6 +133,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("weapon-refine-missing-material", 5, weapon_refine_missing_material),
         Scenario::new("weapon-refine-success", 5, weapon_refine_success),
         Scenario::new("weapon-refine-cancel", 5, weapon_refine_cancel),
+        Scenario::new("increase-agility-live-routes", 5, increase_agility_live_routes),
         // --- Basic Classes ---
         Scenario::new("skills-novice", 5, |config| sweep_job(config, 0, "Novice")),
         Scenario::new("skills-swordman", 5, |config| sweep_job(config, 1, "Swordman")),
@@ -2588,6 +2589,268 @@ fn approach_target(context: &mut TestContext, target: TilePosition) -> Result<()
         "no walkable adjacent cell found around target ({}, {})",
         target.x, target.y
     ))
+}
+
+/// QW-006: Live verification of Increase AGI across every delivery route:
+/// 1. Self-cast (direct activation / skill bar)
+/// 2. Targeted cast onto another player
+/// 3. Targeted cast while moving (attachment)
+/// 4. SpecialEffect visual packet (0x01F3 / @effect 37)
+/// 5. Script / item source (Inc_Agi_10_Scroll 12216 / itemskill)
+/// 6. Heal isolation (SkillId 28 produces holyhit.str / heal number, unchanged)
+pub fn increase_agility_live_routes(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+
+    let primary_id = primary.player_id;
+    let partner_id = partner.player_id;
+
+    // Set up primary as Acolyte with all skills maxed and clean HP/SP.
+    primary.ensure_job(4)?;
+    primary.ensure_base_level(99)?;
+    primary.say("@allskill")?;
+    primary.say("@heal")?;
+    partner.ensure_base_level(99)?;
+    partner.say("@heal")?;
+
+    // Allow after-cast delay from any earlier setup to clear.
+    primary.pump(Duration::from_millis(1500));
+    partner.pump(Duration::from_millis(1500));
+
+    // ------------------------------------------------------------------------
+    // Route 1: Self-cast (SkillId 29 / AL_INCAGI)
+    // ------------------------------------------------------------------------
+    primary.flush();
+    partner.flush();
+    primary
+        .net
+        .cast_skill(SkillId(29), SkillLevel(10), primary_id)
+        .map_err(|_| "cast failed")?;
+
+    // Primary receives SkillEffectNoDamage (0x09CB) for SkillId 29.
+    let self_effect = primary.wait_for_within(
+        "self AL_INCAGI no-damage effect",
+        Duration::from_secs(4),
+        &mut |event| match event {
+            NetworkEvent::SkillEffectNoDamage {
+                skill_id,
+                source_entity_id,
+                destination_entity_id,
+                successful,
+                ..
+            } if skill_id.0 == 29 && *successful => Some((*source_entity_id, *destination_entity_id)),
+            _ => None,
+        },
+    )?;
+    if self_effect.0 != primary_id {
+        return Err(format!(
+            "expected source to be primary ({:?}), got {:?}",
+            primary_id, self_effect.0
+        ));
+    }
+    if self_effect.1 != primary_id {
+        return Err(format!(
+            "expected destination to be self ({:?}), got {:?}",
+            primary_id, self_effect.1
+        ));
+    }
+
+    // Primary receives StatusChange for SI_INC_AGI (12).
+    let _ = primary.wait_for_within(
+        "self SI_INC_AGI status change",
+        Duration::from_secs(4),
+        &mut |event| match event {
+            NetworkEvent::StatusChange {
+                entity_id,
+                index,
+                gained: true,
+                ..
+            } if *entity_id == primary_id && *index == 12 => Some(()),
+            _ => None,
+        },
+    )?;
+
+    // Observer partner also sees SkillEffectNoDamage for primary.
+    let partner_saw_self = partner.wait_for_within("partner saw self AL_INCAGI", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            source_entity_id,
+            destination_entity_id,
+            successful,
+            ..
+        } if skill_id.0 == 29 && *successful && *destination_entity_id == primary_id => Some(*source_entity_id),
+        _ => None,
+    })?;
+    if partner_saw_self != primary_id {
+        return Err(format!("partner expected source primary, got {:?}", partner_saw_self));
+    }
+
+    // ------------------------------------------------------------------------
+    // Route 2: Targeted cast onto another player (partner)
+    // ------------------------------------------------------------------------
+    primary.pump(Duration::from_millis(1500));
+    primary.flush();
+    partner.flush();
+
+    primary
+        .net
+        .cast_skill(SkillId(29), SkillLevel(10), partner_id)
+        .map_err(|_| "targeted cast failed")?;
+
+    // Primary receives SkillEffectNoDamage targeting partner.
+    let primary_saw_targeted = primary.wait_for_within("primary cast on partner", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            source_entity_id,
+            destination_entity_id,
+            successful,
+            ..
+        } if skill_id.0 == 29 && *successful && *destination_entity_id == partner_id => Some(*source_entity_id),
+        _ => None,
+    })?;
+    if primary_saw_targeted != primary_id {
+        return Err(format!("expected primary source, got {:?}", primary_saw_targeted));
+    }
+
+    // Partner receives SkillEffectNoDamage as the destination entity.
+    let partner_effect = partner.wait_for_within("partner received AL_INCAGI", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            source_entity_id,
+            destination_entity_id,
+            successful,
+            ..
+        } if skill_id.0 == 29 && *successful && *destination_entity_id == partner_id => Some(*source_entity_id),
+        _ => None,
+    })?;
+    if partner_effect != primary_id {
+        return Err(format!("partner expected source primary, got {:?}", partner_effect));
+    }
+
+    // Partner receives StatusChange for SI_INC_AGI (12).
+    let _ = partner.wait_for_within("partner SI_INC_AGI status", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::StatusChange {
+            entity_id,
+            index,
+            gained: true,
+            ..
+        } if *entity_id == partner_id && *index == 12 => Some(()),
+        _ => None,
+    })?;
+
+    // ------------------------------------------------------------------------
+    // Route 3: Attachment while moving
+    // ------------------------------------------------------------------------
+    primary.pump(Duration::from_millis(1500));
+    let walk_dest = WorldPosition::new(partner.position.x + 2, partner.position.y, Direction::North);
+    let _ = partner.net.player_move(walk_dest);
+    primary.flush();
+    partner.flush();
+
+    primary
+        .net
+        .cast_skill(SkillId(29), SkillLevel(10), partner_id)
+        .map_err(|_| "moving cast failed")?;
+
+    let _ = partner.wait_for_within("moving target AL_INCAGI", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            destination_entity_id,
+            successful,
+            ..
+        } if skill_id.0 == 29 && *successful && *destination_entity_id == partner_id => Some(()),
+        _ => None,
+    })?;
+    primary.pump(Duration::from_millis(1500));
+
+    // ------------------------------------------------------------------------
+    // Route 4: Native special-effect route (ZC_NOTIFY_EFFECT2 / 0x01F3 /
+    // EF_INCAGILITY = 37)
+    // ------------------------------------------------------------------------
+    primary.flush();
+    partner.flush();
+    primary.say("@effect 37")?;
+
+    let _ = primary.wait_for_within("primary specialeffect 37", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SpecialEffect { entity_id, effect_id }
+            if *entity_id == primary_id && matches!(effect_id, ragnarok_packets::EffectId::Incagility) =>
+        {
+            Some(())
+        }
+        _ => None,
+    })?;
+
+    let _ = partner.wait_for_within(
+        "partner sees primary specialeffect 37",
+        Duration::from_secs(4),
+        &mut |event| match event {
+            NetworkEvent::SpecialEffect { entity_id, effect_id }
+                if *entity_id == primary_id && matches!(effect_id, ragnarok_packets::EffectId::Incagility) =>
+            {
+                Some(())
+            }
+            _ => None,
+        },
+    )?;
+
+    // ------------------------------------------------------------------------
+    // Route 5: Item / Script source (Inc_Agi_10_Scroll / ID 12216)
+    // ------------------------------------------------------------------------
+    primary.pump(Duration::from_millis(1500));
+    primary.flush();
+    let scroll_index = primary.give_item(12216, 1)?;
+    primary.flush();
+
+    let primary_account = primary.account_id;
+    primary.net.use_item(scroll_index, primary_account).map_err(|_| "use_item failed")?;
+
+    let (item_skill_id, item_skill_level) =
+        primary.wait_for_within("scroll AutoRunSkill", Duration::from_secs(4), &mut |event| match event {
+            NetworkEvent::AutoRunSkill { skill_id, skill_level, .. } if skill_id.0 == 29 => Some((*skill_id, *skill_level)),
+            _ => None,
+        })?;
+
+    primary.flush();
+    primary
+        .net
+        .cast_skill(item_skill_id, item_skill_level, primary_id)
+        .map_err(|_| "item skill cast failed")?;
+
+    let _ = primary.wait_for_within("scroll itemskill AL_INCAGI", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            destination_entity_id,
+            successful,
+            ..
+        } if skill_id.0 == 29 && *successful && *destination_entity_id == primary_id => Some(()),
+        _ => None,
+    })?;
+
+    // ------------------------------------------------------------------------
+    // Route 6: Heal isolation verification (SkillId 28 must remain on holyhit.str)
+    // ------------------------------------------------------------------------
+    primary.pump(Duration::from_millis(1500));
+    primary.flush();
+
+    primary
+        .net
+        .cast_skill(SkillId(28), SkillLevel(10), primary_id)
+        .map_err(|_| "heal cast failed")?;
+
+    let heal_amount = primary.wait_for_within("heal skill response", Duration::from_secs(4), &mut |event| match event {
+        NetworkEvent::SkillEffectNoDamage {
+            skill_id,
+            destination_entity_id,
+            effect_value,
+            successful,
+            ..
+        } if skill_id.0 == 28 && *successful && *destination_entity_id == primary_id => Some(*effect_value),
+        _ => None,
+    })?;
+    if heal_amount == 0 {
+        return Err("Heal must deliver a positive heal amount (HealNumber)".to_string());
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]

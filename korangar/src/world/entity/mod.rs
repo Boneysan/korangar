@@ -1972,9 +1972,9 @@ impl Player {
             // Official default natural-heal weight rate is 50%.
             critical_weight_percent: 50,
             attack_range: AttackRange(1),
-            zeny: 0,
-            base_experience: 0,
-            job_experience: 0,
+            zeny: character_information.money.max(0) as u32,
+            base_experience: character_information.experience.max(0) as u64,
+            job_experience: character_information.job_experience.max(0) as u64,
             next_base_experience: 0,
             next_job_experience: 0,
         }
