@@ -904,21 +904,29 @@ impl<App: Application> InterfaceFrame<'_, App> {
         }
     }
 
+    pub fn get_mouse_mode(&self) -> &MouseMode<App> {
+        self.mouse_mode
+    }
+
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    pub fn drop(&mut self, state: &State<App>) {
+    pub fn drop(&mut self, state: &State<App>) -> bool {
         self.event_queue.queue(Event::SetMouseMode {
             mouse_mode: MouseMode::Default,
         });
 
+        let mut handled = false;
+
         if let Some(layout) = &self.overlay_layout {
-            layout.handle_drop(state, self.event_queue, self.mouse_mode);
+            handled |= layout.handle_drop(state, self.event_queue, self.mouse_mode);
         }
 
         if let Some(window_id) = &self.hovered_window {
             let layout = self.window_layouts.get(window_id).unwrap();
 
-            layout.handle_drop(state, self.event_queue, self.mouse_mode);
+            handled |= layout.handle_drop(state, self.event_queue, self.mouse_mode);
         }
+
+        handled
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]

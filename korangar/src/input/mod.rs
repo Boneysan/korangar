@@ -1,6 +1,7 @@
 mod event;
 mod key;
 mod mode;
+pub(crate) mod target;
 pub(crate) mod wasd;
 
 use std::mem::variant_count;
@@ -272,12 +273,22 @@ impl InputSystem {
     pub fn handle_keyboard_input(
         &mut self,
         events: &mut Vec<InputEvent>,
+        target_hostile_key: Option<KeyCode>,
         #[cfg(feature = "debug")] process_mouse: bool,
         #[cfg(feature = "debug")] use_debug_camera: bool,
     ) {
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+
+        if let Some(key) = target_hostile_key
+            && !alt_down
+            && !control_down
+            && !shift_down
+            && self.get_key(key).pressed()
+        {
+            events.push(InputEvent::CycleHostileTarget);
+        }
 
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::ToggleMenuWindow);

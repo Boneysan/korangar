@@ -67,11 +67,17 @@ use std::time::{Duration, Instant};
 
 use cgmath::{InnerSpace, Point3, Vector3};
 use image::{EncodableLayout, ImageFormat, ImageReader, Rgba, RgbaImage};
+use input::target::{
+    SPRITE_HIT_TOLERANCE_PX, TargetCandidate, collect_click_candidates, cycle_target, is_hostile_target_candidate,
+    resolve_effective_target, sort_target_candidates,
+};
 use input::wasd::{
-    WasdDecision, WasdIntent, WasdMoveInput, WasdSendKind, chebyshev, decide_keyboard_move, held_intent_is_stale, stop_tile,
+    WasdDecision, WasdIntent, WasdInvalidator, WasdMoveInput, WasdSendKind, WasdStopDecision, chebyshev, decide_keyboard_move,
+    decide_keyboard_stop, held_intent_is_stale, invalidate_held_intent,
 };
 use input::{MouseInputMode, MouseModeExt};
 use korangar_audio::{AudioEngine, SoundEffectKey};
+use korangar_collision::{Frustum, Sphere};
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
 #[cfg(feature = "debug")]
@@ -102,7 +108,7 @@ use rust_state::{VecIndexExt, VecLookupExt};
 use settings::{
     AudioSettings, AudioSettingsPathExt, GraphicsSettingsCapabilities, GraphicsSettingsPathExt, InterfaceSettings, InterfaceSettingsPathExt,
 };
-use state::hotbar::{HOTBAR_SLOTS, HotbarBinding};
+use state::hotbar::{HOTBAR_SLOTS, HotbarBinding, HotbarPathExt};
 use state::inventory::InventoryPathExt;
 use state::localization::Localization;
 use state::skills::SkillTreePathExt;
@@ -136,7 +142,7 @@ use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
     DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
-    ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    ServiceSettingsPathExt, TargetHostileBinding, WORLD_THEMES_PATH,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
@@ -1153,6 +1159,9 @@ mod resolve_pending_cast_tests {
 
     #[test]
     fn hotbar_keyboard_skill_window_and_direct_share_one_activation() {
+        use ragnarok_bytes::ByteWriter;
+        use ragnarok_packets::{PacketExt, UseSkillAtIdPacket};
+
         let learned = [bash()];
         let targeting = learned_targeting(&learned, SkillId(5)).expect("learned");
         let mouse = PickerTarget::Nothing;
@@ -1173,6 +1182,32 @@ mod resolve_pending_cast_tests {
         assert_eq!(skill_window, direct);
         assert_eq!(hotbar, SkillActivation::CastEntity { entity_id: EntityId(42) });
         assert_eq!(targeting.2, SkillLevel(3));
+
+        // QW-032: Verify all 4 paths produce the exact same 0x0438 packet bytes.
+        let mut expected_writer = ByteWriter::new();
+        UseSkillAtIdPacket::new(targeting.2, SkillId(5), EntityId(42))
+            .packet_to_bytes(&mut expected_writer)
+            .unwrap();
+        let expected_bytes = expected_writer.into_inner();
+        // 0x0438 in little-endian is [0x38, 0x04]
+        assert_eq!(&expected_bytes[..2], &[0x38, 0x04]);
+        assert_eq!(expected_bytes, vec![0x38, 0x04, 0x03, 0x00, 0x05, 0x00, 0x2A, 0x00, 0x00, 0x00]);
+
+        for (name, act) in [
+            ("hotbar", hotbar),
+            ("keyboard", keyboard),
+            ("skill_window", skill_window),
+            ("direct", direct),
+        ] {
+            let SkillActivation::CastEntity { entity_id } = act else {
+                panic!("{name} did not resolve to CastEntity");
+            };
+            let mut writer = ByteWriter::new();
+            UseSkillAtIdPacket::new(targeting.2, SkillId(5), entity_id)
+                .packet_to_bytes(&mut writer)
+                .unwrap();
+            assert_eq!(writer.into_inner(), expected_bytes, "Packet bytes mismatch on path {name}");
+        }
     }
 
     #[test]
@@ -1282,6 +1317,14 @@ struct PendingSkill {
     /// re-arm after a fizzle still knows the name.
     #[allow(dead_code)]
     skill_name: String,
+}
+
+/// A hotbar slot pressed down by the user, awaiting mouse release (to cast/use)
+/// or movement beyond the drag threshold (to begin drag-and-drop).
+#[derive(Clone, Copy, Debug)]
+struct PendingHotbarPress {
+    slot: HotbarSlot,
+    start_position: ScreenPosition,
 }
 
 /// What a left-click resolves to while a skill is armed, given what the cursor
@@ -1734,6 +1777,12 @@ pub struct Client {
     /// press reuses it when the cursor is not over a new entity, so a valid
     /// repeat does not have to re-click the monster.
     last_skill_target: Option<EntityId>,
+    /// Entity currently or most recently hovered by the cursor within
+    /// tolerance.
+    hovered_entity_id: Option<EntityId>,
+    /// A hotbar slot pressed down by the user, awaiting mouse release (to cast)
+    /// or movement beyond the drag threshold (to drag).
+    pending_hotbar_press: Option<PendingHotbarPress>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
     /// disconnect itself lands. The packet arrives immediately before the
     /// socket closes, so it cannot be shown on the map screen we are
@@ -1751,6 +1800,8 @@ pub struct Client {
     /// startup. `None` if the asset is missing — the footprint is then skipped
     /// rather than failing the frame.
     skill_footprint_texture: Option<Arc<Texture>>,
+    /// Ground ring/indicator texture for selected target.
+    target_indicator_texture: Option<Arc<Texture>>,
     pending_impacts: PendingImpactQueue,
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
@@ -3253,6 +3304,10 @@ impl Client {
             // the original uses for Land Protector's ground tiles, which is what
             // a "this cell is affected" marker looks like in RO.
             let skill_footprint_texture = texture_loader.get_or_load(SKILL_FOOTPRINT_TEXTURE, ImageType::Color).ok();
+            let target_indicator_texture = texture_loader
+                .get_or_load("effect\\ring_yellow.tga", ImageType::Color)
+                .ok()
+                .or_else(|| skill_footprint_texture.clone());
         });
 
         time_phase!("initialize timer", {
@@ -3426,11 +3481,14 @@ impl Client {
             input_event_buffer,
             pending_skill: None,
             last_skill_target: None,
+            hovered_entity_id: None,
+            pending_hotbar_press: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
             disconnect_notice_delay: 0,
             pending_error_message: None,
             skill_footprint_texture,
+            target_indicator_texture,
             pending_impacts: PendingImpactQueue::default(),
             network_event_buffer,
             saved_login_data,
@@ -3816,12 +3874,18 @@ impl Client {
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     fn request_entity_details(&mut self, input_report: &InputReport) {
-        if let PickerTarget::Entity(entity_id) = input_report.mouse_target
+        let target_id = match input_report.mouse_target {
+            PickerTarget::Entity(entity_id) => Some(entity_id),
+            _ => self.hovered_entity_id,
+        };
+
+        if let Some(entity_id) = target_id
             && let Some(entity) = self
                 .client_state
                 .follow_mut(client_state().entities())
                 .iter_mut()
                 .find(|entity| entity.get_entity_id() == entity_id)
+            && !entity.is_hidden()
             && entity.are_details_unavailable()
             && self.networking_system.entity_details(entity_id).is_ok()
         {
@@ -4693,6 +4757,18 @@ impl Client {
                 NetworkEvent::RemoveEntity { entity_id, reason } => {
                     // If the motive is dead, you need to set the player to dead.
                     if reason == DisappearanceReason::Died {
+                        let is_local_player = self
+                            .client_state
+                            .try_follow(this_entity())
+                            .is_some_and(|player| player.get_entity_id() == entity_id);
+                        if is_local_player {
+                            let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                            self.invalidate_keyboard_move(WasdInvalidator::Death, here);
+                            self.interface.close_window_with_class(WindowClass::WarpSelection);
+                            self.interface.close_window_with_class(WindowClass::WeaponRefine);
+                            self.interface.open_window(RespawnWindow);
+                        }
+
                         if let Some(entity) = self
                             .client_state
                             .follow_mut(client_state().entities())
@@ -4724,13 +4800,6 @@ impl Client {
                                 self.client_state.follow_mut(client_state().dead_entities()).push(entity);
                             } else if entity_type == EntityType::Player {
                                 entity.set_dead(client_tick);
-
-                                // If the player is us, we need to open the respawn window.
-                                if entity_id == self.client_state.follow(client_state().entities())[0].get_entity_id() {
-                                    self.interface.close_window_with_class(WindowClass::WarpSelection);
-                                    self.interface.close_window_with_class(WindowClass::WeaponRefine);
-                                    self.interface.open_window(RespawnWindow);
-                                }
                             }
                         }
                     } else {
@@ -4843,13 +4912,15 @@ impl Client {
                     }
                 }
                 NetworkEvent::EntitySlide { entity_id, position } => {
+                    let is_player = self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|player| player.get_entity_id() == entity_id);
+                    if is_player {
+                        self.invalidate_keyboard_move(WasdInvalidator::Knockback, Some(position));
+                    }
                     if let Some(map) = &self.map {
-                        let is_player = self
-                            .client_state
-                            .try_follow(this_entity())
-                            .is_some_and(|player| player.get_entity_id() == entity_id);
                         if is_player {
-                            self.note_wasd_interrupt("slide", Some(position));
                             if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                                 player.set_position(map, position, client_tick);
                             }
@@ -4886,7 +4957,7 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
-                    self.note_wasd_interrupt("change-map", Some(position));
+                    self.invalidate_keyboard_move(WasdInvalidator::Warp, Some(position));
                     self.last_skill_target = None;
                     // The map server has accepted this character, so the status
                     // points exist and `pc_statusup` has a session to act on.
@@ -5318,6 +5389,15 @@ impl Client {
                     health_state,
                     is_pk_mode_on,
                 } => {
+                    let is_player = self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|player| player.get_entity_id() == entity_id);
+                    if is_player && crate::world::status_freezes_animation(body_state) {
+                        let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                        self.invalidate_keyboard_move(WasdInvalidator::StunFreeze, here);
+                    }
+
                     let entity = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -5985,7 +6065,7 @@ impl Client {
                         .try_follow(this_entity())
                         .is_some_and(|player| player.get_entity_id() == entity_id)
                     {
-                        self.note_wasd_interrupt("stop-move", Some(position));
+                        self.invalidate_keyboard_move(WasdInvalidator::ServerStop, Some(position));
                     }
                     // Snapping to the reported tile also clears `active_movement`,
                     // which is what stops the walk animation — otherwise the entity
@@ -6606,6 +6686,14 @@ impl Client {
                             skill_id.0,
                             source_entity_id.0
                         );
+                    }
+                    let is_player = self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|player| player.get_entity_id() == source_entity_id);
+                    if is_player && cast_ms > 0 {
+                        let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                        self.invalidate_keyboard_move(WasdInvalidator::CastRooting, here);
                     }
                     if let Some(entity) = self
                         .client_state
@@ -7251,6 +7339,11 @@ impl Client {
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
                 }
+                InputEvent::ClearHotbarSlot { slot } => {
+                    self.client_state
+                        .follow_mut(client_state().hotbar())
+                        .clear_slot(&mut self.networking_system, slot);
+                }
                 other => remaining.push(other),
             }
         }
@@ -7294,6 +7387,53 @@ impl Client {
             "[wasd] interrupt {kind} at {at:?}, held dest {:?}, stale {stale}",
             held.map(|intent| intent.target)
         );
+    }
+
+    fn invalidate_keyboard_move(&mut self, invalidator: WasdInvalidator, at: Option<TilePosition>) {
+        self.note_wasd_interrupt(invalidator.name(), at);
+        self.keyboard_move_target = invalidate_held_intent(invalidator).map(|intent| (intent.target, intent.step_x, intent.step_y));
+    }
+
+    fn cycle_hostile_target(&mut self) {
+        if *self.client_state.follow(client_state().game_settings().target_hostile_binding()) == TargetHostileBinding::Disabled {
+            return;
+        }
+
+        let Some(player_pos) = self.client_state.try_follow(this_entity()).map(|player| player.get_position()) else {
+            return;
+        };
+
+        let current_camera: &(dyn Camera + Send + Sync) = {
+            #[cfg(feature = "debug")]
+            if self.render_options.use_debug_camera {
+                &self.debug_camera
+            } else {
+                &self.player_camera
+            }
+            #[cfg(not(feature = "debug"))]
+            &self.player_camera
+        };
+
+        let frustum = Frustum::new(current_camera.view_projection_matrix(), true);
+
+        let mut candidates = Vec::new();
+        for entity in self.client_state.follow(client_state().entities()).iter().skip(1) {
+            let pos = entity.get_position();
+            let in_view = frustum.intersects_sphere(&Sphere::new(pos, 2.0));
+            if is_hostile_target_candidate(entity.get_entity_type(), entity.is_dead(), entity.is_fading(), in_view) && !entity.is_hidden() {
+                let dx = pos.x - player_pos.x;
+                let dy = pos.y - player_pos.y;
+                let dz = pos.z - player_pos.z;
+                let distance = (dx * dx + dy * dy + dz * dz).sqrt();
+                candidates.push(TargetCandidate {
+                    entity_id: entity.get_entity_id(),
+                    distance,
+                });
+            }
+        }
+
+        sort_target_candidates(&mut candidates);
+        self.last_skill_target = cycle_target(&candidates, self.last_skill_target);
     }
 
     fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
@@ -7475,8 +7615,14 @@ impl Client {
         }
 
         if !interface_has_focus {
+            let target_hostile_key = self
+                .client_state
+                .follow(client_state().game_settings().target_hostile_binding())
+                .to_key_code();
+
             self.input_system.handle_keyboard_input(
                 &mut self.input_event_buffer,
+                target_hostile_key,
                 #[cfg(feature = "debug")]
                 self.interface.get_mouse_mode().is_default(),
                 #[cfg(feature = "debug")]
@@ -7490,6 +7636,7 @@ impl Client {
 
         let mut toggle_sit = false;
         let mut sync_minimap = false;
+        let mut cycle_hostile_target = false;
         let mut keyboard_move = None;
         let mut activate_skill = None;
         // Deferred: `enter_character_server` needs &mut self while this loop
@@ -7641,6 +7788,18 @@ impl Client {
                     true => self.interface.close_window_with_class(WindowClass::GameSettings),
                     false => self.interface.open_window(GameSettingsWindow::new(client_state().game_settings())),
                 },
+                InputEvent::CycleHostileTarget => {
+                    cycle_hostile_target = true;
+                }
+                InputEvent::CycleHostileTargetBinding => {
+                    let path = client_state().game_settings().target_hostile_binding();
+                    let next = self.client_state.follow(path).next();
+                    *self.client_state.follow_mut(path) = next;
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Hostile target cycle binding set to {}", next.display_name()),
+                        MessageColor::Information,
+                    ));
+                }
                 InputEvent::ToggleInterfaceSettingsWindow => match self.interface.is_window_with_class_open(WindowClass::InterfaceSettings)
                 {
                     true => self.interface.close_window_with_class(WindowClass::InterfaceSettings),
@@ -7811,22 +7970,24 @@ impl Client {
                     // exactly like the rubber banding this is trying to avoid.
                     // One step ahead is either where the server already is, or
                     // just in front of it. Costs at most one cell of coast.
-                    if let Some((_, step_x, step_y)) = self.keyboard_move_target.take()
+                    if let Some((target, step_x, step_y)) = self.keyboard_move_target.take()
                         && let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position())
                     {
-                        let stop = stop_tile(here, step_x, step_y, |tile| {
+                        let intent = Some(WasdIntent { target, step_x, step_y });
+                        if let WasdStopDecision::Send { destination: stop } = decide_keyboard_stop(here, intent, |tile| {
                             self.map.as_deref().is_some_and(|map| map.is_walkable(tile))
-                        });
-                        self.keyboard_move_last_dest = Some(stop);
-                        self.keyboard_move_last_sent_at = Some(Instant::now());
-                        if self.wasd_trace {
-                            client_log!("[wasd] send stop from {here:?} to {stop:?} (tick {})", client_tick.0);
+                        }) {
+                            self.keyboard_move_last_dest = Some(stop);
+                            self.keyboard_move_last_sent_at = Some(Instant::now());
+                            if self.wasd_trace {
+                                client_log!("[wasd] send stop from {here:?} to {stop:?} (tick {})", client_tick.0);
+                            }
+                            let _ = self.networking_system.player_move(WorldPosition {
+                                x: stop.x,
+                                y: stop.y,
+                                direction: ragnarok_packets::Direction::North,
+                            });
                         }
-                        let _ = self.networking_system.player_move(WorldPosition {
-                            x: stop.x,
-                            y: stop.y,
-                            direction: ragnarok_packets::Direction::North,
-                        });
                     }
                 }
                 InputEvent::KeyboardMove {
@@ -8544,6 +8705,11 @@ impl Client {
                         )),
                     }
                 }
+                InputEvent::ClearHotbarSlot { slot } => {
+                    self.client_state
+                        .follow_mut(client_state().hotbar())
+                        .clear_slot(&mut self.networking_system, slot);
+                }
                 InputEvent::CastSkillAtEntity {
                     skill_id,
                     skill_level,
@@ -9066,6 +9232,10 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
+        if cycle_hostile_target {
+            self.cycle_hostile_target();
+        }
+
         if let Some((forward, back, left, right, fresh)) = keyboard_move {
             self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
         }
@@ -9390,6 +9560,8 @@ impl Client {
                         }
                         false => {
                             // Normal map switch
+                            self.invalidate_keyboard_move(WasdInvalidator::MapLoad, position);
+
                             let map = self.map.insert(map);
 
                             map.set_ambient_sound_sources(&self.audio_engine);
@@ -9974,7 +10146,8 @@ impl Client {
         let is_mouse_mode_default = mouse_mode.is_default();
         let last_walking_destination = mouse_mode.walk_destination();
 
-        let mut interface_frame = {
+        let mut hotbar_press_clicked = false;
+        let (mut interface_frame, effective_mouse_target) = {
             #[cfg(feature = "debug")]
             profile_block!("user interface");
 
@@ -9991,7 +10164,36 @@ impl Client {
 
             let is_interface_hovered = interface_frame.is_interface_hovered();
 
-            let cursor_state = match input_report.mouse_target {
+            let effective_mouse_target = if !is_interface_hovered {
+                let local_player_id = self.client_state.try_follow(this_entity()).map(|p| p.get_entity_id());
+                let current_target = self
+                    .client_state
+                    .follow(client_state().buffered_action())
+                    .and_then(|action| action.target_entity_id())
+                    .or(self.last_skill_target);
+                let is_ground_item = match input_report.mouse_target {
+                    PickerTarget::Entity(id) => self
+                        .client_state
+                        .follow(client_state().ground_items())
+                        .iter()
+                        .any(|item| item.get_entity_id() == id),
+                    _ => false,
+                };
+                let candidates = collect_click_candidates(
+                    input_report.mouse_target,
+                    input_report.mouse_position,
+                    screen_size,
+                    current_camera,
+                    self.client_state.follow(client_state().entities()),
+                    local_player_id,
+                    SPRITE_HIT_TOLERANCE_PX,
+                );
+                resolve_effective_target(input_report.mouse_target, candidates, current_target, is_ground_item)
+            } else {
+                input_report.mouse_target
+            };
+
+            let cursor_state = match effective_mouse_target {
                 _ if is_rotating_camera => MouseCursorState::RotateCamera,
                 _ if is_grabbing => MouseCursorState::GrabResource,
                 // A skill is armed and waiting for a target: show the attack reticle over
@@ -10027,6 +10229,8 @@ impl Client {
                 if is_interface_hovered {
                     // Starts item/skill drag via SetMouseMode (applied immediately inside click).
                     interface_frame.click(&self.client_state, mouse_button);
+
+                    hotbar_press_clicked = mouse_button == MouseButton::Left;
                 } else {
                     interface_frame.unfocus();
 
@@ -10036,7 +10240,7 @@ impl Client {
                             // disarms; on empty ground it fizzles and stays armed (right-click or
                             // Escape is the only cancel), and the click never falls through to a
                             // walk/interact.
-                            let resolved = resolve_pending_cast(pending.skill_type, input_report.mouse_target);
+                            let resolved = resolve_pending_cast(pending.skill_type, effective_mouse_target);
                             let performed = match resolved {
                                 PendingCastResolution::CastEntity(entity_id) => {
                                     self.input_event_buffer.push(InputEvent::CastSkillAtEntity {
@@ -10068,7 +10272,7 @@ impl Client {
                                 self.pending_skill = Some(pending);
                             }
                         } else {
-                            match input_report.mouse_target {
+                            match effective_mouse_target {
                                 PickerTarget::Nothing => {}
                                 PickerTarget::Entity(entity_id) => {
                                     let is_ground_item = self
@@ -10097,6 +10301,8 @@ impl Client {
                             }
                         }
                     } else if mouse_button == MouseButton::Right {
+                        self.pending_hotbar_press = None;
+
                         if self.pending_skill.is_some() {
                             // Right-click is the primary cancel gesture for an armed skill; it
                             // clears the target and does not start a camera rotation.
@@ -10115,7 +10321,7 @@ impl Client {
                     }
                 }
             } else if let Some(last_destination) = last_walking_destination
-                && let PickerTarget::Tile { x, y } = input_report.mouse_target
+                && let PickerTarget::Tile { x, y } = effective_mouse_target
                 && input_report.left_mouse_button_down
                 && self.pending_skill.is_none()
             {
@@ -10127,10 +10333,28 @@ impl Client {
                 }
             }
 
+            if let Some(press) = self.pending_hotbar_press
+                && input_report.left_mouse_button_down
+            {
+                let dx = input_report.mouse_position.left - press.start_position.left;
+                let dy = input_report.mouse_position.top - press.start_position.top;
+                const DRAG_THRESHOLD_SQ: f32 = 25.0;
+                if dx * dx + dy * dy >= DRAG_THRESHOLD_SQ {
+                    self.pending_hotbar_press = None;
+                    if let Some(mode) = crate::interface::windows::pickup_hotbar_slot(&self.client_state, press.slot) {
+                        interface_frame.set_mouse_mode(mode);
+                    }
+                }
+            }
+
             if input_report.mouse_button_released {
+                if let Some(press) = self.pending_hotbar_press.take() {
+                    self.input_event_buffer.push(InputEvent::CastSkill { slot: press.slot });
+                }
+
+                let active_mouse_mode = interface_frame.get_mouse_mode().clone();
+
                 // Drag inventory item onto the world (not a UI drop target) → drop to ground.
-                // `mouse_mode` is from after process_events, so a press on the previous frame
-                // has already become MoveItem.
                 if !is_interface_hovered
                     && let MouseMode::Custom {
                         mode:
@@ -10138,7 +10362,7 @@ impl Client {
                                 source: ItemSource::Inventory,
                                 item,
                             },
-                    } = &mouse_mode
+                    } = &active_mouse_mode
                 {
                     let amount = inventory_item_amount(item);
                     if amount > 0 {
@@ -10150,7 +10374,28 @@ impl Client {
                 }
 
                 // Equip/storage transfers via drop handlers; queues Default mouse mode.
-                interface_frame.drop(&self.client_state);
+                let handled = interface_frame.drop(&self.client_state);
+                if !handled {
+                    match &active_mouse_mode {
+                        MouseMode::Custom {
+                            mode:
+                                MouseInputMode::MoveSkill {
+                                    source: SkillSource::Hotbar { slot },
+                                    ..
+                                },
+                        }
+                        | MouseMode::Custom {
+                            mode:
+                                MouseInputMode::MoveItem {
+                                    source: ItemSource::Hotbar { slot },
+                                    ..
+                                },
+                        } => {
+                            self.input_event_buffer.push(InputEvent::ClearHotbarSlot { slot: *slot });
+                        }
+                        _ => {}
+                    }
+                }
             }
 
             if let Some(delta) = input_report.scroll {
@@ -10172,7 +10417,21 @@ impl Client {
                 interface_frame.focus_element(ChatTextBox);
             }
 
-            interface_frame
+            (interface_frame, effective_mouse_target)
+        };
+
+        let pending_press_path = client_state().hotbar().pending_press();
+        if hotbar_press_clicked && let Some(slot) = self.client_state.follow(pending_press_path) {
+            self.client_state.update_value(pending_press_path, None);
+            self.pending_hotbar_press = Some(PendingHotbarPress {
+                slot: *slot,
+                start_position: input_report.mouse_position,
+            });
+        }
+
+        self.hovered_entity_id = match effective_mouse_target {
+            PickerTarget::Entity(entity_id) => Some(entity_id),
+            _ => None,
         };
 
         {
@@ -10183,7 +10442,7 @@ impl Client {
                 client_state: &self.client_state,
                 library: &self.library,
                 mouse_position: input_report.mouse_position,
-                mouse_target: input_report.mouse_target,
+                mouse_target: effective_mouse_target,
                 screen_size,
                 scaling,
                 client_tick,
@@ -10194,8 +10453,10 @@ impl Client {
                 is_interface_hovered: interface_frame.is_interface_hovered(),
                 last_walking_destination,
                 buffered_action: *self.client_state.follow(client_state().buffered_action()),
+                last_skill_target: self.last_skill_target,
                 pending_skill: self.pending_skill.as_ref(),
                 skill_footprint_texture: self.skill_footprint_texture.as_ref(),
+                target_indicator_texture: self.target_indicator_texture.as_ref(),
                 #[cfg(feature = "debug")]
                 render_options: &render_options,
                 #[cfg(feature = "debug")]
@@ -10587,12 +10848,15 @@ struct MapRenderContext<'a, 'm: 'a> {
     is_interface_hovered: bool,
     last_walking_destination: Option<TilePosition>,
     buffered_action: Option<BufferedAction>,
+    last_skill_target: Option<EntityId>,
     /// The skill currently armed for targeting, so the aiming cursor can show
     /// its ground footprint.
     pending_skill: Option<&'a PendingSkill>,
     /// Tile texture for that footprint. `None` if it failed to load — the
     /// footprint is then simply not drawn.
     skill_footprint_texture: Option<&'a Arc<Texture>>,
+    /// Ground ring/indicator texture for active target.
+    target_indicator_texture: Option<&'a Arc<Texture>>,
     #[cfg(feature = "debug")]
     render_options: &'a RenderOptions,
     #[cfg(feature = "debug")]
@@ -10975,6 +11239,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 self.client_state.follow(client_state().world_theme()),
                 self.screen_size,
                 self.client_tick,
+                false,
             );
         }
 
@@ -11008,19 +11273,33 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
         }
 
-        if let Some(entity_id) = self.buffered_action.and_then(|action| action.target_entity_id())
+        let highlighted_entity_id = self
+            .buffered_action
+            .and_then(|action| action.target_entity_id())
+            .or(self.last_skill_target);
+        if let Some(entity_id) = highlighted_entity_id
             && let Some(entity) = self
                 .client_state
                 .follow(client_state().entities())
                 .iter()
                 .find(|entity| entity.get_entity_id() == entity_id)
         {
+            let target_position = entity.get_tile_position();
+            let indicator_color = Color::rgba_u8(255, 215, 0, 180);
+            self.map.render_target_indicator(
+                self.effect_renderer,
+                self.target_indicator_texture,
+                target_position,
+                indicator_color,
+            );
+
             entity.render_status(
                 self.middle_interface_renderer,
                 self.current_camera,
                 self.client_state.follow(client_state().world_theme()),
                 self.screen_size,
                 self.client_tick,
+                true,
             );
         }
 
@@ -11046,25 +11325,22 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                         .iter()
                         .find(|entity| entity.get_entity_id() == entity_id)
                     {
-                        // Since the buffered attack entity will render its status anyway,
+                        // Since the highlighted target will render its status anyway,
                         // we make sure not to render it here again if it's the same.
-                        if !self
-                            .buffered_action
-                            .is_some_and(|buffered_action| buffered_action.targets_entity(entity_id))
-                        {
+                        if highlighted_entity_id != Some(entity_id) {
                             entity.render_status(
                                 self.middle_interface_renderer,
                                 self.current_camera,
                                 self.client_state.follow(client_state().world_theme()),
                                 self.screen_size,
                                 self.client_tick,
+                                false,
                             );
                         }
 
-                        if let Some(name) = &entity.get_details() {
-                            let name = name.split('#').next().unwrap();
+                        if let Some(hover_text) = entity.hover_text(self.library) {
                             self.middle_interface_renderer
-                                .render_hover_text(name, self.scaling, self.mouse_position);
+                                .render_hover_text(&hover_text, self.scaling, self.mouse_position);
                         }
                     } else if let Some(item) = self
                         .client_state

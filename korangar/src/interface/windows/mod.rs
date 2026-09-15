@@ -86,7 +86,7 @@ pub use self::friend_list::{FriendListWindow, FriendListWindowState};
 pub use self::friend_request::FriendRequestWindow;
 pub use self::game_settings::GameSettingsWindow;
 pub use self::graphics_settings::GraphicsSettingsWindow;
-pub use self::hotbar::HotbarWindow;
+pub use self::hotbar::{HotbarWindow, pickup_hotbar_slot};
 pub use self::hud::HudWindow;
 pub use self::identify::IdentifyWindow;
 pub use self::instance::InstanceWindow;

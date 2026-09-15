@@ -35,7 +35,7 @@ use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
     AccessoryName, AccessoryNameKey, ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity,
-    Library, MAX_WALK_PATH_SIZE, Map, PathFinder, StatusTint, native_real_weapon_id,
+    JobName, Library, MAX_WALK_PATH_SIZE, Map, PathFinder, StatusTint, Table, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -1263,6 +1263,14 @@ impl Common {
         self.fade_state.is_fading()
     }
 
+    pub fn is_hidden(&self) -> bool {
+        self.entity_type == EntityType::Hidden || EntityOption::from_raw(self.option).is_gm_invisible()
+    }
+
+    pub fn is_concealed(&self) -> bool {
+        EntityOption::from_raw(self.option).is_concealed()
+    }
+
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
         self.update_movement(map, client_tick);
         if self.active_cast.is_some_and(|cast| client_tick.0 >= cast.ends_at.0) {
@@ -1819,7 +1827,7 @@ impl Common {
         if let Some(animation_data) = self.animation_data.as_ref() {
             // M1-007: modulate the existing fade alpha so hide/cloak is visible.
             let mut alpha = self.fade_state.calculate_alpha(client_tick);
-            if EntityOption::from_raw(self.option).is_concealed() {
+            if self.is_concealed() {
                 alpha *= Self::CONCEALED_ALPHA;
             }
 
@@ -1937,6 +1945,7 @@ impl Player {
         let mut common = Common::new(library, &entity_data, tile_position, position, client_tick);
         // Player's own character should not fade in.
         common.fade_state = FadeState::Opaque;
+        common.details = ResourceState::Available(character_information.name.clone());
 
         Self {
             common,
@@ -2217,7 +2226,14 @@ impl Npc {
         &mut self.common
     }
 
-    pub fn render_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    pub fn render_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        is_target: bool,
+    ) {
         if self.common.entity_type != EntityType::Monster {
             return;
         }
@@ -2230,6 +2246,19 @@ impl Npc {
         };
 
         let bar_width = theme.status_bar.enemy_bar_width;
+
+        if is_target {
+            let target_frame_pad = 2.0;
+            let target_border = theme.status_bar.border_size + ScreenSize::uniform(target_frame_pad);
+            renderer.render_rectangle(
+                final_position - target_border - ScreenSize::only_width(bar_width / 2.0),
+                ScreenSize {
+                    width: bar_width,
+                    height: theme.status_bar.enemy_health_height,
+                } + (target_border * 2.0),
+                Color::rgba_u8(255, 215, 0, 220),
+            );
+        }
 
         renderer.render_rectangle(
             final_position - theme.status_bar.border_size - ScreenSize::only_width(bar_width / 2.0),
@@ -2388,12 +2417,20 @@ impl Entity {
         self.get_common().entity_type
     }
 
+    pub fn is_dead(&self) -> bool {
+        self.get_common().is_dead()
+    }
+
     pub fn is_death_animation_over(&self) -> bool {
         self.get_common().is_death_animation_over()
     }
 
     pub fn is_fading(&self) -> bool {
         self.get_common().is_fading()
+    }
+
+    pub fn is_hidden(&self) -> bool {
+        self.get_common().is_hidden()
     }
 
     pub fn fade_out(&mut self, reason: DisappearanceReason, client_tick: ClientTick) {
@@ -2523,6 +2560,36 @@ impl Entity {
 
     pub fn get_details(&self) -> Option<&String> {
         self.get_common().details.as_option()
+    }
+
+    /// Formats the identity tooltip shown when the entity is hovered with the
+    /// mouse.
+    ///
+    /// For players, shows "Name (Class)" or class name if details are still
+    /// loading. For monsters/NPCs, shows the cleaned display name.
+    /// Returns `None` for hidden/invisible entities and warps to prevent
+    /// privacy leaks.
+    pub fn hover_text(&self, library: &Library) -> Option<String> {
+        if self.is_hidden() {
+            return None;
+        }
+
+        match self.get_entity_type() {
+            EntityType::Player => {
+                let job_name = JobName::get(library, self.get_job_id());
+                if let Some(name) = self.get_details() {
+                    let clean_name = name.split('#').next().unwrap_or(name);
+                    Some(format!("{clean_name} ({job_name})"))
+                } else {
+                    Some(job_name.to_string())
+                }
+            }
+            EntityType::Monster | EntityType::Npc => self.get_details().map(|name| {
+                let clean_name = name.split('#').next().unwrap_or(name);
+                clean_name.to_string()
+            }),
+            EntityType::Warp | EntityType::Hidden => None,
+        }
     }
 
     pub fn get_tile_position(&self) -> TilePosition {
@@ -2813,10 +2880,11 @@ impl Entity {
         theme: &WorldTheme,
         window_size: ScreenSize,
         client_tick: ClientTick,
+        is_target: bool,
     ) {
         match self {
             Self::Player(player) => player.render_status(renderer, camera, theme, window_size, client_tick),
-            Self::Npc(npc) => npc.render_status(renderer, camera, theme, window_size),
+            Self::Npc(npc) => npc.render_status(renderer, camera, theme, window_size, is_target),
         }
     }
 
@@ -3246,5 +3314,129 @@ mod headgear_tests {
         let path = headgear_sprite_path("남", "_고글");
         assert!(!is_weapon_part_path(&path));
         assert!(!is_shield_part_path(&path));
+    }
+}
+
+#[cfg(test)]
+mod hover_and_privacy_tests {
+    use cgmath::Point3;
+    use ragnarok_packets::{ClientTick, Direction, EntityId, EntityOption, JobId, Sex, TilePosition};
+
+    use super::{Common, Entity, EntityType, FadeState, Library, Npc, ResourceState};
+
+    fn dummy_common(job_id: JobId, entity_id: EntityId) -> Common {
+        Common {
+            tile_position: TilePosition::new(10, 10),
+            world_position: Point3::new(10.0, 0.0, 10.0),
+            entity_id,
+            job_id,
+            spirit_spheres: 0,
+            direction: Direction::South,
+            head_direction: 0,
+            sex: Sex::Male,
+            head: 1,
+            weapon: 0,
+            shield: 0,
+            accessory: 0,
+            accessory2: 0,
+            accessory3: 0,
+            head_palette: 0,
+            body_palette: 0,
+            robe: 0,
+            body: 0,
+            active_movement: None,
+            entity_type: job_id.into(),
+            option: 0,
+            body_state: 0,
+            health_state: 0,
+            is_pk_mode_on: false,
+            in_safe_zone: false,
+            movement_speed: 150,
+            health_points: 100,
+            maximum_health_points: 100,
+            animation_data: None,
+            details: ResourceState::Unavailable,
+            animation_state: super::AnimationState::new(job_id.into(), ClientTick(0)),
+            trick_dead: false,
+            su_hide: false,
+            su_stoop: false,
+            active_cast: None,
+            stopped_moving: false,
+            fade_state: FadeState::Opaque,
+            scale: 1.0,
+        }
+    }
+
+    #[test]
+    fn player_mouseover_shows_name_and_class() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(100)),
+        });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Alice (Knight)".to_string()));
+    }
+
+    #[test]
+    fn player_mouseover_without_details_shows_class() {
+        let entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(100)),
+        });
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Knight".to_string()));
+    }
+
+    #[test]
+    fn hidden_entity_type_produces_no_hover_text() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(139), EntityId(101)),
+        });
+        entity.set_details("WarpPoint".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Hidden);
+        assert!(entity.is_hidden());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn gm_invisible_player_produces_no_hover_text() {
+        let mut common = dummy_common(JobId(7), EntityId(102));
+        common.option = EntityOption::INVISIBLE.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Admin".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.is_hidden());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn monster_mouseover_cleans_suffix() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(1002), EntityId(103)),
+        });
+        entity.set_details("Poring#48291".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Monster);
+        assert_eq!(entity.hover_text(&library), Some("Poring".to_string()));
+    }
+
+    #[test]
+    fn monster_without_details_returns_none() {
+        let entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(1002), EntityId(104)),
+        });
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn warp_returns_no_hover_text() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(45), EntityId(105)),
+        });
+        entity.set_details("To Prontera".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Warp);
+        assert_eq!(entity.hover_text(&library), None);
     }
 }

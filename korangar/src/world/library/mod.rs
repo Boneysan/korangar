@@ -87,6 +87,24 @@ impl Library {
         })
     }
 
+    #[cfg(test)]
+    pub fn empty_for_test() -> Self {
+        Self {
+            accessory_name_table: Default::default(),
+            job_identity_table: Default::default(),
+            job_name_table: JobName::bundled_for_test(),
+            item_info_table: Default::default(),
+            map_sky_data_table: Default::default(),
+            skill_information_table: Default::default(),
+            skill_requirements_table: Default::default(),
+            skill_tree_table: Default::default(),
+            baby_job_table: Default::default(),
+            towninfo_table: TownInfoTable::default(),
+            campaign_quest_table: CampaignQuestTable::load(),
+            msgstringtable: MsgStringTable::default(),
+        }
+    }
+
     #[inline(always)]
     pub fn get<T: Table>(&self, key: T::Key<'_>) -> &T {
         T::get(self, key)

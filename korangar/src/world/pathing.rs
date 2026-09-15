@@ -377,6 +377,22 @@ mod tests {
     }
 
     #[test]
+    fn forced_correction_cannot_cross_blocked_terrain() {
+        let mut map = TestMap::new(10, 10);
+        for y in 0..10 {
+            map.set_unwalkable(&[TilePosition { x: 5, y }]);
+        }
+        let mut pathfinder = PathFinder::default();
+
+        let start = TilePosition { x: 3, y: 5 };
+        let across_wall = TilePosition { x: 7, y: 5 };
+        assert!(pathfinder.find_walkable_path(&map, start, across_wall).is_none());
+
+        let inside_wall = TilePosition { x: 5, y: 5 };
+        assert!(pathfinder.find_walkable_path(&map, start, inside_wall).is_none());
+    }
+
+    #[test]
     fn test_shoot_path_straight() {
         let map = TestMap::new(10, 10);
         let mut pathfinder = PathFinder::default();

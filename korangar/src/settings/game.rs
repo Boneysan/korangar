@@ -4,9 +4,49 @@ use korangar_interface::element::StateElement;
 use ron::ser::PrettyConfig;
 use rust_state::RustState;
 use serde::{Deserialize, Serialize};
+use winit::keyboard::KeyCode;
 
 fn default_true() -> bool {
     true
+}
+
+/// Configurable key binding for cycling hostile monster targets by distance.
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum TargetHostileBinding {
+    #[default]
+    Tab,
+    Tilde,
+    KeyQ,
+    Disabled,
+}
+
+impl TargetHostileBinding {
+    pub fn to_key_code(self) -> Option<KeyCode> {
+        match self {
+            Self::Tab => Some(KeyCode::Tab),
+            Self::Tilde => Some(KeyCode::Backquote),
+            Self::KeyQ => Some(KeyCode::KeyQ),
+            Self::Disabled => None,
+        }
+    }
+
+    pub fn display_name(self) -> &'static str {
+        match self {
+            Self::Tab => "Tab",
+            Self::Tilde => "~ (Tilde)",
+            Self::KeyQ => "Q",
+            Self::Disabled => "Disabled",
+        }
+    }
+
+    pub fn next(self) -> Self {
+        match self {
+            Self::Tab => Self::Tilde,
+            Self::Tilde => Self::KeyQ,
+            Self::KeyQ => Self::Disabled,
+            Self::Disabled => Self::Tab,
+        }
+    }
 }
 
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
@@ -19,6 +59,9 @@ pub struct GameSettings {
     /// Camera-relative WASD movement. Click-to-move stays available either way.
     #[serde(default = "default_true")]
     pub wasd_movement: bool,
+    /// Key binding to cycle visible, alive, hostile monsters by distance.
+    #[serde(default)]
+    pub target_hostile_binding: TargetHostileBinding,
     /// Last window size in **logical** pixels, restored on the next launch.
     ///
     /// Logical rather than physical so moving between monitors of different
@@ -41,6 +84,7 @@ impl Default for GameSettings {
             auto_attack: true,
             show_minimap: true,
             wasd_movement: true,
+            target_hostile_binding: TargetHostileBinding::default(),
             window_size: None,
             window_maximized: false,
         }

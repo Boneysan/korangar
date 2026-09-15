@@ -21,6 +21,7 @@ pub enum HotbarBinding {
 #[derive(Default, RustState, StateElement)]
 pub struct Hotbar {
     slots: [Option<HotbarBinding>; HOTBAR_SLOTS],
+    pending_press: Option<HotbarSlot>,
 }
 
 impl Hotbar {
@@ -28,6 +29,7 @@ impl Hotbar {
     /// login repopulates them from the server's hotkey packet.
     pub fn clear(&mut self) {
         self.slots.fill(None);
+        self.pending_press = None;
     }
 
     pub fn first_empty_slot(&self) -> Option<HotbarSlot> {

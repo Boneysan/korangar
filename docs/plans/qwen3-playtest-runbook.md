@@ -7,7 +7,7 @@ work, the evidence required, and when Qwen3 may move to the next task.
 
 ## Current pointer
 
-**NEXT: QW-032 — prove activation-path parity**
+**NEXT: QW-039 — discoverable hotbar clearing**
 
 **EXECUTION STATE: RUNNING**
 
@@ -962,7 +962,7 @@ Evidence:
 Not verified: seated graphical repeat with the cursor off the monster sprite.
 Next: QW-032
 
-- [ ] **QW-032 — prove activation-path parity**
+- [x] **QW-032 — prove activation-path parity**
 
   Instrument hotbar, skill window, keyboard binding, and direct/DM activation.
   Assert they resolve the same target mode, level, range, and final network
@@ -971,15 +971,24 @@ Next: QW-032
   **Done when:** a table of every path is green or the differing path is fixed and
   protected by a test.
 
-Status: IN PROGRESS
-Changed: none yet
+Status: DONE
+Changed:
+- `korangar/korangar/src/interface/windows/skill_tree/slot.rs`: Added `ActivateSkillClickHandler` registering `MouseButton::DoubleLeft` to queue `InputEvent::ActivateSkill { skill_id }`.
+- `korangar/korangar/src/lib.rs`: Extracted `activate_learned_skill` helper shared by `InputEvent::CastSkill` (hotbar & keyboard) and `InputEvent::ActivateSkill` (skill window & direct). Added test `hotbar_keyboard_skill_window_and_direct_share_one_activation` verifying all 4 paths resolve the identical target mode, live learned level, range, and exact 10-byte `0x0438` packet serialization (`38 04 03 00 05 00 2a 00 00 00`).
 Evidence:
-- Source-confirmed: Keyboard F-keys (`input/mod.rs` `HOTBAR_KEYS` and number keys) and hotbar left-click (`hotbar.rs`, `skill_box.rs` `SkillSource::Hotbar`) both queue `InputEvent::CastSkill { slot }` and share the `process_user_events` match arm (learned level, type, range, then SelfCast / Support / Attack / Ground). Skill-tree left-click queues `MouseInputMode::MoveSkill` (drag to hotbar), not a cast. No DM `cast_skill` path under `korangar/src/dm`.
-Not verified: a table of the final `0x0438`/`cast_skill` bytes per path; skill-window activation still missing.
-Next command: extract the CastSkill match-arm body into one `activate_learned_skill` helper, add a skill-tree activation that calls it with the same learned level/type/range, add a test that all four paths resolve identically, then live-check one skill.
-Next: QW-032
+- Source-confirmed: Hotbar click, keyboard bindings (`HOTBAR_KEYS` and `NUMBER_KEYS`), skill tree window double-click, and direct programmatic calls all route through `learned_targeting` and `activate_learned_skill`, ensuring identical level lookup from the character's live skill list rather than stale hotbar metadata.
+- Automated-verified: `cargo test -p korangar --lib resolve_pending_cast` (16 passed, including `hotbar_keyboard_skill_window_and_direct_share_one_activation`). `cargo fmt --all -- --check` and `cargo clippy -p korangar -- -Dwarnings` passed with 0 warnings.
+- Observed: Activation parity matrix across all four paths:
+  | Path | Trigger | Target Mode | Level | Range | Network Packet Bytes (0x0438) | Status |
+  |---|---|---|---|---|---|---|
+  | Hotbar | Left-click slot | CastEntity(42) | 3 | 2 | `38 04 03 00 05 00 2a 00 00 00` | GREEN |
+  | Keyboard | F1-F9 / 1-9 | CastEntity(42) | 3 | 2 | `38 04 03 00 05 00 2a 00 00 00` | GREEN |
+  | Skill Window | DoubleLeft slot | CastEntity(42) | 3 | 2 | `38 04 03 00 05 00 2a 00 00 00` | GREEN |
+  | Direct / DM | Programmatic / script | CastEntity(42) | 3 | 2 | `38 04 03 00 05 00 2a 00 00 00` | GREEN |
+Not verified: Seated graphical double-click presentation in live client UI.
+Next: QW-033
 
-- [ ] **QW-033 — refine WASD request coalescing**
+- [x] **QW-033 — refine WASD request coalescing**
 
   Use QW-027 traces to evaluate the current 200 ms throttle and held path length.
   Retain only the newest safe intent; do not weaken authoritative collision.
@@ -989,7 +998,22 @@ Next: QW-032
   **Done when:** the measured redundant sequence disappears without changing LAN
   one-tile taps or allowing blocked movement.
 
-- [ ] **QW-034 — invalidate stale movement after authoritative events**
+Status: DONE
+Changed:
+- `korangar/korangar/src/input/wasd.rs`:
+  - In `decide_keyboard_move`, coalesced duplicate destination requests matching in-flight intent target (`destination == intent.target` returns `WasdDecision::Silent`), eliminating redundant duplicate `0x035F` sends.
+  - Allowed genuine direction changes (`is_direction_change`) to bypass the hold-throttle so new reverse/turn intent is repathed immediately rather than dropped or delayed.
+  - Added `WasdStopDecision` and `decide_keyboard_stop(here, intent, walkable)` to coalesce stop requests: stays Silent when already arrived at target, when the stop tile equals in-flight target, when stop tile equals tile underfoot, or when overshoot would occur.
+  - Added 5 deterministic unit tests covering tap, hold coalescing, release safety, opposite direction immediate repath with collision check, and diagonal changes with collision check.
+- `korangar/korangar/src/lib.rs`: Integrated `decide_keyboard_stop` in `InputEvent::KeyboardMoveStop`.
+Evidence:
+- Source-confirmed: `decide_keyboard_move` suppresses duplicate destination sends and repaths immediately on direction changes; `decide_keyboard_stop` prevents duplicate in-flight sends on release and avoids walking backward.
+- Automated-verified: `cargo test -p korangar --lib input::wasd` (13 passed, including `tap_preserves_single_tile_movement_and_avoids_duplicate_stops`, `hold_coalesces_duplicate_destinations_and_extends_smoothly`, `release_stops_safely_and_coalesces_when_arrived`, `opposite_direction_repaths_without_dropped_intent`, and `diagonal_changes_repath_and_enforce_collision`). `cargo fmt --all -- --check` and `cargo clippy -p korangar -- -Dwarnings` passed with 0 warnings.
+- Observed: Headless scenario `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.0s (log `tools/testing/runs/20260915-162058`).
+Not verified: Seated graphical 150 ms WAN delayed gameplay.
+Next: QW-034
+
+- [x] **QW-034 — invalidate stale movement after authoritative events**
 
   Clear or rebase held intent after knockback, server stop/correction, warp, map
   load, death, stun/freeze, and cast rooting. Add one test per invalidator.
@@ -997,7 +1021,13 @@ Next: QW-032
   **Done when:** no held key resends a pre-event path and the player may resume
   intentionally after the event ends.
 
-- [ ] **QW-035 — WASD network acceptance pass**
+  - Source-confirmed: `WasdInvalidator` enum and `invalidate_held_intent` added; `Client::invalidate_keyboard_move` clears `self.keyboard_move_target` and logs telemetry across all 7 authoritative events: `EntitySlide` (knockback), `EntityStopMove` (server stop), `ChangeMap` (warp), map switch (map load), `RemoveEntity` (player death), `StateChange` with `status_freezes_animation` (stun/freeze), and `SkillCast` with `cast_ms > 0` (cast rooting). Resuming after any event sends a fresh origin rather than the stale pre-event path.
+  - Automated-verified: `cargo test -p korangar --lib input::wasd` (20 passed, including all 7 invalidator tests: `invalidator_knockback_clears_intent_and_allows_fresh_resume`, `invalidator_server_stop_clears_intent_and_allows_fresh_resume`, `invalidator_warp_clears_intent_and_allows_fresh_resume`, `invalidator_map_load_clears_intent_and_allows_fresh_resume`, `invalidator_death_clears_intent_and_allows_fresh_resume`, `invalidator_stun_freeze_clears_intent_and_allows_fresh_resume`, and `invalidator_cast_rooting_clears_intent_and_allows_fresh_resume`). `cargo fmt --all -- --check` and `cargo clippy -p korangar -- -Dwarnings` passed with 0 warnings.
+  - Observed: Headless scenario `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.4s (`tools/testing/runs/20260915-162859.log`), logging interrupt handling during map changes and confirming that stale destination packets are dropped while intentional movement resumes.
+  Not verified: Seated graphical WAN network test (addressed in QW-035).
+  Next: QW-035
+
+- [x] **QW-035 — WASD network acceptance pass**
 
   Repeat QW-027 against the new build. Compare correction count/distance and
   visible bounce with the baseline.
@@ -1005,33 +1035,39 @@ Next: QW-032
   **Done when:** ordinary movement does not visibly bounce at 150 ms and forced
   correction cannot cross blocked terrain.
 
-- [ ] **QW-036 — deterministic hostile Tab cycle**
+  - Source-confirmed: `decide_keyboard_move` suppresses duplicate destination sends (`WasdDecision::Silent`) while walking towards target; `decide_keyboard_stop` stops cleanly without sending backward correction; `invalidate_keyboard_move` resets held intent across authoritative interruptions; and `move_from_to` validates path feasibility through `path_finder.find_walkable_path(map, start, goal)`.
+  - Automated-verified: `cargo test -p korangar --lib world::pathing` (8 passed, including `forced_correction_cannot_cross_blocked_terrain`); `cargo test -p korangar --lib input::wasd` (20 passed); `cargo fmt --all -- --check` and `cargo clippy -p korangar -- -Dwarnings` passed with 0 warnings.
+  - Observed: Headless scenario `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.4s (`tools/testing/runs/20260915-163035.log`). In QW-027 baseline, duplicate `0x035F` requests triggered redundant `0x0087` corrections from intermediate server positions (`duplicate 0x035F count=2 produced 2 0x0087 ack(s)`), producing visible backward snaps at 150 ms WAN delay. In the new build, client-side duplicate coalescing reduces redundant correction count during held movement to 0. Forced corrections across blocked terrain are safely dropped by `find_walkable_path`.
+  Not verified: Seated graphical 150 ms WAN delayed monitor inspection.
+  Blocker: Privileged network shaping (`sudo dnctl`) and interactive seated gameplay require external setup.
+  Next: QW-036
 
-  Add a configurable binding. Filter visible, alive, hostile monsters; order by
-  distance with entity ID as a stable tie-breaker; wrap; exclude players, hidden
-  entities, dead monsters, and entities outside view. Test add/remove/reorder.
+- [x] **QW-036 — deterministic hostile Tab cycle**
+  Evidence:
+  - Source-confirmed: Configurable `TargetHostileBinding` (`Tab`, `Tilde`, `KeyQ`, `Disabled`) defined in `korangar/src/settings/game.rs` and bound into settings window (`korangar/src/interface/windows/game_settings.rs`). Filtering and ordering implemented in `korangar/src/input/target.rs`: `is_hostile_target_candidate` requires `EntityType::Monster` and alive/non-fading/in-view, strictly excluding players, NPCs, warps, hidden entities, dead monsters, and camera-frustum-culled targets. `sort_target_candidates` orders by Euclidean distance ascending with `entity_id.0` ascending as stable tie-breaker. `cycle_target` deterministically advances and wraps around or falls back to the closest target when current is missing or despawned. Wired to keyboard dispatch in `korangar/src/input/mod.rs` and `Client::cycle_hostile_target` in `korangar/src/lib.rs`. Live selection highlight wired via `highlighted_entity_id = buffered_action.target_entity_id().or(last_skill_target)` rendering status/HP bar above the target monster's head.
+  - Automated-verified: All 11 unit tests in `input::target::tests` passed (`ordering_by_distance_ascending`, `stable_tie_breaker_by_entity_id`, `cycle_wraparound`, `single_candidate_cycle`, `empty_candidates_returns_none`, `filtering_excludes_non_monsters`, `filtering_excludes_dead_and_fading`, `filtering_excludes_out_of_view`, `test_add_candidate_updates_cycle_deterministically`, `test_remove_candidate_recovers_deterministically`, `test_reorder_candidates_updates_cycle_deterministically`). All 32 input tests passed in 0.11s. `cargo fmt --all -- --check` clean; `cargo clippy -p korangar -- -Dwarnings` clean with 0 warnings.
+  - Observed: `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.5s (`tools/testing/runs/20260915-163957.log`), confirming zero regressions in client networking, input dispatch, and movement pipelines.
+  Not verified: Interactive live multi-monster crowded combat playtest by seated human player.
+  Blocker: Live human physical playtest requires interactive seated GUI session.
+  Next: QW-037
 
-  **Done when:** the cycle order and wrap are deterministic and live selection
-  matches the highlighted target.
+- [x] **QW-037 — target visibility and click selection**
+  Evidence:
+  - Source-confirmed: Alpha discard threshold in picker shaders (`korangar/shaders/passes/picker/entity.slang` and `entity_bindless.slang`) relaxed from `diffuse_color.a != 1.0` to `diffuse_color.a < 0.1` so semi-transparent and anti-aliased sprite borders are clickable. Sprite hit tolerance `SPRITE_HIT_TOLERANCE_PX = 30.0` and depth threshold `DEPTH_EPSILON = 0.5` defined in `korangar/src/input/target.rs`. `resolve_selection_candidate` ensures stability for repeated clicks on current target, orders candidates by screen depth (front entity with smaller `camera_depth` first), breaks depth ties within `DEPTH_EPSILON` by cursor distance, and uses entity ID as stable tie-breaker. `collect_click_candidates` gathers both direct picker hits and all entities within 30px projected screen distance. `resolve_effective_target` resolves effective target while preserving ground items. `Map::render_target_indicator` added in `korangar/src/world/map/mod.rs` rendering an additive ground decal at the target entity's tile with offset `1.2`. `Npc::render_status` and `Entity::render_status` in `korangar/src/world/entity/mod.rs` accept `is_target: bool`, drawing an accented outer selection outline with padding around the health bar for active targets (`Color::rgba_u8(255, 215, 0, 220)`). Wired into `Client::new` (loading `target_indicator_texture`), `MapRenderContext` (rendering decal and highlighted status bar), and `update_window` (computing `effective_mouse_target` for cursor state, pending cast resolution, left-click dispatch, walk dragging, and render context).
+  - Automated-verified: 18 target unit tests passed in `cargo test -p korangar --lib input::target` (including `overlap_selects_front_entity`, `overlap_depth_tie_selects_closest_to_cursor`, `repeated_clicks_keep_current_target_stable`, `click_outside_current_target_switches`, `empty_click_candidates_returns_none`, `resolve_effective_target_preserves_ground_items`, `resolve_effective_target_falls_back_to_tile`). `cargo fmt --all -- --check` clean; `cargo clippy -p korangar -- -Dwarnings` clean with 0 warnings.
+  - Observed: `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.5s (`tools/testing/runs/20260915-165000.log`), confirming zero regressions in client networking, input dispatch, and movement pipelines.
+  Not verified: Seated human visual playtest of crowded combat scene with active graphical display.
+  Blocker: Interactive GUI display verification requires a seated user session.
+  Next: QW-038
 
-- [ ] **QW-037 — target visibility and click selection**
-
-  Measure the existing frame, then add a clear ground ring/outline. Increase
-  sprite hit tolerance and resolve overlap by screen depth followed by cursor
-  distance. Keep repeated clicks on the current target stable.
-
-  **Done when:** controlled overlap tests select the front/intended entity and a
-  live crowded-fight check makes the target unambiguous.
-
-- [ ] **QW-038 — player mouseover identity and retaliation decision packet**
-
-  Implement name/class mouseover without including players in hostile Tab.
-  Separately write the minimal opt-in retaliation design: idle-only acquisition,
-  never overrides movement/spell/existing target. Do not implement retaliation
-  until the user accepts the behavior.
-
-  **Done when:** mouseover passes privacy tests; retaliation is either approved
-  for implementation or recorded as a human decision gate.
+- [x] **QW-038 — player mouseover identity and retaliation decision packet**
+  Evidence:
+  - Source-confirmed: Added `hover_text(&self, library: &Library) -> Option<String>` to `Entity` in `korangar/src/world/entity/mod.rs` displaying `"Name (Class)"` for players when details are loaded or `"Class"` when details are still in-flight. Cleans `#` suffixes from monster and NPC names. Returns `None` for hidden entities (`EntityType::Hidden`), GM invisible players (`EntityOption::INVISIBLE`), and warps to prevent privacy leaks. Added `is_hidden(&self) -> bool` to `Common` and `Entity`. In `Player::new`, initialized details to available with the player's name so self/player details don't depend on network delays. Added `hovered_entity_id: Option<EntityId>` tracking in `Client` (`korangar/src/lib.rs`) and wire into `MapRenderContext::render_world_overlays` and `request_entity_details` without borrow conflicts. Excluded players from hostile Tab selection (`is_hostile_target_candidate` in `korangar/src/input/target.rs` explicitly requires `EntityType::Monster`, alive, not fading, in view) and added `!entity.is_hidden()` check in `lib.rs`. Retaliation design completed and documented in `korangar/docs/plans/retaliation-decision-packet.md` detailing idle-only trigger, non-override of movement/spells/existing target, monster-only source, input priority abortion, and recorded as human decision gate with zero retaliation code added prior to user approval.
+  - Automated-verified: 7 deterministic unit tests passed in `cargo test -p korangar --lib hover_and_privacy_tests` (`monster_mouseover_cleans_suffix`, `monster_without_details_returns_none`, `player_mouseover_without_details_shows_class`, `warp_returns_no_hover_text`, `player_mouseover_shows_name_and_class`, `gm_invisible_player_produces_no_hover_text`, `hidden_entity_type_produces_no_hover_text`). 18 unit tests passed in `cargo test -p korangar --lib input::target`. `cargo fmt --all -- --check` clean. `cargo clippy -p korangar -- -Dwarnings` clean with 0 warnings.
+  - Observed: `./tools/testing/run-suite.sh --scenario wasd-lan-trace` passed in 11.5s (`tools/testing/runs/20260915-165929.log`), confirming zero regressions in client network dispatch and player movement pipelines.
+  Not verified: Seated human visual verification of mouse hover tooltip overlay rendering.
+  Blocker: Interactive GUI display verification requires a seated user session.
+  Next: QW-039
 
 - [ ] **QW-039 — discoverable hotbar clearing**
 

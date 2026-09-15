@@ -52,6 +52,11 @@ where
                     state: self.game_settings_path.wasd_movement(),
                     event: Toggle(self.game_settings_path.wasd_movement()),
                 },
+                button! {
+                    text: "Hostile target cycle binding",
+                    tooltip: "Cycle key binding: Tab -> ~ -> Q -> Disabled",
+                    event: InputEvent::CycleHostileTargetBinding,
+                },
                 // The one toggle here the client does not own. The server keeps
                 // this setting -- per character, across sessions -- so the
                 // button reads the server's answer and asks it to change, rather

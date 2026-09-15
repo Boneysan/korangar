@@ -133,6 +133,17 @@ impl Table for JobName {
 }
 
 #[cfg(test)]
+impl JobName {
+    pub fn bundled_for_test() -> <Self as Table>::Storage {
+        let mut result = HashMap::new();
+        for (job_id, name) in hercules_job_names() {
+            result.insert(JobId(job_id), JobName(name.to_owned().into()));
+        }
+        result
+    }
+}
+
+#[cfg(test)]
 mod tests {
     use hashbrown::HashMap;
 

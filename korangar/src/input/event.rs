@@ -294,6 +294,10 @@ pub enum InputEvent {
     AssignSkillToHotbar {
         skill: LearnableSkill,
     },
+    /// Clear a hotbar slot (right-click or drag-off-bar).
+    ClearHotbarSlot {
+        slot: HotbarSlot,
+    },
     /// Camera-relative keyboard movement (WASD).
     /// Camera-relative keyboard movement. `fresh` is true when one of the four
     /// keys went down THIS frame, which is what separates a tap from a key that
@@ -508,6 +512,10 @@ pub enum InputEvent {
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.
     ToggleLootWindow,
+    /// Cycle to the next visible, alive, hostile monster by distance.
+    CycleHostileTarget,
+    /// Cycle the configured keybinding for hostile target cycling.
+    CycleHostileTargetBinding,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]
     ToggleThemeInspectorWindow,
