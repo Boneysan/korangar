@@ -116,6 +116,27 @@ where
     }
 }
 
+struct ActivateSkillClickHandler<B> {
+    learned_skill_path: B,
+}
+
+impl<B> ClickHandler<ClientState> for ActivateSkillClickHandler<B>
+where
+    B: Path<ClientState, LearnedSkill, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(learned_skill) = state.try_get(&self.learned_skill_path) else {
+            return;
+        };
+        if learned_skill.skill_level.0 == 0 {
+            return;
+        }
+        queue.queue(InputEvent::ActivateSkill {
+            skill_id: learned_skill.skill_id,
+        });
+    }
+}
+
 struct AssignToHotbarClickHandler<A, B, C> {
     learnable_skill_path: A,
     learned_skill_path: B,
@@ -227,6 +248,7 @@ pub struct SkillSlot<A, B, C, D> {
     window_state_path: C,
     available_skill_points_path: D,
     click_handler: SkillSlotClickHandler<A, B, C>,
+    activate_skill_handler: ActivateSkillClickHandler<B>,
     assign_to_hotbar_handler: AssignToHotbarClickHandler<A, B, C>,
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
@@ -256,6 +278,7 @@ where
             window_state_path,
             available_skill_points_path,
             click_handler: SkillSlotClickHandler::new(learnable_skill_path, learned_skill_path, window_state_path, source),
+            activate_skill_handler: ActivateSkillClickHandler { learned_skill_path },
             assign_to_hotbar_handler: AssignToHotbarClickHandler {
                 learnable_skill_path,
                 learned_skill_path,
@@ -549,6 +572,7 @@ where
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &self.click_handler);
                 if learned_skill.is_some() {
+                    layout.register_click_handler(MouseButton::DoubleLeft, &self.activate_skill_handler);
                     layout.register_click_handler(MouseButton::Right, &self.assign_to_hotbar_handler);
                 }
 

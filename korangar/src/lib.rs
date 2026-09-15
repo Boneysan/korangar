@@ -67,6 +67,9 @@ use std::time::{Duration, Instant};
 
 use cgmath::{InnerSpace, Point3, Vector3};
 use image::{EncodableLayout, ImageFormat, ImageReader, Rgba, RgbaImage};
+use input::wasd::{
+    WasdDecision, WasdIntent, WasdMoveInput, WasdSendKind, chebyshev, decide_keyboard_move, held_intent_is_stale, stop_tile,
+};
 use input::{MouseInputMode, MouseModeExt};
 use korangar_audio::{AudioEngine, SoundEffectKey};
 #[cfg(feature = "debug")]
@@ -1013,10 +1016,14 @@ mod normalize_map_base_name_tests {
 
 #[cfg(test)]
 mod resolve_pending_cast_tests {
-    use ragnarok_packets::{AttackRange, EntityId, ItemId, SkillType, TilePosition};
+    use ragnarok_packets::{AttackRange, EntityId, ItemId, SkillId, SkillLevel, SkillType, TilePosition};
 
-    use super::{PendingCastResolution, is_within_skill_range, resolve_pending_cast};
+    use super::{
+        AttackRepeatResolution, PendingCastResolution, ROLLING_CUTTER_ID, SkillActivation, SkillActivationRequest, is_within_skill_range,
+        learned_targeting, resolve_attack_repeat_target, resolve_pending_cast, resolve_skill_activation,
+    };
     use crate::graphics::PickerTarget;
+    use crate::state::skills::LearnedSkill;
 
     #[test]
     fn entity_targeted_casts_on_entity() {
@@ -1086,6 +1093,126 @@ mod resolve_pending_cast_tests {
     }
 
     #[test]
+    fn repeated_attack_cast_reuses_last_target_when_cursor_is_not_on_an_entity() {
+        let last = EntityId(42);
+        let present = |id: EntityId| id == last;
+        assert_eq!(
+            resolve_attack_repeat_target(PickerTarget::Nothing, Some(last), present),
+            AttackRepeatResolution::Cast(last)
+        );
+        assert_eq!(
+            resolve_attack_repeat_target(PickerTarget::Tile { x: 3, y: 4 }, Some(last), present),
+            AttackRepeatResolution::Cast(last)
+        );
+    }
+
+    #[test]
+    fn repeated_attack_cast_clears_when_last_target_is_gone() {
+        let last = EntityId(42);
+        assert_eq!(
+            resolve_attack_repeat_target(PickerTarget::Nothing, Some(last), |_| false),
+            AttackRepeatResolution::Arm
+        );
+        assert_eq!(
+            resolve_attack_repeat_target(PickerTarget::Nothing, None, |_| true),
+            AttackRepeatResolution::Arm
+        );
+    }
+
+    #[test]
+    fn new_manual_entity_click_replaces_the_stored_target() {
+        let last = EntityId(42);
+        let next = EntityId(99);
+        assert_eq!(
+            resolve_attack_repeat_target(PickerTarget::Entity(next), Some(last), |_| true),
+            AttackRepeatResolution::Cast(next)
+        );
+    }
+
+    fn bash() -> LearnedSkill {
+        LearnedSkill {
+            skill_id: SkillId(5),
+            skill_level: SkillLevel(3),
+            skill_type: SkillType::Attack,
+            spell_point_cost: 8,
+            attack_range: AttackRange(2),
+            skill_name: "Bash".into(),
+            upgradable: true,
+        }
+    }
+
+    fn activation(skill_type: SkillType, skill_id: SkillId, mouse: PickerTarget, last: Option<EntityId>) -> SkillActivation {
+        resolve_skill_activation(SkillActivationRequest {
+            skill_id,
+            skill_type,
+            mouse,
+            last_target: last,
+            player_id: EntityId(1),
+        })
+    }
+
+    #[test]
+    fn hotbar_keyboard_skill_window_and_direct_share_one_activation() {
+        let learned = [bash()];
+        let targeting = learned_targeting(&learned, SkillId(5)).expect("learned");
+        let mouse = PickerTarget::Nothing;
+        let last = Some(EntityId(42));
+        let request = SkillActivationRequest {
+            skill_id: SkillId(5),
+            skill_type: targeting.0,
+            mouse,
+            last_target: last,
+            player_id: EntityId(1),
+        };
+        let hotbar = resolve_skill_activation(request);
+        let keyboard = resolve_skill_activation(request);
+        let skill_window = resolve_skill_activation(request);
+        let direct = resolve_skill_activation(request);
+        assert_eq!(hotbar, keyboard);
+        assert_eq!(keyboard, skill_window);
+        assert_eq!(skill_window, direct);
+        assert_eq!(hotbar, SkillActivation::CastEntity { entity_id: EntityId(42) });
+        assert_eq!(targeting.2, SkillLevel(3));
+    }
+
+    #[test]
+    fn learned_targeting_uses_live_level_not_a_stale_hotbar_maximum() {
+        let learned = [bash()];
+        let targeting = learned_targeting(&learned, SkillId(5)).unwrap();
+        assert_eq!(targeting.2, SkillLevel(3));
+        assert_ne!(targeting.2, SkillLevel(10));
+        assert!(learned_targeting(&learned, SkillId(28)).is_none());
+    }
+
+    #[test]
+    fn self_cast_and_ground_and_passive_match_across_sources() {
+        assert_eq!(
+            activation(SkillType::SelfCast, SkillId(29), PickerTarget::Nothing, None),
+            SkillActivation::CastSelf { channeling: false }
+        );
+        assert_eq!(
+            activation(SkillType::SelfCast, ROLLING_CUTTER_ID, PickerTarget::Nothing, None),
+            SkillActivation::CastSelf { channeling: true }
+        );
+        assert_eq!(
+            activation(SkillType::Support, SkillId(28), PickerTarget::Nothing, None),
+            SkillActivation::CastEntity { entity_id: EntityId(1) }
+        );
+        assert_eq!(
+            activation(SkillType::Support, SkillId(28), PickerTarget::Entity(EntityId(7)), None),
+            SkillActivation::CastEntity { entity_id: EntityId(7) }
+        );
+        assert_eq!(
+            activation(SkillType::Ground, SkillId(89), PickerTarget::Nothing, None),
+            SkillActivation::Arm { ground: true }
+        );
+        assert_eq!(
+            activation(SkillType::Passive, SkillId(1), PickerTarget::Entity(EntityId(7)), None),
+            SkillActivation::Ignore
+        );
+    }
+
+    #[test]
     fn skill_range_uses_the_same_chebyshev_distance_as_server_combat() {
         let player = TilePosition { x: 10, y: 10 };
 
@@ -1151,6 +1278,9 @@ struct PendingSkill {
     skill_level: SkillLevel,
     skill_type: SkillType,
     attack_range: AttackRange,
+    /// Copied into the arm announcement; kept on the pending so a later
+    /// re-arm after a fizzle still knows the name.
+    #[allow(dead_code)]
     skill_name: String,
 }
 
@@ -1174,6 +1304,82 @@ enum PendingCastResolution {
 /// Decide what a click does for an armed skill. Pure — the caller performs the
 /// actual network cast (and, for [`PendingCastResolution::CastEntityTile`], the
 /// entity → tile lookup) so this can be unit-tested without a live client.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum AttackRepeatResolution {
+    Cast(EntityId),
+    Arm,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct SkillActivationRequest {
+    skill_id: SkillId,
+    skill_type: SkillType,
+    mouse: PickerTarget,
+    last_target: Option<EntityId>,
+    player_id: EntityId,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SkillActivation {
+    Ignore,
+    CastSelf { channeling: bool },
+    CastEntity { entity_id: EntityId },
+    Arm { ground: bool },
+}
+
+/// Shared by hotbar, keyboard (`CastSkill` slot), skill-window, and direct
+/// `ActivateSkill`. Source is not an input; only learned type/target matter.
+fn resolve_skill_activation(request: SkillActivationRequest) -> SkillActivation {
+    match request.skill_type {
+        SkillType::Passive => SkillActivation::Ignore,
+        SkillType::SelfCast => SkillActivation::CastSelf {
+            channeling: request.skill_id == ROLLING_CUTTER_ID,
+        },
+        SkillType::Support => {
+            let entity_id = match request.mouse {
+                PickerTarget::Entity(entity_id) => entity_id,
+                _ => request.player_id,
+            };
+            SkillActivation::CastEntity { entity_id }
+        }
+        SkillType::Attack => match resolve_attack_repeat_target(request.mouse, request.last_target, |_| true) {
+            AttackRepeatResolution::Cast(entity_id) => SkillActivation::CastEntity { entity_id },
+            AttackRepeatResolution::Arm => SkillActivation::Arm { ground: false },
+        },
+        SkillType::Ground | SkillType::Trap => SkillActivation::Arm { ground: true },
+    }
+}
+
+fn learned_targeting(skills: &[LearnedSkill], skill_id: SkillId) -> Option<(SkillType, AttackRange, SkillLevel, String)> {
+    skills
+        .iter()
+        .find(|skill| skill.skill_id == skill_id && skill.skill_level.0 > 0)
+        .map(|skill| {
+            (
+                skill.skill_type,
+                skill.attack_range,
+                skill.skill_level,
+                skill.skill_name.clone(),
+            )
+        })
+}
+
+/// Attack-skill hotbar/key press: hover wins; otherwise a still-present last
+/// target is reused so a valid repeat does not have to re-click the monster.
+fn resolve_attack_repeat_target(
+    mouse: PickerTarget,
+    last_target: Option<EntityId>,
+    still_present: impl Fn(EntityId) -> bool,
+) -> AttackRepeatResolution {
+    match resolve_pending_cast(SkillType::Attack, mouse) {
+        PendingCastResolution::CastEntity(entity_id) => AttackRepeatResolution::Cast(entity_id),
+        _ => match last_target.filter(|entity_id| still_present(*entity_id)) {
+            Some(entity_id) => AttackRepeatResolution::Cast(entity_id),
+            None => AttackRepeatResolution::Arm,
+        },
+    }
+}
+
 fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingCastResolution {
     match skill_type {
         SkillType::Attack | SkillType::Support => match target {
@@ -1524,6 +1730,10 @@ pub struct Client {
     /// A targeted skill awaiting a click to pick its target. See
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
+    /// Last entity an Attack skill actually targeted. A second hotbar/key
+    /// press reuses it when the cursor is not over a new entity, so a valid
+    /// repeat does not have to re-click the monster.
+    last_skill_target: Option<EntityId>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
     /// disconnect itself lands. The packet arrives immediately before the
     /// socket closes, so it cannot be shown on the map screen we are
@@ -1624,6 +1834,10 @@ pub struct Client {
     /// made holding a key stutter -- every packet restarted the walk from the
     /// server's authoritative position.
     keyboard_move_target: Option<(TilePosition, i32, i32)>,
+    /// Last `0x035F` destination, so a `0x0087` ack can report correction
+    /// distance. Shared by WASD, click-to-move, and key-release stops.
+    keyboard_move_last_dest: Option<TilePosition>,
+    keyboard_move_last_sent_at: Option<Instant>,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -3211,6 +3425,7 @@ impl Client {
             point_shadow_camera,
             input_event_buffer,
             pending_skill: None,
+            last_skill_target: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
             disconnect_notice_delay: 0,
@@ -3256,6 +3471,8 @@ impl Client {
             wasd_trace: std::env::var("KORANGAR_WASD_TRACE").is_ok(),
             keyboard_move_last_tick: ClientTick(0),
             keyboard_move_target: None,
+            keyboard_move_last_dest: None,
+            keyboard_move_last_sent_at: None,
             pending_stat_plan: None,
             armed_stat_plan: None,
             auto_pickup_queried: false,
@@ -4056,6 +4273,7 @@ impl Client {
                     // Drop any armed skill so it can't leak across a logout/relogin and fire on
                     // the first click of the next session.
                     self.pending_skill = None;
+                    self.last_skill_target = None;
 
                     if reason != DisconnectReason::ClosedByClient {
                         #[cfg(feature = "debug")]
@@ -4535,6 +4753,9 @@ impl Client {
                     if buffered_action.is_some_and(|buffered_action| buffered_action.targets_entity(entity_id)) {
                         *buffered_action = None;
                     }
+                    if self.last_skill_target == Some(entity_id) {
+                        self.last_skill_target = None;
+                    }
 
                     // Drop any effect attached to the entity, like a warp's
                     // portal vortex.
@@ -4628,6 +4849,7 @@ impl Client {
                             .try_follow(this_entity())
                             .is_some_and(|player| player.get_entity_id() == entity_id);
                         if is_player {
+                            self.note_wasd_interrupt("slide", Some(position));
                             if let Some(player) = self.client_state.try_follow_mut(this_entity()) {
                                 player.set_position(map, position, client_tick);
                             }
@@ -4646,15 +4868,8 @@ impl Client {
                     destination,
                     starting_timestamp,
                 } => {
-                    if self.wasd_trace {
-                        let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
-                        client_log!(
-                            "[wasd] server walk {:?} -> {:?}, client believed {:?}",
-                            origin.tile_position(),
-                            destination.tile_position(),
-                            here
-                        );
-                    }
+                    let here = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+                    self.note_move_ack(origin.tile_position(), destination.tile_position(), here);
 
                     if let Some(map) = &self.map
                         && let Some(player) = self.client_state.try_follow_mut(this_entity())
@@ -4671,6 +4886,8 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
+                    self.note_wasd_interrupt("change-map", Some(position));
+                    self.last_skill_target = None;
                     // The map server has accepted this character, so the status
                     // points exist and `pc_statusup` has a session to act on.
                     // Sending any earlier would be dropped in the handshake.
@@ -5763,6 +5980,13 @@ impl Client {
                     }
                 }
                 NetworkEvent::EntityStopMove { entity_id, position } => {
+                    if self
+                        .client_state
+                        .try_follow(this_entity())
+                        .is_some_and(|player| player.get_entity_id() == entity_id)
+                    {
+                        self.note_wasd_interrupt("stop-move", Some(position));
+                    }
                     // Snapping to the reported tile also clears `active_movement`,
                     // which is what stops the walk animation — otherwise the entity
                     // keeps striding toward a destination it already abandoned.
@@ -7034,6 +7258,44 @@ impl Client {
         self.input_event_buffer = remaining;
     }
 
+    fn note_move_request(&mut self, kind: &str, from: TilePosition, to: TilePosition, client_tick: ClientTick) {
+        self.keyboard_move_last_dest = Some(to);
+        self.keyboard_move_last_sent_at = Some(Instant::now());
+        if self.wasd_trace {
+            client_log!("[wasd] send {kind} from {from:?} to {to:?} (tick {})", client_tick.0);
+        }
+    }
+
+    fn note_move_ack(&self, origin: TilePosition, destination: TilePosition, believed: Option<TilePosition>) {
+        if !self.wasd_trace {
+            return;
+        }
+        let correction = believed.map(|here| chebyshev(origin, here)).unwrap_or(0);
+        let dest_delta = self.keyboard_move_last_dest.map(|requested| chebyshev(destination, requested));
+        let ack_delay_ms = self.keyboard_move_last_sent_at.map(|sent| sent.elapsed().as_millis());
+        client_log!(
+            "[wasd] server walk {origin:?} -> {destination:?}, client believed {believed:?}, correction {correction} cells, dest_delta \
+             {dest_delta:?}, ack_delay_ms {ack_delay_ms:?}"
+        );
+    }
+
+    fn note_wasd_interrupt(&self, kind: &str, at: Option<TilePosition>) {
+        if !self.wasd_trace {
+            return;
+        }
+        let held = self
+            .keyboard_move_target
+            .map(|(target, step_x, step_y)| WasdIntent { target, step_x, step_y });
+        let stale = match (at, held) {
+            (Some(here), Some(intent)) => held_intent_is_stale(here, intent),
+            _ => false,
+        };
+        client_log!(
+            "[wasd] interrupt {kind} at {at:?}, held dest {:?}, stale {stale}",
+            held.map(|intent| intent.target)
+        );
+    }
+
     fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
@@ -7044,9 +7306,6 @@ impl Client {
         let Some(start) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
             return;
         };
-        if client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < 200 {
-            return;
-        }
 
         let view = self.player_camera.view_direction();
         let mut forward_x = view.x;
@@ -7085,102 +7344,38 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        // A tap steps one cell. A held key walks, and keeps walking.
-        //
-        // The two need different packets, not different distances. Re-issuing a
-        // short move every 200ms -- which is what this did -- restarts the walk
-        // from the server's authoritative position each time, and that is the
-        // stutter: the character never gets to finish a step before being told
-        // to go somewhere again.
-        //
-        // So a held key sends ONE long path and then says nothing until it has
-        // something new to say: the direction changed, or the end of the path is
-        // close enough that the character would otherwise stop. `fresh` comes
-        // from the input layer (a key that went down this frame), because timing
-        // cannot tell a fast double-tap from a key that was never released.
-        // Every refresh is a correction: the server answers with a walk from ITS
-        // authoritative position, and the client snaps to it. That snap is the
-        // rubber banding, so the cure is to refresh as rarely as the walk allows
-        // -- a long path, extended only when the character has all but arrived.
-        // 15 stays under the server's `max_walk_path` (17 stock), and the path
-        // is straight by construction, so its length is its distance.
-        const HELD_PATH: i32 = 15;
-        const REFRESH_WITHIN: u16 = 1;
-
+        // A tap and a hold use the same packet: the longest straight walkable
+        // path. Re-issuing a short move every 200ms used to restart the walk
+        // from the server's origin each time. `input::wasd` is the policy that
+        // replaced that; every remaining send while a walk is in flight is
+        // still a correction (`0x0087` from the server's tile).
         let step_x = move_x.round() as i32;
         let step_y = move_z.round() as i32;
-        if step_x == 0 && step_y == 0 {
-            return;
-        }
-
-        let walkable_at = |distance: i32| -> Option<TilePosition> {
-            let tile_x = start.x as i32 + step_x * distance;
-            let tile_y = start.y as i32 + step_y * distance;
-            if tile_x < 0 || tile_y < 0 {
-                return None;
-            }
-            let tile = TilePosition {
-                x: tile_x as u16,
-                y: tile_y as u16,
-            };
-            map.is_walkable(tile).then_some(tile)
-        };
-
-        // Every press walks a path. There is no separate one-cell packet, and
-        // that removal is the point: a press used to send a one-cell tap and
-        // then, 200ms later when the throttle allowed, the real path -- two
-        // packets and two corrections at the start of every single movement.
-        // The trace showed 57 of those in one session of walking around.
-        //
-        // A tap still moves one cell, because releasing the key stops the
-        // character one step ahead of where it is. The tap is the press and the
-        // release together, not a special packet.
-        //
-        // So the only question left is whether there is anything new to say:
-        // nothing is in flight, a key just went down, the direction changed, or
-        // the path is about to run out.
-        let repath = match self.keyboard_move_target {
-            None => true,
-            Some((target, held_x, held_y)) => {
-                fresh
-                    || held_x != step_x
-                    || held_y != step_y
-                    || start.x.abs_diff(target.x).max(start.y.abs_diff(target.y)) <= REFRESH_WITHIN
-            }
-        };
-
-        if !repath {
-            return;
-        }
-
-        // Reach as far as the ground allows, so one packet buys as many cells of
-        // walking as possible.
-        let mut furthest = None;
-        for distance in 1..=HELD_PATH {
-            match walkable_at(distance) {
-                Some(tile) => furthest = Some(tile),
-                None => break,
-            }
-        }
-
-        let Some(destination) = furthest else {
-            return;
-        };
-
-        if destination == start {
-            return;
-        }
-
-        if self.wasd_trace {
-            client_log!(
-                "[wasd] send {} from {:?} to {:?} (tick {})",
-                if fresh { "press" } else { "extend" },
+        let current = self.keyboard_move_target.map(|(target, held_x, held_y)| WasdIntent {
+            target,
+            step_x: held_x,
+            step_y: held_y,
+        });
+        let WasdDecision::Send { destination, kind } = decide_keyboard_move(
+            WasdMoveInput {
                 start,
-                destination,
-                client_tick.0
-            );
-        }
+                step_x,
+                step_y,
+                fresh,
+                client_tick: client_tick.0,
+                last_tick: self.keyboard_move_last_tick.0,
+                current,
+            },
+            |tile| map.is_walkable(tile),
+        ) else {
+            return;
+        };
 
+        let kind = match kind {
+            WasdSendKind::Press => "press",
+            WasdSendKind::Extend => "extend",
+        };
+        self.note_move_request(kind, start, destination, client_tick);
         self.keyboard_move_target = Some((destination, step_x, step_y));
 
         let _ = self.networking_system.player_move(WorldPosition {
@@ -7190,6 +7385,64 @@ impl Client {
         });
         self.keyboard_move_last_tick = client_tick;
         *self.client_state.follow_mut(client_state().buffered_action()) = None;
+    }
+
+    fn activate_learned_skill(
+        &mut self,
+        skill_id: SkillId,
+        skill_name: String,
+        skill_type: SkillType,
+        skill_level: SkillLevel,
+        attack_range: AttackRange,
+        mouse: PickerTarget,
+    ) {
+        let player_id = self.client_state.follow(this_entity().manually_asserted()).get_entity_id();
+        let last_present = self.last_skill_target.filter(|&entity_id| {
+            self.client_state
+                .follow(client_state().entities())
+                .iter()
+                .any(|entity| entity.get_entity_id() == entity_id)
+        });
+        match resolve_skill_activation(SkillActivationRequest {
+            skill_id,
+            skill_type,
+            mouse,
+            last_target: last_present,
+            player_id,
+        }) {
+            SkillActivation::Ignore => {}
+            SkillActivation::CastSelf { channeling } => match channeling {
+                true => {
+                    let _ = self.networking_system.cast_channeling_skill(skill_id, skill_level, player_id);
+                }
+                false => {
+                    let _ = self.networking_system.cast_skill(skill_id, skill_level, player_id);
+                }
+            },
+            SkillActivation::CastEntity { entity_id } => {
+                self.last_skill_target = Some(entity_id);
+                cast_or_path_entity_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    entity_id,
+                );
+            }
+            SkillActivation::Arm { ground: _ } => {
+                announce_armed_skill(&mut self.client_state, &skill_name);
+                self.pending_skill = Some(PendingSkill {
+                    skill_id,
+                    skill_level,
+                    skill_type,
+                    attack_range,
+                    skill_name,
+                });
+            }
+        }
     }
 
     /// Returns whether or not the interface is focused.
@@ -7238,6 +7491,7 @@ impl Client {
         let mut toggle_sit = false;
         let mut sync_minimap = false;
         let mut keyboard_move = None;
+        let mut activate_skill = None;
         // Deferred: `enter_character_server` needs &mut self while this loop
         // already mutably drains `input_event_buffer`.
         let mut select_server: Option<CharacterServerInformation> = None;
@@ -7532,7 +7786,12 @@ impl Client {
                     let _ = self.networking_system.switch_character_slot(origin_slot, destination_slot);
                 }
                 InputEvent::PlayerMove { destination } => {
-                    if self.client_state.try_follow(this_entity()).is_some() {
+                    if let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) {
+                        self.keyboard_move_last_dest = Some(destination);
+                        self.keyboard_move_last_sent_at = Some(Instant::now());
+                        if self.wasd_trace {
+                            client_log!("[wasd] send click from {here:?} to {destination:?} (tick {})", client_tick.0);
+                        }
                         let _ = self.networking_system.player_move(WorldPosition {
                             x: destination.x,
                             y: destination.y,
@@ -7555,14 +7814,14 @@ impl Client {
                     if let Some((_, step_x, step_y)) = self.keyboard_move_target.take()
                         && let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position())
                     {
-                        let ahead_x = (here.x as i32 + step_x).max(0) as u16;
-                        let ahead_y = (here.y as i32 + step_y).max(0) as u16;
-                        let ahead = TilePosition { x: ahead_x, y: ahead_y };
-                        let stop = match self.map.as_deref().is_some_and(|map| map.is_walkable(ahead)) {
-                            true => ahead,
-                            false => here,
-                        };
-
+                        let stop = stop_tile(here, step_x, step_y, |tile| {
+                            self.map.as_deref().is_some_and(|map| map.is_walkable(tile))
+                        });
+                        self.keyboard_move_last_dest = Some(stop);
+                        self.keyboard_move_last_sent_at = Some(Instant::now());
+                        if self.wasd_trace {
+                            client_log!("[wasd] send stop from {here:?} to {stop:?} (tick {})", client_tick.0);
+                        }
                         let _ = self.networking_system.player_move(WorldPosition {
                             x: stop.x,
                             y: stop.y,
@@ -7604,6 +7863,7 @@ impl Client {
                         let _ = match entity.get_entity_type() {
                             EntityType::Npc => self.networking_system.start_dialog(entity_id),
                             EntityType::Monster => {
+                                self.last_skill_target = Some(entity_id);
                                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                                 let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
 
@@ -8289,16 +8549,19 @@ impl Client {
                     skill_level,
                     attack_range,
                     entity_id,
-                } => cast_or_path_entity_skill(
-                    &mut self.networking_system,
-                    &mut self.client_state,
-                    self.map.as_deref(),
-                    &mut self.path_finder,
-                    skill_id,
-                    skill_level,
-                    attack_range,
-                    entity_id,
-                ),
+                } => {
+                    self.last_skill_target = Some(entity_id);
+                    cast_or_path_entity_skill(
+                        &mut self.networking_system,
+                        &mut self.client_state,
+                        self.map.as_deref(),
+                        &mut self.path_finder,
+                        skill_id,
+                        skill_level,
+                        attack_range,
+                        entity_id,
+                    );
+                }
                 InputEvent::CastSkillAtTile {
                     skill_id,
                     skill_level,
@@ -8349,99 +8612,20 @@ impl Client {
                     // then rejects with "Skill Level is not high enough",
                     // intermittent — a retry works only because the client's skill
                     // list catches up by then). The learned-skill list is the live source of truth.
-                    let skill_targeting = learnable_skill.as_ref().and_then(|learnable_skill| {
-                        self.client_state
-                            .follow(client_state().skill_tree().skills())
-                            .iter()
-                            .find(|learned_skill| learned_skill.skill_id == learnable_skill.skill_id && learned_skill.skill_level.0 > 0)
-                            .map(|learned_skill| (learned_skill.skill_type, learned_skill.attack_range, learned_skill.skill_level))
-                    });
-
-                    if let (Some(learnable_skill), Some((skill_type, attack_range, skill_level))) = (learnable_skill, skill_targeting) {
-                        match skill_type {
-                            SkillType::Passive => {}
-                            SkillType::SelfCast => {
-                                let this_entity_id = self.client_state.follow(this_entity().manually_asserted()).get_entity_id();
-                                match learnable_skill.skill_id == ROLLING_CUTTER_ID {
-                                    true => {
-                                        let _ = self.networking_system.cast_channeling_skill(
-                                            learnable_skill.skill_id,
-                                            skill_level,
-                                            this_entity_id,
-                                        );
-                                    }
-                                    false => {
-                                        let _ = self
-                                            .networking_system
-                                            .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id);
-                                    }
-                                }
-                            }
-                            SkillType::Support => {
-                                // Support keeps its self-target fallback: cast on the hovered entity,
-                                // else on self. Self-buffs like Heal/Blessing can't reliably be aimed
-                                // by clicking your own sprite, so they must not require a target.
-                                let target_id = match input_report.mouse_target {
-                                    PickerTarget::Entity(entity_id) => entity_id,
-                                    _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
-                                };
-                                // Routed through the pathing cast for the same reason Attack is:
-                                // Hercules drops an out-of-range support cast with no failure
-                                // message either (`unit.c` `unit_skilluse_id2`), so healing an ally
-                                // a few cells too far away did nothing at all. A self-target is
-                                // always at distance 0, so it still casts instantly.
-                                cast_or_path_entity_skill(
-                                    &mut self.networking_system,
-                                    &mut self.client_state,
-                                    self.map.as_deref(),
-                                    &mut self.path_finder,
-                                    learnable_skill.skill_id,
-                                    skill_level,
-                                    attack_range,
-                                    target_id,
-                                );
-                            }
-                            SkillType::Attack => {
-                                // Entity-target: fast-cast if the cursor is already over a target,
-                                // otherwise arm and wait for the next left-click to pick one.
-                                let pending = PendingSkill {
-                                    skill_id: learnable_skill.skill_id,
-                                    skill_level,
-                                    skill_type,
-                                    attack_range,
-                                    skill_name: learnable_skill.skill_name.clone(),
-                                };
-                                match resolve_pending_cast(pending.skill_type, input_report.mouse_target) {
-                                    PendingCastResolution::CastEntity(entity_id) => cast_or_path_entity_skill(
-                                        &mut self.networking_system,
-                                        &mut self.client_state,
-                                        self.map.as_deref(),
-                                        &mut self.path_finder,
-                                        pending.skill_id,
-                                        pending.skill_level,
-                                        pending.attack_range,
-                                        entity_id,
-                                    ),
-                                    _ => {
-                                        announce_armed_skill(&mut self.client_state, &pending.skill_name);
-                                        self.pending_skill = Some(pending);
-                                    }
-                                }
-                            }
-                            SkillType::Ground | SkillType::Trap => {
-                                // Ground-target: always arm so the player aims the placement reticle
-                                // and clicks where the AoE lands, rather than dropping it instantly at
-                                // wherever the cursor happens to sit when the key is pressed.
-                                announce_armed_skill(&mut self.client_state, &learnable_skill.skill_name);
-                                self.pending_skill = Some(PendingSkill {
-                                    skill_id: learnable_skill.skill_id,
-                                    skill_level,
-                                    skill_type,
-                                    attack_range,
-                                    skill_name: learnable_skill.skill_name.clone(),
-                                });
-                            }
-                        }
+                    if let Some(learnable_skill) = learnable_skill
+                        && let Some((skill_type, attack_range, skill_level, skill_name)) = learned_targeting(
+                            self.client_state.follow(client_state().skill_tree().skills()),
+                            learnable_skill.skill_id,
+                        )
+                    {
+                        activate_skill = Some((learnable_skill.skill_id, skill_name, skill_type, skill_level, attack_range));
+                    }
+                }
+                InputEvent::ActivateSkill { skill_id } => {
+                    if let Some((skill_type, attack_range, skill_level, skill_name)) =
+                        learned_targeting(self.client_state.follow(client_state().skill_tree().skills()), skill_id)
+                    {
+                        activate_skill = Some((skill_id, skill_name, skill_type, skill_level, attack_range));
                     }
                 }
                 InputEvent::StopSkill { slot } => {
@@ -8884,6 +9068,17 @@ impl Client {
 
         if let Some((forward, back, left, right, fresh)) = keyboard_move {
             self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
+        }
+
+        if let Some((skill_id, skill_name, skill_type, skill_level, attack_range)) = activate_skill {
+            self.activate_learned_skill(
+                skill_id,
+                skill_name,
+                skill_type,
+                skill_level,
+                attack_range,
+                input_report.mouse_target,
+            );
         }
 
         if sync_minimap {

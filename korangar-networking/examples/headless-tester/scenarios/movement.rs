@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 use korangar_networking::NetworkEvent;
-use ragnarok_packets::{Direction, StatType, WorldPosition};
+use ragnarok_packets::{Direction, StatType, TilePosition, WorldPosition};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -9,6 +9,7 @@ use crate::scenarios::Scenario;
 pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("walk", 3, walk),
+        Scenario::new("wasd-lan-trace", 3, wasd_lan_trace),
         Scenario::new("warp-crossmap", 3, warp_crossmap),
         Scenario::new("entity-details", 3, entity_details),
         Scenario::new("sit-stand", 3, sit_stand),
@@ -41,6 +42,212 @@ fn walk(config: &Config) -> Result<(), String> {
             (destination.x, destination.y)
         ));
     }
+    Ok(())
+}
+
+fn tile(x: u16, y: u16) -> TilePosition {
+    TilePosition { x, y }
+}
+
+fn chebyshev(a: TilePosition, b: TilePosition) -> u16 {
+    a.x.abs_diff(b.x).max(a.y.abs_diff(b.y))
+}
+
+struct MoveAck {
+    origin: TilePosition,
+    destination: TilePosition,
+    delay: Duration,
+}
+
+fn send_move(context: &mut TestContext, dest: TilePosition) -> Result<Instant, String> {
+    context
+        .net
+        .player_move(WorldPosition::new(dest.x, dest.y, Direction::North))
+        .map_err(|_| "disconnected")?;
+    Ok(Instant::now())
+}
+
+fn collect_move_acks(context: &mut TestContext, window: Duration, sent_at: Instant) -> (Vec<MoveAck>, Vec<String>) {
+    let events = context.collect_for(window);
+    let mut acks = Vec::new();
+    let mut extras = Vec::new();
+    for event in events {
+        match event {
+            NetworkEvent::PlayerMove { origin, destination, .. } => acks.push(MoveAck {
+                origin: origin.tile_position(),
+                destination: destination.tile_position(),
+                delay: sent_at.elapsed(),
+            }),
+            NetworkEvent::EntityStopMove { entity_id, position } if entity_id.0 == context.player_id.0 => {
+                extras.push(format!("stop-move at {position:?}"));
+            }
+            NetworkEvent::EntitySlide { entity_id, position } if entity_id.0 == context.player_id.0 => {
+                extras.push(format!("slide at {position:?}"));
+            }
+            NetworkEvent::ChangeMap { map_name, position } => extras.push(format!("change-map {map_name} {position:?}")),
+            NetworkEvent::StateChange {
+                entity_id,
+                body_state,
+                health_state,
+                ..
+            } if entity_id.0 == context.player_id.0 => {
+                extras.push(format!("state-change body=0x{body_state:04x} health=0x{health_state:04x}"))
+            }
+            _ => {}
+        }
+    }
+    (acks, extras)
+}
+
+fn log_acks(label: &str, requested: TilePosition, acks: &[MoveAck]) {
+    eprintln!(
+        "[wasd] {label} requested {requested:?}, {count} PlayerMove 0x0087 ack(s)",
+        count = acks.len()
+    );
+    for (index, ack) in acks.iter().enumerate() {
+        let correction = chebyshev(ack.origin, requested);
+        let dest_delta = chebyshev(ack.destination, requested);
+        eprintln!(
+            "[wasd] {label} ack[{index}] origin {:?} -> dest {:?}, dest_delta {dest_delta}, origin_vs_request {correction}, ack_delay_ms \
+             {}",
+            ack.origin,
+            ack.destination,
+            ack.delay.as_millis()
+        );
+    }
+}
+
+/// QW-027 — LAN WASD vs click-to-move packet trace on a recorded route.
+///
+/// Headless cannot press W, but it can send the same `RequestPlayerMovePacket`
+/// (`0x035F`) sequence the WASD policy emits: one 15-cell path, a stop-ahead
+/// request, a duplicate, and a post-warp stale destination. Click-to-move is
+/// the same opcode aimed at a single 10-cell dest.
+fn wasd_lan_trace(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    const START: (u16, u16) = (155, 180);
+    const CLICK_EAST: u16 = 10;
+    const WASD_EAST: u16 = 15;
+    context.warp("prontera", START.0, START.1)?;
+    let start = context.position;
+    if (start.x, start.y) != START {
+        return Err(format!("expected start {START:?}, got {:?}", (start.x, start.y)));
+    }
+
+    // --- Click-to-move: one request, one dest ---
+    let click_dest = tile(start.x + CLICK_EAST, start.y);
+    context.flush();
+    let click_sent = send_move(&mut context, click_dest)?;
+    let (click_acks, _) = collect_move_acks(&mut context, Duration::from_millis(800), click_sent);
+    log_acks("click", click_dest, &click_acks);
+    if click_acks.len() != 1 {
+        return Err(format!("click-to-move expected 1 PlayerMove ack, got {}", click_acks.len()));
+    }
+    if click_acks[0].destination != click_dest {
+        return Err(format!(
+            "click-to-move dest {:?}, server {:?}",
+            click_dest, click_acks[0].destination
+        ));
+    }
+    let click_correction = chebyshev(click_acks[0].origin, start);
+    eprintln!("[wasd] click correction vs start {click_correction} cells (LAN)");
+
+    context.warp("prontera", START.0, START.1)?;
+
+    // --- WASD press: 15-cell path, no second packet ---
+    let wasd_dest = tile(start.x + WASD_EAST, start.y);
+    context.flush();
+    let wasd_sent = send_move(&mut context, wasd_dest)?;
+    let (wasd_acks, _) = collect_move_acks(&mut context, Duration::from_millis(800), wasd_sent);
+    log_acks("press", wasd_dest, &wasd_acks);
+    if wasd_acks.is_empty() {
+        return Err("WASD 15-cell press produced no PlayerMove ack".into());
+    }
+    if chebyshev(start, wasd_acks[0].destination) != WASD_EAST {
+        return Err(format!(
+            "WASD press dest {:?} was not {WASD_EAST} cells from {start:?}",
+            wasd_acks[0].destination
+        ));
+    }
+    if wasd_acks.len() != 1 {
+        return Err(format!(
+            "WASD press must not emit a one-cell-then-path pair; got {} acks",
+            wasd_acks.len()
+        ));
+    }
+
+    // --- Stop-ahead while the long path is in flight ---
+    context.warp("prontera", START.0, START.1)?;
+    context.flush();
+    let press_sent = send_move(&mut context, wasd_dest)?;
+    let (press_acks, _) = collect_move_acks(&mut context, Duration::from_millis(400), press_sent);
+    if press_acks.is_empty() {
+        return Err("stop-ahead setup produced no press ack".into());
+    }
+    let walking_from = press_acks[0].origin;
+    let stop_dest = tile(walking_from.x.saturating_add(2), walking_from.y);
+    context.flush();
+    let stop_sent = send_move(&mut context, stop_dest)?;
+    let (stop_acks, _) = collect_move_acks(&mut context, Duration::from_millis(800), stop_sent);
+    log_acks("stop", stop_dest, &stop_acks);
+    if stop_acks.is_empty() {
+        return Err("stop-ahead RequestPlayerMovePacket produced no PlayerMove ack".into());
+    }
+    let stop_snap = chebyshev(stop_acks[0].origin, press_acks[0].destination);
+    eprintln!(
+        "[wasd] stop correction: server origin {:?} vs in-flight dest {:?}, chebyshev {stop_snap}",
+        stop_acks[0].origin, press_acks[0].destination
+    );
+
+    // --- Duplicate/stale second request of the same dest ---
+    context.warp("prontera", START.0, START.1)?;
+    context.flush();
+    let dup_sent = send_move(&mut context, click_dest)?;
+    let _ = send_move(&mut context, click_dest)?;
+    let (dup_acks, _) = collect_move_acks(&mut context, Duration::from_millis(800), dup_sent);
+    log_acks("duplicate", click_dest, &dup_acks);
+    eprintln!(
+        "[wasd] duplicate 0x035F count=2 produced {} 0x0087 ack(s) — extra acks are redundant corrections",
+        dup_acks.len()
+    );
+
+    // --- Warp interruption: stale dest the client policy would not re-send ---
+    context.warp("prontera", START.0, START.1)?;
+    context.flush();
+    let held_sent = send_move(&mut context, wasd_dest)?;
+    let _ = collect_move_acks(&mut context, Duration::from_millis(300), held_sent);
+    context.warp("prontera", START.0, START.1.saturating_sub(10))?;
+    let far_warp = context.position;
+    eprintln!("[wasd] interrupt change-map at {far_warp:?}, held dest {wasd_dest:?}");
+    context.flush();
+    let far_sent = send_move(&mut context, wasd_dest)?;
+    let (far_acks, far_extras) = collect_move_acks(&mut context, Duration::from_millis(800), far_sent);
+    log_acks("stale-after-far-warp", wasd_dest, &far_acks);
+    if !far_extras.is_empty() {
+        eprintln!("[wasd] interrupt extras: {far_extras:?}");
+    }
+    eprintln!(
+        "[wasd] far-warp stale dest acks={} (0 means server dropped it; client held-intent is Silent either way)",
+        far_acks.len()
+    );
+
+    context.warp("prontera", START.0, START.1.saturating_add(2))?;
+    let near_warp = context.position;
+    context.flush();
+    let near_sent = send_move(&mut context, wasd_dest)?;
+    let (near_acks, _) = collect_move_acks(&mut context, Duration::from_millis(800), near_sent);
+    log_acks("stale-after-near-warp", wasd_dest, &near_acks);
+    if near_acks.is_empty() {
+        return Err(format!(
+            "nearby stale dest {wasd_dest:?} from {near_warp:?} produced no 0x0087; expected the server to honor it"
+        ));
+    }
+    eprintln!("[wasd] server accepted nearby stale dest {wasd_dest:?} from {near_warp:?} (client held-intent would stay Silent)");
+
+    eprintln!(
+        "[wasd] LAN mechanism: extra 0x035F while walking (stop/duplicate/stale) each yield a 0x0087 from the server origin; \
+         click-to-move does not"
+    );
     Ok(())
 }
 

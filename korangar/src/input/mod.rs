@@ -1,6 +1,7 @@
 mod event;
 mod key;
 mod mode;
+pub(crate) mod wasd;
 
 use std::mem::variant_count;
 use std::sync::Arc;

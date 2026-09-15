@@ -5,7 +5,7 @@
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
-use ragnarok_packets::EntityId;
+use ragnarok_packets::{EntityId, SkillId};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -17,6 +17,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("attack-out-of-range", 4, attack_out_of_range),
         Scenario::new("incoming-damage", 4, incoming_damage),
         Scenario::new("solo-and-party-exp-measurement", 4, solo_and_party_exp_measurement),
+        Scenario::new("repeated-cast-target", 4, repeated_cast_target),
     ]
 }
 
@@ -27,6 +28,60 @@ fn combat_bootstrap(config: &Config) -> Result<TestContext, String> {
     context.say("@heal")?;
     context.warp("prt_fild08", 170, 180)?;
     Ok(context)
+}
+
+/// QW-031 — the same entity id remains a valid Attack-skill target for a
+/// second cast. Headless always names the entity; the client decision that
+/// reuses `last_skill_target` is unit-tested in `resolve_attack_repeat_target`.
+fn repeated_cast_target(config: &Config) -> Result<(), String> {
+    let mut context = combat_bootstrap(config)?;
+    context.flush();
+    context.say("@allskill")?;
+    context.wait_for("SkillTree after @allskill", |event| match event {
+        NetworkEvent::SkillTree { skill_information } if !skill_information.is_empty() => Some(()),
+        _ => None,
+    })?;
+
+    let target = context.spawn_monster("BAPHOMET", 1039)?;
+    let player_id = context.player_id;
+    let target_position = context
+        .entities
+        .get(&target)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("target entity lost")?;
+    context.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+
+    const BASH: SkillId = SkillId(5);
+    let mut hits = 0;
+    for _cast in 0..2 {
+        context.flush();
+        context
+            .net
+            .cast_skill(BASH, ragnarok_packets::SkillLevel(1), target)
+            .map_err(|_| "disconnected")?;
+        let hit = context.wait_for_within("Bash DamageEffect", Duration::from_secs(5), &mut |event| match event {
+            NetworkEvent::DamageEffect {
+                source_entity_id,
+                destination_entity_id,
+                damage_amount: Some(amount),
+                ..
+            } if source_entity_id.0 == player_id.0 && destination_entity_id.0 == target.0 && *amount > 0 => Some(true),
+            NetworkEvent::RemoveEntity { entity_id, .. } if entity_id.0 == target.0 => Some(false),
+            _ => None,
+        })?;
+        if !hit {
+            return Err("target died before the second Bash; spawn a sturdier dummy".into());
+        }
+        hits += 1;
+        context.pump(Duration::from_millis(400));
+    }
+    if hits != 2 {
+        return Err(format!("expected 2 Bash hits on the same entity, got {hits}"));
+    }
+    // Leave the field without @killmonster: Baphomet is an MVP and that command
+    // emits unmodeled 0x010B/0x010C ranking packets.
+    context.warp("prontera", 155, 180)?;
+    Ok(())
 }
 
 /// Walk adjacent to the target, attack, and observe damage, death, and exp.

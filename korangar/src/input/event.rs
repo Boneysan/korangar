@@ -318,6 +318,11 @@ pub enum InputEvent {
         /// Slot of the hotbar that the skill is bound to.
         slot: HotbarSlot,
     },
+    /// Cast a learned skill by id (skill-window / direct activation). Same
+    /// targeting and network request as [`InputEvent::CastSkill`].
+    ActivateSkill {
+        skill_id: SkillId,
+    },
     /// Cast an entity-targeted skill, walking into its range first.
     CastSkillAtEntity {
         skill_id: SkillId,

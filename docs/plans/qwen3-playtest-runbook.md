@@ -7,7 +7,7 @@ work, the evidence required, and when Qwen3 may move to the next task.
 
 ## Current pointer
 
-**NEXT: QW-027 — LAN/WAN WASD trace**
+**NEXT: QW-032 — prove activation-path parity**
 
 **EXECUTION STATE: RUNNING**
 
@@ -896,7 +896,7 @@ Evidence:
 Not verified: none.
 Next: QW-027
 
-- [ ] **QW-027 — LAN/WAN WASD trace**
+- [x] **QW-027 — LAN/WAN WASD trace**
 
   Use a walkable route with recorded coordinates. Compare WASD and click-to-move
   at LAN baseline and 75/150/250 ms with jitter and 1–3% loss where available.
@@ -907,6 +907,20 @@ Next: QW-027
   **Done when:** the first redundant/stale request or correction mechanism is
   identified from `KORANGAR_WASD_TRACE`, or the report is ruled out at every
   available network profile with the unavailable profiles marked BLOCKED.
+
+Status: DONE
+Changed:
+- `korangar/korangar/src/input/wasd.rs`: Extracted the WASD send policy (200 ms throttle, 15-cell held path, refresh-within-1, stop-ahead, stale held intent after a snap).
+- `korangar/korangar/src/lib.rs`: `apply_keyboard_move` and key-release now use that policy. `KORANGAR_WASD_TRACE` logs press/extend/stop/click, `0x0087` correction distance, dest_delta, ack delay, and slide/stop-move/change-map interrupts.
+- `korangar/korangar-networking/examples/headless-tester/scenarios/movement.rs`: LAN scenario `wasd-lan-trace` on recorded `prontera (155, 180)`.
+- `korangar/docs/playtest-reproduction/wasd-movement.md`: Replaced the guessed `0x0073` template with observed `0x035F` / `0x0087` / `0x0088` results.
+Evidence:
+- Source-confirmed: Movement request is `RequestPlayerMovePacket` `0x035F`; walk ack is `PlayerMovePacket` `0x0087`; stop is `EntityStopMovePacket` `0x0088`. Hercules `max_walk_path` is 17. WASD and click share `0x035F`.
+- Automated-verified: `cargo test -p korangar --lib input::wasd` — 8 passed, including `historical_one_cell_then_path_pair_is_gone` and `warp_or_knockback_leaves_held_intent_stale`.
+- Observed: `./tools/testing/run-suite.sh --scenario wasd-lan-trace` PASS in 11.6s (log `tools/testing/runs/20260914-180240`). Click-to-move: one `0x0087`, dest exact, correction vs start 0. WASD 15-cell press: one `0x0087`, no one-cell-then-path pair. Stop-ahead while walking: extra `0x035F` to `(157, 180)` answered with `0x0087` `(158, 180) → (157, 180)` (1-cell backward snap). Duplicate dest: two `0x0087` acks. Near-warp stale dest accepted; far-warp stale dest dropped. First mechanism: any extra `0x035F` during an in-flight walk produces a new `0x0087` from the server origin; click-to-move does not send that extra request.
+Not verified: seated graphical `KORANGAR_WASD_TRACE` pixels; 75/150/250 ms jitter and 1–3% loss (no sudo `dnctl`).
+Blocker: WAN delay/loss profiles require a privileged network injector or a seated internet session.
+Next: QW-030
 
 ## Stage 3 — combat and input implementation
 
@@ -920,7 +934,15 @@ Next: QW-027
   **Done when:** every captured failure shows a truthful reason and older clients
   or unknown future reason values do not desynchronize.
 
-- [ ] **QW-031 — preserve repeated-cast targeting**
+Status: BLOCKED
+Changed: none
+Evidence:
+- Source-confirmed: QW-020 is BLOCKED because the friends-playtest skill names are not in either repository. QW-030 may only map reasons from those captured failures.
+Not verified: skill-failure decoding against the actual playtest list.
+Blocker: QW-020's missing playtest-reported skill names. Independent combat/input cards can proceed.
+Next: QW-031
+
+- [x] **QW-031 — preserve repeated-cast targeting**
 
   Test successful repeated cast, range rejection, server rejection, target
   death, target disappearance, and a new manual selection. Change only the state
@@ -928,6 +950,17 @@ Next: QW-027
 
   **Done when:** valid repeats retain selection while invalid/dead targets clear
   safely; focused state tests and a live repeated-cast check pass.
+
+Status: DONE
+Changed:
+- `korangar/korangar/src/lib.rs`: Added `last_skill_target` and `resolve_attack_repeat_target`. Attack hotbar/key reuses a still-present last entity when the cursor is not on a new one. Stored on monster click and `CastSkillAtEntity`; cleared on that entity's `RemoveEntity`, map change, and map disconnect. Hover/manual click still replaces the stored target.
+- `korangar/korangar-networking/examples/headless-tester/scenarios/combat.rs`: Live `repeated-cast-target` casts Bash twice at the same Baphomet entity id.
+Evidence:
+- Source-confirmed: The transition that dropped a still-valid target was Attack activation requiring `PickerTarget::Entity` (otherwise the skill only armed). There was no last-entity store.
+- Automated-verified: `cargo test -p korangar --lib resolve_pending_cast` — reuse, gone-target, and new-manual-selection cases pass. `cargo clippy -p korangar -- -Dwarnings` passes.
+- Observed: `./tools/testing/run-suite.sh --scenario repeated-cast-target` PASS in 7.2s (log `tools/testing/runs/20260914-181342`): two Bash hits on the same entity id.
+Not verified: seated graphical repeat with the cursor off the monster sprite.
+Next: QW-032
 
 - [ ] **QW-032 — prove activation-path parity**
 
@@ -937,6 +970,14 @@ Next: QW-027
 
   **Done when:** a table of every path is green or the differing path is fixed and
   protected by a test.
+
+Status: IN PROGRESS
+Changed: none yet
+Evidence:
+- Source-confirmed: Keyboard F-keys (`input/mod.rs` `HOTBAR_KEYS` and number keys) and hotbar left-click (`hotbar.rs`, `skill_box.rs` `SkillSource::Hotbar`) both queue `InputEvent::CastSkill { slot }` and share the `process_user_events` match arm (learned level, type, range, then SelfCast / Support / Attack / Ground). Skill-tree left-click queues `MouseInputMode::MoveSkill` (drag to hotbar), not a cast. No DM `cast_skill` path under `korangar/src/dm`.
+Not verified: a table of the final `0x0438`/`cast_skill` bytes per path; skill-window activation still missing.
+Next command: extract the CastSkill match-arm body into one `activate_learned_skill` helper, add a skill-tree activation that calls it with the same learned level/type/range, add a test that all four paths resolve identically, then live-check one skill.
+Next: QW-032
 
 - [ ] **QW-033 — refine WASD request coalescing**
 
