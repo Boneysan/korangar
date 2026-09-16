@@ -25,11 +25,13 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-share-default", 8, party_share_default),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
+        Scenario::new("trade-exact-quantity", 8, trade_exact_quantity),
         Scenario::new("trade-reject", 8, trade_reject),
         Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
         Scenario::new("blue-potion-trade", 8, blue_potion_trade),
+        Scenario::new("trade-restricted-item", 8, trade_restricted_item),
     ]
 }
 
@@ -921,6 +923,51 @@ fn trade_add_item(config: &Config) -> Result<(), String> {
     }
 }
 
+/// QW-042 — both seats see the exact offered amounts; cancel restores
+/// inventories.
+fn trade_exact_quantity(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(RED_POTION, 10)?;
+    let before = count_item(&primary, RED_POTION);
+    let partner_before = count_item(&partner, RED_POTION);
+    begin_trade(&mut primary, &mut partner)?;
+
+    for amount in [1u32, 5] {
+        partner.flush();
+        primary.net.trade_add_item(index, amount).map_err(|_| "primary disconnected")?;
+        let accepted = primary.wait_for("TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if accepted != 0 {
+            return Err(format!("server refused amount {amount} with result {accepted}"));
+        }
+        let seen = partner.wait_for("TradePartnerItem amount", |event| match event {
+            NetworkEvent::TradePartnerItem { item_id, amount: seen, .. } if item_id.0 == RED_POTION => Some(*seen),
+            _ => None,
+        })?;
+        if seen != amount {
+            return Err(format!("partner saw {seen}, expected {amount}"));
+        }
+    }
+
+    let _ = primary.net.trade_cancel();
+    partner.pump(Duration::from_millis(400));
+    let partner_after = count_item(&partner, RED_POTION);
+    drop(primary);
+    std::thread::sleep(Duration::from_millis(900));
+    let primary = TestContext::connect(config)?;
+    let after = count_item(&primary, RED_POTION);
+    if after != before {
+        return Err(format!("cancel+relog changed primary stack from {before} to {after}"));
+    }
+    if partner_after != partner_before {
+        return Err(format!("cancel changed partner stack from {partner_before} to {partner_after}"));
+    }
+    Ok(())
+}
+
 /// Partner explicitly rejects a trade request.
 ///
 /// Complements `trade-cancel` (which cancels an already-accepted trade) and
@@ -1267,5 +1314,42 @@ fn blue_potion_trade(config: &Config) -> Result<(), String> {
         println!("    [QW-021 evidence] {res}");
     }
 
+    Ok(())
+}
+
+/// QW-043 — item 598 is `notrade` in `item_db.conf`; GM 99 is below override
+/// 100.
+fn trade_restricted_item(config: &Config) -> Result<(), String> {
+    const LIGHT_RED_POTION: u32 = 598;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(LIGHT_RED_POTION, 1)?;
+    let before = count_item(&primary, LIGHT_RED_POTION);
+    let partner_before = count_item(&partner, LIGHT_RED_POTION);
+    begin_trade(&mut primary, &mut partner)?;
+    partner.flush();
+    primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
+    let result = primary.wait_for("restricted TradeAddItemResult", |event| match event {
+        NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+        _ => None,
+    })?;
+    let partner_events = partner.collect_for(Duration::from_millis(800));
+    let _ = primary.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    if result == 0 {
+        return Err("notrade Light Red Potion was accepted".to_owned());
+    }
+    if partner_events
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::TradePartnerItem { item_id, .. } if item_id.0 == LIGHT_RED_POTION))
+    {
+        return Err("partner was shown a notrade item".to_owned());
+    }
+    if count_item(&primary, LIGHT_RED_POTION) != before {
+        return Err("restricted refusal changed the giver inventory".to_owned());
+    }
+    if count_item(&partner, LIGHT_RED_POTION) != partner_before {
+        return Err("restricted refusal changed the partner inventory".to_owned());
+    }
     Ok(())
 }

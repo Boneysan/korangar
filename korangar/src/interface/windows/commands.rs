@@ -1,3 +1,4 @@
+use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::StateElement;
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{Path, PathExt, RustState, State};
@@ -13,9 +14,37 @@ use crate::state::theme::InterfaceThemeType;
 type TabIndex = u8;
 
 /// Internal state of the GM / DM command panel.
-#[derive(Default, RustState, StateElement)]
+#[derive(RustState, StateElement)]
 pub struct CommandsWindowState {
     selected_tab: TabIndex,
+    /// Item id or display name for `@item`.
+    item_query: String,
+    /// Quantity to grant. Parsed on send; empty/invalid is refused.
+    item_quantity: String,
+}
+
+impl Default for CommandsWindowState {
+    fn default() -> Self {
+        Self {
+            selected_tab: 0,
+            item_query: String::new(),
+            item_quantity: "1".to_owned(),
+        }
+    }
+}
+
+/// Build the Hercules `@item` line the Items tab sends.
+///
+/// Unquoted multi-word names work: the server peels a trailing integer
+/// (`@item Iron Arrow 500`). Entirely numeric queries are ids
+/// (`@item 1770 500`). Quantity 0 is refused here so the client never
+/// sends a command that silently becomes 1 on the server.
+pub fn format_item_grant(query: &str, quantity: u32) -> Option<String> {
+    let query = query.trim();
+    if query.is_empty() || quantity == 0 {
+        return None;
+    }
+    Some(format!("@item {query} {quantity}"))
 }
 
 /// GM / DM command panel. Sends Hercules atcommands as chat (`@…`).
@@ -48,7 +77,18 @@ where
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
 
+        struct ItemQueryBox;
+        struct ItemQuantityBox;
+
         let tab = self.commands_window_state.selected_tab();
+        let commands_state = self.commands_window_state;
+        let grant_item = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+            let query = state.get(&commands_state.item_query()).clone();
+            let quantity = state.get(&commands_state.item_quantity()).trim().parse::<u32>().unwrap_or(0);
+            if let Some(text) = format_item_grant(&query, quantity) {
+                queue.queue(InputEvent::SendMessage { text });
+            }
+        };
 
         // The active tab's header button is disabled (greyed) as the selected
         // indicator; the others switch `selected_tab` on click.
@@ -413,6 +453,30 @@ where
                                         ),
                                     },
                                     text! {
+                                        text: "Save / respec",
+                                        overflow_behavior: OverflowBehavior::Shrink,
+                                    },
+                                    split! {
+                                        gaps: theme().window().gaps(),
+                                        children: (
+                                            button! {
+                                                text: "Save here",
+                                                tooltip: "[^000001@save^000000] respawn at this cell",
+                                                event: InputEvent::SendMessage { text: "@save".to_string() },
+                                            },
+                                            button! {
+                                                text: "Warp to save",
+                                                tooltip: "[^000001@load^000000]",
+                                                event: InputEvent::SendMessage { text: "@load".to_string() },
+                                            },
+                                            button! {
+                                                text: "Reset skills",
+                                                tooltip: "[^000001@resetskill^000000] unlimited playtest respec",
+                                                event: InputEvent::SendMessage { text: "@resetskill".to_string() },
+                                            },
+                                        ),
+                                    },
+                                    text! {
                                         text: "Stats & skills",
                                         overflow_behavior: OverflowBehavior::Shrink,
                                     },
@@ -448,6 +512,40 @@ where
                                 on_true: fragment! {
                                     gaps: theme().window().gaps(),
                                     children: (
+                                        text! {
+                                            text: "Exact amount: @item <id or name> <quantity>  (GM/DM only)",
+                                            overflow_behavior: OverflowBehavior::Shrink,
+                                        },
+                                        split! {
+                                            gaps: theme().window().gaps(),
+                                            children: (
+                                                text_box! {
+                                                    ghost_text: "1770 or Iron Arrow",
+                                                    state: self.commands_window_state.item_query(),
+                                                    input_handler: DefaultHandler::<_, _, 40>::new(
+                                                        self.commands_window_state.item_query(),
+                                                        grant_item,
+                                                    ),
+                                                    focus_id: ItemQueryBox,
+                                                    overflow_behavior: OverflowBehavior::Shrink,
+                                                },
+                                                text_box! {
+                                                    ghost_text: "1",
+                                                    state: self.commands_window_state.item_quantity(),
+                                                    input_handler: DefaultHandler::<_, _, 6>::new(
+                                                        self.commands_window_state.item_quantity(),
+                                                        grant_item,
+                                                    ),
+                                                    focus_id: ItemQuantityBox,
+                                                    overflow_behavior: OverflowBehavior::Shrink,
+                                                },
+                                                button! {
+                                                    text: "Grant",
+                                                    tooltip: "Sends @item <query> <qty>. Player group 0 cannot use @item.",
+                                                    event: grant_item,
+                                                },
+                                            ),
+                                        },
                                         text! {
                                             text: "Starter gear / consumables",
                                             overflow_behavior: OverflowBehavior::Shrink,
@@ -596,5 +694,25 @@ where
                 },
             ),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::format_item_grant;
+
+    #[test]
+    fn grant_formats_id_and_multi_word_name() {
+        assert_eq!(format_item_grant("1770", 1).as_deref(), Some("@item 1770 1"));
+        assert_eq!(format_item_grant("1770", 500).as_deref(), Some("@item 1770 500"));
+        assert_eq!(format_item_grant("Iron Arrow", 1).as_deref(), Some("@item Iron Arrow 1"));
+        assert_eq!(format_item_grant("Iron Arrow", 500).as_deref(), Some("@item Iron Arrow 500"));
+    }
+
+    #[test]
+    fn grant_refuses_empty_or_zero() {
+        assert_eq!(format_item_grant("", 1), None);
+        assert_eq!(format_item_grant("  ", 5), None);
+        assert_eq!(format_item_grant("501", 0), None);
     }
 }

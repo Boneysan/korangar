@@ -14,9 +14,12 @@ use crate::scenarios::Scenario;
 pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("item-command-multi-word", 6, item_command_multi_word),
+        Scenario::new("item-command-permission", 6, item_command_permission),
         Scenario::new("use-consumable", 6, use_consumable),
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
+        Scenario::new("loot-pickup-race", 6, loot_pickup_race),
+        Scenario::new("drop-exact-quantity", 6, drop_exact_quantity),
         Scenario::new("autopickup-radius", 6, autopickup_radius),
         Scenario::new("autopickup-party-override", 6, autopickup_party_override),
         Scenario::new("immediate-repickup-after-drop", 6, immediate_repickup_after_drop),
@@ -29,7 +32,10 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("storage", 6, storage),
         Scenario::new("storage-persistence", 6, storage_persistence),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
+        Scenario::new("skill-lock-relog", 6, skill_lock_relog),
+        Scenario::new("skill-refund", 6, skill_refund),
         Scenario::new("hotkeys", 6, hotkeys),
+        Scenario::new("hotbar-clear-relog", 6, hotbar_clear_relog),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
         Scenario::new("repair-list-empty", 6, repair_list_empty),
@@ -94,20 +100,16 @@ fn item_command_multi_word(config: &Config) -> Result<(), String> {
         Ok(amount)
     };
 
-    let amount = stocked(&mut context, "@item Iron Arrow 500", IRON_ARROW)?;
-    if amount != 500 {
-        return Err(format!(
-            "`@item Iron Arrow 500` gave {amount} Iron Arrow, not 500 — the quantity was not peeled off the end of a multi-word name"
-        ));
-    }
-
-    let amount = stocked(&mut context, &format!("@item {IRON_ARROW} 500"), IRON_ARROW)?;
-    if amount != 500 {
-        return Err(format!(
-            "`@item {IRON_ARROW} 500` gave {amount}, not 500 — a bare id plus quantity regressed. The longest-name-first lookup is \
-             accepting `\"{IRON_ARROW} 500\"` as an id again (`atoi` stops at the space); it must only accept a string that is numeric \
-             end to end"
-        ));
+    for (command, expected) in [
+        ("@item Iron Arrow 1".to_owned(), 1u16),
+        ("@item Iron Arrow 500".to_owned(), 500),
+        (format!("@item {IRON_ARROW} 1"), 1),
+        (format!("@item {IRON_ARROW} 500"), 500),
+    ] {
+        let amount = stocked(&mut context, &command, IRON_ARROW)?;
+        if amount != expected {
+            return Err(format!("{command:?} gave {amount} Iron Arrow, not {expected}"));
+        }
     }
 
     // Arrows stack, and accumulation here is invisible until the character is
@@ -115,6 +117,28 @@ fn item_command_multi_word(config: &Config) -> Result<(), String> {
     let _ = context.say(&format!("@delitem {IRON_ARROW} 30000"));
     let _ = context.say(&format!("@delitem {IRON} 30000"));
     context.pump(Duration::from_millis(400));
+    Ok(())
+}
+
+/// Player group 0 has no `item` atcommand (`groups.conf`). A GM charcommand
+/// demotes the partner, `@item` must fail, then the partner is restored.
+fn item_command_permission(config: &Config) -> Result<(), String> {
+    let (mut gm, mut partner) = TestContext::connect_pair(config)?;
+    gm.say(&format!("#adjgroup {} 0", partner.character_name))?;
+    partner.pump(Duration::from_millis(500));
+    partner.flush();
+    partner.say("@item 501 1")?;
+    // Group 0 has no `item` command: Hercules returns false with no dispbottom
+    // (`atcommand.c` skips unknown commands for group level 0).
+    let added = partner
+        .collect_for(Duration::from_secs(2))
+        .into_iter()
+        .any(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == 501));
+    gm.say(&format!("#adjgroup {} 99", partner.character_name))?;
+    gm.pump(Duration::from_millis(400));
+    if added {
+        return Err("group 0 partner received Red Potion from @item".to_owned());
+    }
     Ok(())
 }
 
@@ -337,6 +361,73 @@ fn equip_unequip(config: &Config) -> Result<(), String> {
 }
 
 /// Drop a Red Potion onto the ground, then pick it back up.
+/// QW-041 — drop 1, a middle amount, then the rest of the stack.
+fn drop_exact_quantity(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501;
+    context.gm_expect_feedback("@autopickup 0")?;
+    let index = context.give_item(item_id, 10)?;
+
+    for amount in [1u16, 5, 4] {
+        context.flush();
+        context.net.drop_item(index, amount).map_err(|_| "disconnected")?;
+        context.wait_for(&format!("InventoryItemRemoved amount {amount}"), |event| match event {
+            NetworkEvent::InventoryItemRemoved {
+                amount: removed,
+                index: removed_index,
+                ..
+            } if *removed == amount && *removed_index == index => Some(()),
+            _ => None,
+        })?;
+    }
+
+    let _ = context.gm_expect_feedback("@autopickup 2");
+    Ok(())
+}
+
+/// QW-046 — two clients race one floor pile: one owner, no duplicate.
+fn loot_pickup_race(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    primary.gm_expect_feedback("@autopickup 0")?;
+    partner.gm_expect_feedback("@autopickup 0")?;
+    let index = primary.give_item(RED_POTION, 1)?;
+    primary.flush();
+    primary.net.drop_item(index, 1).map_err(|_| "disconnected")?;
+    let ground_id = primary.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id, item_id: id, ..
+        } if id.0 == RED_POTION => Some(*entity_id),
+        _ => None,
+    })?;
+    partner.wait_for("partner AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem { entity_id, .. } if *entity_id == ground_id => Some(()),
+        _ => None,
+    })?;
+    primary.flush();
+    partner.flush();
+    primary.net.pick_up_item(ground_id).map_err(|_| "disconnected")?;
+    partner.net.pick_up_item(ground_id).map_err(|_| "disconnected")?;
+    let primary_adds = primary
+        .collect_for(Duration::from_millis(800))
+        .into_iter()
+        .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == RED_POTION))
+        .count();
+    let partner_adds = partner
+        .collect_for(Duration::from_millis(800))
+        .into_iter()
+        .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == RED_POTION))
+        .count();
+    let _ = primary.gm_expect_feedback("@autopickup 2");
+    let _ = partner.gm_expect_feedback("@autopickup 2");
+    if primary_adds + partner_adds != 1 {
+        return Err(format!(
+            "race must grant the pile once; primary={primary_adds} partner={partner_adds}"
+        ));
+    }
+    Ok(())
+}
+
 fn drop_pickup(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     let item_id = 501; // Red Potion
@@ -1704,6 +1795,91 @@ fn stat_skill_points(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
+/// Lock (CZ_UPGRADE_SKILLLEVEL 0x0112) must persist on the character after
+/// relog.
+fn skill_lock_relog(config: &Config) -> Result<(), String> {
+    const BASIC: u16 = 1;
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(0)?;
+    context.ensure_base_level(10)?;
+    context.say("@reset")?;
+    context.pump(Duration::from_millis(400));
+    context.flush();
+    context
+        .net
+        .level_up_skill(ragnarok_packets::SkillId(BASIC as u16))
+        .map_err(|_| "disconnected")?;
+    context.wait_for("Basic Skill ranked on server", |event| match event {
+        NetworkEvent::UpdateSkill { skill_id, skill_level, .. } if skill_id.0 == BASIC && skill_level.0 >= 1 => Some(()),
+        NetworkEvent::SkillAdded { skill_information } if skill_information.skill_id.0 == BASIC && skill_information.skill_level.0 >= 1 => {
+            Some(())
+        }
+        NetworkEvent::SkillTree { skill_information }
+            if skill_information
+                .iter()
+                .any(|skill| skill.skill_id.0 == BASIC && skill.skill_level.0 >= 1) =>
+        {
+            Some(())
+        }
+        _ => None,
+    })?;
+    drop(context);
+    std::thread::sleep(Duration::from_millis(900));
+    let context = TestContext::connect(config)?;
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == BASIC)
+        .map(|skill| skill.skill_level.0)
+        .unwrap_or(0);
+    if level < 1 {
+        return Err(format!(
+            "after relog Basic Skill was {level}, lock did not persist on the server"
+        ));
+    }
+    Ok(())
+}
+
+fn skill_refund(config: &Config) -> Result<(), String> {
+    const BASIC: u16 = 1;
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(0)?;
+    context.ensure_base_level(10)?;
+    context.say("@reset")?;
+    context.pump(Duration::from_millis(400));
+    context.flush();
+    context
+        .net
+        .level_up_skill(ragnarok_packets::SkillId(BASIC))
+        .map_err(|_| "disconnected")?;
+    context.wait_for("Basic Skill ranked", |event| match event {
+        NetworkEvent::UpdateSkill { skill_id, skill_level, .. } if skill_id.0 == BASIC && skill_level.0 >= 1 => Some(()),
+        NetworkEvent::SkillAdded { skill_information } if skill_information.skill_id.0 == BASIC && skill_information.skill_level.0 >= 1 => {
+            Some(())
+        }
+        NetworkEvent::SkillTree { skill_information }
+            if skill_information
+                .iter()
+                .any(|skill| skill.skill_id.0 == BASIC && skill.skill_level.0 >= 1) =>
+        {
+            Some(())
+        }
+        _ => None,
+    })?;
+    context.say("@refundskill 1")?;
+    context.pump(Duration::from_millis(800));
+    let level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == BASIC)
+        .map(|skill| skill.skill_level.0)
+        .unwrap_or(0);
+    if level != 0 {
+        return Err(format!("@refundskill left Basic Skill at {level}"));
+    }
+    Ok(())
+}
+
 /// A hotkey written by the client survives a relogin — the hotbar is
 /// **server-side** state, not a local preference.
 ///
@@ -1804,6 +1980,83 @@ fn hotkey_write_cycle(config: &Config, which: &str) -> Result<(u32, u16), String
             TAB.0, SLOT.0
         )),
     }
+}
+
+/// Bind then `UNBOUND` on the last slot of each discoverable hotbar row
+/// (slots 8 / 17 / 26). All three client removal paths — source-window drop,
+/// drag-off-bar, right-click clear — send this same `HotkeyData::UNBOUND`
+/// write. Persistence is the character-save round trip, same as `hotkeys`.
+///
+/// Last-of-row slots avoid the graphical Wizard F1–F7 bindings on 0–6.
+fn hotbar_clear_relog(config: &Config) -> Result<(), String> {
+    const TAB: HotbarTab = HotbarTab(0);
+    const ROW_SLOTS: [u16; 3] = [8, 17, 26];
+    const PROBE: u32 = 512;
+
+    let mut context = TestContext::connect(config)?;
+    for slot in ROW_SLOTS {
+        context
+            .net
+            .set_hotkey_data(TAB, HotbarSlot(slot), HotkeyData {
+                hotkey_type: HotkeyType::Item,
+                item_or_skill_id: PROBE,
+                quantity_or_skill_level: 1,
+            })
+            .map_err(|_| "disconnected")?;
+    }
+    context.pump(Duration::from_millis(300));
+    drop(context);
+    std::thread::sleep(Duration::from_millis(900));
+
+    let mut context = TestContext::connect(config)?;
+    let bound = read_hotkey_tab(&mut context, TAB)?;
+    for slot in ROW_SLOTS {
+        match bound.get(slot as usize) {
+            Some(Some((item_id, _))) if *item_id == PROBE => {}
+            other => {
+                return Err(format!("row slot {slot} was {other:?} after bind relog; expected item {PROBE}"));
+            }
+        }
+    }
+
+    for slot in ROW_SLOTS {
+        context
+            .net
+            .set_hotkey_data(TAB, HotbarSlot(slot), HotkeyData::UNBOUND)
+            .map_err(|_| "disconnected")?;
+    }
+    context.pump(Duration::from_millis(300));
+    drop(context);
+    std::thread::sleep(Duration::from_millis(900));
+
+    let mut context = TestContext::connect(config)?;
+    let cleared = read_hotkey_tab(&mut context, TAB)?;
+    for slot in ROW_SLOTS {
+        match cleared.get(slot as usize) {
+            Some(None) => {}
+            other => {
+                return Err(format!("row slot {slot} stayed bound as {other:?} after UNBOUND relog"));
+            }
+        }
+    }
+    Ok(())
+}
+
+/// The whole tab-0 hotkey list from login, one entry per slot.
+fn read_hotkey_tab(context: &mut TestContext, tab: HotbarTab) -> Result<Vec<Option<(u32, u16)>>, String> {
+    let wanted_tab = tab.0;
+    context.wait_for(&format!("SetHotkeyData for tab {wanted_tab}"), |event| match event {
+        NetworkEvent::SetHotkeyData { tab, hotkeys } if tab.0 == wanted_tab => Some(
+            hotkeys
+                .iter()
+                .map(|state| match state {
+                    HotkeyState::Bound(data) => Some((data.item_or_skill_id, data.quantity_or_skill_level)),
+                    HotkeyState::Unbound => None,
+                })
+                .collect(),
+        ),
+        _ => None,
+    })
 }
 
 /// One slot out of the hotkey list the server sends at login, as

@@ -41,6 +41,7 @@ mod party_invite;
 mod player_target;
 #[cfg(feature = "debug")]
 mod profiler;
+mod quantity;
 mod quest_log;
 #[cfg(feature = "debug")]
 mod render_options;
@@ -105,6 +106,7 @@ pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
+pub use self::quantity::QuantityWindow;
 pub use self::quest_log::QuestLogWindow;
 #[cfg(feature = "debug")]
 pub use self::render_options::RenderOptionsWindow;
@@ -170,6 +172,7 @@ pub enum WindowClass {
     Trade,
     TradeRequest,
     Identify,
+    Quantity,
     Respawn,
     SelectServer,
     Sell,

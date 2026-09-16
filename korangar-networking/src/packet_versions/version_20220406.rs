@@ -2197,6 +2197,18 @@ mod skill_failure_text_tests {
         assert_eq!(text(&failure(28, 0)), "Skill level is not high enough.");
     }
 
+    #[test]
+    fn official_causes_are_named_and_unknown_values_do_not_panic() {
+        assert_eq!(text(&failure(28, 1)), "Not enough SP.");
+        assert_eq!(text(&failure(28, 4)), "Skill is still on cooldown.");
+        assert_eq!(text(&failure(28, 6)), "This skill cannot be used with this weapon.");
+        assert_eq!(text(&failure(28, 11)), "That target is invalid for this skill.");
+        assert_eq!(text(&failure(28, 26)), "You can't place it there.");
+        let unknown = text(&failure(28, 255));
+        assert!(!unknown.is_empty());
+        assert!(!unknown.contains("panic"));
+    }
+
     /// Every `State:` precondition is checked in one shared place and reported
     /// as cause 0, so a Crusader with no shield was told to level the skill up.
     /// `USESKILL_FAIL_NEED_SHIELD_WEAPON` (110) exists and Hercules never sends

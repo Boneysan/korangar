@@ -1,12 +1,16 @@
 mod accessory_name;
 mod baby_job;
 mod campaign_quest;
+mod equip_presentation;
+mod equipment_eligibility;
+mod hunt_schema;
 mod item_info;
 mod item_name;
 mod item_resource;
 mod item_stats;
 mod job_identity;
 mod job_name;
+mod journal_slice;
 mod map_sky_data;
 mod msgstringtable;
 mod skill_info;
@@ -14,6 +18,7 @@ mod skill_information;
 mod skill_requirements;
 mod skill_tree;
 mod towninfo;
+mod warp_graph;
 
 use std::hash::Hash;
 
@@ -24,13 +29,21 @@ use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
-pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, quest_display_name};
+pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestLocation, quest_display_name};
+#[allow(unused_imports)]
+pub use self::equip_presentation::UnusablePresentation;
+#[allow(unused_imports)]
+pub use self::equipment_eligibility::{ELIGIBILITY_SCHEMA, EligibilityTable, EquipDenial, bundled_table};
+#[allow(unused_imports)]
+pub use self::hunt_schema::{BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, parse_guidance, parse_objectives};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
 pub use self::item_stats::{item_stats, item_tooltip_text};
 pub use self::job_identity::JobIdentity;
 pub use self::job_name::JobName;
+#[allow(unused_imports)]
+pub use self::journal_slice::format_hunt_journal;
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
 pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
@@ -135,6 +148,10 @@ impl Library {
     #[inline]
     pub fn campaign_quest(&self, quest_id: u32) -> Option<&CampaignQuest> {
         self.campaign_quest_table.get(quest_id)
+    }
+
+    pub fn quest_location(&self, quest_id: u32) -> Option<&QuestLocation> {
+        self.campaign_quest_table.location(quest_id)
     }
 
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.

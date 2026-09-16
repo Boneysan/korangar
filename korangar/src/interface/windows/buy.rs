@@ -1,3 +1,4 @@
+use std::cell::UnsafeCell;
 use std::cmp::Ordering;
 use std::fmt::Display;
 
@@ -5,6 +6,7 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::event::ClickHandler;
 use korangar_interface::layout::area::Area;
+use korangar_interface::layout::tooltip::TooltipExt;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_interface::window::{CustomWindow, Window};
@@ -15,9 +17,9 @@ use super::WindowClass;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
-use crate::state::ClientState;
 use crate::state::theme::InterfaceThemeType;
-use crate::world::ResourceMetadata;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::world::{ResourceMetadata, item_stats, item_tooltip_text};
 
 struct PartialEqDisplayStr<T> {
     last_value: Option<T>,
@@ -61,6 +63,7 @@ struct ItemElement<A, B> {
     children: B,
     amount_string: PartialEqDisplayStr<u32>,
     price_string: PartialEqDisplayStr<u32>,
+    tooltip_text: UnsafeCell<String>,
 }
 
 impl<A, B> ItemElement<A, B> {
@@ -70,6 +73,7 @@ impl<A, B> ItemElement<A, B> {
             children,
             amount_string: PartialEqDisplayStr::new(),
             price_string: PartialEqDisplayStr::new(),
+            tooltip_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -133,6 +137,7 @@ where
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
         let item = state.get(&self.item_path);
+        let is_hovered = layout_info.area.check().run(layout);
 
         layout.add_rectangle(
             layout_info.area,
@@ -180,6 +185,35 @@ where
             VerticalAlignment::Center { offset: 0.0 },
             OverflowBehavior::Shrink,
         );
+
+        if is_hovered {
+            struct VendorItemTooltip;
+            let equipped = state.get(&client_state().inventory()).items().iter().find_map(|other| {
+                let korangar_networking::InventoryItemDetails::Equippable {
+                    equipped_position: other_worn,
+                    refinement_level,
+                    ..
+                } = &other.details
+                else {
+                    return None;
+                };
+                if other_worn.is_empty() {
+                    return None;
+                }
+                let stats = item_stats(other.item_id.0)?;
+                if stats.loc.as_deref() == item_stats(item.item_id.0).and_then(|s| s.loc.as_deref()) {
+                    Some((stats, Some(*refinement_level)))
+                } else {
+                    None
+                }
+            });
+            let (eq, refine) = equipped.map(|(s, r)| (Some(s), r)).unwrap_or((None, None));
+            let text = item_tooltip_text(item.item_id.0, &item.metadata.name, None, eq, refine);
+            unsafe {
+                *self.tooltip_text.get() = text;
+                layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), VendorItemTooltip.tooltip_id());
+            }
+        }
 
         self.children.lay_out(state, store, &layout_info.children, layout);
     }

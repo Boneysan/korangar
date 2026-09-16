@@ -12,6 +12,24 @@ pub const HOTBAR_COLUMNS: usize = 9;
 pub const HOTBAR_ROWS: usize = 3;
 pub const HOTBAR_SLOTS: usize = HOTBAR_COLUMNS * HOTBAR_ROWS;
 
+/// Pixel movement from press origin that starts a hotbar drag instead of
+/// activating the slot on mouse-up. Squared comparison uses this value.
+pub const HOTBAR_DRAG_THRESHOLD_PX: f32 = 5.0;
+
+/// True when the pointer has moved far enough that a pending hotbar press
+/// becomes a drag rather than a click-to-activate.
+pub fn hotbar_press_becomes_drag(dx: f32, dy: f32) -> bool {
+    dx * dx + dy * dy >= HOTBAR_DRAG_THRESHOLD_PX * HOTBAR_DRAG_THRESHOLD_PX
+}
+
+/// Dropping a hotbar skill or item onto a UI target that accepted the drop
+/// does not clear (the drop handler already moved or swapped). An unhandled
+/// drop — drag-off-bar — clears through the same `UNBOUND` write as
+/// right-click and source-window drop.
+pub fn hotbar_unhandled_drop_clears(drop_was_handled: bool) -> bool {
+    !drop_was_handled
+}
+
 #[derive(Clone, Debug, RustState, StateElement)]
 pub enum HotbarBinding {
     Skill(LearnableSkill),
@@ -140,5 +158,63 @@ mod tests {
     fn three_rows_fit_the_server_table() {
         assert_eq!(HOTBAR_SLOTS, 27);
         assert!(HOTBAR_SLOTS < 38);
+    }
+
+    #[test]
+    fn click_inside_threshold_does_not_become_drag() {
+        assert!(!hotbar_press_becomes_drag(0.0, 0.0));
+        assert!(!hotbar_press_becomes_drag(3.0, 3.0));
+        assert!(!hotbar_press_becomes_drag(4.9, 0.0));
+    }
+
+    #[test]
+    fn movement_at_or_beyond_threshold_becomes_drag() {
+        assert!(hotbar_press_becomes_drag(5.0, 0.0));
+        assert!(hotbar_press_becomes_drag(0.0, -5.0));
+        assert!(hotbar_press_becomes_drag(4.0, 4.0));
+    }
+
+    #[test]
+    fn unhandled_drop_clears_handled_drop_does_not() {
+        assert!(hotbar_unhandled_drop_clears(false));
+        assert!(!hotbar_unhandled_drop_clears(true));
+    }
+
+    #[test]
+    fn empty_binding_encodes_as_unbound() {
+        assert_eq!(optional_binding_to_hotkey(None), HotkeyData::UNBOUND);
+        assert_eq!(HotkeyData::UNBOUND.item_or_skill_id, 0);
+        assert_eq!(HotkeyData::UNBOUND.quantity_or_skill_level, 0);
+    }
+
+    #[test]
+    fn every_row_and_column_can_be_cleared() {
+        for row in 0..HOTBAR_ROWS {
+            for column in 0..HOTBAR_COLUMNS {
+                let slot = HotbarSlot((row * HOTBAR_COLUMNS + column) as u16);
+                let mut hotbar = Hotbar::default();
+                hotbar.set_slot(slot, HotbarBinding::Item {
+                    item_id: ItemId(501 + slot.0 as u32),
+                });
+                assert!(hotbar.get_slot(slot).is_some(), "row {row} col {column} should bind");
+                hotbar.unset_slot(slot);
+                assert!(hotbar.get_slot(slot).is_none(), "row {row} col {column} should clear");
+            }
+        }
+    }
+
+    #[test]
+    fn clearing_one_slot_leaves_other_rows_intact() {
+        let mut hotbar = Hotbar::default();
+        let first_of_each_row = [0u16, 9, 18];
+        for slot in first_of_each_row {
+            hotbar.set_slot(HotbarSlot(slot), HotbarBinding::Item {
+                item_id: ItemId(501 + u32::from(slot)),
+            });
+        }
+        hotbar.unset_slot(HotbarSlot(9));
+        assert!(hotbar.get_slot(HotbarSlot(0)).is_some());
+        assert!(hotbar.get_slot(HotbarSlot(9)).is_none());
+        assert!(hotbar.get_slot(HotbarSlot(18)).is_some());
     }
 }

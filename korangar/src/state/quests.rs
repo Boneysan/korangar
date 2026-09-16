@@ -32,6 +32,8 @@ pub struct QuestEntry {
     pub name: String,
     /// Empty for a quest with no item turn-in.
     pub requirements: Vec<QuestRequirementEntry>,
+    /// Hunt zone and/or NPC destination for the journal.
+    pub location: String,
 }
 
 impl QuestEntry {
@@ -46,6 +48,7 @@ impl QuestEntry {
         self.name.to_lowercase().contains(&query)
             || self.quest_id.to_string().contains(&query)
             || self.requirements.iter().any(|item| item.item_name.to_lowercase().contains(&query))
+            || self.location.to_lowercase().contains(&query)
     }
 
     pub fn name(&self) -> &str {
@@ -66,6 +69,7 @@ pub struct QuestLogState {
     pub search: String,
     pub ready_only: bool,
     pinned: Vec<u32>,
+    tracked: Option<u32>,
 }
 
 impl QuestLogState {
@@ -75,6 +79,23 @@ impl QuestLogState {
 
     pub fn is_empty(&self) -> bool {
         self.quests.is_empty()
+    }
+
+    pub fn tracked(&self) -> Option<u32> {
+        self.tracked
+    }
+
+    pub fn track(&mut self, quest_id: u32) {
+        if self.quests.iter().any(|q| q.quest_id == quest_id) {
+            self.tracked = Some(quest_id);
+        }
+    }
+
+    pub fn auto_track_next_if_invalid(&mut self) {
+        if self.tracked.is_some_and(|id| self.quests.iter().any(|q| q.quest_id == id)) {
+            return;
+        }
+        self.tracked = self.quests.first().map(|q| q.quest_id);
     }
 
     pub fn is_pinned(&self, quest_id: u32) -> bool {
@@ -109,6 +130,10 @@ impl QuestLogState {
     pub fn remove(&mut self, quest_id: u32) {
         self.quests.retain(|entry| entry.quest_id != quest_id);
         self.pinned.retain(|id| *id != quest_id);
+        if self.tracked == Some(quest_id) {
+            self.tracked = None;
+            self.auto_track_next_if_invalid();
+        }
     }
 
     /// Drop everything, for a logout or a character switch.
@@ -132,6 +157,7 @@ mod tests {
                 item_name: "Rat Tail".to_owned(),
                 needed: 7,
             }],
+            location: String::new(),
         }
     }
 
@@ -234,5 +260,16 @@ mod tests {
         assert!(!log.is_pinned(20002));
         assert!(log.search.is_empty());
         assert!(!log.ready_only);
+    }
+
+    #[test]
+    fn tracked_quest_auto_advances_when_removed() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20003, "Rockers"));
+        log.add(entry(20008, "Mushrooms"));
+        log.track(20003);
+        assert_eq!(log.tracked(), Some(20003));
+        log.remove(20003);
+        assert_eq!(log.tracked(), Some(20008));
     }
 }

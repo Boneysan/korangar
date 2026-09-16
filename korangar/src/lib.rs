@@ -144,6 +144,7 @@ use crate::settings::{
     DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
     ServiceSettingsPathExt, TargetHostileBinding, WORLD_THEMES_PATH,
 };
+use crate::state::area_loot::AreaLootCancel;
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
@@ -4370,6 +4371,9 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).clear();
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::MapChange);
                     // Cleared here rather than when an entity disappears: the server
                     // re-sends ammunition on enter-view, so a stale entry is simply
                     // overwritten, whereas evicting on removal would reopen the hole
@@ -4887,6 +4891,7 @@ impl Client {
                     if buffered_action.is_some_and(|buffered_action| buffered_action.is_pick_up_item(entity_id)) {
                         *buffered_action = None;
                     }
+                    self.client_state.follow_mut(client_state().area_loot()).on_item_vanished(entity_id);
                 }
                 NetworkEvent::EntityMove {
                     entity_id,
@@ -4957,6 +4962,9 @@ impl Client {
                     }
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::MapChange);
                     self.invalidate_keyboard_move(WasdInvalidator::Warp, Some(position));
                     self.last_skill_target = None;
                     // The map server has accepted this character, so the status
@@ -4983,6 +4991,9 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).truncate(1);
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::MapChange);
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
                     // A respawn-to-save-point (die → Respawn) arrives as a map
@@ -7258,15 +7269,189 @@ impl Client {
         }
     }
 
+    fn confirm_quantity_choice(&mut self) {
+        let (purpose, index, amount) = {
+            let state = self.client_state.follow(client_state().quantity_state());
+            let purpose = state.purpose();
+            let index = state.inventory_index();
+            let amount = state.chooser().map(|chooser| chooser.confirm());
+            (purpose, index, amount)
+        };
+        match (purpose, index, amount) {
+            (crate::state::quantity::QuantityPurpose::Drop, Some(inventory_index), Some(Ok(value))) => {
+                let amount = value as u16;
+                if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
+                }
+                self.client_state.follow_mut(client_state().quantity_state()).clear();
+                self.interface.close_window_with_class(WindowClass::Quantity);
+            }
+            (crate::state::quantity::QuantityPurpose::Trade, Some(inventory_index), Some(Ok(value))) => {
+                self.try_send_trade_add(inventory_index, value);
+                self.client_state.follow_mut(client_state().quantity_state()).clear();
+                self.interface.close_window_with_class(WindowClass::Quantity);
+            }
+            (_, _, Some(Err(error))) => {
+                self.client_state
+                    .follow_mut(client_state().chat_messages())
+                    .push(ChatMessage::new(error.to_string(), MessageColor::Error));
+            }
+            _ => {}
+        }
+    }
+
+    fn apply_quantity_input(&mut self, event: &InputEvent) -> bool {
+        match event {
+            InputEvent::OpenQuantityDrop {
+                inventory_index,
+                maximum,
+                item_name,
+            } => {
+                self.open_quantity_chooser(
+                    *inventory_index,
+                    *maximum,
+                    item_name,
+                    crate::state::quantity::QuantityPurpose::Drop,
+                );
+                true
+            }
+            InputEvent::OpenQuantityTrade {
+                inventory_index,
+                maximum,
+                item_name,
+            } => {
+                self.open_quantity_chooser(
+                    *inventory_index,
+                    *maximum,
+                    item_name,
+                    crate::state::quantity::QuantityPurpose::Trade,
+                );
+                true
+            }
+            InputEvent::QuantityIncrement => {
+                if let Some(chooser) = self.client_state.follow_mut(client_state().quantity_state()).chooser_mut() {
+                    chooser.increment();
+                }
+                true
+            }
+            InputEvent::QuantityDecrement => {
+                if let Some(chooser) = self.client_state.follow_mut(client_state().quantity_state()).chooser_mut() {
+                    chooser.decrement();
+                }
+                true
+            }
+            InputEvent::QuantitySetAll => {
+                if let Some(chooser) = self.client_state.follow_mut(client_state().quantity_state()).chooser_mut() {
+                    chooser.set_all();
+                }
+                true
+            }
+            InputEvent::QuantityConfirm => {
+                self.confirm_quantity_choice();
+                true
+            }
+            InputEvent::QuantityCancel => {
+                if let Some(chooser) = self.client_state.follow_mut(client_state().quantity_state()).chooser_mut() {
+                    chooser.cancel();
+                }
+                self.client_state.follow_mut(client_state().quantity_state()).clear();
+                self.interface.close_window_with_class(WindowClass::Quantity);
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn open_quantity_chooser(
+        &mut self,
+        inventory_index: ragnarok_packets::InventoryIndex,
+        maximum: u16,
+        item_name: &str,
+        purpose: crate::state::quantity::QuantityPurpose,
+    ) {
+        if purpose == crate::state::quantity::QuantityPurpose::Trade
+            && self
+                .client_state
+                .follow(client_state().trade_state())
+                .has_pending_add(inventory_index)
+        {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "That slot is already being added to the trade.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        }
+        let opened = match purpose {
+            crate::state::quantity::QuantityPurpose::Drop => {
+                self.client_state
+                    .follow_mut(client_state().quantity_state())
+                    .open_drop(inventory_index, u32::from(maximum), item_name)
+            }
+            crate::state::quantity::QuantityPurpose::Trade => {
+                self.client_state
+                    .follow_mut(client_state().quantity_state())
+                    .open_trade(inventory_index, u32::from(maximum), item_name)
+            }
+        };
+        match opened {
+            Ok(()) => {
+                self.interface.close_window_with_class(WindowClass::Quantity);
+                self.interface.open_window(QuantityWindow::new(client_state().quantity_state()));
+            }
+            Err(error) => self
+                .client_state
+                .follow_mut(client_state().chat_messages())
+                .push(ChatMessage::new(error.to_string(), MessageColor::Error)),
+        }
+    }
+
+    fn try_send_trade_add(&mut self, inventory_index: ragnarok_packets::InventoryIndex, amount: u32) {
+        if !self.client_state.follow(client_state().trade_state()).is_active() {
+            self.client_state
+                .follow_mut(client_state().chat_messages())
+                .push(ChatMessage::new("No trade is open.".to_owned(), MessageColor::Error));
+            return;
+        }
+        if !self
+            .client_state
+            .follow_mut(client_state().trade_state())
+            .note_pending_add(inventory_index, amount)
+        {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "That slot is already being added to the trade.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        }
+        if self.networking_system.trade_add_item(inventory_index, amount).is_err() {
+            let _ = self
+                .client_state
+                .follow_mut(client_state().trade_state())
+                .take_pending_add(inventory_index);
+            self.client_state
+                .follow_mut(client_state().chat_messages())
+                .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
+        }
+    }
+
     /// Handle inventory-related input events that were queued during the UI
     /// pass (after the main start-of-frame event drain). Leaves unrelated
     /// events in the buffer.
     fn flush_inventory_input_events(&mut self) {
         let mut remaining = Vec::new();
+        let events: Vec<_> = self.input_event_buffer.drain(..).collect();
 
-        for event in self.input_event_buffer.drain(..) {
+        for event in events {
+            if self.apply_quantity_input(&event) {
+                continue;
+            }
             match event {
                 InputEvent::DropItem { inventory_index, amount } => {
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::PlayerDrop);
                     if amount == 0 {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
@@ -7642,6 +7827,8 @@ impl Client {
         // Deferred: `enter_character_server` needs &mut self while this loop
         // already mutably drains `input_event_buffer`.
         let mut select_server: Option<CharacterServerInformation> = None;
+        let mut quantity_events = Vec::new();
+        let mut deferred_trade_adds = Vec::new();
         for event in self.input_event_buffer.drain(..) {
             match event {
                 InputEvent::LogIn {
@@ -7945,6 +8132,9 @@ impl Client {
                     let _ = self.networking_system.switch_character_slot(origin_slot, destination_slot);
                 }
                 InputEvent::PlayerMove { destination } => {
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::ManualAction);
                     if let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) {
                         self.keyboard_move_last_dest = Some(destination);
                         self.keyboard_move_last_sent_at = Some(Instant::now());
@@ -8024,6 +8214,9 @@ impl Client {
                         let _ = match entity.get_entity_type() {
                             EntityType::Npc => self.networking_system.start_dialog(entity_id),
                             EntityType::Monster => {
+                                self.client_state
+                                    .follow_mut(client_state().area_loot())
+                                    .cancel(AreaLootCancel::Combat);
                                 self.last_skill_target = Some(entity_id);
                                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                                 let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
@@ -8081,9 +8274,28 @@ impl Client {
                                 .x
                                 .abs_diff(item_position.x)
                                 .max(player_position.y.abs_diff(item_position.y))
-                                <= ITEM_PICKUP_RANGE.0
+                                <= crate::state::area_loot::AREA_LOOT_RANGE
                             {
-                                let _ = self.networking_system.pick_up_item(entity_id);
+                                let candidates: Vec<crate::state::area_loot::FloorLootCandidate> = self
+                                    .client_state
+                                    .follow(client_state().ground_items())
+                                    .iter()
+                                    .map(|item| crate::state::area_loot::FloorLootCandidate {
+                                        entity_id: item.entity_id,
+                                        tile: item.tile_position,
+                                        can_loot: true,
+                                        present: true,
+                                        weight: 0,
+                                    })
+                                    .collect();
+                                let first = {
+                                    let queue = self.client_state.follow_mut(client_state().area_loot());
+                                    match queue.start_from_click(player_position, entity_id, &candidates, |_| true, 20, u32::MAX) {
+                                        Ok(queued) => queued.first().copied().unwrap_or(entity_id),
+                                        Err(_) => entity_id,
+                                    }
+                                };
+                                let _ = self.networking_system.pick_up_item(first);
 
                                 *self.client_state.follow_mut(client_state().buffered_action()) = None;
                             } else if let Some(path) =
@@ -8100,6 +8312,9 @@ impl Client {
                                 *self.client_state.follow_mut(client_state().buffered_action()) =
                                     Some(BufferedAction::PickUpItem { entity_id });
                             } else {
+                                self.client_state
+                                    .follow_mut(client_state().area_loot())
+                                    .cancel(AreaLootCancel::PathFailure);
                                 *self.client_state.follow_mut(client_state().buffered_action()) = None;
                             }
                         }
@@ -8208,9 +8423,7 @@ impl Client {
                                 let mut parts = arguments.split_whitespace();
                                 if let Some(index) = parts.next().and_then(|s| s.parse::<u16>().ok()) {
                                     let amount = parts.next().and_then(|s| s.parse::<u32>().ok()).unwrap_or(1);
-                                    let _ = self
-                                        .networking_system
-                                        .trade_add_item(ragnarok_packets::InventoryIndex(index), amount);
+                                    deferred_trade_adds.push((ragnarok_packets::InventoryIndex(index), amount));
                                 } else {
                                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                         "Usage: /trade add <inventory_index> [amount]".to_owned(),
@@ -8552,6 +8765,9 @@ impl Client {
                     }
                 }
                 InputEvent::DropItem { inventory_index, amount } => {
+                    self.client_state
+                        .follow_mut(client_state().area_loot())
+                        .cancel(AreaLootCancel::PlayerDrop);
                     if amount == 0 {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
@@ -8581,6 +8797,15 @@ impl Client {
                     let _ = self.networking_system.cancel_item_identify();
                     self.client_state.follow_mut(client_state().identify_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Identify);
+                }
+                InputEvent::OpenQuantityDrop { .. }
+                | InputEvent::OpenQuantityTrade { .. }
+                | InputEvent::QuantityIncrement
+                | InputEvent::QuantityDecrement
+                | InputEvent::QuantitySetAll
+                | InputEvent::QuantityConfirm
+                | InputEvent::QuantityCancel => {
+                    quantity_events.push(event);
                 }
                 InputEvent::SelectWarpDestination { skill_id, map_name } => {
                     self.interface.close_window_with_class(WindowClass::WarpSelection);
@@ -8631,13 +8856,7 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::TradeRequest);
                 }
                 InputEvent::TradeAddItem { inventory_index, amount } => {
-                    // Remember the amount here: the ack carries only an index and a
-                    // result, so this is the last point at which the figure we asked
-                    // for is known.
-                    self.client_state
-                        .follow_mut(client_state().trade_state())
-                        .note_pending_add(inventory_index, amount);
-                    let _ = self.networking_system.trade_add_item(inventory_index, amount);
+                    deferred_trade_adds.push((inventory_index, amount));
                 }
                 InputEvent::TradeAddZeny { amount } => {
                     // The display has to be updated here, exactly as the `/trade zeny`
@@ -9022,6 +9241,25 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::RefundSkillPoint { skill_id } => {
+                    let refunded_pending = {
+                        let pending = self
+                            .client_state
+                            .follow_mut(client_state().skill_tree_window().pending_skill_points());
+                        if let Some(index) = pending.iter().rposition(|id| *id == skill_id) {
+                            pending.remove(index);
+                            true
+                        } else {
+                            false
+                        }
+                    };
+                    if !refunded_pending {
+                        let name = self.client_state.follow(client_state().player_name()).clone();
+                        let _ = self
+                            .networking_system
+                            .send_chat_message(&name, &format!("@refundskill {}", skill_id.0));
+                    }
+                }
                 InputEvent::LevelUpSkills { skill_ids } => {
                     for skill_id in skill_ids {
                         if self.networking_system.level_up_skill(skill_id).is_err() {
@@ -9222,6 +9460,13 @@ impl Client {
                 #[cfg(feature = "debug")]
                 InputEvent::InspectFrame { measurement } => self.interface.open_window(FrameInspectorWindow::new(measurement)),
             }
+        }
+
+        for event in quantity_events {
+            let _ = self.apply_quantity_input(&event);
+        }
+        for (inventory_index, amount) in deferred_trade_adds {
+            self.try_send_trade_add(inventory_index, amount);
         }
 
         if let Some(character_server_information) = select_server {
@@ -9693,6 +9938,11 @@ impl Client {
     /// other quests use the bundled server name table, with an ID fallback
     /// only when the server has a quest that this client does not know yet.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
+        let location = self
+            .library
+            .quest_location(quest_id)
+            .map(|loc| loc.journal_text())
+            .unwrap_or_default();
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
                 quest_id,
@@ -9712,6 +9962,7 @@ impl Client {
                         needed: requirement.needed,
                     })
                     .collect(),
+                location,
             },
             None => QuestEntry {
                 quest_id,
@@ -9719,6 +9970,7 @@ impl Client {
                     .map(str::to_owned)
                     .unwrap_or_else(|| format!("Quest {quest_id}")),
                 requirements: Vec::new(),
+                location,
             },
         }
     }
@@ -10338,8 +10590,7 @@ impl Client {
             {
                 let dx = input_report.mouse_position.left - press.start_position.left;
                 let dy = input_report.mouse_position.top - press.start_position.top;
-                const DRAG_THRESHOLD_SQ: f32 = 25.0;
-                if dx * dx + dy * dy >= DRAG_THRESHOLD_SQ {
+                if crate::state::hotbar::hotbar_press_becomes_drag(dx, dy) {
                     self.pending_hotbar_press = None;
                     if let Some(mode) = crate::interface::windows::pickup_hotbar_slot(&self.client_state, press.slot) {
                         interface_frame.set_mouse_mode(mode);
@@ -10375,7 +10626,7 @@ impl Client {
 
                 // Equip/storage transfers via drop handlers; queues Default mouse mode.
                 let handled = interface_frame.drop(&self.client_state);
-                if !handled {
+                if crate::state::hotbar::hotbar_unhandled_drop_clears(handled) {
                     match &active_mouse_mode {
                         MouseMode::Custom {
                             mode:

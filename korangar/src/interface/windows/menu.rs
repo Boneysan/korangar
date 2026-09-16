@@ -53,6 +53,21 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleCommandsWindow,
                 },
                 button! {
+                    text: "Save here",
+                    tooltip: "Set your respawn/save point to this cell [^000001@save^000000]",
+                    event: InputEvent::SendMessage { text: "@save".to_string() },
+                },
+                button! {
+                    text: "Warp to save",
+                    tooltip: "[^000001@load^000000]",
+                    event: InputEvent::SendMessage { text: "@load".to_string() },
+                },
+                button! {
+                    text: "Reset skills",
+                    tooltip: "Unlimited playtest respec [^000001@resetskill^000000]",
+                    event: InputEvent::SendMessage { text: "@resetskill".to_string() },
+                },
+                button! {
                     text: "Quest Journal",
                     tooltip: "Search campaign and regular quests, pin favorites, and check collection progress (^000001Ctrl+Q^000000)",
                     event: InputEvent::ToggleQuestLogWindow,

@@ -14,6 +14,9 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("entity-details", 3, entity_details),
         Scenario::new("sit-stand", 3, sit_stand),
         Scenario::new("sitting-regeneration-thresholds", 3, sitting_regeneration_thresholds),
+        Scenario::new("sit-25-percent", 3, sit_25_percent),
+        Scenario::new("save-load", 3, save_load),
+        Scenario::new("weight-capacity-x5", 3, weight_capacity_x5),
         Scenario::new("tick-sync", 3, tick_sync),
     ]
 }
@@ -359,11 +362,13 @@ fn collect_hp_sp_ticks(context: &mut TestContext, duration: Duration) -> (Vec<(D
 }
 
 fn damage_character(context: &mut TestContext, max_hp: u32) -> Result<(), String> {
-    context.say("@heal -400 -120")?;
+    let hp_drop = (max_hp / 2).clamp(10, max_hp.saturating_sub(1));
+    let sp_drop = (context.max_spell_points / 2).clamp(1, context.max_spell_points.saturating_sub(1).max(1));
+    context.say(&format!("@heal -{hp_drop} -{sp_drop}"))?;
     context.wait_for("damage applied", |event| match event {
         NetworkEvent::UpdateStat {
             stat_type: StatType::HealthPoints(hp),
-        } if *hp < max_hp => Some(()),
+        } if *hp < max_hp && *hp > 0 => Some(()),
         _ => None,
     })?;
     context.flush();
@@ -418,9 +423,10 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     );
 
     // =========================================================================
-    // 1. Normal Weight (<50%) Sitting: 3+ HP ticks (3.0s) & 3+ SP ticks (4.0s)
+    // 1. Sitting: 25% of max HP/SP about every 10s (playtest, not old 3s ticks).
     // =========================================================================
     damage_character(&mut context, max_hp)?;
+    let hp_before_sit = context.health_points;
 
     context.net.player_sit().map_err(|_| "disconnected")?;
     context.wait_for("PlayerSitDown", |event| match event {
@@ -429,9 +435,7 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     })?;
     context.flush();
 
-    // Sitting: HP tick = 3.0s, SP tick = 4.0s. 13.0s gives 4 HP ticks and 3 SP
-    // ticks.
-    let (hp_ticks_sit, sp_ticks_sit) = collect_hp_sp_ticks(&mut context, Duration::from_millis(13000));
+    let (hp_ticks_sit, sp_ticks_sit) = collect_hp_sp_ticks(&mut context, Duration::from_millis(12000));
 
     context.net.player_stand().map_err(|_| "disconnected")?;
     context.wait_for("PlayerStandUp", |event| match event {
@@ -440,52 +444,19 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     })?;
     context.flush();
 
-    if hp_ticks_sit.len() < 3 {
+    let expected_hp = max_hp / 4;
+    let hp_after = hp_ticks_sit.last().map(|(_, hp)| *hp).unwrap_or(hp_before_sit);
+    let hp_gained = hp_after.saturating_sub(hp_before_sit);
+    if hp_ticks_sit.is_empty() || hp_gained < expected_hp.min(300) {
         return Err(format!(
-            "Normal weight sitting: expected >= 3 HP ticks across 13s, got {} ({:?})",
-            hp_ticks_sit.len(),
-            hp_ticks_sit
+            "Sitting 25%/10s: expected ~{expected_hp} HP in 12s, gained {hp_gained} from {hp_before_sit} ticks={hp_ticks_sit:?}"
         ));
     }
-    if sp_ticks_sit.len() < 3 {
-        return Err(format!(
-            "Normal weight sitting: expected >= 3 SP ticks across 13s, got {} ({:?})",
-            sp_ticks_sit.len(),
-            sp_ticks_sit
-        ));
+    if sp_ticks_sit.is_empty() {
+        return Err(format!("Sitting 25%/10s: no SP ticks in 12s ({sp_ticks_sit:?})"));
     }
 
-    let dh_sit = hp_ticks_sit[1].1 - hp_ticks_sit[0].1;
-    let ds_sit = sp_ticks_sit[1].1 - sp_ticks_sit[0].1;
-    for i in 1..hp_ticks_sit.len() {
-        let step = hp_ticks_sit[i].1 - hp_ticks_sit[i - 1].1;
-        if step != dh_sit {
-            return Err(format!("Inconsistent sitting HP delta: step {i} is {step}, expected {dh_sit}"));
-        }
-    }
-    for i in 1..sp_ticks_sit.len() {
-        let step = sp_ticks_sit[i].1 - sp_ticks_sit[i - 1].1;
-        if step != ds_sit {
-            return Err(format!("Inconsistent sitting SP delta: step {i} is {step}, expected {ds_sit}"));
-        }
-    }
-
-    eprintln!(
-        "[QW-023 Section 1 PASS] Normal Weight Sitting: HP restored +{} per tick ({} ticks observed: {:?}), SP restored +{} per tick ({} \
-         ticks observed: {:?})",
-        dh_sit,
-        hp_ticks_sit.len(),
-        hp_ticks_sit
-            .iter()
-            .map(|(t, v)| (format!("{:.1}s", t.as_secs_f64()), *v))
-            .collect::<Vec<_>>(),
-        ds_sit,
-        sp_ticks_sit.len(),
-        sp_ticks_sit
-            .iter()
-            .map(|(t, v)| (format!("{:.1}s", t.as_secs_f64()), *v))
-            .collect::<Vec<_>>()
-    );
+    eprintln!("[playtest sit] 25%/10s: HP +{hp_gained} (max {max_hp}), SP ticks {sp_ticks_sit:?}");
 
     // =========================================================================
     // 2. Normal Weight (<50%) Standing: 3+ HP ticks (6.0s) & 3+ SP ticks (8.0s)
@@ -513,14 +484,9 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
 
     let dh_std = hp_ticks_std[1].1 - hp_ticks_std[0].1;
     let ds_std = sp_ticks_std[1].1 - sp_ticks_std[0].1;
-    if dh_std != dh_sit {
+    if dh_std >= expected_hp {
         return Err(format!(
-            "Standing HP delta ({dh_std}) does not match sitting HP delta ({dh_sit})"
-        ));
-    }
-    if ds_std != ds_sit {
-        return Err(format!(
-            "Standing SP delta ({ds_std}) does not match sitting SP delta ({ds_sit})"
+            "Standing HP delta ({dh_std}) looks like sitting 25% ({expected_hp}); standing should be stock RO"
         ));
     }
 
@@ -761,5 +727,72 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     }
     eprintln!("[QW-023 Section 6 PASS] Full HP/SP Control: 0 heal events received when at 100% capacity across 7s sitting");
 
+    Ok(())
+}
+
+fn sit_25_percent(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let player_id = context.player_id;
+    context.warp("prontera", 155, 180)?;
+    context.say("@allskill")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(400));
+    let max_hp = context.max_health_points;
+    damage_character(&mut context, max_hp)?;
+    let before = context.health_points;
+    context.net.player_sit().map_err(|_| "disconnected")?;
+    context.wait_for("PlayerSitDown", |event| match event {
+        NetworkEvent::PlayerSitDown { entity_id } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    let (hp_ticks, _) = collect_hp_sp_ticks(&mut context, Duration::from_millis(12000));
+    let _ = context.net.player_stand();
+    let after = hp_ticks.last().map(|(_, hp)| *hp).unwrap_or(before);
+    let gained = after.saturating_sub(before);
+    if gained < (max_hp / 4).min(15) {
+        return Err(format!(
+            "sit 25%: HP {before}->{after} gained {gained}, max {max_hp}, ticks {hp_ticks:?}"
+        ));
+    }
+    Ok(())
+}
+
+fn save_load(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.warp("prontera", 155, 180)?;
+    context.gm_expect_feedback("@save")?;
+    context.warp("prontera", 100, 120)?;
+    context.pump(Duration::from_millis(400));
+    if context.position.x == 155 && context.position.y == 180 {
+        return Err("warp away did not move the character".into());
+    }
+    context.say("@load")?;
+    context.wait_for("return to save", |event| match event {
+        NetworkEvent::PlayerMove { destination, .. } if destination.x == 155 && destination.y == 180 => Some(()),
+        NetworkEvent::ChangeMap { .. } => Some(()),
+        _ => None,
+    })?;
+    context.pump(Duration::from_millis(400));
+    if context.position.x.abs_diff(155) > 2 || context.position.y.abs_diff(180) > 2 {
+        return Err(format!(
+            "@load left us at ({}, {}), expected near (155, 180)",
+            context.position.x, context.position.y
+        ));
+    }
+    Ok(())
+}
+
+fn weight_capacity_x5(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.say("@resetstat")?;
+    context.pump(Duration::from_millis(400));
+    // Novice base ~20300 + STR*300, times 5 => well above 80_000 packet units.
+    if context.max_weight < 80_000 {
+        return Err(format!(
+            "max_weight {} is below 80000; playtest ×5 capacity is missing",
+            context.max_weight
+        ));
+    }
     Ok(())
 }

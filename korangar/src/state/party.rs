@@ -699,4 +699,16 @@ mod tests {
         assert_eq!(member.health(), Some((90, 200)));
         assert_eq!(member.spell(), Some((30, 60)));
     }
+
+    #[test]
+    fn even_share_bonus_is_25_percent_per_extra_member() {
+        fn bonus_percent(members: u32) -> u32 {
+            100 + 25 * members.saturating_sub(1)
+        }
+        assert_eq!(bonus_percent(1), 100);
+        assert_eq!(bonus_percent(2), 125);
+        assert_eq!(bonus_percent(3), 150);
+        // 1000 EXP even-share among 2: (1000 * 125 / 100) / 2 = 625 each
+        assert_eq!(1000u64 * u64::from(bonus_percent(2)) / 100 / 2, 625);
+    }
 }

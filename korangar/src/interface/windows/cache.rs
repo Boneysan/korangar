@@ -144,6 +144,7 @@ impl WindowCache {
             WindowClass::Trade => state(AnchorPoint::Center, -20.0, -80.0, 400.0, 360.0),
             WindowClass::TradeRequest => state(AnchorPoint::Center, 0.0, -40.0, 320.0, 160.0),
             WindowClass::Identify => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
+            WindowClass::Quantity => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 200.0),
             WindowClass::WarpSelection | WindowClass::WeaponRefine | WindowClass::RepairWeapon => {
                 state(AnchorPoint::Center, 0.0, -80.0, 360.0, 300.0)
             }

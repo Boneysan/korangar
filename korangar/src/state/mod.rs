@@ -1,7 +1,12 @@
+pub mod area_loot;
+pub mod breadcrumb;
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
+pub mod campaign_checkpoint;
 pub mod character_creation;
 pub mod character_slots;
+pub mod chest_discovery;
+pub mod combat_chat;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
@@ -10,6 +15,8 @@ pub mod inventory;
 pub mod localization;
 pub mod minimap;
 pub mod party;
+pub mod party_colors;
+pub mod quantity;
 pub mod quests;
 pub mod skill_cooldowns;
 pub mod skills;
@@ -17,6 +24,7 @@ pub mod status_effects;
 pub mod storage;
 pub mod theme;
 pub mod trade;
+pub mod ui_sounds;
 
 use std::cell::Cell;
 use std::collections::HashMap;
@@ -347,6 +355,12 @@ pub struct ClientState {
     /// Magnifier / identify selection dialog.
     #[hidden_element]
     identify_state: IdentifyState,
+    /// Exact quantity chooser (drop / trade).
+    #[hidden_element]
+    quantity_state: crate::state::quantity::QuantityState,
+    /// Area-loot pickup queue (QW-045).
+    #[hidden_element]
+    area_loot: crate::state::area_loot::AreaLootQueue,
     /// Player skill tree.
     skill_tree: SkillTree,
     /// Active status effects (buffs / debuffs) for the local player.
@@ -531,6 +545,8 @@ impl ClientState {
             let storage = StorageState::default();
             let trade_state = TradeState::default();
             let identify_state = IdentifyState::default();
+            let quantity_state = crate::state::quantity::QuantityState::default();
+            let area_loot = crate::state::area_loot::AreaLootQueue::default();
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
@@ -620,6 +636,8 @@ impl ClientState {
             storage,
             trade_state,
             identify_state,
+            quantity_state,
+            area_loot,
             skill_tree,
             status_effects,
             skill_cooldowns,

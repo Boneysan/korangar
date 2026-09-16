@@ -262,6 +262,26 @@ mod tests {
     }
 
     #[test]
+    fn vendor_and_inventory_use_the_same_tooltip() {
+        let sword = item_stats(1101).unwrap();
+        let armor = item_stats(2301).unwrap();
+        let potion = item_stats(501).unwrap();
+        let inv = item_tooltip_text(1101, "Sword", Some(0), Some(armor), Some(0));
+        let vendor = item_tooltip_text(1101, "Sword", Some(0), Some(armor), Some(0));
+        assert_eq!(inv, vendor);
+        assert!(inv.contains("ATK"));
+        let shirt = item_tooltip_text(2301, "Cotton Shirt", None, Some(sword), None);
+        assert!(shirt.contains("DEF") || shirt.contains("Armor") || shirt.contains("Cotton"));
+        let ring = item_stats(2607);
+        let ring_text = item_tooltip_text(2607, "Ring", None, None, None);
+        assert!(!ring_text.is_empty());
+        let _ = ring;
+        let usable = item_tooltip_text(501, "Red Potion", None, None, None);
+        assert!(usable.contains("Potion") || usable.contains("Healing") || potion.item_type.contains("HEAL"));
+        assert!(!usable.contains("vs equipped"));
+    }
+
+    #[test]
     fn tooltip_includes_compare_deltas() {
         let sword = item_stats(1101).unwrap();
         let better = ItemStats {

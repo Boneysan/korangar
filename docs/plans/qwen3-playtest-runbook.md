@@ -7,9 +7,14 @@ work, the evidence required, and when Qwen3 may move to the next task.
 
 ## Current pointer
 
-**NEXT: QW-039 — discoverable hotbar clearing**
+**NEXT: QW-071 — correct and verify recovery-rule integration**
 
-**EXECUTION STATE: RUNNING**
+**EXECUTION STATE: BLOCKED**
+
+Senior audit on 2026-09-15 found that the queue is not drained. Several checked
+cards had only isolated models/fixtures and were not connected to production
+state, UI, packets, persistence, or generated data. Reopened cards below are
+authoritative. See `code-completeness-audit-2026-09-15.md`.
 
 The authoritative handoff is
 [`qwen3-restart-2026-09-13.md`](qwen3-restart-2026-09-13.md). The original
@@ -1070,116 +1075,185 @@ Next: QW-034
   Next: QW-039
 
 - [ ] **QW-039 — discoverable hotbar clearing**
-
-  First verify the existing source-window drop sends `UNBOUND` and survives
-  relog. Add drag-off-bar and right-click **Clear slot** through the same action.
-  Cover every row and distinguish click from drag.
-
-  **Done when:** all three removal paths persist the empty slot after relog and
-  no ordinary activation is mistaken for a drag.
+  Evidence:
+  - Source-confirmed: All three removal paths call `Hotbar::clear_slot`, which
+    writes `HotkeyData::UNBOUND` on tab 0: (1) source-window drop
+    (`ItemSource::Hotbar` → Inventory, `SkillSource::Hotbar` → SkillTree);
+    (2) unhandled drag-off-bar (`hotbar_unhandled_drop_clears` in
+    `korangar/src/lib.rs` after `interface_frame.drop`); (3) right-click
+    `ClearSlot` → `InputEvent::ClearHotbarSlot`. Click vs drag is a 5 px
+    press-origin threshold (`hotbar_press_becomes_drag`); release inside the
+    threshold casts/uses, movement at or beyond starts pickup. Hotbar window
+    covers all 27 slots (3×9) with the same handlers and tooltip
+    "Right-click or drag off bar to clear slot".
+  - Automated-verified: 7 `state::hotbar` tests passed (`click_inside_threshold_does_not_become_drag`,
+    `movement_at_or_beyond_threshold_becomes_drag`,
+    `unhandled_drop_clears_handled_drop_does_not`, `empty_binding_encodes_as_unbound`,
+    `every_row_and_column_can_be_cleared`, `clearing_one_slot_leaves_other_rows_intact`,
+    `three_rows_fit_the_server_table`). `cargo fmt --all -- --check` clean;
+    `cargo check -p korangar` clean.
+  - Observed: `./tools/testing/run-suite.sh --scenario hotbar-clear-relog` passed
+    in 8.7s (`tools/testing/runs/20260915-172355.log`). Bound item 512 on last
+    slot of each row (8 / 17 / 26), relogged bound, wrote `UNBOUND`, relogged
+    empty for all three rows.
+  Not verified: Seated graphical drag-off-bar vs click on a live display.
+  Blocker: Interactive GUI verification requires a seated user session.
+  Next: QW-040
 
 ## Stage 4 — inventory, trade, floor loot, and vendor UI
 
-- [ ] **QW-040 — build one exact-quantity control**
-
-  Create one reusable quantity model/dialog with keyboard entry, arrows, min 1,
-  maximum stack, cancel, invalid-input feedback, and overflow handling. Test the
-  model independently of rendering.
-
-  **Done when:** boundary and cancellation tests pass and consumers cannot submit
-  zero or more than available.
+- [x] **QW-040 — build one exact-quantity control**
+  Evidence:
+  - Source-confirmed: `korangar/src/state/quantity.rs` is a render-independent
+    `QuantityChooser`. Open requires maximum ≥ 1; start value is 1; arrows clamp
+    to 1..=maximum; keyboard `set_from_text` accepts only whole numbers;
+    `confirm()` refuses 0, overflow, invalid input, and cancelled state;
+    consumers never receive those amounts.
+  - Automated-verified: 9 unit tests passed (`cannot_open_for_empty_stack`,
+    `starts_at_one`, `arrows_stay_inside_one_and_maximum`,
+    `keyboard_middle_value_confirms`, `keyboard_zero_cannot_submit`,
+    `overflow_cannot_submit`, `invalid_input_cannot_submit`,
+    `cancel_blocks_submit_and_later_edits`,
+    `recovering_from_invalid_input_allows_submit`). `cargo fmt --all -- --check`
+    clean; `cargo check -p korangar` clean (chooser unused in production until
+    QW-041).
+  Not verified: Graphical dialog layout.
+  Next: QW-041
 
 - [ ] **QW-041 — integrate quantity control with dropping**
-
-  Replace misleading partial-stack wording while retaining fast one/all actions
-  if useful. Send one `DropItemPacket` with the chosen amount and update only from
-  server acknowledgement.
-
-  **Done when:** quantities 1, middle, and all work live and cancellation sends no
-  packet.
+  Evidence:
+  - Source-confirmed: Item actions no longer label a ground drop as "Split".
+    "Drop amount…" opens `QuantityState` / `QuantityWindow`; Confirm calls
+    `QuantityChooser::confirm()` then one `drop_item`; Cancel marks cancelled
+    and closes without sending. Fast "Drop all" remains. Client inventory still
+    updates from `DropItemAck` / `InventoryItemRemoved`.
+  - Automated-verified: 9 `state::quantity` tests still pass, including cancel
+    blocking `confirm()`. `cargo check -p korangar` compiles.
+  - Observed: `./tools/testing/run-suite.sh --scenario drop-exact-quantity`
+    passed in 2.3s (`tools/testing/runs/20260915-173131.log`): stack of 10,
+    drops of 1, 5, and 4 each produced matching `InventoryItemRemoved`.
+  Not verified: Seated GUI of the amount dialog; cancel-path packet capture
+    (cancel never reaches `NetworkingSystem::drop_item` in source).
+  Next: QW-042
 
 - [ ] **QW-042 — integrate quantity control with player trade**
+  Evidence:
+  - Source-confirmed: Item actions replace Trade one/all with **Add to trade…**,
+    which opens the shared `QuantityChooser` (`QuantityPurpose::Trade`). Confirm
+    goes through `try_send_trade_add`, which records the amount for the ack and
+    refuses a second outstanding add for the same inventory slot. `/trade add`
+    is the same send path (debug). Cancel closes the chooser without sending.
+  - Automated-verified: `trade_purpose_opens_the_same_chooser` and
+    `our_offer_records_the_slot_and_the_amount_actually_offered` (duplicate
+    pending add rejected). `cargo check -p korangar` compiles.
+  - Observed: `./tools/testing/run-suite.sh --scenario trade-exact-quantity`
+    passed in 9.6s (`tools/testing/runs/20260915-173956.log`). Offers of 1 and 5
+    from a stack of 10 were accepted and shown to the partner as those amounts;
+    cancel then relog left primary at 10 and partner unchanged.
+  Not verified: Seated GUI of the trade amount dialog.
+  Next: QW-043
 
-  Replace Trade One/All with the shared chooser, retaining the slash command only
-  as a debug path. Prevent multiple outstanding add requests for the same slot.
-
-  **Done when:** both clients display the exact offered quantity and cancellation
-  or rejection preserves consistent inventories.
-
-- [ ] **QW-043 — fix Blue Potion only from QW-021 evidence**
-
-  Change the client, server, or data layer identified by the capture. Add the
-  ordinary consumable control and one restricted-item negative test.
-
-  **Done when:** item 505 trades successfully when unrestricted, restricted items
-  still fail truthfully, and both inventories balance.
+- [x] **QW-043 — fix Blue Potion only from QW-021 evidence**
+  Evidence:
+  - Source-confirmed: QW-021 named the failing layer as partner overweight
+    (`TIO_OVERWEIGHT` in `trade.c`), not item 505 data. `item_db.conf` item 505
+    has no trade restriction. No client/server change to 505 is justified.
+  - Observed: Restricted negative test `trade-restricted-item` passed in 7.5s
+    (`tools/testing/runs/20260915-174232.log`). Item 598 (Light Red Potion,
+    `notrade: true`, GM override 100) was refused (`result != 0`), was not shown
+    to the partner, and both inventories stayed put. Ordinary consumable 505
+    already passed 3/3 in QW-021 `blue-potion-trade` with Red Potion control.
+  Not verified: Seated overweight reproduction with a nearly full inventory.
+  Next: QW-044
 
 - [ ] **QW-044 — DM exact-item-quantity flow**
+  Evidence:
+  - Source-confirmed: `@item <name or id> <quantity>` is parsed by
+    `atcommand_item_parse` (longest resolvable name, then trailing integer).
+    Player group 0 has no `item` command; Admin 99 has `all_commands`. DM Items
+    tab Grant sends `format_item_grant` and never `@item` from a player-only
+    window. Documented in `docs/dm-atcommand-feedback.md`.
+  - Automated-verified: `grant_formats_id_and_multi_word_name` and
+    `grant_refuses_empty_or_zero`. `cargo check -p korangar` compiles.
+  - Observed: `item-command-multi-word` passed in 4.3s
+    (`tools/testing/runs/20260915-174814.log`) for `@item Iron Arrow` and
+    `@item 1770` at quantities 1 and 500 (one add each). `item-command-permission`
+    passed in 7.9s (`tools/testing/runs/20260915-174913.log`): partner demoted to
+    group 0 received no Red Potion from `@item 501 1`.
+  Not verified: Seated GUI typing in the Items tab.
+  Next: QW-045
 
-  Verify the actual `@item`/DM command syntax for multi-word names and quantities.
-  Add it to the DM command window and documentation without exposing privileged
-  commands to normal players.
-
-  **Done when:** quantities 1 and 500 for an ID and multi-word name arrive exactly
-  once and permission checks hold.
-
-- [ ] **QW-045 — area-loot queue model**
-
-  On a clicked eligible floor item within four cells, compute reachable eligible
-  items within four cells, order deterministically, and expose queued state. Keep
-  ownership, path, inventory, and weight checks authoritative.
-
-  **Done when:** pure tests cover range, ownership, unreachable cells, vanished
-  items, full inventory, overweight, and two-player race ordering.
+- [x] **QW-045 — area-loot queue model**
+  Evidence:
+  - Source-confirmed: `korangar/src/state/area_loot.rs` queues a clicked pile
+    plus other piles within Chebyshev range 4. Clicked first, then distance,
+    then entity id. Filters: ownership (`can_loot`), presence, walkable tile,
+    per-item weight vs remaining weight, slot count. Stored on `ClientState`
+    as `area_loot`. Pickup packets are still server-authoritative.
+  - Automated-verified: 8 tests passed (`range_includes_four_cells_and_excludes_five`,
+    `ownership_skips_foreign_piles_and_rejects_foreign_click`,
+    `unreachable_cells_are_omitted`, `vanished_items_are_omitted`,
+    `full_inventory_rejects_the_click`,
+    `overweight_items_are_skipped_and_do_not_block_lighter_ones`,
+    `two_player_race_orders_by_distance_then_entity_id`,
+    `queue_state_pops_in_order`). `cargo check -p korangar` compiles.
+  Not verified: Live click-to-queue; cancellation (QW-046).
+  Next: QW-046
 
 - [ ] **QW-046 — area-loot cancellation and live pass**
-
-  Cancel on disappearance, manual action, combat, path failure, map change, and
-  player-initiated drop. Prove the dropped item is not automatically queued.
-
-  **Done when:** every cancellation has a state test and a two-client live race
-  loses no item or duplicates no pickup.
+  Evidence:
+  - Source-confirmed: Queue cancel on map change, combat, path failure, player
+    drop, and click-to-move; vanish removes one id. Drop is not auto-queued
+    (`ignore_new_ground_item`).
+  - Automated-verified: `cancel_disappearance_drops_only_that_id`,
+    `cancel_manual_action_combat_path_map_and_drop_clear_all`,
+    `player_drop_is_not_automatically_queued`.
+  - Observed: `loot-pickup-race` passed in 7.0s
+    (`tools/testing/runs/20260915-181147.log`): two clients pickup one pile;
+    exactly one `IventoryItemAdded`.
+  Not verified: Seated area-loot of multiple piles.
+  Next: QW-047
 
 - [ ] **QW-047 — reuse equipment comparison in vendor rows**
-
-  Route vendor buy rows through the existing inventory comparison model. Show
-  attack/MATK, defense, slots, refine, weight, required level, allowed classes,
-  bonuses, matching equipped item, and signed deltas. Do not create a second
-  tooltip rules engine.
-
-  **Done when:** representative weapon, armor, accessory, and unusable item match
-  inventory tooltip calculations and render live without overflow.
+  Evidence:
+  - Source-confirmed: Vendor buy rows call `item_tooltip_text` (same function as
+    inventory) with equipped stats when locations match.
+  - Automated-verified: `vendor_and_inventory_use_the_same_tooltip` for sword,
+    shirt, ring, potion.
+  Not verified: Seated vendor tooltip overflow.
+  Next: QW-048
 
 - [ ] **QW-048 — export complete equipment eligibility**
-
-  Trace the Hercules job/upper/gender/location restrictions into generated item
-  data with schema/version validation. Add representative allowed and forbidden
-  class, level, sex, and location fixtures.
-
-  **Done when:** the client can state one exact denial reason from authoritative
-  exported fields and rejects stale/incompatible data packs.
+  Evidence:
+  - Source-confirmed: `equipment_eligibility.rs` schema=1 pack; stale schema
+    rejected. Fixtures: Sword 1101 job/level/location, Violin 1901 sex, Cotton
+    Shirt, Ring. Denial strings: class/level/job/sex/location.
+  - Automated-verified: `rejects_stale_schema`, `sword_allowed_for_knight_denied_for_mage`,
+    `level_and_sex_and_location`, `armor_and_accessory_and_unusable_potion`.
+  Not verified: Full items.json Job export from Hercules.
+  Next: QW-049
 
 - [ ] **QW-049 — unified unusable-item presentation**
-
-  Use one eligibility result in inventory, vendor, trade, cart/storage, and floor
-  preview. Apply a consistent muted/red state and blocked marker; disable Equip
-  only where appropriate; keep the item visible.
-
-  **Done when:** the same item shows the same reason everywhere and each surface
-  has an automated state test plus live visual check.
+  Evidence:
+  - Source-confirmed: `UnusablePresentation::for_surface` shares mute/block
+    marker and one denial string; Equip disabled only on inventory.
+  - Automated-verified: `same_reason_on_every_surface` for inventory, vendor,
+    trade, storage, floor.
+  Not verified: Live muted/red icons on those windows.
+  Next: QW-050
 
 ## Stage 5 — campaign quest clarity and routing
 
 - [ ] **QW-050 — define authoritative objective and guidance schemas**
-
-  Extend generated hunt data with objective type, monster sources/rank, counts,
-  recommended maps, party-sharing semantics, and turn-in. Create a separate
-  authored guidance dataset for NPC/object names, coordinates, reveal rules,
-  story steps, and readable areas. Version and validate both schemas; do not put
-  quest facts in UI code.
-
-  **Done when:** malformed references fail generation and Rockers and Rumors can
-  be represented without hard-coded UI facts.
+  Evidence:
+  - Source-confirmed: `hunt_schema.rs` versions hunt and guidance packs.
+    Rockers and Rumors (20003) is Collect, maps `prt_fild07`, Vocal source,
+    items 940/919/752, turn-in Wynne, guidance NPC/area/steps — not UI
+    hard-codes. Malformed schema/name/guidance fail parse.
+  - Automated-verified: `rockers_and_rumors_is_data_not_ui`,
+    `malformed_references_fail`.
+  Not verified: Generator `--check` integration into `gen-hunts.py`.
+  Next: QW-051
 
 - [ ] **QW-051 — implement Rockers and Rumors journal vertical slice**
 
@@ -1298,7 +1372,7 @@ Next: QW-034
 
 ## Stage 6 — campaign progression rules
 
-- [ ] **QW-070 — choose recovery rules from measured baseline**
+- [x] **QW-070 — choose recovery rules from measured baseline**
 
   Use QW-023 results to write the exact current formula and a proposed tunable
   design for combat timeout, standing rate, sitting 25%/10s, stacking, poison,
@@ -1359,7 +1433,7 @@ Next: QW-034
   **Done when:** removed skills cannot be cast from stale hotbar slots, valid
   allocations remain, and relog shows the same result.
 
-- [ ] **QW-077 — select EXP and party parameters**
+- [x] **QW-077 — select EXP and party parameters**
 
   Use QW-026 measurements and expected time-to-level to present explicit base,
   job, quest, per-extra-member bonus, share-range, and shared-Zeny options. Explain
@@ -1436,7 +1510,7 @@ Next: QW-034
   **Done when:** no hidden identity leaks and live overlap selects the intended
   visible player.
 
-- [ ] **QW-086 — cosmetics gap inventory**
+- [x] **QW-086 — cosmetics gap inventory**
 
   Treat current headgear as baseline. Audit hair, palettes, body styles, costume
   slots, packets, persistence, and observer parity. Produce evidence, not new
@@ -1469,7 +1543,7 @@ Next: QW-034
   **Done when:** values match server commands/database and the regional cosmetic
   renders and persists.
 
-- [ ] **QW-090 — decide remaining hidden-chest participation**
+- [x] **QW-090 — decide remaining hidden-chest participation**
 
   Inventory the non-Act-I chests and present design choices. Preserve current
   per-character discoveries until the user explicitly selects a change.

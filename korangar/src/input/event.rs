@@ -5,8 +5,8 @@ use korangar_debug::profiling::FrameMeasurement;
 use korangar_interface::event::{ClickHandler, Event, EventQueue};
 use korangar_networking::{InventoryItem, ShopItem};
 use ragnarok_packets::{
-    AccountId, AttackRange, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, RepairableItemInformation,
-    ShopId, SkillId, SkillLevel, SoldItemInformation, StatUpType, TilePosition,
+    AccountId, AttackRange, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, InventoryIndex,
+    RepairableItemInformation, ShopId, SkillId, SkillLevel, SoldItemInformation, StatUpType, TilePosition,
 };
 use rust_state::State;
 
@@ -298,6 +298,21 @@ pub enum InputEvent {
     ClearHotbarSlot {
         slot: HotbarSlot,
     },
+    OpenQuantityDrop {
+        inventory_index: InventoryIndex,
+        maximum: u16,
+        item_name: String,
+    },
+    OpenQuantityTrade {
+        inventory_index: InventoryIndex,
+        maximum: u16,
+        item_name: String,
+    },
+    QuantityIncrement,
+    QuantityDecrement,
+    QuantitySetAll,
+    QuantityConfirm,
+    QuantityCancel,
     /// Camera-relative keyboard movement (WASD).
     /// Camera-relative keyboard movement. `fresh` is true when one of the four
     /// keys went down THIS frame, which is what separates a tap from a key that
@@ -460,6 +475,10 @@ pub enum InputEvent {
     /// dependencies as possible.
     DistributePointsForSkill {
         /// Id of the skill to level up.
+        skill_id: SkillId,
+    },
+    /// Remove one pending or committed point from a skill and refund it.
+    RefundSkillPoint {
         skill_id: SkillId,
     },
     /// Level up a skill.

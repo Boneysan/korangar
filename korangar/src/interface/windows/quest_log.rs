@@ -54,9 +54,16 @@ impl QuestDetails {
                 progress,
             });
         };
+        if !quest.location.is_empty() {
+            push(quest.location.clone(), Color::rgb_u8(180, 210, 255), None);
+        }
         if quest.requirements().is_empty() {
             push(
-                "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into(),
+                if quest.location.is_empty() {
+                    "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into()
+                } else {
+                    "Follow the destination above.".into()
+                },
                 Color::monochrome_u8(215),
                 None,
             );

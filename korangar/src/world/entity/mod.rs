@@ -2061,13 +2061,13 @@ impl Player {
         }
     }
 
-    /// Soft overweight starts at the server's critical-weight percent (usually
-    /// 50%).
+    /// Warn (yellow) at 70% of max weight.
     pub fn is_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * self.critical_weight_percent
+        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * 70
     }
 
-    /// Hard overweight at 90% of max weight (cannot attack / use skills in RO).
+    /// Soft overweight at 90% (red). Attacks remain allowed; pickup fails at
+    /// 100%.
     pub fn is_hard_overweight(&self) -> bool {
         self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
     }
