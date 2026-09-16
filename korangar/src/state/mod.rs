@@ -93,8 +93,10 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+pub use crate::state::breadcrumb::BreadcrumbState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
+pub use crate::state::chest_discovery::{ChestDiscoveryState, ChestVisualState};
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
@@ -284,9 +286,14 @@ pub struct ClientState {
     loot_window: LootWindowState,
     /// Seal Cascade campaign progress (bestiary unlocks).
     dm_campaign: DmCampaignState,
+    /// Authoritative personal hidden chest discoveries.
+    #[hidden_element]
+    chest_discovery: ChestDiscoveryState,
     /// Active quests and, for campaign hunting contracts, what they want
     /// handed in.
     quest_log: QuestLogState,
+    /// HUD breadcrumb for the currently tracked quest objective.
+    breadcrumb: BreadcrumbState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -512,7 +519,9 @@ impl ClientState {
             let bestiary_window = BestiaryWindowState::default();
             let loot_window = LootWindowState::default();
             let dm_campaign = DmCampaignState::default();
+            let chest_discovery = ChestDiscoveryState::default();
             let quest_log = QuestLogState::default();
+            let breadcrumb = BreadcrumbState::default();
         });
 
         time_phase!("create character server resources", {
@@ -617,7 +626,9 @@ impl ClientState {
             bestiary_window,
             loot_window,
             dm_campaign,
+            chest_discovery,
             quest_log,
+            breadcrumb,
             friend_list_window,
             party_window,
             instance_state,

@@ -230,6 +230,26 @@ pub fn item_tooltip_text(
     lines.join("\n")
 }
 
+/// Extended tooltip with denial text in red (e.g. `^FF5050Cannot equip:
+/// job^000000`).
+pub fn item_tooltip_text_with_denial(
+    item_id: u32,
+    display_name: &str,
+    refinement: Option<u8>,
+    equipped: Option<&ItemStats>,
+    equipped_refinement: Option<u8>,
+    denial: Option<&str>,
+) -> String {
+    let mut text = item_tooltip_text(item_id, display_name, refinement, equipped, equipped_refinement);
+    if let Some(reason) = denial {
+        text.push('\n');
+        text.push_str("^FF5050");
+        text.push_str(reason);
+        text.push_str("^000000");
+    }
+    text
+}
+
 fn push_delta(lines: &mut Vec<String>, label: &str, mine: Option<i32>, theirs: Option<i32>) {
     match (mine, theirs) {
         (Some(a), Some(b)) if a != b => {

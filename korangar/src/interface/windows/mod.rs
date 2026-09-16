@@ -57,6 +57,7 @@ mod status_bar;
 mod storage;
 #[cfg(feature = "debug")]
 mod theme_inspector;
+mod tracked_objective;
 mod trade;
 mod warp_selection;
 mod weapon_refine;
@@ -121,6 +122,7 @@ pub use self::status_bar::StatusBarWindow;
 pub use self::storage::StorageWindow;
 #[cfg(feature = "debug")]
 pub use self::theme_inspector::{ThemeInspectorWindow, ThemeInspectorWindowState};
+pub use self::tracked_objective::TrackedObjectiveWindow;
 pub use self::trade::{TradeRequestWindow, TradeWindow, TradeWindowState};
 pub use self::warp_selection::WarpSelectionWindow;
 pub use self::weapon_refine::WeaponRefineWindow;
@@ -160,6 +162,8 @@ pub enum WindowClass {
     Party,
     /// Quest log: active quests and campaign contract requirements.
     QuestLog,
+    /// HUD tracker for pinned / active campaign quest objective.
+    TrackedObjective,
     /// Incoming party invite popup (Accept / Decline).
     PartyInvite,
     /// Auto Spell skill chooser.

@@ -18,8 +18,8 @@ use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
 use crate::state::theme::InterfaceThemeType;
-use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::{ResourceMetadata, item_stats, item_tooltip_text};
+use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
+use crate::world::{ResourceMetadata, UnusablePresentation, Wearer, item_stats, item_tooltip_text_with_denial};
 
 struct PartialEqDisplayStr<T> {
     last_value: Option<T>,
@@ -208,7 +208,10 @@ where
                 }
             });
             let (eq, refine) = equipped.map(|(s, r)| (Some(s), r)).unwrap_or((None, None));
-            let text = item_tooltip_text(item.item_id.0, &item.metadata.name, None, eq, refine);
+            let wearer = state.try_follow(this_player()).map(|player| Wearer::from_player(player, "*"));
+            let unusable = wearer.map(|w| UnusablePresentation::for_item(item.item_id.0, w, false));
+            let denial_text = unusable.as_ref().and_then(|u| u.reason_text());
+            let text = item_tooltip_text_with_denial(item.item_id.0, &item.metadata.name, None, eq, refine, denial_text);
             unsafe {
                 *self.tooltip_text.get() = text;
                 layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), VendorItemTooltip.tooltip_id());

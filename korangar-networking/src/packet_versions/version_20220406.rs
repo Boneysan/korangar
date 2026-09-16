@@ -478,8 +478,19 @@ where
         attack_range: packet.attack_range,
     })?;
     packet_handler.register_noop::<NewMailStatusPacket>()?;
-    packet_handler.register_noop::<AchievementUpdatePacket>()?;
-    packet_handler.register_noop::<AchievementListPacket>()?;
+    packet_handler.register(|packet: AchievementUpdatePacket| NetworkEvent::AchievementUpdate {
+        achievement_id: packet.acheivement_data.acheivement_id,
+        is_completed: packet.acheivement_data.is_completed != 0,
+    })?;
+    packet_handler.register(|packet: AchievementListPacket| {
+        let completed_achievements = packet
+            .acheivement_data
+            .into_iter()
+            .filter(|ach| ach.is_completed != 0)
+            .map(|ach| ach.acheivement_id)
+            .collect();
+        NetworkEvent::AchievementList { completed_achievements }
+    })?;
     packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent { percent: packet.weight })?;
     // This match is deliberately EXHAUSTIVE — no `_` arm. It used to end in
     // `_ => None`, which silently dropped nine of the fourteen look types the

@@ -3,6 +3,7 @@
 //! Schema version is required. Stale packs without `schema=` fail to parse.
 
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
 pub const ELIGIBILITY_SCHEMA: u32 = 1;
 
@@ -13,9 +14,18 @@ pub enum Sex {
     Any,
 }
 
+impl From<ragnarok_packets::Sex> for Sex {
+    fn from(sex: ragnarok_packets::Sex) -> Self {
+        match sex {
+            ragnarok_packets::Sex::Male => Sex::Male,
+            ragnarok_packets::Sex::Female => Sex::Female,
+            _ => Sex::Any,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum EquipDenial {
-    Class,
     Level,
     Job,
     Sex,
@@ -25,7 +35,6 @@ pub enum EquipDenial {
 impl EquipDenial {
     pub fn tooltip(&self) -> &'static str {
         match self {
-            Self::Class => "Cannot equip: class",
             Self::Level => "Cannot equip: level",
             Self::Job => "Cannot equip: job",
             Self::Sex => "Cannot equip: sex",
@@ -41,11 +50,14 @@ pub struct EligibilityRow {
     pub sex: Sex,
     pub min_level: u16,
     pub loc: String,
+    pub max_level: u16,
+    pub upper_mask: u32,
+    pub weapon_level: u8,
+    pub slots: u8,
 }
 
 #[derive(Clone, Debug)]
 pub struct EligibilityTable {
-    schema: u32,
     rows: HashMap<u32, EligibilityRow>,
 }
 
@@ -57,11 +69,29 @@ pub struct Wearer {
     pub slot: &'static str,
 }
 
+impl Wearer {
+    pub fn from_player(player: &crate::world::Player, slot: &'static str) -> Self {
+        let common = player.get_common();
+        Self {
+            job_id: common.job_id.0,
+            base_level: player.base_level as u16,
+            sex: common.sex.into(),
+            slot,
+        }
+    }
+}
+
+static GLOBAL_TABLE: OnceLock<EligibilityTable> = OnceLock::new();
+
 impl EligibilityTable {
+    pub fn get() -> &'static Self {
+        GLOBAL_TABLE.get_or_init(bundled_table)
+    }
+
     pub fn parse(source: &str) -> Result<Self, String> {
         let mut lines = source.lines();
         let header = lines.next().ok_or("empty eligibility pack")?;
-        let schema = header
+        let schema: u32 = header
             .strip_prefix("# schema=")
             .and_then(|n| n.trim().parse().ok())
             .ok_or_else(|| "eligibility pack missing schema version".to_owned())?;
@@ -92,49 +122,55 @@ impl EligibilityTable {
             };
             let min_level: u16 = parts.next().unwrap_or("0").parse().unwrap_or(0);
             let loc = parts.next().unwrap_or("").to_owned();
+            let max_level: u16 = parts.next().unwrap_or("0").parse().unwrap_or(0);
+            let upper_mask: u32 = parts.next().unwrap_or("0").parse().unwrap_or(0);
+            let weapon_level: u8 = parts.next().unwrap_or("0").parse().unwrap_or(0);
+            let slots: u8 = parts.next().unwrap_or("0").parse().unwrap_or(0);
             rows.insert(item_id, EligibilityRow {
                 item_id,
                 jobs,
                 sex,
                 min_level,
                 loc,
+                max_level,
+                upper_mask,
+                weapon_level,
+                slots,
             });
         }
-        Ok(Self { schema, rows })
-    }
-
-    pub fn schema(&self) -> u32 {
-        self.schema
+        Ok(Self { rows })
     }
 
     pub fn denial(&self, item_id: u32, wearer: Wearer) -> Option<EquipDenial> {
         let row = self.rows.get(&item_id)?;
-        if !row.jobs.is_empty() && !row.jobs.contains(&wearer.job_id) {
-            return Some(EquipDenial::Job);
-        }
-        if wearer.base_level < row.min_level {
-            return Some(EquipDenial::Level);
+        if !row.loc.is_empty() && wearer.slot != "*" {
+            let matches = row.loc.split('|').any(|slot| {
+                slot == wearer.slot
+                    || (slot == "EQP_WEAPON" && wearer.slot == "EQP_HAND_R")
+                    || (slot == "EQP_SHIELD" && wearer.slot == "EQP_HAND_L")
+                    || (slot == "EQP_ARMS" && (wearer.slot == "EQP_HAND_R" || wearer.slot == "EQP_HAND_L"))
+                    || (slot == "EQP_ACC" && (wearer.slot == "EQP_ACC_L" || wearer.slot == "EQP_ACC_R"))
+                    || (slot == "EQP_HELM"
+                        && (wearer.slot == "EQP_HEAD_TOP" || wearer.slot == "EQP_HEAD_MID" || wearer.slot == "EQP_HEAD_LOW"))
+            });
+            if !matches {
+                return Some(EquipDenial::Location);
+            }
         }
         if row.sex != Sex::Any && row.sex != wearer.sex {
             return Some(EquipDenial::Sex);
         }
-        if !row.loc.is_empty() && row.loc != wearer.slot && wearer.slot != "*" {
-            return Some(EquipDenial::Location);
+        if wearer.base_level < row.min_level || (row.max_level > 0 && wearer.base_level > row.max_level) {
+            return Some(EquipDenial::Level);
         }
-        let _ = EquipDenial::Class;
+        if !row.jobs.is_empty() && !row.jobs.contains(&wearer.job_id) {
+            return Some(EquipDenial::Job);
+        }
         None
     }
 }
 
-/// Bundled fixtures: Sword 1101, Cotton Shirt 2301, Ring 2607, Violin 1901
-/// (male/bard).
-pub const BUNDLED_ELIGIBILITY: &str = "\
-# schema=1
-1101	1|7|14|4008	any	2	EQP_WEAPON
-2301	1|7|14|4008|0	any	1	EQP_ARMOR
-2607		any	0	EQP_ACC
-1901	19	male	1	EQP_WEAPON
-";
+pub const BUNDLED_ELIGIBILITY: &str = include_str!("equipment_eligibility.tsv");
 
 pub fn bundled_table() -> EligibilityTable {
     EligibilityTable::parse(BUNDLED_ELIGIBILITY).expect("bundled eligibility is valid")

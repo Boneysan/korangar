@@ -25,12 +25,12 @@ use crate::graphics::reduce_vertices;
 #[cfg(feature = "debug")]
 use crate::graphics::{BindlessSupport, DebugRectangleInstruction};
 use crate::graphics::{EntityInstruction, ScreenPosition, ScreenSize};
-use crate::loaders::GameFileLoader;
+use crate::loaders::{FontSize, GameFileLoader};
 #[cfg(feature = "debug")]
 use crate::loaders::{GAT_TILE_SIZE, split_mesh_by_texture};
-use crate::renderer::GameInterfaceRenderer;
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
+use crate::renderer::{AlignHorizontal, GameInterfaceRenderer};
 use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
@@ -286,6 +286,10 @@ pub struct Common {
     #[hidden_element]
     active_cast: Option<ActorCast>,
     stopped_moving: bool,
+    #[hidden_element]
+    pub chest_id: Option<u32>,
+    #[hidden_element]
+    pub chest_visual_state: Option<crate::state::ChestVisualState>,
     #[hidden_element]
     fade_state: FadeState,
 }
@@ -1235,6 +1239,8 @@ impl Common {
             su_stoop: false,
             active_cast: None,
             stopped_moving: false,
+            chest_id: None,
+            chest_visual_state: None,
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
             scale,
         }
@@ -1814,6 +1820,10 @@ impl Common {
             _ => {}
         }
 
+        if let Some(chest_state) = self.chest_visual_state {
+            return chest_state.tint();
+        }
+
         if self.health_state & OPT2_DEADLY_POISON != 0 {
             StatusTint::tinted(Color::rgb(0.65, 0.35, 0.7)) // deadly poison — deeper violet
         } else if self.health_state & OPT2_POISON != 0 {
@@ -2269,6 +2279,25 @@ impl Npc {
         window_size: ScreenSize,
         is_target: bool,
     ) {
+        if let Some(chest_state) = self.common.chest_visual_state {
+            let clip_space_position = camera.view_projection_matrix() * self.common.world_position.to_homogeneous();
+            if clip_space_position.w > 0.0 {
+                let screen_position = camera.clip_to_screen_space(clip_space_position);
+                let final_position = ScreenPosition {
+                    left: screen_position.x * window_size.width,
+                    top: screen_position.y * window_size.height - 15.0,
+                };
+                renderer.render_text(
+                    chest_state.hover_tag(),
+                    final_position,
+                    chest_state.display_color(),
+                    FontSize(11.0),
+                    AlignHorizontal::Center,
+                );
+            }
+            return;
+        }
+
         if self.common.entity_type != EntityType::Monster {
             return;
         }
@@ -2437,6 +2466,24 @@ impl Entity {
 
     pub fn get_entity_id(&self) -> EntityId {
         self.get_common().entity_id
+    }
+
+    pub fn get_chest_id(&self) -> Option<u32> {
+        self.get_common().chest_id
+    }
+
+    pub fn get_chest_visual_state(&self) -> Option<crate::state::ChestVisualState> {
+        self.get_common().chest_visual_state
+    }
+
+    pub fn set_chest_state(&mut self, chest_id: u32, visual_state: crate::state::ChestVisualState) {
+        let common = self.get_common_mut();
+        common.chest_id = Some(chest_id);
+        common.chest_visual_state = Some(visual_state);
+    }
+
+    pub fn update_chest_visual_state(&mut self, visual_state: crate::state::ChestVisualState) {
+        self.get_common_mut().chest_visual_state = Some(visual_state);
     }
 
     /// Right-hand weapon appearance (item id or class view) of this entity.
@@ -2623,10 +2670,22 @@ impl Entity {
                     Some(job_name.to_string())
                 }
             }
-            EntityType::Monster | EntityType::Npc => self.get_details().map(|name| {
-                let clean_name = name.split('#').next().unwrap_or(name);
-                clean_name.to_string()
-            }),
+            EntityType::Monster | EntityType::Npc => {
+                let base_name = if let Some(name) = self.get_details() {
+                    let clean_name = name.split('#').next().unwrap_or(name);
+                    clean_name.to_string()
+                } else if self.get_common().chest_id.is_some() {
+                    "Treasure Chest".to_string()
+                } else {
+                    return None;
+                };
+
+                if let Some(chest_state) = self.get_common().chest_visual_state {
+                    Some(format!("{base_name} {}", chest_state.hover_tag()))
+                } else {
+                    Some(base_name)
+                }
+            }
             EntityType::Warp | EntityType::Hidden => None,
         }
     }
@@ -3361,7 +3420,7 @@ mod hover_and_privacy_tests {
     use cgmath::Point3;
     use ragnarok_packets::{ClientTick, Direction, EntityId, EntityOption, JobId, Sex, TilePosition};
 
-    use super::{Common, Entity, EntityType, FadeState, Library, Npc, ResourceState};
+    use super::{Common, Entity, EntityType, FadeState, Library, Npc, ResourceState, StatusTint};
 
     fn dummy_common(job_id: JobId, entity_id: EntityId) -> Common {
         Common {
@@ -3403,6 +3462,8 @@ mod hover_and_privacy_tests {
             stopped_moving: false,
             fade_state: FadeState::Opaque,
             scale: 1.0,
+            chest_id: None,
+            chest_visual_state: None,
         }
     }
 
@@ -3522,5 +3583,36 @@ mod hover_and_privacy_tests {
         let library = Library::empty_for_test();
         assert!(entity.hides_identity());
         assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn chest_entity_hover_and_tint_for_three_states() {
+        use crate::state::ChestVisualState;
+
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(10005), EntityId(200)),
+        });
+        entity.set_details("Treasure Chest#tr120001".to_string());
+        let library = Library::empty_for_test();
+
+        // 1. Available state
+        entity.set_chest_state(120001, ChestVisualState::Available);
+        assert_eq!(entity.get_chest_id(), Some(120001));
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Available));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Available]".to_string()));
+        assert_eq!(entity.get_common().status_tint(), StatusTint::NONE);
+
+        // 2. Opened state
+        entity.update_chest_visual_state(ChestVisualState::Opened);
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Opened));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Opened]".to_string()));
+        assert_ne!(entity.get_common().status_tint(), StatusTint::NONE);
+        assert_eq!(entity.get_common().status_tint(), ChestVisualState::Opened.tint());
+
+        // 3. Unopened state
+        entity.update_chest_visual_state(ChestVisualState::Unopened);
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Unopened));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Unopened]".to_string()));
+        assert_eq!(entity.get_common().status_tint(), ChestVisualState::Unopened.tint());
     }
 }

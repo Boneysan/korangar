@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
 use korangar_interface::element::StateElement;
@@ -83,6 +85,10 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub party_color_overrides: crate::state::party_colors::PartyColorOverrides,
+    /// Locally persisted tracked quest per character name.
+    #[serde(default)]
+    #[hidden_element]
+    pub tracked_quests: HashMap<String, u32>,
 }
 
 impl Default for GameSettings {
@@ -96,6 +102,7 @@ impl Default for GameSettings {
             window_maximized: false,
             combat_filters: crate::state::combat_chat::CombatFilters::default(),
             party_color_overrides: crate::state::party_colors::PartyColorOverrides::default(),
+            tracked_quests: HashMap::new(),
         }
     }
 }
@@ -151,5 +158,21 @@ impl GameSettings {
 impl Drop for GameSettings {
     fn drop(&mut self) {
         self.save();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_tracked_quests_serialization() {
+        let mut settings = GameSettings::default();
+        settings.tracked_quests.insert("TestPlayer".to_string(), 20003);
+
+        let data = ron::ser::to_string_pretty(&settings, PrettyConfig::new()).unwrap();
+        let loaded: GameSettings = ron::from_str(&data).unwrap();
+
+        assert_eq!(loaded.tracked_quests.get("TestPlayer"), Some(&20003));
     }
 }

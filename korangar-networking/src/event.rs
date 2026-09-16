@@ -825,6 +825,15 @@ pub enum NetworkEvent {
         amount: u32,
     },
     StorageClosed,
+    /// Full achievement status list sent on map connection.
+    AchievementList {
+        completed_achievements: Vec<u32>,
+    },
+    /// Single achievement status update.
+    AchievementUpdate {
+        achievement_id: u32,
+        is_completed: bool,
+    },
 }
 
 /// New-type so we can implement some `From` traits. This will help when

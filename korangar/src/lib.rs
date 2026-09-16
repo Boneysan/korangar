@@ -151,7 +151,7 @@ use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, H
 use crate::state::quests::{QuestEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
-use crate::state::{BufferedAction, SelectedServicePath};
+use crate::state::{BufferedAction, ChestVisualState, SelectedServicePath};
 use crate::system::{FrameTimers, GameTimer};
 #[cfg(feature = "debug")]
 use crate::world::MarkerIdentifier;
@@ -1922,6 +1922,9 @@ pub struct Client {
     /// Whether the current map is a town / safe map (no monsters); relaxes the
     /// battle-ready stance. Set on each map load from Towninfo.
     current_map_is_town: bool,
+    /// Base name of the active map (without extension), for POI and chest
+    /// matching.
+    current_map_name: String,
     client_state: State<ClientState>,
 }
 
@@ -3610,6 +3613,7 @@ impl Client {
 
             map: Some(map),
             current_map_is_town: false,
+            current_map_name: String::new(),
             client_state,
         })
     }
@@ -4647,6 +4651,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
+                    self.client_state.follow_mut(client_state().chest_discovery()).reset();
 
                     let Some(saved_login_data) = self.saved_login_data.as_ref() else {
                         self.interface.open_window(ErrorWindow::new(
@@ -4756,6 +4761,11 @@ impl Client {
                     ));
                     self.interface
                         .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
+                    self.interface.open_window(TrackedObjectiveWindow::new(
+                        client_state().breadcrumb(),
+                        client_state().quest_log(),
+                        client_state().inventory(),
+                    ));
                     // Minimap is filled when the map resource finishes loading; open a placeholder
                     // only if the player wants it visible (Game Settings / Map button / Alt+M).
                     let show_minimap = *self.client_state.follow(client_state().game_settings().show_minimap());
@@ -4829,6 +4839,23 @@ impl Client {
                                 entity_type,
                                 entity_part_files
                             );
+                        }
+
+                        let tile_position = npc.get_tile_position();
+                        let chest_record = if npc.get_job_id().0 == 10005 {
+                            self.library
+                                .chest_table()
+                                .find_at(&self.current_map_name, tile_position.x, tile_position.y)
+                        } else {
+                            None
+                        };
+
+                        if let Some(record) = chest_record {
+                            let chest_id = record.id;
+                            let chest_discovery = self.client_state.follow_mut(client_state().chest_discovery());
+                            chest_discovery.discover(chest_id);
+                            let visual_state = chest_discovery.visual_state(chest_id);
+                            npc.set_chest_state(chest_id, visual_state);
                         }
 
                         let entities = self.client_state.follow_mut(client_state().entities());
@@ -5125,6 +5152,7 @@ impl Client {
                     // Instanced maps (`000#pronter`) must load their base
                     // map's resources; the wire name has no `.rsw`.
                     let resource_name = self.game_file_loader.resolve_map_name(&map_name);
+                    self.current_map_name = normalize_map_base_name(&resource_name);
                     self.async_loader.request_map_load(resource_name, Some(position));
                 }
                 NetworkEvent::UpdateClientTick { client_tick, received_at } => {
@@ -5232,7 +5260,51 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Error));
                 }
+                NetworkEvent::AchievementList { completed_achievements } => {
+                    self.client_state
+                        .follow_mut(client_state().chest_discovery())
+                        .handle_achievement_list(&completed_achievements);
+
+                    let opened_ids: hashbrown::HashSet<u32> = completed_achievements.into_iter().collect();
+                    for entity in self.client_state.follow_mut(client_state().entities()).iter_mut() {
+                        if let Some(chest_id) = entity.get_chest_id()
+                            && opened_ids.contains(&chest_id)
+                        {
+                            entity.update_chest_visual_state(ChestVisualState::Opened);
+                        }
+                    }
+                }
+                NetworkEvent::AchievementUpdate {
+                    achievement_id,
+                    is_completed,
+                } => {
+                    self.client_state
+                        .follow_mut(client_state().chest_discovery())
+                        .handle_achievement_update(achievement_id, is_completed);
+
+                    if is_completed {
+                        for entity in self.client_state.follow_mut(client_state().entities()).iter_mut() {
+                            if entity.get_chest_id() == Some(achievement_id) {
+                                entity.update_chest_visual_state(ChestVisualState::Opened);
+                            }
+                        }
+                    }
+                }
                 NetworkEvent::UpdateEntityDetails { entity_id, name } => {
+                    let chest_state_to_set = if let Some(tr_idx) = name.find("#tr") {
+                        let digits: String = name[tr_idx + 3..].chars().take_while(|c| c.is_ascii_digit()).collect();
+                        if let Ok(chest_id) = digits.parse::<u32>() {
+                            let chest_discovery = self.client_state.follow_mut(client_state().chest_discovery());
+                            chest_discovery.discover(chest_id);
+                            let visual_state = chest_discovery.visual_state(chest_id);
+                            Some((chest_id, visual_state))
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    };
+
                     let entity = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -5240,6 +5312,11 @@ impl Client {
                         .find(|entity| entity.get_entity_id() == entity_id);
 
                     if let Some(entity) = entity {
+                        if entity.get_chest_id().is_none()
+                            && let Some((chest_id, visual_state)) = chest_state_to_set
+                        {
+                            entity.set_chest_state(chest_id, visual_state);
+                        }
                         entity.set_details(name);
                     }
                 }
@@ -5759,13 +5836,26 @@ impl Client {
                 NetworkEvent::QuestAdded { quest_id, .. } => {
                     let quest = self.resolve_quest_entry(quest_id);
                     self.client_state.follow_mut(client_state().quest_log()).add(quest);
+                    self.update_quest_auto_tracking();
                 }
                 NetworkEvent::QuestRemoved { quest_id } => {
                     self.client_state.follow_mut(client_state().quest_log()).remove(quest_id);
+                    self.update_quest_auto_tracking();
                 }
                 NetworkEvent::QuestList { quest_ids } => {
                     let quests = quest_ids.into_iter().map(|quest_id| self.resolve_quest_entry(quest_id)).collect();
                     self.client_state.follow_mut(client_state().quest_log()).replace(quests);
+                    let player_name = self.client_state.follow(client_state().player_name()).clone();
+                    if !player_name.is_empty()
+                        && let Some(&saved) = self
+                            .client_state
+                            .follow(client_state().game_settings())
+                            .tracked_quests
+                            .get(&player_name)
+                    {
+                        self.client_state.follow_mut(client_state().quest_log()).track(saved);
+                    }
+                    self.update_quest_auto_tracking();
                 }
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
@@ -7853,7 +7943,7 @@ impl Client {
 
         let current_camera: &(dyn Camera + Send + Sync) = {
             #[cfg(feature = "debug")]
-            if self.render_options.use_debug_camera {
+            if *self.client_state.follow(client_state().render_options().use_debug_camera()) {
                 &self.debug_camera
             } else {
                 &self.player_camera
@@ -8476,7 +8566,14 @@ impl Client {
 
                     if let Some(entity) = entity {
                         let _ = match entity.get_entity_type() {
-                            EntityType::Npc => self.networking_system.start_dialog(entity_id),
+                            EntityType::Npc => {
+                                if let Some(chest_id) = entity.get_chest_id() {
+                                    self.client_state
+                                        .follow_mut(client_state().chest_discovery())
+                                        .click_does_not_open(chest_id);
+                                }
+                                self.networking_system.start_dialog(entity_id)
+                            }
                             EntityType::Monster => {
                                 self.client_state
                                     .follow_mut(client_state().area_loot())
@@ -10110,6 +10207,7 @@ impl Client {
 
                             // Relax the battle stance on town / safe maps.
                             let base = normalize_map_base_name(&map_file_name);
+                            self.current_map_name = base.clone();
                             self.current_map_is_town = self.library.is_town_map(&base);
 
                             // `Map` is cached behind an `Arc`, so a revisit hands
@@ -10268,6 +10366,59 @@ impl Client {
                 requirements: Vec::new(),
                 location,
             },
+        }
+    }
+
+    fn update_quest_auto_tracking(&mut self) {
+        let needed_items: Vec<ItemId> = self
+            .client_state
+            .follow(client_state().quest_log())
+            .quests()
+            .iter()
+            .flat_map(|q| q.requirements.iter().map(|r| r.item_id))
+            .collect();
+        let counts: std::collections::HashMap<ItemId, u32> = {
+            let inv = self.client_state.follow(client_state().inventory());
+            needed_items.into_iter().map(|id| (id, inv.count_of(id))).collect()
+        };
+        self.client_state
+            .follow_mut(client_state().quest_log())
+            .auto_track_next_incomplete(|q| q.items_ready(|id| counts.get(&id).copied().unwrap_or(0)));
+
+        let tracked_id = self.client_state.follow(client_state().quest_log()).tracked();
+        if let Some(id) = tracked_id {
+            if let Some(quest) = self
+                .client_state
+                .follow(client_state().quest_log())
+                .quests()
+                .iter()
+                .find(|q| q.quest_id == id)
+                .cloned()
+            {
+                self.client_state
+                    .follow_mut(client_state().breadcrumb())
+                    .update_from_quest(&quest, |item_id| counts.get(&item_id).copied().unwrap_or(0));
+            }
+        } else {
+            self.client_state.follow_mut(client_state().breadcrumb()).clear();
+        }
+
+        let player_name = self.client_state.follow(client_state().player_name()).clone();
+        if !player_name.is_empty() {
+            match self.client_state.follow(client_state().quest_log()).tracked() {
+                Some(tracked) => {
+                    self.client_state
+                        .follow_mut(client_state().game_settings())
+                        .tracked_quests
+                        .insert(player_name, tracked);
+                }
+                None => {
+                    self.client_state
+                        .follow_mut(client_state().game_settings())
+                        .tracked_quests
+                        .remove(&player_name);
+                }
+            }
         }
     }
 

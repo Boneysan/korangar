@@ -91,11 +91,33 @@ impl QuestLogState {
         }
     }
 
+    pub fn untrack(&mut self) {
+        self.tracked = None;
+    }
+
     pub fn auto_track_next_if_invalid(&mut self) {
         if self.tracked.is_some_and(|id| self.quests.iter().any(|q| q.quest_id == id)) {
             return;
         }
         self.tracked = self.quests.first().map(|q| q.quest_id);
+    }
+
+    /// Auto-select the next incomplete objective when manual selection becomes
+    /// complete or invalid.
+    pub fn auto_track_next_incomplete(&mut self, is_ready: impl Fn(&QuestEntry) -> bool) {
+        if let Some(id) = self.tracked
+            && let Some(q) = self.quests.iter().find(|q| q.quest_id == id)
+            && !is_ready(q)
+        {
+            return;
+        }
+        for q in &self.quests {
+            if !is_ready(q) {
+                self.tracked = Some(q.quest_id);
+                return;
+            }
+        }
+        self.auto_track_next_if_invalid();
     }
 
     pub fn is_pinned(&self, quest_id: u32) -> bool {
@@ -270,6 +292,34 @@ mod tests {
         log.track(20003);
         assert_eq!(log.tracked(), Some(20003));
         log.remove(20003);
+        assert_eq!(log.tracked(), Some(20008));
+    }
+
+    #[test]
+    fn auto_track_selection_rules() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20003, "Rockers"));
+        log.add(entry(20008, "Mushrooms"));
+        log.add(entry(20009, "Bones"));
+
+        // Manual tracking selects quest
+        log.track(20003);
+        assert_eq!(log.tracked(), Some(20003));
+
+        // When manual selection is still incomplete, auto_track keeps it
+        log.auto_track_next_incomplete(|q| q.quest_id == 20008);
+        assert_eq!(log.tracked(), Some(20003));
+
+        // When manual selection becomes complete, auto-tracks next incomplete
+        log.auto_track_next_incomplete(|q| q.quest_id == 20003);
+        assert_eq!(log.tracked(), Some(20008));
+
+        // Untrack clears tracked quest
+        log.untrack();
+        assert_eq!(log.tracked(), None);
+
+        // Auto-track selects first incomplete
+        log.auto_track_next_incomplete(|q| q.quest_id == 20003);
         assert_eq!(log.tracked(), Some(20008));
     }
 }

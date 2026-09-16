@@ -10,11 +10,12 @@ use rust_state::{Path, State};
 
 use super::WindowClass;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
+use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
-use crate::state::ClientState;
 use crate::state::inventory::Inventory;
 use crate::state::quests::{QuestEntry, QuestLogState, QuestLogStatePathExt};
 use crate::state::theme::InterfaceThemeType;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
 
 const LINE_SPACING: f32 = 10.0;
 const PROGRESS_HEIGHT: f32 = 10.0;
@@ -54,16 +55,114 @@ impl QuestDetails {
                 progress,
             });
         };
-        if !quest.location.is_empty() {
-            push(quest.location.clone(), Color::rgb_u8(180, 210, 255), None);
-        }
-        if quest.requirements().is_empty() {
+        if let (Some(objective), Some(guidance)) = (
+            crate::world::bundled_objectives().get(&quest.quest_id),
+            crate::world::bundled_guidance().get(&quest.quest_id),
+        ) {
+            let area_str = format!(
+                "Recommended area: {} ({})",
+                guidance.area,
+                objective.maps.first().cloned().unwrap_or_default()
+            );
+            push(area_str, Color::rgb_u8(180, 210, 255), None);
+
+            let ready = quest.items_ready(|id| inventory.count_of(id));
             push(
-                if quest.location.is_empty() {
-                    "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into()
+                if ready {
+                    "Items collected — return to the quest giver to hand them in.".into()
                 } else {
-                    "Follow the destination above.".into()
+                    "You carry: counts shown below".into()
                 },
+                Color::monochrome_u8(235),
+                None,
+            );
+
+            for (idx, item) in quest.requirements().iter().enumerate() {
+                let carried = inventory.count_of(item.item_id);
+                let remaining = item.needed.saturating_sub(carried);
+                let source_desc = objective
+                    .sources
+                    .get(idx)
+                    .map(|s| {
+                        let name = if !s.name.is_empty() {
+                            s.name.as_str()
+                        } else {
+                            crate::world::display_monster(s.monster_id, &s.rank)
+                        };
+                        if s.rank == "vocal" || s.rank == "boss" {
+                            format!("{name} (boss-type, rare spawn)")
+                        } else {
+                            name.to_string()
+                        }
+                    })
+                    .unwrap_or_else(|| "unknown".to_string());
+
+                let line = crate::world::you_carry_line(&item.item_name, carried, item.needed, &source_desc);
+                let color = if remaining == 0 {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                };
+                let progress = Some(if item.needed == 0 {
+                    1.0
+                } else {
+                    (carried as f32 / item.needed as f32).min(1.0)
+                });
+                push(line, color, progress);
+            }
+
+            push(
+                format!("Turn in: {} — {}", guidance.npc, guidance.area),
+                Color::rgb_u8(255, 220, 130),
+                None,
+            );
+            push("You carry: counts shown above".to_string(), Color::monochrome_u8(200), None);
+            push(
+                format!("Party quest state: {}", objective.party_share),
+                Color::monochrome_u8(180),
+                None,
+            );
+        } else if !quest.location.is_empty() {
+            push(quest.location.clone(), Color::rgb_u8(180, 210, 255), None);
+            if quest.requirements().is_empty() {
+                push("Follow the destination above.".into(), Color::monochrome_u8(215), None);
+            } else {
+                let ready = quest.items_ready(|id| inventory.count_of(id));
+                push(
+                    if ready {
+                        "Items collected — return to the quest giver to hand them in.".into()
+                    } else {
+                        "Collect the following items and keep them in your inventory.".into()
+                    },
+                    Color::monochrome_u8(235),
+                    None,
+                );
+                for item in quest.requirements() {
+                    let carried = inventory.count_of(item.item_id);
+                    let remaining = item.needed.saturating_sub(carried);
+                    let status = if remaining == 0 {
+                        "Collected".into()
+                    } else {
+                        format!("{remaining} more needed")
+                    };
+                    push(
+                        format!("{}\n{} / {} carried · {}", item.item_name, carried, item.needed, status),
+                        if remaining == 0 {
+                            Color::rgb_u8(150, 230, 170)
+                        } else {
+                            Color::monochrome_u8(235)
+                        },
+                        Some(if item.needed == 0 {
+                            1.0
+                        } else {
+                            (carried as f32 / item.needed as f32).min(1.0)
+                        }),
+                    );
+                }
+            }
+        } else if quest.requirements().is_empty() {
+            push(
+                "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into(),
                 Color::monochrome_u8(215),
                 None,
             );
@@ -101,6 +200,48 @@ impl QuestDetails {
                 );
             }
         }
+        Self { rows }
+    }
+
+    pub fn for_exploration(opened_count: usize) -> Self {
+        let mut rows = Vec::new();
+        let mut push = |text: String, color: Color| {
+            rows.push(QuestRow {
+                text,
+                color,
+                font_size: LINE_FONT_SIZE,
+                height: 0.0,
+                progress: None,
+            });
+        };
+        push(
+            "Roadside caches and hidden chests are one-time exploration finds per character. Once looted, their contents are permanently \
+             taken and their latch remains open."
+                .into(),
+            Color::monochrome_u8(235),
+        );
+        push(
+            format!("Personal discoveries: {opened_count} opened across the world."),
+            Color::rgb_u8(180, 210, 255),
+        );
+        push(
+            "Act I features 38 chests across 5 regions (Prontera: 12, Geffen: 8, Morroc: 7, Payon: 9, Alberta/Izlude: 2). Each awards an \
+             investigative Field Note with campaign clues and loose threads, plus a Cartographer's Mark."
+                .into(),
+            Color::monochrome_u8(215),
+        );
+        push(
+            "Cartographer's Marks pool for your party (or bank solo) to buy re-rolls or advantage on DM checks. Check current totals with \
+             [@marks]."
+                .into(),
+            Color::rgb_u8(255, 220, 130),
+        );
+        push(
+            "Finding all chests in an Act I region awards that region's cosmetic headgear: Renown Detective's Cap (Prontera), Mage Hat \
+             (Geffen), Turban (Morroc), Feather Beret (Payon), or Sailor Hat (Alberta & Izlude)."
+                .into(),
+            Color::rgb_u8(150, 230, 170),
+        );
         Self { rows }
     }
 }
@@ -246,6 +387,30 @@ where
                     overflow_behavior: OverflowBehavior::LineBreak,
                 }),
             ));
+
+            let chest_discovery_path = client_state().chest_discovery();
+            let opened_total = state.get(&chest_discovery_path).opened_count();
+            let exploration_header = format!("Exploration & Field Notes\nRoadside caches · {opened_total} opened · 5 Act I regions");
+            self.elements.push((
+                u64::MAX - 2,
+                ErasedElement::new(collapsible! {
+                    text: exploration_header,
+                    font_size: FontSize(TITLE_FONT_SIZE),
+                    title_height: 56.0,
+                    overflow_behavior: OverflowBehavior::LineBreak,
+                    initially_expanded: false,
+                    children: (
+                        QuestDetails::for_exploration(opened_total),
+                        button! {
+                            text: "Read Field Notes [@fieldnotes]",
+                            tooltip: "Open the Field Notes reading menu [^000001@fieldnotes^000000]",
+                            height: 30.0,
+                            font_size: FontSize(15.0),
+                            event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                        },
+                    ),
+                }),
+            ));
             if visible.is_empty() {
                 let message = if log.is_empty() {
                     "Your journal is empty.\nSpeak to quest givers to discover quests. Accepted quests appear here."
@@ -278,6 +443,7 @@ where
                 };
                 let title = format!("{}{}\n{status}", if pinned { "Pinned · " } else { "" }, quest.name());
                 let path = self.quest_log_path;
+                let is_tracked = log.tracked() == Some(id);
                 self.elements.push((
                     u64::from(id),
                     ErasedElement::new(collapsible! {
@@ -288,14 +454,33 @@ where
                         initially_expanded: true,
                         children: (
                             QuestDetails::new(quest, inventory),
-                            button! {
-                                text: if pinned { "Unpin quest" } else { "Pin to top" },
-                                tooltip: "Keep this quest at the top of your journal for this session",
-                                height: 30.0,
-                                font_size: FontSize(15.0),
-                                event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
-                                    state.update_value_with(path, move |log| log.toggle_pin(id));
-                                },
+                            split! {
+                                children: (
+                                    button! {
+                                        text: if pinned { "Unpin quest" } else { "Pin to top" },
+                                        tooltip: "Keep this quest at the top of your journal for this session",
+                                        height: 30.0,
+                                        font_size: FontSize(15.0),
+                                        event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                            state.update_value_with(path, move |log| log.toggle_pin(id));
+                                        },
+                                    },
+                                    button! {
+                                        text: if is_tracked { "Untrack" } else { "Track on HUD" },
+                                        tooltip: if is_tracked { "Remove this objective from the HUD tracker" } else { "Track this objective on the HUD tracker" },
+                                        height: 30.0,
+                                        font_size: FontSize(15.0),
+                                        event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                            state.update_value_with(path, move |log| {
+                                                if log.tracked() == Some(id) {
+                                                    log.untrack();
+                                                } else {
+                                                    log.track(id);
+                                                }
+                                            });
+                                        },
+                                    },
+                                ),
                             },
                         ),
                     }),
@@ -380,6 +565,25 @@ where
                             tooltip: "Show quests whose required items are all in your inventory",
                             state: path.ready_only(),
                             event: Toggle(path.ready_only()),
+                        },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Field Notes",
+                            height: 28.0,
+                            font_size: FontSize(14.0),
+                            tooltip: "Open the Field Notes reading menu [^000001@fieldnotes^000000]",
+                            event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                        },
+                        button! {
+                            text: "Marks",
+                            height: 28.0,
+                            font_size: FontSize(14.0),
+                            tooltip: "Check your party's pooled and banked Cartographer's Marks [^000001@marks^000000]",
+                            event: InputEvent::SendMessage { text: "@marks".to_string() },
                         },
                     ),
                 },

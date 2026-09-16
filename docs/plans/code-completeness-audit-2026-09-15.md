@@ -85,8 +85,9 @@ QW-071–079 therefore require correction and acceptance work before release.
 
 ### Data/schema gaps
 
-- Equipment eligibility is a four-item bundled fixture, not a complete Hercules
-  export of job/upper/gender/location restrictions.
+- Equipment eligibility: resolved in QW-048/QW-049 via `Hercules/tools/gen-equipment-eligibility.py`
+  (5,578 equippable items exported into `equipment_eligibility.tsv`, verified by `check-campaign.sh`,
+  and integrated into `ItemBox` and `BuyWindow`).
 - Hunt objective/guidance data is partly embedded as small Rust string fixtures;
   it is not the complete authoritative generated data pack requested by the
   plan.

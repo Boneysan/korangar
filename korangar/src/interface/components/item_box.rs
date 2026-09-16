@@ -16,8 +16,8 @@ use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::resource::ItemSource;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
-use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::{ResourceMetadata, item_stats, item_tooltip_text};
+use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
+use crate::world::{ResourceMetadata, UnusablePresentation, Wearer, item_stats, item_tooltip_text_with_denial};
 
 #[derive(Default)]
 struct AmountDisplay {
@@ -313,6 +313,10 @@ where
         }
 
         if let Some(item) = state.try_get(&self.item_path) {
+            let wearer = state.try_follow(this_player()).map(|player| Wearer::from_player(player, "*"));
+            let unusable =
+                wearer.map(|w| UnusablePresentation::for_item(item.item_id.0, w, matches!(self.handler.source, ItemSource::Inventory)));
+
             // Hover tooltip: name + combat stats (M1-009), with compare vs
             // equipped gear when this stack is not currently worn.
             if is_hovered && (!item.metadata.name.is_empty() || item.item_id.0 != 0) {
@@ -358,7 +362,15 @@ where
                     }
                     _ => (None, None),
                 };
-                let text = item_tooltip_text(item.item_id.0, &item.metadata.name, refinement, equipped_stats, equipped_refine);
+                let denial_text = unusable.as_ref().and_then(|u| u.reason_text());
+                let text = item_tooltip_text_with_denial(
+                    item.item_id.0,
+                    &item.metadata.name,
+                    refinement,
+                    equipped_stats,
+                    equipped_refine,
+                    denial_text,
+                );
                 // Same pattern as character-slot display strings: keep the
                 // tooltip buffer on the element so the layout borrow is stable.
                 unsafe {
@@ -376,13 +388,21 @@ where
                     height: texture_size,
                 };
 
-                layout.add_texture(texture_area, texture.clone(), Color::WHITE, false);
+                let texture_color = if unusable.as_ref().is_some_and(|u| u.mute_icon) {
+                    Color::rgb_u8(220, 140, 140)
+                } else {
+                    Color::WHITE
+                };
+
+                layout.add_texture(texture_area, texture.clone(), texture_color, false);
 
                 if is_hovered {
                     // Drag to equip/unequip (or rearrange). Double-click for quick equip/unequip.
                     // Right-click opens drop/use actions for inventory items.
                     layout.register_click_handler(MouseButton::Left, &self.handler);
-                    layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
+                    if !unusable.as_ref().is_some_and(|u| u.disable_equip) {
+                        layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
+                    }
                     if matches!(self.right_click_handler.source, ItemSource::Inventory) {
                         layout.register_click_handler(MouseButton::Right, &self.right_click_handler);
                     }

@@ -1,6 +1,7 @@
 mod accessory_name;
 mod baby_job;
 mod campaign_quest;
+mod chest;
 mod equip_presentation;
 mod equipment_eligibility;
 mod hunt_schema;
@@ -31,19 +32,23 @@ pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
 pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestLocation, quest_display_name};
 #[allow(unused_imports)]
+pub use self::chest::{CHEST_SCHEMA_VERSION, ChestRecord, ChestTable};
 pub use self::equip_presentation::UnusablePresentation;
 #[allow(unused_imports)]
-pub use self::equipment_eligibility::{ELIGIBILITY_SCHEMA, EligibilityTable, EquipDenial, bundled_table};
+pub use self::equipment_eligibility::{ELIGIBILITY_SCHEMA, EligibilityRow, EligibilityTable, EquipDenial, Sex, Wearer, bundled_table};
 #[allow(unused_imports)]
-pub use self::hunt_schema::{BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, parse_guidance, parse_objectives};
+pub use self::hunt_schema::{
+    BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, bundled_guidance, bundled_objectives, parse_guidance,
+    parse_objectives,
+};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
-pub use self::item_stats::{item_stats, item_tooltip_text};
+pub use self::item_stats::{item_stats, item_tooltip_text, item_tooltip_text_with_denial};
 pub use self::job_identity::JobIdentity;
 pub use self::job_name::JobName;
 #[allow(unused_imports)]
-pub use self::journal_slice::format_hunt_journal;
+pub use self::journal_slice::{display_monster, format_hunt_journal, item_display_name, you_carry_line};
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
 pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
@@ -66,6 +71,7 @@ pub struct Library {
     baby_job_table: <IsBabyJob as Table>::Storage,
     towninfo_table: TownInfoTable,
     campaign_quest_table: CampaignQuestTable,
+    chest_table: ChestTable,
     msgstringtable: MsgStringTable,
 }
 
@@ -82,6 +88,7 @@ impl Library {
         let baby_job_table = IsBabyJob::load(game_file_loader)?;
         let towninfo_table = TownInfoTable::load(game_file_loader);
         let campaign_quest_table = CampaignQuestTable::load();
+        let chest_table = ChestTable::load();
         let msgstringtable = MsgStringTable::load(game_file_loader);
 
         Ok(Self {
@@ -96,6 +103,7 @@ impl Library {
             baby_job_table,
             towninfo_table,
             campaign_quest_table,
+            chest_table,
             msgstringtable,
         })
     }
@@ -114,8 +122,14 @@ impl Library {
             baby_job_table: Default::default(),
             towninfo_table: TownInfoTable::default(),
             campaign_quest_table: CampaignQuestTable::load(),
+            chest_table: ChestTable::load(),
             msgstringtable: MsgStringTable::default(),
         }
+    }
+
+    #[inline(always)]
+    pub fn chest_table(&self) -> &ChestTable {
+        &self.chest_table
     }
 
     #[inline(always)]

@@ -7,6 +7,7 @@ pub fn you_carry_line(item_name: &str, carried: u32, needed: u32, source: &str) 
     format!("Collect {item_name}       {carried} / {needed}  — {source}")
 }
 
+#[allow(dead_code)]
 pub fn format_hunt_journal(objective: &HuntObjective, guidance: &HuntGuidance, carried: &[(u32, u32)]) -> String {
     let mut lines = vec![
         objective.name.clone(),
@@ -23,10 +24,15 @@ pub fn format_hunt_journal(objective: &HuntObjective, guidance: &HuntGuidance, c
             .sources
             .get(idx)
             .map(|s| {
-                if s.rank == "vocal" || s.rank == "boss" {
-                    format!("{} (boss-type, rare spawn)", display_monster(s.monster_id, &s.rank))
+                let mname = if !s.name.is_empty() {
+                    s.name.as_str()
                 } else {
                     display_monster(s.monster_id, &s.rank)
+                };
+                if s.rank == "vocal" || s.rank == "boss" {
+                    format!("{mname} (boss-type, rare spawn)")
+                } else {
+                    mname.to_owned()
                 }
             })
             .unwrap_or_else(|| "unknown".to_owned());
@@ -40,7 +46,8 @@ pub fn format_hunt_journal(objective: &HuntObjective, guidance: &HuntGuidance, c
     lines.join("\n")
 }
 
-fn item_display_name(id: u32) -> String {
+#[allow(dead_code)]
+pub fn item_display_name(id: u32) -> String {
     match id {
         940 => "Grasshopper's Leg".to_owned(),
         919 => "Animal Skin".to_owned(),
@@ -49,12 +56,12 @@ fn item_display_name(id: u32) -> String {
     }
 }
 
-fn display_monster(id: u32, rank: &str) -> String {
+pub fn display_monster(id: u32, rank: &str) -> &'static str {
     match (id, rank) {
-        (1052, _) => "Rocker".to_owned(),
-        (1167, _) => "Savage Babe".to_owned(),
-        (1088, _) => "Vocal".to_owned(),
-        _ => format!("Monster {id}"),
+        (1052, _) => "Rocker",
+        (1167, _) => "Savage Babe",
+        (1088, _) => "Vocal",
+        _ => "Monster",
     }
 }
 

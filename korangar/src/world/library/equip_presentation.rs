@@ -22,6 +22,10 @@ impl UnusablePresentation {
         }
     }
 
+    pub fn for_item(item_id: u32, wearer: Wearer, can_equip_action: bool) -> Self {
+        Self::for_surface(EligibilityTable::get(), item_id, wearer, can_equip_action)
+    }
+
     pub fn reason_text(&self) -> Option<&'static str> {
         self.denial.map(|d| d.tooltip())
     }

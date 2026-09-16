@@ -22,6 +22,7 @@ pub enum ObjectiveType {
 pub struct MonsterSource {
     pub monster_id: u32,
     pub rank: String,
+    pub name: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -84,7 +85,8 @@ pub fn parse_objectives(source: &str) -> Result<HashMap<u32, HuntObjective>, Str
                 let mut bits = part.split(':');
                 let monster_id = bits.next().ok_or("missing monster")?.parse().map_err(|_| "bad monster")?;
                 let rank = bits.next().unwrap_or("normal").to_owned();
-                Ok(MonsterSource { monster_id, rank })
+                let name = bits.next().unwrap_or("").to_owned();
+                Ok(MonsterSource { monster_id, rank, name })
             })
             .collect::<Result<Vec<_>, String>>()?;
         let item_counts = fields
@@ -163,17 +165,18 @@ pub fn parse_guidance(source: &str) -> Result<HashMap<u32, HuntGuidance>, String
     Ok(out)
 }
 
-pub const BUNDLED_OBJECTIVES: &str = "\
-# schema=1
-20003	Field Contract: Rockers and Rumors	Collect	1052:normal,1167:normal,1088:vocal	940:10,919:10,752:3	prt_fild07	inventory	Wynne
-";
+pub const BUNDLED_OBJECTIVES: &str = include_str!("hunt_objectives.tsv");
+pub const BUNDLED_GUIDANCE: &str = include_str!("hunt_guidance.tsv");
 
-pub const BUNDLED_GUIDANCE: &str = "\
-# schema=1
-20003	Quartermaster Wynne	Prontera West Field	Bring Grasshopper Legs, Animal Skins, and Grasshopper Dolls|Turn in to Wynne
-20050	Fountain	Prontera	Speak to the fountain keeper	revealed
-20050	HiddenClue	Prontera	Do not show this until the first step is done	hidden
-";
+pub fn bundled_objectives() -> &'static HashMap<u32, HuntObjective> {
+    static OBJECTIVES: std::sync::OnceLock<HashMap<u32, HuntObjective>> = std::sync::OnceLock::new();
+    OBJECTIVES.get_or_init(|| parse_objectives(BUNDLED_OBJECTIVES).expect("bundled hunt objectives are valid"))
+}
+
+pub fn bundled_guidance() -> &'static HashMap<u32, HuntGuidance> {
+    static GUIDANCE: std::sync::OnceLock<HashMap<u32, HuntGuidance>> = std::sync::OnceLock::new();
+    GUIDANCE.get_or_init(|| parse_guidance(BUNDLED_GUIDANCE).expect("bundled hunt guidance is valid"))
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct StoryStep {

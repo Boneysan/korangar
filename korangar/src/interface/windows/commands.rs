@@ -208,6 +208,30 @@ where
                                 ),
                             },
                             text! {
+                                text: "Cartographer's Marks & Exploration",
+                                overflow_behavior: OverflowBehavior::Shrink,
+                            },
+                            split! {
+                                gaps: theme().window().gaps(),
+                                children: (
+                                    button! {
+                                        text: "Marks status",
+                                        tooltip: "Check party Marks pool and banked finds [^000001@dmmark show^000000]",
+                                        event: InputEvent::SendMessage { text: "@dmmark show".to_string() },
+                                    },
+                                    button! {
+                                        text: "Spend Mark",
+                                        tooltip: "Spend 1 party Mark for re-roll or advantage [^000001@dmmark spend 1^000000]",
+                                        event: InputEvent::SendMessage { text: "@dmmark spend 1".to_string() },
+                                    },
+                                    button! {
+                                        text: "Grant Mark",
+                                        tooltip: "Award 1 Mark to the active party pool [^000001@dmmark grant 1^000000]",
+                                        event: InputEvent::SendMessage { text: "@dmmark grant 1".to_string() },
+                                    },
+                                ),
+                            },
+                            text! {
                                 text: "Tip: Ctrl+D opens the Dice Roller. @dm* also works in chat.",
                                 overflow_behavior: OverflowBehavior::LineBreak,
                             },

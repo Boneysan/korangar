@@ -138,6 +138,8 @@ impl WindowCache {
             WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 160.0),
             // Zeny / EXP / cooldown strip under the minimap.
             WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
+            // Tracked objective HUD tracker sitting below the HUD readout.
+            WindowClass::TrackedObjective => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 350.0, 260.0, 90.0),
             // Party roster left of center.
             WindowClass::Party => state(AnchorPoint::CenterLeft, MARGIN, -40.0, 320.0, 240.0),
             WindowClass::Storage => state(AnchorPoint::CenterRight, -(380.0 + MARGIN), -80.0, 360.0, 320.0),
@@ -211,6 +213,8 @@ impl WindowCache {
             WindowClass::Minimap,
             WindowClass::StatusBar,
             WindowClass::Hud,
+            WindowClass::TrackedObjective,
+            WindowClass::QuestLog,
             WindowClass::Party,
             WindowClass::Storage,
             WindowClass::Trade,

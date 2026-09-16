@@ -73,6 +73,16 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleQuestLogWindow,
                 },
                 button! {
+                    text: "Field Notes",
+                    tooltip: "Read your discovered roadside field notes and regional progress [^000001@fieldnotes^000000]",
+                    event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                },
+                button! {
+                    text: "Cartographer's Marks",
+                    tooltip: "Check your party's shared pool and banked Marks [^000001@marks^000000]",
+                    event: InputEvent::SendMessage { text: "@marks".to_string() },
+                },
+                button! {
                     text: "Dice Roller",
                     tooltip: "Roll dice via @roll — standard dice, common combos, and custom NdX+mod (^000001Ctrl+D^000000)",
                     event: InputEvent::ToggleDiceWindow,
