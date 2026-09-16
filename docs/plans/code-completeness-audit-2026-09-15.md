@@ -40,20 +40,28 @@ outside their own unit tests (or another test-only helper):
 - `state/breadcrumb.rs`
 - `state/campaign_checkpoint.rs`
 - `state/chest_discovery.rs`
-- `state/combat_chat.rs`
-- `state/party_colors.rs`
-- `state/ui_sounds.rs`
 - `world/library/equip_presentation.rs`
 - `world/library/equipment_eligibility.rs`
 - `world/library/hunt_schema.rs` and `journal_slice.rs`
 - `world/library/warp_graph.rs`
 
-Consequently QW-048–063 and QW-080–084/QW-088 cannot be called complete. In
-particular, there is no production breadcrumb HUD, route guidance, checkpoint
-reconciliation, Combat channel, party-color override, UI-sound playback, chest
-state rendering, or unified unusable-equipment presentation from these modules.
+Consequently QW-048–063 and QW-088 cannot be called complete. In particular,
+there is no production breadcrumb HUD, route guidance, checkpoint
+reconciliation, chest state rendering, or unified unusable-equipment
+presentation from these modules.
 `cargo clippy -p korangar --lib -- -D warnings` independently reports these as
 dead code and fails with 43 warnings-as-errors; QW-100 is therefore open.
+
+### 2026-09-16 integration update
+
+`combat_chat.rs`, `party_colors.rs`, and `ui_sounds.rs` now have production
+owners and call sites. Combat events feed the existing chat window; party rows
+and minimap markers share resolved colors; UI sounds route through the audio
+engine with persistent settings and edge gating. Their automated suites pass.
+QW-081 and QW-083 remain open only for their stated live visual acceptance, and
+QW-084 still needs persisted local color overrides. The original 43-warning
+count above is historical; strict workspace Clippy remains open for current
+dead-code debt plus an all-target constant-assertion lint.
 
 ### Recovery/rules defects and missing evidence
 

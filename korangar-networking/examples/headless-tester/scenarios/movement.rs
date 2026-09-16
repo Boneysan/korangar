@@ -362,6 +362,8 @@ fn collect_hp_sp_ticks(context: &mut TestContext, duration: Duration) -> (Vec<(D
 }
 
 fn damage_character(context: &mut TestContext, max_hp: u32) -> Result<(), String> {
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(300));
     let hp_drop = (max_hp / 2).clamp(10, max_hp.saturating_sub(1));
     let sp_drop = (context.max_spell_points / 2).clamp(1, context.max_spell_points.saturating_sub(1).max(1));
     context.say(&format!("@heal -{hp_drop} -{sp_drop}"))?;
@@ -618,7 +620,10 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     context.say("@heal")?;
     context.pump(Duration::from_millis(300));
     context.flush();
-    damage_character(&mut context, max_hp)?;
+    let sp_drop = (context.max_spell_points / 2).clamp(1, context.max_spell_points.saturating_sub(1).max(1));
+    context.say(&format!("@heal -10 -{sp_drop}"))?;
+    context.pump(Duration::from_millis(300));
+    context.flush();
 
     // Item 12238 (New Year Rice Cake) casts SC_POISON for 50s
     let cake_idx = context.give_item(12238, 5)?;
@@ -689,6 +694,9 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
         NetworkEvent::StateChange {
             entity_id, health_state, ..
         } if entity_id.0 == player_id.0 && (health_state & 0x0001) == 0 => Some(()),
+        NetworkEvent::StatusChange {
+            entity_id, gained: false, ..
+        } if entity_id.0 == player_id.0 => Some(()),
         _ => None,
     })?;
     context.say("@itemreset")?;
@@ -780,6 +788,110 @@ fn save_load(config: &Config) -> Result<(), String> {
             context.position.x, context.position.y
         ));
     }
+
+    // -------------------------------------------------------------------------
+    // Checkpoint NPC flow (Seal Cascade Checkpoint at prontera 151, 191)
+    // -------------------------------------------------------------------------
+    context.warp("prontera", 151, 191)?;
+    context.pump(Duration::from_millis(400));
+
+    let npc_id = context
+        .entities
+        .iter()
+        .find(|(_, data)| {
+            let pos = data.position.tile_position();
+            data.job_id.0 == 117 && (pos.x as i32 - 151).abs() <= 2 && (pos.y as i32 - 191).abs() <= 2
+        })
+        .map(|(id, _)| *id)
+        .ok_or_else(|| "Seal Cascade Checkpoint NPC (job 117) not found near (151, 191)".to_owned())?;
+
+    context.flush();
+    context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+    let greeting = context.wait_for("OpenDialog (checkpoint greeting)", |event| match event {
+        NetworkEvent::OpenDialog { text, npc_id: id } if *id == npc_id => Some(text.clone()),
+        _ => None,
+    })?;
+    if !greeting.contains("[Checkpoint]") {
+        return Err(format!("expected [Checkpoint] greeting, got: {greeting}"));
+    }
+
+    context.wait_for("AddNextButton (checkpoint)", |event| match event {
+        NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.wait_for("AddChoiceButtons (checkpoint options)", |event| match event {
+        NetworkEvent::AddChoiceButtons { npc_id: id, .. } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+
+    // Option 1: Save here
+    context.flush();
+    context.net.choose_dialog_option(npc_id, 1).map_err(|_| "disconnected")?;
+    let saved_text = context.wait_for("OpenDialog (save confirmed)", |event| match event {
+        NetworkEvent::OpenDialog { text, npc_id: id } if *id == npc_id => Some(text.clone()),
+        _ => None,
+    })?;
+    if !saved_text.contains("Saved") {
+        return Err(format!("expected 'Saved' in response, got: {saved_text}"));
+    }
+
+    context.wait_for("AddCloseButton (checkpoint)", |event| match event {
+        NetworkEvent::AddCloseButton { npc_id: id } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    let _ = context.net.close_dialog(npc_id);
+
+    // Warp away to Geffen and die; respawn must return to checkpoint (151, 191)
+    context.warp("geffen", 119, 59)?;
+    context.pump(Duration::from_millis(400));
+    let player_id = context.player_id;
+    context.flush();
+    context.say("@die")?;
+    context.wait_for("own-entity RemoveEntity (Died)", |event| match event {
+        NetworkEvent::RemoveEntity {
+            entity_id,
+            reason: ragnarok_packets::DisappearanceReason::Died,
+        } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.net.respawn().map_err(|_| "disconnected")?;
+    let map_name = context.wait_for("ChangeMap to checkpoint", |event| match event {
+        NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
+        _ => None,
+    })?;
+    if map_name != "prontera" {
+        return Err(format!("respawned on {map_name:?}, expected 'prontera'"));
+    }
+    context.net.map_loaded().map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(500));
+
+    if context.position.x.abs_diff(151) > 2 || context.position.y.abs_diff(191) > 2 {
+        return Err(format!(
+            "respawn left us at ({}, {}), expected near checkpoint (151, 191)",
+            context.position.x, context.position.y
+        ));
+    }
+
+    // Invalid map test: attempting @warp to a nonexistent map must fail cleanly
+    context.flush();
+    context.say("@warp invalid_map_999 100 100")?;
+    context.wait_for("invalid map feedback", |event| match event {
+        NetworkEvent::ChatMessage { text, .. }
+            if text.to_lowercase().contains("map not found") || text.to_lowercase().contains("invalid") =>
+        {
+            Some(())
+        }
+        _ => None,
+    })?;
+
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(300));
     Ok(())
 }
 

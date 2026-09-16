@@ -2073,6 +2073,11 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { source_entity_id: None },
+                    NetworkEvent::SkillFailed {
+                        skill_id: ragnarok_packets::SkillId(19),
+                        cause: 1,
+                        ..
+                    },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,
@@ -2170,6 +2175,7 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { .. },
+                    NetworkEvent::SkillFailed { .. },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,

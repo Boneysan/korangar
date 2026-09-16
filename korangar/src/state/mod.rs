@@ -153,6 +153,10 @@ impl ChatHistory {
         }
         self.messages.push(message);
     }
+
+    pub fn last_mut(&mut self) -> Option<&mut ChatMessage> {
+        self.messages.last_mut()
+    }
 }
 
 impl std::ops::Deref for ChatHistory {
@@ -314,6 +318,8 @@ pub struct ClientState {
 
     /// List of all received chat messages.
     chat_messages: ChatHistory,
+    /// Structured combat log entries and channel state.
+    combat_log: crate::state::combat_chat::CombatLogState,
     /// List of all friends (with online presence).
     friend_list: Vec<FriendEntry>,
     /// Current party roster and pending party invitation state.
@@ -498,6 +504,7 @@ impl ClientState {
                 korangar_networking::PACK_VERSION
             );
             let chat_messages = ChatHistory::from_welcome(ChatMessage::new(welcome_string, MessageColor::Server));
+            let combat_log = crate::state::combat_chat::CombatLogState::default();
 
             let chat_window = ChatWindowState::default();
             let dice_window = DiceWindowState::default();
@@ -623,6 +630,7 @@ impl ClientState {
             ground_items: Vec::new(),
             auto_pickup: false,
             chat_messages,
+            combat_log,
             friend_list,
             party_state,
             shop_items,

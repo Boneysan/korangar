@@ -166,14 +166,18 @@ type ChannelIndex = u8;
 const CHANNEL_PUBLIC: ChannelIndex = 0;
 const CHANNEL_PARTY: ChannelIndex = 1;
 const CHANNEL_WHISPER: ChannelIndex = 2;
+pub const CHANNEL_COMBAT: ChannelIndex = 3;
 
 /// Internal state of the chat window.
 #[derive(Default, RustState, StateElement)]
 pub struct ChatWindowState {
     current_text: String,
-    /// Channel typed text is routed to. `CHANNEL_PUBLIC` by default, which is
-    /// the pre-existing behaviour.
+    /// Channel typed text is routed to, or CHANNEL_COMBAT for viewing combat
+    /// log.
     channel: ChannelIndex,
+    /// Last outgoing send channel (Say/Party/Whisper) to restore when leaving
+    /// Combat.
+    last_send_channel: ChannelIndex,
     /// Who `CHANNEL_WHISPER` talks to.
     whisper_target: String,
     /// Last character to whisper *us*, for reply. Kept separate from
@@ -191,7 +195,20 @@ impl ChatWindowState {
     /// an event handler, so the player still presses Enter to start typing.
     pub fn start_whisper(&mut self, character_name: String) {
         self.channel = CHANNEL_WHISPER;
+        self.last_send_channel = CHANNEL_WHISPER;
         self.whisper_target = character_name;
+    }
+
+    /// Select a channel, saving the last send channel if not combat.
+    pub fn select_channel(&mut self, channel: ChannelIndex) {
+        if channel != CHANNEL_COMBAT {
+            self.last_send_channel = channel;
+        }
+        self.channel = channel;
+    }
+
+    pub fn last_send_channel(&self) -> ChannelIndex {
+        self.last_send_channel
     }
 
     /// Remember who whispered us so Reply and `/r` have a target, and aim the
@@ -219,24 +236,33 @@ impl ChatWindowState {
     }
 }
 
-pub struct ChatWindow<A, B> {
+pub struct ChatWindow<A, B, C, D, E> {
     chat_window_state: A,
     chat_messages_path: B,
+    combat_messages_path: C,
+    combat_log_path: D,
+    combat_filters_path: E,
 }
 
-impl<A, B> ChatWindow<A, B> {
-    pub fn new(chat_window_state: A, chat_messages_path: B) -> Self {
+impl<A, B, C, D, E> ChatWindow<A, B, C, D, E> {
+    pub fn new(chat_window_state: A, chat_messages_path: B, combat_messages_path: C, combat_log_path: D, combat_filters_path: E) -> Self {
         Self {
             chat_window_state,
             chat_messages_path,
+            combat_messages_path,
+            combat_log_path,
+            combat_filters_path,
         }
     }
 }
 
-impl<A, B> CustomWindow<ClientState> for ChatWindow<A, B>
+impl<A, B, C, D, E> CustomWindow<ClientState> for ChatWindow<A, B, C, D, E>
 where
     A: Path<ClientState, ChatWindowState>,
     B: Path<ClientState, crate::state::ChatHistory>,
+    C: Path<ClientState, crate::state::ChatHistory>,
+    D: Path<ClientState, crate::state::combat_chat::CombatLogState>,
+    E: Path<ClientState, crate::state::combat_chat::CombatFilters>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Chat)
@@ -245,9 +271,14 @@ where
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
 
+        use crate::state::combat_chat::{CombatFiltersPathExt, CombatLogStatePathExt};
+
+        let chat_window_path = self.chat_window_state;
         let current_text_path = self.chat_window_state.current_text();
         let channel_path = self.chat_window_state.channel();
         let whisper_target_path = self.chat_window_state.whisper_target();
+        let combat_log_path = self.combat_log_path;
+        let combat_filters_path = self.combat_filters_path;
 
         let send_action = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
             let text = state.get(&current_text_path);
@@ -263,7 +294,11 @@ where
                 true => text.clone(),
                 false => {
                     let target = state.get(&whisper_target_path).trim().to_owned();
-                    match *state.get(&channel_path) {
+                    let effective_channel = match *state.get(&channel_path) {
+                        CHANNEL_COMBAT => state.get(&chat_window_path).last_send_channel(),
+                        other => other,
+                    };
+                    match effective_channel {
                         CHANNEL_PARTY => format!("/p {text}"),
                         // With no target this becomes `/w  <text>`, which the
                         // command handler answers with a usage hint. That is
@@ -285,9 +320,26 @@ where
         // the same convention the DM command panel uses for its tabs.
         let is_channel =
             move |index: ChannelIndex| ComputedSelector::new_default(move |state: &ClientState| *channel_path.follow_safe(state) == index);
+
         let select_channel = move |index: ChannelIndex| {
-            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(channel_path, index)
+            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                state.update_value_with(chat_window_path, move |chat| chat.select_channel(index));
+                if index == CHANNEL_COMBAT {
+                    state.update_value_with(combat_log_path, |log| log.set_selected(true));
+                } else {
+                    state.update_value_with(combat_log_path, |log| log.set_selected(false));
+                }
+            }
         };
+
+        let combat_text = ComputedSelector::new_default(move |state: &ClientState| {
+            let unread = *combat_log_path.unread_count().follow_safe(state);
+            if unread > 0 {
+                format!("Combat ({unread})")
+            } else {
+                "Combat".to_string()
+            }
+        });
 
         let last_sender_path = self.chat_window_state.last_whisper_sender();
         let no_one_to_reply_to = ComputedSelector::new_default(move |state: &ClientState| last_sender_path.follow_safe(state).is_empty());
@@ -338,33 +390,106 @@ where
                             disabled_tooltip: "Nobody has whispered you yet",
                             event: reply_action,
                         },
+                        button! {
+                            text: combat_text,
+                            tooltip: "View structured combat log",
+                            disabled: is_channel(CHANNEL_COMBAT),
+                            event: select_channel(CHANNEL_COMBAT),
+                        },
                     ),
                 },
                 either! {
-                    selector: is_channel(CHANNEL_WHISPER),
-                    on_true: text_box! {
-                        ghost_text: "Whisper to…",
-                        state: whisper_target_path,
-                        input_handler: DefaultHandler::<_, _, MAXIMUM_CHARACTER_NAME_LENGTH>::new(whisper_target_path, |_: &State<ClientState>, _: &mut EventQueue<ClientState>| {}),
-                        background_color: client_theme().chat().text_box_background_color(),
-                        focused_background_color: Color::rgba(0.0, 0.0, 0.0, 0.8),
-                        focus_id: WhisperTargetTextBox,
+                    selector: is_channel(CHANNEL_COMBAT),
+                    on_true: split! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                            state_button! {
+                                text: "Dmg",
+                                tooltip: "Toggle damage dealt and received in combat log",
+                                state: combat_filters_path.damage_dealt(),
+                                event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                    state.update_value_with(combat_filters_path, |filters| {
+                                        filters.damage_dealt = !filters.damage_dealt;
+                                        filters.damage_received = filters.damage_dealt;
+                                    });
+                                },
+                            },
+                            state_button! {
+                                text: "Heal",
+                                tooltip: "Toggle healing in combat log",
+                                state: combat_filters_path.healing(),
+                                event: Toggle(combat_filters_path.healing()),
+                            },
+                            state_button! {
+                                text: "Status",
+                                tooltip: "Toggle status effects in combat log",
+                                state: combat_filters_path.status(),
+                                event: Toggle(combat_filters_path.status()),
+                            },
+                            state_button! {
+                                text: "Fail",
+                                tooltip: "Toggle skill failure reasons in combat log",
+                                state: combat_filters_path.skill_failure(),
+                                event: Toggle(combat_filters_path.skill_failure()),
+                            },
+                            state_button! {
+                                text: "Exp",
+                                tooltip: "Toggle EXP gain in combat log",
+                                state: combat_filters_path.exp(),
+                                event: Toggle(combat_filters_path.exp()),
+                            },
+                            state_button! {
+                                text: "Loot",
+                                tooltip: "Toggle item and Zeny loot in combat log",
+                                state: combat_filters_path.loot(),
+                                event: Toggle(combat_filters_path.loot()),
+                            },
+                            button! {
+                                text: "Clear",
+                                tooltip: "Clear combat log history",
+                                event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                    state.update_value_with(combat_log_path, |log| log.clear());
+                                },
+                            },
+                        ),
                     },
                     on_false: fragment! {
-                        children: (),
+                        children: (
+                            either! {
+                                selector: is_channel(CHANNEL_WHISPER),
+                                on_true: text_box! {
+                                    ghost_text: "Whisper to…",
+                                    state: whisper_target_path,
+                                    input_handler: DefaultHandler::<_, _, MAXIMUM_CHARACTER_NAME_LENGTH>::new(whisper_target_path, |_: &State<ClientState>, _: &mut EventQueue<ClientState>| {}),
+                                    background_color: client_theme().chat().text_box_background_color(),
+                                    focused_background_color: Color::rgba(0.0, 0.0, 0.0, 0.8),
+                                    focus_id: WhisperTargetTextBox,
+                                },
+                                on_false: fragment! {
+                                    children: (),
+                                },
+                            },
+                            text_box! {
+                                ghost_text: client_state().localization().chat_text_box_message(),
+                                state: current_text_path,
+                                input_handler: DefaultHandler::<_, _, MAXIMUM_CHAT_MESSAGE_LENGTH>::new(current_text_path, send_action),
+                                background_color: client_theme().chat().text_box_background_color(),
+                                focused_background_color: Color::rgba(0.0, 0.0, 0.0, 0.8),
+                                focus_id: ChatTextBox,
+                            },
+                        ),
                     },
                 },
-                text_box! {
-                    ghost_text: client_state().localization().chat_text_box_message(),
-                    state: current_text_path,
-                    input_handler: DefaultHandler::<_, _, MAXIMUM_CHAT_MESSAGE_LENGTH>::new(current_text_path, send_action),
-                    background_color: client_theme().chat().text_box_background_color(),
-                    focused_background_color: Color::rgba(0.0, 0.0, 0.0, 0.8),
-                    focus_id: ChatTextBox,
-                },
-                scroll_view! {
-                    follow: true,
-                    children: ChatElement::new(self.chat_messages_path),
+                either! {
+                    selector: is_channel(CHANNEL_COMBAT),
+                    on_true: scroll_view! {
+                        follow: true,
+                        children: ChatElement::new(self.combat_messages_path),
+                    },
+                    on_false: scroll_view! {
+                        follow: true,
+                        children: ChatElement::new(self.chat_messages_path),
+                    },
                 },
             ),
         }
@@ -373,7 +498,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::{CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState};
+    use super::{CHANNEL_COMBAT, CHANNEL_PARTY, CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState};
 
     /// A first whisper should leave the Whisper channel ready to answer.
     #[test]
@@ -411,5 +536,19 @@ mod tests {
 
         assert!(state.whisper_target.is_empty());
         assert_eq!(state.last_whisper_sender(), "Bob");
+    }
+
+    #[test]
+    fn selecting_combat_channel_preserves_last_send_channel() {
+        let mut state = ChatWindowState::default();
+        state.select_channel(CHANNEL_PARTY);
+        assert_eq!(state.last_send_channel(), CHANNEL_PARTY);
+
+        state.select_channel(CHANNEL_COMBAT);
+        assert_eq!(state.channel, CHANNEL_COMBAT);
+        assert_eq!(state.last_send_channel(), CHANNEL_PARTY);
+
+        state.select_channel(state.last_send_channel());
+        assert_eq!(state.channel, CHANNEL_PARTY);
     }
 }

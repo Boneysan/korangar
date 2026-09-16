@@ -1394,7 +1394,22 @@ where
             },
         };
 
-        vec![NetworkEvent::SkillCastCancelled { source_entity_id: None }, reported].into()
+        let item_id = match packet.cause {
+            71 | 72 => Some(packet.item_id),
+            _ => None,
+        };
+
+        vec![
+            NetworkEvent::SkillCastCancelled { source_entity_id: None },
+            NetworkEvent::SkillFailed {
+                skill_id: packet.skill_id,
+                cause: packet.cause,
+                reason,
+                item_id,
+            },
+            reported,
+        ]
+        .into()
     })?;
     // `ZC_NOTIFY_MAPINFO` — a map-zone restriction refused the action. Hercules
     // deliberately sends this *instead of* `clif->skill_fail`, so without a

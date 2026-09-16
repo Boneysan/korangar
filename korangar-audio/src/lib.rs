@@ -75,7 +75,7 @@ struct BackgroundMusicTrack {
 }
 
 enum QueuedSoundEffectType {
-    Sound,
+    Sound { volume: Option<f32> },
     SpatialSound { position: Point3<f32>, range: f32 },
     AmbientSound { ambient_key: AmbientKey },
 }
@@ -320,6 +320,17 @@ impl<F: FileLoader> AudioEngine<F> {
         self.engine_context.lock().unwrap().play_sound_effect(sound_effect_key)
     }
 
+    /// Plays a sound effect scaled by a linear volume multiplier (0.0 to 1.0).
+    pub fn play_sound_effect_with_volume(&self, sound_effect_key: SoundEffectKey, volume: f32) {
+        if volume <= 0.0 {
+            return;
+        }
+        self.engine_context
+            .lock()
+            .unwrap()
+            .play_sound_effect_with_volume(sound_effect_key, volume);
+    }
+
     /// Plays a spatial sound effect, which will get removed automatically once
     /// it finishes playing.
     pub fn play_spatial_sound_effect(&self, sound_effect_key: SoundEffectKey, position: Point3<f32>, range: f32) {
@@ -434,7 +445,7 @@ impl<F: FileLoader> EngineContext<F> {
             .map(|cached_sound_effect| cached_sound_effect.0.clone())
         {
             Some(data) => {
-                if let Err(_error) = self.sound_effect_track.play(data.clone()) {
+                if let Err(_error) = self.sound_effect_track.play(data) {
                     #[cfg(feature = "debug")]
                     print_debug!("[{}] can't play sound effect: {:?}", "error".red(), _error);
                 }
@@ -447,7 +458,34 @@ impl<F: FileLoader> EngineContext<F> {
                     &mut self.queued_sound_effect,
                     &mut self.loading_sound_effect,
                     sound_effect_key,
-                    QueuedSoundEffectType::Sound,
+                    QueuedSoundEffectType::Sound { volume: None },
+                );
+            }
+        }
+    }
+
+    fn play_sound_effect_with_volume(&mut self, sound_effect_key: SoundEffectKey, volume: f32) {
+        match self
+            .cache
+            .get(&sound_effect_key)
+            .map(|cached_sound_effect| cached_sound_effect.0.clone())
+        {
+            Some(data) => {
+                let data = data.volume(linear_to_decibel(volume));
+                if let Err(_error) = self.sound_effect_track.play(data) {
+                    #[cfg(feature = "debug")]
+                    print_debug!("[{}] can't play sound effect: {:?}", "error".red(), _error);
+                }
+            }
+            None => {
+                queue_sound_effect_playback(
+                    self.game_file_loader.clone(),
+                    self.async_response_sender.clone(),
+                    &self.sound_effect_paths,
+                    &mut self.queued_sound_effect,
+                    &mut self.loading_sound_effect,
+                    sound_effect_key,
+                    QueuedSoundEffectType::Sound { volume: Some(volume) },
                 );
             }
         }
@@ -723,7 +761,11 @@ impl<F: FileLoader> EngineContext<F> {
             };
 
             match queued.sound_type {
-                QueuedSoundEffectType::Sound => {
+                QueuedSoundEffectType::Sound { volume } => {
+                    let data = match volume {
+                        Some(vol) => data.volume(linear_to_decibel(vol)),
+                        None => data,
+                    };
                     if let Err(_error) = self.sound_effect_track.play(data) {
                         #[cfg(feature = "debug")]
                         print_debug!("[{}] can't play sound effect: {:?}", "error".red(), _error);

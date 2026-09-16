@@ -108,11 +108,13 @@ use rust_state::{VecIndexExt, VecLookupExt};
 use settings::{
     AudioSettings, AudioSettingsPathExt, GraphicsSettingsCapabilities, GraphicsSettingsPathExt, InterfaceSettings, InterfaceSettingsPathExt,
 };
+use state::combat_chat::CombatLogStatePathExt;
 use state::hotbar::{HOTBAR_SLOTS, HotbarBinding, HotbarPathExt};
 use state::inventory::InventoryPathExt;
 use state::localization::Localization;
 use state::skills::SkillTreePathExt;
 use state::theme::{CursorThemePathExt, IndicatorThemePathExt, InterfaceThemePathExt, WorldThemePathExt};
+use state::ui_sounds::{UiSoundController, UiSoundSink};
 use state::{ChatMessage, ClientState, ClientStatePathExt, client_state, this_entity, this_player};
 #[cfg(feature = "debug")]
 use wgpu::Device;
@@ -566,6 +568,8 @@ const START_CAMERA_FOCUS_POINT: Point3<f32> = Point3::new(600.0, 0.0, 240.0);
 const CHARACTER_PREVIEW_ENTITY_ID: EntityId = EntityId(u32::MAX - 65536);
 const DEFAULT_BACKGROUND_MUSIC: Option<&str> = Some("bgm\\01.mp3");
 const MAIN_MENU_CLICK_SOUND_EFFECT: &str = "버튼소리.wav";
+const UI_ACTIVATION_SOUND_EFFECT: &str = MAIN_MENU_CLICK_SOUND_EFFECT;
+const UI_REJECTION_SOUND_EFFECT: &str = "effect\\p_failed.wav";
 const ITEM_PICKUP_RANGE: AttackRange = AttackRange(1);
 
 fn direction_from_ground_vector(east: f32, north: f32) -> Direction {
@@ -1851,6 +1855,8 @@ pub struct Client {
     tile_texture_set: Arc<TextureSet>,
 
     main_menu_click_sound_effect: SoundEffectKey,
+    ui_rejection_sound_effect: SoundEffectKey,
+    ui_sound_controller: UiSoundController,
 
     #[cfg(feature = "debug")]
     networking_system: NetworkingSystem<PacketHistoryCallback>,
@@ -1917,6 +1923,39 @@ pub struct Client {
     /// battle-ready stance. Set on each map load from Towninfo.
     current_map_is_town: bool,
     client_state: State<ClientState>,
+}
+
+struct ClientUiSoundSink<'a> {
+    audio_engine: &'a AudioEngine<GameFileLoader>,
+    activation_key: SoundEffectKey,
+    rejection_key: SoundEffectKey,
+    volume: f32,
+}
+
+impl<'a> ClientUiSoundSink<'a> {
+    fn new(
+        audio_engine: &'a AudioEngine<GameFileLoader>,
+        activation_key: SoundEffectKey,
+        rejection_key: SoundEffectKey,
+        volume: f32,
+    ) -> Self {
+        Self {
+            audio_engine,
+            activation_key,
+            rejection_key,
+            volume,
+        }
+    }
+}
+
+impl UiSoundSink for ClientUiSoundSink<'_> {
+    fn play_activation(&mut self) {
+        self.audio_engine.play_sound_effect_with_volume(self.activation_key, self.volume);
+    }
+
+    fn play_rejection(&mut self) {
+        self.audio_engine.play_sound_effect_with_volume(self.rejection_key, self.volume);
+    }
 }
 
 impl Client {
@@ -2018,6 +2057,28 @@ impl Client {
 
         let key = self.audio_engine.load(path);
         self.audio_engine.play_spatial_sound_effect(key, position, SKILL_SOUND_RANGE);
+    }
+
+    fn play_ui_activation_sound(&mut self) {
+        let audio_settings = self.client_state.follow(client_state().audio_settings()).clone();
+        let mut sink = ClientUiSoundSink::new(
+            &self.audio_engine,
+            self.main_menu_click_sound_effect,
+            self.ui_rejection_sound_effect,
+            audio_settings.ui_sound_volume,
+        );
+        self.ui_sound_controller.trigger_activation(&audio_settings, &mut sink);
+    }
+
+    fn play_ui_rejection_sound(&mut self) {
+        let audio_settings = self.client_state.follow(client_state().audio_settings()).clone();
+        let mut sink = ClientUiSoundSink::new(
+            &self.audio_engine,
+            self.main_menu_click_sound_effect,
+            self.ui_rejection_sound_effect,
+            audio_settings.ui_sound_volume,
+        );
+        self.ui_sound_controller.trigger_rejection(&audio_settings, &mut sink);
     }
 
     fn add_procedural_skill_effect(
@@ -3383,7 +3444,9 @@ impl Client {
             #[cfg(feature = "debug")]
             let tile_texture_set = Arc::new(tile_texture_set);
 
-            let main_menu_click_sound_effect = audio_engine.load(MAIN_MENU_CLICK_SOUND_EFFECT);
+            let main_menu_click_sound_effect = audio_engine.load(UI_ACTIVATION_SOUND_EFFECT);
+            let ui_rejection_sound_effect = audio_engine.load(UI_REJECTION_SOUND_EFFECT);
+            let ui_sound_controller = UiSoundController::new();
         });
 
         time_phase!("load default map", {
@@ -3519,6 +3582,8 @@ impl Client {
             #[cfg(feature = "debug")]
             tile_texture_set,
             main_menu_click_sound_effect,
+            ui_rejection_sound_effect,
+            ui_sound_controller,
             networking_system,
             audio_engine,
             active_interface_settings,
@@ -3915,6 +3980,41 @@ impl Client {
             })
     }
 
+    fn entity_name(&self, entity_id: EntityId) -> Option<String> {
+        if entity_id.0 == 0 {
+            return Some(
+                self.client_state
+                    .try_follow(this_entity())
+                    .and_then(|player| player.get_details().map(|n| n.split('#').next().unwrap_or(n).to_string()))
+                    .unwrap_or_else(|| "You".to_string()),
+            );
+        }
+        if let Some(player) = self
+            .client_state
+            .try_follow(this_entity())
+            .filter(|entity| entity.get_entity_id() == entity_id)
+        {
+            return Some(
+                player
+                    .get_details()
+                    .map(|n| n.split('#').next().unwrap_or(n).to_string())
+                    .unwrap_or_else(|| "You".to_string()),
+            );
+        }
+        self.client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == entity_id)
+            .and_then(|entity| entity.get_details().map(|n| n.split('#').next().unwrap_or(n).to_string()))
+            .or_else(|| {
+                self.client_state
+                    .follow(client_state().dead_entities())
+                    .iter()
+                    .find(|entity| entity.get_entity_id() == entity_id)
+                    .and_then(|entity| entity.get_details().map(|n| n.split('#').next().unwrap_or(n).to_string()))
+            })
+    }
+
     /// Finish a server-authoritative skill occurrence on its source actor.
     /// Entity id zero is the protocol's local-player sentinel for some result
     /// packets. `set_skill_attack` clears the cast before applying native actor
@@ -4186,7 +4286,7 @@ impl Client {
                     character_servers,
                     login_data,
                 } => {
-                    self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                    self.play_ui_activation_sound();
 
                     // Remove `_m`/`_f` suffix from the username. The suffix is only for *creating*
                     // an account and thus can (and needs to) be removed after the first successful
@@ -4371,6 +4471,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).clear();
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    self.client_state.follow_mut(client_state().combat_log()).clear();
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::MapChange);
@@ -4487,7 +4588,7 @@ impl Client {
                         .set_local_account_id(account_id);
                 }
                 NetworkEvent::CharacterList { characters } => {
-                    self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                    self.play_ui_activation_sound();
 
                     // Job id to class name here, not in the window: the interface
                     // layer holds no `Library`. Same reason party rosters and
@@ -4521,6 +4622,7 @@ impl Client {
                     }
                 }
                 NetworkEvent::CharacterSelectionFailed { message, .. } => {
+                    self.play_ui_rejection_sound();
                     // Deferred for the same reason as the disconnect notice: this
                     // one can arrive *during* the walk back to character select,
                     // so opening it now puts it under the character-selection
@@ -4536,11 +4638,12 @@ impl Client {
                     }
                 }
                 NetworkEvent::CharacterDeletionFailed { message, .. } => {
+                    self.play_ui_rejection_sound();
                     *self.client_state.follow_mut(client_state().currently_deleting()) = None;
                     self.interface.open_window(ErrorWindow::new(message.to_owned()))
                 }
                 NetworkEvent::CharacterSelected { login_data, .. } => {
-                    self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                    self.play_ui_activation_sound();
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
@@ -4637,8 +4740,13 @@ impl Client {
                         // be open while the player is selected.
                         this_player().manually_asserted().job_level(),
                     ));
-                    self.interface
-                        .open_window(ChatWindow::new(client_state().chat_window(), client_state().chat_messages()));
+                    self.interface.open_window(ChatWindow::new(
+                        client_state().chat_window(),
+                        client_state().chat_messages(),
+                        client_state().combat_log().messages(),
+                        client_state().combat_log(),
+                        client_state().game_settings().combat_filters(),
+                    ));
                     self.interface
                         .open_window(HotbarWindow::new(client_state().hotbar(), client_state().skill_tree().skills()));
                     self.interface.open_window(StatusBarWindow::new(client_state().status_effects()));
@@ -4691,12 +4799,14 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                 }
                 NetworkEvent::CharacterCreationFailed { message, .. } => {
+                    self.play_ui_rejection_sound();
                     self.interface.open_window(ErrorWindow::new(message.to_owned()));
                 }
                 NetworkEvent::CharacterSlotSwitched => {
                     *self.client_state.follow_mut(client_state().switch_request()) = None;
                 }
                 NetworkEvent::CharacterSlotSwitchFailed => {
+                    self.play_ui_rejection_sound();
                     self.interface
                         .open_window(ErrorWindow::new("Failed to switch character slots".to_owned()));
                 }
@@ -5053,10 +5163,24 @@ impl Client {
                     amount,
                     equipment,
                 } => {
+                    self.play_ui_rejection_sound();
                     let text = missing_skill_item_text(&self.library, item_id, amount, equipment);
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Error));
+                }
+                NetworkEvent::SkillFailed {
+                    skill_id,
+                    cause,
+                    reason,
+                    item_id,
+                } => {
+                    self.play_ui_rejection_sound();
+                    let entry = crate::state::combat_chat::CombatEntry::from_skill_fail(skill_id, cause, reason, item_id, client_tick);
+                    let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                    self.client_state
+                        .follow_mut(client_state().combat_log())
+                        .record(entry, &self.library, &filters);
                 }
                 NetworkEvent::MessageTableNumber { message_id, value } => {
                     // These table entries carry a `%d` the packet fills in — an
@@ -5087,6 +5211,7 @@ impl Client {
                         .push(ChatMessage::new(text.to_owned(), color));
                 }
                 NetworkEvent::ItemMoveFailed { item_index, amount } => {
+                    self.play_ui_rejection_sound();
                     // The packet names only the slot, so read the item back out
                     // of the inventory the deposit was refused from.
                     let item = self
@@ -5138,6 +5263,39 @@ impl Client {
                             skill_id.map(|skill_id| skill_id.0),
                         );
                     }
+
+                    if let Some(damage) = damage_amount {
+                        let local_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                        let is_outgoing = local_id == Some(source_entity_id);
+                        let is_incoming = local_id == Some(destination_entity_id);
+                        if is_outgoing || is_incoming {
+                            let source_name = if is_outgoing {
+                                Some("You".to_string())
+                            } else {
+                                self.entity_name(source_entity_id)
+                            };
+                            let target_name = if is_incoming {
+                                Some("You".to_string())
+                            } else {
+                                self.entity_name(destination_entity_id)
+                            };
+                            let entry = crate::state::combat_chat::CombatEntry::from_damage(
+                                Some(source_entity_id),
+                                Some(destination_entity_id),
+                                source_name,
+                                target_name,
+                                skill_id,
+                                damage,
+                                is_outgoing,
+                                client_tick,
+                            );
+                            let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                            self.client_state
+                                .follow_mut(client_state().combat_log())
+                                .record(entry, &self.library, &filters);
+                        }
+                    }
+
                     let target_position = self
                         .client_state
                         .follow(client_state().entities())
@@ -5268,6 +5426,24 @@ impl Client {
                         self.particle_holder
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), heal_amount.to_string())));
                     }
+
+                    let local_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                    if entity_id.0 == 0 || local_id == Some(entity_id) {
+                        let entry = crate::state::combat_chat::CombatEntry::from_heal(
+                            None,
+                            Some(entity_id),
+                            None,
+                            Some("You".to_string()),
+                            None,
+                            heal_amount,
+                            false,
+                            client_tick,
+                        );
+                        let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                        self.client_state
+                            .follow_mut(client_state().combat_log())
+                            .record(entry, &self.library, &filters);
+                    }
                 }
                 NetworkEvent::SkillEffectNoDamage {
                     skill_id,
@@ -5305,6 +5481,38 @@ impl Client {
                     {
                         self.particle_holder
                             .spawn_particle(Box::new(HealNumber::new(entity.get_position(), effect_value.to_string())));
+                    }
+
+                    if is_heal_skill && is_displayable && successful {
+                        let local_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                        let is_outgoing = source_entity_id.0 == 0 || local_id == Some(source_entity_id);
+                        let is_incoming = destination_entity_id.0 == 0 || local_id == Some(destination_entity_id);
+                        if is_outgoing || is_incoming {
+                            let source_name = if is_outgoing {
+                                Some("You".to_string())
+                            } else {
+                                self.entity_name(source_entity_id)
+                            };
+                            let target_name = if is_incoming {
+                                Some("You".to_string())
+                            } else {
+                                self.entity_name(destination_entity_id)
+                            };
+                            let entry = crate::state::combat_chat::CombatEntry::from_heal(
+                                Some(source_entity_id),
+                                Some(destination_entity_id),
+                                source_name,
+                                target_name,
+                                Some(skill_id),
+                                effect_value as usize,
+                                is_outgoing,
+                                client_tick,
+                            );
+                            let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                            self.client_state
+                                .follow_mut(client_state().combat_log())
+                                .record(entry, &self.library, &filters);
+                        }
                     }
 
                     // Target-phase visuals for skills that land without damage.
@@ -5372,7 +5580,7 @@ impl Client {
 
                     // The HUD remains local-only; actor guard/status-pose state
                     // above is applied to every visible entity.
-                    if Some(entity_id) == local_id {
+                    if entity_id.0 == 0 || Some(entity_id) == local_id {
                         // Several statuses share one icon index — all three
                         // Sage fields are `SI_GROUNDMAGIC` — so name them from
                         // the unit the player is actually standing in. Must be
@@ -5391,6 +5599,18 @@ impl Client {
                         } else {
                             effects.remove(index);
                         }
+
+                        let entry = crate::state::combat_chat::CombatEntry::from_status(
+                            Some(entity_id),
+                            Some("You".to_string()),
+                            index,
+                            gained,
+                            client_tick,
+                        );
+                        let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                        self.client_state
+                            .follow_mut(client_state().combat_log())
+                            .record(entry, &self.library, &filters);
                     }
                 }
                 NetworkEvent::StateChange {
@@ -5443,6 +5663,19 @@ impl Client {
                     }
                 }
                 NetworkEvent::UpdateStat { stat_type } => {
+                    if let ragnarok_packets::StatType::Zeny(new_zeny) = stat_type
+                        && let Some(player) = self.client_state.try_follow(this_player())
+                    {
+                        let old_zeny = player.zeny;
+                        if new_zeny > old_zeny {
+                            let gained = new_zeny - old_zeny;
+                            let entry = crate::state::combat_chat::CombatEntry::from_loot(None, None, gained, true, client_tick);
+                            let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                            self.client_state
+                                .follow_mut(client_state().combat_log())
+                                .record(entry, &self.library, &filters);
+                        }
+                    }
                     if let Some(player) = self.client_state.try_follow_mut(this_player()) {
                         player.update_stat(stat_type);
                     }
@@ -5630,51 +5863,56 @@ impl Client {
                     result,
                     character_id,
                     base_level,
-                } => match result {
-                    3 => {
-                        let name = self.client_state.follow(client_state().trade_state()).pending_name().to_owned();
-                        let name = if name.is_empty() { "Partner".to_owned() } else { name };
-                        self.client_state
-                            .follow_mut(client_state().trade_state())
-                            .open_with_partner(name, character_id, base_level);
-                        self.interface.close_window_with_class(WindowClass::TradeRequest);
-                        if !self.interface.is_window_with_class_open(WindowClass::Trade) {
-                            self.interface
-                                .open_window(TradeWindow::new(client_state().trade_window(), client_state().trade_state()));
+                } => {
+                    if result != 3 {
+                        self.play_ui_rejection_sound();
+                    }
+                    match result {
+                        3 => {
+                            let name = self.client_state.follow(client_state().trade_state()).pending_name().to_owned();
+                            let name = if name.is_empty() { "Partner".to_owned() } else { name };
+                            self.client_state
+                                .follow_mut(client_state().trade_state())
+                                .open_with_partner(name, character_id, base_level);
+                            self.interface.close_window_with_class(WindowClass::TradeRequest);
+                            if !self.interface.is_window_with_class_open(WindowClass::Trade) {
+                                self.interface
+                                    .open_window(TradeWindow::new(client_state().trade_window(), client_state().trade_state()));
+                            }
                         }
+                        0 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Trade failed: character is too far.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                        1 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Trade failed: character not found.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                        4 => {
+                            self.client_state.follow_mut(client_state().trade_state()).clear();
+                            self.interface.close_window_with_class(WindowClass::TradeRequest);
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Trade rejected.".to_owned(), MessageColor::Information));
+                        }
+                        // Hercules sends 2 for every "cannot trade right now" case in
+                        // `trade_request`, the commonest being `target_sd->trade_partner != 0`
+                        // -- they have a request open that they have not answered. Naming
+                        // that is the difference between a retryable state and a dead button.
+                        2 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Trade failed: they are already in a trade, or have an unanswered trade request.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                        5 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Trade failed: target is busy.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                        _ => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Trade failed (result {result})."),
+                            MessageColor::Error,
+                        )),
                     }
-                    0 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        "Trade failed: character is too far.".to_owned(),
-                        MessageColor::Error,
-                    )),
-                    1 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        "Trade failed: character not found.".to_owned(),
-                        MessageColor::Error,
-                    )),
-                    4 => {
-                        self.client_state.follow_mut(client_state().trade_state()).clear();
-                        self.interface.close_window_with_class(WindowClass::TradeRequest);
-                        self.client_state
-                            .follow_mut(client_state().chat_messages())
-                            .push(ChatMessage::new("Trade rejected.".to_owned(), MessageColor::Information));
-                    }
-                    // Hercules sends 2 for every "cannot trade right now" case in
-                    // `trade_request`, the commonest being `target_sd->trade_partner != 0`
-                    // -- they have a request open that they have not answered. Naming
-                    // that is the difference between a retryable state and a dead button.
-                    2 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        "Trade failed: they are already in a trade, or have an unanswered trade request.".to_owned(),
-                        MessageColor::Error,
-                    )),
-                    5 => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        "Trade failed: target is busy.".to_owned(),
-                        MessageColor::Error,
-                    )),
-                    _ => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("Trade failed (result {result})."),
-                        MessageColor::Error,
-                    )),
-                },
+                }
                 NetworkEvent::TradePartnerItem {
                     item_id,
                     amount,
@@ -5726,6 +5964,7 @@ impl Client {
                             );
                         }
                     } else {
+                        self.play_ui_rejection_sound();
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             format!("Could not add item to trade (result {result})."),
                             MessageColor::Error,
@@ -5736,6 +5975,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().trade_state()).lock_side(who);
                 }
                 NetworkEvent::TradeCancelled => {
+                    self.play_ui_rejection_sound();
                     self.client_state.follow_mut(client_state().trade_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Trade);
                     self.interface.close_window_with_class(WindowClass::TradeRequest);
@@ -5744,6 +5984,9 @@ impl Client {
                         .push(ChatMessage::new("Trade cancelled.".to_owned(), MessageColor::Information));
                 }
                 NetworkEvent::TradeCompleted { success } => {
+                    if !success {
+                        self.play_ui_rejection_sound();
+                    }
                     // **The server never tells us these left.** `trade.c:600` deletes
                     // the traded items with `type = 1`, and `pc.c:4960` reads that
                     // flag as *suppress the client notification* -- so no 0x07FA and
@@ -5795,6 +6038,18 @@ impl Client {
                     is_identified,
                 } => {
                     let name = self.library.get::<ItemName>(ItemNameKey { item_id, is_identified }).to_string();
+                    let entry = crate::state::combat_chat::CombatEntry::from_loot(
+                        Some(item_id),
+                        Some(name.clone()),
+                        quantity as u32,
+                        false,
+                        client_tick,
+                    );
+                    let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                    self.client_state
+                        .follow_mut(client_state().combat_log())
+                        .record(entry, &self.library, &filters);
+
                     let message = format!("You got {name} ({quantity}).");
                     self.client_state
                         .follow_mut(client_state().chat_messages())
@@ -6497,6 +6752,12 @@ impl Client {
                     experience_source,
                     ..
                 } => {
+                    let entry = crate::state::combat_chat::CombatEntry::from_exp(amount, experience_type, client_tick);
+                    let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
+                    self.client_state
+                        .follow_mut(client_state().combat_log())
+                        .record(entry, &self.library, &filters);
+
                     let kind = match experience_type {
                         ExperienceType::BaseExperience => "Base",
                         ExperienceType::JobExperience => "Job",
@@ -7829,7 +8090,8 @@ impl Client {
         let mut select_server: Option<CharacterServerInformation> = None;
         let mut quantity_events = Vec::new();
         let mut deferred_trade_adds = Vec::new();
-        for event in self.input_event_buffer.drain(..) {
+        let events: Vec<_> = self.input_event_buffer.drain(..).collect();
+        for event in events {
             match event {
                 InputEvent::LogIn {
                     service_id,
@@ -8918,10 +9180,13 @@ impl Client {
                             slot,
                             HotbarBinding::Skill(skill),
                         ),
-                        None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                            "The hotbar is full. Clear a slot or drag the skill onto a slot to replace it.".to_owned(),
-                            MessageColor::Error,
-                        )),
+                        None => {
+                            self.play_ui_rejection_sound();
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "The hotbar is full. Clear a slot or drag the skill onto a slot to replace it.".to_owned(),
+                                MessageColor::Error,
+                            ));
+                        }
                     }
                 }
                 InputEvent::ClearHotbarSlot { slot } => {
@@ -10480,9 +10745,19 @@ impl Client {
             if let Some(mouse_button) = input_report.mouse_click {
                 if is_interface_hovered {
                     // Starts item/skill drag via SetMouseMode (applied immediately inside click).
-                    interface_frame.click(&self.client_state, mouse_button);
+                    let handled = interface_frame.click(&self.client_state, mouse_button);
 
                     hotbar_press_clicked = mouse_button == MouseButton::Left;
+                    if handled {
+                        let audio_settings = self.client_state.follow(client_state().audio_settings()).clone();
+                        let mut sink = ClientUiSoundSink::new(
+                            &self.audio_engine,
+                            self.main_menu_click_sound_effect,
+                            self.ui_rejection_sound_effect,
+                            audio_settings.ui_sound_volume,
+                        );
+                        self.ui_sound_controller.on_click(true, &audio_settings, &mut sink);
+                    }
                 } else {
                     interface_frame.unfocus();
 
@@ -10599,6 +10874,15 @@ impl Client {
             }
 
             if input_report.mouse_button_released {
+                let audio_settings = self.client_state.follow(client_state().audio_settings()).clone();
+                let mut sink = ClientUiSoundSink::new(
+                    &self.audio_engine,
+                    self.main_menu_click_sound_effect,
+                    self.ui_rejection_sound_effect,
+                    audio_settings.ui_sound_volume,
+                );
+                self.ui_sound_controller.on_click(false, &audio_settings, &mut sink);
+
                 if let Some(press) = self.pending_hotbar_press.take() {
                     self.input_event_buffer.push(InputEvent::CastSkill { slot: press.slot });
                 }

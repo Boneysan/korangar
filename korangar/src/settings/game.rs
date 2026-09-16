@@ -76,6 +76,9 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub window_maximized: bool,
+    /// Filters for the Combat chat channel.
+    #[serde(default)]
+    pub combat_filters: crate::state::combat_chat::CombatFilters,
 }
 
 impl Default for GameSettings {
@@ -87,6 +90,7 @@ impl Default for GameSettings {
             target_hostile_binding: TargetHostileBinding::default(),
             window_size: None,
             window_maximized: false,
+            combat_filters: crate::state::combat_chat::CombatFilters::default(),
         }
     }
 }

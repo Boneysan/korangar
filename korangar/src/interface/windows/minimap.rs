@@ -123,13 +123,13 @@ impl Element<ClientState> for MinimapView {
                 if !member_map.is_empty() && member_map != current_map {
                     continue;
                 }
+                let color = member.color();
                 extra_blips.push(MinimapBlip {
                     x: pos.x as f32,
                     y: pos.y as f32,
-                    // Soft green — distinct from the red player blip.
-                    red: 80,
-                    green: 220,
-                    blue: 120,
+                    red: color.0,
+                    green: color.1,
+                    blue: color.2,
                     alpha: 255,
                     size_scale: 0.85,
                     name: member.name().to_owned(),

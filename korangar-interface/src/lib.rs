@@ -875,7 +875,7 @@ impl<App: Application> InterfaceFrame<'_, App> {
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    pub fn click(&mut self, state: &State<App>, mouse_button: MouseButton) {
+    pub fn click(&mut self, state: &State<App>, mouse_button: MouseButton) -> bool {
         self.event_queue.queue(Event::Unfocus);
         self.event_queue.queue(Event::CloseOverlay);
 
@@ -883,13 +883,15 @@ impl<App: Application> InterfaceFrame<'_, App> {
             self.event_queue.queue(Event::MoveWindowToTop { window_id: hovered_window });
         }
 
+        let mut handled = false;
+
         if let Some(layout) = &self.overlay_layout {
             let mouse_button = match mouse_button.is_double_click() && !layout.has_button_registered(mouse_button) {
                 true => mouse_button.as_single_click(),
                 false => mouse_button,
             };
 
-            layout.handle_click(state, self.event_queue, mouse_button);
+            handled |= layout.handle_click(state, self.event_queue, mouse_button);
         }
 
         if let Some(window_id) = &self.hovered_window {
@@ -900,8 +902,10 @@ impl<App: Application> InterfaceFrame<'_, App> {
                 false => mouse_button,
             };
 
-            layout.handle_click(state, self.event_queue, mouse_button);
+            handled |= layout.handle_click(state, self.event_queue, mouse_button);
         }
+
+        handled
     }
 
     pub fn get_mouse_mode(&self) -> &MouseMode<App> {

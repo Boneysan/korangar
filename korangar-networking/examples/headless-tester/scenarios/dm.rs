@@ -377,14 +377,22 @@ fn dm_reward_delta(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-/// `@dmexp` must produce exact GainedExperience events for base and job.
+/// `@dmexp` must produce exact GainedExperience events for base and job,
+/// and EXP totals must persist accurately across relog.
 fn dm_experience(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
-    // A mid-level first-job character can always gain both experience types.
+    // A mid-level first-job character can always gain both experience types
+    // without triggering a level-up.
+    context.ensure_job(0)?;
     context.ensure_job(1)?;
     context.ensure_base_level(50)?;
+    context.say("@jlvl 20")?;
+    context.pump(Duration::from_millis(400));
 
     let account_id = context.account_id;
+    let base_before = context.base_experience;
+    let job_before = context.job_experience;
+
     context.flush();
     context.say("@dmexp 1000 500")?;
     context.wait_for("base GainedExperience of 1000", |event| match event {
@@ -406,6 +414,30 @@ fn dm_experience(config: &Config) -> Result<(), String> {
         _ => None,
     })?;
     wait_for_text(&mut context, "exp grant feedback", "Granted 1000 base / 500 job EXP")?;
+
+    context.say("@save")?;
+    context.pump(Duration::from_millis(300));
+    drop(context);
+
+    // Reconnect and assert persisted EXP totals
+    std::thread::sleep(Duration::from_millis(500));
+    let context = TestContext::connect(config)?;
+    let base_after = context.base_experience;
+    let job_after = context.job_experience;
+    if base_after != base_before + 1000 {
+        return Err(format!(
+            "persisted base EXP mismatch: expected {}, got {}",
+            base_before + 1000,
+            base_after
+        ));
+    }
+    if job_after != job_before + 500 {
+        return Err(format!(
+            "persisted job EXP mismatch: expected {}, got {}",
+            job_before + 500,
+            job_after
+        ));
+    }
     Ok(())
 }
 

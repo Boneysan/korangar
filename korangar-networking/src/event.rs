@@ -191,6 +191,13 @@ pub enum NetworkEvent {
         /// consumable.
         equipment: bool,
     },
+    /// A skill use was rejected by the server (`ZC_ACK_TOUSESKILL`).
+    SkillFailed {
+        skill_id: SkillId,
+        cause: u8,
+        reason: Option<SkillFailReason>,
+        item_id: Option<ItemId>,
+    },
     /// A message-table line carrying a number (`ZC_MSG_VALUE`). The table lives
     /// in the client crate, and the id's text holds the `%d` this fills.
     MessageTableNumber {

@@ -626,14 +626,14 @@ fn solo_and_party_exp_measurement(config: &Config) -> Result<(), String> {
 
     eprintln!("    Case 2 (2 players): P1 gains {p1_c2_gain_base} / {p1_c2_gain_job}, P2 gains {p2_c2_gain_base} / {p2_c2_gain_job}");
 
-    if p1_c2_gain_base != 18 || p1_c2_gain_job != 10 {
+    if p1_c2_gain_base != 22 || p1_c2_gain_job != 12 {
         return Err(format!(
-            "Case 2 failed: primary expected 18 Base / 10 Job, got {p1_c2_gain_base} / {p1_c2_gain_job}"
+            "Case 2 failed: primary expected 22 Base / 12 Job (+25% party bonus), got {p1_c2_gain_base} / {p1_c2_gain_job}"
         ));
     }
-    if p2_c2_gain_base != 18 || p2_c2_gain_job != 10 {
+    if p2_c2_gain_base != 22 || p2_c2_gain_job != 12 {
         return Err(format!(
-            "Case 2 failed: partner expected 18 Base / 10 Job, got {p2_c2_gain_base} / {p2_c2_gain_job}"
+            "Case 2 failed: partner expected 22 Base / 12 Job (+25% party bonus), got {p2_c2_gain_base} / {p2_c2_gain_job}"
         ));
     }
 
@@ -677,19 +677,19 @@ fn solo_and_party_exp_measurement(config: &Config) -> Result<(), String> {
          P3={p3_c3_gain_base}/{p3_c3_gain_job}"
     );
 
-    if p1_c3_gain_base != 12 || p1_c3_gain_job != 6 {
+    if p1_c3_gain_base != 18 || p1_c3_gain_job != 9 {
         return Err(format!(
-            "Case 3 failed: P1 expected 12 Base / 6 Job, got {p1_c3_gain_base} / {p1_c3_gain_job}"
+            "Case 3 failed: P1 expected 18 Base / 9 Job (+50% party bonus), got {p1_c3_gain_base} / {p1_c3_gain_job}"
         ));
     }
-    if p2_c3_gain_base != 12 || p2_c3_gain_job != 6 {
+    if p2_c3_gain_base != 18 || p2_c3_gain_job != 9 {
         return Err(format!(
-            "Case 3 failed: P2 expected 12 Base / 6 Job, got {p2_c3_gain_base} / {p2_c3_gain_job}"
+            "Case 3 failed: P2 expected 18 Base / 9 Job (+50% party bonus), got {p2_c3_gain_base} / {p2_c3_gain_job}"
         ));
     }
-    if p3_c3_gain_base != 12 || p3_c3_gain_job != 6 {
+    if p3_c3_gain_base != 18 || p3_c3_gain_job != 9 {
         return Err(format!(
-            "Case 3 failed: P3 expected 12 Base / 6 Job, got {p3_c3_gain_base} / {p3_c3_gain_job}"
+            "Case 3 failed: P3 expected 18 Base / 9 Job (+50% party bonus), got {p3_c3_gain_base} / {p3_c3_gain_job}"
         ));
     }
 

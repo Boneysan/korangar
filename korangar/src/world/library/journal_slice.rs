@@ -1,7 +1,7 @@
 //! Journal text for campaign hunts. Facts come from hunt_schema, counts from
 //! inventory.
 
-use super::hunt_schema::{BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, parse_guidance, parse_objectives};
+use super::hunt_schema::{HuntGuidance, HuntObjective};
 
 pub fn you_carry_line(item_name: &str, carried: u32, needed: u32, source: &str) -> String {
     format!("Collect {item_name}       {carried} / {needed}  — {source}")
@@ -60,6 +60,7 @@ fn display_monster(id: u32, rank: &str) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::super::hunt_schema::{BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, parse_guidance, parse_objectives};
     use super::*;
 
     #[test]

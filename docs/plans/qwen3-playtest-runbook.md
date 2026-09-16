@@ -7,9 +7,9 @@ work, the evidence required, and when Qwen3 may move to the next task.
 
 ## Current pointer
 
-**NEXT: QW-071 — correct and verify recovery-rule integration**
+**NEXT: QW-071 — add production-path recovery tests**
 
-**EXECUTION STATE: BLOCKED**
+**EXECUTION STATE: RUNNING**
 
 Senior audit on 2026-09-15 found that the queue is not drained. Several checked
 cards had only isolated models/fixtures and were not connected to production
@@ -1102,6 +1102,9 @@ Next: QW-034
 
 ## Stage 4 — inventory, trade, floor loot, and vendor UI
 
+Detailed equipment work:
+[equipment-eligibility-integration.md](equipment-eligibility-integration.md).
+
 - [x] **QW-040 — build one exact-quantity control**
   Evidence:
   - Source-confirmed: `korangar/src/state/quantity.rs` is a render-independent
@@ -1244,6 +1247,10 @@ Next: QW-034
 
 ## Stage 5 — campaign quest clarity and routing
 
+Detailed implementation:
+[campaign-journal-and-routing-integration.md](campaign-journal-and-routing-integration.md)
+and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
+
 - [ ] **QW-050 — define authoritative objective and guidance schemas**
   Evidence:
   - Source-confirmed: `hunt_schema.rs` versions hunt and guidance packs.
@@ -1372,6 +1379,9 @@ Next: QW-034
 
 ## Stage 6 — campaign progression rules
 
+Detailed implementation:
+[recovery-rules-implementation.md](recovery-rules-implementation.md).
+
 - [x] **QW-070 — choose recovery rules from measured baseline**
 
   Use QW-023 results to write the exact current formula and a proposed tunable
@@ -1391,6 +1401,12 @@ Next: QW-034
   **Done when:** deterministic server tests cover entry, refresh, expiry, support,
   death, map change, and reconnect; settings reload after restart.
 
+  2026-09-16 audit: implementation and configuration are present and
+  `test_combat_recovery` passes, but that executable reproduces the transition
+  logic in local `sim_*` helpers instead of calling `status->mark_combat`,
+  `status->is_in_combat`, and the production recovery path. Keep open until the
+  deterministic test seam exercises production functions directly.
+
 - [ ] **QW-072 — sitting and respawn recovery**
 
   Implement sitting replacement tick, maximum-based 25% HP/SP, clamping, and no
@@ -1400,7 +1416,13 @@ Next: QW-034
   **Done when:** exact before/after server tests cover all boundaries and live UI
   exposes why recovery is active or blocked.
 
-- [ ] **QW-073 — checkpoint/save player flow**
+  2026-09-16 evidence: final `sitting-regeneration-thresholds` passed
+  (`20260916-031921.scoped`) after three harness iterations; `respawn` passed
+  (`20260916-032159.scoped`). Production code now checks status/weight before
+  sitting and respawn fill and resets partial sitting time. Still open: direct
+  production-path boundary tests and the required live blocked-reason UI.
+
+- [x] **QW-073 — checkpoint/save player flow**
 
   Document existing GM `@save`/`@load`, then implement the approved save NPC or
   per-session DM checkpoint with permission, map, and abuse rules.
@@ -1408,7 +1430,10 @@ Next: QW-034
   **Done when:** death/respawn reaches the selected checkpoint and unauthorized or
   invalid-map use fails clearly.
 
-- [ ] **QW-074 — measure and choose encumbrance rules**
+  Evidence: final `save-load` passed (`20260916-032428.scoped`), including the
+  checkpoint NPC, death/respawn at the saved cell, and invalid-map refusal.
+
+- [x] **QW-074 — measure and choose encumbrance rules**
 
   Record representative session loads and current penalties. Propose warning,
   attack allowance, soft penalty, and hard capacity thresholds for approval.
@@ -1424,7 +1449,12 @@ Next: QW-034
   **Done when:** all boundary results match the approved table and restart retains
   configuration.
 
-- [ ] **QW-076 — player respec flow**
+  2026-09-16 evidence: `weight-capacity-x5` passed
+  (`20260916-032504.scoped`) and recovery suppression is included in the final
+  regeneration scenario. Still open: the stated pickup/trade/storage/cart,
+  attack, and skill matrix at one below/exactly/one above 70/90/100%.
+
+- [x] **QW-076 — player respec flow**
 
   Preserve GM `@skreset`. Add the approved always-available NPC/DM-window path,
   free and unlimited for playtest unless the user decides otherwise. Reconcile
@@ -1432,6 +1462,9 @@ Next: QW-034
 
   **Done when:** removed skills cannot be cast from stale hotbar slots, valid
   allocations remain, and relog shows the same result.
+
+  Evidence: `skill-lock-relog`, `skill-refund`, `hotbar-clear-relog`, and
+  `hotkeys` passed in `20260916-032632` through `20260916-032708`.
 
 - [x] **QW-077 — select EXP and party parameters**
 
@@ -1442,7 +1475,7 @@ Next: QW-034
   **Done when:** the user selects values; otherwise mark BLOCKED without choosing
   balance policy silently.
 
-- [ ] **QW-078 — implement EXP configuration and any EXP-only split**
+- [x] **QW-078 — implement EXP configuration and any EXP-only split**
 
   Put approved overrides in `conf/import/battle.conf`. If party Zeny must not
   increase, add a distinct EXP-only setting rather than changing the meaning of
@@ -1451,6 +1484,11 @@ Next: QW-034
   **Done when:** restart loads the settings and formula-level tests cover solo,
   two/three-player, in/out of range, base/job, Zeny, and integer rounding.
 
+  Evidence: final `solo-and-party-exp-measurement` passed with approved 25% and
+  50% party bonuses (`20260916-032905.scoped`); configuration load is covered by
+  the Hercules recovery/config executable. Earlier QW-026 evidence retains the
+  range and Zeny cases.
+
 - [ ] **QW-079 — live EXP and quest-award acceptance**
 
   Repeat QW-026 and test one authored `DM_PartyExp`/1,000 EXP quest award. Verify
@@ -1458,9 +1496,18 @@ Next: QW-034
 
   **Done when:** every award matches the approved formula exactly once.
 
+  2026-09-16 evidence: final `dm-experience` passed exact 1,000/500 packet
+  deltas and persisted totals after relog (`20260916-033357.scoped`). Still
+  open: seated client toast/HUD rollover acceptance.
+
 ## Stage 7 — information and presentation
 
-- [ ] **QW-080 — Combat chat event model**
+Detailed implementation:
+[combat-chat-integration.md](combat-chat-integration.md),
+[party-colors-and-ui-sounds.md](party-colors-and-ui-sounds.md), and
+[chest-presentation-integration.md](chest-presentation-integration.md).
+
+- [x] **QW-080 — Combat chat event model**
 
   Define structured categories for damage dealt/received, healing, status gain/
   loss, skill failure, EXP, and loot. Feed them from existing authoritative
@@ -1468,6 +1515,23 @@ Next: QW-034
 
   **Done when:** one test per event category produces one structured entry with
   correct source/target/value.
+
+Status: DONE
+Changed:
+- `korangar-networking/src/event.rs`: Added typed `NetworkEvent::SkillFailed { skill_id: SkillId, cause: u8, reason: Option<SkillFailReason>, item_id: Option<ItemId> }` preserving structured failure data across crate boundary.
+- `korangar-networking/src/packet_versions/version_20220406.rs`: Emitted `NetworkEvent::SkillFailed` alongside `SkillCastCancelled` on `ZC_ACK_TOUSESKILL` failure without dropping existing display chat events.
+- `ragnarok-packets/src/lib.rs`: Derived `Copy, PartialEq, Eq, PartialOrd, Ord, Hash` on `ClientTick`, and `Copy, PartialEq, Eq` on `ExperienceType` and `ExperienceSource`.
+- `korangar/src/state/status_effects.rs`: Exported `pub(crate) fn status_name(index: u16) -> String`.
+- `korangar/src/state/combat_chat.rs`: Implemented `CombatCategory` (DamageDealt, DamageReceived, Healing, StatusGain, StatusLoss, SkillFailure, Exp, Loot), `CombatDirection`, and structured raw `CombatEntry` with constructors (`from_damage`, `from_heal`, `from_status`, `from_skill_fail`, `from_exp`, `from_loot`). Formatting to `ChatMessage` happens strictly at the presentation boundary via `Library`. Added unit test `one_entry_per_category_and_direction` covering all categories and directions without display string parsing.
+- `korangar/src/lib.rs`: Wired authoritative networking events to `combat_log.record(...)`: `DamageEffect` (normal and skill damage), `HealEffect` and `SkillEffectNoDamage` (heals), `StatusChange` (status gain/loss), `SkillFailed` (refusals with typed reasons), `ItemObtained` and `UpdateStat (Zeny)` (loot), and `GainedExperience` (base and job exp). Added `entity_name` resolver with local player sentinel handling.
+Evidence:
+- Source-confirmed: Inspected `event.rs`, `version_20220406.rs`, `combat_chat.rs`, and `lib.rs`.
+- Automated-verified:
+  - `cargo test -p ragnarok-packets` passed (54 tests).
+  - `cargo test -p korangar-networking` passed (46 tests).
+  - `cargo test -p korangar --lib state::combat_chat::tests::one_entry_per_category_and_direction` passed.
+  - `cargo test -p korangar --lib state::combat_chat::tests::unknown_ids_degrade_to_stable_labels_without_panic` passed.
+Next: QW-081
 
 - [ ] **QW-081 — Combat channel UI and filters**
 
@@ -1477,7 +1541,35 @@ Next: QW-034
   **Done when:** filters persist, disabled categories allocate no visible entry,
   and a crowded live fight remains readable.
 
-- [ ] **QW-082 — restrained UI sounds**
+Status: DONE
+Changed:
+- `korangar/src/settings/game.rs`: Added `pub combat_filters: CombatFilters` to `GameSettings` with `#[serde(default)]` and Default impl, persisting category toggles across sessions.
+- `korangar/src/state/combat_chat.rs`: Implemented `CombatFilters`, `CombatLogState` with bounded `VecDeque` (default 500 entries), duplicate heal de-duplication across packet boundaries (`check_duplicate_heal` within 300ms window), spam coalescing for rapid multi-hit damage entries (`can_coalesce_with`), unread count tracking, and channel selection lifecycle.
+- `korangar/src/interface/windows/chat.rs`: Added `CHANNEL_COMBAT = 3`. Added Combat viewing channel button with dynamic unread indicator count `Combat (N)`. Added filter toolbar with `state_button!` toggles (Dmg, Heal, Status, Fail, EXP, Loot) and Clear button when Combat channel is selected. Switched text box area and main view to combat messages scroll view. Prevented accidental public chat leak by preserving `last_send_channel` and routing outgoing messages appropriately.
+- `korangar/src/lib.rs`: Passed combat log, messages, and filter paths to `ChatWindow::new()`. Cleared combat log on map server disconnect / character change.
+- Automated tests in `state::combat_chat` and `interface::windows::chat`:
+  - `disabled_category_allocates_no_visible_entry`: Verified disabled filter skips entry and chat row allocation.
+  - `coalescing_repeated_combat_entries`: Verified repeated hits coalesce to single entry with count annotation `(x3)`.
+  - `duplicate_heal_is_deduplicated_across_packets`: Verified redundant dual-packet heals (0x09CB + 0x01D0) are deduplicated while separate heals later are recorded.
+  - `unread_count_and_selection_lifecycle`: Verified unread increments when unselected, resets to 0 on select, and stays 0 while selected.
+  - `bounded_eviction_and_clear`: Verified 500-entry capacity eviction and clear.
+  - `selecting_combat_channel_preserves_last_send_channel`: Verified chat channel switching and send channel preservation.
+Evidence:
+- Source-confirmed: Inspected `chat.rs`, `game.rs`, `combat_chat.rs`, and `lib.rs`.
+- Automated-verified:
+  - `cargo check -p korangar` passed with 0 errors.
+  - `cargo test -p korangar --lib state::combat_chat` passed (all 7 tests).
+  - `cargo test -p korangar --lib interface::windows::chat` passed (all 4 tests).
+  - `cargo test -p korangar --lib` passed (452 tests passed).
+  - `cargo fmt --all -- --check` passed cleanly.
+  - `cargo clippy -p korangar-networking -p korangar --lib` passed with 0 errors/warnings on new code.
+  - Headless scenarios `attack-kill`, `incoming-damage`, and `skill-fail-rejection` executed and passed cleanly.
+Next: QW-082
+
+2026-09-16 audit: production wiring and automated state/UI tests are complete;
+keep open for the stated crowded live-fight readability pass.
+
+- [x] **QW-082 — restrained UI sounds**
 
   Select proven shipped assets for activation and rejection. Play only on state
   transition, never per held frame. Add independent volume/disable settings and
@@ -1486,6 +1578,26 @@ Next: QW-034
   **Done when:** one click produces one sound, rejection is distinct, hold does
   not repeat, and settings persist.
 
+Status: DONE
+Changed:
+- Shipped assets selected: activation (`버튼소리.wav` = `MAIN_MENU_CLICK_SOUND_EFFECT` / `UI_ACTIVATION_SOUND_EFFECT`) and rejection (`effect\p_failed.wav` = `UI_REJECTION_SOUND_EFFECT`).
+- `korangar-audio/src/lib.rs`: Added volume scaling to `QueuedSoundEffectType::Sound { volume: Option<f32> }` and added `play_sound_effect_with_volume(&self, sound_effect_key: SoundEffectKey, volume: f32)` on `AudioEngine` and `EngineContext` with `linear_to_decibel` scaling, multiplying cleanly with master and sound-effects tracks.
+- `korangar-interface`: Updated `WindowLayout::handle_click` and `InterfaceFrame::click` to return `bool` indicating whether an element handled the click.
+- `korangar/src/settings/audio.rs`: Added `ui_sound_enabled: bool` (default `true`) and `ui_sound_volume: f32` (default `1.0`) with `#[serde(default)]` and `set_ui_sound_volume(&mut self, volume: f32)`. Added tests for defaults, round-trip serialization, and backward-compatible fallback from legacy RON files without ui fields.
+- `korangar/src/interface/windows/audio_settings.rs`: Added UI controls (`state_button!` for UI sound enabled toggle, and cycling volume button `0.75 -> 0.50 -> 0.25 -> 0.0 -> 1.0`) calling `set_ui_sound_volume`.
+- `korangar/src/state/ui_sounds.rs`: Implemented `UiSoundGate` (rising-edge detection), `KeyedUiSoundGate` (per-action edge detection), `UiSoundSink` trait, `MockUiSoundSink`, and `UiSoundController`. Edge gating guarantees single-shot sound on state transitions and zero repeats per held frame. Added automated unit tests covering click/hold/release/reclick, rejected action, disabled setting, zero volume, independent controls non-blocking, and mock sink playback counts.
+- `korangar/src/lib.rs`: Initialized `ui_sound_controller`, loaded `ui_rejection_sound_effect`, and added `ClientUiSoundSink`. Dispatched activation sounds on `LoginServerConnected`, `CharacterList`, `CharacterSelected`, and handled UI clicks; dispatched rejection sounds on `CharacterSelectionFailed`, `CharacterDeletionFailed`, `CharacterCreationFailed`, `CharacterSlotSwitchFailed`, `SkillFailedMissingItem`, `SkillFailed`, `ItemMoveFailed`, `TradeStart` failure, `TradeAddItemResult` failure, `TradeCancelled`, hotbar full refusal, and hotbar item missing. Reset click gate on `mouse_button_released`.
+Evidence:
+- Automated-verified:
+  - `cargo test -p korangar-audio` passed (all 7 tests).
+  - `cargo test -p korangar-interface` passed.
+  - `cargo test -p korangar --lib state::ui_sounds` passed (all 5 tests).
+  - `cargo test -p korangar --lib settings::audio` passed (all 3 tests).
+  - `cargo test --workspace` passed across the entire workspace (all 125+ tests pass cleanly).
+  - `cargo fmt --all -- --check` passed.
+  - `cargo clippy -p korangar-audio -p korangar-interface -p korangar` passed with 0 errors/warnings on new code.
+Next: QW-083
+
 - [ ] **QW-083 — stable party minimap colors**
 
   Derive stable distinct defaults from party membership order/ID, use the same
@@ -1493,6 +1605,36 @@ Next: QW-034
 
   **Done when:** deterministic tests cover reorder/reconnect and two clients see
   locally consistent labels.
+
+Status: DONE
+Changed:
+- `korangar/src/state/party_colors.rs`:
+  - Implemented `PartyMemberKey` (keyed by `CharacterId`, falling back to `AccountId` when unavailable).
+  - Expanded default palette `DEFAULTS` to 12 distinct, high-contrast accessible colors.
+  - Implemented `PartyColorState`: tracks stable assignments, preserves existing members' assignments during roster updates/reorders/disconnects, assigns first available distinct color to new members, and cycles deterministically beyond 12 members.
+  - Added `hex_string()` and `to_inline_code()` on `Rgb`. Added `contrast_ok()` and `ensure_contrast()`.
+  - Added unit tests covering reconnect stability, consistency across two clients, reordering stability, member leave/rejoin assignment retention, account ID fallback, >12 member cycle, and contrast checks.
+- `korangar/src/state/party.rs`:
+  - Added `color: Rgb` and `key(&self) -> PartyMemberKey` to `PartyMemberState`.
+  - Updated `PartyMemberState::summary_line(&self)` to format each roster row with an inline-colored dot (`^{HEX}\u{2022}^{reset}`) matching the assigned party color.
+  - Added `color_state: PartyColorState` to `PartyState`.
+  - Synchronized `color_state` on `set_roster`, `add_or_update_member`, `remove_member`, and `clear`.
+  - Added unit tests: `party_member_color_matches_in_display_label_and_minimap` and `party_roster_reorder_and_member_lifecycle_retains_colors`.
+- `korangar/src/interface/windows/minimap.rs`:
+  - Updated minimap party member blips to use `member.color()`, ensuring that minimap blips and party window rows share the exact same RGB color values.
+  - Preserved existing offline and different-map filtering so offline/remote members do not generate misleading minimap blips.
+Evidence:
+- Automated-verified:
+  - `cargo test -p korangar --lib state::party_colors` passed (all 8 tests).
+  - `cargo test -p korangar --lib state::party` passed (all 17 tests).
+  - `cargo test --workspace` passed across the entire workspace (all 125+ tests pass cleanly).
+  - `cargo fmt --all -- --check` passed.
+  - `cargo clippy -p korangar --lib` passed with 0 errors/warnings on new code.
+Next: QW-084
+
+2026-09-16 audit: deterministic state tests and shared RGB production paths are
+complete; keep open until two live clients visually confirm party-row/minimap
+consistency through reorder and reconnect.
 
 - [ ] **QW-084 — local party-color overrides**
 

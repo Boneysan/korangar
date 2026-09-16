@@ -100,7 +100,7 @@ pub trait CharacterServerPacket: Packet {}
 /// Marker trait for map server packets.
 pub trait MapServerPacket: Packet {}
 
-#[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize)]
+#[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ClientTick(pub u32);
 
@@ -4093,7 +4093,7 @@ pub struct VisualEffectPacket {
     pub effect: VisualEffect,
 }
 
-#[derive(Debug, Clone, ByteConvertable)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u16)]
 pub enum ExperienceType {
@@ -4102,7 +4102,7 @@ pub enum ExperienceType {
     JobExperience,
 }
 
-#[derive(Debug, Clone, ByteConvertable)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u16)]
 pub enum ExperienceSource {
