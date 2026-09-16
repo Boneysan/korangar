@@ -42,3 +42,21 @@ and automated evidence sufficient for their current cards.
 
 Next: make the recovery test seam call production functions, then finish the
 recovery/weight live matrix before moving to QW-084.
+
+## Later checkpoint
+
+- Recovery/combat transitions were extracted into `combat_state.c`; the
+  Hercules test now calls the same production helpers as the map server.
+- Added the four-byte recovery-state packet and a player HUD line for standing,
+  sitting, respawn fill, combat, status, weight, and death states.
+- Added persistent local party-color cycle/reset controls with contrast
+  correction.
+- Expanded identity privacy filtering across hover, click candidates, detail
+  requests, cloak/hide, GM invisibility, disguise, off-screen, and overlap.
+- Workspace tests now pass with 480 Korangar library tests and 17 ignored;
+  Hercules build and all 13 recovery/encumbrance contract cases pass.
+
+QW-071 remains open only for a full map-server restart/config-load proof. QW-072,
+079, 081, 083, and 085 remain open for graphical acceptance. QW-075 remains open
+until real pickup/trade/storage/cart pathways are exercised at their boundaries.
+QW-084 is complete. The next independent implementation task is QW-088.

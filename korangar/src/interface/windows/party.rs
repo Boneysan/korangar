@@ -181,6 +181,22 @@ where
                                                 });
                                             },
                                         },
+                                        button! {
+                                            text: "Color",
+                                            tooltip: "Cycle this member's local minimap color",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let account_id = state.get(&member_path).account_id();
+                                                queue.queue(InputEvent::CyclePartyMemberColor { account_id });
+                                            },
+                                        },
+                                        button! {
+                                            text: "Reset color",
+                                            tooltip: "Use the default party color for this member",
+                                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                                let account_id = state.get(&member_path).account_id();
+                                                queue.queue(InputEvent::ResetPartyMemberColor { account_id });
+                                            },
+                                        },
                                     ),
                                 },
                             ),

@@ -59,7 +59,8 @@ owners and call sites. Combat events feed the existing chat window; party rows
 and minimap markers share resolved colors; UI sounds route through the audio
 engine with persistent settings and edge gating. Their automated suites pass.
 QW-081 and QW-083 remain open only for their stated live visual acceptance, and
-QW-084 still needs persisted local color overrides. The original 43-warning
+QW-084 now has persisted, resettable, contrast-corrected local color overrides.
+The original 43-warning
 count above is historical; strict workspace Clippy remains open for current
 dead-code debt plus an all-target constant-assertion lint.
 

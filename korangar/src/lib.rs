@@ -3951,7 +3951,7 @@ impl Client {
                 .follow_mut(client_state().entities())
                 .iter_mut()
                 .find(|entity| entity.get_entity_id() == entity_id)
-            && !entity.is_hidden()
+            && !entity.hides_identity()
             && entity.are_details_unavailable()
             && self.networking_system.entity_details(entity_id).is_ok()
         {
@@ -6743,6 +6743,11 @@ impl Client {
                         client_tick,
                     );
                 }
+                NetworkEvent::RecoveryState { mode, block } => {
+                    if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        player.set_recovery_state(mode, block);
+                    }
+                }
                 NetworkEvent::SkillCooldown { skill_id, until } => {
                     self.client_state.follow_mut(client_state().skill_cooldowns()).set(skill_id, until);
                 }
@@ -6762,12 +6767,9 @@ impl Client {
                         ExperienceType::BaseExperience => "Base",
                         ExperienceType::JobExperience => "Job",
                     };
-                    let source = match experience_source {
-                        ragnarok_packets::ExperienceSource::Regular => "",
-                        ragnarok_packets::ExperienceSource::Quest => " (quest)",
-                    };
+                    let quest = experience_source == ragnarok_packets::ExperienceSource::Quest;
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
-                        format!("Gained {amount} {kind} EXP{source}"),
+                        crate::interface::windows::hud::format_exp_gain_toast(amount, kind, quest),
                         MessageColor::Information,
                     ));
                 }
@@ -9410,6 +9412,35 @@ impl Client {
                     character_name,
                 } => {
                     let _ = self.networking_system.kick_party_member(account_id, &character_name);
+                }
+                InputEvent::CyclePartyMemberColor { account_id } => {
+                    if let Some(key) = self
+                        .client_state
+                        .follow(client_state().party_state())
+                        .members()
+                        .iter()
+                        .find(|member| member.account_id() == account_id)
+                        .map(|member| member.key())
+                    {
+                        let color = self.client_state.follow_mut(client_state().party_state()).cycle_member_color(key);
+                        *self.client_state.follow_mut(client_state().game_settings().party_color_overrides()) =
+                            self.client_state.follow(client_state().party_state()).color_overrides().clone();
+                        let _ = color;
+                    }
+                }
+                InputEvent::ResetPartyMemberColor { account_id } => {
+                    if let Some(key) = self
+                        .client_state
+                        .follow(client_state().party_state())
+                        .members()
+                        .iter()
+                        .find(|member| member.account_id() == account_id)
+                        .map(|member| member.key())
+                    {
+                        self.client_state.follow_mut(client_state().party_state()).reset_member_color(key);
+                        *self.client_state.follow_mut(client_state().game_settings().party_color_overrides()) =
+                            self.client_state.follow(client_state().party_state()).color_overrides().clone();
+                    }
                 }
                 InputEvent::PromotePartyLeader { account_id } => {
                     let _ = self.networking_system.change_party_leader(account_id);

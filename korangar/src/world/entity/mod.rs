@@ -1271,6 +1271,11 @@ impl Common {
         EntityOption::from_raw(self.option).is_concealed()
     }
 
+    /// True when mouseover and click must not reveal this actor's identity.
+    pub fn hides_identity(&self) -> bool {
+        self.is_hidden() || self.is_concealed()
+    }
+
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
         self.update_movement(map, client_tick);
         if self.active_cast.is_some_and(|cast| client_tick.0 >= cast.ends_at.0) {
@@ -1923,6 +1928,31 @@ pub struct Player {
     pub next_base_experience: u64,
     /// Job experience required for the next job level.
     pub next_job_experience: u64,
+    /// Server-authored recovery HUD line (`ZC_RECOVERY_STATE`).
+    pub recovery_status: String,
+}
+
+pub fn weight_is_warn(weight: u32, maximum_weight: u32) -> bool {
+    maximum_weight > 0 && weight * 100 >= maximum_weight * 70
+}
+
+pub fn weight_is_soft(weight: u32, maximum_weight: u32) -> bool {
+    maximum_weight > 0 && weight * 10 >= maximum_weight * 9
+}
+
+pub fn format_recovery_status(mode: u8, block: u8) -> String {
+    match block {
+        1 => "Recovery blocked: dead".to_owned(),
+        2 => "Recovery blocked: status".to_owned(),
+        3 => "Recovery blocked: overweight".to_owned(),
+        4 => "Standing recovery paused: in combat".to_owned(),
+        _ => match mode {
+            2 => "Sitting recovery: 25% HP/SP every 10s".to_owned(),
+            3 => "Respawn recovery: filling remaining HP/SP".to_owned(),
+            1 => "Standing recovery".to_owned(),
+            _ => "Recovery idle".to_owned(),
+        },
+    }
 }
 
 impl Player {
@@ -1986,7 +2016,12 @@ impl Player {
             job_experience: character_information.job_experience.max(0) as u64,
             next_base_experience: 0,
             next_job_experience: 0,
+            recovery_status: "Recovery: waiting for server".to_owned(),
         }
+    }
+
+    pub fn set_recovery_state(&mut self, mode: u8, block: u8) {
+        self.recovery_status = format_recovery_status(mode, block);
     }
 
     pub fn clear_cast(&mut self) {
@@ -2063,13 +2098,13 @@ impl Player {
 
     /// Warn (yellow) at 70% of max weight.
     pub fn is_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * 70
+        weight_is_warn(self.weight, self.maximum_weight)
     }
 
     /// Soft overweight at 90% (red). Attacks remain allowed; pickup fails at
     /// 100%.
     pub fn is_hard_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
+        weight_is_soft(self.weight, self.maximum_weight)
     }
 
     pub fn render_status(
@@ -2433,6 +2468,10 @@ impl Entity {
         self.get_common().is_hidden()
     }
 
+    pub fn hides_identity(&self) -> bool {
+        self.get_common().hides_identity()
+    }
+
     pub fn fade_out(&mut self, reason: DisappearanceReason, client_tick: ClientTick) {
         const DIED_FADE_DURATION_MS: u32 = 2000;
 
@@ -2570,7 +2609,7 @@ impl Entity {
     /// Returns `None` for hidden/invisible entities and warps to prevent
     /// privacy leaks.
     pub fn hover_text(&self, library: &Library) -> Option<String> {
-        if self.is_hidden() {
+        if self.hides_identity() {
             return None;
         }
 
@@ -3437,6 +3476,51 @@ mod hover_and_privacy_tests {
         entity.set_details("To Prontera".to_string());
         let library = Library::empty_for_test();
         assert_eq!(entity.get_entity_type(), EntityType::Warp);
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn cloaked_or_hiding_player_produces_no_hover_text() {
+        let mut common = dummy_common(JobId(7), EntityId(106));
+        common.option = EntityOption::CLOAK.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.hides_identity());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn party_member_uses_the_same_name_and_class_hover() {
+        // Hover has no party-special path: a visible party member is a player.
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(107)),
+        });
+        entity.set_details("Bob".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Bob (Knight)".to_string()));
+    }
+
+    #[test]
+    fn disguised_as_monster_does_not_use_player_class_line() {
+        let mut common = dummy_common(JobId(1002), EntityId(108));
+        common.entity_type = EntityType::Monster;
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Alice".to_string()));
+        assert_ne!(entity.hover_text(&library), Some("Alice (Knight)".to_string()));
+    }
+
+    #[test]
+    fn disguised_gm_invisible_still_leaks_nothing() {
+        let mut common = dummy_common(JobId(1002), EntityId(109));
+        common.entity_type = EntityType::Monster;
+        common.option = EntityOption::INVISIBLE.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.hides_identity());
         assert_eq!(entity.hover_text(&library), None);
     }
 }

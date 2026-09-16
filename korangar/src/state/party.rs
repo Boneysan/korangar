@@ -2,7 +2,7 @@ use korangar_interface::element::StateElement;
 use ragnarok_packets::{AccountId, CharacterId, JobId, PartyId, PartyMember, PartyMemberInfoPacket, TilePosition};
 use rust_state::RustState;
 
-use crate::state::party_colors::{DEFAULTS, PartyColorState, PartyMemberKey, Rgb};
+use crate::state::party_colors::{DEFAULTS, PartyColorOverrides, PartyColorState, PartyMemberKey, Rgb};
 
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct PartyMemberState {
@@ -245,6 +245,8 @@ pub struct PartyState {
     status_text: String,
     #[hidden_element]
     color_state: PartyColorState,
+    #[hidden_element]
+    color_overrides: PartyColorOverrides,
 }
 
 impl Default for PartyState {
@@ -265,6 +267,7 @@ impl Default for PartyState {
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
             color_state: PartyColorState::new(),
+            color_overrides: PartyColorOverrides::default(),
         }
     }
 }
@@ -273,6 +276,33 @@ impl Default for PartyState {
 impl PartyState {
     pub fn color_state(&self) -> &PartyColorState {
         &self.color_state
+    }
+
+    pub fn set_color_overrides(&mut self, overrides: PartyColorOverrides) {
+        self.color_overrides = overrides;
+        self.rebuild_display_text();
+    }
+
+    pub fn color_overrides(&self) -> &PartyColorOverrides {
+        &self.color_overrides
+    }
+
+    pub fn cycle_member_color(&mut self, key: PartyMemberKey) -> Rgb {
+        let current = self
+            .members
+            .iter()
+            .find(|member| member.key() == key)
+            .map(|member| member.color())
+            .or_else(|| self.color_state.color_for_key(&key))
+            .unwrap_or(DEFAULTS[0]);
+        let color = self.color_overrides.cycle(key, current);
+        self.rebuild_display_text();
+        color
+    }
+
+    pub fn reset_member_color(&mut self, key: PartyMemberKey) {
+        self.color_overrides.reset(key);
+        self.rebuild_display_text();
     }
 
     pub fn party_name(&self) -> &str {
@@ -583,9 +613,8 @@ impl PartyState {
 
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
-            if let Some(color) = self.color_state.color_for_key(&member.key()) {
-                member.color = color;
-            }
+            let fallback = self.color_state.color_for_key(&member.key()).unwrap_or(member.color);
+            member.color = self.color_overrides.resolve(member.key(), fallback);
             member.display_label = member.summary_line();
         }
 
@@ -870,5 +899,26 @@ mod tests {
         assert_eq!(client1.members()[0].color(), c1_m3);
         assert_eq!(client1.members()[1].color(), c1_m1);
         assert_eq!(client1.members()[2].color(), c1_m2);
+    }
+
+    #[test]
+    fn local_color_override_does_not_change_default_assignment() {
+        let mut state = PartyState::default();
+        let m1 = PartyMember {
+            account_id: AccountId(10),
+            character_id: CharacterId(100),
+            ..sample_member("Alice", true)
+        };
+        state.set_roster("Guild".to_owned(), vec![m1], |_| "Knight".to_owned());
+        let default = state.members()[0].color();
+        let key = state.members()[0].key();
+
+        let cycled = state.cycle_member_color(key);
+        assert_ne!(cycled, default);
+        assert_eq!(state.members()[0].color(), cycled);
+        assert_eq!(state.color_state().color_for_key(&key), Some(default));
+
+        state.reset_member_color(key);
+        assert_eq!(state.members()[0].color(), default);
     }
 }

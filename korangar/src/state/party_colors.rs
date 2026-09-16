@@ -1,9 +1,10 @@
 //! Stable party minimap and roster colors from membership order and identity.
 
 use ragnarok_packets::{AccountId, CharacterId};
+use serde::{Deserialize, Serialize};
 
 /// RGB color for party members on minimap and party window.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Rgb(pub u8, pub u8, pub u8);
 
 impl Rgb {
@@ -158,6 +159,83 @@ impl PartyColorState {
     }
 }
 
+/// Local-only color overrides. Never sent on the wire.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PartyColorOverrides {
+    #[serde(default)]
+    entries: Vec<PersistedOverride>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+struct PersistedOverride {
+    character_id: Option<u32>,
+    account_id: u32,
+    r: u8,
+    g: u8,
+    b: u8,
+}
+
+impl PartyColorOverrides {
+    pub fn resolve(&self, key: PartyMemberKey, fallback: Rgb) -> Rgb {
+        self.get(key).unwrap_or(fallback)
+    }
+
+    pub fn get(&self, key: PartyMemberKey) -> Option<Rgb> {
+        self.entries
+            .iter()
+            .find(|entry| entry.matches(key))
+            .map(|entry| Rgb(entry.r, entry.g, entry.b))
+    }
+
+    pub fn set(&mut self, key: PartyMemberKey, color: Rgb) -> Rgb {
+        let color = ensure_contrast(color);
+        self.entries.retain(|entry| !entry.matches(key));
+        self.entries.push(PersistedOverride::from_key(key, color));
+        color
+    }
+
+    pub fn reset(&mut self, key: PartyMemberKey) {
+        self.entries.retain(|entry| !entry.matches(key));
+    }
+
+    pub fn cycle(&mut self, key: PartyMemberKey, current: Rgb) -> Rgb {
+        let next = DEFAULTS
+            .iter()
+            .position(|&color| color == current)
+            .map(|index| DEFAULTS[(index + 1) % DEFAULTS.len()])
+            .unwrap_or(DEFAULTS[0]);
+        self.set(key, next)
+    }
+}
+
+impl PersistedOverride {
+    fn from_key(key: PartyMemberKey, color: Rgb) -> Self {
+        match key {
+            PartyMemberKey::Character(CharacterId(id)) => Self {
+                character_id: Some(id),
+                account_id: 0,
+                r: color.0,
+                g: color.1,
+                b: color.2,
+            },
+            PartyMemberKey::Account(AccountId(id)) => Self {
+                character_id: None,
+                account_id: id,
+                r: color.0,
+                g: color.1,
+                b: color.2,
+            },
+        }
+    }
+
+    fn matches(&self, key: PartyMemberKey) -> bool {
+        match key {
+            PartyMemberKey::Character(CharacterId(id)) => self.character_id == Some(id),
+            PartyMemberKey::Account(AccountId(id)) => self.character_id.is_none() && self.account_id == id,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -306,5 +384,24 @@ mod tests {
 
         let fixed_dark = ensure_contrast(Rgb(10, 10, 10));
         assert!(contrast_ok(fixed_dark));
+    }
+
+    #[test]
+    fn local_overrides_round_trip_reset_and_correct_contrast() {
+        let key = PartyMemberKey::Character(CharacterId(42));
+        let mut overrides = PartyColorOverrides::default();
+        let fallback = DEFAULTS[0];
+
+        let stored = overrides.set(key, Rgb(10, 10, 10));
+        assert!(contrast_ok(stored));
+        assert_eq!(overrides.resolve(key, fallback), stored);
+        assert_ne!(stored, fallback);
+
+        let encoded = ron::ser::to_string(&overrides).unwrap();
+        let decoded: PartyColorOverrides = ron::from_str(&encoded).unwrap();
+        assert_eq!(decoded.resolve(key, fallback), stored);
+
+        overrides.reset(key);
+        assert_eq!(overrides.resolve(key, fallback), fallback);
     }
 }

@@ -1346,6 +1346,10 @@ where
     // including gameplay rejections like "party creation requires Basic Skill
     // 7". Without this the rejection is completely silent.
     let reason_slot = pending_skill_fail_reason.clone();
+    packet_handler.register(|packet: RecoveryStatePacket| NetworkEvent::RecoveryState {
+        mode: packet.mode,
+        block: packet.block,
+    })?;
     packet_handler.register(move |packet: SkillFailReasonPacket| {
         // Resolved here, not on the wire: an unknown reason must degrade to
         // `None`, never fail the packet.

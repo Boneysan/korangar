@@ -713,6 +713,11 @@ pub enum NetworkEvent {
         id: u8,
         color: ColorRGBA,
     },
+    /// Campaign recovery HUD (`ZC_RECOVERY_STATE` 0x0EFD).
+    RecoveryState {
+        mode: u8,
+        block: u8,
+    },
     /// Skill post-delay cooldown (`ZC_SKILL_POSTDELAY` 0x043D).
     SkillCooldown {
         skill_id: SkillId,

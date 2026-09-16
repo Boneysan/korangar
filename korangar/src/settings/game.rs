@@ -79,6 +79,10 @@ pub struct GameSettings {
     /// Filters for the Combat chat channel.
     #[serde(default)]
     pub combat_filters: crate::state::combat_chat::CombatFilters,
+    /// Local party-color overrides. Never sent on the wire.
+    #[serde(default)]
+    #[hidden_element]
+    pub party_color_overrides: crate::state::party_colors::PartyColorOverrides,
 }
 
 impl Default for GameSettings {
@@ -91,6 +95,7 @@ impl Default for GameSettings {
             window_size: None,
             window_maximized: false,
             combat_filters: crate::state::combat_chat::CombatFilters::default(),
+            party_color_overrides: crate::state::party_colors::PartyColorOverrides::default(),
         }
     }
 }

@@ -23,7 +23,7 @@ mod friend_request;
 mod game_settings;
 mod graphics_settings;
 mod hotbar;
-mod hud;
+pub(crate) mod hud;
 mod identify;
 mod instance;
 mod interface_settings;

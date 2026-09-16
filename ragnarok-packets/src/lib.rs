@@ -5855,6 +5855,19 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// Campaign recovery HUD (`ZC_RECOVERY_STATE`, **fork packet 0x0EFD**).
+///
+/// `mode` is standing/sitting/respawn; `block` is why recovery is paused.
+/// Length is 4 bytes. A stock client consumes the length table entry and
+/// ignores the payload.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0EFD)]
+pub struct RecoveryStatePacket {
+    pub mode: u8,
+    pub block: u8,
+}
+
 /// Why a skill failed, when the protocol has no code for it
 /// (`ZC_SKILL_FAIL_REASON`, **fork packet 0x0EFE**).
 ///
@@ -6678,6 +6691,16 @@ mod tests {
         assert_eq!(job.account_id, AccountId(0x0102_0304));
         assert_eq!(job.job_id, JobId(4001));
         assert_eq!(job.base_level, 99);
+    }
+
+    #[test]
+    fn recovery_state_packet_is_four_bytes() {
+        let packet = read_packet::<RecoveryStatePacket>(&[0xFD, 0x0E, 0x02, 0x03]);
+        assert_eq!(packet.mode, 2);
+        assert_eq!(packet.block, 3);
+        assert_eq!(packet_bytes(RecoveryStatePacket { mode: 1, block: 4 }), [
+            0xFD, 0x0E, 0x01, 0x04
+        ]);
     }
 
     #[test]

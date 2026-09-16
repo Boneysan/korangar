@@ -531,7 +531,8 @@ impl ClientState {
         time_phase!("create friend list state", {
             let friend_list = Vec::default();
             let friend_list_window = FriendListWindowState::default();
-            let party_state = PartyState::default();
+            let mut party_state = PartyState::default();
+            party_state.set_color_overrides(game_settings.party_color_overrides.clone());
             let party_window = PartyWindowState::default();
             let instance_state = InstanceState::default();
             let auto_spell_skills = Vec::default();

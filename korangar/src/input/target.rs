@@ -67,6 +67,12 @@ pub fn resolve_selection_candidate(mut candidates: Vec<ClickCandidate>, current_
 }
 
 /// Collects candidates for click selection from the entity list.
+/// Clip-space `w` after the view-projection multiply. Behind the camera or on
+/// the near plane is off-screen and must not be hovered or clicked.
+pub fn clip_is_on_screen(clip_w: f32) -> bool {
+    clip_w > 0.0
+}
+
 pub fn collect_click_candidates(
     mouse_target: PickerTarget,
     mouse_position: ScreenPosition,
@@ -87,14 +93,14 @@ pub fn collect_click_candidates(
         if Some(entity_id) == local_player_id {
             continue;
         }
-        if entity.is_dead() || entity.is_fading() || entity.is_hidden() {
+        if entity.is_dead() || entity.is_fading() || entity.hides_identity() {
             continue;
         }
 
         let is_direct = direct_hit_id == Some(entity_id);
         let world_pos = entity.get_position();
         let clip_pos = camera.view_projection_matrix() * world_pos.to_homogeneous();
-        if clip_pos.w <= 0.0 {
+        if !clip_is_on_screen(clip_pos.w) {
             continue;
         }
 
@@ -348,6 +354,27 @@ mod tests {
     fn empty_click_candidates_returns_none() {
         assert_eq!(resolve_selection_candidate(vec![], None), None);
         assert_eq!(resolve_selection_candidate(vec![], Some(EntityId(5))), None);
+    }
+
+    #[test]
+    fn overlap_after_filtering_hidden_selects_the_visible_player() {
+        // Hidden GM was in front (would have been id 2 at depth 5). After
+        // `hides_identity` filtering only the visible player remains.
+        let candidates = vec![click_cand(1, 12.0, 18.0, false)];
+        assert_eq!(resolve_selection_candidate(candidates, None), Some(EntityId(1)));
+    }
+
+    #[test]
+    fn overlap_two_visible_players_picks_the_front_one() {
+        let candidates = vec![click_cand(10, 4.0, 22.0, false), click_cand(11, 9.0, 8.0, false)];
+        assert_eq!(resolve_selection_candidate(candidates, None), Some(EntityId(11)));
+    }
+
+    #[test]
+    fn offscreen_clip_w_is_rejected() {
+        assert!(!clip_is_on_screen(0.0));
+        assert!(!clip_is_on_screen(-2.0));
+        assert!(clip_is_on_screen(0.01));
     }
 
     #[test]

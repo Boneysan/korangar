@@ -104,6 +104,15 @@ pub enum InputEvent {
     ToggleFriendListWindow,
     /// Open or close the party roster window. Only works while playing.
     TogglePartyWindow,
+    /// Cycle this member's local minimap/roster color. Does not change the
+    /// server party.
+    CyclePartyMemberColor {
+        account_id: AccountId,
+    },
+    /// Clear a local party-color override for this member.
+    ResetPartyMemberColor {
+        account_id: AccountId,
+    },
     /// Open or close the zeny/exp HUD. Only works while playing.
     ToggleHudWindow,
     /// Close the most recently opened or clicked closable window.

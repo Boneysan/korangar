@@ -1837,6 +1837,24 @@ mod packet_handlers {
         );
     }
 
+    #[test]
+    fn recovery_state_0x0efd_becomes_a_network_event() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let mut reader = ByteReader::without_metadata(&[0xFD, 0x0E, 0x02, 0x03]);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0EFD should parse");
+        };
+        match &events.0[..] {
+            [NetworkEvent::RecoveryState { mode: 2, block: 3 }] => {}
+            other => panic!("unexpected events: {other:?}"),
+        }
+    }
+
     /// The fork packet 0x0EFE names the runtime reason for a cause-0 failure,
     /// which no static table can reach. Fed as two reads, exactly as Hercules
     /// sends them, so this covers the pairing and not just the wording.

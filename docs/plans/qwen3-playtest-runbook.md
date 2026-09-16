@@ -7,7 +7,7 @@ work, the evidence required, and when Qwen3 may move to the next task.
 
 ## Current pointer
 
-**NEXT: QW-071 — add production-path recovery tests**
+**NEXT: QW-088 — chest visual states**
 
 **EXECUTION STATE: RUNNING**
 
@@ -1401,11 +1401,23 @@ Detailed implementation:
   **Done when:** deterministic server tests cover entry, refresh, expiry, support,
   death, map change, and reconnect; settings reload after restart.
 
-  2026-09-16 audit: implementation and configuration are present and
-  `test_combat_recovery` passes, but that executable reproduces the transition
-  logic in local `sim_*` helpers instead of calling `status->mark_combat`,
-  `status->is_in_combat`, and the production recovery path. Keep open until the
-  deterministic test seam exercises production functions directly.
+  Status: IN PROGRESS
+  Changed: `src/map/combat_state.c`, `src/map/combat_state.h`, `src/map/status.c`,
+  `src/map/skill.c`, `src/map/pc.c`, `src/test/test_combat_recovery.c`, map/test
+  Makefiles. Combat mark/query/clear/apply now live in a shared production unit;
+  the test calls `status->mark_combat`, `status->is_in_combat`,
+  `status_apply_combat_from_damage`, `status_apply_skill_combat`, and
+  `status_clear_combat_and_sit`.
+  Evidence:
+  - Source-confirmed: `status_mark_combat` / `status_is_in_combat` are no longer
+    duplicated in `sim_*` helpers; map-server assigns the same functions.
+  - Automated-verified: `./test_combat_recovery` passed all 10 cases; `make -C
+    src/map obj_sql/combat_state.o obj_sql/status.o obj_sql/skill.o obj_sql/pc.o`
+    compiled.
+  - Observed: not required for this card.
+  Not verified: settings reload after a full map-server restart (the test
+  parses the import file but does not restart the production server).
+  Next: QW-072
 
 - [ ] **QW-072 — sitting and respawn recovery**
 
@@ -1419,8 +1431,24 @@ Detailed implementation:
   2026-09-16 evidence: final `sitting-regeneration-thresholds` passed
   (`20260916-031921.scoped`) after three harness iterations; `respawn` passed
   (`20260916-032159.scoped`). Production code now checks status/weight before
-  sitting and respawn fill and resets partial sitting time. Still open: direct
-  production-path boundary tests and the required live blocked-reason UI.
+  sitting and respawn fill and resets partial sitting time.
+
+  Status: IN PROGRESS
+  Changed: sitting/respawn production helpers; `ZC_RECOVERY_STATE` (0x0EFD);
+  HUD recovery line; `status_recovery_ui_state` for sitting/respawn/standing/
+  combat/weight/status/dead.
+  Evidence:
+  - Source-confirmed: `status_natural_heal` notifies on state change via
+    `clif->recovery_state`; HUD binds `Player.recovery_status`.
+  - Automated-verified: `./test_combat_recovery` (13 cases including Recovery
+    UI State); `recovery_state_packet_is_four_bytes`;
+    `recovery_state_0x0efd_becomes_a_network_event`;
+    `recovery_status_names_active_and_blocked_states`; `cargo check -p korangar`.
+  - Observed: not run (graphical client session).
+  Not verified: live HUD while sitting, overweight, poisoned, in combat, and
+  after respawn.
+  Blocker: live graphical client to observe the HUD line.
+  Next: QW-075 (independent); return to QW-072 for live HUD evidence.
 
 - [x] **QW-073 — checkpoint/save player flow**
 
@@ -1449,10 +1477,20 @@ Detailed implementation:
   **Done when:** all boundary results match the approved table and restart retains
   configuration.
 
-  2026-09-16 evidence: `weight-capacity-x5` passed
-  (`20260916-032504.scoped`) and recovery suppression is included in the final
-  regeneration scenario. Still open: the stated pickup/trade/storage/cart,
-  attack, and skill matrix at one below/exactly/one above 70/90/100%.
+  Status: IN PROGRESS
+  Changed: 90% no longer stops attacks (`SC_WEIGHTOVER90`) or skills; pickup,
+  mail, packages, and additem use `status_encumbrance_blocks_pickup` (hard 100%).
+  Production band helper covers 70/90/100. Inventory HUD already yellow at 70%
+  and red at 90%. `campaign_max_weight_multiplier` 5 remains in import config.
+  Evidence:
+  - Source-confirmed: approved table in `progression-approvals-needed.md`.
+  - Automated-verified: `./test_combat_recovery` Encumbrance Matrix (69/70/89/90/99/100
+    pickup/attack/skill/movement plus cart independence);
+    `weight_bands_match_approved_70_and_90`; config load expects multiplier 5.
+  - Observed: not run (live pickup/trade/storage session).
+  Not verified: the production pickup/trade/storage/cart call paths at each
+  boundary, live two-player trade at 99% vs 100%, and death while overweight.
+  Next: QW-079
 
 - [x] **QW-076 — player respec flow**
 
@@ -1499,6 +1537,18 @@ Detailed implementation:
   2026-09-16 evidence: final `dm-experience` passed exact 1,000/500 packet
   deltas and persisted totals after relog (`20260916-033357.scoped`). Still
   open: seated client toast/HUD rollover acceptance.
+
+  Status: BLOCKED
+  Changed: `format_exp_gain_toast` / `format_exp_hud_pair` used by chat and HUD;
+  unit test covers 1000 Base / 500 Job quest text and HUD rollover.
+  Evidence:
+  - Source-confirmed: `GainedExperience` writes combat log + toast; HUD reads
+    `StatType` EXP totals.
+  - Automated-verified: `quest_award_toast_and_hud_rollover_match_1000_and_500`.
+  - Observed: not run.
+  Not verified: seated toast pixels and HUD bar after a live quest award.
+  Blocker: graphical client session.
+  Next: QW-085 (QW-081/083 remain live-blocked)
 
 ## Stage 7 — information and presentation
 
@@ -1636,13 +1686,22 @@ Next: QW-084
 complete; keep open until two live clients visually confirm party-row/minimap
 consistency through reorder and reconnect.
 
-- [ ] **QW-084 — local party-color overrides**
+- [x] **QW-084 — local party-color overrides**
 
   Add accessible color selection, contrast validation, reset, and persistence.
   Overrides remain local and must not alter network state.
 
   **Done when:** round-trip/reset tests pass and unreadable alpha/contrast values
   are rejected or corrected.
+
+  Status: DONE
+  Changed: `PartyColorOverrides` persisted in `GameSettings`; party window Color /
+  Reset color buttons; `ensure_contrast` on set; default assignment unchanged.
+  Evidence:
+  - Automated-verified: `local_overrides_round_trip_reset_and_correct_contrast`;
+    `local_color_override_does_not_change_default_assignment`.
+  - Observed: not run (live cycle in party window).
+  Next: QW-085
 
 - [ ] **QW-085 — player mouseover privacy acceptance**
 
@@ -1651,6 +1710,19 @@ consistency through reorder and reconnect.
 
   **Done when:** no hidden identity leaks and live overlap selects the intended
   visible player.
+
+  Status: BLOCKED
+  Changed: `hides_identity()` = GM invisible, Hidden type, or HIDE/CLOAK/CHASEWALK.
+  Hover, click candidates, and details requests use it. Off-screen uses
+  `clip_is_on_screen`.
+  Evidence:
+  - Automated-verified: 11 `hover_and_privacy_tests` (name/class, party, cloak,
+    disguise, GM invisible, warp); `overlap_after_filtering_hidden_selects_the_visible_player`;
+    `overlap_two_visible_players_picks_the_front_one`; `offscreen_clip_w_is_rejected`.
+  - Observed: not run.
+  Not verified: live overlap of two players with one GM-hidden.
+  Blocker: seated graphical session.
+  Next: QW-088 (QW-087 needs user cosmetics choice)
 
 - [x] **QW-086 — cosmetics gap inventory**
 
