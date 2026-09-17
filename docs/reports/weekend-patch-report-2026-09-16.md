@@ -82,3 +82,33 @@ When testing the candidate, please focus on:
 Please capture the client version/branch, map and coordinates, party members,
 steps to reproduce, screenshots or video, and any `KORANGAR_*_TRACE` output
 when reporting a failure.
+
+## Backend and server changes
+
+The patch also includes substantial Hercules-side work that players may not
+see directly:
+
+- Added durable campaign checkpoint tables and migration, namespaced by
+  campaign and party with eligible-member records and an append-only event log.
+- Added forward-only checkpoint advancement, carried-item ownership checks,
+  item-consumption clearing, reconnect/map-load synchronization, preview/confirm
+  reconciliation, ahead-member refusal, and explicit administrative rollback.
+- Added versioned, server-authored DMJ messages for checkpoint snapshots, flag
+  transitions, typed objectives, and reconciliation results.
+- Wired campaign flag transitions, authored quest beats, encounter objectives,
+  and item turn-ins into the authoritative checkpoint/objective producers.
+- Added server recovery-state packets and rules for sitting, standing,
+  respawn, combat interruption, poison, status blocks, and overweight states.
+- Unified hard-cap encumbrance handling across pickup, shops, storage, trade,
+  mail/package delivery, and cart operations, including exact-fit boundaries.
+- Added campaign and navigation tooling that validates scripts, extracts the
+  directed warp graph, identifies gated/one-way/dynamic routes, and preserves
+  source provenance.
+- Expanded server-side combat, campaign, inventory, trade, storage, cart, and
+  two-client integration tests. Disposable MariaDB runs apply the real schema
+  migration before starting Hercules, so persistence and reconciliation are
+  tested against the actual server path.
+
+Backend source lives primarily in the [Hercules campaign scripts](../../../Hercules/npc/custom/dm_campaign/),
+[checkpoint migration](../../../Hercules/sql-files/upgrades/2026-09-16--campaign-checkpoint.sql),
+and [validation tools](../../../Hercules/tools/).
