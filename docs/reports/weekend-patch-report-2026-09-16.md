@@ -89,6 +89,53 @@ This checklist records implementation status separately from release gates:
 “still needs” items are verification or packaging work, not claims that the
 underlying concern was ignored.
 
+## Additional playtest concerns
+
+The later adjustment list included several combat, recovery, and quality-of-life
+requests beyond T1–T13. Those are included in this patch review as well:
+
+- **HP/SP recovery:** Sitting and respawn recovery now use explicit maximum-
+  resource rates, while combat, overweight, poison, blocking states, and death
+  expose why recovery is paused. Normal standing regeneration remains governed
+  by the standard Hercules rules. The exact recovery values are listed above.
+- **Better Tab targeting:** Tab targeting cycles visible, alive, hostile
+  monsters in deterministic distance order, wraps cleanly, excludes players and
+  hidden entities, and highlights the selected target. A crowded live combat
+  session is still the final visual check.
+- **Click targeting and repeated casts:** Larger sprite hit tolerance, overlap
+  resolution, target outlines, target indicators, and repeated-cast target
+  retention are implemented and covered by tests.
+- **Failed skills and spells:** Server rejection reasons now reach the client
+  with readable messages and combat-log entries for range, target, SP/item,
+  cooldown, line-of-sight, weapon, and state failures. The exact skill names
+  from the original friends' report were not captured, so those specific cases
+  remain a live follow-up.
+- **Combat feedback:** A structured combat channel now records damage, healing,
+  status changes, skill failures, EXP, and loot with independent categories and
+  filters.
+- **Hotbar usability:** Items and potions, multiple hotbar rows, quantity use,
+  and hotbar clearing behavior are covered. Right-click/off-bar clearing and
+  relog persistence still deserve a seated UI check.
+- **Inventory, trade, and vendor safety:** Equipped-item selling is filtered and
+  server-guarded, sale cart state is corrected, exact-fit weight boundaries are
+  enforced, and vendor equipment restrictions are visible before purchase.
+  Exact quantity entry and the Blue Potion overweight explanation remain useful
+  friend-playtest checks.
+- **Loot and dropped items:** Area-loot queueing, ownership, walkability,
+  disappearance, combat cancellation, and weight limits are covered. Server
+  autopickup can still reclaim a dropped item when enabled, so the player guide
+  should explain that behavior.
+- **Movement reliability:** WASD duplicate-request suppression and correction
+  handling are implemented for the authoritative server path; internet-latency
+  behavior still needs a real remote playtest.
+- **EXP and party pacing:** Solo, two-player, three-player, level-range, and
+  base/job EXP results were measured against server totals. Campaign-specific
+  rate choices remain a configuration/design decision rather than a hidden
+  client assumption.
+- **Party identity and presentation:** Stable party minimap colors, player
+  mouseover names/classes, privacy filtering, headgear rendering, and visual
+  chest states are implemented; live rendering remains the acceptance step.
+
 ## Visual quest guide
 
 The quest guide is advisory and keeps the player in control:
