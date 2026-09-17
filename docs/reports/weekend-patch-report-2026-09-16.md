@@ -9,7 +9,7 @@ Hercules server.
 
 The changes are pushed on these branches:
 
-- Korangar: `agent/bump-hercules-pin` — `60e8e7a7`
+- Korangar: `agent/bump-hercules-pin` — `2a8ec1c9`
 - Hercules: `agent/map-teleport-safety` — `008149be`
 
 ## Player-facing improvements
@@ -38,6 +38,23 @@ The changes are pushed on these branches:
   are blocked.
 - The server warp graph and deterministic route foundation are now generated
   from actual warp scripts rather than hand-authored route examples.
+
+## Visual quest guide
+
+The quest guide is advisory and keeps the player in control:
+
+- On the current map, the tracked-objective HUD shows the action, remaining
+  count, readable destination, direction, and tile distance.
+- The minimap marks the revealed NPC, object, monster, or destination
+  coordinate.
+- For objectives on another map, the journal shows the complete readable map
+  route while the HUD shows only the next portal leg.
+- The next portal is marked on the minimap and in the world; after the map
+  transition, guidance advances to the next leg.
+- On the final map, the portal marker disappears and the destination object
+  becomes the active target.
+- The guide never auto-walks, enters portals, or silently completes objectives.
+  Manual movement and server-authoritative completion remain required.
 
 ## Multiplayer and campaign validation
 
@@ -83,6 +100,8 @@ When testing the candidate, please focus on:
    after respawn.
 6. Confirming EXP toasts/HUD totals and player privacy during overlapping
    mouseover targets.
+7. Checking a vendor list for an item your character cannot equip: the muted
+   icon, red name, blocked marker, and tooltip reason should agree.
 
 Please capture the client version/branch, map and coordinates, party members,
 steps to reproduce, screenshots or video, and any `KORANGAR_*_TRACE` output
