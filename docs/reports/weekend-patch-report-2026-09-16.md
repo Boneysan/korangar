@@ -25,6 +25,13 @@ The changes are pushed on these branches:
   changes instead of retaining stale actionable entries.
 - Sitting, standing, respawn, overweight, and recovery-blocked states now have
   server-authored recovery status shown to the client.
+- Recovery rates are explicit: sitting restores 25% of maximum HP and 25% of
+  maximum SP every 10 seconds; respawn restores 50% of maximum HP/SP
+  immediately, then fills the remaining 50% over the next 10 seconds.
+- Damage cancels the respawn fill. Combat, overweight, blocking status effects,
+  and death report a recovery-blocked state instead of silently applying a
+  partial tick. Ordinary standing regeneration continues to use the standard
+  Hercules rules.
 - Inventory, storage, trade, and cart operations use consistent hard-cap weight
   handling, including exact-fit boundary behavior.
 - Area-loot selection respects ownership, walkability, weight, slots, combat,
