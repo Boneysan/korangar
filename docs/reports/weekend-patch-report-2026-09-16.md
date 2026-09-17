@@ -31,6 +31,11 @@ The changes are pushed on these branches:
   map changes, and disappearing piles.
 - Hotbar clearing, quantity selection, combat feedback, privacy filtering, and
   EXP/quest-award presentation received targeted fixes and test coverage.
+- Vendor buy rows now visibly flag equipment that does not apply to the current
+  player: the item icon and name are muted/red-tinted, a blocked marker is
+  shown, and the tooltip explains the job/level/sex/equipment restriction.
+  Purchasing remains available when appropriate; only invalid equip actions
+  are blocked.
 - The server warp graph and deterministic route foundation are now generated
   from actual warp scripts rather than hand-authored route examples.
 

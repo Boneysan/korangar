@@ -138,6 +138,8 @@ where
     ) {
         let item = state.get(&self.item_path);
         let is_hovered = layout_info.area.check().run(layout);
+        let wearer = state.try_follow(this_player()).map(|player| Wearer::from_player(player, "*"));
+        let unusable = wearer.map(|w| UnusablePresentation::for_item(item.item_id.0, w, false));
 
         layout.add_rectangle(
             layout_info.area,
@@ -148,7 +150,25 @@ where
         );
 
         if let Some(texture) = &item.metadata.texture {
-            layout.add_texture(layout_info.texture_area, texture.clone(), Color::WHITE, false);
+            let item_color = if unusable.as_ref().is_some_and(|presentation| presentation.mute_icon) {
+                Color::rgb_u8(220, 140, 140)
+            } else {
+                Color::WHITE
+            };
+            layout.add_texture(layout_info.texture_area, texture.clone(), item_color, false);
+
+            if unusable.as_ref().is_some_and(|presentation| presentation.blocked_marker) {
+                layout.add_text(
+                    layout_info.texture_area,
+                    "!",
+                    FontSize(18.0),
+                    Color::rgb_u8(255, 90, 90),
+                    Color::rgb_u8(255, 160, 60),
+                    HorizontalAlignment::Left { offset: 2.0, border: 2.0 },
+                    VerticalAlignment::Top { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+            }
 
             if matches!(item.quantity, ItemQuantity::Fixed(..)) {
                 layout.add_text(
@@ -168,7 +188,11 @@ where
             layout_info.text_area,
             &item.metadata.name,
             FontSize(16.0),
-            Color::monochrome_u8(220),
+            if unusable.as_ref().is_some_and(|presentation| presentation.mute_icon) {
+                Color::rgb_u8(220, 140, 140)
+            } else {
+                Color::monochrome_u8(220)
+            },
             Color::rgb_u8(255, 160, 60),
             HorizontalAlignment::Left { offset: 3.0, border: 3.0 },
             VerticalAlignment::Center { offset: 0.0 },

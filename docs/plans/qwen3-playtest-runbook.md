@@ -1289,7 +1289,7 @@ Detailed equipment work:
     - `UnusablePresentation` (`korangar/src/world/library/equip_presentation.rs`): computes unified presentation (`mute_icon`, `blocked_marker`, `disable_equip`, `denial`) via `EligibilityTable::get()`.
     - Tooltip denial formatting (`korangar/src/world/library/item_stats.rs`): `item_tooltip_text_with_denial` appends colored red denial warning (`^FF5050Cannot equip: {reason}^000000`).
     - `ItemBox` integration (`korangar/src/interface/components/item_box.rs`): evaluates `Wearer` from `this_player()`, appends red denial text to hover tooltip, tints muted icon to `Color::rgb_u8(220, 140, 140)`, and blocks double-click quick-equip when `disable_equip` is active.
-    - Vendor shop integration (`korangar/src/interface/windows/buy.rs`): evaluates `UnusablePresentation` for items and renders denial reason in vendor tooltip.
+    - Vendor shop integration (`korangar/src/interface/windows/buy.rs`): evaluates `UnusablePresentation` for items, renders denial reason in the vendor tooltip, and visibly mutes/red-tints inapplicable buy-row icons and names with a blocked marker.
   - Automated-verified:
     - Unit tests: `same_reason_on_every_surface` passed.
     - `cargo clippy -p korangar --features debug` passed with 0 warnings on equipment eligibility and equip presentation modules.
