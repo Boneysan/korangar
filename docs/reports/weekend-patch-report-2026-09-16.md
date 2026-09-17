@@ -46,6 +46,49 @@ The changes are pushed on these branches:
 - The server warp graph and deterministic route foundation are now generated
   from actual warp scripts rather than hand-authored route examples.
 
+## Friends' original concern checklist
+
+The original playtest list was tracked as T1–T13. Here is the player-facing
+status for every item so the reported concerns are visible in the patch scope:
+
+- **T1 — Rebuild and reship the packs:** The client/server changes are pushed,
+  but the distributable packs still need a final rebuild and friend install
+  before this is considered shipped to players.
+- **T2 — Stat allocation at character creation:** The starting-stat path is
+  covered by the current automated checks; a controlled live character
+  creation is still the final confirmation for the original report.
+- **T3 — Party window showing the old job:** The server cache/update path is
+  fixed and tested; a live job change should still be checked in the friend
+  client before release sign-off.
+- **T4 — Head detaching at specific facings:** The attachment compositor was
+  measured across playable jobs, hairs, sexes, poses, and facings with no
+  standing-pose detachments found. One in-world look is still required because
+  the original report was visual.
+- **T5 — `iz_ac01` black screen and invisible walls:** The stale `iz_ac02`
+  server cache and unsafe stair coordinates were corrected; the teleport audit
+  now reports no unsafe destinations.
+- **T6 — Text too small on a 15-inch laptop:** Interface scaling already exists
+  in the client settings; testing 1.3 or 1.5 is the recommended player check.
+- **T7 — Friend-facing update instructions:** Update and troubleshooting
+  instructions are now included in the pack documentation.
+- **T8 — Names when hovering the minimap:** Party-member and local-player
+  blips now provide readable hover tooltips.
+- **T9 — Teleport to a party member:** The party window now provides a
+  non-GM, online-party-member “Go to” action through the server command path.
+- **T10 — Items and potions on the hotbar:** Inventory items can be dragged to
+  hotbar slots and used from slots 1–9.
+- **T11 — Multiple hotbar pages:** Three nine-slot rows are available through
+  the normal, Ctrl, and Alt key tiers.
+- **T12 — WASD movement:** Optional camera-relative WASD movement is available;
+  click-to-move remains supported.
+- **T13 — Headgear animation audit:** Headgear lookup, layering, attachment,
+  sprite changes, and missing-asset handling were audited. Live rendering on
+  the target client remains the last visual check.
+
+This checklist records implementation status separately from release gates:
+“still needs” items are verification or packaging work, not claims that the
+underlying concern was ignored.
+
 ## Visual quest guide
 
 The quest guide is advisory and keeps the player in control:
