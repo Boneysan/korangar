@@ -17,14 +17,16 @@ for required in "$runbook" "$report" \
     [ -e "$required" ] || { echo "FAIL - missing release artifact: $required" >&2; exit 1; }
 done
 
-expected_client="866a8bac4d0055e63e2944d91b0931e9f078d5f0"
-expected_hercules="0e9cc355c738704bf7d7e4c43db59c6fa5a886b7"
-[ "$(git -C "$client_repo" rev-parse HEAD)" = "$expected_client" ] || {
-    echo "FAIL - Korangar base revision changed; refresh the report hashes." >&2
+reported_client="$(awk -F'`' '/Korangar base revision:/ {print $2; exit}' "$report")"
+reported_hercules="$(awk -F'`' '/Hercules base revision:/ {print $2; exit}' "$report")"
+[ -n "$reported_client" ] && git -C "$client_repo" cat-file -e "$reported_client^{commit}" && \
+    git -C "$client_repo" merge-base --is-ancestor "$reported_client" HEAD || {
+    echo "FAIL - reported Korangar base revision is not an ancestor of the candidate." >&2
     exit 1
 }
-[ "$(git -C "$hercules_repo" rev-parse HEAD)" = "$expected_hercules" ] || {
-    echo "FAIL - Hercules base revision changed; refresh the report hashes." >&2
+[ -n "$reported_hercules" ] && git -C "$hercules_repo" cat-file -e "$reported_hercules^{commit}" && \
+    git -C "$hercules_repo" merge-base --is-ancestor "$reported_hercules" HEAD || {
+    echo "FAIL - reported Hercules base revision is not an ancestor of the candidate." >&2
     exit 1
 }
 

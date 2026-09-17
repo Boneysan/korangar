@@ -1,5 +1,7 @@
 # Release readiness — 2026-09-16
 
+Friend-facing summary: [weekend patch report](weekend-patch-report-2026-09-16.md).
+
 ## Candidate state
 
 The Korangar and Hercules worktrees are uncommitted working trees. No commit,
