@@ -19,6 +19,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("equip-unequip", 6, equip_unequip),
         Scenario::new("drop-pickup", 6, drop_pickup),
         Scenario::new("loot-pickup-race", 6, loot_pickup_race),
+        Scenario::new("loot-pickup-multi-pile", 6, loot_pickup_multi_pile),
         Scenario::new("drop-exact-quantity", 6, drop_exact_quantity),
         Scenario::new("autopickup-radius", 6, autopickup_radius),
         Scenario::new("autopickup-party-override", 6, autopickup_party_override),
@@ -31,6 +32,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("use-drop-failures", 6, use_drop_failures),
         Scenario::new("storage", 6, storage),
         Scenario::new("storage-persistence", 6, storage_persistence),
+        Scenario::new("storage-weight-boundary", 6, storage_weight_boundary),
+        Scenario::new("cart-weight-boundary", 6, cart_weight_boundary),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("skill-lock-relog", 6, skill_lock_relog),
         Scenario::new("skill-refund", 6, skill_refund),
@@ -423,6 +426,65 @@ fn loot_pickup_race(config: &Config) -> Result<(), String> {
     if primary_adds + partner_adds != 1 {
         return Err(format!(
             "race must grant the pile once; primary={primary_adds} partner={partner_adds}"
+        ));
+    }
+    Ok(())
+}
+
+/// QW-046 — two clients race two distinct floor piles: each pile is granted
+/// exactly once, and winning one pile does not suppress the other.
+fn loot_pickup_multi_pile(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    const ORANGE_POTION: u32 = 502;
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    primary.gm_expect_feedback("@autopickup 0")?;
+    partner.gm_expect_feedback("@autopickup 0")?;
+
+    let red_index = primary.give_item(RED_POTION, 1)?;
+    let orange_index = primary.give_item(ORANGE_POTION, 1)?;
+    primary.flush();
+    primary.net.drop_item(red_index, 1).map_err(|_| "disconnected")?;
+    primary.net.drop_item(orange_index, 1).map_err(|_| "disconnected")?;
+
+    let red_entity = primary.wait_for("red potion AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem { entity_id, item_id, .. } if item_id.0 == RED_POTION => Some(*entity_id),
+        _ => None,
+    })?;
+    let orange_entity = primary.wait_for("orange potion AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem { entity_id, item_id, .. } if item_id.0 == ORANGE_POTION => Some(*entity_id),
+        _ => None,
+    })?;
+    if red_entity == orange_entity {
+        return Err("distinct floor piles reused one entity id".to_owned());
+    }
+    for entity in [red_entity, orange_entity] {
+        partner.wait_for("partner multi-pile AddGroundItem", |event| match event {
+            NetworkEvent::AddGroundItem { entity_id, .. } if *entity_id == entity => Some(()),
+            _ => None,
+        })?;
+    }
+
+    primary.flush();
+    partner.flush();
+    for entity in [red_entity, orange_entity] {
+        primary.net.pick_up_item(entity).map_err(|_| "disconnected")?;
+        partner.net.pick_up_item(entity).map_err(|_| "disconnected")?;
+    }
+    let primary_events = primary.collect_for(Duration::from_millis(900));
+    let partner_events = partner.collect_for(Duration::from_millis(900));
+    let count = |events: &[NetworkEvent], item_id| {
+        events
+            .iter()
+            .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id))
+            .count()
+    };
+    let red_adds = count(&primary_events, RED_POTION) + count(&partner_events, RED_POTION);
+    let orange_adds = count(&primary_events, ORANGE_POTION) + count(&partner_events, ORANGE_POTION);
+    let _ = primary.gm_expect_feedback("@autopickup 2");
+    let _ = partner.gm_expect_feedback("@autopickup 2");
+    if red_adds != 1 || orange_adds != 1 {
+        return Err(format!(
+            "multi-pile pickup must grant each pile once; red={red_adds}, orange={orange_adds}"
         ));
     }
     Ok(())
@@ -1745,6 +1807,164 @@ fn storage(config: &Config) -> Result<(), String> {
     // Cleanup inventory item
     context.say("@delitem 501 1")?;
     context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// QW-075: storage remains usable at the hard player-weight boundary. Deposit
+/// two arrows, refill the inventory to exactly max weight, require the server
+/// to refuse a withdrawal that would exceed capacity, then cleanly withdraw
+/// the stored stack after making room.
+fn storage_weight_boundary(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let max_weight = context.max_weight;
+    if max_weight < 500 || max_weight / 100 > u32::from(u16::MAX) {
+        return Err(format!("unexpected max weight for storage boundary: {max_weight}"));
+    }
+
+    let _ = context.say("@delitem 999 30000");
+    let _ = context.say("@delitem 1750 30000");
+    context.pump(Duration::from_millis(250));
+
+    let steel_amount = max_weight.saturating_sub(1) / 100;
+    let arrow_remainder = max_weight.saturating_sub(1) - steel_amount * 100;
+    if arrow_remainder < 5 {
+        return Err(format!(
+            "storage boundary needs at least five arrow-weight units, got {arrow_remainder}"
+        ));
+    }
+    context.give_item(999, steel_amount as u16)?;
+    let arrow_index = context.give_item(1750, arrow_remainder as u16)?;
+    if context.weight != max_weight.saturating_sub(1) {
+        return Err(format!("failed to fill inventory to max-1: {}/{}", context.weight, max_weight));
+    }
+
+    context.flush();
+    context.say("@storage")?;
+    context.wait_for("SetStorage at weight boundary", |event| match event {
+        NetworkEvent::SetStorage { .. } => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.move_item_to_storage(arrow_index, 2).map_err(|_| "disconnected")?;
+    let stored = context.wait_for("StorageItemAdded at weight boundary", |event| match event {
+        NetworkEvent::StorageItemAdded { item } if item.item_id.0 == 1750 => Some(item.clone()),
+        _ => None,
+    })?;
+
+    context.give_item(1750, 3)?;
+    if context.weight != max_weight {
+        return Err(format!(
+            "failed to refill inventory to max weight: {}/{}",
+            context.weight, max_weight
+        ));
+    }
+    context.flush();
+    context.net.move_item_from_storage(stored.index, 1).map_err(|_| "disconnected")?;
+    context.wait_for("over-cap storage withdrawal refusal", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Failed to pick up item") => Some(()),
+        _ => None,
+    })?;
+
+    context.say("@delitem 1750 3")?;
+    context.pump(Duration::from_millis(250));
+    context.flush();
+    context.net.move_item_from_storage(stored.index, 2).map_err(|_| "disconnected")?;
+    context.wait_for("StorageItemRemoved after making room", |event| match event {
+        NetworkEvent::StorageItemRemoved { index, .. } if *index == stored.index => Some(()),
+        _ => None,
+    })?;
+    context.net.close_storage().map_err(|_| "disconnected")?;
+    context.wait_for("StorageClosed at weight boundary", |event| match event {
+        NetworkEvent::StorageClosed => Some(()),
+        _ => None,
+    })?;
+    context.say("@delitem 999 30000")?;
+    context.say("@delitem 1750 30000")?;
+    context.pump(Duration::from_millis(250));
+    Ok(())
+}
+
+/// QW-075: exercise Hercules' real inventory-to-cart path at the cart hard
+/// boundary. Steel has weight 100 and Arrow has weight 1 in the checked-in
+/// item database; the counts are derived from the server-advertised cart
+/// capacity so this remains a boundary test rather than a fixed fixture.
+fn cart_weight_boundary(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.say("@cart 1")?;
+    // A failed diagnostic run can leave cart contents persisted on the shared
+    // disposable character. Clear them before reading the authoritative
+    // capacity, so the boundary starts at a known zero-cart state.
+    context.say("@clearcart")?;
+    context.say("@delitem 999 30000")?;
+    context.say("@delitem 1750 30000")?;
+
+    let cart_max = context.wait_for("empty cart capacity", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::CartInfo(count, weight, max_weight),
+        } if *count == 0 && *weight == 0 => Some(*max_weight),
+        _ => None,
+    })?;
+    if cart_max < 100 || cart_max % 10 != 0 {
+        return Err(format!("unexpected server cart capacity: {cart_max}"));
+    }
+    let initial_weight = 0;
+
+    let steel_amount = ((cart_max - 1) / 100) as u16;
+    let arrow_amount = (cart_max - 1 - u32::from(steel_amount) * 100) as u16;
+    if steel_amount == 0 {
+        return Err(format!("cart capacity too small for boundary fixture: {cart_max}"));
+    }
+
+    let steel_index = context.give_item(999, steel_amount)?;
+    let arrow_index = context.give_item(1750, arrow_amount)?;
+    context.flush();
+    context
+        .net
+        .move_item_to_cart(steel_index, u32::from(steel_amount))
+        .map_err(|_| "disconnected")?;
+    let steel_cart_weight = context.wait_for("steel cart transfer", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::CartInfo(_, weight, _),
+        } if *weight > initial_weight => Some(*weight),
+        _ => None,
+    })?;
+    context
+        .net
+        .move_item_to_cart(arrow_index, u32::from(arrow_amount))
+        .map_err(|_| "disconnected")?;
+    let near_limit = context.wait_for("cart at max minus one arrow", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::CartInfo(_, weight, _),
+        } if *weight >= steel_cart_weight => Some(*weight),
+        _ => None,
+    })?;
+    if near_limit != cart_max - 1 {
+        return Err(format!("cart did not reach max-1: {near_limit}/{cart_max}"));
+    }
+
+    let exact_index = context.give_item(1750, 1)?;
+    context.flush();
+    context.net.move_item_to_cart(exact_index, 1).map_err(|_| "disconnected")?;
+    context.wait_for("cart exact hard boundary", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::CartInfo(_, weight, _),
+        } if *weight == cart_max => Some(()),
+        _ => None,
+    })?;
+
+    let rejected_index = context.give_item(1750, 1)?;
+    context.flush();
+    context.net.move_item_to_cart(rejected_index, 1).map_err(|_| "disconnected")?;
+    context.wait_for("cart over-capacity refusal", |event| match event {
+        NetworkEvent::CartItemAddResult { result: 0 } => Some(()),
+        _ => None,
+    })?;
+
+    context.say("@clearcart")?;
+    context.say("@cart 0")?;
+    context.say("@delitem 999 30000")?;
+    context.say("@delitem 1750 30000")?;
+    context.pump(Duration::from_millis(250));
     Ok(())
 }
 

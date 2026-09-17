@@ -2031,7 +2031,11 @@ impl Player {
     }
 
     pub fn set_recovery_state(&mut self, mode: u8, block: u8) {
-        self.recovery_status = format_recovery_status(mode, block);
+        let status = format_recovery_status(mode, block);
+        if std::env::var_os("KORANGAR_RECOVERY_TRACE").is_some() {
+            eprintln!("[recovery] server_state mode={mode} block={block} hud={status:?}");
+        }
+        self.recovery_status = status;
     }
 
     pub fn clear_cast(&mut self) {
@@ -2472,6 +2476,7 @@ impl Entity {
         self.get_common().chest_id
     }
 
+    #[allow(dead_code)]
     pub fn get_chest_visual_state(&self) -> Option<crate::state::ChestVisualState> {
         self.get_common().chest_visual_state
     }

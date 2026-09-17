@@ -3,7 +3,7 @@
 use korangar_interface::element::StateElement;
 use rust_state::RustState;
 
-#[derive(Clone, Debug, Default, PartialEq, Eq, RustState, StateElement)]
+#[derive(Clone, Debug, PartialEq, Eq, RustState, StateElement)]
 pub struct BreadcrumbState {
     pub quest_id: Option<u32>,
     pub quest_title: String,
@@ -15,8 +15,29 @@ pub struct BreadcrumbState {
     pub tile_y: Option<u16>,
     pub collapsed: bool,
     pub hidden: bool,
+    pub guidance_enabled: bool,
     pub scale: u8,
     pub opacity: u8,
+}
+
+impl Default for BreadcrumbState {
+    fn default() -> Self {
+        Self {
+            quest_id: None,
+            quest_title: String::new(),
+            objective_summary: String::new(),
+            remaining: 0,
+            destination: String::new(),
+            map: String::new(),
+            tile_x: None,
+            tile_y: None,
+            collapsed: false,
+            hidden: false,
+            guidance_enabled: true,
+            scale: 100,
+            opacity: 100,
+        }
+    }
 }
 
 impl BreadcrumbState {
@@ -33,6 +54,7 @@ impl BreadcrumbState {
             tile_y: y,
             collapsed: false,
             hidden: false,
+            guidance_enabled: true,
             scale: 100,
             opacity: 100,
         }
@@ -56,7 +78,23 @@ impl BreadcrumbState {
             }
         }
 
+        for objective in quest.kill_objectives() {
+            let remaining = u32::from(objective.total.saturating_sub(objective.current));
+            total_remaining += remaining;
+            if remaining > 0 && first_incomplete_desc.is_empty() {
+                let name = if objective.mob_id != 0 {
+                    crate::world::display_monster(objective.mob_id, "normal").to_string()
+                } else {
+                    format!("objective {}", objective.objective_id)
+                };
+                first_incomplete_desc = format!("Defeat {name} ({}/{})", objective.current, objective.total);
+            }
+        }
+
         self.remaining = total_remaining;
+        self.map = quest.destination_map.clone();
+        self.tile_x = quest.destination_x;
+        self.tile_y = quest.destination_y;
 
         if let Some(guidance) = crate::world::bundled_guidance().get(&quest.quest_id) {
             self.destination = format!("{} ({})", guidance.npc, guidance.area);
@@ -64,8 +102,12 @@ impl BreadcrumbState {
             self.destination = quest.location.clone();
         }
 
-        if total_needed > 0 && total_remaining == 0 {
-            self.objective_summary = "All items collected — turn in".to_string();
+        if (total_needed > 0 || !quest.kill_objectives().is_empty()) && total_remaining == 0 {
+            self.objective_summary = if quest.kill_objectives().is_empty() {
+                "All items collected — turn in".to_string()
+            } else {
+                "Objectives complete — resolve next step".to_string()
+            };
         } else if !first_incomplete_desc.is_empty() {
             self.objective_summary = first_incomplete_desc;
         } else if !quest.location.is_empty() {
@@ -88,17 +130,67 @@ impl BreadcrumbState {
 
     #[allow(dead_code)]
     pub fn distance(&self, map: &str, x: u16, y: u16) -> Option<u16> {
-        if self.hidden || self.map != map {
+        if !self.is_visible_on(map) {
             return None;
         }
         let (tx, ty) = (self.tile_x?, self.tile_y?);
         Some(x.abs_diff(tx).max(y.abs_diff(ty)))
     }
 
+    /// Returns the arrow from the player to the revealed target.
+    pub fn direction(&self, map: &str, x: u16, y: u16) -> Option<&'static str> {
+        if !self.is_visible_on(map) {
+            return None;
+        }
+        let (tx, ty) = (self.tile_x?, self.tile_y?);
+        let dx = tx.cmp(&x);
+        let dy = ty.cmp(&y);
+        Some(match (dx, dy) {
+            (std::cmp::Ordering::Equal, std::cmp::Ordering::Equal) => "•",
+            (std::cmp::Ordering::Greater, std::cmp::Ordering::Equal) => "→",
+            (std::cmp::Ordering::Less, std::cmp::Ordering::Equal) => "←",
+            (std::cmp::Ordering::Equal, std::cmp::Ordering::Greater) => "↑",
+            (std::cmp::Ordering::Equal, std::cmp::Ordering::Less) => "↓",
+            (std::cmp::Ordering::Greater, std::cmp::Ordering::Greater) => "↗",
+            (std::cmp::Ordering::Less, std::cmp::Ordering::Greater) => "↖",
+            (std::cmp::Ordering::Greater, std::cmp::Ordering::Less) => "↘",
+            (std::cmp::Ordering::Less, std::cmp::Ordering::Less) => "↙",
+        })
+    }
+
+    pub fn is_visible_on(&self, map: &str) -> bool {
+        self.quest_id.is_some()
+            && self.remaining > 0
+            && !self.hidden
+            && self.guidance_enabled
+            && self.tile_x.is_some()
+            && self.tile_y.is_some()
+            && normalize_map(&self.map) == normalize_map(map)
+    }
+
+    pub fn target(&self, map: &str) -> Option<(u16, u16)> {
+        if !self.is_visible_on(map) {
+            return None;
+        }
+        Some((self.tile_x?, self.tile_y?))
+    }
+
+    pub fn set_scale(&mut self, scale: u8) {
+        self.scale = scale.clamp(75, 150);
+    }
+
+    pub fn set_opacity(&mut self, opacity: u8) {
+        self.opacity = opacity.clamp(40, 100);
+    }
+
     #[allow(dead_code)]
     pub fn captures_world_click(&self, over_control: bool) -> bool {
         !self.hidden && over_control
     }
+}
+
+fn normalize_map(map: &str) -> &str {
+    map.trim().trim_end_matches(".gat").trim_end_matches(".rsw")
 }
 
 #[cfg(test)]
@@ -125,9 +217,11 @@ mod tests {
         b.collapsed = true;
         b.scale = 80;
         b.opacity = 70;
+        b.guidance_enabled = false;
         let clone = b.clone();
         assert_eq!(clone.collapsed, true);
         assert_eq!(clone.scale, 80);
+        assert!(!clone.guidance_enabled);
     }
 
     #[test]
@@ -151,7 +245,11 @@ mod tests {
                     needed: 10,
                 },
             ],
+            kill_objectives: Vec::new(),
             location: "Prontera West Field".into(),
+            destination_map: "prontera".into(),
+            destination_x: Some(156),
+            destination_y: Some(191),
         };
 
         let mut b = BreadcrumbState::default();
@@ -161,6 +259,9 @@ mod tests {
         assert_eq!(b.remaining, 9);
         assert!(b.objective_summary.contains("Grasshopper's Leg (7/10)"));
         assert!(b.destination.contains("Wynne"));
+        assert_eq!(b.map, "prontera");
+        assert_eq!(b.distance("prontera.gat", 156, 191), Some(0));
+        assert_eq!(b.direction("prontera", 150, 190), Some("↗"));
 
         b.update_from_quest(&quest, |_| 10);
         assert_eq!(b.remaining, 0);
@@ -169,5 +270,21 @@ mod tests {
         b.clear();
         assert_eq!(b.quest_id, None);
         assert!(b.quest_title.is_empty());
+    }
+
+    #[test]
+    fn guidance_is_hidden_for_missing_coordinate_map_mismatch_completion_and_hidden_target() {
+        let mut b = BreadcrumbState::from_objective(20003, 1, "Wynne", "prontera", Some(156), Some(191));
+        assert_eq!(b.distance("prontera", 150, 190), Some(6));
+        assert_eq!(b.direction("prontera", 150, 190), Some("↗"));
+        b.tile_x = None;
+        assert_eq!(b.distance("prontera", 150, 190), None);
+        b.tile_x = Some(156);
+        assert_eq!(b.distance("prt_fild07", 150, 190), None);
+        b.remaining = 0;
+        assert_eq!(b.direction("prontera", 150, 190), None);
+        b.remaining = 1;
+        b.hidden = true;
+        assert_eq!(b.target("prontera"), None);
     }
 }

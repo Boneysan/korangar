@@ -8,11 +8,11 @@
 use std::time::Duration;
 
 use korangar_networking::NetworkEvent;
-use ragnarok_packets::ExperienceType;
+use ragnarok_packets::{EquipPosition, ExperienceType};
 
 use crate::context::{Config, TestContext};
-use crate::scenarios::Scenario;
-use crate::scenarios::social::{connect_pair, form_party, leave_party_both};
+use crate::scenarios::social::{add_party_member, connect_pair, form_party, leave_party_both};
+use crate::scenarios::{Scenario, skipped};
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -24,12 +24,22 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-command-contract", 9, dm_command_contract),
         Scenario::new("dm-flags-status", 9, dm_flags_status),
         Scenario::new("dm-quest-lifecycle", 9, dm_quest_lifecycle),
+        Scenario::new("dm-party-quest-refresh", 9, dm_party_quest_refresh),
         Scenario::new("quest-log-multi", 9, quest_log_multi),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
         Scenario::new("dm-experience", 9, dm_experience),
+        Scenario::new("dm-authored-exp-award", 9, dm_authored_exp_award),
         Scenario::new("dm-warp-recall", 9, dm_warp_recall),
         Scenario::new("dm-hazard-periodic", 9, dm_hazard_periodic),
         Scenario::new("dm-instance-lifecycle", 9, dm_instance_lifecycle),
+        Scenario::new("dm-checkpoint-reconcile", 9, dm_checkpoint_reconcile),
+        Scenario::new("dm-typed-objective-sync", 9, dm_typed_objective_sync),
+        Scenario::new("dm-encounter-objective-sync", 9, dm_encounter_objective_sync),
+        Scenario::new("dm-story-objective-sync", 9, dm_story_objective_sync),
+        Scenario::new("dm-collect-objective-refresh", 9, dm_collect_objective_refresh),
+        Scenario::new("dm-checkpoint-item-consume", 9, dm_checkpoint_item_consume),
+        Scenario::new("dm-kill-objective-refresh", 9, dm_kill_objective_refresh),
+        Scenario::new("dm-objective-type-matrix", 9, dm_objective_type_matrix),
         Scenario::new("dm-beat-table", 9, dm_beat_table),
         Scenario::new("dm-story-beats", 9, dm_story_beats),
         Scenario::new("dm-golden-beats", 9, dm_golden_beats),
@@ -41,6 +51,23 @@ fn wait_for_text(context: &mut TestContext, label: &str, needle: &str) -> Result
         NetworkEvent::ChatMessage { text, .. } if text.contains(needle) => Some(text.clone()),
         _ => None,
     })
+}
+
+/// QW-052: run one real fixture for every typed objective kind against the
+/// same disposable server build. Each constituent fixture owns its cleanup;
+/// this wrapper only provides the matrix-level contract and failure context.
+fn dm_objective_type_matrix(config: &Config) -> Result<(), String> {
+    let fixtures: [(&str, fn(&Config) -> Result<(), String>); 5] = [
+        ("Talk", dm_typed_objective_sync),
+        ("DM encounter", dm_encounter_objective_sync),
+        ("Explore/Interact", dm_story_objective_sync),
+        ("Collect", dm_collect_objective_refresh),
+        ("Kill", dm_kill_objective_refresh),
+    ];
+    for (kind, fixture) in fixtures {
+        fixture(config).map_err(|error| format!("{kind} objective fixture failed: {error}"))?;
+    }
+    Ok(())
 }
 
 /// Send a command and require feedback text containing `needle`.
@@ -71,7 +98,8 @@ fn parse_roll_total(text: &str, marker: &str) -> Result<i32, String> {
 }
 
 fn dm_roll_hidden(config: &Config) -> Result<(), String> {
-    let mut context = TestContext::connect(config)?;
+    let (mut context, mut partner) = connect_pair(config)?;
+    form_party(&mut context, &mut partner)?;
     context.flush();
     context.say("@roll hidden 1d20+1")?;
     wait_for_text(&mut context, "hidden dice result", "1d20+1")?;
@@ -189,6 +217,370 @@ fn dm_command_contract(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
+/// QW-055: exercise the real two-client checkpoint transport. The scenario is
+/// an explicit expected skip until the DBA applies the checkpoint migration;
+/// once the table exists, a missing DMJ preview/confirm result is a failure.
+fn dm_checkpoint_reconcile(config: &Config) -> Result<(), String> {
+    if std::env::var("QW_CHECKPOINT_DB_READY").ok().as_deref() != Some("1") {
+        return skipped("campaign checkpoint migration unavailable");
+    }
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let result = (|| -> Result<(), String> {
+        primary.flush();
+        partner.flush();
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        primary.say("@dm mode on")?;
+        wait_for_text(&mut primary, "campaign mode enable", "DnD mode enabled")?;
+        partner.wait_for("partner checkpoint snapshot", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.starts_with("[DMJ]") && text.contains("\"t\":\"checkpoint") => Some(()),
+            _ => None,
+        })?;
+        // Advance through the same party-authoritative path used by campaign
+        // beats. The checkpoint echo carries the actor who owns the current
+        // item-bearing step; it is not inferred from the local client.
+        let primary_char_id = primary.character_id.0;
+        primary.flush();
+        partner.flush();
+        primary.say("@dmflag set dm_qw055_probe_a 1")?;
+        let first = primary.wait_for("primary checkpoint after first party transition", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]")
+                    && text.contains("\"t\":\"checkpoint")
+                    && text.contains("\"step\":1")
+                    && text.contains(&format!("\"carrier\":{primary_char_id}")) =>
+            {
+                Some(text.clone())
+            }
+            _ => None,
+        })?;
+        partner.wait_for("partner checkpoint after first party transition", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]") && text.contains("\"t\":\"checkpoint") && text.contains("\"step\":1") =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+        if !first.contains("\"carrier\":") {
+            return Err(format!("first checkpoint omitted carried-item owner: {first}"));
+        }
+
+        // Give the independent partner a deliberately-ahead account mirror
+        // through Hercules' normal registry command. This is the same
+        // account variable consumed by DM_CheckpointSyncParty; no SQL or
+        // client-side state is injected into the fixture.
+        partner.say("@set #dm_campaign_checkpoint_step 99")?;
+        partner.pump(Duration::from_millis(500));
+
+        // Logout the partner before the next authoritative transition. The
+        // server must advance the party row while leaving the independent
+        // member's ahead mirror untouched; reconnect reconciliation then
+        // catches the member up only if the guard permits it.
+        drop(partner);
+        primary.flush();
+        primary.say("@dmflag set dm_qw055_probe_b 1")?;
+        primary.wait_for("primary checkpoint while partner is offline", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]")
+                    && text.contains("\"t\":\"checkpoint")
+                    && text.contains("\"step\":2")
+                    && text.contains(&format!("\"carrier\":{primary_char_id}")) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        partner = TestContext::connect_partner(config)?;
+        partner.pump(Duration::from_millis(500));
+        primary.flush();
+        partner.flush();
+        primary.say("@dm reconcile confirm")?;
+        primary.wait_for("reconnect reconciliation result", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]") && text.contains("\"t\":\"reconcile") && text.contains("\"mode\":\"confirm") =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+        // Leave and rejoin without erasing the durable member record. The
+        // following transition must still reach the returning member and keep
+        // the same carried-item owner.
+        partner.net.leave_party().map_err(|_| "partner disconnected while leaving party")?;
+        partner.pump(Duration::from_millis(500));
+        primary.pump(Duration::from_millis(500));
+        add_party_member(&mut primary, &mut partner)?;
+        primary.flush();
+        partner.flush();
+        primary.say("@dmflag set dm_qw055_probe_c 1")?;
+        primary.wait_for("primary checkpoint after leave and rejoin", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]")
+                    && text.contains("\"t\":\"checkpoint")
+                    && text.contains("\"step\":3")
+                    && text.contains(&format!("\"carrier\":{primary_char_id}")) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+        partner.wait_for("ahead refusal after leave and rejoin", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.contains("checkpoint member") && text.contains("REFUSED (ahead)") => Some(()),
+            _ => None,
+        })?;
+
+        primary.flush();
+        primary.say("@dm reconcile")?;
+        let preview = primary.collect_for(Duration::from_secs(2));
+        let preview_text = preview.iter().find_map(|event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]") && text.contains("\"t\":\"reconcile\"") && text.contains("\"mode\":\"preview\"") =>
+            {
+                Some(text.clone())
+            }
+            _ => None,
+        });
+        if preview
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::ChatMessage { text, .. } if text.contains("No durable checkpoint exists")))
+        {
+            return skipped("campaign checkpoint migration unavailable");
+        }
+        let Some(preview_text) = preview_text else {
+            return Err("@dm reconcile preview produced no DMJ result".to_owned());
+        };
+        if !preview_text.contains("\"t\":\"reconcile") || !preview_text.contains("\"mode\":\"preview") {
+            return Err(format!("unexpected preview DMJ payload: {preview_text}"));
+        }
+        if !preview_text.contains("\"ahead\":1") {
+            return Err(format!("preview did not count the independent ahead member: {preview_text}"));
+        }
+
+        primary.flush();
+        partner.flush();
+        primary.say("@dm reconcile confirm")?;
+        let confirm = primary.wait_for("DMJ reconciliation confirmation", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]") && text.contains("\"t\":\"reconcile") && text.contains("\"mode\":\"confirm") =>
+            {
+                Some(text.clone())
+            }
+            _ => None,
+        })?;
+        if !confirm.contains("\"changed\":") {
+            return Err(format!("confirm DMJ omitted changed count: {confirm}"));
+        }
+        partner.wait_for("ahead partner refusal after confirm", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.contains("checkpoint member") && text.contains("REFUSED (ahead)") => Some(()),
+            _ => None,
+        })?;
+        // Reset while the party still exists so the durable row and member
+        // mirrors are removed before the normal party teardown.
+        let _ = primary.say("@dm reset confirm");
+        let _ = primary.say("@dm mode off");
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    result
+}
+
+/// QW-052: run the real Arc 1 Mira beat and require both party clients to
+/// receive the server-authored typed Talk objective for quest 20006.
+fn dm_typed_objective_sync(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+
+        let menu = open_beat_menu(&mut primary, 1)?;
+        let choice = menu
+            .choices
+            .iter()
+            .position(|choice| choice == "Beat - Mira found (20006)")
+            .ok_or_else(|| format!("Arc 1 beat menu omitted Mira objective: {:?}", menu.choices))?;
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .choose_dialog_option(menu.npc_id, (choice + 1) as i8)
+            .map_err(|_| "primary disconnected while selecting Mira beat")?;
+
+        let objective_match = |event: &NetworkEvent| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]")
+                    && text.contains("\"t\":\"objective")
+                    && text.contains("\"quest_id\":20006")
+                    && text.contains("\"kind\":\"Talk\"")
+                    && text.contains("\"completed\":1") =>
+            {
+                Some(())
+            }
+            _ => None,
+        };
+        primary.wait_for("primary typed Talk objective", objective_match)?;
+        partner.wait_for("partner typed Talk objective", objective_match)?;
+
+        // The menu beat pauses on its final page after producing the objective.
+        // Close it explicitly before resetting so no dialog state leaks to the
+        // next scenario.
+        let _ = primary.net.close_dialog(menu.npc_id);
+        primary.pump(Duration::from_millis(300));
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    result
+}
+
+/// QW-052: run the real Arc 2 completion helper and require both party clients
+/// to receive its server-authored DM encounter objective for quest 20012.
+fn dm_encounter_objective_sync(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+
+        let menu = open_beat_menu(&mut primary, 2)?;
+        let choice = menu
+            .choices
+            .iter()
+            .position(|choice| choice == "Beat - Complete Arc 2")
+            .ok_or_else(|| format!("Arc 2 beat menu omitted completion helper: {:?}", menu.choices))?;
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .choose_dialog_option(menu.npc_id, (choice + 1) as i8)
+            .map_err(|_| "primary disconnected while selecting Arc 2 completion")?;
+
+        let objective_match = |event: &NetworkEvent| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]")
+                    && text.contains("\"t\":\"objective")
+                    && text.contains("\"quest_id\":20012")
+                    && text.contains("\"kind\":\"DM\"")
+                    && text.contains("\"completed\":1") =>
+            {
+                Some(())
+            }
+            _ => None,
+        };
+        primary.wait_for("primary DM encounter objective", objective_match)?;
+        partner.wait_for("partner DM encounter objective", objective_match)?;
+
+        let _ = primary.net.close_dialog(menu.npc_id);
+        primary.pump(Duration::from_millis(300));
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+/// QW-052: drive the real Arc 1 painted-sluice and binding-stone interactions
+/// and require both party clients to receive their server-authored typed
+/// updates.
+fn dm_story_objective_sync(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+        say_expect(&mut primary, "@dmquest start 20001", "started")?;
+
+        // The shortcut mirrors the real Painted Sluice#dm producer. The
+        // map-server fixture does not expose NPC entities on prt_sewb1, so a
+        // direct client click is a separate GUI/content gate.
+        run_beat_objective(&mut primary, &mut partner, 1, "Beat - Drain chamber", 20001, 2, "Explore", 1)?;
+
+        // Reset the authoritative party state before the independent Interact
+        // fixture, so this cannot pass from a prior story transition.
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+        say_expect(&mut primary, "@dmquest start 20005", "started")?;
+
+        // The shortcut mirrors the real Binding Stone#dm producer. The direct
+        // Tide-Wheel#dm path remains a separate GUI/content gate.
+        run_beat_objective(&mut primary, &mut partner, 1, "Beat - Binding word", 20005, 1, "Interact", 0)?;
+
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+fn wait_for_typed_objective(context: &mut TestContext, quest_id: u32, objective_id: u32, kind: &str, completed: u8) -> Result<(), String> {
+    let label = format!("typed {kind} objective for quest {quest_id}");
+    context.wait_for(&label, |event| match event {
+        NetworkEvent::ChatMessage { text, .. }
+            if text.starts_with("[DMJ]")
+                && text.contains("\"t\":\"objective")
+                && text.contains(&format!("\"quest_id\":{quest_id}"))
+                && text.contains(&format!("\"objective_id\":{objective_id}"))
+                && text.contains(&format!("\"kind\":\"{kind}\""))
+                && text.contains(&format!("\"completed\":{completed}")) =>
+        {
+            Some(())
+        }
+        _ => None,
+    })
+}
+
+fn run_beat_objective(
+    primary: &mut TestContext,
+    partner: &mut TestContext,
+    arc: u8,
+    label: &str,
+    quest_id: u32,
+    objective_id: u32,
+    kind: &str,
+    completed: u8,
+) -> Result<(), String> {
+    let menu = open_beat_menu(primary, arc)?;
+    let choice = menu
+        .choices
+        .iter()
+        .position(|choice| choice == label)
+        .ok_or_else(|| format!("Arc {arc} beat menu omitted {label:?}: {:?}", menu.choices))?;
+    primary.flush();
+    partner.flush();
+    primary
+        .net
+        .choose_dialog_option(menu.npc_id, (choice + 1) as i8)
+        .map_err(|_| format!("disconnected selecting {label}"))?;
+    wait_for_typed_objective(primary, quest_id, objective_id, kind, completed)?;
+    wait_for_typed_objective(partner, quest_id, objective_id, kind, completed)?;
+    let _ = primary.net.close_dialog(menu.npc_id);
+    primary.pump(Duration::from_millis(300));
+    Ok(())
+}
+
 /// Set/get/clear a probe flag (with relogin persistence — campaign flags are
 /// permanent character variables) and check the @dmstatus flag surface.
 fn dm_flags_status(config: &Config) -> Result<(), String> {
@@ -253,6 +645,466 @@ fn dm_quest_lifecycle(config: &Config) -> Result<(), String> {
     wait_for_text(&mut context, "quest erase feedback", "erased")?;
     say_expect(&mut context, "@dmstatus", "A01:0")?;
     Ok(())
+}
+
+/// QW-056: verify party quest refreshes, offline retention, reconnect
+/// hydration, and another member's authoritative completion/removal.
+fn dm_party_quest_refresh(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 20001;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+        say_expect(&mut primary, &format!("@dmquest erase {QUEST_ID}"), "erased")?;
+
+        primary.flush();
+        partner.flush();
+        primary.say(&format!("@dmquest start {QUEST_ID}"))?;
+        primary.wait_for("primary party QuestAdded", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("partner party QuestAdded", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+
+        // Completion while the partner is offline must not mutate that
+        // member's character quest row behind its back.
+        drop(partner);
+        primary.flush();
+        primary.say(&format!("@dmquest complete {QUEST_ID}"))?;
+        primary.wait_for("primary QuestRemoved after completion", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        wait_for_text(&mut primary, "primary quest completion feedback", "completed")?;
+
+        // Reconnect must hydrate the offline member's own authoritative quest
+        // list; it should still have the active quest that was not completed
+        // while offline.
+        partner = TestContext::connect_partner(config)?;
+        partner.wait_for("reconnected QuestList retaining active quest", |event| match event {
+            NetworkEvent::QuestList { quest_ids } if quest_ids.contains(&QUEST_ID) => Some(()),
+            _ => None,
+        })?;
+
+        add_party_member(&mut primary, &mut partner)?;
+        primary.flush();
+        partner.flush();
+        primary.say(&format!("@dmquest erase {QUEST_ID}"))?;
+        primary.wait_for("primary QuestRemoved after party erase", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("partner QuestRemoved after party erase", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        wait_for_text(&mut primary, "party quest erase feedback", "erased")?;
+
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    result
+}
+
+/// QW-052: start the real Arc 1 inventory-backed hunt and verify its Collect
+/// requirements update from authoritative inventory additions.
+fn dm_collect_objective_refresh(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 20002;
+    const REQUIRED: [(u32, u16); 3] = [(1016, 7), (1052, 7), (955, 3)];
+
+    let (mut context, mut partner) = connect_pair(config)?;
+    form_party(&mut context, &mut partner)?;
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut context, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut context, "@dm mode on", "DnD mode enabled")?;
+        say_expect(&mut context, &format!("@dmquest erase {QUEST_ID}"), "erased")?;
+        for (item_id, _) in REQUIRED {
+            let _ = context.say(&format!("@delitem {item_id} 30000"));
+        }
+        context.pump(Duration::from_millis(300));
+
+        context.flush();
+        context.say(&format!("@dmquest start {QUEST_ID}"))?;
+        context.wait_for("collect quest added", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        wait_for_text(&mut context, "collect quest start feedback", "started")?;
+
+        for (item_id, required) in REQUIRED {
+            context.give_item(item_id, required)?;
+            let carried = context
+                .inventory
+                .iter()
+                .filter(|item| item.item_id.0 == item_id)
+                .map(|item| item.amount() as u32)
+                .sum::<u32>();
+            if carried < required as u32 {
+                return Err(format!("collect objective item {item_id} has {carried}, need {required}"));
+            }
+        }
+
+        // The quest remains active until its authoritative turn-in NPC path;
+        // this scenario deliberately does not complete it by admin command.
+        if !context.inventory.iter().any(|item| item.item_id.0 == 1016) {
+            return Err("collect objective inventory state disappeared after additions".to_owned());
+        }
+        for (item_id, _) in REQUIRED {
+            let _ = context.say(&format!("@delitem {item_id} 30000"));
+        }
+        context.pump(Duration::from_millis(300));
+        say_expect(&mut context, &format!("@dmquest erase {QUEST_ID}"), "erased")?;
+        say_expect(&mut context, "@dm mode off", "DnD mode disabled")?;
+        context.pump(Duration::from_millis(300));
+        leave_party_both(&mut context, &mut partner);
+        Ok(())
+    })();
+
+    let _ = context.say(&format!("@dmquest erase {QUEST_ID}"));
+    let _ = context.say("@dm mode off");
+    leave_party_both(&mut context, &mut partner);
+    result
+}
+
+/// QW-055: consume a carried contract through the real Wynne turn-in and
+/// verify the durable checkpoint clears its authoritative carrier for both
+/// party members.
+fn dm_checkpoint_item_consume(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 20002;
+    const REQUIRED: [(u32, u16); 3] = [(1016, 7), (1052, 7), (955, 3)];
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+    let result = (|| -> Result<(), String> {
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "DnD mode enabled")?;
+        say_expect(&mut primary, "@dmflag set dm_arc01_started 1", "set to 1")?;
+        say_expect(&mut primary, "@dmflag set dm_qw055_consume_probe 1", "set to 1")?;
+        say_expect(&mut primary, &format!("@dmquest erase {QUEST_ID}"), "erased")?;
+        for (item_id, _) in REQUIRED {
+            let _ = primary.say(&format!("@delitem {item_id} 30000"));
+        }
+        primary.pump(Duration::from_millis(300));
+        primary.say(&format!("@dmquest start {QUEST_ID}"))?;
+        primary.wait_for("checkpoint consume hunt quest added", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        wait_for_text(&mut primary, "checkpoint consume hunt start feedback", "started")?;
+        for (item_id, required) in REQUIRED {
+            primary.give_item(item_id, required)?;
+        }
+
+        primary.warp("prontera", 156, 190)?;
+        primary.pump(Duration::from_millis(400));
+        let wynne = primary
+            .entities
+            .iter()
+            .filter_map(|(id, entity)| {
+                let position = entity.position.tile_position();
+                let distance = position.x.abs_diff(156).max(position.y.abs_diff(191));
+                (distance <= 2).then_some((*id, distance))
+            })
+            .min_by_key(|(_, distance)| *distance)
+            .map(|(id, _)| id)
+            .ok_or("Quartermaster Wynne was not visible near (156,191)")?;
+
+        primary.flush();
+        partner.flush();
+        primary.net.start_dialog(wynne).map_err(|_| "primary disconnected at Wynne")?;
+        primary.wait_for("Wynne contract dialog", |event| match event {
+            NetworkEvent::OpenDialog { npc_id, .. } if *npc_id == wynne => Some(()),
+            _ => None,
+        })?;
+
+        let mut carrier_cleared_on_primary = false;
+        let mut choices = None;
+        let deadline = std::time::Instant::now() + Duration::from_secs(10);
+        while choices.is_none() && std::time::Instant::now() < deadline {
+            for event in primary.collect_for(Duration::from_millis(200)) {
+                match event {
+                    NetworkEvent::ChatMessage { text, .. }
+                        if text.starts_with("[DMJ]") && text.contains("\"t\":\"checkpoint") && text.contains("\"carrier\":0") =>
+                    {
+                        carrier_cleared_on_primary = true;
+                    }
+                    NetworkEvent::AddNextButton { npc_id } if npc_id == wynne => {
+                        let _ = primary.net.next_dialog(wynne);
+                    }
+                    NetworkEvent::AddChoiceButtons { npc_id, choices: found } if npc_id == wynne => {
+                        choices = Some(found);
+                    }
+                    _ => {}
+                }
+            }
+        }
+        let choices = choices.ok_or("Wynne turn-in menu did not arrive")?;
+        let finish = choices
+            .iter()
+            .position(|choice| choice == "That's all.")
+            .unwrap_or_else(|| choices.len().saturating_sub(1));
+        primary
+            .net
+            .choose_dialog_option(wynne, (finish + 1) as i8)
+            .map_err(|_| "primary disconnected choosing Wynne close")?;
+        primary.wait_for("Wynne close button", |event| match event {
+            NetworkEvent::AddCloseButton { npc_id } if *npc_id == wynne => Some(()),
+            _ => None,
+        })?;
+        primary.net.close_dialog(wynne).map_err(|_| "primary disconnected closing Wynne")?;
+        primary.pump(Duration::from_millis(300));
+
+        if !carrier_cleared_on_primary {
+            primary.wait_for("primary carrier-cleared checkpoint", |event| match event {
+                NetworkEvent::ChatMessage { text, .. }
+                    if text.starts_with("[DMJ]") && text.contains("\"t\":\"checkpoint") && text.contains("\"carrier\":0") =>
+                {
+                    Some(())
+                }
+                _ => None,
+            })?;
+        }
+        partner.wait_for("partner carrier-cleared checkpoint", |event| match event {
+            NetworkEvent::ChatMessage { text, .. }
+                if text.starts_with("[DMJ]") && text.contains("\"t\":\"checkpoint") && text.contains("\"carrier\":0") =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        if REQUIRED
+            .iter()
+            .any(|(item_id, _)| primary.inventory.iter().any(|item| item.item_id.0 == *item_id))
+        {
+            return Err("Wynne turn-in did not consume all carried contract items".to_owned());
+        }
+        say_expect(&mut primary, &format!("@dmquest erase {QUEST_ID}"), "erased")?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        leave_party_both(&mut primary, &mut partner);
+        Ok(())
+    })();
+
+    let _ = primary.say(&format!("@dmquest erase {QUEST_ID}"));
+    let _ = primary.say("@dm reset confirm");
+    let _ = primary.say("@dm mode off");
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+/// QW-052: use Hercules' real hunting quest/objective packet path and verify
+/// one Zerom kill advances the authoritative Kill count on the client.
+fn dm_kill_objective_refresh(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 1100;
+    const ZEROM_ID: u32 = 1178;
+
+    let mut context = TestContext::connect(config)?;
+    let result =
+        (|| -> Result<(), String> {
+            context.ensure_job(4008)?;
+            context.ensure_base_level(99)?;
+            context.say("@allstats")?;
+            context.say("@heal")?;
+            context.pump(Duration::from_millis(400));
+            context.warp("prt_fild08", 170, 180)?;
+            context.say("@allskill")?;
+            context.wait_for("SkillTree after @allskill", |event| match event {
+                NetworkEvent::SkillTree { skill_information } if !skill_information.is_empty() => Some(()),
+                _ => None,
+            })?;
+            context.say("@delitem 1126 10")?;
+            context.pump(Duration::from_millis(200));
+            let sword = context.give_item(1126, 1)?;
+            context
+                .net
+                .request_item_equip(sword, EquipPosition::RIGHT_HAND)
+                .map_err(|_| "disconnected equipping Saber")?;
+            context.wait_for("Saber equipped", |event| match event {
+                NetworkEvent::UpdateEquippedPosition { index, equipped_position }
+                    if *index == sword && equipped_position.contains(EquipPosition::RIGHT_HAND) =>
+                {
+                    Some(())
+                }
+                _ => None,
+            })?;
+            let _ = context.say(&format!("@quest delete {QUEST_ID}"));
+            context.pump(Duration::from_millis(300));
+            context.flush();
+            context.say(&format!("@quest add {QUEST_ID}"))?;
+            context.wait_for("kill quest added", |event| match event {
+                NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+                _ => None,
+            })?;
+
+            let initial = context.wait_for("initial Zerom objective packet", |event| match event {
+                NetworkEvent::QuestObjectiveProgress { objectives }
+                    if objectives.iter().any(|objective| {
+                        objective.quest_id == QUEST_ID
+                            && objective.mob_id == ZEROM_ID
+                            && objective.current_count == 0
+                            && objective.total_count >= 1
+                    }) =>
+                {
+                    Some(())
+                }
+                _ => None,
+            });
+            if initial.is_err() {
+                return Err(initial.unwrap_err());
+            }
+
+            context.kill_all_monsters();
+            let target = context.spawn_monster("ZEROM", ZEROM_ID as u16)?;
+            let player_id = context.player_id;
+            let mut landed = false;
+            let mut killed = false;
+            let mut objective_seen = false;
+            for _ in 0..5 {
+                let position = context
+                    .entities
+                    .get(&target)
+                    .map(|entity| entity.position.tile_position())
+                    .ok_or("Zerom disappeared before the first attack")?;
+                context.walk_to(position.x.saturating_sub(1).max(5), position.y.max(5))?;
+                context.flush();
+                context.net.player_attack(target).map_err(|_| "disconnected attacking Zerom")?;
+                let outcome = match context.wait_for_within("Zerom DamageEffect or death", Duration::from_secs(5), &mut |event| match event
+                {
+                    NetworkEvent::QuestObjectiveProgress { objectives }
+                        if objectives
+                            .iter()
+                            .any(|objective| objective.quest_id == QUEST_ID && objective.current_count >= 1) =>
+                    {
+                        Some(3)
+                    }
+                    NetworkEvent::RemoveEntity {
+                        entity_id,
+                        reason: ragnarok_packets::DisappearanceReason::Died,
+                    } if *entity_id == target => Some(2),
+                    NetworkEvent::DamageEffect {
+                        source_entity_id,
+                        destination_entity_id,
+                        damage_amount: Some(amount),
+                        ..
+                    } if *source_entity_id == player_id && *destination_entity_id == target && *amount > 0 => Some(1),
+                    NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+                    _ => None,
+                }) {
+                    Ok(outcome) => outcome,
+                    Err(_) => continue,
+                };
+                match outcome {
+                    3 => {
+                        killed = true;
+                        objective_seen = true;
+                        break;
+                    }
+                    2 => {
+                        killed = true;
+                        break;
+                    }
+                    1 => {
+                        landed = true;
+                        context.pump(Duration::from_millis(500));
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            if landed && !killed {
+                let deadline = std::time::Instant::now() + Duration::from_secs(30);
+                while std::time::Instant::now() < deadline {
+                    context.pump(Duration::from_millis(500));
+                    context.net.player_attack(target).map_err(|_| "disconnected attacking Zerom")?;
+                    let outcome = match context.wait_for_within("next Zerom hit or death", Duration::from_secs(6), &mut |event| match event
+                    {
+                        NetworkEvent::QuestObjectiveProgress { objectives }
+                            if objectives
+                                .iter()
+                                .any(|objective| objective.quest_id == QUEST_ID && objective.current_count >= 1) =>
+                        {
+                            Some(3)
+                        }
+                        NetworkEvent::RemoveEntity {
+                            entity_id,
+                            reason: ragnarok_packets::DisappearanceReason::Died,
+                        } if *entity_id == target => Some(2),
+                        NetworkEvent::DamageEffect {
+                            source_entity_id,
+                            destination_entity_id,
+                            ..
+                        } if *source_entity_id == player_id && *destination_entity_id == target => Some(1),
+                        NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+                        _ => None,
+                    }) {
+                        Ok(outcome) => outcome,
+                        Err(_) => {
+                            if let Some(position) = context.entities.get(&target).map(|entity| entity.position.tile_position()) {
+                                let _ = context.walk_to(position.x.saturating_sub(1).max(5), position.y.max(5));
+                            }
+                            continue;
+                        }
+                    };
+                    if outcome == 3 {
+                        killed = true;
+                        objective_seen = true;
+                        break;
+                    }
+                    if outcome == 2 {
+                        killed = true;
+                        break;
+                    }
+                    if outcome == 0 {
+                        let position = context
+                            .entities
+                            .get(&target)
+                            .map(|entity| entity.position.tile_position())
+                            .ok_or("Zerom disappeared after an attack failure")?;
+                        context.walk_to(position.x.saturating_sub(1).max(5), position.y.max(5))?;
+                    }
+                }
+            }
+            if !killed {
+                return Err("spawned Zerom did not die during the kill objective fixture".to_owned());
+            }
+
+            if !objective_seen {
+                context.wait_for("authoritative Zerom kill objective update", |event| match event {
+                    NetworkEvent::QuestObjectiveProgress { objectives }
+                        if objectives.iter().any(|objective| {
+                            objective.quest_id == QUEST_ID
+                                && objective.mob_id == ZEROM_ID
+                                && objective.current_count >= 1
+                                && objective.total_count >= objective.current_count
+                        }) =>
+                    {
+                        Some(())
+                    }
+                    _ => None,
+                })?;
+            }
+
+            let _ = context.say(&format!("@quest delete {QUEST_ID}"));
+            let _ = context.say("@delitem 1101 1");
+            context.pump(Duration::from_millis(300));
+            Ok(())
+        })();
+
+    let _ = context.say(&format!("@quest delete {QUEST_ID}"));
+    let _ = context.say("@delitem 1126 1");
+    result
 }
 
 /// Two campaign quests must both survive a fresh map login and appear together
@@ -436,6 +1288,84 @@ fn dm_experience(config: &Config) -> Result<(), String> {
             "persisted job EXP mismatch: expected {}, got {}",
             job_before + 500,
             job_after
+        ));
+    }
+    Ok(())
+}
+
+/// QW-079: exercise an authored quest dialogue that calls DM_PartyExp rather
+/// than the administrative @dmexp command, and require exact base/job packets
+/// plus quest completion.
+fn dm_authored_exp_award(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 2000;
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(0)?;
+    context.ensure_job(1)?;
+    context.ensure_base_level(50)?;
+    context.say("@jlvl 20")?;
+    context.pump(Duration::from_millis(400));
+    context.say(&format!("@quest delete {QUEST_ID}"))?;
+    context.pump(Duration::from_millis(300));
+    context.warp("prontera", 163, 200)?;
+
+    let npc_id = context
+        .entities
+        .iter()
+        .filter(|(id, data)| {
+            **id != context.player_id
+                && data.position.tile_position().x.abs_diff(163) <= 1
+                && data.position.tile_position().y.abs_diff(200) <= 1
+        })
+        .min_by_key(|(_, data)| {
+            let position = data.position.tile_position();
+            position.x.abs_diff(163) + position.y.abs_diff(200)
+        })
+        .map(|(id, _)| *id)
+        .ok_or_else(|| "authored EXP award NPC not found near (163, 200)".to_owned())?;
+
+    let base_before = context.base_experience;
+    let job_before = context.job_experience;
+
+    context.flush();
+    context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.wait_for("EXP award NPC greeting", |event| match event {
+        NetworkEvent::OpenDialog { npc_id: id, text } if *id == npc_id && text.contains("EXP Quest Award Test") => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("EXP award NPC greeting next", |event| match event {
+        NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.wait_for("authored quest added", |event| match event {
+        NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("authored base EXP award", |event| match event {
+        NetworkEvent::GainedExperience {
+            amount: 1000,
+            experience_type: ExperienceType::BaseExperience,
+            ..
+        } => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("authored job EXP award", |event| match event {
+        NetworkEvent::GainedExperience {
+            amount: 500,
+            experience_type: ExperienceType::JobExperience,
+            ..
+        } => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("authored quest removal", |event| match event {
+        NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+        _ => None,
+    })?;
+    if context.base_experience != base_before + 1000 || context.job_experience != job_before + 500 {
+        return Err(format!(
+            "authored EXP totals mismatch: base {} -> {}, job {} -> {}",
+            base_before, context.base_experience, job_before, context.job_experience
         ));
     }
     Ok(())

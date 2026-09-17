@@ -90,6 +90,9 @@ impl Hotbar {
     where
         Callback: PacketCallback + Send,
     {
+        if std::env::var_os("KORANGAR_HOTBAR_TRACE").is_some() {
+            eprintln!("[hotbar] clear slot={} previous={:?}", slot.0, self.get_slot(slot));
+        }
         let _ = networking_system.set_hotkey_data(HotbarTab(0), slot, HotkeyData::UNBOUND);
         self.unset_slot(slot);
     }

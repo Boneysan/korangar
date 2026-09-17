@@ -122,6 +122,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("observer-ammo-disguise", 11, ammunition_survives_a_disguise),
         Scenario::new("observer-skill-cast", 11, a_cast_reaches_the_observer),
         Scenario::new("observer-status-values", 11, status_values_reach_the_observer),
+        Scenario::new("observer-hidden-player-privacy", 11, hidden_player_privacy),
     ]
 }
 
@@ -432,6 +433,21 @@ fn clearing_a_look_reaches_the_observer(config: &Config) -> Result<(), String> {
 
     partner.assert_converges(subject, Appearance::ClothesColor, 0)?;
     partner.assert_converges(subject, Appearance::HairColor, 0)?;
+    Ok(())
+}
+
+/// QW-085: a GM-hidden player must leave the observer's visible entity set,
+/// then return to it after the server-side visibility toggle is cleared.
+fn hidden_player_privacy(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    let subject = primary.account_id;
+    partner.assert_in_view(subject, true)?;
+
+    primary.say("@hide")?;
+    partner.assert_in_view(subject, false)?;
+
+    primary.say("@hide")?;
+    partner.assert_in_view(subject, true)?;
     Ok(())
 }
 

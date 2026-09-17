@@ -7,9 +7,8 @@
 //! comes from the bundled campaign table instead, resolved to names at the
 //! boundary because the interface layer holds no `Library`.
 //!
-//! Progress is deliberately *not* stored. How many of an item the player is
-//! carrying is already in the inventory, and caching it here would be a second
-//! copy to keep in sync on every pickup, drop, trade and vend.
+//! Item progress is read from the inventory, while kill progress is retained
+//! from the server's authoritative hunting-objective packets.
 
 use korangar_interface::element::StateElement;
 use ragnarok_packets::ItemId;
@@ -23,6 +22,15 @@ pub struct QuestRequirementEntry {
     pub needed: u32,
 }
 
+/// Server-authoritative kill progress from the hunting quest packets.
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct QuestKillObjective {
+    pub objective_id: u32,
+    pub mob_id: u32,
+    pub current: u16,
+    pub total: u16,
+}
+
 /// A quest in the log.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct QuestEntry {
@@ -32,8 +40,13 @@ pub struct QuestEntry {
     pub name: String,
     /// Empty for a quest with no item turn-in.
     pub requirements: Vec<QuestRequirementEntry>,
+    pub kill_objectives: Vec<QuestKillObjective>,
     /// Hunt zone and/or NPC destination for the journal.
     pub location: String,
+    /// Revealed destination coordinate, when the campaign data has one.
+    pub destination_map: String,
+    pub destination_x: Option<u16>,
+    pub destination_y: Option<u16>,
 }
 
 impl QuestEntry {
@@ -41,6 +54,12 @@ impl QuestEntry {
     /// without known item objectives must never appear ready by vacuous truth.
     pub fn items_ready(&self, count: impl Fn(ItemId) -> u32) -> bool {
         !self.requirements.is_empty() && self.requirements.iter().all(|item| count(item.item_id) >= item.needed)
+    }
+
+    pub fn objectives_ready(&self, count: impl Fn(ItemId) -> u32) -> bool {
+        let items_ready = self.requirements.is_empty() || self.items_ready(&count);
+        let kills_ready = self.kill_objectives.iter().all(|objective| objective.current >= objective.total);
+        (!self.requirements.is_empty() || !self.kill_objectives.is_empty()) && items_ready && kills_ready
     }
 
     pub fn matches_search(&self, query: &str) -> bool {
@@ -57,6 +76,29 @@ impl QuestEntry {
 
     pub fn requirements(&self) -> &[QuestRequirementEntry] {
         &self.requirements
+    }
+
+    pub fn kill_objectives(&self) -> &[QuestKillObjective] {
+        &self.kill_objectives
+    }
+
+    pub fn update_kill_objective(&mut self, objective_id: u32, mob_id: u32, current: u16, total: u16) {
+        if let Some(objective) = self
+            .kill_objectives
+            .iter_mut()
+            .find(|objective| objective.objective_id == objective_id)
+        {
+            objective.mob_id = mob_id;
+            objective.current = current;
+            objective.total = total;
+        } else {
+            self.kill_objectives.push(QuestKillObjective {
+                objective_id,
+                mob_id,
+                current,
+                total,
+            });
+        }
     }
 }
 
@@ -75,6 +117,10 @@ pub struct QuestLogState {
 impl QuestLogState {
     pub fn quests(&self) -> &[QuestEntry] {
         &self.quests
+    }
+
+    pub fn quests_mut(&mut self) -> &mut [QuestEntry] {
+        &mut self.quests
     }
 
     pub fn is_empty(&self) -> bool {
@@ -179,7 +225,11 @@ mod tests {
                 item_name: "Rat Tail".to_owned(),
                 needed: 7,
             }],
+            kill_objectives: Vec::new(),
             location: String::new(),
+            destination_map: String::new(),
+            destination_x: None,
+            destination_y: None,
         }
     }
 
@@ -228,6 +278,21 @@ mod tests {
     }
 
     #[test]
+    fn readiness_requires_authoritative_kill_objectives() {
+        let mut quest = entry(20005, "Field Hunt");
+        quest.requirements.clear();
+        quest.kill_objectives.push(super::QuestKillObjective {
+            objective_id: 77,
+            mob_id: 1002,
+            current: 2,
+            total: 3,
+        });
+        assert!(!quest.objectives_ready(|_| 0));
+        quest.kill_objectives[0].current = 3;
+        assert!(quest.objectives_ready(|_| 0));
+    }
+
+    #[test]
     fn readiness_requires_every_objective() {
         let mut quest = entry(20002, "Contract");
         quest.requirements.push(QuestRequirementEntry {
@@ -265,6 +330,18 @@ mod tests {
         log.toggle_pin(20003);
         log.replace(vec![]);
         assert!(!log.is_pinned(20003));
+    }
+
+    #[test]
+    fn tracked_quest_survives_server_refresh_when_its_id_remains_active() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.add(entry(20003, "Second"));
+        log.track(20002);
+        log.replace(vec![entry(20003, "Second refreshed"), entry(20002, "First refreshed")]);
+
+        assert_eq!(log.tracked(), Some(20002));
+        assert_eq!(log.quests()[1].name(), "First refreshed");
     }
 
     #[test]

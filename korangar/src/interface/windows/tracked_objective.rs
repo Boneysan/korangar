@@ -12,19 +12,25 @@ use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::ClientState;
 use crate::state::breadcrumb::BreadcrumbState;
 use crate::state::inventory::Inventory;
+use crate::state::navigation::NavigationState;
 use crate::state::quests::QuestLogState;
 use crate::state::theme::InterfaceThemeType;
+use crate::this_entity;
 
-struct TrackedObjectiveElement<A, B> {
+struct TrackedObjectiveElement<Q, A, B, N> {
+    breadcrumb_path: Q,
     quest_log_path: A,
     inventory_path: B,
+    navigation_path: N,
     elements: Vec<(u64, ElementBox<ClientState>)>,
 }
 
-impl<A, B> Element<ClientState> for TrackedObjectiveElement<A, B>
+impl<Q, A, B, N> Element<ClientState> for TrackedObjectiveElement<Q, A, B, N>
 where
+    Q: Path<ClientState, BreadcrumbState>,
     A: Path<ClientState, QuestLogState>,
     B: Path<ClientState, Inventory>,
+    N: Path<ClientState, NavigationState>,
 {
     type LayoutInfo = ();
 
@@ -34,63 +40,119 @@ where
             self.elements.clear();
             let log = state.get(&self.quest_log_path);
             let inventory = state.get(&self.inventory_path);
+            let breadcrumb = state.get(&self.breadcrumb_path);
+            let navigation = state.get(&self.navigation_path);
+            let player_tile = state.try_follow(this_entity()).map(|player| player.get_tile_position());
+            let ui_scale = f32::from(breadcrumb.scale) / 100.0;
+            let opacity = f32::from(breadcrumb.opacity) / 100.0;
 
-            if let Some(tracked_id) = log.tracked()
+            if !breadcrumb.hidden
+                && let Some(tracked_id) = log.tracked()
                 && let Some(quest) = log.quests().iter().find(|q| q.quest_id == tracked_id)
             {
-                let ready = quest.items_ready(|id| inventory.count_of(id));
-
                 self.elements.push((
                     1,
                     ErasedElement::new(text! {
                         text: format!("★ {}", quest.name()),
-                        font_size: FontSize(15.0),
-                        color: Color::rgb_u8(255, 220, 130),
+                        font_size: FontSize(15.0 * ui_scale),
+                        color: Color::rgb_u8(255, 220, 130).multiply_alpha(opacity),
                         overflow_behavior: OverflowBehavior::LineBreak,
                     }),
                 ));
 
-                let summary = if ready {
-                    "✔ Items ready to turn in!".to_string()
-                } else if !quest.requirements().is_empty() {
-                    let mut parts = Vec::new();
-                    for req in quest.requirements() {
-                        let have = inventory.count_of(req.item_id);
-                        parts.push(format!("{} ({}/{})", req.item_name, have, req.needed));
-                    }
-                    parts.join(", ")
-                } else if !quest.location.is_empty() {
-                    quest.location.clone()
-                } else {
-                    "Follow quest instructions".to_string()
-                };
+                if !breadcrumb.collapsed {
+                    let ready = quest.objectives_ready(|id| inventory.count_of(id));
+                    let summary = if ready {
+                        "✔ Objectives ready for the next step!".to_string()
+                    } else if !quest.kill_objectives().is_empty() {
+                        quest
+                            .kill_objectives()
+                            .iter()
+                            .map(|objective| {
+                                let name = if objective.mob_id != 0 {
+                                    crate::world::display_monster(objective.mob_id, "normal").to_string()
+                                } else {
+                                    format!("objective {}", objective.objective_id)
+                                };
+                                format!("Defeat {name} ({}/{})", objective.current, objective.total)
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ")
+                    } else if !quest.requirements().is_empty() {
+                        let mut parts = Vec::new();
+                        for req in quest.requirements() {
+                            let have = inventory.count_of(req.item_id);
+                            parts.push(format!("{} ({}/{})", req.item_name, have, req.needed));
+                        }
+                        parts.join(", ")
+                    } else if !quest.location.is_empty() {
+                        quest.location.clone()
+                    } else {
+                        "Follow quest instructions".to_string()
+                    };
 
-                let summary_color = if ready {
-                    Color::rgb_u8(150, 230, 170)
-                } else {
-                    Color::monochrome_u8(235)
-                };
+                    let summary_color = if ready {
+                        Color::rgb_u8(150, 230, 170)
+                    } else {
+                        Color::monochrome_u8(235)
+                    };
 
-                self.elements.push((
-                    2,
-                    ErasedElement::new(text! {
-                        text: summary,
-                        font_size: FontSize(13.0),
-                        color: summary_color,
-                        overflow_behavior: OverflowBehavior::LineBreak,
-                    }),
-                ));
-
-                if !quest.location.is_empty() && !ready {
                     self.elements.push((
-                        3,
+                        2,
                         ErasedElement::new(text! {
-                            text: quest.location.clone(),
-                            font_size: FontSize(12.0),
-                            color: Color::rgb_u8(180, 210, 255),
+                            text: summary,
+                            font_size: FontSize(13.0 * ui_scale),
+                            color: summary_color.multiply_alpha(opacity),
                             overflow_behavior: OverflowBehavior::LineBreak,
                         }),
                     ));
+
+                    if !quest.location.is_empty() && !ready {
+                        self.elements.push((
+                            3,
+                            ErasedElement::new(text! {
+                                text: quest.location.clone(),
+                                font_size: FontSize(12.0 * ui_scale),
+                                color: Color::rgb_u8(180, 210, 255).multiply_alpha(opacity),
+                                overflow_behavior: OverflowBehavior::LineBreak,
+                            }),
+                        ));
+                    }
+
+                    if let Some(player) = player_tile
+                        && let Some((target_x, target_y)) = breadcrumb.target(&breadcrumb.map)
+                    {
+                        let distance = breadcrumb.distance(&breadcrumb.map, player.x, player.y).unwrap_or_default();
+                        let direction = breadcrumb.direction(&breadcrumb.map, player.x, player.y).unwrap_or("•");
+                        self.elements.push((
+                            5,
+                            ErasedElement::new(text! {
+                                text: format!("{} {} tiles · {},{}", direction, distance, target_x, target_y),
+                                font_size: FontSize(12.0 * ui_scale),
+                                color: Color::rgb_u8(255, 210, 120).multiply_alpha(opacity),
+                                overflow_behavior: OverflowBehavior::Shrink,
+                            }),
+                        ));
+                    }
+
+                    if navigation.available && !navigation.next_map.is_empty() {
+                        self.elements.push((
+                            13,
+                            ErasedElement::new(text! {
+                                text: format!(
+                                    "Portal: {},{} → {} · {} map{}",
+                                    navigation.next_portal_x.unwrap_or_default(),
+                                    navigation.next_portal_y.unwrap_or_default(),
+                                    navigation.next_map,
+                                    navigation.route_maps.len().saturating_sub(1),
+                                    if navigation.route_maps.len() == 2 { "" } else { "s" },
+                                ),
+                                font_size: FontSize(11.0 * ui_scale),
+                                color: Color::rgb_u8(180, 230, 210).multiply_alpha(opacity),
+                                overflow_behavior: OverflowBehavior::LineBreak,
+                            }),
+                        ));
+                    }
                 }
 
                 self.elements.push((
@@ -99,7 +161,7 @@ where
                         text: "Journal (Ctrl+Q)",
                         tooltip: "Open Quest Journal [^000001Ctrl+Q^000000]",
                         height: 24.0,
-                        font_size: FontSize(13.0),
+                        font_size: FontSize(13.0 * ui_scale),
                         event: InputEvent::ToggleQuestLogWindow,
                     }),
                 ));
@@ -116,11 +178,84 @@ where
                 self.elements.push((
                     2,
                     ErasedElement::new(button! {
-                        text: "Open Journal (Ctrl+Q)",
-                        tooltip: "Choose an objective to track in the Quest Journal [^000001Ctrl+Q^000000]",
+                        text: if breadcrumb.hidden { "Show Breadcrumb" } else { "Open Journal (Ctrl+Q)" },
+                        tooltip: "Show the tracked objective HUD",
                         height: 24.0,
-                        font_size: FontSize(13.0),
-                        event: InputEvent::ToggleQuestLogWindow,
+                        font_size: FontSize(13.0 * ui_scale),
+                        event: if breadcrumb.hidden { InputEvent::ToggleBreadcrumbHidden } else { InputEvent::ToggleQuestLogWindow },
+                    }),
+                ));
+            }
+
+            if !breadcrumb.hidden {
+                self.elements.push((
+                    6,
+                    ErasedElement::new(button! {
+                        text: if breadcrumb.collapsed { "Expand" } else { "Collapse" },
+                        tooltip: "Collapse or expand objective details",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::ToggleBreadcrumbCollapsed,
+                    }),
+                ));
+                self.elements.push((
+                    7,
+                    ErasedElement::new(button! {
+                        text: format!("Size {}% +", breadcrumb.scale),
+                        tooltip: "Increase breadcrumb size",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::BreadcrumbScale { delta: 10 },
+                    }),
+                ));
+                self.elements.push((
+                    8,
+                    ErasedElement::new(button! {
+                        text: format!("Size {}% −", breadcrumb.scale),
+                        tooltip: "Decrease breadcrumb size",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::BreadcrumbScale { delta: -10 },
+                    }),
+                ));
+                self.elements.push((
+                    9,
+                    ErasedElement::new(button! {
+                        text: format!("Opacity {}% −", breadcrumb.opacity),
+                        tooltip: "Decrease breadcrumb opacity",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::BreadcrumbOpacity { delta: -10 },
+                    }),
+                ));
+                self.elements.push((
+                    10,
+                    ErasedElement::new(button! {
+                        text: format!("Opacity {}% +", breadcrumb.opacity),
+                        tooltip: "Increase breadcrumb opacity",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::BreadcrumbOpacity { delta: 10 },
+                    }),
+                ));
+                self.elements.push((
+                    11,
+                    ErasedElement::new(button! {
+                        text: if breadcrumb.guidance_enabled { "Guidance: On" } else { "Guidance: Off" },
+                        tooltip: "Toggle same-map direction, distance, and minimap marker",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::ToggleBreadcrumbGuidance,
+                    }),
+                ));
+                self.elements.push((
+                    12,
+                    ErasedElement::new(button! {
+                        text: "Hide",
+                        tooltip: "Hide the tracked objective HUD",
+                        height: 22.0,
+                        font_size: FontSize(12.0 * ui_scale),
+                        event: InputEvent::ToggleBreadcrumbHidden,
                     }),
                 ));
             }
@@ -144,27 +279,30 @@ where
     }
 }
 
-pub struct TrackedObjectiveWindow<A, B, C> {
-    _breadcrumb_path: A,
+pub struct TrackedObjectiveWindow<A, B, C, D> {
+    breadcrumb_path: A,
     quest_log_path: B,
     inventory_path: C,
+    navigation_path: D,
 }
 
-impl<A, B, C> TrackedObjectiveWindow<A, B, C> {
-    pub fn new(breadcrumb_path: A, quest_log_path: B, inventory_path: C) -> Self {
+impl<A, B, C, D> TrackedObjectiveWindow<A, B, C, D> {
+    pub fn new(breadcrumb_path: A, quest_log_path: B, inventory_path: C, navigation_path: D) -> Self {
         Self {
-            _breadcrumb_path: breadcrumb_path,
+            breadcrumb_path,
             quest_log_path,
             inventory_path,
+            navigation_path,
         }
     }
 }
 
-impl<A, B, C> CustomWindow<ClientState> for TrackedObjectiveWindow<A, B, C>
+impl<A, B, C, D> CustomWindow<ClientState> for TrackedObjectiveWindow<A, B, C, D>
 where
     A: Path<ClientState, BreadcrumbState> + 'static,
     B: Path<ClientState, QuestLogState> + 'static,
     C: Path<ClientState, Inventory> + 'static,
+    D: Path<ClientState, NavigationState> + 'static,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::TrackedObjective)
@@ -180,8 +318,10 @@ where
             maximum_width: 280.0,
             elements: (
                 TrackedObjectiveElement {
+                    breadcrumb_path: self.breadcrumb_path,
                     quest_log_path: self.quest_log_path,
                     inventory_path: self.inventory_path,
+                    navigation_path: self.navigation_path,
                     elements: Vec::new(),
                 },
             )

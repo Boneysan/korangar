@@ -1,42 +1,42 @@
 # schema=1
-20002	Contract: Cellar Vermin	Collect	1175:normal:Tarou,1161:normal:Plankton,1051:normal:Thief Bug	1016:7,1052:7,955:3	prt_sewb1-3	inventory	Quartermaster Wynne
-20003	Field Contract: Rockers and Rumors	Collect	1052:normal:Rocker,1167:normal:Savage Babe,1088:vocal:Vocal	940:10,919:10,752:3	prt_fild07	inventory	Quartermaster Wynne
-20008	Mushroom Ring Patrol	Collect	1014:normal:Spore,1024:normal:Wormtail,1080:normal:Green Plant	921:13,906:9,511:10	pay_fild02,06	inventory	Sun-Hwa
-20009	Bone Tag Turn-In	Collect	1076:normal:Skeleton,1015:normal:Zombie,1031:normal:Poporing	932:4,957:7,938:5	pay_dun00	inventory	Sun-Hwa
-20014	Caravan Water Debt	Collect	1055:normal:Muka,1019:normal:Peco Peco,1047:normal:Peco Peco Egg	952:13,925:13,713:4	moc_fild01,02	inventory	Rashid the Guide
-20015	Ant Hell Survey	Collect	1097:normal:Ant Egg,1095:normal:Andre,1121:normal:Giearth	935:3,955:10,1040:6	anthell01	inventory	Rashid the Guide
-20016	Sphinx Night Watch	Collect	1178:normal:Zerom,1111:normal:Drainliar,1146:normal:Matyr	1002:3,7006:10,919:9	in_sphinx1,2	inventory	Rashid the Guide
-20020	Tower Apprentice Drills	Collect	1077:normal:Poison Spore,1031:normal:Poporing,1035:normal:Hunter Fly	7033:13,938:9,943:9	gef_dun00	inventory	Apprentice Elsbeth
-20021	Orc Village Bounty	Collect	1023:normal:Orc Warrior,1273:normal:Orc Lady,1686:normal:Orc Baby	931:13,7053:8,519:8	gef_fild03,10	inventory	Apprentice Elsbeth
-20022	Argiope Silk Run	Collect	1099:normal:Argiope,1100:normal:Argos,1118:normal:Flora	1042:9,1025:13,1032:13	mjolnir_11	inventory	Apprentice Elsbeth
-20027	Byalan Tide Contract	Collect	1045:normal:Marc,1069:normal:Swordfish,1068:normal:Hydra	956:16,963:16,962:11	iz_dun03	inventory	Captain Mara
-20028	Sunken Ship Manifest	Collect	1071:normal:Pirate Skeleton,1070:normal:Kukre,1179:normal:Whisper	932:6,955:9,1059:9	treasure01,02	inventory	Captain Mara
-20103	Harpy Weather Log	Collect	1376:normal:Harpy,1372:normal:Goat,1368:normal:Geographer	7115:12,7106:6,1032:7	yuno_fild03,04	inventory	Doctor Ingrid Vahl
-20104	Juperos Parts Requisition	Collect	1676:normal:Venatu,1670:normal:Dimik,1685:boss:Vesper	7317:5,7319:5,7095:8	juperos_01,jupe_core	inventory	Doctor Ingrid Vahl
-20105	Norgroad Heat Index	Collect	1386:normal:Sleeper,1386:normal:Sleeper,1372:normal:Goat	7124:8,997:5,713:8	yuno_fild03	inventory	Doctor Ingrid Vahl
-20113	Factory Whistle Shift	Collect	1616:normal:Pitman,1620:normal:Noxious,1619:normal:Porcellio	7318:6,7001:6,1052:6	ein_dun01	inventory	Greta Holm
-20114	Metaling Scrap Drive	Collect	1613:normal:Metaling,1619:normal:Porcellio,1628:normal:Mole	7325:10,7312:6,1018:6	ein_fild06,07	inventory	Greta Holm
-20115	Mine Dust Medicine	Collect	1616:normal:Pitman,1614:normal:Mineral,1615:normal:Obsidian	6244:3,7321:4,7315:4	ein_dun01,02	inventory	Greta Holm
-20122	Outer Garrison	Collect	1163:normal:Raydric,1195:normal:Rideword,1219:normal:Knight of Abyss	7054:8,1097:8,1064:9	gl_knt01,02	inventory	Sir Aldric Unfrocked
-20123	Fallen Choir	Collect	1192:normal:Wraith,1263:normal:Wind Ghost,1198:normal:Dark Priest	1059:9,912:8,7005:6	gl_chyard,gl_church	inventory	Sir Aldric Unfrocked
-20132	Ice Core Samples	Collect	1777:normal:Ice Titan,1776:normal:Siroma,1778:normal:Gazeti	7561:9,7066:2,6253:2	ice_dun02,03	inventory	Acolyte Naima
-20133	Hollow Blessings	Collect	1778:normal:Gazeti,1775:normal:Snowier,1789:normal:Iceicle	6256:3,991:2,6257:3	ice_dun02	inventory	Acolyte Naima
-20142	Lab Infiltration	Collect	1653:normal:Whikebain,1656:normal:Kavac,1682:normal:Removal	7345:4,7347:7,7319:6	lhz_dun01,02	inventory	Doctor Sabine Reuter
-20143	Lower Level Sweep	Collect	1736:normal:Aliot,1735:normal:Alicel,1275:normal:Alice	7507:6,7512:5,7047:5	kh_dun01,02	inventory	Doctor Sabine Reuter
-20153	Gryphon Vigil	Collect	1259:boss:Gryphon,1715:normal:Novus,1368:normal:Geographer	7048:8,7053:3,1033:7	hu_fild02	inventory	Priest Eadric
-20154	Dragon Pack Dispersal	Collect	1714:normal:Ferus,1713:normal:Acidus,1720:normal:Hydro	1036:7,1035:5,7123:5	abyss_01,02,03	inventory	Priest Eadric
-20163	New World Cornus Survey	Collect	1992:normal:Cornus,1994:normal:Luciola Vespa,2015:normal:Dark Pinguicula	6023:10,943:4,7100:6	spl_fild01,bif_fild01	inventory	Envoy Aelith
-20164	Naga Border Patrol	Collect	1993:normal:Naga,1991:boss:Tendrillion,2015:normal:Dark Pinguicula	954:7,7008:6,7188:4	spl_fild01,03	inventory	Envoy Aelith
-20173	Abbey Bell Silencing	Collect	1867:normal:Banshee,1869:normal:Flame Skull,1866:normal:Hell Poodle	7751:6,7005:8,528:8	abbey01	inventory	Father Quill
-20174	Sanctum Sweep	Collect	1864:normal:Zombie Slaughter,1865:normal:Ragged Zombie,1870:normal:Necromancer	7752:9,932:6,7117:3	abbey01,02	inventory	Father Quill
-20183	Volcanic Salamander Hunt	Collect	1831:normal:Salamander,1833:normal:Kasa,1837:normal:Imp	7097:9,7122:4,7098:4	thor_v01,02	inventory	Foreman Dunmar
-20184	Lava Golem Firebreak	Collect	1780:normal:Muscipular,1781:normal:Drosera,1784:normal:Stapo	7565:9,1032:4,7312:3	ve_fild03,07	inventory	Foreman Dunmar
-20192	What the Tower Remembers	Collect	1698:normal:Deathword,1700:normal:Observation,1701:normal:Shelter	1097:8,728:2,722:2	tha_t07,08	inventory	Keeper Lysandra
-20193	Aldebaran Last Letters	Collect	1702:normal:Retribution,1703:normal:Solace,1701:normal:Shelter	723:3,718:3,7440:2	tha_t08,09,11	inventory	Keeper Lysandra
-20202	Underground Prison Cleanup	Collect	1197:normal:Zombie Prisoner,1196:normal:Skeleton Prisoner,1257:normal:Injustice	1099:10,1098:5,7053:5	gl_prison1	inventory	Kronecker G Heine
-20203	Terra Gloria	Collect	1060:normal:Bigfoot,1031:normal:Poporing,1063:normal:Lunatic	948:13,910:4,705:10	prt_maze02,prt_fild08	inventory	Kronecker G Heine
-20212	Sages Legacy	Collect	1737:normal:Aliza,1738:normal:Constant,1735:normal:Alicel	7054:7,7507:4,6214:3	kh_dun01,kh_kiehl01	inventory	Doctor Mira Tressa
-20213	Tartaros Dive	Collect	2223:boss:Celia,2224:boss:Chen,2221:boss:Randal	7345:5,7347:5,6470:2	lhz_dun04	inventory	Doctor Mira Tressa
-20222	The Dead You Failed	Collect	1504:normal:Dullahan,1508:normal:Quve,1505:normal:Loli Ruri	7210:9,7220:5,7214:5	nif_fild01,02	inventory	The Familiar Dead
-20223	Banquet Hall Procession	Collect	1503:normal:Gibbet,1510:normal:Hylozoist,1506:normal:Disguise	7218:10,7217:5,7216:4	nif_fild01,02	inventory	The Familiar Dead
-20232	Beyond the Veil	Collect	1041:normal:Mummy,1029:normal:Isis,1165:normal:Sandman	930:10,936:6,1056:6	moc_pryd04,moc_fild16	inventory	Loki The Voice
+20002	Contract: Cellar Vermin	Collect	1175:normal:Tarou,1161:normal:Plankton,1051:normal:Thief Bug	1016:7,1052:7,955:3	prt_sewb1-3	inventory	Quartermaster Wynne	required	inventory	0
+20003	Field Contract: Rockers and Rumors	Collect	1052:normal:Rocker,1167:normal:Savage Babe,1088:vocal:Vocal	940:10,919:10,752:3	prt_fild07	inventory	Quartermaster Wynne	required	inventory	0
+20008	Mushroom Ring Patrol	Collect	1014:normal:Spore,1024:normal:Wormtail,1080:normal:Green Plant	921:13,906:9,511:10	pay_fild02,06	inventory	Sun-Hwa	required	inventory	0
+20009	Bone Tag Turn-In	Collect	1076:normal:Skeleton,1015:normal:Zombie,1031:normal:Poporing	932:4,957:7,938:5	pay_dun00	inventory	Sun-Hwa	required	inventory	0
+20014	Caravan Water Debt	Collect	1055:normal:Muka,1019:normal:Peco Peco,1047:normal:Peco Peco Egg	952:13,925:13,713:4	moc_fild01,02	inventory	Rashid the Guide	required	inventory	0
+20015	Ant Hell Survey	Collect	1097:normal:Ant Egg,1095:normal:Andre,1121:normal:Giearth	935:3,955:10,1040:6	anthell01	inventory	Rashid the Guide	required	inventory	0
+20016	Sphinx Night Watch	Collect	1178:normal:Zerom,1111:normal:Drainliar,1146:normal:Matyr	1002:3,7006:10,919:9	in_sphinx1,2	inventory	Rashid the Guide	required	inventory	0
+20020	Tower Apprentice Drills	Collect	1077:normal:Poison Spore,1031:normal:Poporing,1035:normal:Hunter Fly	7033:13,938:9,943:9	gef_dun00	inventory	Apprentice Elsbeth	required	inventory	0
+20021	Orc Village Bounty	Collect	1023:normal:Orc Warrior,1273:normal:Orc Lady,1686:normal:Orc Baby	931:13,7053:8,519:8	gef_fild03,10	inventory	Apprentice Elsbeth	required	inventory	0
+20022	Argiope Silk Run	Collect	1099:normal:Argiope,1100:normal:Argos,1118:normal:Flora	1042:9,1025:13,1032:13	mjolnir_11	inventory	Apprentice Elsbeth	required	inventory	0
+20027	Byalan Tide Contract	Collect	1045:normal:Marc,1069:normal:Swordfish,1068:normal:Hydra	956:16,963:16,962:11	iz_dun03	inventory	Captain Mara	required	inventory	0
+20028	Sunken Ship Manifest	Collect	1071:normal:Pirate Skeleton,1070:normal:Kukre,1179:normal:Whisper	932:6,955:9,1059:9	treasure01,02	inventory	Captain Mara	required	inventory	0
+20103	Harpy Weather Log	Collect	1376:normal:Harpy,1372:normal:Goat,1368:normal:Geographer	7115:12,7106:6,1032:7	yuno_fild03,04	inventory	Doctor Ingrid Vahl	required	inventory	0
+20104	Juperos Parts Requisition	Collect	1676:normal:Venatu,1670:normal:Dimik,1685:boss:Vesper	7317:5,7319:5,7095:8	juperos_01,jupe_core	inventory	Doctor Ingrid Vahl	required	inventory	0
+20105	Norgroad Heat Index	Collect	1386:normal:Sleeper,1386:normal:Sleeper,1372:normal:Goat	7124:8,997:5,713:8	yuno_fild03	inventory	Doctor Ingrid Vahl	required	inventory	0
+20113	Factory Whistle Shift	Collect	1616:normal:Pitman,1620:normal:Noxious,1619:normal:Porcellio	7318:6,7001:6,1052:6	ein_dun01	inventory	Greta Holm	required	inventory	0
+20114	Metaling Scrap Drive	Collect	1613:normal:Metaling,1619:normal:Porcellio,1628:normal:Mole	7325:10,7312:6,1018:6	ein_fild06,07	inventory	Greta Holm	required	inventory	0
+20115	Mine Dust Medicine	Collect	1616:normal:Pitman,1614:normal:Mineral,1615:normal:Obsidian	6244:3,7321:4,7315:4	ein_dun01,02	inventory	Greta Holm	required	inventory	0
+20122	Outer Garrison	Collect	1163:normal:Raydric,1195:normal:Rideword,1219:normal:Knight of Abyss	7054:8,1097:8,1064:9	gl_knt01,02	inventory	Sir Aldric Unfrocked	required	inventory	0
+20123	Fallen Choir	Collect	1192:normal:Wraith,1263:normal:Wind Ghost,1198:normal:Dark Priest	1059:9,912:8,7005:6	gl_chyard,gl_church	inventory	Sir Aldric Unfrocked	required	inventory	0
+20132	Ice Core Samples	Collect	1777:normal:Ice Titan,1776:normal:Siroma,1778:normal:Gazeti	7561:9,7066:2,6253:2	ice_dun02,03	inventory	Acolyte Naima	required	inventory	0
+20133	Hollow Blessings	Collect	1778:normal:Gazeti,1775:normal:Snowier,1789:normal:Iceicle	6256:3,991:2,6257:3	ice_dun02	inventory	Acolyte Naima	required	inventory	0
+20142	Lab Infiltration	Collect	1653:normal:Whikebain,1656:normal:Kavac,1682:normal:Removal	7345:4,7347:7,7319:6	lhz_dun01,02	inventory	Doctor Sabine Reuter	required	inventory	0
+20143	Lower Level Sweep	Collect	1736:normal:Aliot,1735:normal:Alicel,1275:normal:Alice	7507:6,7512:5,7047:5	kh_dun01,02	inventory	Doctor Sabine Reuter	required	inventory	0
+20153	Gryphon Vigil	Collect	1259:boss:Gryphon,1715:normal:Novus,1368:normal:Geographer	7048:8,7053:3,1033:7	hu_fild02	inventory	Priest Eadric	required	inventory	0
+20154	Dragon Pack Dispersal	Collect	1714:normal:Ferus,1713:normal:Acidus,1720:normal:Hydro	1036:7,1035:5,7123:5	abyss_01,02,03	inventory	Priest Eadric	required	inventory	0
+20163	New World Cornus Survey	Collect	1992:normal:Cornus,1994:normal:Luciola Vespa,2015:normal:Dark Pinguicula	6023:10,943:4,7100:6	spl_fild01,bif_fild01	inventory	Envoy Aelith	required	inventory	0
+20164	Naga Border Patrol	Collect	1993:normal:Naga,1991:boss:Tendrillion,2015:normal:Dark Pinguicula	954:7,7008:6,7188:4	spl_fild01,03	inventory	Envoy Aelith	required	inventory	0
+20173	Abbey Bell Silencing	Collect	1867:normal:Banshee,1869:normal:Flame Skull,1866:normal:Hell Poodle	7751:6,7005:8,528:8	abbey01	inventory	Father Quill	required	inventory	0
+20174	Sanctum Sweep	Collect	1864:normal:Zombie Slaughter,1865:normal:Ragged Zombie,1870:normal:Necromancer	7752:9,932:6,7117:3	abbey01,02	inventory	Father Quill	required	inventory	0
+20183	Volcanic Salamander Hunt	Collect	1831:normal:Salamander,1833:normal:Kasa,1837:normal:Imp	7097:9,7122:4,7098:4	thor_v01,02	inventory	Foreman Dunmar	required	inventory	0
+20184	Lava Golem Firebreak	Collect	1780:normal:Muscipular,1781:normal:Drosera,1784:normal:Stapo	7565:9,1032:4,7312:3	ve_fild03,07	inventory	Foreman Dunmar	required	inventory	0
+20192	What the Tower Remembers	Collect	1698:normal:Deathword,1700:normal:Observation,1701:normal:Shelter	1097:8,728:2,722:2	tha_t07,08	inventory	Keeper Lysandra	required	inventory	0
+20193	Aldebaran Last Letters	Collect	1702:normal:Retribution,1703:normal:Solace,1701:normal:Shelter	723:3,718:3,7440:2	tha_t08,09,11	inventory	Keeper Lysandra	required	inventory	0
+20202	Underground Prison Cleanup	Collect	1197:normal:Zombie Prisoner,1196:normal:Skeleton Prisoner,1257:normal:Injustice	1099:10,1098:5,7053:5	gl_prison1	inventory	Kronecker G Heine	required	inventory	0
+20203	Terra Gloria	Collect	1060:normal:Bigfoot,1031:normal:Poporing,1063:normal:Lunatic	948:13,910:4,705:10	prt_maze02,prt_fild08	inventory	Kronecker G Heine	required	inventory	0
+20212	Sages Legacy	Collect	1737:normal:Aliza,1738:normal:Constant,1735:normal:Alicel	7054:7,7507:4,6214:3	kh_dun01,kh_kiehl01	inventory	Doctor Mira Tressa	required	inventory	0
+20213	Tartaros Dive	Collect	2223:boss:Celia,2224:boss:Chen,2221:boss:Randal	7345:5,7347:5,6470:2	lhz_dun04	inventory	Doctor Mira Tressa	required	inventory	0
+20222	The Dead You Failed	Collect	1504:normal:Dullahan,1508:normal:Quve,1505:normal:Loli Ruri	7210:9,7220:5,7214:5	nif_fild01,02	inventory	The Familiar Dead	required	inventory	0
+20223	Banquet Hall Procession	Collect	1503:normal:Gibbet,1510:normal:Hylozoist,1506:normal:Disguise	7218:10,7217:5,7216:4	nif_fild01,02	inventory	The Familiar Dead	required	inventory	0
+20232	Beyond the Veil	Collect	1041:normal:Mummy,1029:normal:Isis,1165:normal:Sandman	930:10,936:6,1056:6	moc_pryd04,moc_fild16	inventory	Loki The Voice	required	inventory	0

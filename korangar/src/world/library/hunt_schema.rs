@@ -18,6 +18,34 @@ pub enum ObjectiveType {
     DmEncounter,
 }
 
+impl ObjectiveType {
+    /// Stable compact marker used by journal/HUD renderers. These are text
+    /// icons rather than localized prose so every presentation surface keeps
+    /// the same typed visual vocabulary without duplicating the mapping.
+    pub const fn icon(self) -> &'static str {
+        match self {
+            Self::Talk => "[TALK]",
+            Self::Kill => "[KILL]",
+            Self::Collect => "[GET]",
+            Self::Explore => "[EXPLORE]",
+            Self::Interact => "[USE]",
+            Self::DmEncounter => "[DM]",
+        }
+    }
+
+    /// Human-readable action verb paired with [`Self::icon`].
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::Talk => "Talk",
+            Self::Kill => "Defeat",
+            Self::Collect => "Collect",
+            Self::Explore => "Explore",
+            Self::Interact => "Interact",
+            Self::DmEncounter => "Encounter",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MonsterSource {
     pub monster_id: u32,
@@ -35,6 +63,9 @@ pub struct HuntObjective {
     pub maps: Vec<String>,
     pub party_share: String,
     pub turn_in: String,
+    pub required: bool,
+    pub completion: String,
+    pub dm_triggered: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -108,6 +139,17 @@ pub fn parse_objectives(source: &str) -> Result<HashMap<u32, HuntObjective>, Str
             .collect();
         let party_share = fields.next().unwrap_or("inventory").to_owned();
         let turn_in = fields.next().unwrap_or("").to_owned();
+        let required = match fields.next().unwrap_or("required") {
+            "required" => true,
+            "optional" => false,
+            other => return Err(format!("quest {quest_id} unknown requirement state {other}")),
+        };
+        let completion = fields.next().unwrap_or("server").to_owned();
+        let dm_triggered = match fields.next().unwrap_or("0") {
+            "0" => false,
+            "1" => true,
+            other => return Err(format!("quest {quest_id} bad DM trigger state {other}")),
+        };
         if turn_in.is_empty() {
             return Err(format!("quest {quest_id} missing turn-in"));
         }
@@ -120,6 +162,9 @@ pub fn parse_objectives(source: &str) -> Result<HashMap<u32, HuntObjective>, Str
             maps,
             party_share,
             turn_in,
+            required,
+            completion,
+            dm_triggered,
         });
     }
     Ok(out)
@@ -186,6 +231,8 @@ pub struct StoryStep {
     pub remaining: String,
     pub next: String,
     pub revealed: bool,
+    /// Server-side party flag or flag condition that authorizes reveal.
+    pub reveal_condition: String,
 }
 
 pub fn parse_story_steps(source: &str) -> Result<Vec<StoryStep>, String> {
@@ -202,7 +249,8 @@ pub fn parse_story_steps(source: &str) -> Result<Vec<StoryStep>, String> {
         let remaining = f.next().unwrap_or("").to_owned();
         let next = f.next().unwrap_or("").to_owned();
         let revealed = f.next().unwrap_or("hidden") == "revealed";
-        if id.is_empty() || speaker.is_empty() {
+        let reveal_condition = f.next().unwrap_or("always").to_owned();
+        if id.is_empty() || speaker.is_empty() || reveal_condition.is_empty() {
             return Err("incomplete story step".into());
         }
         out.push(StoryStep {
@@ -212,20 +260,43 @@ pub fn parse_story_steps(source: &str) -> Result<Vec<StoryStep>, String> {
             remaining,
             next,
             revealed,
+            reveal_condition,
         });
     }
     Ok(out)
 }
 
 pub fn visible_story_steps(steps: &[StoryStep]) -> Vec<&StoryStep> {
-    steps.iter().filter(|s| s.revealed).collect()
+    visible_story_steps_for_flags(steps, &[])
 }
 
-pub const OMENS_STEPS: &str = "\
-fountain	Fountain keeper	The water is still	Ask who last drank	south gate	revealed
-south	Guard	A traveler went west	Follow the west road	west field	hidden
-west	Scout	Tracks lead to Prontera field	Return with the rumor	wynne	hidden
-";
+/// Return story beats whose static or server-authorized reveal condition is
+/// satisfied. `flags` must come from an authoritative campaign sync; this
+/// function deliberately has no client-side inference or chat parsing path.
+pub fn visible_story_steps_for_flags<'a>(steps: &'a [StoryStep], flags: &[(&str, u32)]) -> Vec<&'a StoryStep> {
+    steps
+        .iter()
+        .filter(|step| step.revealed || reveal_condition_met(&step.reveal_condition, flags))
+        .collect()
+}
+
+fn reveal_condition_met(condition: &str, flags: &[(&str, u32)]) -> bool {
+    if condition == "always" {
+        return true;
+    }
+
+    let (name, required_mask) = condition
+        .split_once(':')
+        .map_or((condition, 1), |(name, mask)| (name, mask.parse::<u32>().unwrap_or(0)));
+    required_mask != 0
+        && flags
+            .iter()
+            .any(|(flag, value)| *flag == name && (*value & required_mask) == required_mask)
+}
+
+/// Server-derived Arc 1 story beats. Hidden rows remain in the pack so the
+/// client can reveal them when authoritative campaign state advances.
+pub const OMENS_STEPS: &str = include_str!("hunt_story.tsv");
 
 #[cfg(test)]
 mod tests {
@@ -241,6 +312,9 @@ mod tests {
         assert!(hunt.turn_in.contains("Wynne"), "{}", hunt.turn_in);
         assert!(hunt.sources.iter().any(|s| s.rank == "vocal"));
         assert_eq!(hunt.item_counts, vec![(940, 10), (919, 10), (752, 3)]);
+        assert!(hunt.required);
+        assert_eq!(hunt.completion, "inventory");
+        assert!(!hunt.dm_triggered);
         let guide = guidance.get(&20003).unwrap();
         assert!(guide.npc.contains("Wynne"), "{}", guide.npc);
         assert!(!guide.steps.is_empty());
@@ -259,11 +333,49 @@ mod tests {
         let steps = parse_story_steps(OMENS_STEPS).unwrap();
         let visible = visible_story_steps(&steps);
         assert_eq!(visible.len(), 1);
-        assert_eq!(visible[0].speaker, "Fountain keeper");
+        assert_eq!(visible[0].speaker, "Quartermaster Wynne");
         assert!(visible.iter().all(|s| s.revealed));
-        assert!(!visible.iter().any(|s| s.id == "south" || s.id == "west"));
-        assert!(visible[0].remaining.contains("Ask who last drank"));
-        assert_eq!(visible[0].next, "south gate");
+        assert_eq!(visible.len(), 1);
+        assert!(steps.iter().any(|s| s.id == "holt" && !s.revealed));
+        assert!(visible[0].remaining.contains("Ask Tibbets"));
+        assert_eq!(visible[0].next, "tibbets|mother|sluice");
+        assert_eq!(
+            steps.iter().find(|s| s.id == "drain").unwrap().reveal_condition,
+            "dm_arc01_chamber_drained"
+        );
+        assert!(steps.iter().filter(|s| !s.revealed).all(|s| !s.reveal_condition.is_empty()));
+    }
+
+    #[test]
+    fn omens_reveals_only_authorized_server_flags() {
+        let steps = parse_story_steps(OMENS_STEPS).unwrap();
+        let visible = visible_story_steps_for_flags(&steps, &[("dm_arc01_child_found", 1)]);
+        assert!(visible.iter().any(|step| step.id == "mother"));
+        assert!(visible.iter().any(|step| step.id == "mira"));
+        assert!(!visible.iter().any(|step| step.id == "sluice"));
+        assert!(!visible.iter().any(|step| step.id == "holt"));
+
+        let visible = visible_story_steps_for_flags(&steps, &[("dm_arc01_clue_mask", 5)]);
+        assert!(visible.iter().any(|step| step.id == "sluice"));
+        assert!(visible.iter().any(|step| step.id == "tibbets"));
+        assert!(!visible.iter().any(|step| step.id == "drain"));
+    }
+
+    #[test]
+    fn reveal_conditions_require_the_complete_mask() {
+        let mut step = StoryStep {
+            id: "step".to_owned(),
+            speaker: "Speaker".to_owned(),
+            clue: "Clue".to_owned(),
+            remaining: "Do it".to_owned(),
+            next: "next".to_owned(),
+            revealed: false,
+            reveal_condition: "clues:4".to_owned(),
+        };
+        assert_eq!(visible_story_steps_for_flags(&[step.clone()], &[("clues", 4)]).len(), 1);
+        assert!(visible_story_steps_for_flags(&[step.clone()], &[("clues", 2)]).is_empty());
+        step.reveal_condition = "clues:3".to_owned();
+        assert!(visible_story_steps_for_flags(&[step], &[("clues", 1)]).is_empty());
     }
 
     #[test]
@@ -281,5 +393,30 @@ mod tests {
         assert_eq!(parsed[&6].objective_type, ObjectiveType::DmEncounter);
         assert_eq!(parsed[&2].party_share, "party");
         assert_eq!(parsed[&3].party_share, "inventory");
+    }
+
+    #[test]
+    fn optional_and_dm_objective_state_is_typed() {
+        let pack = "# schema=1\n7\tOptional scene\tDM\t1:normal:Por ing\t940:1\tprontera\tparty\tWynne\toptional\tdm\t1\n";
+        let parsed = parse_objectives(pack).unwrap();
+        assert!(!parsed[&7].required);
+        assert_eq!(parsed[&7].completion, "dm");
+        assert!(parsed[&7].dm_triggered);
+    }
+
+    #[test]
+    fn objective_types_have_stable_icons_and_labels() {
+        let cases = [
+            (ObjectiveType::Talk, "[TALK]", "Talk"),
+            (ObjectiveType::Kill, "[KILL]", "Defeat"),
+            (ObjectiveType::Collect, "[GET]", "Collect"),
+            (ObjectiveType::Explore, "[EXPLORE]", "Explore"),
+            (ObjectiveType::Interact, "[USE]", "Interact"),
+            (ObjectiveType::DmEncounter, "[DM]", "Encounter"),
+        ];
+        for (kind, icon, label) in cases {
+            assert_eq!(kind.icon(), icon);
+            assert_eq!(kind.label(), label);
+        }
     }
 }

@@ -1,5 +1,7 @@
 //! Party campaign checkpoint: forward-only, per-character carried items.
 
+#![allow(dead_code)]
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Checkpoint {
     pub step: u32,

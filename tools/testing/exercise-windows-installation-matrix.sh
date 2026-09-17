@@ -31,7 +31,16 @@ VERIFY_PS1="$REPO_ROOT/tools/packaging/windows/Verify.ps1"
 REPAIR_PS1="$REPO_ROOT/tools/packaging/windows/Repair.ps1"
 
 calc_sha256() {
-    shasum -a 256 "$1" | awk '{print toupper($1)}'
+    if command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$1" | awk '{print toupper($1)}'
+    elif command -v pwsh >/dev/null 2>&1; then
+        pwsh -NoProfile -Command \
+            '$hash = Get-FileHash -LiteralPath $args[0] -Algorithm SHA256; $hash.Hash' \
+            -- "$1" | tr '[:lower:]' '[:upper:]'
+    else
+        echo "ERROR: neither shasum nor PowerShell Get-FileHash is available." >&2
+        exit 1
+    fi
 }
 
 record_dir_hashes() {
@@ -44,14 +53,22 @@ record_dir_hashes() {
 
 echo "=== Exercising Windows Installation Matrix (QW-014) ==="
 echo "Working directory: $TMP_ROOT"
-echo "PowerShell: $("$PWSH" --version)"
+PS_VERSION=$("$PWSH" --version)
+if command -v uname >/dev/null 2>&1; then
+    OS_LABEL="$(uname -s) $(uname -m)"
+else
+    OS_LABEL="unknown OS"
+fi
+RUN_DATE_UTC=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+echo "Environment: $OS_LABEL"
+echo "PowerShell: $PS_VERSION"
 echo "Report file: $REPORT_OUT"
 
-cat <<'RPT' > "$REPORT_OUT"
+cat <<RPT > "$REPORT_OUT"
 # Windows Installation Matrix Test Report (QW-014)
 
-**Environment:** macOS arm64 running PowerShell Core 7.6.4 (Windows PowerShell 5.1 target scripts)
-**Date:** 2026-09-13
+**Environment:** $OS_LABEL running $PS_VERSION (Windows PowerShell 5.1 target scripts)
+**UTC date:** $RUN_DATE_UTC
 
 | Case | Scenario | Expected Behavior | Observed Result | Large Assets Untouched? |
 |---|---|---|---|---|

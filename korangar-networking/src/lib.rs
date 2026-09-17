@@ -1160,6 +1160,20 @@ where
         }
     }
 
+    /// Move an inventory item into the equipped cart.
+    pub fn move_item_to_cart(&mut self, inventory_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(MoveItemToCartPacket { inventory_index, amount }),
+        }
+    }
+
+    /// Move a cart item back into inventory.
+    pub fn move_item_from_cart(&mut self, cart_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(MoveItemFromCartPacket { cart_index, amount }),
+        }
+    }
+
     pub fn cast_skill(&mut self, skill_id: SkillId, skill_level: SkillLevel, entity_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(UseSkillAtIdPacket::new(skill_level, skill_id, entity_id)),

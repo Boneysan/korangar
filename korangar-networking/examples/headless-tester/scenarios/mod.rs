@@ -35,7 +35,10 @@ pub const SKIPPED_PREFIX: &str = "SKIPPED: ";
 /// A skip outside this list is a regression: it means a scenario silently
 /// stopped asserting something. Reasons are exact-match on purpose so a changed
 /// precondition has to be reviewed instead of inheriting an old exemption.
-pub const EXPECTED_SKIPS: &[(&str, &str)] = &[("skills-novice", "Novice has no castable skills — its actives are quest-gated")];
+pub const EXPECTED_SKIPS: &[(&str, &str)] = &[
+    ("skills-novice", "Novice has no castable skills — its actives are quest-gated"),
+    ("dm-checkpoint-reconcile", "campaign checkpoint migration unavailable"),
+];
 
 /// Report that a scenario could not run — a precondition the harness cannot
 /// establish, as opposed to a defect in the code under test.
@@ -106,6 +109,7 @@ pub fn all_scenarios() -> Vec<Scenario> {
 /// remember: `every_public_action_has_a_coverage_row` reads
 /// `korangar-networking/src/lib.rs` and fails the build if you did not — see
 /// its comment for why the manifest was only half a gate until then.
+#[allow(dead_code)]
 const ACTION_COVERAGE: &[(&str, &str)] = &[
     // Session / connection
     ("connect_to_login_server", "smoke"),

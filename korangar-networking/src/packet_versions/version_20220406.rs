@@ -6,11 +6,11 @@ use std::time::{Duration, Instant};
 use ragnarok_packets::handler::{DuplicateHandlerError, PacketCallback, PacketHandler};
 use ragnarok_packets::*;
 
-use crate::event::{NetworkEventList, NoNetworkEvents};
+use crate::event::{NetworkEvent, NetworkEventList, NoNetworkEvents, QuestObjectiveProgress};
 use crate::items::{IT_AMMO, ItemQuantity};
 use crate::{
-    CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NetworkEvent,
-    NoMetadata, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
+    CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NoMetadata, ShopItem,
+    UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
 type PendingInventoryItems = Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>>;
@@ -842,9 +842,49 @@ where
         quest_id: packet.quest_id,
         active: packet.active != 0,
     })?;
-    packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
-    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
-    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
+    packet_handler.register(|packet: HuntingQuestNotificationPacket| NetworkEvent::QuestObjectiveProgress {
+        objectives: packet
+            .objective_details
+            .into_iter()
+            .map(|objective| QuestObjectiveProgress {
+                quest_id: objective.quest_id,
+                objective_id: objective.mob_id,
+                mob_id: objective.mob_id,
+                current_count: objective.current_count,
+                total_count: objective.total_count,
+            })
+            .collect(),
+    })?;
+    packet_handler.register(
+        |packet: HuntingQuestUpdateObjectivePacket| NetworkEvent::QuestObjectiveProgress {
+            objectives: packet
+                .objective_details
+                .into_iter()
+                .map(|objective| QuestObjectiveProgress {
+                    quest_id: objective.quest_id,
+                    objective_id: objective.mob_id,
+                    mob_id: objective.mob_id,
+                    current_count: objective.current_count,
+                    total_count: objective.total_count,
+                })
+                .collect(),
+        },
+    )?;
+    packet_handler.register(
+        |packet: HuntingQuestUpdateObjectivePacket4| NetworkEvent::QuestObjectiveProgress {
+            objectives: packet
+                .objective_details
+                .into_iter()
+                .map(|objective| QuestObjectiveProgress {
+                    quest_id: objective.quest_id,
+                    objective_id: objective.hunt_identification,
+                    mob_id: 0,
+                    current_count: objective.current_count,
+                    total_count: objective.total_count,
+                })
+                .collect(),
+        },
+    )?;
     packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved { quest_id: packet.quest_id })?;
     packet_handler.register(|packet: QuestListPacket| NetworkEvent::QuestList {
         quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
@@ -1909,6 +1949,20 @@ where
         amount: packet.amount,
     })?;
     packet_handler.register(|_: StorageClosedPacket| NetworkEvent::StorageClosed)?;
+    packet_handler.register(|packet: CartItemAddResultPacket| NetworkEvent::CartItemAddResult { result: packet.result })?;
+    packet_handler.register(|packet: CartInfoPacket| NetworkEvent::UpdateStat {
+        stat_type: StatType::CartInfo(packet.count, packet.weight, packet.max_weight),
+    })?;
+    packet_handler.register(|packet: CartItemAddedPacket| NetworkEvent::CartItemAdded {
+        index: packet.index,
+        item_id: packet.item_id,
+        amount: packet.amount,
+    })?;
+    packet_handler.register(|packet: CartItemRemovedPacket| NetworkEvent::CartItemRemoved {
+        index: packet.index,
+        amount: packet.amount,
+    })?;
+    packet_handler.register_noop::<CartClosedPacket>()?;
 
     // Consume any remaining server packet whose length is known (from Hercules'
     // own tables) but that has no dedicated handler yet, instead of desyncing

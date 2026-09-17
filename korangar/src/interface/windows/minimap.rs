@@ -150,6 +150,44 @@ impl Element<ClientState> for MinimapView {
                 });
             }
 
+            // Persistent tracked-objective marker. Server compass marks are
+            // independent and may expire; campaign guidance remains until its
+            // objective is complete, hidden, or the player changes maps.
+            let breadcrumb_path = client_state().breadcrumb();
+            let breadcrumb = state.get(&breadcrumb_path);
+            if let Some((x, y)) = breadcrumb.target(current_map) {
+                extra_blips.push(MinimapBlip {
+                    x: x as f32,
+                    y: y as f32,
+                    red: 255,
+                    green: 210,
+                    blue: 80,
+                    alpha: 255,
+                    size_scale: 1.25,
+                    name: breadcrumb.destination.clone(),
+                });
+            }
+
+            // Cross-map route guidance points at the portal source on the
+            // current map; the breadcrumb remains the final objective marker.
+            let navigation_path = client_state().navigation();
+            let navigation = state.get(&navigation_path);
+            if navigation.available
+                && navigation.route_maps.first().is_some_and(|map| map == current_map)
+                && let (Some(x), Some(y)) = (navigation.next_portal_x, navigation.next_portal_y)
+            {
+                extra_blips.push(MinimapBlip {
+                    x: x as f32,
+                    y: y as f32,
+                    red: 100,
+                    green: 235,
+                    blue: 220,
+                    alpha: 255,
+                    size_scale: 1.1,
+                    name: format!("Portal to {}", navigation.next_map),
+                });
+            }
+
             MinimapViewLayout {
                 area,
                 player_tile,

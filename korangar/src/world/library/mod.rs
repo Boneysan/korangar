@@ -38,8 +38,8 @@ pub use self::equip_presentation::UnusablePresentation;
 pub use self::equipment_eligibility::{ELIGIBILITY_SCHEMA, EligibilityRow, EligibilityTable, EquipDenial, Sex, Wearer, bundled_table};
 #[allow(unused_imports)]
 pub use self::hunt_schema::{
-    BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, bundled_guidance, bundled_objectives, parse_guidance,
-    parse_objectives,
+    BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, OMENS_STEPS, ObjectiveType, StoryStep, bundled_guidance,
+    bundled_objectives, parse_guidance, parse_objectives, parse_story_steps, visible_story_steps, visible_story_steps_for_flags,
 };
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
@@ -55,6 +55,8 @@ pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
 pub(crate) use self::skill_information::skill_asset_file_names;
 pub use self::skill_tree::SkillTreeLayout;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
+#[allow(unused_imports)]
+pub use self::warp_graph::{NavigationRoute, RouteLeg, WarpGraph};
 use crate::loaders::GameFileLoader;
 pub use crate::world::library::skill_information::SkillListInformation;
 pub use crate::world::library::skill_requirements::{SkillListKey, SkillListRequirements};
@@ -73,6 +75,8 @@ pub struct Library {
     campaign_quest_table: CampaignQuestTable,
     chest_table: ChestTable,
     msgstringtable: MsgStringTable,
+    #[allow(dead_code)]
+    warp_graph: WarpGraph,
 }
 
 impl Library {
@@ -90,6 +94,7 @@ impl Library {
         let campaign_quest_table = CampaignQuestTable::load();
         let chest_table = ChestTable::load();
         let msgstringtable = MsgStringTable::load(game_file_loader);
+        let warp_graph = WarpGraph::load().map_err(mlua::Error::external)?;
 
         Ok(Self {
             accessory_name_table,
@@ -105,6 +110,7 @@ impl Library {
             campaign_quest_table,
             chest_table,
             msgstringtable,
+            warp_graph,
         })
     }
 
@@ -124,6 +130,7 @@ impl Library {
             campaign_quest_table: CampaignQuestTable::load(),
             chest_table: ChestTable::load(),
             msgstringtable: MsgStringTable::default(),
+            warp_graph: WarpGraph::load().expect("bundled warp graph is valid"),
         }
     }
 
@@ -166,6 +173,25 @@ impl Library {
 
     pub fn quest_location(&self, quest_id: u32) -> Option<&QuestLocation> {
         self.campaign_quest_table.location(quest_id)
+    }
+
+    #[allow(dead_code)]
+    pub fn warp_graph(&self) -> &WarpGraph {
+        &self.warp_graph
+    }
+
+    #[allow(dead_code)]
+    pub fn route_to_objective(
+        &self,
+        start_map: &str,
+        start_x: u16,
+        start_y: u16,
+        goal_map: &str,
+        goal_x: u16,
+        goal_y: u16,
+    ) -> Option<NavigationRoute> {
+        self.warp_graph
+            .route_to_objective(start_map, start_x, start_y, goal_map, goal_x, goal_y)
     }
 
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.

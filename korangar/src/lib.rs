@@ -45,6 +45,7 @@ pub mod playtest_audit;
 mod dm;
 mod graphics;
 use crate::dm::DmCampaignStatePathExt;
+use crate::dm::parser::parse_dmj;
 mod input;
 mod state;
 #[macro_use]
@@ -98,8 +99,8 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AccountId, AttackRange, BuyShopItemsResult, CharacterId, CharacterServerInformation, ClientTick, Direction, DisappearanceReason,
-    EntityId, ExperienceType, HotbarSlot, HotkeyType, ItemId, JobId, PartyId, SellItemsResult, SkillId, SkillLevel, SkillType,
-    SpriteChangeType, TilePosition, UnitId, WorldPosition,
+    EntityId, ExperienceType, HotbarSlot, HotkeyType, ItemId, JobId, PartyId, QuestColor, QuestEffect, QuestEffectPacket, SellItemsResult,
+    SkillId, SkillLevel, SkillType, SpriteChangeType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -597,6 +598,16 @@ fn direction_from_ground_vector(east: f32, north: f32) -> Direction {
         (-1, 0) => Direction::West,
         (-1, 1) => Direction::NorthWest,
         _ => Direction::North,
+    }
+}
+
+/// Opt-in evidence for the manual QW-046 multi-pile click/cancellation pass.
+/// Normal clients pay no logging or state cost; set
+/// `KORANGAR_AREA_LOOT_TRACE=1` to record queue candidates, accepted ids, and
+/// every cancellation reason.
+fn trace_area_loot_cancel(reason: AreaLootCancel) {
+    if std::env::var_os("KORANGAR_AREA_LOOT_TRACE").is_some() {
+        eprintln!("[area-loot] cancel reason={reason:?}");
     }
 }
 
@@ -4476,6 +4487,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
                     self.client_state.follow_mut(client_state().combat_log()).clear();
+                    trace_area_loot_cancel(AreaLootCancel::MapChange);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::MapChange);
@@ -4554,6 +4566,7 @@ impl Client {
                         .is_some_and(|player| player.get_entity_id() == entity_id)
                     {
                         self.interface.close_window_with_class(WindowClass::Respawn);
+                        self.recompute_navigation("respawn");
                     }
                 }
                 NetworkEvent::PlayerSitDown { entity_id } => {
@@ -4765,6 +4778,7 @@ impl Client {
                         client_state().breadcrumb(),
                         client_state().quest_log(),
                         client_state().inventory(),
+                        client_state().navigation(),
                     ));
                     // Minimap is filled when the map resource finishes loading; open a placeholder
                     // only if the player wants it visible (Game Settings / Map button / Alt+M).
@@ -5075,6 +5089,9 @@ impl Client {
                             entity.set_position(map, position, client_tick);
                         }
                     }
+                    if is_player {
+                        self.recompute_navigation("authoritative position");
+                    }
                 }
                 NetworkEvent::PlayerMove {
                     origin,
@@ -5097,8 +5114,11 @@ impl Client {
                         #[cfg(feature = "debug")]
                         player.generate_pathing_mesh(&self.device, &self.queue, self.graphics_engine.bindless_support(), map);
                     }
+                    self.recompute_navigation("authoritative position");
                 }
                 NetworkEvent::ChangeMap { map_name, position } => {
+                    self.update_quest_auto_tracking();
+                    trace_area_loot_cancel(AreaLootCancel::MapChange);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::MapChange);
@@ -5128,6 +5148,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().entities()).truncate(1);
                     self.client_state.follow_mut(client_state().dead_entities()).clear();
                     self.client_state.follow_mut(client_state().ground_items()).clear();
+                    trace_area_loot_cancel(AreaLootCancel::MapChange);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::MapChange);
@@ -5159,6 +5180,34 @@ impl Client {
                     self.game_timer.set_client_tick(client_tick, received_at);
                 }
                 NetworkEvent::ChatMessage { text, color } => {
+                    // DMJ is a server-coloured, versioned structured echo. It
+                    // is the only chat path allowed to update campaign state;
+                    // ordinary chat and malformed/future messages stay text.
+                    if matches!(color, MessageColor::Server)
+                        && let Some(message) = parse_dmj(&text)
+                    {
+                        let trace = std::env::var_os("KORANGAR_DMJ_TRACE").is_some();
+                        let message_debug = trace.then(|| format!("{message:?}"));
+                        let accepted = self
+                            .client_state
+                            .follow_mut(client_state().dm_campaign())
+                            .apply_authoritative(message);
+                        if let Some(message_debug) = message_debug {
+                            let state = self.client_state.follow(client_state().dm_campaign());
+                            eprintln!(
+                                "[dmj] accepted={accepted} message={message_debug} seq={} checkpoint=({}, {}, carrier={:?}) flags={} \
+                                 objectives={} reconciliation={}",
+                                state.last_sequence,
+                                state.checkpoint_arc,
+                                state.checkpoint_step,
+                                state.checkpoint_carrier,
+                                state.flags.len(),
+                                state.objectives.len(),
+                                state.reconciliation.is_some(),
+                            );
+                        }
+                        continue;
+                    }
                     // The server owns automatic pickup, so the settings toggle
                     // has to be told rather than assumed: `@autopickup` always
                     // answers with a line opening `Automatic pickup: `, giving
@@ -5753,8 +5802,21 @@ impl Client {
                                 .record(entry, &self.library, &filters);
                         }
                     }
+                    let exp_stat = matches!(
+                        &stat_type,
+                        ragnarok_packets::StatType::BaseExperience(_)
+                            | ragnarok_packets::StatType::JobExperience(_)
+                            | ragnarok_packets::StatType::NextBaseExperience(_)
+                            | ragnarok_packets::StatType::NextJobExperience(_)
+                    );
                     if let Some(player) = self.client_state.try_follow_mut(this_player()) {
                         player.update_stat(stat_type);
+                        if exp_stat && std::env::var_os("KORANGAR_EXP_TRACE").is_some() {
+                            eprintln!(
+                                "[experience] hud base={}/{} job={}/{}",
+                                player.base_experience, player.next_base_experience, player.job_experience, player.next_job_experience
+                            );
+                        }
                     }
                 }
                 NetworkEvent::CriticalWeightPercent { percent } => {
@@ -5857,10 +5919,33 @@ impl Client {
                     }
                     self.update_quest_auto_tracking();
                 }
+                NetworkEvent::QuestObjectiveProgress { objectives } => {
+                    for objective in objectives {
+                        if objective.quest_id == 0 {
+                            continue;
+                        }
+                        if let Some(quest) = self
+                            .client_state
+                            .follow_mut(client_state().quest_log())
+                            .quests_mut()
+                            .iter_mut()
+                            .find(|quest| quest.quest_id == objective.quest_id)
+                        {
+                            quest.update_kill_objective(
+                                objective.objective_id,
+                                objective.mob_id,
+                                objective.current_count,
+                                objective.total_count,
+                            );
+                        }
+                    }
+                    self.update_quest_auto_tracking();
+                }
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
                         .follow_mut(client_state().inventory())
                         .fill(&self.async_loader, items);
+                    self.update_quest_auto_tracking();
 
                     let inventory = self.client_state.follow(client_state().inventory());
                     let weapon = inventory.equipped_weapon_look();
@@ -5909,6 +5994,11 @@ impl Client {
                 NetworkEvent::StorageClosed => {
                     self.client_state.follow_mut(client_state().storage()).close();
                     self.interface.close_window_with_class(WindowClass::Storage);
+                }
+                NetworkEvent::CartItemAddResult { .. } | NetworkEvent::CartItemAdded { .. } | NetworkEvent::CartItemRemoved { .. } => {
+                    // The current client has no cart window/state model, but
+                    // decoding these packets keeps the stream synchronized and
+                    // makes the events available to a future cart UI.
                 }
                 NetworkEvent::ItemIdentifyList { indices } => {
                     self.client_state.follow_mut(client_state().identify_state()).set_list(indices);
@@ -6100,6 +6190,7 @@ impl Client {
                                 .follow_mut(client_state().inventory())
                                 .remove_item(index, amount.min(u32::from(u16::MAX)) as u16);
                         }
+                        self.update_quest_auto_tracking();
                     }
                     self.client_state.follow_mut(client_state().trade_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Trade);
@@ -6116,6 +6207,7 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().inventory())
                         .add_item(&self.async_loader, item);
+                    self.update_quest_auto_tracking();
 
                     // TODO: Update the selling items. If you pick up an item
                     // that you already have the sell window
@@ -6147,6 +6239,7 @@ impl Client {
                 }
                 NetworkEvent::InventoryItemRemoved { index, amount, .. } => {
                     self.client_state.follow_mut(client_state().inventory()).remove_item(index, amount);
+                    self.update_quest_auto_tracking();
                 }
                 NetworkEvent::SkillTree { skill_information } => {
                     *self.client_state.follow_mut(client_state().skill_tree().skills()) =
@@ -6416,11 +6509,11 @@ impl Client {
                     }
                 }
                 NetworkEvent::EntityStopMove { entity_id, position } => {
-                    if self
+                    let is_player = self
                         .client_state
                         .try_follow(this_entity())
-                        .is_some_and(|player| player.get_entity_id() == entity_id)
-                    {
+                        .is_some_and(|player| player.get_entity_id() == entity_id);
+                    if is_player {
                         self.invalidate_keyboard_move(WasdInvalidator::ServerStop, Some(position));
                     }
                     // Snapping to the reported tile also clears `active_movement`,
@@ -6434,6 +6527,9 @@ impl Client {
                             .find(|entity| entity.get_entity_id() == entity_id)
                     {
                         entity.set_position(map, position, client_tick);
+                    }
+                    if is_player {
+                        self.recompute_navigation("authoritative position");
                     }
                 }
                 NetworkEvent::LoggedOut => {
@@ -6762,12 +6858,16 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .set_roster(party_name, members, |job_id| JobName::get(library, job_id).to_string());
+                    self.update_quest_auto_tracking();
+                    self.recompute_navigation("party update");
                 }
                 NetworkEvent::PartyMemberAdded { member } => {
                     let class_name = JobName::get(&self.library, member.job_id).to_string();
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .add_or_update_member(member, class_name);
+                    self.update_quest_auto_tracking();
+                    self.recompute_navigation("party update");
                 }
                 NetworkEvent::PartyMemberPosition { account_id, position } => {
                     self.client_state
@@ -6808,10 +6908,12 @@ impl Client {
                     result,
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
+                    self.update_quest_auto_tracking();
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                         format!("{character_name} left the party ({result})."),
                         MessageColor::Information,
                     ));
+                    self.recompute_navigation("party update");
                 }
                 NetworkEvent::PartyChatMessage { text, .. } => {
                     self.client_state
@@ -6847,6 +6949,17 @@ impl Client {
                     experience_source,
                     ..
                 } => {
+                    if std::env::var_os("KORANGAR_EXP_TRACE").is_some() {
+                        let kind = match experience_type {
+                            ExperienceType::BaseExperience => "Base",
+                            ExperienceType::JobExperience => "Job",
+                        };
+                        let quest = experience_source == ragnarok_packets::ExperienceSource::Quest;
+                        eprintln!(
+                            "[experience] award amount={amount} kind={kind} source={experience_source:?} quest={quest} toast={:?}",
+                            crate::interface::windows::hud::format_exp_gain_toast(amount, kind, quest)
+                        );
+                    }
                     let entry = crate::state::combat_chat::CombatEntry::from_exp(amount, experience_type, client_tick);
                     let filters = *self.client_state.follow(client_state().game_settings().combat_filters());
                     self.client_state
@@ -7802,6 +7915,7 @@ impl Client {
             }
             match event {
                 InputEvent::DropItem { inventory_index, amount } => {
+                    trace_area_loot_cancel(AreaLootCancel::PlayerDrop);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::PlayerDrop);
@@ -8486,6 +8600,7 @@ impl Client {
                     let _ = self.networking_system.switch_character_slot(origin_slot, destination_slot);
                 }
                 InputEvent::PlayerMove { destination } => {
+                    trace_area_loot_cancel(AreaLootCancel::ManualAction);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::ManualAction);
@@ -8575,6 +8690,7 @@ impl Client {
                                 self.networking_system.start_dialog(entity_id)
                             }
                             EntityType::Monster => {
+                                trace_area_loot_cancel(AreaLootCancel::Combat);
                                 self.client_state
                                     .follow_mut(client_state().area_loot())
                                     .cancel(AreaLootCancel::Combat);
@@ -8637,6 +8753,23 @@ impl Client {
                                 .max(player_position.y.abs_diff(item_position.y))
                                 <= crate::state::area_loot::AREA_LOOT_RANGE
                             {
+                                // Keep the queue an honest client-side
+                                // filter: the server still decides whether a
+                                // pickup succeeds, but we should not ask it
+                                // to walk through blocked cells or queue piles
+                                // that cannot fit the local inventory state.
+                                let (remaining_weight, inventory_slots_free) = self
+                                    .client_state
+                                    .try_follow(this_entity())
+                                    .map(|entity| match entity {
+                                        Entity::Player(player) => (
+                                            player.maximum_weight.saturating_sub(player.weight),
+                                            100u32
+                                                .saturating_sub(self.client_state.follow(client_state().inventory()).items().len() as u32),
+                                        ),
+                                        Entity::Npc(_) => (u32::MAX, 100),
+                                    })
+                                    .unwrap_or((u32::MAX, 100));
                                 let candidates: Vec<crate::state::area_loot::FloorLootCandidate> = self
                                     .client_state
                                     .follow(client_state().ground_items())
@@ -8646,14 +8779,41 @@ impl Client {
                                         tile: item.tile_position,
                                         can_loot: true,
                                         present: true,
-                                        weight: 0,
+                                        weight: crate::world::item_stats(item.item_id.0)
+                                            .map(|stats| stats.weight.saturating_mul(u32::from(item.quantity)))
+                                            .unwrap_or(0),
                                     })
                                     .collect();
                                 let first = {
                                     let queue = self.client_state.follow_mut(client_state().area_loot());
-                                    match queue.start_from_click(player_position, entity_id, &candidates, |_| true, 20, u32::MAX) {
-                                        Ok(queued) => queued.first().copied().unwrap_or(entity_id),
-                                        Err(_) => entity_id,
+                                    match queue.start_from_click(
+                                        player_position,
+                                        entity_id,
+                                        &candidates,
+                                        |tile| map.is_walkable(tile),
+                                        inventory_slots_free,
+                                        remaining_weight,
+                                    ) {
+                                        Ok(queued) => {
+                                            if std::env::var_os("KORANGAR_AREA_LOOT_TRACE").is_some() {
+                                                eprintln!(
+                                                    "[area-loot] click={entity_id:?} candidates={} queued={queued:?} \
+                                                     remaining_weight={remaining_weight} slots={inventory_slots_free}",
+                                                    candidates.len()
+                                                );
+                                            }
+                                            queued.first().copied().unwrap_or(entity_id)
+                                        }
+                                        Err(error) => {
+                                            if std::env::var_os("KORANGAR_AREA_LOOT_TRACE").is_some() {
+                                                eprintln!(
+                                                    "[area-loot] click={entity_id:?} candidates={} rejected={error:?} \
+                                                     remaining_weight={remaining_weight} slots={inventory_slots_free}",
+                                                    candidates.len()
+                                                );
+                                            }
+                                            entity_id
+                                        }
                                     }
                                 };
                                 let _ = self.networking_system.pick_up_item(first);
@@ -8673,6 +8833,7 @@ impl Client {
                                 *self.client_state.follow_mut(client_state().buffered_action()) =
                                     Some(BufferedAction::PickUpItem { entity_id });
                             } else {
+                                trace_area_loot_cancel(AreaLootCancel::PathFailure);
                                 self.client_state
                                     .follow_mut(client_state().area_loot())
                                     .cancel(AreaLootCancel::PathFailure);
@@ -9031,6 +9192,58 @@ impl Client {
                     self.client_state.follow_mut(client_state().minimap()).zoom_by(-24.0);
                     sync_minimap = true;
                 }
+                InputEvent::ToggleBreadcrumbCollapsed => {
+                    let value = {
+                        let breadcrumb = self.client_state.follow_mut(client_state().breadcrumb());
+                        breadcrumb.collapsed = !breadcrumb.collapsed;
+                        breadcrumb.collapsed
+                    };
+                    self.client_state.follow_mut(client_state().game_settings()).breadcrumb_collapsed = value;
+                }
+                InputEvent::ToggleBreadcrumbHidden => {
+                    let value = {
+                        let breadcrumb = self.client_state.follow_mut(client_state().breadcrumb());
+                        breadcrumb.hidden = !breadcrumb.hidden;
+                        breadcrumb.hidden
+                    };
+                    self.client_state.follow_mut(client_state().game_settings()).breadcrumb_hidden = value;
+                }
+                InputEvent::BreadcrumbScale { delta } => {
+                    let value = {
+                        let breadcrumb = self.client_state.follow_mut(client_state().breadcrumb());
+                        let value = if delta.is_positive() {
+                            breadcrumb.scale.saturating_add(delta as u8)
+                        } else {
+                            breadcrumb.scale.saturating_sub(delta.unsigned_abs())
+                        };
+                        breadcrumb.set_scale(value);
+                        breadcrumb.scale
+                    };
+                    self.client_state.follow_mut(client_state().game_settings()).breadcrumb_scale = value;
+                }
+                InputEvent::BreadcrumbOpacity { delta } => {
+                    let value = {
+                        let breadcrumb = self.client_state.follow_mut(client_state().breadcrumb());
+                        let value = if delta.is_positive() {
+                            breadcrumb.opacity.saturating_add(delta as u8)
+                        } else {
+                            breadcrumb.opacity.saturating_sub(delta.unsigned_abs())
+                        };
+                        breadcrumb.set_opacity(value);
+                        breadcrumb.opacity
+                    };
+                    self.client_state.follow_mut(client_state().game_settings()).breadcrumb_opacity = value;
+                }
+                InputEvent::ToggleBreadcrumbGuidance => {
+                    let value = {
+                        let breadcrumb = self.client_state.follow_mut(client_state().breadcrumb());
+                        breadcrumb.guidance_enabled = !breadcrumb.guidance_enabled;
+                        breadcrumb.guidance_enabled
+                    };
+                    self.client_state
+                        .follow_mut(client_state().game_settings())
+                        .breadcrumb_guidance_enabled = value;
+                }
                 InputEvent::ToggleMinimapWindow => {
                     // Only while actually in-game (not character select / main menu map).
                     if self.map.is_some() && self.client_state.try_follow(this_player()).is_some() {
@@ -9126,6 +9339,7 @@ impl Client {
                     }
                 }
                 InputEvent::DropItem { inventory_index, amount } => {
+                    trace_area_loot_cancel(AreaLootCancel::PlayerDrop);
                     self.client_state
                         .follow_mut(client_state().area_loot())
                         .cancel(AreaLootCancel::PlayerDrop);
@@ -9785,9 +9999,11 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::QuestLog) {
                             true => self.interface.close_window_with_class(WindowClass::QuestLog),
-                            false => self
-                                .interface
-                                .open_window(QuestLogWindow::new(client_state().quest_log(), client_state().inventory())),
+                            false => self.interface.open_window(QuestLogWindow::new(
+                                client_state().quest_log(),
+                                client_state().inventory(),
+                                client_state().navigation(),
+                            )),
                         }
                     }
                 }
@@ -10233,6 +10449,7 @@ impl Client {
                             let map_name = map_file_name.clone();
                             self.refresh_minimap(&map_name, map_w, map_h);
                             let _ = self.networking_system.map_loaded();
+                            self.recompute_navigation("map change");
 
                             // Ask the server what automatic pickup is doing, once
                             // per session, so the settings toggle starts out
@@ -10332,10 +10549,10 @@ impl Client {
     /// other quests use the bundled server name table, with an ID fallback
     /// only when the server has a quest that this client does not know yet.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
-        let location = self
-            .library
-            .quest_location(quest_id)
-            .map(|loc| loc.journal_text())
+        let destination = self.library.quest_location(quest_id);
+        let location = destination.map(|loc| loc.journal_text()).unwrap_or_default();
+        let (destination_map, destination_x, destination_y) = destination
+            .map(|loc| (loc.map.clone(), Some(loc.x), Some(loc.y)))
             .unwrap_or_default();
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
@@ -10356,7 +10573,11 @@ impl Client {
                         needed: requirement.needed,
                     })
                     .collect(),
+                kill_objectives: Vec::new(),
                 location,
+                destination_map: destination_map.clone(),
+                destination_x,
+                destination_y,
             },
             None => QuestEntry {
                 quest_id,
@@ -10364,7 +10585,11 @@ impl Client {
                     .map(str::to_owned)
                     .unwrap_or_else(|| format!("Quest {quest_id}")),
                 requirements: Vec::new(),
+                kill_objectives: Vec::new(),
                 location,
+                destination_map,
+                destination_x,
+                destination_y,
             },
         }
     }
@@ -10383,7 +10608,7 @@ impl Client {
         };
         self.client_state
             .follow_mut(client_state().quest_log())
-            .auto_track_next_incomplete(|q| q.items_ready(|id| counts.get(&id).copied().unwrap_or(0)));
+            .auto_track_next_incomplete(|q| q.objectives_ready(|id| counts.get(&id).copied().unwrap_or(0)));
 
         let tracked_id = self.client_state.follow(client_state().quest_log()).tracked();
         if let Some(id) = tracked_id {
@@ -10419,6 +10644,83 @@ impl Client {
                         .remove(&player_name);
                 }
             }
+        }
+
+        self.recompute_navigation("objective refresh");
+    }
+
+    /// Refresh the advisory route using the latest tracked objective and
+    /// authoritative player position. A missing route is intentionally valid:
+    /// dynamic or gated server warps are not guessed by the client.
+    fn recompute_navigation(&mut self, reason: &str) {
+        let target = {
+            let breadcrumb = self.client_state.follow(client_state().breadcrumb());
+            if breadcrumb.remaining > 0 {
+                Some((breadcrumb.map.clone(), breadcrumb.tile_x, breadcrumb.tile_y))
+            } else {
+                None
+            }
+        };
+        let player = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position());
+
+        let route = match (target, player) {
+            (Some((goal_map, Some(goal_x), Some(goal_y))), Some(position)) if !self.current_map_name.is_empty() => self
+                .library
+                .route_to_objective(&self.current_map_name, position.x, position.y, &goal_map, goal_x, goal_y),
+            _ => None,
+        };
+        self.client_state
+            .follow_mut(client_state().navigation())
+            .apply_route(route.as_ref(), reason);
+        if std::env::var_os("KORANGAR_NAVIGATION_TRACE").is_some() {
+            let navigation = self.client_state.follow(client_state().navigation());
+            eprintln!(
+                "[navigation] reason={reason:?} available={} maps={:?} next_map={:?} portal=({:?},{:?}) destination=({:?},{:?}) \
+                 revision={}",
+                navigation.available,
+                navigation.route_maps,
+                navigation.next_map,
+                navigation.next_portal_x,
+                navigation.next_portal_y,
+                navigation.next_x,
+                navigation.next_y,
+                navigation.recompute_count,
+            );
+        }
+
+        // Reuse the server quest-effect renderer for a client-owned, world-
+        // anchored portal marker. It is replaced on every recomputation and
+        // removed when the route is unavailable or already on the objective
+        // map. This is visual guidance only: no movement or portal action is
+        // generated here.
+        const NAVIGATION_MARKER: EntityId = EntityId(u32::MAX);
+        let marker = {
+            let navigation = self.client_state.follow(client_state().navigation());
+            if navigation.available
+                && navigation.route_maps.first().is_some_and(|map| map == &self.current_map_name)
+                && let (Some(x), Some(y)) = (navigation.next_portal_x, navigation.next_portal_y)
+            {
+                Some(TilePosition { x, y })
+            } else {
+                None
+            }
+        };
+        if let Some(map) = self.map.as_ref() {
+            if let Some(position) = marker {
+                self.particle_holder.add_quest_icon(&self.texture_loader, map, QuestEffectPacket {
+                    entity_id: NAVIGATION_MARKER,
+                    position,
+                    effect: QuestEffect::Quest,
+                    color: QuestColor::Purple,
+                });
+            } else {
+                self.particle_holder.remove_quest_icon(NAVIGATION_MARKER);
+            }
+        } else {
+            // Recomputations can arrive while a map resource is being replaced
+            // (quest/inventory packets may precede map-load completion). Never
+            // retain a portal marker from the previous map in that interval.
+            self.particle_holder.remove_quest_icon(NAVIGATION_MARKER);
         }
     }
 
@@ -10887,6 +11189,21 @@ impl Client {
                     local_player_id,
                     SPRITE_HIT_TOLERANCE_PX,
                 );
+                if std::env::var_os("KORANGAR_PRIVACY_TRACE").is_some() {
+                    eprintln!(
+                        "[privacy] picker={:?} current={current_target:?} ground_item={is_ground_item} candidates={:?}",
+                        input_report.mouse_target,
+                        candidates
+                            .iter()
+                            .map(|candidate| (
+                                candidate.entity_id,
+                                candidate.is_direct_hit,
+                                candidate.camera_depth,
+                                candidate.screen_distance,
+                            ))
+                            .collect::<Vec<_>>()
+                    );
+                }
                 resolve_effective_target(input_report.mouse_target, candidates, current_target, is_ground_item)
             } else {
                 input_report.mouse_target

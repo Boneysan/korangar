@@ -14,6 +14,7 @@ pub mod instance;
 pub mod inventory;
 pub mod localization;
 pub mod minimap;
+pub mod navigation;
 pub mod party;
 pub mod party_colors;
 pub mod quantity;
@@ -103,6 +104,7 @@ use crate::state::identify::IdentifyState;
 use crate::state::instance::InstanceState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
+use crate::state::navigation::NavigationState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
@@ -294,6 +296,8 @@ pub struct ClientState {
     quest_log: QuestLogState,
     /// HUD breadcrumb for the currently tracked quest objective.
     breadcrumb: BreadcrumbState,
+    /// Advisory route from the player to the tracked objective.
+    navigation: NavigationState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -521,7 +525,15 @@ impl ClientState {
             let dm_campaign = DmCampaignState::default();
             let chest_discovery = ChestDiscoveryState::default();
             let quest_log = QuestLogState::default();
-            let breadcrumb = BreadcrumbState::default();
+            let breadcrumb = BreadcrumbState {
+                collapsed: game_settings.breadcrumb_collapsed,
+                hidden: game_settings.breadcrumb_hidden,
+                scale: game_settings.breadcrumb_scale,
+                opacity: game_settings.breadcrumb_opacity,
+                guidance_enabled: game_settings.breadcrumb_guidance_enabled,
+                ..Default::default()
+            };
+            let navigation = NavigationState::default();
         });
 
         time_phase!("create character server resources", {
@@ -629,6 +641,7 @@ impl ClientState {
             chest_discovery,
             quest_log,
             breadcrumb,
+            navigation,
             friend_list_window,
             party_window,
             instance_state,

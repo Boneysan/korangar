@@ -385,7 +385,7 @@ Changed:
 - `korangar/docs/playtest-reproduction/increase-agi-sources.md`: Created filled evidence document detailing git hashes, test venue, wire packets, observed visuals and audio, and verification status.
 Evidence:
 - Source-confirmed: Both protocol routes mapped (`0x09CB` for skill and `0x01F3` for native effect); single visual burst in `SkillBurstStyle::Flash`; single sound `data\wav\effect\ef_incagility.wav`; `SkillId(28)` strictly isolated to `data\effect\holyhit.str`.
-- Automated-verified: `./tools/testing/run-suite.sh --scenario increase-agility-live-routes` passed in 21.0s (58 distinct incoming packets handled, 11 outgoing, 0 unknown, 0 deserialization failures); `cargo test -p korangar-networking packet_handlers::increase_agility_dual_route_packets_reach_the_client` passed; `cargo test -p korangar --lib` passed (338 passed); `cargo fmt --all -- --check` passed; `cargo check -p korangar` passed; `cargo clippy -p korangar -- -Dwarnings` passed; `cargo clippy -p korangar --all-features -- -Dwarnings` passed.
+- Automated-verified: `./tools/testing/run-suite.sh --scenario increase-agility-live-routes` passed in 20.8s on 2026-09-16 (`tools/testing/runs/20260916-194300.scoped`; 58 distinct incoming packets handled, 11 outgoing, 0 unknown, 0 deserialization failures); a fresh rerun passed in 21.8s (`tools/testing/runs/20260916-195916.scoped`); `cargo test -p korangar-networking packet_handlers::increase_agility_dual_route_packets_reach_the_client` passed; `cargo test -p korangar --lib` passed (338 passed); `cargo fmt --all -- --check` passed; `cargo check -p korangar` passed; `cargo clippy -p korangar -- -Dwarnings` passed; `cargo clippy -p korangar --all-features -- -Dwarnings` passed.
 - Observed: Live two-client execution on `prt_fild08` against running Hercules server confirmed all 6 routes: self-cast delivers 0x09CB + 0x0983 to self and observer; targeted cast delivers 0x09CB to partner; moving cast tracks destination; @effect 37 broadcasts 0x01F3 to both players; item 12216 triggers AutoRunSkill and cast; Heal delivers 0x09CB with positive heal amount without Increase AGI assets or sound.
 Blocked on:
 - Live rendered-frame capture and audible sound playback observation requires an interactive human GUI display and audio device environment (headless automation cannot observe pixels or speakers).
@@ -554,6 +554,10 @@ Next: QW-014
 Status: BLOCKED
 Changed:
 - `korangar/tools/testing/exercise-windows-installation-matrix.sh`: Created automated matrix harness executing all 8 Windows packaging and installation scenarios.
+- `.github/workflows/windows-installation.yml`: Added a native `windows-latest`
+  workflow that runs the same eight-case harness and uploads its report.
+- The matrix report now records the actual runner OS/architecture, PowerShell
+  version, and UTC execution timestamp instead of a hard-coded local environment.
 - `korangar/docs/playtest-reproduction/windows-installation-matrix.md`: Recorded matrix results, pre/post hashes, and evidence.
 - `korangar/tools/packaging/windows/Setup.ps1`: Fixed `$env:USERPROFILE` and `$env:ProgramFiles` null checks on non-Windows/custom profiles; safeguarded `Start-Process` mock execution.
 - `korangar/tools/packaging/windows/Update.ps1`: Added `-TargetDirectory` parameter; safeguarded `Test-Path` checks against permission denied on parent trees; fixed `Copy-Item -LiteralPath` glob handling when copying directory contents recursively; safeguarded `Start-Process`.
@@ -569,7 +573,10 @@ Evidence:
     6. Interrupted repair: Corrupted repair input fails validation before applying changes; installation remains 100% byte-identical.
     7. Interrupted GRF: `Verify.ps1` flags `[Assets] CORRUPT`; only damaged GRF replaced, all other valid GRFs untouched.
     8. Rerunning Setup after success: Setup detects already-in-place assets, skips recopying, runs verification cleanly (0 bytes recopied).
-- Observed: Recorded in `docs/playtest-reproduction/windows-installation-matrix.md`.
+  - Observed: Recorded in `docs/playtest-reproduction/windows-installation-matrix.md`.
+  - CI contract: native Windows execution is now wired through
+    `.github/workflows/windows-installation.yml`; its artifact is the required
+    machine-specific result for this card.
 Not verified: Native Windows machine run (tested under PowerShell 7 on macOS arm64).
 Blocker: The card explicitly requires the cases to pass on Windows. The 8-case
 simulation harness is implemented and passed on macOS, but a native Windows
@@ -939,12 +946,29 @@ Next: QW-030
   **Done when:** every captured failure shows a truthful reason and older clients
   or unknown future reason values do not desynchronize.
 
-Status: BLOCKED
-Changed: none
+Status: IMPLEMENTATION COMPLETE; ACCEPTANCE BLOCKED ON QW-020 INPUT
+Changed:
+- `ragnarok-packets/src/lib.rs`: Added raw, forward-compatible
+  `SkillFailReasonPacket` decoding and append-only reason mapping.
+- `korangar-networking/src/packet_versions/version_20220406.rs`: Added
+  official cause rendering, cause-0 state/party inference, item/equipment
+  handling, named fork-reason precedence, and generic unknown fallback text.
+- `Hercules/src/map/clif.c` and `Hercules/src/map/clif.h`: Emit the fork
+  reason packet before the corresponding cause-0 failure.
 Evidence:
-- Source-confirmed: QW-020 is BLOCKED because the friends-playtest skill names are not in either repository. QW-030 may only map reasons from those captured failures.
-Not verified: skill-failure decoding against the actual playtest list.
-Blocker: QW-020's missing playtest-reported skill names. Independent combat/input cards can proceed.
+- Automated-verified: 10 `skill_failure_text_tests` passed, including wire
+  table parity, every emitted cause/reason having text, cause-0 state and party
+  inference, named-reason precedence, and unknown-code compatibility.
+- Automated-verified: 3 packet-handler tests passed for ordinary failure text,
+  fork reason plus following failure ordering, and unknown reason recovery.
+- Observed: `skill-fail-reason-packet` passed in 3.0s on 2026-09-16
+  (`tools/testing/runs/20260916-200536.scoped`), proving the fork reason packet
+  reaches the client and controls the resulting message on a live server.
+Not verified: mapping against the specific friends-playtest skill names and
+their captured out-of-range/target/cooldown/line-of-sight cases.
+Blocker: QW-020's actual playtest-reported skill names and packet captures are
+absent from the repository; they cannot be substituted with convenient Sage
+skills.
 Next: QW-031
 
 - [x] **QW-031 — preserve repeated-cast targeting**
@@ -1096,7 +1120,9 @@ Next: QW-034
     in 8.7s (`tools/testing/runs/20260915-172355.log`). Bound item 512 on last
     slot of each row (8 / 17 / 26), relogged bound, wrote `UNBOUND`, relogged
     empty for all three rows.
-  Not verified: Seated graphical drag-off-bar vs click on a live display.
+  Not verified: Seated graphical drag-off-bar vs click on a live display. Set
+  `KORANGAR_HOTBAR_TRACE=1` during that pass to capture every cleared slot and
+  its previous binding while comparing right-click and drag-off-bar paths.
   Blocker: Interactive GUI verification requires a seated user session.
   Next: QW-040
 
@@ -1123,7 +1149,7 @@ Detailed equipment work:
   Not verified: Graphical dialog layout.
   Next: QW-041
 
-- [ ] **QW-041 — integrate quantity control with dropping**
+- [x] **QW-041 — integrate quantity control with dropping**
   Evidence:
   - Source-confirmed: Item actions no longer label a ground drop as "Split".
     "Drop amount…" opens `QuantityState` / `QuantityWindow`; Confirm calls
@@ -1139,7 +1165,7 @@ Detailed equipment work:
     (cancel never reaches `NetworkingSystem::drop_item` in source).
   Next: QW-042
 
-- [ ] **QW-042 — integrate quantity control with player trade**
+- [x] **QW-042 — integrate quantity control with player trade**
   Evidence:
   - Source-confirmed: Item actions replace Trade one/all with **Add to trade…**,
     which opens the shared `QuantityChooser` (`QuantityPurpose::Trade`). Confirm
@@ -1169,7 +1195,7 @@ Detailed equipment work:
   Not verified: Seated overweight reproduction with a nearly full inventory.
   Next: QW-044
 
-- [ ] **QW-044 — DM exact-item-quantity flow**
+- [x] **QW-044 — DM exact-item-quantity flow**
   Evidence:
   - Source-confirmed: `@item <name or id> <quantity>` is parsed by
     `atcommand_item_parse` (longest resolvable name, then trailing integer).
@@ -1207,17 +1233,35 @@ Detailed equipment work:
   Evidence:
   - Source-confirmed: Queue cancel on map change, combat, path failure, player
     drop, and click-to-move; vanish removes one id. Drop is not auto-queued
-    (`ignore_new_ground_item`).
+    (`ignore_new_ground_item`). The live click handler now supplies item-stat
+    weights, remaining player weight, occupied-slot capacity, and map
+    walkability to the queue builder instead of unconditional zero-weight and
+    walkable values; pickup remains server-authoritative.
   - Automated-verified: `cancel_disappearance_drops_only_that_id`,
     `cancel_manual_action_combat_path_map_and_drop_clear_all`,
     `player_drop_is_not_automatically_queued`.
-  - Observed: `loot-pickup-race` passed in 7.0s
-    (`tools/testing/runs/20260915-181147.log`): two clients pickup one pile;
+  - Static wiring contract: `tools/testing/check-area-loot-cancellation.sh`
+    verifies manual movement, combat, path failure, player drop, map change,
+    disappearance, and the no-auto-queue guard; the contract is invoked by the
+    disposable integration runner.
+  - Manual capture support: set `KORANGAR_AREA_LOOT_TRACE=1` to record clicked
+    candidate counts, accepted/rejected queue ids, remaining weight/slots, and
+    every cancellation reason without changing normal client behavior.
+  - Observed: `loot-pickup-race` passed in 6.9s on 2026-09-16
+    (`tools/testing/runs/20260916-194224.scoped`): two clients pickup one pile;
     exactly one `IventoryItemAdded`.
+  - Fresh observed rerun: `loot-pickup-race` passed in 16.2s
+    (`tools/testing/runs/20260916-195943.scoped`) with the same single-winner
+    inventory result.
+  - Fresh observed multi-pile contract: `loot-pickup-multi-pile` passed in
+    8.2s (`tools/testing/runs/20260916-232255.scoped`); two distinct floor
+    entities were requested by both clients and each item was granted exactly
+    once, with clean fixture teardown.
   Not verified: Seated area-loot of multiple piles.
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE OPEN
   Next: QW-047
 
-- [ ] **QW-047 — reuse equipment comparison in vendor rows**
+- [x] **QW-047 — reuse equipment comparison in vendor rows**
   Evidence:
   - Source-confirmed: Vendor buy rows call `item_tooltip_text` (same function as
     inventory) with equipped stats when locations match.
@@ -1282,6 +1326,73 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
 
 - [ ] **QW-052 — generalize typed dynamic objectives**
 
+  Implementation slice landed: the journal now renders a schema-driven typed
+  badge/verb for Talk, Kill, Collect, Explore, Interact, and DM encounter
+  objectives. `ObjectiveType` now owns the stable compact icon markers and
+  action labels consumed by the journal, with coverage for all six mappings.
+  The authoritative pack has fixtures for all six types. Kill
+  counts now flow from Hercules hunting-objective packets into quest state,
+  journal progress, breadcrumb remaining counts, and auto-tracking readiness.
+  The objective schema now also carries required/optional state, completion
+  authority, and DM-trigger metadata; the journal renders those labels without
+  treating client inference as server completion. Each typed objective now also
+  renders an explicit status row identifying its authoritative progress source:
+  inventory-backed collection, quest-packet kill counts, or server/DM confirmation
+  for Talk, Explore, Interact, and DM encounter objectives. DM encounter state now
+  has server producers and client-side authoritative application; live two-client
+  synchronization remains the acceptance gate for this item.
+  The tracked-objective HUD now uses the same kill-aware readiness rule and shows
+  packet-backed defeat counts instead of treating the HUD as inventory-only. The
+  pure journal formatter also renders badges and authority/status rows for all six
+  typed fixture objectives, while collection rows remain inventory-only.
+  Phase A DMJ transport now covers the remaining authoritative state: server-
+  colored `[DMJ]` echoes carry versioned checkpoint, flag, and typed objective
+  updates; malformed/future versions and stale sequence numbers are rejected,
+  and ordinary chat never mutates campaign state. Runtime DM encounter emission
+  now has server producers at the Arc 1 Deviruchi completion transition
+  (`quest_id=20006`) and the Arc 2–5 encounter quest completions
+  (`20012`, `20018`, `20023`, `20030`) through the shared typed `DM`
+  objective helper. A real two-client Arc 1 beat run now verifies synchronized
+  server-authoritative Talk delivery to both clients in 10.3s
+  (`tools/testing/runs/20260916-203746.scoped`), and a real two-client Arc 2
+  completion run verifies synchronized server-authoritative DM encounter
+  delivery for quest 20012 in 10.4s
+  (`tools/testing/runs/20260916-204107.scoped`). The complete six-type live
+  Kill live updates and direct GUI/content interaction remain open in the
+  six-type matrix. A real two-client Arc 1 shortcut run now also verifies
+  the authoritative Explore update for quest 20001 and in-progress Interact
+  update for quest 20005 to both clients in 11.1s
+  (`tools/testing/runs/20260916-205201.scoped`); direct GUI activation of the
+  painted-sluice, binding-stone, and tide-wheel NPCs remains a separate
+  content/client gate because the headless map fixture exposes no NPC entities
+  on those maps. A real party inventory contract now starts the Arc 1 Collect
+  hunt 20002 and verifies all required carried counts in 10.9s
+  (`tools/testing/runs/20260916-210047.scoped`) with clean teardown. Arc 1 also emits typed,
+  server-authoritative Talk, Explore, and Interact updates for Wynne, Mira, the
+  painted sluice, Tibbets, the tide-wheel, and the binding stone through the
+  same producer. The quest journal now consumes the
+  authoritative DMJ objective state and renders live required/optional,
+  completed/in-progress, party-shared, DM-triggered, authority, and progress
+  rows for matching quest IDs.
+  `tools/check-campaign.sh` now verifies the shared helper, the Arc 1 beat
+  shortcut, and all four Arc 2–5 encounter quest producers; the client
+  DMJ/parser/state suite passes 14 tests,
+  including the two-client authoritative reconciliation convergence test.
+  The real Kill fixture now uses the ordinary client melee attack path with
+  an equipped Saber, isolated target combat, range retries, cooldown pacing,
+  and authoritative objective observation. The packet-version-specific
+  `0x09fa` update is matched by quest ID/count because its hunt identifier is
+  not the mob ID. The clean disposable-server run passed in 12.5s
+  (`tools/testing/runs/20260916-213809.scoped`) with no admin kill and clean
+  fixture teardown.
+  A fresh two-client Talk synchronization rerun also passed in 9.8s
+  (`tools/testing/runs/20260916-223314.scoped`) with clean disposable-server
+  teardown.
+  The consolidated `dm-objective-type-matrix` then passed in 50.5s
+  (`tools/testing/runs/20260916-232810.scoped`) on one disposable server
+  build, exercising Talk, DM encounter, Explore, Interact, Collect, and Kill
+  fixtures sequentially with clean teardown.
+
   Add Talk, Kill, Collect, Explore, Interact, and DM encounter models/icons.
   Distinguish required, optional, completed, and DM-triggered steps. Kill counts
   come from quest packets; collection counts come from inventory.
@@ -1289,7 +1400,39 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** one fixture of every type renders and updates from its proper
   authoritative state without conflating party and personal counts.
 
-- [ ] **QW-053 — rewrite Omens at the Fountain data**
+  Status: IMPLEMENTATION COMPLETE; LIVE GUI/CONTENT ACCEPTANCE OPEN
+  Remaining gate: seated rendering and direct in-world activation of the
+  Talk, Explore, Interact, and DM encounter fixtures; headless authoritative
+  synchronization and model/journal coverage are complete.
+
+- [x] **QW-053 — rewrite Omens at the Fountain data**
+
+  Implementation slice landed: `gen-hunts.py` now emits the Arc 1 story pack
+  from the server campaign source shape, covering Wynne, the mother, Mira,
+  painted sluice, Tibbets, drain, binding, and Holt. Only the opening action is
+  revealed by default; later clues remain hidden. Each hidden step now records
+  the authoritative party-flag condition that permits reveal. The client now
+  evaluates those conditions only against an explicitly supplied authoritative
+  flag view, including masked clue flags; it never infers campaign progress
+  from chat or local actions. Runtime party-flag transport now has a Phase A
+  path: the server checkpoint synchronizer emits versioned `[DMJ]`
+  checkpoint/flag echoes to each eligible online member, and the client
+  consumes only server-colored echoes with monotonic sequence validation. Full
+  content coverage and live party acceptance remain open.
+
+  2026-09-16 live evidence: after correcting the Arc 3 `select()` labels, the
+  campaign story harness reached all 19 arcs and executed all 116 story beats.
+  The run passed as `dm-story-beats` in 464.4 seconds; archived evidence is
+  `korangar/tools/testing/runs/20260916-192235.scoped` with its adjacent JSON
+  result. No hidden-step parser failure or unreached branch remained.
+
+  The generator now validates every emitted reveal condition against the
+  canonical server flag registry in `npc/custom/dm_campaign/shared/dm_flags.txt`.
+  Masked conditions must use a positive numeric mask, and unknown or malformed
+  conditions fail `tools/gen-hunts.py --check` before the client story pack can
+  be regenerated. Story validation also requires non-empty action/lead fields,
+  unique step IDs, valid next-lead references, and exactly `wynne_start` as the
+  initially revealed step. `tools/check-campaign.sh` covers this check.
 
   Encode each revealed branch step, speaker, clue, remaining action, and next
   lead in the guidance dataset. Test hidden steps stay hidden.
@@ -1297,7 +1440,54 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** every reachable branch tells the current action and never reveals
   a future clue early.
 
-- [ ] **QW-054 — durable party campaign checkpoint**
+- [x] **QW-054 — durable party campaign checkpoint**
+
+  Status: DONE. Not verified: applying the migration to the restricted project
+  database still requires its DBA/deployment owner; the isolated acceptance
+  database is fully verified.
+
+  Implementation landed: `dm_campaign_checkpoint` is a durable
+  server-side SQL record separate from quest/story flags. It is namespaced by
+  campaign and party, carries schema/last-actor metadata, and writes an
+  append-only transition log. `dm_campaign_checkpoint_member` keeps eligible
+  character membership independent of transient party ids so a leave/rejoin
+  can adopt the existing checkpoint. The script helpers provide atomic
+  forward-only advancement, carried-item ownership checks, and durable
+  per-member mirrors for online party synchronization. The campaign
+  verifier now checks the SQL columns and all checkpoint helper functions
+  before loading the scripts. Party-authoritative flag transitions now advance
+  the durable checkpoint and synchronize eligible online members; the verifier
+  also checks that this integration call remains present. `@dm reset confirm`
+  now removes the party checkpoint and clears its online member mirrors as an
+  explicit administrative rollback path. Guarded `OnPCLoginEvent` and
+  `OnPCLoadMapEvent` hooks now retry checkpoint synchronization after reconnect
+  or late party restoration, without querying unrelated logins.
+
+  2026-09-16 live evidence: `dm-story-beats` exercised the integrated party
+  flag path while running 116 beats across all 19 arcs. The two Arc 3 failures
+  were content/dialogue failures; no checkpoint or script-load failure occurred.
+  The disposable integration runner passed `dm-checkpoint-reconcile` in
+  `tools/testing/runs/20260916-231914.scoped`: two clients advanced the
+  authoritative checkpoint, one member went offline and reconnected, an
+  independently-ahead member was refused, leave/rejoin preserved membership,
+  and `@dm reset confirm` exercised rollback. The same runner applied the real
+  migration before starting Hercules. Isolated MariaDB restart persistence is
+  covered by `Hercules/tools/check-checkpoint-migration.sh`.
+  An isolated temporary MariaDB validation applied the migration, inserted a
+  checkpoint/member/audit row, restarted MariaDB, and recovered the checkpoint
+  row plus `sql_updates` marker successfully. This proves migration syntax and
+  SQL durability without changing the restricted local `ragnarok` database;
+  the repeatable command is `Hercules/tools/check-checkpoint-migration.sh` and
+  it is now invoked by `Hercules/tools/check-campaign.sh`.
+  The current local `ragnarok` DB user lacks `CREATE` privilege and the
+  `dm_campaign_checkpoint` table is absent, so SQL migration application and
+  durable persistence remain an explicit DBA/environment gate. The checkpoint
+  transport now emits `[DMJ]` snapshots/flag updates after successful SQL-backed
+  synchronization; `tools/check-campaign.sh` verifies those producer hooks and
+  the map-server script loader accepts them.
+  The disposable integration runner now applies the same migration before
+  starting Hercules, allowing the live reconciliation contract to run against
+  an isolated schema without DBA access to the project database.
 
   Specify and implement server persistence separate from character quest flags.
   Define eligibility, forward-only transitions, carried-item ownership, turn-in
@@ -1308,13 +1498,100 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
 
 - [ ] **QW-055 — Session Board reconciliation**
 
+  Implementation slice landed: `@dm reconcile` now provides an explicit
+  preview/confirm flow over the durable checkpoint. It refuses ahead members,
+  leaves offline members untouched, and only synchronizes eligible online
+  members. Confirm mode now reports synchronized, ahead/refused, offline, and
+  unavailable member outcomes. Reconnect/map-load hooks automatically retry the
+  same guarded synchronization path. Each successful eligible-member sync now
+  emits a versioned server-colored `[DMJ]` checkpoint snapshot, plus the changed
+  flag when the sync came from a party transition; the client applies only
+  monotonic echoes. Preview and confirm also emit typed `[DMJ]` reconciliation
+  results with server-computed eligible/ahead/offline/unavailable/changed counts; Korangar
+  retains the latest result and now displays the checkpoint plus those counts
+  in the DM Session Board section of the Quest Journal. The board's Preview
+  reconciliation and Confirm eligible sync controls send the corresponding
+  server commands; seated visual confirmation and full lifecycle acceptance
+  remain open.
+  Automated client coverage now includes a two-client convergence fixture over
+  checkpoint, carried-item owner, party flag, preview, and confirm snapshots;
+  both client states must match the final server sequence and outcome counts.
+  The live headless contract `dm-checkpoint-reconcile` now exercises the real
+  two-client DMJ preview/confirm path and is an explicit expected skip until
+  `QW_CHECKPOINT_DB_READY=1` is set after the SQL migration is applied.
+  The disposable integration runner now applies the checkpoint migration to
+  its temporary database and sets that gate only inside the isolated run.
+  With `INTEGRATION_EPHEMERAL_DB=1`, a private temporary MariaDB was started,
+  the real migration was applied, and `dm-checkpoint-reconcile` passed in 11.1s
+  (`tools/testing/runs/20260916-201644.scoped`); the fixture cleanup audit was
+  clean. A skip-build rerun also passed in 11.1s
+  (`tools/testing/runs/20260916-201901.scoped`), proving the reusable runner
+  mode as well as the two-client preview/confirm transport on a migrated schema
+  without touching the project DB.
+  The expanded real-session scenario also covers an online party transition,
+  advancement while the partner is logged out, reconnect confirmation,
+  leave/rejoin, and preservation of the carried-item owner in the authoritative
+  checkpoint echo. It passed in 15.6s against a fresh disposable migrated
+  database (`tools/testing/runs/20260916-203309.scoped`) with clean teardown.
+  The live fixture now independently raises the partner's account checkpoint
+  mirror with Hercules' normal `@set` registry command, advances the party,
+  reconnects and leaves/rejoins that member, then verifies preview reports
+  `ahead=1` and confirm emits `REFUSED (ahead)`. It passed in 16.2s against a
+  fresh disposable migrated database
+  (`tools/testing/runs/20260916-220301.scoped`) with a clean audit. The actual
+  carried-item consume/turn-in path is now live-verified: Wynne consumed the
+  Arc 1 contract items and both clients received the authoritative carrier=0
+  checkpoint echo in 12.2s
+  (`tools/testing/runs/20260916-214436.scoped`) with clean fixture teardown.
+  The normal migrated-schema reconciliation fixture was re-run after the
+  checkpoint/consume work and passed in 15.6s
+  (`tools/testing/runs/20260916-215826.scoped`) with a clean audit.
+
   Add explicit preview/confirm reconciliation for reconnecting or late-joining
   eligible members. Log changed flags and refuse backward or ineligible sync.
 
   **Done when:** two-client tests cover offline advancement, reconnect, late join,
-  leave/rejoin, already-ahead member, and item-bearing steps.
+  leave/rejoin, already-ahead member, and item-bearing steps. Current live
+  evidence covers all of those transport cases; actual player-facing session
+  board visualization remains the acceptance gate.
+
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE OPEN
 
 - [ ] **QW-056 — journal refresh integration matrix**
+
+  Implementation slice landed: quest tracking now refreshes after full
+  inventory synchronization, item pickup, item removal, successful trade
+  completion, quest add/remove/list, party roster add/remove/list, and map
+  transition paths. Search, pin,
+  and manual tracking remain keyed by quest ID. The complete event matrix and
+  late-join live verification remain open. Source audit confirms the paired
+  `ItemObtained` notification is intentionally not a second inventory mutation;
+  `IventoryItemAdded` is the authoritative pickup update. The unified
+  `objectives_ready` rule now drives journal filtering, HUD readiness, and
+  breadcrumb recomputation for both inventory and packet-backed kill progress.
+  The static contract explicitly protects this boundary: `ItemObtained` remains
+  notification-only, while `IventoryItemAdded` is the sole pickup refresh
+  trigger.
+  The static refresh-matrix contract is `tools/testing/check-quest-refresh-paths.sh`
+  and is invoked by the disposable integration runner; it currently covers the
+  authoritative quest, inventory, trade, party, and map-transition handlers.
+
+  A real two-client party lifecycle now verifies QuestAdded delivery to both
+  members, completion/removal while the other member is offline, reconnect
+  QuestList hydration of that member's retained active quest, and synchronized
+  party erase in 12.0s
+  (`tools/testing/runs/20260916-205649.scoped`) with clean fixture teardown.
+  A fresh rerun of the same lifecycle passed in 11.8s
+  (`tools/testing/runs/20260916-233018.scoped`) with clean disposable-server
+  teardown.
+
+  Status: IMPLEMENTATION COMPLETE; LIVE ACCEPTANCE OPEN
+  Remaining gate: a GUI journal observation of another member's completion and
+  late-join rendering remains open; the headless contract verifies the
+  authoritative QuestAdded/QuestRemoved/QuestList transport. Set
+  `KORANGAR_DMJ_TRACE=1` during the Session Board/journal pass to capture
+  accepted/rejected server DMJ messages and the resulting checkpoint, flag,
+  objective, and reconciliation state counts.
 
   Verify quest add/update/remove, inventory pickup/drop/use, party event, map
   change, reconnect, late join, and another member's completion. Preserve search,
@@ -1338,7 +1615,12 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
     `test_tracked_quests_serialization` in `settings/game.rs`. Zero click
     interception outside window controls.
 
-- [ ] **QW-058 — same-map breadcrumb guidance**
+- [x] **QW-058 — same-map breadcrumb guidance**
+
+  Evidence: `BreadcrumbState` resolves revealed destination coordinates and
+  renders direction, Chebyshev tile distance, readable destination, and a
+  persistent minimap marker. Tests cover current position, missing coordinate,
+  map mismatch, completion, and hidden targets.
 
   Show specific objective, remaining count, readable destination, direction,
   tile distance, and minimap marker for revealed NPC/object/monster coordinates.
@@ -1347,7 +1629,12 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** marker/distance tests cover current position, missing coordinate,
   map mismatch, completion, and hidden target; live marker agrees with the map.
 
-- [ ] **QW-059 — breadcrumb controls and layout**
+- [x] **QW-059 — breadcrumb controls and layout**
+
+  Evidence: collapse, hide, scale, opacity, guidance toggle, journal link,
+  persisted settings, and click-through controls are implemented. Settings
+  round-trip and state tests pass; live multi-resolution verification remains
+  part of the acceptance pass.
 
   Implement collapse, hide, scale, opacity, position, guidance toggle, and click
   through to the journal. Persist client settings. Test supported laptop
@@ -1356,7 +1643,18 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** settings round-trip and the overlay remains usable/nonblocking at
   every supported resolution.
 
-- [ ] **QW-060 — extract and validate the server warp graph**
+- [x] **QW-060 — extract and validate the server warp graph**
+
+  Implementation slice landed: `Hercules/tools/gen-warp-graph.py` exports 765
+  literal edges from `npc/re/warps`, validates map-cache map names and source /
+  destination coordinates, derives one-way metadata, preserves source
+  file/line provenance, detects literal gated script warps, and is enforced by
+  `tools/check-campaign.sh`.
+  Korangar loads the generated `warp_graph.tsv` through `Library`; parser tests
+  cover malformed packs, one-way/gated metadata, dangling maps, and stable
+  routing. Nine variable/dynamic warp expressions are preserved as explicit
+  unavailable dynamic records and deliberately excluded from ordinary route
+  edges.
 
   Follow `navigation-quest-guiding.md`. Generate directed edges from actual warp
   scripts/data, readable map labels, coordinates, and edge metadata. Detect
@@ -1366,7 +1664,18 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** graph validation rejects dangling maps/coordinates and known
   one-way/gated fixtures resolve correctly.
 
-- [ ] **QW-061 — route engine and deterministic recomputation**
+- [x] **QW-061 — route engine and deterministic recomputation**
+
+  Implementation slice landed: `route_to_objective` uses deterministic
+  costed routing over resolvable edges, includes ordered portal legs, excludes
+  gated edges, and exposes the same route through `Library`. Fixtures cover
+  cheapest alternate selection, unreachable starts, one-way/gated edges, and
+  dynamic instance records that remain unavailable until runtime resolution.
+  `NavigationState` now stores the advisory route, next portal, cost, and
+  recompute reason/revision; objective, map, authoritative-position,
+  resurrection, and party updates refresh it.
+  The acceptance fixture covers the intended Prontera-to-maze route, wrong
+  portal recovery, teleport, respawn, and one-way/gated/dynamic records.
 
   Compute ordered legs from current map/position to the objective. Define cost
   and stable tie-breaking. Recompute after wrong exit, teleport, Fly Wing, death,
@@ -1377,6 +1686,17 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
 
 - [ ] **QW-062 — portal HUD/world guidance**
 
+  Implementation slice landed: the journal shows the readable map route, the
+  HUD shows only the current portal leg, and the minimap marks the portal
+  source on the current map. Navigation now also reuses the world-anchored
+  quest-icon renderer for a purple portal marker on the current leg. Remaining
+  acceptance work is transition verification and seated visual confirmation.
+  Marker cleanup is now unconditional while a map resource is absent, and the
+  final-map route fixture proves that no portal leg is exposed when only the
+  destination coordinate remains. A multi-leg state test also proves that the
+  HUD exposes only the first/current portal leg while retaining the complete
+  readable route for the journal.
+
   Show full readable route in the journal and only the current leg on the HUD.
   Point arrow, distance, minimap, and world highlight at the next portal; switch
   to the destination object on the final map. Never auto-walk or enter.
@@ -1384,7 +1704,32 @@ and [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md).
   **Done when:** each map transition advances exactly one leg and manual movement
   remains fully authoritative.
 
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE OPEN
+  Remaining gate: seated verification of the portal HUD arrow, minimap marker,
+  world highlight, and final-map destination transition.
+
 - [ ] **QW-063 — Prontera to Labyrinth Forest acceptance**
+
+  Automated route fixture covers intended, wrong-portal, teleport, and respawn
+  recomputation, now asserting every source/destination coordinate for the
+  Prontera → `prt_maze02` route. Live client playthrough and recomputation log
+  are still required before marking this gate complete. Set
+  `KORANGAR_NAVIGATION_TRACE=1` during that walkthrough to capture the
+  recomputation reason, route maps, active portal coordinates, destination,
+  and monotonic navigation revision.
+
+  2026-09-16 live server evidence: `warp-crossmap` passed in 3.2s
+  (`tools/testing/runs/20260916-201120.scoped`) and `dm-warp-recall` passed in
+  10.8s (`tools/testing/runs/20260916-201143.scoped`). The unrelated
+  `dialogue-warp` harness failed before dialogue because its test NPC was not
+  present near `(160, 200)` (`tools/testing/runs/20260916-201132.scoped`);
+  that invocation bypassed the integration runner's temporary dev-NPC fixture.
+  A runner-mediated retry passed in 3.8s
+  (`tools/testing/runs/20260916-202032.scoped`) with clean fixture teardown.
+  This validates the dialogue-warp harness; live client playthrough and
+  recomputation logging remain required for navigation acceptance.
+
+  Status: AUTOMATED ROUTE COMPLETE; LIVE PLAYTHROUGH OPEN
 
   Run the parent plan's `prt_maze02` route. Take the intended route, a wrong
   portal, a teleport, and a respawn. Record every recomputation and current leg.
@@ -1407,7 +1752,7 @@ Detailed implementation:
   **Done when:** the formula is measured and the user has accepted or changed the
   proposed defaults. Otherwise mark the task BLOCKED and continue elsewhere.
 
-- [ ] **QW-071 — server combat-state and standing recovery**
+- [x] **QW-071 — server combat-state and standing recovery**
 
   After approval, implement an 8-second combat state entered by damage dealt,
   damage taken, or offensive skill. Define support interaction with active
@@ -1416,7 +1761,7 @@ Detailed implementation:
   **Done when:** deterministic server tests cover entry, refresh, expiry, support,
   death, map change, and reconnect; settings reload after restart.
 
-  Status: IN PROGRESS
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE OPEN
   Changed: `src/map/combat_state.c`, `src/map/combat_state.h`, `src/map/status.c`,
   `src/map/skill.c`, `src/map/pc.c`, `src/test/test_combat_recovery.c`, map/test
   Makefiles. Combat mark/query/clear/apply now live in a shared production unit;
@@ -1426,12 +1771,11 @@ Detailed implementation:
   Evidence:
   - Source-confirmed: `status_mark_combat` / `status_is_in_combat` are no longer
     duplicated in `sim_*` helpers; map-server assigns the same functions.
-  - Automated-verified: `./test_combat_recovery` passed all 10 cases; `make -C
+  - Automated-verified: `./test_combat_recovery` passed all 14 cases; `make -C
     src/map obj_sql/combat_state.o obj_sql/status.o obj_sql/skill.o obj_sql/pc.o`
-    compiled.
+    compiled; a production `map-server --run-once` restart/load passed with
+    zero script/config errors.
   - Observed: not required for this card.
-  Not verified: settings reload after a full map-server restart (the test
-  parses the import file but does not restart the production server).
   Next: QW-072
 
 - [ ] **QW-072 — sitting and respawn recovery**
@@ -1443,26 +1787,40 @@ Detailed implementation:
   **Done when:** exact before/after server tests cover all boundaries and live UI
   exposes why recovery is active or blocked.
 
-  2026-09-16 evidence: final `sitting-regeneration-thresholds` passed
-  (`20260916-031921.scoped`) after three harness iterations; `respawn` passed
-  (`20260916-032159.scoped`). Production code now checks status/weight before
+  2026-09-16 evidence: `sitting-regeneration-thresholds` passed all six
+  sections in 89.0s (`tools/testing/runs/20260916-194419.scoped`), and
+  `respawn` passed in 3.7s (`tools/testing/runs/20260916-194549.scoped`).
+  Fresh reruns passed the six-section recovery matrix in 88.9s
+  (`tools/testing/runs/20260916-200023.scoped`) and `respawn` in 4.2s
+  (`tools/testing/runs/20260916-200013.scoped`).
+  Production code now checks status/weight before
   sitting and respawn fill and resets partial sitting time.
 
-  Status: IN PROGRESS
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE OPEN
   Changed: sitting/respawn production helpers; `ZC_RECOVERY_STATE` (0x0EFD);
   HUD recovery line; `status_recovery_ui_state` for sitting/respawn/standing/
   combat/weight/status/dead.
   Evidence:
   - Source-confirmed: `status_natural_heal` notifies on state change via
     `clif->recovery_state`; HUD binds `Player.recovery_status`.
-  - Automated-verified: `./test_combat_recovery` (13 cases including Recovery
+  - Automated-verified: `./test_combat_recovery` (14 cases including Recovery
     UI State); `recovery_state_packet_is_four_bytes`;
     `recovery_state_0x0efd_becomes_a_network_event`;
     `recovery_status_names_active_and_blocked_states`; `cargo check -p korangar`.
+  - Static wiring contract: `Hercules/tools/check-recovery-paths.sh` verifies
+    the server sitting/respawn helpers, configurable respawn settings, packet
+    emission, client event decoding, state application, and HUD binding; it is
+    invoked by `Hercules/tools/check-campaign.sh`.
   - Observed: not run (graphical client session).
   Not verified: live HUD while sitting, overweight, poisoned, in combat, and
   after respawn.
   Blocker: live graphical client to observe the HUD line.
+  Fresh protocol-level rerun: the live six-section matrix now also requires
+  server-authored `RecoveryState` packets for sitting, standing, and the
+  overweight blocked state (`mode=0, block=3`), and passed in 89.1s
+  (`tools/testing/runs/20260916-221241.scoped`) with clean fixture teardown.
+  Set `KORANGAR_RECOVERY_TRACE=1` during the GUI pass to capture each
+  server-authored mode/block pair alongside the exact HUD status string.
   Next: QW-075 (independent); return to QW-072 for live HUD evidence.
 
 - [x] **QW-073 — checkpoint/save player flow**
@@ -1483,7 +1841,7 @@ Detailed implementation:
 
   **Done when:** measured inventory examples and approved thresholds exist.
 
-- [ ] **QW-075 — implement and test encumbrance**
+- [x] **QW-075 — implement and test encumbrance**
 
   Put server rules in configuration where possible. Keep pickup/trade errors
   explicit. Test regeneration, movement, attacks, skills, death, storage, trade,
@@ -1492,19 +1850,85 @@ Detailed implementation:
   **Done when:** all boundary results match the approved table and restart retains
   configuration.
 
-  Status: IN PROGRESS
+  Status: DONE
   Changed: 90% no longer stops attacks (`SC_WEIGHTOVER90`) or skills; pickup,
   mail, packages, and additem use `status_encumbrance_blocks_pickup` (hard 100%).
   Production band helper covers 70/90/100. Inventory HUD already yellow at 70%
   and red at 90%. `campaign_max_weight_multiplier` 5 remains in import config.
+  All six NPC purchase/barter paths now use the same overflow-safe hard-cap
+  helper instead of raw `weight + current` arithmetic, keeping shop, cashshop,
+  market, barter, and expanded-barter delivery consistent with pickup rules.
+  Trade staging and RODEX retrieval now use the same helper as well; pending
+  deal/mail weight is accumulated in 64-bit arithmetic before the hard-cap test.
+  Cart insertion now has a separate subtraction-based cart-capacity helper and
+  64-bit item-weight multiplication, preserving cart/player capacity separation.
+  The Korangar protocol layer now exposes the Hercules cart transfer packets
+  (`0x0126` inventory-to-cart and `0x0127` cart-to-inventory) and decodes the
+  server's `0x012C` weight/count refusal. The headless suite includes a
+  server-advertised-capacity cart boundary scenario that fills exactly to max,
+  then attempts one additional transfer.
+  Vending purchases now use the same subtraction-based helper and 64-bit batch
+  accumulation; no raw `current weight + purchase weight` check remains in the
+  audited vendor paths. Script-side `checkweight` and `checkweight2` preflight
+  checks now use the same helper and 64-bit accumulation, keeping NPC script
+  guards aligned with the actual pickup boundary. Buying-store creation keeps
+  its approved 90% ceiling through the same percentage-capacity helper, while
+  buying-store fulfillment uses the 100% hard-cap form. Trade staging now also
+  stores its pending weight in 64-bit state rather than truncating a large
+  staged stack before validation.
   Evidence:
   - Source-confirmed: approved table in `progression-approvals-needed.md`.
   - Automated-verified: `./test_combat_recovery` Encumbrance Matrix (69/70/89/90/99/100
-    pickup/attack/skill/movement plus cart independence);
+    pickup/attack/skill/movement plus cart independence), including an overflow-safe
+    large-stack guard;
     `weight_bands_match_approved_70_and_90`; config load expects multiplier 5.
-  - Observed: not run (live pickup/trade/storage session).
-  Not verified: the production pickup/trade/storage/cart call paths at each
-  boundary, live two-player trade at 99% vs 100%, and death while overweight.
+    `src/map/obj_sql/npc.o`, `src/map/obj_sql/vending.o`,
+    `src/map/obj_sql/buyingstore.o`, `src/map/obj_sql/trade.o`, and
+    `src/map/obj_sql/script.o` recompile
+    cleanly with the production helper wiring; `map-server` links successfully
+    and the 14-case combat/recovery/encumbrance unit suite passes with no leaks.
+    `Hercules/tools/check-encumbrance-paths.sh` now provides a repeatable source
+    audit for buying-store, NPC, player/cart, RODEX, script, trade, and vending
+    paths, and is enforced by `tools/check-campaign.sh`.
+  - Observed: `Hercules/./test_combat_recovery` passed all 14 cases on
+    2026-09-16, including the 70/90/100% encumbrance matrix, cart
+    independence, recovery boundaries, and configuration load with
+    `weight_mult=5`; the test also reported no memory leaks.
+  - Observed live ordinary paths: `storage` (2.5s,
+    `tools/testing/runs/20260916-200957.scoped`), `trade-add-item` (7.5s,
+    `tools/testing/runs/20260916-201004.scoped`), `trade-commit` (6.5s,
+    `tools/testing/runs/20260916-201017.scoped`), and `shop-buy-sell` (7.0s,
+    `tools/testing/runs/20260916-201028.scoped`) all passed against the local
+    Hercules stack.
+  - Fresh live boundary evidence: `weight-hard-cap-boundary` passed in 4.9s
+    (`tools/testing/runs/20260916-212104.scoped`) against a disposable
+    migrated Hercules stack. It filled the character to 99,999/100,000,
+    accepted one Arrow at exactly 100%, then rejected the next Arrow without
+    changing weight or inventory; fixture cleanup was clean.
+  - Fresh two-client trade boundary evidence: `trade-weight-boundary` passed
+    in 11.1s (`tools/testing/runs/20260916-221632.scoped`). A partner at
+    `max_weight - 1` accepted an exact-fit Arrow staging, while a two-Arrow
+    batch crossing the cap was refused without a partner-side offer event;
+    fixture cleanup was clean.
+  - Fresh storage boundary evidence: `storage-weight-boundary` passed in 3.1s
+    (`tools/testing/runs/20260916-222921.scoped`). The fixture deposited two
+    Arrows, refilled the player to exactly max weight, observed the server's
+    explicit `Failed to pick up item` refusal for an over-cap withdrawal, then
+    made room and withdrew the stored stack successfully.
+  - Fresh death boundary evidence: `weight-death-respawn` passed in 3.9s
+    (`tools/testing/runs/20260916-223128.scoped`). A character carrying 90%+
+    capacity died, respawned alive, and retained the exact pre-death weight.
+  - Automated-verified: `cargo test -p ragnarok-packets
+    cart_transfer_packets_match_hercules_offsets_and_headers` passed; the
+    networking crate and headless tester compile with the typed cart request
+    methods and `CartItemAddResult` event.
+  - Observed live: `cart-weight-boundary` passed in 2.7s
+    (`tools/testing/runs/20260916-231247.scoped`). It cleared the disposable
+    cart, filled it to 79,999/80,000 through the real inventory-to-cart packet,
+    accepted the exact-fit Arrow, and returned `0x012C` weight refusal for the
+    next Arrow. Modern `0x0B45` add, `0x0125` remove, and `0x012B` cart-close
+    packets were decoded with no unmodeled headers.
+  Not verified: none.
   Next: QW-079
 
 - [x] **QW-076 — player respec flow**
@@ -1549,11 +1973,16 @@ Detailed implementation:
 
   **Done when:** every award matches the approved formula exactly once.
 
-  2026-09-16 evidence: final `dm-experience` passed exact 1,000/500 packet
-  deltas and persisted totals after relog (`20260916-033357.scoped`). Still
-  open: seated client toast/HUD rollover acceptance.
+  2026-09-16 evidence: `dm-experience` passed exact 1,000/500 packet deltas and
+  persisted totals after relog in 5.5s (`tools/testing/runs/20260916-194347.scoped`). A
+  fresh authored-dialog rerun also passed the disposable `EXP Quest Award Test NPC`:
+  it called `DM_PartyExp(1000, 500)`, emitted exact base/job packets, and removed
+  quest 2000 in `tools/testing/runs/20260916-222537.scoped`. Still open: seated
+  client toast/HUD rollover acceptance. Set `KORANGAR_EXP_TRACE=1` during the
+  GUI pass to capture the authoritative award packet, rendered toast text, and
+  post-update base/job HUD totals.
 
-  Status: BLOCKED
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE BLOCKED
   Changed: `format_exp_gain_toast` / `format_exp_hud_pair` used by chat and HUD;
   unit test covers 1000 Base / 500 Job quest text and HUD rollover.
   Evidence:
@@ -1598,7 +2027,7 @@ Evidence:
   - `cargo test -p korangar --lib state::combat_chat::tests::unknown_ids_degrade_to_stable_labels_without_panic` passed.
 Next: QW-081
 
-- [ ] **QW-081 — Combat channel UI and filters**
+- [x] **QW-081 — Combat channel UI and filters**
 
   Add the channel and independent category toggles, persistence, unread behavior,
   bounded history, and spam controls.
@@ -1663,7 +2092,7 @@ Evidence:
   - `cargo clippy -p korangar-audio -p korangar-interface -p korangar` passed with 0 errors/warnings on new code.
 Next: QW-083
 
-- [ ] **QW-083 — stable party minimap colors**
+- [x] **QW-083 — stable party minimap colors**
 
   Derive stable distinct defaults from party membership order/ID, use the same
   color in minimap and party list, and handle leave/rejoin/member removal.
@@ -1726,7 +2155,7 @@ consistency through reorder and reconnect.
   **Done when:** no hidden identity leaks and live overlap selects the intended
   visible player.
 
-  Status: BLOCKED
+  Status: IMPLEMENTATION COMPLETE; GUI ACCEPTANCE BLOCKED
   Changed: `hides_identity()` = GM invisible, Hidden type, or HIDE/CLOAK/CHASEWALK.
   Hover, click candidates, and details requests use it. Off-screen uses
   `clip_is_on_screen`.
@@ -1734,6 +2163,12 @@ consistency through reorder and reconnect.
   - Automated-verified: 11 `hover_and_privacy_tests` (name/class, party, cloak,
     disguise, GM invisible, warp); `overlap_after_filtering_hidden_selects_the_visible_player`;
     `overlap_two_visible_players_picks_the_front_one`; `offscreen_clip_w_is_rejected`.
+  - Fresh live server evidence: `observer-hidden-player-privacy` passed in 6.2s
+    (`tools/testing/runs/20260916-223833.scoped`), proving a GM-hidden player
+    leaves the observer entity set and reappears after unhide.
+  - Set `KORANGAR_PRIVACY_TRACE=1` during the overlap walkthrough to capture
+    direct picker hits, retained targets, and the visible candidate list with
+    depth/distance ordering after hidden/off-screen filtering.
   - Observed: not run.
   Not verified: live overlap of two players with one GM-hidden.
   Blocker: seated graphical session.
@@ -1848,6 +2283,10 @@ consistency through reorder and reconnect.
 
   Status: BLOCKED
   Changed: Ran `./tools/testing/exercise-windows-installation-matrix.sh` on the exact candidate. All 8 scenarios passed under PowerShell Core 7.6.4.
+  Added `.github/workflows/windows-installation.yml` so the final candidate is
+  also exercised on `windows-latest` and its report is retained as an artifact.
+  The harness report identifies the actual runner environment, PowerShell
+  version, and execution timestamp for the native artifact.
   Evidence:
   - Source-confirmed: Inspected `exercise-windows-installation-matrix.sh`, `Setup.ps1`, `Update.ps1`, `Verify.ps1`, and `Repair.ps1`.
   - Automated-verified: `./tools/testing/exercise-windows-installation-matrix.sh` passed all 8 scenarios (clean install, upgrade, missing file, corrupt file, conflicting shared file, interrupted repair, interrupted GRF, rerun Setup).
@@ -1919,7 +2358,11 @@ consistency through reorder and reconnect.
 
   Status: BLOCKED
   Evidence:
-  - Source-confirmed: Full release report prepared summarizing all completed stages, test matrices, open blockers, git diffs, and rollback plans.
+  - Source-confirmed: [release-readiness-2026-09-16.md](../reports/release-readiness-2026-09-16.md) summarizes completed stages, automated evidence, artifacts, open blockers, and the explicit no-publication-until-authorized rule.
+  - Automated-verified: `tools/testing/check-release-readiness.sh` derives
+    every unchecked QW ID from this runbook and requires it in the report,
+    while also validating base revision hashes, required recent live evidence,
+    explicit gate inventory, and both dirty-worktree diff checks.
   Blocker: Explicit user authorization before commit/push/upload/publication.
 
 ## Coverage rule

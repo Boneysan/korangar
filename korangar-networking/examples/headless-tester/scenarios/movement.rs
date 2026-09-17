@@ -17,6 +17,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("sit-25-percent", 3, sit_25_percent),
         Scenario::new("save-load", 3, save_load),
         Scenario::new("weight-capacity-x5", 3, weight_capacity_x5),
+        Scenario::new("weight-hard-cap-boundary", 3, weight_hard_cap_boundary),
+        Scenario::new("weight-death-respawn", 3, weight_death_respawn),
         Scenario::new("tick-sync", 3, tick_sync),
     ]
 }
@@ -435,6 +437,10 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
         NetworkEvent::PlayerSitDown { entity_id } if entity_id.0 == player_id.0 => Some(()),
         _ => None,
     })?;
+    context.wait_for("recovery state: sitting", |event| match event {
+        NetworkEvent::RecoveryState { mode: 2, block: 0 } => Some(()),
+        _ => None,
+    })?;
     context.flush();
 
     let (hp_ticks_sit, sp_ticks_sit) = collect_hp_sp_ticks(&mut context, Duration::from_millis(12000));
@@ -442,6 +448,10 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     context.net.player_stand().map_err(|_| "disconnected")?;
     context.wait_for("PlayerStandUp", |event| match event {
         NetworkEvent::PlayerStandUp { entity_id } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("recovery state: standing", |event| match event {
+        NetworkEvent::RecoveryState { mode: 1, block: 0 } => Some(()),
         _ => None,
     })?;
     context.flush();
@@ -518,6 +528,10 @@ fn sitting_regeneration_thresholds(config: &Config) -> Result<(), String> {
     let count_steel_60 = (target_weight_60 + 99) / 100;
     let _ = context.give_item(999, count_steel_60 as u16)?;
     context.pump(Duration::from_millis(500));
+    context.wait_for("recovery state: overweight", |event| match event {
+        NetworkEvent::RecoveryState { mode: 0, block: 3 } => Some(()),
+        _ => None,
+    })?;
 
     let w = context.weight;
     let mw = context.max_weight;
@@ -906,5 +920,137 @@ fn weight_capacity_x5(config: &Config) -> Result<(), String> {
             context.max_weight
         ));
     }
+    Ok(())
+}
+
+/// QW-075 — exercise the live hard-cap boundary with real item delivery.
+///
+/// Steel (100 weight) gets the character to exactly one unit below capacity;
+/// Arrow (1 weight) must fit once at 100%, while the next arrow must be
+/// rejected by the server without changing inventory or weight.
+fn weight_hard_cap_boundary(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.say("@itemreset")?;
+    context.say("@resetstat")?;
+    context.pump(Duration::from_millis(400));
+
+    let max_weight = context.max_weight;
+    if max_weight < 200 || max_weight / 100 > u32::from(u16::MAX) {
+        return Err(format!("unexpected max weight for boundary fixture: {max_weight}"));
+    }
+
+    let steel_amount = max_weight.saturating_sub(1) / 100;
+    let remainder = max_weight.saturating_sub(1) - steel_amount * 100;
+    context.give_item(999, steel_amount as u16)?;
+    if remainder > 0 {
+        context.give_item(1750, remainder as u16)?;
+    }
+    context.pump(Duration::from_millis(400));
+
+    if context.weight != max_weight.saturating_sub(1) {
+        return Err(format!(
+            "expected one unit below capacity before final arrow, got {}/{}",
+            context.weight, max_weight
+        ));
+    }
+
+    context.give_item(1750, 1)?;
+    context.pump(Duration::from_millis(300));
+    if context.weight != max_weight {
+        return Err(format!(
+            "one-unit delivery did not reach hard cap: got {}/{}",
+            context.weight, max_weight
+        ));
+    }
+    let arrows_at_cap = context
+        .inventory
+        .iter()
+        .find(|item| item.item_id.0 == 1750)
+        .map(|item| item.amount())
+        .ok_or("final arrow is missing from inventory at hard cap")?;
+
+    context.flush();
+    context.say("@item 1750 1")?;
+    let rejected_events = context.collect_for(Duration::from_millis(1200));
+    if rejected_events.iter().any(|event| {
+        matches!(
+            event,
+            NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == 1750
+        )
+    }) {
+        return Err("server delivered an arrow above the hard weight cap".to_owned());
+    }
+    let arrows_after_rejection = context
+        .inventory
+        .iter()
+        .find(|item| item.item_id.0 == 1750)
+        .map(|item| item.amount())
+        .unwrap_or_default();
+    if context.weight != max_weight || arrows_after_rejection != arrows_at_cap {
+        return Err(format!(
+            "over-cap delivery changed state: weight {}/{} arrows {} -> {}",
+            context.weight, max_weight, arrows_at_cap, arrows_after_rejection
+        ));
+    }
+
+    eprintln!(
+        "[QW-075] live hard-cap boundary passed at {}/{} weight; over-cap arrow rejected",
+        context.weight, max_weight
+    );
+    let _ = context.say("@itemreset");
+    context.pump(Duration::from_millis(300));
+    Ok(())
+}
+
+/// QW-075: death/respawn must preserve an overweight inventory and return a
+/// live character without bypassing the server's weight state.
+fn weight_death_respawn(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.warp("prontera", 155, 180)?;
+    let max_weight = context.max_weight;
+    if max_weight < 500 || max_weight / 100 > u32::from(u16::MAX) {
+        return Err(format!("unexpected max weight for death boundary: {max_weight}"));
+    }
+
+    let _ = context.say("@itemreset");
+    context.pump(Duration::from_millis(250));
+    let target_weight = max_weight * 95 / 100;
+    let steel_amount = target_weight.saturating_add(99) / 100;
+    context.give_item(999, steel_amount as u16)?;
+    let weight_before = context.weight;
+    if weight_before < max_weight * 90 / 100 || weight_before > max_weight {
+        return Err(format!(
+            "failed to enter overweight death boundary: {weight_before}/{max_weight}"
+        ));
+    }
+
+    context.gm_expect_feedback("@save")?;
+    context.warp("geffen", 119, 59)?;
+    let player_id = context.player_id;
+    context.flush();
+    context.say("@die")?;
+    context.wait_for("overweight death", |event| match event {
+        NetworkEvent::RemoveEntity {
+            entity_id,
+            reason: ragnarok_packets::DisappearanceReason::Died,
+        } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.respawn().map_err(|_| "disconnected")?;
+    context.wait_for("overweight respawn map", |event| match event {
+        NetworkEvent::ChangeMap { .. } => Some(()),
+        _ => None,
+    })?;
+    context.net.map_loaded().map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(500));
+    if context.health_points == 0 || context.weight != weight_before {
+        return Err(format!(
+            "respawn changed overweight state unexpectedly: hp={}, weight {} -> {}",
+            context.health_points, weight_before, context.weight
+        ));
+    }
+    context.say("@itemreset")?;
+    context.pump(Duration::from_millis(250));
     Ok(())
 }

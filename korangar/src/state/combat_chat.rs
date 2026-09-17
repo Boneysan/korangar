@@ -1,6 +1,8 @@
 //! Structured combat-log events from authoritative network facts, not parsed
 //! chat strings.
 
+#![allow(dead_code)]
+
 use std::collections::VecDeque;
 
 use korangar_interface::element::StateElement;

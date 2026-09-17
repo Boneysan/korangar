@@ -9,13 +9,16 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{Path, State};
 
 use super::WindowClass;
+use crate::dm::DmCampaignState;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::inventory::Inventory;
+use crate::state::navigation::NavigationState;
 use crate::state::quests::{QuestEntry, QuestLogState, QuestLogStatePathExt};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::world::ObjectiveType;
 
 const LINE_SPACING: f32 = 10.0;
 const PROGRESS_HEIGHT: f32 = 10.0;
@@ -44,7 +47,7 @@ struct QuestDetails {
 }
 
 impl QuestDetails {
-    fn new(quest: &QuestEntry, inventory: &Inventory) -> Self {
+    fn new(quest: &QuestEntry, inventory: &Inventory, navigation: Option<&NavigationState>, dm_campaign: &DmCampaignState) -> Self {
         let mut rows = Vec::new();
         let mut push = |text: String, color: Color, progress: Option<f32>| {
             rows.push(QuestRow {
@@ -55,6 +58,83 @@ impl QuestDetails {
                 progress,
             });
         };
+        if let Some(objective) = crate::world::bundled_objectives().get(&quest.quest_id) {
+            let (icon, label) = Self::objective_badge(objective.objective_type);
+            push(
+                format!("{icon} {label}: {}", objective.name),
+                Color::rgb_u8(210, 220, 255),
+                None,
+            );
+            push(
+                format!(
+                    "{} objective · completion: {}{}",
+                    if objective.required { "Required" } else { "Optional" },
+                    objective.completion,
+                    if objective.dm_triggered { " · DM-triggered" } else { "" },
+                ),
+                Color::rgb_u8(180, 190, 215),
+                None,
+            );
+            push(
+                Self::objective_status_line(objective.objective_type, &objective.completion),
+                Color::rgb_u8(180, 205, 225),
+                None,
+            );
+        }
+        for kill in quest.kill_objectives() {
+            let name = if kill.mob_id != 0 {
+                crate::world::display_monster(kill.mob_id, "normal").to_string()
+            } else {
+                format!("objective {}", kill.objective_id)
+            };
+            let complete = kill.current >= kill.total;
+            push(
+                format!("Defeat {name}: {}/{}", kill.current, kill.total),
+                if complete {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                },
+                Some(if kill.total == 0 {
+                    1.0
+                } else {
+                    (f32::from(kill.current) / f32::from(kill.total)).min(1.0)
+                }),
+            );
+        }
+        for objective in dm_campaign
+            .objectives
+            .iter()
+            .filter(|objective| objective.quest_id == quest.quest_id)
+        {
+            let complete = objective.completed || objective.current >= objective.total;
+            let shared = if objective.party_shared { "party-shared" } else { "personal" };
+            let required = if objective.required { "required" } else { "optional" };
+            let dm_marker = if objective.dm_triggered { " · DM-triggered" } else { "" };
+            push(
+                format!(
+                    "[{}] {} objective: {}/{} · {} · {}{}{}",
+                    objective.kind,
+                    if complete { "Complete" } else { "In progress" },
+                    objective.current,
+                    objective.total,
+                    required,
+                    shared,
+                    dm_marker,
+                    if complete { " · server confirmed" } else { " · server authority" },
+                ),
+                if complete {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                },
+                Some(if objective.total == 0 {
+                    1.0
+                } else {
+                    (f32::from(objective.current) / f32::from(objective.total)).min(1.0)
+                }),
+            );
+        }
         if let (Some(objective), Some(guidance)) = (
             crate::world::bundled_objectives().get(&quest.quest_id),
             crate::world::bundled_guidance().get(&quest.quest_id),
@@ -66,9 +146,13 @@ impl QuestDetails {
             );
             push(area_str, Color::rgb_u8(180, 210, 255), None);
 
-            let ready = quest.items_ready(|id| inventory.count_of(id));
+            let ready = quest.objectives_ready(|id| inventory.count_of(id));
             push(
-                if ready {
+                if !quest.kill_objectives().is_empty() && ready {
+                    "Objectives complete — return to the quest giver to hand them in.".into()
+                } else if !quest.kill_objectives().is_empty() {
+                    "Defeat the listed targets; server progress is shown below.".into()
+                } else if ready {
                     "Items collected — return to the quest giver to hand them in.".into()
                 } else {
                     "You carry: counts shown below".into()
@@ -127,9 +211,13 @@ impl QuestDetails {
             if quest.requirements().is_empty() {
                 push("Follow the destination above.".into(), Color::monochrome_u8(215), None);
             } else {
-                let ready = quest.items_ready(|id| inventory.count_of(id));
+                let ready = quest.objectives_ready(|id| inventory.count_of(id));
                 push(
-                    if ready {
+                    if !quest.kill_objectives().is_empty() && ready {
+                        "Objectives complete — return to the quest giver to hand them in.".into()
+                    } else if !quest.kill_objectives().is_empty() {
+                        "Defeat the listed targets; server progress is shown below.".into()
+                    } else if ready {
                         "Items collected — return to the quest giver to hand them in.".into()
                     } else {
                         "Collect the following items and keep them in your inventory.".into()
@@ -160,14 +248,14 @@ impl QuestDetails {
                     );
                 }
             }
-        } else if quest.requirements().is_empty() {
+        } else if quest.requirements().is_empty() && quest.kill_objectives().is_empty() {
             push(
                 "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into(),
                 Color::monochrome_u8(215),
                 None,
             );
         } else {
-            let ready = quest.items_ready(|id| inventory.count_of(id));
+            let ready = quest.objectives_ready(|id| inventory.count_of(id));
             push(
                 if ready {
                     "Items collected — return to the quest giver to hand them in.".into()
@@ -200,7 +288,37 @@ impl QuestDetails {
                 );
             }
         }
+        if let Some(navigation) = navigation.filter(|navigation| navigation.available) {
+            if navigation.route_maps.len() > 1 {
+                push(
+                    format!("Route: {}", navigation.route_maps.join(" → ")),
+                    Color::rgb_u8(180, 230, 210),
+                    None,
+                );
+            } else {
+                push("Route: direct on the current map".into(), Color::rgb_u8(180, 230, 210), None);
+            }
+        }
         Self { rows }
+    }
+
+    fn objective_badge(objective_type: ObjectiveType) -> (&'static str, &'static str) {
+        (objective_type.icon(), objective_type.label())
+    }
+
+    /// Describe the authority that can advance this objective. The journal
+    /// must not turn a local observation into completion for objectives whose
+    /// state is owned by the server or DM encounter flow.
+    fn objective_status_line(objective_type: ObjectiveType, completion: &str) -> String {
+        let authority = match objective_type {
+            ObjectiveType::Collect => "inventory-backed; carried counts below",
+            ObjectiveType::Kill => "authoritative quest packets; defeat progress below",
+            ObjectiveType::Talk => "awaiting authoritative server confirmation",
+            ObjectiveType::Explore => "awaiting authoritative server confirmation",
+            ObjectiveType::Interact => "awaiting authoritative server confirmation",
+            ObjectiveType::DmEncounter => "awaiting server/DM encounter confirmation",
+        };
+        format!("Status: {authority} · completion: {completion}")
     }
 
     pub fn for_exploration(opened_count: usize) -> Self {
@@ -243,6 +361,30 @@ impl QuestDetails {
             Color::rgb_u8(150, 230, 170),
         );
         Self { rows }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::QuestDetails;
+    use crate::world::ObjectiveType;
+
+    #[test]
+    fn typed_objectives_show_their_progress_authority() {
+        let cases = [
+            (ObjectiveType::Talk, "server confirmation"),
+            (ObjectiveType::Kill, "quest packets"),
+            (ObjectiveType::Collect, "inventory-backed"),
+            (ObjectiveType::Explore, "server confirmation"),
+            (ObjectiveType::Interact, "server confirmation"),
+            (ObjectiveType::DmEncounter, "server/DM encounter"),
+        ];
+
+        for (objective_type, expected) in cases {
+            let line = QuestDetails::objective_status_line(objective_type, "server");
+            assert!(line.contains(expected), "{line}");
+            assert!(line.starts_with("Status: "), "{line}");
+        }
     }
 }
 
@@ -349,16 +491,18 @@ impl Element<ClientState> for QuestDetails {
 
 /// Rebuilt from live inventory. Stable quest IDs preserve collapse state when
 /// searching, pinning, or receiving a differently ordered server roster.
-struct QuestList<A, B> {
+struct QuestList<A, B, N> {
     quest_log_path: A,
     inventory_path: B,
+    navigation_path: N,
     elements: Vec<(u64, ElementBox<ClientState>)>,
 }
 
-impl<A, B> Element<ClientState> for QuestList<A, B>
+impl<A, B, N> Element<ClientState> for QuestList<A, B, N>
 where
     A: Path<ClientState, QuestLogState>,
     B: Path<ClientState, Inventory>,
+    N: Path<ClientState, NavigationState>,
 {
     type LayoutInfo = ();
 
@@ -368,15 +512,79 @@ where
             self.elements.clear();
             let log = state.get(&self.quest_log_path);
             let inventory = state.get(&self.inventory_path);
+            let navigation = state.get(&self.navigation_path);
+            let dm_campaign_path = client_state().dm_campaign();
+            let dm_campaign = state.get(&dm_campaign_path);
             let ready_count = log
                 .quests()
                 .iter()
-                .filter(|quest| quest.items_ready(|id| inventory.count_of(id)))
+                .filter(|quest| quest.objectives_ready(|id| inventory.count_of(id)))
                 .count();
+            if dm_campaign.checkpoint_arc > 0 || dm_campaign.reconciliation.is_some() {
+                let checkpoint = if dm_campaign.checkpoint_arc > 0 {
+                    format!(
+                        "Checkpoint: Arc {} · step {}{}",
+                        dm_campaign.checkpoint_arc,
+                        dm_campaign.checkpoint_step,
+                        dm_campaign
+                            .checkpoint_carrier
+                            .map(|carrier| format!(" · carried by {carrier}"))
+                            .unwrap_or_default(),
+                    )
+                } else {
+                    "Checkpoint: no synchronized step".to_owned()
+                };
+                let reconciliation = dm_campaign
+                    .reconciliation
+                    .as_ref()
+                    .map(|result| {
+                        format!(
+                            "Latest {}: {} eligible · {} ahead · {} offline · {} unavailable · {} changed",
+                            result.mode, result.eligible, result.ahead, result.offline, result.unavailable, result.changed,
+                        )
+                    })
+                    .unwrap_or_else(|| "No reconciliation preview or confirmation yet".to_owned());
+                self.elements.push((
+                    u64::MAX - 3,
+                    ErasedElement::new(collapsible! {
+                        text: "DM Session Board",
+                        font_size: FontSize(TITLE_FONT_SIZE),
+                        title_height: 42.0,
+                        initially_expanded: true,
+                        children: (
+                            text! {
+                                text: format!("{checkpoint}\n{reconciliation}"),
+                                font_size: FontSize(15.0),
+                                overflow_behavior: OverflowBehavior::LineBreak,
+                            },
+                            split! {
+                                children: (
+                                    button! {
+                                        text: "Preview reconciliation",
+                                        tooltip: "Ask the server for a non-mutating party checkpoint preview",
+                                        height: 30.0,
+                                        font_size: FontSize(14.0),
+                                        event: InputEvent::SendMessage { text: "@dm reconcile".to_owned() },
+                                    },
+                                    button! {
+                                        text: "Confirm eligible sync",
+                                        tooltip: "Ask the server to synchronize eligible online members",
+                                        height: 30.0,
+                                        font_size: FontSize(14.0),
+                                        event: InputEvent::SendMessage { text: "@dm reconcile confirm".to_owned() },
+                                    },
+                                ),
+                            },
+                        ),
+                    }),
+                ));
+            }
             let mut visible: Vec<_> = log
                 .quests()
                 .iter()
-                .filter(|quest| quest.matches_search(&log.search) && (!log.ready_only || quest.items_ready(|id| inventory.count_of(id))))
+                .filter(|quest| {
+                    quest.matches_search(&log.search) && (!log.ready_only || quest.objectives_ready(|id| inventory.count_of(id)))
+                })
                 .collect();
             visible.sort_by_key(|quest| !log.is_pinned(quest.quest_id));
             self.elements.push((
@@ -434,9 +642,20 @@ where
                     .iter()
                     .filter(|item| inventory.count_of(item.item_id) >= item.needed)
                     .count();
-                let status = if quest.requirements().is_empty() {
+                let status = if !quest.kill_objectives().is_empty() {
+                    let completed = quest
+                        .kill_objectives()
+                        .iter()
+                        .filter(|objective| objective.current >= objective.total)
+                        .count();
+                    if quest.objectives_ready(|id| inventory.count_of(id)) {
+                        "Objectives complete".into()
+                    } else {
+                        format!("Defeating · {completed}/{} objectives", quest.kill_objectives().len())
+                    }
+                } else if quest.requirements().is_empty() {
                     "Follow quest instructions".into()
-                } else if quest.items_ready(|id| inventory.count_of(id)) {
+                } else if quest.objectives_ready(|id| inventory.count_of(id)) {
                     "Items collected".into()
                 } else {
                     format!("Collecting · {completed}/{} objectives", quest.requirements().len())
@@ -453,7 +672,7 @@ where
                         overflow_behavior: OverflowBehavior::LineBreak,
                         initially_expanded: true,
                         children: (
-                            QuestDetails::new(quest, inventory),
+                            QuestDetails::new(quest, inventory, is_tracked.then_some(navigation), dm_campaign),
                             split! {
                                 children: (
                                     button! {
@@ -505,24 +724,27 @@ where
     }
 }
 
-pub struct QuestLogWindow<A, B> {
+pub struct QuestLogWindow<A, B, N> {
     quest_log_path: A,
     inventory_path: B,
+    navigation_path: N,
 }
 
-impl<A, B> QuestLogWindow<A, B> {
-    pub fn new(quest_log_path: A, inventory_path: B) -> Self {
+impl<A, B, N> QuestLogWindow<A, B, N> {
+    pub fn new(quest_log_path: A, inventory_path: B, navigation_path: N) -> Self {
         Self {
             quest_log_path,
             inventory_path,
+            navigation_path,
         }
     }
 }
 
-impl<A, B> CustomWindow<ClientState> for QuestLogWindow<A, B>
+impl<A, B, N> CustomWindow<ClientState> for QuestLogWindow<A, B, N>
 where
     A: Path<ClientState, QuestLogState> + 'static,
     B: Path<ClientState, Inventory> + 'static,
+    N: Path<ClientState, NavigationState> + 'static,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::QuestLog)
@@ -588,7 +810,12 @@ where
                     ),
                 },
                 scroll_view! {
-                    children: QuestList { quest_log_path: path, inventory_path: self.inventory_path, elements: Vec::new() },
+                    children: QuestList {
+                        quest_log_path: path,
+                        inventory_path: self.inventory_path,
+                        navigation_path: self.navigation_path,
+                        elements: Vec::new(),
+                    },
                 },
                 text! {
                     text: "Ctrl+Q · Journal    Ctrl+W · Close",

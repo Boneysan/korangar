@@ -7,6 +7,8 @@
 //!
 //! Wired by QW-041 (drop) and QW-042 (trade).
 
+#![allow(dead_code)]
+
 use std::fmt;
 
 use korangar_interface::element::StateElement;

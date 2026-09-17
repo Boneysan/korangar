@@ -25,6 +25,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-share-default", 8, party_share_default),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
+        Scenario::new("trade-weight-boundary", 8, trade_weight_boundary),
         Scenario::new("trade-exact-quantity", 8, trade_exact_quantity),
         Scenario::new("trade-reject", 8, trade_reject),
         Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
@@ -921,6 +922,87 @@ fn trade_add_item(config: &Config) -> Result<(), String> {
         )),
         None => Err("the item was accepted but never described to the partner".to_owned()),
     }
+}
+
+/// QW-075 — trade staging must accept an item that exactly reaches the hard
+/// cap and reject a batch that would cross it, without mutating either offer.
+fn trade_weight_boundary(config: &Config) -> Result<(), String> {
+    const STEEL: u32 = 999;
+    const ARROW: u32 = 1750;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result = (|| -> Result<(), String> {
+        primary.say("@itemreset")?;
+        partner.say("@itemreset")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        let max_weight = partner.max_weight;
+        if max_weight < 200 || max_weight / 100 > u32::from(u16::MAX) {
+            return Err(format!("unexpected partner max weight for trade boundary: {max_weight}"));
+        }
+        let steel_amount = max_weight.saturating_sub(1) / 100;
+        let steel_weight = steel_amount * 100;
+        let arrow_amount = max_weight.saturating_sub(1).saturating_sub(steel_weight);
+        partner.give_item(STEEL, steel_amount as u16)?;
+        if arrow_amount > 0 {
+            partner.give_item(ARROW, arrow_amount as u16)?;
+        }
+        if partner.weight != max_weight.saturating_sub(1) {
+            return Err(format!(
+                "partner did not reach max-1 before trade: {}/{}",
+                partner.weight, max_weight
+            ));
+        }
+
+        let index = primary.give_item(ARROW, 2)?;
+        begin_trade(&mut primary, &mut partner)?;
+        partner.flush();
+        primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
+        let exact_result = primary.wait_for("exact-fit TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if exact_result != 0 {
+            return Err(format!("exact-fit trade item was refused with result {exact_result}"));
+        }
+        partner.wait_for("exact-fit TradePartnerItem", |event| match event {
+            NetworkEvent::TradePartnerItem { item_id, amount, .. } if item_id.0 == ARROW && *amount == 1 => Some(()),
+            _ => None,
+        })?;
+        primary.net.trade_cancel().map_err(|_| "primary disconnected")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        begin_trade(&mut primary, &mut partner)?;
+        partner.flush();
+        primary.net.trade_add_item(index, 2).map_err(|_| "primary disconnected")?;
+        let over_result = primary.wait_for("over-cap TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if over_result == 0 {
+            return Err("trade accepted a batch that crossed the hard weight cap".to_owned());
+        }
+        if partner
+            .collect_for(Duration::from_millis(500))
+            .into_iter()
+            .any(|event| matches!(event, NetworkEvent::TradePartnerItem { item_id, .. } if item_id.0 == ARROW))
+        {
+            return Err("over-cap trade leaked an offered item to the partner".to_owned());
+        }
+        let _ = primary.net.trade_cancel();
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        eprintln!("[QW-075] trade boundary accepted exact max and refused over-cap batch");
+        Ok(())
+    })();
+
+    let _ = primary.net.trade_cancel();
+    let _ = partner.net.trade_cancel();
+    let _ = primary.say("@itemreset");
+    let _ = partner.say("@itemreset");
+    result
 }
 
 /// QW-042 — both seats see the exact offered amounts; cancel restores

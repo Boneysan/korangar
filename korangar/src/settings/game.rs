@@ -12,6 +12,14 @@ fn default_true() -> bool {
     true
 }
 
+fn default_breadcrumb_scale() -> u8 {
+    100
+}
+
+fn default_breadcrumb_opacity() -> u8 {
+    100
+}
+
 /// Configurable key binding for cycling hostile monster targets by distance.
 #[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
 pub enum TargetHostileBinding {
@@ -89,6 +97,22 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub tracked_quests: HashMap<String, u32>,
+    /// Local tracked-objective HUD preferences.
+    #[serde(default)]
+    #[hidden_element]
+    pub breadcrumb_collapsed: bool,
+    #[serde(default)]
+    #[hidden_element]
+    pub breadcrumb_hidden: bool,
+    #[serde(default = "default_breadcrumb_scale")]
+    #[hidden_element]
+    pub breadcrumb_scale: u8,
+    #[serde(default = "default_breadcrumb_opacity")]
+    #[hidden_element]
+    pub breadcrumb_opacity: u8,
+    #[serde(default = "default_true")]
+    #[hidden_element]
+    pub breadcrumb_guidance_enabled: bool,
 }
 
 impl Default for GameSettings {
@@ -103,6 +127,11 @@ impl Default for GameSettings {
             combat_filters: crate::state::combat_chat::CombatFilters::default(),
             party_color_overrides: crate::state::party_colors::PartyColorOverrides::default(),
             tracked_quests: HashMap::new(),
+            breadcrumb_collapsed: false,
+            breadcrumb_hidden: false,
+            breadcrumb_scale: 100,
+            breadcrumb_opacity: 100,
+            breadcrumb_guidance_enabled: true,
         }
     }
 }
@@ -169,10 +198,20 @@ mod tests {
     fn test_tracked_quests_serialization() {
         let mut settings = GameSettings::default();
         settings.tracked_quests.insert("TestPlayer".to_string(), 20003);
+        settings.breadcrumb_collapsed = true;
+        settings.breadcrumb_hidden = true;
+        settings.breadcrumb_scale = 125;
+        settings.breadcrumb_opacity = 65;
+        settings.breadcrumb_guidance_enabled = false;
 
         let data = ron::ser::to_string_pretty(&settings, PrettyConfig::new()).unwrap();
         let loaded: GameSettings = ron::from_str(&data).unwrap();
 
         assert_eq!(loaded.tracked_quests.get("TestPlayer"), Some(&20003));
+        assert!(loaded.breadcrumb_collapsed);
+        assert!(loaded.breadcrumb_hidden);
+        assert_eq!(loaded.breadcrumb_scale, 125);
+        assert_eq!(loaded.breadcrumb_opacity, 65);
+        assert!(!loaded.breadcrumb_guidance_enabled);
     }
 }

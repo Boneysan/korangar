@@ -4,6 +4,8 @@
 //! Ownership, path, inventory, and weight here are **client filters**. The
 //! server remains authoritative on the actual pickup.
 
+#![allow(dead_code)]
+
 use korangar_interface::element::StateElement;
 use ragnarok_packets::{EntityId, TilePosition};
 use rust_state::RustState;

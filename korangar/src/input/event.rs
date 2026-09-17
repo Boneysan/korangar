@@ -188,6 +188,20 @@ pub enum InputEvent {
     MinimapZoomIn,
     /// Shrink the minimap square (button / scroll).
     MinimapZoomOut,
+    /// Toggle the tracked-objective HUD between expanded and compact views.
+    ToggleBreadcrumbCollapsed,
+    /// Hide/show the tracked-objective HUD.
+    ToggleBreadcrumbHidden,
+    /// Change tracked-objective HUD scale by a percentage step.
+    BreadcrumbScale {
+        delta: i8,
+    },
+    /// Change tracked-objective HUD opacity by a percentage step.
+    BreadcrumbOpacity {
+        delta: i8,
+    },
+    /// Toggle same-map coordinate guidance and its minimap marker.
+    ToggleBreadcrumbGuidance,
     /// Use a consumable / trigger item use (`CZ_USE_ITEM2`).
     UseItem {
         inventory_index: ragnarok_packets::InventoryIndex,

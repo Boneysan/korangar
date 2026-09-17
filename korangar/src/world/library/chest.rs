@@ -4,6 +4,8 @@
 //! `dm_treasures.txt`). Loads and validates unique chest IDs, coordinates, and
 //! schema versions.
 
+#![allow(dead_code)]
+
 use hashbrown::HashMap;
 
 pub const CHEST_SCHEMA_VERSION: u32 = 1;

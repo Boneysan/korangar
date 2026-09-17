@@ -5,6 +5,8 @@
 //! and `Opened`) driven by server-authoritative achievement packets, with
 //! explicit text/icon fallbacks.
 
+#![allow(dead_code)]
+
 use hashbrown::HashSet;
 use korangar_interface::element::StateElement;
 use rust_state::RustState;

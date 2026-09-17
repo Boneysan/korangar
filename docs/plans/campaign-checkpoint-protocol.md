@@ -43,8 +43,8 @@ instead of duplicating registry manipulation.
 
 ## Transport
 
-Prefer the existing structured `[DMJ]` event channel for the first version if it
-already provides authenticated server-to-client delivery. Define versioned
+The first transport slice uses the existing structured `[DMJ]` event channel,
+with server-colored chat as the delivery lane. Define versioned
 messages for:
 
 - checkpoint snapshot;
@@ -56,6 +56,33 @@ If `[DMJ]` cannot provide the required direction or payload integrity, add one
 versioned custom packet family to both Hercules and
 `korangar-networking/src/packet_versions/version_20220406.rs`. Do not encode
 state in display prose.
+
+The current implementation accepts DMJ version 1 checkpoint, flag, and typed
+objective messages only from server-colored chat. Each message carries a
+monotonic sequence; the client rejects malformed/future versions and stale
+messages. Hercules emits checkpoint/flag snapshots after SQL-backed party
+synchronization, while SQL remains authoritative. The checkpoint row is
+namespaced by the stable campaign id (`seal_cascade`) plus the current party
+id, carries a schema version and last actor, and writes an append-only
+transition log for advance/consume/reset events. A separate durable member
+table keeps eligible character ids and adopts the checkpoint when a member
+leaves and later rejoins under a new transient party id. A custom packet family
+is still unnecessary unless live testing shows chat delivery or integrity is
+insufficient.
+
+The reusable `DM_DMJObjective` script helper is wired to the Arc 1 Deviruchi
+completion transition as the first typed DM encounter producer. It broadcasts
+the completed objective to eligible online party members; additional encounter
+transitions can call the same helper without changing the client protocol.
+
+Reconciliation preview and confirm results now use a typed version-1
+`reconcile` message carrying party, arc/step, mode, eligible, ahead, offline,
+unavailable, and changed counts. Korangar stores the latest result as
+authoritative client state; prose remains supplemental diagnostics.
+
+Administrative rollback additionally emits an explicit version-1 `reset` DMJ
+message. It clears the client campaign mirror and establishes the next sequence
+epoch, so a valid reset is not mistaken for a stale backward transition.
 
 ## Client integration
 
@@ -77,6 +104,18 @@ state in display prose.
 - Two clients: offline advancement, reconnect, late join, leave/rejoin,
   already-ahead member, item-bearing step, server restart.
 
+The migration has also been exercised in an isolated temporary MariaDB
+instance: schema creation, checkpoint/member/audit inserts, clean database
+shutdown/start, and row recovery all passed. The project-local `ragnarok`
+account still cannot apply the migration because it lacks `CREATE`.
+
+The real two-client `dm-checkpoint-reconcile` scenario also covers an online
+party transition, offline advancement, reconnect confirmation, leave/rejoin,
+and carried-item owner propagation on the authoritative checkpoint echo. The
+fresh disposable-schema run passed in
+`tools/testing/runs/20260916-203309.scoped`; live independently-ahead member
+creation and actual carried-item consumption remain acceptance fixtures.
+
 ## Done
 
 - Restart preserves checkpoint and ownership.
@@ -84,4 +123,3 @@ state in display prose.
 - Every reconciliation displays exact effects and requires confirmation.
 - Transition log and DM recovery procedure are documented and tested.
 - The client checkpoint module is used in production and strict Clippy passes.
-

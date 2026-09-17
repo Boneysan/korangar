@@ -9,6 +9,15 @@ use crate::{
     UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QuestObjectiveProgress {
+    pub quest_id: u32,
+    pub objective_id: u32,
+    pub mob_id: u32,
+    pub current_count: u16,
+    pub total_count: u16,
+}
+
 /// An event triggered by one of the Ragnarok Online servers.
 #[derive(Debug)]
 pub enum NetworkEvent {
@@ -374,6 +383,10 @@ pub enum NetworkEvent {
     /// The full quest log, sent after map login (`ZC_ALL_QUEST_LIST` family).
     QuestList {
         quest_ids: Vec<u32>,
+    },
+    /// Authoritative kill-objective counts from the hunting quest packets.
+    QuestObjectiveProgress {
+        objectives: Vec<QuestObjectiveProgress>,
     },
     SetInventory {
         items: Vec<InventoryItem<NoMetadata>>,
@@ -825,6 +838,19 @@ pub enum NetworkEvent {
         amount: u32,
     },
     StorageClosed,
+    /// Result of attempting to add an item to the equipped cart.
+    CartItemAddResult {
+        result: u8,
+    },
+    CartItemAdded {
+        index: InventoryIndex,
+        item_id: ItemId,
+        amount: u32,
+    },
+    CartItemRemoved {
+        index: InventoryIndex,
+        amount: u32,
+    },
     /// Full achievement status list sent on map connection.
     AchievementList {
         completed_achievements: Vec<u32>,
