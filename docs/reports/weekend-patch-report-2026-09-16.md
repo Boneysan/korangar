@@ -9,7 +9,9 @@ Hercules server.
 
 The changes are pushed on these branches:
 
-- Korangar: `agent/bump-hercules-pin` — `2a8ec1c9`
+- Korangar: `agent/bump-hercules-pin` — `ebb890fd`, plus an uncommitted
+  2026-09-18 live-session pass (UI sound, quest tracking, Tab-target attack;
+  see below)
 - Hercules: `agent/map-teleport-safety` — `008149be`
 
 ## Player-facing improvements
@@ -45,6 +47,19 @@ The changes are pushed on these branches:
   are blocked.
 - The server warp graph and deterministic route foundation are now generated
   from actual warp scripts rather than hand-authored route examples.
+- The UI confirm-click sound no longer plays when picking up an item/skill or
+  grabbing a window's move/resize handle — only a completed action (a button,
+  character select, a quest journal entry) chimes.
+- Tracking or untracking a quest from the journal now updates the HUD
+  breadcrumb and remembers the choice for next login immediately, instead of
+  waiting for an unrelated quest event to refresh it.
+- Tab-targeting can now attack: press Space (configurable in Game Settings,
+  cycles Space → F → R → Disabled) to attack the currently Tab-selected
+  target without clicking it. Deliberately a separate confirm press rather
+  than attacking the instant Tab selects, so cycling through monsters to look
+  around does not engage each one.
+- Sitting-recovery HP and SP numbers are now colored distinctly (HP green, SP
+  blue, matching the HUD) and no longer render on top of each other.
 
 ## Friends' original concern checklist
 
@@ -181,6 +196,11 @@ automated workspace:
 - Internet/second-client playtesting and a full Arc I late-join walkthrough.
 - A final live restart/reconciliation pass against the project database.
 - A cosmetics choice for the approved vertical slice.
+- The sitting-recovery HP/SP color and offset fix, and the F/R/Disabled
+  alternate attack-target key bindings, are source-fixed and test-covered but
+  not yet re-confirmed on screen after the latest rebuild (the sound and
+  quest-tracking fixes and the Space default binding were).
+- The 2026-09-18 changes above are uncommitted on top of `ebb890fd`.
 
 These are acceptance gates, not known automated test failures. No source,
 database, or release state should be reset to bypass them.
