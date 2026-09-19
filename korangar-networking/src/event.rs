@@ -9,6 +9,15 @@ use crate::{
     UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QuestObjectiveProgress {
+    pub quest_id: u32,
+    pub objective_id: u32,
+    pub mob_id: u32,
+    pub current_count: u16,
+    pub total_count: u16,
+}
+
 /// An event triggered by one of the Ragnarok Online servers.
 #[derive(Debug)]
 pub enum NetworkEvent {
@@ -191,6 +200,13 @@ pub enum NetworkEvent {
         /// consumable.
         equipment: bool,
     },
+    /// A skill use was rejected by the server (`ZC_ACK_TOUSESKILL`).
+    SkillFailed {
+        skill_id: SkillId,
+        cause: u8,
+        reason: Option<SkillFailReason>,
+        item_id: Option<ItemId>,
+    },
     /// A message-table line carrying a number (`ZC_MSG_VALUE`). The table lives
     /// in the client crate, and the id's text holds the `%d` this fills.
     MessageTableNumber {
@@ -263,6 +279,7 @@ pub enum NetworkEvent {
     HealEffect {
         entity_id: EntityId,
         heal_amount: usize,
+        heal_type: HealType,
     },
     /// A successful non-damage skill use (0x09CB). This is
     /// emitted even when an area skill such as Frost Nova finds no targets,
@@ -367,6 +384,10 @@ pub enum NetworkEvent {
     /// The full quest log, sent after map login (`ZC_ALL_QUEST_LIST` family).
     QuestList {
         quest_ids: Vec<u32>,
+    },
+    /// Authoritative kill-objective counts from the hunting quest packets.
+    QuestObjectiveProgress {
+        objectives: Vec<QuestObjectiveProgress>,
     },
     SetInventory {
         items: Vec<InventoryItem<NoMetadata>>,
@@ -706,6 +727,11 @@ pub enum NetworkEvent {
         id: u8,
         color: ColorRGBA,
     },
+    /// Campaign recovery HUD (`ZC_RECOVERY_STATE` 0x0EFD).
+    RecoveryState {
+        mode: u8,
+        block: u8,
+    },
     /// Skill post-delay cooldown (`ZC_SKILL_POSTDELAY` 0x043D).
     SkillCooldown {
         skill_id: SkillId,
@@ -813,6 +839,28 @@ pub enum NetworkEvent {
         amount: u32,
     },
     StorageClosed,
+    /// Result of attempting to add an item to the equipped cart.
+    CartItemAddResult {
+        result: u8,
+    },
+    CartItemAdded {
+        index: InventoryIndex,
+        item_id: ItemId,
+        amount: u32,
+    },
+    CartItemRemoved {
+        index: InventoryIndex,
+        amount: u32,
+    },
+    /// Full achievement status list sent on map connection.
+    AchievementList {
+        completed_achievements: Vec<u32>,
+    },
+    /// Single achievement status update.
+    AchievementUpdate {
+        achievement_id: u32,
+        is_completed: bool,
+    },
 }
 
 /// New-type so we can implement some `From` traits. This will help when

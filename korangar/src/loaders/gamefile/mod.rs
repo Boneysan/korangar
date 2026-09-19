@@ -38,7 +38,7 @@ pub(crate) const LUA_ARCHIVE_FILE_NAME: &str = "lua_files.7z";
 /// rename the lookup below found no manifest, took its "no manifest, nothing to
 /// check" branch, and the lua verification became a no-op in exactly the
 /// shipped configuration it was written to protect.
-pub(crate) const SHA256SUMS_FILE_NAMES: &[&str] = &["SHA256SUMS-assets", "SHA256SUMS-client", "SHA256SUMS"];
+pub(crate) const SHA256SUMS_FILE_NAMES: &[&str] = &["SHA256SUMS-assets", "SHA256SUMS-client", "SHA256SUMS", "SHA256SUMS-repair"];
 
 pub(crate) const TEMPORARY_CACHE_FILE_NAME: &str = "cache.7z.tmp";
 pub(crate) const HASH_FILE_PATH: &str = "game_file_hash.txt";

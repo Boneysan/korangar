@@ -100,7 +100,7 @@ pub trait CharacterServerPacket: Packet {}
 /// Marker trait for map server packets.
 pub trait MapServerPacket: Packet {}
 
-#[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize)]
+#[derive(Clone, Copy, Debug, ByteConvertable, FixedByteSize, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 pub struct ClientTick(pub u32);
 
@@ -261,7 +261,9 @@ pub enum Sex {
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0064)]
 pub struct LoginServerLoginPacket {
-    /// Unused
+    /// Seal Cascade pack version (`PACK_VERSION`), little-endian. Official
+    /// clients put sclientinfo `<version>` here; we use it so the login
+    /// server can refuse an outdated friends pack.
     #[new_default]
     pub version: [u8; 4],
     #[length(24)]
@@ -4091,7 +4093,7 @@ pub struct VisualEffectPacket {
     pub effect: VisualEffect,
 }
 
-#[derive(Debug, Clone, ByteConvertable)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u16)]
 pub enum ExperienceType {
@@ -4100,7 +4102,7 @@ pub enum ExperienceType {
     JobExperience,
 }
 
-#[derive(Debug, Clone, ByteConvertable)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ByteConvertable)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[numeric_type(u16)]
 pub enum ExperienceSource {
@@ -4850,6 +4852,82 @@ pub struct MoveItemFromStoragePacket {
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0193)]
 pub struct CloseStoragePacket {}
+
+/// Move an inventory item into the equipped cart
+/// (`CZ_MOVE_ITEM_FROM_BODY_TO_CART` 0x0126). Hercules expects the inventory
+/// index using the normal +2 wire offset.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0126)]
+pub struct MoveItemToCartPacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Move a cart item into inventory (`CZ_MOVE_ITEM_FROM_CART_TO_BODY` 0x0127).
+/// Cart slots use the same +2 index convention as inventory slots on this
+/// client protocol version.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0127)]
+pub struct MoveItemFromCartPacket {
+    pub cart_index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Result of adding an item to cart (`ZC_ACK_ADD_ITEM_TO_CART` 0x012C).
+/// `0` means the cart weight limit rejected the item; `1` means the cart slot
+/// limit rejected it.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x012C)]
+pub struct CartItemAddResultPacket {
+    pub result: u8,
+}
+
+/// Cart item count and weight (`ZC_NOTIFY_CARTITEM_COUNTINFO` 0x0121).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0121)]
+pub struct CartInfoPacket {
+    pub count: u16,
+    pub max_count: u16,
+    pub weight: u32,
+    pub max_weight: u32,
+}
+
+/// Cart item added (`ZC_ADD_ITEM_TO_CART` 0x0B45) for packet version
+/// 20220406. This is the modern 32-bit item-id layout from Hercules.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B45)]
+pub struct CartItemAddedPacket {
+    pub index: InventoryIndex,
+    pub amount: u32,
+    pub item_id: ItemId,
+    pub item_type: u8,
+    pub identified: u8,
+    pub damaged: u8,
+    pub slot: [u32; 4],
+    pub option_data: [ItemOptions; 5],
+    pub refine: u8,
+    pub grade: u8,
+}
+
+/// Cart item removed (`ZC_DELETE_ITEM_FROM_CART` 0x0125).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0125)]
+pub struct CartItemRemovedPacket {
+    pub index: InventoryIndex,
+    pub amount: u32,
+}
+
+/// Client-side cart window close (`ZC_CARTOFF` 0x012B).
+#[derive(Debug, Clone, Default, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x012B)]
+pub struct CartClosedPacket {}
 
 /// Storage capacity (`ZC_NOTIFY_STOREITEM_COUNTINFO` 0x00F2).
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
@@ -5853,6 +5931,19 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// Campaign recovery HUD (`ZC_RECOVERY_STATE`, **fork packet 0x0EFD**).
+///
+/// `mode` is standing/sitting/respawn; `block` is why recovery is paused.
+/// Length is 4 bytes. A stock client consumes the length table entry and
+/// ignores the payload.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0EFD)]
+pub struct RecoveryStatePacket {
+    pub mode: u8,
+    pub block: u8,
+}
+
 /// Why a skill failed, when the protocol has no code for it
 /// (`ZC_SKILL_FAIL_REASON`, **fork packet 0x0EFE**).
 ///
@@ -6542,6 +6633,32 @@ mod tests {
     }
 
     #[test]
+    fn cart_transfer_packets_match_hercules_offsets_and_headers() {
+        // Hercules packets_struct.h: 0x0126/0x0127, with inventory/cart index
+        // encoded as actual slot + 2 and a signed 32-bit count on the wire.
+        assert_eq!(
+            packet_bytes(MoveItemToCartPacket {
+                inventory_index: InventoryIndex(7),
+                amount: 300,
+            }),
+            [0x26, 0x01, 0x09, 0x00, 0x2C, 0x01, 0x00, 0x00]
+        );
+        assert_eq!(
+            packet_bytes(MoveItemFromCartPacket {
+                cart_index: InventoryIndex(3),
+                amount: 2,
+            }),
+            [0x27, 0x01, 0x05, 0x00, 0x02, 0x00, 0x00, 0x00]
+        );
+        assert_eq!(packet_bytes(CartItemAddResultPacket { result: 0 }), [0x2C, 0x01, 0x00]);
+        let cart = read_packet::<CartInfoPacket>(&[0x21, 0x01, 0x02, 0x00, 0x64, 0x00, 0xA0, 0x86, 0x01, 0x00, 0x80, 0x38, 0x01, 0x00]);
+        assert_eq!(
+            (cart.count, cart.max_count, cart.weight, cart.max_weight),
+            (2, 100, 100_000, 80_000)
+        );
+    }
+
+    #[test]
     fn request_details_packet_matches_20220406_opcode() {
         assert_eq!(packet_bytes(RequestDetailsPacket::new(EntityId(0x0102_0304))), [
             0x68, 0x03, 0x04, 0x03, 0x02, 0x01
@@ -6676,6 +6793,16 @@ mod tests {
         assert_eq!(job.account_id, AccountId(0x0102_0304));
         assert_eq!(job.job_id, JobId(4001));
         assert_eq!(job.base_level, 99);
+    }
+
+    #[test]
+    fn recovery_state_packet_is_four_bytes() {
+        let packet = read_packet::<RecoveryStatePacket>(&[0xFD, 0x0E, 0x02, 0x03]);
+        assert_eq!(packet.mode, 2);
+        assert_eq!(packet.block, 3);
+        assert_eq!(packet_bytes(RecoveryStatePacket { mode: 1, block: 4 }), [
+            0xFD, 0x0E, 0x01, 0x04
+        ]);
     }
 
     #[test]

@@ -23,7 +23,7 @@ mod friend_request;
 mod game_settings;
 mod graphics_settings;
 mod hotbar;
-mod hud;
+pub(crate) mod hud;
 mod identify;
 mod instance;
 mod interface_settings;
@@ -41,6 +41,7 @@ mod party_invite;
 mod player_target;
 #[cfg(feature = "debug")]
 mod profiler;
+mod quantity;
 mod quest_log;
 #[cfg(feature = "debug")]
 mod render_options;
@@ -56,6 +57,7 @@ mod status_bar;
 mod storage;
 #[cfg(feature = "debug")]
 mod theme_inspector;
+mod tracked_objective;
 mod trade;
 mod warp_selection;
 mod weapon_refine;
@@ -79,14 +81,14 @@ pub use self::disconnect_notice::DisconnectNoticeWindow;
 pub use self::dm::{BestiaryWindow, BestiaryWindowState, LootGeneratorWindow, LootWindowState};
 pub use self::emote::EmoteWindow;
 pub use self::equipment::EquipmentWindow;
-pub use self::error::ErrorWindow;
+pub use self::error::{ErrorWindow, OutdatedClientWindow};
 #[cfg(feature = "debug")]
 pub use self::frame_inspector::FrameInspectorWindow;
 pub use self::friend_list::{FriendListWindow, FriendListWindowState};
 pub use self::friend_request::FriendRequestWindow;
 pub use self::game_settings::GameSettingsWindow;
 pub use self::graphics_settings::GraphicsSettingsWindow;
-pub use self::hotbar::HotbarWindow;
+pub use self::hotbar::{HotbarWindow, pickup_hotbar_slot};
 pub use self::hud::HudWindow;
 pub use self::identify::IdentifyWindow;
 pub use self::instance::InstanceWindow;
@@ -105,6 +107,7 @@ pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
+pub use self::quantity::QuantityWindow;
 pub use self::quest_log::QuestLogWindow;
 #[cfg(feature = "debug")]
 pub use self::render_options::RenderOptionsWindow;
@@ -119,6 +122,7 @@ pub use self::status_bar::StatusBarWindow;
 pub use self::storage::StorageWindow;
 #[cfg(feature = "debug")]
 pub use self::theme_inspector::{ThemeInspectorWindow, ThemeInspectorWindowState};
+pub use self::tracked_objective::TrackedObjectiveWindow;
 pub use self::trade::{TradeRequestWindow, TradeWindow, TradeWindowState};
 pub use self::warp_selection::WarpSelectionWindow;
 pub use self::weapon_refine::WeaponRefineWindow;
@@ -143,7 +147,8 @@ pub enum WindowClass {
     ItemActions,
     Equipment,
     Emotes,
-    /// Login / network error popup (wrong password, disconnect, …).
+    /// Login / network error popup (wrong password, disconnect, outdated
+    /// client, …).
     Error,
     DisconnectNotice,
     StatusBar,
@@ -157,6 +162,8 @@ pub enum WindowClass {
     Party,
     /// Quest log: active quests and campaign contract requirements.
     QuestLog,
+    /// HUD tracker for pinned / active campaign quest objective.
+    TrackedObjective,
     /// Incoming party invite popup (Accept / Decline).
     PartyInvite,
     /// Auto Spell skill chooser.
@@ -169,6 +176,7 @@ pub enum WindowClass {
     Trade,
     TradeRequest,
     Identify,
+    Quantity,
     Respawn,
     SelectServer,
     Sell,

@@ -154,23 +154,29 @@ mod character_slot_preview {
     //     pub background_color: ClientState,
     // }
 
-    pub struct CharacterSlotPreview<P, M, B> {
+    pub struct CharacterSlotPreview<P, M, B, C> {
         character_information: P,
         switch_request: M,
         click_handler: CharacterSlotPreviewHandler<B>,
         overlay_handler: OverlayHandler<M, P>,
         slot: usize,
+        /// The slot's class name. Held as a path rather than looked up while
+        /// drawing, because a borrow taken inline in `lay_out` does not live
+        /// long enough for `add_text` -- the same reason the name and the level
+        /// strings arrive this way.
+        class_name: C,
         hover_tip: UnsafeCell<String>,
         preview: UnsafeCell<Option<std::sync::Arc<crate::world::AnimationData>>>,
     }
 
-    impl<P, M, B> CharacterSlotPreview<P, M, B> {
+    impl<P, M, B, C> CharacterSlotPreview<P, M, B, C> {
         pub fn new(
             character_information: P,
             switch_request: M,
             click_handler: CharacterSlotPreviewHandler<B>,
             overlay_handler: OverlayHandler<M, P>,
             slot: usize,
+            class_name: C,
         ) -> Self {
             Self {
                 character_information,
@@ -178,6 +184,7 @@ mod character_slot_preview {
                 click_handler,
                 overlay_handler,
                 slot,
+                class_name,
                 hover_tip: UnsafeCell::new(String::new()),
                 preview: UnsafeCell::new(None),
             }
@@ -249,11 +256,12 @@ mod character_slot_preview {
         }
     }
 
-    impl<P, M, B> Element<ClientState> for CharacterSlotPreview<P, M, B>
+    impl<P, M, B, C> Element<ClientState> for CharacterSlotPreview<P, M, B, C>
     where
         P: Path<ClientState, CharacterInformation, false>,
         M: Path<ClientState, Option<usize>>,
         B: Path<ClientState, Option<usize>>,
+        C: Path<ClientState, String, false>,
     {
         type LayoutInfo = BaseLayoutInfo;
 
@@ -382,14 +390,40 @@ mod character_slot_preview {
                     OverflowBehavior::Shrink,
                 );
 
+                // The class, directly under the name and in its own colour: it
+                // is identity rather than a statistic, and on a screen of four
+                // slots it is the fastest thing to read. No "Class" label --
+                // "Acolyte" needs no introduction, and the row it saves is the
+                // room this needed. The card is 180 tall and the rows below now
+                // end around 144.
+                if let Some(class_name) = state.try_get(&self.class_name) {
+                    layout.add_text(
+                        layout_info.area,
+                        class_name,
+                        FontSize(14.0),
+                        Color::rgb_u8(150, 205, 255),
+                        Color::rgb_u8(255, 160, 60),
+                        HorizontalAlignment::Center { offset: 0.0, border: 5.0 },
+                        VerticalAlignment::Top { offset: 22.0 },
+                        OverflowBehavior::Shrink,
+                    );
+                }
+
+                // Four facts, four colours: identity blue, base level gold, job
+                // level green, place lavender. The labels are near-white rather
+                // than a fifth hue -- they are the brightest thing on the card
+                // and read as its structure, while the colour carries meaning.
+                // A slot is scanned while deciding which character to play, and
+                // a block of one khaki made every line cost the same effort as
+                // every other.
                 layout.add_text(
                     layout_info.area,
                     "Base level",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 30.0 },
+                    VerticalAlignment::Top { offset: 44.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -399,10 +433,10 @@ mod character_slot_preview {
                         .base_level_str
                         .get_str(self.character_information.manually_asserted().base_level(), state),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(255, 215, 120),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 44.0 },
+                    VerticalAlignment::Top { offset: 58.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -410,10 +444,10 @@ mod character_slot_preview {
                     layout_info.area,
                     "Job level",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 66.0 },
+                    VerticalAlignment::Top { offset: 80.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -423,10 +457,10 @@ mod character_slot_preview {
                         .job_level_str
                         .get_str(self.character_information.manually_asserted().job_level(), state),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(170, 230, 150),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 80.0 },
+                    VerticalAlignment::Top { offset: 94.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -434,10 +468,10 @@ mod character_slot_preview {
                     layout_info.area,
                     "Map",
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(235, 235, 225),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 102.0 },
+                    VerticalAlignment::Top { offset: 116.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -449,10 +483,10 @@ mod character_slot_preview {
                         .strip_suffix(".gat")
                         .unwrap_or(&character_information.map_name),
                     FontSize(14.0),
-                    Color::rgb_u8(200, 200, 150),
+                    Color::rgb_u8(215, 175, 255),
                     Color::rgb_u8(255, 160, 60),
                     HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
-                    VerticalAlignment::Top { offset: 116.0 },
+                    VerticalAlignment::Top { offset: 130.0 },
                     OverflowBehavior::Shrink,
                 );
 
@@ -689,6 +723,7 @@ where
                                     CharacterSlotPreviewHandler::new(self.switch_request, slot),
                                     OverlayHandler::new(slot, self.switch_request, path.in_slot(slot)),
                                     slot,
+                                    path.class_in_slot(slot),
                                 ),
                                 CharacterSlotPreview::new(
                                     path.in_slot(slot + 1),
@@ -696,6 +731,7 @@ where
                                     CharacterSlotPreviewHandler::new(self.switch_request, slot + 1),
                                     OverlayHandler::new(slot + 1, self.switch_request, path.in_slot(slot + 1)),
                                     slot + 1,
+                                    path.class_in_slot(slot + 1),
                                 ),
                                 CharacterSlotPreview::new(
                                     path.in_slot(slot + 2),
@@ -703,6 +739,7 @@ where
                                     CharacterSlotPreviewHandler::new(self.switch_request, slot + 2),
                                     OverlayHandler::new(slot + 2, self.switch_request, path.in_slot(slot + 2)),
                                     slot + 2,
+                                    path.class_in_slot(slot + 2),
                                 ),
                                 CharacterSlotPreview::new(
                                     path.in_slot(slot + 3),
@@ -710,6 +747,7 @@ where
                                     CharacterSlotPreviewHandler::new(self.switch_request, slot + 3),
                                     OverlayHandler::new(slot + 3, self.switch_request, path.in_slot(slot + 3)),
                                     slot + 3,
+                                    path.class_in_slot(slot + 3),
                                 ),
                                 CharacterSlotPreview::new(
                                     path.in_slot(slot + 4),
@@ -717,6 +755,7 @@ where
                                     CharacterSlotPreviewHandler::new(self.switch_request, slot + 4),
                                     OverlayHandler::new(slot + 4, self.switch_request, path.in_slot(slot + 4)),
                                     slot + 4,
+                                    path.class_in_slot(slot + 4),
                                 ),
                             )
                         }));

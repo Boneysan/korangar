@@ -5,8 +5,8 @@ use korangar_debug::profiling::FrameMeasurement;
 use korangar_interface::event::{ClickHandler, Event, EventQueue};
 use korangar_networking::{InventoryItem, ShopItem};
 use ragnarok_packets::{
-    AccountId, AttackRange, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, RepairableItemInformation,
-    ShopId, SkillId, SkillLevel, SoldItemInformation, StatUpType, TilePosition,
+    AccountId, AttackRange, BuyOrSellOption, CharacterId, CharacterServerInformation, EntityId, HotbarSlot, InventoryIndex,
+    RepairableItemInformation, ShopId, SkillId, SkillLevel, SoldItemInformation, StatUpType, TilePosition,
 };
 use rust_state::State;
 
@@ -104,6 +104,15 @@ pub enum InputEvent {
     ToggleFriendListWindow,
     /// Open or close the party roster window. Only works while playing.
     TogglePartyWindow,
+    /// Cycle this member's local minimap/roster color. Does not change the
+    /// server party.
+    CyclePartyMemberColor {
+        account_id: AccountId,
+    },
+    /// Clear a local party-color override for this member.
+    ResetPartyMemberColor {
+        account_id: AccountId,
+    },
     /// Open or close the zeny/exp HUD. Only works while playing.
     ToggleHudWindow,
     /// Close the most recently opened or clicked closable window.
@@ -179,6 +188,20 @@ pub enum InputEvent {
     MinimapZoomIn,
     /// Shrink the minimap square (button / scroll).
     MinimapZoomOut,
+    /// Toggle the tracked-objective HUD between expanded and compact views.
+    ToggleBreadcrumbCollapsed,
+    /// Hide/show the tracked-objective HUD.
+    ToggleBreadcrumbHidden,
+    /// Change tracked-objective HUD scale by a percentage step.
+    BreadcrumbScale {
+        delta: i8,
+    },
+    /// Change tracked-objective HUD opacity by a percentage step.
+    BreadcrumbOpacity {
+        delta: i8,
+    },
+    /// Toggle same-map coordinate guidance and its minimap marker.
+    ToggleBreadcrumbGuidance,
     /// Use a consumable / trigger item use (`CZ_USE_ITEM2`).
     UseItem {
         inventory_index: ragnarok_packets::InventoryIndex,
@@ -294,13 +317,40 @@ pub enum InputEvent {
     AssignSkillToHotbar {
         skill: LearnableSkill,
     },
+    /// Clear a hotbar slot (right-click or drag-off-bar).
+    ClearHotbarSlot {
+        slot: HotbarSlot,
+    },
+    OpenQuantityDrop {
+        inventory_index: InventoryIndex,
+        maximum: u16,
+        item_name: String,
+    },
+    OpenQuantityTrade {
+        inventory_index: InventoryIndex,
+        maximum: u16,
+        item_name: String,
+    },
+    QuantityIncrement,
+    QuantityDecrement,
+    QuantitySetAll,
+    QuantityConfirm,
+    QuantityCancel,
     /// Camera-relative keyboard movement (WASD).
+    /// Camera-relative keyboard movement. `fresh` is true when one of the four
+    /// keys went down THIS frame, which is what separates a tap from a key that
+    /// is simply still held -- and therefore a single step from a stride.
     KeyboardMove {
         forward: bool,
         back: bool,
         left: bool,
         right: bool,
+        fresh: bool,
     },
+    /// Every WASD key came up. A held key walks a long path, so the release has
+    /// to be said out loud -- otherwise the character coasts to the end of a
+    /// path the player has already stopped asking for.
+    KeyboardMoveStop,
     /// Warp to an online party member (`@partyjump`).
     JumpToPartyMember {
         character_name: String,
@@ -309,6 +359,11 @@ pub enum InputEvent {
     CastSkill {
         /// Slot of the hotbar that the skill is bound to.
         slot: HotbarSlot,
+    },
+    /// Cast a learned skill by id (skill-window / direct activation). Same
+    /// targeting and network request as [`InputEvent::CastSkill`].
+    ActivateSkill {
+        skill_id: SkillId,
     },
     /// Cast an entity-targeted skill, walking into its range first.
     CastSkillAtEntity {
@@ -445,6 +500,10 @@ pub enum InputEvent {
         /// Id of the skill to level up.
         skill_id: SkillId,
     },
+    /// Remove one pending or committed point from a skill and refund it.
+    RefundSkillPoint {
+        skill_id: SkillId,
+    },
     /// Level up a skill.
     LevelUpSkills {
         /// List of skills to level up by one. This list is allowed to contain
@@ -491,10 +550,27 @@ pub enum InputEvent {
     ToggleEmoteWindow,
     /// Open or close the quest log. Only works while playing.
     ToggleQuestLogWindow,
+    /// Track or untrack a quest on the HUD breadcrumb, from the journal's
+    /// per-quest button. Routed through an event (rather than the journal's
+    /// other buttons, which mutate `QuestLogState` directly) because the HUD
+    /// breadcrumb refresh and per-character persistence live on `Client` and
+    /// are not reachable from a plain state-mutation closure.
+    ToggleQuestTracking {
+        quest_id: u32,
+    },
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.
     ToggleLootWindow,
+    /// Cycle to the next visible, alive, hostile monster by distance.
+    CycleHostileTarget,
+    /// Cycle the configured keybinding for hostile target cycling.
+    CycleHostileTargetBinding,
+    /// Attack the current Tab-cycled hostile target without needing to click
+    /// or re-hover it.
+    AttackTarget,
+    /// Cycle the configured keybinding for the Tab-target attack confirm.
+    CycleAttackTargetBinding,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]
     ToggleThemeInspectorWindow,

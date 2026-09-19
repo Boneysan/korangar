@@ -2,6 +2,8 @@ use korangar_interface::element::StateElement;
 use ragnarok_packets::{AccountId, CharacterId, JobId, PartyId, PartyMember, PartyMemberInfoPacket, TilePosition};
 use rust_state::RustState;
 
+use crate::state::party_colors::{DEFAULTS, PartyColorOverrides, PartyColorState, PartyMemberKey, Rgb};
+
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct PartyMemberState {
     account_id: AccountId,
@@ -28,12 +30,26 @@ pub struct PartyMemberState {
     /// elements with their own buttons, and an element's text has to come from
     /// a *field* path rather than a method.
     display_label: String,
+    #[hidden_element]
+    color: Rgb,
 }
 
 #[allow(dead_code)]
 impl PartyMemberState {
     pub fn account_id(&self) -> AccountId {
         self.account_id
+    }
+
+    pub fn character_id(&self) -> Option<CharacterId> {
+        self.character_id
+    }
+
+    pub fn color(&self) -> Rgb {
+        self.color
+    }
+
+    pub fn key(&self) -> PartyMemberKey {
+        PartyMemberKey::new(self.character_id, self.account_id)
     }
 
     pub fn name(&self) -> &str {
@@ -110,6 +126,8 @@ impl PartyMemberState {
         // Coloured to match the friend list: presence has to be readable at a
         // glance, and three states that differ only as words are not.
         let reset = crate::state::COLOR_RESET;
+        let color_code = self.color.to_inline_code();
+        let color_dot = format!("{color_code}\u{2022}{reset} ");
         let online = match (self.online, self.is_dead) {
             (false, _) => format!("{}offline{reset}", crate::state::COLOR_OFFLINE),
             (true, true) => format!("{}DEAD{reset}", crate::state::COLOR_DEAD),
@@ -141,7 +159,7 @@ impl PartyMemberState {
         } else {
             format!("  [{}]", self.map_name.trim_end_matches(".gat"))
         };
-        format!("{}{leader}{level}{class}  ({online}){hp}{sp}{map}", self.name)
+        format!("{color_dot}{}{leader}{level}{class}  ({online}){hp}{sp}{map}", self.name)
     }
 
     fn from_roster_member(member: PartyMember) -> Self {
@@ -162,6 +180,7 @@ impl PartyMemberState {
             class_name: String::new(),
             is_dead: false,
             display_label: String::new(),
+            color: DEFAULTS[0],
         }
     }
 
@@ -183,6 +202,7 @@ impl PartyMemberState {
             class_name: String::new(),
             is_dead: false,
             display_label: String::new(),
+            color: DEFAULTS[0],
         }
     }
 }
@@ -223,6 +243,10 @@ pub struct PartyState {
     /// is waiting on you, whether one you sent is still outstanding, or whether
     /// you are simply party-less.
     status_text: String,
+    #[hidden_element]
+    color_state: PartyColorState,
+    #[hidden_element]
+    color_overrides: PartyColorOverrides,
 }
 
 impl Default for PartyState {
@@ -242,12 +266,45 @@ impl Default for PartyState {
             share_loot: false,
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
+            color_state: PartyColorState::new(),
+            color_overrides: PartyColorOverrides::default(),
         }
     }
 }
 
 #[allow(dead_code)]
 impl PartyState {
+    pub fn color_state(&self) -> &PartyColorState {
+        &self.color_state
+    }
+
+    pub fn set_color_overrides(&mut self, overrides: PartyColorOverrides) {
+        self.color_overrides = overrides;
+        self.rebuild_display_text();
+    }
+
+    pub fn color_overrides(&self) -> &PartyColorOverrides {
+        &self.color_overrides
+    }
+
+    pub fn cycle_member_color(&mut self, key: PartyMemberKey) -> Rgb {
+        let current = self
+            .members
+            .iter()
+            .find(|member| member.key() == key)
+            .map(|member| member.color())
+            .or_else(|| self.color_state.color_for_key(&key))
+            .unwrap_or(DEFAULTS[0]);
+        let color = self.color_overrides.cycle(key, current);
+        self.rebuild_display_text();
+        color
+    }
+
+    pub fn reset_member_color(&mut self, key: PartyMemberKey) {
+        self.color_overrides.reset(key);
+        self.rebuild_display_text();
+    }
+
     pub fn party_name(&self) -> &str {
         &self.party_name
     }
@@ -408,6 +465,7 @@ impl PartyState {
         self.pending_invite_id_for_inviter = None;
         self.outgoing_invite = None;
         self.members.clear();
+        self.color_state.clear();
         self.share_pickup = false;
         self.share_loot = false;
         self.rebuild_display_text();
@@ -424,6 +482,13 @@ impl PartyState {
                 member
             })
             .collect();
+
+        let keys: Vec<_> = self.members.iter().map(|m| m.key()).collect();
+        self.color_state.sync_members(&keys);
+        for member in &mut self.members {
+            member.color = self.color_state.assign_or_get(member.key());
+        }
+
         self.rebuild_display_text();
     }
 
@@ -434,9 +499,13 @@ impl PartyState {
 
         let mut member = PartyMemberState::from_member_info(member);
         member.class_name = class_name;
+        member.color = self.color_state.assign_or_get(member.key());
 
         match self.members.iter_mut().find(|existing| existing.account_id == member.account_id) {
-            Some(existing) => *existing = member,
+            Some(existing) => {
+                member.color = existing.color;
+                *existing = member;
+            }
             None => self.members.push(member),
         }
         self.rebuild_display_text();
@@ -490,8 +559,16 @@ impl PartyState {
         // refuses it silently (`party.c:382`), reporting "waiting for an answer"
         // for an answer that could never come.
         match self.is_local(account_id) {
-            true => self.members.clear(),
-            false => self.members.retain(|member| member.account_id != account_id),
+            true => {
+                self.members.clear();
+                self.color_state.clear();
+            }
+            false => {
+                if let Some(removed) = self.members.iter().find(|m| m.account_id == account_id) {
+                    self.color_state.remove(&removed.key());
+                }
+                self.members.retain(|member| member.account_id != account_id);
+            }
         }
 
         if self.members.is_empty() {
@@ -502,6 +579,7 @@ impl PartyState {
             // we just left would render as this party-less character's own state.
             self.share_experience = false;
             self.outgoing_invite = None;
+            self.color_state.clear();
         }
         self.rebuild_display_text();
     }
@@ -535,6 +613,8 @@ impl PartyState {
 
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
+            let fallback = self.color_state.color_for_key(&member.key()).unwrap_or(member.color);
+            member.color = self.color_overrides.resolve(member.key(), fallback);
             member.display_label = member.summary_line();
         }
 
@@ -698,5 +778,147 @@ mod tests {
         let member = &state.members()[0];
         assert_eq!(member.health(), Some((90, 200)));
         assert_eq!(member.spell(), Some((30, 60)));
+    }
+
+    #[test]
+    fn even_share_bonus_is_25_percent_per_extra_member() {
+        fn bonus_percent(members: u32) -> u32 {
+            100 + 25 * members.saturating_sub(1)
+        }
+        assert_eq!(bonus_percent(1), 100);
+        assert_eq!(bonus_percent(2), 125);
+        assert_eq!(bonus_percent(3), 150);
+        // 1000 EXP even-share among 2: (1000 * 125 / 100) / 2 = 625 each
+        assert_eq!(1000u64 * u64::from(bonus_percent(2)) / 100 / 2, 625);
+    }
+
+    #[test]
+    fn party_member_color_matches_in_display_label_and_minimap() {
+        let mut state = PartyState::default();
+        let m1 = PartyMember {
+            account_id: AccountId(10),
+            character_id: CharacterId(100),
+            ..sample_member("Alice", true)
+        };
+        let m2 = PartyMember {
+            account_id: AccountId(20),
+            character_id: CharacterId(200),
+            ..sample_member("Bob", true)
+        };
+        state.set_roster("Guild".to_owned(), vec![m1, m2], |_| "Knight".to_owned());
+
+        let alice = &state.members()[0];
+        let bob = &state.members()[1];
+
+        // Colors are distinct
+        assert_ne!(alice.color(), bob.color());
+
+        // Color in display_label matches member.color()
+        let alice_hex = alice.color().to_inline_code();
+        let bob_hex = bob.color().to_inline_code();
+        assert!(
+            alice.display_label().contains(&alice_hex),
+            "Alice label must contain inline color code {alice_hex}"
+        );
+        assert!(
+            bob.display_label().contains(&bob_hex),
+            "Bob label must contain inline color code {bob_hex}"
+        );
+
+        // Contrast check
+        assert!(crate::state::party_colors::contrast_ok(alice.color()));
+        assert!(crate::state::party_colors::contrast_ok(bob.color()));
+    }
+
+    #[test]
+    fn party_roster_reorder_and_member_lifecycle_retains_colors() {
+        let mut client1 = PartyState::default();
+        let mut client2 = PartyState::default();
+
+        let m1 = PartyMember {
+            account_id: AccountId(1),
+            character_id: CharacterId(101),
+            ..sample_member("Member1", true)
+        };
+        let m2 = PartyMember {
+            account_id: AccountId(2),
+            character_id: CharacterId(102),
+            ..sample_member("Member2", true)
+        };
+        let m3 = PartyMember {
+            account_id: AccountId(3),
+            character_id: CharacterId(103),
+            ..sample_member("Member3", true)
+        };
+
+        // Two clients receiving the same roster get identical colors
+        client1.set_roster("P".to_owned(), vec![m1.clone(), m2.clone(), m3.clone()], |_| String::new());
+        client2.set_roster("P".to_owned(), vec![m1.clone(), m2.clone(), m3.clone()], |_| String::new());
+
+        let c1_m1 = client1.members()[0].color();
+        let c1_m2 = client1.members()[1].color();
+        let c1_m3 = client1.members()[2].color();
+
+        let c2_m1 = client2.members()[0].color();
+        let c2_m2 = client2.members()[1].color();
+        let c2_m3 = client2.members()[2].color();
+
+        assert_eq!(c1_m1, c2_m1);
+        assert_eq!(c1_m2, c2_m2);
+        assert_eq!(c1_m3, c2_m3);
+
+        // Reorder arrives on client 1: [m3, m1, m2]
+        client1.set_roster("P".to_owned(), vec![m3.clone(), m1.clone(), m2.clone()], |_| String::new());
+        assert_eq!(client1.members()[0].color(), c1_m3);
+        assert_eq!(client1.members()[1].color(), c1_m1);
+        assert_eq!(client1.members()[2].color(), c1_m2);
+
+        // m2 leaves client 1
+        client1.remove_member(AccountId(2));
+        assert_eq!(client1.members().len(), 2);
+        assert_eq!(client1.members()[0].color(), c1_m3);
+        assert_eq!(client1.members()[1].color(), c1_m1);
+
+        // m4 joins client 1: gets the freed color of m2
+        let m4 = PartyMemberInfoPacket {
+            account_id: AccountId(4),
+            character_id: CharacterId(104),
+            party_name: "P".to_owned(),
+            player_name: "Member4".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            leader: 1,
+            offline: 0,
+            job_id: JobId(1),
+            base_level: 10,
+            position: TilePosition::new(100, 100),
+            share_pickup: 0,
+            share_loot: 0,
+        };
+        client1.add_or_update_member(m4, "Novice".to_owned());
+        assert_eq!(client1.members().len(), 3);
+        assert_eq!(client1.members()[0].color(), c1_m3);
+        assert_eq!(client1.members()[1].color(), c1_m1);
+        assert_eq!(client1.members()[2].color(), c1_m2);
+    }
+
+    #[test]
+    fn local_color_override_does_not_change_default_assignment() {
+        let mut state = PartyState::default();
+        let m1 = PartyMember {
+            account_id: AccountId(10),
+            character_id: CharacterId(100),
+            ..sample_member("Alice", true)
+        };
+        state.set_roster("Guild".to_owned(), vec![m1], |_| "Knight".to_owned());
+        let default = state.members()[0].color();
+        let key = state.members()[0].key();
+
+        let cycled = state.cycle_member_color(key);
+        assert_ne!(cycled, default);
+        assert_eq!(state.members()[0].color(), cycled);
+        assert_eq!(state.color_state().color_for_key(&key), Some(default));
+
+        state.reset_member_color(key);
+        assert_eq!(state.members()[0].color(), default);
     }
 }

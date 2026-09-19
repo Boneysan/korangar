@@ -1,6 +1,8 @@
 mod event;
 mod key;
 mod mode;
+pub(crate) mod target;
+pub(crate) mod wasd;
 
 use std::mem::variant_count;
 use std::sync::Arc;
@@ -271,12 +273,32 @@ impl InputSystem {
     pub fn handle_keyboard_input(
         &mut self,
         events: &mut Vec<InputEvent>,
+        target_hostile_key: Option<KeyCode>,
+        attack_target_key: Option<KeyCode>,
         #[cfg(feature = "debug")] process_mouse: bool,
         #[cfg(feature = "debug")] use_debug_camera: bool,
     ) {
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+
+        if let Some(key) = target_hostile_key
+            && !alt_down
+            && !control_down
+            && !shift_down
+            && self.get_key(key).pressed()
+        {
+            events.push(InputEvent::CycleHostileTarget);
+        }
+
+        if let Some(key) = attack_target_key
+            && !alt_down
+            && !control_down
+            && !shift_down
+            && self.get_key(key).pressed()
+        {
+            events.push(InputEvent::AttackTarget);
+        }
 
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::ToggleMenuWindow);
@@ -413,12 +435,28 @@ impl InputSystem {
             let left = self.get_key(KeyCode::KeyA).down();
             let right = self.get_key(KeyCode::KeyD).down();
             if forward || back || left || right {
+                // A key that went down this frame is a tap; one that was
+                // already down is a hold. The distinction is made here, where
+                // it is actually known, rather than guessed from timing --
+                // two quick taps and one held key produce the same intervals.
+                let fresh = self.get_key(KeyCode::KeyW).pressed()
+                    || self.get_key(KeyCode::KeyS).pressed()
+                    || self.get_key(KeyCode::KeyA).pressed()
+                    || self.get_key(KeyCode::KeyD).pressed();
+
                 events.push(InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 });
+            } else if self.get_key(KeyCode::KeyW).released()
+                || self.get_key(KeyCode::KeyS).released()
+                || self.get_key(KeyCode::KeyA).released()
+                || self.get_key(KeyCode::KeyD).released()
+            {
+                events.push(InputEvent::KeyboardMoveStop);
             }
         }
 

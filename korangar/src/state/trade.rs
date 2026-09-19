@@ -150,9 +150,18 @@ impl TradeState {
         self.rebuild_display();
     }
 
+    pub fn has_pending_add(&self, inventory_index: InventoryIndex) -> bool {
+        self.pending_adds.iter().any(|pending| pending.inventory_index == inventory_index)
+    }
+
     /// Record an add at send time so its amount survives to the ack.
-    pub fn note_pending_add(&mut self, inventory_index: InventoryIndex, amount: u32) {
+    /// Refuses a second outstanding request for the same slot.
+    pub fn note_pending_add(&mut self, inventory_index: InventoryIndex, amount: u32) -> bool {
+        if self.has_pending_add(inventory_index) {
+            return false;
+        }
         self.pending_adds.push(PendingTradeAdd { inventory_index, amount });
+        true
     }
 
     /// Claim the amount for an acked add. Returns `None` if we have no record
@@ -270,7 +279,11 @@ mod tests {
         state.open_with_partner("Alice".into(), CharacterId(1), 99);
 
         // Offer one out of a stack of twenty.
-        state.note_pending_add(InventoryIndex(7), 1);
+        assert!(state.note_pending_add(InventoryIndex(7), 1));
+        assert!(
+            !state.note_pending_add(InventoryIndex(7), 2),
+            "second add for the same slot must wait for the ack"
+        );
         let requested = state.take_pending_add(InventoryIndex(7));
         assert_eq!(requested, Some(1), "the amount asked for must survive to the ack");
         state.note_our_item(InventoryIndex(7), ItemId(501), requested.unwrap(), "Red Potion x1".into());

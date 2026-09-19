@@ -21,6 +21,15 @@ cd "$here" || exit 1
 say()  { printf '  %s\n' "$1"; }
 good() { printf '  OK  %s\n' "$1"; }
 
+fmt_size() {
+    awk -v b="$1" 'BEGIN {
+        if (b >= 1073741824) printf "%.1f GB", b / 1073741824
+        else if (b >= 1048576) printf "%.0f MB", b / 1048576
+        else if (b >= 1024) printf "%.0f KB", b / 1024
+        else printf "%d B", b
+    }'
+}
+
 fail() {
     printf '\n  Setup stopped: %s\n\n' "$1"
     shift
@@ -33,11 +42,14 @@ fail() {
 printf '\n  Seal Cascade setup\n\n'
 say 'This runs once. It unblocks the download, merges in the game data,'
 say 'checks the files, and starts the game.'
+say 'Large files can sit for a minute with no other movement -- this window'
+say 'will keep saying what it is doing.'
 printf '\n'
 
 # 0. The processor. Checked first because nothing later matters if the binary
 #    cannot execute at all, and because the native failure -- "bad CPU type in
 #    executable" -- tells a player nothing.
+say 'Checking this Mac...'
 #
 #    `uname -m` alone is NOT enough: a Terminal running under Rosetta on an
 #    Apple Silicon Mac also reports x86_64, and that machine is perfectly
@@ -55,6 +67,7 @@ good 'Apple Silicon'
 # 1. Quarantine. Everything from Drive carries it, including this script; the
 #    player had to right-click -> Open just to get here. Clearing the whole
 #    folder means Play works by double-click from now on.
+say 'Clearing macOS download warnings (walks this folder)...'
 if xattr -dr com.apple.quarantine "$here" 2>/dev/null; then
     good 'download unblocked'
 else
@@ -120,7 +133,13 @@ else
             'That download is incomplete. Download Assets again from the' \
             'shared Drive folder, then run Setup again.'
 
-        say "  $name"
+        bytes=$(stat -f %z "$source/$name" 2>/dev/null || echo 0)
+        size=$(fmt_size "$bytes")
+        if [ "$bytes" -gt 104857600 ]; then
+            say "  $name ($size) -- large, this can take a few minutes. Leave this open."
+        else
+            say "  $name ($size)"
+        fi
         if [ "$from_dev" = "$to_dev" ]; then
             mv "$source/$name" "$here/$name" || fail "could not move $name into place." \
                 'Check that this folder is not read-only, then run Setup again.'
@@ -128,22 +147,54 @@ else
             cp -R "$source/$name" "$here/$name" || fail "could not copy $name into place." \
                 'Check that there is enough free disk space, then run Setup again.'
         fi
+        good "  $name is in place"
     done
 
     good 'game data is in place'
 fi
 
-# 3. Checksums. The whole point of shipping the manifests.
+# 3. Checksums. The whole point of shipping the manifests. Hashing the GRFs
+#    is the slowest step in Setup; print each file *before* hashing it so a
+#    multi-gigabyte file does not look like a freeze.
+check_manifest() {
+    manifest=$1
+    total=$(awk '/^[0-9a-fA-F]{64}/ { c++ } END { print c+0 }' "$manifest")
+    [ "$total" -gt 0 ] || return 0
+    say "Checking $manifest ($total files). Large ones can take a minute each."
+    n=0
+    while read -r hash path rest; do
+        case $hash in
+            [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]*) ;;
+            *) continue ;;
+        esac
+        [ -n "$path" ] || continue
+        path=${path#./}
+        n=$((n + 1))
+        if [ ! -e "$path" ]; then
+            fail "$path is listed in $manifest but is not here." \
+                'The download is incomplete. Download that folder again from' \
+                'the shared Drive folder, then run Setup again.'
+        fi
+        bytes=$(stat -f %z "$path")
+        size=$(fmt_size "$bytes")
+        if [ "$bytes" -gt 104857600 ]; then
+            say "  [$n/$total] $path ($size) -- large file, please wait..."
+        else
+            say "  [$n/$total] $path ($size)"
+        fi
+        actual=$(shasum -a 256 "$path" | awk '{ print $1 }')
+        if [ "$actual" != "$hash" ]; then
+            fail "$path does not match $manifest." \
+                'The download is damaged. Double-click Verify to see which files,' \
+                'then download that folder again from the shared Drive folder.'
+        fi
+    done < "$manifest"
+    good "$manifest matches ($total files)"
+}
+
 for manifest in SHA256SUMS-client SHA256SUMS-assets; do
     [ -f "$here/$manifest" ] || continue
-    say "checking $manifest (this takes a moment)"
-    if shasum -a 256 -c "$here/$manifest" > /dev/null 2>&1; then
-        good "$manifest matches"
-    else
-        fail "some files do not match $manifest." \
-            'The download is damaged. Double-click Verify to see which files,' \
-            'then download that folder again from the shared Drive folder.'
-    fi
+    check_manifest "$here/$manifest"
 done
 
 # 4. Tailscale. Not fatal -- Setup should still leave a playable folder if it
@@ -167,6 +218,8 @@ fi
 
 printf '\n'
 good 'Ready. Starting the game -- from now on, just double-click Play.'
+say 'The window can take a minute to appear, especially the first time.'
+say 'Leave this open until you see it.'
 printf '\n'
 
 exec "$here/korangar"

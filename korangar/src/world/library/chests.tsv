@@ -1,0 +1,148 @@
+# schema_version: 1
+id	map	x	y	region	title	hat_id
+120001	prt_fild01	146	126	0	The Milestone That Moved	5108
+120002	prt_fild02	142	221	0	Toll Ledger, Water-Stained	5108
+120003	prt_fild03	172	139	0	A Child's Map	5108
+120004	prt_fild04	118	57	0	Complaint, Unfiled	5108
+120005	prt_fild05	189	291	0	Sluice Key, Spare	5108
+120006	prt_fild06	298	304	0	The Long Count	5108
+120007	prt_fild07	44	104	0	Bootprints Cast in Clay	5108
+120008	prt_fild08	203	222	0	Humming Stones	5108
+120009	prt_fild09	37	354	0	A Guard's Wager Book	5108
+120010	prt_fild10	177	206	0	Refugee Roll	5108
+120011	gef_fild00	73	119	1	Apprentice's Practice Sheet	5027
+120012	gef_fild01	222	224	1	Tower Rent Notice	5027
+120013	gef_fild05	202	292	1	A Wand, Snapped Clean	5027
+120014	gef_fild06	279	105	1	Field Notes on Ley Drift	5027
+120015	gef_fild07	184	249	1	Letter From a Rival	5027
+120016	gef_fild09	170	73	1	Cartomancer's Discard	5027
+120017	gef_fild11	239	248	1	Warding Salt, Unused	5027
+120018	moc_fild11	188	218	2	Water Ration Book	2222
+120019	moc_fild12	234	96	2	Checkpoint Sign, Repainted	2222
+120020	moc_fild13	290	207	2	A Digger's Contract	2222
+120021	moc_fild16	196	108	2	Sand Glass, Cracked	2222
+120022	moc_fild17	269	105	2	Relief Manifest	2222
+120023	moc_fild18	54	284	2	A Dancer's Anklet	2222
+120024	pay_fild01	167	243	3	Lantern Oil Account	5170
+120025	pay_fild02	105	240	3	A Bow, Unstrung and Wrapped	5170
+120026	pay_fild03	144	97	3	Grave Marker Rubbing	5170
+120027	pay_fild04	257	95	3	Hunting Permit, Revoked	5170
+120028	pay_fild07	365	37	3	Child's Prayer Strip	5170
+120029	pay_fild08	237	345	3	Ancestor Roll, Torn	5170
+120030	pay_fild09	251	42	3	Fletcher's Complaint	5170
+120031	pay_fild10	196	38	3	Ferryman's Tally	5170
+120032	mjolnir_01	47	60	-1	A Hidden Cache	0
+120033	mjolnir_02	77	49	-1	A Hidden Cache	0
+120034	mjolnir_03	190	200	-1	A Hidden Cache	0
+120035	mjolnir_04	201	146	-1	A Hidden Cache	0
+120036	mjolnir_05	43	327	-1	A Hidden Cache	0
+120037	mjolnir_06	162	290	-1	A Hidden Cache	0
+120038	mjolnir_07	321	127	-1	A Hidden Cache	0
+120039	mjolnir_08	175	225	-1	A Hidden Cache	0
+120040	mjolnir_09	299	123	-1	A Hidden Cache	0
+120041	mjolnir_10	353	371	-1	A Hidden Cache	0
+120042	mjolnir_11	325	178	-1	A Hidden Cache	0
+120043	mjolnir_12	110	298	-1	A Hidden Cache	0
+120044	cmd_fild01	112	200	-1	A Hidden Cache	0
+120045	cmd_fild02	86	94	-1	A Hidden Cache	0
+120046	cmd_fild03	144	190	-1	A Hidden Cache	0
+120047	cmd_fild04	151	191	-1	A Hidden Cache	0
+120048	cmd_fild06	221	108	-1	A Hidden Cache	0
+120049	cmd_fild07	269	322	-1	A Hidden Cache	0
+120050	cmd_fild08	181	136	-1	A Hidden Cache	0
+120051	cmd_fild09	211	266	-1	A Hidden Cache	0
+120052	yuno_fild01	284	138	-1	A Hidden Cache	0
+120053	yuno_fild12	76	268	-1	A Hidden Cache	0
+120054	yuno_fild02	142	191	-1	A Hidden Cache	0
+120055	yuno_fild03	135	329	-1	A Hidden Cache	0
+120056	yuno_fild04	35	369	-1	A Hidden Cache	0
+120057	yuno_fild06	262	220	-1	A Hidden Cache	0
+120058	yuno_fild07	113	339	-1	A Hidden Cache	0
+120059	yuno_fild08	179	209	-1	A Hidden Cache	0
+120060	yuno_fild09	166	228	-1	A Hidden Cache	0
+120061	yuno_fild11	141	357	-1	A Hidden Cache	0
+120062	hu_fild01	347	312	-1	A Hidden Cache	0
+120063	hu_fild02	80	152	-1	A Hidden Cache	0
+120064	hu_fild04	322	313	-1	A Hidden Cache	0
+120065	hu_fild06	204	228	-1	A Hidden Cache	0
+120066	hu_fild05	197	210	-1	A Hidden Cache	0
+120067	ein_fild01	266	277	-1	A Hidden Cache	0
+120068	ein_fild03	99	332	-1	A Hidden Cache	0
+120069	ein_fild04	334	305	-1	A Hidden Cache	0
+120070	ein_fild05	337	233	-1	A Hidden Cache	0
+120071	ein_fild06	174	245	-1	A Hidden Cache	0
+120072	ein_fild07	188	50	-1	A Hidden Cache	0
+120073	ein_fild08	258	78	-1	A Hidden Cache	0
+120074	ein_fild09	330	76	-1	A Hidden Cache	0
+120075	lhz_fild01	118	73	-1	A Hidden Cache	0
+120076	lhz_fild02	239	243	-1	A Hidden Cache	0
+120077	lhz_fild03	313	132	-1	A Hidden Cache	0
+120078	ra_fild01	138	166	-1	A Hidden Cache	0
+120079	ra_fild03	224	275	-1	A Hidden Cache	0
+120080	ra_fild08	326	45	-1	A Hidden Cache	0
+120081	ra_fild12	352	165	-1	A Hidden Cache	0
+120082	ra_fild04	92	302	-1	A Hidden Cache	0
+120083	ra_fild05	59	59	-1	A Hidden Cache	0
+120084	ra_fild06	362	230	-1	A Hidden Cache	0
+120085	ve_fild01	180	234	-1	A Hidden Cache	0
+120086	ve_fild02	65	194	-1	A Hidden Cache	0
+120087	ve_fild03	197	242	-1	A Hidden Cache	0
+120088	ve_fild04	288	279	-1	A Hidden Cache	0
+120089	ve_fild07	33	113	-1	A Hidden Cache	0
+120090	ecl_fild01	234	217	-1	A Hidden Cache	0
+120091	bif_fild02	155	322	-1	A Hidden Cache	0
+120092	bif_fild01	147	64	-1	A Hidden Cache	0
+120093	spl_fild01	335	315	-1	A Hidden Cache	0
+120094	spl_fild02	153	358	-1	A Hidden Cache	0
+120095	spl_fild03	61	286	-1	A Hidden Cache	0
+120096	man_fild01	41	172	-1	A Hidden Cache	0
+120097	man_fild02	268	357	-1	A Hidden Cache	0
+120098	man_fild03	198	91	-1	A Hidden Cache	0
+120099	dic_fild01	227	82	-1	A Hidden Cache	0
+120100	dic_fild02	147	196	-1	A Hidden Cache	0
+120101	ama_fild01	187	337	-1	A Hidden Cache	0
+120102	gon_fild01	171	332	-1	A Hidden Cache	0
+120103	lou_fild01	104	232	-1	A Hidden Cache	0
+120104	ayo_fild01	289	70	-1	A Hidden Cache	0
+120105	mosk_fild02	176	77	-1	A Hidden Cache	0
+120106	bra_fild01	99	193	-1	A Hidden Cache	0
+120107	dew_fild01	175	287	-1	A Hidden Cache	0
+120108	ma_fild01	308	206	-1	A Hidden Cache	0
+120109	ma_fild02	246	323	-1	A Hidden Cache	0
+120110	abbey03	27	72	-1	A Hidden Cache	0
+120111	abyss_03	86	55	-1	A Hidden Cache	0
+120112	alde_dun04	90	107	-1	A Hidden Cache	0
+120113	ama_dun03	60	163	-1	A Hidden Cache	0
+120114	anthell02	253	41	-1	A Hidden Cache	0
+120115	ayo_dun02	150	256	-1	A Hidden Cache	0
+120116	beach_dun3	102	71	-1	A Hidden Cache	0
+120117	bra_dun02	171	121	-1	A Hidden Cache	0
+120118	c_tower4	37	158	-1	A Hidden Cache	0
+120119	dew_dun02	87	272	-1	A Hidden Cache	0
+120120	dic_dun03	216	211	-1	A Hidden Cache	0
+120121	ecl_tdun04	37	37	-1	A Hidden Cache	0
+120122	ein_dun02	31	255	-1	A Hidden Cache	0
+120123	gef_dun02	222	163	1	Vault Inventory, Amended	5027
+120124	gl_sew04	288	6	-1	A Hidden Cache	0
+120125	gl_knt02	126	235	-1	A Hidden Cache	0
+120126	gl_cas02	53	151	-1	A Hidden Cache	0
+120127	gl_prison1	126	158	-1	A Hidden Cache	0
+120128	gon_dun03	166	231	-1	A Hidden Cache	0
+120129	ice_dun03	45	261	-1	A Hidden Cache	0
+120130	in_sphinx5	154	107	-1	A Hidden Cache	0
+120131	iz_dun05	64	223	4	Diver's Slate	18645
+120132	kh_dun02	70	107	-1	A Hidden Cache	0
+120133	lhz_dun03	240	221	-1	A Hidden Cache	0
+120134	lou_dun03	29	228	-1	A Hidden Cache	0
+120135	mag_dun02	197	77	-1	A Hidden Cache	0
+120136	mjo_dun03	76	220	-1	A Hidden Cache	0
+120137	moc_pryd06	102	121	2	Rubbing From a Sealed Door	2222
+120138	orcsdun02	31	72	-1	A Hidden Cache	0
+120139	pay_dun04	120	124	3	A Lantern That Will Not Light	5170
+120140	prt_maze03	11	14	0	The Gardener's Grievance	5108
+120141	prt_sewb4	19	183	0	Holt's Requisition	5108
+120142	tha_t06	150	176	-1	A Hidden Cache	0
+120143	thor_v03	220	221	-1	A Hidden Cache	0
+120144	treasure02	19	142	4	Manifest of the Sunken Ship	18645
+120145	tur_dun04	134	130	-1	A Hidden Cache	0
+120146	xmas_dun02	120	224	-1	A Hidden Cache	0

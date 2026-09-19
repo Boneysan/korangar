@@ -1,5 +1,56 @@
 # Targeted Spec — Campaign Quest Journal (E7.3)
 
+## Implemented journal refresh — 2026-09-06
+
+The current player window is `interface/windows/quest_log.rs`, opened with
+Ctrl+Q (Control on macOS), or Menu. It is not DM-gated. The design below this
+section is an older proposal, not a description of shipped functionality.
+
+- Default size 460×520; existing saved window sizes are respected. Quest
+  headings are 18 px and objectives 16 px before interface scaling. Text wraps
+  rather than shrinking to fit. The objective list scrolls below fixed search
+  and filter controls.
+- Search updates as you type and matches quest names, IDs, and objective item
+  names without case sensitivity. All quests clears search and the filter.
+- Items collected filters on the current inventory; it does **not** mean the
+  server has completed the quest. Unknown objectives never pass this filter.
+- Collapsible quest sections show collection status even when closed. Item
+  objectives show carried/required quantities, remaining counts or Collected,
+  and bounded progress bars, so color is not the only signal.
+- Pin to top prioritizes a quest within this journal. Pins and search survive
+  closing the window and map-list refreshes during the same character session;
+  removed quests lose their pins and character changes reset the preferences.
+  This is not a HUD tracker or cross-session persistence.
+- Empty journals and filtered-out results have distinct recovery guidance.
+- `tools/export_quest_names.py` bundles 3,172 server-authored names, including
+  campaign story quests. Run it after editing Hercules/db/quest_db.conf; use
+  `--check` to detect drift. Contract requirements still come from gen-hunts.py.
+
+Outstanding data work: full descriptions, quest-giver locations, rewards,
+kill counters, and reliable active/completed history. The current networking
+events discard parts of that state. Do not infer completion from item counts
+or removal alone. Story quests without known objectives say so explicitly.
+
+Validation: unit coverage for inventory readiness (including dropping items,
+multiple objectives, and unknown objectives), search, pin refresh/removal,
+character-switch cleanup, and story-name resolution. Live graphical acceptance
+is still required; automated logic checks do not establish laptop legibility.
+
+Live acceptance checklist:
+
+1. At laptop resolution, open Ctrl+Q at scales 1.0, 1.3 and 1.5; resize to the
+   previous 340×380 size and verify wrapping, scrolling, and reachable controls.
+2. Search by a long quest name and an objective item; test no matches, All
+   quests, and Items collected. Typing WASD or numbers must stay in the field.
+3. Pick up and drop a required item across the threshold; confirm counts,
+   progress bars, summary, and filtered membership update together.
+4. Collapse and pin different quests, filter them out and back, change maps,
+   close/reopen the journal, then switch characters. Check state ownership.
+5. Inspect an empty journal, an unknown quest, and a named story quest; none
+   should claim completed objectives or invented rewards.
+
+---
+
 **Parents**: PROJECT_PLAN.md E7.3, DM_INTERFACE.md §9.3 (player window 5),
 `plans/modern-mechanics.md` §12, DM_DATA_GUIDE.md. **Depends on**: M1 (done).
 **Related**: `navigation-quest-guiding.md` (waypoints/ribbons — out of scope

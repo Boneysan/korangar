@@ -1,7 +1,12 @@
+pub mod area_loot;
+pub mod breadcrumb;
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
+pub mod campaign_checkpoint;
 pub mod character_creation;
 pub mod character_slots;
+pub mod chest_discovery;
+pub mod combat_chat;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
@@ -9,7 +14,10 @@ pub mod instance;
 pub mod inventory;
 pub mod localization;
 pub mod minimap;
+pub mod navigation;
 pub mod party;
+pub mod party_colors;
+pub mod quantity;
 pub mod quests;
 pub mod skill_cooldowns;
 pub mod skills;
@@ -17,6 +25,7 @@ pub mod status_effects;
 pub mod storage;
 pub mod theme;
 pub mod trade;
+pub mod ui_sounds;
 
 use std::cell::Cell;
 use std::collections::HashMap;
@@ -85,14 +94,17 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+pub use crate::state::breadcrumb::BreadcrumbState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
+pub use crate::state::chest_discovery::{ChestDiscoveryState, ChestVisualState};
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
 use crate::state::instance::InstanceState;
 use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
+use crate::state::navigation::NavigationState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
@@ -144,6 +156,10 @@ impl ChatHistory {
             self.messages.drain(..overflow);
         }
         self.messages.push(message);
+    }
+
+    pub fn last_mut(&mut self) -> Option<&mut ChatMessage> {
+        self.messages.last_mut()
     }
 }
 
@@ -272,9 +288,16 @@ pub struct ClientState {
     loot_window: LootWindowState,
     /// Seal Cascade campaign progress (bestiary unlocks).
     dm_campaign: DmCampaignState,
+    /// Authoritative personal hidden chest discoveries.
+    #[hidden_element]
+    chest_discovery: ChestDiscoveryState,
     /// Active quests and, for campaign hunting contracts, what they want
     /// handed in.
     quest_log: QuestLogState,
+    /// HUD breadcrumb for the currently tracked quest objective.
+    breadcrumb: BreadcrumbState,
+    /// Advisory route from the player to the tracked objective.
+    navigation: NavigationState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
@@ -298,8 +321,16 @@ pub struct ClientState {
     /// All ground items on the map.
     ground_items: Vec<GroundItem>,
 
+    /// Automatic pickup, as the SERVER reports it (`@autopickup`). The server
+    /// owns this setting -- it is per character, it persists, and being in a
+    /// party overrides it -- so the toggle shows what came back from the server
+    /// rather than what was last clicked. Queried once on entering the world.
+    auto_pickup: bool,
+
     /// List of all received chat messages.
     chat_messages: ChatHistory,
+    /// Structured combat log entries and channel state.
+    combat_log: crate::state::combat_chat::CombatLogState,
     /// List of all friends (with online presence).
     friend_list: Vec<FriendEntry>,
     /// Current party roster and pending party invitation state.
@@ -341,6 +372,12 @@ pub struct ClientState {
     /// Magnifier / identify selection dialog.
     #[hidden_element]
     identify_state: IdentifyState,
+    /// Exact quantity chooser (drop / trade).
+    #[hidden_element]
+    quantity_state: crate::state::quantity::QuantityState,
+    /// Area-loot pickup queue (QW-045).
+    #[hidden_element]
+    area_loot: crate::state::area_loot::AreaLootQueue,
     /// Player skill tree.
     skill_tree: SkillTree,
     /// Active status effects (buffs / debuffs) for the local player.
@@ -474,10 +511,11 @@ impl ClientState {
 
         time_phase!("create window state", {
             let welcome_string = format!(
-                "Welcome to ^ff8800Korangar^000000 version ^ff8800{}^000000!",
-                env!("CARGO_PKG_VERSION")
+                "Welcome to ^ff8800Seal Cascade^000000 pack ^ff8800{}^000000.",
+                korangar_networking::PACK_VERSION
             );
             let chat_messages = ChatHistory::from_welcome(ChatMessage::new(welcome_string, MessageColor::Server));
+            let combat_log = crate::state::combat_chat::CombatLogState::default();
 
             let chat_window = ChatWindowState::default();
             let dice_window = DiceWindowState::default();
@@ -485,7 +523,17 @@ impl ClientState {
             let bestiary_window = BestiaryWindowState::default();
             let loot_window = LootWindowState::default();
             let dm_campaign = DmCampaignState::default();
+            let chest_discovery = ChestDiscoveryState::default();
             let quest_log = QuestLogState::default();
+            let breadcrumb = BreadcrumbState {
+                collapsed: game_settings.breadcrumb_collapsed,
+                hidden: game_settings.breadcrumb_hidden,
+                scale: game_settings.breadcrumb_scale,
+                opacity: game_settings.breadcrumb_opacity,
+                guidance_enabled: game_settings.breadcrumb_guidance_enabled,
+                ..Default::default()
+            };
+            let navigation = NavigationState::default();
         });
 
         time_phase!("create character server resources", {
@@ -504,7 +552,8 @@ impl ClientState {
         time_phase!("create friend list state", {
             let friend_list = Vec::default();
             let friend_list_window = FriendListWindowState::default();
-            let party_state = PartyState::default();
+            let mut party_state = PartyState::default();
+            party_state.set_color_overrides(game_settings.party_color_overrides.clone());
             let party_window = PartyWindowState::default();
             let instance_state = InstanceState::default();
             let auto_spell_skills = Vec::default();
@@ -525,6 +574,8 @@ impl ClientState {
             let storage = StorageState::default();
             let trade_state = TradeState::default();
             let identify_state = IdentifyState::default();
+            let quantity_state = crate::state::quantity::QuantityState::default();
+            let area_loot = crate::state::area_loot::AreaLootQueue::default();
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
@@ -587,7 +638,10 @@ impl ClientState {
             bestiary_window,
             loot_window,
             dm_campaign,
+            chest_discovery,
             quest_log,
+            breadcrumb,
+            navigation,
             friend_list_window,
             party_window,
             instance_state,
@@ -599,7 +653,9 @@ impl ClientState {
             remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
+            auto_pickup: false,
             chat_messages,
+            combat_log,
             friend_list,
             party_state,
             shop_items,
@@ -613,6 +669,8 @@ impl ClientState {
             storage,
             trade_state,
             identify_state,
+            quantity_state,
+            area_loot,
             skill_tree,
             status_effects,
             skill_cooldowns,

@@ -25,17 +25,17 @@ use crate::graphics::reduce_vertices;
 #[cfg(feature = "debug")]
 use crate::graphics::{BindlessSupport, DebugRectangleInstruction};
 use crate::graphics::{EntityInstruction, ScreenPosition, ScreenSize};
-use crate::loaders::GameFileLoader;
+use crate::loaders::{FontSize, GameFileLoader};
 #[cfg(feature = "debug")]
 use crate::loaders::{GAT_TILE_SIZE, split_mesh_by_texture};
-use crate::renderer::GameInterfaceRenderer;
 #[cfg(feature = "debug")]
 use crate::renderer::MarkerRenderer;
+use crate::renderer::{AlignHorizontal, GameInterfaceRenderer};
 use crate::state::ClientState;
 use crate::state::theme::{InterfaceThemeType, WorldTheme};
 use crate::world::{
     AccessoryName, AccessoryNameKey, ActionEvent, AnimationData, AnimationState, Camera, FadeDirection, FadeState, IsBabyJob, JobIdentity,
-    Library, MAX_WALK_PATH_SIZE, Map, PathFinder, StatusTint, native_real_weapon_id,
+    JobName, Library, MAX_WALK_PATH_SIZE, Map, PathFinder, StatusTint, Table, native_real_weapon_id,
 };
 #[cfg(feature = "debug")]
 use crate::world::{MarkerIdentifier, SubMesh};
@@ -286,6 +286,10 @@ pub struct Common {
     #[hidden_element]
     active_cast: Option<ActorCast>,
     stopped_moving: bool,
+    #[hidden_element]
+    pub chest_id: Option<u32>,
+    #[hidden_element]
+    pub chest_visual_state: Option<crate::state::ChestVisualState>,
     #[hidden_element]
     fade_state: FadeState,
 }
@@ -1235,6 +1239,8 @@ impl Common {
             su_stoop: false,
             active_cast: None,
             stopped_moving: false,
+            chest_id: None,
+            chest_visual_state: None,
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
             scale,
         }
@@ -1261,6 +1267,19 @@ impl Common {
 
     pub fn is_fading(&self) -> bool {
         self.fade_state.is_fading()
+    }
+
+    pub fn is_hidden(&self) -> bool {
+        self.entity_type == EntityType::Hidden || EntityOption::from_raw(self.option).is_gm_invisible()
+    }
+
+    pub fn is_concealed(&self) -> bool {
+        EntityOption::from_raw(self.option).is_concealed()
+    }
+
+    /// True when mouseover and click must not reveal this actor's identity.
+    pub fn hides_identity(&self) -> bool {
+        self.is_hidden() || self.is_concealed()
     }
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
@@ -1801,6 +1820,10 @@ impl Common {
             _ => {}
         }
 
+        if let Some(chest_state) = self.chest_visual_state {
+            return chest_state.tint();
+        }
+
         if self.health_state & OPT2_DEADLY_POISON != 0 {
             StatusTint::tinted(Color::rgb(0.65, 0.35, 0.7)) // deadly poison — deeper violet
         } else if self.health_state & OPT2_POISON != 0 {
@@ -1819,7 +1842,7 @@ impl Common {
         if let Some(animation_data) = self.animation_data.as_ref() {
             // M1-007: modulate the existing fade alpha so hide/cloak is visible.
             let mut alpha = self.fade_state.calculate_alpha(client_tick);
-            if EntityOption::from_raw(self.option).is_concealed() {
+            if self.is_concealed() {
                 alpha *= Self::CONCEALED_ALPHA;
             }
 
@@ -1915,6 +1938,31 @@ pub struct Player {
     pub next_base_experience: u64,
     /// Job experience required for the next job level.
     pub next_job_experience: u64,
+    /// Server-authored recovery HUD line (`ZC_RECOVERY_STATE`).
+    pub recovery_status: String,
+}
+
+pub fn weight_is_warn(weight: u32, maximum_weight: u32) -> bool {
+    maximum_weight > 0 && weight * 100 >= maximum_weight * 70
+}
+
+pub fn weight_is_soft(weight: u32, maximum_weight: u32) -> bool {
+    maximum_weight > 0 && weight * 10 >= maximum_weight * 9
+}
+
+pub fn format_recovery_status(mode: u8, block: u8) -> String {
+    match block {
+        1 => "Recovery blocked: dead".to_owned(),
+        2 => "Recovery blocked: status".to_owned(),
+        3 => "Recovery blocked: overweight".to_owned(),
+        4 => "Standing recovery paused: in combat".to_owned(),
+        _ => match mode {
+            2 => "Sitting recovery: 25% HP/SP every 10s".to_owned(),
+            3 => "Respawn recovery: filling remaining HP/SP".to_owned(),
+            1 => "Standing recovery".to_owned(),
+            _ => "Recovery idle".to_owned(),
+        },
+    }
 }
 
 impl Player {
@@ -1937,6 +1985,7 @@ impl Player {
         let mut common = Common::new(library, &entity_data, tile_position, position, client_tick);
         // Player's own character should not fade in.
         common.fade_state = FadeState::Opaque;
+        common.details = ResourceState::Available(character_information.name.clone());
 
         Self {
             common,
@@ -1972,12 +2021,21 @@ impl Player {
             // Official default natural-heal weight rate is 50%.
             critical_weight_percent: 50,
             attack_range: AttackRange(1),
-            zeny: 0,
-            base_experience: 0,
-            job_experience: 0,
+            zeny: character_information.money.max(0) as u32,
+            base_experience: character_information.experience.max(0) as u64,
+            job_experience: character_information.job_experience.max(0) as u64,
             next_base_experience: 0,
             next_job_experience: 0,
+            recovery_status: "Recovery: waiting for server".to_owned(),
         }
+    }
+
+    pub fn set_recovery_state(&mut self, mode: u8, block: u8) {
+        let status = format_recovery_status(mode, block);
+        if std::env::var_os("KORANGAR_RECOVERY_TRACE").is_some() {
+            eprintln!("[recovery] server_state mode={mode} block={block} hud={status:?}");
+        }
+        self.recovery_status = status;
     }
 
     pub fn clear_cast(&mut self) {
@@ -2052,15 +2110,15 @@ impl Player {
         }
     }
 
-    /// Soft overweight starts at the server's critical-weight percent (usually
-    /// 50%).
+    /// Warn (yellow) at 70% of max weight.
     pub fn is_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * self.critical_weight_percent
+        weight_is_warn(self.weight, self.maximum_weight)
     }
 
-    /// Hard overweight at 90% of max weight (cannot attack / use skills in RO).
+    /// Soft overweight at 90% (red). Attacks remain allowed; pickup fails at
+    /// 100%.
     pub fn is_hard_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
+        weight_is_soft(self.weight, self.maximum_weight)
     }
 
     pub fn render_status(
@@ -2217,7 +2275,33 @@ impl Npc {
         &mut self.common
     }
 
-    pub fn render_status(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, theme: &WorldTheme, window_size: ScreenSize) {
+    pub fn render_status(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+        is_target: bool,
+    ) {
+        if let Some(chest_state) = self.common.chest_visual_state {
+            let clip_space_position = camera.view_projection_matrix() * self.common.world_position.to_homogeneous();
+            if clip_space_position.w > 0.0 {
+                let screen_position = camera.clip_to_screen_space(clip_space_position);
+                let final_position = ScreenPosition {
+                    left: screen_position.x * window_size.width,
+                    top: screen_position.y * window_size.height - 15.0,
+                };
+                renderer.render_text(
+                    chest_state.hover_tag(),
+                    final_position,
+                    chest_state.display_color(),
+                    FontSize(11.0),
+                    AlignHorizontal::Center,
+                );
+            }
+            return;
+        }
+
         if self.common.entity_type != EntityType::Monster {
             return;
         }
@@ -2230,6 +2314,19 @@ impl Npc {
         };
 
         let bar_width = theme.status_bar.enemy_bar_width;
+
+        if is_target {
+            let target_frame_pad = 2.0;
+            let target_border = theme.status_bar.border_size + ScreenSize::uniform(target_frame_pad);
+            renderer.render_rectangle(
+                final_position - target_border - ScreenSize::only_width(bar_width / 2.0),
+                ScreenSize {
+                    width: bar_width,
+                    height: theme.status_bar.enemy_health_height,
+                } + (target_border * 2.0),
+                Color::rgba_u8(255, 215, 0, 220),
+            );
+        }
 
         renderer.render_rectangle(
             final_position - theme.status_bar.border_size - ScreenSize::only_width(bar_width / 2.0),
@@ -2375,6 +2472,25 @@ impl Entity {
         self.get_common().entity_id
     }
 
+    pub fn get_chest_id(&self) -> Option<u32> {
+        self.get_common().chest_id
+    }
+
+    #[allow(dead_code)]
+    pub fn get_chest_visual_state(&self) -> Option<crate::state::ChestVisualState> {
+        self.get_common().chest_visual_state
+    }
+
+    pub fn set_chest_state(&mut self, chest_id: u32, visual_state: crate::state::ChestVisualState) {
+        let common = self.get_common_mut();
+        common.chest_id = Some(chest_id);
+        common.chest_visual_state = Some(visual_state);
+    }
+
+    pub fn update_chest_visual_state(&mut self, visual_state: crate::state::ChestVisualState) {
+        self.get_common_mut().chest_visual_state = Some(visual_state);
+    }
+
     /// Right-hand weapon appearance (item id or class view) of this entity.
     pub fn get_weapon(&self) -> u32 {
         self.get_common().weapon
@@ -2388,12 +2504,24 @@ impl Entity {
         self.get_common().entity_type
     }
 
+    pub fn is_dead(&self) -> bool {
+        self.get_common().is_dead()
+    }
+
     pub fn is_death_animation_over(&self) -> bool {
         self.get_common().is_death_animation_over()
     }
 
     pub fn is_fading(&self) -> bool {
         self.get_common().is_fading()
+    }
+
+    pub fn is_hidden(&self) -> bool {
+        self.get_common().is_hidden()
+    }
+
+    pub fn hides_identity(&self) -> bool {
+        self.get_common().hides_identity()
     }
 
     pub fn fade_out(&mut self, reason: DisappearanceReason, client_tick: ClientTick) {
@@ -2523,6 +2651,48 @@ impl Entity {
 
     pub fn get_details(&self) -> Option<&String> {
         self.get_common().details.as_option()
+    }
+
+    /// Formats the identity tooltip shown when the entity is hovered with the
+    /// mouse.
+    ///
+    /// For players, shows "Name (Class)" or class name if details are still
+    /// loading. For monsters/NPCs, shows the cleaned display name.
+    /// Returns `None` for hidden/invisible entities and warps to prevent
+    /// privacy leaks.
+    pub fn hover_text(&self, library: &Library) -> Option<String> {
+        if self.hides_identity() {
+            return None;
+        }
+
+        match self.get_entity_type() {
+            EntityType::Player => {
+                let job_name = JobName::get(library, self.get_job_id());
+                if let Some(name) = self.get_details() {
+                    let clean_name = name.split('#').next().unwrap_or(name);
+                    Some(format!("{clean_name} ({job_name})"))
+                } else {
+                    Some(job_name.to_string())
+                }
+            }
+            EntityType::Monster | EntityType::Npc => {
+                let base_name = if let Some(name) = self.get_details() {
+                    let clean_name = name.split('#').next().unwrap_or(name);
+                    clean_name.to_string()
+                } else if self.get_common().chest_id.is_some() {
+                    "Treasure Chest".to_string()
+                } else {
+                    return None;
+                };
+
+                if let Some(chest_state) = self.get_common().chest_visual_state {
+                    Some(format!("{base_name} {}", chest_state.hover_tag()))
+                } else {
+                    Some(base_name)
+                }
+            }
+            EntityType::Warp | EntityType::Hidden => None,
+        }
     }
 
     pub fn get_tile_position(&self) -> TilePosition {
@@ -2813,10 +2983,11 @@ impl Entity {
         theme: &WorldTheme,
         window_size: ScreenSize,
         client_tick: ClientTick,
+        is_target: bool,
     ) {
         match self {
             Self::Player(player) => player.render_status(renderer, camera, theme, window_size, client_tick),
-            Self::Npc(npc) => npc.render_status(renderer, camera, theme, window_size),
+            Self::Npc(npc) => npc.render_status(renderer, camera, theme, window_size, is_target),
         }
     }
 
@@ -3246,5 +3417,207 @@ mod headgear_tests {
         let path = headgear_sprite_path("남", "_고글");
         assert!(!is_weapon_part_path(&path));
         assert!(!is_shield_part_path(&path));
+    }
+}
+
+#[cfg(test)]
+mod hover_and_privacy_tests {
+    use cgmath::Point3;
+    use ragnarok_packets::{ClientTick, Direction, EntityId, EntityOption, JobId, Sex, TilePosition};
+
+    use super::{Common, Entity, EntityType, FadeState, Library, Npc, ResourceState, StatusTint};
+
+    fn dummy_common(job_id: JobId, entity_id: EntityId) -> Common {
+        Common {
+            tile_position: TilePosition::new(10, 10),
+            world_position: Point3::new(10.0, 0.0, 10.0),
+            entity_id,
+            job_id,
+            spirit_spheres: 0,
+            direction: Direction::South,
+            head_direction: 0,
+            sex: Sex::Male,
+            head: 1,
+            weapon: 0,
+            shield: 0,
+            accessory: 0,
+            accessory2: 0,
+            accessory3: 0,
+            head_palette: 0,
+            body_palette: 0,
+            robe: 0,
+            body: 0,
+            active_movement: None,
+            entity_type: job_id.into(),
+            option: 0,
+            body_state: 0,
+            health_state: 0,
+            is_pk_mode_on: false,
+            in_safe_zone: false,
+            movement_speed: 150,
+            health_points: 100,
+            maximum_health_points: 100,
+            animation_data: None,
+            details: ResourceState::Unavailable,
+            animation_state: super::AnimationState::new(job_id.into(), ClientTick(0)),
+            trick_dead: false,
+            su_hide: false,
+            su_stoop: false,
+            active_cast: None,
+            stopped_moving: false,
+            fade_state: FadeState::Opaque,
+            scale: 1.0,
+            chest_id: None,
+            chest_visual_state: None,
+        }
+    }
+
+    #[test]
+    fn player_mouseover_shows_name_and_class() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(100)),
+        });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Alice (Knight)".to_string()));
+    }
+
+    #[test]
+    fn player_mouseover_without_details_shows_class() {
+        let entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(100)),
+        });
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Knight".to_string()));
+    }
+
+    #[test]
+    fn hidden_entity_type_produces_no_hover_text() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(139), EntityId(101)),
+        });
+        entity.set_details("WarpPoint".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Hidden);
+        assert!(entity.is_hidden());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn gm_invisible_player_produces_no_hover_text() {
+        let mut common = dummy_common(JobId(7), EntityId(102));
+        common.option = EntityOption::INVISIBLE.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Admin".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.is_hidden());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn monster_mouseover_cleans_suffix() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(1002), EntityId(103)),
+        });
+        entity.set_details("Poring#48291".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Monster);
+        assert_eq!(entity.hover_text(&library), Some("Poring".to_string()));
+    }
+
+    #[test]
+    fn monster_without_details_returns_none() {
+        let entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(1002), EntityId(104)),
+        });
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn warp_returns_no_hover_text() {
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(45), EntityId(105)),
+        });
+        entity.set_details("To Prontera".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.get_entity_type(), EntityType::Warp);
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn cloaked_or_hiding_player_produces_no_hover_text() {
+        let mut common = dummy_common(JobId(7), EntityId(106));
+        common.option = EntityOption::CLOAK.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.hides_identity());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn party_member_uses_the_same_name_and_class_hover() {
+        // Hover has no party-special path: a visible party member is a player.
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(7), EntityId(107)),
+        });
+        entity.set_details("Bob".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Bob (Knight)".to_string()));
+    }
+
+    #[test]
+    fn disguised_as_monster_does_not_use_player_class_line() {
+        let mut common = dummy_common(JobId(1002), EntityId(108));
+        common.entity_type = EntityType::Monster;
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert_eq!(entity.hover_text(&library), Some("Alice".to_string()));
+        assert_ne!(entity.hover_text(&library), Some("Alice (Knight)".to_string()));
+    }
+
+    #[test]
+    fn disguised_gm_invisible_still_leaks_nothing() {
+        let mut common = dummy_common(JobId(1002), EntityId(109));
+        common.entity_type = EntityType::Monster;
+        common.option = EntityOption::INVISIBLE.bits();
+        let mut entity = Entity::Npc(Npc { common });
+        entity.set_details("Alice".to_string());
+        let library = Library::empty_for_test();
+        assert!(entity.hides_identity());
+        assert_eq!(entity.hover_text(&library), None);
+    }
+
+    #[test]
+    fn chest_entity_hover_and_tint_for_three_states() {
+        use crate::state::ChestVisualState;
+
+        let mut entity = Entity::Npc(Npc {
+            common: dummy_common(JobId(10005), EntityId(200)),
+        });
+        entity.set_details("Treasure Chest#tr120001".to_string());
+        let library = Library::empty_for_test();
+
+        // 1. Available state
+        entity.set_chest_state(120001, ChestVisualState::Available);
+        assert_eq!(entity.get_chest_id(), Some(120001));
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Available));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Available]".to_string()));
+        assert_eq!(entity.get_common().status_tint(), StatusTint::NONE);
+
+        // 2. Opened state
+        entity.update_chest_visual_state(ChestVisualState::Opened);
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Opened));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Opened]".to_string()));
+        assert_ne!(entity.get_common().status_tint(), StatusTint::NONE);
+        assert_eq!(entity.get_common().status_tint(), ChestVisualState::Opened.tint());
+
+        // 3. Unopened state
+        entity.update_chest_visual_state(ChestVisualState::Unopened);
+        assert_eq!(entity.get_chest_visual_state(), Some(ChestVisualState::Unopened));
+        assert_eq!(entity.hover_text(&library), Some("Treasure Chest [Unopened]".to_string()));
+        assert_eq!(entity.get_common().status_tint(), ChestVisualState::Unopened.tint());
     }
 }

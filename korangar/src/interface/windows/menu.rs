@@ -53,9 +53,34 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleCommandsWindow,
                 },
                 button! {
-                    text: "Quest Log",
-                    tooltip: "Active quests, and what each hunting contract still wants handed in (^000001Ctrl+Q^000000)",
+                    text: "Save here",
+                    tooltip: "Set your respawn/save point to this cell [^000001@save^000000]",
+                    event: InputEvent::SendMessage { text: "@save".to_string() },
+                },
+                button! {
+                    text: "Warp to save",
+                    tooltip: "[^000001@load^000000]",
+                    event: InputEvent::SendMessage { text: "@load".to_string() },
+                },
+                button! {
+                    text: "Reset skills",
+                    tooltip: "Unlimited playtest respec [^000001@resetskill^000000]",
+                    event: InputEvent::SendMessage { text: "@resetskill".to_string() },
+                },
+                button! {
+                    text: "Quest Journal",
+                    tooltip: "Search campaign and regular quests, pin favorites, and check collection progress (^000001Ctrl+Q^000000)",
                     event: InputEvent::ToggleQuestLogWindow,
+                },
+                button! {
+                    text: "Field Notes",
+                    tooltip: "Read your discovered roadside field notes and regional progress [^000001@fieldnotes^000000]",
+                    event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                },
+                button! {
+                    text: "Cartographer's Marks",
+                    tooltip: "Check your party's shared pool and banked Marks [^000001@marks^000000]",
+                    event: InputEvent::SendMessage { text: "@marks".to_string() },
                 },
                 button! {
                     text: "Dice Roller",

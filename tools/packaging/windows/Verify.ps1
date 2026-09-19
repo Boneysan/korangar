@@ -21,12 +21,29 @@
 #
 # Windows PowerShell 5.1 compatible, pure ASCII, no BOM -- see Play.ps1.
 
+param(
+    [string]$TargetDirectory = ''
+)
+
 $ErrorActionPreference = 'Stop'
-$here = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location $here
+$scriptPath = $MyInvocation.MyCommand.Path
+$here = Split-Path -Parent $scriptPath
+
+$targetDir = $here
+if (-not [string]::IsNullOrEmpty($TargetDirectory)) {
+    if (-not (Test-Path -LiteralPath $TargetDirectory)) {
+        Write-Host ''
+        Write-Host ("  Target directory does not exist: " + $TargetDirectory) -ForegroundColor Red
+        Write-Host ''
+        exit 1
+    }
+    $targetDir = (Resolve-Path -LiteralPath $TargetDirectory).Path
+}
+
+Set-Location $targetDir
 
 $manifestNames = @('SHA256SUMS-client', 'SHA256SUMS-assets')
-$found = @($manifestNames | Where-Object { Test-Path -LiteralPath (Join-Path $here $_) })
+$found = @($manifestNames | Where-Object { Test-Path -LiteralPath (Join-Path $targetDir $_) })
 
 if ($found.Count -eq 0) {
     Write-Host ''
@@ -45,31 +62,98 @@ if ($found.Count -eq 1) {
 $bad = 0
 $missing = 0
 $ok = 0
+$problems = @()
 
 foreach ($manifestName in $found) {
-    $manifest = Join-Path $here $manifestName
+    $manifest = Join-Path $targetDir $manifestName
+    $pkgHalf = if ($manifestName -match 'client') { 'Client' } elseif ($manifestName -match 'assets') { 'Assets' } else { $manifestName }
 
     Write-Host ''
-    Write-Host ("  Checking against " + $manifestName + " ...") -ForegroundColor Cyan
+    Write-Host ("  Checking against " + $manifestName + " [" + $pkgHalf + "] ...") -ForegroundColor Cyan
+    Write-Host '  Each file is named before it is hashed. Large GRFs can take a minute.'
 
+    $entries = @()
     foreach ($line in Get-Content -LiteralPath $manifest) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+        $entries = $entries + $line
+    }
+    $total = $entries.Count
+    $n = 0
 
-        $expected = $Matches[1]
+    foreach ($line in $entries) {
+        if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+
+        $expected = $Matches[1].ToUpperInvariant()
         $relative = $Matches[2] -replace '/', '\'
-        $path = Join-Path $here $relative
+        if ($relative.StartsWith('.\')) {
+            $relative = $relative.Substring(2)
+        }
 
-        if (-not (Test-Path -LiteralPath $path)) {
-            Write-Host ("  MISSING  " + $relative) -ForegroundColor Red
-            $missing = $missing + 1
+        # Shared verifier files are owned exclusively by SHA256SUMS-client.
+        # Stale or cross-release Verify.* entries in SHA256SUMS-assets are ignored.
+        $leafName = Split-Path -Leaf $relative
+        if ($pkgHalf -eq 'Assets' -and ($leafName -eq 'Verify.ps1' -or $leafName -eq 'Verify.bat' -or $leafName -eq 'Verify.command')) {
             continue
         }
 
-        $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
+        $path = Join-Path $targetDir $relative
+        $n = $n + 1
+        $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
+
+        if (-not (Test-Path -LiteralPath $path)) {
+            Write-Host ("  [" + $pkgHalf + "] MISSING: " + $relative) -ForegroundColor Red
+            Write-Host ("    Package Half:   " + $pkgHalf) -ForegroundColor Red
+            Write-Host ("    Manifest Path:  " + $manifest) -ForegroundColor Red
+            Write-Host ("    Expected Hash:  " + $expected) -ForegroundColor Red
+            Write-Host ("    Actual Hash:    <none> (file missing)") -ForegroundColor Red
+            Write-Host ("    Installed Path: " + $path) -ForegroundColor Red
+            $missing = $missing + 1
+            $problems = $problems + [PSCustomObject]@{
+                Status        = 'MISSING'
+                PackageHalf   = $pkgHalf
+                ManifestPath  = $manifest
+                Relative      = $relative
+                InstalledPath = $path
+                ExpectedHash  = $expected
+                ActualHash    = '<none>'
+            }
+            continue
+        }
+
+        $bytes = [long](Get-Item -LiteralPath $path).Length
+        $sizeText = if ($bytes -ge 1073741824) {
+            ([math]::Round(($bytes / 1073741824), 1).ToString() + ' GB')
+        } elseif ($bytes -ge 1048576) {
+            ([math]::Round(($bytes / 1048576), 0).ToString() + ' MB')
+        } else {
+            ([math]::Round(($bytes / 1024), 0).ToString() + ' KB')
+        }
+
+        if ($bytes -gt 104857600) {
+            Write-Host ($prefix + ' (' + $sizeText + ') -- large file, please wait...')
+        } else {
+            Write-Host ($prefix + ' (' + $sizeText + ')')
+        }
+
+        $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToUpperInvariant()
 
         if ($actual -ne $expected) {
-            Write-Host ("  CORRUPT  " + $relative) -ForegroundColor Red
+            Write-Host ("  [" + $pkgHalf + "] CORRUPT: " + $relative) -ForegroundColor Red
+            Write-Host ("    Package Half:   " + $pkgHalf) -ForegroundColor Red
+            Write-Host ("    Manifest Path:  " + $manifest) -ForegroundColor Red
+            Write-Host ("    Expected Hash:  " + $expected) -ForegroundColor Red
+            Write-Host ("    Actual Hash:    " + $actual) -ForegroundColor Red
+            Write-Host ("    Installed Path: " + $path) -ForegroundColor Red
             $bad = $bad + 1
+            $problems = $problems + [PSCustomObject]@{
+                Status        = 'CORRUPT'
+                PackageHalf   = $pkgHalf
+                ManifestPath  = $manifest
+                Relative      = $relative
+                InstalledPath = $path
+                ExpectedHash  = $expected
+                ActualHash    = $actual
+            }
         } else {
             $ok = $ok + 1
         }
@@ -85,8 +169,35 @@ if ($bad -eq 0 -and $missing -eq 0) {
 }
 
 Write-Host ("  $ok good, $bad corrupt, $missing missing.") -ForegroundColor Red
-Write-Host '  Download the affected folder again from the shared Drive folder.'
-Write-Host '  Names ending .grf, lua_files.7z or starting BGM\ are the big Assets'
-Write-Host '  download; anything else is the small Windows one.'
+Write-Host ''
+Write-Host '  Mismatched files and responsible package halves:' -ForegroundColor Yellow
+
+$clientProblems = @($problems | Where-Object { $_.PackageHalf -eq 'Client' })
+$assetsProblems = @($problems | Where-Object { $_.PackageHalf -eq 'Assets' })
+
+if ($clientProblems.Count -gt 0) {
+    Write-Host ("    Client package (" + $clientProblems.Count.ToString() + " failure(s)):") -ForegroundColor Red
+    foreach ($p in $clientProblems) {
+        Write-Host ("      [" + $p.Status + "] " + $p.Relative) -ForegroundColor Red
+        Write-Host ("        Manifest Path:  " + $p.ManifestPath)
+        Write-Host ("        Expected Hash:  " + $p.ExpectedHash)
+        Write-Host ("        Actual Hash:    " + $p.ActualHash)
+        Write-Host ("        Installed Path: " + $p.InstalledPath)
+    }
+    Write-Host '      Action: Download or repair the small Windows client package.' -ForegroundColor Yellow
+}
+
+if ($assetsProblems.Count -gt 0) {
+    Write-Host ("    Assets package (" + $assetsProblems.Count.ToString() + " failure(s)):") -ForegroundColor Red
+    foreach ($p in $assetsProblems) {
+        Write-Host ("      [" + $p.Status + "] " + $p.Relative) -ForegroundColor Red
+        Write-Host ("        Manifest Path:  " + $p.ManifestPath)
+        Write-Host ("        Expected Hash:  " + $p.ExpectedHash)
+        Write-Host ("        Actual Hash:    " + $p.ActualHash)
+        Write-Host ("        Installed Path: " + $p.InstalledPath)
+    }
+    Write-Host '      Action: Download the 3.7 GB Assets package again from Google Drive.' -ForegroundColor Yellow
+}
+
 Write-Host ''
 exit 1

@@ -14,6 +14,11 @@
 #
 # Friends drop both into ONE folder, so data.grf ends up beside Play.bat.
 # Splitting them is the whole point: a client update must not cost 3.7 GB.
+#
+# Pack version: bump tools/packaging/PACK_VERSION (a positive integer, YYYYMMDD
+# is a good scheme) whenever friends must take the new zip. make-pack copies it
+# to VERSION, and the login server refuses any other number. Rebuild the client
+# so the baked number matches, upload the zip, then restart the login server.
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && cd .. && pwd)"
@@ -105,18 +110,32 @@ assets="$out/Assets"
 rm -rf "$windows"
 mkdir -p "$windows/client"
 
-echo "==> $half_name/"
+pack_version_file="tools/packaging/PACK_VERSION"
+[ -f "$pack_version_file" ] || die "$pack_version_file is missing -- it is the number the login server checks"
+pack_version="$(tr -d '[:space:]' < "$pack_version_file")"
+case "$pack_version" in
+    ''|*[!0-9]*) die "$pack_version_file must be a positive integer (got '$pack_version')" ;;
+esac
+[ "$pack_version" -gt 0 ] || die "$pack_version_file must be a positive integer"
+
+echo "==> $half_name/  (pack version $pack_version)"
 cp "$exe" "$windows/$exe_name"
+# Friends see this in Play; the login server compares the same number.
+cp "$pack_version_file" "$windows/VERSION"
 
 if [ "$os" = "windows" ]; then
     cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
        tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+       tools/packaging/windows/Update.bat tools/packaging/windows/Update.ps1 \
        tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Repair.bat tools/packaging/windows/Repair.ps1 \
        tools/packaging/windows/Troubleshoot.bat \
        "tools/packaging/windows/READ ME FIRST.txt" "$redist" "$windows/"
 else
     cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
+       tools/packaging/macos/Update.command \
        tools/packaging/macos/Verify.command \
+       tools/packaging/macos/Repair.command \
        "tools/packaging/macos/READ ME FIRST.txt" "$windows/"
     # A .command without the execute bit opens in TextEdit, which looks exactly
     # like "nothing happened". zip preserves the mode; Finder's unzip restores
@@ -188,20 +207,36 @@ chmod +x "$assets/Verify.command"
 write_manifest() {
     local dir="$1"
     local name="$2"
+    shift 2
     [ -d "$dir" ] || return 0
     echo "==> $dir/$name"
     (
         cd "$dir"
         rm -f SHA256SUMS "$name"
-        # Sorted for a stable file, and excluding the manifest itself.
-        find . -type f ! -name 'SHA256SUMS*' -print0 \
+        # Sorted for a stable file, and excluding the manifest itself and extra excludes.
+        local find_args=( . -type f ! -name 'SHA256SUMS*' )
+        while [ $# -gt 0 ]; do
+            find_args+=( ! -name "$1" )
+            shift
+        done
+        find "${find_args[@]}" -print0 \
             | LC_ALL=C sort -z \
             | xargs -0 shasum -a 256 > "$name"
     )
 }
 
+# SHA256SUMS-client owns the executables, scripts, and launcher/verifier files.
+# SHA256SUMS-assets owns ONLY asset payloads (GRFs, lua_files.7z, BGM).
+# Shared verifier files (Verify.*) are excluded from SHA256SUMS-assets so they
+# are owned by exactly one manifest (SHA256SUMS-client), preventing cross-release divergence.
 write_manifest "$windows" SHA256SUMS-client
-write_manifest "$assets" SHA256SUMS-assets
+write_manifest "$assets" SHA256SUMS-assets 'Verify.*'
+
+if [ -f "$assets/SHA256SUMS-assets" ]; then
+    if grep -E 'Verify\.(bat|ps1|command)' "$assets/SHA256SUMS-assets"; then
+        die "SHA256SUMS-assets contains Verify files -- shared verifiers must be owned only by client manifest"
+    fi
+fi
 
 # A pack that leaks credentials is worse than no pack. login_settings.ron holds
 # a real username and password in plaintext, so this is an assertion, not a
@@ -221,7 +256,8 @@ require() {
 }
 
 if [ "$os" = "windows" ]; then
-    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Verify.bat Verify.ps1 Troubleshoot.bat \
+    for f in korangar.exe Play.bat Play.ps1 Setup.bat Setup.ps1 Update.bat Update.ps1 \
+             Verify.bat Verify.ps1 Repair.bat Repair.ps1 Troubleshoot.bat VERSION \
              "READ ME FIRST.txt" VC_redist.x64.exe SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
@@ -239,15 +275,15 @@ if [ "$os" = "windows" ]; then
         die "Troubleshoot.bat has bare-LF lines; it must be pure CRLF (cmd seeks batch files by byte offset)"
     fi
 else
-    for f in korangar Play.command Setup.command Verify.command \
-             "READ ME FIRST.txt" SHA256SUMS-client \
+    for f in korangar Play.command Setup.command Update.command Verify.command \
+             Repair.command VERSION "READ ME FIRST.txt" SHA256SUMS-client \
              archive client/server.ron client/game_archives.ron; do
         require "$windows/$f"
     done
 
     # A launcher without the execute bit opens in TextEdit. Silent, and it
     # looks like the download is broken.
-    for f in Play.command Setup.command Verify.command korangar; do
+    for f in Play.command Setup.command Update.command Verify.command Repair.command korangar; do
         [ -x "$windows/$f" ] || die "$windows/$f is not executable -- Finder would open it as text"
     done
 fi
@@ -268,6 +304,32 @@ grep -q 'SHA256SUMS-assets' "$windows/$launcher" \
     || die "$launcher does not read SHA256SUMS-assets -- the manifest names have drifted"
 grep -q 'SHA256SUMS-assets' "$windows/$setup" \
     || die "$setup does not read SHA256SUMS-assets -- the manifest names have drifted"
+grep -q 'VERSION' "$windows/$launcher" \
+    || die "$launcher does not print VERSION -- friends would not see the pack number"
+
+# Keep the running login server in lockstep with this zip. Import overrides
+# conf/login/login-server.conf; missing the bump means new clients are refused
+# or old ones are still let in.
+hercules_import="$repo_root/../Hercules/conf/import/login-server.conf"
+if [ -f "$hercules_import" ]; then
+    python3 - "$hercules_import" "$pack_version" <<'PY'
+import pathlib, re, sys
+path = pathlib.Path(sys.argv[1])
+version = sys.argv[2]
+text = path.read_text()
+new, n = re.subn(r"(client_version_to_connect:\s*)\d+", r"\g<1>" + version, text, count=1)
+if n != 1:
+    sys.exit(f"{path} has {n} client_version_to_connect entries; expected 1")
+if new != text:
+    path.write_text(new)
+    print(f"==> {path} client_version_to_connect: {version}")
+else:
+    print(f"==> {path} already at pack version {version}")
+PY
+    echo "==> restart the login server so it expects pack version $pack_version"
+else
+    echo "==> Hercules import not next to this repo; set client_version_to_connect: $pack_version by hand"
+fi
 
 # BGM is loaded off the filesystem (case-insensitively), not out of a GRF, so a
 # manifest that stops at the top level silently leaves 345 MB unverified. That
@@ -297,6 +359,14 @@ if [ "$do_merged" -eq 1 ]; then
     # -c clones on APFS, so staging 3.7 GB costs no space and no time.
     cp -Rc "$windows/." "$merged/"
     cp -Rc "$assets/." "$merged/"
+
+    # Remove the other OS's verifier that came from Assets, ensuring the merged
+    # folder contains only the current OS's verifier files matching SHA256SUMS-client.
+    if [ "$os" = "windows" ]; then
+        rm -f "$merged/Verify.command"
+    else
+        rm -f "$merged/Verify.bat" "$merged/Verify.ps1"
+    fi
 
     # Both manifests have to survive the merge -- that is the entire reason
     # they are named apart (S12). If this ever fails, the rename regressed.
@@ -349,6 +419,40 @@ case "$out" in
     *)  update_zip_absolute="$repo_root/$update_zip" ;;
 esac
 ( cd "$windows" && zip -r -X -q "$update_zip_absolute" . -x '*.DS_Store' )
+
+# Minimal script repair bundle:
+# Contains launch, setup, update, verify, and repair scripts, version, and their manifest.
+# Allows repairing damaged/corrupted scripts without downloading the 47 MB client binary or 3.7 GB assets.
+repair_name="Seal-Cascade-$half_name-Repair"
+repair_dir="$out/$repair_name"
+repair_zip="$out/$repair_name.zip"
+echo "==> $repair_zip"
+rm -rf "$repair_dir" "$repair_zip"
+mkdir -p "$repair_dir"
+
+if [ "$os" = "windows" ]; then
+    cp tools/packaging/windows/Play.bat tools/packaging/windows/Play.ps1 \
+       tools/packaging/windows/Setup.bat tools/packaging/windows/Setup.ps1 \
+       tools/packaging/windows/Update.bat tools/packaging/windows/Update.ps1 \
+       tools/packaging/windows/Verify.bat tools/packaging/windows/Verify.ps1 \
+       tools/packaging/windows/Repair.bat tools/packaging/windows/Repair.ps1 \
+       tools/packaging/windows/Troubleshoot.bat \
+       "tools/packaging/windows/READ ME FIRST.txt" "$windows/VERSION" "$repair_dir/"
+else
+    cp tools/packaging/macos/Play.command tools/packaging/macos/Setup.command \
+       tools/packaging/macos/Update.command tools/packaging/macos/Verify.command \
+       tools/packaging/macos/Repair.command \
+       "tools/packaging/macos/READ ME FIRST.txt" "$windows/VERSION" "$repair_dir/"
+    chmod +x "$repair_dir"/*.command
+fi
+
+write_manifest "$repair_dir" SHA256SUMS-repair
+
+case "$out" in
+    /*) repair_zip_absolute="$repair_zip" ;;
+    *)  repair_zip_absolute="$repo_root/$repair_zip" ;;
+esac
+( cd "$repair_dir" && zip -r -X -q "$repair_zip_absolute" . -x '*.DS_Store' )
 
 echo
 echo "pack ready:"

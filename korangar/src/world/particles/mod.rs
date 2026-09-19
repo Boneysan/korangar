@@ -114,15 +114,25 @@ pub struct HealNumber {
     heal_amount: String,
     velocity_y: f32,
     timer: f32,
+    color: Color,
 }
 
 impl HealNumber {
-    pub fn new(position: Point3<f32>, heal_amount: String) -> Self {
+    /// HP recovery renders green, matching every heal-skill number already on
+    /// screen (`AL_HEAL` and friends, which carry no `HealType` of their own).
+    pub const HEALTH_COLOR: Color = Color::rgb_u8(30, 255, 30);
+    /// SP recovery renders blue, matching the SP figure in the HUD
+    /// (`interface/windows/hud.rs`), so a sitting player can tell the two
+    /// simultaneous recovery ticks apart at a glance.
+    pub const SPELL_POINTS_COLOR: Color = Color::rgb_u8(120, 170, 255);
+
+    pub fn new(position: Point3<f32>, heal_amount: String, color: Color) -> Self {
         Self {
             position,
             heal_amount,
             velocity_y: 50.0,
             timer: 1.0,
+            color,
         }
     }
 }
@@ -145,7 +155,7 @@ impl Particle for HealNumber {
             top: screen_position.y * window_size.height,
         };
 
-        renderer.render_damage_text(&self.heal_amount, final_position, Color::rgb_u8(30, 255, 30), FontSize(16.0));
+        renderer.render_damage_text(&self.heal_amount, final_position, self.color, FontSize(16.0));
     }
 }
 

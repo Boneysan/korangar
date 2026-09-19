@@ -1611,4 +1611,5 @@ pub static PACKET_LENGTHS: &[(u16, i32)] = &[
     (0x0F00, 2),
     (0x0EFF, 30),
     (0x0EFE, 6),
+    (0x0EFD, 4),
 ];

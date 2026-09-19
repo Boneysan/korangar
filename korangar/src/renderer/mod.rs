@@ -11,9 +11,7 @@ use std::sync::Arc;
 #[cfg(feature = "debug")]
 use cgmath::Point3;
 pub use effect::{EffectRenderer, GROUND_DECAL_TEXTURE_COORDINATES};
-#[cfg(feature = "debug")]
-pub use game_interface::AlignHorizontal;
-pub use game_interface::GameInterfaceRenderer;
+pub use game_interface::{AlignHorizontal, GameInterfaceRenderer};
 pub use interface::{InterfaceRenderer, LayoutExt};
 pub(crate) use interface::{animation_part_area, animation_scaling};
 #[cfg(feature = "debug")]

@@ -12,6 +12,9 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 client_repo="$(cd "$here/../.." && pwd)"
 hercules_repo="${HERCULES_DIR:-$(cd "$client_repo/../Hercules" 2>/dev/null && pwd || true)}"
 
+"$client_repo/tools/testing/check-quest-refresh-paths.sh"
+"$client_repo/tools/testing/check-area-loot-cancellation.sh"
+
 if [ -z "$hercules_repo" ] || [ ! -d "$hercules_repo/.git" ]; then
     echo "error: Hercules checkout not found; set HERCULES_DIR" >&2
     exit 2
@@ -24,7 +27,10 @@ db_password="${INTEGRATION_DB_ADMIN_PASSWORD:-}"
 db_name="korangar_integration_$$"
 ready_timeout="${INTEGRATION_READY_TIMEOUT:-900}"
 build_jobs="${INTEGRATION_BUILD_JOBS:-2}"
+ephemeral_db="${INTEGRATION_EPHEMERAL_DB:-0}"
 scratch="$(mktemp -d)"
+ephemeral_db_dir=""
+ephemeral_db_pid=""
 server_log_dir="$client_repo/target/headless-server-logs"
 mkdir -p "$server_log_dir"
 # Where the results land, so the artifact hint on failure names the real file
@@ -51,6 +57,45 @@ mysql_admin=(mysql --protocol=tcp --host="$db_host" --port="$db_port" --user="$d
 if [ -n "$db_password" ]; then
     mysql_admin+=("--password=$db_password")
 fi
+
+start_ephemeral_db() {
+    local data_dir socket_path pid_path error_log port ready
+    command -v mariadbd >/dev/null 2>&1 || { echo "error: mariadbd is required for INTEGRATION_EPHEMERAL_DB=1" >&2; exit 2; }
+    command -v mariadb-install-db >/dev/null 2>&1 || { echo "error: mariadb-install-db is required for INTEGRATION_EPHEMERAL_DB=1" >&2; exit 2; }
+    command -v mariadb-admin >/dev/null 2>&1 || { echo "error: mariadb-admin is required for INTEGRATION_EPHEMERAL_DB=1" >&2; exit 2; }
+
+    port="${INTEGRATION_EPHEMERAL_DB_PORT:-13306}"
+    data_dir="$scratch/ephemeral-db/data"
+    socket_path="$scratch/ephemeral-db/mariadb.sock"
+    pid_path="$scratch/ephemeral-db/mariadb.pid"
+    error_log="$scratch/ephemeral-db/mariadb.log"
+    ephemeral_db_dir="$scratch/ephemeral-db"
+    mkdir -p "$data_dir"
+    mariadb-install-db --no-defaults --auth-root-authentication-method=normal --datadir="$data_dir" >/dev/null
+    mariadbd --no-defaults --datadir="$data_dir" --socket="$socket_path" --port="$port" \
+        --bind-address=127.0.0.1 --pid-file="$pid_path" --log-error="$error_log" \
+        --user="$(id -un)" >/dev/null 2>&1 &
+    ephemeral_db_pid="$!"
+    ready=false
+    for _ in $(seq 1 60); do
+        if mariadb-admin --no-defaults --host=127.0.0.1 --port="$port" -uroot ping >/dev/null 2>&1; then
+            ready=true
+            break
+        fi
+        sleep 0.2
+    done
+    if ! $ready; then
+        echo "error: ephemeral MariaDB did not become ready" >&2
+        tail -40 "$error_log" >&2 || true
+        exit 1
+    fi
+    db_host=127.0.0.1
+    db_port="$port"
+    db_admin=root
+    db_password=
+    mysql_admin=(mysql --protocol=tcp --host="$db_host" --port="$db_port" --user=root)
+    echo "using disposable MariaDB on $db_host:$db_port"
+}
 
 server_pids=()
 database_created=false
@@ -276,6 +321,11 @@ cleanup() {
     if $database_created; then
         "${mysql_admin[@]}" --execute="DROP DATABASE IF EXISTS \`$db_name\`;" >/dev/null 2>&1 || true
     fi
+    if [ -n "$ephemeral_db_pid" ] && kill -0 "$ephemeral_db_pid" 2>/dev/null; then
+        mariadb-admin --no-defaults --host=127.0.0.1 --port="$db_port" -uroot shutdown >/dev/null 2>&1 || true
+        kill "$ephemeral_db_pid" 2>/dev/null || true
+        wait "$ephemeral_db_pid" 2>/dev/null || true
+    fi
     rm -rf "$scratch"
     if [ "$runner_exit" -ne 0 ]; then
         echo "integration artifacts: $results_json and $server_log_dir" >&2
@@ -302,7 +352,11 @@ done
 trap cleanup EXIT
 trap 'exit 130' INT TERM
 
-reclaim_orphans
+if [ "$ephemeral_db" = 1 ]; then
+    start_ephemeral_db
+else
+    reclaim_orphans
+fi
 
 for port in 6900 6121 5121; do
     if nc -z 127.0.0.1 "$port" 2>/dev/null; then
@@ -316,6 +370,17 @@ echo "creating disposable database $db_name on $db_host:$db_port"
 database_created=true
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/main.sql"
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/logs.sql"
+
+# QW-054 is deliberately a real migration gate, not a fixture-only table.
+# Apply it to this disposable database so QW-055 can exercise the actual
+# server-side checkpoint/reconciliation path without requiring CREATE on the
+# operator's restricted project database.
+checkpoint_migration="$hercules_repo/sql-files/upgrades/2026-09-16--campaign-checkpoint.sql"
+[ -f "$checkpoint_migration" ] || {
+    echo "error: checkpoint migration is missing: $checkpoint_migration" >&2
+    exit 2
+}
+"${mysql_admin[@]}" "$db_name" < "$checkpoint_migration"
 
 # 10 bytes -> 20 hex characters. The bound is the protocol, not taste:
 # LoginServerLoginPacket::password is #[length(24)], and the client serializes
@@ -484,6 +549,10 @@ case " $* " in
 *" --results-json "*) ;;
 *) suite_arguments+=(--results-json "$results_json") ;;
 esac
+
+# The migration above is installed only in the disposable database created by
+# this runner, so the headless contract may leave its explicit skip guard.
+export QW_CHECKPOINT_DB_READY=1
 
 set +e
 "$here/run-suite.sh" "${suite_arguments[@]}"

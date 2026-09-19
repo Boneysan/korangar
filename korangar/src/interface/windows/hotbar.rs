@@ -3,7 +3,7 @@ use std::cell::UnsafeCell;
 use korangar_interface::MouseMode;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{BaseLayoutInfo, Element};
-use korangar_interface::event::{ClickHandler, DropHandler, Event, EventQueue};
+use korangar_interface::event::{ClickHandler, DropHandler, EventQueue};
 use korangar_interface::layout::tooltip::TooltipExt;
 use korangar_interface::layout::{MouseButton, Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
@@ -18,7 +18,7 @@ use crate::interface::resource::{ItemSource, SkillSource};
 use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
-use crate::state::hotbar::{HOTBAR_COLUMNS, HOTBAR_ROWS, HOTBAR_SLOTS, Hotbar, HotbarBinding};
+use crate::state::hotbar::{HOTBAR_COLUMNS, HOTBAR_ROWS, HOTBAR_SLOTS, Hotbar, HotbarBinding, HotbarPathExt};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::skills::LearnedSkill;
 use crate::state::theme::InterfaceThemeType;
@@ -33,55 +33,52 @@ fn slot_label(slot: usize) -> &'static str {
     LABELS.get(slot).copied().unwrap_or("?")
 }
 
-struct ActivateSlot {
-    slot: HotbarSlot,
-}
-
-impl ClickHandler<ClientState> for ActivateSlot {
-    fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
-        queue.queue(InputEvent::CastSkill { slot: self.slot });
-    }
-}
-
-struct PickupSlot<H> {
+#[derive(Copy, Clone)]
+struct PressSlot<H> {
     hotbar_path: H,
     slot: HotbarSlot,
 }
 
-impl<H> ClickHandler<ClientState> for PickupSlot<H>
+impl<H> ClickHandler<ClientState> for PressSlot<H>
 where
     H: Path<ClientState, Hotbar>,
 {
-    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
-        match state.get(&self.hotbar_path).get_slot(self.slot) {
-            Some(HotbarBinding::Skill(skill)) => queue.queue(Event::SetMouseMode {
-                mouse_mode: MouseMode::Custom {
-                    mode: MouseInputMode::MoveSkill {
-                        skill: skill.clone(),
-                        source: SkillSource::Hotbar { slot: self.slot },
-                    },
-                },
-            }),
-            Some(HotbarBinding::Item { item_id }) => {
-                let Some(item) = state
-                    .get(&client_state().inventory())
-                    .items()
-                    .iter()
-                    .find(|item| item.item_id == *item_id)
-                    .cloned()
-                else {
-                    return;
-                };
-                queue.queue(Event::SetMouseMode {
-                    mouse_mode: MouseMode::Custom {
-                        mode: MouseInputMode::MoveItem {
-                            item,
-                            source: ItemSource::Hotbar { slot: self.slot },
-                        },
-                    },
-                });
-            }
-            None => {}
+    fn handle_click(&self, state: &State<ClientState>, _: &mut EventQueue<ClientState>) {
+        state.update_value(self.hotbar_path.pending_press(), Some(self.slot));
+    }
+}
+
+#[derive(Copy, Clone)]
+struct ClearSlot {
+    slot: HotbarSlot,
+}
+
+impl ClickHandler<ClientState> for ClearSlot {
+    fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        queue.queue(InputEvent::ClearHotbarSlot { slot: self.slot });
+    }
+}
+
+/// Helper to convert a bound hotbar slot into the corresponding drag mouse
+/// mode.
+pub fn pickup_hotbar_slot(state: &State<ClientState>, slot: HotbarSlot) -> Option<MouseInputMode> {
+    let binding = state.follow(client_state().hotbar()).get_slot(slot).clone()?;
+    match binding {
+        HotbarBinding::Skill(skill) => Some(MouseInputMode::MoveSkill {
+            skill,
+            source: SkillSource::Hotbar { slot },
+        }),
+        HotbarBinding::Item { item_id } => {
+            let item = state
+                .follow(client_state().inventory())
+                .items()
+                .iter()
+                .find(|item| item.item_id == item_id)
+                .cloned()?;
+            Some(MouseInputMode::MoveItem {
+                item,
+                source: ItemSource::Hotbar { slot },
+            })
         }
     }
 }
@@ -116,8 +113,8 @@ struct HotbarSlotBox<H, S> {
     hotbar_path: H,
     skills_path: S,
     slot: usize,
-    activate: ActivateSlot,
-    pickup: PickupSlot<H>,
+    press: PressSlot<H>,
+    clear: ClearSlot,
     drop: SlotDrop,
     tooltip_text: UnsafeCell<String>,
     amount_text: UnsafeCell<String>,
@@ -133,11 +130,11 @@ where
             hotbar_path,
             skills_path,
             slot,
-            activate: ActivateSlot { slot: hotbar_slot },
-            pickup: PickupSlot {
+            press: PressSlot {
                 hotbar_path,
                 slot: hotbar_slot,
             },
+            clear: ClearSlot { slot: hotbar_slot },
             drop: SlotDrop { slot: hotbar_slot },
             tooltip_text: UnsafeCell::new(String::new()),
             amount_text: UnsafeCell::new(String::new()),
@@ -212,12 +209,12 @@ where
                     });
                 }
                 if is_hovered {
-                    layout.register_click_handler(MouseButton::Left, &self.activate);
-                    layout.register_click_handler(MouseButton::Right, &self.pickup);
+                    layout.register_click_handler(MouseButton::Left, &self.press);
+                    layout.register_click_handler(MouseButton::Right, &self.clear);
                     let level = learned.map_or(1, |learned| learned.skill_level.0);
                     let text = skill_tooltip_text(skill.skill_id.0, &skill.skill_name, level, skill.maximum_level.0);
                     unsafe {
-                        *self.tooltip_text.get() = text;
+                        *self.tooltip_text.get() = format!("{text}\nRight-click or drag off bar to clear slot");
                         layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), HotbarSlotTooltip.tooltip_id());
                     }
                 }
@@ -248,16 +245,21 @@ where
                         );
                     }
                     if is_hovered {
-                        layout.register_click_handler(MouseButton::Left, &self.activate);
-                        layout.register_click_handler(MouseButton::Right, &self.pickup);
+                        layout.register_click_handler(MouseButton::Left, &self.press);
+                        layout.register_click_handler(MouseButton::Right, &self.clear);
                         let text = item_tooltip_text(item.item_id.0, &item.metadata.name, None, None, None);
                         unsafe {
-                            *self.tooltip_text.get() = text;
+                            *self.tooltip_text.get() = format!("{text}\nRight-click or drag off bar to clear slot");
                             layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), HotbarSlotTooltip.tooltip_id());
                         }
                     }
                 } else if is_hovered {
-                    layout.register_click_handler(MouseButton::Left, &self.activate);
+                    layout.register_click_handler(MouseButton::Left, &self.press);
+                    layout.register_click_handler(MouseButton::Right, &self.clear);
+                    unsafe {
+                        *self.tooltip_text.get() = "Item not in inventory.\nRight-click to clear slot".to_owned();
+                        layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), HotbarSlotTooltip.tooltip_id());
+                    }
                 }
             }
             None => {

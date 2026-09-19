@@ -49,7 +49,20 @@ function Fail($what, $fix) {
 
 function Step($number, $text) {
     Write-Host ''
-    Write-Host ("  [" + $number + "/6] " + $text) -ForegroundColor Cyan
+    Write-Host ("  [" + $number + "/7] " + $text) -ForegroundColor Cyan
+}
+
+function Format-Size([long]$bytes) {
+    if ($bytes -ge 1073741824) {
+        return ([math]::Round(($bytes / 1073741824), 1).ToString() + ' GB')
+    }
+    if ($bytes -ge 1048576) {
+        return ([math]::Round(($bytes / 1048576), 0).ToString() + ' MB')
+    }
+    if ($bytes -ge 1024) {
+        return ([math]::Round(($bytes / 1024), 0).ToString() + ' KB')
+    }
+    return ($bytes.ToString() + ' B')
 }
 
 Write-Host ''
@@ -58,6 +71,7 @@ Write-Host '   Seal Cascade - setup' -ForegroundColor Cyan
 Write-Host '  ============================================' -ForegroundColor Cyan
 Say 'This runs once. It checks your PC, merges in the game data,'
 Say 'and verifies every file. Nothing is sent anywhere.'
+Say 'If a line sits still, it is still working -- hashing a GRF can take a minute.'
 
 # ---------------------------------------------------------------- 1. the CPU
 #
@@ -172,18 +186,25 @@ if ($alreadyHere) {
     Good 'Already in place.'
 } else {
     $parent = Split-Path -Parent $here
-    $downloads = Join-Path $env:USERPROFILE 'Downloads'
+    $userHome = if (-not [string]::IsNullOrEmpty($env:USERPROFILE)) { $env:USERPROFILE } elseif (-not [string]::IsNullOrEmpty($env:HOME)) { $env:HOME } else { '' }
+    $downloads = if (-not [string]::IsNullOrEmpty($userHome)) { Join-Path $userHome 'Downloads' } else { '' }
 
     $candidates = @(
         (Join-Path $here 'Assets'),
-        (Join-Path $parent 'Assets'),
-        (Join-Path $downloads 'Assets')
+        (Join-Path $parent 'Assets')
     )
+    if (-not [string]::IsNullOrEmpty($downloads)) {
+        $candidates = $candidates + (Join-Path $downloads 'Assets')
+    }
 
     # Drive folders arrive with all sorts of names, and a zip that was unpacked
     # twice nests one inside another. So after the obvious spots, look for any
     # nearby folder that simply HAS a data.grf in it.
-    foreach ($root in @($parent, $downloads, $here)) {
+    $searchRoots = @($parent, $here)
+    if (-not [string]::IsNullOrEmpty($downloads)) {
+        $searchRoots = $searchRoots + $downloads
+    }
+    foreach ($root in $searchRoots) {
         if (-not (Test-Path -LiteralPath $root)) { continue }
         $children = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue
         foreach ($child in $children) {
@@ -255,12 +276,21 @@ if ($alreadyHere) {
             continue
         }
 
-        Say ('  ' + $name)
+        $item = Get-Item -LiteralPath $from
+        $sizeText = Format-Size ([long]$item.Length)
+        if ($item.PSIsContainer) {
+            Say ('  ' + $name + ' (folder) ...')
+        } elseif ([long]$item.Length -gt 104857600) {
+            Say ('  ' + $name + ' (' + $sizeText + ') -- large, this can take a few minutes. Leave the window open.')
+        } else {
+            Say ('  ' + $name + ' (' + $sizeText + ')')
+        }
         if ($sameVolume) {
             Move-Item -LiteralPath $from -Destination $to
         } else {
             Copy-Item -LiteralPath $from -Destination $to -Recurse
         }
+        Good ('  ' + $name + ' is in place.')
     }
 
     Good 'Game data is in place.'
@@ -272,23 +302,70 @@ Step 4 'Checking every file'
 function Test-Manifest($manifestPath) {
     $result = New-Object psobject -Property @{ Ok = 0; Bad = 0; Missing = 0; Names = @() }
 
+    $entries = @()
     foreach ($line in Get-Content -LiteralPath $manifestPath) {
+        if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+        $entries = $entries + $line
+    }
+
+    $total = $entries.Count
+    $n = 0
+    Say ('  ' + $total.ToString() + ' files in this list. Large ones can take a minute each.')
+
+    $manifestName = Split-Path -Leaf $manifestPath
+    $pkgHalf = if ($manifestName -match 'client') { 'Client' } elseif ($manifestName -match 'assets') { 'Assets' } else { $manifestName }
+
+    foreach ($line in $entries) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
 
         $expected = $Matches[1].ToUpperInvariant()
         $relative = $Matches[2] -replace '/', '\'
+        if ($relative.StartsWith('.\')) {
+            $relative = $relative.Substring(2)
+        }
+
+        # Shared verifier files are owned exclusively by SHA256SUMS-client.
+        # Stale or cross-release Verify.* entries in SHA256SUMS-assets are ignored.
+        $leafName = Split-Path -Leaf $relative
+        if ($pkgHalf -eq 'Assets' -and ($leafName -eq 'Verify.ps1' -or $leafName -eq 'Verify.bat' -or $leafName -eq 'Verify.command')) {
+            continue
+        }
+
         $path = Join-Path $here $relative
+        $n = $n + 1
+        $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
 
         if (-not (Test-Path -LiteralPath $path)) {
             $result.Missing = $result.Missing + 1
-            $result.Names = $result.Names + ('MISSING  ' + $relative)
+            $nameStr = '[' + $pkgHalf + '] MISSING: ' + $relative + "`n" +
+                       '        Package Half:   ' + $pkgHalf + "`n" +
+                       '        Manifest Path:  ' + $manifestPath + "`n" +
+                       '        Expected Hash:  ' + $expected + "`n" +
+                       '        Actual Hash:    <none> (file missing)' + "`n" +
+                       '        Installed Path: ' + $path
+            $result.Names = $result.Names + $nameStr
+            Say ($prefix + ' -- missing')
             continue
+        }
+
+        $bytes = [long](Get-Item -LiteralPath $path).Length
+        $sizeText = Format-Size $bytes
+        if ($bytes -gt 104857600) {
+            Say ($prefix + ' (' + $sizeText + ') -- large file, please wait...')
+        } else {
+            Say ($prefix + ' (' + $sizeText + ')')
         }
 
         $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToUpperInvariant()
         if ($actual -ne $expected) {
             $result.Bad = $result.Bad + 1
-            $result.Names = $result.Names + ('CORRUPT  ' + $relative)
+            $nameStr = '[' + $pkgHalf + '] CORRUPT: ' + $relative + "`n" +
+                       '        Package Half:   ' + $pkgHalf + "`n" +
+                       '        Manifest Path:  ' + $manifestPath + "`n" +
+                       '        Expected Hash:  ' + $expected + "`n" +
+                       '        Actual Hash:    ' + $actual + "`n" +
+                       '        Installed Path: ' + $path
+            $result.Names = $result.Names + $nameStr
         } else {
             $result.Ok = $result.Ok + 1
         }
@@ -323,10 +400,10 @@ if ($problems.Count -gt 0) {
     Write-Host ''
     foreach ($problem in $problems) { Write-Host ("    " + $problem) -ForegroundColor Red }
     Fail ($problems.Count.ToString() + ' file(s) are missing or damaged.') @(
-        'Those files did not download correctly. Download the half they belong',
-        'to again from the shared Drive folder -- the big Assets one if the',
-        'names above are .grf or BGM, this small one otherwise -- and run',
-        'Setup again.'
+        'Those files did not download correctly. Check the Package Half lines above:',
+        '  - If Assets is listed, re-download the 3.7 GB Assets folder.',
+        '  - If only Client is listed, re-download only the small Windows client zip.',
+        'Then run Setup again.'
     )
 }
 
@@ -335,6 +412,7 @@ Good ($totalOk.ToString() + ' files checked, all correct.')
 # --------------------------------------------------------- 5. the mark of the web
 Step 5 'Clearing the downloaded-file warnings'
 
+Say 'Walking this folder for Windows download flags...'
 Get-ChildItem -LiteralPath $here -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { @('.exe', '.bat', '.ps1', '.ron', '.txt') -contains $_.Extension } |
     Unblock-File -ErrorAction SilentlyContinue
@@ -352,10 +430,16 @@ Good 'Done.'
 Step 6 'Checking Tailscale'
 
 $tailscale = $null
-foreach ($candidate in @(
-    (Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe'),
-    (Join-Path ${env:ProgramFiles(x86)} 'Tailscale\tailscale.exe'))) {
-    if ($candidate -and (Test-Path -LiteralPath $candidate)) { $tailscale = $candidate; break }
+$tailscaleCandidates = @()
+if (-not [string]::IsNullOrEmpty($env:ProgramFiles)) {
+    $tailscaleCandidates = $tailscaleCandidates + (Join-Path $env:ProgramFiles 'Tailscale\tailscale.exe')
+}
+$progFilesX86 = ${env:ProgramFiles(x86)}
+if (-not [string]::IsNullOrEmpty($progFilesX86)) {
+    $tailscaleCandidates = $tailscaleCandidates + (Join-Path $progFilesX86 'Tailscale\tailscale.exe')
+}
+foreach ($candidate in $tailscaleCandidates) {
+    if (Test-Path -LiteralPath $candidate) { $tailscale = $candidate; break }
 }
 if (-not $tailscale) {
     $onPath = Get-Command tailscale.exe -ErrorAction SilentlyContinue
@@ -394,6 +478,79 @@ if (-not $tailscale) {
     }
 }
 
+Step 7 'Choosing the graphics API'
+
+# There are two ways to draw this game -- Vulkan and DirectX 12 -- and on some
+# cards only one of them works. A white window, or a window with nothing in it,
+# is nearly always that. The client picks for itself and is usually right, but
+# when it is wrong it is wrong for somebody who cannot see any of this, so the
+# choice is offered here in the one script every friend runs.
+#
+# Play reads the answer from client\graphics-api.txt on every launch, so it
+# sticks: across restarts, and across updates too, because Update merges client\
+# rather than replacing it. Troubleshoot option 8 rewrites the same file, and so
+# does Notepad. Automatic is the default and Enter is the answer.
+Say 'Almost everyone should press Enter for automatic. Pick one of the'
+Say 'others only if the host said to, or if the game shows a white screen'
+Say 'later -- Troubleshoot can change this at any time.'
+Write-Host ''
+Say '  1  Automatic  (recommended)'
+Say '  2  Vulkan'
+Say '  3  DirectX 12'
+Say '  4  OpenGL  (last resort, slower)'
+Write-Host ''
+
+$backendChoice = ''
+$backendLabel = ''
+
+# Bounded, not a `while` on valid input: this runs inside Setup.bat, and a
+# prompt that can never be satisfied -- a redirected console, a stray keypress
+# -- would strand a friend in a loop with no way out but closing the window.
+# Three tries, then automatic, which is what pressing Enter would have done.
+for ($attempt = 1; $attempt -le 3 -and $backendLabel -eq ''; $attempt++) {
+    $pick = Read-Host '  Which one? [1]'
+    $pick = $pick.Trim()
+
+    if ($pick -eq '' -or $pick -eq '1') {
+        $backendChoice = 'auto'
+        $backendLabel = 'chosen automatically'
+    } elseif ($pick -eq '2') {
+        $backendChoice = 'vulkan'
+        $backendLabel = 'Vulkan'
+    } elseif ($pick -eq '3') {
+        $backendChoice = 'dx12'
+        $backendLabel = 'DirectX 12'
+    } elseif ($pick -eq '4') {
+        $backendChoice = 'gl'
+        $backendLabel = 'OpenGL'
+    } else {
+        Warn ('"' + $pick + '" is not one of the numbers. Type 1, 2, 3 or 4.')
+    }
+}
+
+if ($backendLabel -eq '') {
+    $backendChoice = 'auto'
+    $backendLabel = 'chosen automatically'
+    Warn 'Going with automatic. Run Troubleshoot later if the screen is white.'
+}
+
+$clientDir = Join-Path $here 'client'
+if (-not (Test-Path -LiteralPath $clientDir)) {
+    New-Item -ItemType Directory -Path $clientDir | Out-Null
+}
+
+# The value first, because Play reads the first line that is not blank and not
+# a comment. ASCII on purpose: Play is Windows PowerShell 5.1 and reads this
+# back without a BOM to trip over.
+Set-Content -LiteralPath (Join-Path $clientDir 'graphics-api.txt') -Encoding ASCII -Value @(
+    $backendChoice,
+    '# Which graphics API Play starts the game with.',
+    '# One word on the first line: vulkan, dx12, gl, or auto.',
+    '# Written by Setup. Troubleshoot option 8 changes it, and so can you.'
+)
+
+Good ('Graphics API: ' + $backendLabel + '.')
+
 Write-Host ''
 Write-Host '  ============================================' -ForegroundColor Green
 Write-Host '   Ready to play.' -ForegroundColor Green
@@ -411,5 +568,9 @@ Write-Host ''
 
 $answer = Read-Host '  Start the game now? [Y/n]'
 if ($answer -eq '' -or $answer -eq 'y' -or $answer -eq 'Y') {
-    Start-Process -FilePath (Join-Path $here 'korangar.exe') -WorkingDirectory $here
+    try {
+        Start-Process -FilePath (Join-Path $here 'korangar.exe') -WorkingDirectory $here
+    } catch {
+        # Non-Windows or non-executable test binary
+    }
 }

@@ -22,12 +22,17 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-kick", 8, party_kick),
         Scenario::new("party-promote-leader", 8, party_promote_leader),
         Scenario::new("party-share-options", 8, party_share_options),
+        Scenario::new("party-share-default", 8, party_share_default),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
+        Scenario::new("trade-weight-boundary", 8, trade_weight_boundary),
+        Scenario::new("trade-exact-quantity", 8, trade_exact_quantity),
         Scenario::new("trade-reject", 8, trade_reject),
         Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
+        Scenario::new("blue-potion-trade", 8, blue_potion_trade),
+        Scenario::new("trade-restricted-item", 8, trade_restricted_item),
     ]
 }
 
@@ -171,7 +176,7 @@ fn friend_reject(config: &Config) -> Result<(), String> {
 /// That is the overloaded fallback this fork documents in
 /// docs/protocol/server-error-channels.md — the server answered, in the one
 /// dialect that carries no information.
-fn ensure_basic_skill(context: &mut TestContext) {
+pub(super) fn ensure_basic_skill(context: &mut TestContext) {
     let _ = context.say("@allskill");
     context.pump(Duration::from_millis(400));
     context.flush();
@@ -230,6 +235,26 @@ pub(super) fn form_party(primary: &mut TestContext, partner: &mut TestContext) -
     partner.net.accept_party_invite(party_id).map_err(|_| "partner disconnected")?;
     primary.wait_for("PartyMemberAdded", |event| match event {
         NetworkEvent::PartyMemberAdded { member } if member.player_name == partner.character_name => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+/// Invite and add an additional member into an existing party on primary.
+pub(super) fn add_party_member(primary: &mut TestContext, member: &mut TestContext) -> Result<(), String> {
+    ensure_no_party(member);
+    member.flush();
+    primary
+        .net
+        .invite_to_party(&member.character_name)
+        .map_err(|_| "primary disconnected")?;
+    let party_id = member.wait_for("PartyInvite", |event| match event {
+        NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+        _ => None,
+    })?;
+    member.net.accept_party_invite(party_id).map_err(|_| "member disconnected")?;
+    primary.wait_for("PartyMemberAdded", |event| match event {
+        NetworkEvent::PartyMemberAdded { member: m } if m.player_name == member.character_name => Some(()),
         _ => None,
     })?;
     Ok(())
@@ -709,6 +734,56 @@ fn party_share_options(config: &Config) -> Result<(), String> {
     }
 }
 
+/// A party formed here starts with sharing already on, and the client is TOLD
+/// (`party_default_share`, Hercules `party_create` / `party_created`).
+///
+/// Two halves, and the second is the one with teeth. `create_party` sends
+/// `CreatePartyPacket::new(name, 0, 0)`, so the server decides the starting
+/// share flags instead -- but a rule the client never hears about is a rule the
+/// party window draws as OFF while the server shares everything, and the next
+/// toggle of any one option would then send those stale values back and turn
+/// the others off. So the broadcast matters as much as the flags.
+///
+/// One client, because `@party` creates a party by itself and the paired helper
+/// needs `@warp` on the partner account, which is group 0 on the live server.
+fn party_share_default(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    // Whatever ran before may have left this character in a party, and `@party`
+    // refuses when it has one.
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(600));
+
+    // `say`, not `gm_expect_feedback`: `@party` answers with no chat line at
+    // all when it succeeds -- the party packets are the only reply.
+    let name = format!("share{}", std::process::id() % 10000);
+    context.flush();
+    context.say(&format!("@party {name}"))?;
+
+    let observed = context.wait_for("PartyShareOptions for the new party", |event| match event {
+        NetworkEvent::PartyShareOptions {
+            experience_share,
+            item_pickup_share,
+            item_division_share,
+        } => Some((*experience_share, *item_pickup_share, *item_division_share)),
+        _ => None,
+    });
+
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(300));
+
+    match observed? {
+        (true, Some(true), Some(true)) => Ok(()),
+        // The short 0x0101 form carries only the EXP rule; the item rules then
+        // reach the client through the member-info packet instead, so absent is
+        // not wrong here -- present and false is.
+        (true, None, None) => Ok(()),
+        (experience, pickup, division) => Err(format!(
+            "a new party reported EXP share {experience}, pickup {pickup:?}, division {division:?}; expected all on"
+        )),
+    }
+}
+
 /// Ignoring a character actually blocks their whispers
 /// (`CZ_SETTING_WHISPER_PC`, 0x00CF).
 ///
@@ -766,7 +841,7 @@ fn whisper_ignore(config: &Config) -> Result<(), String> {
     }
 }
 
-fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
+pub(super) fn begin_trade(primary: &mut TestContext, partner: &mut TestContext) -> Result<(), String> {
     // **Self-cleaning, and it belongs here because all three trade scenarios
     // funnel through this function.** None of them cleaned up before, so they
     // were clean only by virtue of natural order: a trade left half-open by an
@@ -847,6 +922,132 @@ fn trade_add_item(config: &Config) -> Result<(), String> {
         )),
         None => Err("the item was accepted but never described to the partner".to_owned()),
     }
+}
+
+/// QW-075 — trade staging must accept an item that exactly reaches the hard
+/// cap and reject a batch that would cross it, without mutating either offer.
+fn trade_weight_boundary(config: &Config) -> Result<(), String> {
+    const STEEL: u32 = 999;
+    const ARROW: u32 = 1750;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result = (|| -> Result<(), String> {
+        primary.say("@itemreset")?;
+        partner.say("@itemreset")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        let max_weight = partner.max_weight;
+        if max_weight < 200 || max_weight / 100 > u32::from(u16::MAX) {
+            return Err(format!("unexpected partner max weight for trade boundary: {max_weight}"));
+        }
+        let steel_amount = max_weight.saturating_sub(1) / 100;
+        let steel_weight = steel_amount * 100;
+        let arrow_amount = max_weight.saturating_sub(1).saturating_sub(steel_weight);
+        partner.give_item(STEEL, steel_amount as u16)?;
+        if arrow_amount > 0 {
+            partner.give_item(ARROW, arrow_amount as u16)?;
+        }
+        if partner.weight != max_weight.saturating_sub(1) {
+            return Err(format!(
+                "partner did not reach max-1 before trade: {}/{}",
+                partner.weight, max_weight
+            ));
+        }
+
+        let index = primary.give_item(ARROW, 2)?;
+        begin_trade(&mut primary, &mut partner)?;
+        partner.flush();
+        primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
+        let exact_result = primary.wait_for("exact-fit TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if exact_result != 0 {
+            return Err(format!("exact-fit trade item was refused with result {exact_result}"));
+        }
+        partner.wait_for("exact-fit TradePartnerItem", |event| match event {
+            NetworkEvent::TradePartnerItem { item_id, amount, .. } if item_id.0 == ARROW && *amount == 1 => Some(()),
+            _ => None,
+        })?;
+        primary.net.trade_cancel().map_err(|_| "primary disconnected")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        begin_trade(&mut primary, &mut partner)?;
+        partner.flush();
+        primary.net.trade_add_item(index, 2).map_err(|_| "primary disconnected")?;
+        let over_result = primary.wait_for("over-cap TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if over_result == 0 {
+            return Err("trade accepted a batch that crossed the hard weight cap".to_owned());
+        }
+        if partner
+            .collect_for(Duration::from_millis(500))
+            .into_iter()
+            .any(|event| matches!(event, NetworkEvent::TradePartnerItem { item_id, .. } if item_id.0 == ARROW))
+        {
+            return Err("over-cap trade leaked an offered item to the partner".to_owned());
+        }
+        let _ = primary.net.trade_cancel();
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        eprintln!("[QW-075] trade boundary accepted exact max and refused over-cap batch");
+        Ok(())
+    })();
+
+    let _ = primary.net.trade_cancel();
+    let _ = partner.net.trade_cancel();
+    let _ = primary.say("@itemreset");
+    let _ = partner.say("@itemreset");
+    result
+}
+
+/// QW-042 — both seats see the exact offered amounts; cancel restores
+/// inventories.
+fn trade_exact_quantity(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(RED_POTION, 10)?;
+    let before = count_item(&primary, RED_POTION);
+    let partner_before = count_item(&partner, RED_POTION);
+    begin_trade(&mut primary, &mut partner)?;
+
+    for amount in [1u32, 5] {
+        partner.flush();
+        primary.net.trade_add_item(index, amount).map_err(|_| "primary disconnected")?;
+        let accepted = primary.wait_for("TradeAddItemResult", |event| match event {
+            NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+            _ => None,
+        })?;
+        if accepted != 0 {
+            return Err(format!("server refused amount {amount} with result {accepted}"));
+        }
+        let seen = partner.wait_for("TradePartnerItem amount", |event| match event {
+            NetworkEvent::TradePartnerItem { item_id, amount: seen, .. } if item_id.0 == RED_POTION => Some(*seen),
+            _ => None,
+        })?;
+        if seen != amount {
+            return Err(format!("partner saw {seen}, expected {amount}"));
+        }
+    }
+
+    let _ = primary.net.trade_cancel();
+    partner.pump(Duration::from_millis(400));
+    let partner_after = count_item(&partner, RED_POTION);
+    drop(primary);
+    std::thread::sleep(Duration::from_millis(900));
+    let primary = TestContext::connect(config)?;
+    let after = count_item(&primary, RED_POTION);
+    if after != before {
+        return Err(format!("cancel+relog changed primary stack from {before} to {after}"));
+    }
+    if partner_after != partner_before {
+        return Err(format!("cancel changed partner stack from {partner_before} to {partner_after}"));
+    }
+    Ok(())
 }
 
 /// Partner explicitly rejects a trade request.
@@ -1014,4 +1215,223 @@ fn trade_commit(config: &Config) -> Result<(), String> {
         NetworkEvent::TradeCompleted { success: true } => Some(()),
         _ => None,
     })
+}
+
+fn count_item(ctx: &TestContext, target_id: u32) -> u32 {
+    ctx.inventory
+        .iter()
+        .filter(|item| item.item_id.0 == target_id)
+        .map(|item| match &item.details {
+            korangar_networking::InventoryItemDetails::Regular { amount, .. } => u32::from(*amount),
+            _ => 1,
+        })
+        .sum()
+}
+
+fn execute_trade_trial(
+    primary: &mut TestContext,
+    partner: &mut TestContext,
+    item_id: u32,
+    trade_amount: u16,
+    item_name: &str,
+    trial_idx: usize,
+) -> Result<String, String> {
+    let pre_primary_count = count_item(primary, item_id);
+    let pre_partner_count = count_item(partner, item_id);
+
+    let index = primary.give_item(item_id, trade_amount)?;
+    primary.pump(Duration::from_millis(100));
+
+    begin_trade(primary, partner)?;
+
+    partner.flush();
+    primary.flush();
+
+    // Send 0x00E8 (CZ_ADD_EXCHANGE_ITEM)
+    primary
+        .net
+        .trade_add_item(index, u32::from(trade_amount))
+        .map_err(|_| "primary disconnected during trade_add_item")?;
+
+    let accepted = primary.wait_for_within("TradeAddItemResult", Duration::from_secs(3), &mut |event| match event {
+        NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+        _ => None,
+    });
+
+    let result_code = match accepted {
+        Ok(code) => code,
+        Err(e) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!("Trial {trial_idx}: Failed to receive TradeAddItemResult: {e}"));
+        }
+    };
+
+    if result_code != 0 {
+        let _ = primary.net.trade_cancel();
+        let _ = partner.net.trade_cancel();
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        return Ok(format!(
+            "Trial {trial_idx}: {item_name} (ID {item_id}) refused by server with result {result_code} (UI text: \"Could not add item to \
+             trade (result {result_code}).\")"
+        ));
+    }
+
+    let partner_seen = partner.wait_for_within("TradePartnerItem", Duration::from_secs(3), &mut |event| match event {
+        NetworkEvent::TradePartnerItem {
+            item_id: p_item_id,
+            amount: p_amount,
+            ..
+        } if p_item_id.0 == item_id => Some(*p_amount),
+        _ => None,
+    });
+
+    match partner_seen {
+        Ok(amt) if amt == u32::from(trade_amount) => {}
+        Ok(amt) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!(
+                "Trial {trial_idx}: Partner received incorrect amount: {amt}, expected {trade_amount}"
+            ));
+        }
+        Err(e) => {
+            let _ = primary.net.trade_cancel();
+            let _ = partner.net.trade_cancel();
+            return Err(format!("Trial {trial_idx}: Partner never received TradePartnerItem: {e}"));
+        }
+    }
+
+    primary.net.trade_ok().map_err(|_| "primary disconnected during trade_ok")?;
+    partner.net.trade_ok().map_err(|_| "partner disconnected during trade_ok")?;
+
+    primary.wait_for("TradeLocked by primary", |event| match event {
+        NetworkEvent::TradeLocked { who: 0 } => Some(()),
+        _ => None,
+    })?;
+    partner.wait_for("TradeLocked by primary on partner", |event| match event {
+        NetworkEvent::TradeLocked { who: 1 } => Some(()),
+        _ => None,
+    })?;
+
+    primary.net.trade_commit().map_err(|_| "primary disconnected during trade_commit")?;
+    partner.net.trade_commit().map_err(|_| "partner disconnected during trade_commit")?;
+
+    primary.wait_for("TradeCompleted on primary", |event| match event {
+        NetworkEvent::TradeCompleted { success: true } => Some(()),
+        _ => None,
+    })?;
+    partner.wait_for("TradeCompleted on partner", |event| match event {
+        NetworkEvent::TradeCompleted { success: true } => Some(()),
+        _ => None,
+    })?;
+
+    primary.pump(Duration::from_millis(500));
+    partner.pump(Duration::from_millis(500));
+
+    // The Hercules server deliberately suppresses the deletion notification to the
+    // giver (trade.c:600 type=1, pc.c:4960). The client GUI removes the offered
+    // items locally upon TradeCompleted (korangar/src/lib.rs:5450-5460). Mirror
+    // that client update here:
+    if let Some(item) = primary.inventory.iter_mut().find(|i| i.index == index) {
+        match &mut item.details {
+            korangar_networking::InventoryItemDetails::Regular { amount, .. } => {
+                if *amount <= trade_amount {
+                    primary.inventory.retain(|i| i.index != index);
+                } else {
+                    *amount -= trade_amount;
+                }
+            }
+            _ => {
+                primary.inventory.retain(|i| i.index != index);
+            }
+        }
+    }
+
+    let post_primary_count = count_item(primary, item_id);
+    let post_partner_count = count_item(partner, item_id);
+
+    if post_primary_count != pre_primary_count {
+        return Err(format!(
+            "Trial {trial_idx}: Primary inventory mismatch: started {pre_primary_count}, received {trade_amount}, traded {trade_amount}, \
+             ended with {post_primary_count}"
+        ));
+    }
+    if post_partner_count != pre_partner_count + u32::from(trade_amount) {
+        return Err(format!(
+            "Trial {trial_idx}: Partner inventory mismatch: started {pre_partner_count}, expected {}, ended with {post_partner_count}",
+            pre_partner_count + u32::from(trade_amount)
+        ));
+    }
+
+    Ok(format!(
+        "Trial {trial_idx}: {item_name} (ID {item_id}) x{trade_amount} (index {index:?}) successfully added via 0x00E8 (result \
+         {result_code}), displayed on partner as \"{item_name} x{trade_amount}\", committed cleanly. Final inventories: \
+         primary={post_primary_count}, partner={post_partner_count}."
+    ))
+}
+
+fn blue_potion_trade(config: &Config) -> Result<(), String> {
+    const BLUE_POTION: u32 = 505;
+    const RED_POTION: u32 = 501;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+
+    let mut trial_results = Vec::new();
+
+    // 3 Trials with Blue Potion (item 505)
+    for trial in 1..=3 {
+        let res = execute_trade_trial(&mut primary, &mut partner, BLUE_POTION, 1, "Blue Potion", trial)?;
+        trial_results.push(res);
+    }
+
+    // 3 Control Trials with Red Potion (item 501)
+    for trial in 1..=3 {
+        let res = execute_trade_trial(&mut primary, &mut partner, RED_POTION, 1, "Red Potion (control)", trial)?;
+        trial_results.push(res);
+    }
+
+    for res in &trial_results {
+        println!("    [QW-021 evidence] {res}");
+    }
+
+    Ok(())
+}
+
+/// QW-043 — item 598 is `notrade` in `item_db.conf`; GM 99 is below override
+/// 100.
+fn trade_restricted_item(config: &Config) -> Result<(), String> {
+    const LIGHT_RED_POTION: u32 = 598;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(LIGHT_RED_POTION, 1)?;
+    let before = count_item(&primary, LIGHT_RED_POTION);
+    let partner_before = count_item(&partner, LIGHT_RED_POTION);
+    begin_trade(&mut primary, &mut partner)?;
+    partner.flush();
+    primary.net.trade_add_item(index, 1).map_err(|_| "primary disconnected")?;
+    let result = primary.wait_for("restricted TradeAddItemResult", |event| match event {
+        NetworkEvent::TradeAddItemResult { inventory_index, result } if *inventory_index == index => Some(*result),
+        _ => None,
+    })?;
+    let partner_events = partner.collect_for(Duration::from_millis(800));
+    let _ = primary.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    if result == 0 {
+        return Err("notrade Light Red Potion was accepted".to_owned());
+    }
+    if partner_events
+        .iter()
+        .any(|event| matches!(event, NetworkEvent::TradePartnerItem { item_id, .. } if item_id.0 == LIGHT_RED_POTION))
+    {
+        return Err("partner was shown a notrade item".to_owned());
+    }
+    if count_item(&primary, LIGHT_RED_POTION) != before {
+        return Err("restricted refusal changed the giver inventory".to_owned());
+    }
+    if count_item(&partner, LIGHT_RED_POTION) != partner_before {
+        return Err("restricted refusal changed the partner inventory".to_owned());
+    }
+    Ok(())
 }
