@@ -8,6 +8,28 @@ Everything here reflects the controls as implemented in
 `korangar/src/input/mod.rs` and `korangar/src/input/event.rs`; if something
 here stops matching what you see in-game, the source is the tie-breaker.
 
+## Getting started
+
+- **Character select**: click a character slot to play it, or an empty slot
+  to create a new one. **Switch** swaps two characters between slots;
+  deleting asks you to confirm ("Yes, delete") first.
+- **Character creation**: cycle hair style and turn the preview with the `<`
+  `>` arrows either side, pick a sex, and adjust stats with `+`/`-` — or click
+  **"Help me choose my stats"** for a recommended spread for your first job.
+  The same screen also has a **"Text size / interface scale"** control if the
+  UI looks too small (see also Interface Settings, below).
+
+## Talking to NPCs
+
+- Left-click an NPC (or a quest marker on the minimap) to start a
+  conversation. Use the dialog's **Next**/**Close** buttons, click a numbered
+  option to choose it, and type into the box when it asks for a number or
+  text.
+- A **Repair Weapon** or **Weapon Refine** skill/NPC offers a list of your
+  eligible equipment to pick from — select the item, or cancel out.
+- A **warp skill** that offers several destinations shows them as a list the
+  same way — pick one, or cancel.
+
 ## Movement
 
 - **Click-to-move**: left-click a spot on the ground to walk there. Holding
@@ -70,7 +92,9 @@ here stops matching what you see in-game, the source is the tie-breaker.
 - **Alt+E**: Inventory. **Alt+Q**: Equipment. **Alt+S**: Skill Tree.
   **Alt+A**: Stats. **Alt+V**: Character overview.
 - **Drag** an item to equip it (to its equipment slot), to move it between
-  inventory/storage/trade, or to reorder your inventory display.
+  inventory/storage/trade, or to reorder your inventory display. Dragging a
+  stack onto storage, trade, or the ground opens a **quantity picker** so you
+  can move or drop part of a stack instead of all of it.
 - **Double-click** an inventory item to quick-equip it (or quick-unequip it
   from the Equipment window); unidentified items are identified instead, and
   usable items (potions, etc.) are used.
@@ -82,6 +106,15 @@ here stops matching what you see in-game, the source is the tie-breaker.
 - **Automatic pickup** (Game Settings) sweeps loot within two tiles straight
   into your bag; in a party it applies to everyone and the server keeps the
   setting across sessions.
+
+## Stats and skill points
+
+- **Stats window (Alt+A)**: each stat has a **+** button showing its zeny/SP
+  cost; it's disabled once you don't have enough stat points left.
+- **Skill Tree (Alt+S)**: click a skill's rank-up control to spend a skill
+  point on it, and its rank-down control to refund one. **Double-click** a
+  learned skill to activate it directly (same as pressing it from the
+  hotbar); **right-click** it to assign it to the first free hotbar slot.
 
 ## Quests
 
@@ -103,12 +136,31 @@ here stops matching what you see in-game, the source is the tie-breaker.
 
 - **Alt+Z** (or **Alt+P**): Party window. **Alt+H**: Friend list
   (**Alt+Shift+H** toggles the custom zeny/EXP HUD instead).
+- **Forming a party**: in the Party window, type a name and click **Create**,
+  or type a character's name and click **Invite**. An incoming invite shows
+  **Accept**/**Reject** buttons; **Block invites** refuses all of them
+  without a prompt. **Leave** exits your current party. You can also invite
+  someone straight from their target window (left-click them → **Invite**).
+- The party leader can **Kick** a member, **Promote** a new leader, and set
+  the three **Share** rules (EXP / pickup / loot) from the party window.
+- **Go to** warps you to an online party member, through the same command
+  path a GM would use — no GM rights needed. **Whisper** and **Trade**
+  buttons sit next to each member too.
 - Party member colors on the minimap/roster can be locally recolored per
-  member without touching the server's actual party.
-- A party leader can kick members, promote a new leader, and set the three
-  share rules (item/EXP/etc.) from the party window.
-- "Go to" a party member warps you to them through the same command path a
-  GM would use, without needing GM rights.
+  member (**Color** / **Reset color**) without touching the server's actual
+  party.
+- **Friends**: left-click a player (or use the Friend list) and click
+  **Add friend**; an incoming request shows Accept/Reject. **Ignore** on a
+  player mutes their whispers to you.
+- **Whisper**: click **Whisper** on a player's target window, the friend
+  list, or the party window to point your chat box at them.
+
+## Emotes and the minimap
+
+- **Alt+L** opens the emote palette; click one to play it over your
+  character.
+- The minimap can be grown/shrunk with its zoom buttons or the scroll wheel
+  while hovering it, and hidden/shown entirely with **Ctrl+Tab**.
 
 ## Trading, storage, and shops
 
@@ -137,7 +189,7 @@ here stops matching what you see in-game, the source is the tie-breaker.
 | Ctrl+D | Dice roller |
 | Ctrl+O | DM/GM commands panel |
 | Ctrl+S | Game settings |
-| Ctrl+I | Interface settings |
+| Ctrl+I | Interface settings (text/UI scale, language, theme) |
 | Ctrl+G | Graphics settings |
 | Alt+O or Ctrl+A | Audio settings |
 | Ctrl+Tab | Toggle minimap visibility |
