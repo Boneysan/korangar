@@ -274,6 +274,7 @@ impl InputSystem {
         &mut self,
         events: &mut Vec<InputEvent>,
         target_hostile_key: Option<KeyCode>,
+        attack_target_key: Option<KeyCode>,
         #[cfg(feature = "debug")] process_mouse: bool,
         #[cfg(feature = "debug")] use_debug_camera: bool,
     ) {
@@ -288,6 +289,15 @@ impl InputSystem {
             && self.get_key(key).pressed()
         {
             events.push(InputEvent::CycleHostileTarget);
+        }
+
+        if let Some(key) = attack_target_key
+            && !alt_down
+            && !control_down
+            && !shift_down
+            && self.get_key(key).pressed()
+        {
+            events.push(InputEvent::AttackTarget);
         }
 
         if self.get_key(KeyCode::Escape).pressed() {

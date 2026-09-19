@@ -689,15 +689,7 @@ where
                                         tooltip: if is_tracked { "Remove this objective from the HUD tracker" } else { "Track this objective on the HUD tracker" },
                                         height: 30.0,
                                         font_size: FontSize(15.0),
-                                        event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
-                                            state.update_value_with(path, move |log| {
-                                                if log.tracked() == Some(id) {
-                                                    log.untrack();
-                                                } else {
-                                                    log.track(id);
-                                                }
-                                            });
-                                        },
+                                        event: InputEvent::ToggleQuestTracking { quest_id: id },
                                     },
                                 ),
                             },

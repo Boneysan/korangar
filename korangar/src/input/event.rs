@@ -550,6 +550,14 @@ pub enum InputEvent {
     ToggleEmoteWindow,
     /// Open or close the quest log. Only works while playing.
     ToggleQuestLogWindow,
+    /// Track or untrack a quest on the HUD breadcrumb, from the journal's
+    /// per-quest button. Routed through an event (rather than the journal's
+    /// other buttons, which mutate `QuestLogState` directly) because the HUD
+    /// breadcrumb refresh and per-character persistence live on `Client` and
+    /// are not reachable from a plain state-mutation closure.
+    ToggleQuestTracking {
+        quest_id: u32,
+    },
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
     /// Open or close the DM loot generator. Only works while playing.
@@ -558,6 +566,11 @@ pub enum InputEvent {
     CycleHostileTarget,
     /// Cycle the configured keybinding for hostile target cycling.
     CycleHostileTargetBinding,
+    /// Attack the current Tab-cycled hostile target without needing to click
+    /// or re-hover it.
+    AttackTarget,
+    /// Cycle the configured keybinding for the Tab-target attack confirm.
+    CycleAttackTargetBinding,
     /// Open the theme inspector window.
     #[cfg(feature = "debug")]
     ToggleThemeInspectorWindow,

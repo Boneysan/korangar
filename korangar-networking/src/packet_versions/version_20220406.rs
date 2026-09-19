@@ -817,6 +817,7 @@ where
     packet_handler.register(|packet: DisplayPlayerHealEffect| NetworkEvent::HealEffect {
         entity_id: EntityId(0),
         heal_amount: packet.heal_amount as usize,
+        heal_type: packet.heal_type,
     })?;
     packet_handler.register(|packet: StatusChangePacket| NetworkEvent::StatusChange {
         entity_id: packet.entity_id,

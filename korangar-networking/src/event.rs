@@ -279,6 +279,7 @@ pub enum NetworkEvent {
     HealEffect {
         entity_id: EntityId,
         heal_amount: usize,
+        heal_type: HealType,
     },
     /// A successful non-damage skill use (0x09CB). This is
     /// emitted even when an area skill such as Frost Nova finds no targets,

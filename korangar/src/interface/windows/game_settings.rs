@@ -57,6 +57,11 @@ where
                     tooltip: "Cycle key binding: Tab -> ~ -> Q -> Disabled",
                     event: InputEvent::CycleHostileTargetBinding,
                 },
+                button! {
+                    text: "Attack target binding",
+                    tooltip: "Attacks your current Tab target without clicking it. Cycle key binding: Space -> F -> R -> Disabled",
+                    event: InputEvent::CycleAttackTargetBinding,
+                },
                 // The one toggle here the client does not own. The server keeps
                 // this setting -- per character, across sessions -- so the
                 // button reads the server's answer and asks it to change, rather

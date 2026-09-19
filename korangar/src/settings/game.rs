@@ -59,6 +59,49 @@ impl TargetHostileBinding {
     }
 }
 
+/// Configurable key binding to attack the current Tab-cycled hostile target
+/// without needing to click or re-hover it. Deliberately a separate,
+/// disable-able confirm press rather than firing automatically on Tab-select,
+/// so cycling through several monsters to look around does not engage all of
+/// them.
+#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum AttackTargetBinding {
+    #[default]
+    Space,
+    KeyF,
+    KeyR,
+    Disabled,
+}
+
+impl AttackTargetBinding {
+    pub fn to_key_code(self) -> Option<KeyCode> {
+        match self {
+            Self::Space => Some(KeyCode::Space),
+            Self::KeyF => Some(KeyCode::KeyF),
+            Self::KeyR => Some(KeyCode::KeyR),
+            Self::Disabled => None,
+        }
+    }
+
+    pub fn display_name(self) -> &'static str {
+        match self {
+            Self::Space => "Space",
+            Self::KeyF => "F",
+            Self::KeyR => "R",
+            Self::Disabled => "Disabled",
+        }
+    }
+
+    pub fn next(self) -> Self {
+        match self {
+            Self::Space => Self::KeyF,
+            Self::KeyF => Self::KeyR,
+            Self::KeyR => Self::Disabled,
+            Self::Disabled => Self::Space,
+        }
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
 pub struct GameSettings {
     pub auto_attack: bool,
@@ -72,6 +115,9 @@ pub struct GameSettings {
     /// Key binding to cycle visible, alive, hostile monsters by distance.
     #[serde(default)]
     pub target_hostile_binding: TargetHostileBinding,
+    /// Key binding to attack the current Tab-cycled target.
+    #[serde(default)]
+    pub attack_target_binding: AttackTargetBinding,
     /// Last window size in **logical** pixels, restored on the next launch.
     ///
     /// Logical rather than physical so moving between monitors of different
@@ -122,6 +168,7 @@ impl Default for GameSettings {
             show_minimap: true,
             wasd_movement: true,
             target_hostile_binding: TargetHostileBinding::default(),
+            attack_target_binding: AttackTargetBinding::default(),
             window_size: None,
             window_maximized: false,
             combat_filters: crate::state::combat_chat::CombatFilters::default(),

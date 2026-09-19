@@ -99,8 +99,8 @@ use ragnarok_packets::handler::NoPacketCallback;
 use ragnarok_packets::handler::PacketCallback;
 use ragnarok_packets::{
     AccountId, AttackRange, BuyShopItemsResult, CharacterId, CharacterServerInformation, ClientTick, Direction, DisappearanceReason,
-    EntityId, ExperienceType, HotbarSlot, HotkeyType, ItemId, JobId, PartyId, QuestColor, QuestEffect, QuestEffectPacket, SellItemsResult,
-    SkillId, SkillLevel, SkillType, SpriteChangeType, TilePosition, UnitId, WorldPosition,
+    EntityId, ExperienceType, HealType, HotbarSlot, HotkeyType, ItemId, JobId, PartyId, QuestColor, QuestEffect, QuestEffectPacket,
+    SellItemsResult, SkillId, SkillLevel, SkillType, SpriteChangeType, TilePosition, UnitId, WorldPosition,
 };
 use renderer::InterfaceRenderer;
 use rust_state::{ManuallyAssertExt, State};
@@ -144,8 +144,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
-    ServiceSettingsPathExt, TargetHostileBinding, WORLD_THEMES_PATH,
+    AttackTargetBinding, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode,
+    MENU_THEMES_PATH, ServiceSettingsPathExt, TargetHostileBinding, WORLD_THEMES_PATH,
 };
 use crate::state::area_loot::AreaLootCancel;
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
@@ -1263,6 +1263,29 @@ mod resolve_pending_cast_tests {
         );
     }
 
+    /// Support skills must be usable on a Tab-cycled target exactly like
+    /// Attack skills already are — otherwise casting a heal/buff with the
+    /// mouse off the target silently falls back to self instead of the
+    /// intended, already-selected target.
+    #[test]
+    fn support_skill_reuses_the_tab_cycled_target_when_not_hovering_an_entity() {
+        let tab_target = EntityId(42);
+        assert_eq!(
+            activation(SkillType::Support, SkillId(28), PickerTarget::Nothing, Some(tab_target)),
+            SkillActivation::CastEntity { entity_id: tab_target }
+        );
+        // Hovering a different entity still wins over the stale Tab target.
+        assert_eq!(
+            activation(
+                SkillType::Support,
+                SkillId(28),
+                PickerTarget::Entity(EntityId(7)),
+                Some(tab_target)
+            ),
+            SkillActivation::CastEntity { entity_id: EntityId(7) }
+        );
+    }
+
     #[test]
     fn skill_range_uses_the_same_chebyshev_distance_as_server_combat() {
         let player = TilePosition { x: 10, y: 10 };
@@ -1395,9 +1418,13 @@ fn resolve_skill_activation(request: SkillActivationRequest) -> SkillActivation 
             channeling: request.skill_id == ROLLING_CUTTER_ID,
         },
         SkillType::Support => {
+            // Same priority as Attack: hover wins; otherwise reuse the
+            // Tab-cycled target so Support skills are also usable on it
+            // without having to re-hover it, falling back to self only when
+            // nothing is targeted at all.
             let entity_id = match request.mouse {
                 PickerTarget::Entity(entity_id) => entity_id,
-                _ => request.player_id,
+                _ => request.last_target.unwrap_or(request.player_id),
             };
             SkillActivation::CastEntity { entity_id }
         }
@@ -1969,6 +1996,73 @@ impl UiSoundSink for ClientUiSoundSink<'_> {
 
     fn play_rejection(&mut self) {
         self.audio_engine.play_sound_effect_with_volume(self.rejection_key, self.volume);
+    }
+}
+
+/// A click that only picked something up to drag — an item/skill box (the
+/// whole box, edges included, is one hit region), or a window's move/resize
+/// handle (same `ClickHandler` + `SetMouseMode` mechanism, in
+/// `korangar-interface`'s `window/mod.rs`) — is not a completed menu action
+/// and must not chime like one; the drop or cancellation is what resolves it.
+fn click_started_drag(mouse_mode: &MouseMode<ClientState>) -> bool {
+    matches!(
+        mouse_mode,
+        MouseMode::Custom {
+            mode: MouseInputMode::MoveItem { .. } | MouseInputMode::MoveSkill { .. }
+        } | MouseMode::MovingWindow { .. }
+            | MouseMode::ResizingWindow { .. }
+    )
+}
+
+/// `(color, horizontal world-space offset)` for a sitting-recovery tick.
+/// Distinct per stat so simultaneous HP/SP ticks (fired on the same frame, at
+/// the same entity position) are neither the same color nor the same spot.
+fn heal_number_appearance(heal_type: HealType) -> (Color, f32) {
+    match heal_type {
+        HealType::Health => (HealNumber::HEALTH_COLOR, -12.0),
+        HealType::SpellPoints => (HealNumber::SPELL_POINTS_COLOR, 12.0),
+    }
+}
+
+#[cfg(test)]
+mod click_sound_tests {
+    use super::*;
+
+    #[test]
+    fn default_mouse_mode_does_not_count_as_a_drag() {
+        assert!(!click_started_drag(&MouseMode::Default));
+    }
+
+    #[test]
+    fn moving_or_resizing_a_window_counts_as_a_drag() {
+        // Grabbing a window's title bar or resize edge queues SetMouseMode the
+        // same way an item/skill box does; both must be silent until the drop.
+        assert!(click_started_drag(&MouseMode::MovingWindow { window_id: 0 }));
+        assert!(click_started_drag(&MouseMode::ResizingWindow {
+            resize_mode: korangar_interface::layout::ResizeMode::Both,
+            window_id: 0,
+        }));
+    }
+}
+
+#[cfg(test)]
+mod heal_number_appearance_tests {
+    use super::*;
+
+    #[test]
+    fn health_and_spell_points_render_differently() {
+        let (health_color, health_offset) = heal_number_appearance(HealType::Health);
+        let (sp_color, sp_offset) = heal_number_appearance(HealType::SpellPoints);
+
+        assert_ne!(health_color, sp_color, "HP and SP recovery must not share a color");
+        assert_ne!(health_offset, sp_offset, "HP and SP recovery must not render at the same spot");
+    }
+
+    #[test]
+    fn health_recovery_matches_the_established_heal_skill_color() {
+        // AL_HEAL and friends (SkillEffectNoDamage) have always rendered green;
+        // a sitting HP tick must match, not introduce a second "heal" color.
+        assert_eq!(heal_number_appearance(HealType::Health).0, HealNumber::HEALTH_COLOR);
     }
 }
 
@@ -5541,7 +5635,11 @@ impl Client {
                         }
                     }
                 }
-                NetworkEvent::HealEffect { entity_id, heal_amount } => {
+                NetworkEvent::HealEffect {
+                    entity_id,
+                    heal_amount,
+                    heal_type,
+                } => {
                     if let Some(entity) = self
                         .client_state
                         .follow(client_state().entities())
@@ -5549,8 +5647,13 @@ impl Client {
                         .find(|entity| entity.get_entity_id() == entity_id)
                         .or_else(|| self.client_state.try_follow(this_entity()))
                     {
+                        // Sitting recovery fires HP and SP ticks on the same frame at the
+                        // same entity position; give them distinct colors and a horizontal
+                        // offset so the two numbers never render on top of each other.
+                        let (color, x_offset) = heal_number_appearance(heal_type);
+                        let position = entity.get_position() + Vector3::new(x_offset, 0.0, 0.0);
                         self.particle_holder
-                            .spawn_particle(Box::new(HealNumber::new(entity.get_position(), heal_amount.to_string())));
+                            .spawn_particle(Box::new(HealNumber::new(position, heal_amount.to_string(), color)));
                     }
 
                     let local_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
@@ -5605,8 +5708,11 @@ impl Client {
                             .find(|entity| entity.get_entity_id() == destination_entity_id)
                             .or_else(|| self.client_state.try_follow(this_entity()))
                     {
-                        self.particle_holder
-                            .spawn_particle(Box::new(HealNumber::new(entity.get_position(), effect_value.to_string())));
+                        self.particle_holder.spawn_particle(Box::new(HealNumber::new(
+                            entity.get_position(),
+                            effect_value.to_string(),
+                            HealNumber::HEALTH_COLOR,
+                        )));
                     }
 
                     if is_heal_skill && is_displayable && successful {
@@ -8088,6 +8194,36 @@ impl Client {
         self.last_skill_target = cycle_target(&candidates, self.last_skill_target);
     }
 
+    /// Confirm-attack the current Tab-cycled target (`AttackTargetBinding`).
+    /// Deliberately requires this separate press rather than firing the
+    /// moment Tab selects a target, so cycling through monsters to look
+    /// around does not engage each one in turn. Routes through the same
+    /// `PlayerInteract` path a direct click on the monster would, so it picks
+    /// up the same walk-into-range/auto-attack-continuation behavior.
+    fn attack_current_target(&mut self) {
+        if *self.client_state.follow(client_state().game_settings().attack_target_binding()) == AttackTargetBinding::Disabled {
+            return;
+        }
+
+        let Some(entity_id) = self.last_skill_target else {
+            return;
+        };
+
+        // Re-checks the same eligibility `cycle_hostile_target` filtered candidates
+        // by (minus `in_view`, since a target does not need to stay on screen to
+        // remain confirm-attackable) rather than trusting a stale selection.
+        let is_live_monster = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == entity_id)
+            .is_some_and(|entity| is_hostile_target_candidate(entity.get_entity_type(), entity.is_dead(), entity.is_fading(), true));
+
+        if is_live_monster {
+            self.input_event_buffer.push(InputEvent::PlayerInteract { entity_id });
+        }
+    }
+
     fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
@@ -8271,10 +8407,15 @@ impl Client {
                 .client_state
                 .follow(client_state().game_settings().target_hostile_binding())
                 .to_key_code();
+            let attack_target_key = self
+                .client_state
+                .follow(client_state().game_settings().attack_target_binding())
+                .to_key_code();
 
             self.input_system.handle_keyboard_input(
                 &mut self.input_event_buffer,
                 target_hostile_key,
+                attack_target_key,
                 #[cfg(feature = "debug")]
                 self.interface.get_mouse_mode().is_default(),
                 #[cfg(feature = "debug")]
@@ -8289,6 +8430,7 @@ impl Client {
         let mut toggle_sit = false;
         let mut sync_minimap = false;
         let mut cycle_hostile_target = false;
+        let mut attack_target = false;
         let mut keyboard_move = None;
         let mut activate_skill = None;
         // Deferred: `enter_character_server` needs &mut self while this loop
@@ -8452,6 +8594,18 @@ impl Client {
                     *self.client_state.follow_mut(path) = next;
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                         format!("Hostile target cycle binding set to {}", next.display_name()),
+                        MessageColor::Information,
+                    ));
+                }
+                InputEvent::AttackTarget => {
+                    attack_target = true;
+                }
+                InputEvent::CycleAttackTargetBinding => {
+                    let path = client_state().game_settings().attack_target_binding();
+                    let next = self.client_state.follow(path).next();
+                    *self.client_state.follow_mut(path) = next;
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Attack target binding set to {}", next.display_name()),
                         MessageColor::Information,
                     ));
                 }
@@ -10007,6 +10161,15 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleQuestTracking { quest_id } => {
+                    let log = self.client_state.follow_mut(client_state().quest_log());
+                    if log.tracked() == Some(quest_id) {
+                        log.untrack();
+                    } else {
+                        log.track(quest_id);
+                    }
+                    self.refresh_tracked_quest_display();
+                }
                 InputEvent::ToggleDiceWindow => {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
@@ -10088,6 +10251,10 @@ impl Client {
 
         if cycle_hostile_target {
             self.cycle_hostile_target();
+        }
+
+        if attack_target {
+            self.attack_current_target();
         }
 
         if let Some((forward, back, left, right, fresh)) = keyboard_move {
@@ -10594,7 +10761,9 @@ impl Client {
         }
     }
 
-    fn update_quest_auto_tracking(&mut self) {
+    /// Recomputes the item counts every open quest's objectives need, once,
+    /// shared by auto-tracking and the plain display refresh below.
+    fn quest_item_counts(&self) -> std::collections::HashMap<ItemId, u32> {
         let needed_items: Vec<ItemId> = self
             .client_state
             .follow(client_state().quest_log())
@@ -10602,13 +10771,18 @@ impl Client {
             .iter()
             .flat_map(|q| q.requirements.iter().map(|r| r.item_id))
             .collect();
-        let counts: std::collections::HashMap<ItemId, u32> = {
-            let inv = self.client_state.follow(client_state().inventory());
-            needed_items.into_iter().map(|id| (id, inv.count_of(id))).collect()
-        };
-        self.client_state
-            .follow_mut(client_state().quest_log())
-            .auto_track_next_incomplete(|q| q.objectives_ready(|id| counts.get(&id).copied().unwrap_or(0)));
+        let inv = self.client_state.follow(client_state().inventory());
+        needed_items.into_iter().map(|id| (id, inv.count_of(id))).collect()
+    }
+
+    /// Syncs the HUD breadcrumb, the per-character persisted tracked quest,
+    /// and navigation guidance to whatever `quest_log().tracked()` currently
+    /// is — without re-running auto-selection. A manual Track/Untrack from
+    /// the journal must take effect immediately and must not be second-guessed
+    /// by `auto_track_next_incomplete`, which exists only for the server-driven
+    /// paths (new quest, objective progress, …) below.
+    fn refresh_tracked_quest_display(&mut self) {
+        let counts = self.quest_item_counts();
 
         let tracked_id = self.client_state.follow(client_state().quest_log()).tracked();
         if let Some(id) = tracked_id {
@@ -10647,6 +10821,15 @@ impl Client {
         }
 
         self.recompute_navigation("objective refresh");
+    }
+
+    fn update_quest_auto_tracking(&mut self) {
+        let counts = self.quest_item_counts();
+        self.client_state
+            .follow_mut(client_state().quest_log())
+            .auto_track_next_incomplete(|q| q.objectives_ready(|id| counts.get(&id).copied().unwrap_or(0)));
+
+        self.refresh_tracked_quest_display();
     }
 
     /// Refresh the advisory route using the latest tracked objective and
@@ -11243,11 +11426,15 @@ impl Client {
 
             if let Some(mouse_button) = input_report.mouse_click {
                 if is_interface_hovered {
-                    // Starts item/skill drag via SetMouseMode (applied immediately inside click).
+                    // Starts item/skill drag via SetMouseMode — queued, not applied until
+                    // `process_events` drains it at the end of this frame, so
+                    // `get_mouse_mode()` right here would still read last frame's mode.
+                    // `queued_mouse_mode()` looks at the pending event instead.
                     let handled = interface_frame.click(&self.client_state, mouse_button);
+                    let started_drag = interface_frame.queued_mouse_mode().is_some_and(click_started_drag);
 
                     hotbar_press_clicked = mouse_button == MouseButton::Left;
-                    if handled {
+                    if handled && !started_drag {
                         let audio_settings = self.client_state.follow(client_state().audio_settings()).clone();
                         let mut sink = ClientUiSoundSink::new(
                             &self.audio_engine,

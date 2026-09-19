@@ -912,6 +912,23 @@ impl<App: Application> InterfaceFrame<'_, App> {
         self.mouse_mode
     }
 
+    /// The mode a `SetMouseMode` event queued so far this frame (e.g. by the
+    /// click just made) would switch to, without draining the queue.
+    ///
+    /// `get_mouse_mode` is a snapshot borrowed at the start of the frame (see
+    /// `mouse_mode` above) and only advances once `Interface::process_events`
+    /// drains the queue at the end of it, so it cannot see a mode a click made
+    /// *this same frame* set — a caller that needs to react immediately to
+    /// "did this click just start a drag" must look at the pending event
+    /// instead. Returns the most recently queued `SetMouseMode`, in case more
+    /// than one was queued (e.g. a click and then its own cancellation).
+    pub fn queued_mouse_mode(&self) -> Option<&MouseMode<App>> {
+        self.event_queue.iter().rev().find_map(|event| match event {
+            Event::SetMouseMode { mouse_mode } => Some(mouse_mode),
+            _ => None,
+        })
+    }
+
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn drop(&mut self, state: &State<App>) -> bool {
         self.event_queue.queue(Event::SetMouseMode {

@@ -89,6 +89,10 @@ impl<App: Application> EventQueue<App> {
         self.events.iter_mut()
     }
 
+    pub fn iter(&self) -> std::slice::Iter<'_, Event<App>> {
+        self.events.iter()
+    }
+
     pub fn drain(&mut self) -> Drain<'_, Event<App>> {
         self.events.drain(..)
     }
