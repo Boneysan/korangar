@@ -121,7 +121,7 @@ A returning Ragnarok player should recognize the game immediately, but it should
 
 ## 2.1 Product Vision
 
-The intended experience is "Ragnarok Online, fully realized." The original world structure, sprites, classes, equipment concepts, monster identity, cards, stats, cast-time model, autoattack builds, player vending, and open-ended progression are treated as assets rather than legacy problems. Modern systems are added only when they improve responsiveness, clarity, cooperation, navigation, accessibility, or tactical depth.
+The intended experience is "Ragnarok Online, fully realized." The original world structure, sprites, classes, equipment concepts, monster identity, cards, stats, cast-time model, autoattack builds, direct player trade, and open-ended progression are treated as assets rather than legacy problems. Modern systems are added only when they improve responsiveness, clarity, cooperation, navigation, accessibility, or tactical depth.
 
 ## 2.2 Audience
 
@@ -146,7 +146,9 @@ The intended experience is "Ragnarok Online, fully realized." The original world
 | World map, navigation, journals, search        | Large-scale guild warfare tooling  |
 | Modern UI, inventory, party, skill and stat UX | Cross-server matchmaking           |
 | Cards, rare drops, equipment, refinement       | Mandatory daily/weekly progression |
-| Player vending, crafting, small-server economy | Battle pass systems                |
+| Direct player trade, crafting, small-server economy | Battle pass systems           |
+| DM Session mode (opt-in, DM-activated)         | Player vending, market board, auction (decision C2) |
+| In-game encyclopedia (§9.5)                    |                                    |
 
 *Added in v0.2 (decision C5):* **DM Session mode** is a distinct, opt-in mode layered on the server. It is activated by the Dungeon Master (`@dm mode on`, `@dm start`) for one party, runs the Seal Cascade campaign through private instances, scripted hazards, skill checks and DM-chosen beat outcomes, and is switched off between sessions. Everything else in this document describes the server outside a session. DM Session content is not the §8 story spine and does not count toward it.
 
@@ -202,7 +204,7 @@ The server should not rely on mandatory daily quests, weekly caps, login pressur
 
 - Mandatory main-story progression gates for ordinary maps and hunting areas.
 
-- Auction-house replacement that erases player vending from towns.
+- Auction house or market board systems. *(v0.2: vending itself is out of scope for this server's population — decision C2 — so the guardrail is against automated brokering, not in favour of vending.)*
 
 - Frequent gear resets that obsolete cards and equipment every content cycle.
 
@@ -414,7 +416,7 @@ STR, AGI, VIT, INT, DEX, and LUK remain meaningful build decisions. The moderniz
 | Archer           | Range, traps, target selection, sustained pressure, terrain use.                      |
 | Acolyte          | Healing, protection, buffs, status response, undead/demon specialization.             |
 | Thief            | Evasion, crit/burst, stealth, disruption, opportunistic target play.                  |
-| Merchant         | Combat plus economic identity, crafting, vending, equipment support.                  |
+| Merchant         | Combat plus economic identity, crafting, cart, discount/overcharge, equipment support. *(Vending skill exists but the vending economy is out of scope — C2.)* |
 
 ## 7.4 Skill Tree UX
 
@@ -433,6 +435,8 @@ The character window should support a planning state. Players choose a target Ba
 ## 8.1 Story as a Spine
 
 The centralized storyline should orient players through the world, introduce systems, and provide a coherent narrative for players who want one. It should not become a mandatory corridor through all content. A player may pause the story indefinitely and continue leveling, exploring, farming, crafting, or helping friends.
+
+*v0.2 (decision C5):* the Seal Cascade campaign is **not** this spine — it is DM Session mode (§2.3), gated on a DM being present. The self-directed spine this section describes does not yet exist; when it is built, the campaign's party-shared quest helpers and hub-NPC markers are reusable.
 
 ## 8.2 Quest Categories
 
@@ -764,7 +768,7 @@ Useful sinks may include reasonable respec costs, refinement, crafting fees, tra
 
 ## 13.2 Shared Destinations
 
-A party leader or member can propose a destination such as Orc Dungeon, Payon Cave 3F, or a personal marker. Party members accept the route and receive the same breadcrumb guidance. The system coordinates travel without teleporting the party.
+A party leader or member can propose a destination such as Orc Dungeon, Payon Cave 3F, or a personal marker. Party members accept the route and receive the same breadcrumb guidance. The system coordinates travel without teleporting the party. *(v0.2: `@partyjump` already exists as a regroup teleport — decision C4. Shared destinations remain the intended travel tool; the two coexist.)*
 
 ## 13.3 Party Pings
 
@@ -865,14 +869,14 @@ When the player is exploring a town or field without combat pressure, combat-onl
 
 | **Setting**             | **Recommended Baseline**                | **Notes**                                                                    |
 |-------------------------|-----------------------------------------|------------------------------------------------------------------------------|
-| Knowledge Mode          | Hybrid                                  | Basic monster/map info available; deeper details discovered or configurable. |
+| Knowledge Mode          | Hybrid                                  | Basic monster/map info available; deeper details discovered or configurable. *v0.2: gates §9.5 encyclopedia detail, never existence.* |
 | Quest Guidance          | Available, opt-in per tracked quest     | Players can disable globally.                                                |
 | Exact Spawn Coordinates | Off                                     | Use population regions instead.                                              |
-| Auto-Loot               | Configurable categories                 | Respect inventory and weight.                                                |
+| Auto-Loot               | Configurable categories                 | Respect inventory and weight. *v0.2: `@autoloot`/`@alootid`/`@autoloottype` granted to players (C6); category filters are client work.* |
 | Respec                  | Generous early; in-game cost later      | Avoid real-money dependency.                                                 |
 | Party Level Range       | Wider than classic or diminishing model | Tune for friend accessibility.                                               |
 | Death Penalty           | Modest and partly recoverable           | Tune through playtests.                                                      |
-| PvP / WoE               | Disabled / not part of v0.1 design      | Deferred.                                                                    |
+| PvP / WoE               | Disabled / not part of this design      | Deferred. *v0.2: the stock WoE NPC set is still loaded via `npc/scripts_woe.conf` — remove the includes.* |
 
 ## 17.2 Player-Level Configuration
 
@@ -905,7 +909,7 @@ The server should include internal tooling that exposes spawn density, monster b
 | Combat     | Time-to-kill, damage taken, skill usage, movement frequency, interrupts, deaths, potion use. |
 | Navigation | Time spent searching for exits/NPCs, wrong-map transitions, map opens, Navigate usage.       |
 | Questing   | Abandon rates, objective confusion, tracker usage, story completion pace.                    |
-| Economy    | Item availability, Zeny generation/sinks, vending prices, crafting material bottlenecks.     |
+| Economy    | Item availability, Zeny generation/sinks, trade frequency, crafting material bottlenecks.    |
 | Party Play | Level gaps, party duration, shared destination use, XP efficiency, revives/deaths.           |
 | UI         | Most-opened panels, tooltip depth usage, common misclicks, scaling preferences.              |
 
@@ -1079,7 +1083,7 @@ Do not balance only around maximum-efficiency veteran play. This is a friends se
 
 - Making every class equally self-sufficient.
 
-- Replacing travel with unrestricted teleports.
+- Replacing travel with unrestricted teleports. *(v0.2: `@partyjump` is the one accepted exception, party-scoped — decision C4.)*
 
 - Designing PvP or War of Emperium in this phase.
 
@@ -1138,23 +1142,30 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 
 # Appendix C. Initial Configuration Matrix
 
-| **Feature**                | **Baseline**                                      | **Type**              |
-|----------------------------|---------------------------------------------------|-----------------------|
-| PvP / WoE                  | Disabled / deferred                               | Locked for v0.1 scope |
-| Main Story Guidance        | Available when tracked                            | Player configurable   |
-| World Breadcrumbs          | Next-exit guidance                                | Player configurable   |
-| Monster Population Overlay | Broad regions only                                | Player configurable   |
-| Knowledge Mode             | Hybrid                                            | Server configurable   |
-| Input Buffer               | ~200 ms starting test                             | Playtest value        |
-| Action Queue               | 1 action                                          | Recommended default   |
-| Universal Dodge            | None                                              | Locked principle      |
-| Auto-Loot                  | Category filters                                  | Player configurable   |
-| Party Level Rules          | Friend-friendly widened range / diminishing model | Playtest decision     |
-| Death Penalty              | Modest + partial recovery                         | Playtest decision     |
-| Respec                     | Free/cheap early, in-game cost later              | Recommended default   |
-| Fast Travel                | In-world systems; no unrestricted map teleport    | Locked principle      |
-| Exact Spawn Coordinates    | Hidden                                            | Recommended default   |
-| HUD Presets                | Classic + Modern + custom                         | Recommended default   |
+*v0.2 adds a **Current** column — what the forks do today (audited 2026-09-21) — beside the design baseline, so the gap is visible per row.*
+
+| **Feature**                | **Baseline**                                      | **Type**              | **Current (2026-09-21)**                                                              |
+|----------------------------|---------------------------------------------------|-----------------------|---------------------------------------------------------------------------------------|
+| PvP / WoE                  | Disabled / deferred                               | Locked for this scope | Stock WoE NPC scripts still loaded; no PvP maps used. Remove the includes.            |
+| DM Session mode            | Opt-in, DM-activated, one party                   | Decided (C5)          | Implemented: `@dm mode on` / `@dm start`, `DM_SessionAllows` gate at 50 sites.       |
+| Main Story Guidance        | Available when tracked                            | Player configurable   | Quest log window only; no tracker, no toggle.                                        |
+| World Breadcrumbs          | Next-exit guidance                                | Player configurable   | Not started. `<NAVI>` dialogue tags stripped rather than followed.                    |
+| Monster Population Overlay | Broad regions only                                | Player configurable   | Not started. Spawn data present in `bestiary.json`.                                   |
+| Knowledge Mode             | Hybrid                                            | Server configurable   | No switch. DM Bestiary persists per-account unlocks (a Discovery-mode seed).          |
+| In-game Encyclopedia       | Full wiki coverage, generated from server tables  | Locked principle (C1) | Data for monsters/items/cards/status; no player UI; skills/maps/quests need generator.|
+| Input Buffer               | ~200 ms starting test                             | Playtest value        | Not implemented; walk-into-range chaining only.                                       |
+| Action Queue               | 1 action                                          | Recommended default   | Not implemented.                                                                      |
+| Universal Dodge            | None                                              | Locked principle      | None. Plan section struck (C3).                                                       |
+| Auto-Loot                  | Category filters                                  | Player configurable   | `@autoloot` (drop-rate threshold), `@alootid`, `@autoloottype` — group 0 (C6). No category filters. |
+| Party Level Rules          | Friend-friendly widened range / diminishing model | Playtest decision     | Stock `party.conf`.                                                                   |
+| Death Penalty              | Modest + partial recovery                         | Playtest decision     | Stock: 1% base / 1% job, no recovery.                                                 |
+| Respec                     | Free/cheap early, in-game cost later              | Recommended default   | Flat 5,000z stats / 5,000z skills / 9,000z both (`resetnpc.txt`).                    |
+| Fast Travel                | In-world systems; no unrestricted map teleport    | Locked principle      | Kafra + warper NPC; `@partyjump` to any online party member, unbounded (C4).          |
+| Exact Spawn Coordinates    | Hidden                                            | Recommended default   | Hidden (nothing shows them).                                                          |
+| HUD Presets                | Classic + Modern + custom                         | Recommended default   | None. Windows movable/resizable and persisted; no presets or edit mode.               |
+| Drop / EXP Rates           | Tuned for small population (§12.2)                | Playtest decision     | Stock 100% / 100% / card 100%.                                                        |
+| Keyboard Movement          | Optional, same pathing rules                      | Recommended default   | WASD on by default, click-to-move retained, 200 ms throttle.                          |
+| UI Scale                   | Independent of pixel-art scaling                  | Player configurable   | Interface Settings > Scaling (Ctrl+I).                                                |
 
 # Appendix D. Open Design Questions
 
@@ -1213,6 +1224,8 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 - Monster AI Behavior Library: reusable states, priorities, pathing responses, and authoring parameters.
 
 - Pilot Region Design: one complete region implemented end-to-end to validate combat, UI, quests, and navigation together.
+
+- Encyclopedia Data Generator Specification: one build step from the Hercules tree to the §9.5 category files, with the field list per category and the knowledge-mode visibility flag per field.
 
 - Implementation Status Refresh: re-run the Appendix E audit after each playtest and move rows, rather than re-auditing from scratch.
 
