@@ -128,6 +128,11 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 > full macros are public-server scope creep; an **in-client item/mob database
 > browser** — smart tooltips + the campaign journal cover it, and with 4 players
 > the DM answers faster than a wiki UI would.
+> **The database-browser rejection was reversed on 2026-09-21** (GDD v0.2 §9.5,
+> decision C1): build a full in-game encyclopedia — monsters, items, cards, skills,
+> jobs, maps, quests, NPCs, status effects, mechanics, server rules — generated from
+> the Hercules tables and searchable by players. The DM Bestiary window and
+> `docs/*.json` are the seed. The macro-system rejection stands.
 
 - [ ] **Login & connection:**
   - **Custom Server IP Input:** An input field on the login screen to manually specify the server IP and port, allowing users to connect to any server without editing `sclientinfo.xml`.
