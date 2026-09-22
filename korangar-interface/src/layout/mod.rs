@@ -651,22 +651,28 @@ impl<'a, App: Application> WindowLayout<'a, App> {
         false
     }
 
-    pub fn handle_click(&self, state: &State<App>, queue: &mut EventQueue<App>, mouse_button: MouseButton) {
+    pub fn handle_click(&self, state: &State<App>, queue: &mut EventQueue<App>, mouse_button: MouseButton) -> bool {
+        let mut handled = false;
         for layer in self.layers.iter().rev() {
             for (registered_button, click_handler) in &layer.click_handlers {
                 if *registered_button == mouse_button {
                     click_handler.handle_click(state, queue);
+                    handled = true;
                 }
             }
         }
+        handled
     }
 
-    pub fn handle_drop(&self, state: &State<App>, queue: &mut EventQueue<App>, mouse_mode: &'a MouseMode<App>) {
+    pub fn handle_drop(&self, state: &State<App>, queue: &mut EventQueue<App>, mouse_mode: &'a MouseMode<App>) -> bool {
+        let mut handled = false;
         for layer in self.layers.iter().rev() {
             for drop_handler in &layer.drop_handlers {
                 drop_handler.handle_drop(state, queue, mouse_mode);
+                handled = true;
             }
         }
+        handled
     }
 
     pub fn handle_scroll(&self, state: &State<App>, queue: &mut EventQueue<App>, delta: f32) {

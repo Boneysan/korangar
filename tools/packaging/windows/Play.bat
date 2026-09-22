@@ -18,4 +18,5 @@ exit /b
 rem Fall back to launching directly. The checks are skipped, so if the pack is
 rem incomplete the client fails on its own terms instead of explaining itself.
 echo PowerShell was not found. Starting the game without the setup checks.
+echo The window can take a minute to appear. Leave this open until then.
 start "" korangar.exe

@@ -29,7 +29,7 @@ fn status_names() -> &'static HashMap<u16, String> {
 ///
 /// The fallback matters: the server may send an icon this build's table doesn't
 /// know, and showing `#123` is still better than dropping the effect.
-fn status_name(index: u16) -> String {
+pub(crate) fn status_name(index: u16) -> String {
     status_names().get(&index).cloned().unwrap_or_else(|| format!("#{index}"))
 }
 

@@ -23,6 +23,8 @@ pub enum ResolvedEffect {
     /// A sprite animation, relative to `data\sprite\` and without an
     /// extension, plus the ACT action to play.
     Sprite { path: &'static str, action_index: usize },
+    /// Classic EF_INCAGILITY: rising light motes plus the AGI-up sigil.
+    IncreaseAgility,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -39,6 +41,7 @@ pub enum EffectAsset {
     WindHit,
     Meteor,
     Firewall,
+    IncreaseAgility,
 }
 
 impl EffectAsset {
@@ -52,6 +55,7 @@ impl EffectAsset {
     pub fn resolve(self) -> ResolvedEffect {
         match self {
             Self::Sprite { path, action_index } => ResolvedEffect::Sprite { path, action_index },
+            Self::IncreaseAgility => ResolvedEffect::IncreaseAgility,
             other => ResolvedEffect::Str(other.resolve_str()),
         }
     }
@@ -83,6 +87,7 @@ impl EffectAsset {
                 1 => "firewall1.str",
                 _ => "firewall2.str",
             },
+            Self::IncreaseAgility => unreachable!("Increase AGI is procedural; use EffectAsset::resolve"),
         }
     }
 
@@ -97,6 +102,7 @@ impl EffectAsset {
             Self::WindHit => vec!["windhit1.str", "windhit2.str", "windhit3.str"],
             Self::Meteor => vec!["meteor1.str", "meteor2.str", "meteor3.str", "meteor4.str"],
             Self::Firewall => vec!["firewall1.str", "firewall2.str"],
+            Self::IncreaseAgility => vec!["ac_center2.tga", "agi_up.bmp"],
         }
     }
 
@@ -447,6 +453,13 @@ const SUPPORT_HOLY: SkillPresentationRecipe = SkillPresentationRecipe {
     no_damage_target_effects: &[HOLY_HIT],
     ..EMPTY
 };
+/// EF_INCAGILITY (37): the original client uses rising `ac_center2` motes and
+/// an `agi_up` sigil. It is procedural rather than an STR animation.
+const INCREASE_AGILITY_HITS: &[EffectTrack] = &[EffectTrack {
+    asset: EffectAsset::IncreaseAgility,
+    light_color: Color::rgb_u8(190, 255, 145),
+    start_delay: 0.0,
+}];
 const FROST_DIVER_HITS: &[EffectTrack] = &[EffectTrack {
     asset: EffectAsset::Fixed("freeze.str"),
     light_color: Color::rgb_u8(150, 225, 255),
@@ -712,7 +725,10 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
         // `hit_effects` stays because Heal on an undead target is routed the
         // other way (`skill->attack`, `skill.c:5528`) and arrives as damage.
         28 => SUPPORT_HOLY, // AL_HEAL
-        29 => SUPPORT_HOLY, // AL_INCAGI
+        29 => recipe!(
+            no_damage_target_effects: INCREASE_AGILITY_HITS,
+            successful_caster_sounds: &[SoundAsset::Fixed("effect\\ef_incagility.wav")],
+        ), // AL_INCAGI
         30 => SUPPORT_HOLY, // AL_DECAGI
         33 => SUPPORT_HOLY, // AL_ANGELUS
         34 => SUPPORT_HOLY, // AL_BLESSING
@@ -828,6 +844,70 @@ mod tests {
                 "support skill {skill_id} would be invisible when it lands"
             );
         }
+    }
+
+    #[test]
+    fn increase_agility_skill_presentation_recipe_is_exhaustive() {
+        let recipe = skill_presentation_recipe(SkillId(29));
+
+        // Exactly one target effect track.
+        assert_eq!(recipe.no_damage_target_effects.len(), 1);
+        let track = recipe.no_damage_target_effects[0];
+        assert_eq!(track.asset, EffectAsset::IncreaseAgility);
+        assert_eq!(track.asset.resolve(), ResolvedEffect::IncreaseAgility);
+        assert_eq!(track.asset.variants(), vec!["ac_center2.tga", "agi_up.bmp"]);
+        assert_eq!(track.start_delay, 0.0);
+
+        // Increase AGI lands via clif->skill_nodamage; no damage hit effects.
+        assert!(
+            recipe.hit_effects.is_empty(),
+            "Increase AGI must not declare hit_effects (it lands via no-damage)"
+        );
+
+        // No caster visual burst (prevents duplicate visual spawn).
+        assert!(
+            recipe.successful_caster_effect.is_none(),
+            "Increase AGI must not duplicate effect on caster"
+        );
+        assert!(recipe.damage_caster_effect.is_none());
+        assert!(recipe.damage_target_effect.is_none());
+        assert!(recipe.ground_effect.is_none());
+
+        // Audio: exactly one caster sound, no duplicate sounds across other tracks.
+        assert_eq!(recipe.successful_caster_sounds.len(), 1);
+        assert_eq!(recipe.successful_caster_sounds[0].resolve(), "effect\\ef_incagility.wav");
+        assert_eq!(recipe.successful_caster_sounds[0].variants(), vec!["effect\\ef_incagility.wav"]);
+        assert!(recipe.damage_caster_sounds.is_empty());
+        assert!(recipe.damage_target_sounds.is_empty());
+        assert!(recipe.hit_sounds.is_empty());
+        assert!(recipe.ground_sounds.is_empty());
+    }
+
+    #[test]
+    fn heal_skill_presentation_recipe_remains_on_holyhit_str() {
+        let recipe = skill_presentation_recipe(SkillId(28));
+
+        // Heal lands via no-damage for allies, and hit_effects for undead.
+        assert_eq!(recipe.no_damage_target_effects.len(), 1);
+        assert_eq!(recipe.no_damage_target_effects[0].asset, EffectAsset::Fixed("holyhit.str"));
+        assert_eq!(
+            recipe.no_damage_target_effects[0].asset.resolve(),
+            ResolvedEffect::Str("holyhit.str")
+        );
+
+        assert_eq!(recipe.hit_effects.len(), 1);
+        assert_eq!(recipe.hit_effects[0].asset, EffectAsset::Fixed("holyhit.str"));
+        assert_eq!(recipe.hit_effects[0].asset.resolve(), ResolvedEffect::Str("holyhit.str"));
+
+        // Heal must never reference Increase AGI assets or audio.
+        assert_ne!(recipe.no_damage_target_effects[0].asset, EffectAsset::IncreaseAgility);
+        assert_ne!(recipe.hit_effects[0].asset, EffectAsset::IncreaseAgility);
+        assert!(
+            recipe
+                .successful_caster_sounds
+                .iter()
+                .all(|s| s.resolve() != "effect\\ef_incagility.wav")
+        );
     }
 
     #[test]

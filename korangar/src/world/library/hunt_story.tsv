@@ -1,0 +1,10 @@
+# schema=1
+# id	speaker	clue	remaining action	next lead	visibility	authoritative reveal condition
+wynne_start	Quartermaster Wynne	The fountain hums and the south road is unsafe.	Ask Tibbets, the mother, or inspect the painted sluice.	tibbets|mother|sluice	revealed	dm_arc01_started
+mother	Frightened Mother	Mira followed the gray bread-man from the south-gate soup line.	Find Mira before choosing how to rescue her.	mira	hidden	dm_arc01_child_found
+mira	Mira	The bread-man wears a goat ring and the water is a song.	Return to her mother; the drawing names the next sign.	mother	hidden	dm_arc01_child_found
+sluice	Painted Sluice	A goat-head and copper-smelling paint lead down into the water.	Find a second sign from Tibbets or Mira.	tibbets|mira	hidden	dm_arc01_clue_mask:1
+tibbets	Tibbets the Keeper	The gray almsman and Deacon Holt use the lowest chamber.	Obtain the tide-wheel and drain the chamber.	drain	hidden	dm_arc01_clue_mask:4
+drain	Tide-Wheel	The flooded Listening Chamber can be made dry.	Drain the chamber, then speak to Hlin at the binding stone if desired.	binding|holt	hidden	dm_arc01_chamber_drained
+binding	Binding Stone	Holt's chalk names the binding word Hlin.	Apply the word before confronting the conduit.	holt	hidden	dm_arc01_binding_applied
+holt	Deacon Holt	The Deviruchi is chained to the goat-head conduit.	Resolve the encounter, then return to Wynne.	wynne	hidden	dm_arc01_holt_approach

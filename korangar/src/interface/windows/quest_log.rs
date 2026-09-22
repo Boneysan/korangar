@@ -1,6 +1,7 @@
 use korangar_interface::application::Size;
-use korangar_interface::element::Element;
+use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
+use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::layout::area::Area;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
@@ -8,29 +9,31 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{Path, State};
 
 use super::WindowClass;
-use crate::graphics::Color;
+use crate::dm::DmCampaignState;
+use crate::graphics::{Color, CornerDiameter, ShadowPadding};
+use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
-use crate::state::ClientState;
 use crate::state::inventory::Inventory;
-use crate::state::quests::QuestLogState;
+use crate::state::navigation::NavigationState;
+use crate::state::quests::{QuestEntry, QuestLogState, QuestLogStatePathExt};
 use crate::state::theme::InterfaceThemeType;
+use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::world::ObjectiveType;
 
-/// Vertical gap between two contracts.
-const QUEST_SPACING: f32 = 8.0;
-/// Vertical gap between a contract's title and its item lines.
-const LINE_SPACING: f32 = 2.0;
+const LINE_SPACING: f32 = 10.0;
+const PROGRESS_HEIGHT: f32 = 10.0;
 
-const TITLE_FONT_SIZE: f32 = 14.0;
-const LINE_FONT_SIZE: f32 = 13.0;
+const TITLE_FONT_SIZE: f32 = 18.0;
+const LINE_FONT_SIZE: f32 = 16.0;
 
 /// One rendered row: the text, how tall it is, and how it is coloured.
+#[derive(Clone)]
 struct QuestRow {
     text: String,
     color: Color,
     font_size: f32,
     height: f32,
-    /// Item lines are indented under their contract title.
-    indent: f32,
+    progress: Option<f32>,
 }
 
 struct QuestLogLayoutInfo {
@@ -38,131 +41,382 @@ struct QuestLogLayoutInfo {
     rows: Vec<QuestRow>,
 }
 
-/// Renders the quest log as a flat list of rows.
-///
-/// The have-counts are read from the inventory every frame rather than cached
-/// in the quest state: the player's stock changes on every pickup, drop, trade
-/// and vend, and a cached copy would be a second source of truth to keep in
-/// step with all of them.
-struct QuestLogElement<A, B> {
-    quest_log_path: A,
-    inventory_path: B,
+/// Wrapped objective text, measured at the available width and interface scale.
+struct QuestDetails {
+    rows: Vec<QuestRow>,
 }
 
-impl<A, B> QuestLogElement<A, B> {
-    fn new(quest_log_path: A, inventory_path: B) -> Self {
-        Self {
-            quest_log_path,
-            inventory_path,
-        }
-    }
-}
-
-impl<A, B> QuestLogElement<A, B>
-where
-    A: Path<ClientState, QuestLogState>,
-    B: Path<ClientState, Inventory>,
-{
-    fn build_rows(&self, state: &State<ClientState>) -> Vec<QuestRow> {
-        let quest_log = state.get(&self.quest_log_path);
-        let inventory = state.get(&self.inventory_path);
-
-        if quest_log.is_empty() {
-            return vec![QuestRow {
-                text: "No active quests.".to_owned(),
-                color: Color::monochrome_u8(150),
-                font_size: TITLE_FONT_SIZE,
-                height: 0.0,
-                indent: 0.0,
-            }];
-        }
-
+impl QuestDetails {
+    fn new(quest: &QuestEntry, inventory: &Inventory, navigation: Option<&NavigationState>, dm_campaign: &DmCampaignState) -> Self {
         let mut rows = Vec::new();
-
-        for quest in quest_log.quests() {
+        let mut push = |text: String, color: Color, progress: Option<f32>| {
             rows.push(QuestRow {
-                text: quest.name().to_owned(),
-                color: Color::rgb_u8(120, 190, 255),
-                font_size: TITLE_FONT_SIZE,
+                text,
+                color,
+                font_size: LINE_FONT_SIZE,
                 height: 0.0,
-                indent: 0.0,
+                progress,
             });
+        };
+        if let Some(objective) = crate::world::bundled_objectives().get(&quest.quest_id) {
+            let (icon, label) = Self::objective_badge(objective.objective_type);
+            push(
+                format!("{icon} {label}: {}", objective.name),
+                Color::rgb_u8(210, 220, 255),
+                None,
+            );
+            push(
+                format!(
+                    "{} objective · completion: {}{}",
+                    if objective.required { "Required" } else { "Optional" },
+                    objective.completion,
+                    if objective.dm_triggered { " · DM-triggered" } else { "" },
+                ),
+                Color::rgb_u8(180, 190, 215),
+                None,
+            );
+            push(
+                Self::objective_status_line(objective.objective_type, &objective.completion),
+                Color::rgb_u8(180, 205, 225),
+                None,
+            );
+        }
+        for kill in quest.kill_objectives() {
+            let name = if kill.mob_id != 0 {
+                crate::world::display_monster(kill.mob_id, "normal").to_string()
+            } else {
+                format!("objective {}", kill.objective_id)
+            };
+            let complete = kill.current >= kill.total;
+            push(
+                format!("Defeat {name}: {}/{}", kill.current, kill.total),
+                if complete {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                },
+                Some(if kill.total == 0 {
+                    1.0
+                } else {
+                    (f32::from(kill.current) / f32::from(kill.total)).min(1.0)
+                }),
+            );
+        }
+        for objective in dm_campaign
+            .objectives
+            .iter()
+            .filter(|objective| objective.quest_id == quest.quest_id)
+        {
+            let complete = objective.completed || objective.current >= objective.total;
+            let shared = if objective.party_shared { "party-shared" } else { "personal" };
+            let required = if objective.required { "required" } else { "optional" };
+            let dm_marker = if objective.dm_triggered { " · DM-triggered" } else { "" };
+            push(
+                format!(
+                    "[{}] {} objective: {}/{} · {} · {}{}{}",
+                    objective.kind,
+                    if complete { "Complete" } else { "In progress" },
+                    objective.current,
+                    objective.total,
+                    required,
+                    shared,
+                    dm_marker,
+                    if complete { " · server confirmed" } else { " · server authority" },
+                ),
+                if complete {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                },
+                Some(if objective.total == 0 {
+                    1.0
+                } else {
+                    (f32::from(objective.current) / f32::from(objective.total)).min(1.0)
+                }),
+            );
+        }
+        if let (Some(objective), Some(guidance)) = (
+            crate::world::bundled_objectives().get(&quest.quest_id),
+            crate::world::bundled_guidance().get(&quest.quest_id),
+        ) {
+            let area_str = format!(
+                "Recommended area: {} ({})",
+                guidance.area,
+                objective.maps.first().cloned().unwrap_or_default()
+            );
+            push(area_str, Color::rgb_u8(180, 210, 255), None);
 
-            if quest.requirements().is_empty() {
-                rows.push(QuestRow {
-                    text: "Speak to the quest giver.".to_owned(),
-                    color: Color::monochrome_u8(150),
-                    font_size: LINE_FONT_SIZE,
-                    height: 0.0,
-                    indent: 12.0,
+            let ready = quest.objectives_ready(|id| inventory.count_of(id));
+            push(
+                if !quest.kill_objectives().is_empty() && ready {
+                    "Objectives complete — return to the quest giver to hand them in.".into()
+                } else if !quest.kill_objectives().is_empty() {
+                    "Defeat the listed targets; server progress is shown below.".into()
+                } else if ready {
+                    "Items collected — return to the quest giver to hand them in.".into()
+                } else {
+                    "You carry: counts shown below".into()
+                },
+                Color::monochrome_u8(235),
+                None,
+            );
+
+            for (idx, item) in quest.requirements().iter().enumerate() {
+                let carried = inventory.count_of(item.item_id);
+                let remaining = item.needed.saturating_sub(carried);
+                let source_desc = objective
+                    .sources
+                    .get(idx)
+                    .map(|s| {
+                        let name = if !s.name.is_empty() {
+                            s.name.as_str()
+                        } else {
+                            crate::world::display_monster(s.monster_id, &s.rank)
+                        };
+                        if s.rank == "vocal" || s.rank == "boss" {
+                            format!("{name} (boss-type, rare spawn)")
+                        } else {
+                            name.to_string()
+                        }
+                    })
+                    .unwrap_or_else(|| "unknown".to_string());
+
+                let line = crate::world::you_carry_line(&item.item_name, carried, item.needed, &source_desc);
+                let color = if remaining == 0 {
+                    Color::rgb_u8(150, 230, 170)
+                } else {
+                    Color::monochrome_u8(235)
+                };
+                let progress = Some(if item.needed == 0 {
+                    1.0
+                } else {
+                    (carried as f32 / item.needed as f32).min(1.0)
                 });
-                continue;
+                push(line, color, progress);
             }
 
-            for requirement in quest.requirements() {
-                let carried = inventory.count_of(requirement.item_id);
-                let done = carried >= requirement.needed;
-
-                rows.push(QuestRow {
-                    text: format!("{}  {} / {}", requirement.item_name, carried, requirement.needed),
-                    color: match done {
-                        true => Color::rgb_u8(120, 220, 120),
-                        false => Color::monochrome_u8(210),
+            push(
+                format!("Turn in: {} — {}", guidance.npc, guidance.area),
+                Color::rgb_u8(255, 220, 130),
+                None,
+            );
+            push("You carry: counts shown above".to_string(), Color::monochrome_u8(200), None);
+            push(
+                format!("Party quest state: {}", objective.party_share),
+                Color::monochrome_u8(180),
+                None,
+            );
+        } else if !quest.location.is_empty() {
+            push(quest.location.clone(), Color::rgb_u8(180, 210, 255), None);
+            if quest.requirements().is_empty() {
+                push("Follow the destination above.".into(), Color::monochrome_u8(215), None);
+            } else {
+                let ready = quest.objectives_ready(|id| inventory.count_of(id));
+                push(
+                    if !quest.kill_objectives().is_empty() && ready {
+                        "Objectives complete — return to the quest giver to hand them in.".into()
+                    } else if !quest.kill_objectives().is_empty() {
+                        "Defeat the listed targets; server progress is shown below.".into()
+                    } else if ready {
+                        "Items collected — return to the quest giver to hand them in.".into()
+                    } else {
+                        "Collect the following items and keep them in your inventory.".into()
                     },
-                    font_size: LINE_FONT_SIZE,
-                    height: 0.0,
-                    indent: 12.0,
-                });
+                    Color::monochrome_u8(235),
+                    None,
+                );
+                for item in quest.requirements() {
+                    let carried = inventory.count_of(item.item_id);
+                    let remaining = item.needed.saturating_sub(carried);
+                    let status = if remaining == 0 {
+                        "Collected".into()
+                    } else {
+                        format!("{remaining} more needed")
+                    };
+                    push(
+                        format!("{}\n{} / {} carried · {}", item.item_name, carried, item.needed, status),
+                        if remaining == 0 {
+                            Color::rgb_u8(150, 230, 170)
+                        } else {
+                            Color::monochrome_u8(235)
+                        },
+                        Some(if item.needed == 0 {
+                            1.0
+                        } else {
+                            (carried as f32 / item.needed as f32).min(1.0)
+                        }),
+                    );
+                }
+            }
+        } else if quest.requirements().is_empty() && quest.kill_objectives().is_empty() {
+            push(
+                "Follow the quest giver's instructions. Objective details are not available in this journal yet.".into(),
+                Color::monochrome_u8(215),
+                None,
+            );
+        } else {
+            let ready = quest.objectives_ready(|id| inventory.count_of(id));
+            push(
+                if ready {
+                    "Items collected — return to the quest giver to hand them in.".into()
+                } else {
+                    "Collect the following items and keep them in your inventory.".into()
+                },
+                Color::monochrome_u8(235),
+                None,
+            );
+            for item in quest.requirements() {
+                let carried = inventory.count_of(item.item_id);
+                let remaining = item.needed.saturating_sub(carried);
+                let status = if remaining == 0 {
+                    "Collected".into()
+                } else {
+                    format!("{remaining} more needed")
+                };
+                push(
+                    format!("{}\n{} / {} carried · {}", item.item_name, carried, item.needed, status),
+                    if remaining == 0 {
+                        Color::rgb_u8(150, 230, 170)
+                    } else {
+                        Color::monochrome_u8(235)
+                    },
+                    Some(if item.needed == 0 {
+                        1.0
+                    } else {
+                        (carried as f32 / item.needed as f32).min(1.0)
+                    }),
+                );
             }
         }
+        if let Some(navigation) = navigation.filter(|navigation| navigation.available) {
+            if navigation.route_maps.len() > 1 {
+                push(
+                    format!("Route: {}", navigation.route_maps.join(" → ")),
+                    Color::rgb_u8(180, 230, 210),
+                    None,
+                );
+            } else {
+                push("Route: direct on the current map".into(), Color::rgb_u8(180, 230, 210), None);
+            }
+        }
+        Self { rows }
+    }
 
-        rows
+    fn objective_badge(objective_type: ObjectiveType) -> (&'static str, &'static str) {
+        (objective_type.icon(), objective_type.label())
+    }
+
+    /// Describe the authority that can advance this objective. The journal
+    /// must not turn a local observation into completion for objectives whose
+    /// state is owned by the server or DM encounter flow.
+    fn objective_status_line(objective_type: ObjectiveType, completion: &str) -> String {
+        let authority = match objective_type {
+            ObjectiveType::Collect => "inventory-backed; carried counts below",
+            ObjectiveType::Kill => "authoritative quest packets; defeat progress below",
+            ObjectiveType::Talk => "awaiting authoritative server confirmation",
+            ObjectiveType::Explore => "awaiting authoritative server confirmation",
+            ObjectiveType::Interact => "awaiting authoritative server confirmation",
+            ObjectiveType::DmEncounter => "awaiting server/DM encounter confirmation",
+        };
+        format!("Status: {authority} · completion: {completion}")
+    }
+
+    pub fn for_exploration(opened_count: usize) -> Self {
+        let mut rows = Vec::new();
+        let mut push = |text: String, color: Color| {
+            rows.push(QuestRow {
+                text,
+                color,
+                font_size: LINE_FONT_SIZE,
+                height: 0.0,
+                progress: None,
+            });
+        };
+        push(
+            "Roadside caches and hidden chests are one-time exploration finds per character. Once looted, their contents are permanently \
+             taken and their latch remains open."
+                .into(),
+            Color::monochrome_u8(235),
+        );
+        push(
+            format!("Personal discoveries: {opened_count} opened across the world."),
+            Color::rgb_u8(180, 210, 255),
+        );
+        push(
+            "Act I features 38 chests across 5 regions (Prontera: 12, Geffen: 8, Morroc: 7, Payon: 9, Alberta/Izlude: 2). Each awards an \
+             investigative Field Note with campaign clues and loose threads, plus a Cartographer's Mark."
+                .into(),
+            Color::monochrome_u8(215),
+        );
+        push(
+            "Cartographer's Marks pool for your party (or bank solo) to buy re-rolls or advantage on DM checks. Check current totals with \
+             [@marks]."
+                .into(),
+            Color::rgb_u8(255, 220, 130),
+        );
+        push(
+            "Finding all chests in an Act I region awards that region's cosmetic headgear: Renown Detective's Cap (Prontera), Mage Hat \
+             (Geffen), Turban (Morroc), Feather Beret (Payon), or Sailor Hat (Alberta & Izlude)."
+                .into(),
+            Color::rgb_u8(150, 230, 170),
+        );
+        Self { rows }
     }
 }
 
-impl<A, B> Element<ClientState> for QuestLogElement<A, B>
-where
-    A: Path<ClientState, QuestLogState>,
-    B: Path<ClientState, Inventory>,
-{
+#[cfg(test)]
+mod tests {
+    use super::QuestDetails;
+    use crate::world::ObjectiveType;
+
+    #[test]
+    fn typed_objectives_show_their_progress_authority() {
+        let cases = [
+            (ObjectiveType::Talk, "server confirmation"),
+            (ObjectiveType::Kill, "quest packets"),
+            (ObjectiveType::Collect, "inventory-backed"),
+            (ObjectiveType::Explore, "server confirmation"),
+            (ObjectiveType::Interact, "server confirmation"),
+            (ObjectiveType::DmEncounter, "server/DM encounter"),
+        ];
+
+        for (objective_type, expected) in cases {
+            let line = QuestDetails::objective_status_line(objective_type, "server");
+            assert!(line.contains(expected), "{line}");
+            assert!(line.starts_with("Status: "), "{line}");
+        }
+    }
+}
+
+impl Element<ClientState> for QuestDetails {
     type LayoutInfo = QuestLogLayoutInfo;
 
     fn create_layout_info(
         &mut self,
-        state: &State<ClientState>,
+        _: &State<ClientState>,
         _: ElementStoreMut,
         resolvers: &mut dyn Resolvers<ClientState>,
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
-            let mut rows = self.build_rows(state);
+            let mut rows = self.rows.clone();
             let mut total_height = 0.0;
-            let mut previous_was_title = false;
 
             for row in rows.iter_mut() {
-                let is_title = row.indent == 0.0;
-
                 let (size, _) = resolver.get_text_dimensions(
                     &row.text,
                     row.color,
                     row.color,
                     FontSize(row.font_size),
-                    HorizontalAlignment::Left {
-                        offset: 5.0 + row.indent,
-                        border: 3.0,
-                    },
+                    HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                     OverflowBehavior::LineBreak,
                 );
 
-                row.height = size.height();
+                row.height = size.height() + if row.progress.is_some() { PROGRESS_HEIGHT } else { 0.0 };
 
                 if total_height != 0.0 {
-                    total_height += match is_title && !previous_was_title {
-                        true => QUEST_SPACING,
-                        false => LINE_SPACING,
-                    };
+                    total_height += LINE_SPACING;
                 }
                 total_height += row.height;
-                previous_was_title = is_title;
             }
 
             let area = resolver.with_height(total_height);
@@ -179,23 +433,17 @@ where
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
         let mut offset = 0.0;
-        let mut previous_was_title = false;
 
         for row in &layout_info.rows {
-            let is_title = row.indent == 0.0;
-
             if offset != 0.0 {
-                offset += match is_title && !previous_was_title {
-                    true => QUEST_SPACING,
-                    false => LINE_SPACING,
-                };
+                offset += LINE_SPACING;
             }
 
             let row_area = Area {
                 left: layout_info.area.left,
                 top: layout_info.area.top + offset,
                 width: layout_info.area.width,
-                height: row.height,
+                height: row.height - if row.progress.is_some() { PROGRESS_HEIGHT } else { 0.0 },
             };
 
             layout.add_text(
@@ -204,44 +452,291 @@ where
                 FontSize(row.font_size),
                 row.color,
                 row.color,
-                HorizontalAlignment::Left {
-                    offset: 5.0 + row.indent,
-                    border: 3.0,
-                },
+                HorizontalAlignment::Left { offset: 5.0, border: 3.0 },
                 VerticalAlignment::Center { offset: 0.0 },
                 OverflowBehavior::LineBreak,
             );
 
+            if let Some(progress) = row.progress {
+                let bar = Area {
+                    left: row_area.left + 5.0,
+                    top: row_area.top + row_area.height + 4.0,
+                    width: (row_area.width - 10.0).max(0.0),
+                    height: 4.0,
+                };
+                layout.add_rectangle(
+                    bar,
+                    CornerDiameter::uniform(2.0),
+                    Color::monochrome_u8(65),
+                    Color::rgba_u8(0, 0, 0, 0),
+                    ShadowPadding::uniform(0.0),
+                );
+                if progress > 0.0 {
+                    layout.add_rectangle(
+                        Area {
+                            width: bar.width * progress,
+                            ..bar
+                        },
+                        CornerDiameter::uniform(2.0),
+                        row.color,
+                        Color::rgba_u8(0, 0, 0, 0),
+                        ShadowPadding::uniform(0.0),
+                    );
+                }
+            }
             offset += row.height;
-            previous_was_title = is_title;
         }
     }
 }
 
-/// The quest log.
-///
-/// Campaign hunting contracts show what they want handed in and how much of it
-/// the player is carrying. Before this existed the three quest packets were
-/// registered and then dropped on the floor, so every quest in the campaign was
-/// invisible outside NPC dialogue.
-pub struct QuestLogWindow<A, B> {
+/// Rebuilt from live inventory. Stable quest IDs preserve collapse state when
+/// searching, pinning, or receiving a differently ordered server roster.
+struct QuestList<A, B, N> {
     quest_log_path: A,
     inventory_path: B,
+    navigation_path: N,
+    elements: Vec<(u64, ElementBox<ClientState>)>,
 }
 
-impl<A, B> QuestLogWindow<A, B> {
-    pub fn new(quest_log_path: A, inventory_path: B) -> Self {
+impl<A, B, N> Element<ClientState> for QuestList<A, B, N>
+where
+    A: Path<ClientState, QuestLogState>,
+    B: Path<ClientState, Inventory>,
+    N: Path<ClientState, NavigationState>,
+{
+    type LayoutInfo = ();
+
+    fn create_layout_info(&mut self, state: &State<ClientState>, mut store: ElementStoreMut, resolvers: &mut dyn Resolvers<ClientState>) {
+        use korangar_interface::prelude::*;
+        with_single_resolver(resolvers, |resolver| {
+            self.elements.clear();
+            let log = state.get(&self.quest_log_path);
+            let inventory = state.get(&self.inventory_path);
+            let navigation = state.get(&self.navigation_path);
+            let dm_campaign_path = client_state().dm_campaign();
+            let dm_campaign = state.get(&dm_campaign_path);
+            let ready_count = log
+                .quests()
+                .iter()
+                .filter(|quest| quest.objectives_ready(|id| inventory.count_of(id)))
+                .count();
+            if dm_campaign.checkpoint_arc > 0 || dm_campaign.reconciliation.is_some() {
+                let checkpoint = if dm_campaign.checkpoint_arc > 0 {
+                    format!(
+                        "Checkpoint: Arc {} · step {}{}",
+                        dm_campaign.checkpoint_arc,
+                        dm_campaign.checkpoint_step,
+                        dm_campaign
+                            .checkpoint_carrier
+                            .map(|carrier| format!(" · carried by {carrier}"))
+                            .unwrap_or_default(),
+                    )
+                } else {
+                    "Checkpoint: no synchronized step".to_owned()
+                };
+                let reconciliation = dm_campaign
+                    .reconciliation
+                    .as_ref()
+                    .map(|result| {
+                        format!(
+                            "Latest {}: {} eligible · {} ahead · {} offline · {} unavailable · {} changed",
+                            result.mode, result.eligible, result.ahead, result.offline, result.unavailable, result.changed,
+                        )
+                    })
+                    .unwrap_or_else(|| "No reconciliation preview or confirmation yet".to_owned());
+                self.elements.push((
+                    u64::MAX - 3,
+                    ErasedElement::new(collapsible! {
+                        text: "DM Session Board",
+                        font_size: FontSize(TITLE_FONT_SIZE),
+                        title_height: 42.0,
+                        initially_expanded: true,
+                        children: (
+                            text! {
+                                text: format!("{checkpoint}\n{reconciliation}"),
+                                font_size: FontSize(15.0),
+                                overflow_behavior: OverflowBehavior::LineBreak,
+                            },
+                            split! {
+                                children: (
+                                    button! {
+                                        text: "Preview reconciliation",
+                                        tooltip: "Ask the server for a non-mutating party checkpoint preview",
+                                        height: 30.0,
+                                        font_size: FontSize(14.0),
+                                        event: InputEvent::SendMessage { text: "@dm reconcile".to_owned() },
+                                    },
+                                    button! {
+                                        text: "Confirm eligible sync",
+                                        tooltip: "Ask the server to synchronize eligible online members",
+                                        height: 30.0,
+                                        font_size: FontSize(14.0),
+                                        event: InputEvent::SendMessage { text: "@dm reconcile confirm".to_owned() },
+                                    },
+                                ),
+                            },
+                        ),
+                    }),
+                ));
+            }
+            let mut visible: Vec<_> = log
+                .quests()
+                .iter()
+                .filter(|quest| {
+                    quest.matches_search(&log.search) && (!log.ready_only || quest.objectives_ready(|id| inventory.count_of(id)))
+                })
+                .collect();
+            visible.sort_by_key(|quest| !log.is_pinned(quest.quest_id));
+            self.elements.push((
+                u64::MAX,
+                ErasedElement::new(text! {
+                    text: format!("{} shown · {} in journal · {} with items collected", visible.len(), log.quests().len(), ready_count),
+                    font_size: FontSize(14.0),
+                    overflow_behavior: OverflowBehavior::LineBreak,
+                }),
+            ));
+
+            let chest_discovery_path = client_state().chest_discovery();
+            let opened_total = state.get(&chest_discovery_path).opened_count();
+            let exploration_header = format!("Exploration & Field Notes\nRoadside caches · {opened_total} opened · 5 Act I regions");
+            self.elements.push((
+                u64::MAX - 2,
+                ErasedElement::new(collapsible! {
+                    text: exploration_header,
+                    font_size: FontSize(TITLE_FONT_SIZE),
+                    title_height: 56.0,
+                    overflow_behavior: OverflowBehavior::LineBreak,
+                    initially_expanded: false,
+                    children: (
+                        QuestDetails::for_exploration(opened_total),
+                        button! {
+                            text: "Read Field Notes [@fieldnotes]",
+                            tooltip: "Open the Field Notes reading menu [^000001@fieldnotes^000000]",
+                            height: 30.0,
+                            font_size: FontSize(15.0),
+                            event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                        },
+                    ),
+                }),
+            ));
+            if visible.is_empty() {
+                let message = if log.is_empty() {
+                    "Your journal is empty.\nSpeak to quest givers to discover quests. Accepted quests appear here."
+                } else {
+                    "No matching quests.\nClear the search or turn off Items collected to see more quests."
+                };
+                self.elements.push((
+                    u64::MAX - 1,
+                    ErasedElement::new(text! {
+                        text: message,
+                        font_size: FontSize(LINE_FONT_SIZE),
+                        overflow_behavior: OverflowBehavior::LineBreak,
+                    }),
+                ));
+            }
+            for quest in visible {
+                let id = quest.quest_id;
+                let pinned = log.is_pinned(id);
+                let completed = quest
+                    .requirements()
+                    .iter()
+                    .filter(|item| inventory.count_of(item.item_id) >= item.needed)
+                    .count();
+                let status = if !quest.kill_objectives().is_empty() {
+                    let completed = quest
+                        .kill_objectives()
+                        .iter()
+                        .filter(|objective| objective.current >= objective.total)
+                        .count();
+                    if quest.objectives_ready(|id| inventory.count_of(id)) {
+                        "Objectives complete".into()
+                    } else {
+                        format!("Defeating · {completed}/{} objectives", quest.kill_objectives().len())
+                    }
+                } else if quest.requirements().is_empty() {
+                    "Follow quest instructions".into()
+                } else if quest.objectives_ready(|id| inventory.count_of(id)) {
+                    "Items collected".into()
+                } else {
+                    format!("Collecting · {completed}/{} objectives", quest.requirements().len())
+                };
+                let title = format!("{}{}\n{status}", if pinned { "Pinned · " } else { "" }, quest.name());
+                let path = self.quest_log_path;
+                let is_tracked = log.tracked() == Some(id);
+                self.elements.push((
+                    u64::from(id),
+                    ErasedElement::new(collapsible! {
+                        text: title,
+                        font_size: FontSize(TITLE_FONT_SIZE),
+                        title_height: 56.0,
+                        overflow_behavior: OverflowBehavior::LineBreak,
+                        initially_expanded: true,
+                        children: (
+                            QuestDetails::new(quest, inventory, is_tracked.then_some(navigation), dm_campaign),
+                            split! {
+                                children: (
+                                    button! {
+                                        text: if pinned { "Unpin quest" } else { "Pin to top" },
+                                        tooltip: "Keep this quest at the top of your journal for this session",
+                                        height: 30.0,
+                                        font_size: FontSize(15.0),
+                                        event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                            state.update_value_with(path, move |log| log.toggle_pin(id));
+                                        },
+                                    },
+                                    button! {
+                                        text: if is_tracked { "Untrack" } else { "Track on HUD" },
+                                        tooltip: if is_tracked { "Remove this objective from the HUD tracker" } else { "Track this objective on the HUD tracker" },
+                                        height: 30.0,
+                                        font_size: FontSize(15.0),
+                                        event: InputEvent::ToggleQuestTracking { quest_id: id },
+                                    },
+                                ),
+                            },
+                        ),
+                    }),
+                ));
+            }
+            for (id, element) in &mut self.elements {
+                element.create_layout_info(state, store.child_store(*id), resolver);
+            }
+        });
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        _: &'a (),
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        for (id, element) in &self.elements {
+            element.lay_out(state, store.child_store(*id), &(), layout);
+        }
+    }
+}
+
+pub struct QuestLogWindow<A, B, N> {
+    quest_log_path: A,
+    inventory_path: B,
+    navigation_path: N,
+}
+
+impl<A, B, N> QuestLogWindow<A, B, N> {
+    pub fn new(quest_log_path: A, inventory_path: B, navigation_path: N) -> Self {
         Self {
             quest_log_path,
             inventory_path,
+            navigation_path,
         }
     }
 }
 
-impl<A, B> CustomWindow<ClientState> for QuestLogWindow<A, B>
+impl<A, B, N> CustomWindow<ClientState> for QuestLogWindow<A, B, N>
 where
     A: Path<ClientState, QuestLogState> + 'static,
     B: Path<ClientState, Inventory> + 'static,
+    N: Path<ClientState, NavigationState> + 'static,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::QuestLog)
@@ -249,15 +744,75 @@ where
 
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
-
+        struct QuestSearchBox;
+        let path = self.quest_log_path;
         window! {
-            title: "Quest Log",
+            title: "Quest Journal",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
+                text_box! {
+                    ghost_text: "Search quests or objective items…",
+                    state: path.search(),
+                    input_handler: DefaultHandler::<_, _, 80>::new(path.search(), |_: &State<ClientState>, queue: &mut EventQueue<ClientState>| queue.queue(Event::Unfocus)),
+                    focus_id: QuestSearchBox,
+                    height: 32.0,
+                    font_size: FontSize(16.0),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "All quests",
+                            height: 32.0,
+                            font_size: FontSize(15.0),
+                            tooltip: "Clear search and show every quest in your journal",
+                            event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                state.update_value_with(path, |log| { log.search.clear(); log.ready_only = false; });
+                            },
+                        },
+                        state_button! {
+                            text: "Items collected",
+                            height: 32.0,
+                            font_size: FontSize(15.0),
+                            tooltip: "Show quests whose required items are all in your inventory",
+                            state: path.ready_only(),
+                            event: Toggle(path.ready_only()),
+                        },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Field Notes",
+                            height: 28.0,
+                            font_size: FontSize(14.0),
+                            tooltip: "Open the Field Notes reading menu [^000001@fieldnotes^000000]",
+                            event: InputEvent::SendMessage { text: "@fieldnotes".to_string() },
+                        },
+                        button! {
+                            text: "Marks",
+                            height: 28.0,
+                            font_size: FontSize(14.0),
+                            tooltip: "Check your party's pooled and banked Cartographer's Marks [^000001@marks^000000]",
+                            event: InputEvent::SendMessage { text: "@marks".to_string() },
+                        },
+                    ),
+                },
                 scroll_view! {
-                    children: QuestLogElement::new(self.quest_log_path, self.inventory_path),
+                    children: QuestList {
+                        quest_log_path: path,
+                        inventory_path: self.inventory_path,
+                        navigation_path: self.navigation_path,
+                        elements: Vec::new(),
+                    },
+                },
+                text! {
+                    text: "Ctrl+Q · Journal    Ctrl+W · Close",
+                    font_size: FontSize(14.0),
+                    overflow_behavior: OverflowBehavior::LineBreak,
                 },
             ),
         }

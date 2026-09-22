@@ -6,11 +6,11 @@ use std::time::{Duration, Instant};
 use ragnarok_packets::handler::{DuplicateHandlerError, PacketCallback, PacketHandler};
 use ragnarok_packets::*;
 
-use crate::event::{NetworkEventList, NoNetworkEvents};
+use crate::event::{NetworkEvent, NetworkEventList, NoNetworkEvents, QuestObjectiveProgress};
 use crate::items::{IT_AMMO, ItemQuantity};
 use crate::{
-    CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NetworkEvent,
-    NoMetadata, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
+    CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NoMetadata, ShopItem,
+    UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
 type PendingInventoryItems = Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>>;
@@ -75,7 +75,7 @@ fn unify_login_failed_reason2(reason: LoginFailedReason2) -> (UnifiedLoginFailed
         LoginFailedReason2::IdExpired => (UnifiedLoginFailedReason::IdExpired, "Id has expired"),
         LoginFailedReason2::RejectedFromServer => (UnifiedLoginFailedReason::RejectedFromServer, "Rejected from server"),
         LoginFailedReason2::BlockedByGMTeam => (UnifiedLoginFailedReason::BlockedByGMTeam, "Blocked by gm team"),
-        LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, "Game outdated"),
+        LoginFailedReason2::GameOutdated => (UnifiedLoginFailedReason::GameOutdated, crate::OUTDATED_CLIENT_MESSAGE),
         LoginFailedReason2::LoginProhibitedUntil => (UnifiedLoginFailedReason::LoginProhibitedUntil, "Login prohibited until"),
         LoginFailedReason2::ServerFull => (UnifiedLoginFailedReason::ServerFull, "Server is full"),
         LoginFailedReason2::CompanyAccountLimitReached => (
@@ -478,8 +478,19 @@ where
         attack_range: packet.attack_range,
     })?;
     packet_handler.register_noop::<NewMailStatusPacket>()?;
-    packet_handler.register_noop::<AchievementUpdatePacket>()?;
-    packet_handler.register_noop::<AchievementListPacket>()?;
+    packet_handler.register(|packet: AchievementUpdatePacket| NetworkEvent::AchievementUpdate {
+        achievement_id: packet.acheivement_data.acheivement_id,
+        is_completed: packet.acheivement_data.is_completed != 0,
+    })?;
+    packet_handler.register(|packet: AchievementListPacket| {
+        let completed_achievements = packet
+            .acheivement_data
+            .into_iter()
+            .filter(|ach| ach.is_completed != 0)
+            .map(|ach| ach.acheivement_id)
+            .collect();
+        NetworkEvent::AchievementList { completed_achievements }
+    })?;
     packet_handler.register(|packet: CriticalWeightUpdatePacket| NetworkEvent::CriticalWeightPercent { percent: packet.weight })?;
     // This match is deliberately EXHAUSTIVE — no `_` arm. It used to end in
     // `_ => None`, which silently dropped nine of the fourteen look types the
@@ -806,6 +817,7 @@ where
     packet_handler.register(|packet: DisplayPlayerHealEffect| NetworkEvent::HealEffect {
         entity_id: EntityId(0),
         heal_amount: packet.heal_amount as usize,
+        heal_type: packet.heal_type,
     })?;
     packet_handler.register(|packet: StatusChangePacket| NetworkEvent::StatusChange {
         entity_id: packet.entity_id,
@@ -831,9 +843,49 @@ where
         quest_id: packet.quest_id,
         active: packet.active != 0,
     })?;
-    packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
-    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
-    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
+    packet_handler.register(|packet: HuntingQuestNotificationPacket| NetworkEvent::QuestObjectiveProgress {
+        objectives: packet
+            .objective_details
+            .into_iter()
+            .map(|objective| QuestObjectiveProgress {
+                quest_id: objective.quest_id,
+                objective_id: objective.mob_id,
+                mob_id: objective.mob_id,
+                current_count: objective.current_count,
+                total_count: objective.total_count,
+            })
+            .collect(),
+    })?;
+    packet_handler.register(
+        |packet: HuntingQuestUpdateObjectivePacket| NetworkEvent::QuestObjectiveProgress {
+            objectives: packet
+                .objective_details
+                .into_iter()
+                .map(|objective| QuestObjectiveProgress {
+                    quest_id: objective.quest_id,
+                    objective_id: objective.mob_id,
+                    mob_id: objective.mob_id,
+                    current_count: objective.current_count,
+                    total_count: objective.total_count,
+                })
+                .collect(),
+        },
+    )?;
+    packet_handler.register(
+        |packet: HuntingQuestUpdateObjectivePacket4| NetworkEvent::QuestObjectiveProgress {
+            objectives: packet
+                .objective_details
+                .into_iter()
+                .map(|objective| QuestObjectiveProgress {
+                    quest_id: objective.quest_id,
+                    objective_id: objective.hunt_identification,
+                    mob_id: 0,
+                    current_count: objective.current_count,
+                    total_count: objective.total_count,
+                })
+                .collect(),
+        },
+    )?;
     packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved { quest_id: packet.quest_id })?;
     packet_handler.register(|packet: QuestListPacket| NetworkEvent::QuestList {
         quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
@@ -1346,6 +1398,10 @@ where
     // including gameplay rejections like "party creation requires Basic Skill
     // 7". Without this the rejection is completely silent.
     let reason_slot = pending_skill_fail_reason.clone();
+    packet_handler.register(|packet: RecoveryStatePacket| NetworkEvent::RecoveryState {
+        mode: packet.mode,
+        block: packet.block,
+    })?;
     packet_handler.register(move |packet: SkillFailReasonPacket| {
         // Resolved here, not on the wire: an unknown reason must degrade to
         // `None`, never fail the packet.
@@ -1394,7 +1450,22 @@ where
             },
         };
 
-        vec![NetworkEvent::SkillCastCancelled { source_entity_id: None }, reported].into()
+        let item_id = match packet.cause {
+            71 | 72 => Some(packet.item_id),
+            _ => None,
+        };
+
+        vec![
+            NetworkEvent::SkillCastCancelled { source_entity_id: None },
+            NetworkEvent::SkillFailed {
+                skill_id: packet.skill_id,
+                cause: packet.cause,
+                reason,
+                item_id,
+            },
+            reported,
+        ]
+        .into()
     })?;
     // `ZC_NOTIFY_MAPINFO` — a map-zone restriction refused the action. Hercules
     // deliberately sends this *instead of* `clif->skill_fail`, so without a
@@ -1879,6 +1950,20 @@ where
         amount: packet.amount,
     })?;
     packet_handler.register(|_: StorageClosedPacket| NetworkEvent::StorageClosed)?;
+    packet_handler.register(|packet: CartItemAddResultPacket| NetworkEvent::CartItemAddResult { result: packet.result })?;
+    packet_handler.register(|packet: CartInfoPacket| NetworkEvent::UpdateStat {
+        stat_type: StatType::CartInfo(packet.count, packet.weight, packet.max_weight),
+    })?;
+    packet_handler.register(|packet: CartItemAddedPacket| NetworkEvent::CartItemAdded {
+        index: packet.index,
+        item_id: packet.item_id,
+        amount: packet.amount,
+    })?;
+    packet_handler.register(|packet: CartItemRemovedPacket| NetworkEvent::CartItemRemoved {
+        index: packet.index,
+        amount: packet.amount,
+    })?;
+    packet_handler.register_noop::<CartClosedPacket>()?;
 
     // Consume any remaining server packet whose length is known (from Hercules'
     // own tables) but that has no dedicated handler yet, instead of desyncing
@@ -2195,6 +2280,18 @@ mod skill_failure_text_tests {
     #[test]
     fn ordinary_cause_zero_is_unchanged() {
         assert_eq!(text(&failure(28, 0)), "Skill level is not high enough.");
+    }
+
+    #[test]
+    fn official_causes_are_named_and_unknown_values_do_not_panic() {
+        assert_eq!(text(&failure(28, 1)), "Not enough SP.");
+        assert_eq!(text(&failure(28, 4)), "Skill is still on cooldown.");
+        assert_eq!(text(&failure(28, 6)), "This skill cannot be used with this weapon.");
+        assert_eq!(text(&failure(28, 11)), "That target is invalid for this skill.");
+        assert_eq!(text(&failure(28, 26)), "You can't place it there.");
+        let unknown = text(&failure(28, 255));
+        assert!(!unknown.is_empty());
+        assert!(!unknown.contains("panic"));
     }
 
     /// Every `State:` precondition is checked in one shared place and reported

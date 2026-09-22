@@ -17,6 +17,16 @@ lands.
 
 | Plan | Purpose |
 |---|---|
+| [qwen3-playtest-runbook.md](qwen3-playtest-runbook.md) | **Active continuous Qwen3 execution queue:** one bounded task at a time, exact evidence gates, non-blocking review checkpoints, and a single `NEXT` pointer |
+| [qwen3-restart-2026-09-13.md](qwen3-restart-2026-09-13.md) | **Authoritative senior reconciliation:** accepted completions, incomplete evidence, blockers, dirty-worktree snapshot, and exact restart order |
+| [playtest-adjustments-2026-09-12.md](playtest-adjustments-2026-09-12.md) | September playtest product backlog and acceptance intent; execute it through the Qwen3 runbook above |
+| [recovery-rules-implementation.md](recovery-rules-implementation.md) | QW-071–079: server-authoritative recovery, weight, checkpoint/respec, EXP, and boundary verification |
+| [equipment-eligibility-integration.md](equipment-eligibility-integration.md) | QW-047–049: complete Hercules equipment export and shared client presentation |
+| [campaign-journal-and-routing-integration.md](campaign-journal-and-routing-integration.md) | QW-050–053/056–063: generated campaign data, journal, tracker, minimap, and routing |
+| [campaign-checkpoint-protocol.md](campaign-checkpoint-protocol.md) | QW-054–056: durable server checkpoint and preview/confirm late-join reconciliation |
+| [combat-chat-integration.md](combat-chat-integration.md) | QW-080–081: typed combat events, bounded state, filters, and existing-chat integration |
+| [party-colors-and-ui-sounds.md](party-colors-and-ui-sounds.md) | QW-082–084: stable accessible party colors and transition-driven UI audio |
+| [chest-presentation-integration.md](chest-presentation-integration.md) | QW-088–090: authoritative chest state, world presentation, Field Notes, and Marks |
 | [M0-connectivity.md](M0-connectivity.md) | First login → char → map loop against local Hercules |
 | [asset-pipeline.md](asset-pipeline.md) | GRF/archive/data sync decisions for M1 |
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |

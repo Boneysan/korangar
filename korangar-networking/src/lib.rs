@@ -30,12 +30,44 @@ use tokio::task::JoinHandle;
 pub use self::entity::EntityData;
 pub use self::event::{DisconnectReason, NetworkEvent};
 pub use self::hotkey::HotkeyState;
-pub use self::items::{InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem};
+pub use self::items::{
+    InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem, can_sell_item, filter_sell_items,
+};
 pub use self::message::MessageColor;
 pub use self::packet_versions::SupportedPacketVersion;
 pub use self::server::{
     CharacterServerLoginData, LoginServerLoginData, NotConnectedError, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
+
+/// Decimal integer from `tools/packaging/PACK_VERSION`. Sent as CA_LOGIN's
+/// version field so the login server can refuse an old friends pack. Bump that
+/// file (and Hercules `client_version_to_connect`) whenever friends must
+/// update; YYYYMMDD is a good scheme.
+const fn parse_pack_version(raw: &str) -> u32 {
+    let bytes = raw.as_bytes();
+    let mut n = 0u32;
+    let mut i = 0;
+    let mut seen = false;
+    while i < bytes.len() {
+        let b = bytes[i];
+        i += 1;
+        if b == b' ' || b == b'\t' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        assert!(b.is_ascii_digit(), "PACK_VERSION must be a decimal integer");
+        let digit = (b - b'0') as u32;
+        n = n * 10 + digit;
+        seen = true;
+    }
+    assert!(seen && n > 0, "PACK_VERSION must be a positive integer");
+    n
+}
+
+pub const PACK_VERSION: u32 = parse_pack_version(include_str!("../../tools/packaging/PACK_VERSION"));
+
+/// Login-window popup body when the server refuses this pack as too old.
+pub const OUTDATED_CLIENT_MESSAGE: &str =
+    "This client is out of date. Close the game, download the latest Seal-Cascade zip, and run Update.";
 
 const fn weapon_refine_wire_index(inventory_index: InventoryIndex) -> u32 {
     inventory_index.0 as u32 + 2
@@ -466,7 +498,8 @@ where
             })
             .expect("network thread dropped");
 
-        let login_packet = LoginServerLoginPacket::new(username.into(), password.into());
+        let mut login_packet = LoginServerLoginPacket::new(username.into(), password.into());
+        login_packet.version = PACK_VERSION.to_le_bytes();
 
         self.packet_callback.outgoing_packet(&login_packet);
 
@@ -1127,6 +1160,20 @@ where
         }
     }
 
+    /// Move an inventory item into the equipped cart.
+    pub fn move_item_to_cart(&mut self, inventory_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(MoveItemToCartPacket { inventory_index, amount }),
+        }
+    }
+
+    /// Move a cart item back into inventory.
+    pub fn move_item_from_cart(&mut self, cart_index: InventoryIndex, amount: u32) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(MoveItemFromCartPacket { cart_index, amount }),
+        }
+    }
+
     pub fn cast_skill(&mut self, skill_id: SkillId, skill_level: SkillLevel, entity_id: EntityId) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => self.send_map_server_packet(UseSkillAtIdPacket::new(skill_level, skill_id, entity_id)),
@@ -1639,7 +1686,7 @@ mod packet_handlers {
 
         let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
 
-        let mut build = |damage: u32, damage_type: u8| {
+        let build = |damage: u32, damage_type: u8| {
             let mut bytes = vec![0xC8, 0x08];
             bytes.extend_from_slice(&2000000u32.to_le_bytes());
             bytes.extend_from_slice(&110000001u32.to_le_bytes());
@@ -1802,6 +1849,24 @@ mod packet_handlers {
             "unexpected events: {:?}",
             events.0
         );
+    }
+
+    #[test]
+    fn recovery_state_0x0efd_becomes_a_network_event() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let mut reader = ByteReader::without_metadata(&[0xFD, 0x0E, 0x02, 0x03]);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0EFD should parse");
+        };
+        match &events.0[..] {
+            [NetworkEvent::RecoveryState { mode: 2, block: 3 }] => {}
+            other => panic!("unexpected events: {other:?}"),
+        }
     }
 
     /// The fork packet 0x0EFE names the runtime reason for a cause-0 failure,
@@ -2040,6 +2105,11 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { source_entity_id: None },
+                    NetworkEvent::SkillFailed {
+                        skill_id: ragnarok_packets::SkillId(19),
+                        cause: 1,
+                        ..
+                    },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,
@@ -2137,6 +2207,7 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { .. },
+                    NetworkEvent::SkillFailed { .. },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,
@@ -2207,6 +2278,70 @@ mod packet_handlers {
                 }] if entity_id.0 == 2000000
             ),
             "expected SpecialEffect Fireball, got {:?}",
+            events.0
+        );
+    }
+
+    /// Normal AL_INCAGI arrives through SkillEffectNoDamage (0x09CB), while
+    /// explicit EF_INCAGILITY arrives through SpecialEffect (0x01F3).
+    #[test]
+    fn increase_agility_dual_route_packets_reach_the_client() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::{EffectId, EntityId, SkillId};
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // Route 1: Normal AL_INCAGI cast terminal result via 0x09CB (ZC_NOTIFY_SKILL2 /
+        // DisplaySkillEffectNoDamagePacket) 17 bytes: header (0x09CB) |
+        // skill_id 29 | heal_amount 0 | dest_entity 2000001 | src_entity 2000000 |
+        // result 1 (success)
+        let mut skill_bytes = vec![0xCB, 0x09];
+        skill_bytes.extend_from_slice(&29u16.to_le_bytes());
+        skill_bytes.extend_from_slice(&0u32.to_le_bytes());
+        skill_bytes.extend_from_slice(&2000001u32.to_le_bytes());
+        skill_bytes.extend_from_slice(&2000000u32.to_le_bytes());
+        skill_bytes.push(1);
+        assert_eq!(skill_bytes.len(), 17);
+
+        let mut reader = ByteReader::without_metadata(&skill_bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x09CB (AL_INCAGI) did not parse");
+        };
+
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::SkillEffectNoDamage {
+                skill_id: SkillId(29),
+                source_entity_id: EntityId(2000000),
+                destination_entity_id: EntityId(2000001),
+                effect_value: 0,
+                successful: true,
+            }]),
+            "expected SkillEffectNoDamage for AL_INCAGI (SkillId 29), got {:?}",
+            events.0
+        );
+
+        // Route 2: Explicit EF_INCAGILITY visual via 0x01F3 (ZC_NOTIFY_EFFECT2 /
+        // DisplaySpecialEffectPacket) 10 bytes: header (0x01F3) | entity
+        // 2000001 | effect 37 (Incagility)
+        let mut effect_bytes = vec![0xF3, 0x01];
+        effect_bytes.extend_from_slice(&2000001u32.to_le_bytes());
+        effect_bytes.extend_from_slice(&37u32.to_le_bytes());
+        assert_eq!(effect_bytes.len(), 10);
+
+        let mut reader = ByteReader::without_metadata(&effect_bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x01F3 (EF_INCAGILITY) did not parse");
+        };
+
+        assert!(
+            matches!(events.0.as_slice(), [NetworkEvent::SpecialEffect {
+                entity_id: EntityId(2000001),
+                effect_id: EffectId::Incagility,
+            }]),
+            "expected SpecialEffect for EF_INCAGILITY (EffectId 37), got {:?}",
             events.0
         );
     }

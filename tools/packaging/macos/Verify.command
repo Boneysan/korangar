@@ -40,21 +40,72 @@ fi
 bad=0
 ok=0
 
+fmt_size() {
+    awk -v b="$1" 'BEGIN {
+        if (b >= 1073741824) printf "%.1f GB", b / 1073741824
+        else if (b >= 1048576) printf "%.0f MB", b / 1048576
+        else if (b >= 1024) printf "%.0f KB", b / 1024
+        else printf "%d B", b
+    }'
+}
+
 for name in $found; do
-    printf '\n  Checking against %s ...\n' "$name"
+    pkg_half="Client"
+    [ "$name" = "SHA256SUMS-assets" ] && pkg_half="Assets"
 
-    # shasum prints "FAILED" for a mismatch and "FAILED open or read" for a
-    # missing file; both are worth showing, and nothing else is.
-    output=$(shasum -a 256 -c "$name" 2>&1)
-    good=$(printf '%s\n' "$output" | grep -c ': OK$')
-    ok=$((ok + good))
+    printf '\n  Checking against %s [%s] ...\n' "$name" "$pkg_half"
+    printf '  Each file is named before it is hashed. Large GRFs can take a minute.\n'
 
-    printf '%s\n' "$output" | grep -v ': OK$' | grep -E 'FAILED|WARNING' | while read -r line; do
-        printf '  %s\n' "$line"
-    done
+    total=$(awk '/^[0-9a-fA-F]{64}/ { c++ } END { print c+0 }' "$name")
+    n=0
+    while read -r hash path rest; do
+        case $hash in
+            [0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]*) ;;
+            *) continue ;;
+        esac
+        [ -n "$path" ] || continue
+        path=${path#./}
 
-    failures=$(printf '%s\n' "$output" | grep -c 'FAILED')
-    bad=$((bad + failures))
+        # Shared verifier files are owned exclusively by SHA256SUMS-client.
+        base=$(basename "$path")
+        if [ "$pkg_half" = "Assets" ]; then
+            case "$base" in
+                Verify.ps1|Verify.bat|Verify.command) continue ;;
+            esac
+        fi
+
+        n=$((n + 1))
+        if [ ! -e "$path" ]; then
+            printf '  [%s/%s] [%s] MISSING  %s\n' "$n" "$total" "$pkg_half" "$path"
+            printf '    Package Half:   %s\n' "$pkg_half"
+            printf '    Manifest Path:  %s/%s\n' "$here" "$name"
+            printf '    Expected Hash:  %s\n' "$hash"
+            printf '    Actual Hash:    <none> (file missing)\n'
+            printf '    Installed Path: %s/%s\n' "$here" "$path"
+            bad=$((bad + 1))
+            continue
+        fi
+        bytes=$(stat -f %z "$path")
+        size=$(fmt_size "$bytes")
+        if [ "$bytes" -gt 104857600 ]; then
+            printf '  [%s/%s] %s (%s) -- large file, please wait...\n' "$n" "$total" "$path" "$size"
+        else
+            printf '  [%s/%s] %s (%s)\n' "$n" "$total" "$path" "$size"
+        fi
+        actual=$(shasum -a 256 "$path" | awk '{ print tolower($1) }')
+        hash_lower=$(echo "$hash" | tr '[:upper:]' '[:lower:]')
+        if [ "$actual" = "$hash_lower" ]; then
+            ok=$((ok + 1))
+        else
+            printf '  [%s] CORRUPT: %s\n' "$pkg_half" "$path"
+            printf '    Package Half:   %s\n' "$pkg_half"
+            printf '    Manifest Path:  %s/%s\n' "$here" "$name"
+            printf '    Expected Hash:  %s\n' "$hash"
+            printf '    Actual Hash:    %s\n' "$actual"
+            printf '    Installed Path: %s/%s\n' "$here" "$path"
+            bad=$((bad + 1))
+        fi
+    done < "$name"
 done
 
 printf '\n'

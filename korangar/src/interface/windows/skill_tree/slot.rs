@@ -51,6 +51,28 @@ impl LevelDisplay {
 }
 
 /// Regular click handler.
+struct RankDownClickHandler<A> {
+    learnable_skill_path: A,
+}
+
+impl<A> RankDownClickHandler<A> {
+    fn new(learnable_skill_path: A) -> Self {
+        Self { learnable_skill_path }
+    }
+}
+
+impl<A> ClickHandler<ClientState> for RankDownClickHandler<A>
+where
+    A: Path<ClientState, LearnableSkill, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(skill) = state.try_get(&self.learnable_skill_path) else {
+            return;
+        };
+        queue.queue(InputEvent::RefundSkillPoint { skill_id: skill.skill_id });
+    }
+}
+
 struct SkillSlotClickHandler<A, B, C> {
     learnable_skill_path: A,
     learned_skill_path: B,
@@ -113,6 +135,27 @@ where
                 },
             });
         }
+    }
+}
+
+struct ActivateSkillClickHandler<B> {
+    learned_skill_path: B,
+}
+
+impl<B> ClickHandler<ClientState> for ActivateSkillClickHandler<B>
+where
+    B: Path<ClientState, LearnedSkill, false>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(learned_skill) = state.try_get(&self.learned_skill_path) else {
+            return;
+        };
+        if learned_skill.skill_level.0 == 0 {
+            return;
+        }
+        queue.queue(InputEvent::ActivateSkill {
+            skill_id: learned_skill.skill_id,
+        });
     }
 }
 
@@ -227,6 +270,8 @@ pub struct SkillSlot<A, B, C, D> {
     window_state_path: C,
     available_skill_points_path: D,
     click_handler: SkillSlotClickHandler<A, B, C>,
+    rank_down_handler: RankDownClickHandler<A>,
+    activate_skill_handler: ActivateSkillClickHandler<B>,
     assign_to_hotbar_handler: AssignToHotbarClickHandler<A, B, C>,
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
@@ -256,6 +301,8 @@ where
             window_state_path,
             available_skill_points_path,
             click_handler: SkillSlotClickHandler::new(learnable_skill_path, learned_skill_path, window_state_path, source),
+            rank_down_handler: RankDownClickHandler::new(learnable_skill_path),
+            activate_skill_handler: ActivateSkillClickHandler { learned_skill_path },
             assign_to_hotbar_handler: AssignToHotbarClickHandler {
                 learnable_skill_path,
                 learned_skill_path,
@@ -361,13 +408,23 @@ where
                 && skill.acquisition == SkillAcquisition::Job
                 && learned_skill.is_none_or(|learned_skill| learned_skill.upgradable)
                 && current_skill_level < skill.maximum_level.0;
+            let can_rank_down = *state.get(&self.window_state_path.currently_skilling())
+                && skill.acquisition == SkillAcquisition::Job
+                && current_skill_level > 0;
             let rank_up_area = layout_info.area.interior(
                 RANK_UP_SIZE,
                 RANK_UP_SIZE,
                 HorizontalAlignment::Right { offset: 4.0, border: 0.0 },
                 VerticalAlignment::Center { offset: 0.0 },
             );
+            let rank_down_area = layout_info.area.interior(
+                RANK_UP_SIZE,
+                RANK_UP_SIZE,
+                HorizontalAlignment::Left { offset: 4.0, border: 0.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+            );
             let is_rank_up_hovered = can_rank_up && rank_up_area.check().run(layout);
+            let is_rank_down_hovered = can_rank_down && rank_down_area.check().run(layout);
             let is_hovered = sprite_area.check().run(layout);
 
             let required_skill_level = highlighted_skill.and_then(|skill_id| skill.required_for_skills.get(&skill_id));
@@ -513,6 +570,38 @@ where
                 });
             }
 
+            if can_rank_down {
+                let rank_down_color = match is_rank_down_hovered {
+                    true => *state.get(&client_theme().skill_tree().pending_points_color()),
+                    false => *state.get(&client_theme().skill_tree().points_color()),
+                };
+
+                layout.add_rectangle(
+                    rank_down_area,
+                    *state.get(&client_theme().skill_tree().slot_corner_diameter()),
+                    *state.get(&client_theme().skill_tree().slot_background_color()),
+                    rank_down_color,
+                    *state.get(&client_theme().skill_tree().slot_outline()),
+                );
+
+                layout.add_text(
+                    rank_down_area,
+                    "−",
+                    *state.get(&client_theme().skill_tree().points_font_size()),
+                    rank_down_color,
+                    *state.get(&client_theme().skill_tree().highlight_color()),
+                    HorizontalAlignment::Center { offset: 0.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+
+                if is_rank_down_hovered {
+                    layout.register_click_handler(MouseButton::Left, &self.rank_down_handler);
+                    struct RankDownTooltip;
+                    layout.add_tooltip("Refund one skill point", RankDownTooltip.tooltip_id());
+                }
+            }
+
             if can_rank_up {
                 let rank_up_color = match is_rank_up_hovered {
                     true => *state.get(&client_theme().skill_tree().pending_points_color()),
@@ -549,6 +638,7 @@ where
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &self.click_handler);
                 if learned_skill.is_some() {
+                    layout.register_click_handler(MouseButton::DoubleLeft, &self.activate_skill_handler);
                     layout.register_click_handler(MouseButton::Right, &self.assign_to_hotbar_handler);
                 }
 

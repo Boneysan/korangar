@@ -7,9 +7,8 @@
 //! comes from the bundled campaign table instead, resolved to names at the
 //! boundary because the interface layer holds no `Library`.
 //!
-//! Progress is deliberately *not* stored. How many of an item the player is
-//! carrying is already in the inventory, and caching it here would be a second
-//! copy to keep in sync on every pickup, drop, trade and vend.
+//! Item progress is read from the inventory, while kill progress is retained
+//! from the server's authoritative hunting-objective packets.
 
 use korangar_interface::element::StateElement;
 use ragnarok_packets::ItemId;
@@ -23,6 +22,15 @@ pub struct QuestRequirementEntry {
     pub needed: u32,
 }
 
+/// Server-authoritative kill progress from the hunting quest packets.
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct QuestKillObjective {
+    pub objective_id: u32,
+    pub mob_id: u32,
+    pub current: u16,
+    pub total: u16,
+}
+
 /// A quest in the log.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct QuestEntry {
@@ -32,9 +40,36 @@ pub struct QuestEntry {
     pub name: String,
     /// Empty for a quest with no item turn-in.
     pub requirements: Vec<QuestRequirementEntry>,
+    pub kill_objectives: Vec<QuestKillObjective>,
+    /// Hunt zone and/or NPC destination for the journal.
+    pub location: String,
+    /// Revealed destination coordinate, when the campaign data has one.
+    pub destination_map: String,
+    pub destination_x: Option<u16>,
+    pub destination_y: Option<u16>,
 }
 
 impl QuestEntry {
+    /// Inventory readiness is not server-confirmed quest completion. Quests
+    /// without known item objectives must never appear ready by vacuous truth.
+    pub fn items_ready(&self, count: impl Fn(ItemId) -> u32) -> bool {
+        !self.requirements.is_empty() && self.requirements.iter().all(|item| count(item.item_id) >= item.needed)
+    }
+
+    pub fn objectives_ready(&self, count: impl Fn(ItemId) -> u32) -> bool {
+        let items_ready = self.requirements.is_empty() || self.items_ready(&count);
+        let kills_ready = self.kill_objectives.iter().all(|objective| objective.current >= objective.total);
+        (!self.requirements.is_empty() || !self.kill_objectives.is_empty()) && items_ready && kills_ready
+    }
+
+    pub fn matches_search(&self, query: &str) -> bool {
+        let query = query.trim().to_lowercase();
+        self.name.to_lowercase().contains(&query)
+            || self.quest_id.to_string().contains(&query)
+            || self.requirements.iter().any(|item| item.item_name.to_lowercase().contains(&query))
+            || self.location.to_lowercase().contains(&query)
+    }
+
     pub fn name(&self) -> &str {
         &self.name
     }
@@ -42,12 +77,41 @@ impl QuestEntry {
     pub fn requirements(&self) -> &[QuestRequirementEntry] {
         &self.requirements
     }
+
+    pub fn kill_objectives(&self) -> &[QuestKillObjective] {
+        &self.kill_objectives
+    }
+
+    pub fn update_kill_objective(&mut self, objective_id: u32, mob_id: u32, current: u16, total: u16) {
+        if let Some(objective) = self
+            .kill_objectives
+            .iter_mut()
+            .find(|objective| objective.objective_id == objective_id)
+        {
+            objective.mob_id = mob_id;
+            objective.current = current;
+            objective.total = total;
+        } else {
+            self.kill_objectives.push(QuestKillObjective {
+                objective_id,
+                mob_id,
+                current,
+                total,
+            });
+        }
+    }
 }
 
 /// Active quests, in the order the server listed them.
 #[derive(Clone, Debug, Default, RustState, StateElement)]
 pub struct QuestLogState {
     quests: Vec<QuestEntry>,
+    /// Journal preferences survive closing the window and map-list refreshes,
+    /// but are cleared on character switch. Pins order this journal, not a HUD.
+    pub search: String,
+    pub ready_only: bool,
+    pinned: Vec<u32>,
+    tracked: Option<u32>,
 }
 
 impl QuestLogState {
@@ -55,12 +119,68 @@ impl QuestLogState {
         &self.quests
     }
 
+    pub fn quests_mut(&mut self) -> &mut [QuestEntry] {
+        &mut self.quests
+    }
+
     pub fn is_empty(&self) -> bool {
         self.quests.is_empty()
     }
 
+    pub fn tracked(&self) -> Option<u32> {
+        self.tracked
+    }
+
+    pub fn track(&mut self, quest_id: u32) {
+        if self.quests.iter().any(|q| q.quest_id == quest_id) {
+            self.tracked = Some(quest_id);
+        }
+    }
+
+    pub fn untrack(&mut self) {
+        self.tracked = None;
+    }
+
+    pub fn auto_track_next_if_invalid(&mut self) {
+        if self.tracked.is_some_and(|id| self.quests.iter().any(|q| q.quest_id == id)) {
+            return;
+        }
+        self.tracked = self.quests.first().map(|q| q.quest_id);
+    }
+
+    /// Auto-select the next incomplete objective when manual selection becomes
+    /// complete or invalid.
+    pub fn auto_track_next_incomplete(&mut self, is_ready: impl Fn(&QuestEntry) -> bool) {
+        if let Some(id) = self.tracked
+            && let Some(q) = self.quests.iter().find(|q| q.quest_id == id)
+            && !is_ready(q)
+        {
+            return;
+        }
+        for q in &self.quests {
+            if !is_ready(q) {
+                self.tracked = Some(q.quest_id);
+                return;
+            }
+        }
+        self.auto_track_next_if_invalid();
+    }
+
+    pub fn is_pinned(&self, quest_id: u32) -> bool {
+        self.pinned.contains(&quest_id)
+    }
+
+    pub fn toggle_pin(&mut self, quest_id: u32) {
+        if self.is_pinned(quest_id) {
+            self.pinned.retain(|id| *id != quest_id);
+        } else if self.quests.iter().any(|quest| quest.quest_id == quest_id) {
+            self.pinned.push(quest_id);
+        }
+    }
+
     /// Replace the whole log, as `ZC_ALL_QUEST_LIST` does on map login.
     pub fn replace(&mut self, quests: Vec<QuestEntry>) {
+        self.pinned.retain(|id| quests.iter().any(|quest| quest.quest_id == *id));
         self.quests = quests;
     }
 
@@ -77,11 +197,16 @@ impl QuestLogState {
 
     pub fn remove(&mut self, quest_id: u32) {
         self.quests.retain(|entry| entry.quest_id != quest_id);
+        self.pinned.retain(|id| *id != quest_id);
+        if self.tracked == Some(quest_id) {
+            self.tracked = None;
+            self.auto_track_next_if_invalid();
+        }
     }
 
     /// Drop everything, for a logout or a character switch.
     pub fn clear(&mut self) {
-        self.quests.clear();
+        *self = Self::default();
     }
 }
 
@@ -100,6 +225,11 @@ mod tests {
                 item_name: "Rat Tail".to_owned(),
                 needed: 7,
             }],
+            kill_objectives: Vec::new(),
+            location: String::new(),
+            destination_map: String::new(),
+            destination_x: None,
+            destination_y: None,
         }
     }
 
@@ -133,5 +263,140 @@ mod tests {
 
         assert_eq!(log.quests().len(), 1);
         assert_eq!(log.quests()[0].quest_id, 20008);
+    }
+
+    #[test]
+    fn readiness_tracks_inventory_in_both_directions() {
+        let quest = entry(20002, "Contract");
+        assert!(!quest.items_ready(|_| 6));
+        assert!(quest.items_ready(|_| 7));
+        assert!(quest.items_ready(|_| 100));
+        assert!(!quest.items_ready(|_| 0));
+        let mut story = quest;
+        story.requirements.clear();
+        assert!(!story.items_ready(|_| 100));
+    }
+
+    #[test]
+    fn readiness_requires_authoritative_kill_objectives() {
+        let mut quest = entry(20005, "Field Hunt");
+        quest.requirements.clear();
+        quest.kill_objectives.push(super::QuestKillObjective {
+            objective_id: 77,
+            mob_id: 1002,
+            current: 2,
+            total: 3,
+        });
+        assert!(!quest.objectives_ready(|_| 0));
+        quest.kill_objectives[0].current = 3;
+        assert!(quest.objectives_ready(|_| 0));
+    }
+
+    #[test]
+    fn readiness_requires_every_objective() {
+        let mut quest = entry(20002, "Contract");
+        quest.requirements.push(QuestRequirementEntry {
+            item_id: ItemId(1052),
+            item_name: "Single Cell".into(),
+            needed: 7,
+        });
+        assert!(!quest.items_ready(|id| if id == ItemId(1016) { 100 } else { 6 }));
+        assert!(quest.items_ready(|_| 7));
+    }
+
+    #[test]
+    fn search_matches_names_items_and_ids_without_case_or_outer_spaces() {
+        let quest = entry(20002, "Contract: Cellar Vermin");
+        for query in ["", "  CELLAR  ", "rat tail", "20002"] {
+            assert!(quest.matches_search(query));
+        }
+        assert!(!quest.matches_search("Mushroom"));
+    }
+
+    #[test]
+    fn pins_follow_quest_ids_across_refresh_and_are_removed_with_quests() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.add(entry(20003, "Second"));
+        log.toggle_pin(20002);
+        log.toggle_pin(99999);
+        assert!(!log.is_pinned(99999));
+        log.search = "First".into();
+        log.replace(vec![entry(20003, "Second"), entry(20002, "First")]);
+        assert!(log.is_pinned(20002));
+        assert_eq!(log.search, "First");
+        log.remove(20002);
+        assert!(!log.is_pinned(20002));
+        log.toggle_pin(20003);
+        log.replace(vec![]);
+        assert!(!log.is_pinned(20003));
+    }
+
+    #[test]
+    fn tracked_quest_survives_server_refresh_when_its_id_remains_active() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.add(entry(20003, "Second"));
+        log.track(20002);
+        log.replace(vec![entry(20003, "Second refreshed"), entry(20002, "First refreshed")]);
+
+        assert_eq!(log.tracked(), Some(20002));
+        assert_eq!(log.quests()[1].name(), "First refreshed");
+    }
+
+    #[test]
+    fn unpin_and_character_switch_reset_journal_preferences() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "First"));
+        log.toggle_pin(20002);
+        log.toggle_pin(20002);
+        assert!(!log.is_pinned(20002));
+        log.toggle_pin(20002);
+        log.search = "Rat".into();
+        log.ready_only = true;
+        log.clear();
+        assert!(log.is_empty());
+        assert!(!log.is_pinned(20002));
+        assert!(log.search.is_empty());
+        assert!(!log.ready_only);
+    }
+
+    #[test]
+    fn tracked_quest_auto_advances_when_removed() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20003, "Rockers"));
+        log.add(entry(20008, "Mushrooms"));
+        log.track(20003);
+        assert_eq!(log.tracked(), Some(20003));
+        log.remove(20003);
+        assert_eq!(log.tracked(), Some(20008));
+    }
+
+    #[test]
+    fn auto_track_selection_rules() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20003, "Rockers"));
+        log.add(entry(20008, "Mushrooms"));
+        log.add(entry(20009, "Bones"));
+
+        // Manual tracking selects quest
+        log.track(20003);
+        assert_eq!(log.tracked(), Some(20003));
+
+        // When manual selection is still incomplete, auto_track keeps it
+        log.auto_track_next_incomplete(|q| q.quest_id == 20008);
+        assert_eq!(log.tracked(), Some(20003));
+
+        // When manual selection becomes complete, auto-tracks next incomplete
+        log.auto_track_next_incomplete(|q| q.quest_id == 20003);
+        assert_eq!(log.tracked(), Some(20008));
+
+        // Untrack clears tracked quest
+        log.untrack();
+        assert_eq!(log.tracked(), None);
+
+        // Auto-track selects first incomplete
+        log.auto_track_next_incomplete(|q| q.quest_id == 20003);
+        assert_eq!(log.tracked(), Some(20008));
     }
 }

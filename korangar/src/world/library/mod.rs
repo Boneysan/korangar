@@ -1,12 +1,17 @@
 mod accessory_name;
 mod baby_job;
 mod campaign_quest;
+mod chest;
+mod equip_presentation;
+mod equipment_eligibility;
+mod hunt_schema;
 mod item_info;
 mod item_name;
 mod item_resource;
 mod item_stats;
 mod job_identity;
 mod job_name;
+mod journal_slice;
 mod map_sky_data;
 mod msgstringtable;
 mod skill_info;
@@ -14,6 +19,7 @@ mod skill_information;
 mod skill_requirements;
 mod skill_tree;
 mod towninfo;
+mod warp_graph;
 
 use std::hash::Hash;
 
@@ -24,19 +30,33 @@ use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
-pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable};
+pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestLocation, quest_display_name};
+#[allow(unused_imports)]
+pub use self::chest::{CHEST_SCHEMA_VERSION, ChestRecord, ChestTable};
+pub use self::equip_presentation::UnusablePresentation;
+#[allow(unused_imports)]
+pub use self::equipment_eligibility::{ELIGIBILITY_SCHEMA, EligibilityRow, EligibilityTable, EquipDenial, Sex, Wearer, bundled_table};
+#[allow(unused_imports)]
+pub use self::hunt_schema::{
+    BUNDLED_GUIDANCE, BUNDLED_OBJECTIVES, HuntGuidance, HuntObjective, OMENS_STEPS, ObjectiveType, StoryStep, bundled_guidance,
+    bundled_objectives, parse_guidance, parse_objectives, parse_story_steps, visible_story_steps, visible_story_steps_for_flags,
+};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
-pub use self::item_stats::{item_stats, item_tooltip_text};
+pub use self::item_stats::{item_stats, item_tooltip_text, item_tooltip_text_with_denial};
 pub use self::job_identity::JobIdentity;
 pub use self::job_name::JobName;
+#[allow(unused_imports)]
+pub use self::journal_slice::{display_monster, format_hunt_journal, item_display_name, you_carry_line};
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
 pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
 pub(crate) use self::skill_information::skill_asset_file_names;
 pub use self::skill_tree::SkillTreeLayout;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
+#[allow(unused_imports)]
+pub use self::warp_graph::{NavigationRoute, RouteLeg, WarpGraph};
 use crate::loaders::GameFileLoader;
 pub use crate::world::library::skill_information::SkillListInformation;
 pub use crate::world::library::skill_requirements::{SkillListKey, SkillListRequirements};
@@ -53,7 +73,10 @@ pub struct Library {
     baby_job_table: <IsBabyJob as Table>::Storage,
     towninfo_table: TownInfoTable,
     campaign_quest_table: CampaignQuestTable,
+    chest_table: ChestTable,
     msgstringtable: MsgStringTable,
+    #[allow(dead_code)]
+    warp_graph: WarpGraph,
 }
 
 impl Library {
@@ -69,7 +92,9 @@ impl Library {
         let baby_job_table = IsBabyJob::load(game_file_loader)?;
         let towninfo_table = TownInfoTable::load(game_file_loader);
         let campaign_quest_table = CampaignQuestTable::load();
+        let chest_table = ChestTable::load();
         let msgstringtable = MsgStringTable::load(game_file_loader);
+        let warp_graph = WarpGraph::load().map_err(mlua::Error::external)?;
 
         Ok(Self {
             accessory_name_table,
@@ -83,8 +108,35 @@ impl Library {
             baby_job_table,
             towninfo_table,
             campaign_quest_table,
+            chest_table,
             msgstringtable,
+            warp_graph,
         })
+    }
+
+    #[cfg(test)]
+    pub fn empty_for_test() -> Self {
+        Self {
+            accessory_name_table: Default::default(),
+            job_identity_table: Default::default(),
+            job_name_table: JobName::bundled_for_test(),
+            item_info_table: Default::default(),
+            map_sky_data_table: Default::default(),
+            skill_information_table: Default::default(),
+            skill_requirements_table: Default::default(),
+            skill_tree_table: Default::default(),
+            baby_job_table: Default::default(),
+            towninfo_table: TownInfoTable::default(),
+            campaign_quest_table: CampaignQuestTable::load(),
+            chest_table: ChestTable::load(),
+            msgstringtable: MsgStringTable::default(),
+            warp_graph: WarpGraph::load().expect("bundled warp graph is valid"),
+        }
+    }
+
+    #[inline(always)]
+    pub fn chest_table(&self) -> &ChestTable {
+        &self.chest_table
     }
 
     #[inline(always)]
@@ -117,6 +169,29 @@ impl Library {
     #[inline]
     pub fn campaign_quest(&self, quest_id: u32) -> Option<&CampaignQuest> {
         self.campaign_quest_table.get(quest_id)
+    }
+
+    pub fn quest_location(&self, quest_id: u32) -> Option<&QuestLocation> {
+        self.campaign_quest_table.location(quest_id)
+    }
+
+    #[allow(dead_code)]
+    pub fn warp_graph(&self) -> &WarpGraph {
+        &self.warp_graph
+    }
+
+    #[allow(dead_code)]
+    pub fn route_to_objective(
+        &self,
+        start_map: &str,
+        start_x: u16,
+        start_y: u16,
+        goal_map: &str,
+        goal_x: u16,
+        goal_y: u16,
+    ) -> Option<NavigationRoute> {
+        self.warp_graph
+            .route_to_objective(start_map, start_x, start_y, goal_map, goal_x, goal_y)
     }
 
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.

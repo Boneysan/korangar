@@ -30,6 +30,11 @@ This directory contains all design documents, technical deep dives, implementati
 
 ## Documentation Categories
 
+### Player Guide
+| Document | Purpose |
+|----------|---------|
+| [PLAYER_GUIDE.md](PLAYER_GUIDE.md) | **For players, not developers.** How to move, target, fight, quest, trade, and every keybind — Tab-targeting, the Space attack-target confirm, hotbar tiers, HUD tracking, etc. |
+
 ### Core Architecture & Systems
 | Document | Purpose |
 |----------|---------|

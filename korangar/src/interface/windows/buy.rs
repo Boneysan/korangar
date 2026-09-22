@@ -1,3 +1,4 @@
+use std::cell::UnsafeCell;
 use std::cmp::Ordering;
 use std::fmt::Display;
 
@@ -5,6 +6,7 @@ use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox};
 use korangar_interface::event::ClickHandler;
 use korangar_interface::layout::area::Area;
+use korangar_interface::layout::tooltip::TooltipExt;
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_interface::window::{CustomWindow, Window};
@@ -15,9 +17,9 @@ use super::WindowClass;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
-use crate::state::ClientState;
 use crate::state::theme::InterfaceThemeType;
-use crate::world::ResourceMetadata;
+use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
+use crate::world::{ResourceMetadata, UnusablePresentation, Wearer, item_stats, item_tooltip_text_with_denial};
 
 struct PartialEqDisplayStr<T> {
     last_value: Option<T>,
@@ -61,6 +63,7 @@ struct ItemElement<A, B> {
     children: B,
     amount_string: PartialEqDisplayStr<u32>,
     price_string: PartialEqDisplayStr<u32>,
+    tooltip_text: UnsafeCell<String>,
 }
 
 impl<A, B> ItemElement<A, B> {
@@ -70,6 +73,7 @@ impl<A, B> ItemElement<A, B> {
             children,
             amount_string: PartialEqDisplayStr::new(),
             price_string: PartialEqDisplayStr::new(),
+            tooltip_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -133,6 +137,9 @@ where
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
         let item = state.get(&self.item_path);
+        let is_hovered = layout_info.area.check().run(layout);
+        let wearer = state.try_follow(this_player()).map(|player| Wearer::from_player(player, "*"));
+        let unusable = wearer.map(|w| UnusablePresentation::for_item(item.item_id.0, w, false));
 
         layout.add_rectangle(
             layout_info.area,
@@ -143,7 +150,25 @@ where
         );
 
         if let Some(texture) = &item.metadata.texture {
-            layout.add_texture(layout_info.texture_area, texture.clone(), Color::WHITE, false);
+            let item_color = if unusable.as_ref().is_some_and(|presentation| presentation.mute_icon) {
+                Color::rgb_u8(220, 140, 140)
+            } else {
+                Color::WHITE
+            };
+            layout.add_texture(layout_info.texture_area, texture.clone(), item_color, false);
+
+            if unusable.as_ref().is_some_and(|presentation| presentation.blocked_marker) {
+                layout.add_text(
+                    layout_info.texture_area,
+                    "!",
+                    FontSize(18.0),
+                    Color::rgb_u8(255, 90, 90),
+                    Color::rgb_u8(255, 160, 60),
+                    HorizontalAlignment::Left { offset: 2.0, border: 2.0 },
+                    VerticalAlignment::Top { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+            }
 
             if matches!(item.quantity, ItemQuantity::Fixed(..)) {
                 layout.add_text(
@@ -163,7 +188,11 @@ where
             layout_info.text_area,
             &item.metadata.name,
             FontSize(16.0),
-            Color::monochrome_u8(220),
+            if unusable.as_ref().is_some_and(|presentation| presentation.mute_icon) {
+                Color::rgb_u8(220, 140, 140)
+            } else {
+                Color::monochrome_u8(220)
+            },
             Color::rgb_u8(255, 160, 60),
             HorizontalAlignment::Left { offset: 3.0, border: 3.0 },
             VerticalAlignment::Center { offset: 0.0 },
@@ -180,6 +209,38 @@ where
             VerticalAlignment::Center { offset: 0.0 },
             OverflowBehavior::Shrink,
         );
+
+        if is_hovered {
+            struct VendorItemTooltip;
+            let equipped = state.get(&client_state().inventory()).items().iter().find_map(|other| {
+                let korangar_networking::InventoryItemDetails::Equippable {
+                    equipped_position: other_worn,
+                    refinement_level,
+                    ..
+                } = &other.details
+                else {
+                    return None;
+                };
+                if other_worn.is_empty() {
+                    return None;
+                }
+                let stats = item_stats(other.item_id.0)?;
+                if stats.loc.as_deref() == item_stats(item.item_id.0).and_then(|s| s.loc.as_deref()) {
+                    Some((stats, Some(*refinement_level)))
+                } else {
+                    None
+                }
+            });
+            let (eq, refine) = equipped.map(|(s, r)| (Some(s), r)).unwrap_or((None, None));
+            let wearer = state.try_follow(this_player()).map(|player| Wearer::from_player(player, "*"));
+            let unusable = wearer.map(|w| UnusablePresentation::for_item(item.item_id.0, w, false));
+            let denial_text = unusable.as_ref().and_then(|u| u.reason_text());
+            let text = item_tooltip_text_with_denial(item.item_id.0, &item.metadata.name, None, eq, refine, denial_text);
+            unsafe {
+                *self.tooltip_text.get() = text;
+                layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), VendorItemTooltip.tooltip_id());
+            }
+        }
 
         self.children.lay_out(state, store, &layout_info.children, layout);
     }

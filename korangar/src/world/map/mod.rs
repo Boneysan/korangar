@@ -639,6 +639,53 @@ impl Map {
         }
     }
 
+    /// Draws a clear ground ring / target indicator on the terrain underneath a
+    /// selected entity.
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    pub fn render_target_indicator(
+        &self,
+        renderer: &mut EffectRenderer,
+        texture: Option<&Arc<Texture>>,
+        position: TilePosition,
+        color: Color,
+    ) {
+        const OFFSET: f32 = 1.2;
+
+        if position.x >= self.width || position.y >= self.height {
+            return;
+        }
+
+        let Some(tile) = self.get_tile(position) else {
+            return;
+        };
+
+        if tile.flags.contains(TileFlags::WALKABLE) {
+            let base_x = position.x as f32 * GAT_TILE_SIZE;
+            let base_y = position.y as f32 * GAT_TILE_SIZE;
+
+            let corners = [
+                Point3::new(base_x, tile.southwest_corner_height + OFFSET, base_y),
+                Point3::new(base_x + GAT_TILE_SIZE, tile.southeast_corner_height + OFFSET, base_y),
+                Point3::new(base_x, tile.northwest_corner_height + OFFSET, base_y + GAT_TILE_SIZE),
+                Point3::new(
+                    base_x + GAT_TILE_SIZE,
+                    tile.northeast_corner_height + OFFSET,
+                    base_y + GAT_TILE_SIZE,
+                ),
+            ];
+
+            if let Some(texture) = texture {
+                renderer.render_ground_decal(
+                    corners,
+                    texture.clone(),
+                    GROUND_DECAL_TEXTURE_COORDINATES,
+                    color,
+                    GroundDecalBlend::Additive,
+                );
+            }
+        }
+    }
+
     /// Draws the area a ground-targeted skill will cover, one tile-conforming
     /// decal per cell, so aiming shows the real footprint instead of a single
     /// cursor tile. `cells` are `(dx, dy)` offsets from `center` — see

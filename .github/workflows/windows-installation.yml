@@ -1,0 +1,42 @@
+name: Windows installation matrix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: windows-installation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    name: Native Windows installer and repair matrix
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show native tool versions
+        shell: pwsh
+        run: |
+          $PSVersionTable | Format-List
+          Get-Command pwsh
+          Get-Command shasum -ErrorAction SilentlyContinue
+
+      - name: Run the eight-case installation matrix
+        shell: bash
+        env:
+          PWSH: pwsh
+        run: tools/testing/exercise-windows-installation-matrix.sh "$RUNNER_TEMP/windows-matrix.md"
+
+      - name: Upload native Windows matrix report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installation-matrix
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/windows-matrix.md

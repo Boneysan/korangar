@@ -50,34 +50,26 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
         let primary_event = ActionThenClose(primary_action_event(&self.item));
 
         // One selector per button: `ComputedSelector` is not `Copy`.
-        let trade_disabled =
-            ComputedSelector::new_default(|state: &ClientState| !client_state().trade_state().follow_safe(state).is_active());
-        let trade_one_disabled =
-            ComputedSelector::new_default(|state: &ClientState| !client_state().trade_state().follow_safe(state).is_active());
-
-        let half = (amount / 2).max(1);
-        let can_split = amount > 1;
-
-        let split_half = ActionThenClose(InputEvent::DropItem {
-            inventory_index,
-            amount: half,
+        let trade_disabled = ComputedSelector::new_default(move |state: &ClientState| {
+            let trade = client_state().trade_state().follow_safe(state);
+            !trade.is_active() || trade.has_pending_add(inventory_index)
         });
-        let split_one = ActionThenClose(InputEvent::DropItem {
+
+        let can_choose = amount > 1;
+        let drop_amount = ActionThenClose(InputEvent::OpenQuantityDrop {
             inventory_index,
-            amount: 1,
+            maximum: amount,
+            item_name: name.clone(),
         });
         let drop_all = ActionThenClose(InputEvent::DropItem { inventory_index, amount });
 
         // Adding to a trade previously required typing `/trade add
         // <inventory_index>`, and an inventory index is an internal number no
         // player can see. This menu already has it.
-        let trade_all = ActionThenClose(InputEvent::TradeAddItem {
+        let trade_amount = ActionThenClose(InputEvent::OpenQuantityTrade {
             inventory_index,
-            amount: u32::from(amount),
-        });
-        let trade_one = ActionThenClose(InputEvent::TradeAddItem {
-            inventory_index,
-            amount: 1,
+            maximum: amount,
+            item_name: name.clone(),
         });
 
         window! {
@@ -91,20 +83,14 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
                     event: primary_event,
                 },
                 button! {
-                    text: if can_split {
-                        format!("Split half ({half})")
+                    text: if can_choose {
+                        format!("Drop amount… (max {amount})")
                     } else {
-                        "Split half".to_owned()
+                        "Drop amount…".to_owned()
                     },
-                    disabled: !can_split,
-                    disabled_tooltip: "Need a stack of 2+ to split",
-                    event: split_half,
-                },
-                button! {
-                    text: "Split off 1",
-                    disabled: !can_split,
-                    disabled_tooltip: "Need a stack of 2+ to split",
-                    event: split_one,
+                    disabled: !can_choose,
+                    disabled_tooltip: "Need a stack of 2+ to choose an amount",
+                    event: drop_amount,
                 },
                 button! {
                     text: if amount > 1 {
@@ -116,19 +102,13 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
                 },
                 button! {
                     text: if amount > 1 {
-                        format!("Add all to trade ({amount})")
+                        format!("Add to trade… (max {amount})")
                     } else {
-                        "Add to trade".to_owned()
+                        "Add to trade…".to_owned()
                     },
                     disabled: trade_disabled,
-                    disabled_tooltip: "No trade is open",
-                    event: trade_all,
-                },
-                button! {
-                    text: "Add 1 to trade",
-                    disabled: trade_one_disabled,
-                    disabled_tooltip: "No trade is open",
-                    event: trade_one,
+                    disabled_tooltip: "No trade is open, or this slot is already being added",
+                    event: trade_amount,
                 },
                 button! {
                     text: "Cancel",

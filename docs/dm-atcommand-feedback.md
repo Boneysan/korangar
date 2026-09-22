@@ -117,6 +117,30 @@ via `NetworkingSystem::send_chat_message` → `GlobalMessagePacket` **0x00F3**.
 
 ---
 
+## Exact item quantity (`@item`)
+
+Verified against `Hercules/src/map/atcommand.c` (`atcommand_item_parse` /
+`atcommand_item_search`).
+
+| What you want | Command |
+|---|---|
+| One item by id | `@item 1770 1` |
+| Stack by id | `@item 1770 500` |
+| Multi-word display name | `@item Iron Arrow 500` |
+| Quoted name (optional) | `@item "Iron Arrow" 500` |
+
+Rules:
+
+- Quantity is the **trailing integer**. Unquoted names may contain spaces.
+- A string is an id only if it is **numeric end to end** (`1770`, not `1770 500` as a single token).
+- Quantity `<= 0` becomes **1** on the server. The DM panel refuses 0 so that does not happen from the Grant button.
+- Names that themselves end in a number (`Vesper Core 01`) must be quoted, or the last digit is peeled as quantity.
+- **Player group 0 cannot use `@item`** (`Hercules/conf/groups.conf`). Admin (99) has `all_commands`. Dungeon Master (5) does **not** inherit `@item` unless you add it.
+
+The **GM / DM Commands → Items** tab has id/name and quantity fields plus **Grant**, which sends the same line. Preset buttons still send fixed `@item <id> <qty>` stacks. The loot generator Grant buttons already send `@item <id> <qty>`.
+
+---
+
 ## Rebuild / verify
 
 ```bash

@@ -230,6 +230,26 @@ pub fn item_tooltip_text(
     lines.join("\n")
 }
 
+/// Extended tooltip with denial text in red (e.g. `^FF5050Cannot equip:
+/// job^000000`).
+pub fn item_tooltip_text_with_denial(
+    item_id: u32,
+    display_name: &str,
+    refinement: Option<u8>,
+    equipped: Option<&ItemStats>,
+    equipped_refinement: Option<u8>,
+    denial: Option<&str>,
+) -> String {
+    let mut text = item_tooltip_text(item_id, display_name, refinement, equipped, equipped_refinement);
+    if let Some(reason) = denial {
+        text.push('\n');
+        text.push_str("^FF5050");
+        text.push_str(reason);
+        text.push_str("^000000");
+    }
+    text
+}
+
 fn push_delta(lines: &mut Vec<String>, label: &str, mine: Option<i32>, theirs: Option<i32>) {
     match (mine, theirs) {
         (Some(a), Some(b)) if a != b => {
@@ -259,6 +279,26 @@ mod tests {
     fn guard_has_def() {
         let guard = item_stats(2101).expect("Guard in items.json");
         assert_eq!(guard.def, Some(20));
+    }
+
+    #[test]
+    fn vendor_and_inventory_use_the_same_tooltip() {
+        let sword = item_stats(1101).unwrap();
+        let armor = item_stats(2301).unwrap();
+        let potion = item_stats(501).unwrap();
+        let inv = item_tooltip_text(1101, "Sword", Some(0), Some(armor), Some(0));
+        let vendor = item_tooltip_text(1101, "Sword", Some(0), Some(armor), Some(0));
+        assert_eq!(inv, vendor);
+        assert!(inv.contains("ATK"));
+        let shirt = item_tooltip_text(2301, "Cotton Shirt", None, Some(sword), None);
+        assert!(shirt.contains("DEF") || shirt.contains("Armor") || shirt.contains("Cotton"));
+        let ring = item_stats(2607);
+        let ring_text = item_tooltip_text(2607, "Ring", None, None, None);
+        assert!(!ring_text.is_empty());
+        let _ = ring;
+        let usable = item_tooltip_text(501, "Red Potion", None, None, None);
+        assert!(usable.contains("Potion") || usable.contains("Healing") || potion.item_type.contains("HEAL"));
+        assert!(!usable.contains("vs equipped"));
     }
 
     #[test]

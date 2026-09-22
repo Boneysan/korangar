@@ -126,7 +126,7 @@ where
                                         },
                                     },
                                     button! {
-                                        text: client_state().localization().apply_skill_points_button_text(),
+                                        text: "Lock",
                                         disabled: ComputedSelector::new_default(move |state: &ClientState| {
                                             self.window_state_path.pending_skill_points().follow_safe(state).is_empty()
                                         }),
@@ -144,15 +144,8 @@ where
                                 ),
                             },
                             on_false: button! {
-                                text: client_state().localization().distribute_skill_points_button_text(),
-                                disabled: ComputedSelector::new_default(move |state: &ClientState| {
-                                    // Treat a missing player (logout race) as zero available points.
-                                    self.available_skill_points_path
-                                        .follow(state)
-                                        .copied()
-                                        .unwrap_or(0)
-                                        == 0
-                                }),
+                                text: "Unlock",
+                                tooltip: "Allocate or refund skill points. + ranks up, − refunds. Lock when done.",
                                 event: SetToTrue(self.window_state_path.currently_skilling()),
                             },
                         },

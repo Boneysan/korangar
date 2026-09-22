@@ -129,7 +129,7 @@ impl WindowCache {
             WindowClass::SkillTree => state(AnchorPoint::CenterLeft, MARGIN, -200.0, 420.0, 400.0),
             WindowClass::FriendList => state(AnchorPoint::CenterLeft, MARGIN, 80.0, 280.0, 360.0),
             // Quest log sits in the same left column as the skill tree.
-            WindowClass::QuestLog => state(AnchorPoint::CenterLeft, MARGIN, -260.0, 340.0, 380.0),
+            WindowClass::QuestLog => state(AnchorPoint::CenterLeft, MARGIN, -260.0, 460.0, 520.0),
             // Minimap top-right (above inventory).
             WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 210.0),
             // Buff bar top-center.
@@ -138,12 +138,15 @@ impl WindowCache {
             WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 160.0),
             // Zeny / EXP / cooldown strip under the minimap.
             WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
+            // Tracked objective HUD tracker sitting below the HUD readout.
+            WindowClass::TrackedObjective => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 350.0, 260.0, 150.0),
             // Party roster left of center.
             WindowClass::Party => state(AnchorPoint::CenterLeft, MARGIN, -40.0, 320.0, 240.0),
             WindowClass::Storage => state(AnchorPoint::CenterRight, -(380.0 + MARGIN), -80.0, 360.0, 320.0),
             WindowClass::Trade => state(AnchorPoint::Center, -20.0, -80.0, 400.0, 360.0),
             WindowClass::TradeRequest => state(AnchorPoint::Center, 0.0, -40.0, 320.0, 160.0),
             WindowClass::Identify => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 160.0),
+            WindowClass::Quantity => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 200.0),
             WindowClass::WarpSelection | WindowClass::WeaponRefine | WindowClass::RepairWeapon => {
                 state(AnchorPoint::Center, 0.0, -80.0, 360.0, 300.0)
             }
@@ -169,7 +172,7 @@ impl WindowCache {
             WindowClass::PlayerTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 120.0, 260.0, 200.0),
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
-            WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),
+            WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 480.0, 220.0),
             WindowClass::DisconnectNotice => state(AnchorPoint::Center, 0.0, -40.0, 380.0, 170.0),
             WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 470.0, 520.0),
             // DM campaign tools: bestiary right of center, loot generator left.
@@ -210,6 +213,8 @@ impl WindowCache {
             WindowClass::Minimap,
             WindowClass::StatusBar,
             WindowClass::Hud,
+            WindowClass::TrackedObjective,
+            WindowClass::QuestLog,
             WindowClass::Party,
             WindowClass::Storage,
             WindowClass::Trade,
