@@ -86,23 +86,14 @@ and `RequestPlayerMovePacket` flow.
 - **Client Parsing:** `korangar::dm::parser::parse_dm_json` intercepts `ServerMessagePacket` / `GlobalMessagePacket` starting with `[DMJ]`.
 - **UI Binding:** `korangar_interface::windows::BestiaryWindow` maps the `ids` array to `System/monsterinfo.lua` data blocks. If `MobId` is not in the `ids` array, render the stats payload as obfuscated `???` text.
 
-## 5. Active Dodge Roll / Dash
-**Architecture:** Hercules C-Plugin + Client Prediction (High Complexity)
+## 5. Active Dodge Roll / Dash — REJECTED
 
-- **Client Prediction:** 
-  - On `winit` `Spacebar` keypress, lock client movement input.
-  - Call `Entity::play_animation(AnimationState::Dash)`.
-  - Calculate `dest_x` and `dest_y` 4 grid cells in the `camera.yaw` forward vector.
-  - Send `RequestDodgeRollPacket { dest_x: u16, dest_y: u16, dir: u8 }` to the server via the map channel.
-  - Interpolate the local entity model to `dest_x, dest_y` over 300ms using a bezier curve (do not rely on standard grid walk).
-- **Server Plugin (`src/map/clif.c` & `src/map/unit.c`):**
-  - Inject a packet handler for `RequestDodgeRollPacket` (e.g. opcode `0x0F00`).
-  - **Validation:** Call `path_search()` or `map_getcell()` to ensure `dest_x/y` is walkable and within max dash range.
-  - **Execution:** 
-    - Immediately warp the unit silently `unit_warp(bl, mapid, dest_x, dest_y, CLR_TELEPORT)`.
-    - Apply a custom status change: `sc_start(bl, bl, SC_DODGE_IFRAME, 100, 0, 500)`.
-  - **I-Frame Logic:** In `battle.c` `battle_calc_damage()`, return 0 or `BCT_MISS` if the target has `SC_DODGE_IFRAME`.
-- **Broadcast:** The server broadcasts an `EntityDodgePacket` to nearby clients, bypassing the standard `EntityMovePacket`, so remote clients know to render the fast 300ms bezier dash rather than a sudden teleport.
+**Struck 2026-09-21.** The GDD ([`docs/GDD.md`](../GDD.md)
+§5.3) locks this out: *"Movement itself is the universal defensive action. Do not
+add a universal dodge roll unless the entire combat model is intentionally being
+redesigned."* Invulnerability frames would silently invalidate Flee, Safety Wall,
+Pneuma and every positioning skill the tactical layer is built on. The opcode this
+section had pencilled in (`0x0F00`) is now `CZ_CANCEL_CAST`. Do not build this.
 
 ## 6. True Dialogue Tree (CRPG Style Window)
 **Architecture:** Client-Side Presentation Rewrite (`korangar/src/interface/windows/dialog.rs`)

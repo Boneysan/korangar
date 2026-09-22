@@ -114,6 +114,7 @@ HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 202608
 ### Implementation Plans, Roadmaps & Specs
 | Document | Purpose |
 |----------|---------|
+| [GDD.md](GDD.md) | **Game Design Document** (v0.2) — product vision, design pillars, per-system design, roadmap, and an audited implementation-status appendix across both the client and the Hercules fork. Start here for *what* and *why*. |
 | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) | Feature roadmap, UI/UX principles, packet promotion backlog. |
 | [PROJECT_PLAN.md](PROJECT_PLAN.md) | Milestones (M0–M4), detailed task breakdown (E1–E9), decisions, risks. |
 | [plans/README.md](plans/README.md) | Index of executable near-term plans. |
