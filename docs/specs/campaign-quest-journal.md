@@ -1,5 +1,12 @@
 # Targeted Spec — Campaign Quest Journal (E7.3)
 
+> **Historical first-pass spec.** A player quest log now exists at Ctrl+Q
+> (`src/state/quests.rs`, `interface/windows/quest_log.rs`). Do not rebuild
+> the window or re-promote its packet events from this document. The active
+> tracker/hunting-goal work is GDD slice 12 in
+> [gdd-next-slices.md](../plans/gdd-next-slices.md); navigation is
+> [navigation-quest-guiding.md](navigation-quest-guiding.md).
+
 **Parents**: PROJECT_PLAN.md E7.3, DM_INTERFACE.md §9.3 (player window 5),
 `plans/modern-mechanics.md` §12, DM_DATA_GUIDE.md. **Depends on**: M1 (done).
 **Related**: `navigation-quest-guiding.md` (waypoints/ribbons — out of scope

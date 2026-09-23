@@ -40,6 +40,11 @@ impl LightSourceExt for LightSource {
 pub struct PointLightId(u32);
 
 impl PointLightId {
+    /// Light that follows the player character.
+    pub const CHARACTER: Self = Self(u32::MAX - 1);
+}
+
+impl PointLightId {
     pub fn new(id: u32) -> Self {
         Self(id)
     }

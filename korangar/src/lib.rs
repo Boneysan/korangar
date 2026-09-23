@@ -1519,6 +1519,11 @@ pub struct Client {
     /// A targeted skill awaiting a click to pick its target. See
     /// [`PendingSkill`].
     pending_skill: Option<PendingSkill>,
+    /// Party member selected as the default target for support skills.
+    support_target: Option<EntityId>,
+    /// Last monster this character attacked. A failed skill such as Steal
+    /// stops the server-side attack; this is what gets sent again.
+    last_attack_target: Option<EntityId>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
     /// disconnect itself lands. The packet arrives immediately before the
     /// socket closes, so it cannot be shown on the map screen we are
@@ -1540,6 +1545,7 @@ pub struct Client {
     network_event_buffer: NetworkEventBuffer,
     // TODO: Move or remove this.
     saved_login_data: Option<LoginServerLoginData>,
+    current_character_id: Option<CharacterId>,
     // TODO: Move or remove this.
     saved_character_server: Option<CharacterServerInformation>,
     // TODO: Move or remove this.
@@ -2873,7 +2879,6 @@ impl Client {
 
         time_phase!("create audio engine", {
             let audio_engine = Arc::new(AudioEngine::new(game_file_loader.clone()));
-            audio_engine.set_background_music_volume(0.1);
         });
 
         time_phase!("create resource managers", {
@@ -3028,6 +3033,7 @@ impl Client {
 
         // TODO: Move all of these to the ClientState
         let saved_login_data: Option<LoginServerLoginData> = None;
+        let current_character_id: Option<CharacterId> = None;
         let saved_character_server: Option<CharacterServerInformation> = None;
         let saved_login_server_address = None;
         let saved_password = String::new();
@@ -3174,6 +3180,8 @@ impl Client {
             point_shadow_camera,
             input_event_buffer,
             pending_skill: None,
+            support_target: None,
+            last_attack_target: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
             disconnect_notice_delay: 0,
@@ -3182,6 +3190,7 @@ impl Client {
             pending_impacts: PendingImpactQueue::default(),
             network_event_buffer,
             saved_login_data,
+            current_character_id,
             saved_character_server,
             saved_login_server_address,
             saved_password,
@@ -3830,6 +3839,7 @@ impl Client {
     fn handle_network_events(&mut self, client_tick: ClientTick) {
         // Keep HUD cooldown line and timed compass marks in sync with server tick.
         self.client_state.follow_mut(client_state().skill_cooldowns()).tick(client_tick);
+        self.client_state.follow_mut(client_state().toasts()).tick(client_tick.0 as u64);
         self.client_state.follow_mut(client_state().minimap()).tick_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
@@ -3984,11 +3994,13 @@ impl Client {
                     }
                 }
                 NetworkEvent::MapServerDisconnected { reason } => {
+                    self.current_character_id = None;
                     self.client_state.follow_mut(client_state().party_state()).clear();
 
                     // Drop any armed skill so it can't leak across a logout/relogin and fire on
                     // the first click of the next session.
                     self.pending_skill = None;
+                    self.support_target = None;
 
                     if reason != DisconnectReason::ClosedByClient {
                         #[cfg(feature = "debug")]
@@ -4009,6 +4021,7 @@ impl Client {
                     }
 
                     self.map = None;
+                    self.support_target = None;
 
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -4172,6 +4185,7 @@ impl Client {
                     self.interface.open_window(ErrorWindow::new(message.to_owned()))
                 }
                 NetworkEvent::CharacterSelected { login_data, .. } => {
+                    self.current_character_id = Some(login_data.character_id);
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
@@ -4277,6 +4291,8 @@ impl Client {
                     self.interface.open_window(HudWindow::new(
                         this_player().manually_asserted(),
                         client_state().skill_cooldowns(),
+                        client_state().toasts(),
+                        client_state().quest_log(),
                     ));
                     self.interface
                         .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
@@ -4291,6 +4307,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().dialog_window()).end();
 
                     self.map = None;
+                    self.support_target = None;
 
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -4585,6 +4602,7 @@ impl Client {
                     // to `pc->statusup`), so a whole build is at most six.
 
                     self.map = None;
+                    self.support_target = None;
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
                     self.emote_bubbles.clear();
@@ -4602,6 +4620,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().ground_items()).clear();
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
+                    self.client_state.follow_mut(client_state().toasts()).clear();
                     // A respawn-to-save-point (die → Respawn) arrives as a map
                     // change, and the local player survives the truncate(1)
                     // above carrying its death animation. Revive it to idle so
@@ -4636,6 +4655,14 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, color));
+                }
+                NetworkEvent::SkillFailed { .. } => {
+                    let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
+                    if auto_attack && let Some(entity_id) = self.last_attack_target {
+                        let _ = self.networking_system.player_attack(entity_id);
+                        *self.client_state.follow_mut(client_state().buffered_action()) =
+                            Some(BufferedAction::AttackEntity { entity_id });
+                    }
                 }
                 NetworkEvent::SkillFailedMissingItem {
                     item_id,
@@ -4744,6 +4771,7 @@ impl Client {
                         let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
 
                         if let Some(BufferedAction::AttackEntity { entity_id }) = *buffered_action {
+                            self.last_attack_target = Some(entity_id);
                             let _ = self.networking_system.player_attack(entity_id);
 
                             if !auto_attack {
@@ -4868,6 +4896,13 @@ impl Client {
                     // This packet is a terminal skill result. A successful
                     // result owns the source actor action; a failed one still
                     // tears down the cast without inventing an action.
+                    if successful && matches!(skill_id.0, 43 | 44) {
+                        let name = if skill_id.0 == 43 { "Owl's Eye" } else { "Vulture's Eye" };
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("{name} is active."),
+                            MessageColor::Information,
+                        ));
+                    }
                     if successful {
                         self.execute_skill_actor_action(source_entity_id, skill_id, client_tick);
                     } else {
@@ -4943,6 +4978,11 @@ impl Client {
                     remaining_ms,
                     values,
                 } => {
+                    // 65535 is not a status. Printing it as "Lost #65535" was a
+                    // playtest report; drop the packet instead of naming it.
+                    if index == u16::MAX {
+                        continue;
+                    }
                     let updated_actor = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -5106,13 +5146,16 @@ impl Client {
                 NetworkEvent::QuestAdded { quest_id, .. } => {
                     let quest = self.resolve_quest_entry(quest_id);
                     self.client_state.follow_mut(client_state().quest_log()).add(quest);
+                    self.persist_tracked_quests();
                 }
                 NetworkEvent::QuestRemoved { quest_id } => {
                     self.client_state.follow_mut(client_state().quest_log()).remove(quest_id);
+                    self.persist_tracked_quests();
                 }
                 NetworkEvent::QuestList { quest_ids } => {
                     let quests = quest_ids.into_iter().map(|quest_id| self.resolve_quest_entry(quest_id)).collect();
                     self.client_state.follow_mut(client_state().quest_log()).replace(quests);
+                    self.restore_tracked_quests();
                 }
                 NetworkEvent::SetInventory { items } => {
                     self.client_state
@@ -5140,6 +5183,9 @@ impl Client {
                         );
                         player.refresh_neutral_stance(client_tick);
                     }
+                }
+                NetworkEvent::InventoryOrder { indices } => {
+                    self.client_state.follow_mut(client_state().inventory()).apply_server_order(&indices);
                 }
                 NetworkEvent::SetStorage { items } => {
                     self.client_state
@@ -6788,6 +6834,7 @@ impl Client {
         self.client_state
             .follow_mut(client_state().minimap())
             .set_map(base, map_width, map_height, texture, player_marker, pois);
+        self.refresh_navigation_marker();
 
         // Only auto-open when the player wants the minimap visible.
         let show = *self.client_state.follow(client_state().game_settings().show_minimap());
@@ -6796,6 +6843,64 @@ impl Client {
         } else if !show && self.interface.is_window_with_class_open(WindowClass::Minimap) {
             self.interface.close_window_with_class(WindowClass::Minimap);
         }
+    }
+
+    fn refresh_navigation_marker(&mut self) {
+        let minimap = client_state().minimap();
+        let current_map = self.client_state.follow(minimap).map_name().to_string();
+        let target = self.client_state.follow(minimap).navigation_target().cloned();
+        let destination = target.as_ref().and_then(|(target_map, x, y)| {
+            if current_map.eq_ignore_ascii_case(&target_map) {
+                Some((*x, *y))
+            } else {
+                crate::world::next_route_edge(&current_map, &target_map).map(|edge| (edge.from.x, edge.from.y))
+            }
+        });
+        let breadcrumbs = if let (Some((goal_x, goal_y)), Some(map), Some(start)) = (
+            destination,
+            self.map.as_ref(),
+            self.client_state.try_follow(this_entity()).map(Entity::get_tile_position),
+        ) {
+            self.path_finder
+                .find_navigation_path(&**map, start, ragnarok_packets::TilePosition { x: goal_x, y: goal_y })
+                .map(|path| {
+                    let stride = (path.len() / 24).max(1);
+                    let mut points: Vec<_> = path.iter().step_by(stride).map(|tile| (tile.x, tile.y)).collect();
+                    if let Some(last) = path.last()
+                        && points.last().copied() != Some((last.x, last.y))
+                    {
+                        points.push((last.x, last.y));
+                    }
+                    points
+                })
+                .unwrap_or_default()
+        } else {
+            Vec::new()
+        };
+        let minimap_state = self.client_state.follow_mut(minimap);
+        minimap_state.set_navigation_marker(destination);
+        minimap_state.set_navigation_breadcrumbs(breadcrumbs);
+    }
+
+    fn restore_tracked_quests(&mut self) {
+        let Some(character_id) = self.current_character_id.map(|id| id.0) else {
+            return;
+        };
+        let settings = self.client_state.follow(client_state().game_settings());
+        if let Some(quest_ids) = settings.tracked_quests(character_id).map(|quest_ids| quest_ids.to_vec()) {
+            self.client_state.follow_mut(client_state().quest_log()).set_tracked_quests(&quest_ids);
+        }
+        self.persist_tracked_quests();
+    }
+
+    fn persist_tracked_quests(&mut self) {
+        let Some(character_id) = self.current_character_id.map(|id| id.0) else {
+            return;
+        };
+        let quest_ids = self.client_state.follow(client_state().quest_log()).tracked_quest_ids().to_vec();
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        settings.set_tracked_quests(character_id, &quest_ids);
+        settings.save();
     }
 
     /// Resolve minimap BMP only when the archive actually contains it.
@@ -6868,21 +6973,70 @@ impl Client {
 
         for event in self.input_event_buffer.drain(..) {
             match event {
+                InputEvent::SortInventory => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_for_display();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryWearing => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_for_display();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryGear => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_gear();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryItems => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_items();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SetInventoryTab(tab) => {
+                    self.client_state.follow_mut(client_state().inventory()).set_selected_tab(tab);
+                }
+                InputEvent::ToggleQuestTracking(quest_id) => {
+                    self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);
+                    self.persist_tracked_quests();
+                }
                 InputEvent::DropItem { inventory_index, amount } => {
                     if amount == 0 {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new("Nothing to drop.".to_owned(), MessageColor::Error));
-                    } else if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                    } else if self.inventory_item_is_protected(inventory_index) {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "That item type is protected from dropping on this character.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else {
+                        self.unequip_if_worn(inventory_index);
+                        if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
+                        }
+                    }
+                }
+                InputEvent::SplitInventoryStack { inventory_index, amount } => {
+                    if amount == 0 {
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new("Enter an amount greater than zero to split.".to_owned(), MessageColor::Error));
+                    } else if self.networking_system.split_inventory_stack(inventory_index, amount).is_err() {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
                     }
                 }
                 InputEvent::ReorderInventory { from_index, to_slot } => {
-                    self.client_state
-                        .follow_mut(client_state().inventory())
-                        .reorder_display(from_index, to_slot);
+                    let inventory = self.client_state.follow_mut(client_state().inventory());
+                    let tab = inventory.selected_tab();
+                    let query = inventory.search_query().to_owned();
+                    inventory.reorder_display_in_tab(from_index, to_slot, tab, &query);
+                    let indices = inventory.ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
                 }
                 InputEvent::MoveItem { source, destination, item } => match (source, destination) {
                     (ItemSource::Inventory, ItemSource::Equipment { position }) => {
@@ -6928,7 +7082,15 @@ impl Client {
                 },
                 InputEvent::OpenItemActions { item } => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
-                    self.interface.open_window(ItemActionsWindow::new(item));
+                    let protected = self.item_id_is_protected(item.item_id);
+                    self.interface.open_window(ItemActionsWindow::new(item, protected));
+                }
+                InputEvent::ToggleItemProtection(item_id) => {
+                    if let Some(character_id) = self.current_character_id {
+                        self.client_state
+                            .follow_mut(client_state().game_settings())
+                            .toggle_item_protection(character_id.0, item_id.0);
+                    }
                 }
                 InputEvent::CloseItemActions => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
@@ -6999,22 +7161,23 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        let mut destination = None;
-        for distance in (1..=4).rev() {
-            let tile_x = start.x as i32 + (move_x * distance as f32).round() as i32;
-            let tile_y = start.y as i32 + (move_z * distance as f32).round() as i32;
+        // One walkable step. A farther tile jumped through walls and the
+        // server pulled the character back, which is the WASD rubber-band.
+        let step = |dx: i32, dy: i32| -> Option<TilePosition> {
+            let tile_x = start.x as i32 + dx;
+            let tile_y = start.y as i32 + dy;
             if tile_x < 0 || tile_y < 0 {
-                continue;
+                return None;
             }
             let tile = TilePosition {
                 x: tile_x as u16,
                 y: tile_y as u16,
             };
-            if map.is_walkable(tile) {
-                destination = Some(tile);
-                break;
-            }
-        }
+            map.is_walkable(tile).then_some(tile)
+        };
+        let destination = step(move_x.round() as i32, move_z.round() as i32)
+            .or_else(|| step(move_x.signum() as i32, 0))
+            .or_else(|| step(0, move_z.signum() as i32));
         let Some(destination) = destination else {
             return;
         };
@@ -7028,7 +7191,136 @@ impl Client {
             direction: direction_from_ground_vector(move_x, move_z),
         });
         self.keyboard_move_last_tick = client_tick;
-        *self.client_state.follow_mut(client_state().buffered_action()) = None;
+        let keep_attack = matches!(
+            self.client_state.follow(client_state().buffered_action()),
+            Some(BufferedAction::AttackEntity { .. })
+        );
+        if !keep_attack {
+            *self.client_state.follow_mut(client_state().buffered_action()) = None;
+        }
+    }
+
+    /// Worn gear is rejected for drop and trade. Take it off first.
+    fn unequip_if_worn(&mut self, inventory_index: InventoryIndex) {
+        let worn = self
+            .client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .find(|item| item.index == inventory_index)
+            .is_some_and(|item| match &item.details {
+                korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. } => !equipped_position.is_empty(),
+                korangar_networking::InventoryItemDetails::Regular { .. } => false,
+            });
+        if worn {
+            let _ = self.networking_system.request_item_unequip(inventory_index);
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Took it off first. Worn items cannot be dropped or traded.".to_owned(),
+                MessageColor::Information,
+            ));
+        }
+    }
+
+    fn item_id_is_protected(&self, item_id: ItemId) -> bool {
+        self.current_character_id.is_some_and(|character_id| {
+            self.client_state
+                .follow(client_state().game_settings())
+                .is_item_protected(character_id.0, item_id.0)
+        })
+    }
+
+    fn inventory_item_is_protected(&self, inventory_index: InventoryIndex) -> bool {
+        self.client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .find(|item| item.index == inventory_index)
+            .is_some_and(|item| self.item_id_is_protected(item.item_id))
+    }
+
+    fn available_party_targets(&self) -> Vec<(EntityId, String)> {
+        let party = self.client_state.follow(client_state().party_state());
+        let entities = self.client_state.follow(client_state().entities());
+        party
+            .members()
+            .iter()
+            .filter(|member| member.online() && !party.is_local(member.account_id()))
+            .filter_map(|member| {
+                let entity_id = EntityId(member.account_id().0);
+                entities
+                    .iter()
+                    .any(|entity| entity.get_entity_id() == entity_id && entity.get_entity_type() == EntityType::Player)
+                    .then(|| (entity_id, member.name().to_owned()))
+            })
+            .collect()
+    }
+
+    fn cycle_party_target(&mut self) {
+        let targets = self.available_party_targets();
+        if targets.is_empty() {
+            self.support_target = None;
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "No visible online party members to target.".to_owned(),
+                MessageColor::Information,
+            ));
+            return;
+        }
+        let next = self
+            .support_target
+            .and_then(|current| targets.iter().position(|(entity_id, _)| *entity_id == current))
+            .map_or(0, |index| (index + 1) % targets.len());
+        let (entity_id, name) = targets[next].clone();
+        self.support_target = Some(entity_id);
+        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+            format!("Support target: {name}"),
+            MessageColor::Information,
+        ));
+    }
+
+    /// T / Shift+1–4. With no skill armed, these keys select the support target.
+    fn cast_armed_at(&mut self, party_index: Option<usize>) {
+        let entity_id = match party_index {
+            None => self.client_state.try_follow(this_entity()).map(|entity| entity.get_entity_id()),
+            Some(index) => self.available_party_targets().get(index).map(|(entity_id, _)| *entity_id),
+        };
+        let Some(entity_id) = entity_id else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "That party slot is empty or not visible.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        };
+        self.support_target = Some(entity_id);
+
+        let Some(pending) = self.pending_skill.clone() else {
+            let name = match party_index {
+                None => "yourself".to_owned(),
+                Some(index) => self.available_party_targets().get(index).map(|(_, name)| name.clone()).unwrap_or_default(),
+            };
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Support target: {name}"),
+                MessageColor::Information,
+            ));
+            return;
+        };
+        if matches!(pending.skill_type, SkillType::Ground | SkillType::Attack | SkillType::Trap) {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("{} is aimed with the mouse.", pending.skill_name),
+                MessageColor::Information,
+            ));
+            return;
+        }
+        cast_or_path_entity_skill(
+            &mut self.networking_system,
+            &mut self.client_state,
+            self.map.as_deref(),
+            &mut self.path_finder,
+            pending.skill_id,
+            pending.skill_level,
+            pending.attack_range,
+            entity_id,
+        );
+        self.pending_skill = None;
     }
 
     /// Returns whether or not the interface is focused.
@@ -7324,11 +7616,31 @@ impl Client {
                             false => self.interface.open_window(HudWindow::new(
                                 this_player().manually_asserted(),
                                 client_state().skill_cooldowns(),
+                                client_state().toasts(),
+                                client_state().quest_log(),
                             )),
                         }
                     }
                 }
-                InputEvent::CloseTopWindow => self.interface.close_top_window(&self.client_state),
+                InputEvent::CloseTopWindow => {
+                    let _ = self.interface.close_top_window(&self.client_state);
+                }
+                InputEvent::TargetSelf => self.cast_armed_at(None),
+                InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index)),
+                InputEvent::CyclePartyTarget => self.cycle_party_target(),
+                InputEvent::Escape => {
+                    if self.pending_skill.is_some() {
+                        self.pending_skill = None;
+                    } else if cancel_own_cast(&mut self.networking_system, &self.client_state, client_tick) {
+                    } else if !self.interface.close_top_window(&self.client_state)
+                        && self.client_state.try_follow(this_entity()).is_some()
+                    {
+                        match self.interface.is_window_with_class_open(WindowClass::Menu) {
+                            true => self.interface.close_window_with_class(WindowClass::Menu),
+                            false => self.interface.open_window(MenuWindow),
+                        }
+                    }
+                }
                 InputEvent::CloseAllOrdinaryWindows => {
                     self.interface
                         .close_all_windows_except(&[WindowClass::CharacterOverview, WindowClass::Chat]);
@@ -7404,6 +7716,7 @@ impl Client {
                         .client_state
                         .try_follow(this_entity())
                         .is_some_and(|player| player.get_entity_id() == entity_id);
+                    let mut spotted_monster: Option<String> = None;
 
                     let entity = self
                         .client_state
@@ -7415,12 +7728,26 @@ impl Client {
                         let _ = match entity.get_entity_type() {
                             EntityType::Npc => self.networking_system.start_dialog(entity_id),
                             EntityType::Monster => {
+                                let health = entity.get_common().health_points;
+                                let maximum = entity.get_common().maximum_health_points;
+                                if maximum > 0 && self.last_attack_target != Some(entity_id) {
+                                    let name = entity
+                                        .get_details()
+                                        .map(|details| details.split('#').next().unwrap_or(details).to_owned())
+                                        .unwrap_or_else(|| "Monster".to_owned());
+                                    let facts = crate::world::monster_facts(&name);
+                                    let card = facts
+                                        .map(|facts| format!("  Lv {}  {}  {}", facts.level, facts.element, facts.race))
+                                        .unwrap_or_default();
+                                    spotted_monster = Some(format!("{name}{card}  HP {health}/{maximum}"));
+                                }
                                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                                 let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
 
                                 if auto_attack {
                                     *buffered_action = Some(BufferedAction::AttackEntity { entity_id });
                                 }
+                                self.last_attack_target = Some(entity_id);
 
                                 self.networking_system.player_attack(entity_id)
                             }
@@ -7432,6 +7759,7 @@ impl Client {
                             // nonsense.
                             EntityType::Player if is_local_player => Ok(()),
                             EntityType::Player => {
+                                self.support_target = Some(entity_id);
                                 let character_name = entity
                                     .get_details()
                                     .map(|details| details.split('#').next().unwrap_or(details).to_owned())
@@ -7452,6 +7780,11 @@ impl Client {
                             }),
                             _ => Ok(()),
                         };
+                    }
+                    if let Some(line) = spotted_monster {
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new(line, MessageColor::Information));
                     }
                 }
                 InputEvent::PickUpItem { entity_id } => {
@@ -7941,25 +8274,82 @@ impl Client {
                         let _ = self.networking_system.use_item(inventory_index, account_id);
                     }
                 }
+                InputEvent::SortInventory => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_for_display();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryWearing => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_for_display();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryGear => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_gear();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SortInventoryItems => {
+                    self.client_state.follow_mut(client_state().inventory()).sort_items();
+                    let indices = self.client_state.follow(client_state().inventory()).ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
+                }
+                InputEvent::SetInventoryTab(tab) => {
+                    self.client_state.follow_mut(client_state().inventory()).set_selected_tab(tab);
+                }
+                InputEvent::ToggleQuestTracking(quest_id) => {
+                    self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);
+                    self.persist_tracked_quests();
+                }
                 InputEvent::DropItem { inventory_index, amount } => {
                     if amount == 0 {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new("Nothing to drop.".to_owned(), MessageColor::Error));
-                    } else if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                    } else if self.inventory_item_is_protected(inventory_index) {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "That item type is protected from dropping on this character.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else {
+                        self.unequip_if_worn(inventory_index);
+                        if self.networking_system.drop_item(inventory_index, amount).is_err() {
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
+                        }
+                    }
+                }
+                InputEvent::SplitInventoryStack { inventory_index, amount } => {
+                    if amount == 0 {
+                        self.client_state
+                            .follow_mut(client_state().chat_messages())
+                            .push(ChatMessage::new("Enter an amount greater than zero to split.".to_owned(), MessageColor::Error));
+                    } else if self.networking_system.split_inventory_stack(inventory_index, amount).is_err() {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new("Not connected to map server.".to_owned(), MessageColor::Error));
                     }
                 }
                 InputEvent::ReorderInventory { from_index, to_slot } => {
-                    self.client_state
-                        .follow_mut(client_state().inventory())
-                        .reorder_display(from_index, to_slot);
+                    let inventory = self.client_state.follow_mut(client_state().inventory());
+                    let tab = inventory.selected_tab();
+                    let query = inventory.search_query().to_owned();
+                    inventory.reorder_display_in_tab(from_index, to_slot, tab, &query);
+                    let indices = inventory.ordered_indices();
+                    let _ = self.networking_system.reorder_inventory(indices);
                 }
                 InputEvent::OpenItemActions { item } => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
-                    self.interface.open_window(ItemActionsWindow::new(item));
+                    let protected = self.item_id_is_protected(item.item_id);
+                    self.interface.open_window(ItemActionsWindow::new(item, protected));
+                }
+                InputEvent::ToggleItemProtection(item_id) => {
+                    if let Some(character_id) = self.current_character_id {
+                        self.client_state
+                            .follow_mut(client_state().game_settings())
+                            .toggle_item_protection(character_id.0, item_id.0);
+                    }
                 }
                 InputEvent::CloseItemActions => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
@@ -8023,7 +8413,9 @@ impl Client {
                 InputEvent::TradeAddItem { inventory_index, amount } => {
                     // Remember the amount here: the ack carries only an index and a
                     // result, so this is the last point at which the figure we asked
-                    // for is known.
+                    // for is known. Worn gear is rejected by the server, so take it
+                    // off before the add.
+                    self.unequip_if_worn(inventory_index);
                     self.client_state
                         .follow_mut(client_state().trade_state())
                         .note_pending_add(inventory_index, amount);
@@ -8037,6 +8429,22 @@ impl Client {
                     // after the -2 decode and matches no inventory slot. So the round
                     // trip cannot reconstruct the figure: the button sent the zeny and
                     // then showed nothing.
+                    if self.networking_system.trade_add_zeny(amount).is_ok() {
+                        self.client_state.follow_mut(client_state().trade_state()).set_our_zeny(amount);
+                    }
+                }
+                InputEvent::TradeAdjustZeny { delta } => {
+                    let current = self.client_state.follow(client_state().trade_state()).our_zeny();
+                    let available = self
+                        .client_state
+                        .try_follow(this_player())
+                        .map(|player| player.zeny)
+                        .unwrap_or(current);
+                    let amount = if delta >= 0 {
+                        current.saturating_add(delta as u32).min(available)
+                    } else {
+                        current.saturating_sub(delta.unsigned_abs())
+                    };
                     if self.networking_system.trade_add_zeny(amount).is_ok() {
                         self.client_state.follow_mut(client_state().trade_state()).set_our_zeny(amount);
                     }
@@ -8189,13 +8597,30 @@ impl Client {
                                 }
                             }
                             SkillType::Support => {
-                                // Support keeps its self-target fallback: cast on the hovered entity,
-                                // else on self. Self-buffs like Heal/Blessing can't reliably be aimed
-                                // by clicking your own sprite, so they must not require a target.
+                                // Prefer the hovered player, then the selected party target,
+                                // and finally self so self-buffs never require a target click.
                                 let target_id = match input_report.mouse_target {
                                     PickerTarget::Entity(entity_id) => entity_id,
-                                    _ => self.client_state.follow(this_entity().manually_asserted()).get_entity_id(),
+                                    _ => self
+                                        .support_target
+                                        .filter(|target_id| self.client_state.follow(client_state().entities()).iter().any(|entity| {
+                                            entity.get_entity_id() == *target_id && entity.get_entity_type() == EntityType::Player
+                                        }))
+                                        .unwrap_or_else(|| self.client_state.follow(this_entity().manually_asserted()).get_entity_id()),
                                 };
+                                let target_is_monster = self
+                                    .client_state
+                                    .follow(client_state().entities())
+                                    .iter()
+                                    .any(|entity| entity.get_entity_id() == target_id && entity.get_entity_type() == EntityType::Monster);
+                                if target_is_monster {
+                                    let name = learnable_skill.skill_name.clone();
+                                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                        format!("{name} cannot be cast on a monster."),
+                                        MessageColor::Error,
+                                    ));
+                                    continue;
+                                }
                                 // Routed through the pathing cast for the same reason Attack is:
                                 // Hercules drops an out-of-range support cast with no failure
                                 // message either (`unit.c` `unit_skilluse_id2`), so healing an ally
@@ -8412,7 +8837,14 @@ impl Client {
                     let _ = self.networking_system.set_party_invitation_block(blocked);
                 }
                 InputEvent::BuyItems { items } => {
-                    let _ = self.networking_system.purchase_items(items);
+                    if items.is_empty() {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Add items with +1 before buying. +10 and +100 add as many as you can.".to_owned(),
+                            MessageColor::Information,
+                        ));
+                    } else {
+                        let _ = self.networking_system.purchase_items(items);
+                    }
                 }
                 InputEvent::CloseShop => {
                     let _ = self.networking_system.close_shop();
@@ -8431,7 +8863,14 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::BuyOrSell);
                 }
                 InputEvent::SellItems { items } => {
-                    let _ = self.networking_system.sell_items(items);
+                    if items.iter().any(|item| self.inventory_item_is_protected(item.inventory_index)) {
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "Remove protected items from the sell cart first.".to_owned(),
+                            MessageColor::Error,
+                        ));
+                    } else {
+                        let _ = self.networking_system.sell_items(items);
+                    }
                 }
                 InputEvent::StatUp { stat_type } => {
                     let _ = self.networking_system.request_stat_up(stat_type);
@@ -8578,7 +9017,6 @@ impl Client {
                         false => self.interface.open_state_window_mut(client_state()),
                     }
                 }
-                #[cfg(feature = "debug")]
                 InputEvent::ToggleMapsWindow => {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Maps) {
@@ -8586,6 +9024,30 @@ impl Client {
                             false => self.interface.open_window(MapsWindow),
                         }
                     }
+                }
+                InputEvent::SetNavigationDestination { map_name, x, y } => {
+                    let destination = map_name.clone();
+                    self.client_state
+                        .follow_mut(client_state().minimap())
+                        .set_navigation_target(Some((map_name, x, y)));
+                    self.refresh_navigation_marker();
+                    if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
+                        self.interface.open_window(MinimapWindow);
+                    }
+                    let minimap = self.client_state.follow(client_state().minimap());
+                    if minimap.navigation_marker().is_none() || minimap.navigation_breadcrumbs().is_empty() {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "navigation-unavailable",
+                            format!("No walkable route to {destination} is available from this position."),
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                    }
+                }
+                InputEvent::ClearNavigationDestination => {
+                    let minimap = self.client_state.follow_mut(client_state().minimap());
+                    minimap.set_navigation_target(None);
+                    minimap.set_navigation_marker(None);
+                    minimap.set_navigation_breadcrumbs(Vec::new());
                 }
                 InputEvent::ToggleCommandsWindow => {
                     if self.map.is_some() {
@@ -9220,6 +9682,7 @@ impl Client {
 
         match buffered_action {
             BufferedAction::AttackEntity { entity_id } => {
+                self.last_attack_target = Some(entity_id);
                 let _ = self.networking_system.player_attack(entity_id);
 
                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
@@ -9298,6 +9761,11 @@ impl Client {
         const EAR_HEIGHT: Vector3<f32> = Vector3::new(0.0, 5.0, 0.0);
         let listener = current_camera.focus_point() + EAR_HEIGHT;
 
+        let audio = self.client_state.follow(client_state().audio_settings());
+        let master_gain = audio.master.gain();
+        self.audio_engine.set_background_music_volume(audio.music.gain() * master_gain);
+        self.audio_engine.set_sound_effect_volume(audio.effects.gain() * master_gain);
+        self.audio_engine.set_spatial_sound_effect_volume(audio.effects.gain() * master_gain);
         self.audio_engine
             .set_spatial_listener(listener, current_camera.view_direction(), current_camera.look_up_vector());
         self.audio_engine.update();
@@ -9318,6 +9786,14 @@ impl Client {
         effect_holder.register_point_lights(point_light_manager, current_camera);
 
         map.register_point_lights(point_light_manager, point_light_set_buffer, current_camera);
+
+        // A warm light follows the camera focus, which is the player character.
+        point_light_manager.register(
+            crate::world::PointLightId::CHARACTER,
+            current_camera.focus_point() + Vector3::new(0.0, 10.0, 0.0),
+            Color::rgb_u8(255, 214, 160),
+            48.0,
+        );
 
         match lighting_mode {
             LightingMode::Classic => point_light_manager.create_point_light_set(0),
@@ -9620,9 +10096,19 @@ impl Client {
             self.mouse_cursor.set_state(cursor_state, client_tick);
 
             if let Some(mouse_button) = input_report.mouse_click {
+                let modal_screen = self.interface.is_window_with_class_open(WindowClass::CharacterSelection)
+                    || self.interface.is_window_with_class_open(WindowClass::CharacterCreation)
+                    || self.interface.is_window_with_class_open(WindowClass::Login)
+                    || self.interface.is_window_with_class_open(WindowClass::SelectServer);
                 if is_interface_hovered {
                     // Starts item/skill drag via SetMouseMode (applied immediately inside click).
                     interface_frame.click(&self.client_state, mouse_button);
+                    if mouse_button == MouseButton::Left {
+                        self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                    }
+                } else if modal_screen {
+                    // Character select and the other login screens stay up.
+                    // A click on the world behind them does not dismiss them.
                 } else {
                     interface_frame.unfocus();
 
@@ -9635,13 +10121,28 @@ impl Client {
                             let resolved = resolve_pending_cast(pending.skill_type, input_report.mouse_target);
                             let performed = match resolved {
                                 PendingCastResolution::CastEntity(entity_id) => {
-                                    self.input_event_buffer.push(InputEvent::CastSkillAtEntity {
-                                        skill_id: pending.skill_id,
-                                        skill_level: pending.skill_level,
-                                        attack_range: pending.attack_range,
-                                        entity_id,
-                                    });
-                                    true
+                                    let target_is_monster = self
+                                        .client_state
+                                        .follow(client_state().entities())
+                                        .iter()
+                                        .any(|entity| entity.get_entity_id() == entity_id && entity.get_entity_type() == EntityType::Monster);
+                                    if target_is_monster
+                                        && matches!(pending.skill_type, SkillType::Support | SkillType::SelfCast)
+                                    {
+                                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                            format!("{} cannot be cast on a monster.", pending.skill_name),
+                                            MessageColor::Error,
+                                        ));
+                                        false
+                                    } else {
+                                        self.input_event_buffer.push(InputEvent::CastSkillAtEntity {
+                                            skill_id: pending.skill_id,
+                                            skill_level: pending.skill_level,
+                                            attack_range: pending.attack_range,
+                                            entity_id,
+                                        });
+                                        true
+                                    }
                                 }
                                 // Ground placements go through the same walk-into-range path as
                                 // entity targets; an out-of-range cell is otherwise dropped by

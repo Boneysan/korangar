@@ -236,6 +236,11 @@ impl InputSystem {
             events.push(InputEvent::ToggleQuestLogWindow);
         }
 
+        // Escape still closes a window while chat or another control is focused.
+        if self.get_key(KeyCode::Escape).pressed() {
+            events.push(InputEvent::Escape);
+        }
+
         // F10 belongs to chat-window height in the original client, not the hotbar.
         const HOTBAR_KEYS: [KeyCode; 9] = [
             KeyCode::F1,
@@ -279,7 +284,20 @@ impl InputSystem {
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
 
         if self.get_key(KeyCode::Escape).pressed() {
-            events.push(InputEvent::ToggleMenuWindow);
+            events.push(InputEvent::Escape);
+        }
+
+        // Official client: I opens the inventory. Only on this path, so a
+        // focused chat box still types the letter.
+        if !alt_down && !control_down && self.get_key(KeyCode::KeyI).pressed() {
+            events.push(InputEvent::ToggleInventoryWindow);
+        }
+
+        // T targets yourself for the armed skill. Shift+1–4 targets other
+        // party members in roster order. The number row stays the hotbar
+        // when Shift is up.
+        if !alt_down && !control_down && self.get_key(KeyCode::KeyT).pressed() {
+            events.push(InputEvent::TargetSelf);
         }
 
         if alt_down && self.get_key(KeyCode::KeyE).pressed() {
@@ -329,6 +347,8 @@ impl InputSystem {
         // opacity modes land, this cycles between visible and hidden.
         if control_down && self.get_key(KeyCode::Tab).pressed() {
             events.push(InputEvent::ToggleMinimapWindow);
+        } else if !alt_down && !control_down && self.get_key(KeyCode::Tab).pressed() {
+            events.push(InputEvent::CyclePartyTarget);
         }
 
         if alt_down && self.get_key(KeyCode::KeyO).pressed() {
@@ -396,9 +416,13 @@ impl InputSystem {
         for (index, key) in NUMBER_KEYS.into_iter().enumerate() {
             let slot = HotbarSlot((index + number_row) as u16);
             if self.get_key(key).pressed() {
-                events.push(InputEvent::CastSkill { slot });
+                if shift_down && !alt_down && !control_down && index < 4 {
+                    events.push(InputEvent::TargetPartyMember { index });
+                } else {
+                    events.push(InputEvent::CastSkill { slot });
+                }
             }
-            if self.get_key(key).released() {
+            if self.get_key(key).released() && !(shift_down && !alt_down && !control_down && index < 4) {
                 events.push(InputEvent::StopSkill { slot });
             }
         }

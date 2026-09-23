@@ -177,13 +177,13 @@ impl WindowCache {
             WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
             WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
+            WindowClass::Maps => state(AnchorPoint::Center, 0.0, -40.0, 900.0, 650.0),
             // Login / char select stay centered (menu flow).
             WindowClass::Login | WindowClass::SelectServer | WindowClass::CharacterSelection | WindowClass::CharacterCreation => {
                 return None;
             }
             #[cfg(feature = "debug")]
-            WindowClass::Maps
-            | WindowClass::ClientStateInspector
+            WindowClass::ClientStateInspector
             | WindowClass::PacketInspector
             | WindowClass::RenderOptions
             | WindowClass::ThemeInspector
@@ -224,6 +224,7 @@ impl WindowCache {
             WindowClass::Sell,
             WindowClass::SellCart,
             WindowClass::Menu,
+            WindowClass::Maps,
             WindowClass::Emotes,
             // Centered error popup (wrong password / disconnect).
             WindowClass::Error,

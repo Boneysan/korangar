@@ -1,109 +1,33 @@
-# Targeted Spec — Navigation & Quest Guiding System
+# Navigation and quest guiding — GDD §8.4 / next slices 5–6
 
-**Parents**: FEATURE_ROADMAP.md (Navigation & quests section), CLIENT_SYSTEMS_OVERVIEW.md, WORLD_MAPS_ENTITIES.md (map loading + KDTree), modern-mechanics.md §7 (3D world integration), DM_CLIENT_IMPLEMENTATION (map pings/hazards).
+**Parent:** [GDD](../GDD.md) §§8–9 and [next-slices plan](../plans/gdd-next-slices.md). This replaces the older ribbon-first proposal. Guidance is a selected destination, a full map-to-map itinerary, a regional atlas, and a sampled walkable breadcrumb trail on the current minimap. The client never moves or teleports the player automatically. Quest tracker, party pings, portal labels, and population regions can consume the same route data later.
 
-**Scope**: Cross-map quest breadcrumbs, clickable <NAVI> links in dialog, enhanced minimap/world map with tracking, in-world glowing paths/ribbons, custom waypoints/pings (DM + party).
+## Current hooks
 
-**Current base**:
-- Basic maps window with static warp list (no dynamic pathing).
-- Pathing exists (`world/pathing.rs`, collision KDTree in loaders/map).
-- Minimap via maps window or in-game (limited).
-- Quest effects already provide map markers.
-- TilePosition / WorldPosition well modeled.
-- No NAVI parsing, no multi-map graph, no 3D ribbons yet.
+- `src/interface/windows/dialog.rs` currently strips `<NAVI>`/`<INFO>` markup while preserving text. Hercules `src/map/clif.c` emits `map,x,y` followed by optional mode/service/window/monster fields; accept both short and long forms.
+- `src/state/minimap.rs` and `src/interface/windows/minimap.rs` draw player, party, compass, Towninfo POIs, the next route exit, and sampled walkable breadcrumb points. `src/interface/windows/maps.rs` lays out a regional atlas with selectable locations and graph-derived reachability/route highlighting.
+- `Hercules/npc/re/warps/**` contains static `warp` lines. Loaded script manifests, custom warps, and travel-service NPCs must also be inspected; text in an unloaded script is not a playable route.
 
-## Architecture
+## Graph artifact and build step
 
-**Data**:
-- Precompute or load a world graph of maps + warps (from NavigationData/ or server data + custom DM warps).
-- Per-quest objectives can have target (map, x, y) from quest packets or [DMJ] or parsed dialog.
+Generate a deterministic UTF-8 JSON artifact with `schema_version`, Hercules source revision, `maps` keyed by canonical map name, and directed `edges`. Each edge has stable ID, source map/cell/activation area, destination map/cell, kind (`walk_warp`, `service`, `conditional`), source file/line, and availability (`always`, named requirement, or `unknown`). Keep one row per actual portal even if multiple portals connect the same maps. Include only routes loaded by the active renewal script manifests. Exclude WoE, disabled scripts, temporary instance names, GM warps, and inferred reverse routes. Add reviewed service edges separately, with price/prerequisite metadata; do not parse arbitrary NPC control flow as an unconditional route.
 
-**Layers**:
-1. **Path computation**: A* or similar across map graph using warp edges + intra-map pathing.
-2. **Minimap / World map**: Render path segments, arrows at edges, objective radius.
-3. **In-world**: Ground ribbons (using existing tile/model or particle ribbons) + 3D floating markers.
-4. **Dialog integration**: Parse `<NAVI>[text]<INFO>map,x,y</INFO></NAVI>` in NpcDialogPacket / dialog text. Make clickable → set active quest target or immediate warp indicator.
-5. **DM pings**: Special markers ("Danger", "Move here") via QuestEffect or new light packets; shared via party or [DMJ].
+The generator validates map names against `map_index`, coordinates against the map cache where available, duplicate IDs, missing destinations, and source provenance. It emits a coverage report: playable map count, connected components, parsed/unsupported lines, and manually authored edges. A broken edge fails generation or is marked unusable; it never becomes a route. The client embeds the artifact with a schema check and shows “route unavailable” for missing/unknown targets. Regeneration is coupled to the Hercules revision used for a client pack.
 
-**Components**:
-- New `NavigationSystem` in world or loaders.
-- `QuestTracker` state (extends quest handling).
-- UI: Enhanced MapsWindow + in-game minimap widget + QuestTrackerHUD.
-- Rendering: Extend forward pass or post for ribbons (reuse water/ground techniques or new decal).
+## Routing and UI
 
-## Implementation Outline
+For a target `(map, x, y)`, run a directed shortest-path search over usable map edges. Begin with hop count; prefer a reachable exit cell on the current map as the tie-breaker. The graph search does not claim to know intra-map travel time. The atlas shows authored regional placement and only draws a connection when the generated graph can route between its endpoints. On the current map, use walkable-path data to draw a bounded set of breadcrumb points from the player to the next exit; recalculate at every map transition. On the destination map the target gets a cell or broad area marker. If the expected warp fails or the player goes elsewhere, recalculate from the actual server map. A route never initiates movement or teleport by itself.
 
-1. **Graph**:
-   - Load warp data (hardcode common or parse from client NavigationData + RSW?).
-   - For DM: Allow dynamic addition of temporary warps/instances via commands.
+Parse `<NAVI>label<INFO>map,x,y[,mode,services,show_window,monster_id]</INFO></NAVI>` into a typed target, preserving the human label. Invalid/out-of-range coordinates or unknown maps leave readable dialog text and no action. On click, set one active target and offer clear/replace; same-map targets show the marker immediately, cross-map targets show the next exit. The action is keyboard focusable and announced as a destination. A player can disable guidance without losing the dialog text.
 
-2. **Pathfinding**:
-   - Reuse `path_finder` for intra-map.
-   - High-level: BFS/A* over map nodes connected by warps.
-   - Result: sequence of (map, positions or warp points).
+Quest objectives use the same target type only when the server or curated quest data supplies a location. Do not invent a precise destination from a quest title. For an ambiguous objective, show the named map/region and explain that the exact NPC or monster must be found there.
 
-3. **Dialog Parsing**:
-   - In dialog window or a pre-processor: Regex or custom parser for NAVI tags.
-   - On click: `set_active_navigation_target(map, x, y)` → update tracker + render.
+## Acceptance fixtures
 
-4. **HUD / Rendering**:
-   - QuestTrackerHUD: List of active with progress + "Guide" button.
-   - In-world: For current target, draw path using collision mesh or simplified lines. Use existing effect system or new ribbon geometry.
-   - Minimap: Overlay path lines/arrows.
+1. Regenerate twice and compare byte-identical output; edit a loaded warp and detect drift.
+2. Route Prontera to `prt_fild08` and Izlude to one accessible dungeon. Check that the first exit exists at the generated cell on the live 20220406 server.
+3. Reject an unreachable map, unloaded/WoE route, temporary instance, and malformed NAVI tag without a false arrow.
+4. Click a same-map and a cross-map NAVI link; warp normally, deviate once, relog once, and confirm the displayed next exit follows actual location.
+5. Disable guidance, resize UI, and verify text remains readable and clickable state is apparent by more than color.
 
-5. **DM Extensions**:
-   - `@dm ping x y "Danger"` → QuestEffect + special particle + [DMJ] to party.
-   - Free-cam (future) helps DM place pings accurately.
-
-## Packets / Events
-
-- Existing: Quest packets (promote more per backlog), ChangeMap, AddQuestEffect (already great for markers).
-- New events if needed: `SetNavigationTarget`, `QuestObjectiveUpdate`.
-- No new packets initially (use chat/[DMJ] for custom objectives).
-
-## Phasing
-
-- MVP: Single-map breadcrumbs + basic NAVI click in dialog + minimap marker.
-- Phase 2: Full cross-map paths, ribbons, party-shared pings.
-- Ties directly to campaign journal (E7.3).
-
-## Minimap — shipped vs follow-up
-
-### Shipped (2026-07-10)
-
-| Feature | Notes |
-|---------|--------|
-| Minimap window | Alt+M / Character Overview **Map** / Esc menu / Game Settings `show_minimap` (persisted) |
-| Map bitmap + coords | `유저인터페이스\map\{map}.bmp`; live tile readout |
-| Player blip | Texture `minimap\player_1.bmp` (must be texture — UI rects draw under map) |
-| Towninfo facility POIs | `System/Towninfo_EN.lub` → shops, kafra, guides, inn, smith, style; icons under `information\*.bmp` |
-
-### Follow-up — dynamic markers (queued with breadcrumbs)
-
-**Status**: Explicit later task. Do **not** build as a one-off before M1 P0 verification.
-
-| Marker | Source |
-|--------|--------|
-| Quest / NAVI objective | Active navigation target + quest packets |
-| Server `ZC_COMPASS` marks | Promote `MarkMinimapPositionPacket` (0x0144) from noop |
-| Party members | Existing `PartyState` positions (same map only first) |
-| DM / party pings | Shared transport from Phase A `[DMJ]` or later packets |
-
-Implementation sketch:
-
-1. `MinimapState` gains `markers: Vec<MinimapMarker { kind, tile, color, label? }>`.
-2. Network handlers update markers (quest, compass, party).
-3. `MinimapView` draws icons (reuse `유저인터페이스\minimap\quest_*.bmp` where possible).
-4. Breadcrumb path can be a polyline overlay on the same square map area.
-
-Depends on: packet promotions for quests/compass, breadcrumb path data.
-
-## Risks
-
-- Performance: Pathing across many maps; precompute where possible.
-- Data accuracy: Client warps vs server reality (use server as truth via packets when possible).
-- Visuals: Making ribbons look good without new shaders (reuse existing passes).
-
-**See**: WORLD_MAPS_ENTITIES.md for map/object loading/KDTree reuse, GRAPHICS for decal/ground effects, DM_CLIENT for hazard telegraphs (similar spatial rendering).
-
-This completes the navigation item in the roadmap.
+The [next-slices plan](../plans/gdd-next-slices.md) holds ownership and sequencing. Remaining GDD §9.10 work includes broader authored locations, destination information, visited/discovered state, population shading, portal labels, and personal/party waypoints on this graph.

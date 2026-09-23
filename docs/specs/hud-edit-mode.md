@@ -1,24 +1,23 @@
 # Targeted Spec — HUD Edit Mode (Foundational for Phase 2 UI)
 
-**Parents**: FEATURE_ROADMAP.md §8 (Foundation), DM_CLIENT_IMPLEMENTATION.md (HUD elements must participate), CLIENT_SYSTEMS_OVERVIEW.md, SOFTWARE_DESIGN.md, plans/modern-mechanics.md (UI trickery context).
+**Parents**: [GDD §10.17](../GDD.md#1017-implementation-path-added-v02), [next-slices plan](../plans/gdd-next-slices.md) row 14, DM_CLIENT_IMPLEMENTATION.md, CLIENT_SYSTEMS_OVERVIEW.md.
 
-**Why critical**: Every modern widget (party frames, buff bars, initiative, dice cards, toasts, nameplates, cast bars, quest trackers) depends on a flexible, per-character, resizable/scalable HUD layout system. Without it, DM tools and "feels modern" MVP will feel bolted-on.
+**Scope for slice 14**: Lock/unlock, edge snapping, named layouts, reset, and combat fading for existing movable windows and the new quest tracker. Toasts and combat telegraphs can ship earlier using their fixed defaults.
 
-**Current state (deep dive)**:
-- Windows use `korangar_interface` with fixed layouts.
-- Hotbar, StatusBar, Chat are opened on map load.
-- No drag/scale/lock/persist system yet.
-- Cameras and input support basic zoom/rotate but no edit mode overlay.
-- Persistence exists for general settings but not per-HUD profiles.
+**Current state (2026-09-22)**:
+- Windows already move, resize, and persist anchor/size through `WindowCache`.
+- Hotbar, status bar, chat, and minimap open on map load.
+- There is no lock, snap, named profile, or combat-only fade.
+- Interface scale is already a player setting.
 
 ## Architecture
 
-**Core**: Extend `korangar_interface` layout resolver + add a global `HudLayout` state.
+**Core**: Extend `WindowCache` and the existing window controls first; change the shared layout resolver only if a specific required interaction cannot be implemented there.
 
 - `HudEditMode` state flag in `ClientState` or game settings.
 - When active: Render draggable/resizeable "frames" over every HUD element.
 - Each element registers a `HudElementId` + default rect + constraints.
-- Layout stored per character (or account) in settings (similar to `interface_settings.ron` but versioned HUD profiles).
+- Layout stored per character ID in versioned profiles, migrated from the existing cache. A missing/corrupt profile falls back to a usable default.
 
 **Elements to support** (start with core + DM):
 - Hotbar
@@ -36,32 +35,25 @@
 - Resize handles: Scale (respect min/max).
 - Right-click: Lock, reset to default, opacity slider, scale.
 - Snap to grid or other elements.
-- Profiles: "Default", "Combat", "DM", "Minimal" + import/export.
+- Profiles: shipped Classic and Modern layouts plus named custom layouts; import/export can follow after local save/load works.
 
 ## Implementation Steps
 
 1. **State**:
-   - Add `hud_layout: HudLayout` to ClientState (or under interface_settings).
-   - `HudLayout` : HashMap<HudElementId, HudElementConfig> { rect: Rect, scale: f32, locked: bool, visible: bool, ... }
+   - Version a `WindowCache` profile keyed by character ID and layout name. Store anchor, size, locked, visibility, combat-only flag and non-combat opacity.
+   - Migrate one existing cache into the default profile without losing positions.
 
 2. **Registration**:
-   - Each HUD window/element implements a trait or provides metadata on creation.
-   - Example in hotbar/status_bar: register default position.
+   - Give participating windows stable IDs and default/minimum bounds; include hotbar, status bar, chat, minimap, party, tracker, and DM HUD.
 
 3. **Edit Mode UI**:
-   - New debug or in-game mode (toggle via F-key or settings).
-   - Overlay grid + resize boxes using existing picker or new 2D overlay pass.
-   - Use `MouseInputMode::HudEdit` or similar.
+   - Expose an in-game Edit HUD action after the keybinding-table slice. Show visible handles, lock/reset commands, and snap-to-edge feedback.
 
 4. **Persistence**:
-   - Serialize to client settings (ron or similar).
-   - Load on character select / map enter.
-   - Per-character if possible (tie to character name/id).
+   - Save/restore profiles through the existing cache path; use character ID rather than mutable character name. Clamp windows back onscreen after resolution or scale changes.
 
-5. **Rendering**:
-   - Most HUDs already rendered in interface pass.
-   - When editing: Draw frames around them; allow interaction before normal input.
-   - Scale/position applied at layout time.
+5. **Combat fade**:
+   - Define combat as damage dealt or received in the last five seconds (playtest value). Flagged windows fade to a configurable opacity outside combat; interactive controls remain accessible.
 
 6. **DM Integration**:
    - DM elements (initiative, hazard indicators) participate automatically.
@@ -69,15 +61,15 @@
 
 ## Dependencies & Risks
 
-- Depends on: korangar-interface layout system maturity, existing window positioning.
-- Risks: Performance (many elements), persistence format stability, conflict with fixed RO layouts (respect P8: keep familiar conventions).
+- Depends on: quest tracker and keybinding table for full coverage.
+- Risks: cache migration, offscreen windows after resolution changes, DM windows that bypass normal registration.
 - Server: None (pure client).
 
 ## Testing
 
-- Toggle edit, drag/resize hotbar + new DM bar, save profile, relog, verify positions.
-- Multiple profiles switchable.
-- Locked elements ignore drag.
+- Toggle edit, drag/resize hotbar, tracker, and DM bar; save, relog, and verify positions.
+- Switch Classic/Modern/custom profiles and change resolution/UI scale.
+- Locked elements ignore drag; combat fade restores on damage and expires after the timer.
 
 See also: modern-mechanics.md for related UI trickery, buff-bar-slice for widget patterns.
 

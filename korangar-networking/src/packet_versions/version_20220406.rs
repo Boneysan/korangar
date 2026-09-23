@@ -972,6 +972,7 @@ where
         index: packet.index,
         amount: packet.amount,
     })?;
+    packet_handler.register(|packet: InventoryOrderPacket| NetworkEvent::InventoryOrder { indices: packet.indices })?;
     packet_handler.register(|packet: UseItemAckPacket| -> NetworkEventList {
         if packet.result != 0 && packet.amount == 0 {
             NetworkEvent::InventoryItemRemoved {
@@ -1394,7 +1395,12 @@ where
             },
         };
 
-        vec![NetworkEvent::SkillCastCancelled { source_entity_id: None }, reported].into()
+        vec![
+            NetworkEvent::SkillCastCancelled { source_entity_id: None },
+            NetworkEvent::SkillFailed { skill_id: packet.skill_id },
+            reported,
+        ]
+        .into()
     })?;
     // `ZC_NOTIFY_MAPINFO` — a map-zone restriction refused the action. Hercules
     // deliberately sends this *instead of* `clif->skill_fail`, so without a
@@ -2084,6 +2090,12 @@ fn skill_failed_text(packet: &ToUseSkillSuccessPacket, reason: Option<SkillFailR
         if let Some(resisted) = resisted {
             return resisted.to_owned();
         }
+    }
+
+    // TF_STEAL (50) reports a miss, an empty monster, or a bad target as the
+    // generic cause 10. The catch-all sentence does not say what happened.
+    if packet.skill_id.0 == 50 && packet.cause == 10 {
+        return "Nothing to steal. The target was empty, out of range, or not a monster.".to_owned();
     }
 
     match packet.cause {

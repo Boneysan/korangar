@@ -512,7 +512,10 @@ macro_rules! recipe {
 /// explicit instead of falling through several unrelated runtime tables.
 pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
     match skill_id.0 {
-        5 => recipe!(hit_sounds: &[SoundAsset::Fixed("effect\\ef_bash.wav")]),
+        5 => recipe!(
+            hit_effects: SHOCKWAVE_HITS,
+            hit_sounds: &[SoundAsset::Fixed("effect\\ef_bash.wav")],
+        ),
         7 => recipe!(
             successful_caster_effect: Some(SuccessfulCasterEffect::MagnumBreak),
             successful_caster_sounds: &[SoundAsset::Fixed("effect\\ef_magnumbreak.wav")],
@@ -711,6 +714,7 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
         // damage packet, so the no-damage target track is the one that renders.
         // `hit_effects` stays because Heal on an undead target is routed the
         // other way (`skill->attack`, `skill.c:5528`) and arrives as damage.
+        43 | 44 => SUPPORT_HOLY, // AC_OWL, AC_VULTURE — self buffs, no cast time
         28 => SUPPORT_HOLY, // AL_HEAL
         29 => SUPPORT_HOLY, // AL_INCAGI
         30 => SUPPORT_HOLY, // AL_DECAGI
@@ -774,6 +778,8 @@ pub const MAPPED_SKILL_IDS: &[SkillId] = &[
     SkillId(139),
     SkillId(140),
     SkillId(156),
+    SkillId(43),
+    SkillId(44),
     SkillId(28),
     SkillId(29),
     SkillId(30),

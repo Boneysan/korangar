@@ -1039,6 +1039,25 @@ where
         }
     }
 
+    /// Split `amount` into its own inventory stack without dropping it onto
+    /// the ground (Korangar fork packet 0x0efc).
+    pub fn split_inventory_stack(&mut self, inventory_index: InventoryIndex, amount: u16) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(SplitInventoryStackPacket::new(inventory_index, amount))
+            }
+        }
+    }
+
+    /// Save the visible inventory order on the map server.
+    pub fn reorder_inventory(&mut self, indices: Vec<InventoryIndex>) -> Result<(), NotConnectedError> {
+        match self.map_server_packet_version()? {
+            SupportedPacketVersion::_20220406 => {
+                self.send_map_server_packet(InventoryOrderRequestPacket { indices })
+            }
+        }
+    }
+
     pub fn request_item_identify(&mut self, inventory_index: InventoryIndex) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
             SupportedPacketVersion::_20220406 => {

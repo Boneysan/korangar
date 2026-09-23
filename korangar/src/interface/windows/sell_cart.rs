@@ -222,14 +222,14 @@ where
                     for index in self.elements.len()..cart.len() {
                         let item_path = self.cart_path.index(index).manually_asserted();
 
-                        fn disabled_cutoff<A>(item_path: A, amount: u16) -> impl Selector<ClientState, bool>
+                        fn disabled_cutoff<A>(item_path: A, _amount: u16) -> impl Selector<ClientState, bool>
                         where
                             A: Path<ClientState, SellItem<(ResourceMetadata, u16)>>,
                         {
                             ComputedSelector::new_default(move |state: &ClientState| {
                                 let item = item_path.follow_safe(state);
 
-                                item.metadata.1 < amount
+                                item.metadata.1 == 0
                             })
                         }
 

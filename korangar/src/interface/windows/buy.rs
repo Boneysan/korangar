@@ -13,6 +13,7 @@ use rust_state::{ManuallyAssertExt, Path, PathExt, Selector, State, VecIndexExt}
 
 use super::WindowClass;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
+use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
 use crate::state::ClientState;
@@ -229,7 +230,7 @@ where
                         let item_path = self.items_path.index(index).manually_asserted();
                         let cart_path = self.cart_path;
 
-                        fn disabled_cutoff<A, B>(item_path: A, cart_path: B, amount: u32) -> impl Selector<ClientState, bool>
+                        fn disabled_cutoff<A, B>(item_path: A, cart_path: B, _amount: u32) -> impl Selector<ClientState, bool>
                         where
                             A: Path<ClientState, ShopItem<ResourceMetadata>>,
                             B: Path<ClientState, Vec<ShopItem<(ResourceMetadata, u32)>>>,
@@ -238,10 +239,15 @@ where
                                 let item = item_path.follow_safe(state);
                                 let cart = cart_path.follow_safe(state);
 
-                                cart.iter()
+                                let already = cart
+                                    .iter()
                                     .find(|purchase| purchase.item_id == item.item_id)
-                                    .map(|purchase| matches!(item.quantity, ItemQuantity::Fixed(quantity) if quantity - purchase.metadata.1 < amount))
-                                    .unwrap_or_else(|| matches!(item.quantity, ItemQuantity::Fixed(quantity) if quantity < amount))
+                                    .map(|purchase| purchase.metadata.1)
+                                    .unwrap_or(0);
+                                match item.quantity {
+                                    ItemQuantity::Infinite => false,
+                                    ItemQuantity::Fixed(quantity) => quantity.saturating_sub(already) == 0,
+                                }
                             })
                         }
 
@@ -283,7 +289,19 @@ where
                                 let amount = self.amount;
 
                                 state.update_value_with(self.cart_path, move |cart| {
-                                    let amount = resolve_amount(amount, &item, cart);
+                                    let already = cart
+                                        .iter()
+                                        .find(|purchase| purchase.item_id == item.item_id)
+                                        .map(|purchase| purchase.metadata.1)
+                                        .unwrap_or(0);
+                                    let room = match item.quantity {
+                                        ItemQuantity::Fixed(quantity) => quantity.saturating_sub(already),
+                                        ItemQuantity::Infinite => u32::MAX,
+                                    };
+                                    let amount = resolve_amount(amount, &item, cart).min(room);
+                                    if amount == 0 {
+                                        return;
+                                    }
 
                                     if let Some(purchase) = cart.iter_mut().find(|purchase| purchase.item_id == item.item_id) {
                                         purchase.metadata.1 += amount;
@@ -377,6 +395,7 @@ where
     fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
         use korangar_interface::prelude::*;
 
+        let cart_path = self.cart_path;
         window! {
             title: "Buy",
             class: Self::window_class(),
@@ -384,6 +403,20 @@ where
             closable: true,
             resizable: true,
             elements: (
+                button! {
+                    text: "Buy",
+                    event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                        let cart = state.get(&cart_path);
+                        let items = cart
+                            .iter()
+                            .map(|item| ShopItem {
+                                metadata: item.metadata.1,
+                                ..item.clone()
+                            })
+                            .collect();
+                        queue.queue(InputEvent::BuyItems { items });
+                    },
+                },
                 scroll_view! {
                     children: ItemList::new(self.items_path, self.cart_path),
                 },

@@ -16,6 +16,7 @@ pub mod skills;
 pub mod status_effects;
 pub mod storage;
 pub mod theme;
+pub mod toasts;
 pub mod trade;
 
 use std::cell::Cell;
@@ -96,6 +97,7 @@ use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
+use crate::state::toasts::ToastQueue;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
 use crate::state::storage::StorageState;
@@ -349,6 +351,9 @@ pub struct ClientState {
     /// Skill post-delay cooldowns for the local player (`ZC_SKILL_POSTDELAY`).
     #[hidden_element]
     skill_cooldowns: SkillCooldowns,
+    /// Short on-screen notices. Chat history is still the durable copy.
+    #[hidden_element]
+    toasts: ToastQueue,
     /// Current-map minimap texture and dimensions.
     #[hidden_element]
     minimap: MinimapState,
@@ -528,6 +533,7 @@ impl ClientState {
             let skill_tree = SkillTree::default();
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
+            let toasts = ToastQueue::default();
             let minimap = MinimapState::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
@@ -616,6 +622,7 @@ impl ClientState {
             skill_tree,
             status_effects,
             skill_cooldowns,
+            toasts,
             minimap,
             character_servers,
             server_select_status: String::new(),

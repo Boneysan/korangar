@@ -152,6 +152,8 @@ The intended experience is "Ragnarok Online, fully realized." The original world
 
 *Added in v0.2 (decision C5):* **DM Session mode** is a distinct, opt-in mode layered on the server. It is activated by the Dungeon Master (`@dm mode on`, `@dm start`) for one party, runs the Seal Cascade campaign through private instances, scripted hazards, skill checks and DM-chosen beat outcomes, and is switched off between sessions. Everything else in this document describes the server outside a session. DM Session content is not the §8 story spine and does not count toward it.
 
+Story completion is **character-specific**, including in DM Session mode. A party can advance its enrolled characters together, but an alternate character on the same account must play through the story independently. General discovery and non-story unlocks are account-wide; story quests, choices, chapters, and story-gated access are not. The existing online party quest helpers need durable missed-event replay before DM Session quest sync can be called complete (§8.7, S10).
+
 *Added in v0.2 (decision C1):* the **in-game encyclopedia** (§9.5) is in scope as a first-class knowledge system, not a convenience.
 
 ## 2.4 Art and Content Constraint
@@ -346,15 +348,15 @@ These relationships should emerge from class abilities and monster behavior rath
 | 5.8    | Telegraphs for monster area attacks     | Hercules broadcasts every cast (`ZC_USESKILL_ACK` → `UseSkillSuccessPacket`) with skill id, target entity, **ground position** and cast time; the client already draws the cast bar from it. `Map::render_skill_footprint` draws any skill's real cell layout. | The networking layer drops `position`/`destination_entity` when it emits `NetworkEvent::SkillCast`. Carry them through and draw the footprint at the target for `cast_ms`. Restraint rule: only for skills whose layout is larger than one cell, and only while casting. | **S**    |
 | 5.2    | Single-action input buffer, 150-250 ms  | `BufferedAction` (`lib.rs`) holds one pending attack / pickup / cast and fires when the actor walks into range.                                              | Add an expiry tick and a second trigger: the end of the local attack or skill animation. One slot, newest wins, expired input is dropped. No queue.            | **S-M**  |
 | 5.2    | Immediate client acknowledgement        | Skill-fail reasons (`0x0EFE`) and out-of-range chat messages already make refusals explicit.                                                                   | Start the swing/cast animation on send rather than on server echo, and roll back on refusal. Playtest whether it reads as responsive or as desync.           | **M**    |
-| 5.4    | Target cycling / nearest hostile        | Entity list with positions and hostility; `player_target.rs` frame.                                                                                           | Tab = nearest hostile not already targeted, Shift+Tab = previous; sort by distance then screen-centre angle. Client only.                                       | **S**    |
-| 5.4    | Target frame: race / size / element     | `bestiary.json` carries element, race, size, modes for all 1,759 monsters and is already compiled into the client for the DM Bestiary.                        | Look the target's mob id up and render three chips; hide fields per §9.6 knowledge mode. Client only.                                                          | **S**    |
+| 5.4    | Target cycling / nearest hostile        | Entity list with positions and hostility. `player_target.rs` is a **player-only** interaction window, not a monster frame.                                  | Tab = nearest hostile not already targeted, Shift+Tab = previous; sort by distance then screen-centre angle. Keep click-to-attack. Client only.                | **S-M**  |
+| 5.4    | Monster target frame: race / size / element | `bestiary.json` carries element, race, size, modes for all 1,759 monsters and is compiled into the DM Bestiary.                                          | Add a monster target surface keyed by mob id, then render three verified chips; account discovery does not hide them. Client only.                                        | **M**    |
 | 5.4    | Skill-range preview on hover            | Footprint renderer already tints red when out of range.                                                                                                       | Draw the range ring around the player while a skill is armed or its hotbar slot is hovered.                                                                    | **S**    |
 | 5.9    | "Element advantage" cue on damage       | Damage numbers exist; `attr_fix.conf` is the elemental table; target element is in `bestiary.json`.                                                           | Client computes attacker element vs target element for the *cue only* (server still owns damage). Colour or suffix the number when the multiplier is > 1 or < 1. | **S**    |
 | 5.9    | Advanced damage breakdown               | None — the server sends a total.                                                                                                                              | Needs a fork packet carrying the `battle_calc` components. Defer until the immediate/contextual layers are live and someone asks for it.                       | **L**    |
 | 5.3    | Hold-mouse continuous path              | Click-to-move.                                                                                                                                                | Re-issue the move destination on a throttle while the button is held; same 200 ms bound WASD uses.                                                            | **S**    |
 | 5.10   | Proc feedback for auto-cast builds      | Status tints and looping status effects render on the actor.                                                                                                  | Nothing beyond what is done; verify auto-spell / auto-cast visuals read on Sage and Blacksmith builds during the Phase 2 playtest.                             | verify   |
 
-**Recommended order:** telegraphs → target cycling → target-frame chips → input buffer → element cue → hold-mouse → client acknowledgement. The first three are a day each, need no server change, and together are what makes §6 monsters *feel* fair before any AI work starts.
+**Recommended order:** telegraphs → target cycling → monster target frame/chips → input buffer → element cue → hold-mouse → client acknowledgement. Telegraphs and cycling are small client changes; the monster frame is a medium client slice because the existing target window is player-only. Live-readability of these first three gates the §6 AI pilot.
 
 # 6. Monster AI and Encounter Design
 
@@ -482,7 +484,7 @@ Skill trees remain mechanically recognizable but gain better presentation. Every
 
 ## 7.5 Stat and Skill Respec
 
-For a friends server, accidental build mistakes should not require abandoning a character. Recommended default: generous early respecs, then an increasing in-game cost or quest/material requirement at higher progression. Respec should be accessible without real-money dependency. The goal is to preserve meaningful builds while eliminating documentation traps.
+For this friends server, **both stat and skill points can be reallocated for free at any level by ordinary players**. Experimentation should not require a DM, Zeny, a level/class gate, or an empty inventory. A one-point skill refund remains subject to prerequisite safety checks. This is the target policy, not a claim of current completion: Hercules registers full skill reset as `@skreset`, but group 0 grants `resetskill` and the client sends `@resetskill`; no matching alias was found. The client “Reset stats” button currently sends `@reset`, which resets **both** pools and is not granted to group 0; the stats-only command is `@streset`. The priced Reset Girl script is inactive, while the stock Hypnotist is restricted to eligible first jobs below level 50 with no inventory weight. Align command names/permissions and add obvious player-facing controls for each separate reset (§7.7/S2).
 
 ## 7.6 Integrated Build Planner
 
@@ -490,14 +492,14 @@ The character window should support a planning state. Players choose a target Ba
 
 ## 7.7 Implementation Path (added v0.2)
 
-*Same method as §5.13: the hook that exists today, the gap, and a size (S ≤ 1 day · M ≤ 1 week · L longer). Audited 2026-09-21.*
+*Same method as §5.13: the hook that exists today, the gap, and a size (S ≤ 1 day · M ≤ 1 week · L longer). Audited 2026-09-23.*
 
 | **§** | **Design item**                     | **Hook that exists**                                                                                                                  | **Gap**                                                                                                                                                                       | **Size** |
 |-------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | 7.1   | Derived-stat preview per point      | `stats.rs` allocates and shows raw stats; Hercules `status.c` holds the renewal formulas; `statpoint.txt` the point costs.            | Port HIT / FLEE / ASPD / cast / HP / SP formulas client-side for *preview only*, labelled "estimate"; show the delta on hover of each `+` button.                             | M        |
-| 7.4   | Skill detail (SP, cast, range …)    | Tooltip shows name + `Lv x/max` (`skill_info.rs`). `skills.json` carries only name/description/max level. `skill_db.conf` has everything per level. | Extend the JSON generator with per-level SpCost, CastTime, AfterCastActDelay, Range, Element, SkillType, Hit, StatusChange, prerequisites (from `skill_tree.conf`); render in the tooltip. | M        |
-| 7.4   | Preview allocation (no commit)      | Skill tree has tabs, rank-up buttons and drag-to-hotbar (`skill_tree/`).                                                             | A "plan" toggle that holds hypothetical points locally; Commit replays the existing rank-up packets; Discard drops them.                                                        | M        |
-| 7.5   | Respec: generous early, costly late | `npc/custom/resetnpc.txt`, flat 5,000z / 5,000z / 9,000z.                                                                             | Price by `BaseLevel`: free below 50, 10k at 50-79, 50k at 80-98, 200k at 99+. Script edit only.                                                                                | S        |
+| 7.4   | Skill detail (delay, prereqs …)    | `tools/export_skill_info.py` already exports per-level SP cost, range, cast/fixed cast, element, target, hits, duration, area, and reagents; `skill_tooltip_text` renders these in hotbar and skill tree. | Add verified cooldown/after-cast delay, status interactions, and skill-tree prerequisites; retain compact tooltips. Formula prose needs server validation. | M |
+| 7.4   | Preview allocation (no commit)      | The skill tree already stages **currently available** points in `pending_skill_points`, with Apply, Reset Pending, and Cancel. | Extend that model to hypothetical future Job levels/points without sending packets; distinguish the current allocation mode from the future build planner. | M |
+| 7.5   | Free player stat/skill reallocation | Group 0 has `resetskill`/`refundskill`, but full reset is registered as `@skreset`, not `@resetskill`; no alias found. Stats-only is `@streset`, not granted to group 0; the client “Reset stats” sends combined `@reset`. `npc/custom/resetnpc.txt` is inactive. | Align skill command grant/name (alias or `skreset`), grant `streset` to group 0, change the client to `@streset`, and expose separate Stats/Skills reset controls outside DM-style Commands. Verify both free at any level/job as a normal player, including unchanged opposite point pool, relog, and `@refundskill` prerequisite rejection. | S |
 | 7.6   | Build planner                       | —                                                                                                                                     | 7.1 + 7.4 preview combined behind a target level slider. Do after both; reuse the stats formulas.                                                                              | L        |
 | 7.1   | Creation-screen allocator           | Done (2026-09-03/04): 48-point spread, suggested first-job template, live preview.                                                     | —                                                                                                                                                                             | done     |
 
@@ -508,6 +510,8 @@ The character window should support a planning state. Players choose a target Ba
 The centralized storyline should orient players through the world, introduce systems, and provide a coherent narrative for players who want one. It should not become a mandatory corridor through all content. A player may pause the story indefinitely and continue leveling, exploring, farming, crafting, or helping friends.
 
 *v0.2 (decision C5):* the Seal Cascade campaign is **not** this spine — it is DM Session mode (§2.3), gated on a DM being present. The self-directed spine this section describes does not yet exist; when it is built, the campaign's party-shared quest helpers and hub-NPC markers are reusable.
+
+Each character completes either story in their own right. Party play shares accepted quest progress to participating characters, not to every character on those players' accounts. A completed story chapter never appears automatically on a new character.
 
 ## 8.2 Quest Categories
 
@@ -541,6 +545,8 @@ When a quest is tracked, navigation should answer the next useful question: whic
 
 - Respect group play: nearby party members should receive reasonable shared progress where the fiction and mechanics support it.
 
+- In DM Session mode, accepted story quest and flag changes reach every character in the campaign party. Online members update immediately; disconnected members catch up on return. A character joining the active party late automatically inherits the party's current campaign quests and story flags, without receiving past rewards. Another character on the same account inherits nothing until it joins that party. See the [DM party quest-sync contract](specs/dm-party-quest-sync.md).
+
 ## 8.6 Story-Based System Teaching
 
 | **System**      | **Example Teaching Moment**                                                                                              |
@@ -557,12 +563,13 @@ When a quest is tracked, navigation should answer the next useful question: whic
 
 | **§**  | **Design item**                      | **Hook that exists**                                                                                                                                   | **Gap**                                                                                                                                                                                | **Size** |
 |--------|--------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| 8.4    | Breadcrumb to the next exit          | Every warp is a `warp` script line in `Hercules/npc/re/warps/**` (source map + cell → destination map + cell). The minimap draws blips.                | Generate a **map graph** JSON from those lines; client runs a shortest-path over maps and marks the exit cell on the minimap plus an edge arrow. This one artefact also unblocks §9.2, §9.9 and §13.2. | M        |
+| 8.4    | Breadcrumb to the next exit          | Generated JSON graph from loaded static warp scripts; client shortest-hop routing, minimap exit marker, sampled walkable breadcrumbs, and 27-location atlas are present in source. | Expand travel/service coverage, connect quest and `<NAVI>` targets, validate coordinates and route behavior in a live client. | M |
 | 8.4    | Clickable `<NAVI>` links in dialogue | `dialog.rs` parses `<NAVI>[label]<INFO>map,x,y</INFO></NAVI>` — and strips it.                                                                         | Render the label as a button; same map → drop a minimap marker and walk; other map → feed the route above.                                                                              | S        |
 | 8.3    | Quest markers with a player toggle   | `QuestIcon` particles render server quest effects on NPCs.                                                                                             | A Game Settings toggle (like `show_minimap`) that suppresses them.                                                                                                                       | S        |
-| 10.11  | On-HUD quest tracker                 | `quest_log.rs` builds rows with remaining objectives (Ctrl+Q).                                                                                         | A small HUD window showing the *tracked* subset (checkbox per quest, persisted); click → open the log or route.                                                                         | M        |
+| 10.11  | On-HUD quest tracker                 | Quest log Track/Untrack controls, basic tracked-objective HUD summary, and per-character client persistence for tracked quest IDs.                       | Add objective locations/routes and hunting goals; live-check persistence and reconnect behavior.                                                                                       | M        |
 | 8.2    | Hunting goals / journal leads        | —                                                                                                                                                      | Client-side pinned list (item / monster / map name), persisted in settings, shown in the tracker; link to the §9.5 entry.                                                                | S-M      |
-| 8.5    | Shared progress for stock quests     | Campaign quests share via `DM_Party*` helpers. Stock hunting quests count only for the killer (`quest_update_objective` in `quest.c`).                   | Server delta: on kill, also update the objective for party members within `party_share_range` on the same map. Keep behind a battle-conf key.                                           | M        |
+| 8.5    | Shared progress for stock quests     | `mob.c` already calls `quest->update_objective_sub` for nearby party members; `quest.c` checks party ID and active quest. Radius is `AREA_SIZE`, currently overridden to 30 cells in `conf/import/battle.conf`. | Live-verify range, duplicate-credit behavior, and quest limits. Add a separate config key only if playtesting shows the draw-distance radius is wrong for quest credit. | verify |
+| 8.5    | DM Session party story sync          | Party join, quest-log, and map-load hooks perform automatic latest-status catch-up for the allowlisted campaign quests and story flags; catch-up does not replay past rewards. | Expand/maintain the allowlist, replace snapshot-only recovery with typed event/cursor replay, fix account-scoped checkpoint mirrors, and live-check late join/reconnect. [Contract](specs/dm-party-quest-sync.md), S10. | M |
 | 8.6    | Story-based teaching                 | DM Session mode already teaches through play (skill checks, hazards).                                                                                  | Content for the future self-directed spine; not before Phase 4.                                                                                                                         | L        |
 
 # 9. World, Exploration, and Navigation
@@ -607,14 +614,14 @@ The target is the coverage of a full RO wiki. Categories, with the server-side s
 | Monsters            | Stats, level, HP, element/race/size, modes, skills used, spawn maps and density, drops with rates, card, MVP status.  | `db/re/mob_db.conf`, `mob_skill_db.conf`, `npc/**/mobs/*.txt` spawn lines                             | `bestiary.json` (1,759), `mob_lore.json` (540 flavour)   |
 | Items               | Every item: stats, script effects in plain language, weight, slots, refinable, who can equip, buy/sell, where it drops. | `db/re/item_db.conf`, `item_combo_db.conf`, `item_group.conf`                                         | `items.json` (13,182, with `DropsFrom`)                  |
 | Cards               | Effect, slot type, source monster, compounding notes, set/combo bonuses.                                             | `item_db.conf` (card type), `item_combo_db.conf`                                                      | `cards.json` (1,012)                                     |
-| Skills              | Per level: SP, cast time, delay, cooldown, range, area, element, damage formula, status inflicted, prerequisites.     | `db/re/skill_db.conf`, `skill_tree.conf`, `sc_config.conf`                                            | `skills.json` (1,170 — names/descriptions only so far)   |
+| Skills              | Per level: SP, cast time, delay, cooldown, range, area, element, damage formula, status inflicted, prerequisites.     | `db/re/skill_db.conf`, `skill_tree.conf`, `sc_config.conf`                                            | `skills.json` (1,170; costs/range/cast/element/area/reagents already exported and shown in tooltips; delays, prerequisites, verified formulas remain) |
 | Jobs / classes      | Job tree, change requirements, stat bonuses per job level, skill trees, base/job EXP tables.                          | `job_db.conf`, `skill_tree.conf`, `exp_group_db.conf`, `statpoint.txt`, jobmaster NPC                 | —                                                        |
-| Status effects      | What each buff/debuff does, duration, what cures it, what causes it, icon.                                           | `sc_config.conf`, `status.c` tables                                                                   | `status_effects.json` (700)                              |
+| Status effects      | What each buff/debuff does, duration, what cures it, what causes it, icon.                                           | `sc_config.conf`, `status.c` tables                                                                   | `status_effects.json` has roughly 700 **names only**; effects/cures/sources still need verified data |
 | Maps                | Name, region, suggested level, connections (warp graph), monster population, NPCs and services, Kafra, map flags.    | `db/re/map_zone_db.conf`, `npc/**/warps/*.txt`, `npc/**/mobs/*.txt`, `Towninfo`                        | minimap POIs only                                        |
 | Quests              | Name, giver, steps, rewards, prerequisites, level; custom and campaign quests included.                              | `db/re/quest_db.conf`, `npc/re/quests/**`, `npc/custom/quests/**`, campaign quest IDs 20000-20234    | quest log window only                                    |
 | NPCs                | Name, map and coordinates, function (shop, quest, service), shop inventory.                                          | `npc/**/*.txt` headers, shop lines                                                                    | `Towninfo` POIs                                          |
 | Mechanics           | Stat formulas (HIT, FLEE, ASPD, cast time), elemental table, size/race modifiers, refinement odds, EXP penalty, party share. | `attr_fix.conf`, `size_fix.txt`, `refine_db.conf`, `level_penalty.conf`, `battle/*.conf` values     | —                                                        |
-| Server rules        | This server's rates, party level range, death penalty, autoloot, respec costs, DM Session mode explanation.          | `conf/map/battle/*.conf`, `groups.conf`, this document                                                | —                                                        |
+| Server rules        | Effective rates, party level range/bonus, death penalty, autoloot, free stat/skill resets, DM Session mode. | `conf/map/battle/*.conf`, `conf/import/*.conf`, `conf/common/inter-server.conf`, `groups.conf`, this document | — |
 
 ### Behaviour
 
@@ -624,27 +631,23 @@ The target is the coverage of a full RO wiki. Categories, with the server-side s
 
 - **Correct for this server.** Rates, drops, and quest steps reflect the fork's tables, including custom NPCs (warper, healer, jobmaster, stylist) and any future rebalancing. When a value is a client-side estimate rather than a server table (§10.10), it is labelled as such.
 
-- **Knowledge mode (§9.6) gates detail, not existence.** In Hybrid mode every entry exists and is findable; exact drop rates, MVP mechanics, and campaign monster lore reveal through play. In Open Database mode everything is visible. The server owner sets the mode.
+- **Reference knowledge is accessible from the start.** A fresh account can search monsters, items, cards, skills, jobs, maps, quests, status effects, mechanics, and server rules as their verified data ships. Build-relevant facts—including stats, effects, requirements, sources, drops/rates, and boss mechanics—do not require a kill or lore check. Unknown fields are labeled “not documented yet.” Account-wide discovery adds journal history, badges, and non-spoiler encounter notes, not a mechanical-information gate. Campaign plot spoilers and DM controls remain separate.
 
 - **Flavour text is attributed and rewritten.** Wiki prose (the fandom extracts in `mob_lore.json` are CC-BY-SA) is reference material for the writer, not player-facing copy. Player-facing lore is authored in the server's voice with attribution kept in the data file.
 
 ### Build order
 
-1. **Generator.** Extend the existing `tools/` JSON exports into one build step that emits every category above from the Hercules tree, so the encyclopedia is rebuilt whenever `db/` or `npc/` changes. Skills and maps are the largest gaps.
+1. **Generator.** Extend the existing `tools/` JSON exports into one build step that emits supported fields from the Hercules tree whenever `db/` or `npc/` changes. Script-only rules and prose need reviewed authored supplements; unsupported fields must say so. The skill export and tooltip already work; the original exporter for the current monster/item/card JSON was not committed. See the [data contract](specs/encyclopedia-data.md).
 
-2. **Player journal.** Promote the DM Bestiary window into a player-visible Adventure Guide with a search field over monsters, items and cards — the three categories whose data already exists. This is the first shippable slice.
+2. **Player journal.** Promote the DM Bestiary window into a player-visible Adventure Guide with a search field over monsters, items, cards, and the already-exported skills. This is the first shippable slice for build research.
 
-3. **Remaining categories** in order of playtest demand: skills and jobs (build questions), maps and quests (navigation, §8.4), status effects, mechanics, server rules.
+3. **Remaining categories** in order of playtest demand: jobs and fuller skill explanations (build questions), maps and quests (navigation, §8.4), status effects, mechanics, server rules.
 
 4. **Linking and Navigate**, once the map graph from Phase 1 exists.
 
-## 9.6 Discovery Modes
+## 9.6 Discovery and Reference Access
 
-| **Mode**           | **Behavior**                                                                          | **Recommended Use**                                                              |
-|--------------------|---------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| Discovery Mode     | Monster details, drops, and some locations reveal through encounters and exploration. | Best when discovery is part of the group's desired experience.                   |
-| Open Database Mode | Most reference data is searchable immediately.                                        | Best for veteran groups who already use external databases and want convenience. |
-| Hybrid             | Basic location and identity visible; exact drops/mechanics reveal through play.       | Recommended default.                                                             |
+The friends-server baseline is **Open Database**: all verified reference data is searchable immediately, regardless of encounter history. Account-wide discovery records what the player has experienced without limiting research. General discoveries and non-story access (including future visited places, rumors, and general services) carry across characters on an account; **story quests, chapter completion, choices, and story-gated access do not**. Character build and inventory also remain character state. A later opt-in restrictive mode would need its own owner decision and cannot silently replace this baseline.
 
 ## 9.7 Rumors
 
@@ -672,10 +675,10 @@ Hovering or approaching a known exit should identify its destination. If it lies
 
 | **§** | **Design item**                | **Hook that exists**                                                                                                                                  | **Gap**                                                                                                                                                                                    | **Size** |
 |-------|--------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| 9.2   | World map                      | Map graph (§8.7) once generated; the client already loads per-map minimap bitmaps; `Towninfo` gives town POIs.                                        | A window laying out region nodes from the graph (hand-authored positions for ~60 towns/fields, generated for the rest), with visited flags persisted client-side. No teleport.               | M-L      |
+| 9.2   | World map                      | Map graph (§8.7) once generated; the client already loads per-map minimap bitmaps; `Towninfo` gives town POIs.                                        | A window laying out region nodes from the graph (hand-authored positions for ~60 towns/fields, generated for the rest), with account-wide visited flags synced from the server. No teleport.               | M-L      |
 | 9.3   | Map information panel          | Encyclopedia maps category (§9.5).                                                                                                                    | Suggested level = mean spawn level; population = spawn counts; connections = graph edges; party presence = `party_state` map names.                                                         | M        |
 | 9.4   | Population regions             | Spawn lines carry map, cell and spread (`x,y,xs,ys`) — **not yet exported**; `bestiary.json` has no spawn data.                                       | Generator emits per-map spawn rectangles; minimap draws low/medium/high shading for the selected monster. Never exact points.                                                               | M        |
-| 9.6   | Knowledge mode                 | `DmCampaignState.bestiary_unlocked` records kills **for the session only** — not persisted, not server-side (`specs/bestiary-unlock-persistence.md` is the plan). | Server: `#bestiary_<id>` account vars set on kill via `OnNPCKillEvent`, synced at login through a `[DMJ]`-style echo (§13.7). Client: parse and persist. Config key for the mode.          | M        |
+| 9.6   | Account discovery record       | `DmCampaignState.bestiary_unlocked` records kills **for the session only**. The DM-styled Bestiary's Reveal all control is reachable from the unguarded Commands window. | Server-authoritative per-account discovery milestones and login snapshot; client may cache. Separate player and DM views, check account-variable scale, and keep verified Guide mechanics visible before/without sync. Campaign spoilers remain separately protected. | M |
 | 9.7   | Rumors                         | —                                                                                                                                                     | A `rumor` journal category fed by NPC scripts (`callfunc("Journal_AddRumor", id)`) and synced like unlocks. After §9.6.                                                                     | M        |
 | 9.9   | Portal labels                  | Map graph.                                                                                                                                            | Hover/approach a warp cell → tooltip with the destination map name; tracked-route portals get an accent.                                                                                   | S        |
 | 9.8   | Travel                         | Stock; `@partyjump` (C4).                                                                                                                             | —                                                                                                                                                                                          | —        |
@@ -813,7 +816,7 @@ UI scaling must support modern display resolutions without blurring original pix
 | 10.14  | Party frame click-to-target, distance   | Roster with HP/SP, class, Go-to.                                                                                                                                       | Click a row → `player_target`; show "other map" or tile distance from `party_state`.                                                                                                    | S        |
 | 10.15  | Chat: timestamps, item links, tabs      | Public / Party / Whisper channels. `<ITEM>` tags are stripped in `dialog.rs`.                                                                                        | Timestamps S; a Loot/System filter S; `<ITEM>` → hover tooltip via the existing item tooltip S-M; text selection/copy needs a framework primitive M.                                    | S-M      |
 | 10.16  | UI scaling                              | Done.                                                                                                                                                                 | —                                                                                                                                                                                      | done     |
-| —      | Character delete confirmation (M1-014)  | Right-click menu fires `DeleteCharacter` directly.                                                                                                                    | Visible Delete button + typed-name confirm. Same fix shape as the item-drop discoverability report.                                                                                    | S        |
+| —      | Character delete confirmation (M1-014)  | Right-click menu already has a two-step `WarningBanner` confirmation.                                                                                               | Visible Delete button on the character card + typed-name confirm before the existing delete event. Same discoverability fix shape as the item-drop report.                             | S        |
 | —      | Toast notifications                     | —                                                                                                                                                                     | One slide-in widget reused by §11.4 (rare drop), quest complete, level up, party ping. Build once, early.                                                                              | S-M      |
 
 # 11. Loot, Equipment, Cards, and Refinement
@@ -892,7 +895,7 @@ Blacksmith and Alchemist economic identities should be strengthened. Crafting ca
 
 ## 12.5 Currency Sinks
 
-Useful sinks may include reasonable respec costs, refinement, crafting fees, transport, cosmetic services, and convenience services. Avoid punitive sinks that exist only to slow friends from playing together.
+Useful sinks may include refinement, crafting fees, transport, cosmetic services, and convenience services. Stat and skill reallocation stay free. Avoid punitive sinks that exist only to slow friends from playing together.
 
 # 13. Party and Friends-Server Social Systems
 
@@ -936,18 +939,18 @@ For ordinary kill, collection, or interaction objectives, nearby party members s
 
 *Same method as §5.13: the hook that exists today, the gap, and a size (S ≤ 1 day · M ≤ 1 week · L longer). Audited 2026-09-21.*
 
-**The transport decision.** Pings, shared destinations, ready checks, hunting-goal lists, bestiary sync and rumors all need a small channel for structured party state. Nothing in the client parses structured messages today — `[DMJ]` is emitted by server scripts but `DmCampaignState` is populated only from local kill observations. Build the channel once:
+**The transport decision.** Pings, shared destinations, ready checks, and hunting-goal lists need a small channel for ephemeral party state. Bestiary unlocks and rumors need a separate **server-originated** authoritative sync, even if both use the same parser/carrier. Nothing in the client parses these structured messages today — `[DMJ]` is emitted by server scripts but `DmCampaignState` is populated only from local kill observations. Establish the carrier contract once:
 
-- **Phase A — party chat with a prefix.** Send `\x01PS{json}` as ordinary party chat; every client parses and suppresses it; unknown prefixes fall through as text so a stock client still sees something readable. No server change, works tonight. Risk: flood limits (`ip_rules` is tuned) and 150-byte message caps — keep payloads tiny (ping: kind, map, x, y).
-- **Phase B — a fork packet** (`CZ_/ZC_PARTY_STATE`, next free id below `0x0F00`) when Phase A's limits bite. Same client parser, different carrier.
+- **Phase A — party chat feasibility gate.** Test a versioned, bounded party-chat envelope for ephemeral pings and checks, including real byte/rate limits and suppression before rendering. A control-character prefix is not readable on a stock client, so choose a printable fallback or move to Phase B if mixed-client readability is required. Party peers never grant persistent quest/bestiary state.
+- **Phase B — a fork packet** (`CZ_/ZC_PARTY_STATE`, ID allocated only after checking the packet registry on both forks) if Phase A cannot meet the contract. Keep the payload model independent of its carrier.
 
 | **§** | **Design item**                | **Hook that exists**                                                    | **Gap**                                                                                                                                       | **Size** |
 |-------|--------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | 13.3  | Party pings (6 kinds)          | Minimap blips; party chat.                                              | Phase A transport + a timed blip on minimap and in-world; Ctrl+click on the minimap or a radial on the party frame to send.                    | M        |
 | 13.2  | Shared destinations            | Map graph (§8.7).                                                       | Leader proposes `{map}`; accept → each client runs its own route. Payload is one map name.                                                     | S after graph |
 | 13.4  | Tonight's Goals                | —                                                                       | Client list, shared over Phase A on change; shown in the tracker.                                                                              | S-M      |
-| 13.5  | Level range                    | `conf/map/battle/party.conf` stock.                                     | Set `party_even_share_bonus` and widen the share level range; playtest whether a level-sync mode is still wanted. Config only.                 | S        |
-| 13.6  | Shared stock quest progress    | See §8.7.                                                               | Server delta behind a config key.                                                                                                             | M        |
+| 13.5  | Level range                    | Effective `conf/import/battle.conf` already overrides `party_even_share_bonus: 25`; `conf/common/inter-server.conf` keeps `party_share_level: 15`. | Test the current bonus, then widen the level spread if needed; level sync remains a later decision. | S |
+| 13.6  | Shared stock quest progress    | See §8.7.                                                               | Live verification of the existing `mob.c` party iterator; optional independent credit-range config only if needed. | verify |
 | —     | Ready check / target marker    | Same transport.                                                         | Ready: one query, N replies, a toast. Marker: entity id + icon, drawn over the entity for the party.                                           | S each   |
 
 # 14. Death, Recovery, and Difficulty
@@ -1057,11 +1060,12 @@ When the player is exploring a town or field without combat pressure, combat-onl
 
 | **Setting**             | **Recommended Baseline**                | **Notes**                                                                    |
 |-------------------------|-----------------------------------------|------------------------------------------------------------------------------|
-| Knowledge Mode          | Hybrid                                  | Basic monster/map info available; deeper details discovered or configurable. *v0.2: gates §9.5 encyclopedia detail, never existence.* |
+| Knowledge Mode          | Open Database                           | Verified gameplay reference is searchable from the start; account discovery adds history/badges, not mechanical-information gates. |
 | Quest Guidance          | Available, opt-in per tracked quest     | Players can disable globally.                                                |
 | Exact Spawn Coordinates | Off                                     | Use population regions instead.                                              |
 | Auto-Loot               | Configurable categories                 | Respect inventory and weight. *v0.2: `@autoloot`/`@alootid`/`@autoloottype` granted to players (C6); category filters are client work.* |
-| Respec                  | Generous early; in-game cost later      | Avoid real-money dependency.                                                 |
+| Skill respec            | Free at every level                     | Existing player commands; document their use.                               |
+| Stat respec             | Free at every level                     | Give ordinary players `@streset` and a visible player control; not yet implemented. |
 | Party Level Range       | Wider than classic or diminishing model | Tune for friend accessibility.                                               |
 | Death Penalty           | Modest and partly recoverable           | Tune through playtests.                                                      |
 | PvP / WoE               | Disabled / not part of this design      | Deferred. *v0.2: the stock WoE NPC set is still loaded via `npc/scripts_woe.conf` — remove the includes.* |
@@ -1143,17 +1147,17 @@ Do not balance only around maximum-efficiency veteran play. This is a friends se
 
 ## Phase 1 - Foundational UX — **partial** — *paths in §8.7, §9.10, §10.17*
 
-- **[open]** World map and map connection data.
+- **[partial]** World map and map connection data. *A generated graph indexes loaded static warp scripts; a regional atlas shows 27 selectable towns and destinations, with reachable connections and selected route highlighted. The current map draws a walkable breadcrumb trail to the next portal and recomputes the next leg after a map change. Location discovery/visit history, full travel/service coverage, destination details, and live acceptance remain open.*
 
-- **[partial]** Quest tracking and breadcrumb routing. *Quest log window exists (Ctrl+Q); no tracker HUD, no routing.*
+- **[partial]** Quest tracking and breadcrumb routing. *Quest log has Track/Untrack controls and a basic tracked-objective HUD; tracked quest IDs now persist per character in client settings and reconcile against the server's active quest list. Navigation can draw a walkable minimap breadcrumb for a selected map/cell, but quest objectives still lack location data and `<NAVI>` links are not actionable.*
 
 - **[open]** Basic Adventure Guide search. *Confirmed and widened 2026-09-21 (C1): full in-game encyclopedia, §9.5. Seed is the DM Bestiary + in-tree JSON.*
 
-- **[partial]** Inventory/storage search and item protections. *Weight display done; search, sort, filters, locks not started.*
+- **[partial]** Inventory/storage management. *Inventory tabs, sorting, drag arrangement, server-persisted slot order, inventory/storage name search, and per-character do-not-drop/do-not-sell locks are implemented. Category filters, storage reuse, server-authoritative split-to-stack, and live acceptance remain open.*
 
-- **[done]** Improved target/player frames and UI scaling. *Basic frames; scaling done. Status icons and target detail still open.*
+- **[partial]** Improved target/player frames and UI scaling. *UI scaling and player interaction frame exist; monster target frame and status detail are open.*
 
-- **[partial]** Party member map location and shared waypoint support. *Party minimap blips with hover names, roster, world HP bars, `@partyjump` done. Waypoints not started.*
+- **[partial]** Party member map location and shared waypoint support. *Party minimap blips with hover names, roster, world HP bars, and `@partyjump` exist. Personal/shared waypoints and party map-location display outside the current-map minimap remain.*
 
 ## Phase 2 - Combat Responsiveness — **partial** — *slices and order in §5.13*
 
@@ -1181,11 +1185,11 @@ Do not balance only around maximum-efficiency veteran play. This is a friends se
 
 *Nearest existing asset: the DM hazard/encounter scripts in `Hercules/npc/custom/dm_campaign/shared/` prove the server-side primitives (`DM_HazardArea`, mode-bit stripping, `setcell`) that an AI layer would also use.*
 
-## Phase 4 - Journals and Knowledge Systems — **partial (DM-only) — scope widened by C1 to the §9.5 encyclopedia** — *paths in §7.7, §9.10*
+## Phase 4 - Journals and Knowledge Systems — **partial (DM-shaped tools) — scope widened by C1 to the §9.5 encyclopedia** — *paths in §7.7, §9.10*
 
-- **[partial]** Monster Journal with locations, traits, and drops. *Bestiary Journal exists as a DM window with per-account unlock persistence; not a player-facing journal.*
+- **[partial]** Monster Journal with locations, traits, and drops. *Bestiary Journal is DM-styled but reachable through the client Commands window; unlocks are session-only, and its Reveal all button is client-side. No dedicated player Adventure Guide or account persistence exists.*
 
-- **[partial]** Item-to-monster-to-map linking. *Data present in `docs/*.json`; only the DM windows read it.*
+- **[partial]** Item-to-monster-to-map linking. *Item-to-monster drop links exist in `docs/*.json`; monster spawn maps are not exported, so the map leg is open.*
 
 - **[open]** Population overlays.
 
@@ -1201,7 +1205,7 @@ Do not balance only around maximum-efficiency veteran play. This is a friends se
 
 - **[partial]** Refinement clarity improvements. *Refine window exists; chance/consequence display not audited.*
 
-- **[open]** Small-population drop-rate and Zeny balancing. *All rates stock.*
+- **[open]** Small-population drop-rate and Zeny balancing. *Base/drop/quest rates are stock; the effective import config already gives a 25% even-share party EXP bonus per additional member.*
 
 ## Phase 6 - Boss and Story Encounter Pass — **partial (DM Session mode only)**
 
@@ -1225,41 +1229,42 @@ Do not balance only around maximum-efficiency veteran play. This is a friends se
 
 ## v0.2 Build Order — the next slices, sequenced (added 2026-09-21)
 
-*Derived from the §5.13-§16.5 implementation paths. Ordered by dependency first, then cost. Client and server tracks can run in parallel. Each row is one PR-sized slice; sizes as in the section tables.*
+*Derived from the §5.13-§16.5 implementation paths. Client and server tracks can run in parallel. The [end-to-end improvement plan](plans/gdd-improvement-plan.md) covers all in-scope GDD work; its [Wave 1 next-slices plan](plans/gdd-next-slices.md) records these rows' dependencies, acceptance, and open decisions. Use both before starting a row. Larger rows may need more than one PR.*
 
 | **#** | **Slice**                                                        | **Size** | **Unblocks**                                                        | **Path** |
 |-------|------------------------------------------------------------------|----------|---------------------------------------------------------------------|----------|
 | 1     | Toast widget                                                     | S-M      | Rare drops, quest complete, level-up, pings, difficulty warnings    | §10.17   |
 | 2     | Monster cast telegraphs (carry position through `SkillCast`)     | S        | Everything in §6 feeling fair                                       | §5.13    |
-| 3     | Target cycling (Tab) + race/size/element chips on the target frame| S+S     | §5.9 contextual layer, §10.10 vs-target                             | §5.13    |
-| 4     | Character-delete confirm + visible item-drop affordance          | S+S      | Two playtest reports                                                | §10.17   |
+| 3     | Target cycling (Tab) + monster target frame/chips                 | S-M+M    | §5.9 contextual layer, §10.10 vs-target                             | §5.13    |
+| 4     | Visible character Delete + typed-name confirm; visible item Drop  | S+S      | Two playtest reports; existing two-step delete stays                | §10.17   |
 | 5     | **Map graph generator** from `npc/re/warps/**`                   | M        | Breadcrumbs, portal labels, world map, shared destinations, map panel| §8.7     |
 | 6     | `<NAVI>` links + next-exit breadcrumb on the minimap             | S+M      | §8.4, §20.1 "no external guide"                                     | §8.7     |
 | 7     | Inventory search / category tabs / sort / lock list              | M        | §10.9; storage reuses it                                            | §10.17   |
 | 8     | **Encyclopedia generator** (skills, maps, quests, NPCs, refine)  | M        | §9.5 categories, §7.4 skill tooltips, §11.6 refine odds, §14.3      | §9.5     |
 | 9     | Player Adventure Guide window with search (promote DM Bestiary)  | M        | C1 first shippable slice                                            | §9.5     |
 | 10    | Single-action input buffer with expiry                           | S-M      | §5.2                                                                | §5.13    |
-| 11    | Party transport Phase A + pings + ready check                    | M        | §13.3, §13.2, §13.4, §9.6 sync                                      | §13.7    |
+| 11    | Party transport Phase A + pings + ready check                    | M        | §13.3, §13.2, §13.4; parser may also carry server-originated §9.6 sync | §13.7 |
 | 12    | Quest tracker HUD + hunting goals                                | M        | §10.11, §8.2                                                        | §8.7     |
 | 13    | Keybinding table + remap screen                                  | M        | §10.6, §15.1                                                        | §10.17   |
 | 14    | HUD edit mode: lock, snap, named layouts, combat fade            | M        | §10.2, §16.4                                                        | §10.17   |
 | 15    | Accessibility: themes, reduced motion, combat-text controls, density | M    | §15                                                                 | §15.3    |
 
-**Server track (parallel, data and script only):**
+**Server track (parallel; S8/S9 include C changes):**
 
 | **#** | **Slice**                                                  | **Size** | **Path** |
 |-------|------------------------------------------------------------|----------|----------|
 | S1    | Remove the stock WoE includes from `scripts_main.conf`     | S        | §17.1    |
-| S2    | Respec price curve in `resetnpc.txt`                       | S        | §7.7     |
-| S3    | `party.conf` share range and even-share bonus              | S        | §13.7    |
+| S2    | Repair free player skill reset; enable free player stat reset | S        | §7.7     |
+| S3    | Verify effective 25% bonus; test wider inter-server share range | S | §13.7 |
 | S4    | Death-recovery script (`OnPCDieEvent` refund)              | S-M      | §14.5    |
 | S5    | AI archetype pilot on `prt_fild08` via `mob_skill_db`      | S        | §6.10    |
 | S6    | Pilot on `orcsdun01`, then Glast Heim                      | S+S      | §6.10    |
 | S7    | Bestiary unlock persistence (account vars + login sync)    | M        | §9.10    |
-| S8    | Shared stock-quest progress for party members (C, config-gated) | M   | §8.7     |
+| S8    | Verify existing nearby-party stock-quest credit; tune only if needed | verify | §8.7 |
 | S9    | Skirmisher / Ranged Keeper / hazard-aware pathing (C)      | L        | §6.10    |
+| S10   | DM Session party quest sync: per-character event replay    | M        | §8.7     |
 
-Slices 1-4 are a week of client work with no server dependency and change how the game *feels* immediately. Slice 5 and slice 8 are the two generators everything in navigation and knowledge hangs off; do them before any of the windows that consume them.
+Slices 1-4 are client work with no server feature dependency. Slice 5 and slice 8 are the two generators everything in navigation and knowledge hangs off; validate their server revision and coverage before the windows consume them.
 
 ## Phase X - Delivered but unplanned
 
@@ -1377,15 +1382,17 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 | Main Story Guidance        | Available when tracked                            | Player configurable   | Quest log window only; no tracker, no toggle.                                        |
 | World Breadcrumbs          | Next-exit guidance                                | Player configurable   | Not started. `<NAVI>` dialogue tags stripped rather than followed.                    |
 | Monster Population Overlay | Broad regions only                                | Player configurable   | Not started. Spawn data not yet exported from the server tree.                        |
-| Knowledge Mode             | Hybrid                                            | Server configurable   | No switch. DM Bestiary unlocks are session-only, client-side.                        |
+| Knowledge Mode             | Open Database: verified reference data searchable | Decided for friends server | No dedicated player Guide. DM Bestiary unlocks are session-only, client-side. |
+| Story completion           | Each character completes the story, including DM Session | Decided | Online DM party helpers share quest/flag changes; offline missed-event replay and character-only checkpoint isolation remain S10. |
 | In-game Encyclopedia       | Full wiki coverage, generated from server tables  | Locked principle (C1) | Data for monsters/items/cards/status; no player UI; skills/maps/quests need generator.|
 | Input Buffer               | ~200 ms starting test                             | Playtest value        | Not implemented; walk-into-range chaining only.                                       |
 | Action Queue               | 1 action                                          | Recommended default   | Not implemented.                                                                      |
 | Universal Dodge            | None                                              | Locked principle      | None. Plan section struck (C3).                                                       |
 | Auto-Loot                  | Category filters                                  | Player configurable   | `@autoloot` (drop-rate threshold), `@alootid`, `@autoloottype` — group 0 (C6). No category filters. |
-| Party Level Rules          | Friend-friendly widened range / diminishing model | Playtest decision     | Stock `party.conf`.                                                                   |
+| Party Level Rules          | Friend-friendly widened range / diminishing model | Playtest decision     | Effective import config sets 25% even-share bonus per additional member; inter-server share limit remains 15 levels. |
 | Death Penalty              | Modest + partial recovery                         | Playtest decision     | Stock: 1% base / 1% job, no recovery.                                                 |
-| Respec                     | Free/cheap early, in-game cost later              | Recommended default   | Flat 5,000z stats / 5,000z skills / 9,000z both (`resetnpc.txt`).                    |
+| Skill respec               | Free, ordinary-player accessible at every level  | Decided               | Group 0 grants `resetskill`/`refundskill`, but registered full reset is `@skreset`; client sends `@resetskill`. Verify/fix mismatch. Priced Reset Girl is inactive. |
+| Stat respec                | Free, ordinary-player accessible at every level  | Decided               | Registered stats-only command is `@streset`; group 0 lacks `streset`, and client currently sends combined `@reset`. |
 | Fast Travel                | In-world systems; no unrestricted map teleport    | Locked principle      | Kafra + warper NPC; `@partyjump` to any online party member, unbounded (C4).          |
 | Exact Spawn Coordinates    | Hidden                                            | Recommended default   | Hidden (nothing shows them).                                                          |
 | HUD Presets                | Classic + Modern + custom                         | Recommended default   | None. Windows movable/resizable and persisted; no presets or edit mode.               |
@@ -1399,9 +1406,9 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 
 2. How far should keyboard movement go while preserving tile/pathing parity with click-to-move?
 
-3. Should monster journal data be character-specific, account-wide, or server-wide?
+3. ~~Should monster journal data be character-specific, account-wide, or server-wide?~~ **Answered 2026-09-22: account-wide.**
 
-4. What percentage of item/drop information should be available immediately in Hybrid knowledge mode? *v0.2: sharpened by §9.5 — every entry exists in Hybrid; the question is which fields reveal through play.*
+4. ~~What percentage of item/drop information should be available immediately in Hybrid knowledge mode?~~ **Answered 2026-09-22: all verified build-relevant reference information is available immediately; no Hybrid gate.**
 
 5. Should friends have an optional level-sync system, or is a widened party XP model sufficient?
 
@@ -1417,7 +1424,7 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 
 11. Which original UI windows can be extended safely versus requiring replacement or overlay panels?
 
-12. What level of map/monster data can be generated automatically from server tables versus authored manually? *v0.2 note: `bestiary.json`, `items.json`, `cards.json`, `skills.json`, `status_effects.json` are already generated in-tree from Hercules DBs; the open part is authoring population regions and rumors.*
+12. What level of map/monster data can be generated automatically from server tables versus authored manually? *2026-09-22 correction: the original exporter for `bestiary.json`/`items.json`/`cards.json` is missing. `tools/extend_bestiary_export.py` only merges fields; `tools/export_skill_info.py` generates skills. Rebuild the full pipeline and use reviewed supplements for script-only facts, population regions, and rumors.*
 
 *Answered or narrowed since v0.1:*
 
@@ -1425,7 +1432,7 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 
 - Q2 — **Answered.** WASD ships as an optional mode over the same pathfinder with a 200 ms throttle; click-to-move retained. No further keyboard-movement scope is planned.
 
-- Q3 — **Narrowed.** The DM Bestiary tracks unlocks per session, client-side; the spec proposes per-account server variables. Whether a player-facing journal should be account- or server-wide is still open.
+- Q3–Q4 — **Answered.** The player Guide is Open Database by default, with account-wide discovery records independent of reference-field visibility. Current DM Bestiary unlocks are still session-only/client-side and need a separate player implementation.
 
 *New questions raised by the audit:*
 
@@ -1441,23 +1448,25 @@ No universal dodge roll, flanking meter, or prescribed combo is required. The ta
 
 ## Recommended Next Design Deliverables
 
-- Tactical Combat Specification: input states, targeting rules, action buffer, movement, cast states, telegraph taxonomy, AI interfaces. *v0.2: §5.13 and §6.10 are the seed; the remaining spec work is the telegraph taxonomy per skill layout size and the two C-side AI behaviours.*
+- Tactical Combat Specification: input states, targeting rules, action buffer, movement, cast states, telegraph taxonomy, AI interfaces. *Next-slice contract: [combat input](specs/gdd-combat-input.md); AI extension: [monster pilot](specs/monster-ai-pilot.md).*
 
-- UI Wireframe Pack: HUD presets, target/party frames, Adventure Guide, world map, monster journal, inventory, build planner.
+- UI Wireframe Pack: [next-slice HUD/window states](specs/gdd-ui-wireframes.md). World map and build planner need later follow-on wireframes when their slices are scheduled.
 
-- Navigation Data Specification: map graph, portal metadata, breadcrumbs, POIs, monster population regions, discovery flags.
+- Navigation Data Specification: [map graph and next-exit contract](specs/navigation-quest-guiding.md). Population regions and discovery flags are follow-on slices.
 
-- Monster AI Behavior Library: reusable states, priorities, pathing responses, and authoring parameters.
+- Monster AI Behavior Library: [profile and C-side pilot contract](specs/monster-ai-pilot.md).
 
-- Pilot Region Design: one complete region implemented end-to-end to validate combat, UI, quests, and navigation together.
+- Pilot Region Design: [`prt_fild08` first-tier pilot](specs/monster-ai-pilot.md), connected to navigation/Guide as those data slices land.
 
-- Encyclopedia Data Generator Specification: one build step from the Hercules tree to the §9.5 category files, with the field list per category and the knowledge-mode visibility flag per field.
+- Encyclopedia Data Generator Specification: [category/source and knowledge-policy contract](specs/encyclopedia-data.md).
 
-- Implementation Status Refresh: re-run the Appendix E audit after each playtest and move rows, rather than re-auditing from scratch.
+- Implementation Status Refresh: [next-slices plan](plans/gdd-next-slices.md) records current-code evidence and live gates; update Appendix E after each playtest.
 
 # Appendix E. Implementation Status (audited 2026-09-21)
 
 This section was added in v0.2 after auditing the two forks that implement this design — the **Korangar** Rust client (`korangar/`) and the **Hercules** server (`Hercules/`) — against the code, the commit history, and the first friends playtest (2026-09-05, four players, three remote). Status reflects what exists in the tree, not what the client's own roadmap checkboxes say (those were found to be stale).
+
+*2026-09-22 source corrections:* the active free skill-reset commands supersede the inactive priced NPC; effective import config already sets a 25% party even-share bonus; stock kill objectives already credit nearby party members; current skill-point staging and detailed skill tooltips exist; `player_target.rs` is player-only; and the DM-styled Bestiary/Reveal all controls are reachable through the unguarded Commands window. These corrections are folded into the rows below and the [next-slices plan](plans/gdd-next-slices.md). Live acceptance remains separate from source inspection.
 
 ## Status Language
 
@@ -1493,7 +1502,7 @@ This section was added in v0.2 after auditing the two forks that implement this 
 | 5.3 Keyboard movement                      | Done             | WASD shipped 2026-09-05: optional (Game Settings, default on), camera-relative, same pathfinder, 200 ms packet throttle, disabled while text fields have focus. Meets the "no unique collision / no speed advantage" rule by construction. |
 | 5.3 Hold-mouse continuous path             | Not verified     | Not audited.                                                                                                                                                                                                                          |
 | 5.3 No universal dodge roll (LOCKED)       | Decided (C3)     | Plan section in `korangar/docs/plans/modern-mechanics.md` §5 struck 2026-09-21. Principle stands.                                                                                                                                       |
-| 5.4 Left-click select, target frame        | Done             | `player_target.rs` window. Shows name/HP; race/size/element and cast state not shown.                                                                                                                                                 |
+| 5.4 Left-click select, target frame        | Partial          | `player_target.rs` is a player-only action window; clicking a monster attacks it. A persistent monster target frame with race/size/element/cast state is still needed. |
 | 5.4 Target cycling / nearest hostile       | Not started      |                                                                                                                                                                                                                                       |
 | 5.4 Ground-target preview of reachable area| Done (unseen)    | `world/skill_layout.rs` + `Map::render_skill_footprint` (2026-07-26): real cell shapes from `skill_db` layouts, the 15 hardcoded Hercules unit layouts, direction-dependent walls (Fire Wall, Ice Wall …), red tint when out of range. Never seen on screen. |
 | 5.4 Alternate cast styles                  | Not started      | Classic press-then-click only.                                                                                                                                                                                                        |
@@ -1521,8 +1530,8 @@ This section was added in v0.2 after auditing the two forks that implement this 
 |-----------------------------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 7.1 Original stat model           | Done         | Stock. Character creation now has a 48-point allocator with a suggested first-job spread and a live 8-facing preview (2026-09-03/04).                          |
 | 7.1 Derived-stat preview          | Not started  | Stats window allocates points; no next-point preview.                                                                                                         |
-| 7.4 Skill tree presentation       | Partial      | Tabs + drag-to-hotbar exist. No per-skill cast time / SP / range / delay / element display; no preview allocation.                                             |
-| 7.5 Respec                        | Stock custom | `npc/custom/resetnpc.txt`: 5,000z stats, 5,000z skills, 9,000z both, flat at every level. Not the "generous early, costlier later" curve.                     |
+| 7.4 Skill tree presentation       | Partial      | Tabs, drag-to-hotbar, staged current-point allocation, and per-level SP/range/cast/element/area/reagent tooltips exist. Cooldown/delay, prerequisites, verified formulas, and future-level planning remain. |
+| 7.5 Respec                        | Policy decided; command/UI repair due | Both pools are intended free for ordinary players at every level. Group 0 grants `resetskill`/`refundskill`, but the server registers `@skreset`, not the client's `@resetskill` (no alias found). Stats-only `@streset` lacks a group-0 grant; the client “Reset stats” sends combined `@reset`. Priced `resetnpc.txt` is inactive; stock Hypnotist is restricted. |
 | 7.6 Build planner                 | Not started  | Rejected-adjacent: the client roadmap deferred build planning to "skill tree search/filter later".                                                            |
 
 ### §8 Story and Quest Design
@@ -1534,7 +1543,8 @@ This section was added in v0.2 after auditing the two forks that implement this 
 | 8.3 Quest markers                 | Partial      | Standard quest-effect markers on campaign hub and objective NPCs. No player toggle.                                                                                                                                                  |
 | 8.4 Breadcrumb guidance           | Not started  | Spec exists (`docs/specs/navigation-quest-guiding.md`). `<NAVI>` tags in NPC dialogue are stripped, not clickable.                                                                                                                   |
 | 8.5 Kill counts only when meaningful | Done      | Hunting contracts fill from **drops** instead of kill counts (2026-08-25); the quest log shows what each contract still wants.                                                                                                       |
-| 8.5 Shared party progress         | Done (campaign) | Campaign quest starts, completions, erasures and flags apply to every online party member; quest-giver dialogue is mirrored to the party as `[Party Story]`. Stock quests remain per-character.                                    |
+| 8.5 Shared party progress         | Built; stock live check due | Campaign quest state uses `DM_Party*` helpers. For stock kill objectives, `mob.c` already credits nearby members of the killer's party through `quest_update_objective_sub` (`AREA_SIZE`, effective 30 cells). Quest ownership remains per character. |
+| 8.5 DM Session party quest sync    | Partial — catch-up hooks present; live acceptance open | Party-join, quest-log, and map-load hooks copy the stored current status for an explicit campaign quest/flag allowlist. This is automatic latest-status reconciliation, not a typed event log/cursor. The `#dm_campaign_checkpoint_*` mirrors remain account-scoped. Late-join, return, and character-isolation scenarios still need live acceptance. |
 | 8.6 Story-based system teaching   | Not started  |                                                                                                                                                                                                                                      |
 | *Fork addition — skill checks*    | Done         | `@check`: d20 + stat/15 + proficiency + assists vs DC, with server-side consequences (hazard saves, `setcell`, mode bits). Not in the GDD; a candidate for §8.6-style "optional guidance."                                          |
 
@@ -1542,11 +1552,11 @@ This section was added in v0.2 after auditing the two forks that implement this 
 
 | **Item**                          | **Status**   | **Evidence / Notes**                                                                                                                                                                    |
 |-----------------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 9.2 World map                     | Not started  |                                                                                                                                                                                         |
+| 9.2 World map                     | Partial — code present, live acceptance open | `World Map & Route Finder` is available from the in-game menu. The generated static-warp graph currently contains 537 maps and 3,176 directed edges. The atlas lays out 27 selectable towns/destinations, filters overview connections through graph reachability, and highlights a selected route. No account-wide visited/discovered history, destination information panel, or full travel-service/conditional-route coverage yet. |
 | 9.3 Map information panel         | Not started  |                                                                                                                                                                                         |
 | 9.4 Monster population regions    | Not started  | Spawn data is in Hercules `npc/re/mobs/**` spawn lines and is **not** exported yet; `bestiary.json` has stats only.                                                                    |
-| 9.5 In-game encyclopedia          | Decided (C1) — Partial data, no UI | Rejection of 2026-07-05 reversed and scope widened to full wiki coverage. Data exists for monsters/items/cards/status; skills, jobs, maps, quests, NPCs, mechanics need a generator. No player UI. |
-| 9.6 Discovery modes               | Partial      | Bestiary Journal (DM window) unlocks entries on observed kills, **session-only and client-side**; the server-variable persistence is a spec (`specs/bestiary-unlock-persistence.md`), not code. No Knowledge Mode switch. |
+| 9.5 In-game encyclopedia          | Decided (C1) — Partial data, no Guide | Rejection of 2026-07-05 reversed. Existing monster/item/card exports lack their original full exporter; skills have a working per-level exporter/tooltips but need more fields. Maps, quests, jobs, NPCs, mechanics need generation plus authored supplements. Searchable Bestiary is reachable via Commands, but no dedicated player Guide UI. |
+| 9.6 Account discovery             | Policy decided; persistence missing | Open reference knowledge is the baseline; monster discovery belongs to the account. Bestiary unlocks are currently session-only/client-side. The DM-styled Bestiary and Reveal all toggle are reachable through Commands without a client permission gate; `@monster` itself remains server permission-checked. |
 | 9.7 Rumors                        | Not started  |                                                                                                                                                                                         |
 | 9.8 Travel                        | Stock + one addition | Kafra, warper NPC. `@partyjump <name>` (2026-09-05) lets any party member warp to another online member — accepted unbounded for now (C4).                              |
 | 9.9 Portal labels                 | Not started  |                                                                                                                                                                                         |
@@ -1558,18 +1568,18 @@ This section was added in v0.2 after auditing the two forks that implement this 
 |---------------------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 10.2 HUD presets / Edit Mode          | Not started  | Spec: `docs/specs/hud-edit-mode.md`. Windows are movable/resizable and layout persists, but there is no edit mode, presets, or combat fading.                                 |
 | 10.3 Player frame                     | Partial      | HP/SP bars, Base/Job EXP + zeny HUD (Alt+Shift+H), overweight colouring. Status bar is a **text** list with timers; real SC icons not implemented.                             |
-| 10.4 Target frame                     | Partial      | Name + HP. No statuses, element/race/size, cast state, or boss variant.                                                                                                       |
+| 10.4 Target frame                     | Partial      | Player-only interaction window exists; monster clicking attacks. Persistent monster name/HP/status/element/race/size/cast frame is not implemented. |
 | 10.5 Cast bars                        | Done         | Overhead cast bars on entities (self and others).                                                                                                                             |
 | 10.5 Ground footprints / range preview| Done (unseen)| See §5.4.                                                                                                                                                                     |
 | 10.5 Target-of-target                 | Not started  |                                                                                                                                                                               |
 | 10.6 Hotbars                          | Done         | Three rows of nine (1-9, Ctrl+1-9, Alt+1-9; F-keys still work); items/potions on the hotbar (2026-09-05). Keybind remap screen: not started.                                 |
 | 10.7 Equipment sets                   | Not started  |                                                                                                                                                                               |
 | 10.8 Stats interface modes            | Not started  |                                                                                                                                                                               |
-| 10.9 Inventory search/filter/sort/lock| Not started  | `inventory.rs` is a bare grid with drag-and-drop. Weight display and thresholds: done.                                                                                        |
-| 10.9 Storage                          | Partial      | Kafra storage open/store/retrieve works; no search/filters.                                                                                                                   |
+| 10.9 Inventory search/filter/sort/lock| Partial — code present, live acceptance open | Inventory has All/Equipped/Gear/Items tabs, name search, sorting, drag arrangement with server-persisted slot ordering, and per-character drop/sale protection. Fine-grained categories and server-authoritative split-to-stack remain open. Weight display and thresholds: done. |
+| 10.9 Storage                          | Partial      | Kafra storage open/store/retrieve and name search are present. Category filters and live acceptance remain open. |
 | 10.10 Equipment comparison            | Partial      | Tooltip shows "— vs equipped —" deltas (ATK/MATK/DEF/slots/refine). Script bonuses and vs-target context: not started.                                                        |
-| 10.11 Quest tracker                   | Partial      | Quest log window (Ctrl+Q, shipped 2026-08-25, visible only since 2026-09-05 — it had been bound to close-window too). No on-HUD tracker, no per-quest tracking toggle.         |
-| 10.12 Minimap layers / waypoints / pings | Not started | Base minimap done (see §9).                                                                                                                                                  |
+| 10.11 Quest tracker                   | Partial      | Quest log has Track/Untrack controls and a basic HUD summary. Tracked quest IDs persist per character in local client settings and reconcile against the server's active quest list. Objective locations, quest-to-route links, hunting goals, and live reconnect acceptance remain open. |
+| 10.12 Minimap layers / waypoints / pings | Partial — route guidance present | Current minimap shows the next verified portal and a sampled walkable breadcrumb trail to it; the trail is rebuilt after each map change. Personal/shared waypoints, party pings, and live route acceptance remain open. |
 | 10.13 Global search                   | Decided (C1) — Not started | See §9.5.                                                                                                                                                       |
 | 10.14 Party UI                        | Done         | Roster window (Alt+Z / Alt+P) with HP + SP bars (server now sends party SP), class (job-refresh bug fixed server-side 2026-09-05), "Go to" button, minimap blips, world ally HP bars. Click-to-target and distance/out-of-map state: not verified. |
 | 10.15 Chat                            | Partial      | Public / Party / Whisper channels, `/r`-style commands. No timestamps, no item links (`<ITEM>` stripped), no copy/paste selection, no Loot/System tabs.                        |
@@ -1604,8 +1614,8 @@ This section was added in v0.2 after auditing the two forks that implement this 
 | 13.2 Shared destinations          | Not started    |                                                                                                                                 |
 | 13.3 Party pings                  | Not started    | No structured party transport exists in the client yet (the server's `[DMJ]` echo is not parsed). Transport decision in §13.7.  |
 | 13.4 Hunting goals list           | Not started    |                                                                                                                                 |
-| 13.5 Level difference handling    | Stock          | `party.conf` untouched; no level-sync.                                                                                          |
-| 13.6 Shared quest progress        | Done (campaign)| See §8.5.                                                                                                                       |
+| 13.5 Level difference handling    | Partial        | Effective import config gives 25% even-share bonus per extra member; level spread limit remains 15 in `conf/common/inter-server.conf`. No level-sync. |
+| 13.6 Shared quest progress        | Built; live check due | Campaign state shares via helpers; stock kill objectives already credit nearby same-party members. See §8.5. |
 | Party warp                        | Done           | `@partyjump`, non-GM.                                                                                                           |
 | Party loot                        | Decided        | Stays random (`party_item_share_type: 0`), operator decision 2026-09-05.                                                        |
 
@@ -1634,7 +1644,7 @@ This section was added in v0.2 after auditing the two forks that implement this 
 
 | **Item**                        | **Status**   | **Evidence / Notes**                                                                                                                                                                                                                                                    |
 |---------------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 17.1 Server baseline settings   | Mostly stock | `area_size: 30` (draw distance) overridden; autoloot commands granted to group 0 (2026-09-21). Knowledge Mode, guidance, respec curve, party range, death penalty: unchanged. PvP/WoE: the stock WoE NPC set (`npc/scripts_woe.conf`, `npc/re/scripts_woe.conf`) is still included by `scripts_main.conf`; the custom `woe_controller`/battleground scripts are not loaded. §2.3 says WoE is out of scope — remove the includes. |
+| 17.1 Server baseline settings   | Mostly stock | `area_size: 30` (draw distance) overridden; autoloot and free skill-reset commands granted to group 0. Knowledge Mode, guidance, party range, death penalty: unchanged. PvP/WoE: the stock WoE NPC set (`npc/scripts_woe.conf`, `npc/re/scripts_woe.conf`) is still included by `scripts_main.conf`; the custom `woe_controller`/battleground scripts are not loaded. §2.3 says WoE is out of scope — remove the includes. |
 | 17.2 Player-level configuration | Partial      | WASD toggle, minimap toggle, auto-attack, scaling, graphics/audio. None of the guidance/overlay/density/loot-filter options.                                                                                                                                             |
 | 17.3 GM / designer tools        | Done (DM-shaped) | `@dm` console (mode, spawn, warp, recall, hazard, beat, quest, flag, reward, check, encounter, instance, stakes, status, reset, dryrun), `@roll`, DM handbook, session board, Ctrl+O commands window, Ctrl+D dice, Bestiary Journal, Loot Generator, `dev.sh` DB snapshot/restore. **Missing the balance telemetry** the GDD names: spawn density, pathing failures, drop simulation, party-level distribution. |
 | Developer logging (Phase 0)     | Done         | `KORANGAR_PACKET_LOG`, packet inspector, diagnostics collector, `Troubleshoot.bat` for white-screen reports, structured `[DMJ]` echo.                                                                                                                                    |
@@ -1671,6 +1681,14 @@ The audit surfaced six places where a fork decision contradicted this document. 
 | C4    | `@partyjump` is an unbounded party teleport                         | **Keep as-is for now.** Accepted as a §13.1 friends-first convenience on a private server; abuse potential noted for a public setting. May be bounded later.                                                                                                                                    | §9.8 amended with the exception. Revisit if the group grows or if it starts short-circuiting §9 travel.                                                                                             |
 | C5    | Campaign is DM-gated; §8 describes a self-directed spine            | **Campaign is a separate mode.** "DM Session" is activated by the DM (`@dm mode on` / `@dm start`) and is not the §8 story spine. §8 stays as the design for a future self-directed spine; Seal Cascade is not counted against it.                                                              | §2.3 scope amended. Appendix D Q13 answered. Phase 6 rows re-labelled "DM Session mode".                                                                                                            |
 | C6    | `@autoloot` gated to group 1                                        | **Grant to players.** `autoloot`, `alootid`, `autoloottype` moved to group 0 alongside `partyjump`.                                                                                                                                                                                             | Done 2026-09-21 in `Hercules/conf/groups.conf`. The §11.3 filter model remains separate future work.                                                                                                |
+| C7    | Late-joining campaign party members                                | A character joining the active DM Session party automatically inherits its current campaign quests and story flags, without receiving past rewards. State remains per-character; same-account alternates inherit only after joining.                                                                 | 2026-09-23: recorded in the DM party quest-sync contract. S10 implements and verifies the snapshot/replay behavior.                                                                                 |
+
+### Owner decisions — 2026-09-22
+
+- **Account-wide general unlocks; character-specific story:** Persistent non-story discoveries and general access carry across an account's characters. Every character must complete story chapters, choices, and story-gated access independently, including in DM Session mode. Build, inventory, and quest objective counts remain character state.
+- **DM group quest sync (2026-09-23):** A character joining the active campaign party automatically inherits its current campaign quests and story flags, without past rewards. A disconnected member catches up on return; another character on the same account inherits nothing until it joins. Existing helpers cover only online updates; S10 adds durable event replay, late-join snapshot sync, and character-scoped checkpoint state.
+- **Open, searchable knowledge:** The player Adventure Guide must let a fresh account research builds from verified server data. Discovery adds history and optional non-spoiler notes; it does not gate mechanics, drops, rates, or item/skill information. Campaign plot spoilers and DM controls stay separate.
+- **Free experimentation:** Ordinary players can reset stats and skills separately, free at every level. The current command/permission/client mismatch in §7.5 and S2 must be fixed before this is marked delivered.
 
 ### Open playtest item recorded with the decisions
 

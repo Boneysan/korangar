@@ -19,6 +19,7 @@ pub struct StorageState {
     max_amount: u16,
     open: bool,
     capacity_text: String,
+    search_query: String,
 }
 
 #[allow(dead_code)]
@@ -33,6 +34,10 @@ impl StorageState {
 
     pub fn capacity_text(&self) -> &str {
         &self.capacity_text
+    }
+
+    pub fn search_query(&self) -> &str {
+        &self.search_query
     }
 
     pub fn set_list(&mut self, async_loader: &AsyncLoader, items: Vec<InventoryItem<NoMetadata>>) {
@@ -89,6 +94,7 @@ impl StorageState {
         self.amount = 0;
         self.max_amount = 0;
         self.capacity_text.clear();
+        self.search_query.clear();
     }
 
     fn rebuild_capacity_text(&mut self) {

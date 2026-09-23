@@ -123,16 +123,11 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 > to *modern client*: HUD edit mode · party frames · floating combat text · modern
 > inventory · modern NPC dialogue. Ship these first; everything else is polish.
 >
-> **Considered and rejected** (2026-07-05, so they aren't re-proposed): a **macro
-> system** — the command palette + keybind profiles cover the friends-group need,
-> full macros are public-server scope creep; an **in-client item/mob database
-> browser** — smart tooltips + the campaign journal cover it, and with 4 players
-> the DM answers faster than a wiki UI would.
-> **The database-browser rejection was reversed on 2026-09-21** (GDD v0.2 §9.5,
-> decision C1): build a full in-game encyclopedia — monsters, items, cards, skills,
-> jobs, maps, quests, NPCs, status effects, mechanics, server rules — generated from
-> the Hercules tables and searchable by players. The DM Bestiary window and
-> `docs/*.json` are the seed. The macro-system rejection stands.
+> **Current GDD direction (2026-09-21):** the in-client database-browser
+> rejection was reversed by GDD §9.5, decision C1. Build a searchable Adventure
+> Guide from the Hercules tree plus reviewed authored supplements; see
+> [plans/gdd-next-slices.md](plans/gdd-next-slices.md). The older macro-system
+> rejection stands.
 
 - [ ] **Login & connection:**
   - **Custom Server IP Input:** An input field on the login screen to manually specify the server IP and port, allowing users to connect to any server without editing `sclientinfo.xml`.
@@ -144,12 +139,10 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     `register_click_handler(MouseButton::Right, …)`). Nothing on screen hints at it. A
     tester driving the client cold concluded *"there is no character delete button"* — the
     flow works, it is simply invisible.
-  - **Delete has no confirmation.** It fires `InputEvent::DeleteCharacter` straight from
-    the menu. Right-click plus one misclick permanently deletes a character; the only
-    thing standing between a player and losing a character is not knowing the menu exists.
-    That is the wrong safety model for the most destructive action in the client.
+  - **Current:** the right-click menu already opens a second `WarningBanner`
+    confirmation. This prevents a single misclick, but remains hidden to new players.
   - **Do:** a visible affordance on each occupied slot (the official client shows
-    Delete/Make buttons), plus a typed-name or hold-to-confirm step before deletion.
+    Delete/Make buttons), plus the GDD's typed-name step before deletion.
     Keep right-click as an accelerator; don't make it the only path.
   - **Scope note:** per the Modernization Charter the official client is a baseline, not a
     ceiling — copying its bare Delete button would fix discoverability but not the missing
@@ -158,7 +151,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
 - [ ] **Foundation — UI framework:**
   - Scalable UI framework (resolution independence for 1440p/4K), with per-element UI scale.
   - Modern typography and window management (snapping, docking, locking).
-  - **HUD edit mode:** a layout editor to drag/scale/lock every HUD element, with per-character saved profiles (cf. WoW Edit Mode / FFXIV HUD Layout). Generalizes the snapping/docking work above and is the substrate every widget below sits on — **build this first.**
+  - **HUD edit mode:** extend the existing movable/resizable `WindowCache` with lock, snap, named layouts and combat fading. GDD next-slice 14 follows the first widgets and quest tracker; it is not a prerequisite for toasts or target UI.
   - Targeted spec: [specs/hud-edit-mode.md](specs/hud-edit-mode.md)
 
 - [ ] **Combat feedback & readability:**
@@ -244,11 +237,12 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Raid / target markers:** mark a mob (skull/star) as "kill this first," visible
     to the whole party. Complements the [DM_INTERFACE.md](DM_INTERFACE.md) initiative / encounter panel.
   - **Assist targeting:** target the DM's / lead's current target.
-  - **⚠ Transport dependency:** these three **plus the existing shared map ping**
-    ([DM_INTERFACE.md](DM_INTERFACE.md) DM tooling) all need the *same* thing — a channel to sync small bits of party
-    state between clients. Build it **once** ([DM_INTERFACE.md](DM_INTERFACE.md) §9.3 Phase A structured `[DMJ]` echo →
-    Phase B custom packets) and ping + ready-check + markers + assist all come online
-    together. Don't scatter separate transports.
+  - **Transport dependency:** pings, ready checks, and markers share one
+    versioned ephemeral party-state contract. Test party chat as a carrier
+    first; use a fork packet if it cannot meet size, rate, mixed-client, or
+    rendering requirements. `[DMJ]` is a server-originated DM echo, not a
+    peer-authoritative bestiary or quest channel. See GDD §13.7 and the
+    [next-slices plan](plans/gdd-next-slices.md).
 
 - [ ] **Information & communication:**
   - **Tabbed, resizable chat** with item hyperlinks (hover → tooltip), timestamps, per-channel filters, and `/command` autocomplete.
@@ -257,7 +251,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Command palette:** searchable overlay exposing client actions and the many `@dm…`/`@roll` commands ([DM_INTERFACE.md](DM_INTERFACE.md) §9.1) without memorization.
 
 - [ ] **Navigation & quests:**
-  - **Cross-Map Quest Guiding & Breadcrumbs:** A macro-level pathfinding system using a world graph of warp portals. When tracking a quest on another map, a ground-level glowing trail (breadcrumb ribbon) and minimap edge-arrows will guide you seamlessly through multiple maps and warp portals directly to the objective.
+  - **Cross-Map Quest Guiding & Breadcrumbs:** A generated world graph identifies the next verified warp exit; the minimap marks it with an edge arrow. Continuous ground ribbons are not part of the GDD slice.
   - **Clickable NPC navigation links:** Parse RO dialogue navigation markup such as
     `<NAVI>[Hun]<INFO>izlude,122,207,</INFO></NAVI>` into clickable quest
     breadcrumbs. Same-map links should walk or mark the target directly; cross-map
@@ -268,17 +262,13 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
     - Render navigation labels as clickable dialog UI. Start with a small generated
       button beside/below the sentence; later replace it with true inline clickable
       text.
-    - Add visual feedback when a navigation link is activated: walk indicator,
-      ground marker, minimap marker, and eventually world-map support.
+    - Add a same-map marker or next-exit minimap marker when a link is activated;
+      the world-map view follows after the graph is verified.
   - **Navigational Aids:** 3D floating markers over NPCs (`!` / `?`), minimap objective radiuses, and custom map waypoints.
   - **Enhanced minimap/world map:** zoom, tracking filters, shared party pings.
-    *Base minimap (2026-07-10): **Alt+M** / Map button / Game Settings toggle
-    (persisted `show_minimap`), resizable, top-right default, live player blip
-    (`minimap\player_1.bmp`), Towninfo facility POIs (shops/kafra/guides via
-    `System/Towninfo_EN.lub`). Hotbar shows **F1–F10** under slots.
-    **Still deferred:** quest/compass/party markers — see
-    [specs/navigation-quest-guiding.md](specs/navigation-quest-guiding.md)
-    § "Follow-up — Minimap markers".*
+    *The current minimap is resizable, with player, party (hover names), compass,
+    and Towninfo POIs. Quest/NAVI route markers and party pings are the remaining
+    GDD slices; see [navigation-quest-guiding.md](specs/navigation-quest-guiding.md).*
 
 - [ ] **Input & accessibility:**
   - **WASD character movement (P1 modernization):** support camera-relative
@@ -415,7 +405,7 @@ Implementation plan: [plans/M0-connectivity.md](plans/M0-connectivity.md)
   - **Integrated Skill Check Dialogue:** NPC dialogue options automatically detect skill checks (e.g., `[Charisma DC 15]`) and trigger the dice-roll UI inline, rather than requiring separate chat commands.
   - **Active Dodge Roll / Dash (Long-term Extension):** Pushing the engine toward a true Action RPG. A dedicated evasion keybind (`Spacebar`) providing a brief movement burst and i-frames to actively avoid hazard telegraphs. *Note: Requires heavy custom C-plugin work on the Hercules server to handle coordinate snapping and i-frames without rubber-banding.*
   - **Campfire / Short Rest System:** A deployable physical campfire where the party can sit to rapidly recover HP/SP, serving as a roleplay anchor.
-  - **Dynamic Bestiary Journal:** A monster manual that unlocks exact HP, weaknesses, and lore for a creature only after fighting it or passing a DM Lore check. See `specs/bestiary-journal.md`.
+  - **Dynamic Bestiary Journal:** The old campaign/DM journal proposal in `specs/bestiary-journal.md` is superseded for ordinary players by the [Adventure Guide contract](specs/encyclopedia-data.md) and [account discovery spec](specs/bestiary-unlock-persistence.md). Verified monster mechanics, drops, and build-relevant knowledge are searchable from the start; account-wide encounter milestones add history/badges without hiding reference facts. Campaign plot spoilers remain separate.
   - **Action Camera (WASD extension):** After the keyboard-navigation MVP is
     stable, add optional third-person mouse-look, cursor locking, center-screen
     targeting, and left-click attacks. This is an extension, not a prerequisite

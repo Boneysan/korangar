@@ -1944,6 +1944,36 @@ pub struct DropItemPacket {
     pub amount: u16,
 }
 
+/// Split an inventory stack into a second, empty inventory slot (Korangar
+/// fork packet 0x0efc). The original stack retains the remainder.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0efc)]
+pub struct SplitInventoryStackPacket {
+    pub inventory_index: InventoryIndex,
+    pub amount: u16,
+}
+
+/// Client's desired inventory order, expressed as the existing server slot ids.
+#[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0efb)]
+#[variable_length]
+pub struct InventoryOrderRequestPacket {
+    #[repeating_remaining]
+    pub indices: Vec<InventoryIndex>,
+}
+
+/// Authoritative inventory slot order saved by the map server.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0efa)]
+#[variable_length]
+pub struct InventoryOrderPacket {
+    #[repeating_remaining]
+    pub indices: Vec<InventoryIndex>,
+}
+
 /// Server ack that an inventory item was dropped (`ZC_ITEM_THROW_ACK` 0x00AF).
 /// Modern Hercules also sends `ZC_DELETE_ITEM_FROM_BODY` (0x07FA) on success;
 /// this packet still arrives and must be consumed so the stream stays aligned.

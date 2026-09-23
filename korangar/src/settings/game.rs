@@ -33,6 +33,18 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub window_maximized: bool,
+    /// When set, the hotbar ignores drags. Number keys still cast.
+    #[serde(default)]
+    pub hotbar_locked: bool,
+    /// Character overview shows only the name line.
+    #[serde(default)]
+    pub overview_minimized: bool,
+    /// Item IDs protected from dropping or NPC sale, keyed by character ID.
+    #[serde(default)]
+    pub protected_items_by_character: Vec<(u32, Vec<u32>)>,
+    /// Player-selected tracked quest IDs, keyed by character ID.
+    #[serde(default)]
+    pub tracked_quests_by_character: Vec<(u32, Vec<u32>)>,
 }
 
 impl Default for GameSettings {
@@ -43,6 +55,10 @@ impl Default for GameSettings {
             wasd_movement: true,
             window_size: None,
             window_maximized: false,
+            hotbar_locked: false,
+            overview_minimized: false,
+            protected_items_by_character: Vec::new(),
+            tracked_quests_by_character: Vec::new(),
         }
     }
 }
@@ -91,6 +107,52 @@ impl GameSettings {
                 Self::FILE_NAME.magenta(),
                 _error.red()
             );
+        }
+    }
+
+    pub fn is_item_protected(&self, character_id: u32, item_id: u32) -> bool {
+        self.protected_items_by_character
+            .iter()
+            .find(|(id, _)| *id == character_id)
+            .is_some_and(|(_, items)| items.contains(&item_id))
+    }
+
+    pub fn toggle_item_protection(&mut self, character_id: u32, item_id: u32) {
+        let position = self.protected_items_by_character.iter().position(|(id, _)| *id == character_id);
+        let items = match position {
+            Some(position) => &mut self.protected_items_by_character[position].1,
+            None => {
+                self.protected_items_by_character.push((character_id, Vec::new()));
+                &mut self.protected_items_by_character.last_mut().expect("inserted character protection list").1
+            }
+        };
+        if let Some(position) = items.iter().position(|id| *id == item_id) {
+            items.remove(position);
+        } else {
+            items.push(item_id);
+            items.sort_unstable();
+        }
+        self.protected_items_by_character.retain(|(_, items)| !items.is_empty());
+    }
+
+    pub fn tracked_quests(&self, character_id: u32) -> Option<&[u32]> {
+        self.tracked_quests_by_character
+            .iter()
+            .find(|(id, _)| *id == character_id)
+            .map(|(_, quest_ids)| quest_ids.as_slice())
+    }
+
+    pub fn set_tracked_quests(&mut self, character_id: u32, quest_ids: &[u32]) {
+        let quest_ids = {
+            let mut quest_ids = quest_ids.to_vec();
+            quest_ids.sort_unstable();
+            quest_ids.dedup();
+            quest_ids
+        };
+        if let Some((_, existing)) = self.tracked_quests_by_character.iter_mut().find(|(id, _)| *id == character_id) {
+            *existing = quest_ids;
+        } else {
+            self.tracked_quests_by_character.push((character_id, quest_ids));
         }
     }
 }

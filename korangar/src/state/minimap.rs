@@ -44,7 +44,7 @@ pub struct DynamicMinimapMarker {
 /// Default square map size (classic RO corner minimap).
 pub const DEFAULT_MINIMAP_SIDE: f32 = 160.0;
 pub const MIN_MINIMAP_SIDE: f32 = 96.0;
-pub const MAX_MINIMAP_SIDE: f32 = 400.0;
+pub const MAX_MINIMAP_SIDE: f32 = 640.0;
 
 #[derive(RustState, StateElement)]
 pub struct MinimapState {
@@ -68,6 +68,13 @@ pub struct MinimapState {
     /// Compass / quest-style dynamic markers (0x0144).
     #[hidden_element]
     dynamic_markers: Vec<DynamicMinimapMarker>,
+    /// Map-level navigation target and the next route exit to draw.
+    navigation_target: Option<(String, u16, u16)>,
+    #[hidden_element]
+    navigation_marker: Option<(u16, u16)>,
+    /// Sampled walkable tiles from the player to the next route waypoint.
+    #[hidden_element]
+    navigation_breadcrumbs: Vec<(u16, u16)>,
 }
 
 impl Default for MinimapState {
@@ -81,6 +88,9 @@ impl Default for MinimapState {
             player_marker: None,
             pois: Vec::new(),
             dynamic_markers: Vec::new(),
+            navigation_target: None,
+            navigation_marker: None,
+            navigation_breadcrumbs: Vec::new(),
         }
     }
 }
@@ -95,6 +105,8 @@ impl MinimapState {
         self.player_marker = None;
         self.pois.clear();
         self.dynamic_markers.clear();
+        self.navigation_marker = None;
+        self.navigation_breadcrumbs.clear();
     }
 
     pub fn set_map(
@@ -155,6 +167,30 @@ impl MinimapState {
 
     pub fn dynamic_markers(&self) -> &[DynamicMinimapMarker] {
         &self.dynamic_markers
+    }
+
+    pub fn navigation_target(&self) -> Option<&(String, u16, u16)> {
+        self.navigation_target.as_ref()
+    }
+
+    pub fn set_navigation_target(&mut self, target: Option<(String, u16, u16)>) {
+        self.navigation_target = target;
+    }
+
+    pub fn set_navigation_marker(&mut self, marker: Option<(u16, u16)>) {
+        self.navigation_marker = marker;
+    }
+
+    pub fn navigation_marker(&self) -> Option<(u16, u16)> {
+        self.navigation_marker
+    }
+
+    pub fn set_navigation_breadcrumbs(&mut self, breadcrumbs: Vec<(u16, u16)>) {
+        self.navigation_breadcrumbs = breadcrumbs;
+    }
+
+    pub fn navigation_breadcrumbs(&self) -> &[(u16, u16)] {
+        &self.navigation_breadcrumbs
     }
 
     /// Apply a `MarkMinimapPosition` (0x0144) packet.

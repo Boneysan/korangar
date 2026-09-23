@@ -30,7 +30,6 @@ mod interface_settings;
 mod inventory;
 mod item_actions;
 mod login;
-#[cfg(feature = "debug")]
 mod maps;
 mod menu;
 mod minimap;
@@ -185,7 +184,6 @@ pub enum WindowClass {
     Bestiary,
     /// DM loot / rewards generator (Seal Cascade campaign).
     DmLoot,
-    #[cfg(feature = "debug")]
     Maps,
     #[cfg(feature = "debug")]
     ClientStateInspector,

@@ -48,6 +48,11 @@ where
             minimum_width: 300.0,
             maximum_width: 900.0,
             elements: (
+                state_button! {
+                    text: "Minimize",
+                    state: client_state().game_settings().overview_minimized(),
+                    event: Toggle(client_state().game_settings().overview_minimized()),
+                },
                 fragment! {
                     gaps: 4.0,
                     children: (

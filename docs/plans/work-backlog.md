@@ -23,6 +23,10 @@ Do not use this section as a second unchecked checklist.
 - [x] Item names in trade + NPC refine (N15/N25 / row 6)
 - [x] Moonlit redesign (2026-08-08) — re-confirm only after skill-unit changes
 
+### Tabled — needs an in-game test (2026-09-22)
+
+Quest and DM session changes are loaded on the running map server. Checklist: [playtest-2026-09-20.md](playtest-2026-09-20.md). Do not keep coding that system until someone plays it.
+
 ### Still open (live GUI)
 
 - [ ] **Hermode** (Block E) — not reached; sound-only PASS criteria in GUI pass

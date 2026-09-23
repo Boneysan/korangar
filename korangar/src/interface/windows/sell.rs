@@ -224,7 +224,7 @@ where
                         let item_path = self.items_path.index(index).manually_asserted();
                         let cart_path = self.cart_path;
 
-                        fn disabled_cutoff<A, B>(item_path: A, cart_path: B, amount: u16) -> impl Selector<ClientState, bool>
+                        fn disabled_cutoff<A, B>(item_path: A, cart_path: B, _amount: u16) -> impl Selector<ClientState, bool>
                         where
                             A: Path<ClientState, SellItem<(ResourceMetadata, u16)>>,
                             B: Path<ClientState, Vec<SellItem<(ResourceMetadata, u16)>>>,
@@ -233,10 +233,12 @@ where
                                 let item = item_path.follow_safe(state);
                                 let cart = cart_path.follow_safe(state);
 
-                                cart.iter()
+                                let already = cart
+                                    .iter()
                                     .find(|purchase| purchase.inventory_index == item.inventory_index)
-                                    .map(|purchase| item.metadata.1 - purchase.metadata.1 < amount)
-                                    .unwrap_or(item.metadata.1 < amount)
+                                    .map(|purchase| purchase.metadata.1)
+                                    .unwrap_or(0);
+                                item.metadata.1.saturating_sub(already) == 0
                             })
                         }
 
@@ -266,6 +268,15 @@ where
                                 let amount = self.amount;
 
                                 state.update_value_with(self.cart_path, move |cart| {
+                                    let already = cart
+                                        .iter()
+                                        .find(|purchase| purchase.inventory_index == item.inventory_index)
+                                        .map(|purchase| purchase.metadata.1)
+                                        .unwrap_or(0);
+                                    let amount = amount.min(item.metadata.1.saturating_sub(already));
+                                    if amount == 0 {
+                                        return;
+                                    }
                                     if let Some(purchase) =
                                         cart.iter_mut().find(|purchase| purchase.inventory_index == item.inventory_index)
                                     {

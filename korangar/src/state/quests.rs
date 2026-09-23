@@ -48,6 +48,9 @@ impl QuestEntry {
 #[derive(Clone, Debug, Default, RustState, StateElement)]
 pub struct QuestLogState {
     quests: Vec<QuestEntry>,
+    tracked_quests: Vec<u32>,
+    /// HUD tracker text. Rebuilt whenever the log changes.
+    display_text: String,
 }
 
 impl QuestLogState {
@@ -59,9 +62,43 @@ impl QuestLogState {
         self.quests.is_empty()
     }
 
+    pub fn is_tracked(&self, quest_id: u32) -> bool {
+        self.tracked_quests.contains(&quest_id)
+    }
+
+    pub fn tracked_quest_ids(&self) -> &[u32] {
+        &self.tracked_quests
+    }
+
+    pub fn set_tracked_quests(&mut self, quest_ids: &[u32]) {
+        self.tracked_quests = quest_ids
+            .iter()
+            .copied()
+            .filter(|quest_id| self.quests.iter().any(|quest| quest.quest_id == *quest_id))
+            .collect();
+        self.tracked_quests.sort_unstable();
+        self.tracked_quests.dedup();
+        self.rebuild_display();
+    }
+
+    pub fn toggle_tracking(&mut self, quest_id: u32) {
+        if self.tracked_quests.contains(&quest_id) {
+            self.tracked_quests.retain(|id| *id != quest_id);
+        } else if self.quests.iter().any(|quest| quest.quest_id == quest_id) {
+            self.tracked_quests.push(quest_id);
+        }
+        self.rebuild_display();
+    }
+
     /// Replace the whole log, as `ZC_ALL_QUEST_LIST` does on map login.
     pub fn replace(&mut self, quests: Vec<QuestEntry>) {
+        let was_empty = self.quests.is_empty();
         self.quests = quests;
+        self.tracked_quests.retain(|id| self.quests.iter().any(|quest| quest.quest_id == *id));
+        if was_empty && self.tracked_quests.is_empty() {
+            self.tracked_quests = self.quests.iter().map(|quest| quest.quest_id).collect();
+        }
+        self.rebuild_display();
     }
 
     /// Add a quest, or refresh one already listed.
@@ -71,17 +108,51 @@ impl QuestLogState {
     pub fn add(&mut self, quest: QuestEntry) {
         match self.quests.iter_mut().find(|entry| entry.quest_id == quest.quest_id) {
             Some(existing) => *existing = quest,
-            None => self.quests.push(quest),
+            None => {
+                self.tracked_quests.push(quest.quest_id);
+                self.quests.push(quest);
+            }
         }
+        self.rebuild_display();
     }
 
     pub fn remove(&mut self, quest_id: u32) {
         self.quests.retain(|entry| entry.quest_id != quest_id);
+        self.tracked_quests.retain(|id| *id != quest_id);
+        self.rebuild_display();
+    }
+
+    fn rebuild_display(&mut self) {
+        if self.quests.is_empty() {
+            self.display_text.clear();
+            return;
+        }
+        self.display_text = self
+            .quests
+            .iter()
+            .filter(|quest| self.tracked_quests.contains(&quest.quest_id))
+            .map(|quest| {
+                if quest.requirements.is_empty() {
+                    quest.name.clone()
+                } else {
+                    let items = quest
+                        .requirements
+                        .iter()
+                        .map(|requirement| format!("need {} x{}", requirement.item_name, requirement.needed))
+                        .collect::<Vec<_>>()
+                        .join(", ");
+                    format!("{} ({items})", quest.name)
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
     }
 
     /// Drop everything, for a logout or a character switch.
     pub fn clear(&mut self) {
         self.quests.clear();
+        self.tracked_quests.clear();
+        self.rebuild_display();
     }
 }
 

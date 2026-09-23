@@ -177,6 +177,10 @@ impl TradeState {
         self.rebuild_display();
     }
 
+    pub fn our_zeny(&self) -> u32 {
+        self.our_zeny
+    }
+
     pub fn lock_side(&mut self, who: u8) {
         if who == 0 {
             self.we_locked = true;

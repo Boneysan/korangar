@@ -14,6 +14,7 @@ use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
 use crate::state::ClientState;
 use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
+use crate::state::inventory::InventoryTab;
 use crate::state::skills::LearnableSkill;
 #[cfg(feature = "debug")]
 use crate::world::MarkerIdentifier;
@@ -108,6 +109,13 @@ pub enum InputEvent {
     ToggleHudWindow,
     /// Close the most recently opened or clicked closable window.
     CloseTopWindow,
+    /// Escape: close the top window, or open the menu when nothing is closable.
+    Escape,
+    /// Arm the local character as the skill target.
+    TargetSelf,
+    /// Arm party member 0–3 (Shift+1–4), skipping yourself.
+    TargetPartyMember { index: usize },
+    CyclePartyTarget,
     /// Close all ordinary windows while retaining basic info and chat (F11).
     CloseAllOrdinaryWindows,
     /// Toggle if the user interface should be rendered or not.
@@ -184,12 +192,22 @@ pub enum InputEvent {
         inventory_index: ragnarok_packets::InventoryIndex,
     },
     /// Drop an inventory item onto the ground (`CZ_ITEM_THROW2`).
+    SortInventory,
+    SortInventoryWearing,
+    SortInventoryGear,
+    SortInventoryItems,
+    SetInventoryTab(InventoryTab),
+    ToggleQuestTracking(u32),
     DropItem {
         inventory_index: ragnarok_packets::InventoryIndex,
         amount: u16,
     },
+    SplitInventoryStack {
+        inventory_index: ragnarok_packets::InventoryIndex,
+        amount: u16,
+    },
     /// Reorder inventory display by dragging an item onto another grid slot.
-    /// Server inventory indices are unchanged; this is client layout only.
+    /// The server persists the ordered slot list without moving item records.
     ReorderInventory {
         from_index: ragnarok_packets::InventoryIndex,
         to_slot: usize,
@@ -198,6 +216,7 @@ pub enum InputEvent {
     OpenItemActions {
         item: InventoryItem<ResourceMetadata>,
     },
+    ToggleItemProtection(ragnarok_packets::ItemId),
     /// Close the inventory item actions popup.
     CloseItemActions,
     /// One-click identify with a magnifier.
@@ -236,6 +255,9 @@ pub enum InputEvent {
     /// Put zeny into the open trade.
     TradeAddZeny {
         amount: u32,
+    },
+    TradeAdjustZeny {
+        delta: i32,
     },
     /// Lock our trade offer.
     TradeOk,
@@ -481,9 +503,12 @@ pub enum InputEvent {
     /// Open or close the client state inspector window.
     #[cfg(feature = "debug")]
     ToggleClientStateInspectorWindow,
-    /// Open or close the maps window. Only works while playing.
-    #[cfg(feature = "debug")]
+    /// Open or close the world map window. Only works while playing.
     ToggleMapsWindow,
+    /// Set a route destination without teleporting.
+    SetNavigationDestination { map_name: String, x: u16, y: u16 },
+    /// Clear the current route destination.
+    ClearNavigationDestination,
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,

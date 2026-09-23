@@ -12,24 +12,30 @@ use crate::state::theme::InterfaceThemeType;
 use crate::world::{CommonPathExt, Player, PlayerPathExt};
 
 /// Compact zeny / base-exp / job-exp / skill-cooldown readout.
-pub struct HudWindow<P, C> {
+pub struct HudWindow<P, C, T, Q> {
     player_path: P,
     cooldowns_path: C,
+    toasts_path: T,
+    quests_path: Q,
 }
 
-impl<P, C> HudWindow<P, C> {
-    pub fn new(player_path: P, cooldowns_path: C) -> Self {
+impl<P, C, T, Q> HudWindow<P, C, T, Q> {
+    pub fn new(player_path: P, cooldowns_path: C, toasts_path: T, quests_path: Q) -> Self {
         Self {
             player_path,
             cooldowns_path,
+            toasts_path,
+            quests_path,
         }
     }
 }
 
-impl<P, C> CustomWindow<ClientState> for HudWindow<P, C>
+impl<P, C, T, Q> CustomWindow<ClientState> for HudWindow<P, C, T, Q>
 where
     P: Path<ClientState, Player>,
     C: Path<ClientState, SkillCooldowns>,
+    T: Path<ClientState, crate::state::toasts::ToastQueue>,
+    Q: Path<ClientState, crate::state::quests::QuestLogState>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Hud)
@@ -39,6 +45,8 @@ where
         use korangar_interface::prelude::*;
 
         let cooldown_text = self.cooldowns_path.display_text();
+        let toast_text = self.toasts_path.display_text();
+        let quest_text = self.quests_path.display_text();
 
         window! {
             title: "HUD",
@@ -125,6 +133,16 @@ where
                         text! {
                             text: cooldown_text,
                             color: Color::rgb_u8(255, 180, 120),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        text! {
+                            text: quest_text,
+                            color: Color::rgb_u8(140, 200, 255),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        text! {
+                            text: toast_text,
+                            color: Color::rgb_u8(255, 230, 160),
                             overflow_behavior: OverflowBehavior::Shrink,
                         },
                     ),

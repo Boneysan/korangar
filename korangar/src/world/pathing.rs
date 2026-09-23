@@ -70,6 +70,28 @@ impl PathFinder {
         goal: TilePosition,
         attack_range: AttackRange,
     ) -> Option<&[TilePosition]> {
+        self.find_walkable_path_with_limit(map, start, goal, attack_range, MAX_WALK_PATH_SIZE)
+    }
+
+    /// Returns a longer walkable route for visual navigation guidance. This is
+    /// not used to issue player movement, so it can retain a full map path.
+    pub fn find_navigation_path(
+        &mut self,
+        map: &impl Traversable,
+        start: TilePosition,
+        goal: TilePosition,
+    ) -> Option<&[TilePosition]> {
+        self.find_walkable_path_with_limit(map, start, goal, AttackRange(0), 16_384)
+    }
+
+    fn find_walkable_path_with_limit(
+        &mut self,
+        map: &impl Traversable,
+        start: TilePosition,
+        goal: TilePosition,
+        attack_range: AttackRange,
+        max_path_size: usize,
+    ) -> Option<&[TilePosition]> {
         self.open_set.clear();
         self.closed_set.clear();
         self.came_from.clear();
@@ -85,7 +107,7 @@ impl PathFinder {
 
         while let Some(current) = self.open_set.pop() {
             if current.position.x.abs_diff(goal.x).max(current.position.y.abs_diff(goal.y)) <= attack_range.0 {
-                return match self.reconstruct_path(start, current.position) {
+                return match self.reconstruct_path(start, current.position, max_path_size) {
                     true => Some(&self.path),
                     false => None,
                 };
@@ -236,14 +258,14 @@ impl PathFinder {
         }
     }
 
-    fn reconstruct_path(&mut self, start: TilePosition, goal: TilePosition) -> bool {
+    fn reconstruct_path(&mut self, start: TilePosition, goal: TilePosition, max_path_size: usize) -> bool {
         let mut current = goal;
 
         while current != start {
             self.path.push(current);
             current = *self.came_from.get(&current).unwrap();
 
-            if self.path.len() >= MAX_WALK_PATH_SIZE {
+            if self.path.len() >= max_path_size {
                 return false;
             }
         }

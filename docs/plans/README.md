@@ -15,8 +15,17 @@ This directory contains executable implementation plans derived from the design
 docs. Keep plans short, milestone-scoped, and close them or replace them as work
 lands.
 
+**Current GDD delivery map (2026-09-23):** [gdd-improvement-plan.md](gdd-improvement-plan.md)
+covers every in-scope GDD improvement and its follow-on gate. Its Wave 1
+[gdd-next-slices.md](gdd-next-slices.md) tracks 15 client and ten Hercules
+server slices in GDD §19, with dependencies, design decisions, and acceptance.
+Older handoffs below remain useful evidence for their own milestones.
+
 | Plan | Purpose |
 |---|---|
+| [gdd-improvement-plan.md](gdd-improvement-plan.md) | End-to-end GDD coverage, delivery waves, F01–F39 follow-on queue, and decision gates |
+| [gdd-next-slices.md](gdd-next-slices.md) | Active GDD v0.2 implementation plan and decision ledger for the next client/server slices |
+| [phase1-progress-2026-09-23.md](phase1-progress-2026-09-23.md) | Phase 1 code present, acceptance limits, and remaining work as of 2026-09-23 |
 | [M0-connectivity.md](M0-connectivity.md) | First login → char → map loop against local Hercules |
 | [asset-pipeline.md](asset-pipeline.md) | GRF/archive/data sync decisions for M1 |
 | [packet-gap-party-whisper.md](packet-gap-party-whisper.md) | Protocol-safety plan for missing party and whisper packet families |
@@ -43,9 +52,13 @@ Recent targeted specs for DM / protocol:
 - `dm-ui-window-template.md` — isolation, WindowClass, reactive template.
 
 Future / Phase 2 specs:
-- `hud-edit-mode.md` — foundational layout system for all modern HUD + DM elements.
-- `navigation-quest-guiding.md` — cross-map breadcrumbs, NAVI parsing, in-world ribbons, pings.
-- `campaign-quest-journal.md` — quest UI (not built; headless owns packets only).
+- `hud-edit-mode.md` — edit controls and named profiles over the existing WindowCache.
+- `navigation-quest-guiding.md` — generated graph, NAVI links, and next-exit minimap guidance.
+- `encyclopedia-data.md` — reproducible server-derived categories and knowledge policy.
+- `monster-ai-pilot.md` — three-tier archetype pilot and bounded C-side extensions.
+- `gdd-combat-input.md` — cast, selection, and timed-action state transitions.
+- `gdd-ui-wireframes.md` — next-slice HUD/window hierarchy and interaction states.
+- `campaign-quest-journal.md` — historical first-pass quest UI spec; the player quest log now exists, while slice 12 owns the HUD tracker.
 
 Use [docs/protocol](../protocol/) for Hercules-derived packet references and
 packet audit lookup workflows.

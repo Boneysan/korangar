@@ -35,6 +35,33 @@ where
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
+                split! {
+                    children: (
+                        text! { text: "Master" },
+                        drop_down! {
+                            selected: self.audio_settings_path.master(),
+                            options: self.audio_settings_path.volume_choices(),
+                        },
+                    ),
+                },
+                split! {
+                    children: (
+                        text! { text: "Music" },
+                        drop_down! {
+                            selected: self.audio_settings_path.music(),
+                            options: self.audio_settings_path.volume_choices(),
+                        },
+                    ),
+                },
+                split! {
+                    children: (
+                        text! { text: "Effects" },
+                        drop_down! {
+                            selected: self.audio_settings_path.effects(),
+                            options: self.audio_settings_path.volume_choices(),
+                        },
+                    ),
+                },
                 state_button! {
                     text: client_state().localization().mute_audio_on_focus_loss_button_text(),
                     state: self.audio_settings_path.mute_on_focus_loss(),

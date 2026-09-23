@@ -91,13 +91,10 @@ impl CustomWindow<ClientState> for MenuWindow {
                     foreground_color: client_theme().debug_button().foreground_color(),
                     hovered_background_color: client_theme().debug_button().hovered_background_color(),
                 },
-                #[cfg(feature = "debug")]
                 button! {
-                    text: "Maps",
-                    tooltip: "List of maps used for testing (^000001only available in debug mode^000000)",
+                    text: "World Map",
+                    tooltip: "View connected regions and follow a route to a destination",
                     event: InputEvent::ToggleMapsWindow,
-                    foreground_color: client_theme().debug_button().foreground_color(),
-                    hovered_background_color: client_theme().debug_button().hovered_background_color(),
                 },
                 #[cfg(feature = "debug")]
                 button! {

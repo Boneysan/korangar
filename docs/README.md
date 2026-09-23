@@ -16,15 +16,10 @@ This directory contains all design documents, technical deep dives, implementati
   3. `docs/CLIENT_SYSTEMS_OVERVIEW.md` — High-level map of the codebase.
   4. `docs/SOFTWARE_DESIGN.md` — Architecture and key decisions.
 
-- **Current animation next step (2026-07-23):** E1 mechanism live-closed; M1-017
-  fixed; Soul Strike classic sprite travel live-OK. F1/F3–F7 stay procedural after
-  failed filename-guess sprites. Session:
-  [2026-07-22-session-notes.md](2026-07-22-session-notes.md). Phase D is **DONE** —
-  code closed and live client verification signed off (all 8 rows PASS 2026-07-21, see
-  [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)).
-  **Phase E (skill/status recipes) is next** —
-  [plans/animation-fidelity.md](plans/animation-fidelity.md) §6. New protocol note
-  from closing D: [protocol/inventory-and-ranged-attacks.md](protocol/inventory-and-ranged-attacks.md).
+- **Current cross-project build order (2026-09-22):** Start with
+  [GDD §19](GDD.md#19-implementation-roadmap) and
+  [plans/gdd-next-slices.md](plans/gdd-next-slices.md). The older animation
+  handoffs remain useful for effect work but are not the active GDD queue.
 
 - **Cross-references**: Documents link to each other extensively. Follow the "See also" sections.
 
@@ -115,6 +110,8 @@ HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 202608
 | Document | Purpose |
 |----------|---------|
 | [GDD.md](GDD.md) | **Game Design Document** (v0.2) — product vision, design pillars, per-system design, roadmap, and an audited implementation-status appendix across both the client and the Hercules fork. Start here for *what* and *why*. |
+| [plans/gdd-improvement-plan.md](plans/gdd-improvement-plan.md) | **End-to-end GDD improvement plan** — complete in-scope coverage, delivery waves, follow-on slices, decision gates, and definition of done. |
+| [plans/gdd-next-slices.md](plans/gdd-next-slices.md) | **Active GDD implementation plan** — all numbered next slices, dependencies, decisions, and acceptance checks. |
 | [FEATURE_ROADMAP.md](FEATURE_ROADMAP.md) | Feature roadmap, UI/UX principles, packet promotion backlog. |
 | [PROJECT_PLAN.md](PROJECT_PLAN.md) | Milestones (M0–M4), detailed task breakdown (E1–E9), decisions, risks. |
 | [plans/README.md](plans/README.md) | Index of executable near-term plans. |
@@ -123,7 +120,7 @@ HERCULES_DIR=../Hercules tools/testing/run-integration-tests.sh --shuffle 202608
 | [plans/packet-gap-party-whisper.md](plans/packet-gap-party-whisper.md) | Critical party/whisper packet safety plan. |
 | [plans/M1-p0-verification.md](plans/M1-p0-verification.md) | E3.1 live P0 verification checklist (M1). |
 | [plans/animation-fidelity.md](plans/animation-fidelity.md) | Animation fidelity phases A–F (A–C closed; D code closed). |
-| **[plans/phase-d-live-verification.md](plans/phase-d-live-verification.md)** | **NEXT: Phase D in-game checklist (Claude/Codex start here).** |
+| [plans/phase-d-live-verification.md](plans/phase-d-live-verification.md) | Historical Phase D in-game checklist; closed. |
 | [plans/modern-mechanics.md](plans/modern-mechanics.md) | Technical sketches for future action RPG / tabletop mechanics (WASD camera, skill checks, gamepad, etc.). |
 | [plans/friends-distribution.md](plans/friends-distribution.md) | How to ship a **private friends-only** client via Google Drive (E8.3). Not a public release. |
 | [specs/](specs/) | Targeted implementation specs (see below). |
@@ -136,11 +133,16 @@ These are concrete, code-level guides ready for implementation:
 - [party-packets.md](specs/party-packets.md) — Detailed plan + Hercules layouts for party (0x0AE4/0x0AE5) and whisper.
 - [dm-phase-a-chat-integration.md](specs/dm-phase-a-chat-integration.md) — `[DMJ]` parser, command emitter, lib.rs integration.
 - [dm-ui-window-template.md](specs/dm-ui-window-template.md) — Isolation pattern + copy-paste template for DM windows.
-- [hud-edit-mode.md](specs/hud-edit-mode.md) — Foundational HUD layout editor (required for most Phase 2 UI).
-- [navigation-quest-guiding.md](specs/navigation-quest-guiding.md) — Cross-map breadcrumbs, NAVI parsing, in-world ribbons, pings.
+- [hud-edit-mode.md](specs/hud-edit-mode.md) — Edit controls and named profiles over the existing window cache.
+- [navigation-quest-guiding.md](specs/navigation-quest-guiding.md) — Generated map graph, NAVI links, next-exit markers.
+- [encyclopedia-data.md](specs/encyclopedia-data.md) — Adventure Guide extraction, coverage, and knowledge policy.
+- [monster-ai-pilot.md](specs/monster-ai-pilot.md) — Tactical monster profiles and three-tier pilot.
+- [gdd-combat-input.md](specs/gdd-combat-input.md) — Cast, monster selection, and input-buffer transitions.
+- [gdd-ui-wireframes.md](specs/gdd-ui-wireframes.md) — HUD/window hierarchy and interaction states for the next slices.
 - [atb-structured-rounds.md](specs/atb-structured-rounds.md) — Future work (E7.14): DM-toggleable ATB encounter rounds (movement/action locks via `setpcblock`, `[DMJ]`-synced charge-bar strip).
 - [campaign-quest-journal.md](specs/campaign-quest-journal.md) — E7.3: quest data pipeline from `quest_db.conf`, journal window, HUD tracker; consumes QuestAdded/QuestRemoved/QuestList.
-- [bestiary-unlock-persistence.md](specs/bestiary-unlock-persistence.md) — Bestiary unlocks: client-local RON file (Phase 1), server-authoritative party-wide sync (Phase 2).
+- [dm-party-quest-sync.md](specs/dm-party-quest-sync.md) — DM Session party quest/flag synchronization without copying story completion between characters.
+- [bestiary-unlock-persistence.md](specs/bestiary-unlock-persistence.md) — Server-authoritative per-account player unlocks and login sync.
 - [initiative-encounter-panel.md](specs/initiative-encounter-panel.md) — E7.5+E7.8: initiative tracker + encounter panel, client windows *and* the missing `dm_checks.txt`/`dm_combat.txt` server commands.
 - [proficiency-checks.md](specs/proficiency-checks.md) — Future work (E7.16): `d20 + base_stat/15 + proficiency` check formula, class skills as proficiencies, mechanical stealth/perception outcomes.
 

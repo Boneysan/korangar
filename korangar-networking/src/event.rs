@@ -182,6 +182,11 @@ pub enum NetworkEvent {
     /// (`ZC_ACK_TOUSESKILL` causes 71 / 72). Hercules only sends the item *id*,
     /// and the item name table lives in the client crate, so the message is
     /// finished there instead of reporting a raw id.
+    /// `ZC_ACK_TOUSESKILL` refused the skill. The chat line is separate.
+    /// The client uses this to resume an attack the skill interrupted.
+    SkillFailed {
+        skill_id: SkillId,
+    },
     SkillFailedMissingItem {
         item_id: ItemId,
         /// How many the skill needs. Hercules sends this in `btype`; `0` and
@@ -370,6 +375,9 @@ pub enum NetworkEvent {
     },
     SetInventory {
         items: Vec<InventoryItem<NoMetadata>>,
+    },
+    InventoryOrder {
+        indices: Vec<InventoryIndex>,
     },
     IventoryItemAdded {
         item: InventoryItem<NoMetadata>,

@@ -455,10 +455,14 @@ where
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    pub fn close_top_window(&mut self, state: &State<App>) {
+    /// Closes the top closable window. Returns whether a window was closed.
+    pub fn close_top_window(&mut self, state: &State<App>) -> bool {
         if let Some(index_from_back) = self.windows.iter().rev().position(|wrapper| wrapper.window.is_closable(state)) {
             let index = self.windows.len() - 1 - index_from_back;
             self.remove_window(index);
+            true
+        } else {
+            false
         }
     }
 

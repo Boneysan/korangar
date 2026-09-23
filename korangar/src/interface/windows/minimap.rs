@@ -136,6 +136,32 @@ impl Element<ClientState> for MinimapView {
                 });
             }
 
+            for (x, y) in minimap.navigation_breadcrumbs() {
+                extra_blips.push(MinimapBlip {
+                    x: f32::from(*x),
+                    y: f32::from(*y),
+                    red: 80,
+                    green: 220,
+                    blue: 255,
+                    alpha: 225,
+                    size_scale: 0.38,
+                    name: "Route breadcrumb".to_owned(),
+                });
+            }
+
+            if let Some((x, y)) = minimap.navigation_marker() {
+                extra_blips.push(MinimapBlip {
+                    x: f32::from(x),
+                    y: f32::from(y),
+                    red: 255,
+                    green: 210,
+                    blue: 70,
+                    alpha: 255,
+                    size_scale: 1.15,
+                    name: "Route exit".to_owned(),
+                });
+            }
+
             // Compass / NPC marks (0x0144).
             for mark in minimap.dynamic_markers() {
                 extra_blips.push(MinimapBlip {

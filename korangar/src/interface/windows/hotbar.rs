@@ -53,6 +53,9 @@ where
     H: Path<ClientState, Hotbar>,
 {
     fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        if *state.get(&client_state().game_settings().hotbar_locked()) {
+            return;
+        }
         match state.get(&self.hotbar_path).get_slot(self.slot) {
             Some(HotbarBinding::Skill(skill)) => queue.queue(Event::SetMouseMode {
                 mouse_mode: MouseMode::Custom {
@@ -91,7 +94,10 @@ struct SlotDrop {
 }
 
 impl DropHandler<ClientState> for SlotDrop {
-    fn handle_drop(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>, mouse_mode: &MouseMode<ClientState>) {
+    fn handle_drop(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>, mouse_mode: &MouseMode<ClientState>) {
+        if *state.get(&client_state().game_settings().hotbar_locked()) {
+            return;
+        }
         match mouse_mode {
             MouseMode::Custom {
                 mode: MouseInputMode::MoveSkill { source, skill },
@@ -313,6 +319,11 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             elements: (
+                state_button! {
+                    text: "Lock skill bar",
+                    state: client_state().game_settings().hotbar_locked(),
+                    event: Toggle(client_state().game_settings().hotbar_locked()),
+                },
                 text! {
                     text: "1–9 · Ctrl+1–9 · Alt+1–9  (F1–F9 still work)",
                     height: 14.0,

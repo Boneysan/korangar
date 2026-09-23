@@ -1,5 +1,7 @@
 # Targeted Spec — Dynamic Bestiary Journal (E7.3 + Roadmap)
 
+> Historical DM/campaign design only. Its client-local kill unlocks and gated mechanical detail do **not** define the player Adventure Guide. Current player policy is [open searchable reference](encyclopedia-data.md) with [account-wide discovery](bestiary-unlock-persistence.md); use those specs and the [GDD next-slices plan](../plans/gdd-next-slices.md) for implementation.
+
 **Parents**: FEATURE_ROADMAP.md (Dynamic Bestiary Journal), PROJECT_PLAN.md E7.3, DM_INTERFACE.md §9.3, DM_DATA_GUIDE.md, BESTIARY.md + bestiary.json.
 
 **Purpose**: A native, unlockable monster manual that displays accurate stats, weaknesses, skills, and lore for campaign-relevant mobs. Unlocks via kills or DM Lore checks. Replaces/supplements official quest journal for Seal Cascade content.

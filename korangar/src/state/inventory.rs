@@ -9,19 +9,42 @@ use crate::graphics::Texture;
 use crate::loaders::AsyncLoader;
 use crate::world::ResourceMetadata;
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, RustState, StateElement)]
+pub enum InventoryTab {
+    #[default]
+    All,
+    Equipped,
+    Gear,
+    Items,
+}
+
 #[derive(Default, RustState, StateElement)]
 pub struct Inventory {
     // TODO: Unhide this.
     #[hidden_element]
     items: Vec<InventoryItem<ResourceMetadata>>,
+    selected_tab: InventoryTab,
+    split_amount: String,
+    search_query: String,
 }
 
 impl Inventory {
     pub fn fill(&mut self, async_loader: &AsyncLoader, items: Vec<InventoryItem<NoMetadata>>) {
-        self.items = items
+        let mut incoming: Vec<_> = items
             .into_iter()
             .map(|item| async_loader.request_inventory_item_metadata_load(item))
             .collect();
+        // A full inventory sync used to replace the vec in server order, so a
+        // trade or equip ack shuffled the grid. Keep the order the player
+        // already had, and append only stacks that are new.
+        let mut ordered = Vec::with_capacity(incoming.len());
+        for previous in self.items.drain(..) {
+            if let Some(position) = incoming.iter().position(|item| item.index == previous.index) {
+                ordered.push(incoming.remove(position));
+            }
+        }
+        ordered.append(&mut incoming);
+        self.items = ordered;
     }
 
     pub fn add_item(&mut self, async_loader: &AsyncLoader, item: InventoryItem<NoMetadata>) {
@@ -79,11 +102,66 @@ impl Inventory {
         self.items.remove(position);
     }
 
-    /// Move an item in the local inventory display order (grid drag-and-drop).
-    ///
-    /// Hercules does not expose a free inventory rearrange packet; this only
-    /// changes how the client lays items out until the next full inventory
-    /// sync.
+    /// Equipment before other items, whether or not it is worn.
+    pub fn sort_gear(&mut self) {
+        self.items.sort_by(|left, right| {
+            fn gear(item: &InventoryItem<ResourceMetadata>) -> u8 {
+                match &item.details {
+                    InventoryItemDetails::Equippable { .. } => 0,
+                    InventoryItemDetails::Regular { .. } => 1,
+                }
+            }
+            gear(left)
+                .cmp(&gear(right))
+                .then_with(|| left.metadata.name.cmp(&right.metadata.name))
+        });
+    }
+
+    /// Consumables and other non-equipment before gear.
+    pub fn sort_items(&mut self) {
+        self.items.sort_by(|left, right| {
+            fn item_rank(item: &InventoryItem<ResourceMetadata>) -> u8 {
+                match &item.details {
+                    InventoryItemDetails::Regular { .. } => 0,
+                    InventoryItemDetails::Equippable { .. } => 1,
+                }
+            }
+            item_rank(left)
+                .cmp(&item_rank(right))
+                .then_with(|| left.metadata.name.cmp(&right.metadata.name))
+        });
+    }
+
+    pub fn selected_tab(&self) -> InventoryTab {
+        self.selected_tab
+    }
+
+    pub fn search_query(&self) -> &str {
+        &self.search_query
+    }
+
+    pub fn set_selected_tab(&mut self, selected_tab: InventoryTab) {
+        self.selected_tab = selected_tab;
+    }
+
+    /// Group worn gear, then other equipment, then everything else, by name.
+    pub fn sort_for_display(&mut self) {
+        self.items.sort_by(|left, right| {
+            fn rank(item: &InventoryItem<ResourceMetadata>) -> u8 {
+                match &item.details {
+                    InventoryItemDetails::Equippable { equipped_position, .. } if !equipped_position.is_empty() => 0,
+                    InventoryItemDetails::Equippable { .. } => 1,
+                    InventoryItemDetails::Regular { .. } => 2,
+                }
+            }
+            rank(left)
+                .cmp(&rank(right))
+                .then_with(|| left.metadata.name.cmp(&right.metadata.name))
+                .then_with(|| left.index.0.cmp(&right.index.0))
+        });
+    }
+
+    /// Move an item in the visible order; the caller persists the resulting slot list.
     pub fn reorder_display(&mut self, from_index: InventoryIndex, to_slot: usize) {
         let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
             return;
@@ -96,6 +174,43 @@ impl Inventory {
         let item = self.items.remove(from);
         let insert_at = to_slot.min(self.items.len());
         self.items.insert(insert_at, item);
+    }
+
+    pub fn reorder_display_in_tab(&mut self, from_index: InventoryIndex, to_slot: usize, tab: InventoryTab, query: &str) {
+        if tab == InventoryTab::All {
+            if query.is_empty() {
+                self.reorder_display(from_index, to_slot);
+                return;
+            }
+        }
+        let Some(from) = self.items.iter().position(|item| item.index == from_index) else { return };
+        if !inventory_item_visible(&self.items[from], tab, query) {
+            return;
+        }
+        let destinations: Vec<_> = self.items.iter().enumerate()
+            .filter(|(_, item)| inventory_item_visible(item, tab, query))
+            .map(|(index, _)| index)
+            .collect();
+        let target = destinations.get(to_slot).copied().or_else(|| destinations.last().map(|index| index + 1));
+        let Some(mut target) = target else { return };
+        let item = self.items.remove(from);
+        if from < target { target -= 1; }
+        self.items.insert(target.min(self.items.len()), item);
+    }
+
+    pub fn ordered_indices(&self) -> Vec<InventoryIndex> {
+        self.items.iter().map(|item| item.index).collect()
+    }
+
+    pub fn apply_server_order(&mut self, indices: &[InventoryIndex]) {
+        let mut ordered = Vec::with_capacity(self.items.len());
+        for index in indices {
+            if let Some(position) = self.items.iter().position(|item| item.index == *index) {
+                ordered.push(self.items.remove(position));
+            }
+        }
+        ordered.append(&mut self.items);
+        self.items = ordered;
     }
 
     pub fn update_equipped_position(&mut self, index: InventoryIndex, new_equipped_position: EquipPosition) {
@@ -253,6 +368,19 @@ impl Inventory {
             None => None,
         }
     }
+}
+
+pub fn inventory_tab_matches(item: &InventoryItem<ResourceMetadata>, tab: InventoryTab) -> bool {
+    match tab {
+        InventoryTab::All => true,
+        InventoryTab::Equipped => matches!(&item.details, InventoryItemDetails::Equippable { equipped_position, .. } if !equipped_position.is_empty()),
+        InventoryTab::Gear => matches!(&item.details, InventoryItemDetails::Equippable { .. }),
+        InventoryTab::Items => matches!(&item.details, InventoryItemDetails::Regular { .. }),
+    }
+}
+
+fn inventory_item_visible(item: &InventoryItem<ResourceMetadata>, tab: InventoryTab, query: &str) -> bool {
+    inventory_tab_matches(item, tab) && item.metadata.name.to_lowercase().contains(&query.to_lowercase())
 }
 
 /// Classic shield item IDs → ViewSprite (Guard/Buckler/Shield/Mirror).
