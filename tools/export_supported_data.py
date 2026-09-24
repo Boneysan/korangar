@@ -27,6 +27,7 @@ EXPORTERS = (
     "export_job_skills.py",
     "export_job_bonuses.py",
     "export_status_names.py",
+    "export_status_reference.py",
     "extend_bestiary_export.py",
     "export_item_reference.py",
     "export_bestiary_reference.py",

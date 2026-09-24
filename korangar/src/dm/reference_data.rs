@@ -18,7 +18,7 @@ const CARDS_JSON: &str = include_str!("../../../docs/cards.v1.json");
 const SKILLS_JSON: &str = include_str!("../../../docs/skills.json");
 const JOB_SKILLS_JSON: &str = include_str!("../../../docs/job-skills.v1.json");
 const JOB_BONUSES_JSON: &str = include_str!("../../../docs/job-bonuses.v1.json");
-const STATUS_NAMES_JSON: &str = include_str!("../../../docs/status_effects.json");
+const STATUS_REFERENCE_JSON: &str = include_str!("../../../docs/status-effects.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -189,10 +189,32 @@ pub struct ReferenceSource {
     pub record: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ReferenceStatus {
     pub id: u32,
     pub name: String,
+    #[serde(default)]
+    pub statuses: Vec<ReferenceStatusMechanic>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatusMechanic {
+    pub constant: String,
+    pub id: u32,
+    #[serde(default)]
+    pub flags: Vec<String>,
+    #[serde(default)]
+    pub calculation_flags: Vec<String>,
+    #[serde(default)]
+    pub associated_skill: Option<ReferenceStatusSkill>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatusSkill {
+    pub id: u16,
+    pub name: String,
+    #[serde(default)]
+    pub description: String,
 }
 
 pub struct ReferenceData {
@@ -227,14 +249,15 @@ impl ReferenceData {
             serde_json::from_str(JOB_SKILLS_JSON).map_err(|error| format!("embedded job-skills.v1.json is invalid: {error}"))?;
         let job_bonuses: VersionedFile<ReferenceJobBonuses> =
             serde_json::from_str(JOB_BONUSES_JSON).map_err(|error| format!("embedded job-bonuses.v1.json is invalid: {error}"))?;
-        let status_names: HashMap<String, String> =
-            serde_json::from_str(STATUS_NAMES_JSON).map_err(|error| format!("embedded status_effects.json is invalid: {error}"))?;
+        let status_reference: VersionedFile<ReferenceStatus> =
+            serde_json::from_str(STATUS_REFERENCE_JSON).map_err(|error| format!("embedded status-effects.v1.json is invalid: {error}"))?;
 
         if bestiary.schema_version != 1
             || items.schema_version != 1
             || cards.schema_version != 1
             || job_skills.schema_version != 1
             || job_bonuses.schema_version != 1
+            || status_reference.schema_version != 1
         {
             return Err("unsupported embedded reference-data schema version".to_owned());
         }
@@ -242,6 +265,7 @@ impl ReferenceData {
             || items.source_revision != cards.source_revision
             || cards.source_revision != job_skills.source_revision
             || job_skills.source_revision != job_bonuses.source_revision
+            || job_bonuses.source_revision != status_reference.source_revision
         {
             return Err("embedded reference files come from different Hercules revisions".to_owned());
         }
@@ -249,10 +273,16 @@ impl ReferenceData {
             || items.source_worktree_dirty != cards.source_worktree_dirty
             || cards.source_worktree_dirty != job_skills.source_worktree_dirty
             || job_skills.source_worktree_dirty != job_bonuses.source_worktree_dirty
+            || job_bonuses.source_worktree_dirty != status_reference.source_worktree_dirty
         {
             return Err("embedded reference files disagree about source worktree status".to_owned());
         }
-        if bestiary.mode != items.mode || items.mode != cards.mode || cards.mode != job_skills.mode || job_skills.mode != job_bonuses.mode {
+        if bestiary.mode != items.mode
+            || items.mode != cards.mode
+            || cards.mode != job_skills.mode
+            || job_skills.mode != job_bonuses.mode
+            || job_bonuses.mode != status_reference.mode
+        {
             return Err("embedded reference files use different renewal modes".to_owned());
         }
 
@@ -262,18 +292,13 @@ impl ReferenceData {
         let skills_by_id = unique_id_index(&skills, "skill")?;
         let job_skill_trees_by_id = unique_job_id_index(&job_skills.entries)?;
         let job_bonuses_by_id = unique_job_bonus_id_index(&job_bonuses.entries)?;
-        let mut statuses = status_names
-            .into_iter()
-            .map(|(id, name)| {
-                Ok(ReferenceStatus {
-                    id: id.parse().map_err(|_| format!("invalid status ID {id:?}"))?,
-                    name,
-                })
-            })
-            .collect::<Result<Vec<_>, String>>()?;
+        let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
-            return Err("embedded status names are empty or invalid".to_owned());
+            return Err("embedded status reference rows are empty or invalid".to_owned());
+        }
+        if statuses.len() != 700 {
+            return Err(format!("expected 700 status icon rows, found {}", statuses.len()));
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
@@ -298,6 +323,19 @@ impl ReferenceData {
                             "job {} prerequisite {} name/ID mismatch",
                             tree.job_id, prerequisite.skill_id
                         ));
+                    }
+                }
+            }
+        }
+
+        for status in &statuses {
+            for mechanic in &status.statuses {
+                if let Some(skill) = &mechanic.associated_skill {
+                    let Some(&skill_index) = skills_by_id.get(&(skill.id as u32)) else {
+                        return Err(format!("status {} links missing skill {}", mechanic.constant, skill.id));
+                    };
+                    if skills[skill_index].name != skill.name {
+                        return Err(format!("status {} skill name/ID mismatch", mechanic.constant));
                     }
                 }
             }
@@ -399,7 +437,17 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .statuses
             .iter()
-            .filter(|status| query.is_empty() || status.name.to_lowercase().contains(&query) || status.id.to_string() == query)
+            .filter(|status| {
+                query.is_empty()
+                    || status.name.to_lowercase().contains(&query)
+                    || status.id.to_string() == query
+                    || status.statuses.iter().any(|mechanic| {
+                        mechanic.constant.to_lowercase().contains(&query)
+                            || mechanic.associated_skill.as_ref().is_some_and(|skill| {
+                                skill.name.to_lowercase().contains(&query) || skill.description.to_lowercase().contains(&query)
+                            })
+                    })
+            })
             .collect();
         matches.sort_by_key(|status| (status.name.to_lowercase(), status.id));
         matches.truncate(limit);

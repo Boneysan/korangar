@@ -319,11 +319,33 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
 }
 
 fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<String> {
-    vec![
-        format!("{}  (Status icon ID {})", status.name, status.id),
-        "Verified reference: server status-icon name only.".to_owned(),
-        "Effect, duration, sources, interactions, and cures: not documented yet.".to_owned(),
-    ]
+    let mut lines = vec![format!("{}  (Status icon ID {})", status.name, status.id)];
+    if status.statuses.is_empty() {
+        lines.push("Verified reference: server status-icon name only; no matching sc_config record.".to_owned());
+    } else {
+        lines.push("Verified server metadata from renewal sc_config.conf:".to_owned());
+        for mechanic in &status.statuses {
+            lines.push(format!("{} (status ID {})", mechanic.constant, mechanic.id));
+            if mechanic.flags.is_empty() {
+                lines.push("  Server flags: none listed".to_owned());
+            } else {
+                lines.push(format!("  Server flags: {}", mechanic.flags.join(", ")));
+            }
+            if !mechanic.calculation_flags.is_empty() {
+                lines.push(format!("  Recalculation flags: {}", mechanic.calculation_flags.join(", ")));
+            }
+            if let Some(skill) = &mechanic.associated_skill {
+                let label = if skill.description.is_empty() {
+                    skill.name.clone()
+                } else {
+                    format!("{} ({})", skill.description, skill.name)
+                };
+                lines.push(format!("@guide:skill:{}|Associated skill: {label}", skill.id));
+            }
+        }
+    }
+    lines.push("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet.".to_owned());
+    lines
 }
 
 fn parse_guide_link(line: &str) -> Option<GuideResult> {
@@ -784,7 +806,7 @@ mod tests {
     }
 
     #[test]
-    fn status_effect_search_exposes_names_without_inventing_mechanics() {
+    fn status_effect_search_shows_verified_server_metadata_and_marks_gaps() {
         let data = reference_data();
         let blessing = data
             .search_statuses("blessing", 10)
@@ -792,13 +814,25 @@ mod tests {
             .next()
             .expect("Blessing status name");
         let details = super::status_details(blessing).join("\n");
-        assert!(details.contains("server status-icon name only"));
-        assert!(details.contains("Effect, duration, sources, interactions, and cures: not documented yet."));
+        assert!(details.contains("Verified server metadata from renewal sc_config.conf"));
+        assert!(details.contains("SC_BLESSING (status ID 30)"));
+        assert!(details.contains("Server flags: Buff, NoBoss, NoMadoReset, NoMagicBlocked"));
+        assert!(details.contains("Recalculation flags: Dex, Hit, Int, Str"));
+        assert!(details.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
+        assert!(details.contains("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet."));
         assert_eq!(data.statuses.len(), 700);
         assert!(
             data.search_statuses(&blessing.id.to_string(), 1)
                 .iter()
                 .any(|status| status.id == blessing.id)
+        );
+        assert_eq!(data.search_statuses("AL_BLESSING", 1)[0].id, blessing.id);
+
+        let name_only = data.search_statuses("Stormkick Ready", 1).remove(0);
+        assert!(
+            super::status_details(name_only)
+                .join("\n")
+                .contains("server status-icon name only; no matching sc_config record")
         );
     }
 
