@@ -129,6 +129,12 @@ where
                     event: Toggle(self.game_settings_path.reduce_flashing()),
                 },
                 state_button! {
+                    text: "Quickcast ground skills at cursor",
+                    tooltip: "When enabled, selecting a ground skill casts at the current map cell. If no map cell is under the cursor, the skill enters the normal aim-and-click mode.",
+                    state: self.game_settings_path.quickcast_ground_skills(),
+                    event: Toggle(self.game_settings_path.quickcast_ground_skills()),
+                },
+                state_button! {
                     text: "Show combat text",
                     tooltip: "Show floating damage, miss, and healing numbers. This does not change combat results or sound cues.",
                     state: self.game_settings_path.show_combat_text(),

@@ -9440,17 +9440,32 @@ impl Client {
                                 }
                             }
                             SkillType::Ground | SkillType::Trap => {
-                                // Ground-target: always arm so the player aims the placement reticle
-                                // and clicks where the AoE lands, rather than dropping it instantly at
-                                // wherever the cursor happens to sit when the key is pressed.
-                                announce_armed_skill(&mut self.client_state, &learnable_skill.skill_name);
-                                self.pending_skill = Some(PendingSkill {
+                                let pending = PendingSkill {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level,
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
-                                });
+                                };
+                                let quickcast = *self.client_state.follow(client_state().game_settings().quickcast_ground_skills());
+                                let quickcast_tile = quickcast
+                                    .then(|| resolve_pending_cast(pending.skill_type, input_report.mouse_target))
+                                    .and_then(|resolution| resolve_pending_ground_tile(&self.client_state, resolution));
+
+                                if let Some(tile) = quickcast_tile {
+                                    self.input_event_buffer.push(InputEvent::CastSkillAtTile {
+                                        skill_id: pending.skill_id,
+                                        skill_level: pending.skill_level,
+                                        attack_range: pending.attack_range,
+                                        tile,
+                                    });
+                                } else {
+                                    // Keep the normal explicit aim mode as the safe fallback,
+                                    // including when quickcast is disabled or no map cell is under
+                                    // the cursor.
+                                    announce_armed_skill(&mut self.client_state, &pending.skill_name);
+                                    self.pending_skill = Some(pending);
+                                }
                             }
                         }
                     }
