@@ -1,8 +1,9 @@
 //! Phase 8 — multi-client social protocol flows.
 
+use std::collections::HashSet;
 use std::time::Duration;
 
-use korangar_networking::NetworkEvent;
+use korangar_networking::{MessageColor, NetworkEvent};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -14,6 +15,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("friend-reject", 8, friend_reject),
         Scenario::new("party-lifecycle", 8, party_lifecycle),
         Scenario::new("party-ping-carrier", 8, party_ping_carrier),
+        Scenario::new("account-discovery-isolation", 8, account_discovery_isolation),
         Scenario::new("party-reject-block", 8, party_reject_block),
         Scenario::new("party-member-vitals", 8, party_member_vitals),
         Scenario::new("party-sp-only-broadcast", 8, party_sp_only_broadcast),
@@ -441,6 +443,231 @@ fn party_ping_carrier(config: &Config) -> Result<(), String> {
     })();
     leave_party_both(&mut primary, &mut partner);
     result
+}
+
+/// A first kill is saved to the account ledger, delivered to an active client,
+/// and replayed to another character on that account—but never to another
+/// account.
+fn account_discovery_isolation(config: &Config) -> Result<(), String> {
+    let alternate_name = format!("GuideAlt{:05}", std::process::id() % 100_000);
+    let alternate_creator = TestContext::connect_as(
+        config,
+        &config.username,
+        &config.password,
+        Some(&alternate_name),
+        Some(&alternate_name),
+    )?;
+    let account_id = alternate_creator.account_id.0;
+    drop(alternate_creator);
+
+    let (mut primary, mut other_account) = connect_pair(config)?;
+    if primary.account_id.0 != account_id {
+        return Err(format!(
+            "alternate character belongs to account {account_id}, primary logged in as account {}",
+            primary.account_id.0
+        ));
+    }
+    if other_account.account_id.0 == account_id {
+        return Err("discovery isolation fixture did not use a separate account".to_owned());
+    }
+
+    let existing = primary.collect_for(Duration::from_millis(150));
+    let known_mobs = discovery_mob_ids(&existing, account_id);
+    const CANDIDATES: &[(u16, &str)] = &[
+        (1002, "PORING"),
+        (1007, "FABRE"),
+        (1008, "PUPA"),
+        (1009, "CONDOR"),
+        (1012, "RODA FROG"),
+        (1014, "SPORE"),
+        (1015, "ZOMBIE"),
+        (1049, "PICKY"),
+    ];
+    let (mob_id, mob_name) = CANDIDATES
+        .iter()
+        .copied()
+        .find(|(mob_id, _)| !known_mobs.contains(mob_id))
+        .ok_or("all discovery test mobs were already recorded on the primary account")?;
+
+    primary.ensure_job(4008)?; // Lord Knight
+    primary.ensure_base_level(99)?;
+    primary.say("@allskill")?;
+    primary.say("@heal")?;
+    primary.warp("prt_fild08", 170, 180)?;
+    primary.pump(Duration::from_millis(300));
+    primary.flush();
+    other_account.flush();
+
+    let target = primary.spawn_monster(mob_name, mob_id)?;
+    let target_position = primary
+        .entities
+        .get(&target)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("spawned discovery target has no visible tile")?;
+    primary.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+
+    let player_id = primary.player_id;
+    let mut target_died = false;
+    for _ in 0..30 {
+        primary.flush();
+        primary.net.player_attack(target).map_err(|_| "primary disconnected")?;
+        let outcome = primary.wait_for_within(
+            "discovery target damage or death",
+            Duration::from_secs(6),
+            &mut |event| match event {
+                NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(2),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *source_entity_id == player_id && *destination_entity_id == target => Some(1),
+                NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+                _ => None,
+            },
+        )?;
+        if outcome == 2 {
+            target_died = true;
+            break;
+        }
+        if outcome == 0 {
+            let target_position = primary
+                .entities
+                .get(&target)
+                .map(|entity| entity.position.tile_position())
+                .ok_or("discovery target disappeared without a death event")?;
+            primary.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+        }
+    }
+    if !target_died {
+        return Err(format!("could not kill discovery fixture mob {mob_name} ({mob_id})"));
+    }
+
+    let delta = format!("[KORANGAR-DISCOVERY:v1:delta:{account_id}:{mob_id}:1]");
+    primary.wait_for("account-bound first-kill discovery delta", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&delta) => Some(()),
+        _ => None,
+    })?;
+
+    let other_events = other_account.collect_for(Duration::from_millis(300));
+    if other_events.iter().any(|event| {
+        matches!(event, NetworkEvent::ChatMessage { color: MessageColor::Server, text }
+            if text.contains("[KORANGAR-DISCOVERY:v1:delta:"))
+    }) {
+        return Err("first-kill discovery delta leaked to a different account".to_owned());
+    }
+    drop(other_account);
+    drop(primary);
+
+    let mut same_account_alt = TestContext::connect_as(config, &config.username, &config.password, Some(&alternate_name), None)?;
+    if same_account_alt.account_id.0 != account_id {
+        return Err("alternate-character reconnect changed account identity".to_owned());
+    }
+    let begin_prefix = format!("[KORANGAR-DISCOVERY:v1:begin:{account_id}:");
+    same_account_alt.wait_for("account discovery snapshot begin", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&begin_prefix) => Some(()),
+        _ => None,
+    })?;
+    same_account_alt.wait_for("discovered mob in same-account snapshot", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if discovery_line_contains_mob(text, account_id, mob_id) => Some(()),
+        _ => None,
+    })?;
+    let end_marker = format!("[KORANGAR-DISCOVERY:v1:end:{account_id}:");
+    same_account_alt.wait_for("account discovery snapshot end", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&end_marker) => Some(()),
+        _ => None,
+    })?;
+    drop(same_account_alt);
+
+    let mut separate_account = TestContext::connect_as(
+        config,
+        &config.partner_username,
+        &config.partner_password,
+        Some("HeadlessTwo"),
+        None,
+    )?;
+    let separate_account_id = separate_account.account_id.0;
+    if separate_account_id == account_id {
+        return Err("second account unexpectedly shares the primary account id".to_owned());
+    }
+    let empty_snapshot = format!("[KORANGAR-DISCOVERY:v1:begin:{separate_account_id}:");
+    separate_account.wait_for("separate account's discovery snapshot", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&empty_snapshot) && text.ends_with(":0:0]") => Some(()),
+        _ => None,
+    })?;
+    let separate_end = format!("[KORANGAR-DISCOVERY:v1:end:{separate_account_id}:");
+    separate_account.wait_for("separate account's empty snapshot end", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&separate_end) => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+fn discovery_line_contains_mob(text: &str, account_id: u32, mob_id: u16) -> bool {
+    let Some((_, chunk)) = text.split_once("[KORANGAR-DISCOVERY:v1:chunk:") else {
+        return false;
+    };
+    let mut fields = chunk.splitn(4, ':');
+    let Some(parsed_account) = fields.next().and_then(|field| field.parse::<u32>().ok()) else {
+        return false;
+    };
+    let _sequence = fields.next();
+    let _index = fields.next();
+    let Some(payload) = fields.next() else {
+        return false;
+    };
+    parsed_account == account_id
+        && payload
+            .trim_end_matches(']')
+            .split(',')
+            .filter_map(|pair| pair.split_once('='))
+            .any(|(id, tier)| id.parse::<u16>().ok() == Some(mob_id) && tier == "1")
+}
+
+fn discovery_mob_ids(events: &[NetworkEvent], account_id: u32) -> HashSet<u16> {
+    let mut known = HashSet::new();
+    for event in events {
+        if let NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } = event
+        {
+            let Some((_, chunk)) = text.split_once("[KORANGAR-DISCOVERY:v1:chunk:") else {
+                continue;
+            };
+            let mut fields = chunk.splitn(4, ':');
+            if fields.next().and_then(|field| field.parse::<u32>().ok()) != Some(account_id) {
+                continue;
+            }
+            let _sequence = fields.next();
+            let _index = fields.next();
+            if let Some(payload) = fields.next() {
+                for (id, _) in payload.trim_end_matches(']').split(',').filter_map(|pair| pair.split_once('=')) {
+                    if let Ok(id) = id.parse() {
+                        known.insert(id);
+                    }
+                }
+            }
+        }
+    }
+    known
 }
 
 fn party_reject_block(config: &Config) -> Result<(), String> {
