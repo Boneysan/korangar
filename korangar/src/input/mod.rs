@@ -334,6 +334,10 @@ impl InputSystem {
             events.push(InputEvent::ToggleQuestLogWindow);
         }
 
+        if self.binding_pressed(bindings, BindableAction::SendDangerPing, false) {
+            events.push(InputEvent::SendPartyPing { kind: "danger".to_owned() });
+        }
+
         // Escape still closes a window while chat or another control is focused.
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::Escape);
@@ -727,6 +731,25 @@ mod keybinding_tests {
         #[cfg(not(feature = "debug"))]
         input.handle_keyboard_input(&mut events, &KeyBindings::default(), None);
         assert!(events.iter().any(|event| matches!(event, InputEvent::ToggleMapsWindow)));
+    }
+
+    #[test]
+    fn danger_ping_shortcut_dispatches_the_shared_party_ping_event() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::AltLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyG, ElementState::Pressed);
+        input.update_delta(ClientTick(5));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &KeyBindings::default(), None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &KeyBindings::default(), None);
+        assert!(
+            events
+                .iter()
+                .any(|event| matches!(event, InputEvent::SendPartyPing { kind } if kind == "danger"))
+        );
     }
 
     #[test]
