@@ -8,6 +8,7 @@ use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::settings::{BindableAction, GameSettings, GameSettingsPathExt};
 use crate::state::localization::LocalizationPathExt;
+use crate::state::skills::SkillTreePathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 
@@ -15,6 +16,82 @@ struct KeyBindingList<A> {
     game_settings_path: A,
     elements: Vec<ElementBox<ClientState>>,
     labels: Vec<String>,
+}
+
+struct GroundSkillModeList<A> {
+    game_settings_path: A,
+    elements: Vec<ElementBox<ClientState>>,
+    entries: Vec<(u16, String)>,
+}
+
+impl<A> Element<ClientState> for GroundSkillModeList<A>
+where
+    A: Path<ClientState, GameSettings> + Copy + 'static,
+{
+    type LayoutInfo = ();
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        mut store: ElementStoreMut,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            use korangar_interface::prelude::*;
+            let settings = state.get(&self.game_settings_path);
+            let mut entries = state
+                .get(&client_state().skill_tree().skills())
+                .iter()
+                .filter(|skill| {
+                    matches!(
+                        skill.skill_type,
+                        ragnarok_packets::SkillType::Ground | ragnarok_packets::SkillType::Trap
+                    )
+                })
+                .map(|skill| {
+                    let mode = settings.effective_ground_skill_target_mode(skill.skill_id.0);
+                    let source = if settings.ground_skill_target_modes.contains_key(&skill.skill_id.0) {
+                        "override"
+                    } else {
+                        "global"
+                    };
+                    (skill.skill_id.0, format!("{} — {} ({source})", skill.skill_name, mode.label()))
+                })
+                .collect::<Vec<_>>();
+            entries.sort_by_key(|(skill_id, _)| *skill_id);
+            if entries != self.entries {
+                self.elements.clear();
+                if entries.is_empty() {
+                    self.elements
+                        .push(ErasedElement::new(text! { text: "No learned ground/trap skills." }));
+                } else {
+                    for (skill_id, label) in &entries {
+                        self.elements.push(ErasedElement::new(button! {
+                            text: label.clone(),
+                            tooltip: "Click to cycle this skill through Aim + click, Quickcast, Hold + release, then inherit global settings.",
+                            event: InputEvent::CycleGroundSkillTargetMode(*skill_id),
+                        }));
+                    }
+                }
+                self.entries = std::mem::take(&mut entries);
+            }
+            for (index, element) in self.elements.iter_mut().enumerate() {
+                element.create_layout_info(state, store.child_store(index as u64), resolver);
+            }
+        });
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        _: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        for (index, element) in self.elements.iter().enumerate() {
+            element.lay_out(state, store.child_store(index as u64), &(), layout);
+        }
+    }
 }
 
 impl<A> Element<ClientState> for KeyBindingList<A>
@@ -136,15 +213,23 @@ where
                 },
                 state_button! {
                     text: "Quickcast ground skills at cursor",
-                    tooltip: "When enabled, selecting a ground skill casts at the current map cell. If no map cell is under the cursor, the skill enters the normal aim-and-click mode.",
+                    tooltip: "Global default for ground/trap skills unless a learned skill has an override. When enabled, selecting a skill casts at the current map cell; without a valid cursor target it falls back to aim-and-click.",
                     state: self.game_settings_path.quickcast_ground_skills(),
                     event: Toggle(self.game_settings_path.quickcast_ground_skills()),
                 },
                 state_button! {
                     text: "Hold ground skill key to aim, release to cast",
-                    tooltip: "For ground/trap hotbar skills, hold its key while aiming with the cursor, then release the key to cast at the valid ground target. This takes precedence over quickcast-at-cursor; releasing without a valid target cancels the cast.",
+                    tooltip: "Global default for ground/trap skills unless a learned skill has an override. Hold its hotbar key while aiming, then release over a valid target; this takes precedence over the global quickcast option.",
                     state: self.game_settings_path.hold_aim_release_ground_skills(),
                     event: Toggle(self.game_settings_path.hold_aim_release_ground_skills()),
+                },
+                text! { text: "Per-skill ground/trap targeting — click a learned skill to cycle its override." },
+                scroll_view! {
+                    children: GroundSkillModeList {
+                        game_settings_path: self.game_settings_path,
+                        elements: Vec::new(),
+                        entries: Vec::new(),
+                    }
                 },
                 state_button! {
                     text: "Show quest markers",

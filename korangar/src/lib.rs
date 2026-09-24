@@ -132,8 +132,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH,
-    ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, GroundSkillTargetMode, IN_GAME_THEMES_PATH,
+    LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
@@ -8409,6 +8409,29 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Information));
                 }
+                InputEvent::CycleGroundSkillTargetMode(skill_id) => {
+                    let skill_name = self
+                        .client_state
+                        .follow(client_state().skill_tree().skills())
+                        .iter()
+                        .find(|skill| skill.skill_id.0 == skill_id)
+                        .map(|skill| skill.skill_name.clone())
+                        .unwrap_or_else(|| format!("Skill {skill_id}"));
+                    let (mode, source) = {
+                        let settings = self.client_state.follow_mut(client_state().game_settings());
+                        let mode = settings.cycle_ground_skill_target_mode(skill_id);
+                        let source = if settings.ground_skill_target_modes.contains_key(&skill_id) {
+                            "override"
+                        } else {
+                            "global default"
+                        };
+                        (mode, source)
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("{skill_name}: {} ({source}).", mode.label()),
+                        MessageColor::Information,
+                    ));
+                }
                 InputEvent::CycleCombatTextFrequency => {
                     let settings = self.client_state.follow_mut(client_state().game_settings());
                     settings.combat_text_frequency = settings.combat_text_frequency.next();
@@ -9741,25 +9764,25 @@ impl Client {
                                 }
                             }
                             SkillType::Ground | SkillType::Trap => {
-                                let hold_aim_release = *self
+                                let target_mode = self
                                     .client_state
-                                    .follow(client_state().game_settings().hold_aim_release_ground_skills());
+                                    .follow(client_state().game_settings())
+                                    .effective_ground_skill_target_mode(learnable_skill.skill_id.0);
                                 let pending = PendingSkill {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level,
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
-                                    confirm_on_hotbar_release: hold_aim_release.then_some(slot),
+                                    confirm_on_hotbar_release: (target_mode == GroundSkillTargetMode::HoldToAimRelease).then_some(slot),
                                 };
-                                if hold_aim_release {
+                                if target_mode == GroundSkillTargetMode::HoldToAimRelease {
                                     // The matching StopSkill event commits at the
                                     // cursor's then-current target on key release.
                                     announce_armed_skill(&mut self.client_state, &pending.skill_name);
                                     self.pending_skill = Some(pending);
                                 } else {
-                                    let quickcast = *self.client_state.follow(client_state().game_settings().quickcast_ground_skills());
-                                    let quickcast_tile = quickcast
+                                    let quickcast_tile = (target_mode == GroundSkillTargetMode::QuickcastAtCursor)
                                         .then(|| resolve_pending_cast(pending.skill_type, input_report.mouse_target))
                                         .and_then(|resolution| resolve_pending_ground_tile(&self.client_state, resolution));
 

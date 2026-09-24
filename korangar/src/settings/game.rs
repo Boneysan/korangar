@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
 use korangar_interface::element::StateElement;
@@ -11,6 +13,23 @@ const MAX_CLIENT_HUNTING_GOALS: usize = 5;
 
 fn default_true() -> bool {
     true
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum GroundSkillTargetMode {
+    AimAndClick,
+    QuickcastAtCursor,
+    HoldToAimRelease,
+}
+
+impl GroundSkillTargetMode {
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::AimAndClick => "Aim + click",
+            Self::QuickcastAtCursor => "Quickcast",
+            Self::HoldToAimRelease => "Hold + release",
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
@@ -117,6 +136,11 @@ pub struct GameSettings {
     /// cursor target when that key is released.
     #[serde(default)]
     pub hold_aim_release_ground_skills: bool,
+    /// Per-skill target-mode overrides keyed by the server skill ID. Missing
+    /// IDs inherit the global quickcast/hold options above.
+    #[serde(default)]
+    #[hidden_element]
+    pub ground_skill_target_modes: HashMap<u16, GroundSkillTargetMode>,
     /// Show server-provided quest markers above NPCs and objective locations.
     #[serde(default = "default_true")]
     pub show_quest_markers: bool,
@@ -183,6 +207,7 @@ impl Default for GameSettings {
             reduce_flashing: false,
             quickcast_ground_skills: false,
             hold_aim_release_ground_skills: false,
+            ground_skill_target_modes: HashMap::new(),
             show_quest_markers: true,
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
@@ -323,12 +348,44 @@ impl Drop for GameSettings {
     }
 }
 
+impl GameSettings {
+    pub fn effective_ground_skill_target_mode(&self, skill_id: u16) -> GroundSkillTargetMode {
+        self.ground_skill_target_modes.get(&skill_id).copied().unwrap_or_else(|| {
+            if self.hold_aim_release_ground_skills {
+                GroundSkillTargetMode::HoldToAimRelease
+            } else if self.quickcast_ground_skills {
+                GroundSkillTargetMode::QuickcastAtCursor
+            } else {
+                GroundSkillTargetMode::AimAndClick
+            }
+        })
+    }
+
+    /// Cycle explicit overrides and finally return to inheriting global
+    /// settings.
+    pub fn cycle_ground_skill_target_mode(&mut self, skill_id: u16) -> GroundSkillTargetMode {
+        let next = match self.ground_skill_target_modes.get(&skill_id).copied() {
+            None => Some(GroundSkillTargetMode::AimAndClick),
+            Some(GroundSkillTargetMode::AimAndClick) => Some(GroundSkillTargetMode::QuickcastAtCursor),
+            Some(GroundSkillTargetMode::QuickcastAtCursor) => Some(GroundSkillTargetMode::HoldToAimRelease),
+            Some(GroundSkillTargetMode::HoldToAimRelease) => None,
+        };
+        if let Some(mode) = next {
+            self.ground_skill_target_modes.insert(skill_id, mode);
+            mode
+        } else {
+            self.ground_skill_target_modes.remove(&skill_id);
+            self.effective_ground_skill_target_mode(skill_id)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::mem::ManuallyDrop;
 
     use super::super::key_bindings::BindableAction;
-    use super::{CombatTextFrequency, CombatTextSize, GameSettings, format_damage_number};
+    use super::{CombatTextFrequency, CombatTextSize, GameSettings, GroundSkillTargetMode, format_damage_number};
 
     #[test]
     fn accessibility_settings_have_safe_defaults_and_migrate_older_files() {
@@ -376,6 +433,55 @@ mod tests {
         let hold_aim: ManuallyDrop<GameSettings> =
             ManuallyDrop::new(ron::from_str("(auto_attack:true, hold_aim_release_ground_skills:true)").unwrap());
         assert!(hold_aim.hold_aim_release_ground_skills);
+        assert!(old_settings.ground_skill_target_modes.is_empty());
+        let per_skill_mode: ManuallyDrop<GameSettings> =
+            ManuallyDrop::new(ron::from_str("(auto_attack:true, ground_skill_target_modes:{1001:QuickcastAtCursor})").unwrap());
+        assert_eq!(
+            per_skill_mode.effective_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::QuickcastAtCursor
+        );
+    }
+
+    #[test]
+    fn per_skill_ground_target_modes_override_globals_and_cycle_back_to_inheritance() {
+        let mut settings = ManuallyDrop::new(GameSettings::default());
+        assert_eq!(
+            settings.effective_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::AimAndClick
+        );
+
+        settings.quickcast_ground_skills = true;
+        assert_eq!(
+            settings.effective_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::QuickcastAtCursor
+        );
+        settings.hold_aim_release_ground_skills = true;
+        assert_eq!(
+            settings.effective_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::HoldToAimRelease
+        );
+
+        assert_eq!(
+            settings.cycle_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::AimAndClick
+        );
+        assert_eq!(
+            settings.effective_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::AimAndClick
+        );
+        assert_eq!(
+            settings.cycle_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::QuickcastAtCursor
+        );
+        assert_eq!(
+            settings.cycle_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::HoldToAimRelease
+        );
+        assert_eq!(
+            settings.cycle_ground_skill_target_mode(1001),
+            GroundSkillTargetMode::HoldToAimRelease
+        );
+        assert!(!settings.ground_skill_target_modes.contains_key(&1001));
     }
 
     #[test]

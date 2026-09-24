@@ -101,6 +101,8 @@ pub enum InputEvent {
     ResetHudLayout,
     /// Cycle the persisted HUD positioning grid between off, 8, 16, and 32 px.
     CycleHudSnapGrid,
+    /// Cycle one learned ground/trap skill's target-mode override.
+    CycleGroundSkillTargetMode(u16),
     /// Cycle between all combat text and important-only combat text.
     CycleCombatTextFrequency,
     /// Cycle combat text font size through small, normal, and large.
