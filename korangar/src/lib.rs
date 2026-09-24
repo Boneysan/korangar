@@ -945,7 +945,7 @@ fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level:
         return None;
     }
     let (mean_level, player_level) = (mean_level?, player_level?);
-    (mean_level.saturating_sub(player_level) >= 15).then(|| {
+    crate::world::is_dangerous_map_level(mean_level, player_level).then(|| {
         format!(
             "Caution: {map_name} averages level {mean_level}, 15+ above your level ({player_level}). Warning only; travel is unrestricted."
         )

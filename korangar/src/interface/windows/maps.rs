@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::sync::OnceLock;
 
 use korangar_interface::element::Element;
@@ -10,13 +11,14 @@ use korangar_interface::window::{CustomWindow, Window};
 use ragnarok_packets::TilePosition;
 use rust_state::State;
 
+use crate::PlayerPathExt;
 use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::theme::InterfaceThemeType;
-use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::{NavigationEdge, navigation_graph, route_edges};
+use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
+use crate::world::{NavigationEdge, is_dangerous_map_level, navigation_graph, route_edges};
 
 #[derive(Clone, Copy)]
 struct AtlasLocation {
@@ -282,6 +284,7 @@ struct AtlasNode {
 struct AtlasView {
     nodes: Vec<AtlasNode>,
     details: [String; 5],
+    dangerous_maps: HashSet<String>,
 }
 
 impl AtlasView {
@@ -299,6 +302,7 @@ impl AtlasView {
                 })
                 .collect(),
             details: destination_detail_lines("", None, None, 0, None, &[], None),
+            dangerous_maps: HashSet::new(),
         }
     }
 }
@@ -340,6 +344,7 @@ impl Element<ClientState> for AtlasView {
             .filter(|member| member.online() && normalized_map_name(member.map_name()).eq_ignore_ascii_case(selected_map))
             .map(|member| member.name().to_owned())
             .collect();
+        let reference = crate::dm::reference_data::reference_data();
         self.details = destination_detail_lines(
             current_map,
             target,
@@ -347,8 +352,23 @@ impl Element<ClientState> for AtlasView {
             outgoing_exits,
             Some(visit_state),
             &party_members_here,
-            crate::dm::reference_data::reference_data().map_spawn_summary(selected_map),
+            reference.map_spawn_summary(selected_map),
         );
+        let player_level = state
+            .try_get(&this_player().base_level())
+            .copied()
+            .map(|level| level.min(u16::MAX as usize) as u16);
+        self.dangerous_maps = player_level.map_or_else(HashSet::new, |player_level| {
+            LOCATIONS
+                .iter()
+                .filter(|location| {
+                    reference
+                        .map_spawn_summary(location.map)
+                        .is_some_and(|(_, mean_level, _)| is_dangerous_map_level(mean_level, player_level))
+                })
+                .map(|location| location.map.to_ascii_lowercase())
+                .collect()
+        });
         with_single_resolver(resolvers, |resolver| resolver.with_height(520.0))
     }
 
@@ -444,6 +464,7 @@ impl Element<ClientState> for AtlasView {
             let is_current = current_map.eq_ignore_ascii_case(node.location.map);
             let is_target = target.is_some_and(|map| map.eq_ignore_ascii_case(node.location.map));
             let in_route = route_maps.iter().any(|map| map.eq_ignore_ascii_case(node.location.map));
+            let is_dangerous = self.dangerous_maps.contains(node.location.map);
             let is_hovered = node_area.check().run(layout);
             let color = if is_target {
                 Color::rgb_u8(122, 79, 25)
@@ -460,10 +481,16 @@ impl Element<ClientState> for AtlasView {
                 node_area,
                 CornerDiameter::uniform(7.0),
                 color,
-                Color::rgba_u8(0, 0, 0, 150),
+                if is_dangerous {
+                    Color::rgb_u8(255, 126, 92)
+                } else {
+                    Color::rgba_u8(0, 0, 0, 150)
+                },
                 ShadowPadding::uniform(2.0),
             );
-            let visit_marker = if discovery.visited_map(node.location.map) {
+            let visit_marker = if is_dangerous {
+                "!"
+            } else if discovery.visited_map(node.location.map) {
                 "✓"
             } else if discovery.map_snapshot_complete() {
                 "·"

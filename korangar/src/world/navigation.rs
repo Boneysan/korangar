@@ -3,6 +3,12 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
+pub const DANGER_LEVEL_GAP: u16 = 15;
+
+pub fn is_dangerous_map_level(mean_spawn_level: u16, player_level: u16) -> bool {
+    mean_spawn_level.saturating_sub(player_level) >= DANGER_LEVEL_GAP
+}
+
 #[derive(Deserialize)]
 pub struct NavigationGraph {
     pub maps: Vec<String>,
@@ -84,4 +90,17 @@ pub fn route_edges(current_map: &str, target_map: &str) -> Option<Vec<&'static N
 /// Return the first verified warp on a minimum-hop route to `target_map`.
 pub fn next_route_edge(current_map: &str, target_map: &str) -> Option<&'static NavigationEdge> {
     route_edges(current_map, target_map)?.into_iter().next()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::is_dangerous_map_level;
+
+    #[test]
+    fn map_danger_level_uses_the_inclusive_fifteen_level_boundary() {
+        assert!(!is_dangerous_map_level(34, 20));
+        assert!(is_dangerous_map_level(35, 20));
+        assert!(!is_dangerous_map_level(20, 35));
+        assert!(!is_dangerous_map_level(u16::MAX, u16::MAX));
+    }
 }

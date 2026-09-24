@@ -459,31 +459,32 @@ impl ReferenceData {
     /// weighted by directive count and is a guide, not a recommended-level
     /// rule.
     pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
-        let map_name = map_name.strip_suffix(".gat").unwrap_or(map_name);
-        let mut spawn_records = 0_u64;
-        let mut weighted_levels = 0_u64;
-        let mut species = 0;
-        for monster in &self.monsters {
-            for region in &monster.spawn_regions {
-                let region_map = region.map.strip_suffix(".gat").unwrap_or(&region.map);
-                if !region_map.eq_ignore_ascii_case(map_name) || region.spawn_records == 0 {
-                    continue;
+        type Aggregate = (u64, u64, usize);
+        static SUMMARIES: OnceLock<HashMap<String, (u64, u16, usize)>> = OnceLock::new();
+        let summaries = SUMMARIES.get_or_init(|| {
+            let mut aggregates: HashMap<String, Aggregate> = HashMap::new();
+            for monster in &self.monsters {
+                for region in &monster.spawn_regions {
+                    if region.spawn_records == 0 {
+                        continue;
+                    }
+                    let map = region.map.strip_suffix(".gat").unwrap_or(&region.map).to_ascii_lowercase();
+                    let records = u64::from(region.spawn_records);
+                    let aggregate = aggregates.entry(map).or_default();
+                    aggregate.0 += records;
+                    aggregate.1 += u64::from(monster.level) * records;
+                    aggregate.2 += 1;
                 }
-                let records = u64::from(region.spawn_records);
-                spawn_records += records;
-                weighted_levels += u64::from(monster.level) * records;
-                species += 1;
             }
-        }
-        if spawn_records == 0 {
-            None
-        } else {
-            Some((
-                spawn_records,
-                ((weighted_levels + spawn_records / 2) / spawn_records) as u16,
-                species,
-            ))
-        }
+            aggregates
+                .into_iter()
+                .map(|(map, (records, weighted_levels, species))| {
+                    (map, (records, ((weighted_levels + records / 2) / records) as u16, species))
+                })
+                .collect()
+        });
+        let map_name = map_name.strip_suffix(".gat").unwrap_or(map_name).to_ascii_lowercase();
+        summaries.get(&map_name).copied()
     }
 
     pub fn item_by_id(&self, id: u32) -> Option<&ReferenceItem> {
