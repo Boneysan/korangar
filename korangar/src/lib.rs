@@ -10599,6 +10599,14 @@ impl Client {
                 #[cfg(feature = "debug")]
                 InputEvent::CameraLookAround { offset } => self.debug_camera.look_around(offset),
                 #[cfg(feature = "debug")]
+                InputEvent::CameraLookUp => self.debug_camera.look_up(delta_time),
+                #[cfg(feature = "debug")]
+                InputEvent::CameraLookDown => self.debug_camera.look_down(delta_time),
+                #[cfg(feature = "debug")]
+                InputEvent::CameraLookLeft => self.debug_camera.look_left(delta_time),
+                #[cfg(feature = "debug")]
+                InputEvent::CameraLookRight => self.debug_camera.look_right(delta_time),
+                #[cfg(feature = "debug")]
                 InputEvent::CameraMoveForward => self.debug_camera.move_forward(delta_time),
                 #[cfg(feature = "debug")]
                 InputEvent::CameraMoveBackward => self.debug_camera.move_backward(delta_time),

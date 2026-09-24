@@ -39,6 +39,11 @@ pub enum BindableAction {
     DebugCameraLeft,
     DebugCameraRight,
     DebugCameraUp,
+    DebugCameraLookUp,
+    DebugCameraLookDown,
+    DebugCameraLookLeft,
+    DebugCameraLookRight,
+    DebugCameraAccelerate,
     HotbarSlot(u8),
 }
 
@@ -81,6 +86,11 @@ impl BindableAction {
             Self::DebugCameraLeft,
             Self::DebugCameraRight,
             Self::DebugCameraUp,
+            Self::DebugCameraLookUp,
+            Self::DebugCameraLookDown,
+            Self::DebugCameraLookLeft,
+            Self::DebugCameraLookRight,
+            Self::DebugCameraAccelerate,
         ];
         actions.extend((0..27).map(Self::HotbarSlot));
         actions
@@ -127,6 +137,11 @@ impl BindableAction {
             Self::DebugCameraLeft => "Debug camera: move left",
             Self::DebugCameraRight => "Debug camera: move right",
             Self::DebugCameraUp => "Debug camera: move up",
+            Self::DebugCameraLookUp => "Debug camera: look up",
+            Self::DebugCameraLookDown => "Debug camera: look down",
+            Self::DebugCameraLookLeft => "Debug camera: look left",
+            Self::DebugCameraLookRight => "Debug camera: look right",
+            Self::DebugCameraAccelerate => "Debug camera: accelerate (hold)",
             Self::HotbarSlot(_) => unreachable!(),
         }
         .to_owned()
@@ -179,6 +194,11 @@ impl BindableAction {
             Self::DebugCameraLeft => ("KeyA", false, false, false),
             Self::DebugCameraRight => ("KeyD", false, false, false),
             Self::DebugCameraUp => ("Space", false, false, false),
+            Self::DebugCameraLookUp => ("ArrowUp", false, false, false),
+            Self::DebugCameraLookDown => ("ArrowDown", false, false, false),
+            Self::DebugCameraLookLeft => ("ArrowLeft", false, false, false),
+            Self::DebugCameraLookRight => ("ArrowRight", false, false, false),
+            Self::DebugCameraAccelerate => ("PageUp", false, false, false),
             Self::HotbarSlot(_) => unreachable!(),
         };
         KeyChord {
@@ -377,8 +397,8 @@ impl KeyBindings {
     }
 }
 
-/// The debug camera replaces ordinary movement while active, so sharing its
-/// defaults with movement is intentional and remains unambiguous at dispatch.
+/// The debug camera replaces ordinary movement while active, so sharing
+/// same-direction movement/look bindings is intentional and unambiguous.
 fn contextual_camera_pair(left: BindableAction, right: BindableAction) -> bool {
     matches!(
         (left, right),
@@ -390,6 +410,14 @@ fn contextual_camera_pair(left: BindableAction, right: BindableAction) -> bool {
             | (BindableAction::DebugCameraLeft, BindableAction::MoveLeft)
             | (BindableAction::MoveRight, BindableAction::DebugCameraRight)
             | (BindableAction::DebugCameraRight, BindableAction::MoveRight)
+            | (BindableAction::MoveForward, BindableAction::DebugCameraLookUp)
+            | (BindableAction::DebugCameraLookUp, BindableAction::MoveForward)
+            | (BindableAction::MoveBackward, BindableAction::DebugCameraLookDown)
+            | (BindableAction::DebugCameraLookDown, BindableAction::MoveBackward)
+            | (BindableAction::MoveLeft, BindableAction::DebugCameraLookLeft)
+            | (BindableAction::DebugCameraLookLeft, BindableAction::MoveLeft)
+            | (BindableAction::MoveRight, BindableAction::DebugCameraLookRight)
+            | (BindableAction::DebugCameraLookRight, BindableAction::MoveRight)
     )
 }
 
@@ -456,6 +484,14 @@ mod tests {
         assert_eq!(
             bindings.assign(BindableAction::DebugCameraBackward, KeyChord::new("KeyI", false, false, false)),
             Err(BindingError::Conflict(BindableAction::OpenInventory))
+        );
+
+        bindings
+            .assign(BindableAction::MoveForward, KeyChord::new("ArrowUp", false, false, false))
+            .expect("same-direction debug-camera look may share ordinary movement");
+        assert_eq!(
+            bindings.assign(BindableAction::MoveForward, KeyChord::new("ArrowDown", false, false, false)),
+            Err(BindingError::Conflict(BindableAction::DebugCameraLookDown))
         );
     }
 

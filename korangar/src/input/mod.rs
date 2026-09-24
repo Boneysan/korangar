@@ -576,13 +576,25 @@ impl InputSystem {
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::ShiftLeft).pressed() && use_debug_camera {
+        if use_debug_camera && self.binding_down(bindings, BindableAction::DebugCameraAccelerate) {
             events.push(InputEvent::CameraAccelerate);
+        } else {
+            // Reset on mode exit or if a chord modifier was released before its main key.
+            events.push(InputEvent::CameraDecelerate);
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::ShiftLeft).released() && use_debug_camera {
-            events.push(InputEvent::CameraDecelerate);
+        if use_debug_camera {
+            for (action, event) in [
+                (BindableAction::DebugCameraLookUp, InputEvent::CameraLookUp),
+                (BindableAction::DebugCameraLookDown, InputEvent::CameraLookDown),
+                (BindableAction::DebugCameraLookLeft, InputEvent::CameraLookLeft),
+                (BindableAction::DebugCameraLookRight, InputEvent::CameraLookRight),
+            ] {
+                if self.binding_down(bindings, action) {
+                    events.push(event);
+                }
+            }
         }
 
         // TODO: This should be moved.
@@ -808,5 +820,41 @@ mod keybinding_tests {
         let mut events = Vec::new();
         ordinary.handle_keyboard_input(&mut events, &bindings, None, false, false);
         assert!(!events.iter().any(|event| matches!(event, InputEvent::CameraMoveForward)));
+    }
+
+    #[cfg(feature = "debug")]
+    #[test]
+    fn remapped_debug_camera_look_and_acceleration_dispatch_only_in_camera_mode() {
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::DebugCameraLookLeft, KeyChord::new("KeyJ", true, false, false))
+            .expect("debug camera look can be remapped");
+        bindings
+            .assign(BindableAction::DebugCameraAccelerate, KeyChord::new("KeyK", true, false, false))
+            .expect("debug camera acceleration can be remapped");
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        input.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyK, ElementState::Pressed);
+        input.update_delta(ClientTick(10));
+        let mut events = Vec::new();
+        input.handle_keyboard_input(&mut events, &bindings, None, false, true);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::CameraLookLeft)));
+        assert!(events.iter().any(|event| matches!(event, InputEvent::CameraAccelerate)));
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::KeyboardMove { .. })));
+
+        // Releasing a chord modifier first must stop acceleration immediately.
+        input.update_keyboard(KeyCode::ControlLeft, ElementState::Released);
+        input.update_delta(ClientTick(11));
+        let mut events = Vec::new();
+        input.handle_keyboard_input(&mut events, &bindings, None, false, true);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::CameraDecelerate)));
+
+        let mut ordinary = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        ordinary.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        ordinary.update_delta(ClientTick(12));
+        let mut events = Vec::new();
+        ordinary.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::CameraLookLeft)));
     }
 }

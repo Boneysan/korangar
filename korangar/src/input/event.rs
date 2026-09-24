@@ -612,6 +612,18 @@ pub enum InputEvent {
         /// Offset of the view direction.
         offset: Vector2<f32>,
     },
+    /// Turn the debug camera up at a frame-rate-independent angular speed.
+    #[cfg(feature = "debug")]
+    CameraLookUp,
+    /// Turn the debug camera down at a frame-rate-independent angular speed.
+    #[cfg(feature = "debug")]
+    CameraLookDown,
+    /// Turn the debug camera left at a frame-rate-independent angular speed.
+    #[cfg(feature = "debug")]
+    CameraLookLeft,
+    /// Turn the debug camera right at a frame-rate-independent angular speed.
+    #[cfg(feature = "debug")]
+    CameraLookRight,
     /// Move the debug camera forward.
     #[cfg(feature = "debug")]
     CameraMoveForward,
