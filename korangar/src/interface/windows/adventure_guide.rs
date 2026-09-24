@@ -223,13 +223,15 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
         if let Some(level) = target.level_range {
             lines.push(format!("Target level bounds (raw server values): {} / {}", level[0], level[1]));
         }
+        let map_has_route = target.map_name.as_ref().is_some_and(|map| is_graph_map(map));
         if let Some(map) = &target.map_name {
-            if is_graph_map(map) {
+            if map_has_route {
                 lines.push(format!("@route:{map}"));
             } else {
                 lines.push(format!("Target map {map} has no loaded navigation route."));
             }
-        } else if let Some(mob_id) = target.mob_id {
+        }
+        if !map_has_route && let Some(mob_id) = target.mob_id {
             if target.monster_data_known == Some(true) {
                 lines.push(format!(
                     "@guide:monster:{mob_id}|View {} and known spawn routes",
@@ -743,6 +745,7 @@ mod tests {
         GuideResult, ReferenceItem, display_name, item_details, item_matches_query, job_names, monster_details, parse_guide_link,
         quest_details, quest_reference_details, reference_data, resolve_details, skill_details,
     };
+    use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
 
     #[test]
@@ -991,6 +994,25 @@ mod tests {
         let quest_link = parse_guide_link("@guide:quest:1100|Open quest").expect("quest links are supported");
         assert_eq!(quest_link.kind, "quest");
         assert!(!resolve_details(&quest_link).is_empty());
+    }
+
+    #[test]
+    fn guide_quest_with_unsupported_map_falls_back_to_monster_routes() {
+        let quest = ReferenceQuest {
+            id: 1,
+            name: "Test quest".to_owned(),
+            targets: vec![ReferenceQuestTarget {
+                mob_id: Some(1002),
+                monster_name: "Poring".to_owned(),
+                monster_data_known: Some(true),
+                count: 3,
+                level_range: None,
+                map_name: Some("not_in_navigation_graph".to_owned()),
+            }],
+        };
+        let detail = quest_reference_details(&quest);
+        assert!(detail.iter().any(|line| line.contains("no loaded navigation route")));
+        assert!(detail.iter().any(|line| line.starts_with("@guide:monster:1002|")));
     }
 }
 
