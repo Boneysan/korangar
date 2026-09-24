@@ -1230,7 +1230,7 @@ fn client_tick_reached(now: u32, deadline: u32) -> bool {
 mod timed_action_buffer_tests {
     use ragnarok_packets::EntityId;
 
-    use super::{AttackRange, SkillId, SkillLevel, TilePosition, client_tick_reached};
+    use super::{AttackRange, SkillId, SkillLevel, TilePosition, cancel_timed_action_on_skill_refusal, client_tick_reached};
     use crate::state::{BufferedAction, TimedBufferedAction};
 
     #[test]
@@ -1278,6 +1278,22 @@ mod timed_action_buffer_tests {
         assert!(!ground_cast.targets_entity(target));
         assert!(!ground_cast.targets_ground_item(target));
     }
+
+    #[test]
+    fn skill_refusal_cancels_only_the_pending_timed_action() {
+        let mut queued = Some(TimedBufferedAction {
+            action: BufferedAction::AttackEntity { entity_id: EntityId(17) },
+            queued_at: 10,
+            expires_at: 210,
+        });
+        assert!(cancel_timed_action_on_skill_refusal(&mut queued));
+        assert!(queued.is_none());
+        assert!(!cancel_timed_action_on_skill_refusal(&mut queued));
+    }
+}
+
+fn cancel_timed_action_on_skill_refusal(action: &mut Option<crate::state::TimedBufferedAction>) -> bool {
+    action.take().is_some()
 }
 
 fn queue_action_if_animation_locked(state: &mut State<ClientState>, action: BufferedAction, client_tick: ClientTick) -> bool {
@@ -4847,7 +4863,13 @@ impl Client {
                         .push(ChatMessage::new(text, color));
                 }
                 NetworkEvent::SkillFailed { .. } => {
-                    *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
+                    if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "action-buffer-refused",
+                            "Queued action canceled after skill refusal",
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                    }
                     let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                     if auto_attack && let Some(entity_id) = self.last_attack_target {
                         let _ = self.networking_system.player_attack(entity_id);
@@ -4859,6 +4881,13 @@ impl Client {
                     amount,
                     equipment,
                 } => {
+                    if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "action-buffer-refused",
+                            "Queued action canceled after skill item requirement failed",
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                    }
                     let text = missing_skill_item_text(&self.library, item_id, amount, equipment);
                     self.client_state
                         .follow_mut(client_state().chat_messages())
