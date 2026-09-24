@@ -303,6 +303,9 @@ where
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn handle_drag(&mut self, delta: App::Size, interface_scaling: f32) {
+        if self.window_cache.movement_locked() {
+            return;
+        }
         match self.mouse_mode {
             MouseMode::Default => {}
             MouseMode::MovingWindow { window_id } => {
@@ -394,7 +397,12 @@ where
 
         self.windows.push(WindowWrapper {
             window: Box::new(window),
-            data: WindowData { id, anchor, size },
+            data: WindowData {
+                id,
+                anchor,
+                size,
+                movement_locked: self.window_cache.movement_locked(),
+            },
             display_information: DisplayInformation {
                 real_area: Area {
                     left: 0.0,
@@ -409,6 +417,50 @@ where
 
     pub fn get_mouse_mode(&self) -> &MouseMode<App> {
         &self.mouse_mode
+    }
+
+    pub fn toggle_window_movement_lock(&mut self) -> bool {
+        let locked = !self.window_cache.movement_locked();
+        self.window_cache.set_movement_locked(locked);
+        locked
+    }
+
+    pub fn window_movement_locked(&self) -> bool {
+        self.window_cache.movement_locked()
+    }
+
+    pub fn select_window_layout(&mut self, name: &str) -> bool {
+        if !self.window_cache.select_layout(name) {
+            return false;
+        }
+        self.apply_cached_layouts();
+        true
+    }
+
+    pub fn save_window_layout(&mut self, name: &str) -> bool {
+        self.window_cache.save_layout(name)
+    }
+
+    pub fn reset_window_layout(&mut self) {
+        self.window_cache.reset_layout();
+        self.apply_cached_layouts();
+    }
+
+    pub fn activate_character_layout(&mut self, character_id: u32) {
+        self.window_cache.activate_character_layout(character_id);
+        self.apply_cached_layouts();
+    }
+
+    fn apply_cached_layouts(&mut self) {
+        for wrapper in &mut self.windows {
+            if let Some(window_class) = wrapper.window.get_class()
+                && let Some((anchor, size)) = self.window_cache.get_window_state(window_class)
+            {
+                wrapper.data.anchor = anchor;
+                wrapper.data.size = size;
+            }
+            wrapper.data.movement_locked = self.window_cache.movement_locked();
+        }
     }
 
     pub fn has_focus(&self) -> bool {
@@ -590,6 +642,7 @@ where
             #[cfg(feature = "debug")]
             korangar_debug::profile_block!("create window layout info");
 
+            wrapper.data.movement_locked = this.window_cache.movement_locked();
             wrapper.display_information = wrapper.window.create_layout_info(
                 state,
                 &mut this.window_store,

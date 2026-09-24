@@ -75,12 +75,7 @@ impl PathFinder {
 
     /// Returns a longer walkable route for visual navigation guidance. This is
     /// not used to issue player movement, so it can retain a full map path.
-    pub fn find_navigation_path(
-        &mut self,
-        map: &impl Traversable,
-        start: TilePosition,
-        goal: TilePosition,
-    ) -> Option<&[TilePosition]> {
+    pub fn find_navigation_path(&mut self, map: &impl Traversable, start: TilePosition, goal: TilePosition) -> Option<&[TilePosition]> {
         self.find_walkable_path_with_limit(map, start, goal, AttackRange(0), 16_384)
     }
 

@@ -292,7 +292,9 @@ pub struct Common {
 
 #[derive(Copy, Clone)]
 pub(crate) struct ActorCast {
-    _skill_id: SkillId,
+    skill_id: SkillId,
+    target_entity_id: EntityId,
+    target_position: TilePosition,
     ends_at: ClientTick,
     total_ms: u32,
 }
@@ -1442,9 +1444,11 @@ impl Common {
         !self.in_safe_zone && (self.is_pk_mode_on || self.weapon != 0)
     }
 
-    fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, now: ClientTick) {
+    fn start_cast(&mut self, skill_id: SkillId, target_entity_id: EntityId, target_position: TilePosition, cast_ms: u32, now: ClientTick) {
         self.active_cast = (cast_ms > 0).then_some(ActorCast {
-            _skill_id: skill_id,
+            skill_id,
+            target_entity_id,
+            target_position,
             ends_at: ClientTick(now.0.saturating_add(cast_ms)),
             total_ms: cast_ms,
         });
@@ -2318,7 +2322,7 @@ impl Npc {
             renderer.render_bar(
                 final_position,
                 bar_size,
-                Color::rgb_u8(80, 220, 120),
+                theme.status_bar.ally_health_color,
                 maximum as f32,
                 current as f32,
             );
@@ -2342,7 +2346,7 @@ impl Npc {
             renderer.render_bar(
                 final_position + ScreenPosition::only_top(offset),
                 bar_size,
-                Color::rgb_u8(255, 210, 60),
+                theme.status_bar.cast_bar_color,
                 total,
                 elapsed,
             );
@@ -2386,6 +2390,22 @@ impl Entity {
 
     pub fn get_entity_type(&self) -> EntityType {
         self.get_common().entity_type
+    }
+
+    pub fn health_points(&self) -> (usize, usize) {
+        let common = self.get_common();
+        (common.health_points, common.maximum_health_points)
+    }
+
+    /// Whether this monster can be selected as a hostile target right now.
+    pub fn is_targetable_monster(&self) -> bool {
+        let common = self.get_common();
+        common.entity_type == EntityType::Monster
+            && (common.maximum_health_points == 0 || common.health_points > 0)
+            && !common.trick_dead
+            && !common.su_hide
+            && !common.animation_state.is_dead()
+            && !common.is_fading()
     }
 
     pub fn is_death_animation_over(&self) -> bool {
@@ -2721,6 +2741,14 @@ impl Entity {
         self.get_common().stopped_moving
     }
 
+    pub fn is_action_animation_active(&self) -> bool {
+        self.get_common().animation_state.is_action_animation_active()
+    }
+
+    pub fn is_dead(&self) -> bool {
+        self.get_common().is_dead()
+    }
+
     pub fn stop_movement(&mut self) {
         self.get_common_mut().active_movement = None;
     }
@@ -2743,8 +2771,16 @@ impl Entity {
         self.get_common_mut().update_animation_status(index, gained, client_tick);
     }
 
-    pub fn start_cast(&mut self, skill_id: SkillId, cast_ms: u32, client_tick: ClientTick) {
-        self.get_common_mut().start_cast(skill_id, cast_ms, client_tick);
+    pub fn start_cast(
+        &mut self,
+        skill_id: SkillId,
+        target_entity_id: EntityId,
+        target_position: TilePosition,
+        cast_ms: u32,
+        client_tick: ClientTick,
+    ) {
+        self.get_common_mut()
+            .start_cast(skill_id, target_entity_id, target_position, cast_ms, client_tick);
     }
 
     pub fn clear_cast(&mut self) {
@@ -2756,6 +2792,13 @@ impl Entity {
     /// cancel would do something" can never disagree.
     pub fn is_casting(&self, client_tick: ClientTick) -> bool {
         self.get_common().cast_bar(client_tick).is_some()
+    }
+
+    /// Target retained from the server cast packet, while the cast bar is
+    /// active.
+    pub fn cast_target(&self, client_tick: ClientTick) -> Option<(SkillId, EntityId, TilePosition)> {
+        let cast = self.get_common().active_cast?;
+        (cast.ends_at.0 > client_tick.0).then_some((cast.skill_id, cast.target_entity_id, cast.target_position))
     }
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {

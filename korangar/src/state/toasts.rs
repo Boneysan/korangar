@@ -56,13 +56,7 @@ impl ToastQueue {
         self.push_with_ttl(key, summary, priority, DEFAULT_TTL_MS);
     }
 
-    pub fn push_with_ttl(
-        &mut self,
-        key: impl Into<String>,
-        summary: impl Into<String>,
-        priority: ToastPriority,
-        ttl_ms: u64,
-    ) {
+    pub fn push_with_ttl(&mut self, key: impl Into<String>, summary: impl Into<String>, priority: ToastPriority, ttl_ms: u64) {
         let key = key.into();
         let summary = summary.into();
         if let Some(existing) = self

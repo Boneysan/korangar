@@ -5,6 +5,7 @@
 
 pub mod data;
 pub mod loot;
+pub mod reference_data;
 
 pub use data::{BestiaryMonster, dm_data};
 use korangar_interface::element::StateElement;

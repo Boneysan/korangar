@@ -12,6 +12,7 @@ use rust_state::State;
 
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
+use crate::settings::{BindableAction, KeyChord};
 use crate::state::ClientState;
 use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
 use crate::state::inventory::InventoryTab;
@@ -74,6 +75,34 @@ pub enum InputEvent {
     ToggleStatsWindow,
     /// Open or close the game settings window.
     ToggleGameSettingsWindow,
+    /// Begin listening for a keyboard chord for a remappable action.
+    BeginKeyBindingCapture(BindableAction),
+    /// Commit a captured keyboard chord.
+    CapturedKeyBinding {
+        action: BindableAction,
+        chord: KeyChord,
+    },
+    /// Cancel keybinding capture without changing the current binding.
+    CancelKeyBindingCapture,
+    /// Restore all keyboard shortcuts to their shipped defaults.
+    ResetKeyBindings,
+    /// Write the current shortcuts to the fixed client/keybindings.ron export.
+    ExportKeyBindings,
+    /// Read shortcuts from client/keybindings.ron after validating
+    /// conflicts/version.
+    ImportKeyBindings,
+    /// Lock or unlock HUD movement and resizing.
+    ToggleHudEditLock,
+    /// Select one of the built-in HUD layouts.
+    SelectHudLayout(&'static str),
+    /// Save the current HUD arrangement to the named custom slot.
+    SaveHudLayout(&'static str),
+    /// Restore the current character's HUD to Classic defaults.
+    ResetHudLayout,
+    /// Cycle between all combat text and important-only combat text.
+    CycleCombatTextFrequency,
+    /// Cycle combat text font size through small, normal, and large.
+    CycleCombatTextSize,
     /// Open or close the interface settings window.
     ToggleInterfaceSettingsWindow,
     /// Open or close the graphics settings window.
@@ -114,7 +143,13 @@ pub enum InputEvent {
     /// Arm the local character as the skill target.
     TargetSelf,
     /// Arm party member 0–3 (Shift+1–4), skipping yourself.
-    TargetPartyMember { index: usize },
+    TargetPartyMember {
+        index: usize,
+    },
+    /// Cycle through visible living monsters in range order.
+    CycleMonsterTarget {
+        reverse: bool,
+    },
     CyclePartyTarget,
     /// Close all ordinary windows while retaining basic info and chat (F11).
     CloseAllOrdinaryWindows,
@@ -506,9 +541,27 @@ pub enum InputEvent {
     /// Open or close the world map window. Only works while playing.
     ToggleMapsWindow,
     /// Set a route destination without teleporting.
-    SetNavigationDestination { map_name: String, x: u16, y: u16 },
+    SetNavigationDestination {
+        map_name: String,
+        x: u16,
+        y: u16,
+    },
+    /// Route to a map through verified exits without choosing a private cell.
+    SetNavigationMapDestination {
+        map_name: String,
+    },
     /// Clear the current route destination.
     ClearNavigationDestination,
+    /// Share the current route destination with the party using ephemeral chat.
+    SharePartyDestination,
+    /// Route to the party's current shared destination and acknowledge it.
+    AcceptPartyDestination,
+    /// Start a bounded party-wide ready check.
+    StartPartyReadyCheck,
+    /// Respond once to the active party ready check.
+    RespondPartyReadyCheck {
+        ready: bool,
+    },
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
@@ -518,6 +571,18 @@ pub enum InputEvent {
     ToggleQuestLogWindow,
     /// Open or close the bestiary journal. Only works while playing.
     ToggleBestiaryWindow,
+    /// Open or close the open-search player reference guide. Only works while
+    /// playing.
+    ToggleAdventureGuideWindow,
+    /// Open a specific item in the player guide.
+    OpenAdventureGuideItem {
+        item_id: u32,
+    },
+    /// Broadcast the current position through ordinary party chat with a
+    /// readable fallback.
+    SendPartyPing {
+        kind: String,
+    },
     /// Open or close the DM loot generator. Only works while playing.
     ToggleLootWindow,
     /// Open the theme inspector window.

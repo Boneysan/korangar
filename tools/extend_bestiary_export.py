@@ -19,8 +19,10 @@ Re-run after mob_db.conf / mob_skill_db.conf changes, then rebuild
 (include_str! embeds bestiary.json at compile time).
 """
 
+import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -46,6 +48,8 @@ def parse_mob_db():
         if not m:
             continue
         mid = int(m.group(1))
+        if mid in out:
+            raise ValueError(f"duplicate monster ID {mid} in {MOB_DB}")
         entry = {}
         sm = re.search(r'Size:\s*"Size_(\w+)"', b)
         if sm:
@@ -126,12 +130,22 @@ def parse_mob_skill_db():
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="fail without writing if bestiary.json would change")
+    args = parser.parse_args()
+
     mob_fields = parse_mob_db()
     skills = parse_mob_skill_db()
     print(f"mob_db.conf: {len(mob_fields)} entries parsed")
     print(f"mob_skill_db.conf: {len(skills)} sprites with skills")
 
-    bestiary = json.loads(BESTIARY.read_text())
+    bestiary = json.loads(BESTIARY.read_text(encoding="utf-8"))
+    ids = [monster.get("Id") for monster in bestiary]
+    if None in ids:
+        raise SystemExit(f"{BESTIARY} contains an entry without Id")
+    if len(ids) != len(set(ids)):
+        duplicates = sorted({monster_id for monster_id in ids if ids.count(monster_id) > 1})
+        raise SystemExit(f"{BESTIARY} contains duplicate monster IDs: {duplicates}")
     before = {
         "element": sum(1 for m in bestiary if m.get("Element")),
         "skills": sum(1 for m in bestiary if m.get("Skills")),
@@ -156,7 +170,16 @@ def main():
     print(f"Skills coverage:  {before['skills']} -> {after['skills']} / {len(bestiary)}")
     print(f"Mode coverage:    {before['mode']} -> {after['mode']} / {len(bestiary)}")
 
-    BESTIARY.write_text(json.dumps(bestiary, indent=1, ensure_ascii=False) + "\n")
+    rendered = json.dumps(bestiary, indent=1, ensure_ascii=False) + "\n"
+    if args.check:
+        current = BESTIARY.read_text(encoding="utf-8")
+        if current != rendered:
+            print(f"stale: {BESTIARY} — re-run {Path(__file__).name}", file=sys.stderr)
+            raise SystemExit(1)
+        print(f"up to date: {len(bestiary)} monsters")
+        return
+
+    BESTIARY.write_text(rendered, encoding="utf-8")
     print(f"wrote {BESTIARY}")
 
 

@@ -2,7 +2,6 @@ use std::cell::{Cell, UnsafeCell};
 
 use korangar_components::item_box;
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::event::EventQueue;
 use korangar_interface::window::{CustomWindow, Window};
 use korangar_networking::InventoryItem;
 use rust_state::{Path, PathExt, Selector, State};
@@ -11,8 +10,8 @@ use crate::ItemSource;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
+use crate::state::inventory::{InventoryPathExt, InventoryTab, inventory_tab_matches};
 use crate::state::localization::LocalizationPathExt;
-use crate::state::inventory::{InventoryTab, inventory_tab_matches};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::world::{Player, ResourceMetadata};
@@ -45,7 +44,9 @@ where
     fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a InventoryItem<ResourceMetadata>> {
         let tab = *self.tab_path.follow_safe(state);
         let query = self.query_path.follow_safe(state).to_lowercase();
-        self.items_path.follow_safe(state).iter()
+        self.items_path
+            .follow_safe(state)
+            .iter()
             .filter(|item| inventory_tab_matches(item, tab) && item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }
@@ -53,7 +54,9 @@ where
     fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut InventoryItem<ResourceMetadata>> {
         let tab = *self.tab_path.follow_safe(state);
         let query = self.query_path.follow_safe(state).to_lowercase();
-        self.items_path.follow_mut_safe(state).iter_mut()
+        self.items_path
+            .follow_mut_safe(state)
+            .iter_mut()
             .filter(|item| inventory_tab_matches(item, tab) && item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }

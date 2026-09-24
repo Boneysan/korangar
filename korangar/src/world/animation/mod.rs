@@ -734,6 +734,19 @@ impl AnimationState {
         self.native_actor_state == 0
     }
 
+    /// A finite local action pose that can defer one follow-up input until the
+    /// animation completes. Walking and persistent status poses are not locks.
+    pub fn is_action_animation_active(&self) -> bool {
+        matches!(
+            self.action_type,
+            AnimationActionType::Attack1
+                | AnimationActionType::Attack2
+                | AnimationActionType::Attack3
+                | AnimationActionType::Skill
+                | AnimationActionType::Pickup
+        )
+    }
+
     /// The entity is standing still (peaceful Idle or battle-ready ReadyFight),
     /// i.e. safe to re-resolve the stance after an equip change without
     /// interrupting a walk/attack/sit/dead motion.

@@ -10,7 +10,7 @@ use crate::event::{NetworkEventList, NoNetworkEvents};
 use crate::items::{IT_AMMO, ItemQuantity};
 use crate::{
     CharacterServerLoginData, HotkeyState, InventoryItem, InventoryItemDetails, LoginServerLoginData, MessageColor, NetworkEvent,
-    NoMetadata, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
+    NoMetadata, QuestHuntObjective, QuestHuntProgress, ShopItem, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
 
 type PendingInventoryItems = Rc<RefCell<Option<(u8, Vec<InventoryItem<NoMetadata>>)>>>;
@@ -831,9 +831,30 @@ where
         quest_id: packet.quest_id,
         active: packet.active != 0,
     })?;
-    packet_handler.register_noop::<HuntingQuestNotificationPacket>()?;
+    packet_handler.register(|packet: HuntingQuestNotificationPacket| NetworkEvent::QuestHuntObjectives {
+        objectives: packet
+            .objective_details
+            .into_iter()
+            .map(|objective| QuestHuntObjective {
+                quest_id: objective.quest_id,
+                mob_id: objective.mob_id,
+                total_count: objective.total_count,
+                current_count: objective.current_count,
+            })
+            .collect(),
+    })?;
     packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket>()?;
-    packet_handler.register_noop::<HuntingQuestUpdateObjectivePacket4>()?;
+    packet_handler.register(|packet: HuntingQuestUpdateObjectivePacket4| NetworkEvent::QuestHuntProgress {
+        objectives: packet
+            .objective_details
+            .into_iter()
+            .map(|objective| QuestHuntProgress {
+                quest_id: objective.hunt_identification,
+                objective_index: objective.hunt_identification2,
+                current_count: objective.current_count,
+            })
+            .collect(),
+    })?;
     packet_handler.register(|packet: QuestRemovedPacket| NetworkEvent::QuestRemoved { quest_id: packet.quest_id })?;
     packet_handler.register(|packet: QuestListPacket| NetworkEvent::QuestList {
         quest_ids: packet.quests.iter().map(|quest| quest.quest_id).collect(),
@@ -1329,6 +1350,8 @@ where
     packet_handler.register(|packet: UseSkillSuccessPacket| {
         (packet.delay_time > 0).then_some(NetworkEvent::SkillCast {
             source_entity_id: packet.source_entity,
+            target_entity_id: packet.destination_entity,
+            target_position: packet.position,
             skill_id: packet.skill_id,
             cast_ms: packet.delay_time,
         })
@@ -1336,6 +1359,8 @@ where
     packet_handler.register(|packet: UseSkillAckPacket| {
         (packet.delay_time > 0).then_some(NetworkEvent::SkillCast {
             source_entity_id: packet.source_entity,
+            target_entity_id: packet.destination_entity,
+            target_position: packet.position,
             skill_id: packet.skill_id,
             cast_ms: packet.delay_time,
         })

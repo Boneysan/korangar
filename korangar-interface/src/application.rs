@@ -199,6 +199,30 @@ where
 
     /// Update the size of a registered window.
     fn update_size(&mut self, window_class: App::WindowClass, size: App::Size);
+
+    /// Whether the player has locked HUD window movement and resizing.
+    fn movement_locked(&self) -> bool {
+        false
+    }
+
+    /// Persist the HUD lock state.
+    fn set_movement_locked(&mut self, _locked: bool) {}
+
+    /// Activate a saved window layout by name.
+    fn select_layout(&mut self, _name: &str) -> bool {
+        false
+    }
+
+    /// Save the current arrangement as a named layout.
+    fn save_layout(&mut self, _name: &str) -> bool {
+        false
+    }
+
+    /// Reset the current character's arrangement to the Classic defaults.
+    fn reset_layout(&mut self) {}
+
+    /// Switch the cache to the selected character's profile set.
+    fn activate_character_layout(&mut self, _character_id: u32) {}
 }
 
 /// Glue between [`korangar_interface`] and the renderer of the application.

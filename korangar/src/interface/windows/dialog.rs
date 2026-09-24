@@ -36,6 +36,7 @@ pub struct DialogElement {
     is_next_button: bool,
     is_input_widget: bool,
     is_choice_button: bool,
+    is_navigation_button: bool,
 }
 
 impl DialogElement {
@@ -50,6 +51,7 @@ impl DialogElement {
             is_next_button,
             is_input_widget: false,
             is_choice_button: false,
+            is_navigation_button: false,
         }
     }
 
@@ -63,6 +65,7 @@ impl DialogElement {
             is_next_button: false,
             is_input_widget: true,
             is_choice_button: false,
+            is_navigation_button: false,
         }
     }
 
@@ -76,12 +79,73 @@ impl DialogElement {
             is_next_button: false,
             is_input_widget: false,
             is_choice_button: true,
+            is_navigation_button: false,
+        }
+    }
+
+    fn new_navigation<E>(element: E) -> Self
+    where
+        E: Element<ClientState> + 'static,
+    {
+        Self {
+            element: UnsafeCell::new(ErasedElement::new(element)),
+            is_next_button: false,
+            is_input_widget: false,
+            is_choice_button: false,
+            is_navigation_button: true,
         }
     }
 
     fn is_transient(&self) -> bool {
-        self.is_next_button || self.is_input_widget || self.is_choice_button
+        self.is_next_button || self.is_input_widget || self.is_choice_button || self.is_navigation_button
     }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct NavigationLink {
+    label: String,
+    map_name: String,
+    x: u16,
+    y: u16,
+}
+
+/// Parse the short and full Hercules `<NAVI>` forms without treating NPC
+/// markup as trusted coordinates. Invalid links remain readable text but
+/// cannot create navigation actions.
+fn parse_navigation_links(text: &str) -> Vec<NavigationLink> {
+    let mut links = Vec::new();
+    let mut remaining = text;
+    while let Some(start) = remaining.find("<NAVI>") {
+        let after_open = &remaining[start + "<NAVI>".len()..];
+        let Some(end) = after_open.find("</NAVI>") else { break };
+        let body = &after_open[..end];
+        if let Some((label, info_and_close)) = body.split_once("<INFO>")
+            && let Some((info, _)) = info_and_close.split_once("</INFO>")
+        {
+            let mut parts = info.split(',');
+            let map_name = parts.next().unwrap_or_default().trim();
+            let x = parts.next().and_then(|value| value.trim().parse::<u16>().ok());
+            let y = parts.next().and_then(|value| value.trim().parse::<u16>().ok());
+            if !label.trim().is_empty()
+                && label.len() <= 256
+                && !map_name.is_empty()
+                && map_name.len() <= 24
+                && map_name.bytes().all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+                && let (Some(x), Some(y)) = (x, y)
+                && x > 0
+                && y > 0
+            {
+                links.push(NavigationLink {
+                    label: label.trim().to_owned(),
+                    map_name: map_name.to_owned(),
+                    x,
+                    y,
+                });
+            }
+        }
+        remaining = &after_open[end + "</NAVI>".len()..];
+    }
+    links
 }
 
 fn normalize_dialog_text(text: String) -> String {
@@ -134,7 +198,7 @@ fn normalize_dialog_text(text: String) -> String {
 mod tests {
     use ragnarok_packets::EntityId;
 
-    use super::{DialogWindowState, normalize_dialog_text};
+    use super::{DialogWindowState, NavigationLink, normalize_dialog_text, parse_navigation_links};
 
     /// The whole reason `active` exists, pinned.
     ///
@@ -206,6 +270,30 @@ mod tests {
 
         assert_eq!(normalize_dialog_text(text.to_owned()), text);
     }
+
+    #[test]
+    fn parses_short_and_long_navi_targets_but_rejects_bad_coordinates() {
+        let links = parse_navigation_links(concat!(
+            "<NAVI>[Hun]<INFO>izlude,122,207,</INFO></NAVI>",
+            " <NAVI>Tool Shop<INFO>prontera,156,191,1,0,0,0</INFO></NAVI>",
+            " <NAVI>Bad<INFO>prt_fild08,-1,20</INFO></NAVI>",
+            " <NAVI>Unsafe<INFO>prontera,9,8;@warp</INFO></NAVI>"
+        ));
+
+        assert_eq!(links.len(), 2);
+        assert_eq!(links[0], NavigationLink {
+            label: "[Hun]".to_owned(),
+            map_name: "izlude".to_owned(),
+            x: 122,
+            y: 207
+        });
+        assert_eq!(links[1], NavigationLink {
+            label: "Tool Shop".to_owned(),
+            map_name: "prontera".to_owned(),
+            x: 156,
+            y: 191
+        });
+    }
 }
 
 /// Internal state of the dialog window.
@@ -263,6 +351,7 @@ impl DialogWindowState {
             self.clear_transient_controls();
         }
 
+        let navigation_links = parse_navigation_links(&text);
         let text = normalize_dialog_text(text);
 
         self.elements.push(DialogElement::new(
@@ -271,6 +360,17 @@ impl DialogWindowState {
             },
             false,
         ));
+
+        for link in navigation_links {
+            let map_name = link.map_name;
+            let x = link.x;
+            let y = link.y;
+            self.elements.push(DialogElement::new_navigation(button! {
+                text: format!("Go to {} ({x}, {y})", link.label),
+                tooltip: format!("Set a walkable route to {map_name} {x},{y}; this does not teleport you"),
+                event: InputEvent::SetNavigationDestination { map_name, x, y },
+            }));
+        }
     }
 
     /// Add add next button to the dialog.

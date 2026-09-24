@@ -1,6 +1,5 @@
 use korangar_components::item_box;
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::event::EventQueue;
 use korangar_interface::window::{CustomWindow, Window};
 use korangar_networking::InventoryItem;
 use rust_state::{Path, PathExt, State};
@@ -38,14 +37,18 @@ where
 {
     fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a InventoryItem<ResourceMetadata>> {
         let query = self.query_path.follow_safe(state).to_lowercase();
-        self.items_path.follow_safe(state).iter()
+        self.items_path
+            .follow_safe(state)
+            .iter()
             .filter(|item| item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }
 
     fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut InventoryItem<ResourceMetadata>> {
         let query = self.query_path.follow_safe(state).to_lowercase();
-        self.items_path.follow_mut_safe(state).iter_mut()
+        self.items_path
+            .follow_mut_safe(state)
+            .iter_mut()
             .filter(|item| item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }

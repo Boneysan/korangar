@@ -409,6 +409,20 @@ where
                 text! {
                     text: self.party_path.display_text(),
                 },
+                text! {
+                    text: self.party_path.shared_destination_text(),
+                },
+                button! {
+                    text: "Accept shared destination",
+                    tooltip: "Set the shared route locally and acknowledge it to the party",
+                    event: InputEvent::AcceptPartyDestination,
+                },
+                text! { text: self.party_path.ready_check_text(), },
+                split! { gaps: theme().window().gaps(), children: (
+                    button! { text: "Start ready check", tooltip: "Ask current online party members to confirm readiness", event: InputEvent::StartPartyReadyCheck },
+                    button! { text: "Ready", event: InputEvent::RespondPartyReadyCheck { ready: true } },
+                    button! { text: "Not ready", event: InputEvent::RespondPartyReadyCheck { ready: false } },
+                ) },
                 PartyMemberList::new(self.party_path.members(), self.party_path),
             )
         }

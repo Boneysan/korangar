@@ -161,7 +161,8 @@ impl Inventory {
         });
     }
 
-    /// Move an item in the visible order; the caller persists the resulting slot list.
+    /// Move an item in the visible order; the caller persists the resulting
+    /// slot list.
     pub fn reorder_display(&mut self, from_index: InventoryIndex, to_slot: usize) {
         let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
             return;
@@ -183,18 +184,28 @@ impl Inventory {
                 return;
             }
         }
-        let Some(from) = self.items.iter().position(|item| item.index == from_index) else { return };
+        let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
+            return;
+        };
         if !inventory_item_visible(&self.items[from], tab, query) {
             return;
         }
-        let destinations: Vec<_> = self.items.iter().enumerate()
+        let destinations: Vec<_> = self
+            .items
+            .iter()
+            .enumerate()
             .filter(|(_, item)| inventory_item_visible(item, tab, query))
             .map(|(index, _)| index)
             .collect();
-        let target = destinations.get(to_slot).copied().or_else(|| destinations.last().map(|index| index + 1));
+        let target = destinations
+            .get(to_slot)
+            .copied()
+            .or_else(|| destinations.last().map(|index| index + 1));
         let Some(mut target) = target else { return };
         let item = self.items.remove(from);
-        if from < target { target -= 1; }
+        if from < target {
+            target -= 1;
+        }
         self.items.insert(target.min(self.items.len()), item);
     }
 
@@ -373,7 +384,9 @@ impl Inventory {
 pub fn inventory_tab_matches(item: &InventoryItem<ResourceMetadata>, tab: InventoryTab) -> bool {
     match tab {
         InventoryTab::All => true,
-        InventoryTab::Equipped => matches!(&item.details, InventoryItemDetails::Equippable { equipped_position, .. } if !equipped_position.is_empty()),
+        InventoryTab::Equipped => {
+            matches!(&item.details, InventoryItemDetails::Equippable { equipped_position, .. } if !equipped_position.is_empty())
+        }
         InventoryTab::Gear => matches!(&item.details, InventoryItemDetails::Equippable { .. }),
         InventoryTab::Items => matches!(&item.details, InventoryItemDetails::Regular { .. }),
     }

@@ -715,17 +715,17 @@ pub fn skill_presentation_recipe(skill_id: SkillId) -> SkillPresentationRecipe {
         // `hit_effects` stays because Heal on an undead target is routed the
         // other way (`skill->attack`, `skill.c:5528`) and arrives as damage.
         43 | 44 => SUPPORT_HOLY, // AC_OWL, AC_VULTURE — self buffs, no cast time
-        28 => SUPPORT_HOLY, // AL_HEAL
-        29 => SUPPORT_HOLY, // AL_INCAGI
-        30 => SUPPORT_HOLY, // AL_DECAGI
-        33 => SUPPORT_HOLY, // AL_ANGELUS
-        34 => SUPPORT_HOLY, // AL_BLESSING
-        66 => SUPPORT_HOLY, // PR_IMPOSITIO
-        67 => SUPPORT_HOLY, // PR_SUFFRAGIUM
-        68 => SUPPORT_HOLY, // PR_ASPERSIO
-        73 => SUPPORT_HOLY, // PR_KYRIE
-        74 => SUPPORT_HOLY, // PR_MAGNIFICAT
-        75 => SUPPORT_HOLY, // PR_GLORIA
+        28 => SUPPORT_HOLY,      // AL_HEAL
+        29 => SUPPORT_HOLY,      // AL_INCAGI
+        30 => SUPPORT_HOLY,      // AL_DECAGI
+        33 => SUPPORT_HOLY,      // AL_ANGELUS
+        34 => SUPPORT_HOLY,      // AL_BLESSING
+        66 => SUPPORT_HOLY,      // PR_IMPOSITIO
+        67 => SUPPORT_HOLY,      // PR_SUFFRAGIUM
+        68 => SUPPORT_HOLY,      // PR_ASPERSIO
+        73 => SUPPORT_HOLY,      // PR_KYRIE
+        74 => SUPPORT_HOLY,      // PR_MAGNIFICAT
+        75 => SUPPORT_HOLY,      // PR_GLORIA
         // AL_HOLYLIGHT is 156 (already mapped above as HOLY_HIT)
         214 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::Raid)),
         406 => recipe!(successful_caster_effect: Some(SuccessfulCasterEffect::MeteorAssault)),

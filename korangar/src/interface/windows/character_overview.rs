@@ -5,6 +5,7 @@ use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
+use crate::settings::GameSettingsPathExt;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
@@ -133,6 +134,19 @@ where
                 button! {
                     text: client_state().localization().stats_button_text(),
                     event: InputEvent::ToggleStatsWindow,
+                },
+                // These are player commands on this fork, not DM tools. Keep
+                // the two point pools separate and use the registered command
+                // names (`streset` / `skreset`) rather than upstream aliases.
+                button! {
+                    text: "Reset stats (free)",
+                    tooltip: "Reset stat points only. Does not reset skills or cost Zeny. Uses @streset.",
+                    event: InputEvent::SendMessage { text: "@streset".to_owned() },
+                },
+                button! {
+                    text: "Reset skills (free)",
+                    tooltip: "Reset skill points only. Does not reset stats or cost Zeny. Uses @skreset.",
+                    event: InputEvent::SendMessage { text: "@skreset".to_owned() },
                 },
                 button! {
                     text: client_state().localization().friend_list_button_text(),

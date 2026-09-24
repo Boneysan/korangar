@@ -96,6 +96,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     tooltip: "View connected regions and follow a route to a destination",
                     event: InputEvent::ToggleMapsWindow,
                 },
+                button! {
+                    text: "Adventure Guide",
+                    tooltip: "Search open monster, item, and card reference data",
+                    event: InputEvent::ToggleAdventureGuideWindow,
+                },
                 #[cfg(feature = "debug")]
                 button! {
                     text: "Theme inspector",

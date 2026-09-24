@@ -373,6 +373,14 @@ pub enum NetworkEvent {
     QuestList {
         quest_ids: Vec<u32>,
     },
+    /// Monster targets sent when a hunting quest is added.
+    QuestHuntObjectives {
+        objectives: Vec<QuestHuntObjective>,
+    },
+    /// Progress counters for existing hunting objectives.
+    QuestHuntProgress {
+        objectives: Vec<QuestHuntProgress>,
+    },
     SetInventory {
         items: Vec<InventoryItem<NoMetadata>>,
     },
@@ -753,6 +761,8 @@ pub enum NetworkEvent {
     /// Skill cast bar / wind-up (`ZC_USESKILL_ACK` / success 0x0B1A / 0x07FB).
     SkillCast {
         source_entity_id: EntityId,
+        target_entity_id: EntityId,
+        target_position: TilePosition,
         skill_id: SkillId,
         /// Cast duration in milliseconds (`delay_time`).
         cast_ms: u32,
@@ -821,6 +831,21 @@ pub enum NetworkEvent {
         amount: u32,
     },
     StorageClosed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QuestHuntObjective {
+    pub quest_id: u32,
+    pub mob_id: u32,
+    pub total_count: u16,
+    pub current_count: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QuestHuntProgress {
+    pub quest_id: u32,
+    pub objective_index: u32,
+    pub current_count: u16,
 }
 
 /// New-type so we can implement some `From` traits. This will help when

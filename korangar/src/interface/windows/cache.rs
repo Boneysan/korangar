@@ -12,7 +12,7 @@ use crate::state::ClientState;
 
 const MARGIN: f32 = 12.0;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct WindowState {
     pub anchor: Anchor<ClientState>,
     pub size: ScreenSize,
@@ -55,9 +55,43 @@ impl WindowState {
     }
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct WindowCache {
+    #[serde(default = "current_version")]
+    version: u16,
+    #[serde(default)]
     entries: HashMap<WindowClass, WindowState>,
+    #[serde(default)]
+    movement_locked: bool,
+    #[serde(default)]
+    active_profile: String,
+    #[serde(default)]
+    profiles: HashMap<String, HashMap<WindowClass, WindowState>>,
+    #[serde(default)]
+    active_character_id: Option<u32>,
+    #[serde(default)]
+    character_profiles: HashMap<u32, HashMap<String, HashMap<WindowClass, WindowState>>>,
+    #[serde(default)]
+    character_active_profiles: HashMap<u32, String>,
+}
+
+const fn current_version() -> u16 {
+    1
+}
+
+impl Default for WindowCache {
+    fn default() -> Self {
+        Self {
+            version: current_version(),
+            entries: HashMap::new(),
+            movement_locked: false,
+            active_profile: "Classic".to_owned(),
+            profiles: HashMap::new(),
+            active_character_id: None,
+            character_profiles: HashMap::new(),
+            character_active_profiles: HashMap::new(),
+        }
+    }
 }
 
 impl WindowCache {
@@ -74,13 +108,22 @@ impl WindowCache {
         #[cfg(feature = "debug")]
         print_debug!("loading window cache from {}", Self::FILE_NAME.magenta());
 
-        std::fs::read_to_string(Self::FILE_NAME)
-            .ok()
-            .and_then(|data| ron::from_str(&data).ok())
-            .map(|entries| Self { entries })
+        let data = std::fs::read_to_string(Self::FILE_NAME).ok()?;
+        if let Ok(cache) = ron::from_str::<Self>(&data)
+            && cache.version == current_version()
+        {
+            return Some(cache);
+        }
+        // Migrate the old, unversioned HashMap<WindowClass, WindowState>
+        // directly into the Classic profile without losing saved geometry.
+        let entries = ron::from_str::<HashMap<WindowClass, WindowState>>(&data).ok()?;
+        let mut cache = Self::default();
+        cache.entries = entries;
+        cache.profiles.insert("Classic".to_owned(), cache.entries.clone());
+        Some(cache)
     }
 
-    fn save(&self) {
+    fn save(&mut self) {
         #[cfg(feature = "debug")]
         print_debug!("saving window cache to {}", Self::FILE_NAME.magenta());
 
@@ -93,7 +136,8 @@ impl WindowCache {
             );
         }
 
-        let data = ron::ser::to_string_pretty(&self.entries, PrettyConfig::new()).unwrap();
+        self.sync_active_profile();
+        let data = ron::ser::to_string_pretty(self, PrettyConfig::new()).unwrap();
         if let Err(_error) = std::fs::write(Self::FILE_NAME, data) {
             #[cfg(feature = "debug")]
             print_debug!(
@@ -131,7 +175,7 @@ impl WindowCache {
             // Quest log sits in the same left column as the skill tree.
             WindowClass::QuestLog => state(AnchorPoint::CenterLeft, MARGIN, -260.0, 340.0, 380.0),
             // Minimap top-right (above inventory).
-            WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 210.0),
+            WindowClass::Minimap => state(AnchorPoint::TopRight, -(176.0 + MARGIN), MARGIN, 176.0, 238.0),
             // Buff bar top-center.
             // Effects list one per line (up to MAXIMUM_DISPLAYED_EFFECTS = 8), so 48px
             // clipped everything past the first. Sized for the full list.
@@ -167,6 +211,7 @@ impl WindowCache {
             WindowClass::AutoSpell => state(AnchorPoint::Center, 0.0, -40.0, 300.0, 320.0),
             WindowClass::Instance => state(AnchorPoint::TopRight, -MARGIN, MARGIN + 60.0, 280.0, 120.0),
             WindowClass::PlayerTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 120.0, 260.0, 200.0),
+            WindowClass::MonsterTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 320.0, 280.0, 150.0),
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
             WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),
@@ -174,6 +219,7 @@ impl WindowCache {
             WindowClass::Commands => state(AnchorPoint::CenterLeft, MARGIN + 40.0, -180.0, 470.0, 520.0),
             // DM campaign tools: bestiary right of center, loot generator left.
             WindowClass::Bestiary => state(AnchorPoint::CenterRight, -(400.0 + MARGIN), -240.0, 380.0, 480.0),
+            WindowClass::AdventureGuide => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -260.0, 400.0, 520.0),
             WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
             WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
@@ -192,7 +238,7 @@ impl WindowCache {
         })
     }
 
-    fn seed_defaults(&mut self) {
+    fn seed_default_entries(&mut self) {
         // Drop still-initializing center placeholders so edge defaults apply.
         // Keep any entry the user already dragged (initializing: false), even if
         // size was never written (old bug stored 0 × MAX).
@@ -226,6 +272,7 @@ impl WindowCache {
             WindowClass::Menu,
             WindowClass::Maps,
             WindowClass::Emotes,
+            WindowClass::AdventureGuide,
             // Centered error popup (wrong password / disconnect).
             WindowClass::Error,
             WindowClass::DisconnectNotice,
@@ -242,6 +289,188 @@ impl WindowCache {
                 entry.size = default.size;
             }
         }
+    }
+
+    fn seed_defaults(&mut self) {
+        self.seed_default_entries();
+        if self.profiles.is_empty() {
+            self.profiles.insert("Classic".to_owned(), self.entries.clone());
+        }
+        if self.active_profile.is_empty() {
+            self.active_profile = "Classic".to_owned();
+        }
+    }
+
+    fn sync_active_profile(&mut self) {
+        if let Some(character_id) = self.active_character_id {
+            self.character_profiles
+                .entry(character_id)
+                .or_default()
+                .insert(self.active_profile.clone(), self.entries.clone());
+            self.character_active_profiles.insert(character_id, self.active_profile.clone());
+        } else {
+            self.profiles.insert(self.active_profile.clone(), self.entries.clone());
+        }
+    }
+
+    fn built_in_layout(name: &str) -> Option<HashMap<WindowClass, WindowState>> {
+        if !matches!(name, "Classic" | "Modern") {
+            return None;
+        }
+        let mut layout = Self::default();
+        layout.seed_default_entries();
+        if name == "Modern" {
+            let set = |entries: &mut HashMap<WindowClass, WindowState>, class, point, left, top, width, height| {
+                entries.insert(
+                    class,
+                    WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
+                        width,
+                        height,
+                    }),
+                );
+            };
+            set(
+                &mut layout.entries,
+                WindowClass::Hotbar,
+                AnchorPoint::BottomCenter,
+                -270.0,
+                -100.0,
+                540.0,
+                88.0,
+            );
+            set(
+                &mut layout.entries,
+                WindowClass::StatusBar,
+                AnchorPoint::TopLeft,
+                MARGIN,
+                MARGIN,
+                300.0,
+                160.0,
+            );
+            set(
+                &mut layout.entries,
+                WindowClass::Minimap,
+                AnchorPoint::TopRight,
+                -210.0,
+                MARGIN,
+                198.0,
+                220.0,
+            );
+            set(
+                &mut layout.entries,
+                WindowClass::Party,
+                AnchorPoint::BottomRight,
+                -332.0,
+                -212.0,
+                320.0,
+                240.0,
+            );
+            set(
+                &mut layout.entries,
+                WindowClass::QuestLog,
+                AnchorPoint::CenterRight,
+                -360.0,
+                -190.0,
+                340.0,
+                380.0,
+            );
+        }
+        Some(layout.entries.clone())
+    }
+
+    fn select_profile_layout(&mut self, name: &str) -> bool {
+        if name.is_empty()
+            || name.len() > 24
+            || !name
+                .chars()
+                .all(|ch| ch.is_ascii_alphanumeric() || ch == ' ' || ch == '_' || ch == '-')
+        {
+            return false;
+        }
+        self.sync_active_profile();
+        let profile = if let Some(character_id) = self.active_character_id {
+            self.character_profiles
+                .get(&character_id)
+                .and_then(|profiles| profiles.get(name))
+                .cloned()
+        } else {
+            self.profiles.get(name).cloned()
+        }
+        .or_else(|| Self::built_in_layout(name));
+        let Some(profile) = profile else {
+            return false;
+        };
+        self.active_profile = name.to_owned();
+        self.entries = profile;
+        self.seed_default_entries();
+        self.sync_active_profile();
+        self.save();
+        true
+    }
+
+    fn save_custom_profile(&mut self, name: &str) -> bool {
+        if name.is_empty()
+            || name.len() > 24
+            || !name
+                .chars()
+                .all(|ch| ch.is_ascii_alphanumeric() || ch == ' ' || ch == '_' || ch == '-')
+            || matches!(name, "Classic" | "Modern")
+        {
+            return false;
+        }
+        if let Some(character_id) = self.active_character_id {
+            self.character_profiles
+                .entry(character_id)
+                .or_default()
+                .insert(name.to_owned(), self.entries.clone());
+        } else {
+            self.profiles.insert(name.to_owned(), self.entries.clone());
+        }
+        self.active_profile = name.to_owned();
+        self.sync_active_profile();
+        self.save();
+        true
+    }
+
+    fn reset_active_layout(&mut self) {
+        let defaults = Self::built_in_layout("Classic").expect("Classic layout exists");
+        self.entries = defaults;
+        self.active_profile = "Classic".to_owned();
+        self.seed_default_entries();
+        self.sync_active_profile();
+        self.save();
+    }
+
+    fn activate_character(&mut self, character_id: u32) {
+        if self.active_character_id == Some(character_id) {
+            return;
+        }
+        self.sync_active_profile();
+        let first_character = self.active_character_id.is_none() && self.character_profiles.is_empty();
+        self.active_character_id = Some(character_id);
+        let active_profile = self
+            .character_active_profiles
+            .get(&character_id)
+            .cloned()
+            .unwrap_or_else(|| "Classic".to_owned());
+        let saved = self
+            .character_profiles
+            .get(&character_id)
+            .and_then(|profiles| profiles.get(&active_profile))
+            .cloned();
+        self.entries = saved
+            .or_else(|| {
+                if first_character {
+                    Some(self.entries.clone())
+                } else {
+                    Self::built_in_layout("Classic")
+                }
+            })
+            .unwrap_or_default();
+        self.active_profile = active_profile;
+        self.seed_default_entries();
+        self.sync_active_profile();
+        self.save();
     }
 }
 
@@ -333,6 +562,31 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
             );
         }
         self.save();
+    }
+
+    fn movement_locked(&self) -> bool {
+        self.movement_locked
+    }
+
+    fn set_movement_locked(&mut self, locked: bool) {
+        self.movement_locked = locked;
+        self.save();
+    }
+
+    fn select_layout(&mut self, name: &str) -> bool {
+        self.select_profile_layout(name)
+    }
+
+    fn save_layout(&mut self, name: &str) -> bool {
+        self.save_custom_profile(name)
+    }
+
+    fn reset_layout(&mut self) {
+        self.reset_active_layout();
+    }
+
+    fn activate_character_layout(&mut self, character_id: u32) {
+        self.activate_character(character_id);
     }
 }
 

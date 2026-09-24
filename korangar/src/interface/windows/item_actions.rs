@@ -7,6 +7,7 @@ use rust_state::{PathExt, State};
 use crate::input::InputEvent;
 use crate::interface::resource::ItemSource;
 use crate::interface::windows::WindowClass;
+use crate::state::inventory::InventoryPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::world::ResourceMetadata;
@@ -51,7 +52,11 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
         let name = self.item.metadata.name.clone();
         let item_id = self.item.item_id;
         let protection_action = ActionThenClose(InputEvent::ToggleItemProtection(item_id));
-        let protection_label = if self.protected { "Allow drop and sale" } else { "Protect from drop and sale" };
+        let protection_label = if self.protected {
+            "Allow drop and sale"
+        } else {
+            "Protect from drop and sale"
+        };
         let primary_label = primary_action_label(&self.item);
         let primary_event = ActionThenClose(primary_action_event(&self.item));
 
@@ -132,7 +137,7 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
                 text_box! {
                     ghost_text: "Amount to split into inventory",
                     state: split_amount_path,
-                    input_handler: DefaultHandler::<_, _, MAXIMUM_SPLIT_DIGITS>::new(split_amount_path, |_, _| {}),
+                    input_handler: DefaultHandler::<_, _, MAXIMUM_SPLIT_DIGITS>::new(split_amount_path, Event::Unfocus),
                     focus_id: SplitAmountTextBox,
                 },
                 text! {

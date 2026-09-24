@@ -15,6 +15,7 @@ pub use self::event::InputEvent;
 pub use self::key::Key;
 pub use self::mode::{Grabbed, MouseInputMode, MouseModeExt};
 use crate::graphics::{PickerTarget, ScreenPosition, ScreenSize};
+use crate::settings::{BindableAction, KeyBindings};
 
 const MOUSE_SCOLL_MULTIPLIER: f32 = 30.0;
 const KEY_COUNT: usize = variant_count::<KeyCode>();
@@ -49,6 +50,7 @@ pub struct InputSystem {
     left_mouse_button: Key,
     right_mouse_button: Key,
     keys: [Key; KEY_COUNT],
+    known_key_codes: Vec<KeyCode>,
     input_buffer: Vec<char>,
     picker_value: Arc<AtomicU64>,
     previous_mouse_button: Option<PreviousMouseButton>,
@@ -67,6 +69,7 @@ impl InputSystem {
         let left_mouse_button = Key::default();
         let right_mouse_button = Key::default();
         let keys = [Key::default(); KEY_COUNT];
+        let known_key_codes = Vec::new();
 
         let input_buffer = Vec::new();
         let previous_mouse_button = None;
@@ -81,6 +84,7 @@ impl InputSystem {
             left_mouse_button,
             right_mouse_button,
             keys,
+            known_key_codes,
             input_buffer,
             picker_value,
             previous_mouse_button,
@@ -197,21 +201,115 @@ impl InputSystem {
     pub fn update_keyboard(&mut self, key_code: KeyCode, state: ElementState) {
         let index = key_code as usize;
         if index < self.keys.len() {
+            if !self.known_key_codes.contains(&key_code) {
+                self.known_key_codes.push(key_code);
+            }
             let pressed = matches!(state, ElementState::Pressed);
             self.keys[index].set_down(pressed);
         }
     }
 
-    /// Game-action keys that should work even while a text box or window has
-    /// focus. Official RO: Insert = sit/stand; F1–F9 = hotbar.
-    pub fn handle_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
-        self.push_game_action_keys(events);
+    fn binding_pressed(&self, bindings: &KeyBindings, action: BindableAction, allow_shift: bool) -> bool {
+        self.binding_key_down(bindings, action, allow_shift, true)
     }
 
-    fn push_game_action_keys(&mut self, events: &mut Vec<InputEvent>) {
+    fn binding_released(&self, bindings: &KeyBindings, action: BindableAction) -> bool {
+        let chord = bindings.chord(action);
+        let Some(key_code) = self
+            .known_key_codes
+            .iter()
+            .copied()
+            .find(|key_code| format!("{key_code:?}") == chord.key)
+        else {
+            return false;
+        };
+        let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+        let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+        let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+        self.get_key(key_code).released() && control_down == chord.control && alt_down == chord.alt && shift_down == chord.shift
+    }
+
+    fn binding_down(&self, bindings: &KeyBindings, action: BindableAction) -> bool {
+        self.binding_key_down(bindings, action, false, false)
+    }
+
+    fn binding_key_down(&self, bindings: &KeyBindings, action: BindableAction, allow_shift: bool, pressed: bool) -> bool {
+        let chord = bindings.chord(action);
+        let Some(key_code) = self
+            .known_key_codes
+            .iter()
+            .copied()
+            .find(|key_code| format!("{key_code:?}") == chord.key)
+        else {
+            return false;
+        };
+        let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+        let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+        let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+        let shift_matches = if allow_shift && !chord.shift {
+            true
+        } else {
+            shift_down == chord.shift
+        };
+        let key_active = if pressed {
+            self.get_key(key_code).pressed()
+        } else {
+            self.get_key(key_code).down()
+        };
+        key_active && control_down == chord.control && alt_down == chord.alt && shift_matches
+    }
+
+    /// Game-action keys that should work even while a text box or window has
+    /// focus. Official RO: Insert = sit/stand; F1–F9 = hotbar.
+    fn capture_keybinding(&self, events: &mut Vec<InputEvent>, pending: Option<BindableAction>) -> bool {
+        let Some(action) = pending else {
+            return false;
+        };
+        if self.get_key(KeyCode::Escape).pressed() {
+            events.push(InputEvent::CancelKeyBindingCapture);
+            return true;
+        }
+        let modifier_keys = [
+            KeyCode::ControlLeft,
+            KeyCode::ControlRight,
+            KeyCode::AltLeft,
+            KeyCode::AltRight,
+            KeyCode::ShiftLeft,
+            KeyCode::ShiftRight,
+        ];
+        if let Some(key_code) = self
+            .known_key_codes
+            .iter()
+            .copied()
+            .find(|key_code| !modifier_keys.contains(key_code) && self.get_key(*key_code).pressed())
+        {
+            let control = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+            let alt = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+            let shift = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+            events.push(InputEvent::CapturedKeyBinding {
+                action,
+                chord: crate::settings::KeyChord::new(format!("{key_code:?}"), control, alt, shift),
+            });
+        }
+        true
+    }
+
+    pub fn handle_game_action_keys(
+        &mut self,
+        events: &mut Vec<InputEvent>,
+        bindings: &KeyBindings,
+        pending_capture: Option<BindableAction>,
+    ) {
+        if self.capture_keybinding(events, pending_capture) {
+            return;
+        }
+        self.push_game_action_keys(events, bindings);
+    }
+
+    fn push_game_action_keys(&mut self, events: &mut Vec<InputEvent>, bindings: &KeyBindings) {
         // Official RO: Insert toggles sit / stand.
         // Also accept Home as a WSL/laptop-friendly fallback (Insert is often awkward).
-        if self.get_key(KeyCode::Insert).pressed() || self.get_key(KeyCode::Home).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleSit, false) || self.get_key(KeyCode::Home).pressed() {
             events.push(InputEvent::ToggleSit);
         }
 
@@ -220,19 +318,19 @@ impl InputSystem {
         // a DM typically types an `@dm` command, then reaches for the panel.
         // Ctrl+O produces no printable character, so it does not leak into chat.
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
-        if control_down && self.get_key(KeyCode::KeyO).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleCommands, false) {
             events.push(InputEvent::ToggleCommandsWindow);
         }
 
         // Dice roller (Ctrl+D). Also in the always-works path so players can roll
         // while the chat box is focused (same rationale as Ctrl+O).
-        if control_down && self.get_key(KeyCode::KeyD).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleDice, false) {
             events.push(InputEvent::ToggleDiceWindow);
         }
 
         // Quest log (Ctrl+Q). Same always-works path: checking what a contract
         // still wants is the sort of thing you do mid-conversation.
-        if control_down && self.get_key(KeyCode::KeyQ).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenQuestLog, false) {
             events.push(InputEvent::ToggleQuestLogWindow);
         }
 
@@ -276,9 +374,15 @@ impl InputSystem {
     pub fn handle_keyboard_input(
         &mut self,
         events: &mut Vec<InputEvent>,
+        bindings: &KeyBindings,
+        pending_capture: Option<BindableAction>,
         #[cfg(feature = "debug")] process_mouse: bool,
         #[cfg(feature = "debug")] use_debug_camera: bool,
     ) {
+        if self.capture_keybinding(events, pending_capture) {
+            self.input_buffer.clear();
+            return;
+        }
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
@@ -289,14 +393,14 @@ impl InputSystem {
 
         // Official client: I opens the inventory. Only on this path, so a
         // focused chat box still types the letter.
-        if !alt_down && !control_down && self.get_key(KeyCode::KeyI).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenInventory, false) {
             events.push(InputEvent::ToggleInventoryWindow);
         }
 
         // T targets yourself for the armed skill. Shift+1–4 targets other
         // party members in roster order. The number row stays the hotbar
         // when Shift is up.
-        if !alt_down && !control_down && self.get_key(KeyCode::KeyT).pressed() {
+        if self.binding_pressed(bindings, BindableAction::TargetSelf, false) {
             events.push(InputEvent::TargetSelf);
         }
 
@@ -304,28 +408,28 @@ impl InputSystem {
             events.push(InputEvent::ToggleInventoryWindow);
         }
 
-        if alt_down && self.get_key(KeyCode::KeyV).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenCharacterOverview, false) {
             events.push(InputEvent::ToggleCharacterOverviewWindow);
         }
 
-        if alt_down && self.get_key(KeyCode::KeyS).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenSkillTree, false) {
             events.push(InputEvent::ToggleSkillTreeWindow);
         }
 
-        if alt_down && self.get_key(KeyCode::KeyA).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenStats, false) {
             events.push(InputEvent::ToggleStatsWindow);
         }
 
-        if alt_down && self.get_key(KeyCode::KeyZ).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenParty, false) {
             events.push(InputEvent::TogglePartyWindow);
         }
 
-        if alt_down && self.get_key(KeyCode::KeyQ).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenEquipment, false) {
             events.push(InputEvent::ToggleEquipmentWindow);
         }
 
         // Original-client-style emotion palette shortcut.
-        if alt_down && self.get_key(KeyCode::KeyL).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleEmotes, false) {
             events.push(InputEvent::ToggleEmoteWindow);
         }
 
@@ -336,52 +440,55 @@ impl InputSystem {
 
         // Alt+H is the original friend-list binding. Keep the custom HUD on
         // Alt+Shift+H so it does not replace official behavior.
-        if alt_down && self.get_key(KeyCode::KeyH).pressed() {
-            match shift_down {
-                true => events.push(InputEvent::ToggleHudWindow),
-                false => events.push(InputEvent::ToggleFriendListWindow),
-            }
+        if self.binding_pressed(bindings, BindableAction::OpenHud, false) {
+            events.push(InputEvent::ToggleHudWindow);
+        } else if self.binding_pressed(bindings, BindableAction::OpenFriendList, false) {
+            events.push(InputEvent::ToggleFriendListWindow);
         }
 
-        // The original client uses Ctrl+Tab to cycle minimap display modes. Until
-        // opacity modes land, this cycles between visible and hidden.
-        if control_down && self.get_key(KeyCode::Tab).pressed() {
-            events.push(InputEvent::ToggleMinimapWindow);
-        } else if !alt_down && !control_down && self.get_key(KeyCode::Tab).pressed() {
+        // Ctrl+Tab toggles the minimap until its opacity modes land; the shifted
+        // chord keeps party-target cycling reachable. Plain Tab cycles monsters.
+        if self.binding_pressed(bindings, BindableAction::CyclePartyTarget, false) {
             events.push(InputEvent::CyclePartyTarget);
+        } else if self.binding_pressed(bindings, BindableAction::ToggleMinimap, false) {
+            events.push(InputEvent::ToggleMinimapWindow);
+        } else if self.binding_pressed(bindings, BindableAction::CycleMonsterTarget, true) {
+            events.push(InputEvent::CycleMonsterTarget { reverse: shift_down });
         }
 
-        if alt_down && self.get_key(KeyCode::KeyO).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenAudioSettings, false)
+            || (control_down && self.get_key(KeyCode::KeyA).pressed())
+        {
             events.push(InputEvent::ToggleAudioSettingsWindow);
         }
 
         // Alt+Enter is the reflex on Windows. F11 — the other reflex — is not
         // available: the binding right below already owns it.
-        if alt_down && self.get_key(KeyCode::Enter).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleFullscreen, false) {
             events.push(InputEvent::ToggleFullscreen);
         }
 
-        if self.get_key(KeyCode::F11).pressed() {
+        if self.binding_pressed(bindings, BindableAction::CloseAllWindows, false) {
             events.push(InputEvent::CloseAllOrdinaryWindows);
         }
 
-        if control_down && self.get_key(KeyCode::KeyS).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenGameSettings, false) {
             events.push(InputEvent::ToggleGameSettingsWindow);
         }
 
-        if control_down && self.get_key(KeyCode::KeyI).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenInterfaceSettings, false) {
             events.push(InputEvent::ToggleInterfaceSettingsWindow);
         }
 
-        if control_down && self.get_key(KeyCode::KeyG).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenGraphicsSettings, false) {
             events.push(InputEvent::ToggleGraphicsSettingsWindow);
         }
 
-        if control_down && self.get_key(KeyCode::KeyA).pressed() {
+        if self.binding_pressed(bindings, BindableAction::OpenAudioSettings, false) {
             events.push(InputEvent::ToggleAudioSettingsWindow);
         }
 
-        if control_down && self.get_key(KeyCode::KeyH).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleInterface, false) {
             events.push(InputEvent::ToggleShowInterface);
         }
 
@@ -389,41 +496,28 @@ impl InputSystem {
         // arrived, and both fired in the same frame: the log opened and this
         // immediately closed it again, so the quest window could never be seen.
         // Found in the first day of real play, 2026-09-05.
-        if control_down && self.get_key(KeyCode::KeyW).pressed() {
+        if self.binding_pressed(bindings, BindableAction::CloseTopWindow, false) {
             events.push(InputEvent::CloseTopWindow);
         }
 
         // Number-row hotbar. Only here, not in push_game_action_keys: while
         // chat is focused these keys must type digits rather than fire skills.
-        const NUMBER_KEYS: [KeyCode; 9] = [
-            KeyCode::Digit1,
-            KeyCode::Digit2,
-            KeyCode::Digit3,
-            KeyCode::Digit4,
-            KeyCode::Digit5,
-            KeyCode::Digit6,
-            KeyCode::Digit7,
-            KeyCode::Digit8,
-            KeyCode::Digit9,
-        ];
-        let number_row = if alt_down {
-            18
-        } else if control_down {
-            9
-        } else {
-            0
-        };
-        for (index, key) in NUMBER_KEYS.into_iter().enumerate() {
-            let slot = HotbarSlot((index + number_row) as u16);
-            if self.get_key(key).pressed() {
-                if shift_down && !alt_down && !control_down && index < 4 {
-                    events.push(InputEvent::TargetPartyMember { index });
-                } else {
-                    events.push(InputEvent::CastSkill { slot });
-                }
+        for slot_index in 0..27 {
+            let slot = HotbarSlot(slot_index as u16);
+            let action = BindableAction::HotbarSlot(slot_index as u8);
+            if self.binding_pressed(bindings, action, false) {
+                events.push(InputEvent::CastSkill { slot });
             }
-            if self.get_key(key).released() && !(shift_down && !alt_down && !control_down && index < 4) {
+            if self.binding_released(bindings, action) {
                 events.push(InputEvent::StopSkill { slot });
+            }
+        }
+        const PARTY_KEYS: [KeyCode; 4] = [KeyCode::Digit1, KeyCode::Digit2, KeyCode::Digit3, KeyCode::Digit4];
+        if shift_down && !alt_down && !control_down {
+            for (index, key) in PARTY_KEYS.into_iter().enumerate() {
+                if self.get_key(key).pressed() {
+                    events.push(InputEvent::TargetPartyMember { index });
+                }
             }
         }
 
@@ -431,11 +525,11 @@ impl InputSystem {
         let wasd_free = !use_debug_camera;
         #[cfg(not(feature = "debug"))]
         let wasd_free = true;
-        if wasd_free && !alt_down && !control_down && !shift_down {
-            let forward = self.get_key(KeyCode::KeyW).down();
-            let back = self.get_key(KeyCode::KeyS).down();
-            let left = self.get_key(KeyCode::KeyA).down();
-            let right = self.get_key(KeyCode::KeyD).down();
+        if wasd_free {
+            let forward = self.binding_down(bindings, BindableAction::MoveForward);
+            let back = self.binding_down(bindings, BindableAction::MoveBackward);
+            let left = self.binding_down(bindings, BindableAction::MoveLeft);
+            let right = self.binding_down(bindings, BindableAction::MoveRight);
             if forward || back || left || right {
                 events.push(InputEvent::KeyboardMove {
                     forward,
@@ -448,10 +542,9 @@ impl InputSystem {
 
         // Sit + hotbar always work (also when a UI element has focus — see
         // `handle_game_action_keys`).
-        self.push_game_action_keys(events);
+        self.push_game_action_keys(events, bindings);
 
-        #[cfg(feature = "debug")]
-        if control_down && self.get_key(KeyCode::KeyM).pressed() {
+        if self.binding_pressed(bindings, BindableAction::ToggleMaps, false) {
             events.push(InputEvent::ToggleMapsWindow);
         }
 
@@ -521,5 +614,153 @@ impl InputSystem {
         }
 
         self.input_buffer.clear();
+    }
+}
+
+#[cfg(test)]
+mod keybinding_tests {
+    use std::sync::Arc;
+    use std::sync::atomic::AtomicU64;
+
+    use ragnarok_packets::ClientTick;
+    use winit::event::ElementState;
+    use winit::keyboard::KeyCode;
+
+    use super::{InputEvent, InputSystem};
+    use crate::settings::{BindableAction, KeyBindings, KeyChord};
+
+    #[test]
+    fn remapped_shortcut_dispatches_from_the_persisted_table() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::OpenInventory, KeyChord::new("KeyJ", true, false, false))
+            .expect("non-conflicting remap");
+        input.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        input.update_delta(ClientTick(1));
+
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+
+        assert!(events.iter().any(|event| matches!(event, InputEvent::ToggleInventoryWindow)));
+    }
+
+    #[test]
+    fn remapped_hotbar_slot_dispatches_and_shift_party_target_stays_available() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::HotbarSlot(0), KeyChord::new("KeyJ", false, false, false))
+            .expect("hotbar slot can be remapped");
+        input.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        input.update_delta(ClientTick(6));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(
+            events
+                .iter()
+                .any(|event| matches!(event, InputEvent::CastSkill { slot } if slot.0 == 0))
+        );
+
+        let mut party_input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        party_input.update_keyboard(KeyCode::Digit1, ElementState::Pressed);
+        party_input.update_keyboard(KeyCode::ShiftLeft, ElementState::Pressed);
+        party_input.update_delta(ClientTick(7));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        party_input.handle_keyboard_input(&mut events, &KeyBindings::default(), None, false, false);
+        #[cfg(not(feature = "debug"))]
+        party_input.handle_keyboard_input(&mut events, &KeyBindings::default(), None);
+        assert!(
+            events
+                .iter()
+                .any(|event| matches!(event, InputEvent::TargetPartyMember { index: 0 }))
+        );
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::CastSkill { .. })));
+    }
+
+    #[test]
+    fn keybinding_capture_emits_the_physical_key_and_modifier_state() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::AltLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::ShiftLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyK, ElementState::Pressed);
+        input.update_delta(ClientTick(2));
+
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(
+            &mut events,
+            &KeyBindings::default(),
+            Some(BindableAction::OpenHud),
+            false,
+            false,
+        );
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &KeyBindings::default(), Some(BindableAction::OpenHud));
+
+        assert!(events.iter().any(|event| matches!(
+            event,
+            InputEvent::CapturedKeyBinding {
+                action: BindableAction::OpenHud,
+                chord: KeyChord { key, control: false, alt: true, shift: true },
+            } if key == "KeyK"
+        )));
+    }
+
+    #[test]
+    fn shipped_world_map_binding_works_in_release_input_path() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyM, ElementState::Pressed);
+        input.update_delta(ClientTick(3));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &KeyBindings::default(), None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &KeyBindings::default(), None);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::ToggleMapsWindow)));
+    }
+
+    #[test]
+    fn remapped_movement_uses_exact_chord_and_preserves_default_directions() {
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::MoveForward, KeyChord::new("ArrowUp", false, false, false))
+            .expect("arrow key is an available movement binding");
+        input.update_keyboard(KeyCode::ArrowUp, ElementState::Pressed);
+        input.update_keyboard(KeyCode::KeyA, ElementState::Pressed);
+        input.update_delta(ClientTick(4));
+
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::KeyboardMove {
+            forward: true,
+            left: true,
+            back: false,
+            right: false
+        })));
+
+        let mut modified = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        modified.update_keyboard(KeyCode::ArrowUp, ElementState::Pressed);
+        modified.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        modified.update_delta(ClientTick(5));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        modified.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        modified.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::KeyboardMove { .. })));
     }
 }

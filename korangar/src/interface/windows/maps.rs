@@ -1,7 +1,7 @@
 use std::sync::OnceLock;
 
-use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::Element;
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::event::{ClickHandler, EventQueue};
 use korangar_interface::layout::area::Area;
 use korangar_interface::layout::{MouseButton, Resolvers, WindowLayout, with_single_resolver};
@@ -14,10 +14,9 @@ use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
-use crate::renderer::LayoutExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::route_edges;
+use crate::world::{NavigationEdge, navigation_graph, route_edges};
 
 #[derive(Clone, Copy)]
 struct AtlasLocation {
@@ -30,42 +29,234 @@ struct AtlasLocation {
 
 // Positions are a readable regional overview rather than in-game coordinates.
 const LOCATIONS: &[AtlasLocation] = &[
-    AtlasLocation { map: "yuno", label: "Juno", x: 0.48, y: 0.12, tile: TilePosition { x: 157, y: 123 } },
-    AtlasLocation { map: "rachel", label: "Rachel", x: 0.69, y: 0.12, tile: TilePosition { x: 120, y: 120 } },
-    AtlasLocation { map: "hugel", label: "Hugel", x: 0.84, y: 0.27, tile: TilePosition { x: 96, y: 145 } },
-    AtlasLocation { map: "aldebaran", label: "Al De Baran", x: 0.39, y: 0.27, tile: TilePosition { x: 140, y: 131 } },
-    AtlasLocation { map: "geffen", label: "Geffen", x: 0.20, y: 0.34, tile: TilePosition { x: 119, y: 59 } },
-    AtlasLocation { map: "prontera", label: "Prontera", x: 0.48, y: 0.43, tile: TilePosition { x: 155, y: 183 } },
-    AtlasLocation { map: "payon", label: "Payon", x: 0.76, y: 0.39, tile: TilePosition { x: 160, y: 120 } },
-    AtlasLocation { map: "morocc", label: "Morroc", x: 0.31, y: 0.57, tile: TilePosition { x: 156, y: 97 } },
-    AtlasLocation { map: "izlude", label: "Izlude", x: 0.55, y: 0.60, tile: TilePosition { x: 128, y: 146 } },
-    AtlasLocation { map: "alberta", label: "Alberta", x: 0.68, y: 0.58, tile: TilePosition { x: 28, y: 234 } },
-    AtlasLocation { map: "amatsu", label: "Amatsu", x: 0.88, y: 0.52, tile: TilePosition { x: 198, y: 84 } },
-    AtlasLocation { map: "comodo", label: "Comodo", x: 0.17, y: 0.72, tile: TilePosition { x: 184, y: 151 } },
-    AtlasLocation { map: "umbala", label: "Umbala", x: 0.31, y: 0.78, tile: TilePosition { x: 97, y: 153 } },
-    AtlasLocation { map: "jawaii", label: "Jawaii", x: 0.49, y: 0.82, tile: TilePosition { x: 251, y: 132 } },
-    AtlasLocation { map: "louyang", label: "Louyang", x: 0.71, y: 0.76, tile: TilePosition { x: 217, y: 100 } },
-    AtlasLocation { map: "gonryun", label: "Gonryun", x: 0.84, y: 0.68, tile: TilePosition { x: 160, y: 120 } },
-    AtlasLocation { map: "ayothaya", label: "Ayothaya", x: 0.88, y: 0.84, tile: TilePosition { x: 208, y: 166 } },
-    AtlasLocation { map: "brasilis", label: "Brasilis", x: 0.10, y: 0.88, tile: TilePosition { x: 196, y: 217 } },
-    AtlasLocation { map: "einbroch", label: "Einbroch", x: 0.57, y: 0.22, tile: TilePosition { x: 64, y: 200 } },
-    AtlasLocation { map: "einbech", label: "Einbech", x: 0.66, y: 0.29, tile: TilePosition { x: 63, y: 35 } },
-    AtlasLocation { map: "lighthalzen", label: "Lighthalzen", x: 0.55, y: 0.34, tile: TilePosition { x: 158, y: 92 } },
-    AtlasLocation { map: "lasagna", label: "Lasagna", x: 0.96, y: 0.36, tile: TilePosition { x: 193, y: 182 } },
-    AtlasLocation { map: "dicastes01", label: "El Dicastes", x: 0.80, y: 0.16, tile: TilePosition { x: 198, y: 187 } },
-    AtlasLocation { map: "xmas", label: "Lutie", x: 0.31, y: 0.19, tile: TilePosition { x: 147, y: 134 } },
-    AtlasLocation { map: "mid_camp", label: "Midgard Camp", x: 0.39, y: 0.69, tile: TilePosition { x: 180, y: 240 } },
-    AtlasLocation { map: "c_tower1", label: "Clock Tower", x: 0.28, y: 0.27, tile: TilePosition { x: 235, y: 218 } },
-    AtlasLocation { map: "ama_dun01", label: "Amatsu Cave", x: 0.93, y: 0.59, tile: TilePosition { x: 54, y: 107 } },
+    AtlasLocation {
+        map: "yuno",
+        label: "Juno",
+        x: 0.48,
+        y: 0.12,
+        tile: TilePosition { x: 157, y: 123 },
+    },
+    AtlasLocation {
+        map: "rachel",
+        label: "Rachel",
+        x: 0.69,
+        y: 0.12,
+        tile: TilePosition { x: 120, y: 120 },
+    },
+    AtlasLocation {
+        map: "hugel",
+        label: "Hugel",
+        x: 0.84,
+        y: 0.27,
+        tile: TilePosition { x: 96, y: 145 },
+    },
+    AtlasLocation {
+        map: "aldebaran",
+        label: "Al De Baran",
+        x: 0.39,
+        y: 0.27,
+        tile: TilePosition { x: 140, y: 131 },
+    },
+    AtlasLocation {
+        map: "geffen",
+        label: "Geffen",
+        x: 0.20,
+        y: 0.34,
+        tile: TilePosition { x: 119, y: 59 },
+    },
+    AtlasLocation {
+        map: "prontera",
+        label: "Prontera",
+        x: 0.48,
+        y: 0.43,
+        tile: TilePosition { x: 155, y: 183 },
+    },
+    AtlasLocation {
+        map: "payon",
+        label: "Payon",
+        x: 0.76,
+        y: 0.39,
+        tile: TilePosition { x: 160, y: 120 },
+    },
+    AtlasLocation {
+        map: "morocc",
+        label: "Morroc",
+        x: 0.31,
+        y: 0.57,
+        tile: TilePosition { x: 156, y: 97 },
+    },
+    AtlasLocation {
+        map: "izlude",
+        label: "Izlude",
+        x: 0.55,
+        y: 0.60,
+        tile: TilePosition { x: 128, y: 146 },
+    },
+    AtlasLocation {
+        map: "alberta",
+        label: "Alberta",
+        x: 0.68,
+        y: 0.58,
+        tile: TilePosition { x: 28, y: 234 },
+    },
+    AtlasLocation {
+        map: "amatsu",
+        label: "Amatsu",
+        x: 0.88,
+        y: 0.52,
+        tile: TilePosition { x: 198, y: 84 },
+    },
+    AtlasLocation {
+        map: "comodo",
+        label: "Comodo",
+        x: 0.17,
+        y: 0.72,
+        tile: TilePosition { x: 184, y: 151 },
+    },
+    AtlasLocation {
+        map: "umbala",
+        label: "Umbala",
+        x: 0.31,
+        y: 0.78,
+        tile: TilePosition { x: 97, y: 153 },
+    },
+    AtlasLocation {
+        map: "jawaii",
+        label: "Jawaii",
+        x: 0.49,
+        y: 0.82,
+        tile: TilePosition { x: 251, y: 132 },
+    },
+    AtlasLocation {
+        map: "louyang",
+        label: "Louyang",
+        x: 0.71,
+        y: 0.76,
+        tile: TilePosition { x: 217, y: 100 },
+    },
+    AtlasLocation {
+        map: "gonryun",
+        label: "Gonryun",
+        x: 0.84,
+        y: 0.68,
+        tile: TilePosition { x: 160, y: 120 },
+    },
+    AtlasLocation {
+        map: "ayothaya",
+        label: "Ayothaya",
+        x: 0.88,
+        y: 0.84,
+        tile: TilePosition { x: 208, y: 166 },
+    },
+    AtlasLocation {
+        map: "brasilis",
+        label: "Brasilis",
+        x: 0.10,
+        y: 0.88,
+        tile: TilePosition { x: 196, y: 217 },
+    },
+    AtlasLocation {
+        map: "einbroch",
+        label: "Einbroch",
+        x: 0.57,
+        y: 0.22,
+        tile: TilePosition { x: 64, y: 200 },
+    },
+    AtlasLocation {
+        map: "einbech",
+        label: "Einbech",
+        x: 0.66,
+        y: 0.29,
+        tile: TilePosition { x: 63, y: 35 },
+    },
+    AtlasLocation {
+        map: "lighthalzen",
+        label: "Lighthalzen",
+        x: 0.55,
+        y: 0.34,
+        tile: TilePosition { x: 158, y: 92 },
+    },
+    AtlasLocation {
+        map: "lasagna",
+        label: "Lasagna",
+        x: 0.96,
+        y: 0.36,
+        tile: TilePosition { x: 193, y: 182 },
+    },
+    AtlasLocation {
+        map: "dicastes01",
+        label: "El Dicastes",
+        x: 0.80,
+        y: 0.16,
+        tile: TilePosition { x: 198, y: 187 },
+    },
+    AtlasLocation {
+        map: "xmas",
+        label: "Lutie",
+        x: 0.31,
+        y: 0.19,
+        tile: TilePosition { x: 147, y: 134 },
+    },
+    AtlasLocation {
+        map: "mid_camp",
+        label: "Midgard Camp",
+        x: 0.39,
+        y: 0.69,
+        tile: TilePosition { x: 180, y: 240 },
+    },
+    AtlasLocation {
+        map: "c_tower1",
+        label: "Clock Tower",
+        x: 0.28,
+        y: 0.27,
+        tile: TilePosition { x: 235, y: 218 },
+    },
+    AtlasLocation {
+        map: "ama_dun01",
+        label: "Amatsu Cave",
+        x: 0.93,
+        y: 0.59,
+        tile: TilePosition { x: 54, y: 107 },
+    },
 ];
 
 // Authored regional roads keep the overview legible. Actual route highlighting
 // and the minimap guidance use the generated, verified warp graph.
 const ROADS: &[(usize, usize)] = &[
-    (0, 18), (0, 22), (1, 22), (2, 22), (18, 19), (18, 9), (19, 20), (20, 9),
-    (3, 4), (3, 5), (3, 23), (4, 5), (4, 7), (4, 23), (5, 6), (5, 7), (5, 8),
-    (5, 24), (6, 8), (6, 9), (6, 15), (7, 12), (7, 24), (8, 9), (8, 13), (9, 10),
-    (9, 13), (10, 15), (10, 26), (11, 12), (12, 17), (13, 14), (14, 15), (14, 16),
+    (0, 18),
+    (0, 22),
+    (1, 22),
+    (2, 22),
+    (18, 19),
+    (18, 9),
+    (19, 20),
+    (20, 9),
+    (3, 4),
+    (3, 5),
+    (3, 23),
+    (4, 5),
+    (4, 7),
+    (4, 23),
+    (5, 6),
+    (5, 7),
+    (5, 8),
+    (5, 24),
+    (6, 8),
+    (6, 9),
+    (6, 15),
+    (7, 12),
+    (7, 24),
+    (8, 9),
+    (8, 13),
+    (9, 10),
+    (9, 13),
+    (10, 15),
+    (10, 26),
+    (11, 12),
+    (12, 17),
+    (13, 14),
+    (14, 15),
+    (14, 16),
 ];
 
 struct RouteClick {
@@ -90,6 +281,7 @@ struct AtlasNode {
 
 struct AtlasView {
     nodes: Vec<AtlasNode>,
+    details: [String; 3],
 }
 
 impl AtlasView {
@@ -100,9 +292,13 @@ impl AtlasView {
                 .copied()
                 .map(|location| AtlasNode {
                     location,
-                    click: RouteClick { map: location.map, position: location.tile },
+                    click: RouteClick {
+                        map: location.map,
+                        position: location.tile,
+                    },
                 })
                 .collect(),
+            details: destination_detail_lines("", None, None, 0, None),
         }
     }
 }
@@ -112,10 +308,34 @@ impl Element<ClientState> for AtlasView {
 
     fn create_layout_info(
         &mut self,
-        _: &State<ClientState>,
+        state: &State<ClientState>,
         _: ElementStoreMut,
         resolvers: &mut dyn Resolvers<ClientState>,
     ) -> Self::LayoutInfo {
+        let minimap_path = client_state().minimap();
+        let minimap = state.get(&minimap_path);
+        let current_map = minimap.map_name();
+        let target = minimap.navigation_target().map(|target| target.map_name.as_str());
+        let discovery_path = client_state().discovery();
+        let discovery = state.get(&discovery_path);
+        let route = target.and_then(|destination| route_edges(current_map, destination));
+        let outgoing_exits = target.map_or(0, |destination| {
+            navigation_graph()
+                .edges
+                .iter()
+                .filter(|edge| edge.from.map.eq_ignore_ascii_case(destination))
+                .count()
+        });
+        let visit_state = target.map(|destination| {
+            if discovery.visited_map(destination) {
+                "visited"
+            } else if discovery.map_snapshot_complete() {
+                "not yet visited"
+            } else {
+                "discovery sync pending"
+            }
+        });
+        self.details = destination_detail_lines(current_map, target, route.as_deref(), outgoing_exits, visit_state);
         with_single_resolver(resolvers, |resolver| resolver.with_height(520.0))
     }
 
@@ -126,9 +346,12 @@ impl Element<ClientState> for AtlasView {
         area: &Self::LayoutInfo,
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
-        let minimap = state.get(&client_state().minimap());
+        let minimap_path = client_state().minimap();
+        let minimap = state.get(&minimap_path);
+        let discovery_path = client_state().discovery();
+        let discovery = state.get(&discovery_path);
         let current_map = minimap.map_name();
-        let target = minimap.navigation_target().map(|(map, _, _)| map.as_str());
+        let target = minimap.navigation_target().map(|target| target.map_name.as_str());
         let route = target.and_then(|destination| route_edges(current_map, destination));
         let mut route_maps = Vec::new();
         if let Some(edges) = &route {
@@ -151,7 +374,7 @@ impl Element<ClientState> for AtlasView {
         let point = |location: AtlasLocation| {
             (
                 area.left + location.x * (area.width - node_width - 8.0),
-                area.top + location.y * (area.height - node_height - 42.0),
+                area.top + location.y * (area.height - node_height - 92.0),
             )
         };
         for &(from, to) in available_roads() {
@@ -160,7 +383,14 @@ impl Element<ClientState> for AtlasView {
             };
             let (x1, y1) = point(left.location);
             let (x2, y2) = point(right.location);
-            draw_dotted_connection(layout, x1 + node_width / 2.0, y1 + node_height / 2.0, x2 + node_width / 2.0, y2 + node_height / 2.0, Color::rgb_u8(67, 100, 121));
+            draw_dotted_connection(
+                layout,
+                x1 + node_width / 2.0,
+                y1 + node_height / 2.0,
+                x2 + node_width / 2.0,
+                y2 + node_height / 2.0,
+                Color::rgb_u8(67, 100, 121),
+            );
         }
 
         // Mark route legs by linking the visible atlas locations found in the
@@ -180,7 +410,14 @@ impl Element<ClientState> for AtlasView {
         for pair in route_nodes.windows(2) {
             let (x1, y1) = point(pair[0].location);
             let (x2, y2) = point(pair[1].location);
-            draw_dotted_connection(layout, x1 + node_width / 2.0, y1 + node_height / 2.0, x2 + node_width / 2.0, y2 + node_height / 2.0, Color::rgb_u8(255, 204, 84));
+            draw_dotted_connection(
+                layout,
+                x1 + node_width / 2.0,
+                y1 + node_height / 2.0,
+                x2 + node_width / 2.0,
+                y2 + node_height / 2.0,
+                Color::rgb_u8(255, 204, 84),
+            );
         }
 
         for node in &self.nodes {
@@ -206,20 +443,68 @@ impl Element<ClientState> for AtlasView {
             } else {
                 Color::rgb_u8(34, 49, 66)
             };
-            layout.add_rectangle(node_area, CornerDiameter::uniform(7.0), color, Color::rgba_u8(0, 0, 0, 150), ShadowPadding::uniform(2.0));
+            layout.add_rectangle(
+                node_area,
+                CornerDiameter::uniform(7.0),
+                color,
+                Color::rgba_u8(0, 0, 0, 150),
+                ShadowPadding::uniform(2.0),
+            );
+            let visit_marker = if discovery.visited_map(node.location.map) {
+                "✓"
+            } else if discovery.map_snapshot_complete() {
+                "·"
+            } else {
+                "?"
+            };
             layout.add_text(
                 node_area,
+                visit_marker,
+                FontSize(12.0),
+                Color::rgb_u8(145, 218, 173),
+                Color::WHITE,
+                HorizontalAlignment::Left { offset: 4.0, border: 0.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+                OverflowBehavior::Shrink,
+            );
+            layout.add_text(
+                Area {
+                    left: node_area.left + 15.0,
+                    width: node_area.width - 15.0,
+                    ..node_area
+                },
                 node.location.label,
                 FontSize(12.0),
                 Color::rgb_u8(239, 235, 215),
                 Color::WHITE,
-                HorizontalAlignment::Center { offset: 2.0, border: 3.0 },
+                HorizontalAlignment::Center { offset: -4.0, border: 3.0 },
                 VerticalAlignment::Center { offset: 0.0 },
                 OverflowBehavior::Shrink,
             );
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &node.click);
             }
+        }
+
+        for (index, line) in self.details.iter().enumerate() {
+            if line.is_empty() {
+                continue;
+            }
+            layout.add_text(
+                Area {
+                    left: area.left + 12.0,
+                    top: area.top + area.height - 86.0 + index as f32 * 18.0,
+                    width: area.width - 24.0,
+                    height: 18.0,
+                },
+                line,
+                FontSize(12.0),
+                Color::rgb_u8(195, 205, 214),
+                Color::WHITE,
+                HorizontalAlignment::Left { offset: 2.0, border: 0.0 },
+                VerticalAlignment::Center { offset: 0.0 },
+                OverflowBehavior::Shrink,
+            );
         }
 
         let status = if target.is_some() && route.is_none() {
@@ -233,7 +518,12 @@ impl Element<ClientState> for AtlasView {
             "Select a town or destination to plot a route. Click Clear Route to cancel."
         };
         layout.add_text(
-            Area { left: area.left + 12.0, top: area.top + area.height - 27.0, width: area.width - 24.0, height: 20.0 },
+            Area {
+                left: area.left + 12.0,
+                top: area.top + area.height - 27.0,
+                width: area.width - 24.0,
+                height: 20.0,
+            },
             status,
             FontSize(12.0),
             Color::rgb_u8(195, 205, 214),
@@ -256,6 +546,47 @@ fn available_roads() -> &'static [(usize, usize)] {
     })
 }
 
+fn destination_detail_lines(
+    current_map: &str,
+    target_map: Option<&str>,
+    route: Option<&[&'static NavigationEdge]>,
+    outgoing_exits: usize,
+    visit_state: Option<&str>,
+) -> [String; 3] {
+    let Some(target_map) = target_map else {
+        return [
+            "Destination: none selected".to_owned(),
+            "Choose a reachable map to see its verified portal route.".to_owned(),
+            String::new(),
+        ];
+    };
+
+    let visited = visit_state.unwrap_or("discovery sync pending");
+    let destination = format!("Destination: {target_map} • {visited}");
+    let (route_summary, next_exit) = match route {
+        None => (
+            "No verified route".to_owned(),
+            format!("No portal route from {current_map} to {target_map}."),
+        ),
+        Some(edges) if edges.is_empty() => ("Already at destination".to_owned(), format!("You are already on {target_map}.")),
+        Some(edges) => {
+            let edge = edges[0];
+            (
+                format!("Verified route: {} portal legs", edges.len()),
+                format!(
+                    "Next exit: {} ({}, {}) → {}",
+                    edge.from.map, edge.from.x, edge.from.y, edge.to.map
+                ),
+            )
+        }
+    };
+    [
+        destination,
+        format!("{route_summary} • outgoing exits: {outgoing_exits}"),
+        next_exit,
+    ]
+}
+
 fn draw_dotted_connection(layout: &mut WindowLayout<'_, ClientState>, x1: f32, y1: f32, x2: f32, y2: f32, color: Color) {
     let dx = x2 - x1;
     let dy = y2 - y1;
@@ -266,7 +597,12 @@ fn draw_dotted_connection(layout: &mut WindowLayout<'_, ClientState>, x1: f32, y
         let x = x1 + dx * ratio;
         let y = y1 + dy * ratio;
         layout.add_rectangle(
-            Area { left: x - 2.0, top: y - 2.0, width: 4.0, height: 4.0 },
+            Area {
+                left: x - 2.0,
+                top: y - 2.0,
+                width: 4.0,
+                height: 4.0,
+            },
             CornerDiameter::uniform(2.0),
             color,
             Color::rgba_u8(0, 0, 0, 0),
@@ -290,14 +626,50 @@ impl CustomWindow<ClientState> for MapsWindow {
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
-            elements: [
+            elements: (
                 AtlasView::new(),
                 button! {
                     text: "Clear Route",
                     tooltip: "Clear the current destination and breadcrumb trail",
                     event: InputEvent::ClearNavigationDestination,
                 },
-            ],
+            ),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::destination_detail_lines;
+    use crate::world::{navigation_graph, route_edges};
+
+    #[test]
+    fn atlas_destination_details_use_verified_route_edges_and_visit_state() {
+        let route = route_edges("prontera", "izlude").expect("known route");
+        let graph = navigation_graph();
+        let outgoing = graph
+            .edges
+            .iter()
+            .filter(|edge| edge.from.map.eq_ignore_ascii_case("izlude"))
+            .count();
+        let lines = destination_detail_lines("prontera", Some("izlude"), Some(&route), outgoing, Some("visited"));
+
+        assert!(lines[0].contains("Destination: izlude • visited"));
+        assert!(lines[1].contains(&format!("outgoing exits: {outgoing}")));
+        assert!(lines[1].contains(&format!("{} portal legs", route.len())));
+        assert!(lines[2].contains(&route[0].from.map));
+        assert!(lines[2].contains(&route[0].to.map));
+    }
+
+    #[test]
+    fn atlas_destination_details_do_not_claim_routes_when_graph_has_none() {
+        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None);
+        assert!(lines[0].contains("discovery sync pending"));
+        assert!(lines[1].contains("No verified route"));
+        assert!(lines[2].contains("No portal route"));
+
+        let empty = destination_detail_lines("prontera", None, None, 0, None);
+        assert_eq!(empty[0], "Destination: none selected");
+        assert!(empty[2].is_empty());
     }
 }

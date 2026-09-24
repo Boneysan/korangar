@@ -131,6 +131,7 @@ where
     pub id: u64,
     pub anchor: Anchor<App>,
     pub size: App::Size,
+    pub movement_locked: bool,
 }
 
 pub(crate) struct DisplayInformation {
@@ -147,21 +148,32 @@ pub struct WindowLayoutInfoSet<T> {
 struct ResizeClickHandler {
     window_id: u64,
     resize_mode: ResizeMode,
+    locked: bool,
 }
 
 impl ResizeClickHandler {
     fn new(resize_mode: ResizeMode) -> Self {
-        Self { window_id: 0, resize_mode }
+        Self {
+            window_id: 0,
+            resize_mode,
+            locked: false,
+        }
     }
 
-    fn update(&mut self, window_id: u64) {
+    fn update(&mut self, window_id: u64, locked: bool) {
         self.window_id = window_id;
+        self.locked = locked;
     }
 }
 
 impl<App: Application> ClickHandler<App> for ResizeClickHandler {
     fn handle_click(&self, _: &State<App>, queue: &mut EventQueue<App>) {
-        let Self { window_id, resize_mode } = *self;
+        if self.locked {
+            return;
+        }
+        let Self {
+            window_id, resize_mode, ..
+        } = *self;
 
         queue.queue(Event::SetMouseMode {
             mouse_mode: MouseMode::ResizingWindow { resize_mode, window_id },
@@ -172,16 +184,21 @@ impl<App: Application> ClickHandler<App> for ResizeClickHandler {
 #[derive(Default)]
 struct MoveClickHandler {
     window_id: u64,
+    locked: bool,
 }
 
 impl MoveClickHandler {
-    fn update(&mut self, window_id: u64) {
+    fn update(&mut self, window_id: u64, locked: bool) {
         self.window_id = window_id;
+        self.locked = locked;
     }
 }
 
 impl<App: Application> ClickHandler<App> for MoveClickHandler {
     fn handle_click(&self, _: &State<App>, queue: &mut EventQueue<App>) {
+        if self.locked {
+            return;
+        }
         queue.queue(Event::SetMouseMode {
             mouse_mode: MouseMode::MovingWindow { window_id: self.window_id },
         });
@@ -374,10 +391,10 @@ where
         window_size: App::Size,
     ) -> DisplayInformation {
         self.close_click_action.update(data.id);
-        self.move_click_action.update(data.id);
-        self.horizontal_resize_click_action.update(data.id);
-        self.vertical_resize_click_action.update(data.id);
-        self.resize_click_action.update(data.id);
+        self.move_click_action.update(data.id, data.movement_locked);
+        self.horizontal_resize_click_action.update(data.id, data.movement_locked);
+        self.vertical_resize_click_action.update(data.id, data.movement_locked);
+        self.resize_click_action.update(data.id, data.movement_locked);
 
         let store = store.get_or_create_from_window_id(data.id, generator);
 
@@ -491,7 +508,7 @@ where
 
         let is_title_hovered = layout_info.title_area.check().run(layout);
 
-        if is_title_hovered {
+        if is_title_hovered && !data.movement_locked {
             layout.register_click_handler(MouseButton::Left, &self.move_click_action);
         }
 
@@ -526,8 +543,9 @@ where
         let vertical_resize_hovered = vertical_resize_area.check().run(layout);
         let resize_hovered = resize_area.check().run(layout);
 
-        let horizontal_resize_available = *state.get(&self.minimum_width) != *state.get(&self.maximum_width);
-        let vertical_resize_available = *state.get(&self.resizable) && *state.get(&self.minimum_height) != *state.get(&self.maximum_height);
+        let horizontal_resize_available = !data.movement_locked && *state.get(&self.minimum_width) != *state.get(&self.maximum_width);
+        let vertical_resize_available =
+            !data.movement_locked && *state.get(&self.resizable) && *state.get(&self.minimum_height) != *state.get(&self.maximum_height);
 
         if resize_hovered && horizontal_resize_available && vertical_resize_available {
             layout.register_click_handler(MouseButton::Left, &self.resize_click_action);

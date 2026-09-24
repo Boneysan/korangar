@@ -427,6 +427,19 @@ pub fn skill_footprint(skill_id: SkillId, skill_level: SkillLevel, direction: u8
     Some(cells)
 }
 
+/// Return a footprint only when its cells are identical at every supported
+/// skill level. Cast packets do not include the caster's skill level, so a
+/// cast warning must omit layouts whose shape could be wrong.
+pub fn level_invariant_skill_footprint(skill_id: SkillId, direction: u8) -> Option<Vec<(i8, i8)>> {
+    let footprint = skill_footprint(skill_id, SkillLevel(1), direction)?;
+    for level in 2..=10 {
+        if skill_footprint(skill_id, SkillLevel(level), direction).as_deref() != Some(footprint.as_slice()) {
+            return None;
+        }
+    }
+    Some(footprint)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -13,6 +13,22 @@ use crate::world::{Camera, PointLightId, PointLightManager};
 
 const SEGMENT_COUNT: usize = 24;
 const EFFECT_ORIGIN: Vector2<f32> = Vector2::new(319.0, 291.0);
+const REDUCED_FLASH_SCALE: f32 = 0.55;
+
+fn flash_alpha(alpha: f32, reduce_flashing: bool) -> f32 {
+    if reduce_flashing { alpha * REDUCED_FLASH_SCALE } else { alpha }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::flash_alpha;
+
+    #[test]
+    fn reduce_flashing_dims_bursts_without_changing_unreduced_alpha() {
+        assert!((flash_alpha(0.8, true) - 0.44).abs() < f32::EPSILON);
+        assert_eq!(flash_alpha(0.8, false), 0.8);
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub enum SkillBurstStyle {
@@ -86,6 +102,7 @@ pub struct SkillBurst {
     style: SkillBurstStyle,
     elapsed: f32,
     point_light_id: PointLightId,
+    reduce_flashing: bool,
     gets_deleted: bool,
 }
 
@@ -99,8 +116,14 @@ impl SkillBurst {
             style,
             elapsed: 0.0,
             point_light_id,
+            reduce_flashing: false,
             gets_deleted: false,
         }
+    }
+
+    pub fn with_reduce_flashing(mut self, reduce_flashing: bool) -> Self {
+        self.reduce_flashing = reduce_flashing;
+        self
     }
 
     pub fn with_secondary_texture(mut self, texture: Arc<Texture>) -> Self {
@@ -126,6 +149,10 @@ impl SkillBurst {
         angle: f32,
         color: Color,
     ) {
+        let color = Color {
+            alpha: flash_alpha(color.alpha, self.reduce_flashing),
+            ..color
+        };
         let half_width = size.x / 2.0;
         let half_height = size.y / 2.0;
         renderer.render_effect(
@@ -189,7 +216,12 @@ impl SkillBurst {
                         Vector2::new(u0, 1.0),
                         Vector2::new(u1, 1.0),
                     ],
-                    Color::rgba(1.0, 0.75 + layer as f32 * 0.15, 0.35, alpha - layer as f32 * 0.1),
+                    Color::rgba(
+                        1.0,
+                        0.75 + layer as f32 * 0.15,
+                        0.35,
+                        flash_alpha(alpha - layer as f32 * 0.1, self.reduce_flashing),
+                    ),
                     BlendFactor::SrcAlpha,
                     BlendFactor::One,
                 );
@@ -198,7 +230,7 @@ impl SkillBurst {
     }
 
     fn render_melee_hit(&self, renderer: &mut EffectRenderer, camera: &dyn Camera, progress: f32) {
-        let alpha = (1.0 - progress) * 0.9;
+        let alpha = flash_alpha((1.0 - progress) * 0.9, self.reduce_flashing);
         for index in 0..8 {
             let angle = index as f32 / 8.0 * TAU + 0.3;
             let distance = 12.0 + progress * 26.0;
@@ -302,7 +334,7 @@ impl SkillBurst {
         // eight-frame 폭발 cycle at the target, drawn as a tight cluster.
         if !self.frames.is_empty() {
             let frame_index = ((progress * self.frames.len() as f32) as usize).min(self.frames.len() - 1);
-            let cluster_alpha = (1.0 - progress * progress) * 0.95;
+            let cluster_alpha = flash_alpha((1.0 - progress * progress) * 0.95, self.reduce_flashing);
             for (cluster, (offset, size)) in [
                 (Vector2::new(0.0, -12.0), 110.0),
                 (Vector2::new(-26.0, 6.0), 80.0),
@@ -342,7 +374,7 @@ impl SkillBurst {
         // Hit effect 1 underneath: eight lens1/lens2 streaks placed around the
         // target in a circle pattern, growing long and thin while converging
         // inward — the classic psychokinesis hit. No STR or sprite exists.
-        let alpha = (progress * 5.0).min(1.0) * (1.0 - progress) * 0.9;
+        let alpha = flash_alpha((progress * 5.0).min(1.0) * (1.0 - progress) * 0.9, self.reduce_flashing);
         let radius = 30.0 - progress * 18.0;
         let half_length = 25.0 + progress * 120.0;
         let half_width = 14.0 * (1.0 - progress) + 2.0;
@@ -398,7 +430,7 @@ impl SkillBurst {
         alpha: f32,
     ) {
         let peak = base + Vector3::new(tilt.x * height, height, tilt.y * height);
-        let color = Color::rgba(1.0, 0.97, 0.9, alpha);
+        let color = Color::rgba(1.0, 0.97, 0.9, flash_alpha(alpha, self.reduce_flashing));
         for plane in 0..2 {
             let plane_angle = yaw + plane as f32 * (PI / 2.0);
             let edge = Vector3::new(plane_angle.cos() * half_width, 0.0, plane_angle.sin() * half_width);
@@ -524,7 +556,7 @@ impl SkillBurst {
                 ],
                 EFFECT_ORIGIN + Vector2::new(0.0, -10.0),
                 Rad(0.0),
-                Color::rgba(1.0, 1.0, 1.0, alpha),
+                Color::rgba(1.0, 1.0, 1.0, flash_alpha(alpha, self.reduce_flashing)),
                 BlendFactor::SrcAlpha,
                 BlendFactor::One,
             );
@@ -546,11 +578,12 @@ impl EffectBase for SkillBurst {
     fn register_point_lights(&self, point_light_manager: &mut PointLightManager, camera: &dyn Camera) {
         let progress = self.progress();
         let (color, maximum_intensity) = self.style.light();
-        let intensity = (progress * PI).sin().max(0.0) * maximum_intensity;
+        let scale = flash_alpha(1.0, self.reduce_flashing);
+        let intensity = (progress * PI).sin().max(0.0) * maximum_intensity * scale;
         let light_position = self.position + Vector3::new(0.0, 5.0, 0.0);
 
         if Frustum::new(camera.view_projection_matrix(), true).intersects_sphere(&Sphere::new(light_position, intensity)) {
-            point_light_manager.register_fading(self.point_light_id, light_position, color, intensity, maximum_intensity);
+            point_light_manager.register_fading(self.point_light_id, light_position, color, intensity, maximum_intensity * scale);
         }
     }
 

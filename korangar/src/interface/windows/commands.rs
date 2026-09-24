@@ -429,16 +429,6 @@ where
                                                 tooltip: "[^000001@allskill^000000]",
                                                 event: InputEvent::SendMessage { text: "@allskill".to_string() },
                                             },
-                                            button! {
-                                                text: "Reset stats",
-                                                tooltip: "[^000001@reset^000000]",
-                                                event: InputEvent::SendMessage { text: "@reset".to_string() },
-                                            },
-                                            button! {
-                                                text: "Reset skills",
-                                                tooltip: "[^000001@resetskill^000000]",
-                                                event: InputEvent::SendMessage { text: "@resetskill".to_string() },
-                                            },
                                         ),
                                     },
                                 ),

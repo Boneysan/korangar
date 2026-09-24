@@ -18,6 +18,7 @@ use crate::interface::resource::{ItemSource, SkillSource};
 use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
+use crate::settings::GameSettingsPathExt;
 use crate::state::hotbar::{HOTBAR_COLUMNS, HOTBAR_ROWS, HOTBAR_SLOTS, Hotbar, HotbarBinding};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::skills::LearnedSkill;

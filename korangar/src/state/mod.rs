@@ -2,6 +2,7 @@
 pub mod cache_statistics;
 pub mod character_creation;
 pub mod character_slots;
+pub mod discovery;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
@@ -29,15 +30,12 @@ use std::collections::HashMap;
 /// reserved** -- they mean reset-to-default and highlight, not black and
 /// near-black -- so never pick a colour that collides with them.
 ///
-/// These exist because a *shape* difference was not enough to read at a glance:
-/// the friend list distinguished presence with `●` against `○`, which the
-/// bundled font could draw as neither, and even the working `•`/`·` pair was
-/// too subtle. Colour carries the signal; the glyph is now only a dot to hang
-/// it on.
-pub const COLOR_ONLINE: &str = "^00C000";
-pub const COLOR_OFFLINE: &str = "^B03030";
-pub const COLOR_LEADER: &str = "^FFC800";
-pub const COLOR_DEAD: &str = "^FF4040";
+/// Status colors use a color-vision-friendly blue / neutral / vermillion set;
+/// the accompanying words always carry the meaning as well.
+pub const COLOR_ONLINE: &str = "^0072B2";
+pub const COLOR_OFFLINE: &str = "^6B6B6B";
+pub const COLOR_LEADER: &str = "^E69F00";
+pub const COLOR_DEAD: &str = "^D55E00";
 /// Restores the element's default colour. Always close a coloured span with it.
 pub const COLOR_RESET: &str = "^000000";
 use std::sync::Arc;
@@ -76,8 +74,9 @@ use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
-    BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState, FriendListWindowState, LoginWindowState,
-    LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
+    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState,
+    FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState,
+    TradeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -88,6 +87,7 @@ use crate::settings::{
 };
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
+use crate::state::discovery::DiscoveryState;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
@@ -97,11 +97,11 @@ use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
 use crate::state::skill_cooldowns::SkillCooldowns;
-use crate::state::toasts::ToastQueue;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
 use crate::state::storage::StorageState;
 use crate::state::theme::WorldTheme;
+use crate::state::toasts::ToastQueue;
 use crate::state::trade::TradeState;
 #[cfg(feature = "debug")]
 use crate::world::Object;
@@ -207,6 +207,26 @@ impl BufferedAction {
     }
 }
 
+/// One replaceable follow-up action accepted during a finite local attack,
+/// pickup, or skill animation. Its expiry applies only while animation-locked;
+/// ordinary walk-into-range chaining stays in `buffered_action`.
+#[derive(Debug, Clone, Copy, RustState, StateElement)]
+pub struct TimedBufferedAction {
+    pub action: BufferedAction,
+    pub queued_at: u32,
+    pub expires_at: u32,
+}
+
+impl TimedBufferedAction {
+    pub fn targets_entity(&self, entity_id: EntityId) -> bool {
+        self.action.targets_entity(entity_id)
+    }
+
+    pub fn targets_ground_item(&self, entity_id: EntityId) -> bool {
+        self.action.is_pick_up_item(entity_id)
+    }
+}
+
 /// Internal state of the client. Everything that can be viewed or modified via
 /// the user interface should be in here. State that takes care of managing OS
 /// or rendering resources should be in [`Client`](super::Client).
@@ -270,16 +290,25 @@ pub struct ClientState {
     skill_tree_window: SkillTreeWindowState,
     /// Internal state of the bestiary journal window.
     bestiary_window: BestiaryWindowState,
+    /// Internal state of the player-facing open-search Adventure Guide.
+    adventure_guide: AdventureGuideWindowState,
     /// Internal state of the DM loot generator window.
     loot_window: LootWindowState,
     /// Seal Cascade campaign progress (bestiary unlocks).
     dm_campaign: DmCampaignState,
+    /// Account-scoped monster knowledge synchronized from Hercules.
+    #[hidden_element]
+    discovery: DiscoveryState,
     /// Active quests and, for campaign hunting contracts, what they want
     /// handed in.
     quest_log: QuestLogState,
 
     /// All entities on the map.
     entities: Vec<Entity>,
+    /// Monster currently selected by the player, exposed to reactive HUD UI.
+    targeted_monster: Option<EntityId>,
+    /// Live formatted summary for the selected monster target frame.
+    targeted_monster_summary: String,
     /// Ammunition each remote player has loaded, keyed by account id.
     ///
     /// Deliberately **not** stored on the [`Entity`]. The server broadcasts
@@ -372,6 +401,9 @@ pub struct ClientState {
     switch_request: Option<usize>,
     /// Name of the character being created currently.
     create_character_name: String,
+    /// Exact-name confirmation text for the character deletion overlay.
+    #[hidden_element]
+    delete_character_confirmation: String,
     /// Sex and hair chosen in the character creation window, plus the lists
     /// they are chosen from.
     character_creation: CharacterCreation,
@@ -382,6 +414,8 @@ pub struct ClientState {
     /// Buffered player action. For example, attacking a target that is out of
     /// range.
     buffered_action: Option<BufferedAction>,
+    /// One-shot animation-lock input buffer, independent of autoattack/pathing.
+    timed_buffered_action: Option<TimedBufferedAction>,
 
     /// Map data that is viewed in the inspector. Once added to this vector they
     /// are never removed so we can ensure the user interface remains valid.
@@ -488,6 +522,7 @@ impl ClientState {
             let dice_window = DiceWindowState::default();
             let commands_window = CommandsWindowState::default();
             let bestiary_window = BestiaryWindowState::default();
+            let adventure_guide = AdventureGuideWindowState::default();
             let loot_window = LootWindowState::default();
             let dm_campaign = DmCampaignState::default();
             let quest_log = QuestLogState::default();
@@ -544,6 +579,7 @@ impl ClientState {
         });
 
         let buffered_action = None;
+        let timed_buffered_action = None;
 
         #[cfg(feature = "debug")]
         let debug_timer = korangar_debug::logging::Timer::new("creating debug resources");
@@ -591,8 +627,10 @@ impl ClientState {
             dice_window,
             commands_window,
             bestiary_window,
+            adventure_guide,
             loot_window,
             dm_campaign,
+            discovery: DiscoveryState::default(),
             quest_log,
             friend_list_window,
             party_window,
@@ -602,6 +640,8 @@ impl ClientState {
             dialog_window,
             skill_tree_window,
             entities: Vec::new(),
+            targeted_monster: None,
+            targeted_monster_summary: String::new(),
             remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
@@ -630,9 +670,11 @@ impl ClientState {
             currently_deleting,
             switch_request,
             create_character_name,
+            delete_character_confirmation: String::new(),
             character_creation,
             window_size,
             buffered_action,
+            timed_buffered_action,
             #[cfg(feature = "debug")]
             inspecting_maps,
             #[cfg(feature = "debug")]

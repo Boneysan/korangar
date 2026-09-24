@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::graphics::{Color, CornerDiameter, ScreenSize, ShadowPadding};
 use crate::loaders::{FontSize, OverflowBehavior};
-use crate::settings::{IN_GAME_THEMES_PATH, MENU_THEMES_PATH};
+use crate::settings::{DEUTERANOPIA_THEME_NAME, HIGH_CONTRAST_THEME_NAME, IN_GAME_THEMES_PATH, MENU_THEMES_PATH};
 use crate::state::ClientState;
 
 #[derive(Default, Debug, Clone, Copy)]
@@ -110,6 +110,21 @@ pub struct InterfaceTheme {
 
 impl InterfaceTheme {
     pub fn load(theme_type: InterfaceThemeType, name: &str) -> Self {
+        if name == HIGH_CONTRAST_THEME_NAME {
+            let theme = match theme_type {
+                InterfaceThemeType::Menu => Self::default_menu(),
+                InterfaceThemeType::InGame => Self::default_in_game(),
+            };
+            return Self::high_contrast(theme);
+        }
+        if name == DEUTERANOPIA_THEME_NAME {
+            let theme = match theme_type {
+                InterfaceThemeType::Menu => Self::default_menu(),
+                InterfaceThemeType::InGame => Self::default_in_game(),
+            };
+            return Self::deuteranopia(theme);
+        }
+
         #[cfg(feature = "debug")]
         let timer = Timer::new("Load theme");
 
@@ -137,6 +152,149 @@ impl InterfaceTheme {
         #[cfg(feature = "debug")]
         timer.stop();
 
+        theme
+    }
+
+    fn high_contrast(mut theme: Self) -> Self {
+        let black = Color::BLACK;
+        let dark = Color::rgb_u8(8, 12, 18);
+        let white = Color::WHITE;
+        let muted = Color::rgb_u8(185, 195, 205);
+        let cyan = Color::rgb_u8(0, 235, 255);
+        let yellow = Color::rgb_u8(255, 235, 0);
+        let hover_background = Color::rgb_u8(0, 55, 75);
+
+        theme.window.title_color = white;
+        theme.window.hovered_title_color = cyan;
+        theme.window.background_color = black;
+        theme.window.highlight_color = yellow;
+        theme.window.anchor_color = cyan;
+        theme.window.closest_anchor_color = yellow;
+
+        theme.text.color = white;
+        theme.text.highlight_color = yellow;
+
+        theme.button.background_color = dark;
+        theme.button.foreground_color = white;
+        theme.button.highlight_color = yellow;
+        theme.button.hovered_background_color = hover_background;
+        theme.button.hovered_foreground_color = white;
+        theme.button.disabled_background_color = dark;
+        theme.button.disabled_foreground_color = muted;
+
+        theme.state_button.background_color = dark;
+        theme.state_button.foreground_color = white;
+        theme.state_button.highlight_color = yellow;
+        theme.state_button.hovered_background_color = hover_background;
+        theme.state_button.hovered_foreground_color = white;
+        theme.state_button.disabled_background_color = dark;
+        theme.state_button.disabled_foreground_color = muted;
+        theme.state_button.checkbox_color = cyan;
+        theme.state_button.hovered_checkbox_color = yellow;
+        theme.state_button.disabled_checkbox_color = muted;
+
+        theme.text_box.background_color = black;
+        theme.text_box.foreground_color = white;
+        theme.text_box.highlight_color = yellow;
+        theme.text_box.hovered_background_color = dark;
+        theme.text_box.hovered_foreground_color = white;
+        theme.text_box.focused_background_color = hover_background;
+        theme.text_box.focused_foreground_color = white;
+        theme.text_box.ghost_foreground_color = muted;
+        theme.text_box.hide_icon_color = cyan;
+        theme.text_box.hovered_hide_icon_color = yellow;
+
+        theme.collapsible.background_color = dark;
+        theme.collapsible.secondary_background_color = black;
+        theme.collapsible.foreground_color = white;
+        theme.collapsible.highlight_color = yellow;
+        theme.collapsible.hovered_foreground_color = cyan;
+        theme.collapsible.icon_color = white;
+
+        theme.drop_down.item_background_color = dark;
+        theme.drop_down.item_foreground_color = white;
+        theme.drop_down.item_highlight_color = yellow;
+        theme.drop_down.item_hovered_background_color = hover_background;
+        theme.drop_down.item_hovered_foreground_color = white;
+        theme.drop_down.list_background_color = black;
+        theme.drop_down.button_background_color = dark;
+        theme.drop_down.button_foreground_color = white;
+        theme.drop_down.button_highlight_color = yellow;
+        theme.drop_down.button_hovered_background_color = hover_background;
+        theme.drop_down.button_hovered_foreground_color = white;
+
+        theme.field.background_color = black;
+        theme.field.foreground_color = white;
+        theme.field.highlight_color = yellow;
+
+        theme.tooltip.background_color = black;
+        theme.tooltip.foreground_color = white;
+        theme.tooltip.highlight_color = yellow;
+
+        theme.chat.window_color = black;
+        theme.chat.text_box_background_color = black;
+
+        theme.skill_tree.requirement_color = yellow;
+        theme.skill_tree.hover_color = cyan;
+        theme.skill_tree.name_text_color = white;
+        theme.skill_tree.highlight_color = yellow;
+        theme.skill_tree.points_color = white;
+        theme.skill_tree.pending_points_color = cyan;
+        theme.skill_tree.arrow_color = white;
+        theme.skill_tree.lower_level_color = yellow;
+
+        theme.global.drop_area_color = Color::rgba_u8(0, 235, 255, 255);
+        theme.global.hovered_drop_area_color = Color::rgba_u8(255, 235, 0, 255);
+        theme.global.fill_alpha = 0.28;
+        theme
+    }
+
+    fn deuteranopia(mut theme: Self) -> Self {
+        // Okabe-Ito blue/orange cues are distinct under common red/green color
+        // vision deficiencies. Keep text labels and shapes alongside color.
+        let blue = Color::rgb_u8(0, 114, 178);
+        let dark_blue = Color::rgb_u8(0, 55, 90);
+        let orange = Color::rgb_u8(230, 159, 0);
+
+        theme.window.hovered_title_color = blue;
+        theme.window.highlight_color = orange;
+        theme.window.anchor_color = blue;
+        theme.window.closest_anchor_color = orange;
+        theme.text.highlight_color = orange;
+
+        theme.button.highlight_color = orange;
+        theme.button.hovered_background_color = dark_blue;
+        theme.state_button.highlight_color = orange;
+        theme.state_button.hovered_background_color = dark_blue;
+        theme.state_button.checkbox_color = blue;
+        theme.state_button.hovered_checkbox_color = orange;
+
+        theme.text_box.highlight_color = orange;
+        theme.text_box.hovered_background_color = dark_blue;
+        theme.text_box.focused_background_color = dark_blue;
+        theme.text_box.hide_icon_color = blue;
+        theme.text_box.hovered_hide_icon_color = orange;
+
+        theme.collapsible.highlight_color = orange;
+        theme.collapsible.hovered_foreground_color = blue;
+        theme.collapsible.icon_color = blue;
+
+        theme.drop_down.item_highlight_color = orange;
+        theme.drop_down.item_hovered_background_color = dark_blue;
+        theme.drop_down.button_highlight_color = orange;
+        theme.drop_down.button_hovered_background_color = dark_blue;
+
+        theme.field.highlight_color = orange;
+        theme.tooltip.highlight_color = orange;
+        theme.skill_tree.requirement_color = orange;
+        theme.skill_tree.hover_color = blue;
+        theme.skill_tree.highlight_color = orange;
+        theme.skill_tree.pending_points_color = blue;
+        theme.skill_tree.lower_level_color = orange;
+
+        theme.global.drop_area_color = Color::rgba_u8(0, 114, 178, 210);
+        theme.global.hovered_drop_area_color = Color::rgba_u8(230, 159, 0, 230);
+        theme.global.fill_alpha = 0.2;
         theme
     }
 
@@ -579,5 +737,52 @@ impl InterfaceTheme {
                 drop_area_outline: ShadowPadding::uniform(4.0),
             },
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{InterfaceTheme, InterfaceThemeType};
+    use crate::graphics::Color;
+    use crate::settings::HIGH_CONTRAST_THEME_NAME;
+
+    fn luminance(channel: f32) -> f32 {
+        if channel <= 0.04045 {
+            channel / 12.92
+        } else {
+            ((channel + 0.055) / 1.055).powf(2.4)
+        }
+    }
+
+    fn contrast_ratio(foreground: Color, background: Color) -> f32 {
+        let luminance = |color: Color| 0.2126 * luminance(color.red) + 0.7152 * luminance(color.green) + 0.0722 * luminance(color.blue);
+        let (lighter, darker) = {
+            let first = luminance(foreground);
+            let second = luminance(background);
+            if first >= second { (first, second) } else { (second, first) }
+        };
+        (lighter + 0.05) / (darker + 0.05)
+    }
+
+    #[test]
+    fn built_in_high_contrast_theme_uses_non_color_coded_bright_selection() {
+        let theme = InterfaceTheme::load(InterfaceThemeType::InGame, HIGH_CONTRAST_THEME_NAME);
+        assert_eq!(theme.window.background_color, Color::BLACK);
+        assert_eq!(theme.text.color, Color::WHITE);
+        assert_eq!(theme.button.foreground_color, Color::WHITE);
+        assert_eq!(theme.button.highlight_color, Color::rgb_u8(255, 235, 0));
+        assert_eq!(theme.state_button.checkbox_color, Color::rgb_u8(0, 235, 255));
+        assert!(contrast_ratio(theme.text.color, theme.window.background_color) >= 15.0);
+        assert!(contrast_ratio(theme.button.foreground_color, theme.button.background_color) >= 15.0);
+        assert!(contrast_ratio(theme.button.highlight_color, theme.window.background_color) >= 15.0);
+    }
+
+    #[test]
+    fn deuteranopia_theme_uses_distinct_blue_and_orange_focus_cues() {
+        let theme = InterfaceTheme::load(InterfaceThemeType::InGame, crate::settings::DEUTERANOPIA_THEME_NAME);
+        assert_eq!(theme.window.hovered_title_color, Color::rgb_u8(0, 114, 178));
+        assert_eq!(theme.button.highlight_color, Color::rgb_u8(230, 159, 0));
+        assert_eq!(theme.state_button.checkbox_color, Color::rgb_u8(0, 114, 178));
+        assert_eq!(theme.text_box.focused_background_color, Color::rgb_u8(0, 55, 90));
     }
 }

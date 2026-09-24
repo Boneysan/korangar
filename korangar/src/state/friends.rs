@@ -54,9 +54,9 @@ impl FriendEntry {
     /// read `HeadlessTwo []` and never appeared to change. `•` (U+2022) is
     /// present and is the dot used here.
     ///
-    /// **The distinction is carried by colour, not by shape.** Swapping in a
-    /// `•`/`·` pair rendered correctly but still read as almost no change at a
-    /// glance, so presence is a green dot against a red one.
+    /// The explicit label and color both distinguish presence. The shared
+    /// status palette avoids a red/green-only distinction for color-vision
+    /// accessibility.
     fn format_label(name: &str, online: bool) -> String {
         let (color, state) = match online {
             true => (crate::state::COLOR_ONLINE, "online"),
@@ -103,16 +103,10 @@ mod tests {
         assert_eq!(order, ["Bob", "Carol", "alice", "zoe"]);
     }
 
-    /// **This test cannot tell you the glyph is visible.** It passed for the
-    /// whole time the list rendered `Bob []`: the previous `●`/`○` are absent
-    /// from the bundled font, so they drew as tofu while still comparing equal
-    /// as `char`s. Only looking at the screen catches that -- which is what the
-    /// GUI pass is for. Keep the two assertions in sync with `format_label`,
-    /// and if you change the glyphs, check the new ones resolve through the
-    /// font's cmap *and* appear in the pre-baked atlas (`NotoSans.csv.gz` is
-    /// keyed by glyph id, not codepoint).
+    /// Covers the stored status tag and words, not the rendered contrast;
+    /// visual acceptance is still a separate GUI pass.
     #[test]
-    fn online_glyph_updates() {
+    fn online_status_color_tags_update() {
         let friend = Friend {
             account_id: AccountId(1),
             character_id: CharacterId(2),
@@ -137,5 +131,8 @@ mod tests {
             assert_ne!(code, "^000000", "collides with the reset code");
             assert_ne!(code, "^000001", "collides with the highlight code");
         }
+        assert_eq!(crate::state::COLOR_ONLINE, "^0072B2", "Wong-palette blue");
+        assert_eq!(crate::state::COLOR_OFFLINE, "^6B6B6B", "neutral offline state");
+        assert_eq!(crate::state::COLOR_DEAD, "^D55E00", "Wong-palette vermillion");
     }
 }

@@ -16,6 +16,7 @@ mod character_slot_preview {
     use std::cell::{Cell, UnsafeCell};
     use std::fmt::Display;
 
+    use korangar_interface::components::text_box::DefaultHandler;
     use korangar_interface::element::store::{ElementStore, ElementStoreMut};
     use korangar_interface::element::{BaseLayoutInfo, Element};
     use korangar_interface::event::{ClickHandler, EventQueue};
@@ -94,22 +95,36 @@ mod character_slot_preview {
                                 .map(|c| c.name.clone())
                                 .unwrap_or_else(|| "this character".to_owned());
                             let confirm_text = format!("Really delete {name}?");
+                            let confirmation_path = client_state().delete_character_confirmation();
+                            state.update_value(confirmation_path, String::new());
                             let confirm = ErasedElement::new(fragment! {
                                 gaps: 4.0,
                                 children: (
                                     WarningBanner::new(confirm_text),
+                                    text! { text: format!("Type {name} exactly to confirm deletion."), },
+                                    text_box! {
+                                        ghost_text: "Character name",
+                                        state: confirmation_path,
+                                        input_handler: DefaultHandler::<_, _, 24>::new(confirmation_path, Event::Unfocus),
+                                        focus_id: CharacterDeleteConfirmationTextBox,
+                                    },
                                     button! {
                                         text: "Yes, delete",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            if state.get(&confirmation_path) != &name {
+                                                return;
+                                            }
                                             let character_information = state.try_get(&character_information_path).unwrap();
                                             let character_id = character_information.character_id;
                                             queue.queue(InputEvent::DeleteCharacter { character_id });
+                                            state.update_value(confirmation_path, String::new());
                                             queue.queue(Event::CloseOverlay);
                                         },
                                     },
                                     button! {
                                         text: "Cancel",
-                                        event: move |_: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            state.update_value(confirmation_path, String::new());
                                             queue.queue(Event::CloseOverlay);
                                         },
                                     },
@@ -119,7 +134,7 @@ mod character_slot_preview {
                             queue.queue(Event::OpenOverlay {
                                 element: confirm,
                                 position: overlay_position,
-                                size: ScreenSize { width: 240.0, height: 130.0 },
+                                size: ScreenSize { width: 300.0, height: 190.0 },
                                 window_id: overlay_window_id,
                             });
                         },
@@ -196,6 +211,8 @@ mod character_slot_preview {
     pub struct WarningBanner {
         text: String,
     }
+
+    struct CharacterDeleteConfirmationTextBox;
 
     impl WarningBanner {
         const BACKGROUND: Color = Color::rgba_u8(20, 10, 10, 235);
@@ -456,8 +473,41 @@ mod character_slot_preview {
                     OverflowBehavior::Shrink,
                 );
 
+                let action_area = korangar_interface::layout::area::Area {
+                    left: layout_info.area.left + layout_info.area.width - 96.0,
+                    top: layout_info.area.top + layout_info.area.height - 26.0,
+                    width: 90.0,
+                    height: 21.0,
+                };
+                let is_action_hovered = action_area.check().run(layout);
+                layout.add_rectangle(
+                    action_area,
+                    CornerDiameter::uniform(8.0),
+                    if is_action_hovered {
+                        Color::rgba_u8(110, 40, 25, 235)
+                    } else {
+                        Color::rgba_u8(45, 25, 20, 220)
+                    },
+                    Color::rgba_u8(0, 0, 0, 100),
+                    ShadowPadding::diagonal(1.0, 2.0),
+                );
+                layout.add_text(
+                    action_area,
+                    "Delete / Switch",
+                    FontSize(11.0),
+                    Color::rgb_u8(255, 170, 130),
+                    Color::rgb_u8(255, 160, 60),
+                    HorizontalAlignment::Center { offset: 0.0, border: 3.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+
                 if is_hoverered {
-                    layout.register_click_handler(MouseButton::Left, &self.click_handler.select_character);
+                    if is_action_hovered {
+                        layout.register_click_handler(MouseButton::Left, &self.overlay_handler);
+                    } else {
+                        layout.register_click_handler(MouseButton::Left, &self.click_handler.select_character);
+                    }
                     layout.register_click_handler(MouseButton::Right, &self.overlay_handler);
 
                     {

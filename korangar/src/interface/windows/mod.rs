@@ -1,3 +1,4 @@
+mod adventure_guide;
 mod audio_settings;
 mod auto_spell;
 mod buy;
@@ -33,6 +34,7 @@ mod login;
 mod maps;
 mod menu;
 mod minimap;
+mod monster_target;
 #[cfg(feature = "debug")]
 mod packet_inspector;
 mod party;
@@ -61,6 +63,7 @@ mod weapon_refine;
 
 use serde::{Deserialize, Serialize};
 
+pub use self::adventure_guide::{AdventureGuideWindow, AdventureGuideWindowState, open_item_entry};
 pub use self::audio_settings::AudioSettingsWindow;
 pub use self::auto_spell::AutoSpellWindow;
 pub use self::buy::BuyWindow;
@@ -93,10 +96,10 @@ pub use self::interface_settings::InterfaceSettingsWindow;
 pub use self::inventory::InventoryWindow;
 pub use self::item_actions::{ItemActionsWindow, inventory_item_amount};
 pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
-#[cfg(feature = "debug")]
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
 pub use self::minimap::MinimapWindow;
+pub use self::monster_target::MonsterTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
@@ -164,6 +167,8 @@ pub enum WindowClass {
     Instance,
     /// Target frame for a clicked player (whisper / invite / trade / befriend).
     PlayerTarget,
+    /// Reactive HUD frame for the selected monster.
+    MonsterTarget,
     Storage,
     Trade,
     TradeRequest,
@@ -182,6 +187,8 @@ pub enum WindowClass {
     Dice,
     /// Bestiary journal (Seal Cascade campaign, unlock-on-kill).
     Bestiary,
+    /// Open-search player reference guide, separate from DM campaign tools.
+    AdventureGuide,
     /// DM loot / rewards generator (Seal Cascade campaign).
     DmLoot,
     Maps,

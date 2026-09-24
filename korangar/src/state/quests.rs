@@ -23,6 +23,16 @@ pub struct QuestRequirementEntry {
     pub needed: u32,
 }
 
+/// A server-reported kill objective. Locations are resolved from verified
+/// static monster spawn records only; no destination is guessed from text.
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct QuestHuntObjectiveEntry {
+    pub monster_id: u32,
+    pub monster_name: String,
+    pub total_count: u16,
+    pub current_count: u16,
+}
+
 /// A quest in the log.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct QuestEntry {
@@ -32,6 +42,8 @@ pub struct QuestEntry {
     pub name: String,
     /// Empty for a quest with no item turn-in.
     pub requirements: Vec<QuestRequirementEntry>,
+    /// Explicit monster objectives from Hercules hunting-quest packets.
+    pub hunt_objectives: Vec<QuestHuntObjectiveEntry>,
 }
 
 impl QuestEntry {
@@ -41,6 +53,10 @@ impl QuestEntry {
 
     pub fn requirements(&self) -> &[QuestRequirementEntry] {
         &self.requirements
+    }
+
+    pub fn hunt_objectives(&self) -> &[QuestHuntObjectiveEntry] {
+        &self.hunt_objectives
     }
 }
 
@@ -70,6 +86,10 @@ impl QuestLogState {
         &self.tracked_quests
     }
 
+    pub fn display_text(&self) -> &str {
+        &self.display_text
+    }
+
     pub fn set_tracked_quests(&mut self, quest_ids: &[u32]) {
         self.tracked_quests = quest_ids
             .iter()
@@ -91,10 +111,16 @@ impl QuestLogState {
     }
 
     /// Replace the whole log, as `ZC_ALL_QUEST_LIST` does on map login.
-    pub fn replace(&mut self, quests: Vec<QuestEntry>) {
+    pub fn replace(&mut self, mut quests: Vec<QuestEntry>) {
         let was_empty = self.quests.is_empty();
+        for quest in &mut quests {
+            if let Some(existing) = self.quests.iter().find(|entry| entry.quest_id == quest.quest_id) {
+                quest.hunt_objectives.clone_from(&existing.hunt_objectives);
+            }
+        }
         self.quests = quests;
-        self.tracked_quests.retain(|id| self.quests.iter().any(|quest| quest.quest_id == *id));
+        self.tracked_quests
+            .retain(|id| self.quests.iter().any(|quest| quest.quest_id == *id));
         if was_empty && self.tracked_quests.is_empty() {
             self.tracked_quests = self.quests.iter().map(|quest| quest.quest_id).collect();
         }
@@ -107,13 +133,43 @@ impl QuestLogState {
     /// about (activating a paused quest does it), so this must not duplicate.
     pub fn add(&mut self, quest: QuestEntry) {
         match self.quests.iter_mut().find(|entry| entry.quest_id == quest.quest_id) {
-            Some(existing) => *existing = quest,
+            Some(existing) => {
+                let mut quest = quest;
+                quest.hunt_objectives.clone_from(&existing.hunt_objectives);
+                *existing = quest;
+            }
             None => {
                 self.tracked_quests.push(quest.quest_id);
                 self.quests.push(quest);
             }
         }
         self.rebuild_display();
+    }
+
+    pub fn set_hunt_objectives(&mut self, quest_id: u32, objectives: Vec<QuestHuntObjectiveEntry>) {
+        let Some(quest) = self.quests.iter_mut().find(|entry| entry.quest_id == quest_id) else {
+            self.add(QuestEntry {
+                quest_id,
+                name: format!("Quest {quest_id}"),
+                requirements: Vec::new(),
+                hunt_objectives: objectives,
+            });
+            return;
+        };
+        quest.hunt_objectives = objectives;
+        self.rebuild_display();
+    }
+
+    pub fn update_hunt_progress(&mut self, quest_id: u32, objective_index: u32, current_count: u16) {
+        if let Some(objective) = self
+            .quests
+            .iter_mut()
+            .find(|entry| entry.quest_id == quest_id)
+            .and_then(|quest| quest.hunt_objectives.get_mut(objective_index as usize))
+        {
+            objective.current_count = current_count.min(objective.total_count);
+            self.rebuild_display();
+        }
     }
 
     pub fn remove(&mut self, quest_id: u32) {
@@ -132,7 +188,7 @@ impl QuestLogState {
             .iter()
             .filter(|quest| self.tracked_quests.contains(&quest.quest_id))
             .map(|quest| {
-                if quest.requirements.is_empty() {
+                let mut text = if quest.requirements.is_empty() {
                     quest.name.clone()
                 } else {
                     let items = quest
@@ -142,7 +198,14 @@ impl QuestLogState {
                         .collect::<Vec<_>>()
                         .join(", ");
                     format!("{} ({items})", quest.name)
+                };
+                for objective in &quest.hunt_objectives {
+                    text.push_str(&format!(
+                        "\n  {}: {} / {}",
+                        objective.monster_name, objective.current_count, objective.total_count
+                    ));
                 }
+                text
             })
             .collect::<Vec<_>>()
             .join("\n");
@@ -160,7 +223,7 @@ impl QuestLogState {
 mod tests {
     use ragnarok_packets::ItemId;
 
-    use super::{QuestEntry, QuestLogState, QuestRequirementEntry};
+    use super::{QuestEntry, QuestHuntObjectiveEntry, QuestLogState, QuestRequirementEntry};
 
     fn entry(quest_id: u32, name: &str) -> QuestEntry {
         QuestEntry {
@@ -171,6 +234,7 @@ mod tests {
                 item_name: "Rat Tail".to_owned(),
                 needed: 7,
             }],
+            hunt_objectives: Vec::new(),
         }
     }
 
@@ -204,5 +268,24 @@ mod tests {
 
         assert_eq!(log.quests().len(), 1);
         assert_eq!(log.quests()[0].quest_id, 20008);
+    }
+
+    #[test]
+    fn hunting_objectives_survive_server_list_refresh_and_update_progress() {
+        let mut log = QuestLogState::default();
+        log.add(entry(20002, "Cellar Vermin"));
+        log.set_hunt_objectives(20002, vec![QuestHuntObjectiveEntry {
+            monster_id: 1002,
+            monster_name: "Poring".to_owned(),
+            total_count: 10,
+            current_count: 3,
+        }]);
+        log.update_hunt_progress(20002, 0, 5);
+        log.replace(vec![entry(20002, "Cellar Vermin"), entry(20003, "Other active quest")]);
+
+        assert_eq!(log.quests()[0].hunt_objectives()[0].current_count, 5);
+        assert!(log.display_text().contains("Poring: 5 / 10"));
+        log.remove(20002);
+        assert_eq!(log.quests().len(), 1);
     }
 }

@@ -149,6 +149,30 @@ impl Element<ClientState> for MinimapView {
                 });
             }
 
+            if let Some(ping) = minimap.party_ping() {
+                let (red, green, blue) = match ping.kind.as_str() {
+                    // Okabe-Ito colors remain distinct for common red/green
+                    // deficiencies. The marker's name also carries the ping
+                    // kind, so meaning never depends on color alone.
+                    "assist" => (240, 228, 66),
+                    "danger" => (213, 94, 0),
+                    "retreat" => (230, 159, 0),
+                    "ready" => (0, 114, 178),
+                    "on-my-way" => (86, 180, 233),
+                    _ => (204, 121, 167),
+                };
+                extra_blips.push(MinimapBlip {
+                    x: f32::from(ping.x),
+                    y: f32::from(ping.y),
+                    red,
+                    green,
+                    blue,
+                    alpha: 255,
+                    size_scale: 1.15,
+                    name: format!("{} ping from {}", ping.kind, ping.sender),
+                });
+            }
+
             if let Some((x, y)) = minimap.navigation_marker() {
                 extra_blips.push(MinimapBlip {
                     x: f32::from(x),
@@ -423,7 +447,7 @@ impl CustomWindow<ClientState> for MinimapWindow {
 
         // Border + title chrome roughly; content is square map + coords + zoom row.
         const CHROME_W: f32 = 24.0;
-        const CHROME_H: f32 = 56.0;
+        const CHROME_H: f32 = 156.0;
 
         window! {
             title: "Map",
@@ -432,7 +456,7 @@ impl CustomWindow<ClientState> for MinimapWindow {
             closable: true,
             resizable: true,
             // Drag the right edge or bottom-right corner, or use − / + / scroll.
-            minimum_width: MIN_MINIMAP_SIDE + CHROME_W,
+            minimum_width: MIN_MINIMAP_SIDE + CHROME_W + 32.0,
             maximum_width: MAX_MINIMAP_SIDE + CHROME_W,
             minimum_height: MIN_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
             maximum_height: MAX_MINIMAP_SIDE + COORDS_HEIGHT + ZOOM_ROW_HEIGHT + CHROME_H,
@@ -456,6 +480,17 @@ impl CustomWindow<ClientState> for MinimapWindow {
                         },
                     ),
                 },
+                split! { gaps: theme().window().gaps(), children: (
+                    button! { text: "Location", tooltip: "Share your current position", event: InputEvent::SendPartyPing { kind: "location".to_owned() } },
+                    button! { text: "Assist", tooltip: "Ask party members for help here", event: InputEvent::SendPartyPing { kind: "assist".to_owned() } },
+                    button! { text: "Danger", tooltip: "Warn the party about danger here", event: InputEvent::SendPartyPing { kind: "danger".to_owned() } },
+                ) },
+                split! { gaps: theme().window().gaps(), children: (
+                    button! { text: "Retreat", tooltip: "Suggest regrouping or retreating here", event: InputEvent::SendPartyPing { kind: "retreat".to_owned() } },
+                    button! { text: "Ready", tooltip: "Mark this location as ready", event: InputEvent::SendPartyPing { kind: "ready".to_owned() } },
+                    button! { text: "On my way", tooltip: "Tell the party you are moving here", event: InputEvent::SendPartyPing { kind: "on-my-way".to_owned() } },
+                ) },
+                button! { text: "Share current route", tooltip: "Send your selected map route to party members; they choose whether to accept it", event: InputEvent::SharePartyDestination },
             ),
         }
     }

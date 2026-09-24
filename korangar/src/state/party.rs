@@ -1,6 +1,201 @@
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{AccountId, CharacterId, JobId, PartyId, PartyMember, PartyMemberInfoPacket, TilePosition};
+use ragnarok_packets::{AccountId, CharacterId, ClientTick, JobId, PartyId, PartyMember, PartyMemberInfoPacket, TilePosition};
 use rust_state::RustState;
+
+#[derive(Clone, Debug, RustState, StateElement)]
+pub struct SharedDestination {
+    sender: String,
+    nonce: u32,
+    map_name: String,
+    #[hidden_element]
+    position: Option<(u16, u16)>,
+}
+
+impl SharedDestination {
+    pub fn sender(&self) -> &str {
+        &self.sender
+    }
+
+    pub fn nonce(&self) -> u32 {
+        self.nonce
+    }
+
+    pub fn map_name(&self) -> &str {
+        &self.map_name
+    }
+
+    pub fn position(&self) -> Option<(u16, u16)> {
+        self.position
+    }
+
+    pub fn display_text(&self) -> String {
+        match self.position {
+            Some((x, y)) => format!("Shared destination from {}: {} ({x}, {y})", self.sender, self.map_name),
+            None => format!("Shared destination from {}: {}", self.sender, self.map_name),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum PartySessionMessage {
+    DestinationSet {
+        sender: String,
+        nonce: u32,
+        map_name: String,
+        position: Option<(u16, u16)>,
+    },
+    DestinationAccepted {
+        nonce: u32,
+    },
+    ReadyStart {
+        sender: String,
+        nonce: u32,
+    },
+    ReadyResponse {
+        sender: String,
+        nonce: u32,
+        ready: bool,
+    },
+}
+
+pub fn parse_party_session_message(text: &str) -> Option<PartySessionMessage> {
+    let (sender, body) = text.split_once(" : ")?;
+    if sender.is_empty() || sender.len() > 24 {
+        return None;
+    }
+    let mut fields = body.strip_prefix("[KORANGAR-SESSION:v1] ")?.split_whitespace();
+    let action = fields.next()?;
+    match action {
+        "dest-set" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            let map_name = fields.next()?;
+            if map_name.is_empty() || map_name.len() > 24 || !map_name.bytes().all(|byte| byte.is_ascii_alphanumeric() || byte == b'_') {
+                return None;
+            }
+            let x = fields.next()?;
+            let y = fields.next()?;
+            let position = match (x, y) {
+                ("*", "*") => None,
+                (x, y) => Some((x.parse::<u16>().ok()?, y.parse::<u16>().ok()?)),
+            };
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::DestinationSet {
+                sender: sender.to_owned(),
+                nonce,
+                map_name: map_name.to_owned(),
+                position,
+            })
+        }
+        "dest-accept" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::DestinationAccepted { nonce })
+        }
+        "ready-start" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::ReadyStart {
+                sender: sender.to_owned(),
+                nonce,
+            })
+        }
+        "ready-response" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            let ready = match fields.next()? {
+                "ready" => true,
+                "not-ready" => false,
+                _ => return None,
+            };
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::ReadyResponse {
+                sender: sender.to_owned(),
+                nonce,
+                ready,
+            })
+        }
+        _ => None,
+    }
+}
+
+#[derive(Clone, Debug, RustState, StateElement)]
+pub(crate) struct ReadyCheck {
+    #[hidden_element]
+    starter: String,
+    #[hidden_element]
+    nonce: u32,
+    #[hidden_element]
+    participants: Vec<String>,
+    #[hidden_element]
+    responses: Vec<(String, bool)>,
+    #[hidden_element]
+    expires_at: u32,
+}
+
+impl ReadyCheck {
+    fn new(starter: String, nonce: u32, participants: Vec<String>, now: ClientTick) -> Self {
+        let mut unique = Vec::new();
+        for name in participants.into_iter().chain(std::iter::once(starter.clone())) {
+            if !unique.iter().any(|existing: &String| existing.eq_ignore_ascii_case(&name)) {
+                unique.push(name);
+            }
+        }
+        let mut check = Self {
+            starter: starter.clone(),
+            nonce,
+            participants: unique,
+            responses: Vec::new(),
+            expires_at: now.0.wrapping_add(30_000),
+        };
+        check.record_response(&starter, true);
+        check
+    }
+
+    fn record_response(&mut self, sender: &str, ready: bool) -> bool {
+        if !self.participants.iter().any(|name| name.eq_ignore_ascii_case(sender))
+            || self.responses.iter().any(|(name, _)| name.eq_ignore_ascii_case(sender))
+        {
+            return false;
+        }
+        self.responses.push((sender.to_owned(), ready));
+        true
+    }
+
+    fn remove_participant(&mut self, sender: &str) {
+        self.participants.retain(|name| !name.eq_ignore_ascii_case(sender));
+        self.responses.retain(|(name, _)| !name.eq_ignore_ascii_case(sender));
+    }
+
+    fn display_text(&self) -> String {
+        let mut text = format!(
+            "Ready check from {} ({}/{} replied)",
+            self.starter,
+            self.responses.len(),
+            self.participants.len()
+        );
+        for name in &self.participants {
+            let state = self
+                .responses
+                .iter()
+                .find(|(responder, _)| responder.eq_ignore_ascii_case(name))
+                .map(|(_, ready)| if *ready { "ready" } else { "not ready" })
+                .unwrap_or("waiting");
+            text.push_str(&format!("\n{name}: {state}"));
+        }
+        text
+    }
+}
+
+fn client_tick_reached(now: u32, deadline: u32) -> bool {
+    now.wrapping_sub(deadline) < (1 << 31)
+}
 
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct PartyMemberState {
@@ -107,8 +302,8 @@ impl PartyMemberState {
 
     /// One-line roster summary for the party window.
     pub fn summary_line(&self) -> String {
-        // Coloured to match the friend list: presence has to be readable at a
-        // glance, and three states that differ only as words are not.
+        // Match the friend-list blue/neutral/orange status palette while
+        // retaining explicit words for color-independent status reading.
         let reset = crate::state::COLOR_RESET;
         let online = match (self.online, self.is_dead) {
             (false, _) => format!("{}offline{reset}", crate::state::COLOR_OFFLINE),
@@ -223,6 +418,11 @@ pub struct PartyState {
     /// is waiting on you, whether one you sent is still outstanding, or whether
     /// you are simply party-less.
     status_text: String,
+    shared_destination: Option<SharedDestination>,
+    shared_destination_text: String,
+    #[hidden_element]
+    ready_check: Option<ReadyCheck>,
+    ready_check_text: String,
 }
 
 impl Default for PartyState {
@@ -242,6 +442,10 @@ impl Default for PartyState {
             share_loot: false,
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
+            shared_destination: None,
+            shared_destination_text: "No shared destination.".to_owned(),
+            ready_check: None,
+            ready_check_text: "No active ready check.".to_owned(),
         }
     }
 }
@@ -268,6 +472,106 @@ impl PartyState {
         &self.status_text
     }
 
+    pub fn shared_destination(&self) -> Option<&SharedDestination> {
+        self.shared_destination.as_ref()
+    }
+
+    pub fn shared_destination_text(&self) -> &str {
+        &self.shared_destination_text
+    }
+
+    pub fn set_shared_destination(&mut self, sender: String, nonce: u32, map_name: String, position: Option<(u16, u16)>) {
+        let destination = SharedDestination {
+            sender,
+            nonce,
+            map_name,
+            position,
+        };
+        self.shared_destination_text = destination.display_text();
+        self.shared_destination = Some(destination);
+    }
+
+    pub fn clear_shared_destination(&mut self, nonce: u32) -> bool {
+        if !self
+            .shared_destination
+            .as_ref()
+            .is_some_and(|destination| destination.nonce == nonce)
+        {
+            return false;
+        }
+        self.shared_destination = None;
+        self.shared_destination_text = "No shared destination.".to_owned();
+        true
+    }
+
+    pub fn clear_shared_destination_all(&mut self) {
+        self.shared_destination = None;
+        self.shared_destination_text = "No shared destination.".to_owned();
+    }
+
+    pub fn ready_check_text(&self) -> &str {
+        &self.ready_check_text
+    }
+
+    pub fn ready_check_nonce(&self) -> Option<u32> {
+        self.ready_check.as_ref().map(|check| check.nonce)
+    }
+
+    pub fn online_member_names(&self) -> Vec<String> {
+        self.members
+            .iter()
+            .filter(|member| member.online)
+            .map(|member| member.name.clone())
+            .collect()
+    }
+
+    pub fn begin_ready_check(&mut self, starter: String, nonce: u32, participants: Vec<String>, now: ClientTick) {
+        self.ready_check = Some(ReadyCheck::new(starter, nonce, participants, now));
+        self.refresh_ready_check_text();
+    }
+
+    pub fn can_respond_ready_check(&self, nonce: u32, sender: &str) -> bool {
+        self.ready_check.as_ref().is_some_and(|check| {
+            check.nonce == nonce
+                && check.participants.iter().any(|name| name.eq_ignore_ascii_case(sender))
+                && check.responses.iter().all(|(name, _)| !name.eq_ignore_ascii_case(sender))
+        })
+    }
+
+    pub fn record_ready_response(&mut self, nonce: u32, sender: &str, ready: bool) -> bool {
+        let accepted = self
+            .ready_check
+            .as_mut()
+            .is_some_and(|check| check.nonce == nonce && check.record_response(sender, ready));
+        if accepted {
+            self.refresh_ready_check_text();
+        }
+        accepted
+    }
+
+    pub fn tick_ready_check(&mut self, now: ClientTick) {
+        if self
+            .ready_check
+            .as_ref()
+            .is_some_and(|check| client_tick_reached(now.0, check.expires_at))
+        {
+            self.clear_ready_check();
+            self.ready_check_text = "Ready check expired.".to_owned();
+        }
+    }
+
+    fn refresh_ready_check_text(&mut self) {
+        self.ready_check_text = self
+            .ready_check
+            .as_ref()
+            .map_or_else(|| "No active ready check.".to_owned(), ReadyCheck::display_text);
+    }
+
+    fn clear_ready_check(&mut self) {
+        self.ready_check = None;
+        self.ready_check_text = "No active ready check.".to_owned();
+    }
+
     /// True once we are actually in a party. Membership, not the party name —
     /// the name arrives with the roster and is empty for a party of one until
     /// the first member packet lands.
@@ -289,6 +593,10 @@ impl PartyState {
     pub fn set_local_account_id(&mut self, account_id: AccountId) {
         self.local_account_id = Some(account_id);
         self.rebuild_display_text();
+    }
+
+    pub fn local_account_id(&self) -> Option<AccountId> {
+        self.local_account_id
     }
 
     pub fn share_experience(&self) -> bool {
@@ -408,6 +716,8 @@ impl PartyState {
         self.pending_invite_id_for_inviter = None;
         self.outgoing_invite = None;
         self.members.clear();
+        self.clear_shared_destination_all();
+        self.clear_ready_check();
         self.share_pickup = false;
         self.share_loot = false;
         self.rebuild_display_text();
@@ -428,6 +738,10 @@ impl PartyState {
     }
 
     pub fn add_or_update_member(&mut self, member: PartyMemberInfoPacket, class_name: String) {
+        if self.members.is_empty() {
+            self.clear_shared_destination_all();
+            self.clear_ready_check();
+        }
         self.party_name = member.party_name.clone();
         self.share_pickup = member.share_pickup != 0;
         self.share_loot = member.share_loot != 0;
@@ -489,6 +803,11 @@ impl PartyState {
         // then stayed true, and every later invite was sent to a server that
         // refuses it silently (`party.c:382`), reporting "waiting for an answer"
         // for an answer that could never come.
+        if let Some(member) = self.members.iter().find(|member| member.account_id == account_id)
+            && let Some(check) = self.ready_check.as_mut()
+        {
+            check.remove_participant(member.name());
+        }
         match self.is_local(account_id) {
             true => self.members.clear(),
             false => self.members.retain(|member| member.account_id != account_id),
@@ -496,12 +815,16 @@ impl PartyState {
 
         if self.members.is_empty() {
             self.party_name.clear();
+            self.clear_shared_destination_all();
+            self.clear_ready_check();
             self.share_pickup = false;
             self.share_loot = false;
             // Same staleness, one row down: a share rule left over from the party
             // we just left would render as this party-less character's own state.
             self.share_experience = false;
             self.outgoing_invite = None;
+        } else {
+            self.refresh_ready_check_text();
         }
         self.rebuild_display_text();
     }
@@ -558,6 +881,93 @@ mod tests {
     use ragnarok_packets::{AccountId, CharacterId, JobId, PartyMember, TilePosition};
 
     use super::*;
+
+    #[test]
+    fn party_session_destination_messages_are_versioned_bounded_and_nonce_matched() {
+        assert_eq!(
+            parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set 420 prt_fild08 120 154"),
+            Some(PartySessionMessage::DestinationSet {
+                sender: "Ada".to_owned(),
+                nonce: 420,
+                map_name: "prt_fild08".to_owned(),
+                position: Some((120, 154)),
+            })
+        );
+        assert_eq!(
+            parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set 421 izlude * *"),
+            Some(PartySessionMessage::DestinationSet {
+                sender: "Ada".to_owned(),
+                nonce: 421,
+                map_name: "izlude".to_owned(),
+                position: None,
+            })
+        );
+        assert_eq!(
+            parse_party_session_message("BigZ : [KORANGAR-SESSION:v1] dest-accept 420"),
+            Some(PartySessionMessage::DestinationAccepted { nonce: 420 })
+        );
+        assert_eq!(
+            parse_party_session_message("Ada : [KORANGAR-SESSION:v1] ready-start 700"),
+            Some(PartySessionMessage::ReadyStart {
+                sender: "Ada".to_owned(),
+                nonce: 700
+            })
+        );
+        assert_eq!(
+            parse_party_session_message("BigZ : [KORANGAR-SESSION:v1] ready-response 700 not-ready"),
+            Some(PartySessionMessage::ReadyResponse {
+                sender: "BigZ".to_owned(),
+                nonce: 700,
+                ready: false
+            })
+        );
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v2] dest-set 420 izlude * *").is_none());
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set 420 izlude;@warp * *").is_none());
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set nope izlude * *").is_none());
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set 420 izlude 1 *").is_none());
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-accept 420 extra").is_none());
+        assert!(parse_party_session_message("Ada : [KORANGAR-SESSION:v1] ready-response 700 maybe").is_none());
+    }
+
+    #[test]
+    fn ready_check_tracks_one_response_per_current_member_and_wrap_safe_timeout() {
+        let mut state = PartyState::default();
+        let now = ClientTick(u32::MAX - 10_000);
+        state.begin_ready_check(
+            "Ada".to_owned(),
+            700,
+            vec!["ada".to_owned(), "BigZ".to_owned(), "Cy".to_owned()],
+            now,
+        );
+        assert_eq!(state.ready_check_nonce(), Some(700));
+        assert!(state.can_respond_ready_check(700, "BigZ"));
+        assert!(!state.can_respond_ready_check(700, "Unknown"));
+        assert!(state.record_ready_response(700, "BigZ", false));
+        assert!(!state.record_ready_response(700, "bigz", true));
+        assert!(state.ready_check_text().contains("BigZ: not ready"));
+        assert!(state.ready_check_text().contains("Cy: waiting"));
+        state.tick_ready_check(ClientTick(now.0.wrapping_add(29_999)));
+        assert_eq!(state.ready_check_nonce(), Some(700));
+        state.tick_ready_check(ClientTick(now.0.wrapping_add(30_000)));
+        assert_eq!(state.ready_check_nonce(), None);
+        assert_eq!(state.ready_check_text(), "Ready check expired.");
+    }
+
+    #[test]
+    fn shared_destination_persists_until_matching_acceptance_or_party_end() {
+        let mut state = PartyState::default();
+        state.set_shared_destination("Ada".to_owned(), 420, "izlude".to_owned(), Some((100, 80)));
+        assert_eq!(state.shared_destination_text(), "Shared destination from Ada: izlude (100, 80)");
+        assert!(!state.clear_shared_destination(419));
+        assert!(state.shared_destination().is_some());
+        assert!(state.clear_shared_destination(420));
+        assert!(state.shared_destination().is_none());
+
+        state.set_shared_destination("Ada".to_owned(), 421, "prt_fild08".to_owned(), None);
+        state.clear();
+        assert!(state.shared_destination().is_none());
+        assert_eq!(state.shared_destination_text(), "No shared destination.");
+    }
 
     fn sample_member(name: &str, online: bool) -> PartyMember {
         PartyMember {
@@ -677,7 +1087,13 @@ mod tests {
         assert!(label.contains("Alice"));
         assert!(label.contains("Wizard"));
         assert!(label.contains("online"));
+        assert!(label.contains(crate::state::COLOR_ONLINE));
         assert!(label.contains("Lv50"));
+
+        state.set_member_dead(AccountId(1), true);
+        let dead_label = state.members()[0].display_label();
+        assert!(dead_label.contains("DEAD"));
+        assert!(dead_label.contains(crate::state::COLOR_DEAD));
     }
 
     #[test]

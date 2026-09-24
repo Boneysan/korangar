@@ -1948,7 +1948,7 @@ pub struct DropItemPacket {
 /// fork packet 0x0efc). The original stack retains the remainder.
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x0efc)]
+#[header(0x0EFC)]
 pub struct SplitInventoryStackPacket {
     pub inventory_index: InventoryIndex,
     pub amount: u16,
@@ -1957,7 +1957,7 @@ pub struct SplitInventoryStackPacket {
 /// Client's desired inventory order, expressed as the existing server slot ids.
 #[derive(Debug, Clone, Packet, ClientPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x0efb)]
+#[header(0x0EFB)]
 #[variable_length]
 pub struct InventoryOrderRequestPacket {
     #[repeating_remaining]
@@ -1967,7 +1967,7 @@ pub struct InventoryOrderRequestPacket {
 /// Authoritative inventory slot order saved by the map server.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
-#[header(0x0efa)]
+#[header(0x0EFA)]
 #[variable_length]
 pub struct InventoryOrderPacket {
     #[repeating_remaining]

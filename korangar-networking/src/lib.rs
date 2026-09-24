@@ -28,7 +28,7 @@ use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 use tokio::task::JoinHandle;
 
 pub use self::entity::EntityData;
-pub use self::event::{DisconnectReason, NetworkEvent};
+pub use self::event::{DisconnectReason, NetworkEvent, QuestHuntObjective, QuestHuntProgress};
 pub use self::hotkey::HotkeyState;
 pub use self::items::{InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem};
 pub use self::message::MessageColor;
@@ -1043,18 +1043,14 @@ where
     /// the ground (Korangar fork packet 0x0efc).
     pub fn split_inventory_stack(&mut self, inventory_index: InventoryIndex, amount: u16) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(SplitInventoryStackPacket::new(inventory_index, amount))
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(SplitInventoryStackPacket::new(inventory_index, amount)),
         }
     }
 
     /// Save the visible inventory order on the map server.
     pub fn reorder_inventory(&mut self, indices: Vec<InventoryIndex>) -> Result<(), NotConnectedError> {
         match self.map_server_packet_version()? {
-            SupportedPacketVersion::_20220406 => {
-                self.send_map_server_packet(InventoryOrderRequestPacket { indices })
-            }
+            SupportedPacketVersion::_20220406 => self.send_map_server_packet(InventoryOrderRequestPacket { indices }),
         }
     }
 
@@ -1977,6 +1973,63 @@ mod packet_handlers {
         ));
     }
 
+    #[test]
+    fn hunting_quest_notification_and_progress_packets_keep_mob_and_index_fields() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        use crate::{NetworkEvent, QuestHuntObjective, QuestHuntProgress};
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+
+        // ZC_HUNTING_QUEST_INFO (0x08FE): packet header + explicit quest/mob/count
+        // tuple.
+        let mut notification = vec![0xFE, 0x08];
+        notification.extend_from_slice(&16u16.to_le_bytes());
+        notification.extend_from_slice(&20_001u32.to_le_bytes());
+        notification.extend_from_slice(&1002u32.to_le_bytes());
+        notification.extend_from_slice(&10u16.to_le_bytes());
+        notification.extend_from_slice(&3u16.to_le_bytes());
+        let mut reader = ByteReader::without_metadata(&notification);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("hunting quest notification did not parse");
+        };
+        assert!(matches!(
+            events.0.as_slice(),
+            [NetworkEvent::QuestHuntObjectives { objectives }]
+                if objectives == &vec![QuestHuntObjective {
+                    quest_id: 20_001,
+                    mob_id: 1002,
+                    total_count: 10,
+                    current_count: 3,
+                }]
+        ));
+
+        // ZC_UPDATE_MISSION_HUNT 2020+ (0x0AFE): quest ID + objective index + updated
+        // count.
+        let mut progress = vec![0xFE, 0x0A];
+        progress.extend_from_slice(&22u16.to_le_bytes());
+        progress.extend_from_slice(&1u16.to_le_bytes());
+        progress.extend_from_slice(&20_001u32.to_le_bytes());
+        progress.extend_from_slice(&20_001u32.to_le_bytes());
+        progress.extend_from_slice(&0u32.to_le_bytes());
+        progress.extend_from_slice(&10u16.to_le_bytes());
+        progress.extend_from_slice(&4u16.to_le_bytes());
+        let mut reader = ByteReader::without_metadata(&progress);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("hunting quest progress did not parse");
+        };
+        assert!(matches!(
+            events.0.as_slice(),
+            [NetworkEvent::QuestHuntProgress { objectives }]
+                if objectives == &vec![QuestHuntProgress {
+                    quest_id: 20_001,
+                    objective_index: 0,
+                    current_count: 4,
+                }]
+        ));
+    }
+
     /// A reason from a server newer than this build must cost nothing.
     ///
     /// This was wrong when the packet first landed: the reason was modelled as
@@ -2059,6 +2112,7 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { source_entity_id: None },
+                    NetworkEvent::SkillFailed { skill_id: ragnarok_packets::SkillId(19) },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,
@@ -2156,6 +2210,7 @@ mod packet_handlers {
                 events.0.as_slice(),
                 [
                     NetworkEvent::SkillCastCancelled { .. },
+                    NetworkEvent::SkillFailed { skill_id: ragnarok_packets::SkillId(1) },
                     NetworkEvent::ChatMessage {
                         text,
                         color: MessageColor::Error,

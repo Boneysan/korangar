@@ -5,8 +5,84 @@ use ron::ser::PrettyConfig;
 use rust_state::RustState;
 use serde::{Deserialize, Serialize};
 
+use super::key_bindings::{BindableAction, KeyBindings};
+
 fn default_true() -> bool {
     true
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum CombatTextFrequency {
+    /// Show every damage, miss, and healing number.
+    #[default]
+    All,
+    /// Keep critical hits and misses, while hiding routine damage numbers.
+    Important,
+    /// Hide floating numbers while leaving textual status notifications intact.
+    StatusOnly,
+}
+
+impl CombatTextFrequency {
+    pub fn next(self) -> Self {
+        match self {
+            Self::All => Self::Important,
+            Self::Important => Self::StatusOnly,
+            Self::StatusOnly => Self::All,
+        }
+    }
+
+    pub fn shows_damage(self, is_critical: bool) -> bool {
+        match self {
+            Self::All => true,
+            Self::Important => is_critical,
+            Self::StatusOnly => false,
+        }
+    }
+
+    pub fn shows_miss(self) -> bool {
+        matches!(self, Self::All | Self::Important)
+    }
+
+    pub fn shows_healing(self) -> bool {
+        matches!(self, Self::All | Self::Important)
+    }
+}
+
+/// Keep server-reported per-hit damage intact while avoiding one floating
+/// label per division in a multi-hit packet.
+pub fn format_damage_number(amount: usize, hit_count: usize) -> String {
+    let hit_count = hit_count.max(1);
+    if hit_count == 1 {
+        amount.to_string()
+    } else {
+        format!("{amount} x {hit_count}")
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum CombatTextSize {
+    Small,
+    #[default]
+    Normal,
+    Large,
+}
+
+impl CombatTextSize {
+    pub fn next(self) -> Self {
+        match self {
+            Self::Small => Self::Normal,
+            Self::Normal => Self::Large,
+            Self::Large => Self::Small,
+        }
+    }
+
+    pub fn scale(self) -> f32 {
+        match self {
+            Self::Small => 0.8,
+            Self::Normal => 1.0,
+            Self::Large => 1.3,
+        }
+    }
 }
 
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
@@ -19,6 +95,31 @@ pub struct GameSettings {
     /// Camera-relative WASD movement. Click-to-move stays available either way.
     #[serde(default = "default_true")]
     pub wasd_movement: bool,
+    /// Suppress camera shake and other nonessential camera motion.
+    #[serde(default)]
+    pub reduce_motion: bool,
+    /// Reduce the brightness of procedural combat bursts and their point
+    /// lights.
+    #[serde(default)]
+    pub reduce_flashing: bool,
+    /// Show floating damage, miss, and healing numbers.
+    #[serde(default = "default_true")]
+    pub show_combat_text: bool,
+    /// Select how much floating damage feedback to show while enabled.
+    #[serde(default)]
+    pub combat_text_frequency: CombatTextFrequency,
+    /// Size multiplier for floating combat text.
+    #[serde(default)]
+    pub combat_text_size: CombatTextSize,
+    /// User overrides for keyboard shortcuts; missing entries use shipped
+    /// defaults.
+    #[serde(default)]
+    #[hidden_element]
+    pub key_bindings: KeyBindings,
+    /// In-memory remap capture request; deliberately not persisted.
+    #[serde(skip)]
+    #[hidden_element]
+    pub pending_key_binding: Option<BindableAction>,
     /// Last window size in **logical** pixels, restored on the next launch.
     ///
     /// Logical rather than physical so moving between monitors of different
@@ -41,9 +142,11 @@ pub struct GameSettings {
     pub overview_minimized: bool,
     /// Item IDs protected from dropping or NPC sale, keyed by character ID.
     #[serde(default)]
+    #[hidden_element]
     pub protected_items_by_character: Vec<(u32, Vec<u32>)>,
     /// Player-selected tracked quest IDs, keyed by character ID.
     #[serde(default)]
+    #[hidden_element]
     pub tracked_quests_by_character: Vec<(u32, Vec<u32>)>,
 }
 
@@ -53,6 +156,13 @@ impl Default for GameSettings {
             auto_attack: true,
             show_minimap: true,
             wasd_movement: true,
+            reduce_motion: false,
+            reduce_flashing: false,
+            show_combat_text: true,
+            combat_text_frequency: CombatTextFrequency::default(),
+            combat_text_size: CombatTextSize::default(),
+            key_bindings: KeyBindings::default(),
+            pending_key_binding: None,
             window_size: None,
             window_maximized: false,
             hotbar_locked: false,
@@ -123,7 +233,11 @@ impl GameSettings {
             Some(position) => &mut self.protected_items_by_character[position].1,
             None => {
                 self.protected_items_by_character.push((character_id, Vec::new()));
-                &mut self.protected_items_by_character.last_mut().expect("inserted character protection list").1
+                &mut self
+                    .protected_items_by_character
+                    .last_mut()
+                    .expect("inserted character protection list")
+                    .1
             }
         };
         if let Some(position) = items.iter().position(|id| *id == item_id) {
@@ -160,5 +274,72 @@ impl GameSettings {
 impl Drop for GameSettings {
     fn drop(&mut self) {
         self.save();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::ManuallyDrop;
+
+    use super::super::key_bindings::BindableAction;
+    use super::{CombatTextFrequency, CombatTextSize, GameSettings, format_damage_number};
+
+    #[test]
+    fn accessibility_settings_have_safe_defaults_and_migrate_older_files() {
+        let default_settings = ManuallyDrop::new(GameSettings::default());
+        assert!(!default_settings.reduce_motion);
+        assert!(!default_settings.reduce_flashing);
+        assert!(default_settings.show_combat_text);
+        assert_eq!(default_settings.combat_text_frequency, CombatTextFrequency::All);
+        assert_eq!(default_settings.combat_text_size, CombatTextSize::Normal);
+
+        let old_settings: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str("(auto_attack:true)").unwrap());
+        assert!(!old_settings.reduce_motion);
+        assert!(!old_settings.reduce_flashing);
+        assert!(old_settings.show_combat_text);
+        assert_eq!(old_settings.combat_text_frequency, CombatTextFrequency::All);
+        assert_eq!(old_settings.combat_text_size, CombatTextSize::Normal);
+        assert_eq!(old_settings.key_bindings.chord(BindableAction::OpenInventory).key, "KeyI");
+        assert_eq!(old_settings.pending_key_binding, None);
+
+        let migrated_user_choices: ManuallyDrop<GameSettings> = ManuallyDrop::new(
+            ron::from_str("(auto_attack:true, show_combat_text:false, combat_text_frequency:Important, combat_text_size:Large)").unwrap(),
+        );
+        assert!(!migrated_user_choices.show_combat_text);
+        assert_eq!(migrated_user_choices.combat_text_frequency, CombatTextFrequency::Important);
+        assert_eq!(migrated_user_choices.combat_text_size, CombatTextSize::Large);
+        let status_only: ManuallyDrop<GameSettings> =
+            ManuallyDrop::new(ron::from_str("(auto_attack:true, combat_text_frequency:StatusOnly)").unwrap());
+        assert_eq!(status_only.combat_text_frequency, CombatTextFrequency::StatusOnly);
+    }
+
+    #[test]
+    fn combat_text_accessibility_modes_are_predictable_and_cyclable() {
+        assert!(CombatTextFrequency::All.shows_damage(false));
+        assert!(CombatTextFrequency::All.shows_miss());
+        assert!(CombatTextFrequency::All.shows_healing());
+        assert!(CombatTextFrequency::Important.shows_damage(true));
+        assert!(!CombatTextFrequency::Important.shows_damage(false));
+        assert!(CombatTextFrequency::Important.shows_miss());
+        assert!(CombatTextFrequency::Important.shows_healing());
+        assert!(!CombatTextFrequency::StatusOnly.shows_damage(true));
+        assert!(!CombatTextFrequency::StatusOnly.shows_miss());
+        assert!(!CombatTextFrequency::StatusOnly.shows_healing());
+        assert_eq!(CombatTextFrequency::All.next(), CombatTextFrequency::Important);
+        assert_eq!(CombatTextFrequency::Important.next(), CombatTextFrequency::StatusOnly);
+        assert_eq!(CombatTextFrequency::StatusOnly.next(), CombatTextFrequency::All);
+
+        assert_eq!(CombatTextSize::Small.next(), CombatTextSize::Normal);
+        assert_eq!(CombatTextSize::Normal.next(), CombatTextSize::Large);
+        assert_eq!(CombatTextSize::Large.next(), CombatTextSize::Small);
+        assert!(CombatTextSize::Small.scale() < CombatTextSize::Normal.scale());
+        assert!(CombatTextSize::Normal.scale() < CombatTextSize::Large.scale());
+    }
+
+    #[test]
+    fn multi_hit_damage_text_is_compact_without_aggregating_server_damage() {
+        assert_eq!(format_damage_number(123, 1), "123");
+        assert_eq!(format_damage_number(123, 0), "123");
+        assert_eq!(format_damage_number(123, 5), "123 x 5");
     }
 }

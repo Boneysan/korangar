@@ -25,12 +25,17 @@ impl Default for OverlayTheme {
 }
 
 #[derive(Serialize, Deserialize, RustState, StateElement)]
+#[serde(default)]
 pub struct StatusBarTheme {
     pub background_color: Color,
     pub player_health_color: Color,
+    /// Health for other player/party entities shown over the world.
+    pub ally_health_color: Color,
     pub enemy_health_color: Color,
     pub spell_point_color: Color,
     pub activity_point_color: Color,
+    /// Cast progress for other player/party entities shown over the world.
+    pub cast_bar_color: Color,
     pub player_bar_width: f32,
     pub enemy_bar_width: f32,
     pub health_height: f32,
@@ -46,9 +51,11 @@ impl Default for StatusBarTheme {
         Self {
             background_color: Color::monochrome_u8(40),
             player_health_color: Color::rgb_u8(67, 163, 83),
+            ally_health_color: Color::rgb_u8(80, 220, 120),
             enemy_health_color: Color::rgb_u8(206, 49, 116),
             spell_point_color: Color::rgb_u8(0, 129, 163),
             activity_point_color: Color::rgb_u8(218, 145, 81),
+            cast_bar_color: Color::rgb_u8(255, 210, 60),
             player_bar_width: 85.0,
             enemy_bar_width: 60.0,
             health_height: 8.0,
@@ -87,20 +94,59 @@ impl Default for CursorTheme {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, RustState, StateElement)]
+#[derive(Serialize, Deserialize, RustState, StateElement)]
+#[serde(default)]
 pub struct WorldTheme {
     pub overlay: OverlayTheme,
     pub status_bar: StatusBarTheme,
     pub indicator: IndicatorTheme,
     pub cursor: CursorTheme,
+    /// Local ground-target preview color while the target is in range.
+    pub skill_aim_in_range: Color,
+    /// Local ground-target preview color while the target is out of range.
+    pub skill_aim_out_of_range: Color,
+    /// Server cast telegraph color for hostile/incoming ground effects.
+    pub enemy_telegraph: Color,
+}
+
+impl Default for WorldTheme {
+    fn default() -> Self {
+        Self {
+            overlay: OverlayTheme::default(),
+            status_bar: StatusBarTheme::default(),
+            indicator: IndicatorTheme::default(),
+            cursor: CursorTheme::default(),
+            skill_aim_in_range: Color::rgba(0.35, 0.75, 1.0, 0.5),
+            skill_aim_out_of_range: Color::rgba(1.0, 0.3, 0.25, 0.5),
+            enemy_telegraph: Color::rgba(1.0, 0.28, 0.12, 0.48),
+        }
+    }
 }
 
 impl WorldTheme {
     pub fn load(name: &str) -> Self {
-        use crate::settings::WORLD_THEMES_PATH;
+        use crate::settings::{DEUTERANOPIA_THEME_NAME, WORLD_THEMES_PATH};
 
         #[cfg(feature = "debug")]
         let timer = Timer::new("Load theme");
+
+        if name == DEUTERANOPIA_THEME_NAME {
+            let mut theme = Self::default();
+            theme.status_bar.player_health_color = Color::rgb_u8(0, 114, 178);
+            theme.status_bar.ally_health_color = Color::rgb_u8(0, 114, 178);
+            theme.status_bar.enemy_health_color = Color::rgb_u8(213, 94, 0);
+            theme.status_bar.spell_point_color = Color::rgb_u8(86, 180, 233);
+            theme.status_bar.activity_point_color = Color::rgb_u8(230, 159, 0);
+            theme.status_bar.cast_bar_color = Color::rgb_u8(230, 159, 0);
+            theme.indicator.walking = Color::rgba_u8(0, 114, 178, 240);
+            theme.cursor.color = Color::rgb_u8(230, 159, 0);
+            theme.skill_aim_in_range = Color::rgba_u8(0, 114, 178, 190);
+            theme.skill_aim_out_of_range = Color::rgba_u8(230, 159, 0, 210);
+            theme.enemy_telegraph = Color::rgba_u8(213, 94, 0, 215);
+            #[cfg(feature = "debug")]
+            timer.stop();
+            return theme;
+        }
 
         let path = format!("{WORLD_THEMES_PATH}/{name}.ron");
 
@@ -144,5 +190,39 @@ impl WorldTheme {
         }
 
         timer.stop();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{StatusBarTheme, WorldTheme};
+    use crate::graphics::Color;
+    use crate::settings::DEUTERANOPIA_THEME_NAME;
+
+    #[test]
+    fn deuteranopia_world_theme_uses_blue_orange_and_labeled_bars() {
+        let theme = WorldTheme::load(DEUTERANOPIA_THEME_NAME);
+        assert_eq!(theme.status_bar.player_health_color, Color::rgb_u8(0, 114, 178));
+        assert_eq!(theme.status_bar.enemy_health_color, Color::rgb_u8(213, 94, 0));
+        assert_eq!(theme.status_bar.ally_health_color, Color::rgb_u8(0, 114, 178));
+        assert_eq!(theme.status_bar.activity_point_color, Color::rgb_u8(230, 159, 0));
+        assert_eq!(theme.status_bar.cast_bar_color, Color::rgb_u8(230, 159, 0));
+        assert_eq!(theme.cursor.color, Color::rgb_u8(230, 159, 0));
+        assert_eq!(theme.skill_aim_in_range, Color::rgba_u8(0, 114, 178, 190));
+        assert_eq!(theme.enemy_telegraph, Color::rgba_u8(213, 94, 0, 215));
+    }
+
+    #[test]
+    fn older_world_themes_default_new_telegraph_colors() {
+        let old_theme: WorldTheme = ron::from_str("()").expect("old empty world theme remains loadable");
+        assert_eq!(old_theme.skill_aim_in_range, Color::rgba(0.35, 0.75, 1.0, 0.5));
+        assert_eq!(old_theme.skill_aim_out_of_range, Color::rgba(1.0, 0.3, 0.25, 0.5));
+        assert_eq!(old_theme.enemy_telegraph, Color::rgba(1.0, 0.28, 0.12, 0.48));
+        assert_eq!(old_theme.status_bar.ally_health_color, Color::rgb_u8(80, 220, 120));
+        assert_eq!(old_theme.status_bar.cast_bar_color, Color::rgb_u8(255, 210, 60));
+
+        let old_status_bar: StatusBarTheme = ron::from_str("()").expect("old status bar themes remain loadable");
+        assert_eq!(old_status_bar.ally_health_color, Color::rgb_u8(80, 220, 120));
+        assert_eq!(old_status_bar.cast_bar_color, Color::rgb_u8(255, 210, 60));
     }
 }

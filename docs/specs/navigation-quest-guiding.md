@@ -4,7 +4,7 @@
 
 ## Current hooks
 
-- `src/interface/windows/dialog.rs` currently strips `<NAVI>`/`<INFO>` markup while preserving text. Hercules `src/map/clif.c` emits `map,x,y` followed by optional mode/service/window/monster fields; accept both short and long forms.
+- `src/interface/windows/dialog.rs` preserves dialog text and now parses valid short/full `<NAVI>` targets into labeled route buttons. Map names/coordinates are syntactically checked; route selection additionally requires the current map/cell to be valid or a verified graph path to the destination. Hercules `src/map/clif.c` emits `map,x,y` followed by optional mode/service/window/monster fields; mode/service behavior is intentionally not interpreted yet.
 - `src/state/minimap.rs` and `src/interface/windows/minimap.rs` draw player, party, compass, Towninfo POIs, the next route exit, and sampled walkable breadcrumb points. `src/interface/windows/maps.rs` lays out a regional atlas with selectable locations and graph-derived reachability/route highlighting.
 - `Hercules/npc/re/warps/**` contains static `warp` lines. Loaded script manifests, custom warps, and travel-service NPCs must also be inspected; text in an unloaded script is not a playable route.
 
@@ -18,9 +18,9 @@ The generator validates map names against `map_index`, coordinates against the m
 
 For a target `(map, x, y)`, run a directed shortest-path search over usable map edges. Begin with hop count; prefer a reachable exit cell on the current map as the tie-breaker. The graph search does not claim to know intra-map travel time. The atlas shows authored regional placement and only draws a connection when the generated graph can route between its endpoints. On the current map, use walkable-path data to draw a bounded set of breadcrumb points from the player to the next exit; recalculate at every map transition. On the destination map the target gets a cell or broad area marker. If the expected warp fails or the player goes elsewhere, recalculate from the actual server map. A route never initiates movement or teleport by itself.
 
-Parse `<NAVI>label<INFO>map,x,y[,mode,services,show_window,monster_id]</INFO></NAVI>` into a typed target, preserving the human label. Invalid/out-of-range coordinates or unknown maps leave readable dialog text and no action. On click, set one active target and offer clear/replace; same-map targets show the marker immediately, cross-map targets show the next exit. The action is keyboard focusable and announced as a destination. A player can disable guidance without losing the dialog text.
+Parse `<NAVI>label<INFO>map,x,y[,mode,services,show_window,monster_id]</INFO></NAVI>` into a typed target, preserving the human label. Invalid coordinates, unknown maps, or destinations without a verified directed graph route leave readable dialog text and do not replace the active route. On click, set one active target; same-map targets show the marker immediately, cross-map targets show the next exit. A player can clear/replace guidance without losing the dialog text. Live focus order, route accuracy, and guidance disable controls remain acceptance work.
 
-Quest objectives use the same target type only when the server or curated quest data supplies a location. Do not invent a precise destination from a quest title. For an ambiguous objective, show the named map/region and explain that the exact NPC or monster must be found there.
+Quest objectives use the same target type only when the server or curated quest data supplies a location. The client consumes Hercules hunting notifications/progress and routes identified monster objectives only to loaded static spawn-map regions also present in the navigation graph; these are broad regions, not exact cells. Item turn-in requirements link to the matching Guide item/card record and can route to graph-known maps for verified exported drop-source monsters. Do not invent a precise destination from a quest title or inferred NPC location. Other non-hunt/story objectives and NPC locations remain unlinked until explicit server/curated location data exists.
 
 ## Acceptance fixtures
 
@@ -30,4 +30,4 @@ Quest objectives use the same target type only when the server or curated quest 
 4. Click a same-map and a cross-map NAVI link; warp normally, deviate once, relog once, and confirm the displayed next exit follows actual location.
 5. Disable guidance, resize UI, and verify text remains readable and clickable state is apparent by more than color.
 
-The [next-slices plan](../plans/gdd-next-slices.md) holds ownership and sequencing. Remaining GDD §9.10 work includes broader authored locations, destination information, visited/discovered state, population shading, portal labels, and personal/party waypoints on this graph.
+The [next-slices plan](../plans/gdd-next-slices.md) holds ownership and sequencing. The atlas now surfaces account visit/sync state and selected-destination route details (outgoing exits, hop count, next exact portal cell). Remaining GDD §9.10 work includes broader authored destination/service details, population shading, portal labels, and personal/party waypoints on this graph.
