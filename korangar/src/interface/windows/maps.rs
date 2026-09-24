@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use std::sync::OnceLock;
+use std::sync::{Arc, OnceLock};
 
 use korangar_interface::element::Element;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
@@ -18,7 +18,7 @@ use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
-use crate::world::{NavigationEdge, is_dangerous_map_level, navigation_graph, route_edges};
+use crate::world::{Library, NavigationEdge, is_dangerous_map_level, navigation_graph, route_edges};
 
 #[derive(Clone, Copy)]
 struct AtlasLocation {
@@ -282,14 +282,16 @@ struct AtlasNode {
 }
 
 struct AtlasView {
+    library: Arc<Library>,
     nodes: Vec<AtlasNode>,
     details: [String; 6],
     dangerous_maps: HashSet<String>,
 }
 
 impl AtlasView {
-    fn new() -> Self {
+    fn new(library: Arc<Library>) -> Self {
         Self {
+            library,
             nodes: LOCATIONS
                 .iter()
                 .copied()
@@ -301,7 +303,7 @@ impl AtlasView {
                     },
                 })
                 .collect(),
-            details: destination_detail_lines("", None, None, 0, None, &[], None, None),
+            details: destination_detail_lines("", None, None, 0, None, &[], None, &[]),
             dangerous_maps: HashSet::new(),
         }
     }
@@ -344,9 +346,12 @@ impl Element<ClientState> for AtlasView {
             .filter(|member| member.online() && normalized_map_name(member.map_name()).eq_ignore_ascii_case(selected_map))
             .map(|member| member.name().to_owned())
             .collect();
-        let town_pois = selected_map
-            .eq_ignore_ascii_case(current_map)
-            .then(|| minimap.pois().iter().map(|poi| poi.name.clone()).collect::<Vec<_>>());
+        let town_pois = self
+            .library
+            .town_pois(selected_map)
+            .iter()
+            .map(|poi| poi.name.clone())
+            .collect::<Vec<_>>();
         let reference = crate::dm::reference_data::reference_data();
         self.details = destination_detail_lines(
             current_map,
@@ -356,7 +361,7 @@ impl Element<ClientState> for AtlasView {
             Some(visit_state),
             &party_members_here,
             reference.map_spawn_summary(selected_map),
-            town_pois.as_deref(),
+            &town_pois,
         );
         let player_level = state
             .try_get(&this_player().base_level())
@@ -598,7 +603,7 @@ fn destination_detail_lines(
     visit_state: Option<&str>,
     party_members_here: &[String],
     population: Option<(u64, u16, usize)>,
-    town_pois: Option<&[String]>,
+    town_pois: &[String],
 ) -> [String; 6] {
     let selected_map = target_map.unwrap_or(current_map);
     let visited = visit_state.unwrap_or("discovery sync pending");
@@ -625,16 +630,14 @@ fn destination_detail_lines(
     } else {
         format!("Party here: {}", party_members_here.join(", "))
     };
-    let poi_line = match town_pois {
-        None => "Towninfo facilities: not loaded for this remote destination".to_owned(),
-        Some(pois) if pois.is_empty() => "Towninfo facilities: none listed for this map".to_owned(),
-        Some(pois) => {
-            let shown = pois.iter().take(3).cloned().collect::<Vec<_>>().join(", ");
-            if pois.len() > 3 {
-                format!("Towninfo facilities: {shown}, +{} more", pois.len() - 3)
-            } else {
-                format!("Towninfo facilities: {shown}")
-            }
+    let poi_line = if town_pois.is_empty() {
+        "Towninfo facilities: none listed for this map".to_owned()
+    } else {
+        let shown = town_pois.iter().take(3).cloned().collect::<Vec<_>>().join(", ");
+        if town_pois.len() > 3 {
+            format!("Towninfo facilities: {shown}, +{} more", town_pois.len() - 3)
+        } else {
+            format!("Towninfo facilities: {shown}")
         }
     };
     let (route_summary, next_exit) = match (target_map, route) {
@@ -693,7 +696,15 @@ fn draw_dotted_connection(layout: &mut WindowLayout<'_, ClientState>, x1: f32, y
     }
 }
 
-pub struct MapsWindow;
+pub struct MapsWindow {
+    library: Arc<Library>,
+}
+
+impl MapsWindow {
+    pub fn new(library: Arc<Library>) -> Self {
+        Self { library }
+    }
+}
 
 impl CustomWindow<ClientState> for MapsWindow {
     fn window_class() -> Option<WindowClass> {
@@ -709,7 +720,7 @@ impl CustomWindow<ClientState> for MapsWindow {
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                AtlasView::new(),
+                AtlasView::new(self.library),
                 button! {
                     text: "Clear Route",
                     tooltip: "Clear the current destination and breadcrumb trail",
@@ -745,7 +756,7 @@ mod tests {
             Some("visited"),
             &party,
             population,
-            Some(&pois),
+            &pois,
         );
 
         assert!(lines[0].contains("Destination: izlude • visited"));
@@ -760,14 +771,14 @@ mod tests {
 
     #[test]
     fn atlas_destination_details_do_not_claim_routes_when_graph_has_none() {
-        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None, &[], None, None);
+        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None, &[], None, &[]);
         assert!(lines[0].contains("discovery sync pending"));
         assert!(lines[1].contains("unavailable"));
         assert!(lines[2].contains("no verified spawn records"));
-        assert!(lines[4].contains("not loaded for this remote destination"));
+        assert!(lines[4].contains("none listed for this map"));
         assert!(lines[5].contains("No verified route"));
 
-        let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None, Some(&[]));
+        let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None, &[]);
         assert_eq!(empty[0], "Current map: prontera • visited");
         assert!(empty[4].contains("none listed"));
         assert!(empty[5].contains("3"));

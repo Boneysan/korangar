@@ -9860,7 +9860,7 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Maps) {
                             true => self.interface.close_window_with_class(WindowClass::Maps),
-                            false => self.interface.open_window(MapsWindow),
+                            false => self.interface.open_window(MapsWindow::new(self.library.clone())),
                         }
                     }
                 }
