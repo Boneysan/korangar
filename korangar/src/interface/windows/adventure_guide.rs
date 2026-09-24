@@ -57,6 +57,7 @@ impl<A> AdventureGuideWindow<A> {
 }
 
 fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
+    let data = reference_data();
     let mut lines = vec![
         format!("{}  (ID {})", display_name(&monster.name, &monster.sprite_name), monster.id),
         format!("Level {}   HP {}", monster.level, monster.hp),
@@ -71,6 +72,38 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         lines.push(format!("Size: {size}"));
     }
     lines.push(format!("Skills: {}   Drops: {}", monster.skills.len(), monster.drops.len()));
+    if !monster.skills.is_empty() {
+        lines.push("Server-configured skills (rate is the raw mob_skill_db value):".to_owned());
+        for mob_skill in monster.skills.iter().take(8) {
+            let label = data
+                .skills
+                .iter()
+                .find(|skill| skill.name.eq_ignore_ascii_case(&mob_skill.skill_name))
+                .map(|skill| {
+                    format!(
+                        "@guide:skill:{}|{} — Lv {} — rate {} — delay {} ms",
+                        skill.id,
+                        display_name(&skill.description, &skill.name),
+                        mob_skill.level,
+                        mob_skill.rate,
+                        mob_skill.delay_ms
+                    )
+                })
+                .unwrap_or_else(|| {
+                    format!(
+                        "{} — Lv {} — rate {} — delay {} ms (no matching skill reference)",
+                        mob_skill.skill_name, mob_skill.level, mob_skill.rate, mob_skill.delay_ms
+                    )
+                });
+            lines.push(label);
+        }
+        if monster.skills.len() > 8 {
+            lines.push(format!("{} additional skill records omitted.", monster.skills.len() - 8));
+        }
+        if let Some(source) = &monster.skills_source {
+            lines.push(format!("Monster-skill source: {} ({})", source.path, source.record));
+        }
+    }
     for drop in monster.drops.iter().take(8) {
         lines.push(format!(
             "@guide:item:{}|{} — {:.2}%",
@@ -1045,6 +1078,26 @@ mod tests {
             id: monster_id,
         });
         assert!(!detail.is_empty());
+    }
+
+    #[test]
+    fn monster_skill_details_link_verified_skill_ids_and_preserve_raw_rates() {
+        let monster = reference_data().monster_by_id(1002).expect("Poring bestiary record");
+        let details = monster_details(monster);
+        let skill_link = details
+            .iter()
+            .find(|line| line.starts_with("@guide:skill:184|"))
+            .and_then(|line| parse_guide_link(line))
+            .expect("Poring's Water Attack should link to its verified skill record");
+        assert_eq!(skill_link.kind, "skill");
+        assert_eq!(skill_link.id, 184);
+        assert!(details.iter().any(|line| line.contains("rate 2000")));
+        assert!(details.iter().any(|line| line.contains("delay 5000 ms")));
+        assert!(
+            resolve_details(&skill_link)
+                .iter()
+                .any(|line| line.contains("Water Attribute Attack"))
+        );
     }
 
     #[test]

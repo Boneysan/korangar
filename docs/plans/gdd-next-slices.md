@@ -62,6 +62,8 @@ This is a source audit, not a claim that the feature has been seen on screen. Ef
 
 **2026-09-24 Guide search follow-up:** Item/card All and category searches now accept exact IDs, display/Aegis names, raw exported effect tags, and verified source-monster display/Japanese/sprite aliases. This makes the current source contract searchable without translating or guessing item scripts. Reference-data tests cover Oridecon by ID, an item source-monster match, and Poring Card by ID/effect tag. This improves search coverage but does not close the still-open field completeness or live Guide-acceptance gates.
 
+**2026-09-24 monster Guide-detail follow-up:** Player monster records now show up to eight exported mob-skill entries, preserve raw rate/delay values, and provide links into the skill Guide when the server skill constant resolves. Unknown constants stay visible as raw, unmatched entries; no skill behavior or probability prose is inferred. Focused Poring skill link/value tests pass. This adds detail but does not satisfy the live fresh-account Guide acceptance gate.
+
 ## Readiness and dependency gates
 
 | Gate | Required result before dependent work | Check |
