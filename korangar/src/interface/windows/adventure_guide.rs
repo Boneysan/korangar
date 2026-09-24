@@ -564,7 +564,8 @@ where
     let discovery = state.get(&discovery_path);
     let mut rows = Vec::new();
     if category == "All" {
-        rows.extend(search_all_categories(&query, state));
+        let quest_log_path = client_state().quest_log();
+        rows.extend(search_all_categories(&query, discovery, state.get(&quest_log_path).quests()));
     } else if category == "Monsters" {
         rows.extend(
             data.search_monsters(&query, MAX_RESULTS).into_iter().map(|monster| GuideResult {
@@ -677,12 +678,16 @@ where
     ]);
 }
 
-fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideResult> {
+fn search_all_categories(
+    query: &str,
+    discovery: &crate::state::discovery::DiscoveryState,
+    active_quests: &[crate::state::quests::QuestEntry],
+) -> Vec<GuideResult> {
     let data = reference_data();
     let mut rows = Vec::new();
 
     rows.extend(
-        data.search_monsters(query, remaining_result_slots(&rows))
+        data.search_monsters(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|monster| GuideResult {
                 label: format!(
@@ -698,7 +703,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
         data.search_items(query, data.items.len())
             .into_iter()
             .filter(|item| item.item_type != "IT_CARD")
-            .take(remaining_result_slots(&rows))
+            .take(all_category_result_slots(&rows))
             .map(|item| GuideResult {
                 label: format!("{}  (Item, ID {})", display_name(&item.name, &item.aegis_name), item.id),
                 kind: "item".to_owned(),
@@ -709,7 +714,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
         data.cards
             .iter()
             .filter(|card| item_matches_query(card, query))
-            .take(remaining_result_slots(&rows))
+            .take(all_category_result_slots(&rows))
             .map(|card| GuideResult {
                 label: format!("{}  (Card, ID {})", display_name(&card.name, &card.aegis_name), card.id),
                 kind: "card".to_owned(),
@@ -717,7 +722,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             }),
     );
     rows.extend(
-        data.search_skills(query, remaining_result_slots(&rows))
+        data.search_skills(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|skill| GuideResult {
                 label: format!("{}  (Skill, ID {})", display_name(&skill.description, &skill.name), skill.id),
@@ -726,7 +731,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             }),
     );
     rows.extend(
-        data.search_statuses(query, remaining_result_slots(&rows))
+        data.search_statuses(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|status| GuideResult {
                 label: format!("{}  (Status icon {})", status.name, status.id),
@@ -735,15 +740,13 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             }),
     );
 
-    let discovery_path = client_state().discovery();
-    let discovery = state.get(&discovery_path);
     rows.extend(
         crate::world::navigation_graph()
             .maps
             .iter()
             .enumerate()
             .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(query))
-            .take(remaining_result_slots(&rows))
+            .take(all_category_result_slots(&rows))
             .map(|(index, map)| GuideResult {
                 label: format!("{map}  (Map{})", if discovery.visited_map(map) { ", Visited" } else { "" }),
                 kind: "map".to_owned(),
@@ -753,7 +756,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
     rows.extend(
         job_names()
             .filter(|(_, name)| query.is_empty() || name.to_lowercase().contains(query))
-            .take(remaining_result_slots(&rows))
+            .take(all_category_result_slots(&rows))
             .map(|(id, name)| GuideResult {
                 label: format!("{name}  (Job)"),
                 kind: "job".to_owned(),
@@ -761,7 +764,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             }),
     );
     rows.extend(
-        data.search_quests(query, remaining_result_slots(&rows))
+        data.search_quests(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|quest| GuideResult {
                 label: format!("{}  (Quest {})", quest.name, quest.id),
@@ -770,8 +773,6 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             }),
     );
 
-    let quest_log_path = client_state().quest_log();
-    let active_quests = state.get(&quest_log_path).quests();
     let listed_ids = rows
         .iter()
         .filter(|row| row.kind == "quest")
@@ -782,7 +783,7 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
             .iter()
             .filter(|quest| query.is_empty() || quest.name().to_lowercase().contains(query) || quest.quest_id.to_string().contains(query))
             .filter(|quest| !listed_ids.contains(&quest.quest_id))
-            .take(remaining_result_slots(&rows))
+            .take(all_category_result_slots(&rows))
             .map(|quest| GuideResult {
                 label: format!("{}  (Active Quest {})", quest.name(), quest.quest_id),
                 kind: "quest".to_owned(),
@@ -792,8 +793,8 @@ fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideRe
     rows
 }
 
-fn remaining_result_slots(rows: &[GuideResult]) -> usize {
-    MAX_RESULTS.saturating_sub(rows.len())
+fn all_category_result_slots(rows: &[GuideResult]) -> usize {
+    7.min(MAX_RESULTS.saturating_sub(rows.len()))
 }
 
 /// Select an item from another in-game surface, populate the Guide search and
@@ -865,9 +866,10 @@ where
 mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, item_matches_query, job_names, monster_details, parse_guide_link,
-        quest_details, quest_reference_details, reference_data, resolve_details, skill_details,
+        quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories, skill_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
+    use crate::state::discovery::DiscoveryState;
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
 
     #[test]
@@ -1135,6 +1137,14 @@ mod tests {
         let detail = quest_reference_details(&quest);
         assert!(detail.iter().any(|line| line.contains("no loaded navigation route")));
         assert!(detail.iter().any(|line| line.starts_with("@guide:monster:1002|")));
+    }
+
+    #[test]
+    fn all_search_finds_matching_monster_card_and_quest_together() {
+        let rows = search_all_categories("poring", &DiscoveryState::default(), &[]);
+        assert!(rows.iter().any(|row| row.kind == "monster" && row.id == 1002));
+        assert!(rows.iter().any(|row| row.kind == "card" && row.id == 4001));
+        assert!(rows.iter().any(|row| row.kind == "quest"));
     }
 }
 
