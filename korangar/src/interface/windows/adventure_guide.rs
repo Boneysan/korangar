@@ -242,8 +242,44 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             }
         }
     }
+    for npc in quest.npc_references.iter().take(8) {
+        lines.push(format!(
+            "Related NPC script reference: {} — {} ({}, {}) [{}:{}; {}]",
+            npc.name,
+            npc.map_name,
+            npc.x,
+            npc.y,
+            npc.source_path,
+            npc.source_line,
+            npc.uses.join(", ")
+        ));
+        if is_graph_map(&npc.map_name) {
+            lines.push(format!(
+                "@route-cell:{}:{}:{}|Route to {} — {}",
+                npc.map_name, npc.x, npc.y, npc.name, npc.map_name
+            ));
+        } else {
+            lines.push(format!("{} is not currently in the loaded navigation graph.", npc.map_name));
+        }
+    }
+    if quest.npc_references.len() > 8 {
+        lines.push(format!(
+            "{} additional related NPC script references omitted.",
+            quest.npc_references.len() - 8
+        ));
+    }
     lines.push("Quest giver, scripted story steps, prerequisites, and rewards are not included in this static hunt reference.".to_owned());
     lines
+}
+
+fn parse_route_cell_link(line: &str) -> Option<(String, u16, u16, String)> {
+    let route = line.strip_prefix("@route-cell:")?;
+    let (destination, label) = route.split_once('|')?;
+    let mut parts = destination.rsplitn(3, ':');
+    let y = parts.next()?.parse().ok()?;
+    let x = parts.next()?.parse().ok()?;
+    let map_name = parts.next()?;
+    Some((map_name.to_owned(), x, y, label.to_owned()))
 }
 
 fn resolve_details(result: &GuideResult) -> Vec<String> {
@@ -514,7 +550,12 @@ where
             for index in self.elements.len()..count {
                 let line = self.path.index(index).manually_asserted();
                 let value = state.get(&line).clone();
-                if let Some(map_name) = value.strip_prefix("@route:") {
+                if let Some((map_name, x, y, label)) = parse_route_cell_link(&value) {
+                    self.elements.push(ErasedElement::new(button! {
+                        text: label,
+                        event: InputEvent::SetNavigationDestination { map_name, x, y },
+                    }));
+                } else if let Some(map_name) = value.strip_prefix("@route:") {
                     let map_name = map_name.to_owned();
                     self.elements.push(ErasedElement::new(button! {
                         text: format!("Route to {map_name}"),
@@ -866,7 +907,8 @@ where
 mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, item_matches_query, job_names, monster_details, parse_guide_link,
-        quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories, skill_details,
+        parse_route_cell_link, quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories,
+        skill_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -1125,6 +1167,7 @@ mod tests {
         let quest = ReferenceQuest {
             id: 1,
             name: "Test quest".to_owned(),
+            npc_references: Vec::new(),
             targets: vec![ReferenceQuestTarget {
                 mob_id: Some(1002),
                 monster_name: "Poring".to_owned(),
@@ -1137,6 +1180,20 @@ mod tests {
         let detail = quest_reference_details(&quest);
         assert!(detail.iter().any(|line| line.contains("no loaded navigation route")));
         assert!(detail.iter().any(|line| line.starts_with("@guide:monster:1002|")));
+    }
+
+    #[test]
+    fn quest_npc_script_reference_offers_an_exact_cell_route() {
+        let quest = reference_data().quest_by_id(9030).expect("tracked Lost Puppies quest");
+        let detail = quest_reference_details(quest);
+        let route = detail
+            .iter()
+            .find_map(|line| parse_route_cell_link(line))
+            .expect("NPC script cell has a route action");
+        assert_eq!(
+            route,
+            ("brasilis".to_owned(), 297, 307, "Route to Angelo#br — brasilis".to_owned())
+        );
     }
 
     #[test]

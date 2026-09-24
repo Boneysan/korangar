@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export the tracked Hercules quest DB's names and explicit hunt targets.
+"""Export tracked Hercules quest names, explicit hunt targets, and static NPC references.
 
 When the source file is absent or locally modified, the exporter uses its
 tracked HEAD version and marks that fallback in the generated manifest. This
@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -24,6 +25,9 @@ QUEST_DB = HERCULES / "db/quest_db.conf"
 MOB_DB = HERCULES / "db/re/mob_db.conf"
 BESTIARY = ROOT / "docs/bestiary.v1.json"
 OUTPUT = ROOT / "docs/quests.v1.json"
+NPC_QUEST_DIRS = (HERCULES / "npc/re/quests", HERCULES / "npc/custom")
+NPC_HEADER = re.compile(r"^\s*([A-Za-z0-9_]+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\s+script\s+([^\s,]+)\s+[^,\n]+,\s*\{")
+QUEST_CALL = re.compile(r"\b(setquest|questprogress|completequest|erasequest)\s*\(?\s*(\d+)")
 
 
 def read_quest_source() -> tuple[str, bool, str | None]:
@@ -57,6 +61,62 @@ def parse_rooted_quest_db(text: str) -> list[dict[str, Any]]:
     raise ValueError("quest_db root not found")
 
 
+def extract_npc_quest_references(text: str, source_path: str, quest_ids: set[int]) -> dict[int, list[dict[str, Any]]]:
+    """Map literal quest-state calls to their nearest static NPC declaration."""
+    result: dict[int, list[dict[str, Any]]] = {}
+    current_npc: dict[str, Any] | None = None
+    npc_depth: int | None = None
+    depth = 0
+    for line_number, line in enumerate(_strip_comments(text).splitlines(), 1):
+        code = line
+        header = NPC_HEADER.match(code)
+        if header and depth == 0:
+            map_name, x, y, _direction, name = header.groups()
+            current_npc = {
+                "name": name,
+                "map_name": map_name,
+                "x": int(x),
+                "y": int(y),
+                "source_path": source_path,
+                "script_line": line_number,
+                "uses": [],
+            }
+            npc_depth = depth + 1
+        if current_npc is not None and npc_depth is not None and depth >= npc_depth:
+            for call in QUEST_CALL.finditer(code):
+                quest_id = int(call.group(2))
+                if quest_id not in quest_ids:
+                    continue
+                record = result.setdefault(quest_id, [])
+                key = (current_npc["name"], current_npc["map_name"], current_npc["x"], current_npc["y"])
+                existing = next((npc for npc in record if (npc["name"], npc["map_name"], npc["x"], npc["y"]) == key), None)
+                if existing is None:
+                    existing = {**current_npc, "source_line": line_number, "uses": []}
+                    record.append(existing)
+                use = call.group(1)
+                if use not in existing["uses"]:
+                    existing["uses"].append(use)
+        in_string = False
+        escaped = False
+        for character in code:
+            if escaped:
+                escaped = False
+            elif character == "\\" and in_string:
+                escaped = True
+            elif character == '"':
+                in_string = not in_string
+            elif not in_string and character == "{":
+                depth += 1
+            elif not in_string and character == "}":
+                depth -= 1
+        if npc_depth is not None and depth < npc_depth:
+            current_npc = None
+            npc_depth = None
+    for records in result.values():
+        records.sort(key=lambda npc: (npc["map_name"], npc["name"], npc["x"], npc["y"]))
+    return result
+
+
 def build() -> dict[str, object]:
     quest_text, used_head_fallback, fallback_reason = read_quest_source()
     raw_quests = parse_rooted_quest_db(quest_text)
@@ -64,6 +124,18 @@ def build() -> dict[str, object]:
     monsters = {int(row["id"]): row for row in bestiary["entries"]}
     mob_records = parse_skill_db(MOB_DB.read_text(encoding="utf-8", errors="replace"))
     mob_constants = {row["SpriteName"]: int(row["Id"]) for row in mob_records if "SpriteName" in row and "Id" in row}
+    quest_ids = {int(row["Id"]) for row in raw_quests if isinstance(row.get("Id"), int)}
+    npc_references: dict[int, list[dict[str, Any]]] = {}
+    for directory in NPC_QUEST_DIRS:
+        if not directory.is_dir():
+            continue
+        for script_path in sorted(directory.rglob("*.txt")):
+            relative_path = script_path.relative_to(HERCULES).as_posix()
+            references = extract_npc_quest_references(
+                script_path.read_text(encoding="utf-8", errors="replace"), relative_path, quest_ids
+            )
+            for quest_id, records in references.items():
+                npc_references.setdefault(quest_id, []).extend(records)
 
     entries = []
     seen: set[int] = set()
@@ -109,7 +181,13 @@ def build() -> dict[str, object]:
                 "map_name": map_name,
                 "source_record": f"quest {quest_id} target {len(targets) + 1}",
             })
-        entries.append({"id": quest_id, "name": name, "targets": targets, "source_record": f"quest {quest_id}"})
+        entries.append({
+            "id": quest_id,
+            "name": name,
+            "targets": targets,
+            "npc_references": npc_references.get(quest_id, []),
+            "source_record": f"quest {quest_id}",
+        })
 
     entries.sort(key=lambda entry: (str(entry["name"]).casefold(), int(entry["id"])))
     revision, dirty = source_revision()
@@ -119,6 +197,7 @@ def build() -> dict[str, object]:
         "source_worktree_dirty": dirty,
         "mode": "renewal",
         "source": "db/quest_db.conf",
+        "npc_sources": ["npc/re/quests", "npc/custom"],
         "source_file_available_in_worktree": QUEST_DB.is_file(),
         "used_tracked_head_fallback": used_head_fallback,
         "source_fallback_reason": fallback_reason,
@@ -144,7 +223,8 @@ def main() -> int:
     OUTPUT.write_text(payload, encoding="utf-8")
     data = json.loads(payload)
     target_count = sum(len(entry["targets"]) for entry in data["entries"])
-    print(f"wrote {OUTPUT.relative_to(ROOT)} ({len(data['entries'])} quests, {target_count} hunt targets)")
+    npc_count = sum(bool(entry["npc_references"]) for entry in data["entries"])
+    print(f"wrote {OUTPUT.relative_to(ROOT)} ({len(data['entries'])} quests, {target_count} hunt targets, {npc_count} with static NPC references)")
     if data["used_tracked_head_fallback"]:
         print(f"note: quest_db.conf {data['source_fallback_reason']}; used tracked HEAD snapshot (not live SQL data)")
     return 0

@@ -224,6 +224,20 @@ pub struct ReferenceQuest {
     pub name: String,
     #[serde(default)]
     pub targets: Vec<ReferenceQuestTarget>,
+    #[serde(default)]
+    pub npc_references: Vec<ReferenceQuestNpc>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestNpc {
+    pub name: String,
+    pub map_name: String,
+    pub x: u16,
+    pub y: u16,
+    pub source_path: String,
+    pub source_line: u32,
+    #[serde(default)]
+    pub uses: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -332,6 +346,11 @@ impl ReferenceData {
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
 
         for quest in &quests.entries {
+            if quest.npc_references.iter().any(|npc| {
+                npc.name.trim().is_empty() || npc.map_name.trim().is_empty() || npc.source_path.trim().is_empty() || npc.source_line == 0
+            }) {
+                return Err(format!("quest {} has an invalid NPC script reference", quest.id));
+            }
             for target in &quest.targets {
                 if target.count == 0 {
                     return Err(format!("quest {} has an invalid hunt target", quest.id));
@@ -473,6 +492,10 @@ impl ReferenceData {
                         target.monster_name.to_lowercase().contains(&query)
                             || target.map_name.as_ref().is_some_and(|map| map.to_lowercase().contains(&query))
                     })
+                    || quest
+                        .npc_references
+                        .iter()
+                        .any(|npc| npc.name.to_lowercase().contains(&query) || npc.map_name.to_lowercase().contains(&query))
             })
             .collect();
         matches.sort_by_key(|quest| (quest.name.to_lowercase(), quest.id));
@@ -672,6 +695,7 @@ mod tests {
                 .iter()
                 .any(|quest| quest.targets.iter().any(|target| target.monster_name == "Poring"))
         );
+        assert!(data.search_quests("angelo", 10).iter().any(|quest| quest.id == 9030));
 
         let knight = data.job_skill_tree_by_id(7).expect("Knight skill tree");
         let bash = knight
