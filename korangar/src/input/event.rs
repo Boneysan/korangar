@@ -232,6 +232,7 @@ pub enum InputEvent {
     SortInventoryGear,
     SortInventoryItems,
     SetInventoryTab(InventoryTab),
+    SetStorageTab(InventoryTab),
     ToggleQuestTracking(u32),
     /// Add a reference monster as a character-local hunt target, not a server
     /// quest.

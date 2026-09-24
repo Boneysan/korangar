@@ -7545,6 +7545,9 @@ impl Client {
                 InputEvent::SetInventoryTab(tab) => {
                     self.client_state.follow_mut(client_state().inventory()).set_selected_tab(tab);
                 }
+                InputEvent::SetStorageTab(tab) => {
+                    self.client_state.follow_mut(client_state().storage()).set_selected_tab(tab);
+                }
                 InputEvent::ToggleQuestTracking(quest_id) => {
                     self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);
                     self.persist_tracked_quests();
@@ -9245,6 +9248,9 @@ impl Client {
                 }
                 InputEvent::SetInventoryTab(tab) => {
                     self.client_state.follow_mut(client_state().inventory()).set_selected_tab(tab);
+                }
+                InputEvent::SetStorageTab(tab) => {
+                    self.client_state.follow_mut(client_state().storage()).set_selected_tab(tab);
                 }
                 InputEvent::ToggleQuestTracking(quest_id) => {
                     self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);

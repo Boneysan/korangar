@@ -16,6 +16,10 @@ pub enum InventoryTab {
     Equipped,
     Gear,
     Items,
+    Consumables,
+    Etc,
+    Cards,
+    Ammo,
 }
 
 #[derive(Default, RustState, StateElement)]
@@ -387,8 +391,24 @@ pub fn inventory_tab_matches(item: &InventoryItem<ResourceMetadata>, tab: Invent
         InventoryTab::Equipped => {
             matches!(&item.details, InventoryItemDetails::Equippable { equipped_position, .. } if !equipped_position.is_empty())
         }
-        InventoryTab::Gear => matches!(&item.details, InventoryItemDetails::Equippable { .. }),
+        InventoryTab::Gear => {
+            item.item_type != korangar_networking::IT_AMMO && matches!(&item.details, InventoryItemDetails::Equippable { .. })
+        }
         InventoryTab::Items => matches!(&item.details, InventoryItemDetails::Regular { .. }),
+        InventoryTab::Consumables | InventoryTab::Etc | InventoryTab::Cards | InventoryTab::Ammo => {
+            item_type_matches_category(item.item_type, tab)
+        }
+    }
+}
+
+fn item_type_matches_category(item_type: u8, tab: InventoryTab) -> bool {
+    // Hercules IT_* values shared by the 20220406 inventory and storage lists.
+    match tab {
+        InventoryTab::Consumables => matches!(item_type, 0 | 2 | 11),
+        InventoryTab::Etc => item_type == 3,
+        InventoryTab::Cards => item_type == 6,
+        InventoryTab::Ammo => item_type == korangar_networking::IT_AMMO,
+        _ => false,
     }
 }
 
@@ -411,7 +431,19 @@ fn shield_view_from_item_id(item_id: u32) -> Option<u32> {
 
 #[cfg(test)]
 mod tests {
-    use super::shield_view_from_item_id;
+    use super::{InventoryTab, item_type_matches_category, shield_view_from_item_id};
+
+    #[test]
+    fn item_categories_follow_hercules_item_type_values() {
+        for item_type in [0, 2, 11] {
+            assert!(item_type_matches_category(item_type, InventoryTab::Consumables));
+        }
+        assert!(item_type_matches_category(3, InventoryTab::Etc));
+        assert!(item_type_matches_category(6, InventoryTab::Cards));
+        assert!(item_type_matches_category(10, InventoryTab::Ammo));
+        assert!(!item_type_matches_category(3, InventoryTab::Cards));
+        assert!(!item_type_matches_category(255, InventoryTab::Consumables));
+    }
 
     #[test]
     fn classic_shield_item_ids_map_to_view_sprites() {

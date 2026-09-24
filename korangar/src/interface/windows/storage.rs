@@ -2,27 +2,30 @@ use korangar_components::item_box;
 use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::window::{CustomWindow, Window};
 use korangar_networking::InventoryItem;
-use rust_state::{Path, PathExt, State};
+use rust_state::{Path, PathExt, Selector, State};
 
 use crate::ItemSource;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
+use crate::state::inventory::{InventoryTab, inventory_tab_matches};
 use crate::state::storage::{StorageState, StorageStatePathExt};
 use crate::state::theme::InterfaceThemeType;
 use crate::world::ResourceMetadata;
 
 #[derive(Clone, Copy)]
-struct FilteredStorageItemPath<P, Q> {
+struct FilteredStorageItemPath<P, T, Q> {
     items_path: P,
+    tab_path: T,
     query_path: Q,
     slot: usize,
 }
 
-impl<P, Q> rust_state::Selector<ClientState, InventoryItem<ResourceMetadata>, false> for FilteredStorageItemPath<P, Q>
+impl<P, T, Q> Selector<ClientState, InventoryItem<ResourceMetadata>, false> for FilteredStorageItemPath<P, T, Q>
 where
     P: Path<ClientState, Vec<InventoryItem<ResourceMetadata>>> + Copy,
+    T: Path<ClientState, InventoryTab>,
     Q: Path<ClientState, String>,
 {
     fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a InventoryItem<ResourceMetadata>> {
@@ -30,26 +33,29 @@ where
     }
 }
 
-impl<P, Q> Path<ClientState, InventoryItem<ResourceMetadata>, false> for FilteredStorageItemPath<P, Q>
+impl<P, T, Q> Path<ClientState, InventoryItem<ResourceMetadata>, false> for FilteredStorageItemPath<P, T, Q>
 where
     P: Path<ClientState, Vec<InventoryItem<ResourceMetadata>>>,
+    T: Path<ClientState, InventoryTab>,
     Q: Path<ClientState, String>,
 {
     fn follow<'a>(&self, state: &'a ClientState) -> Option<&'a InventoryItem<ResourceMetadata>> {
+        let tab = *self.tab_path.follow_safe(state);
         let query = self.query_path.follow_safe(state).to_lowercase();
         self.items_path
             .follow_safe(state)
             .iter()
-            .filter(|item| item.metadata.name.to_lowercase().contains(&query))
+            .filter(|item| inventory_tab_matches(item, tab) && item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }
 
     fn follow_mut<'a>(&self, state: &'a mut ClientState) -> Option<&'a mut InventoryItem<ResourceMetadata>> {
+        let tab = *self.tab_path.follow_safe(state);
         let query = self.query_path.follow_safe(state).to_lowercase();
         self.items_path
             .follow_mut_safe(state)
             .iter_mut()
-            .filter(|item| item.metadata.name.to_lowercase().contains(&query))
+            .filter(|item| inventory_tab_matches(item, tab) && item.metadata.name.to_lowercase().contains(&query))
             .nth(self.slot)
     }
 }
@@ -88,6 +94,7 @@ where
 
         let capacity = self.storage_path.capacity_text();
         let search_path = self.storage_path.search_query();
+        let tab_path = self.storage_path.selected_tab();
         let commit_search = |_: &State<ClientState>, _: &mut EventQueue<ClientState>| {};
 
         window! {
@@ -111,6 +118,13 @@ where
                     focus_id: StorageSearchBox,
                     overflow_behavior: OverflowBehavior::Shrink,
                 },
+                button! { text: "All", event: InputEvent::SetStorageTab(InventoryTab::All) },
+                button! { text: "Gear", event: InputEvent::SetStorageTab(InventoryTab::Gear) },
+                button! { text: "Items", event: InputEvent::SetStorageTab(InventoryTab::Items) },
+                button! { text: "Consumables", event: InputEvent::SetStorageTab(InventoryTab::Consumables) },
+                button! { text: "Etc", event: InputEvent::SetStorageTab(InventoryTab::Etc) },
+                button! { text: "Cards", event: InputEvent::SetStorageTab(InventoryTab::Cards) },
+                button! { text: "Ammo", event: InputEvent::SetStorageTab(InventoryTab::Ammo) },
                 std::array::from_fn::<_, STORAGE_ROWS, _>(|row| {
                     split! {
                         gaps: theme().window().gaps(),
@@ -118,6 +132,7 @@ where
                             let slot = row * STORAGE_COLUMNS + column;
                             let path = FilteredStorageItemPath {
                                 items_path: self.items_path,
+                                tab_path,
                                 query_path: search_path,
                                 slot,
                             };

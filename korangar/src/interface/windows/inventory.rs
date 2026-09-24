@@ -197,6 +197,22 @@ where
                     event: InputEvent::SetInventoryTab(InventoryTab::Items),
                 },
                 button! {
+                    text: "Consumables",
+                    event: InputEvent::SetInventoryTab(InventoryTab::Consumables),
+                },
+                button! {
+                    text: "Etc",
+                    event: InputEvent::SetInventoryTab(InventoryTab::Etc),
+                },
+                button! {
+                    text: "Cards",
+                    event: InputEvent::SetInventoryTab(InventoryTab::Cards),
+                },
+                button! {
+                    text: "Ammo",
+                    event: InputEvent::SetInventoryTab(InventoryTab::Ammo),
+                },
+                button! {
                     text: "Sort",
                     event: InputEvent::SortInventory,
                 },

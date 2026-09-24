@@ -9,6 +9,7 @@ use rust_state::RustState;
 
 use crate::graphics::Texture;
 use crate::loaders::AsyncLoader;
+use crate::state::inventory::InventoryTab;
 use crate::world::ResourceMetadata;
 
 #[derive(Default, RustState, StateElement)]
@@ -20,6 +21,7 @@ pub struct StorageState {
     open: bool,
     capacity_text: String,
     search_query: String,
+    selected_tab: InventoryTab,
 }
 
 #[allow(dead_code)]
@@ -38,6 +40,14 @@ impl StorageState {
 
     pub fn search_query(&self) -> &str {
         &self.search_query
+    }
+
+    pub fn selected_tab(&self) -> InventoryTab {
+        self.selected_tab
+    }
+
+    pub fn set_selected_tab(&mut self, selected_tab: InventoryTab) {
+        self.selected_tab = selected_tab;
     }
 
     pub fn set_list(&mut self, async_loader: &AsyncLoader, items: Vec<InventoryItem<NoMetadata>>) {
@@ -95,6 +105,7 @@ impl StorageState {
         self.max_amount = 0;
         self.capacity_text.clear();
         self.search_query.clear();
+        self.selected_tab = InventoryTab::All;
     }
 
     fn rebuild_capacity_text(&mut self) {
