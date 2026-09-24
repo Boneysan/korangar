@@ -12,7 +12,7 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 client_repo="$(cd "$here/../.." && pwd)"
 hercules_repo="${HERCULES_DIR:-$(cd "$client_repo/../Hercules" 2>/dev/null && pwd || true)}"
 
-if [ -z "$hercules_repo" ] || [ ! -d "$hercules_repo/.git" ]; then
+if [ -z "$hercules_repo" ] || ! git -C "$hercules_repo" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "error: Hercules checkout not found; set HERCULES_DIR" >&2
     exit 2
 fi

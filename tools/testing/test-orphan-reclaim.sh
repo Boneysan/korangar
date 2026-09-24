@@ -20,15 +20,29 @@ ok() { echo "  ok: $*"; }
 
 # A fake Hercules checkout is enough: the sweep only ever looks at conf/import.
 fake_hercules="$test_root/Hercules"
-mkdir -p "$fake_hercules/.git" "$fake_hercules/conf/import"
+mkdir -p "$fake_hercules/conf/import"
+git init --quiet "$fake_hercules"
 
 # Source the runner for its functions only. INTEGRATION_DB_ADMIN points at a
 # user that does not exist so an accidental database call cannot touch a real
 # server; every assertion here is about files.
 INTEGRATION_RUNNER_SOURCE_ONLY=1 \
     HERCULES_DIR="$fake_hercules" \
+    TMPDIR="$test_root" \
     INTEGRATION_DB_ADMIN="korangar_orphan_test_nonexistent" \
     . "$runner"
+
+echo "run-integration-tests accepts a linked worktree checkout"
+linked_hercules="$test_root/Hercules-worktree"
+git init --quiet --separate-git-dir="$test_root/Hercules.gitdir" "$linked_hercules"
+if INTEGRATION_RUNNER_SOURCE_ONLY=1 \
+    HERCULES_DIR="$linked_hercules" \
+    TMPDIR="$test_root" \
+    bash -c '. "$1"' _ "$runner"; then
+    ok "a Git worktree-style .git file is accepted"
+else
+    fail "a Git worktree-style .git file was rejected"
+fi
 
 echo "static_override reproduces each managed config"
 for name in login-server char-server map-server inter-server; do
