@@ -92,6 +92,10 @@ pub struct GameSettings {
     /// Persisted so closing it stays closed across map changes and restarts.
     #[serde(default = "default_true")]
     pub show_minimap: bool,
+    /// Show a non-blocking warning when entering a map whose static-spawn mean
+    /// level is at least 15 levels above this character.
+    #[serde(default = "default_true")]
+    pub warn_dangerous_maps: bool,
     /// Camera-relative WASD movement. Click-to-move stays available either way.
     #[serde(default = "default_true")]
     pub wasd_movement: bool,
@@ -163,6 +167,7 @@ impl Default for GameSettings {
         Self {
             auto_attack: true,
             show_minimap: true,
+            warn_dangerous_maps: true,
             wasd_movement: true,
             reduce_motion: false,
             reduce_flashing: false,
@@ -301,6 +306,7 @@ mod tests {
         assert!(!default_settings.reduce_flashing);
         assert!(!default_settings.quickcast_ground_skills);
         assert!(default_settings.show_quest_markers);
+        assert!(default_settings.warn_dangerous_maps);
         assert!(default_settings.show_combat_text);
         assert_eq!(default_settings.combat_text_frequency, CombatTextFrequency::All);
         assert_eq!(default_settings.combat_text_size, CombatTextSize::Normal);
@@ -310,6 +316,7 @@ mod tests {
         assert!(!old_settings.reduce_flashing);
         assert!(!old_settings.quickcast_ground_skills);
         assert!(old_settings.show_quest_markers);
+        assert!(old_settings.warn_dangerous_maps);
         assert!(old_settings.show_combat_text);
         assert_eq!(old_settings.combat_text_frequency, CombatTextFrequency::All);
         assert_eq!(old_settings.combat_text_size, CombatTextSize::Normal);
@@ -317,9 +324,14 @@ mod tests {
         assert_eq!(old_settings.pending_key_binding, None);
 
         let migrated_user_choices: ManuallyDrop<GameSettings> = ManuallyDrop::new(
-            ron::from_str("(auto_attack:true, show_combat_text:false, combat_text_frequency:Important, combat_text_size:Large)").unwrap(),
+            ron::from_str(
+                "(auto_attack:true, show_combat_text:false, warn_dangerous_maps:false, combat_text_frequency:Important, \
+                 combat_text_size:Large)",
+            )
+            .unwrap(),
         );
         assert!(!migrated_user_choices.show_combat_text);
+        assert!(!migrated_user_choices.warn_dangerous_maps);
         assert_eq!(migrated_user_choices.combat_text_frequency, CombatTextFrequency::Important);
         assert_eq!(migrated_user_choices.combat_text_size, CombatTextSize::Large);
         let status_only: ManuallyDrop<GameSettings> =

@@ -940,6 +940,18 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .to_lowercase()
 }
 
+fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level: Option<u16>, enabled: bool) -> Option<String> {
+    if !enabled {
+        return None;
+    }
+    let (mean_level, player_level) = (mean_level?, player_level?);
+    (mean_level.saturating_sub(player_level) >= 15).then(|| {
+        format!(
+            "Caution: {map_name} averages level {mean_level}, 15+ above your level ({player_level}). Warning only; travel is unrestricted."
+        )
+    })
+}
+
 #[cfg(test)]
 mod adapter_score_tests {
     use wgpu::{AdapterInfo, Backend, DeviceType};
@@ -1003,6 +1015,26 @@ mod normalize_map_base_name_tests {
         assert_eq!(normalize_map_base_name("prt_in.GAT"), "prt_in");
         assert_eq!(normalize_map_base_name("izlude"), "izlude");
         assert_eq!(normalize_map_base_name("maps/payon.rsw"), "payon");
+    }
+}
+
+#[cfg(test)]
+mod map_difficulty_warning_tests {
+    use super::map_difficulty_warning;
+
+    #[test]
+    fn warns_at_fifteen_levels_above_without_restricting_travel() {
+        let warning = map_difficulty_warning("orcsdun02", Some(35), Some(20), true).unwrap();
+        assert!(warning.contains("averages level 35"));
+        assert!(warning.contains("Warning only"));
+        assert!(map_difficulty_warning("orcsdun02", Some(34), Some(20), true).is_none());
+    }
+
+    #[test]
+    fn warning_is_opt_out_and_missing_levels_do_not_guess() {
+        assert!(map_difficulty_warning("unknown", Some(40), Some(1), false).is_none());
+        assert!(map_difficulty_warning("unknown", None, Some(1), true).is_none());
+        assert!(map_difficulty_warning("unknown", Some(40), None, true).is_none());
     }
 }
 
@@ -7214,8 +7246,25 @@ impl Client {
 
         self.client_state
             .follow_mut(client_state().minimap())
-            .set_map(base, map_width, map_height, texture, player_marker, pois);
+            .set_map(base.clone(), map_width, map_height, texture, player_marker, pois);
         self.refresh_navigation_marker();
+
+        let warn_dangerous_maps = *self.client_state.follow(client_state().game_settings().warn_dangerous_maps());
+        let player_level = self
+            .client_state
+            .try_follow(this_player().base_level())
+            .copied()
+            .map(|level| level.min(u16::MAX as usize) as u16);
+        let mean_spawn_level = crate::dm::reference_data::reference_data()
+            .map_spawn_summary(&base)
+            .map(|(_, mean_level, _)| mean_level);
+        if let Some(message) = map_difficulty_warning(&base, mean_spawn_level, player_level, warn_dangerous_maps) {
+            self.client_state.follow_mut(client_state().toasts()).push(
+                "map-danger-warning",
+                message,
+                crate::state::toasts::ToastPriority::Normal,
+            );
+        }
 
         // Only auto-open when the player wants the minimap visible.
         let show = *self.client_state.follow(client_state().game_settings().show_minimap());

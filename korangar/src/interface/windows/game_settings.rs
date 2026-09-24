@@ -111,6 +111,12 @@ where
                     event: InputEvent::ToggleMinimapWindow,
                 },
                 state_button! {
+                    text: "Warn before high-level maps",
+                    tooltip: "Show a non-blocking toast when the map's static-spawn mean is at least 15 levels above your character. This never prevents travel.",
+                    state: self.game_settings_path.warn_dangerous_maps(),
+                    event: Toggle(self.game_settings_path.warn_dangerous_maps()),
+                },
+                state_button! {
                     text: "WASD movement",
                     tooltip: "Walk with W A S D relative to the camera. Click-to-move still works.",
                     state: self.game_settings_path.wasd_movement(),
