@@ -208,6 +208,17 @@ where
     /// Persist the HUD lock state.
     fn set_movement_locked(&mut self, _locked: bool) {}
 
+    /// Optional screen-space grid used to snap dragged window anchors.
+    fn snap_grid_size(&self) -> Option<f32> {
+        None
+    }
+
+    /// Advance the configured snapping grid, returning the new pixel size (or
+    /// `None` when snapping is disabled).
+    fn cycle_snap_grid(&mut self) -> Option<f32> {
+        None
+    }
+
     /// Activate a saved window layout by name.
     fn select_layout(&mut self, _name: &str) -> bool {
         false

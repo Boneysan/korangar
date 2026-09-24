@@ -99,6 +99,8 @@ pub enum InputEvent {
     SaveHudLayout(&'static str),
     /// Restore the current character's HUD to Classic defaults.
     ResetHudLayout,
+    /// Cycle the persisted HUD positioning grid between off, 8, 16, and 32 px.
+    CycleHudSnapGrid,
     /// Cycle between all combat text and important-only combat text.
     CycleCombatTextFrequency,
     /// Cycle combat text font size through small, normal, and large.

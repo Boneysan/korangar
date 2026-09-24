@@ -171,6 +171,7 @@ where
                 button! { text: "Modern layout", event: InputEvent::SelectHudLayout("Modern") },
                 button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
                 button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
+                button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
             ),
         }
     }

@@ -63,6 +63,9 @@ pub struct WindowCache {
     entries: HashMap<WindowClass, WindowState>,
     #[serde(default)]
     movement_locked: bool,
+    /// 0 disables grid snapping; 1–3 select 8/16/32 screen-pixel grids.
+    #[serde(default)]
+    snap_grid_step: u8,
     #[serde(default)]
     active_profile: String,
     #[serde(default)]
@@ -85,6 +88,7 @@ impl Default for WindowCache {
             version: current_version(),
             entries: HashMap::new(),
             movement_locked: false,
+            snap_grid_step: 0,
             active_profile: "Classic".to_owned(),
             profiles: HashMap::new(),
             active_character_id: None,
@@ -472,6 +476,20 @@ impl WindowCache {
         self.sync_active_profile();
         self.save();
     }
+
+    fn configured_snap_grid_size(&self) -> Option<f32> {
+        match self.snap_grid_step {
+            1 => Some(8.0),
+            2 => Some(16.0),
+            3 => Some(32.0),
+            _ => None,
+        }
+    }
+
+    fn advance_snap_grid(&mut self) -> Option<f32> {
+        self.snap_grid_step = (self.snap_grid_step % 4 + 1) % 4;
+        self.configured_snap_grid_size()
+    }
 }
 
 impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
@@ -571,6 +589,16 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     fn set_movement_locked(&mut self, locked: bool) {
         self.movement_locked = locked;
         self.save();
+    }
+
+    fn snap_grid_size(&self) -> Option<f32> {
+        self.configured_snap_grid_size()
+    }
+
+    fn cycle_snap_grid(&mut self) -> Option<f32> {
+        let grid = self.advance_snap_grid();
+        self.save();
+        grid
     }
 
     fn select_layout(&mut self, name: &str) -> bool {
@@ -709,5 +737,42 @@ mod tests {
         let default = WindowCache::default_for_class(WindowClass::Chat).expect("Chat has a default");
         assert_eq!(resolved.width, default.size.width);
         assert_eq!(resolved.height, default.size.height);
+    }
+
+    #[test]
+    fn snap_grid_cycles_and_persists_without_affecting_old_cache_files() {
+        let mut cache = WindowCache::default();
+        assert_eq!(cache.snap_grid_size(), None);
+        assert_eq!(cache.advance_snap_grid(), Some(8.0));
+        assert_eq!(cache.advance_snap_grid(), Some(16.0));
+        assert_eq!(cache.advance_snap_grid(), Some(32.0));
+        assert_eq!(cache.advance_snap_grid(), None);
+
+        let serialized = ron::ser::to_string_pretty(&cache, PrettyConfig::new()).unwrap();
+        let restored: WindowCache = ron::from_str(&serialized).unwrap();
+        assert_eq!(restored.snap_grid_size(), None);
+
+        // The pre-snap cache shape omits the new optional field and remains
+        // readable via serde(default), just like earlier cache migrations.
+        let legacy = "(version:1,entries:{},movement_locked:false,active_profile:\"Classic\",profiles:{},active_character_id:None,\
+                      character_profiles:{},character_active_profiles:{})";
+        let restored: WindowCache = ron::from_str(legacy).unwrap();
+        assert_eq!(restored.snap_grid_size(), None);
+    }
+
+    #[test]
+    fn snapping_aligns_the_actual_screen_position_for_right_anchored_windows() {
+        let screen = size(1919.0, 1079.0);
+        let mut anchor: Anchor<ClientState> = Anchor::with_point(AnchorPoint::TopRight, ScreenPosition { left: -101.0, top: 13.0 });
+        anchor.snap_to_grid(screen, size(100.0, 50.0), 16.0);
+
+        let position = anchor.to_position(screen);
+        assert_eq!(position.left, 1824.0);
+        assert_eq!(position.top, 16.0);
+
+        let original = position;
+        anchor.snap_to_grid(screen, size(100.0, 50.0), f32::NAN);
+        assert_eq!(anchor.to_position(screen).left, original.left);
+        assert_eq!(anchor.to_position(screen).top, original.top);
     }
 }

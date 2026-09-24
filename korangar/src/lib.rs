@@ -8399,6 +8399,16 @@ impl Client {
                         MessageColor::Information,
                     ));
                 }
+                InputEvent::CycleHudSnapGrid => {
+                    let grid = self.interface.cycle_window_snap_grid();
+                    let text = grid.map_or_else(
+                        || "HUD grid snapping disabled.".to_owned(),
+                        |size| format!("HUD windows now snap to a {size:.0}px grid."),
+                    );
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text, MessageColor::Information));
+                }
                 InputEvent::CycleCombatTextFrequency => {
                     let settings = self.client_state.follow_mut(client_state().game_settings());
                     settings.combat_text_frequency = settings.combat_text_frequency.next();

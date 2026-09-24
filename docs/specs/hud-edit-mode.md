@@ -4,11 +4,11 @@
 
 **Scope for slice 14**: Lock/unlock, edge snapping, named layouts, reset, and combat fading for existing movable windows and the new quest tracker. Toasts and combat telegraphs can ship earlier using their fixed defaults.
 
-**Current state (2026-09-22)**:
-- Windows already move, resize, and persist anchor/size through `WindowCache`.
-- Hotbar, status bar, chat, and minimap open on map load.
-- There is no lock, snap, named profile, or combat-only fade.
-- Interface scale is already a player setting.
+**Current state (2026-09-24)**:
+- Windows move, resize, and persist anchor/size through versioned `WindowCache`.
+- Lock/unlock, Classic/Modern layouts, a per-character custom layout slot, and reset are exposed in Game Settings.
+- Optional 8/16/32px screen-grid snapping can be cycled in Game Settings and is persisted; old caches default to snapping off.
+- Combat-only fading is not implemented yet. Interface scale is already a player setting.
 
 ## Architecture
 
@@ -34,13 +34,13 @@
 - Drag: Move the element's anchor/rect.
 - Resize handles: Scale (respect min/max).
 - Right-click: Lock, reset to default, opacity slider, scale.
-- Snap to grid or other elements.
+- Optional screen-grid snap at 8/16/32px. Snapping to other elements remains future work.
 - Profiles: shipped Classic and Modern layouts plus named custom layouts; import/export can follow after local save/load works.
 
 ## Implementation Steps
 
 1. **State**:
-   - Version a `WindowCache` profile keyed by character ID and layout name. Store anchor, size, locked, visibility, combat-only flag and non-combat opacity.
+   - Version a `WindowCache` profile keyed by character ID and layout name. Store anchor, size, locked, visibility, combat-only flag and non-combat opacity. Persist snap-grid selection separately from per-character layouts.
    - Migrate one existing cache into the default profile without losing positions.
 
 2. **Registration**:
@@ -69,7 +69,7 @@
 
 - Toggle edit, drag/resize hotbar, tracker, and DM bar; save, relog, and verify positions.
 - Switch Classic/Modern/custom profiles and change resolution/UI scale.
-- Locked elements ignore drag; combat fade restores on damage and expires after the timer.
+- Grid tests cover off/8/16/32px cycling, negative offsets, and old-cache migration. Still required: visually verify dragged windows align to screen coordinates and remain stable after relog, resolution/UI-scale changes, and profile switching; combat fade restores on damage and expires after its timer.
 
 See also: modern-mechanics.md for related UI trickery, buff-bar-slice for widget patterns.
 

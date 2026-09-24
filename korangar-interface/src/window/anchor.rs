@@ -219,6 +219,21 @@ where
         .unwrap();
     }
 
+    /// Snap the window's screen-space top-left position to a configurable grid.
+    /// Invalid grid sizes are ignored so malformed settings cannot poison a
+    /// window position with NaNs or infinities.
+    pub fn snap_to_grid(&mut self, window_space: App::Size, window_size: App::Size, grid_size: f32) {
+        if !grid_size.is_finite() || grid_size <= 0.0 {
+            return;
+        }
+        let position = self.to_position(window_space);
+        let snapped_position = App::Position::new(
+            snap_coordinate(position.left(), grid_size),
+            snap_coordinate(position.top(), grid_size),
+        );
+        self.update(window_space, snapped_position, window_size);
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn render_window_anchors(
         &self,
@@ -443,5 +458,21 @@ where
             shadow_color,
             shadow_padding,
         );
+    }
+}
+
+fn snap_coordinate(value: f32, grid_size: f32) -> f32 {
+    (value / grid_size).round() * grid_size
+}
+
+#[cfg(test)]
+mod tests {
+    use super::snap_coordinate;
+
+    #[test]
+    fn grid_snapping_rounds_to_the_nearest_multiple_and_handles_negative_offsets() {
+        assert_eq!(snap_coordinate(13.0, 8.0), 16.0);
+        assert_eq!(snap_coordinate(-13.0, 8.0), -16.0);
+        assert_eq!(snap_coordinate(-12.0, 8.0), -16.0);
     }
 }

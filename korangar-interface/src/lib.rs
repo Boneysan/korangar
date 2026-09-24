@@ -306,6 +306,7 @@ where
         if self.window_cache.movement_locked() {
             return;
         }
+        let snap_grid_size = self.window_cache.snap_grid_size();
         match self.mouse_mode {
             MouseMode::Default => {}
             MouseMode::MovingWindow { window_id } => {
@@ -321,6 +322,9 @@ where
                     );
 
                     wrapper.data.anchor.update(self.window_size, new_position, scaled_size);
+                    if let Some(grid_size) = snap_grid_size {
+                        wrapper.data.anchor.snap_to_grid(self.window_size, scaled_size, grid_size);
+                    }
 
                     if let Some(window_class) = wrapper.window.get_class() {
                         self.window_cache.update_anchor(window_class, wrapper.data.anchor);
@@ -427,6 +431,11 @@ where
 
     pub fn window_movement_locked(&self) -> bool {
         self.window_cache.movement_locked()
+    }
+
+    /// Cycle window-position snapping and return its new grid size.
+    pub fn cycle_window_snap_grid(&mut self) -> Option<f32> {
+        self.window_cache.cycle_snap_grid()
     }
 
     pub fn select_window_layout(&mut self, name: &str) -> bool {
