@@ -314,6 +314,22 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .map(str::to_owned)
         .collect::<Vec<_>>();
     lines.push(format!("Skill identifier: {} (ID {})", skill.name, skill.id));
+    let linked_statuses: Vec<_> = reference_data()
+        .statuses
+        .iter()
+        .filter(|status| {
+            status
+                .statuses
+                .iter()
+                .any(|mechanic| mechanic.associated_skill.as_ref().is_some_and(|source| source.id == skill.id))
+        })
+        .collect();
+    if !linked_statuses.is_empty() {
+        lines.push("Associated status references:".to_owned());
+        for status in linked_statuses {
+            lines.push(format!("@guide:status:{}|{} (icon {})", status.id, status.name, status.id));
+        }
+    }
     lines.push("Source: bundled Hercules skill database export.".to_owned());
     lines
 }
@@ -352,7 +368,7 @@ fn parse_guide_link(line: &str) -> Option<GuideResult> {
     let link = line.strip_prefix("@guide:")?;
     let (target, label) = link.split_once('|')?;
     let (kind, id) = target.split_once(':')?;
-    if !matches!(kind, "item" | "monster" | "skill") {
+    if !matches!(kind, "item" | "monster" | "skill" | "status") {
         return None;
     }
     Some(GuideResult {
@@ -789,6 +805,25 @@ mod tests {
         assert!(detail.contains("Fire Bolt"));
         assert!(detail.contains("SP "));
         assert!(detail.contains("Source: bundled Hercules skill database export."));
+    }
+
+    #[test]
+    fn status_and_skill_reference_links_are_navigable_in_both_directions() {
+        let blessing = reference_data()
+            .search_skills("AL_BLESSING", 1)
+            .into_iter()
+            .next()
+            .expect("Blessing skill row");
+        let skill_lines = skill_details(blessing);
+        let status_link = skill_lines
+            .iter()
+            .find(|line| line.starts_with("@guide:status:"))
+            .expect("skill links to its status icon record");
+        let target = parse_guide_link(status_link).expect("status link is an actionable Guide link");
+        assert_eq!(target.kind, "status");
+        let status_lines = resolve_details(&target).join("\n");
+        assert!(status_lines.contains("SC_BLESSING (status ID 30)"));
+        assert!(status_lines.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
     }
 
     #[test]
