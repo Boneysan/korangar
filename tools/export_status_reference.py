@@ -21,6 +21,8 @@ SKILL_DB = HERCULES / "db/re/skill_db.conf"
 OUTPUT = ROOT / "docs/status-effects.v1.json"
 STATUS_CONSTANT = re.compile(r"^\s*(SC_[A-Z0-9_]+):\s*(-?\d+)\s*,?\s*$")
 ICON_CONSTANT = re.compile(r"^\s*(SI_[A-Z0-9_]+):\s*(-?\d+)\s*,?\s*$")
+C_STATUS_CALL = re.compile(r"\bsc_start4?\s*\(")
+STATUS_NAME = re.compile(r"SC_[A-Z0-9_]+")
 
 
 def parse_records(text: str) -> dict[str, dict[str, Any]]:
@@ -84,6 +86,105 @@ def index_status_change_skills(skills: list[dict[str, Any]]) -> dict[str, list[d
     return {status: sorted(rows, key=lambda row: (int(row["id"]), str(row["name"]))) for status, rows in by_status.items()}
 
 
+def mask_c_comments_and_strings(text: str) -> str:
+    """Blank C comments and literals while preserving offsets and line numbers."""
+    result = list(text)
+    index = 0
+    state = "code"
+    while index < len(text):
+        current = text[index]
+        following = text[index + 1] if index + 1 < len(text) else ""
+        if state == "code":
+            if current == "/" and following == "/":
+                result[index] = result[index + 1] = " "
+                index += 2
+                state = "line_comment"
+                continue
+            if current == "/" and following == "*":
+                result[index] = result[index + 1] = " "
+                index += 2
+                state = "block_comment"
+                continue
+            if current == '"':
+                result[index] = " "
+                state = "string"
+            elif current == "'":
+                result[index] = " "
+                state = "character"
+        elif state == "line_comment":
+            if current == "\n":
+                state = "code"
+            else:
+                result[index] = " "
+        elif state == "block_comment":
+            if current == "*" and following == "/":
+                result[index] = result[index + 1] = " "
+                index += 2
+                state = "code"
+                continue
+            if current != "\n":
+                result[index] = " "
+        else:
+            if current == "\\" and index + 1 < len(text):
+                if current != "\n":
+                    result[index] = " "
+                if following != "\n":
+                    result[index + 1] = " "
+                index += 2
+                continue
+            if current == ('"' if state == "string" else "'"):
+                result[index] = " "
+                state = "code"
+            elif current != "\n":
+                result[index] = " "
+        index += 1
+    return "".join(result)
+
+
+def split_c_arguments(masked: str, open_paren: int) -> list[str] | None:
+    depth = 1
+    start = open_paren + 1
+    arguments: list[str] = []
+    for index in range(start, len(masked)):
+        char = masked[index]
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                arguments.append(masked[start:index].strip())
+                return arguments
+        elif char == "," and depth == 1:
+            arguments.append(masked[start:index].strip())
+            start = index + 1
+    return None
+
+
+def extract_status_call_sites(path: str, text: str) -> dict[str, list[dict[str, object]]]:
+    """Find call sites with a literal SC_* third argument; dynamic types stay unknown."""
+    masked = mask_c_comments_and_strings(text)
+    references: dict[str, list[dict[str, object]]] = defaultdict(list)
+    for match in C_STATUS_CALL.finditer(masked):
+        open_paren = masked.find("(", match.start())
+        arguments = split_c_arguments(masked, open_paren)
+        if arguments is None or len(arguments) < 3:
+            continue
+        status = re.sub(r"\s+", "", arguments[2])
+        if not STATUS_NAME.fullmatch(status):
+            continue
+        references[status].append({"path": path, "line": masked.count("\n", 0, match.start()) + 1})
+    return references
+
+
+def collect_status_call_sites() -> dict[str, list[dict[str, object]]]:
+    references: dict[str, list[dict[str, object]]] = defaultdict(list)
+    for path in sorted((HERCULES / "src/map").glob("*.c")):
+        relative = path.relative_to(HERCULES).as_posix()
+        for status, rows in extract_status_call_sites(relative, path.read_text(encoding="utf-8", errors="replace")).items():
+            references[status].extend(rows)
+    return {status: sorted(rows, key=lambda row: (str(row["path"]), int(row["line"]))) for status, rows in references.items()}
+
+
 def build() -> dict[str, object]:
     icon_names: dict[str, str] = json.loads(STATUS_NAMES.read_text(encoding="utf-8"))
     sc_ids, si_ids = parse_constants(CONSTANTS.read_text(encoding="utf-8", errors="replace"))
@@ -91,6 +192,7 @@ def build() -> dict[str, object]:
     skills = parse_skill_db(SKILL_DB.read_text(encoding="utf-8", errors="replace"))
     skills_by_name = {skill["Name"]: skill for skill in skills if "Name" in skill and "Id" in skill}
     skills_by_status = index_status_change_skills(skills)
+    code_call_sites = collect_status_call_sites()
     status_by_icon: dict[int, list[dict[str, object]]] = defaultdict(list)
 
     for constant, config in sorted(status_config.items()):
@@ -123,6 +225,8 @@ def build() -> dict[str, object]:
             }
         if constant in skills_by_status:
             status_record["status_change_skills"] = skills_by_status[constant]
+        if constant in code_call_sites:
+            status_record["code_call_sites"] = code_call_sites[constant]
         status_by_icon[icon_id].append(status_record)
 
     entries = [
@@ -143,7 +247,7 @@ def build() -> dict[str, object]:
         "source_revision": revision,
         "source_worktree_dirty": dirty,
         "mode": "renewal",
-        "source": ["db/constants.conf", "db/re/sc_config.conf", "db/re/skill_db.conf"],
+        "source": ["db/constants.conf", "db/re/sc_config.conf", "db/re/skill_db.conf", "src/map/*.c sc_start/sc_start4 literal call sites"],
         "entries": entries,
     }
 

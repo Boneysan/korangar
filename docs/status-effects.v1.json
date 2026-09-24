@@ -6,7 +6,8 @@
  "source": [
   "db/constants.conf",
   "db/re/sc_config.conf",
-  "db/re/skill_db.conf"
+  "db/re/skill_db.conf",
+  "src/map/*.c sc_start/sc_start4 literal call sites"
  ],
  "entries": [
   {
@@ -66,6 +67,20 @@
         "record": "MER_PROVOKE"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14705
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 408
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 7960
+      }
      ]
     }
    ],
@@ -114,6 +129,28 @@
         "path": "db/re/skill_db.conf",
         "record": "SM_ENDURE"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/battle.c",
+       "line": 6944
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 8471
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 8751
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 9720
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 9837
       }
      ]
     }
@@ -263,6 +300,12 @@
         "path": "db/re/skill_db.conf",
         "record": "KO_YAMIKUMO"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 5696
       }
      ]
     }
@@ -585,6 +628,12 @@
         "record": "MER_BLESSING"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14655
+      }
      ]
     }
    ],
@@ -703,6 +752,12 @@
         "path": "db/re/skill_db.conf",
         "record": "MER_INCAGI"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14658
       }
      ]
     }
@@ -946,6 +1001,12 @@
         "record": "PR_ASPERSIO"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14661
+      }
      ]
     }
    ],
@@ -1002,6 +1063,12 @@
         "path": "db/re/skill_db.conf",
         "record": "LG_PIETY"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14665
       }
      ]
     }
@@ -1120,6 +1187,12 @@
         "path": "db/re/skill_db.conf",
         "record": "MER_MAGNIFICAT"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10825
       }
      ]
     }
@@ -1692,6 +1765,12 @@
         "record": "NPC_HALLUCINATION"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2292
+      }
      ]
     }
    ],
@@ -1723,7 +1802,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_WEIGHTOVER50"
      },
-     "icon_constant": "SI_WEIGHTOVER50"
+     "icon_constant": "SI_WEIGHTOVER50",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 2064
+      }
+     ]
     }
    ],
    "source": {
@@ -1754,7 +1839,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_WEIGHTOVER90"
      },
-     "icon_constant": "SI_WEIGHTOVER90"
+     "icon_constant": "SI_WEIGHTOVER90",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 2066
+      }
+     ]
     }
    ],
    "source": {
@@ -1904,7 +1995,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_MOVHASTE_INFINITY"
      },
-     "icon_constant": "SI_MOVHASTE_INFINITY"
+     "icon_constant": "SI_MOVHASTE_INFINITY",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9179
+      }
+     ]
     }
    ],
    "source": {
@@ -2024,6 +2121,16 @@
         "record": "GS_DISARM"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/battle.c",
+       "line": 3567
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 9394
+      }
      ]
     },
     {
@@ -2041,7 +2148,17 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_NO_SWITCH_WEAPON"
      },
-     "icon_constant": "SI_NOEQUIPWEAPON"
+     "icon_constant": "SI_NOEQUIPWEAPON",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 5362
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 5380
+      }
+     ]
     }
    ],
    "source": {
@@ -2089,6 +2206,12 @@
         "path": "db/re/skill_db.conf",
         "record": "RG_STRIPSHIELD"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 9395
       }
      ]
     }
@@ -2625,6 +2748,16 @@
         "path": "db/re/skill_db.conf",
         "record": "SA_AUTOSPELL"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 18310
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 18356
       }
      ]
     }
@@ -3424,6 +3557,12 @@
         "record": "MO_EXPLOSIONSPIRITS"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10944
+      }
      ]
     }
    ],
@@ -3503,7 +3642,17 @@
        "path": "db/re/skill_db.conf",
        "record": "MO_EXTREMITYFIST"
       }
-     }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 5121
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 6715
+      }
+     ]
     }
    ],
    "source": {
@@ -3779,6 +3928,32 @@
         "path": "db/re/skill_db.conf",
         "record": "ML_SPIRALPIERCE"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1938
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1944
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2186
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10531
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10666
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 11694
       }
      ]
     }
@@ -4627,6 +4802,12 @@
         "record": "CG_MARIONETTE"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 7314
+      }
      ]
     }
    ],
@@ -4664,7 +4845,13 @@
        "path": "db/re/skill_db.conf",
        "record": "CG_MARIONETTE"
       }
-     }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 7315
+      }
+     ]
     }
    ],
    "source": {
@@ -4794,6 +4981,20 @@
         "path": "db/re/skill_db.conf",
         "record": "SU_SV_STEMSPEAR"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2165
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2235
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2373
       }
      ]
     }
@@ -5321,7 +5522,13 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_RUN"
       }
-     }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 11472
+      }
+     ]
     }
    ],
    "source": {
@@ -5460,7 +5667,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_MIRACLE"
      },
-     "icon_constant": "SI_SOULLINK"
+     "icon_constant": "SI_SOULLINK",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2804
+      }
+     ]
     },
     {
      "constant": "SC_SOULLINK",
@@ -5497,6 +5710,12 @@
         "path": "db/re/skill_db.conf",
         "record": "SL_HIGH"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9654
       }
      ]
     }
@@ -5789,6 +6008,24 @@
         "path": "db/re/skill_db.conf",
         "record": "SL_SMA"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 3490
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9655
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9673
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9738
       }
      ]
     }
@@ -6140,7 +6377,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_CHASEWALK2"
      },
-     "icon_constant": "SI_INCSTR"
+     "icon_constant": "SI_INCSTR",
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 12483
+      }
+     ]
     }
    ],
    "source": {
@@ -6496,7 +6739,13 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_CLOSECONFINE"
       }
-     }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 8606
+      }
+     ]
     }
    ],
    "source": {
@@ -6552,6 +6801,12 @@
         "path": "db/re/skill_db.conf",
         "record": "MH_TINDER_BREAKER"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 6176
       }
      ]
     }
@@ -7746,6 +8001,12 @@
         "path": "db/re/skill_db.conf",
         "record": "NPC_CRITICALWOUND"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2049
       }
      ]
     }
@@ -9312,7 +9573,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_HALLUCINATIONWALK_POSTDELAY"
      },
-     "icon_constant": "SI_HALLUCINATIONWALK_POSTDELAY"
+     "icon_constant": "SI_HALLUCINATIONWALK_POSTDELAY",
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 11738
+      }
+     ]
     }
    ],
    "source": {
@@ -9405,6 +9672,12 @@
         "record": "GC_WEAPONBLOCKING"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10203
+      }
      ]
     }
    ],
@@ -9460,6 +9733,12 @@
         "path": "db/re/skill_db.conf",
         "record": "GC_ROLLINGCUTTER"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10194
       }
      ]
     }
@@ -9553,6 +9832,12 @@
         "path": "db/re/skill_db.conf",
         "record": "GC_POISONINGWEAPON"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 20839
       }
      ]
     }
@@ -9887,6 +10172,24 @@
         "path": "db/re/skill_db.conf",
         "record": "RK_DRAGONBREATH_WATER"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2058
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2084
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2131
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14975
       }
      ]
     }
@@ -10609,7 +10912,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_OVERHEAT_LIMITPOINT"
      },
-     "icon_constant": "SI_OVERHEAT_LIMITPOINT"
+     "icon_constant": "SI_OVERHEAT_LIMITPOINT",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 11411
+      }
+     ]
     }
    ],
    "source": {
@@ -10635,7 +10944,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_OVERHEAT"
      },
-     "icon_constant": "SI_OVERHEAT"
+     "icon_constant": "SI_OVERHEAT",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 11409
+      }
+     ]
     }
    ],
    "source": {
@@ -10730,6 +11045,12 @@
         "path": "db/re/skill_db.conf",
         "record": "NC_INFRAREDSCAN"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 5942
       }
      ]
     }
@@ -11351,6 +11672,12 @@
         "record": "SC_AUTOSHADOWSPELL"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 21004
+      }
      ]
     }
    ],
@@ -11432,7 +11759,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_SHIELDSPELL_DEF"
      },
-     "icon_constant": "SI_SHIELDSPELL_DEF"
+     "icon_constant": "SI_SHIELDSPELL_DEF",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10785
+      }
+     ]
     }
    ],
    "source": {
@@ -11455,7 +11788,21 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_SHIELDSPELL_MDEF"
      },
-     "icon_constant": "SI_SHIELDSPELL_MDEF"
+     "icon_constant": "SI_SHIELDSPELL_MDEF",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10812
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10818
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10823
+      }
+     ]
     }
    ],
    "source": {
@@ -11480,7 +11827,17 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_SHIELDSPELL_REF"
      },
-     "icon_constant": "SI_SHIELDSPELL_REF"
+     "icon_constant": "SI_SHIELDSPELL_REF",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10839
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10849
+      }
+     ]
     }
    ],
    "source": {
@@ -11619,6 +11976,12 @@
         "path": "db/re/skill_db.conf",
         "record": "AB_ADORAMUS"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2062
       }
      ]
     }
@@ -11810,6 +12173,12 @@
         "record": "LG_BANDING"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 13092
+      }
      ]
     }
    ],
@@ -11857,6 +12226,12 @@
         "path": "db/re/skill_db.conf",
         "record": "LG_EARTHDRIVE"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2194
       }
      ]
     }
@@ -12612,6 +12987,12 @@
         "record": "SR_FALLENEMPIRE"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2200
+      }
      ]
     }
    ],
@@ -13088,6 +13469,12 @@
         "record": "SO_ARRULLO"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 15001
+      }
      ]
     }
    ],
@@ -13173,6 +13560,16 @@
         "path": "db/re/skill_db.conf",
         "record": "SO_DIAMONDDUST"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2224
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14969
       }
      ]
     }
@@ -13342,6 +13739,24 @@
         "path": "db/re/skill_db.conf",
         "record": "SO_CLOUD_KILL"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9577
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14699
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14985
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 18922
       }
      ]
     }
@@ -14211,6 +14626,12 @@
         "record": "GN_FIRE_EXPANSION_SMOKE_POWDER"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14870
+      }
      ]
     }
    ],
@@ -14254,6 +14675,12 @@
         "path": "db/re/skill_db.conf",
         "record": "GN_FIRE_EXPANSION_TEAR_GAS"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14874
       }
      ]
     }
@@ -14465,7 +14892,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_MELON_BOMB"
      },
-     "icon_constant": "SI_MELON_BOMB"
+     "icon_constant": "SI_MELON_BOMB",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2238
+      }
+     ]
     }
    ],
    "source": {
@@ -14490,7 +14923,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_BANANA_BOMB_SITDOWN_POSTDELAY"
      },
-     "icon_constant": "SI_BANANA_BOMB_SITDOWN_POSTDELAY"
+     "icon_constant": "SI_BANANA_BOMB_SITDOWN_POSTDELAY",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2242
+      }
+     ]
     }
    ],
    "source": {
@@ -14818,7 +15257,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_BANANA_BOMB"
      },
-     "icon_constant": "SI_BANANA_BOMB"
+     "icon_constant": "SI_BANANA_BOMB",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2241
+      }
+     ]
     }
    ],
    "source": {
@@ -14911,7 +15356,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_SPELLBOOK7"
      },
-     "icon_constant": "SI_SPELLBOOK7"
+     "icon_constant": "SI_SPELLBOOK7",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 20971
+      }
+     ]
     }
    ],
    "source": {
@@ -16889,6 +17340,12 @@
         "record": "MH_NEEDLE_OF_PARALYZE"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2288
+      }
      ]
     }
    ],
@@ -17161,6 +17618,28 @@
         "path": "db/re/skill_db.conf",
         "record": "MER_LEXDIVINA"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2209
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2264
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2379
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10764
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14995
       }
      ]
     }
@@ -17552,6 +18031,12 @@
         "record": "MH_VOLCANIC_ASH"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14171
+      }
      ]
     }
    ],
@@ -17637,7 +18122,17 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_ALL_RIDING"
      },
-     "icon_constant": "SI_ALL_RIDING"
+     "icon_constant": "SI_ALL_RIDING",
+     "code_call_sites": [
+      {
+       "path": "src/map/atcommand.c",
+       "line": 9524
+      },
+      {
+       "path": "src/map/script.c",
+       "line": 25074
+      }
+     ]
     }
    ],
    "source": {
@@ -18148,6 +18643,12 @@
         "path": "db/re/skill_db.conf",
         "record": "KO_JYUMONJIKIRI"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2267
       }
      ]
     }
@@ -18879,7 +19380,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_PUSH_CART"
      },
-     "icon_constant": "SI_ON_PUSH_CART"
+     "icon_constant": "SI_ON_PUSH_CART",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 9537
+      }
+     ]
     }
    ],
    "source": {
@@ -19718,7 +20225,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_REBOUND"
      },
-     "icon_constant": "SI_REBOUND"
+     "icon_constant": "SI_REBOUND",
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 11832
+      }
+     ]
     }
    ],
    "source": {
@@ -19920,6 +20433,12 @@
         "record": "GC_DARKCROW"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2147
+      }
      ]
     }
    ],
@@ -19989,6 +20508,12 @@
         "path": "db/re/skill_db.conf",
         "record": "GN_ILLUSIONDOPING"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2291
       }
      ]
     }
@@ -20187,7 +20712,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_QD_SHOT_READY"
      },
-     "icon_constant": "SI_E_QD_SHOT_READY"
+     "icon_constant": "SI_E_QD_SHOT_READY",
+     "code_call_sites": [
+      {
+       "path": "src/map/battle.c",
+       "line": 5112
+      }
+     ]
     }
    ],
    "source": {
@@ -20406,6 +20937,12 @@
         "path": "db/re/skill_db.conf",
         "record": "RL_AM_BLAST"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2320
       }
      ]
     }
@@ -21365,7 +21902,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_SPRITEMABLE"
      },
-     "icon_constant": "SI_SPRITEMABLE"
+     "icon_constant": "SI_SPRITEMABLE",
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 2493
+      }
+     ]
     }
    ],
    "source": {
@@ -21696,6 +22239,16 @@
         "record": "SJ_FLASHKICK"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 6283
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 6287
+      }
      ]
     }
    ],
@@ -21989,6 +22542,12 @@
         "path": "db/re/skill_db.conf",
         "record": "SJ_NOVAEXPLOSING"
        }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 6316
       }
      ]
     }
@@ -22461,6 +23020,16 @@
         "record": "SP_SOULENERGY"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 335
+      },
+      {
+       "path": "src/map/pc.c",
+       "line": 343
+      }
      ]
     }
    ],
@@ -22488,7 +23057,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_USE_SKILL_SP_SPA"
      },
-     "icon_constant": "SI_USE_SKILL_SP_SPA"
+     "icon_constant": "SI_USE_SKILL_SP_SPA",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2789
+      }
+     ]
     }
    ],
    "source": {
@@ -22515,7 +23090,17 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_USE_SKILL_SP_SHA"
      },
-     "icon_constant": "SI_USE_SKILL_SP_SHA"
+     "icon_constant": "SI_USE_SKILL_SP_SHA",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2792
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2795
+      }
+     ]
     }
    ],
    "source": {
@@ -22562,6 +23147,12 @@
         "record": "SP_SHA"
        }
       }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2385
+      }
      ]
     }
    ],
@@ -22592,7 +23183,17 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_ENSEMBLEFATIGUE"
      },
-     "icon_constant": "SI_ENSEMBLEFATIGUE"
+     "icon_constant": "SI_ENSEMBLEFATIGUE",
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 15488
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 15489
+      }
+     ]
     }
    ],
    "source": {
@@ -22784,7 +23385,13 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_MADOGEAR"
      },
-     "icon_constant": "SI_MADOGEAR"
+     "icon_constant": "SI_MADOGEAR",
+     "code_call_sites": [
+      {
+       "path": "src/map/pc.c",
+       "line": 9616
+      }
+     ]
     }
    ],
    "source": {

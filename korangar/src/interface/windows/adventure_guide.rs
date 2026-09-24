@@ -552,6 +552,18 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
                 };
                 lines.push(format!("@guide:skill:{}|Skill database StatusChange: {label}", skill.id));
             }
+            if !mechanic.code_call_sites.is_empty() {
+                lines.push(format!(
+                    "Literal Hercules C sc_start call sites (not exhaustive; {} total):",
+                    mechanic.code_call_sites.len()
+                ));
+                for source in mechanic.code_call_sites.iter().take(8) {
+                    lines.push(format!("  {}:{}", source.path, source.line));
+                }
+                if mechanic.code_call_sites.len() > 8 {
+                    lines.push(format!("  … and {} more", mechanic.code_call_sites.len() - 8));
+                }
+            }
         }
     }
     lines.push("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet.".to_owned());
@@ -1301,6 +1313,8 @@ mod tests {
         assert!(details.contains("Server flags: Buff, NoBoss, NoMadoReset, NoMagicBlocked"));
         assert!(details.contains("Recalculation flags: Dex, Hit, Int, Str"));
         assert!(details.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
+        assert!(details.contains("Literal Hercules C sc_start call sites (not exhaustive"));
+        assert!(details.contains("src/map/skill.c:"));
         assert!(details.contains("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet."));
         assert_eq!(data.statuses.len(), 700);
         assert!(

@@ -227,6 +227,16 @@ pub struct ReferenceStatusMechanic {
     /// Skills whose explicit Hercules `StatusChange` field names this status.
     #[serde(default)]
     pub status_change_skills: Vec<ReferenceStatusSkill>,
+    /// Literal C call sites; this is a source index, not an exhaustive source
+    /// list.
+    #[serde(default)]
+    pub code_call_sites: Vec<ReferenceStatusCallSite>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatusCallSite {
+    pub path: String,
+    pub line: u32,
 }
 
 #[derive(Debug, Deserialize)]
@@ -424,6 +434,11 @@ impl ReferenceData {
                     };
                     if skills[skill_index].name != skill.name {
                         return Err(format!("status {} StatusChange skill name/ID mismatch", mechanic.constant));
+                    }
+                }
+                for source in &mechanic.code_call_sites {
+                    if source.path.is_empty() || source.line == 0 {
+                        return Err(format!("status {} has an invalid C call-site reference", mechanic.constant));
                     }
                 }
             }
