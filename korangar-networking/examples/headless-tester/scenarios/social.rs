@@ -661,6 +661,66 @@ fn party_quest_credit(config: &Config) -> Result<(), String> {
             return Err("one contested monster death advanced a party quest more than once".to_owned());
         }
 
+        partner.warp("prt_fild08", primary.position.x.saturating_add(10), primary.position.y)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        primary.flush();
+        partner.flush();
+        let primary_target = primary.spawn_monster("SPORE", 1014)?;
+        let partner_target = partner.spawn_monster("SPORE", 1014)?;
+        if primary_target == partner_target {
+            return Err("simultaneous quest fixtures reused a monster entity id".to_owned());
+        }
+        let primary_target_position = primary
+            .entities
+            .get(&primary_target)
+            .map(|entity| entity.position.tile_position())
+            .ok_or("primary simultaneous Spore has no visible tile")?;
+        let partner_target_position = partner
+            .entities
+            .get(&partner_target)
+            .map(|entity| entity.position.tile_position())
+            .ok_or("partner simultaneous Spore has no visible tile")?;
+        primary.walk_to(primary_target_position.x.saturating_sub(1), primary_target_position.y)?;
+        partner.walk_to(partner_target_position.x.saturating_sub(1), partner_target_position.y)?;
+        primary.flush();
+        partner.flush();
+        primary.net.player_attack(primary_target).map_err(|_| "primary disconnected")?;
+        partner.net.player_attack(partner_target).map_err(|_| "partner disconnected")?;
+
+        let mut primary_target_dead = false;
+        let mut partner_target_dead = false;
+        for _ in 0..30 {
+            if !primary_target_dead {
+                primary_target_dead = await_quest_target_attack(&mut primary, primary_target)?;
+                if !primary_target_dead {
+                    primary.net.player_attack(primary_target).map_err(|_| "primary disconnected")?;
+                }
+            }
+            if !partner_target_dead {
+                partner_target_dead = await_quest_target_attack(&mut partner, partner_target)?;
+                if !partner_target_dead {
+                    partner.net.player_attack(partner_target).map_err(|_| "partner disconnected")?;
+                }
+            }
+            if primary_target_dead && partner_target_dead {
+                break;
+            }
+        }
+        if !primary_target_dead || !partner_target_dead {
+            return Err(format!(
+                "simultaneous quest fixtures did not both die (primary: {primary_target_dead}, partner: {partner_target_dead})"
+            ));
+        }
+        primary.wait_for("two concurrent kills advance primary quest twice", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(8) => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("two concurrent kills advance partner quest twice", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(5) => Some(()),
+            _ => None,
+        })?;
+
         primary.say(&format!("@quest del {QUEST_ID}"))?;
         partner.say(&format!("@quest del {QUEST_ID}"))?;
         primary.wait_for("primary quest removed", |event| match event {
@@ -807,6 +867,26 @@ fn kill_contested_quest_spore(primary: &mut TestContext, partner: &mut TestConte
         }
     }
     Err("could not kill contested quest Spore within 30 attack rounds".to_owned())
+}
+
+fn await_quest_target_attack(context: &mut TestContext, target: ragnarok_packets::EntityId) -> Result<bool, String> {
+    let outcome = context.wait_for_within(
+        "simultaneous quest target damage or death",
+        Duration::from_secs(6),
+        &mut |event| match event {
+            NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(2),
+            NetworkEvent::DamageEffect { destination_entity_id, .. } if *destination_entity_id == target => Some(1),
+            NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+            _ => None,
+        },
+    )?;
+    if outcome == 0 {
+        if let Some(entity) = context.entities.get(&target) {
+            let position = entity.position.tile_position();
+            context.walk_to(position.x.saturating_sub(1), position.y)?;
+        }
+    }
+    Ok(outcome == 2)
 }
 
 /// A first kill is saved to the account ledger, delivered to an active client,
