@@ -12237,8 +12237,12 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         // reason emotes do: they are ACT animations, so frame timing and
         // per-frame offsets come from the shared animation path.
         #[cfg_attr(feature = "debug", korangar_debug::debug_condition(self.render_options.show_entities))]
-        self.sprite_effects
-            .render(self.entity_instructions, entity_camera, self.client_tick);
+        self.sprite_effects.render(
+            self.entity_instructions,
+            entity_camera,
+            self.client_tick,
+            *self.client_state.get(&client_state().game_settings().reduce_flashing()),
+        );
 
         #[cfg(feature = "debug")]
         if self.render_options.show_entities_debug {

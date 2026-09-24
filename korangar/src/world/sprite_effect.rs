@@ -39,6 +39,7 @@ const LINGER_MS: u32 = 120;
 /// Lifetime bound used while the animation data is still loading, so a spawn
 /// whose sprite never arrives cannot leak.
 const FALLBACK_LIFETIME_MS: u32 = 3000;
+const REDUCED_FLASH_ALPHA: f32 = 0.55;
 
 /// Sentinel entity IDs routing async animation-data loads back here. Counts
 /// down from just below
@@ -312,7 +313,7 @@ impl SpriteEffects {
         });
     }
 
-    pub fn render(&self, instructions: &mut Vec<EntityInstruction>, camera: &dyn Camera, client_tick: ClientTick) {
+    pub fn render(&self, instructions: &mut Vec<EntityInstruction>, camera: &dyn Camera, client_tick: ClientTick, reduce_flashing: bool) {
         for (index, effect) in self.active.iter().enumerate() {
             let Some(animation_data) = self.loaded.get(effect.path) else {
                 continue;
@@ -331,13 +332,17 @@ impl SpriteEffects {
 
             // Dim trail ghosts after the fact — the shared render path has no
             // per-call tint parameter.
-            if effect.alpha < 1.0 {
+            if effect.alpha < 1.0 || reduce_flashing {
                 for instruction in &mut instructions[first_new_instruction..] {
-                    instruction.color.alpha *= effect.alpha;
+                    instruction.color.alpha *= render_alpha(effect.alpha, reduce_flashing);
                 }
             }
         }
     }
+}
+
+fn render_alpha(effect_alpha: f32, reduce_flashing: bool) -> f32 {
+    effect_alpha * if reduce_flashing { REDUCED_FLASH_ALPHA } else { 1.0 }
 }
 
 #[cfg(test)]
@@ -346,6 +351,14 @@ mod tests {
 
     const PATH_A: &str = "이팩트\\soule";
     const PATH_B: &str = "이팩트\\유령";
+
+    #[test]
+    fn reduce_flashing_dims_authored_sprite_layers_without_changing_effect_alpha_or_timing() {
+        assert_eq!(render_alpha(1.0, false), 1.0);
+        assert_eq!(render_alpha(0.5, false), 0.5);
+        assert_eq!(render_alpha(1.0, true), 0.55);
+        assert_eq!(render_alpha(0.5, true), 0.275);
+    }
 
     #[test]
     fn sentinels_round_trip_to_their_path() {
