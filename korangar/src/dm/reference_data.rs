@@ -465,7 +465,15 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .quests
             .iter()
-            .filter(|quest| query.is_empty() || quest.name.to_lowercase().contains(&query) || quest.id.to_string() == query)
+            .filter(|quest| {
+                query.is_empty()
+                    || quest.name.to_lowercase().contains(&query)
+                    || quest.id.to_string() == query
+                    || quest.targets.iter().any(|target| {
+                        target.monster_name.to_lowercase().contains(&query)
+                            || target.map_name.as_ref().is_some_and(|map| map.to_lowercase().contains(&query))
+                    })
+            })
             .collect();
         matches.sort_by_key(|quest| (quest.name.to_lowercase(), quest.id));
         matches.truncate(limit);
@@ -659,6 +667,11 @@ mod tests {
         assert!(data.search_items("oridecon", 100).iter().any(|item| item.id == 984));
         assert!(data.quest_by_id(3401).is_some_and(|quest| quest.name == "Animal Monster Hunt"));
         assert!(data.search_quests("animal monster hunt", 10).iter().any(|quest| quest.id == 3401));
+        assert!(
+            data.search_quests("poring", 100)
+                .iter()
+                .any(|quest| quest.targets.iter().any(|target| target.monster_name == "Poring"))
+        );
 
         let knight = data.job_skill_tree_by_id(7).expect("Knight skill tree");
         let bash = knight
