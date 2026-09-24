@@ -66,6 +66,8 @@ This is a source audit, not a claim that the feature has been seen on screen. Ef
 
 **2026-09-24 atlas facility-routing follow-up:** The selected destination's first three nonnegative-coordinate Towninfo facilities now have exact-cell route actions in the atlas details. Route target cells come from the client facility table, while the existing verified warp graph still governs cross-map routing. This does not assert that the corresponding server NPC/service is present or active; visual/live traversal acceptance and fuller authored transport/service coverage remain open.
 
+**2026-09-24 Guide map-service routing follow-up:** Adventure Guide map entries now include exact-cell route actions for up to eight Towninfo facilities, in addition to verified outgoing portal routes. The player Guide receives the current client library and serializes only nonnegative facility coordinates into its existing route-cell action format. Route encoding and invalid-coordinate filtering are tested; live facility presence and visual/traversal acceptance remain open.
+
 ## Readiness and dependency gates
 
 | Gate | Required result before dependent work | Check |

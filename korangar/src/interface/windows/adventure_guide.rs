@@ -2,6 +2,8 @@
 //! reuse the DM Bestiary: campaign reveal/spawn controls and unlocks are not
 //! part of the player's mechanical reference.
 
+use std::sync::Arc;
+
 use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox, StateElement};
@@ -15,6 +17,7 @@ use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::world::{Library, TownPoi};
 
 const MAX_QUERY: usize = 48;
 const MAX_RESULTS: usize = 60;
@@ -48,11 +51,12 @@ impl Default for AdventureGuideWindowState {
 
 pub struct AdventureGuideWindow<A> {
     state_path: A,
+    library: Arc<Library>,
 }
 
 impl<A> AdventureGuideWindow<A> {
-    pub fn new(state_path: A) -> Self {
-        Self { state_path }
+    pub fn new(state_path: A, library: Arc<Library>) -> Self {
+        Self { state_path, library }
     }
 }
 
@@ -298,7 +302,7 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
     lines
 }
 
-fn map_details(map_name: &str) -> Vec<String> {
+fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     let graph = crate::world::navigation_graph();
     let mut lines = vec![format!("Map: {map_name}")];
     match reference_data().map_spawn_summary(map_name) {
@@ -327,6 +331,31 @@ fn map_details(map_name: &str) -> Vec<String> {
     }
     if exits.len() > 8 {
         lines.push(format!("{} additional exits omitted.", exits.len() - 8));
+    }
+    let mut routeable_poi_count = 0;
+    for poi in town_pois {
+        let (Ok(x), Ok(y)) = (u16::try_from(poi.x), u16::try_from(poi.y)) else {
+            continue;
+        };
+        if routeable_poi_count == 8 {
+            break;
+        }
+        lines.push(format!("Towninfo facility: {} at ({x}, {y})", poi.name));
+        lines.push(format!("@route-cell:{map_name}:{x}:{y}|Route to {} — {map_name}", poi.name));
+        routeable_poi_count += 1;
+    }
+    let valid_poi_count = town_pois
+        .iter()
+        .filter(|poi| u16::try_from(poi.x).is_ok() && u16::try_from(poi.y).is_ok())
+        .count();
+    if valid_poi_count > routeable_poi_count {
+        lines.push(format!(
+            "{} additional Towninfo facility routes omitted.",
+            valid_poi_count - routeable_poi_count
+        ));
+    }
+    if town_pois.is_empty() {
+        lines.push("Towninfo facilities: none listed for this map".to_owned());
     }
     lines.push("Static data omits conditional/scripted spawns and does not represent live monster counts or services.".to_owned());
     lines.push(format!("@route:{map_name}"));
@@ -376,7 +405,7 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
         "map" => crate::world::navigation_graph()
             .maps
             .get(result.id as usize)
-            .map(|map_name| map_details(map_name))
+            .map(|map_name| map_details(map_name, &[]))
             .unwrap_or_else(|| vec!["Map entry unavailable.".to_owned()]),
         "job" => job_names()
             .find(|(id, _)| *id as u32 == result.id)
@@ -384,6 +413,17 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
             .unwrap_or_else(|| vec!["Job entry unavailable.".to_owned()]),
         _ => vec!["Unsupported category.".to_owned()],
     }
+}
+
+fn resolve_details_with_library(result: &GuideResult, library: &Library) -> Vec<String> {
+    if result.kind == "map" {
+        return crate::world::navigation_graph()
+            .maps
+            .get(result.id as usize)
+            .map(|map_name| map_details(map_name, library.town_pois(map_name)))
+            .unwrap_or_else(|| vec!["Map entry unavailable.".to_owned()]);
+    }
+    resolve_details(result)
 }
 
 fn job_details(job_id: u16, name: &str) -> Vec<String> {
@@ -518,6 +558,7 @@ fn parse_guide_link(line: &str) -> Option<GuideResult> {
 
 struct GuideResultList<A> {
     state_path: A,
+    library: Arc<Library>,
     elements: Vec<ElementBox<ClientState>>,
 }
 
@@ -540,6 +581,7 @@ where
             for index in self.elements.len()..count {
                 let row_path = self.state_path.results().index(index).manually_asserted();
                 let detail_path = self.state_path.detail();
+                let library = self.library.clone();
                 self.elements.push(ErasedElement::new(button! {
                     text: row_path.label(),
                     event: move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
@@ -553,7 +595,7 @@ where
                                 .map(quest_details)
                                 .unwrap_or_else(|| vec!["This quest is no longer active. Refresh the search to update the list.".to_owned()])
                         } else {
-                            resolve_details(&result)
+                            resolve_details_with_library(&result, &library)
                         };
                         state.update_value(detail_path, detail);
                     },
@@ -931,6 +973,7 @@ where
         use korangar_interface::prelude::*;
         struct GuideSearchBox;
         let path = self.state_path;
+        let library = self.library;
         let search = move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| run_search(state, path);
         let set_category = |category: &'static str| {
             move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
@@ -959,7 +1002,7 @@ where
                     button! { text: "Quests", event: set_category("Quests") },
                     button! { text: "Search", event: search },
                 ) },
-                scroll_view! { children: GuideResultList { state_path: path, elements: Vec::new() } },
+                scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
                 scroll_view! { children: GuideLines::new(path.detail()) },
             ),
         }
@@ -969,12 +1012,14 @@ where
 #[cfg(test)]
 mod tests {
     use super::{
-        GuideResult, ReferenceItem, display_name, item_details, job_names, monster_details, parse_guide_link, parse_route_cell_link,
-        quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories, skill_details,
+        GuideResult, ReferenceItem, display_name, item_details, job_names, map_details, monster_details, parse_guide_link,
+        parse_route_cell_link, quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories,
+        skill_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
+    use crate::world::{TownPoi, TownPoiKind};
 
     #[test]
     fn guide_labels_untranslated_script_effects_and_missing_fields() {
@@ -1147,6 +1192,35 @@ mod tests {
         assert!(detail.iter().any(|line| line.contains("conditional/scripted spawns")));
         assert!(detail.iter().any(|line| line == "@route:prt_fild08"));
         assert!(detail.iter().any(|line| line.starts_with("@route:")));
+    }
+
+    #[test]
+    fn guide_map_details_offer_exact_routes_to_valid_towninfo_facilities() {
+        let pois = [
+            TownPoi {
+                name: "Kafra Employee".to_owned(),
+                x: 156,
+                y: 191,
+                kind: TownPoiKind::Kafra,
+            },
+            TownPoi {
+                name: "Invalid negative point".to_owned(),
+                x: -1,
+                y: 10,
+                kind: TownPoiKind::Other,
+            },
+        ];
+        let details = map_details("prontera", &pois);
+        let facility_route = details
+            .iter()
+            .find(|line| line.starts_with("@route-cell:"))
+            .expect("valid Towninfo POI should have a route action");
+        assert!(facility_route.contains("Route to Kafra Employee"));
+        assert!(!details.iter().any(|line| line.contains("Invalid negative point")));
+        assert_eq!(
+            parse_route_cell_link(facility_route),
+            Some(("prontera".to_owned(), 156, 191, "Route to Kafra Employee — prontera".to_owned()))
+        );
     }
 
     #[test]

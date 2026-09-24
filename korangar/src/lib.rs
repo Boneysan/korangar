@@ -10283,9 +10283,10 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::AdventureGuide) {
                             true => self.interface.close_window_with_class(WindowClass::AdventureGuide),
-                            false => self
-                                .interface
-                                .open_window(AdventureGuideWindow::new(client_state().adventure_guide())),
+                            false => self.interface.open_window(AdventureGuideWindow::new(
+                                client_state().adventure_guide(),
+                                self.library.clone(),
+                            )),
                         }
                     }
                 }
@@ -10293,8 +10294,10 @@ impl Client {
                     if self.map.is_some() {
                         crate::interface::windows::open_item_entry(&self.client_state, client_state().adventure_guide(), item_id);
                         if !self.interface.is_window_with_class_open(WindowClass::AdventureGuide) {
-                            self.interface
-                                .open_window(AdventureGuideWindow::new(client_state().adventure_guide()));
+                            self.interface.open_window(AdventureGuideWindow::new(
+                                client_state().adventure_guide(),
+                                self.library.clone(),
+                            ));
                         }
                     }
                 }
