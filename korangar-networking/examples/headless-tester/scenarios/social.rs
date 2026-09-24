@@ -624,6 +624,43 @@ fn party_quest_credit(config: &Config) -> Result<(), String> {
             return Err("solo kill credited a former party member".to_owned());
         }
 
+        form_party(&mut primary, &mut partner)?;
+        partner.ensure_job(4008)?;
+        partner.ensure_base_level(99)?;
+        partner.say("@allskill")?;
+        partner.say("@heal")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        primary.flush();
+        partner.flush();
+        let contested = kill_contested_quest_spore(&mut primary, &mut partner)?;
+        if [first, second, third, fourth, fifth].contains(&contested) {
+            return Err("contested quest fixture reused a prior monster entity id".to_owned());
+        }
+        primary.wait_for("contested Spore kill increments primary quest once", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(6) => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("contested Spore kill increments partner quest once", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(3) => Some(()),
+            _ => None,
+        })?;
+        let primary_late_progress = primary.collect_for(Duration::from_millis(300));
+        let partner_late_progress = partner.collect_for(Duration::from_millis(300));
+        if primary_late_progress.iter().any(|event| {
+            matches!(event, NetworkEvent::QuestHuntProgress { objectives }
+            if objectives.iter().any(|objective| {
+                objective.quest_id == QUEST_ID && objective.current_count > 6
+            }))
+        }) || partner_late_progress.iter().any(|event| {
+            matches!(event, NetworkEvent::QuestHuntProgress { objectives }
+            if objectives.iter().any(|objective| {
+                objective.quest_id == QUEST_ID && objective.current_count > 3
+            }))
+        }) {
+            return Err("one contested monster death advanced a party quest more than once".to_owned());
+        }
+
         primary.say(&format!("@quest del {QUEST_ID}"))?;
         partner.say(&format!("@quest del {QUEST_ID}"))?;
         primary.wait_for("primary quest removed", |event| match event {
@@ -703,6 +740,73 @@ fn kill_spawned_quest_spore(context: &mut TestContext, target: ragnarok_packets:
         }
     }
     Err("could not kill quest Spore within 30 attacks".to_owned())
+}
+
+fn kill_contested_quest_spore(primary: &mut TestContext, partner: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
+    let target = primary.spawn_monster("SPORE", 1014)?;
+    let mut target_position = primary
+        .entities
+        .get(&target)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("spawned contested quest Spore has no visible tile")?;
+    primary.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+    partner.warp("prt_fild08", target_position.x.saturating_add(1), target_position.y)?;
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    primary.flush();
+    partner.flush();
+    let primary_id = primary.player_id;
+    let partner_id = partner.player_id;
+    let mut primary_landed_hit = false;
+    let mut partner_landed_hit = false;
+
+    for _ in 0..30 {
+        if let Some(entity) = primary.entities.get(&target) {
+            target_position = entity.position.tile_position();
+        } else if primary_landed_hit && partner_landed_hit {
+            return Ok(target);
+        } else {
+            return Err("contested kill ended before both party members landed a hit".to_owned());
+        }
+        primary.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+        partner.walk_to(target_position.x.saturating_add(1), target_position.y)?;
+        primary.net.player_attack(target).map_err(|_| "primary disconnected")?;
+        partner.net.player_attack(target).map_err(|_| "partner disconnected")?;
+        let outcome = primary.wait_for_within(
+            "contested quest Spore hit or death",
+            Duration::from_secs(6),
+            &mut |event| match event {
+                NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(3),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *destination_entity_id == target && *source_entity_id == primary_id => Some(1),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *destination_entity_id == target && *source_entity_id == partner_id => Some(2),
+                NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+                _ => None,
+            },
+        )?;
+        match outcome {
+            3 if primary_landed_hit && partner_landed_hit => return Ok(target),
+            3 => return Err("contested kill ended before both party members landed a hit".to_owned()),
+            1 => primary_landed_hit = true,
+            2 => partner_landed_hit = true,
+            0 => {}
+            _ => {}
+        }
+        if !primary.entities.contains_key(&target) {
+            if primary_landed_hit && partner_landed_hit {
+                return Ok(target);
+            }
+            return Err("contested kill ended before both party members landed a hit".to_owned());
+        }
+    }
+    Err("could not kill contested quest Spore within 30 attack rounds".to_owned())
 }
 
 /// A first kill is saved to the account ledger, delivered to an active client,
