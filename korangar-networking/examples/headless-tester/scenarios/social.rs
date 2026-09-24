@@ -564,8 +564,48 @@ fn party_quest_credit(config: &Config) -> Result<(), String> {
             NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(1) => Some(()),
             _ => None,
         })?;
+
+        let third = kill_quest_spore_with_partner_distance(&mut primary, &mut partner, 30)?;
+        if third == first || third == second {
+            return Err("quest fixture reused a prior monster entity id".to_owned());
+        }
+        primary.wait_for("primary receives third Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(3) => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("party member at the 30-cell boundary receives credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(2) => Some(()),
+            _ => None,
+        })?;
+
+        let fourth = kill_quest_spore_with_partner_distance(&mut primary, &mut partner, 31)?;
+        if fourth == first || fourth == second || fourth == third {
+            return Err("quest fixture reused a prior monster entity id".to_owned());
+        }
+        primary.wait_for("primary receives fourth Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(4) => Some(()),
+            _ => None,
+        })?;
+        let outside_range_events = partner.collect_for(Duration::from_millis(400));
+        if outside_range_events.iter().any(|event| {
+            matches!(event, NetworkEvent::QuestHuntProgress { objectives }
+            if objectives.iter().any(|objective| {
+                objective.quest_id == QUEST_ID && objective.current_count > 2
+            }))
+        }) {
+            return Err("party member one cell beyond the configured AREA_SIZE received quest credit".to_owned());
+        }
+
         primary.say(&format!("@quest del {QUEST_ID}"))?;
         partner.say(&format!("@quest del {QUEST_ID}"))?;
+        primary.wait_for("primary quest removed", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("partner quest removed", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
         Ok(())
     })();
     leave_party_both(&mut primary, &mut partner);
@@ -581,6 +621,29 @@ fn quest_progress_count(objectives: &[QuestHuntProgress], quest_id: u32) -> Opti
 
 fn kill_quest_spore(context: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
     let target = context.spawn_monster("SPORE", 1014)?;
+    kill_spawned_quest_spore(context, target)
+}
+
+fn kill_quest_spore_with_partner_distance(
+    context: &mut TestContext,
+    partner: &mut TestContext,
+    distance: u16,
+) -> Result<ragnarok_packets::EntityId, String> {
+    let target = context.spawn_monster("SPORE", 1014)?;
+    let target_position = context
+        .entities
+        .get(&target)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("spawned quest Spore has no visible tile")?;
+    partner.warp("prt_fild08", target_position.x.saturating_add(distance), target_position.y)?;
+    context.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    context.flush();
+    partner.flush();
+    kill_spawned_quest_spore(context, target)
+}
+
+fn kill_spawned_quest_spore(context: &mut TestContext, target: ragnarok_packets::EntityId) -> Result<ragnarok_packets::EntityId, String> {
     let player_id = context.player_id;
     for _ in 0..30 {
         let target_position = context
