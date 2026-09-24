@@ -593,27 +593,27 @@ impl InputSystem {
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::KeyW).down() && use_debug_camera {
+        if self.binding_down(bindings, BindableAction::DebugCameraForward) && use_debug_camera {
             events.push(InputEvent::CameraMoveForward);
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::KeyS).down() && use_debug_camera {
+        if self.binding_down(bindings, BindableAction::DebugCameraBackward) && use_debug_camera {
             events.push(InputEvent::CameraMoveBackward);
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::KeyA).down() && use_debug_camera {
+        if self.binding_down(bindings, BindableAction::DebugCameraLeft) && use_debug_camera {
             events.push(InputEvent::CameraMoveLeft);
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::KeyD).down() && use_debug_camera {
+        if self.binding_down(bindings, BindableAction::DebugCameraRight) && use_debug_camera {
             events.push(InputEvent::CameraMoveRight);
         }
 
         #[cfg(feature = "debug")]
-        if self.get_key(KeyCode::Space).down() && use_debug_camera {
+        if self.binding_down(bindings, BindableAction::DebugCameraUp) && use_debug_camera {
             events.push(InputEvent::CameraMoveUp);
         }
 

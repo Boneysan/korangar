@@ -34,6 +34,11 @@ pub enum BindableAction {
     MoveBackward,
     MoveLeft,
     MoveRight,
+    DebugCameraForward,
+    DebugCameraBackward,
+    DebugCameraLeft,
+    DebugCameraRight,
+    DebugCameraUp,
     HotbarSlot(u8),
 }
 
@@ -71,6 +76,11 @@ impl BindableAction {
             Self::MoveBackward,
             Self::MoveLeft,
             Self::MoveRight,
+            Self::DebugCameraForward,
+            Self::DebugCameraBackward,
+            Self::DebugCameraLeft,
+            Self::DebugCameraRight,
+            Self::DebugCameraUp,
         ];
         actions.extend((0..27).map(Self::HotbarSlot));
         actions
@@ -112,6 +122,11 @@ impl BindableAction {
             Self::MoveBackward => "Move backward",
             Self::MoveLeft => "Move left",
             Self::MoveRight => "Move right",
+            Self::DebugCameraForward => "Debug camera: move forward",
+            Self::DebugCameraBackward => "Debug camera: move backward",
+            Self::DebugCameraLeft => "Debug camera: move left",
+            Self::DebugCameraRight => "Debug camera: move right",
+            Self::DebugCameraUp => "Debug camera: move up",
             Self::HotbarSlot(_) => unreachable!(),
         }
         .to_owned()
@@ -159,6 +174,11 @@ impl BindableAction {
             Self::MoveBackward => ("KeyS", false, false, false),
             Self::MoveLeft => ("KeyA", false, false, false),
             Self::MoveRight => ("KeyD", false, false, false),
+            Self::DebugCameraForward => ("KeyW", false, false, false),
+            Self::DebugCameraBackward => ("KeyS", false, false, false),
+            Self::DebugCameraLeft => ("KeyA", false, false, false),
+            Self::DebugCameraRight => ("KeyD", false, false, false),
+            Self::DebugCameraUp => ("Space", false, false, false),
             Self::HotbarSlot(_) => unreachable!(),
         };
         KeyChord {
@@ -317,7 +337,7 @@ impl KeyBindings {
             return Err(BindingError::InvalidKey);
         }
         for other_action in BindableAction::all() {
-            if other_action != action && self.chord(other_action) == chord {
+            if other_action != action && self.chord(other_action) == chord && !contextual_camera_pair(action, other_action) {
                 return Err(BindingError::Conflict(other_action));
             }
         }
@@ -357,9 +377,25 @@ impl KeyBindings {
     }
 }
 
+/// The debug camera replaces ordinary movement while active, so sharing its
+/// defaults with movement is intentional and remains unambiguous at dispatch.
+fn contextual_camera_pair(left: BindableAction, right: BindableAction) -> bool {
+    matches!(
+        (left, right),
+        (BindableAction::MoveForward, BindableAction::DebugCameraForward)
+            | (BindableAction::DebugCameraForward, BindableAction::MoveForward)
+            | (BindableAction::MoveBackward, BindableAction::DebugCameraBackward)
+            | (BindableAction::DebugCameraBackward, BindableAction::MoveBackward)
+            | (BindableAction::MoveLeft, BindableAction::DebugCameraLeft)
+            | (BindableAction::DebugCameraLeft, BindableAction::MoveLeft)
+            | (BindableAction::MoveRight, BindableAction::DebugCameraRight)
+            | (BindableAction::DebugCameraRight, BindableAction::MoveRight)
+    )
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{BindableAction, BindingError, KeyBindings, KeyChord};
+    use super::{BindableAction, BindingError, KeyBindings, KeyChord, contextual_camera_pair};
 
     #[test]
     fn shipped_bindings_preserve_distinct_chords_and_can_be_reset() {
@@ -370,9 +406,8 @@ mod tests {
         let actions = BindableAction::all();
         for (index, action) in actions.iter().enumerate() {
             for other_action in &actions[index + 1..] {
-                assert_ne!(
-                    bindings.chord(*action),
-                    bindings.chord(*other_action),
+                assert!(
+                    bindings.chord(*action) != bindings.chord(*other_action) || contextual_camera_pair(*action, *other_action),
                     "default binding conflict: {:?}",
                     action
                 );
@@ -406,6 +441,22 @@ mod tests {
             Err(BindingError::InvalidKey),
         );
         assert_eq!(bindings.chord(BindableAction::OpenInventory).key, "KeyI");
+    }
+
+    #[test]
+    fn debug_camera_can_share_movement_defaults_but_other_conflicts_are_rejected() {
+        let mut bindings = KeyBindings::default();
+        assert_eq!(
+            bindings.chord(BindableAction::DebugCameraForward),
+            bindings.chord(BindableAction::MoveForward)
+        );
+        bindings
+            .assign(BindableAction::DebugCameraForward, KeyChord::new("KeyJ", false, false, false))
+            .unwrap();
+        assert_eq!(
+            bindings.assign(BindableAction::DebugCameraBackward, KeyChord::new("KeyI", false, false, false)),
+            Err(BindingError::Conflict(BindableAction::OpenInventory))
+        );
     }
 
     #[test]
