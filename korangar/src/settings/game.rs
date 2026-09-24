@@ -113,6 +113,10 @@ pub struct GameSettings {
     /// target.
     #[serde(default)]
     pub quickcast_ground_skills: bool,
+    /// Arm a ground/trap skill while its hotbar key is held and cast at the
+    /// cursor target when that key is released.
+    #[serde(default)]
+    pub hold_aim_release_ground_skills: bool,
     /// Show server-provided quest markers above NPCs and objective locations.
     #[serde(default = "default_true")]
     pub show_quest_markers: bool,
@@ -178,6 +182,7 @@ impl Default for GameSettings {
             reduce_motion: false,
             reduce_flashing: false,
             quickcast_ground_skills: false,
+            hold_aim_release_ground_skills: false,
             show_quest_markers: true,
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
@@ -331,6 +336,7 @@ mod tests {
         assert!(!default_settings.reduce_motion);
         assert!(!default_settings.reduce_flashing);
         assert!(!default_settings.quickcast_ground_skills);
+        assert!(!default_settings.hold_aim_release_ground_skills);
         assert!(default_settings.show_quest_markers);
         assert!(default_settings.warn_dangerous_maps);
         assert!(default_settings.show_combat_text);
@@ -341,6 +347,7 @@ mod tests {
         assert!(!old_settings.reduce_motion);
         assert!(!old_settings.reduce_flashing);
         assert!(!old_settings.quickcast_ground_skills);
+        assert!(!old_settings.hold_aim_release_ground_skills);
         assert!(old_settings.show_quest_markers);
         assert!(old_settings.warn_dangerous_maps);
         assert!(old_settings.show_combat_text);
@@ -366,6 +373,9 @@ mod tests {
         let quickcast: ManuallyDrop<GameSettings> =
             ManuallyDrop::new(ron::from_str("(auto_attack:true, quickcast_ground_skills:true)").unwrap());
         assert!(quickcast.quickcast_ground_skills);
+        let hold_aim: ManuallyDrop<GameSettings> =
+            ManuallyDrop::new(ron::from_str("(auto_attack:true, hold_aim_release_ground_skills:true)").unwrap());
+        assert!(hold_aim.hold_aim_release_ground_skills);
     }
 
     #[test]

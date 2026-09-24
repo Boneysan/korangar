@@ -1040,9 +1040,12 @@ mod map_difficulty_warning_tests {
 
 #[cfg(test)]
 mod resolve_pending_cast_tests {
-    use ragnarok_packets::{AttackRange, EntityId, ItemId, SkillType, TilePosition};
+    use ragnarok_packets::{AttackRange, EntityId, HotbarSlot, ItemId, SkillId, SkillLevel, SkillType, TilePosition};
 
-    use super::{PendingCastResolution, is_within_skill_range, resolve_pending_cast};
+    use super::{
+        PendingCastResolution, PendingSkill, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
+        pending_skill_commits_on_release, resolve_pending_cast,
+    };
     use crate::graphics::PickerTarget;
 
     #[test]
@@ -1098,6 +1101,30 @@ mod resolve_pending_cast_tests {
             resolve_pending_cast(SkillType::Ground, PickerTarget::Nothing),
             PendingCastResolution::Fizzle
         );
+    }
+
+    #[test]
+    fn hold_aim_release_commits_only_when_the_originating_hotbar_key_releases() {
+        let pending = PendingSkill {
+            skill_id: SkillId(80),
+            skill_level: SkillLevel(3),
+            skill_type: SkillType::Ground,
+            attack_range: AttackRange(9),
+            skill_name: "Storm Gust".to_owned(),
+            confirm_on_hotbar_release: Some(HotbarSlot(12)),
+        };
+        assert!(pending_skill_commits_on_release(&pending, HotbarSlot(12)));
+        assert!(!pending_skill_commits_on_release(&pending, HotbarSlot(11)));
+        assert_eq!(
+            resolve_pending_cast(pending.skill_type, PickerTarget::Tile { x: 8, y: 14 }),
+            PendingCastResolution::CastTile(TilePosition { x: 8, y: 14 })
+        );
+        assert_eq!(
+            resolve_pending_cast(pending.skill_type, PickerTarget::Nothing),
+            PendingCastResolution::Fizzle
+        );
+        assert!(pending_held_skill_canceled_by_interface_focus(&pending, true));
+        assert!(!pending_held_skill_canceled_by_interface_focus(&pending, false));
     }
 
     #[test]
@@ -1179,6 +1206,16 @@ struct PendingSkill {
     skill_type: SkillType,
     attack_range: AttackRange,
     skill_name: String,
+    /// When set, a ground/trap skill is committed when its hotbar key releases.
+    confirm_on_hotbar_release: Option<HotbarSlot>,
+}
+
+fn pending_skill_commits_on_release(pending: &PendingSkill, released_slot: HotbarSlot) -> bool {
+    pending.confirm_on_hotbar_release == Some(released_slot)
+}
+
+fn pending_held_skill_canceled_by_interface_focus(pending: &PendingSkill, interface_has_focus: bool) -> bool {
+    interface_has_focus && pending.confirm_on_hotbar_release.is_some()
 }
 
 /// What a left-click resolves to while a skill is armed, given what the cursor
@@ -8074,6 +8111,18 @@ impl Client {
                 *self.client_state.follow(client_state().render_options().use_debug_camera()),
             );
         } else {
+            if self
+                .pending_skill
+                .as_ref()
+                .is_some_and(|pending| pending_held_skill_canceled_by_interface_focus(pending, interface_has_focus))
+            {
+                self.pending_skill = None;
+                self.client_state.follow_mut(client_state().toasts()).push(
+                    "held-ground-skill-focus-canceled",
+                    "Ground skill canceled because keyboard focus moved to the interface.",
+                    crate::state::toasts::ToastPriority::Normal,
+                );
+            }
             // Sit / hotbar still work while a UI widget is focused (e.g. chat box).
             // Menu shortcuts stay gated so they don't fire while typing.
             self.input_system
@@ -9643,6 +9692,7 @@ impl Client {
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
+                                    confirm_on_hotbar_release: None,
                                 };
                                 match resolve_pending_cast(pending.skill_type, input_report.mouse_target) {
                                     PendingCastResolution::CastEntity(entity_id) => {
@@ -9675,37 +9725,71 @@ impl Client {
                                 }
                             }
                             SkillType::Ground | SkillType::Trap => {
+                                let hold_aim_release = *self
+                                    .client_state
+                                    .follow(client_state().game_settings().hold_aim_release_ground_skills());
                                 let pending = PendingSkill {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level,
                                     skill_type,
                                     attack_range,
                                     skill_name: learnable_skill.skill_name.clone(),
+                                    confirm_on_hotbar_release: hold_aim_release.then_some(slot),
                                 };
-                                let quickcast = *self.client_state.follow(client_state().game_settings().quickcast_ground_skills());
-                                let quickcast_tile = quickcast
-                                    .then(|| resolve_pending_cast(pending.skill_type, input_report.mouse_target))
-                                    .and_then(|resolution| resolve_pending_ground_tile(&self.client_state, resolution));
-
-                                if let Some(tile) = quickcast_tile {
-                                    self.input_event_buffer.push(InputEvent::CastSkillAtTile {
-                                        skill_id: pending.skill_id,
-                                        skill_level: pending.skill_level,
-                                        attack_range: pending.attack_range,
-                                        tile,
-                                    });
-                                } else {
-                                    // Keep the normal explicit aim mode as the safe fallback,
-                                    // including when quickcast is disabled or no map cell is under
-                                    // the cursor.
+                                if hold_aim_release {
+                                    // The matching StopSkill event commits at the
+                                    // cursor's then-current target on key release.
                                     announce_armed_skill(&mut self.client_state, &pending.skill_name);
                                     self.pending_skill = Some(pending);
+                                } else {
+                                    let quickcast = *self.client_state.follow(client_state().game_settings().quickcast_ground_skills());
+                                    let quickcast_tile = quickcast
+                                        .then(|| resolve_pending_cast(pending.skill_type, input_report.mouse_target))
+                                        .and_then(|resolution| resolve_pending_ground_tile(&self.client_state, resolution));
+
+                                    if let Some(tile) = quickcast_tile {
+                                        self.input_event_buffer.push(InputEvent::CastSkillAtTile {
+                                            skill_id: pending.skill_id,
+                                            skill_level: pending.skill_level,
+                                            attack_range: pending.attack_range,
+                                            tile,
+                                        });
+                                    } else {
+                                        // Keep the normal explicit aim mode as the safe fallback,
+                                        // including when quickcast is disabled or no map cell is under
+                                        // the cursor.
+                                        announce_armed_skill(&mut self.client_state, &pending.skill_name);
+                                        self.pending_skill = Some(pending);
+                                    }
                                 }
                             }
                         }
                     }
                 }
                 InputEvent::StopSkill { slot } => {
+                    if self
+                        .pending_skill
+                        .as_ref()
+                        .is_some_and(|pending| pending_skill_commits_on_release(pending, slot))
+                    {
+                        let pending = self.pending_skill.take().expect("pending held skill checked above");
+                        let resolution = resolve_pending_cast(pending.skill_type, input_report.mouse_target);
+                        let tile = resolve_pending_ground_tile(&self.client_state, resolution);
+                        if let Some(tile) = tile {
+                            self.input_event_buffer.push(InputEvent::CastSkillAtTile {
+                                skill_id: pending.skill_id,
+                                skill_level: pending.skill_level,
+                                attack_range: pending.attack_range,
+                                tile,
+                            });
+                        } else {
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "held-ground-skill-no-target",
+                                "Ground skill canceled: release over a valid map tile or target.",
+                                crate::state::toasts::ToastPriority::Normal,
+                            );
+                        }
+                    }
                     if let Some(skill) = self.client_state.follow(client_state().hotbar()).get_skill_in_slot(slot)
                         && skill.skill_id == ROLLING_CUTTER_ID
                     {
@@ -11646,7 +11730,14 @@ impl Client {
                     interface_frame.unfocus();
 
                     if mouse_button == MouseButton::Left {
-                        if let Some(pending) = self.pending_skill.take() {
+                        if self
+                            .pending_skill
+                            .as_ref()
+                            .is_some_and(|pending| pending.confirm_on_hotbar_release.is_some())
+                        {
+                            // Hold-aim-release samples the cursor when the
+                            // hotbar key is released; clicking does not commit.
+                        } else if let Some(pending) = self.pending_skill.take() {
                             // A skill is armed: this click picks its target. On a hit the skill
                             // disarms; on empty ground it fizzles and stays armed (right-click or
                             // Escape is the only cancel), and the click never falls through to a

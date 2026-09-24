@@ -141,6 +141,12 @@ where
                     event: Toggle(self.game_settings_path.quickcast_ground_skills()),
                 },
                 state_button! {
+                    text: "Hold ground skill key to aim, release to cast",
+                    tooltip: "For ground/trap hotbar skills, hold its key while aiming with the cursor, then release the key to cast at the valid ground target. This takes precedence over quickcast-at-cursor; releasing without a valid target cancels the cast.",
+                    state: self.game_settings_path.hold_aim_release_ground_skills(),
+                    event: Toggle(self.game_settings_path.hold_aim_release_ground_skills()),
+                },
+                state_button! {
                     text: "Show quest markers",
                     tooltip: "Show or hide quest indicators on NPCs and objective locations.",
                     state: self.game_settings_path.show_quest_markers(),
