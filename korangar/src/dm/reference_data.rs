@@ -184,6 +184,22 @@ pub struct ReferenceItemDrop {
     pub source_record: String,
 }
 
+impl ReferenceItem {
+    pub fn matches_query(&self, query: &str) -> bool {
+        let query = query.to_lowercase();
+        self.matches_lowercase_query(&query)
+    }
+
+    fn matches_lowercase_query(&self, query: &str) -> bool {
+        query.is_empty()
+            || self.id.to_string() == query
+            || self.name.to_lowercase().contains(&query)
+            || self.aegis_name.to_lowercase().contains(&query)
+            || self.effect_status.to_lowercase().contains(&query)
+            || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(&query))
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceSource {
     pub path: String,
@@ -593,14 +609,29 @@ impl ReferenceData {
 
     pub fn search_items(&self, query: &str, limit: usize) -> Vec<&ReferenceItem> {
         let query = query.to_lowercase();
-        let mut matches: Vec<_> = self
-            .items
-            .iter()
-            .filter(|item| query.is_empty() || item.name.to_lowercase().contains(&query) || item.aegis_name.to_lowercase().contains(&query))
-            .collect();
+        let mut matches: Vec<_> = self.items.iter().filter(|item| self.item_matches_query(item, &query)).collect();
         matches.sort_by_key(|item| (item.name.to_lowercase(), item.id));
         matches.truncate(limit);
         matches
+    }
+
+    pub fn search_cards(&self, query: &str, limit: usize) -> Vec<&ReferenceItem> {
+        let query = query.to_lowercase();
+        let mut matches: Vec<_> = self.cards.iter().filter(|card| self.item_matches_query(card, &query)).collect();
+        matches.sort_by_key(|card| (card.name.to_lowercase(), card.id));
+        matches.truncate(limit);
+        matches
+    }
+
+    fn item_matches_query(&self, item: &ReferenceItem, query: &str) -> bool {
+        item.matches_lowercase_query(query)
+            || item.drops_from.iter().any(|drop| {
+                self.monster_by_id(drop.monster_id).is_some_and(|monster| {
+                    monster.name.to_lowercase().contains(query)
+                        || monster.jname.to_lowercase().contains(query)
+                        || monster.sprite_name.to_lowercase().contains(query)
+                })
+            })
     }
 }
 
@@ -726,6 +757,19 @@ mod tests {
                 .any(|monster| monster.sprite_name == "HYDRA")
         );
         assert!(data.search_items("oridecon", 100).iter().any(|item| item.id == 984));
+        assert!(data.search_items("984", 10).iter().any(|item| item.id == 984));
+        assert!(
+            data.search_items("poring", data.items.len())
+                .iter()
+                .any(|item| item.drops_from.iter().any(|drop| drop.monster_id == 1002))
+        );
+        assert!(data.search_cards("4001", 10).iter().any(|card| card.id == 4001));
+        assert!(data.search_cards("poring", 10).iter().any(|card| card.id == 4001));
+        assert!(
+            data.search_cards("scripted_not_translated", data.cards.len())
+                .iter()
+                .any(|card| card.id == 4001)
+        );
         assert!(data.quest_by_id(3401).is_some_and(|quest| quest.name == "Animal Monster Hunt"));
         assert!(data.search_quests("animal monster hunt", 10).iter().any(|quest| quest.id == 3401));
         assert!(

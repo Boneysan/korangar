@@ -168,13 +168,6 @@ fn display_name(name: &str, fallback: &str) -> String {
     if name.is_empty() { fallback.to_owned() } else { name.to_owned() }
 }
 
-fn item_matches_query(item: &ReferenceItem, query: &str) -> bool {
-    query.is_empty()
-        || query.parse::<u32>().ok() == Some(item.id)
-        || item.name.to_lowercase().contains(query)
-        || item.aegis_name.to_lowercase().contains(query)
-}
-
 fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
     let data = reference_data();
     let mut lines = vec![format!("{}  (Quest ID {})", quest.name(), quest.quest_id)];
@@ -735,12 +728,15 @@ where
         rows.extend(active);
     } else {
         let cards_only = category == "Cards";
-        let source = if cards_only { &data.cards } else { &data.items };
+        let matches = if cards_only {
+            data.search_cards(&query, MAX_RESULTS)
+        } else {
+            data.search_items(&query, MAX_RESULTS)
+        };
         rows.extend(
-            source
-                .iter()
-                .filter(|item| item_matches_query(item, &query))
-                .take(MAX_RESULTS)
+            matches
+                .into_iter()
+                .filter(|item| cards_only || item.item_type != "IT_CARD")
                 .map(|item| GuideResult {
                     label: format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
                     kind: if cards_only { "card" } else { "item" }.to_owned(),
@@ -787,9 +783,8 @@ fn search_all_categories(
             }),
     );
     rows.extend(
-        data.cards
-            .iter()
-            .filter(|card| item_matches_query(card, query))
+        data.search_cards(query, all_category_result_slots(&rows))
+            .into_iter()
             .take(all_category_result_slots(&rows))
             .map(|card| GuideResult {
                 label: format!("{}  (Card, ID {})", display_name(&card.name, &card.aegis_name), card.id),
@@ -941,9 +936,8 @@ where
 #[cfg(test)]
 mod tests {
     use super::{
-        GuideResult, ReferenceItem, display_name, item_details, item_matches_query, job_names, monster_details, parse_guide_link,
-        parse_route_cell_link, quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories,
-        skill_details,
+        GuideResult, ReferenceItem, display_name, item_details, job_names, monster_details, parse_guide_link, parse_route_cell_link,
+        quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories, skill_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -992,9 +986,9 @@ mod tests {
             source: None,
             drops_from: Vec::new(),
         };
-        assert!(item_matches_query(&item, "501"));
-        assert!(!item_matches_query(&item, "502"));
-        assert!(item_matches_query(&item, "red pot"));
+        assert!(item.matches_query("501"));
+        assert!(!item.matches_query("502"));
+        assert!(item.matches_query("red pot"));
     }
 
     #[test]

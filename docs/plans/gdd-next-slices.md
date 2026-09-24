@@ -60,6 +60,8 @@ This is a source audit, not a claim that the feature has been seen on screen. Ef
 | S9 | 2026-09-24: the source hook includes a bounded, cooldown-limited RangedKeeper and `AvoidHazards` A* cost for Orc Archer on `orcsdun02`, plus a hit-triggered Skirmisher for Orc Skeleton on `orcsdun01`. Hazard-cell scans are cached in a 17×17 origin window; outside it, costs remain stock. Dense-map/path/load/oscillation stress and live behavior acceptance remain open. |
 | S10 | 2026-09-24: in addition to `OnPCPartyJoin`, `OnPCQuestLog`, and `OnPCLoadMapEvent` snapshot reconciliation, `DM_PartyApplyQuest`/`DM_PartyApplyFlag` append typed SQL events before mutation. `DM_ReplayPartyEvents` replays quest set/complete/erase and flag set/clear in order, verifies each character postcondition, and advances a character-keyed cursor only after success; it issues no rewards. Existing unprefixed checkpoint mirrors are character-scoped. Remaining: live migration/reconnect, same-account alternate isolation, party re-creation/reset/run identity, event-write failure behavior, and audit/repair UX. |
 
+**2026-09-24 Guide search follow-up:** Item/card All and category searches now accept exact IDs, display/Aegis names, raw exported effect tags, and verified source-monster display/Japanese/sprite aliases. This makes the current source contract searchable without translating or guessing item scripts. Reference-data tests cover Oridecon by ID, an item source-monster match, and Poring Card by ID/effect tag. This improves search coverage but does not close the still-open field completeness or live Guide-acceptance gates.
+
 ## Readiness and dependency gates
 
 | Gate | Required result before dependent work | Check |
