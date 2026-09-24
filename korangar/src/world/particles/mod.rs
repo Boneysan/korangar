@@ -339,7 +339,14 @@ impl ParticleHolder {
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile("render particles"))]
-    pub fn render(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize, scaling: Scaling) {
+    pub fn render(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        window_size: ScreenSize,
+        scaling: Scaling,
+        show_quest_markers: bool,
+    ) {
         self.particles
             .iter()
             .for_each(|particle| particle.render(renderer, camera, window_size));
@@ -354,9 +361,11 @@ impl ParticleHolder {
         // which can appear even for special entities (warps) or when the main sprite
         // isn't loaded. The black outline / visibility comes from the quest_*.bmp
         // assets themselves.
-        self.quest_icons
-            .values()
-            .for_each(|quest_icon| quest_icon.render(renderer, camera, window_size, scaling.get_factor()));
+        if show_quest_markers {
+            self.quest_icons
+                .values()
+                .for_each(|quest_icon| quest_icon.render(renderer, camera, window_size, scaling.get_factor()));
+        }
     }
 }
 

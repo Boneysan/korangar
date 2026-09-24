@@ -135,6 +135,12 @@ where
                     event: Toggle(self.game_settings_path.quickcast_ground_skills()),
                 },
                 state_button! {
+                    text: "Show quest markers",
+                    tooltip: "Show or hide quest indicators on NPCs and objective locations.",
+                    state: self.game_settings_path.show_quest_markers(),
+                    event: Toggle(self.game_settings_path.show_quest_markers()),
+                },
+                state_button! {
                     text: "Show combat text",
                     tooltip: "Show floating damage, miss, and healing numbers. This does not change combat results or sound cues.",
                     state: self.game_settings_path.show_combat_text(),

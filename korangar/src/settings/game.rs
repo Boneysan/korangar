@@ -107,6 +107,9 @@ pub struct GameSettings {
     /// target.
     #[serde(default)]
     pub quickcast_ground_skills: bool,
+    /// Show server-provided quest markers above NPCs and objective locations.
+    #[serde(default = "default_true")]
+    pub show_quest_markers: bool,
     /// Show floating damage, miss, and healing numbers.
     #[serde(default = "default_true")]
     pub show_combat_text: bool,
@@ -164,6 +167,7 @@ impl Default for GameSettings {
             reduce_motion: false,
             reduce_flashing: false,
             quickcast_ground_skills: false,
+            show_quest_markers: true,
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
             combat_text_size: CombatTextSize::default(),
@@ -296,6 +300,7 @@ mod tests {
         assert!(!default_settings.reduce_motion);
         assert!(!default_settings.reduce_flashing);
         assert!(!default_settings.quickcast_ground_skills);
+        assert!(default_settings.show_quest_markers);
         assert!(default_settings.show_combat_text);
         assert_eq!(default_settings.combat_text_frequency, CombatTextFrequency::All);
         assert_eq!(default_settings.combat_text_size, CombatTextSize::Normal);
@@ -304,6 +309,7 @@ mod tests {
         assert!(!old_settings.reduce_motion);
         assert!(!old_settings.reduce_flashing);
         assert!(!old_settings.quickcast_ground_skills);
+        assert!(old_settings.show_quest_markers);
         assert!(old_settings.show_combat_text);
         assert_eq!(old_settings.combat_text_frequency, CombatTextFrequency::All);
         assert_eq!(old_settings.combat_text_size, CombatTextSize::Normal);

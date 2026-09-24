@@ -12372,6 +12372,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             self.current_camera,
             self.screen_size,
             self.scaling,
+            *self.client_state.follow(client_state().game_settings().show_quest_markers()),
         );
 
         self.effect_holder.render(self.effect_renderer, self.current_camera);
