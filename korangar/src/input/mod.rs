@@ -786,4 +786,27 @@ mod keybinding_tests {
         modified.handle_keyboard_input(&mut events, &bindings, None);
         assert!(!events.iter().any(|event| matches!(event, InputEvent::KeyboardMove { .. })));
     }
+
+    #[cfg(feature = "debug")]
+    #[test]
+    fn remapped_debug_camera_movement_dispatches_only_in_camera_mode() {
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::DebugCameraForward, KeyChord::new("KeyJ", false, false, false))
+            .expect("debug camera movement can be remapped");
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        input.update_delta(ClientTick(8));
+        let mut events = Vec::new();
+        input.handle_keyboard_input(&mut events, &bindings, None, false, true);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::CameraMoveForward)));
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::KeyboardMove { .. })));
+
+        let mut ordinary = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        ordinary.update_keyboard(KeyCode::KeyJ, ElementState::Pressed);
+        ordinary.update_delta(ClientTick(9));
+        let mut events = Vec::new();
+        ordinary.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::CameraMoveForward)));
+    }
 }

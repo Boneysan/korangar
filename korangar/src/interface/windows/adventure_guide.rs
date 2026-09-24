@@ -65,6 +65,7 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     let mut lines = vec![
         format!("{}  (ID {})", display_name(&monster.name, &monster.sprite_name), monster.id),
         format!("Level {}   HP {}", monster.level, monster.hp),
+        format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id),
     ];
     if let Some(element) = &monster.element {
         lines.push(format!("Element: {} {}", element.r#type, element.level));
@@ -648,12 +649,24 @@ where
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
             use korangar_interface::prelude::*;
+            // Detail strings contain dynamic cross-links/actions; rebuild them
+            // when the selected entry changes, even if the line count does not.
+            self.elements.clear();
             let count = state.get(&self.path).len();
-            self.elements.truncate(count);
-            for index in self.elements.len()..count {
+            for index in 0..count {
                 let line = self.path.index(index).manually_asserted();
                 let value = state.get(&line).clone();
-                if let Some((map_name, x, y, label)) = parse_route_cell_link(&value) {
+                if let Some(monster_id) = value
+                    .strip_prefix("@hunting-goal:")
+                    .and_then(|link| link.split_once('|'))
+                    .and_then(|(monster_id, _)| monster_id.parse::<u32>().ok())
+                {
+                    self.elements.push(ErasedElement::new(button! {
+                        text: "Add to personal hunting goals (client-only)",
+                        tooltip: "Saved for this character. This is not a server quest and has no kill counter.",
+                        event: InputEvent::AddClientHuntingGoal { monster_id },
+                    }));
+                } else if let Some((map_name, x, y, label)) = parse_route_cell_link(&value) {
                     self.elements.push(ErasedElement::new(button! {
                         text: label,
                         event: InputEvent::SetNavigationDestination { map_name, x, y },
@@ -1129,6 +1142,11 @@ mod tests {
     fn monster_skill_details_link_verified_skill_ids_and_preserve_raw_rates() {
         let monster = reference_data().monster_by_id(1002).expect("Poring bestiary record");
         let details = monster_details(monster);
+        assert!(
+            details
+                .iter()
+                .any(|line| line == &format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id))
+        );
         let skill_link = details
             .iter()
             .find(|line| line.starts_with("@guide:skill:184|"))

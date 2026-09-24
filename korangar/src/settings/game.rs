@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 
 use super::key_bindings::{BindableAction, KeyBindings};
 
+const MAX_CLIENT_HUNTING_GOALS: usize = 5;
+
 fn default_true() -> bool {
     true
 }
@@ -160,6 +162,10 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub tracked_quests_by_character: Vec<(u32, Vec<u32>)>,
+    /// Player-authored, client-only hunt targets keyed by character ID.
+    #[serde(default)]
+    #[hidden_element]
+    pub hunting_goals_by_character: Vec<(u32, Vec<u32>)>,
 }
 
 impl Default for GameSettings {
@@ -184,6 +190,7 @@ impl Default for GameSettings {
             overview_minimized: false,
             protected_items_by_character: Vec::new(),
             tracked_quests_by_character: Vec::new(),
+            hunting_goals_by_character: Vec::new(),
         }
     }
 }
@@ -284,6 +291,25 @@ impl GameSettings {
             self.tracked_quests_by_character.push((character_id, quest_ids));
         }
     }
+
+    pub fn hunting_goals(&self, character_id: u32) -> Option<&[u32]> {
+        self.hunting_goals_by_character
+            .iter()
+            .find(|(id, _)| *id == character_id)
+            .map(|(_, monster_ids)| monster_ids.as_slice())
+    }
+
+    pub fn set_hunting_goals(&mut self, character_id: u32, monster_ids: &[u32]) {
+        let mut monster_ids = monster_ids.to_vec();
+        monster_ids.sort_unstable();
+        monster_ids.dedup();
+        monster_ids.truncate(MAX_CLIENT_HUNTING_GOALS);
+        if let Some((_, existing)) = self.hunting_goals_by_character.iter_mut().find(|(id, _)| *id == character_id) {
+            *existing = monster_ids;
+        } else {
+            self.hunting_goals_by_character.push((character_id, monster_ids));
+        }
+    }
 }
 
 impl Drop for GameSettings {
@@ -363,6 +389,23 @@ mod tests {
         assert_eq!(CombatTextSize::Large.next(), CombatTextSize::Small);
         assert!(CombatTextSize::Small.scale() < CombatTextSize::Normal.scale());
         assert!(CombatTextSize::Normal.scale() < CombatTextSize::Large.scale());
+    }
+
+    #[test]
+    fn client_hunting_goals_are_deduplicated_and_scoped_per_character() {
+        let mut settings = ManuallyDrop::new(GameSettings::default());
+        settings.set_hunting_goals(10, &[1002, 1001, 1002]);
+        settings.set_hunting_goals(11, &[1003]);
+        assert_eq!(settings.hunting_goals(10), Some(&[1001, 1002][..]));
+        assert_eq!(settings.hunting_goals(11), Some(&[1003][..]));
+        assert_eq!(settings.hunting_goals(12), None);
+        let encoded = ron::ser::to_string(&*settings).unwrap();
+        let loaded: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str(&encoded).unwrap());
+        assert_eq!(loaded.hunting_goals(10), Some(&[1001, 1002][..]));
+        assert_eq!(loaded.hunting_goals(11), Some(&[1003][..]));
+
+        let old_settings: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str("(auto_attack:true)").unwrap());
+        assert!(old_settings.hunting_goals_by_character.is_empty());
     }
 
     #[test]

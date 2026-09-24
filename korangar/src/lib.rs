@@ -136,7 +136,7 @@ use crate::settings::{
     ServiceSettingsPathExt, WORLD_THEMES_PATH,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
-use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
+use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
@@ -7354,13 +7354,38 @@ impl Client {
         let Some(character_id) = self.current_character_id.map(|id| id.0) else {
             return;
         };
-        let settings = self.client_state.follow(client_state().game_settings());
-        if let Some(quest_ids) = settings.tracked_quests(character_id).map(|quest_ids| quest_ids.to_vec()) {
+        let (tracked_quest_ids, hunting_goal_ids) = {
+            let settings = self.client_state.follow(client_state().game_settings());
+            (
+                settings.tracked_quests(character_id).map(|quest_ids| quest_ids.to_vec()),
+                settings.hunting_goals(character_id).unwrap_or_default().to_vec(),
+            )
+        };
+        if let Some(quest_ids) = tracked_quest_ids {
             self.client_state
                 .follow_mut(client_state().quest_log())
                 .set_tracked_quests(&quest_ids);
         }
+        let goals = hunting_goal_ids
+            .into_iter()
+            .filter_map(|monster_id| {
+                crate::dm::reference_data::reference_data()
+                    .monster_by_id(monster_id)
+                    .map(|monster| ClientHuntingGoalEntry {
+                        monster_id,
+                        monster_name: if monster.name.is_empty() {
+                            monster.sprite_name.clone()
+                        } else {
+                            monster.name.clone()
+                        },
+                    })
+            })
+            .collect();
+        self.client_state
+            .follow_mut(client_state().quest_log())
+            .set_client_hunting_goals(goals);
         self.persist_tracked_quests();
+        self.persist_client_hunting_goals();
     }
 
     fn persist_tracked_quests(&mut self) {
@@ -7370,6 +7395,22 @@ impl Client {
         let quest_ids = self.client_state.follow(client_state().quest_log()).tracked_quest_ids().to_vec();
         let settings = self.client_state.follow_mut(client_state().game_settings());
         settings.set_tracked_quests(character_id, &quest_ids);
+        settings.save();
+    }
+
+    fn persist_client_hunting_goals(&mut self) {
+        let Some(character_id) = self.current_character_id.map(|id| id.0) else {
+            return;
+        };
+        let monster_ids = self
+            .client_state
+            .follow(client_state().quest_log())
+            .client_hunting_goals()
+            .iter()
+            .map(|goal| goal.monster_id)
+            .collect::<Vec<_>>();
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        settings.set_hunting_goals(character_id, &monster_ids);
         settings.save();
     }
 
@@ -7470,6 +7511,52 @@ impl Client {
                 InputEvent::ToggleQuestTracking(quest_id) => {
                     self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);
                     self.persist_tracked_quests();
+                }
+                InputEvent::AddClientHuntingGoal { monster_id } => {
+                    let goal = crate::dm::reference_data::reference_data()
+                        .monster_by_id(monster_id)
+                        .map(|monster| ClientHuntingGoalEntry {
+                            monster_id,
+                            monster_name: if monster.name.is_empty() {
+                                monster.sprite_name.clone()
+                            } else {
+                                monster.name.clone()
+                            },
+                        });
+                    match goal {
+                        Some(goal) => {
+                            let added = self
+                                .client_state
+                                .follow_mut(client_state().quest_log())
+                                .add_client_hunting_goal(goal);
+                            if added {
+                                self.persist_client_hunting_goals();
+                            }
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                format!("personal-hunt:{monster_id}"),
+                                if added {
+                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                } else {
+                                    "Already listed, or the five-goal limit has been reached.".to_owned()
+                                },
+                                crate::state::toasts::ToastPriority::Normal,
+                            );
+                        }
+                        None => self.client_state.follow_mut(client_state().toasts()).push(
+                            format!("personal-hunt:{monster_id}"),
+                            "This monster is not present in the verified reference data.".to_owned(),
+                            crate::state::toasts::ToastPriority::Normal,
+                        ),
+                    }
+                }
+                InputEvent::RemoveClientHuntingGoal { monster_id } => {
+                    if self
+                        .client_state
+                        .follow_mut(client_state().quest_log())
+                        .remove_client_hunting_goal(monster_id)
+                    {
+                        self.persist_client_hunting_goals();
+                    }
                 }
                 InputEvent::DropItem { inventory_index, amount } => {
                     if amount == 0 {
@@ -9113,6 +9200,52 @@ impl Client {
                 InputEvent::ToggleQuestTracking(quest_id) => {
                     self.client_state.follow_mut(client_state().quest_log()).toggle_tracking(quest_id);
                     self.persist_tracked_quests();
+                }
+                InputEvent::AddClientHuntingGoal { monster_id } => {
+                    let goal = crate::dm::reference_data::reference_data()
+                        .monster_by_id(monster_id)
+                        .map(|monster| ClientHuntingGoalEntry {
+                            monster_id,
+                            monster_name: if monster.name.is_empty() {
+                                monster.sprite_name.clone()
+                            } else {
+                                monster.name.clone()
+                            },
+                        });
+                    match goal {
+                        Some(goal) => {
+                            let added = self
+                                .client_state
+                                .follow_mut(client_state().quest_log())
+                                .add_client_hunting_goal(goal);
+                            if added {
+                                self.persist_client_hunting_goals();
+                            }
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                format!("personal-hunt:{monster_id}"),
+                                if added {
+                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                } else {
+                                    "Already listed, or the five-goal limit has been reached.".to_owned()
+                                },
+                                crate::state::toasts::ToastPriority::Normal,
+                            );
+                        }
+                        None => self.client_state.follow_mut(client_state().toasts()).push(
+                            format!("personal-hunt:{monster_id}"),
+                            "This monster is not present in the verified reference data.".to_owned(),
+                            crate::state::toasts::ToastPriority::Normal,
+                        ),
+                    }
+                }
+                InputEvent::RemoveClientHuntingGoal { monster_id } => {
+                    if self
+                        .client_state
+                        .follow_mut(client_state().quest_log())
+                        .remove_client_hunting_goal(monster_id)
+                    {
+                        self.persist_client_hunting_goals();
+                    }
                 }
                 InputEvent::DropItem { inventory_index, amount } => {
                     if amount == 0 {

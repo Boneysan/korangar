@@ -15,6 +15,8 @@ use korangar_interface::element::StateElement;
 use ragnarok_packets::ItemId;
 use rust_state::RustState;
 
+const MAX_CLIENT_HUNTING_GOALS: usize = 5;
+
 /// One item a contract asks for, with its display name already resolved.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct QuestRequirementEntry {
@@ -31,6 +33,15 @@ pub struct QuestHuntObjectiveEntry {
     pub monster_name: String,
     pub total_count: u16,
     pub current_count: u16,
+}
+
+/// A player-authored, local-only target selected from the Adventure Guide.
+/// It deliberately has no progress counter: ordinary monster death packets
+/// do not prove that the local player earned the kill.
+#[derive(Clone, Debug, Eq, PartialEq, RustState, StateElement)]
+pub struct ClientHuntingGoalEntry {
+    pub monster_id: u32,
+    pub monster_name: String,
 }
 
 /// A quest in the log.
@@ -65,6 +76,7 @@ impl QuestEntry {
 pub struct QuestLogState {
     quests: Vec<QuestEntry>,
     tracked_quests: Vec<u32>,
+    client_hunting_goals: Vec<ClientHuntingGoalEntry>,
     /// HUD tracker text. Rebuilt whenever the log changes.
     display_text: String,
 }
@@ -75,7 +87,7 @@ impl QuestLogState {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.quests.is_empty()
+        self.quests.is_empty() && self.client_hunting_goals.is_empty()
     }
 
     pub fn is_tracked(&self, quest_id: u32) -> bool {
@@ -84,6 +96,43 @@ impl QuestLogState {
 
     pub fn tracked_quest_ids(&self) -> &[u32] {
         &self.tracked_quests
+    }
+
+    pub fn client_hunting_goals(&self) -> &[ClientHuntingGoalEntry] {
+        &self.client_hunting_goals
+    }
+
+    pub fn set_client_hunting_goals(&mut self, goals: Vec<ClientHuntingGoalEntry>) {
+        self.client_hunting_goals = goals;
+        self.client_hunting_goals.sort_by_key(|goal| goal.monster_id);
+        self.client_hunting_goals.dedup_by_key(|goal| goal.monster_id);
+        self.client_hunting_goals.truncate(MAX_CLIENT_HUNTING_GOALS);
+        self.rebuild_display();
+    }
+
+    pub fn add_client_hunting_goal(&mut self, goal: ClientHuntingGoalEntry) -> bool {
+        if self.client_hunting_goals.len() >= MAX_CLIENT_HUNTING_GOALS
+            || self
+                .client_hunting_goals
+                .iter()
+                .any(|existing| existing.monster_id == goal.monster_id)
+        {
+            return false;
+        }
+        self.client_hunting_goals.push(goal);
+        self.client_hunting_goals.sort_by_key(|goal| goal.monster_id);
+        self.rebuild_display();
+        true
+    }
+
+    pub fn remove_client_hunting_goal(&mut self, monster_id: u32) -> bool {
+        let old_len = self.client_hunting_goals.len();
+        self.client_hunting_goals.retain(|goal| goal.monster_id != monster_id);
+        let removed = old_len != self.client_hunting_goals.len();
+        if removed {
+            self.rebuild_display();
+        }
+        removed
     }
 
     pub fn display_text(&self) -> &str {
@@ -179,11 +228,7 @@ impl QuestLogState {
     }
 
     fn rebuild_display(&mut self) {
-        if self.quests.is_empty() {
-            self.display_text.clear();
-            return;
-        }
-        self.display_text = self
+        let mut entries = self
             .quests
             .iter()
             .filter(|quest| self.tracked_quests.contains(&quest.quest_id))
@@ -207,14 +252,23 @@ impl QuestLogState {
                 }
                 text
             })
-            .collect::<Vec<_>>()
-            .join("\n");
+            .collect::<Vec<_>>();
+        if !self.client_hunting_goals.is_empty() {
+            entries.push("Personal hunting goals (client-only):".to_owned());
+            entries.extend(
+                self.client_hunting_goals
+                    .iter()
+                    .map(|goal| format!("  {} — no server-tracked progress", goal.monster_name)),
+            );
+        }
+        self.display_text = entries.join("\n");
     }
 
     /// Drop everything, for a logout or a character switch.
     pub fn clear(&mut self) {
         self.quests.clear();
         self.tracked_quests.clear();
+        self.client_hunting_goals.clear();
         self.rebuild_display();
     }
 }
@@ -223,7 +277,7 @@ impl QuestLogState {
 mod tests {
     use ragnarok_packets::ItemId;
 
-    use super::{QuestEntry, QuestHuntObjectiveEntry, QuestLogState, QuestRequirementEntry};
+    use super::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLogState, QuestRequirementEntry};
 
     fn entry(quest_id: u32, name: &str) -> QuestEntry {
         QuestEntry {
@@ -287,5 +341,39 @@ mod tests {
         assert!(log.display_text().contains("Poring: 5 / 10"));
         log.remove(20002);
         assert_eq!(log.quests().len(), 1);
+    }
+
+    #[test]
+    fn client_hunting_goals_are_deduplicated_local_and_cleared_on_character_logout() {
+        let mut log = QuestLogState::default();
+        let poring = ClientHuntingGoalEntry {
+            monster_id: 1002,
+            monster_name: "Poring".to_owned(),
+        };
+        assert!(log.add_client_hunting_goal(poring.clone()));
+        assert!(!log.add_client_hunting_goal(poring));
+        assert!(log.display_text().contains("Personal hunting goals (client-only):"));
+        assert!(log.display_text().contains("Poring — no server-tracked progress"));
+        assert!(!log.is_empty());
+
+        log.clear();
+        assert!(log.client_hunting_goals().is_empty());
+        assert!(log.is_empty());
+    }
+
+    #[test]
+    fn personal_hunting_goal_count_is_bounded() {
+        let mut log = QuestLogState::default();
+        for monster_id in 1..=5 {
+            assert!(log.add_client_hunting_goal(ClientHuntingGoalEntry {
+                monster_id,
+                monster_name: format!("Monster {monster_id}"),
+            }));
+        }
+        assert!(!log.add_client_hunting_goal(ClientHuntingGoalEntry {
+            monster_id: 6,
+            monster_name: "Monster 6".to_owned(),
+        }));
+        assert_eq!(log.client_hunting_goals().len(), 5);
     }
 }

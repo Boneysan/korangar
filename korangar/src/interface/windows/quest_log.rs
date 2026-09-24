@@ -37,14 +37,12 @@ where
 {
     fn row_count(&self, state: &State<ClientState>) -> usize {
         let quest_log = state.get(&self.quest_log_path);
+        let goals = quest_log.client_hunting_goals();
         if quest_log.is_empty() {
             return 1;
         }
-        (if quest_log.quests().iter().any(|quest| !quest.requirements().is_empty()) {
-            1
-        } else {
-            0
-        }) + quest_log
+        let mut rows = usize::from(quest_log.quests().iter().any(|quest| !quest.requirements().is_empty()));
+        rows += quest_log
             .quests()
             .iter()
             .map(|quest| {
@@ -61,7 +59,15 @@ where
                         .map(|objective| 1 + hunt_spawn_maps(objective.monster_id).len())
                         .sum::<usize>()
             })
-            .sum::<usize>()
+            .sum::<usize>();
+        if !goals.is_empty() {
+            rows += 2 + usize::from(quest_log.quests().is_empty());
+            rows += goals
+                .iter()
+                .map(|goal| 1 + hunt_spawn_maps(goal.monster_id).len().max(1))
+                .sum::<usize>();
+        }
+        rows
     }
 }
 
@@ -147,10 +153,13 @@ where
         if quest_log.is_empty() {
             self.rows.push(ErasedElement::new(text! { text: "No active quests." }));
         } else {
-            if quest_log.quests().iter().any(|quest| !quest.requirements().is_empty()) {
+            if !quest_log.quests().is_empty() && quest_log.quests().iter().any(|quest| !quest.requirements().is_empty()) {
                 self.rows.push(ErasedElement::new(text! {
                     text: "Counts show what you carry. The NPC also counts party members who are offline."
                 }));
+            }
+            if quest_log.quests().is_empty() && !quest_log.client_hunting_goals().is_empty() {
+                self.rows.push(ErasedElement::new(text! { text: "No active server quests." }));
             }
             for quest in quest_log.quests() {
                 let action = if quest_log.is_tracked(quest.quest_id) { "Untrack" } else { "Track" };
@@ -211,6 +220,36 @@ where
                             text: format!("Route to {map_name}"),
                             tooltip: "Broad static spawn region; exact spawn cells are not shown.",
                             event: InputEvent::SetNavigationMapDestination { map_name },
+                        }));
+                    }
+                }
+            }
+            if !quest_log.client_hunting_goals().is_empty() {
+                self.rows
+                    .push(ErasedElement::new(text! { text: "Personal hunting goals (client-only)" }));
+                self.rows.push(ErasedElement::new(text! {
+                    text: "These targets are character-local; the server does not track their kill progress."
+                }));
+                for goal in quest_log.client_hunting_goals() {
+                    self.rows.push(ErasedElement::new(split! {
+                        children: (
+                            button! {
+                                text: "Remove",
+                                event: InputEvent::RemoveClientHuntingGoal { monster_id: goal.monster_id },
+                            },
+                            text! { text: goal.monster_name.clone() },
+                        ),
+                    }));
+                    for map_name in hunt_spawn_maps(goal.monster_id) {
+                        self.rows.push(ErasedElement::new(button! {
+                            text: format!("Route to {map_name}"),
+                            tooltip: "Broad static spawn region; exact spawn cells are not shown.",
+                            event: InputEvent::SetNavigationMapDestination { map_name },
+                        }));
+                    }
+                    if hunt_spawn_maps(goal.monster_id).is_empty() {
+                        self.rows.push(ErasedElement::new(text! {
+                            text: "No graph-known static spawn map is available for this target."
                         }));
                     }
                 }

@@ -233,6 +233,15 @@ pub enum InputEvent {
     SortInventoryItems,
     SetInventoryTab(InventoryTab),
     ToggleQuestTracking(u32),
+    /// Add a reference monster as a character-local hunt target, not a server
+    /// quest.
+    AddClientHuntingGoal {
+        monster_id: u32,
+    },
+    /// Remove a character-local hunt target.
+    RemoveClientHuntingGoal {
+        monster_id: u32,
+    },
     DropItem {
         inventory_index: ragnarok_packets::InventoryIndex,
         amount: u16,
