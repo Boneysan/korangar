@@ -8362,9 +8362,24 @@ impl Client {
                 InputEvent::Escape => {
                     if self.pending_skill.is_some() {
                         self.pending_skill = None;
+                        *self.client_state.follow_mut(client_state().buffered_action()) = None;
                         *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
                     } else if cancel_own_cast(&mut self.networking_system, &self.client_state, client_tick) {
+                        *self.client_state.follow_mut(client_state().buffered_action()) = None;
                         *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
+                    } else if self.client_state.follow(client_state().buffered_action()).is_some()
+                        || self.client_state.follow(client_state().timed_buffered_action()).is_some()
+                    {
+                        // Escape is an explicit cancel: do not let an action
+                        // queued during an animation fire after the player has
+                        // tried to back out of it.
+                        *self.client_state.follow_mut(client_state().buffered_action()) = None;
+                        *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "action-buffer-canceled",
+                            "Queued action canceled",
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
                     } else if !self.interface.close_top_window(&self.client_state) && self.client_state.try_follow(this_entity()).is_some()
                     {
                         match self.interface.is_window_with_class_open(WindowClass::Menu) {
