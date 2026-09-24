@@ -6,7 +6,7 @@
 
 Hercules stores monster discovery milestones and visited-map history **per account**. A first encounter/kill (and later reviewed events such as a lore check) can advance a badge, encounter history, or authored non-spoiler note; entering a map adds a visited-place badge. These records never gate searchable monster mechanics, drops, rates, cards, map links, or other build-planning facts. A kill grants the configured milestone to the killer's account. Whether eligible nearby party members also receive discovery credit is a separate implementation choice; if added, grant it server-side, still keyed by account. An account cannot be downgraded by a stale client, map change, DM view toggle, or reconnect. Rumors and general-service unlocks can use additional distinct account-scoped records. **Story quests, chapter completion, choices, and story-gated access never enter this account ledger**; they remain per-character, including in DM Session mode ([quest-sync contract](dm-party-quest-sync.md)).
 
-The current implementation uses `korangar_account_discovery` keyed by `(account_id, mob_id)` and `korangar_account_map_discovery` keyed by `(account_id, map_name)` (migration: `Hercules/sql-files/upgrades/2026-09-24--korangar-discovery.sql`). Monster rows use a bounded `TINYINT` milestone; map visits are a monotonic set. The old DM Bestiary list is session-only designer state, not player cache, and is intentionally not imported. No client-local player unlock cache exists to migrate.
+The current implementation uses `korangar_account_discovery` keyed by `(account_id, mob_id)` and `korangar_account_map_discovery` keyed by `(account_id, map_name)` (migration: `Hercules/sql-files/upgrades/2026-09-24--korangar-discovery.sql`). Monster rows use a bounded `TINYINT` milestone; map visits are a monotonic set. Hercules dispatches a dedicated Korangar map-change event for this ledger rather than enabling its global `loadevent` mapflag, which would run every map-load script on every flagged map. The old DM Bestiary list is session-only designer state, not player cache, and is intentionally not imported. No client-local player unlock cache exists to migrate.
 
 ## Snapshot and delta protocol
 
@@ -16,7 +16,8 @@ The friends-server Guide is open by default. Discovery synchronization changes b
 
 ## Acceptance
 
-- **Still requires live acceptance:** kill a Poring, relog, and see its discovery milestone retained on a second character of the same account; a different account starts at its own milestone.
+- **Live acceptance passed (2026-09-24):** `account-discovery-isolation` verifies first-kill and first-visit deltas, completed monster/map snapshots on a second character of the same account, an empty monster snapshot on a different account, no cross-account map-delta leak, and no visited-map leak in the other account's snapshot. Fixture cleanup passed.
+- **Still open:** validate the production upgrade migration independently of the fresh disposable-server schema path; exercise richer reviewed milestones and DM-ledger interaction.
 - Snapshot handles zero, many, interrupted, and reordered chunks without inventing unlocks; delta after snapshot merges once.
 - Client parser unit tests cover empty/incomplete/reordered/account-mismatched/duplicate snapshots and monotonic deltas. DM reveal-all does not persist; legacy DM state is intentionally not migrated.
 - Two accounts with different discovery histories see the same verified Poring stats, drops, and source links. No party peer can forge a milestone grant.

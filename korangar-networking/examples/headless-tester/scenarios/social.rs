@@ -917,6 +917,7 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
 
     let existing = primary.collect_for(Duration::from_millis(150));
     let known_mobs = discovery_mob_ids(&existing, account_id);
+    let known_maps = discovery_map_ids(&existing, account_id);
     const CANDIDATES: &[(u16, &str)] = &[
         (1002, "PORING"),
         (1007, "FABRE"),
@@ -932,11 +933,41 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
         .copied()
         .find(|(mob_id, _)| !known_mobs.contains(mob_id))
         .ok_or("all discovery test mobs were already recorded on the primary account")?;
+    let visit_candidates = [("geffen", 119, 59), ("payon", 150, 100), ("morocc", 156, 97), ("alberta", 135, 100)];
+    let (visit_map, visit_x, visit_y) = visit_candidates
+        .iter()
+        .copied()
+        .find(|(map_name, ..)| !known_maps.contains(*map_name))
+        .ok_or("all account-discovery map fixtures were already visited")?;
 
     primary.ensure_job(4008)?; // Lord Knight
     primary.ensure_base_level(99)?;
     primary.say("@allskill")?;
     primary.say("@heal")?;
+    other_account.flush();
+    primary.warp(visit_map, visit_x, visit_y)?;
+    if primary.map_name != visit_map {
+        return Err(format!(
+            "map-discovery fixture expected {visit_map}, landed on {}",
+            primary.map_name
+        ));
+    }
+    let visit_delta = format!("[KORANGAR-MAP-DISCOVERY:v1:visited:{account_id}:{visit_map}]");
+    primary.wait_for("first-visit account discovery delta", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&visit_delta) => Some(()),
+        _ => None,
+    })?;
+    let other_map_events = other_account.collect_for(Duration::from_millis(300));
+    if other_map_events.iter().any(|event| {
+        matches!(event, NetworkEvent::ChatMessage { color: MessageColor::Server, text }
+            if text.contains(&visit_delta))
+    }) {
+        return Err("map-visit discovery delta leaked to a different account".to_owned());
+    }
+
     primary.warp("prt_fild08", 170, 180)?;
     primary.pump(Duration::from_millis(300));
     primary.flush();
@@ -1032,6 +1063,26 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
         } if text.contains(&end_marker) => Some(()),
         _ => None,
     })?;
+    let map_begin_prefix = format!("[KORANGAR-MAP-DISCOVERY:v1:begin:{account_id}:");
+    same_account_alt.wait_for("account map-discovery snapshot begin", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&map_begin_prefix) => Some(()),
+        _ => None,
+    })?;
+    let map_end_prefix = format!("[KORANGAR-MAP-DISCOVERY:v1:end:{account_id}:");
+    same_account_alt.wait_for("account map-discovery snapshot end", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&map_end_prefix) => Some(()),
+        _ => None,
+    })?;
+    let map_snapshot = same_account_alt.collect_for(Duration::from_millis(100));
+    if !discovery_map_ids(&map_snapshot, account_id).contains(visit_map) {
+        return Err(format!("same-account snapshot omitted visited map {visit_map}"));
+    }
     drop(same_account_alt);
 
     let mut separate_account = TestContext::connect_as(
@@ -1061,6 +1112,26 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
         } if text.contains(&separate_end) => Some(()),
         _ => None,
     })?;
+    let separate_map_begin = format!("[KORANGAR-MAP-DISCOVERY:v1:begin:{separate_account_id}:");
+    separate_account.wait_for("separate account's map-discovery snapshot begin", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&separate_map_begin) => Some(()),
+        _ => None,
+    })?;
+    let separate_map_end = format!("[KORANGAR-MAP-DISCOVERY:v1:end:{separate_account_id}:");
+    separate_account.wait_for("separate account's map-discovery snapshot end", |event| match event {
+        NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } if text.contains(&separate_map_end) => Some(()),
+        _ => None,
+    })?;
+    let separate_map_snapshot = separate_account.collect_for(Duration::from_millis(100));
+    if discovery_map_ids(&separate_map_snapshot, separate_account_id).contains(visit_map) {
+        return Err(format!("visited map {visit_map} leaked into a different account's snapshot"));
+    }
     Ok(())
 }
 
@@ -1109,6 +1180,40 @@ fn discovery_mob_ids(events: &[NetworkEvent], account_id: u32) -> HashSet<u16> {
                     }
                 }
             }
+        }
+    }
+    known
+}
+
+fn discovery_map_ids(events: &[NetworkEvent], account_id: u32) -> HashSet<String> {
+    let mut known = HashSet::new();
+    for event in events {
+        let NetworkEvent::ChatMessage {
+            color: MessageColor::Server,
+            text,
+        } = event
+        else {
+            continue;
+        };
+        if let Some((_, visited)) = text.split_once("[KORANGAR-MAP-DISCOVERY:v1:visited:") {
+            if let Some((parsed_account, map_name)) = visited.split_once(':')
+                && parsed_account.parse::<u32>().ok() == Some(account_id)
+            {
+                known.insert(map_name.trim_end_matches(']').to_owned());
+            }
+            continue;
+        }
+        let Some((_, chunk)) = text.split_once("[KORANGAR-MAP-DISCOVERY:v1:chunk:") else {
+            continue;
+        };
+        let mut fields = chunk.splitn(4, ':');
+        if fields.next().and_then(|field| field.parse::<u32>().ok()) != Some(account_id) {
+            continue;
+        }
+        let _sequence = fields.next();
+        let _index = fields.next();
+        if let Some(payload) = fields.next() {
+            known.extend(payload.trim_end_matches(']').split(',').map(str::to_owned));
         }
     }
     known
