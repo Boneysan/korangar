@@ -25,6 +25,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("use-drop-failures", 6, use_drop_failures),
         Scenario::new("storage", 6, storage),
         Scenario::new("storage-persistence", 6, storage_persistence),
+        Scenario::new("inventory-order", 6, inventory_order),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
@@ -32,6 +33,45 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("repair-list-empty", 6, repair_list_empty),
         Scenario::new("repair-invalid-item", 6, repair_invalid_item),
     ]
+}
+
+/// Kept as the final suite scenario because it fills the disposable character's
+/// inventory to test the no-free-slot rejection path.
+pub fn split_stack_scenario() -> Scenario {
+    Scenario::new("inventory-split", 6, inventory_split)
+}
+
+/// Persist a reordered permutation without changing the underlying item slot
+/// identifiers used by equip/use/storage actions.
+fn inventory_order(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.give_item(501, 1)?;
+    context.give_item(503, 1)?; // Yellow Potion, distinct item/slot.
+    let original = context.inventory.iter().map(|item| item.index).collect::<Vec<_>>();
+    if original.len() < 2 {
+        return Err(format!("inventory-order fixture has only {} occupied slots", original.len()));
+    }
+    let mut reordered = original.clone();
+    reordered.reverse();
+    context.flush();
+    context.net.reorder_inventory(reordered.clone()).map_err(|_| "disconnected")?;
+    let acknowledged = context.wait_for("InventoryOrder acknowledgement", |event| match event {
+        NetworkEvent::InventoryOrder { indices } => Some(indices.clone()),
+        _ => None,
+    })?;
+    if acknowledged != reordered {
+        return Err(format!(
+            "server acknowledged inventory order {acknowledged:?}, requested {reordered:?}"
+        ));
+    }
+    let mut slot_ids = context.inventory.iter().map(|item| item.index).collect::<Vec<_>>();
+    slot_ids.sort_unstable_by_key(|index| index.0);
+    let mut expected_slot_ids = original;
+    expected_slot_ids.sort_unstable_by_key(|index| index.0);
+    if slot_ids != expected_slot_ids {
+        return Err("reordering display slots changed authoritative inventory indices".to_owned());
+    }
+    Ok(())
 }
 
 const BS_REPAIRWEAPON: SkillId = SkillId(108);
@@ -894,38 +934,137 @@ fn open_groomer_buy(context: &mut TestContext, groomer_id: EntityId) -> Result<(
     Ok((shop_id, pet_food))
 }
 
-/// Open storage, move a Red Potion to it, then retrieve it, and close storage.
+/// Partial inventory ↔ storage transfers preserve item counts and source slot
+/// identity, including a merged retrieve into an existing inventory stack.
 fn storage(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
     let item_id = 501; // Red Potion
 
-    let index = context.give_item(item_id, 1)?;
+    context.say(&format!("@delitem {item_id} 30000"))?;
+    context.pump(Duration::from_millis(250));
+    context.say("@storage")?;
+    let existing_storage = context.wait_for("initial SetStorage", |event| match event {
+        NetworkEvent::SetStorage { items } => Some(items.clone()),
+        _ => None,
+    })?;
+    for existing in existing_storage.into_iter().filter(|item| item.item_id.0 == item_id) {
+        context.flush();
+        context
+            .net
+            .move_item_from_storage(existing.index, u32::from(existing.amount()))
+            .map_err(|_| "disconnected")?;
+        context.wait_for("clear old Red Potion storage stack", |event| match event {
+            NetworkEvent::StorageItemRemoved { index, amount } if *index == existing.index && *amount == u32::from(existing.amount()) => {
+                Some(())
+            }
+            _ => None,
+        })?;
+    }
+    context.flush();
+    context.net.close_storage().map_err(|_| "disconnected")?;
+    context.wait_for("close storage after clearing marker", |event| {
+        matches!(event, NetworkEvent::StorageClosed).then_some(())
+    })?;
+    context.say(&format!("@delitem {item_id} 30000"))?;
+    context.pump(Duration::from_millis(250));
+    let inventory_index = context.give_item(item_id, 5)?;
 
     context.flush();
     context.say("@storage")?;
-    context.wait_for("SetStorage", |event| match event {
-        NetworkEvent::SetStorage { .. } => Some(()),
-        _ => None,
+    context.wait_for("SetStorage for transfer", |event| {
+        matches!(event, NetworkEvent::SetStorage { .. }).then_some(())
     })?;
 
     context.flush();
-    context.net.move_item_to_storage(index, 1).map_err(|_| "disconnected")?;
+    context.net.move_item_to_storage(inventory_index, 2).map_err(|_| "disconnected")?;
 
     let storage_item = context.wait_for("StorageItemAdded", |event| match event {
-        NetworkEvent::StorageItemAdded { item } if item.item_id.0 == item_id => Some(item.clone()),
+        NetworkEvent::StorageItemAdded { item } if item.item_id.0 == item_id && item.amount() == 2 => Some(item.clone()),
         _ => None,
     })?;
+    context.wait_for("inventory count reduced after partial store", |event| match event {
+        NetworkEvent::InventoryItemRemoved { index, amount: 2, .. } if *index == inventory_index => Some(()),
+        _ => None,
+    })?;
+    let carried = context
+        .inventory
+        .iter()
+        .find(|item| item.index == inventory_index)
+        .map(|item| item.amount());
+    if carried != Some(3) {
+        return Err(format!("storing two potions left inventory amount {carried:?}, expected 3"));
+    }
 
     context.flush();
     context
         .net
         .move_item_from_storage(storage_item.index, 1)
         .map_err(|_| "disconnected")?;
-
     context.wait_for("StorageItemRemoved", |event| match event {
-        NetworkEvent::StorageItemRemoved { index: removed_index, .. } if *removed_index == storage_item.index => Some(()),
+        NetworkEvent::StorageItemRemoved {
+            index: removed_index,
+            amount: 1,
+        } if *removed_index == storage_item.index => Some(()),
         _ => None,
     })?;
+    context.wait_for("one potion merged back to inventory", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id && item.amount() == 1 => Some(()),
+        _ => None,
+    })?;
+    let carried = context
+        .inventory
+        .iter()
+        .filter(|item| item.item_id.0 == item_id)
+        .map(|item| item.amount())
+        .sum::<u16>();
+    if carried != 4 {
+        return Err(format!("retrieving one potion left carried amount {carried}, expected 4"));
+    }
+
+    context.flush();
+    context.net.close_storage().map_err(|_| "disconnected")?;
+    context.wait_for("StorageClosed before re-open", |event| {
+        matches!(event, NetworkEvent::StorageClosed).then_some(())
+    })?;
+    context.flush();
+    context.say("@storage")?;
+    let remaining_storage = context.wait_for("storage snapshot with remaining potion", |event| match event {
+        NetworkEvent::SetStorage { items } => Some(items.clone()),
+        _ => None,
+    })?;
+    let remaining_item = remaining_storage
+        .into_iter()
+        .find(|item| item.item_id.0 == item_id)
+        .ok_or("partially transferred potion missing from storage snapshot")?;
+    if remaining_item.amount() != 1 || remaining_item.index != storage_item.index {
+        return Err(format!(
+            "remaining storage stack was index {} amount {}, expected index {} amount 1",
+            remaining_item.index.0,
+            remaining_item.amount(),
+            storage_item.index.0
+        ));
+    }
+    context
+        .net
+        .move_item_from_storage(remaining_item.index, 1)
+        .map_err(|_| "disconnected")?;
+    context.wait_for("final storage item removal", |event| match event {
+        NetworkEvent::StorageItemRemoved { index, amount: 1 } if *index == remaining_item.index => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("final potion merged into inventory", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id && item.amount() == 1 => Some(()),
+        _ => None,
+    })?;
+    let carried = context
+        .inventory
+        .iter()
+        .filter(|item| item.item_id.0 == item_id)
+        .map(|item| item.amount())
+        .sum::<u16>();
+    if carried != 5 {
+        return Err(format!("after retrieving all potions, carried amount is {carried}, expected 5"));
+    }
 
     context.flush();
     context.net.close_storage().map_err(|_| "disconnected")?;
@@ -934,9 +1073,119 @@ fn storage(config: &Config) -> Result<(), String> {
         _ => None,
     })?;
 
-    // Cleanup inventory item
-    context.say("@delitem 501 1")?;
+    // Cleanup inventory item (the disposable integration database is dropped).
+    context.say("@delitem 501 5")?;
     context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// Exercise the server-authoritative stack split against valid, invalid, and
+/// full-inventory paths; the disposable integration database is discarded.
+fn inventory_split(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501u32; // Red Potion
+    let initial_amount = 10u16;
+
+    context.say(&format!("@delitem {item_id} 30000"))?;
+    context.say("@delitem 1770 30000")?;
+    context.say("@delitem 4001 30000")?;
+    context.pump(Duration::from_millis(250));
+    let source_index = context.give_item(item_id, initial_amount)?;
+    let _arrow_index = context.give_item(1770, 8)?; // Iron Arrow (IT_AMMO)
+    let _card_index = context.give_item(4001, 1)?; // Poring Card (IT_CARD)
+    let arrow = context.inventory.iter().find(|item| item.item_id.0 == 1770);
+    let card = context.inventory.iter().find(|item| item.item_id.0 == 4001);
+    if !arrow.is_some_and(|item| item.item_type == 10 && item.amount() == 8) {
+        return Err("live Iron Arrow packet did not report stackable ammo as item type 10, amount 8".to_owned());
+    }
+    if !card.is_some_and(|item| item.item_type == 6 && item.amount() == 1) {
+        return Err("live Poring Card packet did not report card item type 6".to_owned());
+    }
+    context.flush();
+
+    context.net.split_inventory_stack(source_index, 4).map_err(|_| "disconnected")?;
+    context.wait_for("partial split source decrement", |event| match event {
+        NetworkEvent::InventoryItemRemoved { index, amount, .. } if *index == source_index && *amount == 4 => Some(()),
+        _ => None,
+    })?;
+    let split_index = context.wait_for("partial split destination stack", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id && item.index != source_index && item.amount() == 4 => {
+            Some(item.index)
+        }
+        _ => None,
+    })?;
+    let source_amount = context
+        .inventory
+        .iter()
+        .find(|item| item.index == source_index)
+        .map(|item| item.amount());
+    let split_amount = context
+        .inventory
+        .iter()
+        .find(|item| item.index == split_index)
+        .map(|item| item.amount());
+    if source_amount != Some(6) || split_amount != Some(4) {
+        return Err(format!(
+            "valid split left source/destination amounts {source_amount:?}/{split_amount:?}, expected 6/4"
+        ));
+    }
+
+    for invalid_amount in [0, 6, 7] {
+        context.flush();
+        context
+            .net
+            .split_inventory_stack(source_index, invalid_amount)
+            .map_err(|_| "disconnected")?;
+        context.wait_for("server rejection of invalid split amount", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.contains("Choose a stackable item and an amount smaller than the stack") => {
+                Some(())
+            }
+            _ => None,
+        })?;
+        let events = context.collect_for(Duration::from_millis(100));
+        if events.iter().any(|event| {
+            matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id)
+                || matches!(event, NetworkEvent::InventoryItemRemoved { index, .. } if *index == source_index)
+        }) {
+            return Err(format!("invalid split amount {invalid_amount} mutated the potion stacks"));
+        }
+    }
+
+    // This is a fresh disposable test database when selected on its own.
+    // @allstats gives sufficient weight capacity; a large count of non-stackable
+    // Knives fills every remaining slot without relying on a visual inventory.
+    context.say("@item 1201 300")?; // Knife (non-stackable)
+    context.pump(Duration::from_secs(2));
+    if !context
+        .inventory
+        .iter()
+        .any(|item| item.item_id.0 == item_id && item.index == source_index)
+    {
+        return Err("inventory source potion disappeared while filling inventory".to_owned());
+    }
+    context.flush();
+    context.net.split_inventory_stack(source_index, 1).map_err(|_| "disconnected")?;
+    context.wait_for("server rejection of split with full inventory", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Your inventory is full; make room before splitting a stack") => Some(()),
+        _ => None,
+    })?;
+    let events = context.collect_for(Duration::from_millis(100));
+    if events.iter().any(|event| {
+        matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id)
+            || matches!(event, NetworkEvent::InventoryItemRemoved { index, .. } if *index == source_index)
+    }) {
+        return Err("full-inventory split rejection mutated the source stack".to_owned());
+    }
+    let remaining = context
+        .inventory
+        .iter()
+        .find(|item| item.index == source_index)
+        .map(|item| item.amount());
+    if remaining != Some(6) {
+        return Err(format!(
+            "full-inventory split changed source amount to {remaining:?}, expected 6"
+        ));
+    }
     Ok(())
 }
 

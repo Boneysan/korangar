@@ -764,13 +764,39 @@ impl TestContext {
             }
             NetworkEvent::IventoryItemAdded { item } => {
                 if let Some(existing) = self.inventory.iter_mut().find(|existing| existing.index == item.index) {
-                    *existing = item.clone();
+                    if existing.item_id == item.item_id {
+                        match (&mut existing.details, &item.details) {
+                            (
+                                korangar_networking::InventoryItemDetails::Regular { amount, .. },
+                                korangar_networking::InventoryItemDetails::Regular { amount: added, .. },
+                            )
+                            | (
+                                korangar_networking::InventoryItemDetails::Equippable { amount, .. },
+                                korangar_networking::InventoryItemDetails::Equippable { amount: added, .. },
+                            ) => {
+                                *amount = amount.saturating_add(*added);
+                            }
+                            _ => *existing = item.clone(),
+                        }
+                    } else {
+                        *existing = item.clone();
+                    }
                 } else {
                     self.inventory.push(item.clone());
                 }
             }
-            NetworkEvent::InventoryItemRemoved { index, .. } => {
-                self.inventory.retain(|item| item.index != *index);
+            NetworkEvent::InventoryItemRemoved { index, amount, .. } => {
+                if let Some(position) = self.inventory.iter().position(|item| item.index == *index) {
+                    let item_amount = self.inventory[position].amount();
+                    if item_amount > *amount {
+                        match &mut self.inventory[position].details {
+                            korangar_networking::InventoryItemDetails::Regular { amount: current, .. }
+                            | korangar_networking::InventoryItemDetails::Equippable { amount: current, .. } => *current -= *amount,
+                        }
+                    } else {
+                        self.inventory.remove(position);
+                    }
+                }
             }
             NetworkEvent::SkillTree { skill_information } => {
                 self.skills = skill_information.clone();

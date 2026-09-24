@@ -77,6 +77,11 @@ EOF
     char-server)
         cat <<'EOF'
 char_configuration: {
+    // The disposable database seeds Hercules' stock inter-server account.
+    inter: {
+        userid: "s1"
+        passwd: "p1"
+    }
     @include "conf/import/integration-sql.conf"
     // Headless lifecycle tests create and delete characters immediately.
     enable_char_creation: true
@@ -92,6 +97,11 @@ EOF
     map-server)
         cat <<'EOF'
 map_configuration: {
+    // The disposable database seeds Hercules' stock inter-server account.
+    inter: {
+        userid: "s1"
+        passwd: "p1"
+    }
     @include "conf/import/integration-sql.conf"
 }
 EOF

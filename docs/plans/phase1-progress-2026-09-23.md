@@ -10,7 +10,7 @@ Phase 1 remains **partial**. This handoff records code and data present in the w
 - **World Map:** The in-game menu opens a centered, clickable regional atlas with 27 town and destination nodes. Reachable atlas connections are filtered through the generated graph. Selecting a node sets a route; it does not teleport the player. The atlas highlights the current route and the current/target locations where represented.
 - **Per-map guidance:** The client finds a shortest-hop portal route, marks the next portal on the minimap, and computes a walkable tile path from the player to that exit. The minimap draws sampled breadcrumb points and a distinct exit marker. A map transition triggers route recalculation for the next leg. The client does not auto-walk.
 - **Quest tracker preference:** Track/Untrack selections persist per character in `client/game_settings.ron` and are restored against the server's active quest list. Quest state and objective progress remain server-authoritative.
-- **Inventory management:** Inventory and storage expose shared name search and server-item-type categories; inventory sorting, drag arrangement, server-persisted slot ordering, and per-character item protections are present. The client sends a dedicated split-stack packet, and Hercules validates eligibility/amount/capacity before moving quantity into a separate slot. Quest-item/favorite/recent-loot categories and live behavior remain unverified.
+- **Inventory management (refreshed 2026-09-24):** Inventory and storage expose shared name search and server-item-type categories; inventory sorting, drag arrangement, server-persisted slot ordering, and per-character item protections are present. The client sends a dedicated split-stack packet, and Hercules validates eligibility/amount/capacity before moving quantity into a separate slot. Targeted disposable-server tests pass valid, invalid, full-capacity, partial storage round-trip, inventory ordering, and live Iron Arrow/Card item-type cases. Quest-item/favorite/recent-loot filters are explicitly deferred pending reliable metadata/history contracts; GUI visuals remain unverified.
 - **DM campaign catch-up:** Hercules has party-join, quest-log, and map-load catch-up hooks. They copy stored current status for the explicitly listed campaign quests and story flags to a joining or returning character. Status catch-up does not replay past rewards. See the [party quest-sync spec](../specs/dm-party-quest-sync.md) for limits.
 
 ## Still open for Phase 1
@@ -20,7 +20,7 @@ Phase 1 remains **partial**. This handoff records code and data present in the w
 - Make quest objectives and Hercules `<NAVI>` dialog links supply actionable map destinations.
 - Add the player Adventure Guide and data-generation coverage described by GDD §9.5.
 - Add the monster target frame and related status detail.
-- Live acceptance for server-authoritative stack splitting, category filtering, storage transfers, drag/drop, and relog persistence.
+- GUI visual/usability acceptance and broader relog/drag/drop acceptance for inventory/storage. Quest-item/favorite/recent-loot filters are deferred (see the refreshed slice 7 row in `gdd-next-slices.md`); they are not live acceptance failures.
 - Add personal/shared party waypoints and party location display beyond current-map minimap markers.
 - Continue Phase 1 live acceptance and resolve any failures found there.
 

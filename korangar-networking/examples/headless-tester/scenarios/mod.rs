@@ -90,6 +90,7 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(social::scenarios());
     scenarios.extend(dm::scenarios());
     scenarios.extend(observer::scenarios());
+    scenarios.push(items::split_stack_scenario());
     scenarios
 }
 
@@ -162,6 +163,8 @@ const ACTION_COVERAGE: &[(&str, &str)] = &[
     ("move_item_to_storage", "storage-persistence"),
     ("move_item_from_storage", "storage-persistence"),
     ("close_storage", "storage-persistence"),
+    ("split_inventory_stack", "inventory-split"),
+    ("reorder_inventory", "inventory-order"),
     ("select_buy_or_sell", "shop-buy-sell"),
     ("purchase_items", "shop-buy-sell"),
     ("sell_items", "shop-buy-sell"),

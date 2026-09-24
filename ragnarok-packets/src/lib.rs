@@ -5920,6 +5920,17 @@ pub struct SkillFailReasonPacket {
     pub reason: u16,
 }
 
+/// Campaign recovery HUD state (`ZC_RECOVERY_STATE`, Hercules fork packet
+/// `0x0EFD`). Korangar currently has no player-facing recovery-state control;
+/// model the exact two-byte payload so headless sessions consume it safely.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0EFD)]
+pub struct RecoveryStatePacket {
+    pub mode: u8,
+    pub block: u8,
+}
+
 /// The runtime reason behind a cause-0 skill failure, as sent by our Hercules
 /// delta's `enum skill_fail_reason`.
 ///
