@@ -624,16 +624,24 @@ where
                 }),
         );
     } else if category == "Quests" {
+        let quest_log_path = client_state().quest_log();
+        let active_quests = state.get(&quest_log_path).quests();
+        let active_ids = active_quests
+            .iter()
+            .map(|quest| quest.quest_id)
+            .collect::<std::collections::HashSet<_>>();
         rows.extend(data.search_quests(&query, MAX_RESULTS).into_iter().map(|quest| GuideResult {
-            label: format!("{}  (Quest {})", quest.name, quest.id),
+            label: format!(
+                "{}  (Quest {}){}",
+                quest.name,
+                quest.id,
+                if active_ids.contains(&quest.id) { " — Active" } else { "" }
+            ),
             kind: "quest".to_owned(),
             id: quest.id,
         }));
-        let quest_log_path = client_state().quest_log();
         let listed_ids = rows.iter().map(|row| row.id).collect::<std::collections::HashSet<_>>();
-        let active = state
-            .get(&quest_log_path)
-            .quests()
+        let active = active_quests
             .iter()
             .filter(|quest| query.is_empty() || quest.name().to_lowercase().contains(&query) || quest.quest_id.to_string().contains(&query))
             .filter(|quest| !listed_ids.contains(&quest.quest_id))
