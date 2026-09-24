@@ -1030,6 +1030,16 @@ mod tests {
     }
 
     #[test]
+    fn party_membership_requires_a_roster_not_just_a_stale_party_label() {
+        let mut state = PartyState::default();
+        state.party_name = "Stale label".to_owned();
+        assert!(!state.in_party());
+
+        state.set_roster("Testing".to_owned(), vec![sample_member("test", true)], |_| String::new());
+        assert!(state.in_party());
+    }
+
+    #[test]
     fn empty_party_display_text() {
         let state = PartyState::default();
         // The roster is empty; the "no party" wording lives in the status line.

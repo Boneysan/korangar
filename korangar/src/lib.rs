@@ -9982,6 +9982,14 @@ impl Client {
                     ) {
                         continue;
                     }
+                    if !self.client_state.follow(client_state().party_state()).in_party() {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "party-ping-no-party",
+                            "Join a party before sending a party ping.",
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                        continue;
+                    }
                     let allowed = self
                         .client_state
                         .follow_mut(client_state().minimap())
