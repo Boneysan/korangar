@@ -19,6 +19,7 @@ const SKILLS_JSON: &str = include_str!("../../../docs/skills.json");
 const JOB_SKILLS_JSON: &str = include_str!("../../../docs/job-skills.v1.json");
 const JOB_BONUSES_JSON: &str = include_str!("../../../docs/job-bonuses.v1.json");
 const STATUS_REFERENCE_JSON: &str = include_str!("../../../docs/status-effects.v1.json");
+const QUESTS_JSON: &str = include_str!("../../../docs/quests.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -217,6 +218,24 @@ pub struct ReferenceStatusSkill {
     pub description: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuest {
+    pub id: u32,
+    pub name: String,
+    #[serde(default)]
+    pub targets: Vec<ReferenceQuestTarget>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestTarget {
+    pub mob_id: Option<u32>,
+    pub monster_name: String,
+    pub monster_data_known: Option<bool>,
+    pub count: u32,
+    pub level_range: Option<[u16; 2]>,
+    pub map_name: Option<String>,
+}
+
 pub struct ReferenceData {
     pub source_revision: String,
     pub mode: String,
@@ -227,12 +246,14 @@ pub struct ReferenceData {
     pub job_skill_trees: Vec<ReferenceJobSkillTree>,
     pub job_bonuses: Vec<ReferenceJobBonuses>,
     pub statuses: Vec<ReferenceStatus>,
+    pub quests: Vec<ReferenceQuest>,
     monsters_by_id: HashMap<u32, usize>,
     items_by_id: HashMap<u32, usize>,
     cards_by_id: HashMap<u32, usize>,
     skills_by_id: HashMap<u32, usize>,
     job_skill_trees_by_id: HashMap<u16, usize>,
     job_bonuses_by_id: HashMap<u16, usize>,
+    quests_by_id: HashMap<u32, usize>,
 }
 
 impl ReferenceData {
@@ -251,6 +272,8 @@ impl ReferenceData {
             serde_json::from_str(JOB_BONUSES_JSON).map_err(|error| format!("embedded job-bonuses.v1.json is invalid: {error}"))?;
         let status_reference: VersionedFile<ReferenceStatus> =
             serde_json::from_str(STATUS_REFERENCE_JSON).map_err(|error| format!("embedded status-effects.v1.json is invalid: {error}"))?;
+        let quests: VersionedFile<ReferenceQuest> =
+            serde_json::from_str(QUESTS_JSON).map_err(|error| format!("embedded quests.v1.json is invalid: {error}"))?;
 
         if bestiary.schema_version != 1
             || items.schema_version != 1
@@ -258,6 +281,7 @@ impl ReferenceData {
             || job_skills.schema_version != 1
             || job_bonuses.schema_version != 1
             || status_reference.schema_version != 1
+            || quests.schema_version != 1
         {
             return Err("unsupported embedded reference-data schema version".to_owned());
         }
@@ -266,6 +290,7 @@ impl ReferenceData {
             || cards.source_revision != job_skills.source_revision
             || job_skills.source_revision != job_bonuses.source_revision
             || job_bonuses.source_revision != status_reference.source_revision
+            || status_reference.source_revision != quests.source_revision
         {
             return Err("embedded reference files come from different Hercules revisions".to_owned());
         }
@@ -274,6 +299,7 @@ impl ReferenceData {
             || cards.source_worktree_dirty != job_skills.source_worktree_dirty
             || job_skills.source_worktree_dirty != job_bonuses.source_worktree_dirty
             || job_bonuses.source_worktree_dirty != status_reference.source_worktree_dirty
+            || status_reference.source_worktree_dirty != quests.source_worktree_dirty
         {
             return Err("embedded reference files disagree about source worktree status".to_owned());
         }
@@ -282,6 +308,7 @@ impl ReferenceData {
             || cards.mode != job_skills.mode
             || job_skills.mode != job_bonuses.mode
             || job_bonuses.mode != status_reference.mode
+            || status_reference.mode != quests.mode
         {
             return Err("embedded reference files use different renewal modes".to_owned());
         }
@@ -292,6 +319,7 @@ impl ReferenceData {
         let skills_by_id = unique_id_index(&skills, "skill")?;
         let job_skill_trees_by_id = unique_job_id_index(&job_skills.entries)?;
         let job_bonuses_by_id = unique_job_bonus_id_index(&job_bonuses.entries)?;
+        let quests_by_id = unique_quest_id_index(&quests.entries)?;
         let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
@@ -302,6 +330,17 @@ impl ReferenceData {
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
+
+        for quest in &quests.entries {
+            for target in &quest.targets {
+                if target.count == 0 {
+                    return Err(format!("quest {} has an invalid hunt target", quest.id));
+                }
+                if target.monster_data_known == Some(true) && !target.mob_id.is_some_and(|id| monster_ids.contains(&id)) {
+                    return Err(format!("quest {} marks a missing monster as known", quest.id));
+                }
+            }
+        }
 
         for tree in &job_skills.entries {
             for skill in &tree.skills {
@@ -382,12 +421,14 @@ impl ReferenceData {
             job_skill_trees: job_skills.entries,
             job_bonuses: job_bonuses.entries,
             statuses,
+            quests: quests.entries,
             monsters_by_id,
             items_by_id,
             cards_by_id,
             skills_by_id,
             job_skill_trees_by_id,
             job_bonuses_by_id,
+            quests_by_id,
         })
     }
 
@@ -413,6 +454,22 @@ impl ReferenceData {
 
     pub fn job_bonuses_by_id(&self, id: u16) -> Option<&ReferenceJobBonuses> {
         self.job_bonuses_by_id.get(&id).map(|&index| &self.job_bonuses[index])
+    }
+
+    pub fn quest_by_id(&self, id: u32) -> Option<&ReferenceQuest> {
+        self.quests_by_id.get(&id).map(|&index| &self.quests[index])
+    }
+
+    pub fn search_quests(&self, query: &str, limit: usize) -> Vec<&ReferenceQuest> {
+        let query = query.to_lowercase();
+        let mut matches: Vec<_> = self
+            .quests
+            .iter()
+            .filter(|quest| query.is_empty() || quest.name.to_lowercase().contains(&query) || quest.id.to_string() == query)
+            .collect();
+        matches.sort_by_key(|quest| (quest.name.to_lowercase(), quest.id));
+        matches.truncate(limit);
+        matches
     }
 
     pub fn search_skills(&self, query: &str, limit: usize) -> Vec<&ReferenceSkill> {
@@ -482,6 +539,16 @@ impl ReferenceData {
         matches.truncate(limit);
         matches
     }
+}
+
+fn unique_quest_id_index(entries: &[ReferenceQuest]) -> Result<HashMap<u32, usize>, String> {
+    let mut result = HashMap::with_capacity(entries.len());
+    for (index, entry) in entries.iter().enumerate() {
+        if entry.name.trim().is_empty() || result.insert(entry.id, index).is_some() {
+            return Err(format!("invalid or duplicate quest ID {}", entry.id));
+        }
+    }
+    Ok(result)
 }
 
 fn unique_id_index<T>(entries: &[T], category: &str) -> Result<HashMap<u32, usize>, String>
@@ -573,6 +640,7 @@ mod tests {
         assert_eq!(data.cards.len(), 1012);
         assert_eq!(data.job_skill_trees.len(), 128);
         assert_eq!(data.job_bonuses.len(), 147);
+        assert_eq!(data.quests.len(), 3172);
         assert!(data.source_revision.len() >= 40);
 
         let poring = data.monster_by_id(1002).expect("Poring exists");
@@ -589,6 +657,8 @@ mod tests {
                 .any(|monster| monster.sprite_name == "HYDRA")
         );
         assert!(data.search_items("oridecon", 100).iter().any(|item| item.id == 984));
+        assert!(data.quest_by_id(3401).is_some_and(|quest| quest.name == "Animal Monster Hunt"));
+        assert!(data.search_quests("animal monster hunt", 10).iter().any(|quest| quest.id == 3401));
 
         let knight = data.job_skill_tree_by_id(7).expect("Knight skill tree");
         let bash = knight

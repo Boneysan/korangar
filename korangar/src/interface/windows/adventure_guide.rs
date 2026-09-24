@@ -206,6 +206,41 @@ fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
             requirement.item_id.0, requirement.item_name, requirement.needed
         ));
     }
+    if let Some(reference) = data.quest_by_id(quest.quest_id) {
+        lines.extend(quest_reference_details(reference));
+    }
+    lines
+}
+
+fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) -> Vec<String> {
+    let mut lines = vec![format!("{} — bundled hunt reference", quest.name)];
+    if quest.targets.is_empty() {
+        lines.push("No explicit hunt targets are recorded for this quest.".to_owned());
+    }
+    for target in &quest.targets {
+        let title = format!("{} × {}", target.monster_name, target.count);
+        lines.push(format!("Objective: {title}"));
+        if let Some(level) = target.level_range {
+            lines.push(format!("Target level bounds (raw server values): {} / {}", level[0], level[1]));
+        }
+        if let Some(map) = &target.map_name {
+            if is_graph_map(map) {
+                lines.push(format!("@route:{map}"));
+            } else {
+                lines.push(format!("Target map {map} has no loaded navigation route."));
+            }
+        } else if let Some(mob_id) = target.mob_id {
+            if target.monster_data_known == Some(true) {
+                lines.push(format!(
+                    "@guide:monster:{mob_id}|View {} and known spawn routes",
+                    target.monster_name
+                ));
+            } else {
+                lines.push(format!("Monster ID {mob_id} has no matching bundled bestiary entry."));
+            }
+        }
+    }
+    lines.push("Quest giver, scripted story steps, prerequisites, and rewards are not included in this static hunt reference.".to_owned());
     lines
 }
 
@@ -235,6 +270,10 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
             .find(|status| status.id == result.id)
             .map(status_details)
             .unwrap_or_else(|| vec!["Status reference entry unavailable.".to_owned()]),
+        "quest" => data
+            .quest_by_id(result.id)
+            .map(quest_reference_details)
+            .unwrap_or_else(|| vec!["Quest reference entry unavailable.".to_owned()]),
         "map" => crate::world::navigation_graph()
             .maps
             .get(result.id as usize)
@@ -368,7 +407,7 @@ fn parse_guide_link(line: &str) -> Option<GuideResult> {
     let link = line.strip_prefix("@guide:")?;
     let (target, label) = link.split_once('|')?;
     let (kind, id) = target.split_once(':')?;
-    if !matches!(kind, "item" | "monster" | "skill" | "status") {
+    if !matches!(kind, "item" | "monster" | "skill" | "status" | "quest") {
         return None;
     }
     Some(GuideResult {
@@ -585,21 +624,26 @@ where
                 }),
         );
     } else if category == "Quests" {
-        rows.extend(
-            state
-                .get(&client_state().quest_log())
-                .quests()
-                .iter()
-                .filter(|quest| {
-                    query.is_empty() || quest.name().to_lowercase().contains(&query) || quest.quest_id.to_string().contains(&query)
-                })
-                .take(MAX_RESULTS)
-                .map(|quest| GuideResult {
-                    label: format!("{}  (Quest {})", quest.name(), quest.quest_id),
-                    kind: "quest".to_owned(),
-                    id: quest.quest_id,
-                }),
-        );
+        rows.extend(data.search_quests(&query, MAX_RESULTS).into_iter().map(|quest| GuideResult {
+            label: format!("{}  (Quest {})", quest.name, quest.id),
+            kind: "quest".to_owned(),
+            id: quest.id,
+        }));
+        let quest_log_path = client_state().quest_log();
+        let listed_ids = rows.iter().map(|row| row.id).collect::<std::collections::HashSet<_>>();
+        let active = state
+            .get(&quest_log_path)
+            .quests()
+            .iter()
+            .filter(|quest| query.is_empty() || quest.name().to_lowercase().contains(&query) || quest.quest_id.to_string().contains(&query))
+            .filter(|quest| !listed_ids.contains(&quest.quest_id))
+            .take(MAX_RESULTS.saturating_sub(rows.len()))
+            .map(|quest| GuideResult {
+                label: format!("{}  (Quest {})", quest.name(), quest.quest_id),
+                kind: "quest".to_owned(),
+                id: quest.quest_id,
+            });
+        rows.extend(active);
     } else {
         let cards_only = category == "Cards";
         let source = if cards_only { &data.cards } else { &data.items };
@@ -689,7 +733,7 @@ where
 mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, item_matches_query, job_names, monster_details, parse_guide_link,
-        quest_details, reference_data, resolve_details, skill_details,
+        quest_details, quest_reference_details, reference_data, resolve_details, skill_details,
     };
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
 
@@ -925,6 +969,20 @@ mod tests {
         assert!(detail.iter().any(|line| line.starts_with("@route:")));
         assert!(detail.iter().any(|line| line.starts_with("@guide:monster:")));
         assert!(detail.iter().any(|line| line.starts_with("@guide:item:501|")));
+    }
+
+    #[test]
+    fn guide_static_quest_details_include_searchable_targets_and_route_links() {
+        let data = reference_data();
+        let quest = data.quest_by_id(1100).expect("tracked reference quest");
+        let detail = quest_reference_details(quest);
+        assert!(detail.iter().any(|line| line.contains("bundled hunt reference")));
+        assert!(detail.iter().any(|line| line.starts_with("@guide:monster:")) || detail.iter().any(|line| line.starts_with("@route:")));
+        assert!(detail.iter().any(|line| line.contains("Quest giver")));
+
+        let quest_link = parse_guide_link("@guide:quest:1100|Open quest").expect("quest links are supported");
+        assert_eq!(quest_link.kind, "quest");
+        assert!(!resolve_details(&quest_link).is_empty());
     }
 }
 
