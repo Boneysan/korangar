@@ -325,6 +325,15 @@ impl DiscoveryState {
         if complete.len() != snapshot.expected_entries {
             return false;
         }
+        // Encounter milestones are permanent account history. Keep the client
+        // ledger monotonic even if an older/incomplete server snapshot arrives
+        // after a newer delta (for example during reconnect overlap).
+        for (&monster_id, &milestone) in &self.discoveries {
+            complete
+                .entry(monster_id)
+                .and_modify(|known| *known = (*known).max(milestone))
+                .or_insert(milestone);
+        }
         for discovery in snapshot.pending_deltas {
             merge(&mut complete, discovery);
         }
@@ -435,6 +444,19 @@ mod tests {
     }
 
     #[test]
+    fn stale_complete_snapshot_cannot_downgrade_account_discovery() {
+        let mut state = DiscoveryState::default();
+        assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:delta:42:1002:3]"));
+        assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:begin:42:10:1:1]"));
+        assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:chunk:42:10:0:1002=1]"));
+        assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:end:42:10]"));
+
+        assert_eq!(state.milestone(1002), Some(3));
+        assert_eq!(state.discovered_count(), 1);
+        assert!(state.snapshot_complete());
+    }
+
+    #[test]
     fn rejects_forged_party_style_or_malformed_lines_and_never_downgrades_deltas() {
         let mut state = DiscoveryState::default();
         assert!(!receive(&mut state, "[KORANGAR-DISCOVERY:v1:delta:42:1002:99]"));
@@ -446,12 +468,13 @@ mod tests {
     }
 
     #[test]
-    fn accepts_an_empty_snapshot_and_handles_duplicate_chunks_idempotently() {
+    fn empty_snapshot_preserves_monotonic_history_and_duplicate_chunks_are_idempotent() {
         let mut state = DiscoveryState::default();
         assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:delta:42:1002:1]"));
         assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:begin:42:11:0:0]"));
         assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:end:42:11]"));
-        assert_eq!(state.discovered_count(), 0);
+        assert_eq!(state.discovered_count(), 1);
+        assert_eq!(state.milestone(1002), Some(1));
 
         assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:begin:42:12:1:1]"));
         assert!(receive(&mut state, "[KORANGAR-DISCOVERY:v1:chunk:42:12:0:1002=1]"));
