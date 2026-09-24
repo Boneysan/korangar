@@ -14,7 +14,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("friend-lifecycle", 8, friend_lifecycle),
         Scenario::new("friend-reject", 8, friend_reject),
         Scenario::new("party-lifecycle", 8, party_lifecycle),
-        Scenario::new("party-ping-carrier", 8, party_ping_carrier),
+        Scenario::new("party-message-carrier", 8, party_message_carrier),
         Scenario::new("account-discovery-isolation", 8, account_discovery_isolation),
         Scenario::new("party-reject-block", 8, party_reject_block),
         Scenario::new("party-member-vitals", 8, party_member_vitals),
@@ -362,7 +362,7 @@ fn party_lifecycle(config: &Config) -> Result<(), String> {
 
 /// Verify the server relays one versioned ping, rate-limits a second ping from
 /// the same character, and rejects payloads over its 128-byte carrier bound.
-fn party_ping_carrier(config: &Config) -> Result<(), String> {
+fn party_message_carrier(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
     let result: Result<(), String> = (|| {
         form_party(&mut primary, &mut partner)?;
@@ -439,7 +439,70 @@ fn party_ping_carrier(config: &Config) -> Result<(), String> {
         partner.wait_for("v2 party ping after the cooldown", |event| match event {
             NetworkEvent::PartyChatMessage { text, .. } if text.contains(ACCEPTED_AFTER_LIMIT) => Some(()),
             _ => None,
-        })
+        })?;
+
+        const SESSION_START: &str = "[KORANGAR-SESSION:v1] ready-start 420";
+        const SESSION_RATE_LIMITED: &str = "[KORANGAR-SESSION:v1] ready-response 420 ready";
+        let _ = partner.collect_for(Duration::from_millis(1050));
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, SESSION_START)
+            .map_err(|_| "primary disconnected")?;
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, SESSION_RATE_LIMITED)
+            .map_err(|_| "primary disconnected")?;
+        partner.wait_for("v1 party session relay", |event| match event {
+            NetworkEvent::PartyChatMessage { text, .. } if text.contains(SESSION_START) => Some(()),
+            _ => None,
+        })?;
+        let session_burst = partner.collect_for(Duration::from_millis(350));
+        if session_burst
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::PartyChatMessage { text, .. } if text.contains(SESSION_RATE_LIMITED)))
+        {
+            return Err("Hercules relayed a second v1 party session message inside the one-second sender cooldown".to_owned());
+        }
+
+        let session_boundary_marker = "[KORANGAR-SESSION:v1] boundary ";
+        let session_oversized_marker = "[KORANGAR-SESSION:v1] boundary";
+        let session_boundary = format!("{session_boundary_marker}{}", "x".repeat(128 - session_boundary_marker.len()));
+        if session_boundary.len() != 128 {
+            return Err("party-session boundary fixture must be exactly 128 bytes".to_owned());
+        }
+        let _ = partner.collect_for(Duration::from_millis(750));
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, &session_boundary)
+            .map_err(|_| "primary disconnected")?;
+        partner.wait_for("128-byte v1 party session relay", |event| match event {
+            NetworkEvent::PartyChatMessage { text, .. } if text.contains(session_oversized_marker) => Some(()),
+            _ => None,
+        })?;
+
+        let oversized_session = format!("{session_boundary}x");
+        if oversized_session.len() != 129 {
+            return Err("oversized party-session fixture must be exactly 129 bytes".to_owned());
+        }
+        let _ = partner.collect_for(Duration::from_millis(1050));
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, &oversized_session)
+            .map_err(|_| "primary disconnected")?;
+        let rejected_session = partner.collect_for(Duration::from_millis(350));
+        if rejected_session
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::PartyChatMessage { text, .. } if text.contains(session_oversized_marker)))
+        {
+            return Err("Hercules relayed an oversized v1 party session payload".to_owned());
+        }
+        Ok(())
     })();
     leave_party_both(&mut primary, &mut partner);
     result
