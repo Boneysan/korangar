@@ -596,6 +596,34 @@ fn party_quest_credit(config: &Config) -> Result<(), String> {
             return Err("party member one cell beyond the configured AREA_SIZE received quest credit".to_owned());
         }
 
+        let partner_name = partner.character_name.clone();
+        partner.net.leave_party().map_err(|_| "partner disconnected")?;
+        primary.wait_for("partner left before solo quest test", |event| match event {
+            NetworkEvent::PartyMemberRemoved { character_name, .. } if character_name == &partner_name => Some(()),
+            _ => None,
+        })?;
+        primary.net.leave_party().map_err(|_| "primary disconnected")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        primary.flush();
+        partner.flush();
+
+        let fifth = kill_quest_spore(&mut primary)?;
+        if [first, second, third, fourth].contains(&fifth) {
+            return Err("solo quest fixture reused a prior monster entity id".to_owned());
+        }
+        primary.wait_for("solo player receives Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(5) => Some(()),
+            _ => None,
+        })?;
+        let solo_partner_events = partner.collect_for(Duration::from_millis(300));
+        if solo_partner_events.iter().any(|event| {
+            matches!(event, NetworkEvent::QuestHuntProgress { objectives }
+                if objectives.iter().any(|objective| objective.quest_id == QUEST_ID))
+        }) {
+            return Err("solo kill credited a former party member".to_owned());
+        }
+
         primary.say(&format!("@quest del {QUEST_ID}"))?;
         partner.say(&format!("@quest del {QUEST_ID}"))?;
         primary.wait_for("primary quest removed", |event| match event {
