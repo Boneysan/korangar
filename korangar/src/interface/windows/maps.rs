@@ -281,7 +281,7 @@ struct AtlasNode {
 
 struct AtlasView {
     nodes: Vec<AtlasNode>,
-    details: [String; 3],
+    details: [String; 5],
 }
 
 impl AtlasView {
@@ -298,7 +298,7 @@ impl AtlasView {
                     },
                 })
                 .collect(),
-            details: destination_detail_lines("", None, None, 0, None),
+            details: destination_detail_lines("", None, None, 0, None, &[], None),
         }
     }
 }
@@ -318,24 +318,37 @@ impl Element<ClientState> for AtlasView {
         let target = minimap.navigation_target().map(|target| target.map_name.as_str());
         let discovery_path = client_state().discovery();
         let discovery = state.get(&discovery_path);
+        let party_path = client_state().party_state();
+        let party = state.get(&party_path);
         let route = target.and_then(|destination| route_edges(current_map, destination));
-        let outgoing_exits = target.map_or(0, |destination| {
-            navigation_graph()
-                .edges
-                .iter()
-                .filter(|edge| edge.from.map.eq_ignore_ascii_case(destination))
-                .count()
-        });
-        let visit_state = target.map(|destination| {
-            if discovery.visited_map(destination) {
-                "visited"
-            } else if discovery.map_snapshot_complete() {
-                "not yet visited"
-            } else {
-                "discovery sync pending"
-            }
-        });
-        self.details = destination_detail_lines(current_map, target, route.as_deref(), outgoing_exits, visit_state);
+        let selected_map = target.unwrap_or(current_map);
+        let outgoing_exits = navigation_graph()
+            .edges
+            .iter()
+            .filter(|edge| edge.from.map.eq_ignore_ascii_case(selected_map))
+            .count();
+        let visit_state = if discovery.visited_map(selected_map) {
+            "visited"
+        } else if discovery.map_snapshot_complete() {
+            "not yet visited"
+        } else {
+            "discovery sync pending"
+        };
+        let party_members_here: Vec<_> = party
+            .members()
+            .iter()
+            .filter(|member| member.online() && normalized_map_name(member.map_name()).eq_ignore_ascii_case(selected_map))
+            .map(|member| member.name().to_owned())
+            .collect();
+        self.details = destination_detail_lines(
+            current_map,
+            target,
+            route.as_deref(),
+            outgoing_exits,
+            Some(visit_state),
+            &party_members_here,
+            crate::dm::reference_data::reference_data().map_spawn_summary(selected_map),
+        );
         with_single_resolver(resolvers, |resolver| resolver.with_height(520.0))
     }
 
@@ -374,7 +387,7 @@ impl Element<ClientState> for AtlasView {
         let point = |location: AtlasLocation| {
             (
                 area.left + location.x * (area.width - node_width - 8.0),
-                area.top + location.y * (area.height - node_height - 92.0),
+                area.top + location.y * (area.height - node_height - 160.0),
             )
         };
         for &(from, to) in available_roads() {
@@ -493,7 +506,7 @@ impl Element<ClientState> for AtlasView {
             layout.add_text(
                 Area {
                     left: area.left + 12.0,
-                    top: area.top + area.height - 86.0 + index as f32 * 18.0,
+                    top: area.top + area.height - 126.0 + index as f32 * 18.0,
                     width: area.width - 24.0,
                     height: 18.0,
                 },
@@ -552,39 +565,63 @@ fn destination_detail_lines(
     route: Option<&[&'static NavigationEdge]>,
     outgoing_exits: usize,
     visit_state: Option<&str>,
-) -> [String; 3] {
-    let Some(target_map) = target_map else {
-        return [
-            "Destination: none selected".to_owned(),
-            "Choose a reachable map to see its verified portal route.".to_owned(),
-            String::new(),
-        ];
-    };
-
+    party_members_here: &[String],
+    population: Option<(u64, u16, usize)>,
+) -> [String; 5] {
+    let selected_map = target_map.unwrap_or(current_map);
     let visited = visit_state.unwrap_or("discovery sync pending");
-    let destination = format!("Destination: {target_map} • {visited}");
-    let (route_summary, next_exit) = match route {
-        None => (
-            "No verified route".to_owned(),
-            format!("No portal route from {current_map} to {target_map}."),
+    let map_heading = match target_map {
+        Some(target) => format!("Destination: {target} • {visited}"),
+        None => format!("Current map: {selected_map} • {visited}"),
+    };
+    let (level_line, population_line) = population.map_or_else(
+        || {
+            (
+                "Suggested level: unavailable".to_owned(),
+                "Static population: no verified spawn records".to_owned(),
+            )
+        },
+        |(records, mean_level, species)| {
+            (
+                format!("Suggested level: ~{mean_level} (static-spawn mean)"),
+                format!("Static population: {records} spawn records • {species} species"),
+            )
+        },
+    );
+    let party_line = if party_members_here.is_empty() {
+        "Party here: no online members reporting this map".to_owned()
+    } else {
+        format!("Party here: {}", party_members_here.join(", "))
+    };
+    let (route_summary, next_exit) = match (target_map, route) {
+        (None, _) => (
+            format!("Verified outgoing connections: {outgoing_exits}"),
+            "choose a destination to plot a route".to_owned(),
         ),
-        Some(edges) if edges.is_empty() => ("Already at destination".to_owned(), format!("You are already on {target_map}.")),
-        Some(edges) => {
+        (Some(target), None) => (
+            "No verified route".to_owned(),
+            format!("No portal route from {current_map} to {target}"),
+        ),
+        (Some(target), Some(edges)) if edges.is_empty() => ("Already at destination".to_owned(), format!("you are on {target}")),
+        (Some(_), Some(edges)) => {
             let edge = edges[0];
             (
-                format!("Verified route: {} portal legs", edges.len()),
-                format!(
-                    "Next exit: {} ({}, {}) → {}",
-                    edge.from.map, edge.from.x, edge.from.y, edge.to.map
-                ),
+                format!("{} portal legs • {outgoing_exits} exits", edges.len()),
+                format!("next: {} ({}, {}) → {}", edge.from.map, edge.from.x, edge.from.y, edge.to.map),
             )
         }
     };
     [
-        destination,
-        format!("{route_summary} • outgoing exits: {outgoing_exits}"),
-        next_exit,
+        map_heading,
+        level_line,
+        population_line,
+        party_line,
+        format!("Connections: {route_summary} • {next_exit}"),
     ]
+}
+
+fn normalized_map_name(map_name: &str) -> &str {
+    map_name.strip_suffix(".gat").unwrap_or(map_name)
 }
 
 fn draw_dotted_connection(layout: &mut WindowLayout<'_, ClientState>, x1: f32, y1: f32, x2: f32, y2: f32, color: Color) {
@@ -640,7 +677,7 @@ impl CustomWindow<ClientState> for MapsWindow {
 
 #[cfg(test)]
 mod tests {
-    use super::destination_detail_lines;
+    use super::{destination_detail_lines, normalized_map_name};
     use crate::world::{navigation_graph, route_edges};
 
     #[test]
@@ -652,24 +689,38 @@ mod tests {
             .iter()
             .filter(|edge| edge.from.map.eq_ignore_ascii_case("izlude"))
             .count();
-        let lines = destination_detail_lines("prontera", Some("izlude"), Some(&route), outgoing, Some("visited"));
+        let party = vec!["Alice".to_owned()];
+        let population = crate::dm::reference_data::reference_data().map_spawn_summary("izlude");
+        let lines = destination_detail_lines(
+            "prontera",
+            Some("izlude"),
+            Some(&route),
+            outgoing,
+            Some("visited"),
+            &party,
+            population,
+        );
 
         assert!(lines[0].contains("Destination: izlude • visited"));
-        assert!(lines[1].contains(&format!("outgoing exits: {outgoing}")));
-        assert!(lines[1].contains(&format!("{} portal legs", route.len())));
-        assert!(lines[2].contains(&route[0].from.map));
-        assert!(lines[2].contains(&route[0].to.map));
+        assert!(lines[1].contains("Suggested level:"));
+        assert!(lines[2].contains("Static population:"));
+        assert!(lines[3].contains("Alice"));
+        assert!(lines[4].contains(&format!("{} portal legs", route.len())));
+        assert!(lines[4].contains(&route[0].from.map));
+        assert!(lines[4].contains(&route[0].to.map));
     }
 
     #[test]
     fn atlas_destination_details_do_not_claim_routes_when_graph_has_none() {
-        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None);
+        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None, &[], None);
         assert!(lines[0].contains("discovery sync pending"));
-        assert!(lines[1].contains("No verified route"));
-        assert!(lines[2].contains("No portal route"));
+        assert!(lines[1].contains("unavailable"));
+        assert!(lines[2].contains("no verified spawn records"));
+        assert!(lines[4].contains("No verified route"));
 
-        let empty = destination_detail_lines("prontera", None, None, 0, None);
-        assert_eq!(empty[0], "Destination: none selected");
-        assert!(empty[2].is_empty());
+        let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None);
+        assert_eq!(empty[0], "Current map: prontera • visited");
+        assert!(empty[4].contains("3"));
+        assert_eq!(normalized_map_name("izlude.gat"), "izlude");
     }
 }

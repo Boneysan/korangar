@@ -455,6 +455,37 @@ impl ReferenceData {
         self.monsters_by_id.get(&id).map(|&index| &self.monsters[index])
     }
 
+    /// Summarize only exported, static spawn directives for a map. The level is
+    /// weighted by directive count and is a guide, not a recommended-level
+    /// rule.
+    pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
+        let map_name = map_name.strip_suffix(".gat").unwrap_or(map_name);
+        let mut spawn_records = 0_u64;
+        let mut weighted_levels = 0_u64;
+        let mut species = 0;
+        for monster in &self.monsters {
+            for region in &monster.spawn_regions {
+                let region_map = region.map.strip_suffix(".gat").unwrap_or(&region.map);
+                if !region_map.eq_ignore_ascii_case(map_name) || region.spawn_records == 0 {
+                    continue;
+                }
+                let records = u64::from(region.spawn_records);
+                spawn_records += records;
+                weighted_levels += u64::from(monster.level) * records;
+                species += 1;
+            }
+        }
+        if spawn_records == 0 {
+            None
+        } else {
+            Some((
+                spawn_records,
+                ((weighted_levels + spawn_records / 2) / spawn_records) as u16,
+                species,
+            ))
+        }
+    }
+
     pub fn item_by_id(&self, id: u32) -> Option<&ReferenceItem> {
         self.items_by_id.get(&id).map(|&index| &self.items[index])
     }
@@ -679,6 +710,12 @@ mod tests {
         assert_eq!(poring.element.as_ref().map(|element| element.r#type.as_str()), Some("Water"));
         assert!(poring.spawn_regions.iter().any(|region| region.map == "prt_fild08"));
         assert!(poring.spawn_regions.iter().all(|region| !region.source.is_empty()));
+        let prt_fild08 = data.map_spawn_summary("prt_fild08").expect("static map spawns");
+        assert!(prt_fild08.0 > 0);
+        assert!(prt_fild08.1 > 0);
+        assert!(prt_fild08.2 > 0);
+        assert_eq!(data.map_spawn_summary("prt_fild08.gat"), Some(prt_fild08));
+        assert_eq!(data.map_spawn_summary("no_such_map"), None);
         assert!(poring.drops.iter().any(|drop| drop.item_id == 4001 && drop.kind == "normal"));
         assert_eq!(data.card_by_id(4001).map(|card| card.aegis_name.as_str()), Some("Poring_Card"));
         assert!(data.item_by_id(984).is_some_and(|item| item.name == "Oridecon"));
