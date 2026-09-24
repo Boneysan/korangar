@@ -272,6 +272,41 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
     lines
 }
 
+fn map_details(map_name: &str) -> Vec<String> {
+    let graph = crate::world::navigation_graph();
+    let mut lines = vec![format!("Map: {map_name}")];
+    match reference_data().map_spawn_summary(map_name) {
+        Some((records, mean_level, species)) => {
+            lines.push(format!(
+                "Suggested level: ~{mean_level} (static-spawn-record-weighted mean; reference only)"
+            ));
+            lines.push(format!("Static population: {records} spawn records across {species} species"));
+        }
+        None => {
+            lines.push("Suggested level: unavailable (no verified static spawn records)".to_owned());
+            lines.push("Static population: no verified spawn records".to_owned());
+        }
+    }
+
+    let mut exits: Vec<_> = graph
+        .edges
+        .iter()
+        .filter(|edge| edge.from.map.eq_ignore_ascii_case(map_name))
+        .collect();
+    exits.sort_by_key(|edge| (edge.to.map.to_ascii_lowercase(), edge.from.x, edge.from.y, edge.to.x, edge.to.y));
+    lines.push(format!("Verified outgoing portal connections: {}", exits.len()));
+    for edge in exits.iter().take(8) {
+        lines.push(format!("Exit at ({}, {}) to {}", edge.from.x, edge.from.y, edge.to.map));
+        lines.push(format!("@route:{}", edge.to.map));
+    }
+    if exits.len() > 8 {
+        lines.push(format!("{} additional exits omitted.", exits.len() - 8));
+    }
+    lines.push("Static data omits conditional/scripted spawns and does not represent live monster counts or services.".to_owned());
+    lines.push(format!("@route:{map_name}"));
+    lines
+}
+
 fn parse_route_cell_link(line: &str) -> Option<(String, u16, u16, String)> {
     let route = line.strip_prefix("@route-cell:")?;
     let (destination, label) = route.split_once('|')?;
@@ -315,7 +350,7 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
         "map" => crate::world::navigation_graph()
             .maps
             .get(result.id as usize)
-            .map(|map_name| vec![format!("Map: {map_name}"), "@route:".to_owned() + map_name])
+            .map(|map_name| map_details(map_name))
             .unwrap_or_else(|| vec!["Map entry unavailable.".to_owned()]),
         "job" => job_names()
             .find(|(id, _)| *id as u32 == result.id)
@@ -1058,7 +1093,13 @@ mod tests {
         };
         let detail = resolve_details(&result);
         assert!(detail.iter().any(|line| line == "Map: prt_fild08"));
+        assert!(detail.iter().any(|line| line.starts_with("Suggested level:")));
+        assert!(detail.iter().any(|line| line.starts_with("Static population:")));
+        assert!(detail.iter().any(|line| line.starts_with("Verified outgoing portal connections:")));
+        assert!(detail.iter().any(|line| line.starts_with("Exit at (")));
+        assert!(detail.iter().any(|line| line.contains("conditional/scripted spawns")));
         assert!(detail.iter().any(|line| line == "@route:prt_fild08"));
+        assert!(detail.iter().any(|line| line.starts_with("@route:")));
     }
 
     #[test]
