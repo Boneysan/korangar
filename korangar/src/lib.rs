@@ -12856,10 +12856,31 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                             );
                         }
 
-                        if let Some(name) = &entity.get_details() {
-                            let name = name.split('#').next().unwrap();
+                        let portal_tooltip = if entity.get_entity_type() == EntityType::Warp {
+                            let minimap = self.client_state.follow(client_state().minimap());
+                            let target = minimap.navigation_target().map(|target| target.map_name.as_str());
+                            crate::world::portal_label(
+                                &crate::world::navigation_graph().edges,
+                                minimap.map_name(),
+                                entity.get_tile_position().x,
+                                entity.get_tile_position().y,
+                                target,
+                            )
+                            .map(|(destination, is_route)| {
+                                if is_route {
+                                    format!("→ Route portal: {destination}")
+                                } else {
+                                    format!("Portal to {destination}")
+                                }
+                            })
+                        } else {
+                            None
+                        };
+                        if let Some(text) =
+                            portal_tooltip.or_else(|| entity.get_details().map(|name| name.split('#').next().unwrap().to_owned()))
+                        {
                             self.middle_interface_renderer
-                                .render_hover_text(name, self.scaling, self.mouse_position);
+                                .render_hover_text(&text, self.scaling, self.mouse_position);
                         }
                     } else if let Some(item) = self
                         .client_state

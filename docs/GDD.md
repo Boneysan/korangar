@@ -669,7 +669,7 @@ NPC dialogue, signs, books, quests, and exploration can add Rumors to the Advent
 
 ## 9.9 Portal Labels
 
-Hovering or approaching a known exit should identify its destination. If it lies on the tracked route, it receives a subtle route indicator. Unknown portals may remain less descriptive to preserve discovery.
+Hovering a graph-known warp identifies its destination; the next verified exit on the tracked route is labeled “Route portal.” Unknown/unindexed warps retain their existing hover behavior. Code and unit coverage are present; in-world readability and route matching still need live visual acceptance.
 
 ## 9.10 Implementation Path (added v0.2)
 
@@ -682,7 +682,7 @@ Hovering or approaching a known exit should identify its destination. If it lies
 | 9.4   | Population regions             | Static loaded spawn directives are exported as map-level records for 965 monsters; coordinate/spread fields remain deliberately unused. | Add reviewed conditional/scripted coverage and a low/medium/high selected-monster overlay on maps/minimap; never expose exact points. | M |
 | 9.6   | Account discovery record       | Hercules stores first-kill milestones in `korangar_account_discovery` keyed by account+mob; account/sequence-bound login snapshots and kill deltas travel in private server messages. Client stages snapshots, preserves prior state until a complete end marker, and merges snapshots plus queued deltas monotonically by highest milestone; Guide results show discovered/not encountered/sync pending. | Live-check SQL startup/migration, two characters on one account, account isolation, reconnect, and DM separation; add later reviewed encounter milestones. Never gate verified mechanics. | partial |
 | 9.7   | Rumors                         | —                                                                                                                                                     | A `rumor` journal category fed by NPC scripts (`callfunc("Journal_AddRumor", id)`) and synced like unlocks. After §9.6.                                                                     | M        |
-| 9.9   | Portal labels                  | Map graph.                                                                                                                                            | Hover/approach a warp cell → tooltip with the destination map name; tracked-route portals get an accent.                                                                                   | S        |
+| 9.9   | Portal labels                  | Graph-known warp entities expose their destination on hover; the next exit on the selected route is prefixed “Route portal.” Unknown edges retain existing hover text. | In-world readability, hover behavior while approaching, and route accent need live visual acceptance.                                                                   | S        |
 | 9.8   | Travel                         | Stock; `@partyjump` (C4).                                                                                                                             | —                                                                                                                                                                                          | —        |
 
 # 10. User Interface and User Experience
@@ -1635,7 +1635,7 @@ This section was added in v0.2 after auditing the two forks that implement this 
 | 9.6 Account discovery             | Partial; live acceptance due | Hercules has account+mob and account+map SQL ledgers with first-kill/first-visit deltas and complete bounded login snapshots; Korangar account-binds private server messages and shows Guide badges without hiding facts. Live account isolation/reconnect and broader encounter milestones remain. DM unlocks stay session-only; `@monster` is server permission-checked. |
 | 9.7 Rumors                        | Not started  |                                                                                                                                                                                         |
 | 9.8 Travel                        | Stock + one addition | Kafra, warper NPC. `@partyjump <name>` (2026-09-05) lets any party member warp to another online member — accepted unbounded for now (C4).                              |
-| 9.9 Portal labels                 | Not started  |                                                                                                                                                                                         |
+| 9.9 Portal labels                 | Partial — source implemented, visual/live acceptance open | Hovering a graph-known warp entity shows its destination; the next verified route edge receives a “Route portal” label. Unknown/unindexed warps retain existing hover text. Graph matching and route-highlight tests pass; in-world readability and live route behavior remain unverified. |
 | Minimap (base)                    | Done         | Ctrl+Tab; Towninfo POIs (shops, Kafra, guides), player blip, party blips with hover names, compass packet.                                                                              |
 
 ### §10 User Interface and User Experience

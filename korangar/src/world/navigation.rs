@@ -33,6 +33,35 @@ pub struct NavigationPosition {
     pub height: u16,
 }
 
+/// Resolve a hovered tile to a verified outgoing portal destination. The
+/// optional route target marks only the first edge on its shortest known path.
+pub fn portal_label<'a>(
+    edges: &'a [NavigationEdge],
+    current_map: &str,
+    x: u16,
+    y: u16,
+    route_target: Option<&str>,
+) -> Option<(&'a str, bool)> {
+    let route_edge = route_target
+        .and_then(|target| route_edges(current_map, target))
+        .and_then(|route| route.into_iter().next());
+
+    edges.iter().find_map(|edge| {
+        let from = &edge.from;
+        let inside = from.map.eq_ignore_ascii_case(current_map)
+            && x >= from.x
+            && y >= from.y
+            && x < from.x.saturating_add(from.width.max(1))
+            && y < from.y.saturating_add(from.height.max(1));
+        inside.then(|| {
+            (
+                edge.to.map.as_str(),
+                route_edge.is_some_and(|route_edge| route_edge.id == edge.id),
+            )
+        })
+    })
+}
+
 static NAVIGATION_GRAPH: OnceLock<NavigationGraph> = OnceLock::new();
 
 pub fn navigation_graph() -> &'static NavigationGraph {
@@ -94,7 +123,7 @@ pub fn next_route_edge(current_map: &str, target_map: &str) -> Option<&'static N
 
 #[cfg(test)]
 mod tests {
-    use super::is_dangerous_map_level;
+    use super::{is_dangerous_map_level, navigation_graph, portal_label};
 
     #[test]
     fn map_danger_level_uses_the_inclusive_fifteen_level_boundary() {
@@ -102,5 +131,30 @@ mod tests {
         assert!(is_dangerous_map_level(35, 20));
         assert!(!is_dangerous_map_level(20, 35));
         assert!(!is_dangerous_map_level(u16::MAX, u16::MAX));
+    }
+
+    #[test]
+    fn hovered_known_portal_names_destination_and_marks_the_next_route_exit() {
+        let graph = navigation_graph();
+        let edge = graph
+            .edges
+            .iter()
+            .find(|edge| super::next_route_edge(&edge.from.map, &edge.to.map).is_some_and(|next| next.id == edge.id))
+            .expect("navigation graph has direct route edges");
+
+        assert_eq!(
+            portal_label(&graph.edges, &edge.from.map, edge.from.x, edge.from.y, Some(&edge.to.map)),
+            Some((edge.to.map.as_str(), true)),
+        );
+
+        let outside = edge.from.x.saturating_add(edge.from.width.max(1));
+        assert_eq!(
+            portal_label(&graph.edges, &edge.from.map, outside, edge.from.y, Some(&edge.to.map)),
+            None,
+        );
+        assert_eq!(
+            portal_label(&graph.edges, &edge.from.map, edge.from.x, edge.from.y, Some(&edge.from.map)),
+            Some((edge.to.map.as_str(), false)),
+        );
     }
 }
