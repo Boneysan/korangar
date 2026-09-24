@@ -10,6 +10,7 @@ pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("walk", 3, walk),
         Scenario::new("warp-crossmap", 3, warp_crossmap),
+        Scenario::new("navigation-warp-traversal", 3, navigation_warp_traversal),
         Scenario::new("entity-details", 3, entity_details),
         Scenario::new("sit-stand", 3, sit_stand),
         Scenario::new("tick-sync", 3, tick_sync),
@@ -56,6 +57,49 @@ fn warp_crossmap(config: &Config) -> Result<(), String> {
     if context.entities.is_empty() {
         return Err(format!(
             "no entities after cross-map warp (prontera had {prontera_entities}) — AddEntity stream missing"
+        ));
+    }
+    Ok(())
+}
+
+/// Traverse both directions of the graph's Prontera ↔ prt_fild08 route using
+/// ordinary movement, then verify the live server's map-change destinations.
+fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    // Static graph edge: prontera (156,22), 3x2 -> prt_fild08 (170,375).
+    context.warp("prontera", 156, 26)?;
+    context.flush();
+    context
+        .net
+        .player_move(WorldPosition::new(157, 22, Direction::North))
+        .map_err(|_| "disconnected")?;
+    let field_position = context.wait_for("navigation portal to prt_fild08", |event| match event {
+        NetworkEvent::ChangeMap { map_name, position } if map_name == "prt_fild08" => Some(*position),
+        _ => None,
+    })?;
+    if field_position.x.abs_diff(170) > 3 || field_position.y.abs_diff(375) > 3 {
+        return Err(format!(
+            "Prontera portal arrived at unexpected prt_fild08 cell ({}, {})",
+            field_position.x, field_position.y
+        ));
+    }
+
+    // Return edge: prt_fild08 (170,378), 3x2 -> prontera (156,26).
+    context.warp("prt_fild08", 170, 374)?;
+    context.flush();
+    context
+        .net
+        .player_move(WorldPosition::new(171, 378, Direction::South))
+        .map_err(|_| "disconnected")?;
+    let prontera_position = context.wait_for("navigation portal back to prontera", |event| match event {
+        NetworkEvent::ChangeMap { map_name, position } if map_name == "prontera" => Some(*position),
+        _ => None,
+    })?;
+    if prontera_position.x.abs_diff(156) > 3 || prontera_position.y.abs_diff(26) > 3 {
+        return Err(format!(
+            "prt_fild08 portal arrived at unexpected Prontera cell ({}, {})",
+            prontera_position.x, prontera_position.y
         ));
     }
     Ok(())
