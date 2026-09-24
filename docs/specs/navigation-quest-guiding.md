@@ -25,7 +25,7 @@ Quest objectives use the same target type only when the server or curated quest 
 ## Acceptance fixtures
 
 1. Regenerate twice and compare byte-identical output; edit a loaded warp and detect drift.
-2. Route Prontera to `prt_fild08` and Izlude to one accessible dungeon. Check that the first exit exists at the generated cell on the live 20220406 server.
+2. Route Prontera to `prt_fild08` and Izlude to one accessible dungeon. Check that the first exit exists at the generated cell on the live 20220406 server. `navigation-warp-traversal` now proves the Prontera route's live server traversal in both directions by walking into the generated warp's touch area; Izlude→dungeon remains pending.
 3. Reject an unreachable map, unloaded/WoE route, temporary instance, and malformed NAVI tag without a false arrow.
 4. Click a same-map and a cross-map NAVI link; warp normally, deviate once, relog once, and confirm the displayed next exit follows actual location.
 5. Disable guidance, resize UI, and verify text remains readable and clickable state is apparent by more than color.

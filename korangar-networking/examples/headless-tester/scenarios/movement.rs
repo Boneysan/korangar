@@ -1,5 +1,7 @@
 //! Phase 3 — movement and world state.
 
+use std::time::Duration;
+
 use korangar_networking::NetworkEvent;
 use ragnarok_packets::{Direction, WorldPosition};
 
@@ -67,17 +69,23 @@ fn warp_crossmap(config: &Config) -> Result<(), String> {
 fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
 
-    // Static graph edge: prontera (156,22), 3x2 -> prt_fild08 (170,375).
-    context.warp("prontera", 156, 26)?;
-    context.flush();
-    context
-        .net
-        .player_move(WorldPosition::new(157, 22, Direction::North))
-        .map_err(|_| "disconnected")?;
-    let field_position = context.wait_for("navigation portal to prt_fild08", |event| match event {
-        NetworkEvent::ChangeMap { map_name, position } if map_name == "prt_fild08" => Some(*position),
-        _ => None,
-    })?;
+    // Static graph edge: prontera (156,22), 3x2 touch radii -> prt_fild08
+    // (170,375). Force a cross-map setup even if the reused test character
+    // logged in on Prontera; Hercules treats a same-map @warp as a no-op.
+    context.warp("geffen", 119, 59)?;
+    context.warp("prontera", 156, 80)?;
+    if context.map_name != "prontera" {
+        return Err(format!("expected Prontera setup, landed on {}", context.map_name));
+    }
+    context.walk_to(156, 30)?;
+    let field_position = walk_through_portal(&mut context, "prt_fild08", &[
+        (156, 24),
+        (157, 24),
+        (155, 24),
+        (158, 24),
+        (154, 24),
+        (159, 24),
+    ])?;
     if field_position.x.abs_diff(170) > 3 || field_position.y.abs_diff(375) > 3 {
         return Err(format!(
             "Prontera portal arrived at unexpected prt_fild08 cell ({}, {})",
@@ -86,16 +94,18 @@ fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
     }
 
     // Return edge: prt_fild08 (170,378), 3x2 -> prontera (156,26).
-    context.warp("prt_fild08", 170, 374)?;
-    context.flush();
-    context
-        .net
-        .player_move(WorldPosition::new(171, 378, Direction::South))
-        .map_err(|_| "disconnected")?;
-    let prontera_position = context.wait_for("navigation portal back to prontera", |event| match event {
-        NetworkEvent::ChangeMap { map_name, position } if map_name == "prontera" => Some(*position),
-        _ => None,
-    })?;
+    // Cross-map setup ensures @warp can place us near the return edge; a
+    // same-map @warp is a no-op in stock Hercules.
+    context.warp("prontera", 156, 30)?;
+    context.warp("prt_fild08", 170, 370)?;
+    let prontera_position = walk_through_portal(&mut context, "prontera", &[
+        (170, 376),
+        (171, 376),
+        (169, 376),
+        (172, 376),
+        (168, 376),
+        (173, 376),
+    ])?;
     if prontera_position.x.abs_diff(156) > 3 || prontera_position.y.abs_diff(26) > 3 {
         return Err(format!(
             "prt_fild08 portal arrived at unexpected Prontera cell ({}, {})",
@@ -103,6 +113,61 @@ fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
         ));
     }
     Ok(())
+}
+
+/// Walk toward each server-verified cell in a static warp rectangle until a
+/// movement acknowledgement or the expected map transition is observed.
+fn walk_through_portal(
+    context: &mut TestContext,
+    expected_map: &str,
+    cells: &[(u16, u16)],
+) -> Result<ragnarok_packets::TilePosition, String> {
+    enum Step {
+        Moved(ragnarok_packets::TilePosition),
+        ChangedMap(ragnarok_packets::TilePosition),
+    }
+
+    for &(x, y) in cells {
+        if context.map_name == expected_map {
+            return context.wait_for(&format!("ChangeMap to {expected_map}"), |event| match event {
+                NetworkEvent::ChangeMap { map_name, position } if map_name == expected_map => Some(*position),
+                _ => None,
+            });
+        }
+        let start = context.position;
+        context.flush();
+        context
+            .net
+            .player_move(WorldPosition::new(x, y, Direction::North))
+            .map_err(|_| "disconnected")?;
+        let mut classify = |event: &NetworkEvent| match event {
+            NetworkEvent::ChangeMap { map_name, position } if map_name == expected_map => Some(Step::ChangedMap(*position)),
+            NetworkEvent::PlayerMove { destination, .. } => Some(Step::Moved(destination.tile_position())),
+            _ => None,
+        };
+        match context.wait_for_within("movement toward graph portal", Duration::from_secs(4), &mut classify) {
+            Ok(Step::ChangedMap(position)) => return Ok(position),
+            Ok(Step::Moved(destination)) => {
+                let distance = start.x.abs_diff(destination.x).max(start.y.abs_diff(destination.y)) as u64;
+                context.pump(Duration::from_millis((distance * 200 + 500).min(4000)));
+                if context.map_name == expected_map {
+                    return context.wait_for(&format!("ChangeMap to {expected_map}"), |event| match event {
+                        NetworkEvent::ChangeMap { map_name, position } if map_name == expected_map => Some(*position),
+                        _ => None,
+                    });
+                }
+            }
+            Err(_) => continue,
+        }
+    }
+
+    Err(format!(
+        "no walkable entry among {} cells; remained on {} at ({}, {})",
+        cells.len(),
+        context.map_name,
+        context.position.x,
+        context.position.y
+    ))
 }
 
 /// `RequestDetailsPacket` round trip resolves a monster's name.

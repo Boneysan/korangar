@@ -900,14 +900,19 @@ impl TestContext {
             _ => None,
         })??;
 
+        if !moved && (self.map_name != map || self.position.x != x || self.position.y != y) {
+            return Err(format!(
+                "@warp {map} {x} {y} reported an unchanged destination, but the server state is {} ({}, {})",
+                self.map_name, self.position.x, self.position.y
+            ));
+        }
+
         if moved {
-            // The server expects a load acknowledgement after every map change
-            // before it will process further commands.
-            self.net.map_loaded().map_err(|_| "disconnected")?;
+            // `track` sends the load acknowledgement and records the actual
+            // server-selected landing cell. Do not overwrite it with the
+            // requested coordinate: @warp can adjust an invalid/blocked cell.
             self.pump(Duration::from_millis(500));
         }
-        self.map_name = map.to_owned();
-        self.position = TilePosition { x, y };
         Ok(())
     }
 
@@ -916,13 +921,12 @@ impl TestContext {
     pub fn warp_random(&mut self, map: &str) -> Result<(), String> {
         self.flush();
         self.say(&format!("@warp {map}"))?;
-        let position = self.wait_for(&format!("ChangeMap to {map}"), |event| match event {
-            NetworkEvent::ChangeMap { map_name, position } if map_name == map => Some(*position),
+        self.wait_for(&format!("ChangeMap to {map}"), |event| match event {
+            NetworkEvent::ChangeMap { map_name, .. } if map_name == map => Some(()),
             _ => None,
         })?;
-        self.net.map_loaded().map_err(|_| "disconnected")?;
-        self.map_name = map.to_owned();
-        self.position = position;
+        // `track` already acknowledged the map change and recorded its actual
+        // landing cell while `wait_for` pumped the packet stream.
         self.pump(Duration::from_millis(500));
         Ok(())
     }
