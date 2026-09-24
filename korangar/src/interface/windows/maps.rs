@@ -18,7 +18,7 @@ use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
-use crate::world::{Library, NavigationEdge, is_dangerous_map_level, navigation_graph, route_edges};
+use crate::world::{Library, NavigationEdge, TownPoi, is_dangerous_map_level, navigation_graph, route_edges};
 
 #[derive(Clone, Copy)]
 struct AtlasLocation {
@@ -266,6 +266,33 @@ struct RouteClick {
     position: TilePosition,
 }
 
+struct FacilityRouteClick {
+    map_name: String,
+    position: TilePosition,
+}
+
+impl ClickHandler<ClientState> for FacilityRouteClick {
+    fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        queue.queue(InputEvent::SetNavigationDestination {
+            map_name: self.map_name.clone(),
+            x: self.position.x,
+            y: self.position.y,
+        });
+    }
+}
+
+struct FacilityRoute {
+    name: String,
+    click: FacilityRouteClick,
+}
+
+fn town_poi_tile(poi: &TownPoi) -> Option<TilePosition> {
+    Some(TilePosition {
+        x: poi.x.try_into().ok()?,
+        y: poi.y.try_into().ok()?,
+    })
+}
+
 impl ClickHandler<ClientState> for RouteClick {
     fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
         queue.queue(InputEvent::SetNavigationDestination {
@@ -284,6 +311,7 @@ struct AtlasNode {
 struct AtlasView {
     library: Arc<Library>,
     nodes: Vec<AtlasNode>,
+    facility_routes: Vec<FacilityRoute>,
     details: [String; 6],
     dangerous_maps: HashSet<String>,
 }
@@ -303,6 +331,7 @@ impl AtlasView {
                     },
                 })
                 .collect(),
+            facility_routes: Vec::new(),
             details: destination_detail_lines("", None, None, 0, None, &[], None, &[]),
             dangerous_maps: HashSet::new(),
         }
@@ -346,12 +375,22 @@ impl Element<ClientState> for AtlasView {
             .filter(|member| member.online() && normalized_map_name(member.map_name()).eq_ignore_ascii_case(selected_map))
             .map(|member| member.name().to_owned())
             .collect();
-        let town_pois = self
-            .library
-            .town_pois(selected_map)
+        let pois = self.library.town_pois(selected_map);
+        self.facility_routes = pois
             .iter()
-            .map(|poi| poi.name.clone())
-            .collect::<Vec<_>>();
+            .filter_map(|poi| {
+                let position = town_poi_tile(poi)?;
+                Some(FacilityRoute {
+                    name: format!("Route: {}", poi.name),
+                    click: FacilityRouteClick {
+                        map_name: selected_map.to_owned(),
+                        position,
+                    },
+                })
+            })
+            .take(3)
+            .collect();
+        let town_pois = pois.iter().map(|poi| poi.name.clone()).collect::<Vec<_>>();
         let reference = crate::dm::reference_data::reference_data();
         self.details = destination_detail_lines(
             current_map,
@@ -537,6 +576,59 @@ impl Element<ClientState> for AtlasView {
 
         for (index, line) in self.details.iter().enumerate() {
             if line.is_empty() {
+                continue;
+            }
+            if index == 4 && !self.facility_routes.is_empty() {
+                let row = Area {
+                    left: area.left + 12.0,
+                    top: area.top + area.height - 144.0 + index as f32 * 18.0,
+                    width: area.width - 24.0,
+                    height: 18.0,
+                };
+                layout.add_text(
+                    Area { width: 78.0, ..row },
+                    "Facilities:",
+                    FontSize(12.0),
+                    Color::rgb_u8(195, 205, 214),
+                    Color::WHITE,
+                    HorizontalAlignment::Left { offset: 2.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+                let route_width = ((row.width - 82.0) / self.facility_routes.len() as f32).min(150.0);
+                for (route_index, facility) in self.facility_routes.iter().enumerate() {
+                    let route_area = Area {
+                        left: row.left + 80.0 + route_width * route_index as f32,
+                        top: row.top,
+                        width: route_width,
+                        height: row.height,
+                    };
+                    let hovered = route_area.check().run(layout);
+                    layout.add_rectangle(
+                        route_area,
+                        CornerDiameter::uniform(4.0),
+                        if hovered {
+                            Color::rgb_u8(58, 78, 96)
+                        } else {
+                            Color::rgb_u8(34, 49, 66)
+                        },
+                        Color::rgba_u8(0, 0, 0, 80),
+                        ShadowPadding::uniform(0.0),
+                    );
+                    layout.add_text(
+                        route_area,
+                        &facility.name,
+                        FontSize(11.0),
+                        Color::rgb_u8(239, 235, 215),
+                        Color::WHITE,
+                        HorizontalAlignment::Center { offset: 0.0, border: 3.0 },
+                        VerticalAlignment::Center { offset: 0.0 },
+                        OverflowBehavior::Shrink,
+                    );
+                    if hovered {
+                        layout.register_click_handler(MouseButton::Left, &facility.click);
+                    }
+                }
                 continue;
             }
             layout.add_text(
@@ -733,8 +825,22 @@ impl CustomWindow<ClientState> for MapsWindow {
 
 #[cfg(test)]
 mod tests {
-    use super::{destination_detail_lines, normalized_map_name};
-    use crate::world::{navigation_graph, route_edges};
+    use super::{destination_detail_lines, normalized_map_name, town_poi_tile};
+    use crate::world::{TownPoi, TownPoiKind, navigation_graph, route_edges};
+
+    #[test]
+    fn atlas_poi_routes_accept_only_nonnegative_client_coordinates() {
+        let poi = TownPoi {
+            name: "Kafra Employee".to_owned(),
+            x: 156,
+            y: 191,
+            kind: TownPoiKind::Kafra,
+        };
+        assert_eq!(town_poi_tile(&poi), Some(ragnarok_packets::TilePosition { x: 156, y: 191 }));
+
+        let invalid = TownPoi { x: -1, ..poi };
+        assert_eq!(town_poi_tile(&invalid), None);
+    }
 
     #[test]
     fn atlas_destination_details_use_verified_route_edges_and_visit_state() {

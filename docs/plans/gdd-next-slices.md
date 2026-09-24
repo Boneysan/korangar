@@ -64,6 +64,8 @@ This is a source audit, not a claim that the feature has been seen on screen. Ef
 
 **2026-09-24 monster Guide-detail follow-up:** Player monster records now show up to eight exported mob-skill entries, preserve raw rate/delay values, and provide links into the skill Guide when the server skill constant resolves. Unknown constants stay visible as raw, unmatched entries; no skill behavior or probability prose is inferred. Focused Poring skill link/value tests pass. This adds detail but does not satisfy the live fresh-account Guide acceptance gate.
 
+**2026-09-24 atlas facility-routing follow-up:** The selected destination's first three nonnegative-coordinate Towninfo facilities now have exact-cell route actions in the atlas details. Route target cells come from the client facility table, while the existing verified warp graph still governs cross-map routing. This does not assert that the corresponding server NPC/service is present or active; visual/live traversal acceptance and fuller authored transport/service coverage remain open.
+
 ## Readiness and dependency gates
 
 | Gate | Required result before dependent work | Check |
