@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 WARP = re.compile(
-    r"^\s*([A-Za-z0-9_]+),(\d+),(\d+),(\d+)\s+warp\s+\S+\s+"
+    r"^\s*([A-Za-z0-9_]+),(\d+),(\d+),(\d+)\s+warp\s+.+?\s+"
     r"(\d+),(\d+),([A-Za-z0-9_]+),(\d+),(\d+)\s*(?:$|//)"
 )
 INCLUDE = re.compile(r'^\s*@include\s+"([^"]+)"')

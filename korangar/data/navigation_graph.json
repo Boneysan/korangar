@@ -2,17 +2,9 @@
   "coverage": {
     "active_script_files_scanned": 653,
     "coordinate_validation": "map names validated against db/map_index.txt; map cache unavailable to this generator",
-    "directed_edges": 3176,
-    "maps_with_edges": 537,
-    "unsupported_static_warps": [
-      "npc/quests/quests_louyang.txt:2415",
-      "npc/quests/quests_louyang.txt:2416",
-      "npc/quests/quests_louyang.txt:2417",
-      "npc/quests/quests_louyang.txt:2418",
-      "npc/quests/thana_quest.txt:2337",
-      "npc/re/quests/quests_eclage.txt:2357",
-      "npc/re/quests/quests_eclage.txt:2358"
-    ],
+    "directed_edges": 3183,
+    "maps_with_edges": 538,
+    "unsupported_static_warps": [],
     "weakly_connected_components": 35
   },
   "edges": [
@@ -6482,6 +6474,24 @@
       "availability": "always",
       "from": {
         "height": 1,
+        "map": "lou_in02",
+        "width": 1,
+        "x": 203,
+        "y": 159
+      },
+      "id": "warp-1b04adc6d4055fd6",
+      "kind": "walk_warp",
+      "source": "npc/quests/quests_louyang.txt:2418",
+      "to": {
+        "map": "louyang",
+        "x": 129,
+        "y": 118
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
+        "height": 1,
         "map": "gefg_cas03",
         "width": 1,
         "x": 38,
@@ -6494,6 +6504,24 @@
         "map": "gefg_cas03",
         "x": 43,
         "y": 271
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
+        "height": 1,
+        "map": "lou_in02",
+        "width": 1,
+        "x": 198,
+        "y": 159
+      },
+      "id": "warp-1b12e20a4daa6ce7",
+      "kind": "walk_warp",
+      "source": "npc/quests/quests_louyang.txt:2417",
+      "to": {
+        "map": "louyang",
+        "x": 124,
+        "y": 118
       }
     },
     {
@@ -31502,6 +31530,24 @@
       "availability": "always",
       "from": {
         "height": 1,
+        "map": "tha_t04",
+        "width": 1,
+        "x": 81,
+        "y": 36
+      },
+      "id": "warp-8c2dbe5815180e32",
+      "kind": "walk_warp",
+      "source": "npc/quests/thana_quest.txt:2337",
+      "to": {
+        "map": "tha_t05",
+        "x": 62,
+        "y": 8
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
+        "height": 1,
         "map": "gefg_cas02",
         "width": 1,
         "x": 70,
@@ -33728,6 +33774,24 @@
         "map": "ayo_fild01",
         "x": 37,
         "y": 241
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
+        "height": 2,
+        "map": "ecl_in04",
+        "width": 2,
+        "x": 222,
+        "y": 232
+      },
+      "id": "warp-98c2fb5d1e463b99",
+      "kind": "walk_warp",
+      "source": "npc/re/quests/quests_eclage.txt:2358",
+      "to": {
+        "map": "eclage",
+        "x": 289,
+        "y": 260
       }
     },
     {
@@ -42176,6 +42240,24 @@
       "availability": "always",
       "from": {
         "height": 1,
+        "map": "louyang",
+        "width": 1,
+        "x": 129,
+        "y": 121
+      },
+      "id": "warp-bd81e54b1de00b52",
+      "kind": "walk_warp",
+      "source": "npc/quests/quests_louyang.txt:2415",
+      "to": {
+        "map": "lou_in02",
+        "x": 203,
+        "y": 161
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
+        "height": 1,
         "map": "payg_cas02",
         "width": 1,
         "x": 276,
@@ -47395,6 +47477,24 @@
     {
       "availability": "always",
       "from": {
+        "height": 1,
+        "map": "louyang",
+        "width": 1,
+        "x": 125,
+        "y": 121
+      },
+      "id": "warp-d260b5321d97ef39",
+      "kind": "walk_warp",
+      "source": "npc/quests/quests_louyang.txt:2416",
+      "to": {
+        "map": "lou_in02",
+        "x": 198,
+        "y": 161
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
         "height": 2,
         "map": "geffen_in",
         "width": 3,
@@ -52489,6 +52589,24 @@
     {
       "availability": "always",
       "from": {
+        "height": 2,
+        "map": "ecl_in04",
+        "width": 2,
+        "x": 181,
+        "y": 222
+      },
+      "id": "warp-ec0f240bf4dd1e1d",
+      "kind": "walk_warp",
+      "source": "npc/re/quests/quests_eclage.txt:2357",
+      "to": {
+        "map": "eclage",
+        "x": 289,
+        "y": 260
+      }
+    },
+    {
+      "availability": "always",
+      "from": {
         "height": 7,
         "map": "pay_fild03",
         "width": 2,
@@ -57286,6 +57404,7 @@
     "ecl_in01",
     "ecl_in02",
     "ecl_in03",
+    "ecl_in04",
     "ecl_tdun01",
     "ecl_tdun02",
     "ecl_tdun03",
