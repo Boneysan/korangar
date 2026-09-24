@@ -39,7 +39,7 @@ impl Default for AdventureGuideWindowState {
     fn default() -> Self {
         Self {
             query: String::new(),
-            category: "Monsters".to_owned(),
+            category: "All".to_owned(),
             results: Vec::new(),
             detail: vec!["Choose a category and search, then select an entry.".to_owned()],
         }
@@ -563,7 +563,9 @@ where
     let discovery_path = client_state().discovery();
     let discovery = state.get(&discovery_path);
     let mut rows = Vec::new();
-    if category == "Monsters" {
+    if category == "All" {
+        rows.extend(search_all_categories(&query, state));
+    } else if category == "Monsters" {
         rows.extend(
             data.search_monsters(&query, MAX_RESULTS).into_iter().map(|monster| GuideResult {
                 label: format!(
@@ -675,6 +677,125 @@ where
     ]);
 }
 
+fn search_all_categories(query: &str, state: &State<ClientState>) -> Vec<GuideResult> {
+    let data = reference_data();
+    let mut rows = Vec::new();
+
+    rows.extend(
+        data.search_monsters(query, remaining_result_slots(&rows))
+            .into_iter()
+            .map(|monster| GuideResult {
+                label: format!(
+                    "{}  (Monster, Lv {})",
+                    display_name(&monster.name, &monster.sprite_name),
+                    monster.level
+                ),
+                kind: "monster".to_owned(),
+                id: monster.id,
+            }),
+    );
+    rows.extend(
+        data.search_items(query, data.items.len())
+            .into_iter()
+            .filter(|item| item.item_type != "IT_CARD")
+            .take(remaining_result_slots(&rows))
+            .map(|item| GuideResult {
+                label: format!("{}  (Item, ID {})", display_name(&item.name, &item.aegis_name), item.id),
+                kind: "item".to_owned(),
+                id: item.id,
+            }),
+    );
+    rows.extend(
+        data.cards
+            .iter()
+            .filter(|card| item_matches_query(card, query))
+            .take(remaining_result_slots(&rows))
+            .map(|card| GuideResult {
+                label: format!("{}  (Card, ID {})", display_name(&card.name, &card.aegis_name), card.id),
+                kind: "card".to_owned(),
+                id: card.id,
+            }),
+    );
+    rows.extend(
+        data.search_skills(query, remaining_result_slots(&rows))
+            .into_iter()
+            .map(|skill| GuideResult {
+                label: format!("{}  (Skill, ID {})", display_name(&skill.description, &skill.name), skill.id),
+                kind: "skill".to_owned(),
+                id: skill.id as u32,
+            }),
+    );
+    rows.extend(
+        data.search_statuses(query, remaining_result_slots(&rows))
+            .into_iter()
+            .map(|status| GuideResult {
+                label: format!("{}  (Status icon {})", status.name, status.id),
+                kind: "status".to_owned(),
+                id: status.id,
+            }),
+    );
+
+    let discovery_path = client_state().discovery();
+    let discovery = state.get(&discovery_path);
+    rows.extend(
+        crate::world::navigation_graph()
+            .maps
+            .iter()
+            .enumerate()
+            .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(query))
+            .take(remaining_result_slots(&rows))
+            .map(|(index, map)| GuideResult {
+                label: format!("{map}  (Map{})", if discovery.visited_map(map) { ", Visited" } else { "" }),
+                kind: "map".to_owned(),
+                id: index as u32,
+            }),
+    );
+    rows.extend(
+        job_names()
+            .filter(|(_, name)| query.is_empty() || name.to_lowercase().contains(query))
+            .take(remaining_result_slots(&rows))
+            .map(|(id, name)| GuideResult {
+                label: format!("{name}  (Job)"),
+                kind: "job".to_owned(),
+                id: id as u32,
+            }),
+    );
+    rows.extend(
+        data.search_quests(query, remaining_result_slots(&rows))
+            .into_iter()
+            .map(|quest| GuideResult {
+                label: format!("{}  (Quest {})", quest.name, quest.id),
+                kind: "quest".to_owned(),
+                id: quest.id,
+            }),
+    );
+
+    let quest_log_path = client_state().quest_log();
+    let active_quests = state.get(&quest_log_path).quests();
+    let listed_ids = rows
+        .iter()
+        .filter(|row| row.kind == "quest")
+        .map(|row| row.id)
+        .collect::<std::collections::HashSet<_>>();
+    rows.extend(
+        active_quests
+            .iter()
+            .filter(|quest| query.is_empty() || quest.name().to_lowercase().contains(query) || quest.quest_id.to_string().contains(query))
+            .filter(|quest| !listed_ids.contains(&quest.quest_id))
+            .take(remaining_result_slots(&rows))
+            .map(|quest| GuideResult {
+                label: format!("{}  (Active Quest {})", quest.name(), quest.quest_id),
+                kind: "quest".to_owned(),
+                id: quest.quest_id,
+            }),
+    );
+    rows
+}
+
+fn remaining_result_slots(rows: &[GuideResult]) -> usize {
+    MAX_RESULTS.saturating_sub(rows.len())
+}
+
 /// Select an item from another in-game surface, populate the Guide search and
 /// detail panes, and leave the guide ready to continue browsing.
 pub fn open_item_entry<A>(state: &State<ClientState>, path: A, item_id: u32)
@@ -722,6 +843,7 @@ where
                 text! { text: format!("Open reference • data revision {} • discovery badges sync per account; mechanics remain open • untranslated scripts and missing spawn data are labeled", revision), overflow_behavior: OverflowBehavior::Shrink },
                 text_box! { ghost_text: "Search monsters, items, cards, skills, status effects, maps, jobs, or quests…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
+                    button! { text: "All", event: set_category("All") },
                     button! { text: "Monsters", event: set_category("Monsters") },
                     button! { text: "Items", event: set_category("Items") },
                     button! { text: "Cards", event: set_category("Cards") },
