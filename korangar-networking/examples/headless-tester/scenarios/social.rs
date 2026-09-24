@@ -3,7 +3,7 @@
 use std::collections::HashSet;
 use std::time::Duration;
 
-use korangar_networking::{MessageColor, NetworkEvent};
+use korangar_networking::{MessageColor, NetworkEvent, QuestHuntProgress};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -15,6 +15,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("friend-reject", 8, friend_reject),
         Scenario::new("party-lifecycle", 8, party_lifecycle),
         Scenario::new("party-message-carrier", 8, party_message_carrier),
+        Scenario::new("party-quest-credit", 8, party_quest_credit),
         Scenario::new("account-discovery-isolation", 8, account_discovery_isolation),
         Scenario::new("party-reject-block", 8, party_reject_block),
         Scenario::new("party-member-vitals", 8, party_member_vitals),
@@ -506,6 +507,111 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
     })();
     leave_party_both(&mut primary, &mut partner);
     result
+}
+
+/// Party members receive kill credit only for their own active quest entries.
+fn party_quest_credit(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 11118; // Request: Hunt Spore, one Spore per objective event.
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result = (|| {
+        form_party(&mut primary, &mut partner)?;
+        primary.ensure_job(4008)?; // Lord Knight
+        primary.ensure_base_level(99)?;
+        primary.say("@allskill")?;
+        primary.say("@heal")?;
+        primary.say(&format!("@quest add {QUEST_ID}"))?;
+        primary.wait_for("primary quest added", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+
+        primary.warp("prt_fild08", 170, 180)?;
+        partner.warp("prt_fild08", 174, 180)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        primary.flush();
+        partner.flush();
+
+        let first = kill_quest_spore(&mut primary)?;
+        primary.wait_for("active primary receives its first Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(1) => Some(()),
+            _ => None,
+        })?;
+        let inactive_partner_events = partner.collect_for(Duration::from_millis(300));
+        if inactive_partner_events.iter().any(|event| {
+            matches!(event, NetworkEvent::QuestHuntProgress { objectives }
+                if objectives.iter().any(|objective| objective.quest_id == QUEST_ID))
+        }) {
+            return Err("party kill credited a member without that active quest".to_owned());
+        }
+
+        partner.say(&format!("@quest add {QUEST_ID}"))?;
+        partner.wait_for("partner quest added", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        primary.flush();
+        partner.flush();
+        let second = kill_quest_spore(&mut primary)?;
+        if first == second {
+            return Err("quest fixture reused the same monster entity id".to_owned());
+        }
+        primary.wait_for("primary receives second Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(2) => Some(()),
+            _ => None,
+        })?;
+        partner.wait_for("active partner receives shared Spore quest credit", |event| match event {
+            NetworkEvent::QuestHuntProgress { objectives } if quest_progress_count(objectives, QUEST_ID) == Some(1) => Some(()),
+            _ => None,
+        })?;
+        primary.say(&format!("@quest del {QUEST_ID}"))?;
+        partner.say(&format!("@quest del {QUEST_ID}"))?;
+        Ok(())
+    })();
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+fn quest_progress_count(objectives: &[QuestHuntProgress], quest_id: u32) -> Option<u16> {
+    objectives
+        .iter()
+        .find(|objective| objective.quest_id == quest_id && objective.objective_index == 0)
+        .map(|objective| objective.current_count)
+}
+
+fn kill_quest_spore(context: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
+    let target = context.spawn_monster("SPORE", 1014)?;
+    let player_id = context.player_id;
+    for _ in 0..30 {
+        let target_position = context
+            .entities
+            .get(&target)
+            .map(|entity| entity.position.tile_position())
+            .ok_or("quest Spore disappeared before death")?;
+        context.walk_to(target_position.x.saturating_sub(1), target_position.y)?;
+        context.flush();
+        context.net.player_attack(target).map_err(|_| "primary disconnected")?;
+        let outcome = context.wait_for_within(
+            "quest Spore damage or death",
+            Duration::from_secs(6),
+            &mut |event| match event {
+                NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(2),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *source_entity_id == player_id && *destination_entity_id == target => Some(1),
+                NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(0),
+                _ => None,
+            },
+        )?;
+        match outcome {
+            2 => return Ok(target),
+            1 => {}
+            _ => {}
+        }
+    }
+    Err("could not kill quest Spore within 30 attacks".to_owned())
 }
 
 /// A first kill is saved to the account ledger, delivered to an active client,
