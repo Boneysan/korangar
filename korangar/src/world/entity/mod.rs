@@ -2863,6 +2863,115 @@ impl Entity {
         }
     }
 
+    /// Draw a persistent bracket around the selected entity's projected status
+    /// stack so it remains identifiable when the pointer moves away.
+    pub fn render_target_outline(
+        &self,
+        renderer: &GameInterfaceRenderer,
+        camera: &dyn Camera,
+        theme: &WorldTheme,
+        window_size: ScreenSize,
+    ) {
+        let common = self.get_common();
+        let clip = camera.view_projection_matrix() * common.world_position.to_homogeneous();
+        if clip.w <= 0.0 {
+            return;
+        }
+
+        let screen = camera.clip_to_screen_space(clip);
+        let anchor = ScreenPosition {
+            left: screen.x * window_size.width,
+            top: screen.y * window_size.height + 5.0,
+        };
+        if common.entity_type != EntityType::Monster {
+            return;
+        }
+
+        let bar_width = theme.status_bar.enemy_bar_width;
+        let bar_height = theme.status_bar.enemy_health_height;
+        let inset = 3.0;
+        let stroke = 2.0;
+        let left = anchor.left - bar_width / 2.0 - inset - stroke;
+        let top = anchor.top - inset - stroke;
+        let width = bar_width + (inset + stroke) * 2.0;
+        let height = bar_height + (inset + stroke) * 2.0;
+        let color = theme.target_outline;
+        let arm = 8.0;
+
+        for (position, size) in [
+            (ScreenPosition { left, top }, ScreenSize {
+                width: arm,
+                height: stroke,
+            }),
+            (ScreenPosition { left, top }, ScreenSize {
+                width: stroke,
+                height: arm,
+            }),
+            (
+                ScreenPosition {
+                    left: left + width - arm,
+                    top,
+                },
+                ScreenSize {
+                    width: arm,
+                    height: stroke,
+                },
+            ),
+            (
+                ScreenPosition {
+                    left: left + width - stroke,
+                    top,
+                },
+                ScreenSize {
+                    width: stroke,
+                    height: arm,
+                },
+            ),
+            (
+                ScreenPosition {
+                    left,
+                    top: top + height - stroke,
+                },
+                ScreenSize {
+                    width: arm,
+                    height: stroke,
+                },
+            ),
+            (
+                ScreenPosition {
+                    left,
+                    top: top + height - arm,
+                },
+                ScreenSize {
+                    width: stroke,
+                    height: arm,
+                },
+            ),
+            (
+                ScreenPosition {
+                    left: left + width - arm,
+                    top: top + height - stroke,
+                },
+                ScreenSize {
+                    width: arm,
+                    height: stroke,
+                },
+            ),
+            (
+                ScreenPosition {
+                    left: left + width - stroke,
+                    top: top + height - arm,
+                },
+                ScreenSize {
+                    width: stroke,
+                    height: arm,
+                },
+            ),
+        ] {
+            renderer.render_rectangle(position, size, color);
+        }
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn render_ally_status(
         &self,

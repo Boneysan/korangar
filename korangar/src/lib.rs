@@ -12421,6 +12421,12 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 self.screen_size,
                 self.client_tick,
             );
+            entity.render_target_outline(
+                self.middle_interface_renderer,
+                self.current_camera,
+                self.client_state.follow(client_state().world_theme()),
+                self.screen_size,
+            );
         }
 
         if let Some(entity_id) = self
@@ -12438,6 +12444,12 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                 self.client_state.follow(client_state().world_theme()),
                 self.screen_size,
                 self.client_tick,
+            );
+            entity.render_target_outline(
+                self.middle_interface_renderer,
+                self.current_camera,
+                self.client_state.follow(client_state().world_theme()),
+                self.screen_size,
             );
         }
 

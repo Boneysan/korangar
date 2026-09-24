@@ -107,6 +107,9 @@ pub struct WorldTheme {
     pub skill_aim_out_of_range: Color,
     /// Server cast telegraph color for hostile/incoming ground effects.
     pub enemy_telegraph: Color,
+    /// Persistent non-color-only target marker framing the selected monster's
+    /// status bars.
+    pub target_outline: Color,
 }
 
 impl Default for WorldTheme {
@@ -119,6 +122,7 @@ impl Default for WorldTheme {
             skill_aim_in_range: Color::rgba(0.35, 0.75, 1.0, 0.5),
             skill_aim_out_of_range: Color::rgba(1.0, 0.3, 0.25, 0.5),
             enemy_telegraph: Color::rgba(1.0, 0.28, 0.12, 0.48),
+            target_outline: Color::rgb_u8(255, 220, 64),
         }
     }
 }
@@ -143,6 +147,7 @@ impl WorldTheme {
             theme.skill_aim_in_range = Color::rgba_u8(0, 114, 178, 190);
             theme.skill_aim_out_of_range = Color::rgba_u8(230, 159, 0, 210);
             theme.enemy_telegraph = Color::rgba_u8(213, 94, 0, 215);
+            theme.target_outline = Color::rgb_u8(240, 228, 66);
             #[cfg(feature = "debug")]
             timer.stop();
             return theme;
@@ -210,6 +215,7 @@ mod tests {
         assert_eq!(theme.cursor.color, Color::rgb_u8(230, 159, 0));
         assert_eq!(theme.skill_aim_in_range, Color::rgba_u8(0, 114, 178, 190));
         assert_eq!(theme.enemy_telegraph, Color::rgba_u8(213, 94, 0, 215));
+        assert_eq!(theme.target_outline, Color::rgb_u8(240, 228, 66));
     }
 
     #[test]
@@ -218,6 +224,7 @@ mod tests {
         assert_eq!(old_theme.skill_aim_in_range, Color::rgba(0.35, 0.75, 1.0, 0.5));
         assert_eq!(old_theme.skill_aim_out_of_range, Color::rgba(1.0, 0.3, 0.25, 0.5));
         assert_eq!(old_theme.enemy_telegraph, Color::rgba(1.0, 0.28, 0.12, 0.48));
+        assert_eq!(old_theme.target_outline, Color::rgb_u8(255, 220, 64));
         assert_eq!(old_theme.status_bar.ally_health_color, Color::rgb_u8(80, 220, 120));
         assert_eq!(old_theme.status_bar.cast_bar_color, Color::rgb_u8(255, 210, 60));
 
