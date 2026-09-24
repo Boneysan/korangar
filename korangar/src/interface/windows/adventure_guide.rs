@@ -497,10 +497,10 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .statuses
         .iter()
         .filter(|status| {
-            status
-                .statuses
-                .iter()
-                .any(|mechanic| mechanic.associated_skill.as_ref().is_some_and(|source| source.id == skill.id))
+            status.statuses.iter().any(|mechanic| {
+                mechanic.associated_skill.as_ref().is_some_and(|source| source.id == skill.id)
+                    || mechanic.status_change_skills.iter().any(|source| source.id == skill.id)
+            })
         })
         .collect();
     if !linked_statuses.is_empty() {
@@ -536,6 +536,21 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
                     format!("{} ({})", skill.description, skill.name)
                 };
                 lines.push(format!("@guide:skill:{}|Associated skill: {label}", skill.id));
+            }
+            for skill in &mechanic.status_change_skills {
+                if mechanic
+                    .associated_skill
+                    .as_ref()
+                    .is_some_and(|associated| associated.id == skill.id)
+                {
+                    continue;
+                }
+                let label = if skill.description.is_empty() {
+                    skill.name.clone()
+                } else {
+                    format!("{} ({})", skill.description, skill.name)
+                };
+                lines.push(format!("@guide:skill:{}|Skill database StatusChange: {label}", skill.id));
             }
         }
     }
@@ -1027,7 +1042,7 @@ mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories,
-        skill_details,
+        skill_details, status_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -1190,6 +1205,37 @@ mod tests {
         let status_lines = resolve_details(&target).join("\n");
         assert!(status_lines.contains("SC_BLESSING (status ID 30)"));
         assert!(status_lines.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
+    }
+
+    #[test]
+    fn status_guide_links_explicit_skill_db_status_change_fields() {
+        let data = reference_data();
+        for (status_name, skill_name, skill_id) in [
+            ("Adaptation", "BD_ADAPTATION", 304),
+            ("Assumptio", "CASH_ASSUMPTIO", 691),
+            ("Basilica Buff", "HP_BASILICA", 362),
+        ] {
+            let status = data
+                .search_statuses(status_name, 10)
+                .into_iter()
+                .find(|status| status.name == status_name)
+                .expect("status icon row");
+            let detail = status_details(status).join("\n");
+            assert!(detail.contains(skill_name));
+            assert!(detail.contains(&format!("@guide:skill:{skill_id}|Skill database StatusChange:")));
+
+            let skill = data
+                .search_skills(skill_name, 10)
+                .into_iter()
+                .find(|skill| skill.name == skill_name)
+                .expect("skill row");
+            assert!(
+                skill_details(skill)
+                    .iter()
+                    .any(|line| line == &format!("@guide:status:{}|{} (icon {})", status.id, status.name, status.id))
+            );
+            assert_eq!(data.search_statuses(skill_name, 10)[0].id, status.id);
+        }
     }
 
     #[test]

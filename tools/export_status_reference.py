@@ -59,12 +59,38 @@ def parse_constants(text: str) -> tuple[dict[str, int], dict[str, int]]:
     return statuses, icons
 
 
+def index_status_change_skills(skills: list[dict[str, Any]]) -> dict[str, list[dict[str, object]]]:
+    """Index explicit skill_db StatusChange fields without inferring other sources."""
+    by_status: dict[str, list[dict[str, object]]] = defaultdict(list)
+    for skill in skills:
+        status = skill.get("StatusChange")
+        skill_id, name = skill.get("Id"), skill.get("Name")
+        if (
+            not isinstance(status, str)
+            or not status.startswith("SC_")
+            or status == "SC_NONE"
+            or not isinstance(skill_id, int)
+            or not isinstance(name, str)
+        ):
+            continue
+        by_status[status].append(
+            {
+                "id": skill_id,
+                "name": name,
+                "description": str(skill.get("Description", "")),
+                "source": {"path": "db/re/skill_db.conf", "record": name},
+            }
+        )
+    return {status: sorted(rows, key=lambda row: (int(row["id"]), str(row["name"]))) for status, rows in by_status.items()}
+
+
 def build() -> dict[str, object]:
     icon_names: dict[str, str] = json.loads(STATUS_NAMES.read_text(encoding="utf-8"))
     sc_ids, si_ids = parse_constants(CONSTANTS.read_text(encoding="utf-8", errors="replace"))
     status_config = parse_records(STATUS_CONFIG.read_text(encoding="utf-8", errors="replace"))
     skills = parse_skill_db(SKILL_DB.read_text(encoding="utf-8", errors="replace"))
     skills_by_name = {skill["Name"]: skill for skill in skills if "Name" in skill and "Id" in skill}
+    skills_by_status = index_status_change_skills(skills)
     status_by_icon: dict[int, list[dict[str, object]]] = defaultdict(list)
 
     for constant, config in sorted(status_config.items()):
@@ -95,6 +121,8 @@ def build() -> dict[str, object]:
                 "description": str(skill.get("Description", "")),
                 "source": {"path": "db/re/skill_db.conf", "record": str(skill["Name"])},
             }
+        if constant in skills_by_status:
+            status_record["status_change_skills"] = skills_by_status[constant]
         status_by_icon[icon_id].append(status_record)
 
     entries = [

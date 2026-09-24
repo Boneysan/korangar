@@ -224,6 +224,9 @@ pub struct ReferenceStatusMechanic {
     pub calculation_flags: Vec<String>,
     #[serde(default)]
     pub associated_skill: Option<ReferenceStatusSkill>,
+    /// Skills whose explicit Hercules `StatusChange` field names this status.
+    #[serde(default)]
+    pub status_change_skills: Vec<ReferenceStatusSkill>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -412,6 +415,17 @@ impl ReferenceData {
                         return Err(format!("status {} skill name/ID mismatch", mechanic.constant));
                     }
                 }
+                for skill in &mechanic.status_change_skills {
+                    let Some(&skill_index) = skills_by_id.get(&(skill.id as u32)) else {
+                        return Err(format!(
+                            "status {} links missing StatusChange skill {}",
+                            mechanic.constant, skill.id
+                        ));
+                    };
+                    if skills[skill_index].name != skill.name {
+                        return Err(format!("status {} StatusChange skill name/ID mismatch", mechanic.constant));
+                    }
+                }
             }
         }
 
@@ -580,6 +594,9 @@ impl ReferenceData {
                     || status.statuses.iter().any(|mechanic| {
                         mechanic.constant.to_lowercase().contains(&query)
                             || mechanic.associated_skill.as_ref().is_some_and(|skill| {
+                                skill.name.to_lowercase().contains(&query) || skill.description.to_lowercase().contains(&query)
+                            })
+                            || mechanic.status_change_skills.iter().any(|skill| {
                                 skill.name.to_lowercase().contains(&query) || skill.description.to_lowercase().contains(&query)
                             })
                     })

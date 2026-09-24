@@ -37,7 +37,36 @@
        "path": "db/re/skill_db.conf",
        "record": "SM_PROVOKE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 6,
+       "name": "SM_PROVOKE",
+       "description": "Provoke",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_PROVOKE"
+       }
+      },
+      {
+       "id": 473,
+       "name": "SM_SELFPROVOKE",
+       "description": "Provoke Self",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_SELFPROVOKE"
+       }
+      },
+      {
+       "id": 8232,
+       "name": "MER_PROVOKE",
+       "description": "Provoke",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_PROVOKE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -75,7 +104,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SM_ENDURE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8,
+       "name": "SM_ENDURE",
+       "description": "Endure",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_ENDURE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -112,7 +152,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KN_TWOHANDQUICKEN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 60,
+       "name": "KN_TWOHANDQUICKEN",
+       "description": "Twohand Quicken",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KN_TWOHANDQUICKEN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -147,7 +198,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AC_CONCENTRATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 45,
+       "name": "AC_CONCENTRATION",
+       "description": "Improve Concentration",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AC_CONCENTRATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -182,7 +244,27 @@
        "path": "db/re/skill_db.conf",
        "record": "TF_HIDING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 51,
+       "name": "TF_HIDING",
+       "description": "Hiding",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TF_HIDING"
+       }
+      },
+      {
+       "id": 3001,
+       "name": "KO_YAMIKUMO",
+       "description": "Yamikumo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_YAMIKUMO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -219,7 +301,27 @@
        "path": "db/re/skill_db.conf",
        "record": "AS_CLOAKING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 135,
+       "name": "AS_CLOAKING",
+       "description": "Cloaking",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_CLOAKING"
+       }
+      },
+      {
+       "id": 353,
+       "name": "NPC_INVISIBLE",
+       "description": "Invisible",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_INVISIBLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -253,7 +355,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AS_ENCHANTPOISON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 138,
+       "name": "AS_ENCHANTPOISON",
+       "description": "Enchant Poison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_ENCHANTPOISON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -285,7 +398,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AS_POISONREACT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 139,
+       "name": "AS_POISONREACT",
+       "description": "Poison React",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_POISONREACT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -325,7 +449,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WZ_QUAGMIRE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 92,
+       "name": "WZ_QUAGMIRE",
+       "description": "Quagmire",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_QUAGMIRE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -361,7 +496,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AL_ANGELUS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 33,
+       "name": "AL_ANGELUS",
+       "description": "Angelus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_ANGELUS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -401,7 +547,45 @@
        "path": "db/re/skill_db.conf",
        "record": "AL_BLESSING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 34,
+       "name": "AL_BLESSING",
+       "description": "Blessing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_BLESSING"
+       }
+      },
+      {
+       "id": 689,
+       "name": "CASH_BLESSING",
+       "description": "Party Blessing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CASH_BLESSING"
+       }
+      },
+      {
+       "id": 2041,
+       "name": "AB_CLEMENTIA",
+       "description": "Crementia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_CLEMENTIA"
+       }
+      },
+      {
+       "id": 8239,
+       "name": "MER_BLESSING",
+       "description": "Blessing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_BLESSING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -433,7 +617,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AL_CRUCIS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 32,
+       "name": "AL_CRUCIS",
+       "description": "Signum Crucis",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_CRUCIS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -471,7 +666,45 @@
        "path": "db/re/skill_db.conf",
        "record": "AL_INCAGI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 29,
+       "name": "AL_INCAGI",
+       "description": "Increase AGI",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_INCAGI"
+       }
+      },
+      {
+       "id": 690,
+       "name": "CASH_INCAGI",
+       "description": "Party Increase AGI",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CASH_INCAGI"
+       }
+      },
+      {
+       "id": 2042,
+       "name": "AB_CANTO",
+       "description": "Canto Candidus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_CANTO"
+       }
+      },
+      {
+       "id": 8240,
+       "name": "MER_INCAGI",
+       "description": "Increase Agility",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_INCAGI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -509,7 +742,27 @@
        "path": "db/re/skill_db.conf",
        "record": "AL_DECAGI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 30,
+       "name": "AL_DECAGI",
+       "description": "Decrease AGI",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_DECAGI"
+       }
+      },
+      {
+       "id": 8234,
+       "name": "MER_DECAGI",
+       "description": "Decrease_AGI",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_DECAGI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -545,7 +798,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_SLOWPOISON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 71,
+       "name": "PR_SLOWPOISON",
+       "description": "Slow Poison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_SLOWPOISON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -581,7 +845,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_IMPOSITIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 66,
+       "name": "PR_IMPOSITIO",
+       "description": "Impositio Manus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_IMPOSITIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -614,7 +889,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_SUFFRAGIUM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 67,
+       "name": "PR_SUFFRAGIUM",
+       "description": "Suffragium",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_SUFFRAGIUM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -649,7 +935,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_ASPERSIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 68,
+       "name": "PR_ASPERSIO",
+       "description": "Aspersio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_ASPERSIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -686,7 +983,27 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_BENEDICTIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 69,
+       "name": "PR_BENEDICTIO",
+       "description": "B.S. Sacramenti",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_BENEDICTIO"
+       }
+      },
+      {
+       "id": 2322,
+       "name": "LG_PIETY",
+       "description": "Piety",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_PIETY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -719,7 +1036,36 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_KYRIE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 73,
+       "name": "PR_KYRIE",
+       "description": "Kyrie Eleison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_KYRIE"
+       }
+      },
+      {
+       "id": 2045,
+       "name": "AB_PRAEFATIO",
+       "description": "Praefatio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_PRAEFATIO"
+       }
+      },
+      {
+       "id": 8238,
+       "name": "MER_KYRIE",
+       "description": "Kyrie Eleison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_KYRIE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -755,7 +1101,27 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_MAGNIFICAT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 74,
+       "name": "PR_MAGNIFICAT",
+       "description": "Magnificat",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_MAGNIFICAT"
+       }
+      },
+      {
+       "id": 8222,
+       "name": "MER_MAGNIFICAT",
+       "description": "Magnificat",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_MAGNIFICAT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -790,7 +1156,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_GLORIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 75,
+       "name": "PR_GLORIA",
+       "description": "Gloria",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_GLORIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -824,7 +1201,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PR_LEXAETERNA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 78,
+       "name": "PR_LEXAETERNA",
+       "description": "Lex Aeterna",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_LEXAETERNA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -859,7 +1247,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BS_ADRENALINE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 111,
+       "name": "BS_ADRENALINE",
+       "description": "Adrenaline Rush",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BS_ADRENALINE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -891,7 +1290,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BS_WEAPONPERFECT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 112,
+       "name": "BS_WEAPONPERFECT",
+       "description": "Weapon Perfection",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BS_WEAPONPERFECT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -923,7 +1333,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BS_OVERTHRUST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 113,
+       "name": "BS_OVERTHRUST",
+       "description": "Power-Thrust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BS_OVERTHRUST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -957,7 +1378,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BS_MAXIMIZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 114,
+       "name": "BS_MAXIMIZE",
+       "description": "Maximize Power",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BS_MAXIMIZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1035,7 +1467,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NV_TRICKDEAD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 143,
+       "name": "NV_TRICKDEAD",
+       "description": "Play Dead",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NV_TRICKDEAD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1070,7 +1513,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MC_LOUD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 155,
+       "name": "MC_LOUD",
+       "description": "Crazy Uproar",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MC_LOUD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1102,7 +1556,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MG_ENERGYCOAT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 157,
+       "name": "MG_ENERGYCOAT",
+       "description": "Energy Coat",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MG_ENERGYCOAT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1132,7 +1597,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_ARMORBRAKE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 344,
+       "name": "NPC_ARMORBRAKE",
+       "description": "Break armor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_ARMORBRAKE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1162,7 +1638,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_WEAPONBRAKER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 343,
+       "name": "NPC_WEAPONBRAKER",
+       "description": "Break weapon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WEAPONBRAKER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1194,7 +1681,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_HALLUCINATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 207,
+       "name": "NPC_HALLUCINATION",
+       "description": "Hallucination",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_HALLUCINATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1436,7 +1934,18 @@
        "path": "db/re/skill_db.conf",
        "record": "HT_ANKLESNARE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 117,
+       "name": "HT_ANKLESNARE",
+       "description": "Ankle Snare",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HT_ANKLESNARE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1495,7 +2004,27 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_STRIPWEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 215,
+       "name": "RG_STRIPWEAPON",
+       "description": "Divest Weapon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_STRIPWEAPON"
+       }
+      },
+      {
+       "id": 513,
+       "name": "GS_DISARM",
+       "description": "Disarm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_DISARM"
+       }
+      }
+     ]
     },
     {
      "constant": "SC_NO_SWITCH_WEAPON",
@@ -1550,7 +2079,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_STRIPSHIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 216,
+       "name": "RG_STRIPSHIELD",
+       "description": "Divest Shield",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_STRIPSHIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1588,7 +2128,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_STRIPARMOR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 217,
+       "name": "RG_STRIPARMOR",
+       "description": "Divest Armor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_STRIPARMOR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1626,7 +2177,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_STRIPHELM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 218,
+       "name": "RG_STRIPHELM",
+       "description": "Divest Helm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_STRIPHELM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1661,7 +2223,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AM_CP_WEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 234,
+       "name": "AM_CP_WEAPON",
+       "description": "Alchemical Weapon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AM_CP_WEAPON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1696,7 +2269,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AM_CP_SHIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 235,
+       "name": "AM_CP_SHIELD",
+       "description": "Synthesized Shield",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AM_CP_SHIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1731,7 +2315,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AM_CP_ARMOR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 236,
+       "name": "AM_CP_ARMOR",
+       "description": "Synthetic Armor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AM_CP_ARMOR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1766,7 +2361,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AM_CP_HELM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 237,
+       "name": "AM_CP_HELM",
+       "description": "Biochemical Helm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AM_CP_HELM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1799,7 +2405,27 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_AUTOGUARD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 249,
+       "name": "CR_AUTOGUARD",
+       "description": "Guard",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_AUTOGUARD"
+       }
+      },
+      {
+       "id": 8220,
+       "name": "ML_AUTOGUARD",
+       "description": "Guard",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ML_AUTOGUARD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1832,7 +2458,27 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_REFLECTSHIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 252,
+       "name": "CR_REFLECTSHIELD",
+       "description": "Shield Reflect",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_REFLECTSHIELD"
+       }
+      },
+      {
+       "id": 8205,
+       "name": "MS_REFLECTSHIELD",
+       "description": "Shield_Reflect",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MS_REFLECTSHIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1868,7 +2514,18 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_PROVIDENCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 256,
+       "name": "CR_PROVIDENCE",
+       "description": "Resistant Souls",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_PROVIDENCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1903,7 +2560,27 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_DEFENDER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 257,
+       "name": "CR_DEFENDER",
+       "description": "Defending Aura",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_DEFENDER"
+       }
+      },
+      {
+       "id": 8219,
+       "name": "ML_DEFENDER",
+       "description": "Defending_Aura",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ML_DEFENDER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1938,7 +2615,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_AUTOSPELL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 279,
+       "name": "SA_AUTOSPELL",
+       "description": "Hindsight",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_AUTOSPELL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -1974,7 +2662,18 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_SPEARQUICKEN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 258,
+       "name": "CR_SPEARQUICKEN",
+       "description": "Spear Quicken",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_SPEARQUICKEN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2011,7 +2710,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BA_WHISTLE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 319,
+       "name": "BA_WHISTLE",
+       "description": "Perfect Tablature",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BA_WHISTLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2047,7 +2757,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BA_ASSASSINCROSS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 320,
+       "name": "BA_ASSASSINCROSS",
+       "description": "Impressive Riff",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BA_ASSASSINCROSS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2081,7 +2802,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BA_POEMBRAGI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 321,
+       "name": "BA_POEMBRAGI",
+       "description": "Magic Strings",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BA_POEMBRAGI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2118,7 +2850,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BA_APPLEIDUN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 322,
+       "name": "BA_APPLEIDUN",
+       "description": "Song of Lutie",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BA_APPLEIDUN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2154,7 +2897,18 @@
        "path": "db/re/skill_db.conf",
        "record": "DC_HUMMING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 327,
+       "name": "DC_HUMMING",
+       "description": "Focus Ballet",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_HUMMING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2191,7 +2945,18 @@
        "path": "db/re/skill_db.conf",
        "record": "DC_DONTFORGETME"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 328,
+       "name": "DC_DONTFORGETME",
+       "description": "Slow Grace",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_DONTFORGETME"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2227,7 +2992,18 @@
        "path": "db/re/skill_db.conf",
        "record": "DC_FORTUNEKISS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 329,
+       "name": "DC_FORTUNEKISS",
+       "description": "Lady Luck",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_FORTUNEKISS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2263,7 +3039,18 @@
        "path": "db/re/skill_db.conf",
        "record": "DC_SERVICEFORYOU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 330,
+       "name": "DC_SERVICEFORYOU",
+       "description": "Gypsy's Kiss",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_SERVICEFORYOU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2297,7 +3084,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_RICHMANKIM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 307,
+       "name": "BD_RICHMANKIM",
+       "description": "Mental Sensing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_RICHMANKIM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2334,7 +3132,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_ETERNALCHAOS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 308,
+       "name": "BD_ETERNALCHAOS",
+       "description": "Down Tempo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_ETERNALCHAOS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2371,7 +3180,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_DRUMBATTLEFIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 309,
+       "name": "BD_DRUMBATTLEFIELD",
+       "description": "Battle Theme",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_DRUMBATTLEFIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2407,7 +3227,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_RINGNIBELUNGEN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 310,
+       "name": "BD_RINGNIBELUNGEN",
+       "description": "Harmonic Lick",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_RINGNIBELUNGEN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2442,7 +3273,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_ROKISWEIL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 311,
+       "name": "BD_ROKISWEIL",
+       "description": "Classical Pluck",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_ROKISWEIL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2476,7 +3318,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_INTOABYSS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 312,
+       "name": "BD_INTOABYSS",
+       "description": "Power Chord",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_INTOABYSS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2512,7 +3365,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BD_SIEGFRIED"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 313,
+       "name": "BD_SIEGFRIED",
+       "description": "Acoustic Rhythm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_SIEGFRIED"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2549,7 +3413,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MO_EXPLOSIONSPIRITS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 270,
+       "name": "MO_EXPLOSIONSPIRITS",
+       "description": "Fury",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MO_EXPLOSIONSPIRITS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2587,7 +3462,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MO_STEELBODY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 268,
+       "name": "MO_STEELBODY",
+       "description": "Mental Strength",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MO_STEELBODY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2655,7 +3541,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_FLAMELAUNCHER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 280,
+       "name": "SA_FLAMELAUNCHER",
+       "description": "Endow Blaze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_FLAMELAUNCHER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2693,7 +3590,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_FROSTWEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 281,
+       "name": "SA_FROSTWEAPON",
+       "description": "Endow Tsunami",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_FROSTWEAPON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2731,7 +3639,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_LIGHTNINGLOADER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 282,
+       "name": "SA_LIGHTNINGLOADER",
+       "description": "Endow Tornado",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_LIGHTNINGLOADER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2769,7 +3688,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_SEISMICWEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 283,
+       "name": "SA_SEISMICWEAPON",
+       "description": "Endow Quake",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_SEISMICWEAPON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2803,7 +3733,54 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_STOP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 342,
+       "name": "NPC_STOP",
+       "description": "Stop",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_STOP"
+       }
+      },
+      {
+       "id": 371,
+       "name": "CH_TIGERFIST",
+       "description": "Glacier Fist",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CH_TIGERFIST"
+       }
+      },
+      {
+       "id": 397,
+       "name": "LK_SPIRALPIERCE",
+       "description": "Spiral Pierce",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_SPIRALPIERCE"
+       }
+      },
+      {
+       "id": 2482,
+       "name": "GN_WALLOFTHORN",
+       "description": "Wall of Thorns",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_WALLOFTHORN"
+       }
+      },
+      {
+       "id": 8218,
+       "name": "ML_SPIRALPIERCE",
+       "description": "Spiral_Pierce",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ML_SPIRALPIERCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2839,7 +3816,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_CHANGEUNDEAD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 348,
+       "name": "NPC_CHANGEUNDEAD",
+       "description": "Undead Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEUNDEAD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2872,7 +3860,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_AURABLADE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 355,
+       "name": "LK_AURABLADE",
+       "description": "Aura Blade",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_AURABLADE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2906,7 +3905,27 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_PARRYING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 356,
+       "name": "LK_PARRYING",
+       "description": "Parrying",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_PARRYING"
+       }
+      },
+      {
+       "id": 8204,
+       "name": "MS_PARRYING",
+       "description": "Parry",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MS_PARRYING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2943,7 +3962,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_CONCENTRATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 357,
+       "name": "LK_CONCENTRATION",
+       "description": "Concentration",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_CONCENTRATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -2979,7 +4009,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_TENSIONRELAX"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 358,
+       "name": "LK_TENSIONRELAX",
+       "description": "Relax",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_TENSIONRELAX"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3022,7 +4063,36 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_BERSERK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 359,
+       "name": "LK_BERSERK",
+       "description": "Frenzy",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_BERSERK"
+       }
+      },
+      {
+       "id": 2303,
+       "name": "SC_BLOODYLUST",
+       "description": "Bloody Lust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_BLOODYLUST"
+       }
+      },
+      {
+       "id": 8206,
+       "name": "MS_BERSERK",
+       "description": "Frenzy",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MS_BERSERK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3046,7 +4116,18 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_ASSUMPTIO"
      },
-     "icon_constant": "SI_ASSUMPTIO"
+     "icon_constant": "SI_ASSUMPTIO",
+     "status_change_skills": [
+      {
+       "id": 691,
+       "name": "CASH_ASSUMPTIO",
+       "description": "Party Assumptio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CASH_ASSUMPTIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3082,7 +4163,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_DELUGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 286,
+       "name": "SA_DELUGE",
+       "description": "Deluge",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_DELUGE"
+       }
+      }
+     ]
     },
     {
      "constant": "SC_VIOLENTGALE",
@@ -3108,7 +4200,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_VIOLENTGALE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 287,
+       "name": "SA_VIOLENTGALE",
+       "description": "Whirlwind",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_VIOLENTGALE"
+       }
+      }
+     ]
     },
     {
      "constant": "SC_VOLCANO",
@@ -3135,7 +4238,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_VOLCANO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 285,
+       "name": "SA_VOLCANO",
+       "description": "Volcano",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_VOLCANO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3170,7 +4284,18 @@
        "path": "db/re/skill_db.conf",
        "record": "HW_MAGICPOWER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 366,
+       "name": "HW_MAGICPOWER",
+       "description": "Mystical Amplification",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HW_MAGICPOWER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3205,7 +4330,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ASC_EDP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 378,
+       "name": "ASC_EDP",
+       "description": "Enchant Deadly Poison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ASC_EDP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3247,7 +4383,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SN_SIGHT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 380,
+       "name": "SN_SIGHT",
+       "description": "Falcon Eyes",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SN_SIGHT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3284,7 +4431,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SN_WINDWALK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 383,
+       "name": "SN_WINDWALK",
+       "description": "Wind Walker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SN_WINDWALK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3320,7 +4478,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WS_MELTDOWN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 384,
+       "name": "WS_MELTDOWN",
+       "description": "Shattering Strike",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WS_MELTDOWN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3358,7 +4527,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WS_CARTBOOST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 387,
+       "name": "WS_CARTBOOST",
+       "description": "Cart Boost",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WS_CARTBOOST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3388,7 +4568,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ST_REJECTSWORD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 390,
+       "name": "ST_REJECTSWORD",
+       "description": "Counter Instinct",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ST_REJECTSWORD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3425,7 +4616,18 @@
        "path": "db/re/skill_db.conf",
        "record": "CG_MARIONETTE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 396,
+       "name": "CG_MARIONETTE",
+       "description": "Marionette Control",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CG_MARIONETTE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3519,7 +4721,81 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_BLEEDING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 230,
+       "name": "AM_ACIDTERROR",
+       "description": "Acid Terror",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AM_ACIDTERROR"
+       }
+      },
+      {
+       "id": 398,
+       "name": "LK_HEADCRUSH",
+       "description": "Traumatic Blow",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_HEADCRUSH"
+       }
+      },
+      {
+       "id": 514,
+       "name": "GS_PIERCINGSHOT",
+       "description": "Piercing Shot",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_PIERCINGSHOT"
+       }
+      },
+      {
+       "id": 660,
+       "name": "NPC_BLEEDING",
+       "description": "Bleeding",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_BLEEDING"
+       }
+      },
+      {
+       "id": 665,
+       "name": "NPC_WIDEBLEEDING",
+       "description": "Wide Bleeding",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDEBLEEDING"
+       }
+      },
+      {
+       "id": 2553,
+       "name": "RL_MASS_SPIRAL",
+       "description": "Mass Spiral",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_MASS_SPIRAL"
+       }
+      },
+      {
+       "id": 5021,
+       "name": "SU_SCRATCH",
+       "description": "Scratch",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_SCRATCH"
+       }
+      },
+      {
+       "id": 5026,
+       "name": "SU_SV_STEMSPEAR",
+       "description": "Silvervine Stem Spear",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_SV_STEMSPEAR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3558,7 +4834,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LK_JOINTBEAT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 399,
+       "name": "LK_JOINTBEAT",
+       "description": "Vital Strike",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LK_JOINTBEAT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3588,7 +4875,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WE_BABY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 408,
+       "name": "WE_BABY",
+       "description": "Baby",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WE_BABY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3618,7 +4916,27 @@
        "path": "db/re/skill_db.conf",
        "record": "SM_AUTOBERSERK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 146,
+       "name": "SM_AUTOBERSERK",
+       "description": "Auto Berserk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_AUTOBERSERK"
+       }
+      },
+      {
+       "id": 8233,
+       "name": "MER_AUTOBERSERK",
+       "description": "Berserk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_AUTOBERSERK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3655,7 +4973,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_RUN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 411,
+       "name": "TK_RUN",
+       "description": "Running",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_RUN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3712,7 +5041,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_READYSTORM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 412,
+       "name": "TK_READYSTORM",
+       "description": "Tornado Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_READYSTORM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3757,7 +5097,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_READYDOWN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 414,
+       "name": "TK_READYDOWN",
+       "description": "Heel Drop Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_READYDOWN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3802,7 +5153,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_READYTURN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 416,
+       "name": "TK_READYTURN",
+       "description": "Roundhouse Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_READYTURN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3847,7 +5209,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_READYCOUNTER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 418,
+       "name": "TK_READYCOUNTER",
+       "description": "Counter Kick Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_READYCOUNTER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -3892,7 +5265,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_DODGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 420,
+       "name": "TK_DODGE",
+       "description": "Tumbling",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_DODGE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4008,7 +5392,18 @@
        "path": "db/re/skill_db.conf",
        "record": "BS_ADRENALINE2"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 459,
+       "name": "BS_ADRENALINE2",
+       "description": "Advanced Adrenaline Rush",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BS_ADRENALINE2"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4092,7 +5487,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_HIGH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 494,
+       "name": "SL_HIGH",
+       "description": "Spirit of Rebirth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_HIGH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4201,7 +5607,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_KAITE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 465,
+       "name": "SL_KAITE",
+       "description": "Kaite",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_KAITE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4231,7 +5648,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_KAIZEL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 462,
+       "name": "SL_KAIZEL",
+       "description": "Kaizel",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_KAIZEL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4265,7 +5693,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_KAAHI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 463,
+       "name": "SL_KAAHI",
+       "description": "Kaahi",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_KAAHI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4299,7 +5738,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_KAUPE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 464,
+       "name": "SL_KAUPE",
+       "description": "Kaupe",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_KAUPE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4329,7 +5779,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_SMA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 469,
+       "name": "SL_SMA",
+       "description": "Esma",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_SMA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4362,7 +5823,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SL_SKE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 471,
+       "name": "SL_SKE",
+       "description": "Eske",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_SKE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4398,7 +5870,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KN_ONEHAND"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 495,
+       "name": "KN_ONEHAND",
+       "description": "Onehand Quicken",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KN_ONEHAND"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4428,7 +5911,36 @@
        "path": "db/re/skill_db.conf",
        "record": "SG_SUN_WARM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 428,
+       "name": "SG_SUN_WARM",
+       "description": "Warmth of the Sun",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_SUN_WARM"
+       }
+      },
+      {
+       "id": 429,
+       "name": "SG_MOON_WARM",
+       "description": "Warmth of the Moon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_MOON_WARM"
+       }
+      },
+      {
+       "id": 430,
+       "name": "SG_STAR_WARM",
+       "description": "Warmth of the Stars",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_STAR_WARM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4460,7 +5972,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SG_SUN_COMFORT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 431,
+       "name": "SG_SUN_COMFORT",
+       "description": "Comfort of the Sun",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_SUN_COMFORT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4492,7 +6015,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SG_MOON_COMFORT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 432,
+       "name": "SG_MOON_COMFORT",
+       "description": "Comfort of the Moon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_MOON_COMFORT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4524,7 +6058,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SG_STAR_COMFORT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 433,
+       "name": "SG_STAR_COMFORT",
+       "description": "Comfort of the Stars",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_STAR_COMFORT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4557,7 +6102,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ST_PRESERVE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 475,
+       "name": "ST_PRESERVE",
+       "description": "Preserve",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ST_PRESERVE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4666,7 +6222,18 @@
        "path": "db/re/skill_db.conf",
        "record": "PF_DOUBLECASTING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 482,
+       "name": "PF_DOUBLECASTING",
+       "description": "Double Casting",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PF_DOUBLECASTING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4699,7 +6266,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WS_OVERTHRUSTMAX"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 486,
+       "name": "WS_OVERTHRUSTMAX",
+       "description": "Maximum Power Thrust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WS_OVERTHRUSTMAX"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4733,7 +6311,18 @@
        "path": "db/re/skill_db.conf",
        "record": "CG_TAROTCARD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 489,
+       "name": "CG_TAROTCARD",
+       "description": "Tarot Card of Fate",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CG_TAROTCARD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4769,7 +6358,18 @@
        "path": "db/re/skill_db.conf",
        "record": "CR_SHRINK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 1002,
+       "name": "CR_SHRINK",
+       "description": "Shrink",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_SHRINK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4805,7 +6405,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WZ_SIGHTBLASTER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 1006,
+       "name": "WZ_SIGHTBLASTER",
+       "description": "Sight Blaster",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_SIGHTBLASTER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4835,7 +6446,18 @@
        "path": "db/re/skill_db.conf",
        "record": "DC_WINKCHARM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 1011,
+       "name": "DC_WINKCHARM",
+       "description": "Wink of Charm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_WINKCHARM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4911,7 +6533,27 @@
        "path": "db/re/skill_db.conf",
        "record": "RG_CLOSECONFINE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 1005,
+       "name": "RG_CLOSECONFINE",
+       "description": "Close Confine",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_CLOSECONFINE"
+       }
+      },
+      {
+       "id": 8036,
+       "name": "MH_TINDER_BREAKER",
+       "description": "Tinder Breaker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_TINDER_BREAKER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4943,7 +6585,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GS_MADNESSCANCEL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 504,
+       "name": "GS_MADNESSCANCEL",
+       "description": "Madness Canceller",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_MADNESSCANCEL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -4977,7 +6630,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GS_GATLINGFEVER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 517,
+       "name": "GS_GATLINGFEVER",
+       "description": "Gatling Fever",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_GATLINGFEVER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5013,7 +6677,18 @@
        "path": "db/re/skill_db.conf",
        "record": "TK_SPTIME"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 423,
+       "name": "TK_SPTIME",
+       "description": "Happy Break",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_SPTIME"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5047,7 +6722,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NJ_UTSUSEMI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 531,
+       "name": "NJ_UTSUSEMI",
+       "description": "Cicada Skin Sheeding",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_UTSUSEMI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5083,7 +6769,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NJ_BUNSINJYUTSU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 532,
+       "name": "NJ_BUNSINJYUTSU",
+       "description": "Mirror Image",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_BUNSINJYUTSU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5116,7 +6813,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NJ_NEN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 543,
+       "name": "NJ_NEN",
+       "description": "Soul",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_NEN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5149,7 +6857,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GS_ADJUSTMENT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 505,
+       "name": "GS_ADJUSTMENT",
+       "description": "AdJustment",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_ADJUSTMENT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5183,7 +6902,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GS_INCREASING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 506,
+       "name": "GS_INCREASING",
+       "description": "Increasing Accuracy",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_INCREASING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5225,7 +6955,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NJ_SUITON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 538,
+       "name": "NJ_SUITON",
+       "description": "Hidden Water",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_SUITON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5948,7 +7689,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_SLOWCAST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 672,
+       "name": "NPC_SLOWCAST",
+       "description": "Slow Cast",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_SLOWCAST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -5984,7 +7736,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_CRITICALWOUND"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 673,
+       "name": "NPC_CRITICALWOUND",
+       "description": "Critical Wounds",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CRITICALWOUND"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6385,7 +8148,162 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_ATTRICHANGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 161,
+       "name": "NPC_ATTRICHANGE",
+       "description": "Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_ATTRICHANGE"
+       }
+      },
+      {
+       "id": 162,
+       "name": "NPC_CHANGEWATER",
+       "description": "Water Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEWATER"
+       }
+      },
+      {
+       "id": 163,
+       "name": "NPC_CHANGEGROUND",
+       "description": "Earth Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEGROUND"
+       }
+      },
+      {
+       "id": 164,
+       "name": "NPC_CHANGEFIRE",
+       "description": "Fire Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEFIRE"
+       }
+      },
+      {
+       "id": 165,
+       "name": "NPC_CHANGEWIND",
+       "description": "Wind Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEWIND"
+       }
+      },
+      {
+       "id": 166,
+       "name": "NPC_CHANGEPOISON",
+       "description": "Poison Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEPOISON"
+       }
+      },
+      {
+       "id": 167,
+       "name": "NPC_CHANGEHOLY",
+       "description": "Holy Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEHOLY"
+       }
+      },
+      {
+       "id": 168,
+       "name": "NPC_CHANGEDARKNESS",
+       "description": "Shadow Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGEDARKNESS"
+       }
+      },
+      {
+       "id": 169,
+       "name": "NPC_CHANGETELEKINESIS",
+       "description": "Ghost Attribute Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CHANGETELEKINESIS"
+       }
+      },
+      {
+       "id": 1008,
+       "name": "SA_ELEMENTWATER",
+       "description": "Elemental Change Water",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_ELEMENTWATER"
+       }
+      },
+      {
+       "id": 1017,
+       "name": "SA_ELEMENTGROUND",
+       "description": "Elemental Change Earth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_ELEMENTGROUND"
+       }
+      },
+      {
+       "id": 1018,
+       "name": "SA_ELEMENTFIRE",
+       "description": "Elemental Change Fire",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_ELEMENTFIRE"
+       }
+      },
+      {
+       "id": 1019,
+       "name": "SA_ELEMENTWIND",
+       "description": "Elemental Change Wind",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_ELEMENTWIND"
+       }
+      },
+      {
+       "id": 2249,
+       "name": "RA_MAGENTATRAP",
+       "description": "Magenta Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_MAGENTATRAP"
+       }
+      },
+      {
+       "id": 2250,
+       "name": "RA_COBALTTRAP",
+       "description": "Cobalt Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_COBALTTRAP"
+       }
+      },
+      {
+       "id": 2251,
+       "name": "RA_MAIZETRAP",
+       "description": "Maize Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_MAIZETRAP"
+       }
+      },
+      {
+       "id": 2252,
+       "name": "RA_VERDURETRAP",
+       "description": "Verdure Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_VERDURETRAP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6421,7 +8339,27 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_HELLPOWER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 683,
+       "name": "NPC_HELLPOWER",
+       "description": "Hell Power",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_HELLPOWER"
+       }
+      },
+      {
+       "id": 684,
+       "name": "NPC_WIDEHELLDIGNITY",
+       "description": "Hell Dignity",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDEHELLDIGNITY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6482,7 +8420,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_INVINCIBLE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 685,
+       "name": "NPC_INVINCIBLE",
+       "description": "Invincible",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_INVINCIBLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6543,7 +8492,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ALL_PARTYFLEE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 693,
+       "name": "ALL_PARTYFLEE",
+       "description": "Party Flee",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ALL_PARTYFLEE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6578,7 +8538,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ALL_ANGEL_PROTECT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 694,
+       "name": "ALL_ANGEL_PROTECT",
+       "description": "Angel's Protection",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ALL_ANGEL_PROTECT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6610,7 +8581,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_ENCHANTBLADE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2001,
+       "name": "RK_ENCHANTBLADE",
+       "description": "Enchant Blade",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_ENCHANTBLADE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6646,7 +8628,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_DEATHBOUND"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2003,
+       "name": "RK_DEATHBOUND",
+       "description": "Death Bound",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_DEATHBOUND"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6681,7 +8674,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_REFRESH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2013,
+       "name": "RK_REFRESH",
+       "description": "Refresh",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_REFRESH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6717,7 +8721,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_GIANTGROWTH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2014,
+       "name": "RK_GIANTGROWTH",
+       "description": "Giant Growth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_GIANTGROWTH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6753,7 +8768,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_STONEHARDSKIN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2015,
+       "name": "RK_STONEHARDSKIN",
+       "description": "Stone Hard Skin",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_STONEHARDSKIN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6789,7 +8815,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_VITALITYACTIVATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2016,
+       "name": "RK_VITALITYACTIVATION",
+       "description": "Vitality Activation",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_VITALITYACTIVATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6826,7 +8863,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_FIGHTINGSPIRIT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2018,
+       "name": "RK_FIGHTINGSPIRIT",
+       "description": "Fighting Spirit",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_FIGHTINGSPIRIT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6860,7 +8908,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_ABUNDANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2019,
+       "name": "RK_ABUNDANCE",
+       "description": "Abundance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_ABUNDANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6929,7 +8988,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_VENOMIMPRESS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2021,
+       "name": "GC_VENOMIMPRESS",
+       "description": "Venom Impress",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_VENOMIMPRESS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -6967,7 +9037,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_EPICLESIS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2044,
+       "name": "AB_EPICLESIS",
+       "description": "Epiclesis",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_EPICLESIS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7001,7 +9082,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_ORATIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2046,
+       "name": "AB_ORATIO",
+       "description": "Oratio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_ORATIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7037,7 +9129,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_LAUDAAGNUS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2047,
+       "name": "AB_LAUDAAGNUS",
+       "description": "Lauda Agnus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_LAUDAAGNUS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7073,7 +9176,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_LAUDARAMUS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2048,
+       "name": "AB_LAUDARAMUS",
+       "description": "Lauda Ramus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_LAUDARAMUS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7111,7 +9225,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_CLOAKINGEXCEED"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2033,
+       "name": "GC_CLOAKINGEXCEED",
+       "description": "Cloaking Exceed",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_CLOAKINGEXCEED"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7148,7 +9273,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_HALLUCINATIONWALK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2035,
+       "name": "GC_HALLUCINATIONWALK",
+       "description": "Hallucination Walk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_HALLUCINATIONWALK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7212,7 +9348,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_RENOVATIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2050,
+       "name": "AB_RENOVATIO",
+       "description": "Renovatio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_RENOVATIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7247,7 +9394,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_WEAPONBLOCKING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2028,
+       "name": "GC_WEAPONBLOCKING",
+       "description": "Weapon Blocking",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_WEAPONBLOCKING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7292,7 +9450,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_ROLLINGCUTTER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2036,
+       "name": "GC_ROLLINGCUTTER",
+       "description": "Rolling Cutter",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_ROLLINGCUTTER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7328,7 +9497,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_EXPIATIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2053,
+       "name": "AB_EXPIATIO",
+       "description": "Expiatio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_EXPIATIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7363,7 +9543,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_POISONINGWEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2027,
+       "name": "GC_POISONINGWEAPON",
+       "description": "Poisoning Weapon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_POISONINGWEAPON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7620,7 +9811,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_DUPLELIGHT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2054,
+       "name": "AB_DUPLELIGHT",
+       "description": "Duple Light",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_DUPLELIGHT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7657,7 +9859,36 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_DRAGONBREATH_WATER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2203,
+       "name": "WL_FROSTMISTY",
+       "description": "Frosty Misty",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_FROSTMISTY"
+       }
+      },
+      {
+       "id": 2254,
+       "name": "RA_ICEBOUNDTRAP",
+       "description": "Icebound Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_ICEBOUNDTRAP"
+       }
+      },
+      {
+       "id": 5004,
+       "name": "RK_DRAGONBREATH_WATER",
+       "description": "Dragon Breath - Water",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_DRAGONBREATH_WATER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7692,7 +9923,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RA_FEARBREEZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2234,
+       "name": "RA_FEARBREEZE",
+       "description": "Fear Breeze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_FEARBREEZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7729,7 +9971,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RA_ELECTRICSHOCKER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2238,
+       "name": "RA_ELECTRICSHOCKER",
+       "description": "Electric Shocker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_ELECTRICSHOCKER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7769,7 +10022,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WL_MARSHOFABYSS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2205,
+       "name": "WL_MARSHOFABYSS",
+       "description": "Marsh of Abyss",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_MARSHOFABYSS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7805,7 +10069,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WL_RECOGNIZEDSPELL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2206,
+       "name": "WL_RECOGNIZEDSPELL",
+       "description": "Recognized Spell",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_RECOGNIZEDSPELL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7835,7 +10110,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WL_STASIS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2209,
+       "name": "WL_STASIS",
+       "description": "Stasis",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_STASIS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7894,7 +10180,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RA_WUGDASH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2242,
+       "name": "RA_WUGDASH",
+       "description": "Warg Dash",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_WUGDASH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7941,7 +10238,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RA_CAMOUFLAGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2247,
+       "name": "RA_CAMOUFLAGE",
+       "description": "Camouflage",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_CAMOUFLAGE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -7978,7 +10286,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_ACCELERATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2262,
+       "name": "NC_ACCELERATION",
+       "description": "Acceleration",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_ACCELERATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8015,7 +10334,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_HOVERING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2263,
+       "name": "NC_HOVERING",
+       "description": "Hovering",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_HOVERING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8342,7 +10672,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_SHAPESHIFT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2268,
+       "name": "NC_SHAPESHIFT",
+       "description": "Shape Shift",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_SHAPESHIFT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8379,7 +10720,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_INFRAREDSCAN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2270,
+       "name": "NC_INFRAREDSCAN",
+       "description": "Infrared Scan",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_INFRAREDSCAN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8416,7 +10768,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_MAGNETICFIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2272,
+       "name": "NC_MAGNETICFIELD",
+       "description": "Magnetic Field",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_MAGNETICFIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8455,7 +10818,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_NEUTRALBARRIER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2273,
+       "name": "NC_NEUTRALBARRIER",
+       "description": "Neutral Barrier",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_NEUTRALBARRIER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8512,7 +10886,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_STEALTHFIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2274,
+       "name": "NC_STEALTHFIELD",
+       "description": "Stealth Field",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_STEALTHFIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8680,7 +11065,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_REPRODUCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2285,
+       "name": "SC_REPRODUCE",
+       "description": "Reproduce",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_REPRODUCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8822,7 +11218,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_REFLECTDAMAGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2311,
+       "name": "LG_REFLECTDAMAGE",
+       "description": "Reflect Damage",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_REFLECTDAMAGE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8859,7 +11266,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_FORCEOFVANGUARD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2313,
+       "name": "LG_FORCEOFVANGUARD",
+       "description": "Force of Vanguard",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_FORCEOFVANGUARD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8922,7 +11340,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_AUTOSHADOWSPELL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2286,
+       "name": "SC_AUTOSHADOWSPELL",
+       "description": "Auto Shadow Spell",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_AUTOSHADOWSPELL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -8958,7 +11387,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_SHADOWFORM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2287,
+       "name": "SC_SHADOWFORM",
+       "description": "Shadow Form",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_SHADOWFORM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9076,7 +11516,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_BODYPAINT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2289,
+       "name": "SC_BODYPAINT",
+       "description": "Body Painting",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_BODYPAINT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9111,7 +11562,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_EXEEDBREAK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2316,
+       "name": "LG_EXEEDBREAK",
+       "description": "Exceed Break",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_EXEEDBREAK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9147,7 +11609,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_ADORAMUS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2040,
+       "name": "AB_ADORAMUS",
+       "description": "Adoramus",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_ADORAMUS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9181,7 +11654,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_PRESTIGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2318,
+       "name": "LG_PRESTIGE",
+       "description": "Prestige",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_PRESTIGE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9221,7 +11705,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_INVISIBILITY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2290,
+       "name": "SC_INVISIBILITY",
+       "description": "Invisibility",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_INVISIBILITY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9255,7 +11750,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_DEADLYINFECT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2291,
+       "name": "SC_DEADLYINFECT",
+       "description": "Deadly Infect",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_DEADLYINFECT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9293,7 +11799,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_BANDING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2319,
+       "name": "LG_BANDING",
+       "description": "Banding",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_BANDING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9330,7 +11847,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_EARTHDRIVE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2323,
+       "name": "LG_EARTHDRIVE",
+       "description": "Earth Drive",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_EARTHDRIVE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9375,7 +11903,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_INSPIRATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2325,
+       "name": "LG_INSPIRATION",
+       "description": "Inspiration",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_INSPIRATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9410,7 +11949,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_ENERVATION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2292,
+       "name": "SC_ENERVATION",
+       "description": "Masquerade - Enervation",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_ENERVATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9447,7 +11997,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_GROOMY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2293,
+       "name": "SC_GROOMY",
+       "description": "Masquerade - Gloomy",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_GROOMY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9487,7 +12048,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_RAISINGDRAGON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2338,
+       "name": "SR_RAISINGDRAGON",
+       "description": "Raising Dragon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_RAISINGDRAGON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9520,7 +12092,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_IGNORANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2294,
+       "name": "SC_IGNORANCE",
+       "description": "Masquerade - Ignorance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_IGNORANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9555,7 +12138,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_LAZINESS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2295,
+       "name": "SC_LAZINESS",
+       "description": "Masquerade - Laziness",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_LAZINESS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9590,7 +12184,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_LIGHTNINGWALK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2335,
+       "name": "SR_LIGHTNINGWALK",
+       "description": "Lightning Walk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_LIGHTNINGWALK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9653,7 +12258,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_UNLUCKY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2296,
+       "name": "SC_UNLUCKY",
+       "description": "Masquerade - Unlucky",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_UNLUCKY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9714,7 +12330,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_CURSEDCIRCLE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2334,
+       "name": "SR_CURSEDCIRCLE",
+       "description": "Cursed Circle",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_CURSEDCIRCLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9750,7 +12377,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_WEAKNESS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2297,
+       "name": "SC_WEAKNESS",
+       "description": "Masquerade - Weakness",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_WEAKNESS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9785,7 +12423,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_CRESCENTELBOW"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2333,
+       "name": "SR_CRESCENTELBOW",
+       "description": "Crescent Elbow",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_CRESCENTELBOW"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9833,7 +12482,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_STRIPACCESSARY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2298,
+       "name": "SC_STRIPACCESSARY",
+       "description": "Strip Accessory",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_STRIPACCESSARY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9870,7 +12530,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SC_MANHOLE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2299,
+       "name": "SC_MANHOLE",
+       "description": "Man Hole",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_MANHOLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9930,7 +12601,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_FALLENEMPIRE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2329,
+       "name": "SR_FALLENEMPIRE",
+       "description": "Fallen Empire",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_FALLENEMPIRE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9960,7 +12642,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_GENTLETOUCH_ENERGYGAIN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2346,
+       "name": "SR_GENTLETOUCH_ENERGYGAIN",
+       "description": "Gentle Touch - Energy Gain",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_GENTLETOUCH_ENERGYGAIN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -9995,7 +12688,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_GENTLETOUCH_CHANGE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2347,
+       "name": "SR_GENTLETOUCH_CHANGE",
+       "description": "Gentle Touch - Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_GENTLETOUCH_CHANGE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10029,7 +12733,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_GENTLETOUCH_REVITALIZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2348,
+       "name": "SR_GENTLETOUCH_REVITALIZE",
+       "description": "Gentle Touch - Revitalize",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_GENTLETOUCH_REVITALIZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10077,7 +12792,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WA_SWING_DANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2350,
+       "name": "WA_SWING_DANCE",
+       "description": "Swing Dance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WA_SWING_DANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10114,7 +12840,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WA_SYMPHONY_OF_LOVER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2351,
+       "name": "WA_SYMPHONY_OF_LOVER",
+       "description": "Symphony of Lovers",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WA_SYMPHONY_OF_LOVER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10147,7 +12884,27 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_FIREWALK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2443,
+       "name": "SO_FIREWALK",
+       "description": "Fire Walk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_FIREWALK"
+       }
+      },
+      {
+       "id": 2444,
+       "name": "SO_ELECTRICWALK",
+       "description": "Electric Walk",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_ELECTRICWALK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10179,7 +12936,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_SPELLFIST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2445,
+       "name": "SO_SPELLFIST",
+       "description": "Spell Fist",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_SPELLFIST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10212,7 +12980,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_POEMOFNETHERWORLD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2419,
+       "name": "WM_POEMOFNETHERWORLD",
+       "description": "Poem of The Netherworld",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_POEMOFNETHERWORLD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10244,7 +13023,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_VOICEOFSIREN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2420,
+       "name": "WM_VOICEOFSIREN",
+       "description": "Voice of Siren",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_VOICEOFSIREN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10278,7 +13068,27 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_LULLABY_DEEPSLEEP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2422,
+       "name": "WM_LULLABY_DEEPSLEEP",
+       "description": "Deep Sleep Lullaby",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_LULLABY_DEEPSLEEP"
+       }
+      },
+      {
+       "id": 2455,
+       "name": "SO_ARRULLO",
+       "description": "Arrullo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_ARRULLO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10310,7 +13120,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_SIRCLEOFNATURE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2423,
+       "name": "WM_SIRCLEOFNATURE",
+       "description": "Circle of Nature's Sound",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_SIRCLEOFNATURE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10342,7 +13163,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_DIAMONDDUST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2447,
+       "name": "SO_DIAMONDDUST",
+       "description": "Diamond Dust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_DIAMONDDUST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10377,7 +13209,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_GLOOMYDAY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2425,
+       "name": "WM_GLOOMYDAY",
+       "description": "Gloomy Day",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_GLOOMYDAY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10409,7 +13252,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_SONG_OF_MANA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2427,
+       "name": "WM_SONG_OF_MANA",
+       "description": "Song of Mana",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_SONG_OF_MANA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10442,7 +13296,54 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_POISON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 52,
+       "name": "TF_POISON",
+       "description": "Envenom",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TF_POISON"
+       }
+      },
+      {
+       "id": 140,
+       "name": "AS_VENOMDUST",
+       "description": "Venom Dust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_VENOMDUST"
+       }
+      },
+      {
+       "id": 176,
+       "name": "NPC_POISON",
+       "description": "Poison Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_POISON"
+       }
+      },
+      {
+       "id": 657,
+       "name": "NPC_ACIDBREATH",
+       "description": "Acid Breath",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_ACIDBREATH"
+       }
+      },
+      {
+       "id": 2450,
+       "name": "SO_CLOUD_KILL",
+       "description": "Cloud Kill",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_CLOUD_KILL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10476,7 +13377,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_DANCE_WITH_WUG"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2428,
+       "name": "WM_DANCE_WITH_WUG",
+       "description": "Dance With A Warg",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_DANCE_WITH_WUG"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10513,7 +13425,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MI_RUSH_WINDMILL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2381,
+       "name": "MI_RUSH_WINDMILL",
+       "description": "Windmill Rush Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MI_RUSH_WINDMILL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10550,7 +13473,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MI_ECHOSONG"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2382,
+       "name": "MI_ECHOSONG",
+       "description": "Echo Song",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MI_ECHOSONG"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10589,7 +13523,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MI_HARMONIZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2383,
+       "name": "MI_HARMONIZE",
+       "description": "Harmonize",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MI_HARMONIZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10622,7 +13567,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_STRIKING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2451,
+       "name": "SO_STRIKING",
+       "description": "Striking",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_STRIKING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10659,7 +13615,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WA_MOONLIT_SERENADE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2352,
+       "name": "WA_MOONLIT_SERENADE",
+       "description": "Moonlit Serenade",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WA_MOONLIT_SERENADE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10696,7 +13663,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_SATURDAY_NIGHT_FEVER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2430,
+       "name": "WM_SATURDAY_NIGHT_FEVER",
+       "description": "Saturday Night Fever",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_SATURDAY_NIGHT_FEVER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10745,7 +13723,18 @@
        "path": "db/re/skill_db.conf",
        "record": "NC_ANALYZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2271,
+       "name": "NC_ANALYZE",
+       "description": "Analyze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NC_ANALYZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10782,7 +13771,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_LERADS_DEW"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2431,
+       "name": "WM_LERADS_DEW",
+       "description": "Lerad's Dew",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_LERADS_DEW"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10819,7 +13819,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_MELODYOFSINK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2432,
+       "name": "WM_MELODYOFSINK",
+       "description": "Melody of Sink",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_MELODYOFSINK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10858,7 +13869,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_BEYOND_OF_WARCRY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2433,
+       "name": "WM_BEYOND_OF_WARCRY",
+       "description": "Warcry of Beyond",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_BEYOND_OF_WARCRY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -10893,7 +13915,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_UNLIMITED_HUMMING_VOICE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2434,
+       "name": "WM_UNLIMITED_HUMMING_VOICE",
+       "description": "Unlimited Humming Voice",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_UNLIMITED_HUMMING_VOICE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11015,7 +14048,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_CARTBOOST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2478,
+       "name": "GN_CARTBOOST",
+       "description": "Cart Boost",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_CARTBOOST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11054,7 +14098,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_THORNS_TRAP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2479,
+       "name": "GN_THORNS_TRAP",
+       "description": "Thorn Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_THORNS_TRAP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11084,7 +14139,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_BLOOD_SUCKER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2480,
+       "name": "GN_BLOOD_SUCKER",
+       "description": "Blood Sucker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_BLOOD_SUCKER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11134,7 +14200,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_FIRE_EXPANSION_SMOKE_POWDER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2487,
+       "name": "GN_FIRE_EXPANSION_SMOKE_POWDER",
+       "description": "Fire Expansion Smoke Powder",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_FIRE_EXPANSION_SMOKE_POWDER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11167,7 +14244,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_FIRE_EXPANSION_TEAR_GAS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2488,
+       "name": "GN_FIRE_EXPANSION_TEAR_GAS",
+       "description": "Fire Expansion Tear Gas",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_FIRE_EXPANSION_TEAR_GAS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11208,7 +14296,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_MANDRAGORA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2492,
+       "name": "GN_MANDRAGORA",
+       "description": "Howling of Mandragora",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_MANDRAGORA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11247,7 +14346,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_SECRAMENT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2515,
+       "name": "AB_SECRAMENT",
+       "description": "Secrament",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_SECRAMENT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -11977,7 +15087,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_CIRCLE_OF_FIRE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8401,
+       "name": "EL_CIRCLE_OF_FIRE",
+       "description": "Circle of Fire",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_CIRCLE_OF_FIRE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12030,7 +15151,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_FIRE_CLOAK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8402,
+       "name": "EL_FIRE_CLOAK",
+       "description": "Fire Cloak",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_FIRE_CLOAK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12081,7 +15213,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WATER_SCREEN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8404,
+       "name": "EL_WATER_SCREEN",
+       "description": "Water Screen",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WATER_SCREEN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12134,7 +15277,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WATER_DROP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8405,
+       "name": "EL_WATER_DROP",
+       "description": "Water Drop",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WATER_DROP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12188,7 +15342,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WIND_STEP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8407,
+       "name": "EL_WIND_STEP",
+       "description": "Wind Step",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WIND_STEP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12241,7 +15406,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WIND_CURTAIN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8408,
+       "name": "EL_WIND_CURTAIN",
+       "description": "Wind Curtain",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WIND_CURTAIN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12276,7 +15452,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WATER_BARRIER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8406,
+       "name": "EL_WATER_BARRIER",
+       "description": "Water Barrier",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WATER_BARRIER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12310,7 +15497,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_ZEPHYR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8409,
+       "name": "EL_ZEPHYR",
+       "description": "Zephyr",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_ZEPHYR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12364,7 +15562,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_SOLID_SKIN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8410,
+       "name": "EL_SOLID_SKIN",
+       "description": "Solid Skin",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_SOLID_SKIN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12417,7 +15626,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_STONE_SHIELD"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8411,
+       "name": "EL_STONE_SHIELD",
+       "description": "Stone Shield",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_STONE_SHIELD"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12453,7 +15673,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_POWER_OF_GAIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8412,
+       "name": "EL_POWER_OF_GAIA",
+       "description": "Power of Gaia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_POWER_OF_GAIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12506,7 +15737,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_PYROTECHNIC"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8413,
+       "name": "EL_PYROTECHNIC",
+       "description": "Pyrotechnic",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_PYROTECHNIC"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12559,7 +15801,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_HEATER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8414,
+       "name": "EL_HEATER",
+       "description": "Heater",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_HEATER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12612,7 +15865,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_TROPIC"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8415,
+       "name": "EL_TROPIC",
+       "description": "Tropic",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_TROPIC"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12665,7 +15929,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_AQUAPLAY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8416,
+       "name": "EL_AQUAPLAY",
+       "description": "Aqua Play",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_AQUAPLAY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12718,7 +15993,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_COOLER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8417,
+       "name": "EL_COOLER",
+       "description": "Cooler",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_COOLER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12771,7 +16057,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_CHILLY_AIR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8418,
+       "name": "EL_CHILLY_AIR",
+       "description": "Cool Air",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_CHILLY_AIR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12824,7 +16121,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_GUST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8419,
+       "name": "EL_GUST",
+       "description": "Gust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_GUST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12877,7 +16185,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_BLAST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8420,
+       "name": "EL_BLAST",
+       "description": "Blast",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_BLAST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12930,7 +16249,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_WILD_STORM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8421,
+       "name": "EL_WILD_STORM",
+       "description": "Wild Storm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_WILD_STORM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -12983,7 +16313,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_PETROLOGY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8422,
+       "name": "EL_PETROLOGY",
+       "description": "Petrology",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_PETROLOGY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13036,7 +16377,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_CURSED_SOIL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8423,
+       "name": "EL_CURSED_SOIL",
+       "description": "Cursed Soil",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_CURSED_SOIL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13089,7 +16441,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_UPHEAVAL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8424,
+       "name": "EL_UPHEAVAL",
+       "description": "Upheaval",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_UPHEAVAL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13130,7 +16493,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_TIDAL_WEAPON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8433,
+       "name": "EL_TIDAL_WEAPON",
+       "description": "Tidal Weapon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_TIDAL_WEAPON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13162,7 +16536,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_ROCK_CRUSHER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8440,
+       "name": "EL_ROCK_CRUSHER",
+       "description": "Rock Launcher",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_ROCK_CRUSHER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13194,7 +16579,18 @@
        "path": "db/re/skill_db.conf",
        "record": "EL_ROCK_CRUSHER_ATK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8441,
+       "name": "EL_ROCK_CRUSHER_ATK",
+       "description": "Rock Launcher Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "EL_ROCK_CRUSHER_ATK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13232,7 +16628,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_FIRE_INSIGNIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2465,
+       "name": "SO_FIRE_INSIGNIA",
+       "description": "Fire Insignia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_FIRE_INSIGNIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13268,7 +16675,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_WATER_INSIGNIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2466,
+       "name": "SO_WATER_INSIGNIA",
+       "description": "Water Insignia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_WATER_INSIGNIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13304,7 +16722,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_WIND_INSIGNIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2467,
+       "name": "SO_WIND_INSIGNIA",
+       "description": "Wind Insignia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_WIND_INSIGNIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13344,7 +16773,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SO_EARTH_INSIGNIA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2468,
+       "name": "SO_EARTH_INSIGNIA",
+       "description": "Earth Insignia",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_EARTH_INSIGNIA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13438,7 +16878,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_NEEDLE_OF_PARALYZE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8019,
+       "name": "MH_NEEDLE_OF_PARALYZE",
+       "description": "Needle of Paralyze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_NEEDLE_OF_PARALYZE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13472,7 +16923,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_PAIN_KILLER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8021,
+       "name": "MH_PAIN_KILLER",
+       "description": "Pain Killer",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_PAIN_KILLER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13556,7 +17018,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_LIGHT_OF_REGENE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8022,
+       "name": "MH_LIGHT_OF_REGENE",
+       "description": "Light of Regene",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_LIGHT_OF_REGENE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13590,7 +17063,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_OVERED_BOOST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8023,
+       "name": "MH_OVERED_BOOST",
+       "description": "Overed Boost",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_OVERED_BOOST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13622,7 +17106,63 @@
        "path": "db/re/skill_db.conf",
        "record": "NPC_SILENCEATTACK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 76,
+       "name": "PR_LEXDIVINA",
+       "description": "Lex Divina",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PR_LEXDIVINA"
+       }
+      },
+      {
+       "id": 178,
+       "name": "NPC_SILENCEATTACK",
+       "description": "Silence Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_SILENCEATTACK"
+       }
+      },
+      {
+       "id": 663,
+       "name": "NPC_WIDESILENCE",
+       "description": "Wide Silence",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDESILENCE"
+       }
+      },
+      {
+       "id": 2581,
+       "name": "SJ_STAREMPEROR",
+       "description": "Advent of the Star Emperor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_STAREMPEROR"
+       }
+      },
+      {
+       "id": 8026,
+       "name": "MH_SILENT_BREEZE",
+       "description": "Silent Breeze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_SILENT_BREEZE"
+       }
+      },
+      {
+       "id": 8236,
+       "name": "MER_LEXDIVINA",
+       "description": "Lex_Divina",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_LEXDIVINA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13657,7 +17197,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ALL_ODINS_POWER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2537,
+       "name": "ALL_ODINS_POWER",
+       "description": "Odin's Power",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ALL_ODINS_POWER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13726,7 +17277,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_GOLDENE_FERSE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8032,
+       "name": "MH_GOLDENE_FERSE",
+       "description": "Golden Heel",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_GOLDENE_FERSE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13761,7 +17323,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_ANGRIFFS_MODUS"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8035,
+       "name": "MH_ANGRIFFS_MODUS",
+       "description": "Attack Mode",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_ANGRIFFS_MODUS"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13836,7 +17409,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_MAGMA_FLOW"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8039,
+       "name": "MH_MAGMA_FLOW",
+       "description": "Magma Flow",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_MAGMA_FLOW"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13866,7 +17450,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_GRANITIC_ARMOR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8040,
+       "name": "MH_GRANITIC_ARMOR",
+       "description": "Granitic Armor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_GRANITIC_ARMOR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13899,7 +17494,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_PYROCLASTIC"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8042,
+       "name": "MH_PYROCLASTIC",
+       "description": "Pyroclastic",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_PYROCLASTIC"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -13935,7 +17541,18 @@
        "path": "db/re/skill_db.conf",
        "record": "MH_VOLCANIC_ASH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 8043,
+       "name": "MH_VOLCANIC_ASH",
+       "description": "Volcanic Ash",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_VOLCANIC_ASH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14120,7 +17737,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RK_CRUSHSTRIKE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2012,
+       "name": "RK_CRUSHSTRIKE",
+       "description": "Crush Strike",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_CRUSHSTRIKE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14510,7 +18138,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KO_JYUMONJIKIRI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3004,
+       "name": "KO_JYUMONJIKIRI",
+       "description": "Cross Strike",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_JYUMONJIKIRI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14540,7 +18179,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KO_MEIKYOUSISUI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3011,
+       "name": "KO_MEIKYOUSISUI",
+       "description": "Meikyo Shisui",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_MEIKYOUSISUI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14634,7 +18284,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KO_KYOUGAKU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3013,
+       "name": "KO_KYOUGAKU",
+       "description": "Kyougaku",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_KYOUGAKU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14666,7 +18327,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KO_IZAYOI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3022,
+       "name": "KO_IZAYOI",
+       "description": "Izayoi",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_IZAYOI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14696,7 +18368,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KO_ZENKAI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3020,
+       "name": "KO_ZENKAI",
+       "description": "Zenkai",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_ZENKAI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14726,7 +18409,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KG_KAGEHUMI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3023,
+       "name": "KG_KAGEHUMI",
+       "description": "Kagehumi",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KG_KAGEHUMI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14756,7 +18450,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KG_KYOMU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3024,
+       "name": "KG_KYOMU",
+       "description": "Kyomu",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KG_KYOMU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14786,7 +18491,18 @@
        "path": "db/re/skill_db.conf",
        "record": "KG_KAGEMUSYA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3025,
+       "name": "KG_KAGEMUSYA",
+       "description": "Kagemusha",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KG_KAGEMUSYA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14819,7 +18535,18 @@
        "path": "db/re/skill_db.conf",
        "record": "OB_ZANGETSU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3026,
+       "name": "OB_ZANGETSU",
+       "description": "Zangetsu",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "OB_ZANGETSU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14872,7 +18599,18 @@
        "path": "db/re/skill_db.conf",
        "record": "OB_OBOROGENSOU"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3027,
+       "name": "OB_OBOROGENSOU",
+       "description": "Oboro Gensou",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "OB_OBOROGENSOU"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -14902,7 +18640,18 @@
        "path": "db/re/skill_db.conf",
        "record": "OB_AKAITSUKI"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 3029,
+       "name": "OB_AKAITSUKI",
+       "description": "Akaitsuki",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "OB_AKAITSUKI"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15734,7 +19483,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WM_FRIGG_SONG"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5007,
+       "name": "WM_FRIGG_SONG",
+       "description": "Frigg's Song",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_FRIGG_SONG"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15764,7 +19524,18 @@
        "path": "db/re/skill_db.conf",
        "record": "AB_OFFERTORIUM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5011,
+       "name": "AB_OFFERTORIUM",
+       "description": "Offertorium",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AB_OFFERTORIUM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15799,7 +19570,18 @@
        "path": "db/re/skill_db.conf",
        "record": "WL_TELEKINESIS_INTENSE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5012,
+       "name": "WL_TELEKINESIS_INTENSE",
+       "description": "Intense Telekinesis",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_TELEKINESIS_INTENSE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15898,7 +19680,18 @@
        "path": "db/re/skill_db.conf",
        "record": "ALL_FULL_THROTTLE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5014,
+       "name": "ALL_FULL_THROTTLE",
+       "description": "Full Throttle",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ALL_FULL_THROTTLE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15960,7 +19753,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RA_UNLIMIT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5002,
+       "name": "RA_UNLIMIT",
+       "description": "Unlimited",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_UNLIMIT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -15990,7 +19794,18 @@
        "path": "db/re/skill_db.conf",
        "record": "LG_KINGS_GRACE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5013,
+       "name": "LG_KINGS_GRACE",
+       "description": "King's Grace",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "LG_KINGS_GRACE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16094,7 +19909,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GC_DARKCROW"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5001,
+       "name": "GC_DARKCROW",
+       "description": "Dark Claw",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GC_DARKCROW"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16153,7 +19979,18 @@
        "path": "db/re/skill_db.conf",
        "record": "GN_ILLUSIONDOPING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5003,
+       "name": "GN_ILLUSIONDOPING",
+       "description": "Illusion Doping",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GN_ILLUSIONDOPING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16203,7 +20040,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SR_FLASHCOMBO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5009,
+       "name": "SR_FLASHCOMBO",
+       "description": "Flash Combo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_FLASHCOMBO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16260,7 +20108,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_B_TRAP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2555,
+       "name": "RL_B_TRAP",
+       "description": "Bind Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_B_TRAP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16294,7 +20153,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_E_CHAIN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2558,
+       "name": "RL_E_CHAIN",
+       "description": "Eternal Chain",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_E_CHAIN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16351,7 +20221,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_C_MARKER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2560,
+       "name": "RL_C_MARKER",
+       "description": "Crimson Marker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_C_MARKER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16424,7 +20305,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_P_ALTER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2563,
+       "name": "RL_P_ALTER",
+       "description": "Platinum Alter",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_P_ALTER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16459,7 +20351,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_HEAT_BARREL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2568,
+       "name": "RL_HEAT_BARREL",
+       "description": "Heat Barrel",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_HEAT_BARREL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -16493,7 +20396,18 @@
        "path": "db/re/skill_db.conf",
        "record": "RL_AM_BLAST"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2569,
+       "name": "RL_AM_BLAST",
+       "description": "Anti-Material Blast",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_AM_BLAST"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17022,7 +20936,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_STOOP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5022,
+       "name": "SU_STOOP",
+       "description": "Stoop",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_STOOP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17056,7 +20981,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_CN_POWDERING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5027,
+       "name": "SU_CN_POWDERING",
+       "description": "Catnip Powdering",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_CN_POWDERING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17253,7 +21189,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_ARCLOUSEDASH"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5035,
+       "name": "SU_ARCLOUSEDASH",
+       "description": "Arclouse Dash",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_ARCLOUSEDASH"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17283,7 +21230,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_TUNAPARTY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5039,
+       "name": "SU_TUNAPARTY",
+       "description": "Tuna Party",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_TUNAPARTY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17316,7 +21274,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_BUNCHOFSHRIMP"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5040,
+       "name": "SU_BUNCHOFSHRIMP",
+       "description": "Bunch of Shrimp",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_BUNCHOFSHRIMP"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17357,7 +21326,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SU_HIDE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 5020,
+       "name": "SU_HIDE",
+       "description": "Hide",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_HIDE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17419,7 +21399,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_LIGHTOFMOON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2574,
+       "name": "SJ_LIGHTOFMOON",
+       "description": "Light Of Moon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_LIGHTOFMOON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17453,7 +21444,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_LIGHTOFSUN"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2590,
+       "name": "SJ_LIGHTOFSUN",
+       "description": "Light Of Sun",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_LIGHTOFSUN"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17487,7 +21489,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_LIGHTOFSTAR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2577,
+       "name": "SJ_LIGHTOFSTAR",
+       "description": "Light Of Star",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_LIGHTOFSTAR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17524,7 +21537,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_LUNARSTANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2575,
+       "name": "SJ_LUNARSTANCE",
+       "description": "Lunar Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_LUNARSTANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17566,7 +21590,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_UNIVERSESTANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2583,
+       "name": "SJ_UNIVERSESTANCE",
+       "description": "Universe Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_UNIVERSESTANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17604,7 +21639,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_SUNSTANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2591,
+       "name": "SJ_SUNSTANCE",
+       "description": "Sun Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_SUNSTANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17639,7 +21685,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_FLASHKICK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2580,
+       "name": "SJ_FLASHKICK",
+       "description": "Flash Kick",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_FLASHKICK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17674,7 +21731,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_NEWMOONKICK"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2579,
+       "name": "SJ_NEWMOONKICK",
+       "description": "New Moon Kick",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_NEWMOONKICK"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17711,7 +21779,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_STARSTANCE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2578,
+       "name": "SJ_STARSTANCE",
+       "description": "Star Stance",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_STARSTANCE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17745,7 +21824,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_BOOKOFDIMENSION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2586,
+       "name": "SJ_BOOKOFDIMENSION",
+       "description": "Book Of Dimension",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_BOOKOFDIMENSION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17797,7 +21887,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_BOOKOFCREATINGSTAR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2587,
+       "name": "SJ_BOOKOFCREATINGSTAR",
+       "description": "Book Of Creating Star",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_BOOKOFCREATINGSTAR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17831,7 +21932,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_FALLINGSTAR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2584,
+       "name": "SJ_FALLINGSTAR",
+       "description": "Falling Star",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_FALLINGSTAR"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17867,7 +21979,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_NOVAEXPLOSING"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2582,
+       "name": "SJ_NOVAEXPLOSING",
+       "description": "Nova Explosing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_NOVAEXPLOSING"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17902,7 +22025,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SJ_GRAVITYCONTROL"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2585,
+       "name": "SJ_GRAVITYCONTROL",
+       "description": "Gravity Control",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_GRAVITYCONTROL"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17936,7 +22070,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULCOLLECT"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2609,
+       "name": "SP_SOULCOLLECT",
+       "description": "Soul Collect",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULCOLLECT"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -17970,7 +22115,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULREAPER"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2607,
+       "name": "SP_SOULREAPER",
+       "description": "Soul Reaper",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULREAPER"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18006,7 +22162,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULUNITY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2605,
+       "name": "SP_SOULUNITY",
+       "description": "Soul Unity",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULUNITY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18044,7 +22211,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULSHADOW"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2597,
+       "name": "SP_SOULSHADOW",
+       "description": "Soul Shadow",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULSHADOW"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18081,7 +22259,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULFAIRY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2599,
+       "name": "SP_SOULFAIRY",
+       "description": "Soul Fairy",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULFAIRY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18119,7 +22308,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULFALCON"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2598,
+       "name": "SP_SOULFALCON",
+       "description": "Soul Falcon",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULFALCON"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18157,7 +22357,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULGOLEM"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2596,
+       "name": "SP_SOULGOLEM",
+       "description": "Golem's Soul",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULGOLEM"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18189,7 +22400,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULDIVISION"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2606,
+       "name": "SP_SOULDIVISION",
+       "description": "Soul Division",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULDIVISION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18228,7 +22450,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULENERGY"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2611,
+       "name": "SP_SOULENERGY",
+       "description": "Soul Energy Research",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULENERGY"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18318,7 +22551,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SHA"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2603,
+       "name": "SP_SHA",
+       "description": "Sha",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SHA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18373,7 +22617,18 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_ADAPTATION"
      },
-     "icon_constant": "SI_ADAPTATION"
+     "icon_constant": "SI_ADAPTATION",
+     "status_change_skills": [
+      {
+       "id": 304,
+       "name": "BD_ADAPTATION",
+       "description": "Amp",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_ADAPTATION"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18406,7 +22661,18 @@
        "path": "db/re/skill_db.conf",
        "record": "HP_ASSUMPTIO"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 361,
+       "name": "HP_ASSUMPTIO",
+       "description": "Assumptio",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HP_ASSUMPTIO"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18433,7 +22699,18 @@
       "path": "db/re/sc_config.conf",
       "record": "SC_BASILICA_BUFF"
      },
-     "icon_constant": "SI_BASILICA_BUFF"
+     "icon_constant": "SI_BASILICA_BUFF",
+     "status_change_skills": [
+      {
+       "id": 362,
+       "name": "HP_BASILICA",
+       "description": "Basilica",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HP_BASILICA"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18468,7 +22745,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SP_SOULCURSE"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 2601,
+       "name": "SP_SOULCURSE",
+       "description": "Soul Curse",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SOULCURSE"
+       }
+      }
+     ]
     }
    ],
    "source": {
@@ -18531,7 +22819,18 @@
        "path": "db/re/skill_db.conf",
        "record": "SA_LANDPROTECTOR"
       }
-     }
+     },
+     "status_change_skills": [
+      {
+       "id": 288,
+       "name": "SA_LANDPROTECTOR",
+       "description": "Magnetic Earth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_LANDPROTECTOR"
+       }
+      }
+     ]
     }
    ],
    "source": {
