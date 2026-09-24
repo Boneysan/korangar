@@ -3817,16 +3817,25 @@ impl Client {
         };
         if game_settings.show_combat_text && show_impact_text {
             let font_scale = game_settings.combat_text_size.scale();
-            let particle: Box<dyn Particle + Send + Sync> = match damage_amount {
-                Some(amount) => Box::new(DamageNumber::new(
-                    target_position,
-                    crate::settings::format_damage_number(amount, hit_count),
-                    is_critical,
-                    font_scale,
-                )),
-                None => Box::new(Miss::new(target_position, font_scale)),
-            };
-            self.particle_holder.spawn_particle(particle);
+            match damage_amount {
+                Some(amount_per_hit) => {
+                    self.particle_holder.spawn_damage_number(
+                        crate::world::DamageNumberEvent {
+                            position: target_position,
+                            source_entity_id,
+                            target_entity_id: destination_entity_id,
+                            skill_id,
+                            amount_per_hit,
+                            hit_count,
+                            is_critical,
+                        },
+                        font_scale,
+                    );
+                }
+                None => self
+                    .particle_holder
+                    .spawn_particle(Box::new(Miss::new(target_position, font_scale))),
+            }
         }
 
         if let Some(skill_id) = skill_id {

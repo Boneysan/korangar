@@ -5,7 +5,7 @@ use cgmath::{Point3, Vector3};
 #[cfg(feature = "debug")]
 use korangar_debug::logging::Colorize;
 use korangar_interface::application::Clip;
-use ragnarok_packets::{EntityId, QuestColor, QuestEffectPacket};
+use ragnarok_packets::{EntityId, QuestColor, QuestEffectPacket, SkillId};
 use rand_aes::tls::rand_f32;
 
 use crate::Map;
@@ -18,35 +18,80 @@ pub trait Particle {
     fn update(&mut self, delta_time: f32) -> bool;
 
     fn render(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize);
+
+    fn merge_damage_number(&mut self, _event: &DamageNumberEvent) -> bool {
+        false
+    }
 }
 
 fn random_velocity() -> f32 {
     rand_f32() * 40.0 - 20.0
 }
 
+const DAMAGE_NUMBER_MERGE_WINDOW: f32 = 0.08;
+
+pub struct DamageNumberEvent {
+    pub position: Point3<f32>,
+    pub source_entity_id: EntityId,
+    pub target_entity_id: EntityId,
+    pub skill_id: Option<SkillId>,
+    pub amount_per_hit: usize,
+    pub hit_count: usize,
+    pub is_critical: bool,
+}
+
 pub struct DamageNumber {
     position: Point3<f32>,
+    source_entity_id: EntityId,
+    target_entity_id: EntityId,
+    skill_id: Option<SkillId>,
+    amount_per_hit: usize,
+    hit_count: usize,
     damage_amount: String,
     velocity_y: f32,
     velocity_x: f32,
     velocity_z: f32,
     timer: f32,
+    merge_window_remaining: f32,
     is_critical: bool,
     font_scale: f32,
 }
 
 impl DamageNumber {
-    pub fn new(position: Point3<f32>, damage_amount: String, is_critical: bool, font_scale: f32) -> Self {
+    pub fn new(event: DamageNumberEvent, font_scale: f32) -> Self {
+        let hit_count = event.hit_count.max(1);
         Self {
-            position,
-            damage_amount,
+            position: event.position,
+            source_entity_id: event.source_entity_id,
+            target_entity_id: event.target_entity_id,
+            skill_id: event.skill_id,
+            amount_per_hit: event.amount_per_hit,
+            hit_count,
+            damage_amount: crate::settings::format_damage_number(event.amount_per_hit, hit_count),
             velocity_y: 50.0,
             velocity_x: random_velocity(),
             velocity_z: random_velocity(),
             timer: 0.6,
-            is_critical,
+            merge_window_remaining: DAMAGE_NUMBER_MERGE_WINDOW,
+            is_critical: event.is_critical,
             font_scale,
         }
+    }
+
+    fn merge_event(&mut self, event: &DamageNumberEvent) -> bool {
+        if self.merge_window_remaining <= 0.0
+            || self.source_entity_id != event.source_entity_id
+            || self.target_entity_id != event.target_entity_id
+            || self.skill_id != event.skill_id
+            || self.amount_per_hit != event.amount_per_hit
+            || self.is_critical != event.is_critical
+        {
+            return false;
+        }
+
+        self.hit_count = self.hit_count.saturating_add(event.hit_count.max(1));
+        self.damage_amount = crate::settings::format_damage_number(self.amount_per_hit, self.hit_count);
+        true
     }
 }
 
@@ -59,6 +104,7 @@ impl Particle for DamageNumber {
         self.position.z += self.velocity_z * delta_time;
 
         self.timer -= delta_time;
+        self.merge_window_remaining = (self.merge_window_remaining - delta_time).max(0.0);
         self.timer > 0.0
     }
 
@@ -76,6 +122,10 @@ impl Particle for DamageNumber {
         };
 
         renderer.render_damage_text(&self.damage_amount, final_position, color, FontSize(16.0 * self.font_scale));
+    }
+
+    fn merge_damage_number(&mut self, event: &DamageNumberEvent) -> bool {
+        self.merge_event(event)
     }
 }
 
@@ -308,6 +358,17 @@ impl ParticleHolder {
         self.particles.push(particle);
     }
 
+    /// Merge identical per-hit labels for the same actor/target inside a short
+    /// presentation window. The server-reported amount is never summed.
+    pub fn spawn_damage_number(&mut self, event: DamageNumberEvent, font_scale: f32) -> bool {
+        if self.particles.iter_mut().rev().any(|particle| particle.merge_damage_number(&event)) {
+            return true;
+        }
+
+        self.spawn_particle(Box::new(DamageNumber::new(event, font_scale)));
+        false
+    }
+
     pub fn set_party_ping_marker(&mut self, marker: Option<PartyPingMarker>) {
         self.party_ping = marker;
     }
@@ -390,5 +451,69 @@ mod party_ping_tests {
         assert!(holder.party_ping.is_some());
         holder.update(0.2);
         assert!(holder.party_ping.is_none());
+    }
+}
+
+#[cfg(test)]
+mod damage_number_merge_tests {
+    use cgmath::Point3;
+    use ragnarok_packets::{EntityId, SkillId};
+
+    use super::{DAMAGE_NUMBER_MERGE_WINDOW, DamageNumber, DamageNumberEvent, ParticleHolder};
+
+    fn event(amount_per_hit: usize, hit_count: usize) -> DamageNumberEvent {
+        DamageNumberEvent {
+            position: Point3::new(1.0, 2.0, 3.0),
+            source_entity_id: EntityId(10),
+            target_entity_id: EntityId(20),
+            skill_id: Some(SkillId(59)),
+            amount_per_hit,
+            hit_count,
+            is_critical: false,
+        }
+    }
+
+    #[test]
+    fn identical_rapid_packets_merge_the_hit_label_without_summing_damage() {
+        let mut number = DamageNumber::new(event(42, 2), 1.0);
+        assert_eq!(number.damage_amount, "42 x 2");
+
+        assert!(number.merge_event(&event(42, 3)));
+        assert_eq!(number.damage_amount, "42 x 5");
+        assert_eq!(number.amount_per_hit, 42);
+
+        assert!(!number.merge_event(&event(43, 1)));
+        assert_eq!(number.damage_amount, "42 x 5");
+    }
+
+    #[test]
+    fn packet_merge_requires_same_actor_target_skill_and_critical_state() {
+        let mut number = DamageNumber::new(event(42, 1), 1.0);
+        let mut different = event(42, 1);
+        different.source_entity_id = EntityId(11);
+        assert!(!number.merge_event(&different));
+
+        let mut different = event(42, 1);
+        different.target_entity_id = EntityId(21);
+        assert!(!number.merge_event(&different));
+
+        let mut different = event(42, 1);
+        different.skill_id = Some(SkillId(60));
+        assert!(!number.merge_event(&different));
+
+        let mut different = event(42, 1);
+        different.is_critical = true;
+        assert!(!number.merge_event(&different));
+    }
+
+    #[test]
+    fn packet_merge_window_expires_and_holder_reuses_only_matching_labels() {
+        let mut holder = ParticleHolder::default();
+        assert!(!holder.spawn_damage_number(event(42, 1), 1.0));
+        assert!(holder.spawn_damage_number(event(42, 1), 1.0));
+        assert_eq!(holder.particles.len(), 1);
+        holder.update(DAMAGE_NUMBER_MERGE_WINDOW + 0.001);
+        assert!(!holder.spawn_damage_number(event(42, 1), 1.0));
+        assert_eq!(holder.particles.len(), 2);
     }
 }
