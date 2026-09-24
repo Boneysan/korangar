@@ -13,6 +13,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("friend-lifecycle", 8, friend_lifecycle),
         Scenario::new("friend-reject", 8, friend_reject),
         Scenario::new("party-lifecycle", 8, party_lifecycle),
+        Scenario::new("party-ping-carrier", 8, party_ping_carrier),
         Scenario::new("party-reject-block", 8, party_reject_block),
         Scenario::new("party-member-vitals", 8, party_member_vitals),
         Scenario::new("party-sp-only-broadcast", 8, party_sp_only_broadcast),
@@ -355,6 +356,91 @@ fn party_lifecycle(config: &Config) -> Result<(), String> {
         _ => None,
     })?;
     primary.net.leave_party().map_err(|_| "primary disconnected".to_owned())
+}
+
+/// Verify the server relays one versioned ping, rate-limits a second ping from
+/// the same character, and rejects payloads over its 128-byte carrier bound.
+fn party_ping_carrier(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, &mut partner)?;
+
+        const FIRST: &str = "[KORANGAR-PING:v2] danger prontera 155 180";
+        const RATE_LIMITED: &str = "[KORANGAR-PING:v2] assist prontera 156 180";
+        const ACCEPTED_AFTER_LIMIT: &str = "[KORANGAR-PING:v2] retreat prontera 157 180";
+        const BOUNDARY_MARKER: &str = "[KORANGAR-PING:v2] boundary ";
+        const OVERSIZED_MARKER: &str = "[KORANGAR-PING:v2] boundary";
+
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, FIRST)
+            .map_err(|_| "primary disconnected")?;
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, RATE_LIMITED)
+            .map_err(|_| "primary disconnected")?;
+
+        partner.wait_for("first v2 party ping relay", |event| match event {
+            NetworkEvent::PartyChatMessage { text, .. } if text.contains(FIRST) => Some(()),
+            _ => None,
+        })?;
+        let burst_messages = partner.collect_for(Duration::from_millis(1250));
+        if burst_messages
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::PartyChatMessage { text, .. } if text.contains(RATE_LIMITED)))
+        {
+            return Err("Hercules relayed a second v2 party ping inside the one-second sender cooldown".to_owned());
+        }
+
+        let boundary_payload = format!("{BOUNDARY_MARKER}{}", "x".repeat(128 - BOUNDARY_MARKER.len()));
+        if boundary_payload.len() != 128 {
+            return Err("party-ping boundary fixture must be exactly 128 bytes".to_owned());
+        }
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, &boundary_payload)
+            .map_err(|_| "primary disconnected")?;
+        partner.wait_for("128-byte v2 party-ping relay", |event| match event {
+            NetworkEvent::PartyChatMessage { text, .. } if text.contains(OVERSIZED_MARKER) => Some(()),
+            _ => None,
+        })?;
+
+        let oversized = format!("{boundary_payload}x");
+        if oversized.len() != 129 {
+            return Err("oversized party-ping fixture must be exactly 129 bytes".to_owned());
+        }
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, &oversized)
+            .map_err(|_| "primary disconnected")?;
+        let oversized_messages = partner.collect_for(Duration::from_millis(300));
+        if oversized_messages
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::PartyChatMessage { text, .. } if text.contains(OVERSIZED_MARKER)))
+        {
+            return Err("Hercules relayed an oversized party-ping payload".to_owned());
+        }
+
+        let _ = partner.collect_for(Duration::from_millis(1000));
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary.character_name, ACCEPTED_AFTER_LIMIT)
+            .map_err(|_| "primary disconnected")?;
+        partner.wait_for("v2 party ping after the cooldown", |event| match event {
+            NetworkEvent::PartyChatMessage { text, .. } if text.contains(ACCEPTED_AFTER_LIMIT) => Some(()),
+            _ => None,
+        })
+    })();
+    leave_party_both(&mut primary, &mut partner);
+    result
 }
 
 fn party_reject_block(config: &Config) -> Result<(), String> {
