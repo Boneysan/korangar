@@ -283,7 +283,7 @@ struct AtlasNode {
 
 struct AtlasView {
     nodes: Vec<AtlasNode>,
-    details: [String; 5],
+    details: [String; 6],
     dangerous_maps: HashSet<String>,
 }
 
@@ -301,7 +301,7 @@ impl AtlasView {
                     },
                 })
                 .collect(),
-            details: destination_detail_lines("", None, None, 0, None, &[], None),
+            details: destination_detail_lines("", None, None, 0, None, &[], None, None),
             dangerous_maps: HashSet::new(),
         }
     }
@@ -344,6 +344,9 @@ impl Element<ClientState> for AtlasView {
             .filter(|member| member.online() && normalized_map_name(member.map_name()).eq_ignore_ascii_case(selected_map))
             .map(|member| member.name().to_owned())
             .collect();
+        let town_pois = selected_map
+            .eq_ignore_ascii_case(current_map)
+            .then(|| minimap.pois().iter().map(|poi| poi.name.clone()).collect::<Vec<_>>());
         let reference = crate::dm::reference_data::reference_data();
         self.details = destination_detail_lines(
             current_map,
@@ -353,6 +356,7 @@ impl Element<ClientState> for AtlasView {
             Some(visit_state),
             &party_members_here,
             reference.map_spawn_summary(selected_map),
+            town_pois.as_deref(),
         );
         let player_level = state
             .try_get(&this_player().base_level())
@@ -533,7 +537,7 @@ impl Element<ClientState> for AtlasView {
             layout.add_text(
                 Area {
                     left: area.left + 12.0,
-                    top: area.top + area.height - 126.0 + index as f32 * 18.0,
+                    top: area.top + area.height - 144.0 + index as f32 * 18.0,
                     width: area.width - 24.0,
                     height: 18.0,
                 },
@@ -594,7 +598,8 @@ fn destination_detail_lines(
     visit_state: Option<&str>,
     party_members_here: &[String],
     population: Option<(u64, u16, usize)>,
-) -> [String; 5] {
+    town_pois: Option<&[String]>,
+) -> [String; 6] {
     let selected_map = target_map.unwrap_or(current_map);
     let visited = visit_state.unwrap_or("discovery sync pending");
     let map_heading = match target_map {
@@ -620,6 +625,18 @@ fn destination_detail_lines(
     } else {
         format!("Party here: {}", party_members_here.join(", "))
     };
+    let poi_line = match town_pois {
+        None => "Towninfo facilities: not loaded for this remote destination".to_owned(),
+        Some(pois) if pois.is_empty() => "Towninfo facilities: none listed for this map".to_owned(),
+        Some(pois) => {
+            let shown = pois.iter().take(3).cloned().collect::<Vec<_>>().join(", ");
+            if pois.len() > 3 {
+                format!("Towninfo facilities: {shown}, +{} more", pois.len() - 3)
+            } else {
+                format!("Towninfo facilities: {shown}")
+            }
+        }
+    };
     let (route_summary, next_exit) = match (target_map, route) {
         (None, _) => (
             format!("Verified outgoing connections: {outgoing_exits}"),
@@ -643,6 +660,7 @@ fn destination_detail_lines(
         level_line,
         population_line,
         party_line,
+        poi_line,
         format!("Connections: {route_summary} • {next_exit}"),
     ]
 }
@@ -717,6 +735,7 @@ mod tests {
             .filter(|edge| edge.from.map.eq_ignore_ascii_case("izlude"))
             .count();
         let party = vec!["Alice".to_owned()];
+        let pois = vec!["Kafra Employee".to_owned(), "Tool Dealer".to_owned()];
         let population = crate::dm::reference_data::reference_data().map_spawn_summary("izlude");
         let lines = destination_detail_lines(
             "prontera",
@@ -726,28 +745,32 @@ mod tests {
             Some("visited"),
             &party,
             population,
+            Some(&pois),
         );
 
         assert!(lines[0].contains("Destination: izlude • visited"));
         assert!(lines[1].contains("Suggested level:"));
         assert!(lines[2].contains("Static population:"));
         assert!(lines[3].contains("Alice"));
-        assert!(lines[4].contains(&format!("{} portal legs", route.len())));
-        assert!(lines[4].contains(&route[0].from.map));
-        assert!(lines[4].contains(&route[0].to.map));
+        assert!(lines[4].contains("Kafra Employee"));
+        assert!(lines[5].contains(&format!("{} portal legs", route.len())));
+        assert!(lines[5].contains(&route[0].from.map));
+        assert!(lines[5].contains(&route[0].to.map));
     }
 
     #[test]
     fn atlas_destination_details_do_not_claim_routes_when_graph_has_none() {
-        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None, &[], None);
+        let lines = destination_detail_lines("unknown_map", Some("unknown_destination"), None, 0, None, &[], None, None);
         assert!(lines[0].contains("discovery sync pending"));
         assert!(lines[1].contains("unavailable"));
         assert!(lines[2].contains("no verified spawn records"));
-        assert!(lines[4].contains("No verified route"));
+        assert!(lines[4].contains("not loaded for this remote destination"));
+        assert!(lines[5].contains("No verified route"));
 
-        let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None);
+        let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None, Some(&[]));
         assert_eq!(empty[0], "Current map: prontera • visited");
-        assert!(empty[4].contains("3"));
+        assert!(empty[4].contains("none listed"));
+        assert!(empty[5].contains("3"));
         assert_eq!(normalized_map_name("izlude.gat"), "izlude");
     }
 }
