@@ -45,6 +45,7 @@ pub enum PartySessionMessage {
         position: Option<(u16, u16)>,
     },
     DestinationAccepted {
+        sender: String,
         nonce: u32,
     },
     ReadyStart {
@@ -93,7 +94,10 @@ pub fn parse_party_session_message(text: &str) -> Option<PartySessionMessage> {
             if fields.next().is_some() {
                 return None;
             }
-            Some(PartySessionMessage::DestinationAccepted { nonce })
+            Some(PartySessionMessage::DestinationAccepted {
+                sender: sender.to_owned(),
+                nonce,
+            })
         }
         "ready-start" => {
             let nonce = fields.next()?.parse::<u32>().ok()?;
@@ -458,6 +462,15 @@ impl PartyState {
 
     pub fn members(&self) -> &[PartyMemberState] {
         &self.members
+    }
+
+    /// Party chat carries a server-authenticated account id alongside its
+    /// printable text. Only accept structured session/ping commands when the
+    /// text's claimed sender matches that roster identity.
+    pub fn message_sender_matches(&self, account_id: AccountId, sender: &str) -> bool {
+        self.members
+            .iter()
+            .any(|member| member.account_id == account_id && member.name.eq_ignore_ascii_case(sender))
     }
 
     pub fn display_text(&self) -> &str {
@@ -883,6 +896,33 @@ mod tests {
     use super::*;
 
     #[test]
+    fn structured_party_messages_require_authenticated_roster_sender() {
+        let mut state = PartyState::default();
+        state.members.push(PartyMemberState {
+            account_id: AccountId(7),
+            character_id: None,
+            name: "Ada".to_owned(),
+            map_name: String::new(),
+            position: None,
+            online: true,
+            leader: false,
+            job_id: None,
+            base_level: None,
+            health_points: None,
+            maximum_health_points: None,
+            spell_points: None,
+            maximum_spell_points: None,
+            class_name: String::new(),
+            is_dead: false,
+            display_label: String::new(),
+        });
+
+        assert!(state.message_sender_matches(AccountId(7), "ada"));
+        assert!(!state.message_sender_matches(AccountId(8), "Ada"));
+        assert!(!state.message_sender_matches(AccountId(7), "Mallory"));
+    }
+
+    #[test]
     fn party_session_destination_messages_are_versioned_bounded_and_nonce_matched() {
         assert_eq!(
             parse_party_session_message("Ada : [KORANGAR-SESSION:v1] dest-set 420 prt_fild08 120 154"),
@@ -904,7 +944,10 @@ mod tests {
         );
         assert_eq!(
             parse_party_session_message("BigZ : [KORANGAR-SESSION:v1] dest-accept 420"),
-            Some(PartySessionMessage::DestinationAccepted { nonce: 420 })
+            Some(PartySessionMessage::DestinationAccepted {
+                sender: "BigZ".to_owned(),
+                nonce: 420
+            })
         );
         assert_eq!(
             parse_party_session_message("Ada : [KORANGAR-SESSION:v1] ready-start 700"),

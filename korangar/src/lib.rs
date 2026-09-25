@@ -6460,8 +6460,13 @@ impl Client {
                         MessageColor::Information,
                     ));
                 }
-                NetworkEvent::PartyChatMessage { text, .. } => {
-                    if let Some(ping) = crate::state::minimap::parse_party_ping(&text) {
+                NetworkEvent::PartyChatMessage { account_id, text } => {
+                    if let Some(ping) = crate::state::minimap::parse_party_ping(&text)
+                        && self
+                            .client_state
+                            .follow(client_state().party_state())
+                            .message_sender_matches(account_id, &ping.sender)
+                    {
                         let current_map = self.client_state.follow(client_state().minimap()).map_name().to_owned();
                         if ping.map_name.eq_ignore_ascii_case(&current_map) {
                             if self
@@ -6487,7 +6492,17 @@ impl Client {
                             );
                         }
                     }
-                    if let Some(message) = crate::state::party::parse_party_session_message(&text) {
+                    if let Some(message) = crate::state::party::parse_party_session_message(&text)
+                        && self
+                            .client_state
+                            .follow(client_state().party_state())
+                            .message_sender_matches(account_id, match &message {
+                                crate::state::party::PartySessionMessage::DestinationSet { sender, .. }
+                                | crate::state::party::PartySessionMessage::DestinationAccepted { sender, .. }
+                                | crate::state::party::PartySessionMessage::ReadyStart { sender, .. }
+                                | crate::state::party::PartySessionMessage::ReadyResponse { sender, .. } => sender,
+                            })
+                    {
                         match message {
                             crate::state::party::PartySessionMessage::DestinationSet {
                                 sender,
@@ -6507,7 +6522,7 @@ impl Client {
                                     crate::state::toasts::ToastPriority::High,
                                 );
                             }
-                            crate::state::party::PartySessionMessage::DestinationAccepted { nonce } => {
+                            crate::state::party::PartySessionMessage::DestinationAccepted { nonce, .. } => {
                                 self.client_state
                                     .follow_mut(client_state().party_state())
                                     .clear_shared_destination(nonce);
