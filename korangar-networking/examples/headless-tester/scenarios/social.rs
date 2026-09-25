@@ -926,7 +926,11 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     let account_id = alternate_creator.account_id.0;
     drop(alternate_creator);
 
-    let (mut primary, mut other_account) = connect_pair(config)?;
+    // Do not use connect_pair here: its required venue warp flushes the login
+    // discovery snapshot from each character. This scenario must inspect the
+    // server's completed login snapshots before it can choose unseen fixtures.
+    let mut primary = TestContext::connect(config)?;
+    let mut other_account = TestContext::connect_partner(config)?;
     if primary.account_id.0 != account_id {
         return Err(format!(
             "alternate character belongs to account {account_id}, primary logged in as account {}",
@@ -937,12 +941,13 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
         return Err("discovery isolation fixture did not use a separate account".to_owned());
     }
 
-    let existing = primary.collect_for(Duration::from_millis(150));
+    let existing = collect_discovery_snapshot(&mut primary, account_id)?;
     let known_mobs = discovery_mob_ids(&existing, account_id);
     let known_maps = discovery_map_ids(&existing, account_id);
-    let other_existing = other_account.collect_for(Duration::from_millis(150));
-    let other_known_mobs = discovery_mob_ids(&other_existing, other_account.account_id.0);
-    let other_known_maps = discovery_map_ids(&other_existing, other_account.account_id.0);
+    let other_account_id = other_account.account_id.0;
+    let other_existing = collect_discovery_snapshot(&mut other_account, other_account_id)?;
+    let other_known_mobs = discovery_mob_ids(&other_existing, other_account_id);
+    let other_known_maps = discovery_map_ids(&other_existing, other_account_id);
     const CANDIDATES: &[(u16, &str)] = &[
         (1002, "PORING"),
         (1007, "FABRE"),
@@ -1210,6 +1215,40 @@ fn discovery_line_contains_mob(text: &str, account_id: u32, mob_id: u16) -> bool
             .split(',')
             .filter_map(|pair| pair.split_once('='))
             .any(|(id, tier)| id.parse::<u16>().ok() == Some(mob_id) && tier == "1")
+}
+
+/// Login discovery snapshots can arrive behind a burst of character/skill
+/// state packets. Do not infer that an account has never visited a map from a
+/// short sampling window; wait until both independently chunked ledgers have
+/// emitted their end markers, retaining all events for fixture selection.
+fn collect_discovery_snapshot(context: &mut TestContext, account_id: u32) -> Result<Vec<NetworkEvent>, String> {
+    let mob_end = format!("[KORANGAR-DISCOVERY:v1:end:{account_id}:");
+    let map_end = format!("[KORANGAR-MAP-DISCOVERY:v1:end:{account_id}:");
+    let deadline = Instant::now() + context.timeout;
+    let mut events = Vec::new();
+    let (mut mob_complete, mut map_complete) = (false, false);
+
+    while Instant::now() < deadline && (!mob_complete || !map_complete) {
+        let batch = context.collect_for(Duration::from_millis(100));
+        for event in &batch {
+            if let NetworkEvent::ChatMessage {
+                color: MessageColor::Server,
+                text,
+            } = event
+            {
+                mob_complete |= text.contains(&mob_end);
+                map_complete |= text.contains(&map_end);
+            }
+        }
+        events.extend(batch);
+    }
+
+    if !mob_complete || !map_complete {
+        return Err(format!(
+            "incomplete account discovery snapshot for {account_id} (mob end: {mob_complete}, map end: {map_complete})"
+        ));
+    }
+    Ok(events)
 }
 
 fn discovery_mob_ids(events: &[NetworkEvent], account_id: u32) -> HashSet<u16> {

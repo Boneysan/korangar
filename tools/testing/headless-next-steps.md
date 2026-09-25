@@ -6,7 +6,7 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | Latest ordered full run (2026-09-24): **160 pass / 1 fail / 1 expected skip** over 162 registered. The lone failure was account-discovery event ordering; its collector fix and a scoped server map-transition recovery hook now pass focused disposable-server tests (`account-discovery-isolation`, `death-recovery-save-point`: 2/2, clean fixture teardown, zero unknown/fallback/failed packets). Repeat the ordered full suite before calling the registry fully accepted. |
+| **Status** | Latest ordered full run (2026-09-25): **162 pass / 1 expected skip / 0 fail** over 162 registered. Archive: [`runs/20260925-003101.log`](runs/20260925-003101.log). The run includes the account-discovery snapshot fix after the full skill sweep and party-quest scenario, plus death recovery. It reported 176 incoming / 68 outgoing packet types, 0 unknown/fallback/failed packets, 0 unmet skill expectations, clean DM SQL journal/cursor audits, and clean fixture teardown. The ordered headless registry gate is closed; GUI/visual acceptance and the separate playtest gates remain distinct. |
 | **Resume first** | **GUI / client**, not more suite grinding — [gui-verification-pass.md](../../docs/plans/gui-verification-pass.md) (Block E Hermode, N20 Auto Spell). Optional re-shuffle after Desert Wolf harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
 | **Meaning of green** | [../../docs/plans/testing-completeness.md](../../docs/plans/testing-completeness.md) |
