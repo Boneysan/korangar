@@ -116,9 +116,8 @@ fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-/// Verify Izlude's real NPC service leg to the Byalan waiting area: pay the
-/// sailor and validate the server-selected map transfer. The static dungeon
-/// entrance is a separate, still-unverified walk-warp edge.
+/// Follow Izlude's real NPC service route to the Sunken Ship: pay the sailor,
+/// arrive at Byalan, and walk through the generated dungeon entrance warp.
 fn navigation_izlude_ferry_service(config: &Config) -> Result<(), String> {
     let mut context = TestContext::connect(config)?;
 
@@ -182,9 +181,37 @@ fn navigation_izlude_ferry_service(config: &Config) -> Result<(), String> {
         return Err(format!("ferry should arrive at izlu2dun, landed on {}", context.map_name));
     }
 
-    // The static edge (`izlu2dun` 108,83 -> `iz_dun00` 168,168) is separately
-    // modeled in the navigation graph. Its live walk traversal remains open:
-    // this fixture server returned no movement acknowledgements at those cells.
+    // Follow a route decoded from Hercules' map cache. The entrance trigger is
+    // centered at (108,83), with a 3x2 touch radius; the uppermost reachable
+    // path approaches from the south at (105,85). Keep each leg short enough
+    // for the server's path-length limit.
+    for &(x, y) in &[
+        (98, 70),
+        (88, 80),
+        (78, 90),
+        (68, 99),
+        (58, 108),
+        (49, 118),
+        (59, 128),
+        (69, 130),
+        (79, 136),
+        (89, 136),
+        (99, 136),
+        (106, 127),
+        (102, 117),
+        (107, 107),
+        (103, 97),
+        (103, 89),
+    ] {
+        context.walk_to(x, y)?;
+    }
+    let dungeon_position = walk_through_portal(&mut context, "iz_dun00", &[(105, 85)])?;
+    if dungeon_position.x.abs_diff(168) > 3 || dungeon_position.y.abs_diff(168) > 3 {
+        return Err(format!(
+            "Byalan entrance arrived at unexpected iz_dun00 cell ({}, {})",
+            dungeon_position.x, dungeon_position.y
+        ));
+    }
     Ok(())
 }
 
