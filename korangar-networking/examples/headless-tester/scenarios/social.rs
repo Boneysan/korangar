@@ -918,6 +918,9 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     let existing = primary.collect_for(Duration::from_millis(150));
     let known_mobs = discovery_mob_ids(&existing, account_id);
     let known_maps = discovery_map_ids(&existing, account_id);
+    let other_existing = other_account.collect_for(Duration::from_millis(150));
+    let other_known_mobs = discovery_mob_ids(&other_existing, other_account.account_id.0);
+    let other_known_maps = discovery_map_ids(&other_existing, other_account.account_id.0);
     const CANDIDATES: &[(u16, &str)] = &[
         (1002, "PORING"),
         (1007, "FABRE"),
@@ -931,14 +934,14 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     let (mob_id, mob_name) = CANDIDATES
         .iter()
         .copied()
-        .find(|(mob_id, _)| !known_mobs.contains(mob_id))
-        .ok_or("all discovery test mobs were already recorded on the primary account")?;
+        .find(|(mob_id, _)| !known_mobs.contains(mob_id) && !other_known_mobs.contains(mob_id))
+        .ok_or("all discovery test mobs were already recorded on one of the fixture accounts")?;
     let visit_candidates = [("geffen", 119, 59), ("payon", 150, 100), ("morocc", 156, 97), ("alberta", 135, 100)];
     let (visit_map, visit_x, visit_y) = visit_candidates
         .iter()
         .copied()
-        .find(|(map_name, ..)| !known_maps.contains(*map_name))
-        .ok_or("all account-discovery map fixtures were already visited")?;
+        .find(|(map_name, ..)| !known_maps.contains(*map_name) && !other_known_maps.contains(*map_name))
+        .ok_or("all account-discovery map fixtures were already visited on one of the fixture accounts")?;
 
     primary.ensure_job(4008)?; // Lord Knight
     primary.ensure_base_level(99)?;
@@ -1096,12 +1099,12 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     if separate_account_id == account_id {
         return Err("second account unexpectedly shares the primary account id".to_owned());
     }
-    let empty_snapshot = format!("[KORANGAR-DISCOVERY:v1:begin:{separate_account_id}:");
+    let separate_snapshot = format!("[KORANGAR-DISCOVERY:v1:begin:{separate_account_id}:");
     separate_account.wait_for("separate account's discovery snapshot", |event| match event {
         NetworkEvent::ChatMessage {
             color: MessageColor::Server,
             text,
-        } if text.contains(&empty_snapshot) && text.ends_with(":0:0]") => Some(()),
+        } if text.contains(&separate_snapshot) => Some(()),
         _ => None,
     })?;
     let separate_end = format!("[KORANGAR-DISCOVERY:v1:end:{separate_account_id}:");
@@ -1129,6 +1132,9 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
         _ => None,
     })?;
     let separate_map_snapshot = separate_account.collect_for(Duration::from_millis(100));
+    if discovery_mob_ids(&separate_map_snapshot, separate_account_id).contains(&mob_id) {
+        return Err(format!("discovered mob {mob_id} leaked into a different account's snapshot"));
+    }
     if discovery_map_ids(&separate_map_snapshot, separate_account_id).contains(visit_map) {
         return Err(format!("visited map {visit_map} leaked into a different account's snapshot"));
     }

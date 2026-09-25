@@ -70,6 +70,8 @@ This is a source audit, not a claim that the feature has been seen on screen. Ef
 
 **2026-09-24 portal-label follow-up:** Hovering a graph-known warp entity now displays its destination; when a navigation target is active, the first verified exit on the shortest route is prefixed “Route portal.” Unknown/unindexed warps retain their existing hover text. Navigation tests cover destination lookup and route labeling; visual readability and live traversal acceptance remain open.
 
+**2026-09-24 discovery-fixture sequence follow-up:** Running `party-quest-credit` before `account-discovery-isolation` exposed that the isolation fixture incorrectly required the second account's snapshot to be empty, even though earlier scenarios may legitimately have recorded discoveries on that account. The fixture now chooses a mob/map undiscovered by either account and asserts those specific primary-account discoveries do not appear in the second account's snapshots. Both scenarios pass in sequence against a fresh disposable server/database; cleanup audit is clean.
+
 ## Readiness and dependency gates
 
 | Gate | Required result before dependent work | Check |
