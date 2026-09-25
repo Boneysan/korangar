@@ -13,6 +13,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("walk", 3, walk),
         Scenario::new("warp-crossmap", 3, warp_crossmap),
         Scenario::new("navigation-warp-traversal", 3, navigation_warp_traversal),
+        Scenario::new("navigation-izlude-ferry-service", 3, navigation_izlude_ferry_service),
         Scenario::new("entity-details", 3, entity_details),
         Scenario::new("sit-stand", 3, sit_stand),
         Scenario::new("tick-sync", 3, tick_sync),
@@ -115,6 +116,78 @@ fn navigation_warp_traversal(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
+/// Verify Izlude's real NPC service leg to the Byalan waiting area: pay the
+/// sailor and validate the server-selected map transfer. The static dungeon
+/// entrance is a separate, still-unverified walk-warp edge.
+fn navigation_izlude_ferry_service(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    // Start with a cross-map setup because Hercules treats a same-map @warp as
+    // a no-op. The renewal sailor NPC is at (197, 205).
+    context.warp("geffen", 119, 59)?;
+    context.warp("izlude", 197, 198)?;
+    if context.map_name != "izlude" {
+        return Err(format!("expected Izlude setup, landed on {}", context.map_name));
+    }
+    let sailor_id = context
+        .entities
+        .iter()
+        .find(|(_, data)| {
+            let pos = data.position.tile_position();
+            pos.x.abs_diff(197) <= 2 && pos.y.abs_diff(205) <= 2
+        })
+        .map(|(id, _)| *id)
+        .ok_or_else(|| "Izlude Sailor NPC not visible near (197, 205)".to_owned())?;
+
+    // Fresh disposable integration characters start with an empty wallet.
+    // Provision fare through the fixture's GM command; this account/database
+    // is discarded by the integration runner after the scenario.
+    context.say("@zeny 500")?;
+    context.wait_for("test-only ferry fare", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: ragnarok_packets::StatType::Zeny(value),
+        } if *value >= 150 => Some(*value),
+        _ => None,
+    })?;
+    let starting_zeny = context.zeny;
+    context.flush();
+    context.net.start_dialog(sailor_id).map_err(|_| "disconnected")?;
+    context.wait_for("Izlude Sailor greeting", |event| match event {
+        NetworkEvent::AddNextButton { npc_id } if *npc_id == sailor_id => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.next_dialog(sailor_id).map_err(|_| "disconnected")?;
+    let choices = context.wait_for("Izlude Sailor travel choices", |event| match event {
+        NetworkEvent::AddChoiceButtons { npc_id, choices } if *npc_id == sailor_id => Some(choices.clone()),
+        _ => None,
+    })?;
+    if choices.len() < 2 || !choices[0].contains("Byalan Island") {
+        return Err(format!("unexpected Izlude Sailor choices: {choices:?}"));
+    }
+    context.flush();
+    context.net.choose_dialog_option(sailor_id, 1).map_err(|_| "disconnected")?;
+
+    context.wait_for("Sailor fare deduction", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: ragnarok_packets::StatType::Zeny(value),
+        } if *value == starting_zeny - 150 => Some(*value),
+        _ => None,
+    })?;
+    context.wait_for("ChangeMap to Byalan waiting area", |event| match event {
+        NetworkEvent::ChangeMap { map_name, position } if map_name == "izlu2dun" => Some(*position),
+        _ => None,
+    })?;
+    if context.map_name != "izlu2dun" {
+        return Err(format!("ferry should arrive at izlu2dun, landed on {}", context.map_name));
+    }
+
+    // The static edge (`izlu2dun` 108,83 -> `iz_dun00` 168,168) is separately
+    // modeled in the navigation graph. Its live walk traversal remains open:
+    // this fixture server returned no movement acknowledgements at those cells.
+    Ok(())
+}
+
 /// Walk toward each server-verified cell in a static warp rectangle until a
 /// movement acknowledgement or the expected map transition is observed.
 fn walk_through_portal(
@@ -127,6 +200,7 @@ fn walk_through_portal(
         ChangedMap(ragnarok_packets::TilePosition),
     }
 
+    let mut observed_moves = Vec::new();
     for &(x, y) in cells {
         if context.map_name == expected_map {
             return context.wait_for(&format!("ChangeMap to {expected_map}"), |event| match event {
@@ -148,6 +222,7 @@ fn walk_through_portal(
         match context.wait_for_within("movement toward graph portal", Duration::from_secs(4), &mut classify) {
             Ok(Step::ChangedMap(position)) => return Ok(position),
             Ok(Step::Moved(destination)) => {
+                observed_moves.push(format!("({x}, {y}) -> ({}, {})", destination.x, destination.y));
                 let distance = start.x.abs_diff(destination.x).max(start.y.abs_diff(destination.y)) as u64;
                 context.pump(Duration::from_millis((distance * 200 + 500).min(4000)));
                 if context.map_name == expected_map {
@@ -162,11 +237,12 @@ fn walk_through_portal(
     }
 
     Err(format!(
-        "no walkable entry among {} cells; remained on {} at ({}, {})",
+        "no walkable entry among {} cells; remained on {} at ({}, {}); movement acks: {:?}",
         cells.len(),
         context.map_name,
         context.position.x,
-        context.position.y
+        context.position.y,
+        observed_moves
     ))
 }
 
