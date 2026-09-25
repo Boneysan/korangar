@@ -17,7 +17,7 @@ The friends-server Guide is open by default. Discovery synchronization changes b
 ## Acceptance
 
 - **Live acceptance passed (2026-09-24):** `account-discovery-isolation` verifies first-kill and first-visit deltas, completed monster/map snapshots on a second character of the same account, an empty monster snapshot on a different account, no cross-account map-delta leak, and no visited-map leak in the other account's snapshot. Fixture cleanup passed.
-- **Still open:** validate the production upgrade migration independently of the fresh disposable-server schema path; exercise richer reviewed milestones and DM-ledger interaction.
+- **Migration check passed (2026-09-24):** the upgrade uses Hercules' indexed `YYYY-MM-DD--HH-MM.sql` naming and timestamp header, and is listed in `sql-files/upgrades/index.txt`. Applied twice to a disposable MariaDB database: both tables exist and the `sql_updates` timestamp is present exactly once. **Still open:** apply/verify it against a representative existing production database and startup; exercise richer reviewed milestones and DM-ledger interaction.
 - Snapshot handles zero, many, interrupted, and reordered chunks without inventing unlocks; delta after snapshot merges once.
 - Client parser unit tests cover empty/incomplete/reordered/account-mismatched/duplicate snapshots and monotonic deltas. DM reveal-all does not persist; legacy DM state is intentionally not migrated.
 - Two accounts with different discovery histories see the same verified Poring stats, drops, and source links. No party peer can forge a milestone grant.
