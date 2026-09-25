@@ -438,7 +438,11 @@ if [ "${INTEGRATION_SKIP_BUILD:-0}" != "1" ]; then
             export CPPFLAGS="-I$pcre_prefix/include${CPPFLAGS:+ $CPPFLAGS}"
             export LDFLAGS="-L$pcre_prefix/lib${LDFLAGS:+ $LDFLAGS}"
         fi
-        ./configure --enable-packetver=20220406
+        configure_args=(--enable-packetver=20220406)
+        if ! command -v mysql_config >/dev/null 2>&1 && command -v mariadb_config >/dev/null 2>&1; then
+            configure_args+=(--with-mysql="$(command -v mariadb_config)")
+        fi
+        ./configure "${configure_args[@]}"
         make -j"$build_jobs"
     )
 fi

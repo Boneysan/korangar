@@ -962,7 +962,7 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     let (visit_map, visit_x, visit_y) = visit_candidates
         .iter()
         .copied()
-        .find(|(map_name, ..)| !known_maps.contains(*map_name) && !other_known_maps.contains(*map_name))
+        .find(|(map_name, ..)| *map_name != primary.map_name && !known_maps.contains(*map_name) && !other_known_maps.contains(*map_name))
         .ok_or("all account-discovery map fixtures were already visited on one of the fixture accounts")?;
 
     primary.ensure_job(4008)?; // Lord Knight
