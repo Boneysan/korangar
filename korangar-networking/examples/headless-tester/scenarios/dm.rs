@@ -25,6 +25,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-flags-status", 9, dm_flags_status),
         Scenario::new("dm-quest-lifecycle", 9, dm_quest_lifecycle),
         Scenario::new("quest-log-multi", 9, quest_log_multi),
+        Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
         Scenario::new("dm-experience", 9, dm_experience),
         Scenario::new("dm-warp-recall", 9, dm_warp_recall),
@@ -296,6 +297,61 @@ fn quest_log_multi(config: &Config) -> Result<(), String> {
         })?;
     }
     Ok(())
+}
+
+/// Record party campaign state while one member is offline, then verify the
+/// returning character replays both quest and flag transitions and can catch
+/// up again without duplicating the quest notification.
+fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 20001;
+    const FLAG_NAME: &str = "dm_replay_probe";
+
+    let (mut primary, partner) = TestContext::connect_pair(config)?;
+    let mut partner = Some(partner);
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, partner.as_mut().ok_or("partner disconnected")?)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+
+        primary.flush();
+        primary.say(&format!("@dmquest start {QUEST_ID}"))?;
+        primary.wait_for("primary starts campaign quest before offline replay", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        say_expect(&mut primary, &format!("@dmflag set {FLAG_NAME} 17"), "set to 17")?;
+
+        partner = Some(TestContext::connect_partner(config)?);
+        let returning = partner.as_mut().ok_or("partner reconnect failed")?;
+        returning.wait_for("offline party quest replay", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+            _ => None,
+        })?;
+        say_expect(returning, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 17"))?;
+
+        say_expect(returning, "@dm catchup", "Catch-up ran")?;
+        if returning
+            .collect_for(Duration::from_millis(350))
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID))
+        {
+            return Err("repeated party catch-up replayed the same active quest notification".to_owned());
+        }
+        say_expect(returning, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 17"))?;
+        Ok(())
+    })();
+
+    let _ = primary.say(&format!("@dmflag clear {FLAG_NAME}"));
+    primary.pump(Duration::from_millis(100));
+    let _ = primary.say("@dm reset confirm");
+    primary.pump(Duration::from_millis(250));
+    if let Some(partner) = partner.as_mut() {
+        let _ = leave_party_both(&mut primary, partner);
+    }
+    result
 }
 
 /// Read the wallet through an explicit `@zeny` round trip. The map-login

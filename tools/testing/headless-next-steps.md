@@ -6,7 +6,7 @@ next, or about to claim the suite is "complete".
 
 | | |
 |---|---|
-| **Status** | Last full-suite acceptance: **2026-08-12**, 148 pass / 1 skip / 0 fail over 149 registered, ~59 min, 0 flaky/retried/unknown; 0 unmet/exempted skill expectations. Current registry: **151**. Added 2026-09-24: targeted disposable-server `inventory-split`, `storage`, and `inventory-order` all pass with 0 unknown packets; refresh the complete-suite run before calling the current 151-scenario registry fully accepted. |
+| **Status** | Last full-suite acceptance: **2026-08-12**, 148 pass / 1 skip / 0 fail over 149 registered, ~59 min, 0 flaky/retried/unknown; 0 unmet/exempted skill expectations. Current registry: **161**. Added 2026-09-24: targeted disposable-server `inventory-split`, `storage`, `inventory-order`, `party-message-carrier`, and `dm-party-offline-replay` pass with clean fixture teardown; refresh the complete-suite run before calling the current 161-scenario registry fully accepted. |
 | **Resume first** | **GUI / client**, not more suite grinding — [gui-verification-pass.md](../../docs/plans/gui-verification-pass.md) (Block E Hermode, N20 Auto Spell). Optional re-shuffle after Desert Wolf harden |
 | **Canonical plan** | [headless_test_plan.md](headless_test_plan.md) |
 | **Meaning of green** | [../../docs/plans/testing-completeness.md](../../docs/plans/testing-completeness.md) |

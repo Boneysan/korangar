@@ -326,6 +326,20 @@ echo "creating disposable database $db_name on $db_host:$db_port"
 database_created=true
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/main.sql"
 "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/logs.sql"
+# Install the currently supported Korangar-owned schema upgrades into the
+# disposable database exactly as an operator applies them in production. The
+# rest of Hercules' historical upgrades target older schemas and are not
+# replayed over the current `main.sql` snapshot.
+korangar_upgrades=(
+    2026-09-24--19-35.sql # account-persistent monster/map discovery
+    2026-09-24--19-45.sql # campaign checkpoint and membership
+    2026-09-24--19-46.sql # campaign state and pending grants
+    2026-09-24--19-47.sql # typed campaign replay journal
+)
+for upgrade in "${korangar_upgrades[@]}"; do
+    echo "applying Korangar schema upgrade $upgrade"
+    "${mysql_admin[@]}" "$db_name" < "$hercules_repo/sql-files/upgrades/$upgrade"
+done
 
 # 10 bytes -> 20 hex characters. The bound is the protocol, not taste:
 # LoginServerLoginPacket::password is #[length(24)], and the client serializes
