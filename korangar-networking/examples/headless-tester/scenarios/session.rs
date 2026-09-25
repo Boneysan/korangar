@@ -1009,32 +1009,59 @@ fn death_recovery_save_point(config: &Config) -> Result<(), String> {
         ));
     }
 
-    context.flush();
-    context.net.respawn().map_err(|_| "disconnected")?;
-    let map_name = context.wait_for("respawn at death-recovery save point", |event| match event {
-        NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
-        _ => None,
-    })?;
-    if map_name != SAVE_MAP {
-        return Err(format!("respawned on {map_name:?}, expected save map {SAVE_MAP:?}"));
-    }
-    context.net.map_loaded().map_err(|_| "disconnected")?;
-
+    // The recovery ledger is stored in permanent character variables. Drop
+    // the map session while the penalty is pending, then reconnect the same
+    // character before respawning to prove the loss survives logout/relogin.
+    context.net.disconnect_from_map_server();
+    drop(context);
+    sleep(Duration::from_millis(700));
+    let mut context = TestContext::connect(config)?;
     let expected_base_refund = (base_before_death - base_after_death) / 2;
     let expected_job_refund = (job_before_death - job_after_death) / 2;
-    let mut recovery_events = Vec::new();
-    let deadline = Instant::now() + Duration::from_secs(5);
-    let mut recovery_message = None;
-    while Instant::now() < deadline && recovery_message.is_none() {
-        let events = context.collect_for(Duration::from_millis(100));
-        recovery_message = events.iter().find_map(|event| match event {
-            NetworkEvent::ChatMessage {
-                text,
-                color: korangar_networking::MessageColor::Server,
-            } if text.starts_with("Korangar recovery: restored ") => Some(text.clone()),
+    // Depending on saved dead-state timing, login itself can place the
+    // character at the save point and run the recovery hook. Preserve that
+    // login burst; flushing here would discard the only report and a later
+    // respawn would correctly produce no second map transition.
+    let mut recovery_events = context.collect_for(Duration::from_millis(300));
+    let mut recovery_message = recovery_events.iter().find_map(|event| match event {
+        NetworkEvent::ChatMessage {
+            text,
+            color: korangar_networking::MessageColor::Server,
+        } if text.starts_with("Korangar recovery: restored ") => Some(text.clone()),
+        _ => None,
+    });
+
+    if recovery_message.is_some() {
+        if context.map_name != SAVE_MAP {
+            return Err(format!(
+                "recovery ran during relog on {:?}, expected save map {SAVE_MAP:?}",
+                context.map_name
+            ));
+        }
+    } else {
+        context.flush();
+        context.net.respawn().map_err(|_| "disconnected")?;
+        let map_name = context.wait_for("respawn at death-recovery save point", |event| match event {
+            NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
             _ => None,
-        });
-        recovery_events.extend(events);
+        })?;
+        if map_name != SAVE_MAP {
+            return Err(format!("respawned on {map_name:?}, expected save map {SAVE_MAP:?}"));
+        }
+        context.net.map_loaded().map_err(|_| "disconnected")?;
+
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while Instant::now() < deadline && recovery_message.is_none() {
+            let events = context.collect_for(Duration::from_millis(100));
+            recovery_message = events.iter().find_map(|event| match event {
+                NetworkEvent::ChatMessage {
+                    text,
+                    color: korangar_networking::MessageColor::Server,
+                } if text.starts_with("Korangar recovery: restored ") => Some(text.clone()),
+                _ => None,
+            });
+            recovery_events.extend(events);
+        }
     }
     let recovery_message =
         recovery_message.ok_or_else(|| format!("save-point respawn did not produce death recovery; events: {recovery_events:?}"))?;
