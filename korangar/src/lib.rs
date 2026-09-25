@@ -1267,7 +1267,10 @@ fn client_tick_reached(now: u32, deadline: u32) -> bool {
 mod timed_action_buffer_tests {
     use ragnarok_packets::EntityId;
 
-    use super::{AttackRange, SkillId, SkillLevel, TilePosition, cancel_timed_action_on_skill_refusal, client_tick_reached};
+    use super::{
+        AttackRange, ClientTick, SkillId, SkillLevel, TilePosition, cancel_timed_action_on_skill_refusal, client_tick_reached,
+        replace_timed_buffered_action,
+    };
     use crate::state::{BufferedAction, TimedBufferedAction};
 
     #[test]
@@ -1317,6 +1320,34 @@ mod timed_action_buffer_tests {
     }
 
     #[test]
+    fn newest_timed_action_replaces_the_old_slot_and_restarts_expiry() {
+        let mut queued = Some(TimedBufferedAction {
+            action: BufferedAction::AttackEntity { entity_id: EntityId(17) },
+            queued_at: 100,
+            expires_at: 300,
+        });
+        replace_timed_buffered_action(
+            &mut queued,
+            BufferedAction::CastSkill {
+                skill_id: SkillId(5),
+                skill_level: SkillLevel(2),
+                entity_id: EntityId(23),
+                attack_range: AttackRange(9),
+            },
+            ClientTick(199),
+        );
+
+        let replacement = queued.expect("latest press must remain queued");
+        assert!(matches!(replacement.action, BufferedAction::CastSkill {
+            skill_id: SkillId(5),
+            entity_id: EntityId(23),
+            ..
+        }));
+        assert_eq!(replacement.queued_at, 199);
+        assert_eq!(replacement.expires_at, 399);
+    }
+
+    #[test]
     fn skill_refusal_cancels_only_the_pending_timed_action() {
         let mut queued = Some(TimedBufferedAction {
             action: BufferedAction::AttackEntity { entity_id: EntityId(17) },
@@ -1337,17 +1368,21 @@ fn queue_action_if_animation_locked(state: &mut State<ClientState>, action: Buff
     if !state.try_follow(this_entity()).is_some_and(Entity::is_action_animation_active) {
         return false;
     }
-    *state.follow_mut(client_state().timed_buffered_action()) = Some(crate::state::TimedBufferedAction {
-        action,
-        queued_at: client_tick.0,
-        expires_at: client_tick.0.wrapping_add(TIMED_ACTION_BUFFER_MS),
-    });
+    replace_timed_buffered_action(state.follow_mut(client_state().timed_buffered_action()), action, client_tick);
     state.follow_mut(client_state().toasts()).push(
         "timed-action-buffer",
         "Action queued",
         crate::state::toasts::ToastPriority::Normal,
     );
     true
+}
+
+fn replace_timed_buffered_action(slot: &mut Option<crate::state::TimedBufferedAction>, action: BufferedAction, client_tick: ClientTick) {
+    *slot = Some(crate::state::TimedBufferedAction {
+        action,
+        queued_at: client_tick.0,
+        expires_at: client_tick.0.wrapping_add(TIMED_ACTION_BUFFER_MS),
+    });
 }
 
 /// Cast `pending` at whatever `target` currently resolves to. Returns `true` if
