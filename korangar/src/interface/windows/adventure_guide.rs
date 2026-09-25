@@ -275,15 +275,26 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
     }
     for npc in quest.npc_references.iter().take(8) {
         lines.push(format!(
-            "Related NPC script reference: {} — {} ({}, {}) [{}:{}; {}]",
-            npc.name,
-            npc.map_name,
-            npc.x,
-            npc.y,
-            npc.source_path,
-            npc.source_line,
-            npc.uses.join(", ")
+            "Related NPC script reference: {} — {} ({}, {}) [{}:{}]",
+            npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.source_line
         ));
+        if !npc.uses.is_empty() {
+            let clues = npc
+                .uses
+                .iter()
+                .map(|usage| match usage.as_str() {
+                    "setquest" => "sets quest state",
+                    "questprogress" => "checks or advances quest progress",
+                    "completequest" => "completes quest state",
+                    "erasequest" => "removes quest state",
+                    _ => "uses quest state",
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            lines.push(format!(
+                "Script call evidence: {clues}; this does not prove NPC role or current availability."
+            ));
+        }
         if is_graph_map(&npc.map_name) {
             lines.push(format!(
                 "@route-cell:{}:{}:{}|Route to {} — {}",
@@ -1483,6 +1494,32 @@ mod tests {
             route,
             ("brasilis".to_owned(), 297, 307, "Route to Angelo#br — brasilis".to_owned())
         );
+    }
+
+    #[test]
+    fn quest_npc_script_evidence_explains_calls_without_claiming_giver_role() {
+        let quest = ReferenceQuest {
+            id: 7,
+            name: "Test quest".to_owned(),
+            targets: Vec::new(),
+            npc_references: vec![crate::dm::reference_data::ReferenceQuestNpc {
+                name: "Test NPC".to_owned(),
+                map_name: "prontera".to_owned(),
+                x: 100,
+                y: 100,
+                source_path: "npc/re/quests/test.txt".to_owned(),
+                source_line: 12,
+                uses: vec!["setquest".to_owned(), "completequest".to_owned()],
+            }],
+        };
+        let detail = quest_reference_details(&quest);
+        assert!(detail.iter().any(|line| line.contains("sets quest state, completes quest state")));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("does not prove NPC role or current availability"))
+        );
+        assert!(detail.iter().any(|line| line.starts_with("@route-cell:prontera:100:100|")));
     }
 
     #[test]
