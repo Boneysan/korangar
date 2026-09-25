@@ -365,6 +365,8 @@ fn party_lifecycle(config: &Config) -> Result<(), String> {
 /// the same character, and rejects payloads over its 128-byte carrier bound.
 fn party_message_carrier(config: &Config) -> Result<(), String> {
     let (mut primary, mut partner) = connect_pair(config)?;
+    let primary_account = primary.account_id;
+    let primary_chat_prefix = format!("{} : ", primary.character_name);
     let result: Result<(), String> = (|| {
         form_party(&mut primary, &mut partner)?;
 
@@ -386,7 +388,11 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
             .map_err(|_| "primary disconnected")?;
 
         partner.wait_for("first v2 party ping relay", |event| match event {
-            NetworkEvent::PartyChatMessage { text, .. } if text.contains(FIRST) => Some(()),
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_chat_prefix) && text.contains(FIRST) =>
+            {
+                Some(())
+            }
             _ => None,
         })?;
         let burst_messages = partner.collect_for(Duration::from_millis(1250));
@@ -408,7 +414,11 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
             .send_party_chat_message(&primary.character_name, &boundary_payload)
             .map_err(|_| "primary disconnected")?;
         partner.wait_for("128-byte v2 party-ping relay", |event| match event {
-            NetworkEvent::PartyChatMessage { text, .. } if text.contains(OVERSIZED_MARKER) => Some(()),
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_chat_prefix) && text.contains(OVERSIZED_MARKER) =>
+            {
+                Some(())
+            }
             _ => None,
         })?;
 
@@ -438,7 +448,11 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
             .send_party_chat_message(&primary.character_name, ACCEPTED_AFTER_LIMIT)
             .map_err(|_| "primary disconnected")?;
         partner.wait_for("v2 party ping after the cooldown", |event| match event {
-            NetworkEvent::PartyChatMessage { text, .. } if text.contains(ACCEPTED_AFTER_LIMIT) => Some(()),
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_chat_prefix) && text.contains(ACCEPTED_AFTER_LIMIT) =>
+            {
+                Some(())
+            }
             _ => None,
         })?;
 
@@ -456,7 +470,11 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
             .send_party_chat_message(&primary.character_name, SESSION_RATE_LIMITED)
             .map_err(|_| "primary disconnected")?;
         partner.wait_for("v1 party session relay", |event| match event {
-            NetworkEvent::PartyChatMessage { text, .. } if text.contains(SESSION_START) => Some(()),
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_chat_prefix) && text.contains(SESSION_START) =>
+            {
+                Some(())
+            }
             _ => None,
         })?;
         let session_burst = partner.collect_for(Duration::from_millis(350));
@@ -481,7 +499,11 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
             .send_party_chat_message(&primary.character_name, &session_boundary)
             .map_err(|_| "primary disconnected")?;
         partner.wait_for("128-byte v1 party session relay", |event| match event {
-            NetworkEvent::PartyChatMessage { text, .. } if text.contains(session_oversized_marker) => Some(()),
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_chat_prefix) && text.contains(session_oversized_marker) =>
+            {
+                Some(())
+            }
             _ => None,
         })?;
 
