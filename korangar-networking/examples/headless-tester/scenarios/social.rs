@@ -1,7 +1,7 @@
 //! Phase 8 — multi-client social protocol flows.
 
 use std::collections::HashSet;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use korangar_networking::{MessageColor, NetworkEvent, QuestHuntProgress};
 
@@ -970,21 +970,49 @@ fn account_discovery_isolation(config: &Config) -> Result<(), String> {
     primary.say("@allskill")?;
     primary.say("@heal")?;
     other_account.flush();
-    primary.warp(visit_map, visit_x, visit_y)?;
+    // Observe the map transition and discovery delta in the same collection:
+    // the map-change private message can arrive before ChangeMap, and the
+    // generic warp helper's predicate wait would otherwise discard it.
+    primary.flush();
+    primary.say(&format!("@warp {visit_map} {visit_x} {visit_y}"))?;
+    let visit_delta = format!("[KORANGAR-MAP-DISCOVERY:v1:visited:{account_id}:{visit_map}]");
+    let mut visit_events = Vec::new();
+    let mut arrived = false;
+    let mut discovery_delta_seen = false;
+    let deadline = Instant::now() + config.timeout;
+    while Instant::now() < deadline && (!arrived || !discovery_delta_seen) {
+        let events = primary.collect_for(Duration::from_millis(100));
+        for event in &events {
+            match event {
+                NetworkEvent::ChangeMap { map_name, .. } if map_name == visit_map => arrived = true,
+                NetworkEvent::ChangeMap { map_name, .. } => {
+                    return Err(format!("map-discovery warp landed on {map_name}, expected {visit_map}"));
+                }
+                NetworkEvent::ChatMessage {
+                    color: MessageColor::Server,
+                    text,
+                } if text.contains(&visit_delta) => discovery_delta_seen = true,
+                _ => {}
+            }
+        }
+        visit_events.extend(events);
+    }
+    if !arrived {
+        return Err(format!(
+            "map-discovery fixture did not arrive on {visit_map}; events: {visit_events:?}"
+        ));
+    }
     if primary.map_name != visit_map {
         return Err(format!(
             "map-discovery fixture expected {visit_map}, landed on {}",
             primary.map_name
         ));
     }
-    let visit_delta = format!("[KORANGAR-MAP-DISCOVERY:v1:visited:{account_id}:{visit_map}]");
-    primary.wait_for("first-visit account discovery delta", |event| match event {
-        NetworkEvent::ChatMessage {
-            color: MessageColor::Server,
-            text,
-        } if text.contains(&visit_delta) => Some(()),
-        _ => None,
-    })?;
+    if !discovery_delta_seen {
+        return Err(format!(
+            "first-visit account discovery delta for {visit_map} was not observed; events: {visit_events:?}"
+        ));
+    }
     let other_map_events = other_account.collect_for(Duration::from_millis(300));
     if other_map_events.iter().any(|event| {
         matches!(event, NetworkEvent::ChatMessage { color: MessageColor::Server, text }

@@ -4,7 +4,7 @@ use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use korangar_networking::{DEFAULT_HAIR_STYLE, NetworkEvent, NetworkingSystem};
-use ragnarok_packets::Sex;
+use ragnarok_packets::{DisappearanceReason, Sex, StatType};
 
 use crate::context::{Config, PACKET_VERSION, TestContext};
 use crate::scenarios::Scenario;
@@ -27,6 +27,10 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("logout-relogin", 1, logout_relogin),
         Scenario::new("respawn", 1, respawn),
     ]
+}
+
+pub fn death_recovery_scenario() -> Scenario {
+    Scenario::new("death-recovery-save-point", 10, death_recovery_save_point)
 }
 
 /// A character with zero `slotchange` entitlement must receive an explicit
@@ -858,6 +862,207 @@ fn respawn(config: &Config) -> Result<(), String> {
     context.say("@heal")?;
     context.pump(Duration::from_millis(300));
     context.net.disconnect_from_map_server();
+    Ok(())
+}
+
+/// Award controlled base/job EXP, die under the configured penalty, and verify
+/// that the save-point recovery refunds exactly half the measured loss once.
+fn death_recovery_save_point(config: &Config) -> Result<(), String> {
+    // Kill on the open field (penalty enabled), then respawn in Prontera so the
+    // map-load hook checks the configured save-point recovery path.
+    const SAVE_MAP: &str = "prontera";
+    const SAVE_X: u16 = 155;
+    const SAVE_Y: u16 = 180;
+    const DEATH_MAP: &str = "prt_fild08";
+    const DEATH_X: u16 = 286;
+    const DEATH_Y: u16 = 338;
+    const QUEST_AWARD_NPC_X: u16 = 170;
+    const QUEST_AWARD_NPC_Y: u16 = 200;
+
+    let mut context = TestContext::connect(config)?;
+    context.ensure_job(1)?;
+    context.ensure_base_level(50)?;
+    // A 1% penalty can floor to zero at the first job level. Raise the
+    // controlled fixture so this acceptance checks both EXP pools.
+    context.flush();
+    context.say("@jlevel 19")?;
+    context.wait_for("JobLevel >= 20 for measurable death penalty", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::JobLevel(value),
+        } if (20..50).contains(value) => Some(()),
+        _ => None,
+    })?;
+    context.warp(SAVE_MAP, SAVE_X, SAVE_Y)?;
+    context.say("@save")?;
+    context.pump(Duration::from_millis(200));
+
+    // The disposable integration runner enables this quest-award fixture only
+    // for headless tests. Clear its character quest so repeated test runs can
+    // safely obtain the same controlled EXP award.
+    context.say("@quest del 2000")?;
+    context.warp(DEATH_MAP, DEATH_X, DEATH_Y)?;
+    context.warp("prontera", QUEST_AWARD_NPC_X - 2, QUEST_AWARD_NPC_Y)?;
+    context.pump(Duration::from_millis(250));
+    let npc_id = context
+        .entities
+        .iter()
+        .find(|(_, entity)| {
+            let position = entity.position.tile_position();
+            position.x == QUEST_AWARD_NPC_X && position.y == QUEST_AWARD_NPC_Y
+        })
+        .map(|(id, _)| *id)
+        .ok_or("EXP quest-award test NPC was not visible at Prontera (170,200)")?;
+
+    context.flush();
+    context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.wait_for("EXP fixture first page", |event| match event {
+        NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+
+    let award_events = context.collect_for(Duration::from_millis(600));
+    let mut gained_base = false;
+    let mut gained_job = false;
+    let mut base_before_death = None;
+    let mut job_before_death = None;
+    for event in &award_events {
+        match event {
+            NetworkEvent::GainedExperience {
+                amount: 1000,
+                experience_type: ragnarok_packets::ExperienceType::BaseExperience,
+                ..
+            } => gained_base = true,
+            NetworkEvent::GainedExperience {
+                amount: 500,
+                experience_type: ragnarok_packets::ExperienceType::JobExperience,
+                ..
+            } => gained_job = true,
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::BaseExperience(value),
+            } => base_before_death = Some(*value),
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::JobExperience(value),
+            } => job_before_death = Some(*value),
+            _ => {}
+        }
+    }
+    if !gained_base || !gained_job {
+        return Err(format!(
+            "EXP fixture did not grant both controlled awards (base={gained_base}, job={gained_job}); events: {award_events:?}"
+        ));
+    }
+    let base_before_death = base_before_death.ok_or("base EXP update missing after controlled award")?;
+    let job_before_death = job_before_death.ok_or("job EXP update missing after controlled award")?;
+    if base_before_death == 0 || job_before_death == 0 {
+        return Err(format!(
+            "controlled award left insufficient EXP to test death loss (base={base_before_death}, job={job_before_death})"
+        ));
+    }
+    context.flush();
+    context.net.close_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(100));
+
+    context.warp(DEATH_MAP, DEATH_X, DEATH_Y)?;
+    let player_id = context.player_id;
+    context.flush();
+    context.say("@kill")?;
+
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let mut death_events = Vec::new();
+    let mut died = false;
+    while Instant::now() < deadline && !died {
+        let events = context.collect_for(Duration::from_millis(100));
+        died = events.iter().any(
+            |event| matches!(event, NetworkEvent::RemoveEntity { entity_id, reason: DisappearanceReason::Died } if *entity_id == player_id),
+        );
+        death_events.extend(events);
+    }
+    if !died {
+        return Err(format!("@kill did not produce own-entity death; events: {death_events:?}"));
+    }
+    // Death and EXP status packets are adjacent but not guaranteed to land in
+    // the same network tick. Drain the tail before reading the two pools.
+    death_events.extend(context.collect_for(Duration::from_millis(300)));
+    let mut base_after_death = None;
+    let mut job_after_death = None;
+    for event in &death_events {
+        match event {
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::BaseExperience(value),
+            } => base_after_death = Some(*value),
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::JobExperience(value),
+            } => job_after_death = Some(*value),
+            _ => {}
+        }
+    }
+    let base_after_death =
+        base_after_death.ok_or_else(|| format!("server did not send base EXP after death penalty; events: {death_events:?}"))?;
+    let job_after_death =
+        job_after_death.ok_or_else(|| format!("server did not send job EXP after death penalty; events: {death_events:?}"))?;
+    if base_after_death >= base_before_death || job_after_death >= job_before_death {
+        return Err(format!(
+            "configured death penalty did not reduce both EXP pools: base {base_before_death}->{base_after_death}, job \
+             {job_before_death}->{job_after_death}"
+        ));
+    }
+
+    context.flush();
+    context.net.respawn().map_err(|_| "disconnected")?;
+    let map_name = context.wait_for("respawn at death-recovery save point", |event| match event {
+        NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
+        _ => None,
+    })?;
+    if map_name != SAVE_MAP {
+        return Err(format!("respawned on {map_name:?}, expected save map {SAVE_MAP:?}"));
+    }
+    context.net.map_loaded().map_err(|_| "disconnected")?;
+
+    let expected_base_refund = (base_before_death - base_after_death) / 2;
+    let expected_job_refund = (job_before_death - job_after_death) / 2;
+    let mut recovery_events = Vec::new();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let mut recovery_message = None;
+    while Instant::now() < deadline && recovery_message.is_none() {
+        let events = context.collect_for(Duration::from_millis(100));
+        recovery_message = events.iter().find_map(|event| match event {
+            NetworkEvent::ChatMessage {
+                text,
+                color: korangar_networking::MessageColor::Server,
+            } if text.starts_with("Korangar recovery: restored ") => Some(text.clone()),
+            _ => None,
+        });
+        recovery_events.extend(events);
+    }
+    let recovery_message =
+        recovery_message.ok_or_else(|| format!("save-point respawn did not produce death recovery; events: {recovery_events:?}"))?;
+    let amounts = recovery_message
+        .strip_prefix("Korangar recovery: restored ")
+        .and_then(|text| text.split_once(" base and "))
+        .and_then(|(base, job)| Some((base.parse::<u64>().ok()?, job.strip_suffix(" job EXP.")?.parse::<u64>().ok()?)))
+        .ok_or_else(|| format!("could not parse recovery amount report: {recovery_message:?}"))?;
+    if amounts != (expected_base_refund, expected_job_refund) {
+        return Err(format!(
+            "save-point recovery mismatch: reported base/job {:?}, expected half of measured loss ({expected_base_refund}, \
+             {expected_job_refund})",
+            amounts
+        ));
+    }
+
+    // A repeated map-load acknowledgement must not pay the already-consumed
+    // ledger again.
+    context.net.map_loaded().map_err(|_| "disconnected")?;
+    let duplicate = context.collect_for(Duration::from_millis(300));
+    if duplicate.iter().any(|event| {
+        matches!(event, NetworkEvent::ChatMessage { text, color: korangar_networking::MessageColor::Server } if text.starts_with("Korangar recovery: restored "))
+    }) {
+        return Err("repeated map-load acknowledgement duplicated the death refund".to_owned());
+    }
+    context.say("@heal")?;
+    context.say("@quest del 2000")?;
+    context.pump(Duration::from_millis(200));
     Ok(())
 }
 
