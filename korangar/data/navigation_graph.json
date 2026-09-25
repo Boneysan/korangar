@@ -1,13 +1,50 @@
 {
   "coverage": {
     "active_script_files_scanned": 653,
+    "authored_services": 2,
     "coordinate_validation": "map names validated against db/map_index.txt; map cache unavailable to this generator",
-    "directed_edges": 3183,
+    "directed_edges": 3185,
     "maps_with_edges": 538,
     "unsupported_static_warps": [],
-    "weakly_connected_components": 35
+    "weakly_connected_components": 34
   },
   "edges": [
+    {
+      "action": "Talk to the Sailor and choose the return option.",
+      "availability": "always",
+      "from": {
+        "map": "izlu2dun",
+        "x": 108,
+        "y": 27
+      },
+      "id": "service-byalan-return-sailor",
+      "kind": "npc_service",
+      "requirements": "No fare.",
+      "source": "npc/cities/izlude.txt:511-523",
+      "to": {
+        "map": "izlude",
+        "x": 197,
+        "y": 210
+      }
+    },
+    {
+      "action": "Talk to the Sailor and choose Byalan Island.",
+      "availability": "conditional",
+      "from": {
+        "map": "izlude",
+        "x": 197,
+        "y": 205
+      },
+      "id": "service-izlude-byalan-ferry",
+      "kind": "npc_service",
+      "requirements": "Costs 150 zeny.",
+      "source": "npc/re/cities/izlude.txt:37; npc/cities/izlude.txt:45-63",
+      "to": {
+        "map": "izlu2dun",
+        "x": 107,
+        "y": 50
+      }
+    },
     {
       "availability": "always",
       "from": {
@@ -57303,7 +57340,7 @@
       }
     }
   ],
-  "hercules_revision": "13d2ef394d5c46d3044622b848bc1124518861ce",
+  "hercules_revision": "0d2b1494eefb6653fd7ff25e7ad69934fa72e1ce",
   "hercules_worktree_dirty": true,
   "maps": [
     "abbey01",

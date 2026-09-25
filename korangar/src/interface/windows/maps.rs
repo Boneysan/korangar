@@ -744,9 +744,27 @@ fn destination_detail_lines(
         (Some(target), Some(edges)) if edges.is_empty() => ("Already at destination".to_owned(), format!("you are on {target}")),
         (Some(_), Some(edges)) => {
             let edge = edges[0];
+            let edge_action = if edge.kind == "npc_service" {
+                let action = edge.action.as_deref().unwrap_or("use the listed travel service");
+                let requirements = edge
+                    .requirements
+                    .as_deref()
+                    .map(|requirements| format!(" • {requirements}"))
+                    .unwrap_or_default();
+                let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
+                format!(
+                    "next: service at {} ({}, {}) — {action}{availability}{requirements} → {}",
+                    edge.from.map, edge.from.x, edge.from.y, edge.to.map
+                )
+            } else {
+                format!(
+                    "next: portal at {} ({}, {}) → {}",
+                    edge.from.map, edge.from.x, edge.from.y, edge.to.map
+                )
+            };
             (
-                format!("{} portal legs • {outgoing_exits} exits", edges.len()),
-                format!("next: {} ({}, {}) → {}", edge.from.map, edge.from.x, edge.from.y, edge.to.map),
+                format!("{} travel legs • {outgoing_exits} connections", edges.len()),
+                edge_action,
             )
         }
     };
@@ -870,9 +888,21 @@ mod tests {
         assert!(lines[2].contains("Static population:"));
         assert!(lines[3].contains("Alice"));
         assert!(lines[4].contains("Kafra Employee"));
-        assert!(lines[5].contains(&format!("{} portal legs", route.len())));
+        assert!(lines[5].contains(&format!("{} travel legs", route.len())));
         assert!(lines[5].contains(&route[0].from.map));
         assert!(lines[5].contains(&route[0].to.map));
+    }
+
+    #[test]
+    fn atlas_destination_details_explain_conditional_npc_service_legs() {
+        let route = route_edges("izlude", "iz_dun00").expect("authored conditional ferry route");
+        let lines = destination_detail_lines("izlude", Some("iz_dun00"), Some(&route), 2, Some("visited"), &[], None, &[]);
+
+        assert!(lines[5].contains("service at izlude (197, 205)"));
+        assert!(lines[5].contains("choose Byalan Island"));
+        assert!(lines[5].contains("conditional"));
+        assert!(lines[5].contains("150 zeny"));
+        assert!(lines[5].contains("izlu2dun"));
     }
 
     #[test]

@@ -1,0 +1,38 @@
+{
+  "services": [
+    {
+      "id": "service-izlude-byalan-ferry",
+      "availability": "conditional",
+      "action": "Talk to the Sailor and choose Byalan Island.",
+      "requirements": "Costs 150 zeny.",
+      "from": {
+        "map": "izlude",
+        "x": 197,
+        "y": 205
+      },
+      "to": {
+        "map": "izlu2dun",
+        "x": 107,
+        "y": 50
+      },
+      "source": "npc/re/cities/izlude.txt:37; npc/cities/izlude.txt:45-63"
+    },
+    {
+      "id": "service-byalan-return-sailor",
+      "availability": "always",
+      "action": "Talk to the Sailor and choose the return option.",
+      "requirements": "No fare.",
+      "from": {
+        "map": "izlu2dun",
+        "x": 108,
+        "y": 27
+      },
+      "to": {
+        "map": "izlude",
+        "x": 197,
+        "y": 210
+      },
+      "source": "npc/cities/izlude.txt:511-523"
+    }
+  ]
+}

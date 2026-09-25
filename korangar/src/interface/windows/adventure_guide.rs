@@ -322,7 +322,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     let mut exits: Vec<_> = graph
         .edges
         .iter()
-        .filter(|edge| edge.from.map.eq_ignore_ascii_case(map_name))
+        .filter(|edge| edge.kind == "walk_warp" && edge.from.map.eq_ignore_ascii_case(map_name))
         .collect();
     exits.sort_by_key(|edge| (edge.to.map.to_ascii_lowercase(), edge.from.x, edge.from.y, edge.to.x, edge.to.y));
     lines.push(format!("Verified outgoing portal connections: {}", exits.len()));
@@ -332,6 +332,30 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     }
     if exits.len() > 8 {
         lines.push(format!("{} additional exits omitted.", exits.len() - 8));
+    }
+    let mut services: Vec<_> = graph
+        .edges
+        .iter()
+        .filter(|edge| edge.kind == "npc_service" && edge.from.map.eq_ignore_ascii_case(map_name))
+        .collect();
+    services.sort_by_key(|edge| (edge.to.map.to_ascii_lowercase(), edge.from.x, edge.from.y));
+    if !services.is_empty() {
+        lines.push(format!("Verified NPC travel services: {}", services.len()));
+        for edge in services {
+            let action = edge.action.as_deref().unwrap_or("Talk to the listed NPC.");
+            let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
+            lines.push(format!(
+                "Service at ({}, {}): {action}{availability} → {}",
+                edge.from.x, edge.from.y, edge.to.map
+            ));
+            if let Some(requirements) = &edge.requirements {
+                lines.push(format!("Requirement: {requirements}"));
+            }
+            if let Some(source) = &edge.source {
+                lines.push(format!("Reviewed source: {source}"));
+            }
+            lines.push(format!("@route:{}", edge.to.map));
+        }
     }
     let mut routeable_poi_count = 0;
     for poi in town_pois {
@@ -1268,6 +1292,31 @@ mod tests {
         assert!(detail.iter().any(|line| line.contains("conditional/scripted spawns")));
         assert!(detail.iter().any(|line| line == "@route:prt_fild08"));
         assert!(detail.iter().any(|line| line.starts_with("@route:")));
+    }
+
+    #[test]
+    fn guide_map_details_show_npc_service_action_and_requirement() {
+        let index = crate::world::navigation_graph()
+            .maps
+            .iter()
+            .position(|map| map == "izlude")
+            .expect("Izlude is a known map");
+        let result = GuideResult {
+            label: "izlude".to_owned(),
+            kind: "map".to_owned(),
+            id: index as u32,
+        };
+        let detail = resolve_details(&result);
+
+        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 1"));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("choose Byalan Island.") && line.contains("(conditional)"))
+        );
+        assert!(detail.iter().any(|line| line == "Requirement: Costs 150 zeny."));
+        assert!(detail.iter().any(|line| line.contains("npc/re/cities/izlude.txt:37")));
+        assert!(detail.iter().any(|line| line == "@route:izlu2dun"));
     }
 
     #[test]

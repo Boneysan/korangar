@@ -18,8 +18,22 @@ pub struct NavigationGraph {
 #[derive(Deserialize)]
 pub struct NavigationEdge {
     pub id: String,
+    #[serde(default = "default_edge_kind")]
+    pub kind: String,
+    #[serde(default)]
+    pub availability: String,
+    #[serde(default)]
+    pub action: Option<String>,
+    #[serde(default)]
+    pub requirements: Option<String>,
+    #[serde(default)]
+    pub source: Option<String>,
     pub from: NavigationPosition,
     pub to: NavigationPosition,
+}
+
+fn default_edge_kind() -> String {
+    "walk_warp".to_owned()
 }
 
 #[derive(Deserialize)]
@@ -33,8 +47,8 @@ pub struct NavigationPosition {
     pub height: u16,
 }
 
-/// Resolve a hovered tile to a verified outgoing portal destination. The
-/// optional route target marks only the first edge on its shortest known path.
+/// Resolve a hovered tile to a verified outgoing walk-warp destination. The
+/// optional route target marks only the first walk-warp edge on its route.
 pub fn portal_label<'a>(
     edges: &'a [NavigationEdge],
     current_map: &str,
@@ -47,6 +61,9 @@ pub fn portal_label<'a>(
         .and_then(|route| route.into_iter().next());
 
     edges.iter().find_map(|edge| {
+        if edge.kind != "walk_warp" {
+            return None;
+        }
         let from = &edge.from;
         let inside = from.map.eq_ignore_ascii_case(current_map)
             && x >= from.x
@@ -123,7 +140,7 @@ pub fn next_route_edge(current_map: &str, target_map: &str) -> Option<&'static N
 
 #[cfg(test)]
 mod tests {
-    use super::{is_dangerous_map_level, navigation_graph, portal_label};
+    use super::{is_dangerous_map_level, navigation_graph, portal_label, route_edges};
 
     #[test]
     fn map_danger_level_uses_the_inclusive_fifteen_level_boundary() {
@@ -139,7 +156,9 @@ mod tests {
         let edge = graph
             .edges
             .iter()
-            .find(|edge| super::next_route_edge(&edge.from.map, &edge.to.map).is_some_and(|next| next.id == edge.id))
+            .find(|edge| {
+                edge.kind == "walk_warp" && super::next_route_edge(&edge.from.map, &edge.to.map).is_some_and(|next| next.id == edge.id)
+            })
             .expect("navigation graph has direct route edges");
 
         assert_eq!(
@@ -155,6 +174,24 @@ mod tests {
         assert_eq!(
             portal_label(&graph.edges, &edge.from.map, edge.from.x, edge.from.y, Some(&edge.from.map)),
             Some((edge.to.map.as_str(), false)),
+        );
+    }
+
+    #[test]
+    fn izlude_route_includes_conditional_ferry_service_then_dungeon_warp() {
+        let graph = navigation_graph();
+        let route = route_edges("izlude", "iz_dun00").expect("authored ferry route");
+
+        assert_eq!(route.len(), 2);
+        assert_eq!(route[0].id, "service-izlude-byalan-ferry");
+        assert_eq!(route[0].kind, "npc_service");
+        assert_eq!(route[0].availability, "conditional");
+        assert_eq!(route[0].requirements.as_deref(), Some("Costs 150 zeny."));
+        assert_eq!(route[1].kind, "walk_warp");
+
+        assert_eq!(
+            graph.maps.iter().find(|map| map.as_str() == "izlu2dun").map(String::as_str),
+            Some("izlu2dun")
         );
     }
 }

@@ -121,6 +121,64 @@ def parse_warps(root: Path, files: list[Path], known_maps: set[str]) -> tuple[li
     return edges, unsupported, errors
 
 
+def parse_authored_services(path: Path, known_maps: set[str]) -> tuple[list[dict], list[str]]:
+    """Load reviewed NPC/service hops that cannot be derived from static warp lines."""
+    artifact = json.loads(path.read_text(encoding="utf-8"))
+    services = artifact.get("services")
+    if not isinstance(services, list):
+        return [], [f"{path}: expected a 'services' array"]
+
+    edges: list[dict] = []
+    errors: list[str] = []
+    seen_ids: set[str] = set()
+    for index, service in enumerate(services):
+        label = f"{path}:services[{index}]"
+        if not isinstance(service, dict):
+            errors.append(f"{label}: expected an object")
+            continue
+        required = {"id", "availability", "action", "from", "to", "source"}
+        missing = required - service.keys()
+        if missing:
+            errors.append(f"{label}: missing {', '.join(sorted(missing))}")
+            continue
+        edge_id = service["id"]
+        if not isinstance(edge_id, str) or not edge_id.startswith("service-") or edge_id in seen_ids:
+            errors.append(f"{label}: service id must be unique and begin with 'service-'")
+            continue
+        seen_ids.add(edge_id)
+        locations_valid = True
+        for side in ("from", "to"):
+            position = service[side]
+            if not isinstance(position, dict) or not {"map", "x", "y"} <= position.keys():
+                errors.append(f"{label}: {side} must include map, x, and y")
+                locations_valid = False
+                continue
+            if position["map"] not in known_maps:
+                errors.append(f"{label}: unknown {side} map {position['map']!r}")
+                locations_valid = False
+            if any(not isinstance(position[key], int) or not 0 <= position[key] <= 65535 for key in ("x", "y")):
+                errors.append(f"{label}: {side} coordinates must be unsigned 16-bit integers")
+                locations_valid = False
+        if not locations_valid:
+            continue
+        if not isinstance(service["availability"], str) or service["availability"] not in {"always", "conditional", "unknown"}:
+            errors.append(f"{label}: availability must be always, conditional, or unknown")
+            continue
+        if (
+            not isinstance(service["action"], str)
+            or not service["action"].strip()
+            or not isinstance(service["source"], str)
+            or not service["source"].strip()
+        ):
+            errors.append(f"{label}: action and source must be non-empty strings")
+            continue
+        edge = dict(service)
+        edge["kind"] = "npc_service"
+        edge.setdefault("requirements", None)
+        edges.append(edge)
+    return edges, errors
+
+
 def coverage(edges: list[dict]) -> dict:
     maps = {edge["from"]["map"] for edge in edges} | {edge["to"]["map"] for edge in edges}
     neighbors = {name: set() for name in maps}
@@ -146,6 +204,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--hercules-root", type=Path, default=client_root.parent / "Hercules")
     parser.add_argument("--output", type=Path, default=client_root / "korangar" / "data" / "navigation_graph.json")
+    parser.add_argument(
+        "--services",
+        type=Path,
+        default=client_root / "korangar" / "data" / "navigation_services.json",
+        help="reviewed NPC/service edges authored outside static warp scripts",
+    )
     parser.add_argument("--check", action="store_true", help="fail if the generated artifact differs from the existing file")
     args = parser.parse_args()
 
@@ -158,9 +222,13 @@ def main() -> int:
     files = loaded_script_files(root, entry)
     known_maps = map_names(index)
     edges, unsupported, errors = parse_warps(root, files, known_maps)
+    services, service_errors = parse_authored_services(args.services, known_maps)
+    errors.extend(service_errors)
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
+    edges.extend(services)
+    edges.sort(key=lambda edge: edge["id"])
     used_maps = sorted({edge["from"]["map"] for edge in edges} | {edge["to"]["map"] for edge in edges})
     revision, dirty = source_revision(root)
     artifact = {
@@ -173,6 +241,7 @@ def main() -> int:
             **coverage(edges),
             "active_script_files_scanned": len(files),
             "unsupported_static_warps": unsupported,
+            "authored_services": len(services),
             "coordinate_validation": "map names validated against db/map_index.txt; map cache unavailable to this generator",
         },
     }
