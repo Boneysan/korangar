@@ -518,6 +518,57 @@ set -e
 stop_servers
 sleep 1
 
+# This scenario's client assertions prove visible state; keep the journal in
+# the disposable database and verify the server-side events and per-character
+# replay cursor directly before the database is dropped.
+if [ "$runner_exit" -eq 0 ] && python3 -c 'import json,sys; raise SystemExit(not any(item.get("name") == "dm-party-offline-replay" and item.get("outcome") == "pass" for item in json.load(open(sys.argv[1], encoding="utf-8")).get("scenarios", [])))' "$results_json"; then
+    dm_replay_violations=$(
+        "${mysql_admin[@]}" --batch --skip-column-names "$db_name" <<'SQL'
+SET @dm_replay_party = (
+    SELECT `party_id` FROM `dm_campaign_checkpoint_member`
+     WHERE `campaign_id` = 'seal_cascade' AND `char_id` = 150000 LIMIT 1
+);
+SELECT 'replay test party checkpoint missing' WHERE @dm_replay_party IS NULL OR @dm_replay_party = 0;
+SELECT 'quest start journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_replay_party
+       AND `kind` = 'quest_set' AND `name` = '20001'
+);
+SELECT 'flag set journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_replay_party
+       AND `kind` = 'flag_set' AND `name` = 'dm_replay_probe'
+);
+SELECT 'quest erase journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_replay_party
+       AND `kind` = 'quest_erase' AND `name` = '20001'
+);
+SELECT 'flag clear journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_replay_party
+       AND `kind` = 'flag_clear' AND `name` = 'dm_replay_probe'
+);
+SELECT 'returning member cursor missing or behind event journal'
+  FROM (
+      SELECT MAX(e.`id`) AS `journal_tail`, MAX(c.`last_event_id`) AS `cursor_id`
+        FROM `dm_campaign_party_event` e
+        LEFT JOIN `dm_campaign_party_cursor` c
+          ON c.`campaign_id` = e.`campaign_id` AND c.`party_id` = e.`party_id` AND c.`char_id` = 150001
+       WHERE e.`campaign_id` = 'seal_cascade' AND e.`party_id` = @dm_replay_party
+  ) AS `replay_cursor`
+ WHERE `journal_tail` IS NULL OR `cursor_id` IS NULL OR `cursor_id` < `journal_tail`;
+SQL
+    )
+    if [ -n "$dm_replay_violations" ]; then
+        echo "DM party replay SQL audit failed:" >&2
+        printf '  %s\n' "$dm_replay_violations" >&2
+        runner_exit=1
+    else
+        echo "DM party replay SQL audit: event journal and returning-character cursor are clean"
+    fi
+fi
+
 fixture_violations=$("${mysql_admin[@]}" --batch --skip-column-names "$db_name" <<'SQL'
 SELECT CONCAT('online characters: ', COUNT(*)) FROM `char` WHERE `online` <> 0 HAVING COUNT(*) <> 0;
 SELECT CONCAT('temporary characters: ', COUNT(*)) FROM `char`

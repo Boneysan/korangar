@@ -344,12 +344,21 @@ fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
         Ok(())
     })();
 
-    let _ = primary.say(&format!("@dmflag clear {FLAG_NAME}"));
-    primary.pump(Duration::from_millis(100));
-    let _ = primary.say("@dm reset confirm");
-    primary.pump(Duration::from_millis(250));
     if let Some(partner) = partner.as_mut() {
+        // Keep the journal/cursors intact until the integration runner audits
+        // them. Clear the character state through real party transitions.
+        let _ = primary.say(&format!("@dmquest erase {QUEST_ID}"));
+        primary.pump(Duration::from_millis(150));
+        partner.pump(Duration::from_millis(150));
+        let _ = primary.say(&format!("@dmflag clear {FLAG_NAME}"));
+        primary.pump(Duration::from_millis(150));
+        partner.pump(Duration::from_millis(150));
+        let _ = primary.say("@dm mode off");
+        primary.pump(Duration::from_millis(150));
         let _ = leave_party_both(&mut primary, partner);
+    } else {
+        let _ = primary.say("@dm reset confirm");
+        primary.pump(Duration::from_millis(250));
     }
     result
 }
