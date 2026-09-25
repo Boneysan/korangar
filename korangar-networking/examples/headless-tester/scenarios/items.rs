@@ -27,6 +27,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("storage-persistence", 6, storage_persistence),
         Scenario::new("inventory-order", 6, inventory_order),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
+        Scenario::new("reset-command-behavior", 6, reset_command_behavior),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
@@ -1233,6 +1234,109 @@ fn stat_skill_points(config: &Config) -> Result<(), String> {
     // Re-heal/reset
     context.say("@reset")?;
     context.pump(Duration::from_millis(200));
+    Ok(())
+}
+
+/// The player-facing reset commands are free, affect only their own pool, and
+/// leave the resulting state intact across logout/relogin.
+fn reset_command_behavior(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let starting_job = context.job_id.0;
+    let starting_base_level = context.base_level;
+    context.ensure_job(7)?; // Knight: SM_BASH (5) is a stable tree fixture.
+    context.ensure_base_level(10)?;
+
+    // Start from a known stat baseline and allocate one visible point. The
+    // headless seats are GM fixtures, so @allskill seeds a deterministic
+    // learned skill for testing reset behavior without relying on novice
+    // quest-gated skills or manually earning job levels.
+    context.gm_expect_feedback("@streset")?;
+    let base_strength = context.wait_for("initial stat reset Strength", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::Strength(value, _),
+        } => Some(*value),
+        _ => None,
+    })?;
+    let starting_zeny = context.zeny;
+
+    context.flush();
+    context
+        .net
+        .request_stat_up(StatUpType::Strength { amount: 1 })
+        .map_err(|_| "disconnected")?;
+    context.wait_for("allocated Strength", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::Strength(value, _),
+        } if *value > base_strength => Some(*value),
+        _ => None,
+    })?;
+
+    context.gm_expect_feedback("@allskill")?;
+    context.wait_for("SM_BASH present in skill tree", |event| match event {
+        NetworkEvent::SkillTree { skill_information } => skill_information
+            .iter()
+            .find(|skill| skill.skill_id.0 == 5 && skill.skill_level.0 > 0)
+            .map(|skill| skill.skill_level.0),
+        _ => None,
+    })?;
+
+    context.gm_expect_feedback("@streset")?;
+    context.wait_for("stat reset restoring Strength", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::Strength(value, _),
+        } if *value == base_strength => Some(*value),
+        _ => None,
+    })?;
+    if context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == 5)
+        .is_none_or(|skill| skill.skill_level.0 == 0)
+    {
+        return Err("@streset removed the independently learned SM_BASH skill".to_owned());
+    }
+
+    context.gm_expect_feedback("@skreset")?;
+    context.wait_for("skill reset clearing SM_BASH", |event| match event {
+        NetworkEvent::SkillTree { skill_information } => Some(
+            skill_information
+                .iter()
+                .find(|skill| skill.skill_id.0 == 5)
+                .map_or(0, |skill| skill.skill_level.0),
+        ),
+        _ => None,
+    })?;
+    let cleared_skill_level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == 5)
+        .map_or(0, |skill| skill.skill_level.0);
+    if cleared_skill_level != 0 {
+        return Err(format!("@skreset left SM_BASH at level {cleared_skill_level}"));
+    }
+    if context.zeny != starting_zeny {
+        return Err(format!("free reset commands changed zeny: {starting_zeny} -> {}", context.zeny));
+    }
+
+    context.net.disconnect_from_map_server();
+    drop(context);
+    std::thread::sleep(Duration::from_millis(700));
+    let mut context = TestContext::connect(config)?;
+    if context.skills.iter().any(|skill| skill.skill_id.0 == 5 && skill.skill_level.0 != 0) {
+        return Err(format!("SM_BASH reset did not persist across relog: {:?}", context.skills));
+    }
+    if context.zeny != starting_zeny {
+        return Err(format!(
+            "relogin changed zeny after free resets: {starting_zeny} -> {}",
+            context.zeny
+        ));
+    }
+
+    // Leave the shared character's class and level unchanged for later tests.
+    context.gm_expect_feedback("@streset")?;
+    context.gm_expect_feedback("@skreset")?;
+    context.ensure_job(starting_job)?;
+    context.ensure_base_level(starting_base_level)?;
     Ok(())
 }
 
