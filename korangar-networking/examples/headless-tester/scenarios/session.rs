@@ -1041,10 +1041,17 @@ fn death_recovery_save_point(config: &Config) -> Result<(), String> {
     } else {
         context.flush();
         context.net.respawn().map_err(|_| "disconnected")?;
-        let map_name = context.wait_for("respawn at death-recovery save point", |event| match event {
-            NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
-            _ => None,
-        })?;
+        let map_name = context
+            .wait_for("respawn at death-recovery save point", |event| match event {
+                NetworkEvent::ChangeMap { map_name, .. } => Some(map_name.clone()),
+                _ => None,
+            })
+            .map_err(|error| {
+                format!(
+                    "{error}; reconnect state before respawn was {:?}({},{})",
+                    context.map_name, context.position.x, context.position.y
+                )
+            })?;
         if map_name != SAVE_MAP {
             return Err(format!("respawned on {map_name:?}, expected save map {SAVE_MAP:?}"));
         }
