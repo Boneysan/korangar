@@ -47,7 +47,12 @@ case "$db_host$db_admin$db_password" in
     ;;
 esac
 
-mysql_admin=(mysql --protocol=tcp --host="$db_host" --port="$db_port" --user="$db_admin")
+if [ "${INTEGRATION_DB_CLIENT_DOCKER:-0}" = 1 ]; then
+    db_client_image="${INTEGRATION_DB_CLIENT_IMAGE:-mariadb:11.8}"
+    mysql_admin=(docker run --rm -i --network host "$db_client_image" mariadb --protocol=tcp --host="$db_host" --port="$db_port" --user="$db_admin")
+else
+    mysql_admin=(mysql --protocol=tcp --host="$db_host" --port="$db_port" --user="$db_admin")
+fi
 if [ -n "$db_password" ]; then
     mysql_admin+=("--password=$db_password")
 fi
@@ -302,7 +307,13 @@ fi
 
 # Prerequisites for actually standing up a run. Checked below the seam because
 # a test that only sources this file for its functions needs none of them.
-for command_name in mysql nc cargo git; do
+required_commands=(nc cargo git)
+if [ "${INTEGRATION_DB_CLIENT_DOCKER:-0}" = 1 ]; then
+    required_commands+=(docker)
+else
+    required_commands+=(mysql)
+fi
+for command_name in "${required_commands[@]}"; do
     command -v "$command_name" >/dev/null 2>&1 || {
         echo "error: required command not found: $command_name" >&2
         exit 2
@@ -384,7 +395,9 @@ VALUES
     (150000, 2000000, 0, 'HeadlessOne', 0, 99, 10,
      1000, 1000, 100, 100, 'prontera', 155, 180, 'prontera', 155, 180, 0, 'M'),
     (150001, 2000001, 0, 'HeadlessTwo', 0, 99, 10,
-     1000, 1000, 100, 100, 'prontera', 156, 180, 'prontera', 156, 180, 10000, 'F');
+     1000, 1000, 100, 100, 'prontera', 156, 180, 'prontera', 156, 180, 10000, 'F'),
+    (150002, 2000000, 1, 'HeadlessAlt', 0, 99, 10,
+     1000, 1000, 100, 100, 'prontera', 155, 181, 'prontera', 155, 180, 0, 'M');
 SQL
 
 mkdir -p "$hercules_repo/conf/import"
@@ -566,6 +579,61 @@ SQL
         runner_exit=1
     else
         echo "DM party replay SQL audit: event journal and returning-character cursor are clean"
+    fi
+fi
+
+if [ "$runner_exit" -eq 0 ] && python3 -c 'import json,sys; raise SystemExit(not any(item.get("name") == "dm-party-alternate-character" and item.get("outcome") == "pass" for item in json.load(open(sys.argv[1], encoding="utf-8")).get("scenarios", [])))' "$results_json"; then
+    dm_alt_violations=$(
+        "${mysql_admin[@]}" --batch --skip-column-names "$db_name" <<'SQL'
+SET @dm_alt_party = (
+    SELECT `party_id` FROM `dm_campaign_checkpoint_member`
+     WHERE `campaign_id` = 'seal_cascade' AND `char_id` = 150002 LIMIT 1
+);
+SELECT 'alternate character was not enrolled after party join' WHERE @dm_alt_party IS NULL OR @dm_alt_party = 0;
+SELECT 'alternate quest replay journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_alt_party
+       AND `kind` = 'quest_set' AND `name` = '20002'
+);
+SELECT 'alternate flag replay journal event missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_alt_party
+       AND `kind` = 'flag_set' AND `name` = 'dm_alt_probe'
+);
+SELECT 'alternate cleanup transitions missing' WHERE NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_alt_party
+       AND `kind` = 'quest_erase' AND `name` = '20002'
+) OR NOT EXISTS (
+    SELECT 1 FROM `dm_campaign_party_event`
+     WHERE `campaign_id` = 'seal_cascade' AND `party_id` = @dm_alt_party
+       AND `kind` = 'flag_clear' AND `name` = 'dm_alt_probe'
+);
+SELECT CONCAT('primary/alternate replay cursors missing or behind journal tail: tail=',
+              COALESCE(`journal_tail`, 'NULL'), ', primary=',
+              COALESCE(`primary_cursor`, 'NULL'), ', alternate=',
+              COALESCE(`alternate_cursor`, 'NULL'))
+  FROM (
+      SELECT MAX(e.`id`) AS `journal_tail`,
+             MAX(CASE WHEN c.`char_id` = 150000 THEN c.`last_event_id` END) AS `primary_cursor`,
+             MAX(CASE WHEN c.`char_id` = 150002 THEN c.`last_event_id` END) AS `alternate_cursor`
+        FROM `dm_campaign_party_event` e
+        LEFT JOIN `dm_campaign_party_cursor` c
+          ON c.`campaign_id` = e.`campaign_id` AND c.`party_id` = e.`party_id`
+         AND c.`char_id` IN (150000, 150002)
+       WHERE e.`campaign_id` = 'seal_cascade' AND e.`party_id` = @dm_alt_party
+  ) AS `alt_replay_cursor`
+ WHERE `journal_tail` IS NULL
+    OR `primary_cursor` IS NULL OR `primary_cursor` < `journal_tail`
+    OR `alternate_cursor` IS NULL OR `alternate_cursor` < `journal_tail`;
+SQL
+    )
+    if [ -n "$dm_alt_violations" ]; then
+        echo "DM alternate-character SQL audit failed:" >&2
+        printf '  %s\n' "$dm_alt_violations" >&2
+        runner_exit=1
+    else
+        echo "DM alternate-character SQL audit: enrollment, replay, and both cursors are clean"
     fi
 fi
 

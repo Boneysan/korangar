@@ -12,7 +12,7 @@ use ragnarok_packets::ExperienceType;
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
-use crate::scenarios::social::{connect_pair, form_party, leave_party_both};
+use crate::scenarios::social::{connect_pair, create_party, ensure_no_party, form_party, leave_party_both};
 
 pub fn scenarios() -> Vec<Scenario> {
     vec![
@@ -26,6 +26,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-quest-lifecycle", 9, dm_quest_lifecycle),
         Scenario::new("quest-log-multi", 9, quest_log_multi),
         Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
+        Scenario::new("dm-party-alternate-character", 9, dm_party_alternate_character),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
         Scenario::new("dm-experience", 9, dm_experience),
         Scenario::new("dm-warp-recall", 9, dm_warp_recall),
@@ -361,6 +362,104 @@ fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
         primary.pump(Duration::from_millis(250));
     }
     result
+}
+
+/// A second character on the campaign owner's account stays isolated until it
+/// explicitly joins the active party, then catches up from the same journal.
+fn dm_party_alternate_character(config: &Config) -> Result<(), String> {
+    const QUEST_ID: u32 = 20002;
+    const FLAG_NAME: &str = "dm_alt_probe";
+
+    let mut primary = TestContext::connect(config)?;
+    let mut partner = TestContext::connect_partner(config)?;
+    if primary.account_id == partner.account_id {
+        return Err("alternate-character fixture requires two distinct accounts".to_owned());
+    }
+    ensure_no_party(&mut primary);
+    ensure_no_party(&mut partner);
+    create_party(&mut partner)?;
+    primary.flush();
+    partner
+        .net
+        .invite_to_party(&primary.character_name)
+        .map_err(|_| "partner disconnected while inviting primary")?;
+    let party_id = primary.wait_for("primary accepts partner-led party", |event| match event {
+        NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+        _ => None,
+    })?;
+    primary.net.accept_party_invite(party_id).map_err(|_| "primary disconnected")?;
+    partner.wait_for("primary joins partner-led party", |event| match event {
+        NetworkEvent::PartyMemberAdded { member } if member.player_name == primary.character_name => Some(()),
+        _ => None,
+    })?;
+    say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+    say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+    primary.say(&format!("@dmquest start {QUEST_ID}"))?;
+    primary.wait_for("primary starts alternate-character campaign quest", |event| match event {
+        NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+        _ => None,
+    })?;
+    say_expect(&mut primary, &format!("@dmflag set {FLAG_NAME} 23"), "set to 23")?;
+
+    let primary_account = primary.account_id;
+    drop(primary);
+    let mut alternate = TestContext::connect_as(config, &config.username, &config.password, Some("HeadlessAlt"), None)?;
+    if alternate.account_id != primary_account {
+        return Err("alternate character did not authenticate to the primary account".to_owned());
+    }
+    let pre_join_events = alternate.collect_for(Duration::from_millis(300));
+    if pre_join_events.iter().any(|event| {
+        matches!(event,
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID
+        )
+    }) {
+        return Err("same-account alternate received a campaign quest before joining the party".to_owned());
+    }
+    say_expect(&mut alternate, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 0"))?;
+
+    partner
+        .net
+        .invite_to_party(&alternate.character_name)
+        .map_err(|_| "partner disconnected before inviting alternate")?;
+    let party_id = alternate.wait_for("alternate receives party invitation", |event| match event {
+        NetworkEvent::PartyInvite { party_id, .. } => Some(*party_id),
+        _ => None,
+    })?;
+    alternate.net.accept_party_invite(party_id).map_err(|_| "alternate disconnected")?;
+    partner.wait_for("alternate joins active campaign party", |event| match event {
+        NetworkEvent::PartyMemberAdded { member } if member.player_name == alternate.character_name => Some(()),
+        _ => None,
+    })?;
+    alternate.wait_for("campaign quest replay after alternate joins", |event| match event {
+        NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_ID => Some(()),
+        _ => None,
+    })?;
+    say_expect(
+        &mut alternate,
+        &format!("@dmflag get {FLAG_NAME}"),
+        &format!("{FLAG_NAME} = 23"),
+    )?;
+
+    // Journal cleanup as ordinary character-scoped transitions so the
+    // disposable SQL audit can verify each enrolled cursor reaches the tail.
+    let _ = alternate.say(&format!("@dmquest erase {QUEST_ID}"));
+    alternate.pump(Duration::from_millis(150));
+    partner.pump(Duration::from_millis(150));
+    let _ = alternate.say(&format!("@dmflag clear {FLAG_NAME}"));
+    alternate.pump(Duration::from_millis(150));
+    partner.pump(Duration::from_millis(150));
+    let _ = alternate.net.leave_party();
+    alternate.pump(Duration::from_millis(300));
+    drop(alternate);
+    let mut primary = TestContext::connect(config)?;
+    say_expect(&mut primary, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 0"))?;
+    let _ = primary.say("@dm mode off");
+    primary.pump(Duration::from_millis(150));
+    let _ = primary.net.leave_party();
+    primary.pump(Duration::from_millis(300));
+    let _ = partner.net.leave_party();
+    partner.pump(Duration::from_millis(300));
+    Ok(())
 }
 
 /// Read the wallet through an explicit `@zeny` round trip. The map-login
