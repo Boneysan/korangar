@@ -194,4 +194,21 @@ mod tests {
             Some("izlu2dun")
         );
     }
+
+    #[test]
+    fn service_steps_are_not_portals_and_the_post_ferry_warp_is_the_next_exit() {
+        let graph = navigation_graph();
+        assert_eq!(
+            portal_label(&graph.edges, "izlude", 197, 205, Some("iz_dun00")),
+            None,
+            "an NPC service is a route step, not a walk warp entity"
+        );
+
+        let next = super::next_route_edge("izlu2dun", "iz_dun00").expect("dungeon entrance warp");
+        assert_eq!(next.kind, "walk_warp");
+        assert_eq!(
+            portal_label(&graph.edges, "izlu2dun", next.from.x, next.from.y, Some("iz_dun00")),
+            Some(("iz_dun00", true))
+        );
+    }
 }
