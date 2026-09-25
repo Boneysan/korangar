@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "13d2ef394d5c46d3044622b848bc1124518861ce",
+ "source_revision": "6ea934bf3878c2cca31842adf2d9e2634f8ec2dc",
  "source_worktree_dirty": true,
  "mode": "renewal",
  "source": "db/quest_db.conf",
@@ -11097,7 +11097,12 @@
       "questprogress",
       "setquest"
      ],
-     "source_line": 60
+     "source_line": 60,
+     "reviewed_role": "offer",
+     "reviewed_source_lines": [
+      90
+     ],
+     "review_evidence": "The NPC directly offers the missing-puppies task in dialogue before setting quest 9030."
     }
    ],
    "source_record": "quest 9030"
@@ -11118,7 +11123,12 @@
       "questprogress",
       "erasequest"
      ],
-     "source_line": 66
+     "source_line": 66,
+     "reviewed_role": "turn_in",
+     "reviewed_source_lines": [
+      73
+     ],
+     "review_evidence": "The NPC acknowledges the three found puppies, grants the reward, then erases quest 9031."
     }
    ],
    "source_record": "quest 9031"

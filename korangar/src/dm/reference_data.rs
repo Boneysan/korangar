@@ -267,6 +267,12 @@ pub struct ReferenceQuestNpc {
     pub source_line: u32,
     #[serde(default)]
     pub uses: Vec<String>,
+    #[serde(default)]
+    pub reviewed_role: Option<String>,
+    #[serde(default)]
+    pub reviewed_source_lines: Vec<u32>,
+    #[serde(default)]
+    pub review_evidence: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -376,7 +382,18 @@ impl ReferenceData {
 
         for quest in &quests.entries {
             if quest.npc_references.iter().any(|npc| {
-                npc.name.trim().is_empty() || npc.map_name.trim().is_empty() || npc.source_path.trim().is_empty() || npc.source_line == 0
+                npc.name.trim().is_empty()
+                    || npc.map_name.trim().is_empty()
+                    || npc.source_path.trim().is_empty()
+                    || npc.source_line == 0
+                    || npc
+                        .reviewed_role
+                        .as_deref()
+                        .is_some_and(|role| !matches!(role, "offer" | "turn_in"))
+                    || npc.reviewed_role.is_some()
+                        != (npc.review_evidence.as_deref().is_some_and(|note| !note.trim().is_empty())
+                            && !npc.reviewed_source_lines.is_empty()
+                            && npc.reviewed_source_lines.iter().all(|line| *line > 0))
             }) {
                 return Err(format!("quest {} has an invalid NPC script reference", quest.id));
             }

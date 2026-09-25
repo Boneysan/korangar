@@ -274,10 +274,27 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
         }
     }
     for npc in quest.npc_references.iter().take(8) {
-        lines.push(format!(
-            "Related NPC script reference: {} — {} ({}, {}) [{}:{}]",
-            npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.source_line
-        ));
+        let reviewed_label = match npc.reviewed_role.as_deref() {
+            Some("offer") => Some("Reviewed quest offer"),
+            Some("turn_in") => Some("Reviewed quest turn-in"),
+            _ => None,
+        };
+        if let Some(label) = reviewed_label {
+            lines.push(format!(
+                "{label}: {} — {} ({}, {}) [{}; source lines {:?}]",
+                npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.reviewed_source_lines
+            ));
+            if let Some(evidence) = &npc.review_evidence {
+                lines.push(format!(
+                    "Source-reviewed route: {evidence} Requirements or availability may still apply."
+                ));
+            }
+        } else {
+            lines.push(format!(
+                "Related NPC script reference: {} — {} ({}, {}) [{}:{}]",
+                npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.source_line
+            ));
+        }
         if !npc.uses.is_empty() {
             let clues = npc
                 .uses
@@ -296,8 +313,13 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             ));
         }
         if is_graph_map(&npc.map_name) {
+            let route_label = match npc.reviewed_role.as_deref() {
+                Some("offer") => "Route to quest offer",
+                Some("turn_in") => "Route to quest turn-in",
+                _ => "Route to related script NPC",
+            };
             lines.push(format!(
-                "@route-cell:{}:{}:{}|Route to {} — {}",
+                "@route-cell:{}:{}:{}|{route_label}: {} — {}",
                 npc.map_name, npc.x, npc.y, npc.name, npc.map_name
             ));
         } else {
@@ -1484,7 +1506,7 @@ mod tests {
 
     #[test]
     fn quest_npc_script_reference_offers_an_exact_cell_route() {
-        let quest = reference_data().quest_by_id(9030).expect("tracked Lost Puppies quest");
+        let quest = reference_data().quest_by_id(9030).expect("tracked Lost Puppies offer quest");
         let detail = quest_reference_details(quest);
         let route = detail
             .iter()
@@ -1492,7 +1514,31 @@ mod tests {
             .expect("NPC script cell has a route action");
         assert_eq!(
             route,
-            ("brasilis".to_owned(), 297, 307, "Route to Angelo#br — brasilis".to_owned())
+            (
+                "brasilis".to_owned(),
+                297,
+                307,
+                "Route to quest offer: Angelo#br — brasilis".to_owned()
+            )
+        );
+        assert!(detail.iter().any(|line| line.contains("Reviewed quest offer: Angelo#br")));
+        assert!(detail.iter().any(|line| line.contains("source lines [90]")));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("Requirements or availability may still apply"))
+        );
+    }
+
+    #[test]
+    fn reviewed_quest_turn_in_routes_to_the_source_verified_npc() {
+        let quest = reference_data().quest_by_id(9031).expect("tracked Lost Puppies turn-in quest");
+        let detail = quest_reference_details(quest);
+        assert!(detail.iter().any(|line| line.contains("Reviewed quest turn-in: Angelo#br")));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.starts_with("@route-cell:brasilis:297:307|Route to quest turn-in:"))
         );
     }
 
@@ -1510,6 +1556,9 @@ mod tests {
                 source_path: "npc/re/quests/test.txt".to_owned(),
                 source_line: 12,
                 uses: vec!["setquest".to_owned(), "completequest".to_owned()],
+                reviewed_role: None,
+                reviewed_source_lines: Vec::new(),
+                review_evidence: None,
             }],
         };
         let detail = quest_reference_details(&quest);

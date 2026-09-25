@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "quest_id": 9030,
+      "npc_name": "Angelo#br",
+      "map_name": "brasilis",
+      "x": 297,
+      "y": 307,
+      "source_path": "npc/re/quests/quests_brasilis.txt",
+      "role": "offer",
+      "source_lines": [90],
+      "evidence": "The NPC directly offers the missing-puppies task in dialogue before setting quest 9030."
+    },
+    {
+      "quest_id": 9031,
+      "npc_name": "Angelo#br",
+      "map_name": "brasilis",
+      "x": 297,
+      "y": 307,
+      "source_path": "npc/re/quests/quests_brasilis.txt",
+      "role": "turn_in",
+      "source_lines": [73],
+      "evidence": "The NPC acknowledges the three found puppies, grants the reward, then erases quest 9031."
+    }
+  ]
+}

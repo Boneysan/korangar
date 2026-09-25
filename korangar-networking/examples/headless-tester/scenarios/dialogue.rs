@@ -15,7 +15,129 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dialogue-number", 7, dialogue_number),
         Scenario::new("dialogue-string", 7, dialogue_string),
         Scenario::new("dialogue-warp", 7, dialogue_warp),
+        Scenario::new("quest-reviewed-brasilis-npc-routes", 7, quest_reviewed_brasilis_npc_routes),
     ]
+}
+
+/// Verify both source-reviewed Guide routes against the live Brasilis NPC:
+/// Angelo offers 9030 in dialogue, then handles the 9031 turn-in and starts
+/// the repeat cooldown quest. Quest setup for the turn-in is deliberately
+/// synthetic (`@quest add`); objective completion is not claimed here.
+fn quest_reviewed_brasilis_npc_routes(config: &Config) -> Result<(), String> {
+    const OFFER_QUEST: u32 = 9030;
+    const TURN_IN_QUEST: u32 = 9031;
+    const COOLDOWN_QUEST: u32 = 9032;
+    const NPC_X: u16 = 297;
+    const NPC_Y: u16 = 307;
+
+    let mut context = TestContext::connect(config)?;
+    context.ensure_base_level(40)?;
+    let mut npc_id_for_cleanup = None;
+    let result = (|| {
+        for quest_id in [OFFER_QUEST, TURN_IN_QUEST, COOLDOWN_QUEST] {
+            context.say(&format!("@quest del {quest_id}"))?;
+        }
+        context.warp("brasilis", NPC_X.saturating_sub(3), NPC_Y)?;
+        context.pump(Duration::from_millis(300));
+        let npc_id = context
+            .entities
+            .iter()
+            .find(|(_, entity)| {
+                let position = entity.position.tile_position();
+                position.x == NPC_X && position.y == NPC_Y
+            })
+            .map(|(id, _)| *id)
+            .ok_or("Angelo#br was not visible at reviewed cell brasilis (297,307)")?;
+        npc_id_for_cleanup = Some(npc_id);
+
+        context.flush();
+        context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+        let (offer_text, offer_events) = collect_dialog_page(&mut context, npc_id, "Angelo quest offer dialogue")?;
+        if !offer_text.contains("Puppies have been disappearing") {
+            return Err(format!("reviewed offer NPC produced unexpected dialogue page: {offer_text:?}"));
+        }
+        if !offer_events
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id))
+        {
+            return Err("Angelo offer page did not end with a next button".to_owned());
+        }
+        context.flush();
+        context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+        let (task_text, task_events) = collect_dialog_page(&mut context, npc_id, "Angelo quest task dialogue")?;
+        if !task_text.contains("find") || !task_text.contains("puppies") {
+            return Err(format!("reviewed offer NPC produced unexpected task text: {task_text:?}"));
+        }
+        if !task_events
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == OFFER_QUEST))
+        {
+            return Err("Angelo's offer dialogue did not add quest 9030".to_owned());
+        }
+        if !task_events
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::AddCloseButton { npc_id: id } if *id == npc_id))
+        {
+            return Err("Angelo quest offer page did not end with a close button".to_owned());
+        }
+        context.flush();
+        context.net.close_dialog(npc_id).map_err(|_| "disconnected")?;
+
+        context.say(&format!("@quest del {OFFER_QUEST}"))?;
+        context.say(&format!("@quest add {TURN_IN_QUEST}"))?;
+        context.wait_for("synthetic quest 9031 setup", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == TURN_IN_QUEST => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+        let (turn_in_text, turn_in_events) = collect_dialog_page(&mut context, npc_id, "Angelo quest turn-in dialogue")?;
+        if !turn_in_text.contains("found all of 3 puppies") {
+            return Err(format!("reviewed turn-in NPC produced unexpected dialogue: {turn_in_text:?}"));
+        }
+        if !turn_in_events
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::QuestRemoved { quest_id } if *quest_id == TURN_IN_QUEST))
+        {
+            return Err("Angelo's turn-in dialogue did not remove quest 9031".to_owned());
+        }
+        if !turn_in_events
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == COOLDOWN_QUEST))
+        {
+            return Err("Angelo's turn-in dialogue did not start cooldown quest 9032".to_owned());
+        }
+
+        Ok(())
+    })();
+    if let Some(npc_id) = npc_id_for_cleanup {
+        let _ = context.net.close_dialog(npc_id);
+    }
+    for quest_id in [OFFER_QUEST, TURN_IN_QUEST, COOLDOWN_QUEST] {
+        let _ = context.say(&format!("@quest del {quest_id}"));
+    }
+    context.pump(Duration::from_millis(100));
+    result
+}
+
+/// NPC scripts send the speaker label and each `mes` as separate dialog text
+/// events. Collect a complete page before asserting its player-facing content.
+fn collect_dialog_page(context: &mut TestContext, npc_id: EntityId, description: &str) -> Result<(String, Vec<NetworkEvent>), String> {
+    let first = context.wait_for(description, |event| match event {
+        NetworkEvent::OpenDialog { npc_id: id, text } if *id == npc_id => Some(text.clone()),
+        _ => None,
+    })?;
+    let events = context.collect_for(Duration::from_millis(200));
+    let mut text = first;
+    for event in &events {
+        if let NetworkEvent::OpenDialog { npc_id: id, text: chunk } = event
+            && *id == npc_id
+        {
+            text.push('\n');
+            text.push_str(chunk);
+        }
+    }
+    Ok((text, events))
 }
 
 /// Helper to prepare the character, reload scripts, warp to Prontera, and
