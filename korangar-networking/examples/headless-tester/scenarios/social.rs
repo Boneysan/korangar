@@ -4,6 +4,7 @@ use std::collections::HashSet;
 use std::time::{Duration, Instant};
 
 use korangar_networking::{MessageColor, NetworkEvent, QuestHuntProgress};
+use ragnarok_packets::{AccountId, ExperienceType};
 
 use crate::context::{Config, TestContext};
 use crate::scenarios::Scenario;
@@ -26,6 +27,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-kick", 8, party_kick),
         Scenario::new("party-promote-leader", 8, party_promote_leader),
         Scenario::new("party-share-options", 8, party_share_options),
+        Scenario::new("party-experience-sharing", 8, party_experience_sharing),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
         Scenario::new("trade-reject", 8, trade_reject),
@@ -1664,6 +1666,207 @@ fn party_share_options(config: &Config) -> Result<(), String> {
         true => Ok(()),
         false => Err("the server reported EXP sharing still off after enabling it".to_owned()),
     }
+}
+
+/// Measure party EXP sharing against a same-character solo control. Hercules
+/// shares among living, non-idle party members on the same map; unlike shared
+/// quest credit, this path has no cell-distance check. The candidate level
+/// spread is 30, with 31 expected to disable sharing.
+fn party_experience_sharing(config: &Config) -> Result<(), String> {
+    // Keep combat deterministic while still leaving room for the 30/31-level
+    // boundary inside Renewal's 175-level cap.
+    const BASE_LEVEL: u32 = 60;
+    const EVEN_SHARE_BONUS_PERCENT: u64 = 25;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    form_party(&mut primary, &mut partner)?;
+    let original_levels = (primary.base_level, partner.base_level);
+
+    let result = (|| {
+        primary.ensure_base_level(BASE_LEVEL)?;
+        partner.ensure_base_level(BASE_LEVEL)?;
+        primary.warp("prt_fild08", 170, 180)?;
+        partner.warp("prt_fild08", 174, 180)?;
+        primary.say("@heal")?;
+        partner.say("@heal")?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        set_party_experience_sharing(&mut primary, false)?;
+        let solo_control = kill_spore_and_collect_party_exp(&mut primary, &mut partner, Some(31))?;
+        if solo_control.1 != (0, 0) || solo_control.0.0 == 0 || solo_control.0.1 == 0 {
+            return Err(format!(
+                "solo control EXP was primary {:?}, partner {:?}; expected primary base/job EXP and no partner EXP",
+                solo_control.0, solo_control.1
+            ));
+        }
+
+        set_party_experience_sharing(&mut primary, true)?;
+        let same_map_far = kill_spore_and_collect_party_exp(&mut primary, &mut partner, Some(31))?;
+        if same_map_far.0.0 == 0 || same_map_far.0.1 == 0 || same_map_far.1.0 == 0 || same_map_far.1.1 == 0 {
+            return Err(format!(
+                "same-map sharing at 31 cells did not grant both base/job EXP: primary {:?}, partner {:?}",
+                same_map_far.0, same_map_far.1
+            ));
+        }
+        assert_even_share_bonus(solo_control.0, same_map_far, EVEN_SHARE_BONUS_PERCENT)?;
+
+        // The exact configured level-spread boundary remains eligible.
+        partner.ensure_base_level(BASE_LEVEL + 30)?;
+        primary.warp("prt_fild08", 170, 180)?;
+        partner.warp("prt_fild08", 180, 180)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        let at_limit = kill_spore_and_collect_party_exp(&mut primary, &mut partner, Some(10))?;
+        if at_limit.0.0 == 0 || at_limit.1.0 == 0 {
+            return Err(format!(
+                "30-level boundary did not share base EXP: primary {:?}, partner {:?}",
+                at_limit.0, at_limit.1
+            ));
+        }
+
+        // One level beyond the configured limit returns to individual EXP.
+        partner.ensure_base_level(BASE_LEVEL + 31)?;
+        primary.warp("prt_fild08", 170, 180)?;
+        partner.warp("prt_fild08", 180, 180)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        let above_limit = kill_spore_and_collect_party_exp(&mut primary, &mut partner, Some(10))?;
+        if above_limit.0.0 == 0 || above_limit.0.1 == 0 || above_limit.1 != (0, 0) {
+            return Err(format!(
+                "31-level spread did not fall back to individual EXP: primary {:?}, partner {:?}",
+                above_limit.0, above_limit.1
+            ));
+        }
+
+        // Map membership, not screen/cell distance, is the server's sharing
+        // boundary. A same-level member on a different map receives nothing.
+        partner.ensure_base_level(BASE_LEVEL)?;
+        set_party_experience_sharing(&mut primary, true)?;
+        primary.warp("prt_fild08", 170, 180)?;
+        partner.warp("geffen", 120, 100)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        let other_map = kill_spore_and_collect_party_exp(&mut primary, &mut partner, None)?;
+        if other_map.0.0 == 0 || other_map.1 != (0, 0) {
+            return Err(format!(
+                "different-map member received party EXP: primary {:?}, partner {:?}",
+                other_map.0, other_map.1
+            ));
+        }
+
+        println!(
+            "    solo base/job {:?}; same-map 31-cell party {:?} + {:?}; 30-level boundary {:?} + {:?}; 31-level and other-map exclusions \
+             passed",
+            solo_control.0, same_map_far.0, same_map_far.1, at_limit.0, at_limit.1
+        );
+        Ok(())
+    })();
+
+    set_party_experience_sharing(&mut primary, false).ok();
+    primary.ensure_base_level(original_levels.0).ok();
+    partner.ensure_base_level(original_levels.1).ok();
+    let _ = primary.say("@killmonster");
+    let _ = partner.say("@killmonster");
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+fn set_party_experience_sharing(context: &mut TestContext, enabled: bool) -> Result<(), String> {
+    context.flush();
+    context
+        .net
+        .set_party_options(enabled, false, false)
+        .map_err(|_| "disconnected while changing party EXP sharing")?;
+    context.wait_for(
+        &format!("party EXP sharing {}", if enabled { "enabled" } else { "disabled" }),
+        |event| match event {
+            NetworkEvent::PartyShareOptions { experience_share, .. } if *experience_share == enabled => Some(()),
+            _ => None,
+        },
+    )?;
+    Ok(())
+}
+
+fn kill_spore_and_collect_party_exp(
+    primary: &mut TestContext,
+    partner: &mut TestContext,
+    partner_distance: Option<u16>,
+) -> Result<((u64, u64), (u64, u64)), String> {
+    let target = primary.spawn_monster("SPORE", 1014)?;
+    let target_position = primary
+        .entities
+        .get(&target)
+        .map(|entity| entity.position.tile_position())
+        .ok_or("spawned party EXP Spore has no visible tile")?;
+    if let Some(distance) = partner_distance {
+        partner.warp("prt_fild08", target_position.x.saturating_add(distance), target_position.y)?;
+    } else {
+        partner.warp("geffen", 120, 100)?;
+    }
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    primary.flush();
+    partner.flush();
+    kill_spawned_quest_spore(primary, target)?;
+
+    let primary_account = primary.account_id;
+    let partner_account = partner.account_id;
+    let mut primary_gain = (0u64, 0u64);
+    let mut partner_gain = (0u64, 0u64);
+    for event in primary.collect_for(Duration::from_millis(500)) {
+        accumulate_party_experience(event, primary_account, partner_account, &mut primary_gain, &mut partner_gain);
+    }
+    for event in partner.collect_for(Duration::from_millis(500)) {
+        accumulate_party_experience(event, primary_account, partner_account, &mut primary_gain, &mut partner_gain);
+    }
+    Ok((primary_gain, partner_gain))
+}
+
+fn accumulate_party_experience(
+    event: NetworkEvent,
+    primary_account: AccountId,
+    partner_account: AccountId,
+    primary_gain: &mut (u64, u64),
+    partner_gain: &mut (u64, u64),
+) {
+    let NetworkEvent::GainedExperience {
+        account_id,
+        amount,
+        experience_type,
+        ..
+    } = event
+    else {
+        return;
+    };
+    let gain = if account_id == primary_account {
+        primary_gain
+    } else if account_id == partner_account {
+        partner_gain
+    } else {
+        return;
+    };
+    match experience_type {
+        ExperienceType::BaseExperience => gain.0 += amount,
+        ExperienceType::JobExperience => gain.1 += amount,
+    }
+}
+
+fn assert_even_share_bonus(solo: (u64, u64), shared: ((u64, u64), (u64, u64)), bonus_percent: u64) -> Result<(), String> {
+    for (kind, solo_amount, primary_amount, partner_amount) in
+        [("base", solo.0, shared.0.0, shared.1.0), ("job", solo.1, shared.0.1, shared.1.1)]
+    {
+        let total = primary_amount + partner_amount;
+        let expected = solo_amount * (100 + bonus_percent) / 100;
+        if total.abs_diff(expected) > 2 {
+            return Err(format!(
+                "{bonus_percent}% even-share {kind} EXP total was {total} (solo {solo_amount}, expected about {expected})"
+            ));
+        }
+    }
+    Ok(())
 }
 
 /// Ignoring a character actually blocks their whispers
