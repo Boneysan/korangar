@@ -392,7 +392,6 @@ fn dm_party_alternate_character(config: &Config) -> Result<(), String> {
         NetworkEvent::PartyMemberAdded { member } if member.player_name == primary.character_name => Some(()),
         _ => None,
     })?;
-    say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
     say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
     primary.say(&format!("@dmquest start {QUEST_ID}"))?;
     primary.wait_for("primary starts alternate-character campaign quest", |event| match event {
