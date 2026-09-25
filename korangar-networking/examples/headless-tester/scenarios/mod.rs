@@ -91,6 +91,7 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(dm::scenarios());
     scenarios.extend(observer::scenarios());
     scenarios.push(items::split_stack_scenario());
+    scenarios.push(session::death_recovery_threshold_scenario());
     scenarios.push(session::death_recovery_scenario());
     scenarios
 }

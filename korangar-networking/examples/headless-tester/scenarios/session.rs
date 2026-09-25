@@ -4,7 +4,7 @@ use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use korangar_networking::{DEFAULT_HAIR_STYLE, NetworkEvent, NetworkingSystem};
-use ragnarok_packets::{DisappearanceReason, Sex, StatType};
+use ragnarok_packets::{DisappearanceReason, ExperienceType, Sex, StatType};
 
 use crate::context::{Config, PACKET_VERSION, TestContext};
 use crate::scenarios::Scenario;
@@ -31,6 +31,224 @@ pub fn scenarios() -> Vec<Scenario> {
 
 pub fn death_recovery_scenario() -> Scenario {
     Scenario::new("death-recovery-save-point", 10, death_recovery_save_point)
+}
+
+pub fn death_recovery_threshold_scenario() -> Scenario {
+    Scenario::new("death-recovery-ten-kill-threshold", 10, death_recovery_ten_kill_threshold)
+}
+
+/// Record a real death penalty, resurrect on the field, and prove that the
+/// recovery ledger pays on exactly the tenth same-map monster kill.
+fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
+    const DEATH_MAP: &str = "prt_fild08";
+    const DEATH_X: u16 = 286;
+    const DEATH_Y: u16 = 338;
+    const NPC_X: u16 = 170;
+    const NPC_Y: u16 = 200;
+
+    let (mut context, mut healer) = TestContext::connect_pair(config)?;
+    context.ensure_job(1)?;
+    context.ensure_base_level(50)?;
+    context.flush();
+    context.say("@jlevel 19")?;
+    context.wait_for("job level 20 for measurable penalty", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::JobLevel(value),
+        } if (20..50).contains(value) => Some(()),
+        _ => None,
+    })?;
+    healer.ensure_job(8)?;
+    healer.ensure_base_level(50)?;
+    healer.say("@allskill")?;
+    healer.say("@heal")?;
+    healer.give_item(717, 1)?;
+    healer.pump(Duration::from_millis(200));
+
+    // The integration runner installs a controlled quest reward fixture.
+    context.say("@quest del 2000")?;
+    context.warp("prontera", NPC_X - 2, NPC_Y)?;
+    context.pump(Duration::from_millis(250));
+    let npc_id = context
+        .entities
+        .iter()
+        .find(|(_, entity)| {
+            let position = entity.position.tile_position();
+            position.x == NPC_X && position.y == NPC_Y
+        })
+        .map(|(id, _)| *id)
+        .ok_or("EXP fixture NPC was not visible")?;
+    context.flush();
+    context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.wait_for("EXP fixture first page", |event| match event {
+        NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id => Some(()),
+        _ => None,
+    })?;
+    context.flush();
+    context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+    let awards = context.collect_for(Duration::from_millis(600));
+    let mut base_before = None;
+    let mut job_before = None;
+    let mut base_awarded = false;
+    let mut job_awarded = false;
+    for event in &awards {
+        match event {
+            NetworkEvent::GainedExperience {
+                amount: 1000,
+                experience_type: ExperienceType::BaseExperience,
+                ..
+            } => base_awarded = true,
+            NetworkEvent::GainedExperience {
+                amount: 500,
+                experience_type: ExperienceType::JobExperience,
+                ..
+            } => job_awarded = true,
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::BaseExperience(value),
+            } => base_before = Some(*value),
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::JobExperience(value),
+            } => job_before = Some(*value),
+            _ => {}
+        }
+    }
+    if !base_awarded || !job_awarded {
+        return Err(format!(
+            "controlled EXP award missing (base={base_awarded}, job={job_awarded}); events: {awards:?}"
+        ));
+    }
+    context.flush();
+    context.net.close_dialog(npc_id).map_err(|_| "disconnected")?;
+    context.pump(Duration::from_millis(100));
+    context.warp("prontera", 155, 180)?;
+    context.say("@save")?;
+    context.pump(Duration::from_millis(150));
+    context.warp(DEATH_MAP, DEATH_X, DEATH_Y)?;
+    healer.warp(DEATH_MAP, DEATH_X.saturating_add(2), DEATH_Y)?;
+    context.pump(Duration::from_millis(300));
+    healer.pump(Duration::from_millis(300));
+
+    let player_id = context.player_id;
+    context.flush();
+    context.say("@kill")?;
+    context.wait_for("death on recovery field", |event| match event {
+        NetworkEvent::RemoveEntity {
+            entity_id,
+            reason: DisappearanceReason::Died,
+        } if *entity_id == player_id => Some(()),
+        _ => None,
+    })?;
+    let tail = context.collect_for(Duration::from_millis(300));
+    let mut base_after = None;
+    let mut job_after = None;
+    for event in &tail {
+        match event {
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::BaseExperience(value),
+            } => base_after = Some(*value),
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::JobExperience(value),
+            } => job_after = Some(*value),
+            _ => {}
+        }
+    }
+    let base_loss = base_before
+        .ok_or("base EXP before death missing")?
+        .saturating_sub(base_after.ok_or("base EXP penalty missing")?);
+    let job_loss = job_before
+        .ok_or("job EXP before death missing")?
+        .saturating_sub(job_after.ok_or("job EXP penalty missing")?);
+    if base_loss == 0 || job_loss == 0 {
+        return Err(format!(
+            "expected real base and job EXP losses, got ({base_loss}, {job_loss}); death events: {tail:?}"
+        ));
+    }
+    healer.flush();
+    healer
+        .net
+        .cast_skill(ragnarok_packets::SkillId(54), ragnarok_packets::SkillLevel(4), player_id)
+        .map_err(|_| "healer disconnected")?;
+    context.wait_for("Resurrection on the death map", |event| match event {
+        NetworkEvent::ResurrectPlayer { entity_id } if *entity_id == player_id => Some(()),
+        _ => None,
+    })?;
+    context.wait_for("positive HP after Resurrection", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: StatType::HealthPoints(value),
+        } if *value > 0 => Some(()),
+        _ => None,
+    })?;
+    if context.map_name != DEATH_MAP {
+        return Err(format!("Resurrection left death map {DEATH_MAP}: {:?}", context.map_name));
+    }
+
+    for kill_index in 1..=10 {
+        let target = context.spawn_monster("PORING", 1002)?;
+        let mut dead = false;
+        for _ in 0..30 {
+            let position = context
+                .entities
+                .get(&target)
+                .map(|entity| entity.position.tile_position())
+                .ok_or("spawned Poring vanished before the test killed it")?;
+            context.walk_to(position.x.saturating_sub(1), position.y)?;
+            context.flush();
+            context.net.player_attack(target).map_err(|_| "disconnected")?;
+            match context.wait_for_within("Poring hit or death", Duration::from_secs(6), &mut |event| match event {
+                NetworkEvent::RemoveEntity {
+                    entity_id,
+                    reason: DisappearanceReason::Died,
+                } if *entity_id == target => Some(true),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *source_entity_id == player_id && *destination_entity_id == target => Some(false),
+                NetworkEvent::AttackFailed { target_entity_id, .. } if *target_entity_id == target => Some(false),
+                _ => None,
+            })? {
+                true => {
+                    dead = true;
+                    break;
+                }
+                false => {}
+            }
+        }
+        if !dead {
+            return Err(format!("failed to kill controlled Poring #{kill_index}"));
+        }
+        let events = context.collect_for(Duration::from_millis(250));
+        let report = events.iter().find_map(|event| match event {
+            NetworkEvent::ChatMessage {
+                text,
+                color: korangar_networking::MessageColor::Server,
+            } if text.starts_with("Korangar recovery: restored ") => Some(text.clone()),
+            _ => None,
+        });
+        if kill_index < 10 && report.is_some() {
+            return Err(format!("recovery paid before kill ten (after kill {kill_index}): {report:?}"));
+        }
+        if kill_index == 10 {
+            let report = report.ok_or_else(|| "tenth same-map kill did not trigger recovery".to_owned())?;
+            let actual = report
+                .strip_prefix("Korangar recovery: restored ")
+                .and_then(|text| text.split_once(" base and "))
+                .and_then(|(base, job)| Some((base.parse::<u64>().ok()?, job.strip_suffix(" job EXP.")?.parse::<u64>().ok()?)))
+                .ok_or_else(|| format!("could not parse recovery report {report:?}"))?;
+            let expected = (base_loss / 2, job_loss / 2);
+            if actual != expected {
+                return Err(format!(
+                    "ten-kill refund {actual:?} did not equal half the measured loss {expected:?}"
+                ));
+            }
+        }
+        context.say("@heal")?;
+        context.pump(Duration::from_millis(100));
+    }
+    context.say("@quest del 2000")?;
+    healer.say("@heal")?;
+    context.pump(Duration::from_millis(150));
+    healer.pump(Duration::from_millis(150));
+    Ok(())
 }
 
 /// A character with zero `slotchange` entitlement must receive an explicit
