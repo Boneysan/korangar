@@ -463,6 +463,19 @@ pub enum InputEvent {
         /// Character to whisper to.
         character_name: String,
     },
+    /// GDD 10.14: "Click a row → `player_target`". Distinct from
+    /// [`Self::TargetPartyMember`] (the Shift+1-4 by-roster-index hotkey):
+    /// this is the party *window*'s row click, addressed by account id, and
+    /// opens the same
+    /// [`PlayerTargetWindow`](crate::interface::windows::PlayerTargetWindow)
+    /// a world click on that player opens, and sets them as the active
+    /// support-skill target -- full parity with clicking their sprite, not
+    /// just a shortcut to the window.
+    OpenPartyMemberTarget {
+        account_id: AccountId,
+        character_name: String,
+        class_name: String,
+    },
     /// Ask a character to trade.
     RequestTrade {
         /// Account id of the character to trade with.

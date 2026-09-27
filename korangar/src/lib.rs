@@ -8719,6 +8719,18 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
+                InputEvent::OpenPartyMemberTarget {
+                    account_id,
+                    character_name,
+                    class_name,
+                } => {
+                    // Same two effects a world click on that player has
+                    // (EntityType::Player above): become the active
+                    // support-skill target, and open their frame.
+                    self.support_target = Some(EntityId(account_id.0));
+                    self.interface
+                        .open_window(PlayerTargetWindow::new(account_id, character_name, class_name));
+                }
                 InputEvent::SetAutolootRate { rate } => {
                     let rate = rate.min(100);
                     *self.client_state.follow_mut(client_state().game_settings().autoloot_rate()) = rate;

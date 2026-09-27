@@ -114,6 +114,14 @@ where
                             let member = member_path.follow_safe(state);
                             party.is_local(member.account_id()) || !member.online()
                         });
+                        // A target frame offering to whisper or trade with
+                        // yourself is nonsense, same guard as the world click
+                        // this button otherwise mirrors (EntityType::Player
+                        // if is_local_player => Ok(())).
+                        let target_blocked = ComputedSelector::new_default(move |state: &ClientState| {
+                            let party = party_path.follow_safe(state);
+                            party.is_local(member_path.follow_safe(state).account_id())
+                        });
 
                         self.elements.push(ErasedElement::new(collapsible! {
                             text: label_path,
@@ -129,6 +137,20 @@ where
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
                                             let character_name = state.get(&member_path).name().to_owned();
                                             queue.queue(InputEvent::JumpToPartyMember { character_name });
+                                        },
+                                    },
+                                    button! {
+                                        text: "Target",
+                                        tooltip: "Open this member's target frame and arm them as your support-skill target [GDD 10.14]",
+                                        disabled: target_blocked,
+                                        disabled_tooltip: "You cannot target yourself this way",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let member = state.get(&member_path);
+                                            queue.queue(InputEvent::OpenPartyMemberTarget {
+                                                account_id: member.account_id(),
+                                                character_name: member.name().to_owned(),
+                                                class_name: member.class_name().to_owned(),
+                                            });
                                         },
                                     },
                                     button! {

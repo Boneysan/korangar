@@ -239,6 +239,10 @@ impl PartyMemberState {
         &self.name
     }
 
+    pub fn class_name(&self) -> &str {
+        &self.class_name
+    }
+
     pub fn map_name(&self) -> &str {
         &self.map_name
     }
@@ -304,8 +308,40 @@ impl PartyMemberState {
         }
     }
 
+    /// GDD 10.14: "show 'other map' or tile distance from `party_state`".
+    /// `local_map`/`local_position` are the local player's own current map
+    /// and party-broadcast position (the local account is itself a party
+    /// member, so this needs no state outside `PartyState`). Chebyshev
+    /// distance (`max(|dx|, |dy|)`), matching how RO itself measures range,
+    /// not a Euclidean "as the crow flies" number.
+    fn location_summary(&self, local_map: &str, local_position: Option<TilePosition>) -> String {
+        if self.map_name.is_empty() {
+            return String::new();
+        }
+        let same_map = !local_map.is_empty() && self.map_name.eq_ignore_ascii_case(local_map);
+        if !same_map {
+            return format!("  (other map: {})", self.map_name.trim_end_matches(".gat"));
+        }
+        match (self.position, local_position) {
+            (Some(member), Some(local)) => {
+                let dx = member.x.abs_diff(local.x);
+                let dy = member.y.abs_diff(local.y);
+                let distance = dx.max(dy);
+                match distance {
+                    0 => "  (here)".to_owned(),
+                    1 => "  (1 tile away)".to_owned(),
+                    n => format!("  ({n} tiles away)"),
+                }
+            }
+            // Same map confirmed, but a position has not arrived yet (e.g.
+            // just joined): say so rather than silently showing nothing,
+            // which would read as "no location data at all".
+            _ => format!("  [{}]", self.map_name.trim_end_matches(".gat")),
+        }
+    }
+
     /// One-line roster summary for the party window.
-    pub fn summary_line(&self) -> String {
+    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>) -> String {
         // Match the friend-list blue/neutral/orange status palette while
         // retaining explicit words for color-independent status reading.
         let reset = crate::state::COLOR_RESET;
@@ -335,12 +371,8 @@ impl PartyMemberState {
             Some((sp, max)) => format!("  {sp}/{max} SP"),
             None => String::new(),
         };
-        let map = if self.map_name.is_empty() {
-            String::new()
-        } else {
-            format!("  [{}]", self.map_name.trim_end_matches(".gat"))
-        };
-        format!("{}{leader}{level}{class}  ({online}){hp}{sp}{map}", self.name)
+        let location = self.location_summary(local_map, local_position);
+        format!("{}{leader}{level}{class}  ({online}){hp}{sp}{location}", self.name)
     }
 
     fn from_roster_member(member: PartyMember) -> Self {
@@ -869,9 +901,18 @@ impl PartyState {
     fn rebuild_display_text(&mut self) {
         self.rebuild_status_text();
 
+        // The local account is itself a roster entry (see `is_local`), so its
+        // own current map/position for distance comparisons come from right
+        // here -- no `this_entity()` or other state needed.
+        let local = self
+            .local_account_id
+            .and_then(|account_id| self.members.iter().find(|member| member.account_id == account_id))
+            .map(|member| (member.map_name.clone(), member.position));
+        let (local_map, local_position) = local.unwrap_or_default();
+
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
-            member.display_label = member.summary_line();
+            member.display_label = member.summary_line(&local_map, local_position);
         }
 
         if self.members.is_empty() {
@@ -1167,5 +1208,66 @@ mod tests {
         let member = &state.members()[0];
         assert_eq!(member.health(), Some((90, 200)));
         assert_eq!(member.spell(), Some((30, 60)));
+    }
+
+    /// GDD 10.14: "show 'other map' or tile distance from `party_state`".
+    /// The local account is itself a roster row (`is_local`), so this needs
+    /// only `PartyState`'s own data -- no `this_entity()` in the mix.
+    #[test]
+    fn display_label_shows_tile_distance_or_other_map() {
+        let mut state = PartyState::default();
+        let local = PartyMember {
+            account_id: AccountId(1),
+            character_id: CharacterId(1),
+            player_name: "Local".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            offline: 0,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        let same_map = PartyMember {
+            account_id: AccountId(2),
+            character_id: CharacterId(2),
+            player_name: "Nearby".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            offline: 0,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        let other_map = PartyMember {
+            account_id: AccountId(3),
+            character_id: CharacterId(3),
+            player_name: "Elsewhere".to_owned(),
+            map_name: "izlude.gat".to_owned(),
+            offline: 0,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        state.set_roster("P".to_owned(), vec![local, same_map, other_map], |_| "Novice".to_owned());
+        state.set_local_account_id(AccountId(1));
+
+        // Neither position has arrived yet: same-map members fall back to
+        // the bracketed map name rather than silently omitting location.
+        let find = |state: &PartyState, id: u32| state.members().iter().find(|m| m.account_id == AccountId(id)).unwrap().clone();
+        assert!(find(&state, 2).display_label().contains("[prontera]"));
+        assert!(find(&state, 3).display_label().contains("(other map: izlude)"));
+
+        // Positions arrive: same-map member gets a real tile distance;
+        // different-map member is unaffected by not having one at all.
+        state.update_position(AccountId(1), TilePosition::new(150, 150));
+        state.update_position(AccountId(2), TilePosition::new(153, 154));
+        assert!(
+            find(&state, 2).display_label().contains("(4 tiles away)"),
+            "{}",
+            find(&state, 2).display_label()
+        );
+        assert!(find(&state, 3).display_label().contains("(other map: izlude)"));
+
+        // Standing on the same tile reads as "here", not "0 tiles away".
+        state.update_position(AccountId(2), TilePosition::new(150, 150));
+        assert!(find(&state, 2).display_label().contains("(here)"));
     }
 }
