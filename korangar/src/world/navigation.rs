@@ -211,4 +211,38 @@ mod tests {
             Some(("iz_dun00", true))
         );
     }
+
+    #[test]
+    fn malangdo_cat_fleet_connects_an_otherwise_unreachable_island() {
+        // Before the four service edges below, `malangdo` had no static-warp
+        // connection to the overworld at all -- only to its own interiors
+        // (mal_in01/02, mal_dun01). Each direction is a single-hop route.
+        for (from, to, id) in [
+            ("izlude", "malangdo", "service-izlude-malangdo-cat-fleet"),
+            ("alberta", "malangdo", "service-alberta-malangdo-cat-fleet"),
+            ("malangdo", "izlude", "service-malangdo-izlude-cat-fleet"),
+            ("malangdo", "alberta", "service-malangdo-alberta-cat-fleet"),
+        ] {
+            let route = route_edges(from, to).unwrap_or_else(|| panic!("expected a route from {from} to {to}"));
+            assert_eq!(route.len(), 1, "expected a single-hop service route from {from} to {to}");
+            assert_eq!(route[0].id, id);
+            assert_eq!(route[0].kind, "npc_service");
+            assert_eq!(route[0].availability, "conditional");
+            assert!(
+                route[0].requirements.as_deref().is_some_and(|text| text.contains("1000 zeny")),
+                "fare should be documented as up to 1000 zeny, varying with ep13_yong1"
+            );
+        }
+    }
+
+    #[test]
+    fn malangdo_service_hops_are_not_portals() {
+        let graph = navigation_graph();
+        // A service step is an NPC conversation, not a walkable warp entity --
+        // it must not be labeled the way a hovered walk-warp tile would be.
+        assert_eq!(portal_label(&graph.edges, "izlude", 182, 218, Some("malangdo")), None);
+        assert_eq!(portal_label(&graph.edges, "alberta", 200, 151, Some("malangdo")), None);
+        assert_eq!(portal_label(&graph.edges, "malangdo", 219, 86, Some("izlude")), None);
+        assert_eq!(portal_label(&graph.edges, "malangdo", 219, 86, Some("alberta")), None);
+    }
 }

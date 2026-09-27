@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "6e4d3ee45b4466666dd1318cec0514d12316ee0f",
+ "source_revision": "e7220318b47e18bf974f7b65256c5c7a4f347ead",
  "source_worktree_dirty": true,
  "mode": "renewal",
  "skill_tree_source": "db/re/skill_tree.conf",

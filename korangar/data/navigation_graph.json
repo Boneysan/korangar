@@ -1,14 +1,32 @@
 {
   "coverage": {
     "active_script_files_scanned": 653,
-    "authored_services": 2,
+    "authored_services": 6,
     "coordinate_validation": "map names validated against db/map_index.txt; map cache unavailable to this generator",
-    "directed_edges": 3185,
+    "directed_edges": 3189,
     "maps_with_edges": 538,
     "unsupported_static_warps": [],
-    "weakly_connected_components": 34
+    "weakly_connected_components": 33
   },
   "edges": [
+    {
+      "action": "Talk to the cat and choose to travel to Malangdo.",
+      "availability": "conditional",
+      "from": {
+        "map": "alberta",
+        "x": 200,
+        "y": 151
+      },
+      "id": "service-alberta-malangdo-cat-fleet",
+      "kind": "npc_service",
+      "requirements": "Costs up to 1000 zeny; the fare drops (999/500/0) as the account's ep13_yong1 reputation variable rises, but never exceeds 1000.",
+      "source": "npc/re/cities/malangdo.txt:176-224 (warp at 205, 221)",
+      "to": {
+        "map": "malangdo",
+        "x": 217,
+        "y": 85
+      }
+    },
     {
       "action": "Talk to the Sailor and choose the return option.",
       "availability": "always",
@@ -43,6 +61,60 @@
         "map": "izlu2dun",
         "x": 107,
         "y": 50
+      }
+    },
+    {
+      "action": "Talk to the cat and choose to travel to Malangdo.",
+      "availability": "conditional",
+      "from": {
+        "map": "izlude",
+        "x": 182,
+        "y": 218
+      },
+      "id": "service-izlude-malangdo-cat-fleet",
+      "kind": "npc_service",
+      "requirements": "Costs up to 1000 zeny; the fare drops (999/500/0) as the account's ep13_yong1 reputation variable rises, but never exceeds 1000.",
+      "source": "npc/re/cities/malangdo.txt:176-225 (warp at 205, 221)",
+      "to": {
+        "map": "malangdo",
+        "x": 217,
+        "y": 85
+      }
+    },
+    {
+      "action": "Talk to Kong and choose the Alberta destination.",
+      "availability": "conditional",
+      "from": {
+        "map": "malangdo",
+        "x": 219,
+        "y": 86
+      },
+      "id": "service-malangdo-alberta-cat-fleet",
+      "kind": "npc_service",
+      "requirements": "Costs up to 1000 zeny; the fare drops (999/500/0) as the account's ep13_yong1 reputation variable rises, but never exceeds 1000.",
+      "source": "npc/re/cities/malangdo.txt:231-297 (warp at 285, 297)",
+      "to": {
+        "map": "alberta",
+        "x": 192,
+        "y": 150
+      }
+    },
+    {
+      "action": "Talk to Kong and choose the Izlude destination.",
+      "availability": "conditional",
+      "from": {
+        "map": "malangdo",
+        "x": 219,
+        "y": 86
+      },
+      "id": "service-malangdo-izlude-cat-fleet",
+      "kind": "npc_service",
+      "requirements": "Costs up to 1000 zeny; the fare drops (999/500/0) as the account's ep13_yong1 reputation variable rises, but never exceeds 1000.",
+      "source": "npc/re/cities/malangdo.txt:231-296 (warp at 283, 295)",
+      "to": {
+        "map": "izlude",
+        "x": 195,
+        "y": 212
       }
     },
     {
@@ -57340,7 +57412,7 @@
       }
     }
   ],
-  "hercules_revision": "6e4d3ee45b4466666dd1318cec0514d12316ee0f",
+  "hercules_revision": "e7220318b47e18bf974f7b65256c5c7a4f347ead",
   "hercules_worktree_dirty": true,
   "maps": [
     "abbey01",

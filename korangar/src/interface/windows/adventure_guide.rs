@@ -1341,7 +1341,9 @@ mod tests {
         };
         let detail = resolve_details(&result);
 
-        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 1"));
+        // Izlude now has two verified outbound NPC services: the Byalan ferry
+        // and the Malangdo cat fleet (added 2026-09-27).
+        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 2"));
         assert!(
             detail
                 .iter()
@@ -1350,6 +1352,15 @@ mod tests {
         assert!(detail.iter().any(|line| line == "Requirement: Costs 150 zeny."));
         assert!(detail.iter().any(|line| line.contains("npc/re/cities/izlude.txt:37")));
         assert!(detail.iter().any(|line| line == "@route:izlu2dun"));
+
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("travel to Malangdo.") && line.contains("(conditional)"))
+        );
+        assert!(detail.iter().any(|line| line.starts_with("Requirement: Costs up to 1000 zeny")));
+        assert!(detail.iter().any(|line| line.contains("npc/re/cities/malangdo.txt:176")));
+        assert!(detail.iter().any(|line| line == "@route:malangdo"));
     }
 
     #[test]
