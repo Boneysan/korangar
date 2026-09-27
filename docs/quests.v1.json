@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "2a57639dc3ec06c3e5e19958581a483da5cc691a",
+ "source_revision": "6e4d3ee45b4466666dd1318cec0514d12316ee0f",
  "source_worktree_dirty": true,
  "mode": "renewal",
  "source": "db/quest_db.conf",
@@ -19194,16 +19194,16 @@
     {
      "name": "EXP",
      "map_name": "prontera",
-     "x": 163,
+     "x": 170,
      "y": 200,
      "source_path": "npc/custom/headless_dialog_test.txt",
-     "script_line": 38,
+     "script_line": 39,
      "uses": [
       "questprogress",
       "setquest",
       "completequest"
      ],
-     "source_line": 42
+     "source_line": 43
     }
    ],
    "source_record": "quest 2000"
