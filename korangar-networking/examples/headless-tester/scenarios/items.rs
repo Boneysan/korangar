@@ -28,6 +28,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("inventory-order", 6, inventory_order),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("reset-command-behavior", 6, reset_command_behavior),
+        Scenario::new("reset-command-ordinary-reachability", 6, reset_command_ordinary_reachability),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
@@ -1337,6 +1338,71 @@ fn reset_command_behavior(config: &Config) -> Result<(), String> {
     context.gm_expect_feedback("@skreset")?;
     context.ensure_job(starting_job)?;
     context.ensure_base_level(starting_base_level)?;
+    Ok(())
+}
+
+/// `reset-command-behavior` only ever ran as the shared GM (group 99)
+/// fixture, so the GDD S2 acceptance gap ("group 0 command reachability is
+/// still open") stayed open even after that scenario passed: `conf/groups.conf`
+/// grants ordinary players `streset`/`skreset`/`refundskill`, but nothing had
+/// ever exercised the commands as a non-GM account.
+///
+/// Deliberately account-agnostic (works whether `--username` is a GM or an
+/// ordinary player), and deliberately does not depend on `@allskill` or any
+/// other GM-only command to seed its fixture -- it reads whatever skill/stat
+/// state the account already has rather than manufacturing it, so this is
+/// safe to run against the shared GM fixture too (where it exercises the same
+/// commands from the other side: with permission implied by `all_commands`
+/// rather than the named per-command grant).
+///
+/// The commands are chat text with no dedicated ack packet: a permission
+/// rejection and a genuine no-op both look like "no event arrived" at the
+/// wire level unless a real state change proves the command actually ran.
+/// The reachability question is answered by an `UpdateStat` on `@streset`;
+/// `@skreset` and `@refundskill` are checked opportunistically, and are not
+/// GDD acceptance evidence for an account with no learned skill to clear.
+fn reset_command_ordinary_reachability(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    let starting_zeny = context.zeny;
+
+    context.gm_expect_feedback("@streset")?;
+    context.wait_for(
+        "Strength UpdateStat proving @streset executed (not silently rejected)",
+        |event| match event {
+            NetworkEvent::UpdateStat {
+                stat_type: StatType::Strength(..),
+            } => Some(()),
+            _ => None,
+        },
+    )?;
+    if context.zeny != starting_zeny {
+        return Err(format!("@streset changed zeny: {starting_zeny} -> {}", context.zeny));
+    }
+
+    // Opportunistic: only meaningful evidence if the account already has a
+    // learned skill to clear. A freshly-seeded ordinary test account proves
+    // it; the shared GM fixture's skill state is unpredictable mid-suite.
+    // Skill 1 (NV_BASIC) is excluded: every character has it innately, and
+    // `@skreset` correctly never clears it -- it is not a "learned" skill.
+    if let Some(skill) = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_level.0 > 0 && skill.skill_id.0 != 1)
+        .cloned()
+    {
+        context.gm_expect_feedback("@skreset")?;
+        context.wait_for(&format!("SkillTree clearing skill {}", skill.skill_id.0), |event| match event {
+            NetworkEvent::SkillTree { skill_information } => skill_information
+                .iter()
+                .find(|entry| entry.skill_id.0 == skill.skill_id.0)
+                .map_or(Some(()), |entry| (entry.skill_level.0 == 0).then_some(())),
+            _ => None,
+        })?;
+        if context.zeny != starting_zeny {
+            return Err(format!("@skreset changed zeny: {starting_zeny} -> {}", context.zeny));
+        }
+    }
+
     Ok(())
 }
 
