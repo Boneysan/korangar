@@ -29,6 +29,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("reset-command-behavior", 6, reset_command_behavior),
         Scenario::new("reset-command-ordinary-reachability", 6, reset_command_ordinary_reachability),
+        Scenario::new("refundskill-prerequisite-rejection", 6, refundskill_prerequisite_rejection),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
@@ -1401,6 +1402,77 @@ fn reset_command_ordinary_reachability(config: &Config) -> Result<(), String> {
         if context.zeny != starting_zeny {
             return Err(format!("@skreset changed zeny: {starting_zeny} -> {}", context.zeny));
         }
+    }
+
+    Ok(())
+}
+
+/// GDD S2's other still-open item: `@refundskill`'s prerequisite rejection
+/// ("single-skill refund prerequisite rejection") had never been exercised
+/// live. `pc_skilldown` (`src/map/pc.c`) refuses to refund a skill below the
+/// level a *learned* dependent still needs, answering with a red chat message
+/// instead of a `SkillTree` update -- and leaves the skill's level untouched.
+///
+/// Opportunistic like its sibling above: only asserts anything when the
+/// account happens to hold Swordsman's SM_BASH (id 5) at level >= 5 with
+/// SM_MAGNUM (id 7, needs `SM_BASH: 5`) learned at level >= 1, so it is safe
+/// to register in "all" against the shared GM fixture's unpredictable skill
+/// state. A freshly-seeded ordinary test account (this row's whole point,
+/// same as its sibling) proves it deliberately.
+fn refundskill_prerequisite_rejection(config: &Config) -> Result<(), String> {
+    const SM_BASH: u16 = 5;
+    const SM_MAGNUM: u16 = 7;
+
+    let mut context = TestContext::connect(config)?;
+    let starting_zeny = context.zeny;
+
+    let bash_level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == SM_BASH)
+        .map(|skill| skill.skill_level.0);
+    let magnum_level = context
+        .skills
+        .iter()
+        .find(|skill| skill.skill_id.0 == SM_MAGNUM)
+        .map(|skill| skill.skill_level.0);
+    let (Some(bash_level), Some(magnum_level)) = (bash_level, magnum_level) else {
+        return Ok(());
+    };
+    if bash_level < 5 || magnum_level < 1 {
+        return Ok(());
+    }
+
+    // The dependent still needs it: refunding SM_BASH must be refused, and
+    // SM_BASH's level must not move.
+    context.flush();
+    context.say(&format!("@refundskill {SM_BASH}"))?;
+    context.wait_for("prerequisite-refund rejection message", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Refund the skills that require this one first") => Some(()),
+        _ => None,
+    })?;
+    if context
+        .skills
+        .iter()
+        .any(|skill| skill.skill_id.0 == SM_BASH && skill.skill_level.0 != bash_level)
+    {
+        return Err("SM_BASH's level moved despite the refund being refused".to_owned());
+    }
+
+    // The dependent itself has nothing relying on it: refunding it must
+    // succeed and produce a real SkillTree update.
+    context.flush();
+    context.say(&format!("@refundskill {SM_MAGNUM}"))?;
+    context.wait_for("SkillTree lowering the independent dependent skill", |event| match event {
+        NetworkEvent::SkillTree { skill_information } => skill_information
+            .iter()
+            .find(|entry| entry.skill_id.0 == SM_MAGNUM)
+            .is_some_and(|entry| entry.skill_level.0 == magnum_level - 1)
+            .then_some(()),
+        _ => None,
+    })?;
+    if context.zeny != starting_zeny {
+        return Err(format!("@refundskill changed zeny: {starting_zeny} -> {}", context.zeny));
     }
 
     Ok(())
