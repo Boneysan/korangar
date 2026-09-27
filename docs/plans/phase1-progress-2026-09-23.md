@@ -8,7 +8,7 @@ Phase 1 remains **partial**. This handoff first recorded code and data present i
 
 ## Implemented in the working trees
 
-- **Navigation graph:** `tools/generate_navigation_graph.py` reads the active Hercules script manifests and emits `korangar/data/navigation_graph.json`. As of 2026-09-24, the artifact contains 538 maps and 3,185 directed edges: 3,183 static walk warps plus two reviewed Izlude/Byalan Sailor service edges, the Byalan hop marked conditional on 150 zeny. Other dynamic or conditional transports are not represented as guaranteed routes.
+- **Navigation graph:** `tools/generate_navigation_graph.py` reads the active Hercules script manifests and emits `korangar/data/navigation_graph.json`. As of 2026-09-27, the artifact contains 538 maps and 3,189 directed edges: 3,183 static walk warps plus six reviewed NPC service edges (Izlude/Byalan Sailor, and the Izlude/Alberta <-> Malangdo cat fleet added 2026-09-27), each conditional service edge marked with its zeny requirement. Other dynamic or conditional transports are not represented as guaranteed routes.
 - **World Map:** The in-game menu opens a centered, clickable regional atlas with 27 town and destination nodes. Reachable atlas connections are filtered through the generated graph. Selecting a node sets a route; it does not teleport the player. The atlas highlights the current route and the current/target locations where represented.
 - **Per-map guidance:** The client finds a shortest-hop portal route, marks the next portal on the minimap, and computes a walkable tile path from the player to that exit. The minimap draws sampled breadcrumb points and a distinct exit marker. A map transition triggers route recalculation for the next leg. The client does not auto-walk.
 - **Quest tracker preference:** Track/Untrack selections persist per character in `client/game_settings.ron` and are restored against the server's active quest list. Quest state and objective progress remain server-authoritative.
@@ -18,7 +18,7 @@ Phase 1 remains **partial**. This handoff first recorded code and data present i
 ## Still open for Phase 1
 
 - GUI/visual acceptance for the World Map, portal selection, walkable breadcrumbs, inventory behavior, and quest preference restoration. Builds pass, and headless live coverage exists for portal/Izlude traversal, inventory split/storage, and DM late-join catch-up.
-- Expand and validate route data for travel-service NPCs and conditional transports beyond the Izlude/Byalan Sailor. Account-wide visited badges and destination detail panels now exist (slices 6 and S7).
+- Expand and validate route data for travel-service NPCs and conditional transports beyond the Izlude/Byalan Sailor and the Malangdo cat fleet (both added). Account-wide visited badges and destination detail panels now exist (slices 6 and S7). Live traversal of the Malangdo hop is not yet verified, same as its Guide/atlas visual acceptance.
 - Supply destinations for NPC/story quest objectives that have no explicit location data. Valid `<NAVI>` links, hunt objectives, and item turn-ins already route.
 - Complete Adventure Guide data coverage for GDD §9.5 (status prose and cures, conditional skill effects, authored spawn conditions) and fresh-account live acceptance. The Guide window itself exists.
 - Add status and cast detail to the monster target frame, which already shows HP and level/element/race/size.
