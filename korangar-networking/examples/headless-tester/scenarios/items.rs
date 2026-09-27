@@ -30,6 +30,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("reset-command-behavior", 6, reset_command_behavior),
         Scenario::new("reset-command-ordinary-reachability", 6, reset_command_ordinary_reachability),
         Scenario::new("refundskill-prerequisite-rejection", 6, refundskill_prerequisite_rejection),
+        Scenario::new("autoloot-commands-are-recognized", 6, autoloot_commands_are_recognized),
         Scenario::new("hotkeys", 6, hotkeys),
         Scenario::new("repair-weapon-cancel", 6, repair_weapon_cancel),
         Scenario::new("repair-weapon-success", 6, repair_weapon_success),
@@ -1474,6 +1475,68 @@ fn refundskill_prerequisite_rejection(config: &Config) -> Result<(), String> {
     if context.zeny != starting_zeny {
         return Err(format!("@refundskill changed zeny: {starting_zeny} -> {}", context.zeny));
     }
+
+    Ok(())
+}
+
+/// GDD 11.2's Loot tab (client-side,
+/// `korangar/src/interface/windows/game_settings.rs`, `AutolootPanel`) sends
+/// `@autoloot <rate>` and `@autoloottype +/-<type>` with no dedicated ack
+/// packet -- it can only prove the command was recognized by matching the exact
+/// text `ACMD(autoloot)`/`ACMD(autoloottype)` reply with
+/// (`src/map/atcommand.c`). Account-agnostic like its S2 siblings,
+/// so it is safe in the shared "all" run too.
+fn autoloot_commands_are_recognized(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+
+    context.flush();
+    context.say("@autoloot 50")?;
+    context.wait_for("autoloot rate confirmation", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Autolooting items with drop rates of 50") => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.say("@autoloot 0")?;
+    context.wait_for("autoloot off confirmation", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Autoloot is now off") => Some(()),
+        _ => None,
+    })?;
+
+    // +card / -card round trip. If a previous run of this same scenario left
+    // "card" enabled, add first so the toggle below is a clean add-then-remove
+    // regardless of starting state.
+    context.flush();
+    context.say("@autoloottype +card")?;
+    let added = context.wait_for_within("autoloottype +card reply", Duration::from_secs(5), &mut |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Autolooting item type: 'Card'") => Some(true),
+        NetworkEvent::ChatMessage { text, .. } if text.contains("already autolooting this item type") => Some(false),
+        _ => None,
+    })?;
+    if !added {
+        // Already enabled from a previous run: this is the add, so re-add
+        // fails on purpose -- confirm the exact "already enabled" wording,
+        // then remove so the rest of this scenario runs from a clean state.
+        context.flush();
+        context.say("@autoloottype -card")?;
+        context.wait_for("autoloottype -card cleanup", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.contains("Removed item type: 'Card'") => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context.say("@autoloottype +card")?;
+        context.wait_for("autoloottype +card after cleanup", |event| match event {
+            NetworkEvent::ChatMessage { text, .. } if text.contains("Autolooting item type: 'Card'") => Some(()),
+            _ => None,
+        })?;
+    }
+
+    context.flush();
+    context.say("@autoloottype -card")?;
+    context.wait_for("autoloottype -card reply", |event| match event {
+        NetworkEvent::ChatMessage { text, .. } if text.contains("Removed item type: 'Card'") => Some(()),
+        _ => None,
+    })?;
 
     Ok(())
 }

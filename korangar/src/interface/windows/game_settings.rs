@@ -6,7 +6,7 @@ use rust_state::{Path, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
-use crate::settings::{BindableAction, GameSettings, GameSettingsPathExt};
+use crate::settings::{AutolootItemType, BindableAction, GameSettings, GameSettingsPathExt};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::skills::SkillTreePathExt;
 use crate::state::theme::InterfaceThemeType;
@@ -74,6 +74,89 @@ where
                     }
                 }
                 self.entries = std::mem::take(&mut entries);
+            }
+            for (index, element) in self.elements.iter_mut().enumerate() {
+                element.create_layout_info(state, store.child_store(index as u64), resolver);
+            }
+        });
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        _: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        for (index, element) in self.elements.iter().enumerate() {
+            element.lay_out(state, store.child_store(index as u64), &(), layout);
+        }
+    }
+}
+
+/// GDD 11.2's Loot tab: `@autoloot` rate and `@autoloottype` toggles as
+/// buttons, "so nobody types `@` commands". Like [`GroundSkillModeList`],
+/// this only sends the commands -- Hercules gives no packet the client could
+/// use to read the true current server-side value back, so the label text is
+/// "what this UI last sent", not a synced state.
+struct AutolootPanel<A> {
+    game_settings_path: A,
+    elements: Vec<ElementBox<ClientState>>,
+}
+
+impl<A> Element<ClientState> for AutolootPanel<A>
+where
+    A: Path<ClientState, GameSettings> + Copy + 'static,
+{
+    type LayoutInfo = ();
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        mut store: ElementStoreMut,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            use korangar_interface::prelude::*;
+
+            let settings = state.get(&self.game_settings_path);
+            self.elements.clear();
+            self.elements.push(ErasedElement::new(text! {
+                text: format!(
+                    "Autoloot rate: {}% (items with a drop rate at or below this are always picked up)",
+                    settings.autoloot_rate
+                ),
+            }));
+            self.elements.push(ErasedElement::new(split! {
+                gaps: theme().window().gaps(),
+                children: (
+                    button! {
+                        text: "−10%",
+                        tooltip: "Lower the autoloot drop-rate threshold.",
+                        event: InputEvent::SetAutolootRate { rate: settings.autoloot_rate.saturating_sub(10) },
+                    },
+                    button! {
+                        text: "+10%",
+                        tooltip: "Raise the autoloot drop-rate threshold.",
+                        event: InputEvent::SetAutolootRate { rate: settings.autoloot_rate.saturating_add(10).min(100) },
+                    },
+                    button! {
+                        text: "Off",
+                        tooltip: "Disable rate-based autoloot (item-type autoloot below is unaffected).",
+                        event: InputEvent::SetAutolootRate { rate: 0 },
+                    },
+                ),
+            }));
+            self.elements
+                .push(ErasedElement::new(text! { text: "Always autoloot these item types:" }));
+            for item_type in AutolootItemType::ALL {
+                let enabled = settings.autoloot_types.contains(&item_type);
+                let label = format!("[{}] {}", if enabled { "x" } else { " " }, item_type.label());
+                self.elements.push(ErasedElement::new(button! {
+                    text: label,
+                    tooltip: "Click to toggle always autolooting this item type, regardless of drop rate.",
+                    event: InputEvent::ToggleAutolootType { item_type },
+                }));
             }
             for (index, element) in self.elements.iter_mut().enumerate() {
                 element.create_layout_info(state, store.child_store(index as u64), resolver);
@@ -255,6 +338,11 @@ where
                     tooltip: "Show or hide the server's compass/quest marks on the minimap. Separate from \"Show quest markers\" above, which controls the overhead world markers.",
                     state: self.game_settings_path.show_minimap_quest_markers(),
                     event: Toggle(self.game_settings_path.show_minimap_quest_markers()),
+                },
+                text! { text: "Loot" },
+                AutolootPanel {
+                    game_settings_path: self.game_settings_path,
+                    elements: Vec::new(),
                 },
                 state_button! {
                     text: "Show combat text",

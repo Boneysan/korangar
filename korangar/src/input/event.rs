@@ -12,7 +12,7 @@ use rust_state::State;
 
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
-use crate::settings::{BindableAction, KeyChord};
+use crate::settings::{AutolootItemType, BindableAction, KeyChord};
 use crate::state::ClientState;
 use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
 use crate::state::inventory::InventoryTab;
@@ -375,6 +375,18 @@ pub enum InputEvent {
     /// Warp to an online party member (`@partyjump`).
     JumpToPartyMember {
         character_name: String,
+    },
+    /// GDD 11.2's Loot tab: set the `@autoloot` drop-rate threshold. Clamped
+    /// to 0-100 by the handler; Hercules itself clamps too, so an
+    /// out-of-range value is not a wire hazard, just wasted intent.
+    SetAutolootRate {
+        rate: u8,
+    },
+    /// GDD 11.2's Loot tab: flip one `@autoloottype` entry. The handler reads
+    /// the current membership and sends `+`/`-` accordingly, the same
+    /// read-then-flip shape as `ToggleMinimapWindow`.
+    ToggleAutolootType {
+        item_type: AutolootItemType,
     },
     /// Cast a skill.
     CastSkill {

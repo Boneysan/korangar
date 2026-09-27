@@ -8719,6 +8719,35 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
+                InputEvent::SetAutolootRate { rate } => {
+                    let rate = rate.min(100);
+                    *self.client_state.follow_mut(client_state().game_settings().autoloot_rate()) = rate;
+                    let command = format!("@autoloot {rate}");
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("> {command}"), MessageColor::Information));
+                    let _ = self
+                        .networking_system
+                        .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
+                }
+                InputEvent::ToggleAutolootType { item_type } => {
+                    let now_enabled = {
+                        let types = self.client_state.follow_mut(client_state().game_settings().autoloot_types());
+                        let now_enabled = !types.remove(&item_type);
+                        if now_enabled {
+                            types.insert(item_type);
+                        }
+                        now_enabled
+                    };
+                    let sign = if now_enabled { '+' } else { '-' };
+                    let command = format!("@autoloottype {sign}{}", item_type.command_name());
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(format!("> {command}"), MessageColor::Information));
+                    let _ = self
+                        .networking_system
+                        .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
+                }
                 InputEvent::PlayerInteract { entity_id } => {
                     let is_local_player = self
                         .client_state

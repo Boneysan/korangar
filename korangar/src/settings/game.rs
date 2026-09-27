@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
@@ -28,6 +28,64 @@ impl GroundSkillTargetMode {
             Self::AimAndClick => "Aim + click",
             Self::QuickcastAtCursor => "Quickcast",
             Self::HoldToAimRelease => "Hold + release",
+        }
+    }
+}
+
+/// Item types `@autoloottype` recognizes (`src/map/atcommand.c`,
+/// `ACMD(autoloottype)`). `command_name` must match its `strncmp(message,
+/// "...", N)` prefixes exactly.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, RustState, StateElement)]
+pub enum AutolootItemType {
+    Healing,
+    Usable,
+    Etc,
+    Weapon,
+    Armor,
+    Card,
+    PetEgg,
+    PetArmor,
+    Ammo,
+}
+
+impl AutolootItemType {
+    pub const ALL: [Self; 9] = [
+        Self::Healing,
+        Self::Usable,
+        Self::Etc,
+        Self::Weapon,
+        Self::Armor,
+        Self::Card,
+        Self::PetEgg,
+        Self::PetArmor,
+        Self::Ammo,
+    ];
+
+    pub fn command_name(self) -> &'static str {
+        match self {
+            Self::Healing => "healing",
+            Self::Usable => "usable",
+            Self::Etc => "etc",
+            Self::Weapon => "weapon",
+            Self::Armor => "armor",
+            Self::Card => "card",
+            Self::PetEgg => "petegg",
+            Self::PetArmor => "petarmor",
+            Self::Ammo => "ammo",
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Healing => "Healing items",
+            Self::Usable => "Usable items",
+            Self::Etc => "Etc items",
+            Self::Weapon => "Weapons",
+            Self::Armor => "Armor",
+            Self::Card => "Cards",
+            Self::PetEgg => "Pet eggs",
+            Self::PetArmor => "Pet armor",
+            Self::Ammo => "Ammo",
         }
     }
 }
@@ -156,6 +214,18 @@ pub struct GameSettings {
     /// the separate overhead world markers, not the minimap.
     #[serde(default = "default_true")]
     pub show_minimap_quest_markers: bool,
+    /// GDD 11.2's Loot tab: last rate sent to `@autoloot` (0-100, the
+    /// percent-and-below drop-rate threshold Hercules autoloots regardless of
+    /// type). The client cannot read the server's actual current value back
+    /// -- this is what the UI last sent, not a synced state.
+    #[serde(default)]
+    pub autoloot_rate: u8,
+    /// GDD 11.2's Loot tab: item types last told to `@autoloottype +`/`-`.
+    /// Same caveat as `autoloot_rate`: a preference this UI has sent, not a
+    /// value read back from the server.
+    #[serde(default)]
+    #[hidden_element]
+    pub autoloot_types: HashSet<AutolootItemType>,
     /// Show floating damage, miss, and healing numbers.
     #[serde(default = "default_true")]
     pub show_combat_text: bool,
@@ -224,6 +294,8 @@ impl Default for GameSettings {
             show_minimap_facilities: true,
             show_minimap_party: true,
             show_minimap_quest_markers: true,
+            autoloot_rate: 0,
+            autoloot_types: HashSet::new(),
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
             combat_text_size: CombatTextSize::default(),
@@ -400,7 +472,39 @@ mod tests {
     use std::mem::ManuallyDrop;
 
     use super::super::key_bindings::BindableAction;
-    use super::{CombatTextFrequency, CombatTextSize, GameSettings, GroundSkillTargetMode, format_damage_number};
+    use super::{AutolootItemType, CombatTextFrequency, CombatTextSize, GameSettings, GroundSkillTargetMode, format_damage_number};
+
+    #[test]
+    fn autoloot_item_type_command_names_match_hercules_exactly() {
+        // Hercules' ACMD(autoloottype) recognizes exactly these strings
+        // (src/map/atcommand.c). A typo here would silently send a command
+        // the server rejects with "Item type not found." -- wrong at the
+        // wire, not a compile error.
+        let expected = [
+            (AutolootItemType::Healing, "healing"),
+            (AutolootItemType::Usable, "usable"),
+            (AutolootItemType::Etc, "etc"),
+            (AutolootItemType::Weapon, "weapon"),
+            (AutolootItemType::Armor, "armor"),
+            (AutolootItemType::Card, "card"),
+            (AutolootItemType::PetEgg, "petegg"),
+            (AutolootItemType::PetArmor, "petarmor"),
+            (AutolootItemType::Ammo, "ammo"),
+        ];
+        assert_eq!(AutolootItemType::ALL.len(), expected.len());
+        for (item_type, command_name) in expected {
+            assert_eq!(item_type.command_name(), command_name);
+        }
+        // Every ALL entry is covered above, and none twice.
+        let mut seen: Vec<&'static str> = AutolootItemType::ALL.iter().map(|item_type| item_type.command_name()).collect();
+        seen.sort_unstable();
+        seen.dedup();
+        assert_eq!(
+            seen.len(),
+            AutolootItemType::ALL.len(),
+            "AutolootItemType::ALL has a duplicate command_name"
+        );
+    }
 
     #[test]
     fn accessibility_settings_have_safe_defaults_and_migrate_older_files() {
@@ -413,6 +517,10 @@ mod tests {
         assert!(default_settings.show_minimap_facilities);
         assert!(default_settings.show_minimap_party);
         assert!(default_settings.show_minimap_quest_markers);
+        // Off by default: nothing was ever sent to the server on a fresh
+        // install, so the UI must not claim otherwise.
+        assert_eq!(default_settings.autoloot_rate, 0);
+        assert!(default_settings.autoloot_types.is_empty());
         assert!(default_settings.warn_dangerous_maps);
         assert!(default_settings.show_combat_text);
         assert_eq!(default_settings.combat_text_frequency, CombatTextFrequency::All);
@@ -427,6 +535,8 @@ mod tests {
         assert!(old_settings.show_minimap_facilities);
         assert!(old_settings.show_minimap_party);
         assert!(old_settings.show_minimap_quest_markers);
+        assert_eq!(old_settings.autoloot_rate, 0);
+        assert!(old_settings.autoloot_types.is_empty());
         assert!(old_settings.warn_dangerous_maps);
         assert!(old_settings.show_combat_text);
         assert_eq!(old_settings.combat_text_frequency, CombatTextFrequency::All);
