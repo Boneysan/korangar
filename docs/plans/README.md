@@ -2,6 +2,9 @@
 
 **Parent hub**: [docs/README.md](../README.md) (start here for the full documentation index).
 
+> **2026-09-27 — the active work is the GDD v0.2 modernization** ([gdd-next-slices.md](gdd-next-slices.md)).
+> The 2026-08-12 track notes below are historical.
+>
 > **2026-08-12 — two tracks are separate:**
 >
 > 1. **Headless suite** — acceptance **closed** for planned depth. Resume:

@@ -16,7 +16,7 @@ This directory contains all design documents, technical deep dives, implementati
   3. `docs/CLIENT_SYSTEMS_OVERVIEW.md` — High-level map of the codebase.
   4. `docs/SOFTWARE_DESIGN.md` — Architecture and key decisions.
 
-- **Current cross-project build order (2026-09-22):** Start with
+- **Current cross-project build order (2026-09-22; status re-verified 2026-09-27):** Start with
   [GDD §19](GDD.md#19-implementation-roadmap) and
   [plans/gdd-next-slices.md](plans/gdd-next-slices.md). The older animation
   handoffs remain useful for effect work but are not the active GDD queue.

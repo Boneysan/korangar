@@ -1,5 +1,13 @@
 # Korangar — agent notes
 
+**CURRENT PRIORITY (verified 2026-09-27): GDD v0.2 modernization, Phase 1.** Start with
+[docs/plans/gdd-next-slices.md](docs/plans/gdd-next-slices.md) (per-slice status and the
+2026-09-27 verification notes) and [docs/GDD.md Appendix E](docs/GDD.md). Open issues to
+know first: the G1 data drift check is red (stale revision stamps, so re-run
+`tools/export_supported_data.py`); the only full headless run since the newest scenario failed
+`skills-professor`; S3's `party_share_level: 30` is an uncommitted Hercules edit. The
+July animation/live-pass notes below are historical context for effect work, not the active queue.
+
 Rust Ragnarok Online client (wgpu 29 + winit). This fork's goal is a usable
 custom UI for a friends group + DM campaign.
 
