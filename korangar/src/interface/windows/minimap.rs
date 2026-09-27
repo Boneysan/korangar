@@ -2,10 +2,10 @@ use std::cell::UnsafeCell;
 
 use korangar_interface::element::Element;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
-use korangar_interface::event::{EventQueue, ScrollHandler};
+use korangar_interface::event::{ClickHandler, EventQueue, ScrollHandler};
 use korangar_interface::layout::area::Area;
 use korangar_interface::layout::tooltip::TooltipExt;
-use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
+use korangar_interface::layout::{MouseButton, Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::State;
@@ -62,6 +62,10 @@ struct MinimapViewLayout {
 /// invisible — the blip must be a texture instruction (or similar custom).
 struct MinimapView {
     hover_tip: UnsafeCell<String>,
+    /// Scratch storage for this frame's waypoint-click handler, so
+    /// `register_click_handler` can borrow it for `'a`. Overwritten every
+    /// frame in `lay_out` before use; the initial value is never read.
+    waypoint_click: UnsafeCell<MinimapWaypointClick>,
 }
 
 struct MinimapBlipTooltip;
@@ -82,6 +86,37 @@ impl ScrollHandler<ClientState> for MinimapScrollZoom {
             minimap.zoom_by(step);
         });
         true
+    }
+}
+
+/// Left-click places the personal waypoint at the clicked tile (GDD 10.12).
+/// The tile is computed once per frame in `lay_out`, from the same `area`
+/// [`tile_to_minimap`] uses, so a click and the marker it places always agree
+/// on where the map bitmap actually is on screen.
+struct MinimapWaypointClick {
+    tile_x: u16,
+    tile_y: u16,
+}
+
+impl ClickHandler<ClientState> for MinimapWaypointClick {
+    fn handle_click(&self, state: &State<ClientState>, _: &mut EventQueue<ClientState>) {
+        let waypoint = Some((self.tile_x, self.tile_y));
+        state.update_value_with(client_state().minimap(), move |minimap| {
+            minimap.set_personal_waypoint(waypoint);
+        });
+    }
+}
+
+/// Right-click clears the personal waypoint. A dedicated gesture rather than
+/// click-to-toggle: a player refining a spot with several left-clicks should
+/// not have to first figure out where the previous click already landed.
+struct MinimapWaypointClear;
+
+impl ClickHandler<ClientState> for MinimapWaypointClear {
+    fn handle_click(&self, state: &State<ClientState>, _: &mut EventQueue<ClientState>) {
+        state.update_value_with(client_state().minimap(), |minimap| {
+            minimap.set_personal_waypoint(None);
+        });
     }
 }
 
@@ -186,6 +221,22 @@ impl Element<ClientState> for MinimapView {
                 });
             }
 
+            if let Some((x, y)) = minimap.personal_waypoint() {
+                // Deliberately distinct from every other marker color used
+                // above (route exit, ping kinds, compass) so it reads as its
+                // own thing at a glance.
+                extra_blips.push(MinimapBlip {
+                    x: f32::from(x),
+                    y: f32::from(y),
+                    red: 235,
+                    green: 235,
+                    blue: 245,
+                    alpha: 255,
+                    size_scale: 1.05,
+                    name: format!("Waypoint ({x}, {y})"),
+                });
+            }
+
             // Compass / NPC marks (0x0144).
             for mark in minimap.dynamic_markers() {
                 extra_blips.push(MinimapBlip {
@@ -228,7 +279,8 @@ impl Element<ClientState> for MinimapView {
         };
 
         // Scroll-wheel zoom while the cursor is over the map.
-        if area.check().run(layout) {
+        let hovering = area.check().run(layout);
+        if hovering {
             layout.register_scroll_handler(&MinimapScrollZoom);
         }
 
@@ -260,6 +312,20 @@ impl Element<ClientState> for MinimapView {
 
         let map_w = minimap.map_width().max(1) as f32;
         let map_h = minimap.map_height().max(1) as f32;
+
+        // Click-to-place / click-to-clear the personal waypoint (GDD 10.12).
+        // Registered only while hovering the map area, not the whole window,
+        // so clicking the zoom buttons or coordinate readout never places one.
+        if hovering && minimap.map_width() > 0 && minimap.map_height() > 0 {
+            let mouse = layout.get_mouse_position();
+            let (tile_x, tile_y) = minimap_to_tile(mouse.left, mouse.top, map_w, map_h, area);
+            // Safety: overwritten here, immediately before the borrow below is
+            // taken, and the borrow does not outlive this call to `lay_out`.
+            unsafe { *self.waypoint_click.get() = MinimapWaypointClick { tile_x, tile_y } };
+            layout.register_click_handler(MouseButton::Left, unsafe { &*self.waypoint_click.get() });
+            layout.register_click_handler(MouseButton::Right, &MinimapWaypointClear);
+        }
+
         let poi_size = (side / DEFAULT_MINIMAP_SIDE * POI_ICON_SIZE).clamp(8.0, 20.0);
         let player_size = (side / DEFAULT_MINIMAP_SIDE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
 
@@ -388,6 +454,17 @@ fn tile_to_minimap(tile_x: f32, tile_y: f32, map_w: f32, map_h: f32, area: Area)
     (cx, cy)
 }
 
+/// Inverse of [`tile_to_minimap`]: a screen point inside `area` to the GAT
+/// tile under it. Used for click-to-place, so it must invert the same
+/// left-to-right, bottom-to-top mapping exactly, not just approximate it.
+fn minimap_to_tile(screen_x: f32, screen_y: f32, map_w: f32, map_h: f32, area: Area) -> (u16, u16) {
+    let nx = ((screen_x - area.left) / area.width).clamp(0.0, 1.0);
+    let ny = ((screen_y - area.top) / area.height).clamp(0.0, 1.0);
+    let tile_x = (nx * map_w).clamp(0.0, map_w - 1.0);
+    let tile_y = ((1.0 - ny) * map_h).clamp(0.0, map_h - 1.0);
+    (tile_x as u16, tile_y as u16)
+}
+
 /// Coordinate readout under the map image.
 struct MinimapCoords;
 
@@ -463,6 +540,7 @@ impl CustomWindow<ClientState> for MinimapWindow {
             elements: (
                 MinimapView {
                     hover_tip: UnsafeCell::new(String::new()),
+                    waypoint_click: UnsafeCell::new(MinimapWaypointClick { tile_x: 0, tile_y: 0 }),
                 },
                 MinimapCoords,
                 split! {
@@ -493,5 +571,61 @@ impl CustomWindow<ClientState> for MinimapWindow {
                 button! { text: "Share current route", tooltip: "Send your selected map route to party members; they choose whether to accept it", event: InputEvent::SharePartyDestination },
             ),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_area() -> Area {
+        Area {
+            left: 40.0,
+            top: 20.0,
+            width: 160.0,
+            height: 160.0,
+        }
+    }
+
+    #[test]
+    fn minimap_to_tile_inverts_tile_to_minimap() {
+        let area = test_area();
+        let (map_w, map_h) = (200.0, 200.0);
+        for (tile_x, tile_y) in [(0.0, 0.0), (50.0, 120.0), (199.0, 199.0), (100.0, 100.0)] {
+            let (screen_x, screen_y) = tile_to_minimap(tile_x, tile_y, map_w, map_h, area);
+            let (round_trip_x, round_trip_y) = minimap_to_tile(screen_x, screen_y, map_w, map_h, area);
+            // Sub-tile precision is lost (minimap_to_tile floors to a whole
+            // tile), so the round trip only needs to land on the same tile,
+            // not reproduce the exact fractional input.
+            assert_eq!(round_trip_x, tile_x as u16, "x round-trip for tile ({tile_x}, {tile_y})");
+            assert_eq!(round_trip_y, tile_y as u16, "y round-trip for tile ({tile_x}, {tile_y})");
+        }
+    }
+
+    #[test]
+    fn minimap_to_tile_flips_y_between_screen_and_world() {
+        // Screen top (low y) is the map's north edge -- the highest tile_y,
+        // matching tile_to_minimap's own `1.0 - ...` flip. Getting this
+        // backwards would place every click's marker mirrored top-to-bottom.
+        let area = test_area();
+        let (top_tile_x, top_tile_y) = minimap_to_tile(area.left, area.top, 200.0, 200.0, area);
+        let (bottom_tile_x, bottom_tile_y) = minimap_to_tile(area.left, area.top + area.height, 200.0, 200.0, area);
+        assert_eq!(top_tile_x, bottom_tile_x);
+        assert!(
+            top_tile_y > bottom_tile_y,
+            "top of screen should map to a higher tile_y (north) than the bottom"
+        );
+    }
+
+    #[test]
+    fn minimap_to_tile_clamps_outside_the_map_area() {
+        let area = test_area();
+        let (map_w, map_h) = (200.0, 200.0);
+        // Comfortably outside the area on every side.
+        assert_eq!(minimap_to_tile(area.left - 500.0, area.top, map_w, map_h, area), (0, 199));
+        assert_eq!(
+            minimap_to_tile(area.left + area.width + 500.0, area.top + area.height, map_w, map_h, area),
+            (199, 0)
+        );
     }
 }

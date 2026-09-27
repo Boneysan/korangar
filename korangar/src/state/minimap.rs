@@ -143,6 +143,13 @@ pub struct MinimapState {
     party_ping: Option<PartyPing>,
     #[hidden_element]
     party_ping_sent_at: Option<ClientTick>,
+    /// Player-placed personal waypoint (GDD 10.12 "clickable personal
+    /// waypoint placement"). Client-only, map-local, never sent to the
+    /// server or other players -- unlike a party ping it has no expiry and
+    /// no sender, and unlike the navigation marker it is not derived from
+    /// the route graph, so it works on any clicked tile.
+    #[hidden_element]
+    personal_waypoint: Option<(u16, u16)>,
 }
 
 impl Default for MinimapState {
@@ -161,6 +168,7 @@ impl Default for MinimapState {
             navigation_breadcrumbs: Vec::new(),
             party_ping: None,
             party_ping_sent_at: None,
+            personal_waypoint: None,
         }
     }
 }
@@ -178,6 +186,7 @@ impl MinimapState {
         self.party_ping = None;
         self.navigation_marker = None;
         self.navigation_breadcrumbs.clear();
+        self.personal_waypoint = None;
     }
 
     pub fn set_map(
@@ -195,9 +204,10 @@ impl MinimapState {
         self.texture = texture;
         self.player_marker = player_marker;
         self.pois = pois;
-        // Compass marks are map-local.
+        // Compass marks, pings, and the personal waypoint are all map-local.
         self.dynamic_markers.clear();
         self.party_ping = None;
+        self.personal_waypoint = None;
     }
 
     pub fn display_side(&self) -> f32 {
@@ -263,6 +273,18 @@ impl MinimapState {
 
     pub fn navigation_breadcrumbs(&self) -> &[(u16, u16)] {
         &self.navigation_breadcrumbs
+    }
+
+    /// Place (or clear, with `None`) the personal waypoint. Out-of-bounds
+    /// tiles are rejected the same way [`Self::set_party_ping`] rejects them,
+    /// so a click computed against a stale map size cannot store a marker
+    /// the current map can never render.
+    pub fn set_personal_waypoint(&mut self, waypoint: Option<(u16, u16)>) {
+        self.personal_waypoint = waypoint.filter(|(x, y)| *x < self.map_width && *y < self.map_height);
+    }
+
+    pub fn personal_waypoint(&self) -> Option<(u16, u16)> {
+        self.personal_waypoint
     }
 
     pub fn set_party_ping(&mut self, mut ping: PartyPing, now: ClientTick) -> bool {
@@ -504,5 +526,44 @@ mod tests {
         assert!((state.display_side() - MAX_MINIMAP_SIDE).abs() < 0.01);
         state.zoom_by(-10_000.0);
         assert!((state.display_side() - MIN_MINIMAP_SIDE).abs() < 0.01);
+    }
+
+    #[test]
+    fn personal_waypoint_round_trips_and_clears() {
+        let mut state = MinimapState::default();
+        state.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
+        assert!(state.personal_waypoint().is_none());
+        state.set_personal_waypoint(Some((120, 154)));
+        assert_eq!(state.personal_waypoint(), Some((120, 154)));
+        state.set_personal_waypoint(None);
+        assert!(state.personal_waypoint().is_none());
+    }
+
+    #[test]
+    fn personal_waypoint_outside_the_loaded_map_is_rejected() {
+        let mut state = MinimapState::default();
+        state.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
+        state.set_personal_waypoint(Some((200, 50))); // x == map_width, out of bounds
+        assert!(state.personal_waypoint().is_none());
+        state.set_personal_waypoint(Some((50, 200))); // y == map_height, out of bounds
+        assert!(state.personal_waypoint().is_none());
+        state.set_personal_waypoint(Some((199, 199))); // exactly in bounds
+        assert_eq!(state.personal_waypoint(), Some((199, 199)));
+    }
+
+    #[test]
+    fn personal_waypoint_is_map_local() {
+        let mut state = MinimapState::default();
+        state.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
+        state.set_personal_waypoint(Some((120, 154)));
+
+        // A map change clears it -- a waypoint on the old map means nothing here.
+        state.set_map("izlude".into(), 200, 200, None, None, Vec::new());
+        assert!(state.personal_waypoint().is_none());
+
+        // `clear()` (logout / disconnect) also drops it.
+        state.set_personal_waypoint(Some((10, 10)));
+        state.clear();
+        assert!(state.personal_waypoint().is_none());
     }
 }
