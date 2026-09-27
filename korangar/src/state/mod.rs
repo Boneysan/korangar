@@ -114,15 +114,27 @@ use crate::{AudioSettings, CHARACTER_PREVIEW_ENTITY_ID, GraphicsSettings};
 /// message so the chat window can use the correct colors when switching themes.
 #[derive(Debug, Clone, RustState, StateElement)]
 pub struct ChatMessage {
-    /// Raw message.
+    /// Raw message. Deliberately never includes the timestamp below --
+    /// callers throughout this crate match on exact prefixes/substrings of
+    /// this text (party ping parsing, marker text, message-color routing),
+    /// and baking a per-second-varying timestamp into it would break every
+    /// one of them. GDD 10.15's timestamp is display-only, added by the chat
+    /// window at render time from `sent_at`.
     pub text: String,
     /// Color of the message.
     pub color: MessageColor,
+    /// Wall-clock time this message was added to the log (GDD 10.15).
+    #[hidden_element]
+    pub sent_at: chrono::DateTime<chrono::Local>,
 }
 
 impl ChatMessage {
     pub fn new(text: String, color: MessageColor) -> Self {
-        Self { text, color }
+        Self {
+            text,
+            color,
+            sent_at: chrono::Local::now(),
+        }
     }
 }
 

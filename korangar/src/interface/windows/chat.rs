@@ -15,7 +15,7 @@ use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::{ChatThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
-use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::state::{ChatMessage, ClientState, ClientStatePathExt, client_state, client_theme};
 
 const MAXIMUM_CHAT_MESSAGE_LENGTH: usize = 80;
 /// Ragnarok character names cap at 24.
@@ -32,6 +32,21 @@ struct ChatLayoutInfo {
     area: Area,
     // TODO: Don't allocate this every frame.
     message_heights: Vec<f32>,
+    // `add_text` in `lay_out` needs `&'a str`, and a `String` computed there
+    // cannot satisfy that lifetime -- so the timestamp-prefixed text is
+    // computed once here, alongside the height it produced, and `lay_out`
+    // borrows from this struct instead of recomputing it.
+    display_texts: Vec<String>,
+}
+
+/// GDD 10.15's chat timestamp: display-only, so it lives here rather than on
+/// `ChatMessage::text` (see that field's doc comment for why). One function
+/// shared by the height-measurement and render passes below, so the text
+/// actually measured is always exactly the text actually drawn -- computing
+/// it separately in each pass risks the two silently drifting apart and
+/// wrapping/clipping the last line.
+fn display_text(chat_message: &ChatMessage) -> String {
+    format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), chat_message.text)
 }
 
 struct ChatElement<A> {
@@ -62,7 +77,7 @@ where
             let message_spacing = 5.0;
 
             let mut total_height = 0.0;
-            let message_heights = chat_messages
+            let (message_heights, display_texts): (Vec<f32>, Vec<String>) = chat_messages
                 .iter()
                 .map(|chat_message| {
                     let color = match chat_message.color {
@@ -77,8 +92,9 @@ where
                         MessageColor::Information => Color::monochrome_u8(255),
                     };
 
+                    let display_text = display_text(chat_message);
                     let (size, _) = resolver.get_text_dimensions(
-                        &chat_message.text,
+                        &display_text,
                         color,
                         Color::rgb_u8(255, 160, 60),
                         // TODO: Theme this.
@@ -93,13 +109,17 @@ where
 
                     total_height += size.height();
 
-                    size.height()
+                    (size.height(), display_text)
                 })
-                .collect();
+                .unzip();
 
             let area = resolver.with_height(total_height);
 
-            Self::LayoutInfo { area, message_heights }
+            Self::LayoutInfo {
+                area,
+                message_heights,
+                display_texts,
+            }
         })
     }
 
@@ -118,7 +138,8 @@ where
         chat_messages
             .iter()
             .zip(layout_info.message_heights.iter())
-            .for_each(|(chat_message, message_height)| {
+            .zip(layout_info.display_texts.iter())
+            .for_each(|((chat_message, message_height), display_text)| {
                 let color = match chat_message.color {
                     MessageColor::Rgb { red, green, blue } => Color::rgb_u8(red, green, blue),
                     // TODO: Make the color right.
@@ -144,7 +165,7 @@ where
 
                 layout.add_text(
                     text_area,
-                    &chat_message.text,
+                    display_text,
                     // TODO: Theme this.
                     FontSize(14.0),
                     color,
@@ -373,7 +394,25 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::{CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState};
+    use chrono::TimeZone;
+    use korangar_networking::MessageColor;
+
+    use super::{CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState, display_text};
+    use crate::state::ChatMessage;
+
+    /// GDD 10.15's chat timestamp is display-only: `ChatMessage::text` must
+    /// stay exactly what was passed in (parsers and marker-matching
+    /// throughout this crate rely on that), while `display_text` -- what the
+    /// window actually measures and draws -- carries the `[HH:MM:SS]` prefix.
+    #[test]
+    fn display_text_prefixes_a_timestamp_without_touching_the_stored_text() {
+        let mut message = ChatMessage::new("hello party".to_owned(), MessageColor::Information);
+        // Fix the timestamp so this test does not depend on wall-clock time.
+        message.sent_at = chrono::Local.with_ymd_and_hms(2026, 9, 27, 14, 5, 9).unwrap();
+
+        assert_eq!(message.text, "hello party");
+        assert_eq!(display_text(&message), "[14:05:09] hello party");
+    }
 
     /// A first whisper should leave the Whisper channel ready to answer.
     #[test]
