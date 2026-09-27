@@ -144,6 +144,18 @@ pub struct GameSettings {
     /// Show server-provided quest markers above NPCs and objective locations.
     #[serde(default = "default_true")]
     pub show_quest_markers: bool,
+    /// Minimap layer toggle (GDD 10.12): Towninfo facility markers (shops,
+    /// Kafra, guides, inns).
+    #[serde(default = "default_true")]
+    pub show_minimap_facilities: bool,
+    /// Minimap layer toggle (GDD 10.12): party member blips.
+    #[serde(default = "default_true")]
+    pub show_minimap_party: bool,
+    /// Minimap layer toggle (GDD 10.12): server compass/quest marks
+    /// (`ZC_COMPASS`). Independent of `show_quest_markers`, which controls
+    /// the separate overhead world markers, not the minimap.
+    #[serde(default = "default_true")]
+    pub show_minimap_quest_markers: bool,
     /// Show floating damage, miss, and healing numbers.
     #[serde(default = "default_true")]
     pub show_combat_text: bool,
@@ -209,6 +221,9 @@ impl Default for GameSettings {
             hold_aim_release_ground_skills: false,
             ground_skill_target_modes: HashMap::new(),
             show_quest_markers: true,
+            show_minimap_facilities: true,
+            show_minimap_party: true,
+            show_minimap_quest_markers: true,
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
             combat_text_size: CombatTextSize::default(),
@@ -395,6 +410,9 @@ mod tests {
         assert!(!default_settings.quickcast_ground_skills);
         assert!(!default_settings.hold_aim_release_ground_skills);
         assert!(default_settings.show_quest_markers);
+        assert!(default_settings.show_minimap_facilities);
+        assert!(default_settings.show_minimap_party);
+        assert!(default_settings.show_minimap_quest_markers);
         assert!(default_settings.warn_dangerous_maps);
         assert!(default_settings.show_combat_text);
         assert_eq!(default_settings.combat_text_frequency, CombatTextFrequency::All);
@@ -406,6 +424,9 @@ mod tests {
         assert!(!old_settings.quickcast_ground_skills);
         assert!(!old_settings.hold_aim_release_ground_skills);
         assert!(old_settings.show_quest_markers);
+        assert!(old_settings.show_minimap_facilities);
+        assert!(old_settings.show_minimap_party);
+        assert!(old_settings.show_minimap_quest_markers);
         assert!(old_settings.warn_dangerous_maps);
         assert!(old_settings.show_combat_text);
         assert_eq!(old_settings.combat_text_frequency, CombatTextFrequency::All);
@@ -415,13 +436,19 @@ mod tests {
 
         let migrated_user_choices: ManuallyDrop<GameSettings> = ManuallyDrop::new(
             ron::from_str(
-                "(auto_attack:true, show_combat_text:false, warn_dangerous_maps:false, combat_text_frequency:Important, \
-                 combat_text_size:Large)",
+                "(auto_attack:true, show_combat_text:false, warn_dangerous_maps:false, show_minimap_facilities:false, \
+                 combat_text_frequency:Important, combat_text_size:Large)",
             )
             .unwrap(),
         );
         assert!(!migrated_user_choices.show_combat_text);
         assert!(!migrated_user_choices.warn_dangerous_maps);
+        // Explicitly turned off in the file above; must not be silently
+        // re-enabled by the same defaulting that protects untouched fields.
+        assert!(!migrated_user_choices.show_minimap_facilities);
+        // Untouched fields still default on, same as a brand-new install.
+        assert!(migrated_user_choices.show_minimap_party);
+        assert!(migrated_user_choices.show_minimap_quest_markers);
         assert_eq!(migrated_user_choices.combat_text_frequency, CombatTextFrequency::Important);
         assert_eq!(migrated_user_choices.combat_text_size, CombatTextSize::Large);
         let status_only: ManuallyDrop<GameSettings> =

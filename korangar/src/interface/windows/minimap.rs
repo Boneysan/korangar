@@ -15,6 +15,7 @@ use crate::graphics::{Color, CornerDiameter, ShadowPadding};
 use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::renderer::LayoutExt;
+use crate::settings::GameSettingsPathExt;
 use crate::state::minimap::{DEFAULT_MINIMAP_SIDE, MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state, this_entity};
@@ -141,13 +142,16 @@ impl Element<ClientState> for MinimapView {
 
             let minimap = state.get(&minimap_path);
             let current_map = minimap.map_name();
+            let game_settings_path = client_state().game_settings();
+            let game_settings = state.get(&game_settings_path);
 
             let mut extra_blips = Vec::new();
 
             // Party members on the same map with a known tile position.
+            // Layer toggle (GDD 10.12): "Show party members on minimap".
             let party_path = client_state().party_state();
             let party = state.get(&party_path);
-            for member in party.members() {
+            for member in party.members().iter().filter(|_| game_settings.show_minimap_party) {
                 if !member.online() {
                     continue;
                 }
@@ -238,7 +242,12 @@ impl Element<ClientState> for MinimapView {
             }
 
             // Compass / NPC marks (0x0144).
-            for mark in minimap.dynamic_markers() {
+            // Layer toggle (GDD 10.12): "Show quest marks on minimap".
+            for mark in minimap
+                .dynamic_markers()
+                .iter()
+                .filter(|_| game_settings.show_minimap_quest_markers)
+            {
                 extra_blips.push(MinimapBlip {
                     x: mark.x,
                     y: mark.y,
@@ -268,6 +277,7 @@ impl Element<ClientState> for MinimapView {
     ) {
         let minimap_path = client_state().minimap();
         let minimap = state.get(&minimap_path);
+        let show_minimap_facilities = *state.get(&client_state().game_settings().show_minimap_facilities());
         let row = layout_info.area;
         // Center a square map area inside the row (row may be wider after chrome).
         let side = row.height.min(row.width).clamp(MIN_MINIMAP_SIDE, MAX_MINIMAP_SIDE);
@@ -330,8 +340,9 @@ impl Element<ClientState> for MinimapView {
         let player_size = (side / DEFAULT_MINIMAP_SIDE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
 
         // Towninfo facility POIs (shops, kafra, guides, …).
+        // Layer toggle (GDD 10.12): "Show facility markers on minimap".
         // Must be textures — rectangles flush under the map bitmap and disappear.
-        for poi in minimap.pois() {
+        for poi in minimap.pois().iter().filter(|_| show_minimap_facilities) {
             let (cx, cy) = tile_to_minimap(poi.x as f32, poi.y as f32, map_w, map_h, area);
             let icon_area = Area {
                 left: cx - poi_size / 2.0,

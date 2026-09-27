@@ -237,6 +237,25 @@ where
                     state: self.game_settings_path.show_quest_markers(),
                     event: Toggle(self.game_settings_path.show_quest_markers()),
                 },
+                text! { text: "Minimap layers" },
+                state_button! {
+                    text: "Show facility markers",
+                    tooltip: "Show or hide Towninfo facility markers (shops, Kafra, guides, inns) on the minimap.",
+                    state: self.game_settings_path.show_minimap_facilities(),
+                    event: Toggle(self.game_settings_path.show_minimap_facilities()),
+                },
+                state_button! {
+                    text: "Show party members",
+                    tooltip: "Show or hide same-map party member blips on the minimap.",
+                    state: self.game_settings_path.show_minimap_party(),
+                    event: Toggle(self.game_settings_path.show_minimap_party()),
+                },
+                state_button! {
+                    text: "Show quest marks",
+                    tooltip: "Show or hide the server's compass/quest marks on the minimap. Separate from \"Show quest markers\" above, which controls the overhead world markers.",
+                    state: self.game_settings_path.show_minimap_quest_markers(),
+                    event: Toggle(self.game_settings_path.show_minimap_quest_markers()),
+                },
                 state_button! {
                     text: "Show combat text",
                     tooltip: "Show floating damage, miss, and healing numbers. This does not change combat results or sound cues.",
