@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+  "source_revision": "fa63cd8af40b01333790d8c0cbf4d7a8a6a5245b",
   "source_worktree_dirty": true,
   "mode": "renewal",
   "review_scope": "Manually reviewed per-level damage/heal formula derivations, traced against engine C source and skill_db.conf. Not a full skill catalogue -- see docs/plans/encyclopedia-roadmap.md E4 for remaining scope.",

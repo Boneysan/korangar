@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+  "source_revision": "fa63cd8af40b01333790d8c0cbf4d7a8a6a5245b",
   "mode": "renewal",
   "evidence_states": {
     "verified": "Source or reviewed control flow establishes this claim for the exported server revision.",
@@ -118,11 +118,11 @@
     "quests": {
       "records": 3172,
       "quest_records_with_hunt_targets": {
-        "observed": 454,
+        "observed": 448,
         "total": 3172,
         "basis": "quest records with at least one exported hunt target"
       },
-      "hunt_target_rows": 468,
+      "hunt_target_rows": 462,
       "npc_stage_relations": 1345,
       "quests_with_reviewed_flow": {
         "observed": 124,

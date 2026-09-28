@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+ "source_revision": "fa63cd8af40b01333790d8c0cbf4d7a8a6a5245b",
  "source_worktree_dirty": true,
  "mode": "renewal",
  "source": "db/quest_db.conf",
@@ -16,8 +16,8 @@
   "review_status": "nearby literal item grants are candidates, not confirmed quest rewards"
  },
  "source_file_available_in_worktree": true,
- "used_tracked_head_fallback": true,
- "source_fallback_reason": "locally_modified",
+ "used_tracked_head_fallback": false,
+ "source_fallback_reason": null,
  "entries": [
   {
    "id": 7487,
@@ -50646,17 +50646,7 @@
   {
    "id": 20005,
    "name": "The Goat-Headed Sign",
-   "targets": [
-    {
-     "mob_id": 1109,
-     "monster_name": "Deviruchi",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20005 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Quartermaster Wynne#dm",
@@ -50897,17 +50887,7 @@
   {
    "id": 20018,
    "name": "The King Beneath",
-   "targets": [
-    {
-     "mob_id": 1511,
-     "monster_name": "Amon Ra",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20018 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Mother Sabra#dm",
@@ -52824,17 +52804,7 @@
   {
    "id": 20023,
    "name": "The Vault That Prays",
-   "targets": [
-    {
-     "mob_id": 1039,
-     "monster_name": "Baphomet",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20023 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Archmagus Doran#dm",
@@ -56648,17 +56618,7 @@
   {
    "id": 20012,
    "name": "What the Ancestors Won't Say",
-   "targets": [
-    {
-     "mob_id": 1150,
-     "monster_name": "Moonlight Flower",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20012 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Grove Conduit A#dm",
@@ -56727,17 +56687,7 @@
   {
    "id": 20017,
    "name": "What the Desert Spat Up",
-   "targets": [
-    {
-     "mob_id": 1038,
-     "monster_name": "Osiris",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20017 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Osiris's Court#dm",
@@ -56791,17 +56741,7 @@
   {
    "id": 20030,
    "name": "What Turned Over in the Deep",
-   "targets": [
-    {
-     "mob_id": 1583,
-     "monster_name": "Tao Gunka",
-     "monster_data_known": true,
-     "count": 1,
-     "level_range": null,
-     "map_name": null,
-     "source_record": "quest 20030 target 1"
-    }
-   ],
+   "targets": [],
    "npc_references": [
     {
      "name": "Captain Mara#dm",
