@@ -10,15 +10,24 @@
     "actual_tag": null,
     "quantization": null,
     "ollama_version": null,
-    "num_ctx": null,
+    "num_ctx": 229376,
     "offload": null,
-    "prompt_version": 1
+    "prompt_version": 2
   },
   "source_snapshot": {
-    "korangar_head": "a7a1357475e59a6fb1fa1248946e4bcbb8211fd1",
+    "korangar_head": "63879756",
     "hercules_head": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
     "dirty_files_need_baseline_hashes": true,
-    "quest_db_policy": "When Hercules/db/quest_db.conf is dirty, quest exporter uses tracked HEAD snapshot"
+    "quest_db_policy": "When Hercules/db/quest_db.conf is dirty, quest exporter uses tracked HEAD snapshot",
+    "staleness_rule": "Judge staleness by digests of cited source files, not repository heads",
+    "hercules_local_only_files": [
+      "conf/char/char-server.conf",
+      "conf/map/map-server.conf",
+      "conf/global/sql_connection.conf",
+      "libmariadb.so.3",
+      "db/quest_db.conf"
+    ],
+    "commit_policy": "One korangar commit per accepted unit, explicit paths only; never commit in Hercules; do not push"
   },
   "packages": {
     "E0": "partial",
@@ -38,7 +47,8 @@
       "state": "todo",
       "scope": "Hercules npc/scripts.conf and the npc/scripts_*.conf includes actually loaded by the active server (renewal mode), plus dirty files in korangar/ and Hercules/",
       "output": "Deterministic generated manifest (tools/ script + committed JSON) listing every loaded script file with path and sha256, plus sha256 of each dirty file in both repositories; ledger source_snapshot.dirty_files_need_baseline_hashes cleared",
-      "exit_check": "Manifest regenerates byte-identically; a --check mode fails when a loaded script or dirty file changes; unloaded scripts (pre-re, scripts_removed, disabled includes) are excluded and listed as out of scope"
+      "exit_check": "Manifest regenerates byte-identically; a --check mode fails when a loaded script or dirty file changes; unloaded scripts (pre-re, scripts_removed, disabled includes) are excluded and listed as out of scope",
+      "attempts": 0
     },
     {
       "id": "E0-baseline-and-claim-audit",
@@ -46,7 +56,8 @@
       "state": "todo",
       "scope": "Current exports, Guide claim display, source and loaded-script manifests",
       "output": "Baseline source digests, candidate inventory, claim-state gaps and first bounded fix",
-      "exit_check": "Coverage denominators and evidence states are recorded; any first fix is source-cited and exporter checked"
+      "exit_check": "Coverage denominators and evidence states are recorded; any first fix is source-cited and exporter checked",
+      "attempts": 0
     },
     {
       "id": "E7-live-journey-inventory",
@@ -54,7 +65,9 @@
       "state": "todo",
       "scope": "Fresh non-DM item, skill and quest journeys against the running client/server",
       "output": "Dated access/precondition record and journey checklist",
-      "exit_check": "Live environment is available or precise blocker is recorded"
+      "exit_check": "Live environment is available or precise blocker is recorded",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E1-loaded-grant-branch-queue",
@@ -62,7 +75,9 @@
       "state": "todo",
       "scope": "docs/item-script-grants.v1.json and tools/item_exchange_reviews.json",
       "output": "Unreviewed loaded grant/removal branches grouped into bounded NPC/helper units",
-      "exit_check": "Every queued candidate has a source path, nearest declaration, item IDs and an exclusion or review reason"
+      "exit_check": "Every queued candidate has a source path, nearest declaration, item IDs and an exclusion or review reason",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E2-ordinary-stock-classification",
@@ -70,7 +85,9 @@
       "state": "todo",
       "scope": "Loaded shop/trader declarations and current NPC reference exports",
       "output": "Bounded literal, conditional, barter, cash and runtime stock review units",
-      "exit_check": "Stock source and condition class are explicit for every queued declaration"
+      "exit_check": "Stock source and condition class are explicit for every queued declaration",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E3-untranslated-pattern-inventory",
@@ -78,7 +95,9 @@
       "state": "todo",
       "scope": "Unsupported item, card and combo scripts in active item reference data",
       "output": "Pattern clusters ranked by number of affected entries and source semantics",
-      "exit_check": "Each cluster has examples, affected IDs and a specific review target"
+      "exit_check": "Each cluster has examples, affected IDs and a specific review target",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E4-formula-status-gap-inventory",
@@ -86,7 +105,9 @@
       "state": "todo",
       "scope": "Skill/status exports, tools/skill_formula_reviews.json and active Hercules code/config",
       "output": "Unreviewed formula/status families with source entry points",
-      "exit_check": "Each family has stable IDs, code path and an unresolved-field list"
+      "exit_check": "Each family has stable IDs, code path and an unresolved-field list",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E5-quest-family-queue",
@@ -94,7 +115,9 @@
       "state": "todo",
       "scope": "Quest reference export, tools/quest_flow_reviews.json and loaded script manifest",
       "output": "Unreviewed quest families including those without nearby item grants",
-      "exit_check": "Each family names quest IDs, source scripts, helpers and likely giver/turn-in path or an explicit unknown"
+      "exit_check": "Each family names quest IDs, source scripts, helpers and likely giver/turn-in path or an explicit unknown",
+      "attempts": 0,
+      "kind": "planning"
     },
     {
       "id": "E6-world-rule-queue",
@@ -102,7 +125,9 @@
       "state": "todo",
       "scope": "Spawn, boss, map flag, map-zone and navigation exports plus active code/config",
       "output": "Bounded dynamic map-expression, override, boss and route review units",
-      "exit_check": "Each unit states configured, conditional or live evidence needed"
+      "exit_check": "Each unit states configured, conditional or live evidence needed",
+      "attempts": 0,
+      "kind": "planning"
     }
   ],
   "completed_unit_ids": [],
