@@ -9,8 +9,7 @@ Hard rules, repeated here because they are the costly ones:
 
 - Paths are relative to this repository root; Hercules is `../Hercules`.
 - Edit review files under `tools/`, never the generated `docs/*.v1.json`.
-- Never commit, stage, reset, or edit Hercules' local-only files, and never
-  commit in `Hercules/` at all.
+- Never edit Hercules config, and never commit in `Hercules/` at all.
 - Commit one accepted unit at a time in this repository, staging explicit
   paths only. Do not push.
 - An unknown stated plainly beats a guess. Model confidence is not evidence.

@@ -10,7 +10,7 @@ As of 2026-09-28, E0–E7 are partial. The roadmap and coverage inventory hold c
 
 Paths in this plan are relative to the `korangar/` repository root. `Hercules/` is its sibling (`../Hercules`), and every exporter finds it that way. The workspace may be mounted at different absolute paths on different machines (for example `/media/bigz/T7/...` on Linux or `/Volumes/T7/...` on macOS). Never write an absolute path into data, the ledger, or the journal.
 
-`Hercules/` has local-only uncommitted changes that are not encyclopedia work: `conf/char/char-server.conf`, `conf/map/map-server.conf`, and `conf/global/sql_connection.conf` (this machine's database user and name). Never commit, reset, or edit them. `db/quest_db.conf` is committed (Hercules `fa63cd8af`); if it is ever dirty again, `tools/export_quest_reference.py` reads its tracked `HEAD` snapshot and reports the fallback. A revision plus `source_worktree_dirty: true` alone is inadequate provenance for a changed file; record the exact digest of the cited content or cite the tracked snapshot.
+`Hercules/` has no uncommitted work as of Hercules `cc83ca152`; its database settings (`inter_user` / `herc_re_db`) are committed. Do not edit Hercules config or commit in `Hercules/`. `db/quest_db.conf` is committed (Hercules `fa63cd8af`); if it is ever dirty again, `tools/export_quest_reference.py` reads its tracked `HEAD` snapshot and reports the fallback. A revision plus `source_worktree_dirty: true` alone is inadequate provenance for a changed file; record the exact digest of the cited content or cite the tracked snapshot.
 
 **Model and context.** Run [`qwen3-coder:30b`](https://ollama.com/library/qwen3-coder) under [Ollama](https://docs.ollama.com) (on macOS, the Ollama app; on Linux, the [Linux setup](https://docs.ollama.com/linux)); fall back to [`qwen3:14b`](https://ollama.com/library/qwen3) under the same gates if throughput or memory makes it impractical. Check `ollama ps` for CPU/GPU offload. Use a context of **224K tokens**. Ollama's [default context is much smaller](https://docs.ollama.com/faq), and Qwen Code's own context setting does not enlarge the server's, so set it on the server: `OLLAMA_CONTEXT_LENGTH=229376 ollama serve`, or a Modelfile with `PARAMETER num_ctx 229376`. With this window the whole session-start reading (about 25K tokens) fits comfortably; do not trim it. Prefer [schema-constrained JSON](https://docs.ollama.com/capabilities/structured-outputs) at temperature 0 for extraction. Log model tag, quantization, Ollama version, context, offload, and prompt version in the ledger's `model` block. None of these settings proves a claim.
 
@@ -62,7 +62,7 @@ Build a finite queue from generated coverage plus loaded-source inventories. One
 
 Every in-scope candidate eventually needs a final disposition: verified/conditional/configured estimate with exact evidence; a specific unknown because source or live state cannot resolve it; or a documented absence after searching the declared scope. A clue or `not reviewed` remains open work. Never turn model confidence, a nearby call, or dialogue alone into a verified fact.
 
-**Commits.** Commit each accepted unit in `korangar/` on the current branch, one commit per unit, message `Encyclopedia <unit-id>: <one-line result>`. Stage only the files that unit changed, by explicit path (`git add <paths>`); never `git add -A` or `git add .`. Never commit, stage, reset, or stash in `Hercules/`, and never touch its local-only files listed above. A blocked unit's ledger and journal update may be committed on its own. Do not push.
+**Commits.** Commit each accepted unit in `korangar/` on the current branch, one commit per unit, message `Encyclopedia <unit-id>: <one-line result>`. Stage only the files that unit changed, by explicit path (`git add <paths>`); never `git add -A` or `git add .`. Never commit, stage, reset, or stash in `Hercules/`, and never edit its config. A blocked unit's ledger and journal update may be committed on its own. Do not push.
 
 ## Repeat loop
 
@@ -126,8 +126,8 @@ in full, then docs/plans/encyclopedia-roadmap.md, docs/plans/encyclopedia-covera
 docs/specs/encyclopedia-data.md and docs/plans/encyclopedia-qwen3-progress.json.
 Follow the repeat loop across all E0–E7 packages, starting with the ledger's
 next_action. Edit review files under tools/, never generated docs/*.v1.json, and
-use the plan's Tools table for which exporter and checks to run. Never touch
-Hercules' local-only files and never commit in Hercules. Cite exact loaded
+use the plan's Tools table for which exporter and checks to run. Never edit
+Hercules config and never commit in Hercules. Cite exact loaded
 Hercules source, stable IDs, conditions and source revision/digest for every
 claim. Leave unsupported facts visibly unknown. Finish one bounded unit,
 validate it, run export_supported_data.py --check, checkpoint the ledger and

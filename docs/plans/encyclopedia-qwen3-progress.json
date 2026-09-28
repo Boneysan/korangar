@@ -16,15 +16,10 @@
   },
   "source_snapshot": {
     "korangar_head": "63879756",
-    "hercules_head": "fa63cd8af",
-    "dirty_files_need_baseline_hashes": true,
+    "hercules_head": "cc83ca152",
+    "dirty_files_need_baseline_hashes": false,
     "quest_db_policy": "quest_db.conf committed at Hercules fa63cd8af; if dirty again, the quest exporter uses the tracked HEAD snapshot",
     "staleness_rule": "Judge staleness by digests of cited source files, not repository heads",
-    "hercules_local_only_files": [
-      "conf/char/char-server.conf",
-      "conf/map/map-server.conf",
-      "conf/global/sql_connection.conf"
-    ],
     "commit_policy": "One korangar commit per accepted unit, explicit paths only; never commit in Hercules; do not push"
   },
   "packages": {
