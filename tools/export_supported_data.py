@@ -26,13 +26,21 @@ EXPORTERS = (
     "export_job_names.py",
     "export_job_skills.py",
     "export_job_bonuses.py",
+    "export_refine_reference.py",
+    "export_server_rules.py",
     "export_status_names.py",
     "export_status_reference.py",
-    "export_quest_reference.py",
     "extend_bestiary_export.py",
     "export_item_reference.py",
+    "export_crafting_reference.py",
+    "export_item_grant_reference.py",
+    "export_npc_reference.py",
+    "export_item_exchange_reviews.py",
+    "export_map_flags.py",
     "export_bestiary_reference.py",
+    "export_quest_reference.py",
     "generate_navigation_graph.py",
+    "export_encyclopedia_coverage.py",
 )
 
 

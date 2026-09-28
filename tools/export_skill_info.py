@@ -35,7 +35,7 @@ OUTPUT = REPO / "docs" / "skills.json"
 # knockback, plagiarism flags, weapon restrictions, …) is deliberately dropped:
 # a tooltip that fills the screen is worse than one that answers the question.
 SCALAR_FIELDS = ["Id", "Name", "Description", "MaxLevel", "AttackType"]
-LEVELLED_FIELDS = ["Range", "CastTime", "FixedCastTime", "NumberOfHits", "SkillData1"]
+LEVELLED_FIELDS = ["Range", "CastTime", "FixedCastTime", "AfterCastActDelay", "CoolDown", "NumberOfHits", "SkillData1"]
 # Element is usually a plain string but six skills vary it by level
 # (TK_SEVENWIND and friends), so it gets the same levelled treatment.
 LEVELLED_TEXT_FIELDS = ["Element"]

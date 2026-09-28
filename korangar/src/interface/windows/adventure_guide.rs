@@ -2,6 +2,7 @@
 //! reuse the DM Bestiary: campaign reveal/spawn controls and unlocks are not
 //! part of the player's mechanical reference.
 
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use korangar_interface::components::text_box::DefaultHandler;
@@ -11,7 +12,9 @@ use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{ManuallyAssertExt, Path, RustState, State, VecIndexExt};
 
-use crate::dm::reference_data::{ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceSkill, reference_data};
+use crate::dm::reference_data::{
+    ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceNpc, ReferenceRefinement, ReferenceSkill, reference_data,
+};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
@@ -78,29 +81,59 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     }
     lines.push(format!("Skills: {}   Drops: {}", monster.skills.len(), monster.drops.len()));
     if !monster.skills.is_empty() {
-        lines.push("Server-configured skills (rate is the raw mob_skill_db value):".to_owned());
+        lines.push("Configured monster skills and trigger conditions:".to_owned());
         for mob_skill in monster.skills.iter().take(8) {
+            let chance = if mob_skill.rate > 0 {
+                format!("{:.2}%", mob_skill.rate as f32 / 100.0)
+            } else {
+                "not available".to_owned()
+            };
+            let cast_time = if mob_skill.cast_time_ms > 0 {
+                format!("; cast time {:.1}s", mob_skill.cast_time_ms as f32 / 1000.0)
+            } else {
+                String::new()
+            };
+            let cancel = if mob_skill.cancelable {
+                "; cast can be interrupted"
+            } else {
+                "; cast is not configured as interruptible"
+            };
             let label = data
                 .skills
                 .iter()
                 .find(|skill| skill.name.eq_ignore_ascii_case(&mob_skill.skill_name))
                 .map(|skill| {
                     format!(
-                        "@guide:skill:{}|{} — Lv {} — rate {} — delay {} ms",
+                        "@guide:skill:{}|{} — Lv {} — {} — retry delay {:.1}s{}{}",
                         skill.id,
                         display_name(&skill.description, &skill.name),
                         mob_skill.level,
-                        mob_skill.rate,
-                        mob_skill.delay_ms
+                        chance,
+                        mob_skill.delay_ms as f32 / 1000.0,
+                        cast_time,
+                        cancel
                     )
                 })
                 .unwrap_or_else(|| {
                     format!(
-                        "{} — Lv {} — rate {} — delay {} ms (no matching skill reference)",
-                        mob_skill.skill_name, mob_skill.level, mob_skill.rate, mob_skill.delay_ms
+                        "{} — Lv {} — {} — retry delay {:.1}s{}{} (no matching skill reference)",
+                        mob_skill.skill_name,
+                        mob_skill.level,
+                        chance,
+                        mob_skill.delay_ms as f32 / 1000.0,
+                        cast_time,
+                        cancel
                     )
                 });
             lines.push(label);
+            if !mob_skill.trigger_summary.is_empty() {
+                lines.push(format!("  {}", mob_skill.trigger_summary));
+            } else {
+                lines.push("  Trigger details have not been translated from the server record.".to_owned());
+            }
+            if !mob_skill.target_summary.is_empty() {
+                lines.push(format!("  {}", mob_skill.target_summary));
+            }
         }
         if monster.skills.len() > 8 {
             lines.push(format!("{} additional skill records omitted.", monster.skills.len() - 8));
@@ -109,11 +142,15 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
             lines.push(format!("Monster-skill source: {} ({})", source.path, source.record));
         }
     }
+    if !monster.drops.is_empty() {
+        lines.push("Configured database drop rates (server modifiers may change realized chances):".to_owned());
+    }
     for drop in monster.drops.iter().take(8) {
         lines.push(format!(
-            "@guide:item:{}|{} — {:.2}%",
+            "@guide:item:{}|{} — {} drop {:.2}%",
             drop.item_id,
             display_name(&drop.name, &drop.aegis_name),
+            if drop.kind == "mvp" { "MVP" } else { "normal" },
             drop.rate_per_10000 as f32 / 100.0
         ));
     }
@@ -128,9 +165,28 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     if routeable_regions.is_empty() {
         lines.push("No graph-known static spawn-map route is available; conditional/scripted spawns may also be omitted.".to_owned());
     } else {
-        lines.push("Known static spawn maps (broad map references only; no spawn cells are exposed):".to_owned());
+        lines.push("Loaded static spawn placements (configured directive centers/spreads; exact runtime cells are randomized):".to_owned());
         for region in routeable_regions.iter().take(12) {
-            lines.push(format!("{} — {} spawn records", region.map, region.spawn_records));
+            lines.push(format!(
+                "{} — {} loaded records, {} monsters listed",
+                region.map, region.spawn_records, region.listed_monsters
+            ));
+            for placement in region.placements.iter().take(3) {
+                let location = if placement.random_map_cell {
+                    "random eligible cell on map".to_owned()
+                } else if placement.x_spread != 0 || placement.y_spread != 0 {
+                    format!(
+                        "around ({}, {}) — spread {}×{}",
+                        placement.x, placement.y, placement.x_spread, placement.y_spread
+                    )
+                } else {
+                    format!("at ({}, {})", placement.x, placement.y)
+                };
+                lines.push(format!("  {location} — {} listed — {}", placement.amount, placement.source));
+            }
+            if region.placements.len() > 3 {
+                lines.push(format!("  {} more placement records", region.placements.len() - 3));
+            }
             lines.push(format!("@route:{}", region.map));
         }
         if routeable_regions.len() > 12 {
@@ -139,6 +195,52 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
                 routeable_regions.len() - 12
             ));
         }
+    }
+    if !monster.scripted_spawn_references.is_empty() {
+        lines.push("Loaded-script spawn call sites (event/quest/instance conditions are not interpreted):".to_owned());
+        for spawn in monster.scripted_spawn_references.iter().take(8) {
+            let location = match (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
+                (Some(map), [Some(x), Some(y)]) => format!("{map} at ({x}, {y})"),
+                (Some(map), [Some(x1), Some(y1), Some(x2), Some(y2)]) => {
+                    format!("{map} in area ({x1}, {y1})–({x2}, {y2})")
+                }
+                (None, _) if spawn.map_template.is_some() => {
+                    format!(
+                        "{}instance of map template {}",
+                        if spawn.map_template_approximate {
+                            "approximately on an "
+                        } else {
+                            "on an "
+                        },
+                        spawn.map_template.as_deref().unwrap_or_default()
+                    )
+                }
+                (None, [Some(x), Some(y)]) => format!("map expression `{}` at ({x}, {y})", spawn.map_expression),
+                (None, [Some(x1), Some(y1), Some(x2), Some(y2)]) => {
+                    format!("map expression `{}` in area ({x1}, {y1})–({x2}, {y2})", spawn.map_expression)
+                }
+                (..) => format!("map expression `{}`", spawn.map_expression),
+            };
+            let amount = spawn
+                .amount
+                .map(|count| format!("; configured call amount {count}"))
+                .unwrap_or_default();
+            lines.push(format!("{} — {location}{amount} — {}", spawn.spawn_kind, spawn.source));
+            if let (Some(map), [Some(x), Some(y)]) = (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
+                lines.push(format!("@route-cell:{map}:{x}:{y}|Route near scripted spawn — {map}"));
+            } else if let (Some(map), [Some(x1), Some(y1), Some(x2), Some(y2)]) = (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
+                let x = (x1 + x2) / 2;
+                let y = (y1 + y2) / 2;
+                lines.push(format!("@route-cell:{map}:{x}:{y}|Route near scripted spawn area — {map}"));
+            }
+        }
+        if monster.scripted_spawn_references.len() > 8 {
+            lines.push(format!(
+                "{} additional scripted spawn references omitted.",
+                monster.scripted_spawn_references.len() - 8
+            ));
+        }
+        lines.push("A call site does not prove it runs for every player or when the monster is currently present.".to_owned());
     }
     lines
 }
@@ -149,8 +251,252 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
         format!("Type: {kind}   Weight: {}", item.weight),
     ];
+    let relevant = reference_data()
+        .crafting_recipes
+        .iter()
+        .filter(|recipe| recipe.output_id == item.id || recipe.materials.iter().any(|material| material.item_id == item.id))
+        .collect::<Vec<_>>();
+    if !relevant.is_empty() {
+        lines.push("Crafting and conversion recipes:".to_owned());
+        for recipe in relevant.iter().take(12) {
+            if recipe.output_id == item.id {
+                let materials = recipe
+                    .materials
+                    .iter()
+                    .map(|material| {
+                        let count = if material.required {
+                            format!("×{}", material.amount)
+                        } else {
+                            "guide required".to_owned()
+                        };
+                        format!("@guide:item:{}|{} {count}", material.item_id, material.item_name)
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let requirement = recipe
+                    .skill_name
+                    .as_deref()
+                    .map(|name| format!("; {name} Lv {} required", recipe.skill_level.unwrap_or_default()))
+                    .unwrap_or_default();
+                lines.push(format!(
+                    "Makes {} ×{} from {materials}{requirement} — {}:{}",
+                    recipe.output_name, recipe.output_amount, recipe.source.path, recipe.source.record
+                ));
+            } else {
+                lines.push(format!(
+                    "Used to make @guide:item:{}|{} ×{} — {}:{}",
+                    recipe.output_id, recipe.output_name, recipe.output_amount, recipe.source.path, recipe.source.record
+                ));
+            }
+        }
+        if relevant.len() > 12 {
+            lines.push(format!("{} additional recipe links omitted.", relevant.len() - 12));
+        }
+        lines.push(
+            "Recipe lists are configured server recipes; they do not establish access to the required skill or guarantee success."
+                .to_owned(),
+        );
+    }
+    let reviewed_quest_rewards = reference_data()
+        .quests
+        .iter()
+        .filter_map(|quest| {
+            let flow = quest.flow_review.as_ref()?;
+            let reward = flow.verified_item_rewards.iter().find(|reward| reward.item_id == item.id)?;
+            Some((quest, flow, reward))
+        })
+        .collect::<Vec<_>>();
+    if !reviewed_quest_rewards.is_empty() {
+        lines.push("Source-reviewed quest rewards:".to_owned());
+        for (quest, flow, reward) in reviewed_quest_rewards {
+            lines.push(format!(
+                "@guide:quest:{}|{} ×{} — {} [{}; {}:{}]",
+                quest.id,
+                quest.name,
+                reward.amount,
+                reward.explanation,
+                reward.evidence_state.label(),
+                reward.source_path,
+                reward.source_line
+            ));
+            for condition in &flow.conditions {
+                lines.push(format!("Reward condition: {condition}"));
+            }
+        }
+    }
+    let reviewed_reward_source_keys = reference_data()
+        .quests
+        .iter()
+        .flat_map(|quest| quest.flow_review.iter().flat_map(|flow| flow.verified_item_rewards.iter()))
+        .map(|reward| (reward.item_id, reward.amount, reward.source_path.clone(), reward.source_line))
+        .collect::<HashSet<_>>();
+    let grants = reference_data()
+        .item_grants
+        .iter()
+        .filter(|grant| {
+            grant.item_id == item.id
+                && !reviewed_reward_source_keys.contains(&(grant.item_id, grant.amount, grant.source.path.clone(), grant.source.line))
+        })
+        .collect::<Vec<_>>();
+    if !grants.is_empty() {
+        lines.push("Item grant clues in loaded NPC scripts:".to_owned());
+        for grant in grants.iter().take(10) {
+            let source = format!("{}:{}", grant.source.path, grant.source.line);
+            if let Some(npc) = &grant.npc_clue {
+                lines.push(format!(
+                    "{} ×{} near {} at {} ({}, {}) — {source}",
+                    grant.item_name, grant.amount, npc.name, npc.map, npc.x, npc.y
+                ));
+                if is_graph_map(&npc.map) {
+                    lines.push(format!("@route:{}", npc.map));
+                }
+            } else {
+                lines.push(format!("{} ×{} — {source}", grant.item_name, grant.amount));
+            }
+        }
+        if grants.len() > 10 {
+            lines.push(format!("{} additional script clues omitted.", grants.len() - 10));
+        }
+        lines.push(
+            "These calls show possible grants in the script; the surrounding conditions and whether a player can trigger them are not \
+             reviewed."
+                .to_owned(),
+        );
+    }
+    let uses = reference_data()
+        .item_consumptions
+        .iter()
+        .filter(|use_ref| use_ref.item_id == item.id)
+        .collect::<Vec<_>>();
+    if !uses.is_empty() {
+        lines.push("Consumed in loaded NPC scripts (possible requirements or exchanges):".to_owned());
+        for use_ref in uses.iter().take(10) {
+            let evidence = format!("{}:{}", use_ref.source.path, use_ref.source.line);
+            if let Some(npc) = &use_ref.npc_clue {
+                lines.push(format!(
+                    "{} ×{} near {} at {} ({}, {}) — {evidence}",
+                    use_ref.item_name, use_ref.amount, npc.name, npc.map, npc.x, npc.y
+                ));
+                if is_graph_map(&npc.map) {
+                    lines.push(format!("@route:{}", npc.map));
+                }
+            } else {
+                lines.push(format!("{} ×{} — {evidence}", use_ref.item_name, use_ref.amount));
+            }
+        }
+        if uses.len() > 10 {
+            lines.push(format!("{} additional consumption clues omitted.", uses.len() - 10));
+        }
+        lines.push("These literal removals do not prove an exchange; rewards and conditions may be elsewhere or dynamic.".to_owned());
+    }
+    let exchanges = reference_data()
+        .item_exchanges
+        .iter()
+        .filter(|exchange| {
+            exchange.inputs.iter().any(|input| input.item_id == item.id)
+                || exchange.outcomes.iter().any(|outcome| outcome.item_ids.contains(&item.id))
+        })
+        .collect::<Vec<_>>();
+    if !exchanges.is_empty() {
+        lines.push("Source-reviewed exchanges:".to_owned());
+        for exchange in exchanges {
+            lines.push(format!(
+                "{} — @guide:npc:{}|{} at {} ({}, {})",
+                exchange.title, exchange.npc.npc_id, exchange.npc.name, exchange.npc.map, exchange.npc.x, exchange.npc.y
+            ));
+            let cost = exchange
+                .inputs
+                .iter()
+                .map(|input| format!("@guide:item:{}|{} ×{}", input.item_id, input.item_name, input.amount))
+                .collect::<Vec<_>>()
+                .join(", ");
+            if !cost.is_empty() {
+                lines.push(format!("Costs: {cost}"));
+            }
+            for outcome in &exchange.outcomes {
+                let rewards = outcome
+                    .items
+                    .iter()
+                    .map(|output| format!("@guide:item:{}|{} ×{}", output.item_id, output.item_name, outcome.amount))
+                    .collect::<Vec<_>>()
+                    .join(" or ");
+                lines.push(format!(
+                    "{}: {rewards} ({})",
+                    outcome.label,
+                    outcome.selection.replace('_', " ")
+                ));
+            }
+            for condition in &exchange.conditions {
+                lines.push(format!("Condition: {condition}"));
+            }
+            lines.push(format!(
+                "Reviewed source: {} lines {:?}",
+                exchange.source.path, exchange.source.reviewed_lines
+            ));
+            lines.push(format!("Reviewed by {} on {}", exchange.reviewed_by, exchange.reviewed_on));
+            if is_graph_map(&exchange.npc.map) {
+                lines.push(format!(
+                    "@route-cell:{}:{}:{}|Route to exchange — {}",
+                    exchange.npc.map, exchange.npc.x, exchange.npc.y, exchange.npc.map
+                ));
+            }
+        }
+    }
     if item.buy > 0 {
         lines.push(format!("Buy price: {}z", item.buy));
+    }
+    if let Some(sell) = item.sell {
+        lines.push(format!("Sell price: {sell}z"));
+    }
+    if !item.job.is_empty() {
+        let mut jobs = item
+            .job
+            .iter()
+            .filter(|(_, allowed)| **allowed)
+            .map(|(name, _)| name.as_str())
+            .collect::<Vec<_>>();
+        jobs.sort_unstable();
+        lines.push(format!("Allowed jobs: {}", jobs.join(", ")));
+    }
+    if let Some(gender) = &item.gender {
+        let label = match gender.as_str() {
+            "SEX_MALE" => "Male characters",
+            "SEX_FEMALE" => "Female characters",
+            _ => gender,
+        };
+        lines.push(format!("Gender restriction: {label}"));
+    }
+    if let Some(location) = &item.loc {
+        let locations = match location {
+            serde_json::Value::String(value) => vec![value.as_str()],
+            serde_json::Value::Array(values) => values.iter().filter_map(serde_json::Value::as_str).collect(),
+            _ => Vec::new(),
+        };
+        if !locations.is_empty() {
+            let readable = locations
+                .iter()
+                .map(|location| location.strip_prefix("EQP_").unwrap_or(location).replace('_', " "))
+                .collect::<Vec<_>>()
+                .join(", ");
+            lines.push(format!("Equipment location: {readable}"));
+        } else if let Some(flags) = location.as_i64() {
+            lines.push(format!("Equipment location flags: {flags}"));
+        }
+    }
+    if let Some(level) = &item.equip_level {
+        let requirement = match level {
+            serde_json::Value::Array(range) if range.len() == 2 => {
+                format!("{}–{}", range[0], range[1])
+            }
+            other => other.to_string(),
+        };
+        lines.push(format!("Required base level: {requirement}"));
+    }
+    if let Some(weapon_level) = item.weapon_level {
+        lines.push(format!("Weapon level: {weapon_level}"));
+    }
+    if let Some(refineable) = item.refine {
+        lines.push(if refineable { "Can be refined." } else { "Cannot be refined." }.to_owned());
     }
     if let Some(atk) = item.atk {
         lines.push(format!("ATK: {atk}"));
@@ -164,19 +510,125 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     if let Some(slots) = item.slots {
         lines.push(format!("Slots: {slots}"));
     }
-    if !item.effect_status.is_empty() {
-        lines.push(format!("Script status: {} (not translated)", item.effect_status));
+    if !item.combos.is_empty() {
+        lines.push("Item set combinations:".to_owned());
+        for combo in item.combos.iter().take(8) {
+            let members = combo
+                .members
+                .iter()
+                .filter(|member| member.id != item.id)
+                .map(|member| format!("@guide:item:{}|{}", member.id, display_name(&member.name, &member.aegis_name)))
+                .collect::<Vec<_>>()
+                .join(" + ");
+            let effect_note = combo.effect_summary.as_deref().unwrap_or_else(|| {
+                if combo.effect_status == "scripted_not_translated" {
+                    "combo effect script not translated"
+                } else {
+                    "no combo script field in source"
+                }
+            });
+            lines.push(format!("{members} — {effect_note}"));
+            lines.push(format!("Combo source: {} ({})", combo.source.path, combo.source.record));
+        }
+        if item.combos.len() > 8 {
+            lines.push(format!("{} additional item combinations omitted.", item.combos.len() - 8));
+        }
+    }
+    if !item.group_contents.is_empty() {
+        lines.push("Randomized group contents (configured chance for one group selection):".to_owned());
+        for entry in item.group_contents.iter().take(16) {
+            lines.push(format!(
+                "@guide:item:{}|{} — {:.2}% (weight {}/{})",
+                entry.item.id,
+                display_name(&entry.item.name, &entry.item.aegis_name),
+                entry.selection_chance_percent,
+                entry.selection_weight,
+                entry.total_weight
+            ));
+        }
+        if item.group_contents.len() > 16 {
+            lines.push(format!(
+                "{} additional possible contents omitted.",
+                item.group_contents.len() - 16
+            ));
+        }
+        if let Some(entry) = item.group_contents.first() {
+            lines.push(format!("Contents source: {} ({})", entry.source.path, entry.source.record));
+        }
+        lines.push(
+            "These are configured group-selection chances; custom item scripts may apply additional rules or grant multiple results."
+                .to_owned(),
+        );
+    }
+    if !item.contained_in_groups.is_empty() {
+        lines.push("Can be selected from these containers:".to_owned());
+        for group in item.contained_in_groups.iter().take(8) {
+            lines.push(format!(
+                "@guide:item:{}|{} — {:.2}% (weight {}/{})",
+                group.container.id,
+                display_name(&group.container.name, &group.container.aegis_name),
+                group.selection_chance_percent,
+                group.selection_weight,
+                group.total_weight
+            ));
+        }
+        if item.contained_in_groups.len() > 8 {
+            lines.push(format!("{} additional containers omitted.", item.contained_in_groups.len() - 8));
+        }
+    }
+    if !item.shops.is_empty() {
+        lines.push("Literal shop listings in loaded NPC scripts (availability or conditions not reviewed):".to_owned());
+        for shop in item.shops.iter().take(8) {
+            let price = if shop.uses_item_db_price {
+                if item.buy > 0 {
+                    format!("{} {} (item DB value)", item.buy, shop.currency)
+                } else {
+                    "item DB value".to_owned()
+                }
+            } else {
+                format!("{} {}", shop.price.unwrap_or_default(), shop.currency)
+            };
+            lines.push(format!(
+                "{} — {} at {} ({}, {}) — {} — {}",
+                shop.npc_name, shop.shop_type, shop.map, shop.x, shop.y, price, shop.source
+            ));
+            if is_graph_map(&shop.map) {
+                lines.push(format!("@route:{}", shop.map));
+            }
+        }
+        if item.shops.len() > 8 {
+            lines.push(format!("{} additional loaded shop listings omitted.", item.shops.len() - 8));
+        }
+        lines.push(
+            "Only literal stock declarations from loaded NPC scripts are indexed; conditional and runtime-added stock may be missing."
+                .to_owned(),
+        );
+    }
+    if let Some(summary) = &item.effect_summary {
+        lines.push(format!("Effect: {summary}"));
+        lines.push(
+            "Effect summaries cover only recognized script patterns. Conditions and trigger odds are included when supported; stacking \
+             and cross-effect interactions may remain undocumented."
+                .to_owned(),
+        );
+    } else if item.effect_status == "scripted_not_translated" {
+        lines.push("Script effect: not translated yet; conditions and interactions are not documented.".to_owned());
+    } else if item.effect_status == "no_script_field" {
+        lines.push("No item script effect field is present in the loaded item record.".to_owned());
+    } else if !item.effect_status.is_empty() {
+        lines.push(format!("Effect coverage: {}", item.effect_status.replace('_', " ")));
     } else {
         lines.push("Detailed script effect: not documented yet.".to_owned());
     }
     if !item.drops_from.is_empty() {
-        lines.push("Dropped by:".to_owned());
+        lines.push("Monster database drop rates (server modifiers may change realized chances):".to_owned());
         for source in item.drops_from.iter().take(8) {
             lines.push(format!(
-                "@guide:monster:{}|{} (ID {}) — {:.2}%",
+                "@guide:monster:{}|{} (ID {}) — {} drop {:.2}%",
                 source.monster_id,
                 source.sprite_name,
                 source.monster_id,
+                if source.kind == "mvp" { "MVP" } else { "normal" },
                 source.rate_per_10000 as f32 / 100.0
             ));
             if let Some(monster) = reference_data().monster_by_id(source.monster_id) {
@@ -192,6 +644,115 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     if let Some(source) = &item.source {
         lines.push(format!("Source: {} ({})", source.path, source.record));
     }
+    lines
+}
+
+fn refinement_details(refinement: &ReferenceRefinement) -> Vec<String> {
+    let mut lines = vec![
+        "Whitesmith Weapon Refine (WS_WEAPONREFINE)".to_owned(),
+        "The chance shown is the configured base chance; the caster's job level changes the final chance.".to_owned(),
+        format!(
+            "Bonus: {} percentage points per job level relative to 50 (positive above 50, negative below), or +{} points for Mechanic \
+             (Transcendent).",
+            refinement.job_level_bonus_per_job_level_from_50_per_mille as f32 / 10.0,
+            refinement.mechanic_transcendent_flat_bonus_percent
+        ),
+        format!(
+            "A weapon can be refined only below the skill level and below +{}.",
+            refinement.max_useful_refine_level
+        ),
+        format!("On failure: {}.", refinement.on_failure),
+        "No Zeny cost is charged by this skill; one material is consumed per attempt.".to_owned(),
+    ];
+    for weapon in &refinement.weapon_levels {
+        lines.push(format!("Weapon Level {} — material: {}", weapon.weapon_level, weapon.material));
+        let odds = (1..=refinement.max_useful_refine_level)
+            .filter_map(|target| {
+                weapon
+                    .base_chance_percent_by_target_level
+                    .get(&target.to_string())
+                    .map(|chance| format!("+{target}: {chance}%"))
+            })
+            .collect::<Vec<_>>()
+            .join(" · ");
+        lines.push(odds);
+    }
+    lines.push(
+        "Source: bundled Hercules refine_db.conf and skill_weaponrefine implementation. Rates may differ if the server data changes."
+            .to_owned(),
+    );
+    lines
+}
+
+fn refinement_query_matches(query: &str) -> bool {
+    let query = query.to_lowercase();
+    query.is_empty()
+        || ["refine", "weapon", "phracon", "emveretarcon", "oridecon", "whitesmith", "mechanic"]
+            .iter()
+            .any(|term| term.contains(&query) || query.contains(term))
+}
+
+fn server_rule_matches(rule: &crate::dm::reference_data::ReferenceServerRule, query: &str) -> bool {
+    let query = query.to_lowercase();
+    query.is_empty()
+        || rule.title.to_lowercase().contains(&query)
+        || rule.summary.to_lowercase().contains(&query)
+        || rule.category.to_lowercase().contains(&query)
+        || rule.details.iter().any(|detail| detail.to_lowercase().contains(&query))
+}
+
+fn server_rule_details(rule: &crate::dm::reference_data::ReferenceServerRule) -> Vec<String> {
+    let mut lines = vec![rule.title.clone(), rule.summary.clone()];
+    lines.extend(rule.details.iter().cloned());
+    lines.push("Source configuration:".to_owned());
+    lines.extend(rule.sources.iter().map(|source| format!("{} ({})", source.path, source.record)));
+    lines.push("Values are exported from this Hercules source revision and can change with server configuration.".to_owned());
+    lines
+}
+
+fn coverage_details() -> Vec<String> {
+    let report = &reference_data().coverage_report;
+    let mut lines = vec![
+        "Encyclopedia coverage counts — these measure exported data, not completion of player explanations.".to_owned(),
+        format!("Source revision: {} ({})", report.source_revision, report.mode),
+    ];
+    let mut categories = report.categories.iter().collect::<Vec<_>>();
+    categories.sort_by_key(|(name, _)| *name);
+    for (category, fields) in categories {
+        lines.push(format!("{}:", category.replace('_', " ")));
+        let Some(fields) = fields.as_object() else { continue };
+        let mut fields = fields.iter().collect::<Vec<_>>();
+        fields.sort_by_key(|(name, _)| *name);
+        for (name, value) in fields {
+            if let (Some(observed), Some(total)) = (
+                value.get("observed").and_then(serde_json::Value::as_u64),
+                value.get("total").and_then(serde_json::Value::as_u64),
+            ) {
+                lines.push(format!("  {}: {observed}/{total}", name.replace('_', " ")));
+            } else if let Some(count) = value.as_u64() {
+                lines.push(format!("  {}: {count}", name.replace('_', " ")));
+            } else if let Some(status) = value.get("evidence_state").and_then(serde_json::Value::as_str) {
+                lines.push(format!("  {}: {status}", name.replace('_', " ")));
+            }
+        }
+    }
+    lines.push(format!("Counting rule: {}", report.counting_policy));
+    let state_label = |state| match state {
+        crate::dm::reference_data::EvidenceState::Verified => "verified",
+        crate::dm::reference_data::EvidenceState::Conditional => "conditional",
+        crate::dm::reference_data::EvidenceState::ConfiguredEstimate => "configured estimate",
+        crate::dm::reference_data::EvidenceState::SourceClue => "source clue",
+        crate::dm::reference_data::EvidenceState::NotReviewed => "not reviewed",
+        crate::dm::reference_data::EvidenceState::Unknown => "unknown",
+    };
+    let mut evidence_states = report.evidence_states.iter().collect::<Vec<_>>();
+    evidence_states.sort_by_key(|(state, _)| state_label(**state));
+    lines.push("Evidence labels:".to_owned());
+    lines.extend(
+        evidence_states
+            .into_iter()
+            .map(|(state, description)| format!("  {} — {description}", state_label(*state))),
+    );
     lines
 }
 
@@ -244,9 +805,41 @@ fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
 }
 
 fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) -> Vec<String> {
+    let data = reference_data();
     let mut lines = vec![format!("{} — bundled hunt reference", quest.name)];
+    if let Some(flow) = &quest.flow_review {
+        lines.push(format!(
+            "Source-reviewed flow: {} [{}; reviewed {}]",
+            flow.title,
+            flow.evidence_state.label(),
+            flow.reviewed_on
+        ));
+        for condition in &flow.conditions {
+            lines.push(format!("Verified condition: {condition}"));
+        }
+        for reward in &flow.verified_item_rewards {
+            lines.push(format!(
+                "@guide:item:{}|{} ×{} — {} [{}; {}:{}]",
+                reward.item_id,
+                reward.item_name,
+                reward.amount,
+                reward.explanation,
+                reward.evidence_state.label(),
+                reward.source_path,
+                reward.source_line
+            ));
+        }
+        for source in &flow.sources {
+            lines.push(format!("Flow source: {} lines {:?}", source.path, source.lines));
+        }
+        lines.push(format!("Reviewed by {} on {}", flow.reviewed_by, flow.reviewed_on));
+        lines.push(format!("Review method: {}", flow.review_method));
+    }
     if quest.targets.is_empty() {
         lines.push("No explicit hunt targets are recorded for this quest.".to_owned());
+    }
+    if quest.npc_references.is_empty() {
+        lines.push("No NPC giver or turn-in has been source-reviewed in this quest entry.".to_owned());
     }
     for target in &quest.targets {
         let title = format!("{} × {}", target.monster_name, target.count);
@@ -273,6 +866,39 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             }
         }
     }
+    let unreviewed_reward_candidates = quest
+        .item_reward_candidates
+        .iter()
+        .filter(|candidate| {
+            !quest.flow_review.as_ref().is_some_and(|flow| {
+                flow.verified_item_rewards.iter().any(|reward| {
+                    reward.item_id == candidate.item_id
+                        && reward.amount == candidate.amount
+                        && reward.source_path == candidate.source_path
+                        && reward.source_line == candidate.source_line
+                })
+            })
+        })
+        .collect::<Vec<_>>();
+    if !unreviewed_reward_candidates.is_empty() {
+        lines.push("Nearby literal item-grant candidates (not verified quest rewards):".to_owned());
+        for candidate in unreviewed_reward_candidates.iter().take(16) {
+            lines.push(format!(
+                "@guide:item:{}|{} × {} — candidate near quest completion",
+                candidate.item_id, candidate.item_name, candidate.amount
+            ));
+            lines.push(format!(
+                "Candidate evidence: {}:{}; nearby completequest call at line {} (offset {} lines)",
+                candidate.source_path, candidate.source_line, candidate.nearby_completequest_line, candidate.distance_lines
+            ));
+        }
+        if unreviewed_reward_candidates.len() > 16 {
+            lines.push(format!(
+                "{} additional candidate grants omitted.",
+                unreviewed_reward_candidates.len() - 16
+            ));
+        }
+    }
     for npc in quest.npc_references.iter().take(8) {
         let reviewed_label = match npc.reviewed_role.as_deref() {
             Some("offer") => Some("Reviewed quest offer"),
@@ -287,6 +913,16 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             if let Some(evidence) = &npc.review_evidence {
                 lines.push(format!(
                     "Source-reviewed route: {evidence} Requirements or availability may still apply."
+                ));
+            }
+            if let Some(reward) = &npc.verified_reward {
+                let item_name = data
+                    .item_by_id(reward.item_id)
+                    .map(|item| display_name(&item.name, &item.aegis_name))
+                    .unwrap_or_else(|| format!("Item {}", reward.item_id));
+                lines.push(format!(
+                    "Verified turn-in reward: {} base EXP + @guide:item:{}|{} ×{}",
+                    reward.base_exp, reward.item_id, item_name, reward.item_amount
                 ));
             }
         } else {
@@ -304,6 +940,8 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
                     "questprogress" => "checks or advances quest progress",
                     "completequest" => "completes quest state",
                     "erasequest" => "removes quest state",
+                    "checkquest" => "checks a quest-state prerequisite or progress condition",
+                    "que_dic" => "calls shared hunting-request completion logic",
                     _ => "uses quest state",
                 })
                 .collect::<Vec<_>>()
@@ -332,14 +970,115 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             quest.npc_references.len() - 8
         ));
     }
-    lines.push("Quest giver, scripted story steps, prerequisites, and rewards are not included in this static hunt reference.".to_owned());
+    lines.push(
+        "Unreviewed quest steps, prerequisites, branch logic, and rewards remain incomplete unless explicitly source-reviewed above."
+            .to_owned(),
+    );
     lines
 }
 
 fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     let graph = crate::world::navigation_graph();
-    let mut lines = vec![format!("Map: {map_name}")];
-    match reference_data().map_spawn_summary(map_name) {
+    let reference = reference_data();
+    let is_template = scripted_map_templates().iter().any(|name| name.eq_ignore_ascii_case(map_name));
+    let mut lines = vec![if is_template {
+        format!("Instance map template: {map_name}")
+    } else {
+        format!("Map: {map_name}")
+    }];
+    let mut configured_flags = reference
+        .map_flags
+        .iter()
+        .filter(|entry| entry.map.eq_ignore_ascii_case(map_name) && entry.effective_static)
+        .collect::<Vec<_>>();
+    configured_flags.sort_by_key(|entry| {
+        (
+            entry.flag.to_lowercase(),
+            entry.value.to_lowercase(),
+            entry.source.path.clone(),
+            entry.source.line,
+        )
+    });
+    configured_flags.dedup_by(|left, right| left.flag.eq_ignore_ascii_case(&right.flag) && left.value.eq_ignore_ascii_case(&right.value));
+    if !configured_flags.is_empty() {
+        lines.push("Configured map flags from loaded scripts:".to_owned());
+        for entry in configured_flags.iter().take(24) {
+            let value = if entry.value.is_empty() {
+                String::new()
+            } else {
+                format!(" ({})", entry.value)
+            };
+            lines.push(format!(
+                "{}{}: {} — {}:{}",
+                entry.flag, value, entry.description, entry.source.path, entry.source.line
+            ));
+            if let Some(overridden) = entry.overridden_directive_count {
+                lines.push(format!(
+                    "{} earlier loaded-script directive(s) for this flag are superseded.",
+                    overridden
+                ));
+            }
+        }
+        if configured_flags.len() > 24 {
+            lines.push(format!("{} additional map-flag entries omitted.", configured_flags.len() - 24));
+        }
+        lines.push(
+            "These show the last literal directive in loaded-file order. Runtime setmapflag/removemapflag calls and map-zone \
+             configuration can still change effective rules."
+                .to_owned(),
+        );
+    }
+    for review in reference
+        .runtime_map_flag_reviews
+        .iter()
+        .filter(|review| review.map.eq_ignore_ascii_case(map_name))
+    {
+        lines.push(format!(
+            "Source-reviewed runtime rule: {} [{}]",
+            review.title,
+            review.evidence_state.label()
+        ));
+        lines.push(review.summary.clone());
+        for condition in &review.conditions {
+            lines.push(format!("Condition: {condition}"));
+        }
+        for source in &review.sources {
+            lines.push(format!("Reviewed source: {} lines {:?}", source.path, source.lines));
+        }
+        lines.push(format!("Reviewed by {} on {}", review.reviewed_by, review.reviewed_on));
+    }
+    let mut runtime_flags = reference
+        .runtime_map_flag_clues
+        .iter()
+        .filter(|clue| clue.map.as_deref().is_some_and(|map| map.eq_ignore_ascii_case(map_name)))
+        .collect::<Vec<_>>();
+    runtime_flags.sort_by_key(|clue| (clue.flag.to_lowercase(), clue.source.path.clone(), clue.source.line));
+    if !runtime_flags.is_empty() {
+        lines.push("Runtime map-flag call sites (source clues; execution and conditions unreviewed):".to_owned());
+        for clue in runtime_flags.iter().take(16) {
+            lines.push(format!(
+                "{}({}, {}){} — {}:{}",
+                clue.operation,
+                clue.map_expression,
+                clue.flag,
+                if clue.value.is_empty() {
+                    String::new()
+                } else {
+                    format!(", {}", clue.value)
+                },
+                clue.source.path,
+                clue.source.line
+            ));
+        }
+        if runtime_flags.len() > 16 {
+            lines.push(format!(
+                "{} additional runtime map-flag clues omitted.",
+                runtime_flags.len() - 16
+            ));
+        }
+        lines.push("A call site does not prove that its event runs or establish the map's current rules.".to_owned());
+    }
+    match reference.map_spawn_summary(map_name) {
         Some((records, mean_level, species)) => {
             lines.push(format!(
                 "Suggested level: ~{mean_level} (static-spawn-record-weighted mean; reference only)"
@@ -347,10 +1086,79 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
             lines.push(format!("Static population: {records} spawn records across {species} species"));
         }
         None => {
-            lines.push("Suggested level: unavailable (no verified static spawn records)".to_owned());
-            lines.push("Static population: no verified spawn records".to_owned());
+            lines.push(if is_template {
+                "No base-map static population is attached to this instance template.".to_owned()
+            } else {
+                "Suggested level: unavailable (no verified static spawn records)".to_owned()
+            });
+            if !is_template {
+                lines.push("Static population: no verified spawn records".to_owned());
+            }
         }
     }
+
+    let mut static_mobs = reference
+        .monsters
+        .iter()
+        .filter_map(|monster| {
+            monster
+                .spawn_regions
+                .iter()
+                .find(|region| region.map.eq_ignore_ascii_case(map_name))
+                .map(|region| (monster, region))
+        })
+        .collect::<Vec<_>>();
+    static_mobs.sort_by_key(|(monster, _)| (monster.name.to_lowercase(), monster.id));
+    if !static_mobs.is_empty() {
+        lines.push(format!("Static monster roster ({} species):", static_mobs.len()));
+        for (monster, region) in &static_mobs {
+            lines.push(format!(
+                "@guide:monster:{}|{} — {} listed across {} configured spawn records",
+                monster.id,
+                display_name(&monster.name, &monster.sprite_name),
+                region.listed_monsters,
+                region.spawn_records
+            ));
+        }
+    }
+
+    let mut scripted_mobs = reference
+        .monsters
+        .iter()
+        .filter_map(|monster| {
+            let call_sites = monster
+                .scripted_spawn_references
+                .iter()
+                .filter(|spawn| {
+                    spawn.map.as_deref().is_some_and(|map| map.eq_ignore_ascii_case(map_name))
+                        || spawn.map_template.as_deref().is_some_and(|map| map.eq_ignore_ascii_case(map_name))
+                })
+                .count();
+            (call_sites > 0).then_some((monster, call_sites))
+        })
+        .collect::<Vec<_>>();
+    scripted_mobs.sort_by_key(|(monster, _)| (monster.name.to_lowercase(), monster.id));
+    if !scripted_mobs.is_empty() {
+        lines.push(format!(
+            "Scripted spawn clues ({} species; some map links are approximate; triggers and runtime populations unknown):",
+            scripted_mobs.len()
+        ));
+        for (monster, call_sites) in &scripted_mobs {
+            lines.push(format!(
+                "@guide:monster:{}|{} — {} call sites",
+                monster.id,
+                display_name(&monster.name, &monster.sprite_name),
+                call_sites
+            ));
+        }
+    } else {
+        lines.push("No loaded scripted-spawn call is currently linked to this map.".to_owned());
+    }
+    lines.push(
+        "The roster lists configured static spawns and identifiable script call sites; it does not show live counts. Dynamic map \
+         expressions may prevent some script spawns from being assigned to this map."
+            .to_owned(),
+    );
 
     let mut exits: Vec<_> = graph
         .edges
@@ -415,9 +1223,26 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     if town_pois.is_empty() {
         lines.push("Towninfo facilities: none listed for this map".to_owned());
     }
-    lines.push("Static data omits conditional/scripted spawns and does not represent live monster counts or services.".to_owned());
-    lines.push(format!("@route:{map_name}"));
+    lines.push("Spawn rosters are configured data and script clues; they do not represent live monster counts.".to_owned());
+    if is_graph_map(map_name) {
+        lines.push(format!("@route:{map_name}"));
+    } else if is_template {
+        lines.push("Instance template: the runtime map name and route depend on the created instance.".to_owned());
+    }
     lines
+}
+
+fn scripted_map_templates() -> Vec<String> {
+    let mut templates = std::collections::BTreeSet::new();
+    for monster in &reference_data().monsters {
+        templates.extend(
+            monster
+                .scripted_spawn_references
+                .iter()
+                .filter_map(|spawn| spawn.map_template.clone()),
+        );
+    }
+    templates.into_iter().collect()
 }
 
 fn parse_route_cell_link(line: &str) -> Option<(String, u16, u16, String)> {
@@ -428,6 +1253,103 @@ fn parse_route_cell_link(line: &str) -> Option<(String, u16, u16, String)> {
     let x = parts.next()?.parse().ok()?;
     let map_name = parts.next()?;
     Some((map_name.to_owned(), x, y, label.to_owned()))
+}
+
+fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
+    let display = display_name(&npc.display_name, &npc.name);
+    let kind = match npc.declared_type.as_str() {
+        "shop" => "Static shop declaration",
+        "cashshop" => "Cash shop declaration",
+        "trader" => "Trader declaration (stock may be script-driven)",
+        "warp" => "Warp declaration",
+        _ => "NPC script declaration (specific behavior not inferred)",
+    };
+    let mut lines = vec![
+        format!("{display}"),
+        format!("Type: {kind}"),
+        format!("Map: {} at ({}, {})", npc.map, npc.x, npc.y),
+    ];
+    if !npc.internal_name.is_empty() {
+        lines.push(format!("Internal script name: {}", npc.internal_name));
+    }
+    if !npc.sprite.is_empty() && npc.declared_type != "warp" {
+        lines.push(format!("Declared sprite: {}", npc.sprite));
+    }
+    lines.push(format!("Source: {}:{}", npc.source.path, npc.source.line));
+    for exchange in reference_data()
+        .item_exchanges
+        .iter()
+        .filter(|exchange| exchange.npc.npc_id == npc.id)
+    {
+        lines.push(format!("Reviewed service: {}", exchange.npc.service_role));
+        lines.push(format!(
+            "Source-reviewed exchange: {} [{}]",
+            exchange.title,
+            exchange.evidence_state.label()
+        ));
+        let costs = exchange
+            .inputs
+            .iter()
+            .map(|input| format!("@guide:item:{}|{} ×{}", input.item_id, input.item_name, input.amount))
+            .collect::<Vec<_>>()
+            .join(", ");
+        if !costs.is_empty() {
+            lines.push(format!("Costs: {costs}"));
+        }
+        for outcome in &exchange.outcomes {
+            let rewards = outcome
+                .items
+                .iter()
+                .map(|item| format!("@guide:item:{}|{} ×{}", item.item_id, item.item_name, outcome.amount))
+                .collect::<Vec<_>>()
+                .join(" or ");
+            lines.push(format!("{}: {rewards}", outcome.label));
+        }
+        for condition in &exchange.conditions {
+            lines.push(format!("Condition: {condition}"));
+        }
+        lines.push(format!(
+            "Reviewed source: {} lines {:?}",
+            exchange.source.path, exchange.source.reviewed_lines
+        ));
+        lines.push(format!("Reviewed by {} on {}", exchange.reviewed_by, exchange.reviewed_on));
+    }
+    if is_graph_map(&npc.map) {
+        if let (Ok(x), Ok(y)) = (u16::try_from(npc.x), u16::try_from(npc.y)) {
+            lines.push(format!(
+                "@route-cell:{}:{}:{}|Route to {} — {}",
+                npc.map, x, y, display, npc.map
+            ));
+        } else {
+            lines.push(format!("@route:{}", npc.map));
+        }
+    } else {
+        lines.push("This map is not in the current navigation graph, so no route action is available.".to_owned());
+    }
+    if matches!(npc.declared_type.as_str(), "shop" | "cashshop" | "trader") {
+        if npc.offers.is_empty() {
+            lines.push("No literal stock was linked to this declaration; conditional or runtime stock may still exist.".to_owned());
+        } else {
+            lines.push(format!("Indexed literal stock ({} offers):", npc.offers.len()));
+            for offer in npc.offers.iter().take(24) {
+                let price = if offer.uses_item_db_price {
+                    format!("item DB price ({})", offer.currency)
+                } else {
+                    format!("{} {}", offer.price.unwrap_or_default(), offer.currency)
+                };
+                lines.push(format!("@guide:item:{}|{} — {price}", offer.item_id, offer.item_name));
+            }
+            if npc.offers.len() > 24 {
+                lines.push(format!("{} additional offers omitted.", npc.offers.len() - 24));
+            }
+            if let Some(offer) = npc.offers.first() {
+                lines.push(format!("Offer source: {}", offer.source));
+            }
+        }
+        lines
+            .push("Only literal offers from loaded scripts are indexed; conditional, barter, and runtime stock may be missing.".to_owned());
+    }
+    lines
 }
 
 fn resolve_details(result: &GuideResult) -> Vec<String> {
@@ -465,10 +1387,27 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
             .get(result.id as usize)
             .map(|map_name| map_details(map_name, &[]))
             .unwrap_or_else(|| vec!["Map entry unavailable.".to_owned()]),
+        "map-template" => scripted_map_templates()
+            .get(result.id as usize)
+            .map(|map_name| map_details(map_name, &[]))
+            .unwrap_or_else(|| vec!["Instance map template unavailable.".to_owned()]),
+        "npc" => data
+            .npcs
+            .iter()
+            .find(|npc| npc.id == result.id)
+            .map(npc_details)
+            .unwrap_or_else(|| vec!["NPC reference entry unavailable.".to_owned()]),
         "job" => job_names()
             .find(|(id, _)| *id as u32 == result.id)
             .map(|(_, name)| job_details(result.id as u16, name))
             .unwrap_or_else(|| vec!["Job entry unavailable.".to_owned()]),
+        "mechanic" => refinement_details(&data.refinement),
+        "coverage" => coverage_details(),
+        "server-rule" => data
+            .server_rules
+            .get(result.id as usize)
+            .map(server_rule_details)
+            .unwrap_or_else(|| vec!["Server-rule reference unavailable.".to_owned()]),
         _ => vec!["Unsupported category.".to_owned()],
     }
 }
@@ -550,7 +1489,42 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .map(str::to_owned)
         .collect::<Vec<_>>();
     lines.push(format!("Skill identifier: {} (ID {})", skill.name, skill.id));
-    let linked_statuses: Vec<_> = reference_data()
+    let data = reference_data();
+    let job_sources: Vec<_> = data
+        .job_skill_trees
+        .iter()
+        .filter_map(|tree| {
+            tree.skills
+                .iter()
+                .find(|job_skill| job_skill.skill_id == skill.id)
+                .map(|job_skill| (tree, job_skill))
+        })
+        .collect();
+    if !job_sources.is_empty() {
+        lines.push("Job-tree availability and prerequisites:".to_owned());
+        for (tree, job_skill) in job_sources.iter().take(12) {
+            let mut details = format!("{} — max Lv {}", tree.tree_name, job_skill.max_level);
+            if job_skill.minimum_job_level > 0 {
+                details.push_str(&format!(", job Lv {}", job_skill.minimum_job_level));
+            }
+            if !job_skill.prerequisites.is_empty() {
+                let prerequisites = job_skill
+                    .prerequisites
+                    .iter()
+                    .map(|prerequisite| format!("{} Lv {}", prerequisite.name, prerequisite.level))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                details.push_str(&format!(", requires {prerequisites}"));
+            }
+            lines.push(format!("@guide:job:{}|{details}", tree.job_id));
+        }
+        if job_sources.len() > 12 {
+            lines.push(format!("{} additional job trees omitted.", job_sources.len() - 12));
+        }
+    } else {
+        lines.push("No exported job-tree requirement record is available for this skill.".to_owned());
+    }
+    let linked_statuses: Vec<_> = data
         .statuses
         .iter()
         .filter(|status| {
@@ -578,13 +1552,69 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
         lines.push("Verified server metadata from renewal sc_config.conf:".to_owned());
         for mechanic in &status.statuses {
             lines.push(format!("{} (status ID {})", mechanic.constant, mechanic.id));
-            if mechanic.flags.is_empty() {
-                lines.push("  Server flags: none listed".to_owned());
+            let flag_meanings = mechanic
+                .flags
+                .iter()
+                .filter_map(|flag| match flag.as_str() {
+                    "NoDeathReset" => Some("persists through death"),
+                    "NoSave" => Some("not saved as persistent character state"),
+                    "NoDispelReset" => Some("not removed by Dispel"),
+                    "NoClearanceReset" => Some("not removed by Clearance"),
+                    "Buff" => Some("classified by the server as a buff"),
+                    "Debuff" => Some("classified by the server as a debuff"),
+                    "NoMadoReset" => Some("not cleared when MADO Gear is removed"),
+                    "NoAllReset" => Some("not cleared by the server's general status reset"),
+                    "NoBoss" => Some("cannot be applied to boss monsters"),
+                    "NoBBReset" => Some("not removed by Banishing Buster"),
+                    "NoMagicBlocked" => Some("cannot be applied while the target is in a no-magic state"),
+                    _ => None,
+                })
+                .collect::<Vec<_>>();
+            if flag_meanings.is_empty() {
+                lines.push("  No lifecycle or classification flags listed.".to_owned());
             } else {
-                lines.push(format!("  Server flags: {}", mechanic.flags.join(", ")));
+                lines.push(format!("  Server lifecycle rules: {}.", flag_meanings.join("; ")));
             }
             if !mechanic.calculation_flags.is_empty() {
-                lines.push(format!("  Recalculation flags: {}", mechanic.calculation_flags.join(", ")));
+                let labels = mechanic
+                    .calculation_flags
+                    .iter()
+                    .map(|flag| match flag.as_str() {
+                        "Str" => "STR",
+                        "Agi" => "AGI",
+                        "Vit" => "VIT",
+                        "Int" => "INT",
+                        "Dex" => "DEX",
+                        "Luk" => "LUK",
+                        "Hit" => "HIT",
+                        "Flee" => "FLEE",
+                        "Def" => "DEF",
+                        "Mdef" => "MDEF",
+                        "Maxhp" => "maximum HP",
+                        "Maxsp" => "maximum SP",
+                        "Batk" => "base attack",
+                        "Watk" => "weapon attack",
+                        "Matk" => "magic attack",
+                        "Atk_Ele" => "attack element",
+                        "Def_Ele" => "defense element",
+                        "Aspd" => "attack speed",
+                        "Dspd" => "movement speed",
+                        "Def2" => "defense",
+                        "Mdef2" => "magic defense",
+                        "Flee2" => "perfect dodge",
+                        "AtkPerc" => "attack percentage",
+                        "DefPerc" => "defense percentage",
+                        "MatkPerc" => "magic attack percentage",
+                        "MdefPerc" => "magic defense percentage",
+                        "Cri" => "critical rate",
+                        other => other,
+                    })
+                    .collect::<Vec<_>>();
+                lines.push(format!(
+                    "  Server recalculates these stat groups when this status changes: {}. This does not state whether the status raises \
+                     or lowers them.",
+                    labels.join(", ")
+                ));
             }
             if let Some(skill) = &mechanic.associated_skill {
                 let label = if skill.description.is_empty() {
@@ -623,7 +1653,11 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
             }
         }
     }
-    lines.push("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet.".to_owned());
+    lines.push(
+        "These server lifecycle rules do not explain the status's gameplay effect. Its exact effect, duration, per-level odds, complete \
+         sources, interactions, and cures are not documented yet."
+            .to_owned(),
+    );
     lines
 }
 
@@ -631,7 +1665,7 @@ fn parse_guide_link(line: &str) -> Option<GuideResult> {
     let link = line.strip_prefix("@guide:")?;
     let (target, label) = link.split_once('|')?;
     let (kind, id) = target.split_once(':')?;
-    if !matches!(kind, "item" | "monster" | "skill" | "status" | "quest") {
+    if !matches!(kind, "item" | "monster" | "skill" | "status" | "quest" | "npc") {
         return None;
     }
     Some(GuideResult {
@@ -804,6 +1838,7 @@ where
     let discovery_path = client_state().discovery();
     let discovery = state.get(&discovery_path);
     let mut rows = Vec::new();
+
     if category == "All" {
         let quest_log_path = client_state().quest_log();
         rows.extend(search_all_categories(&query, discovery, state.get(&quest_log_path).quests()));
@@ -836,6 +1871,15 @@ where
             kind: "status".to_owned(),
             id: status.id,
         }));
+    } else if category == "NPCs" {
+        rows.extend(data.search_npcs(&query, MAX_RESULTS).into_iter().map(|npc| GuideResult {
+            label: format!(
+                "{}  ({} • {} {}, {})",
+                npc.display_name, npc.declared_type, npc.map, npc.x, npc.y
+            ),
+            kind: "npc".to_owned(),
+            id: npc.id,
+        }));
     } else if category == "Maps" {
         rows.extend(
             crate::world::navigation_graph()
@@ -858,6 +1902,19 @@ where
                     id: index as u32,
                 }),
         );
+        let templates = scripted_map_templates();
+        rows.extend(
+            templates
+                .iter()
+                .enumerate()
+                .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(&query))
+                .take(MAX_RESULTS.saturating_sub(rows.len()))
+                .map(|(index, map)| GuideResult {
+                    label: format!("{map}  (instance map template)"),
+                    kind: "map-template".to_owned(),
+                    id: index as u32,
+                }),
+        );
     } else if category == "Jobs" {
         rows.extend(
             job_names()
@@ -867,6 +1924,32 @@ where
                     label: format!("{name}  (job)"),
                     kind: "job".to_owned(),
                     id: id as u32,
+                }),
+        );
+    } else if category == "Mechanics" {
+        if query.is_empty() || "encyclopedia coverage evidence".contains(&query) {
+            rows.push(GuideResult {
+                label: "Encyclopedia coverage and evidence labels".to_owned(),
+                kind: "coverage".to_owned(),
+                id: 1,
+            });
+        }
+        if refinement_query_matches(&query) {
+            rows.push(GuideResult {
+                label: "Weapon refinement odds and rules".to_owned(),
+                kind: "mechanic".to_owned(),
+                id: 1,
+            });
+        }
+        rows.extend(
+            data.server_rules
+                .iter()
+                .enumerate()
+                .filter(|(_, rule)| server_rule_matches(rule, &query))
+                .map(|(index, rule)| GuideResult {
+                    label: format!("{} ({})", rule.title, rule.category),
+                    kind: "server-rule".to_owned(),
+                    id: index as u32,
                 }),
         );
     } else if category == "Quests" {
@@ -930,6 +2013,34 @@ fn search_all_categories(
     let data = reference_data();
     let mut rows = Vec::new();
 
+    if "encyclopedia coverage evidence".contains(query) {
+        rows.push(GuideResult {
+            label: "Encyclopedia coverage and evidence labels (Mechanics)".to_owned(),
+            kind: "coverage".to_owned(),
+            id: 1,
+        });
+    }
+
+    if refinement_query_matches(query) {
+        rows.push(GuideResult {
+            label: "Weapon refinement odds and rules (Mechanics)".to_owned(),
+            kind: "mechanic".to_owned(),
+            id: 1,
+        });
+    }
+    rows.extend(
+        data.server_rules
+            .iter()
+            .enumerate()
+            .filter(|(_, rule)| server_rule_matches(rule, query))
+            .take(all_category_result_slots(&rows))
+            .map(|(index, rule)| GuideResult {
+                label: format!("{} (Mechanics: {})", rule.title, rule.category),
+                kind: "server-rule".to_owned(),
+                id: index as u32,
+            }),
+    );
+
     rows.extend(
         data.search_monsters(query, all_category_result_slots(&rows))
             .into_iter()
@@ -982,6 +2093,15 @@ fn search_all_categories(
                 id: status.id,
             }),
     );
+    rows.extend(
+        data.search_npcs(query, all_category_result_slots(&rows))
+            .into_iter()
+            .map(|npc| GuideResult {
+                label: format!("{}  (NPC: {} — {})", npc.display_name, npc.declared_type, npc.map),
+                kind: "npc".to_owned(),
+                id: npc.id,
+            }),
+    );
 
     rows.extend(
         crate::world::navigation_graph()
@@ -993,6 +2113,19 @@ fn search_all_categories(
             .map(|(index, map)| GuideResult {
                 label: format!("{map}  (Map{})", if discovery.visited_map(map) { ", Visited" } else { "" }),
                 kind: "map".to_owned(),
+                id: index as u32,
+            }),
+    );
+    let templates = scripted_map_templates();
+    rows.extend(
+        templates
+            .iter()
+            .enumerate()
+            .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(query))
+            .take(all_category_result_slots(&rows))
+            .map(|(index, map)| GuideResult {
+                label: format!("{map}  (Instance map template)"),
+                kind: "map-template".to_owned(),
                 id: index as u32,
             }),
     );
@@ -1086,7 +2219,7 @@ where
             closable: true,
             elements: (
                 text! { text: format!("Open reference • data revision {} • discovery badges sync per account; mechanics remain open • untranslated scripts and missing spawn data are labeled", revision), overflow_behavior: OverflowBehavior::Shrink },
-                text_box! { ghost_text: "Search monsters, items, cards, skills, status effects, maps, jobs, or quests…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
+                text_box! { ghost_text: "Search monsters, items, cards, skills, statuses, NPCs, maps, quests, jobs, or mechanics…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
                     button! { text: "All", event: set_category("All") },
                     button! { text: "Monsters", event: set_category("Monsters") },
@@ -1094,6 +2227,8 @@ where
                     button! { text: "Cards", event: set_category("Cards") },
                     button! { text: "Skills", event: set_category("Skills") },
                     button! { text: "Status Effects", event: set_category("Status Effects") },
+                    button! { text: "NPCs", event: set_category("NPCs") },
+                    button! { text: "Mechanics", event: set_category("Mechanics") },
                     button! { text: "Maps", event: set_category("Maps") },
                     button! { text: "Jobs", event: set_category("Jobs") },
                     button! { text: "Quests", event: set_category("Quests") },
@@ -1126,12 +2261,24 @@ mod tests {
             name: "Red Potion".to_owned(),
             item_type: "IT_HEALING".to_owned(),
             buy: 0,
+            sell: None,
             weight: 0,
             atk: None,
             matk: None,
             defense: None,
             slots: None,
-            effect_status: "<script>".to_owned(),
+            job: Default::default(),
+            gender: None,
+            loc: None,
+            equip_level: None,
+            refine: None,
+            weapon_level: None,
+            effect_status: "scripted_not_translated".to_owned(),
+            effect_summary: None,
+            combos: Vec::new(),
+            group_contents: Vec::new(),
+            contained_in_groups: Vec::new(),
+            shops: Vec::new(),
             source: None,
             drops_from: Vec::new(),
         };
@@ -1152,12 +2299,24 @@ mod tests {
             name: "Red Potion".to_owned(),
             item_type: "IT_HEALING".to_owned(),
             buy: 0,
+            sell: None,
             weight: 0,
             atk: None,
             matk: None,
             defense: None,
             slots: None,
+            job: Default::default(),
+            gender: None,
+            loc: None,
+            equip_level: None,
+            refine: None,
+            weapon_level: None,
             effect_status: String::new(),
+            effect_summary: None,
+            combos: Vec::new(),
+            group_contents: Vec::new(),
+            contained_in_groups: Vec::new(),
+            shops: Vec::new(),
             source: None,
             drops_from: Vec::new(),
         };
@@ -1223,7 +2382,7 @@ mod tests {
     }
 
     #[test]
-    fn monster_skill_details_link_verified_skill_ids_and_preserve_raw_rates() {
+    fn monster_skill_details_link_verified_skill_ids_and_explain_triggers() {
         let monster = reference_data().monster_by_id(1002).expect("Poring bestiary record");
         let details = monster_details(monster);
         assert!(
@@ -1238,8 +2397,9 @@ mod tests {
             .expect("Poring's Water Attack should link to its verified skill record");
         assert_eq!(skill_link.kind, "skill");
         assert_eq!(skill_link.id, 184);
-        assert!(details.iter().any(|line| line.contains("rate 2000")));
-        assert!(details.iter().any(|line| line.contains("delay 5000 ms")));
+        assert!(details.iter().any(|line| line.contains("20.00%")));
+        assert!(details.iter().any(|line| line.contains("retry delay 5.0s")));
+        assert!(details.iter().any(|line| line.contains("Configured chance: 20.00% chance")));
         assert!(
             resolve_details(&skill_link)
                 .iter()
@@ -1322,7 +2482,11 @@ mod tests {
         assert!(detail.iter().any(|line| line.starts_with("Static population:")));
         assert!(detail.iter().any(|line| line.starts_with("Verified outgoing portal connections:")));
         assert!(detail.iter().any(|line| line.starts_with("Exit at (")));
-        assert!(detail.iter().any(|line| line.contains("conditional/scripted spawns")));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("Scripted spawn clues") || line.contains("No loaded scripted-spawn call"))
+        );
         assert!(detail.iter().any(|line| line == "@route:prt_fild08"));
         assert!(detail.iter().any(|line| line.starts_with("@route:")));
     }
@@ -1403,12 +2567,18 @@ mod tests {
         let details = super::status_details(blessing).join("\n");
         assert!(details.contains("Verified server metadata from renewal sc_config.conf"));
         assert!(details.contains("SC_BLESSING (status ID 30)"));
-        assert!(details.contains("Server flags: Buff, NoBoss, NoMadoReset, NoMagicBlocked"));
-        assert!(details.contains("Recalculation flags: Dex, Hit, Int, Str"));
+        assert!(details.contains(
+            "Server lifecycle rules: classified by the server as a buff; cannot be applied to boss monsters; not cleared when MADO Gear \
+             is removed; cannot be applied while the target is in a no-magic state."
+        ));
+        assert!(details.contains("Server recalculates these stat groups when this status changes: DEX, HIT, INT, STR."));
         assert!(details.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
         assert!(details.contains("Literal Hercules C sc_start call sites (not exhaustive"));
         assert!(details.contains("src/map/skill.c:"));
-        assert!(details.contains("Exact effect, duration, per-level odds, all sources, interactions, and cures: not documented yet."));
+        assert!(
+            details
+                .contains("Its exact effect, duration, per-level odds, complete sources, interactions, and cures are not documented yet.")
+        );
         assert_eq!(data.statuses.len(), 700);
         assert!(
             data.search_statuses(&blessing.id.to_string(), 1)
@@ -1488,7 +2658,11 @@ mod tests {
         let detail = quest_reference_details(quest);
         assert!(detail.iter().any(|line| line.contains("bundled hunt reference")));
         assert!(detail.iter().any(|line| line.starts_with("@guide:monster:")) || detail.iter().any(|line| line.starts_with("@route:")));
-        assert!(detail.iter().any(|line| line.contains("Quest giver")));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("No NPC giver or turn-in has been source-reviewed"))
+        );
 
         let quest_link = parse_guide_link("@guide:quest:1100|Open quest").expect("quest links are supported");
         assert_eq!(quest_link.kind, "quest");
@@ -1509,6 +2683,8 @@ mod tests {
                 level_range: None,
                 map_name: Some("not_in_navigation_graph".to_owned()),
             }],
+            item_reward_candidates: Vec::new(),
+            flow_review: None,
         };
         let detail = quest_reference_details(&quest);
         assert!(detail.iter().any(|line| line.contains("no loaded navigation route")));
@@ -1570,7 +2746,10 @@ mod tests {
                 reviewed_role: None,
                 reviewed_source_lines: Vec::new(),
                 review_evidence: None,
+                verified_reward: None,
             }],
+            item_reward_candidates: Vec::new(),
+            flow_review: None,
         };
         let detail = quest_reference_details(&quest);
         assert!(detail.iter().any(|line| line.contains("sets quest state, completes quest state")));

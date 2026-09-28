@@ -1,0 +1,436 @@
+{
+ "schema_version": 1,
+ "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+ "source_worktree_dirty": true,
+ "mode": "renewal",
+ "sources": [
+  "conf/map/battle.conf and its ordered includes/imports",
+  "conf/common/inter-server.conf and its ordered imports",
+  "npc/custom/korangar_death_recovery.txt",
+  "conf/groups.conf",
+  "conf/map/battle/drops.conf",
+  "db/re/attr_fix.conf",
+  "db/re/size_fix.txt"
+ ],
+ "entries": [
+  {
+   "id": "player-loot-and-resets",
+   "category": "Mechanics",
+   "title": "Player loot and reset commands",
+   "summary": "Default player accounts have the listed pickup, auto-loot, and respec commands.",
+   "details": [
+    "Group 0 (the default player group) can use @autopickup, @autoloot, @alootid, @autoloottype, and @noautolootid.",
+    "Automatic ground pickup starts at 2 cells; parties impose this configured radius. Player pickup reservations, party sharing, map flags, weight, and inventory capacity still apply.",
+    "Auto-loot drop-rate checks do not include player drop-rate bonuses and penalties.",
+    "Group 0 can use @streset and @skreset for free stat and skill resets, plus @refundskill to refund eligible skills.",
+    "The command permissions and defaults are configured values; per-character auto-loot selections and pickup settings can differ at runtime."
+   ],
+   "sources": [
+    {
+     "path": "conf/groups.conf",
+     "record": "groups[0].commands"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 178: autopickup_radius"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 162: autoloot_adjust"
+    },
+    {
+     "path": "src/map/atcommand.c",
+     "record": "@streset, @skreset, and @refundskill handlers"
+    }
+   ]
+  },
+  {
+   "id": "experience-and-drops",
+   "category": "Rates",
+   "title": "Experience and drop modifiers",
+   "summary": "Configured base, job, and quest EXP rates are shown separately from item drop modifiers.",
+   "details": [
+    "Base EXP: 100%.",
+    "Job EXP: 100%.",
+    "Quest EXP: 100%.",
+    "Common-item drop modifier: 100%; boss common-item modifier: 100%.",
+    "Healing-item modifier: 100%; boss healing-item modifier: 100%.",
+    "Usable-item modifier: 100%; boss usable-item modifier: 100%.",
+    "Equipment modifier: 100%; boss equipment modifier: 100%.",
+    "Card drop modifier: 100%; boss card modifier: 100%.",
+    "MVP inventory-drop modifier: 100%.",
+    "Script bonus drops: 100%; item-chain drops: 100%; treasure drops: 100%.",
+    "Logarithmic drop scaling: disabled.",
+    "These are server modifiers, not final per-monster drop chances; the item’s exported drop rate remains a separate value."
+   ],
+   "sources": [
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 47: base_exp_rate"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 48: job_exp_rate"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 49: quest_exp_rate"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 64: item_rate_common"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 65: item_rate_common_boss"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 70: item_rate_heal"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 71: item_rate_heal_boss"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 76: item_rate_use"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 77: item_rate_use_boss"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 82: item_rate_equip"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 83: item_rate_equip_boss"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 88: item_rate_card"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 89: item_rate_card_boss"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 94: item_rate_mvp"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 99: item_rate_adddrop"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 104: item_rate_add_chain"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 109: item_rate_treasure"
+    },
+    {
+     "path": "conf/map/battle/drops.conf",
+     "record": "line 132: item_logarithmic_drops"
+    }
+   ]
+  },
+  {
+   "id": "party-experience",
+   "category": "Party",
+   "title": "Party experience sharing",
+   "summary": "Eligible even-share parties receive the configured bonus before EXP is divided.",
+   "details": [
+    "Even-share bonus: 25% per additional eligible member.",
+    "Maximum member level spread: 30 levels.",
+    "Party EXP sharing is map-scoped; this configuration does not set a cell-distance limit.",
+    "The 30-level spread is a playtest candidate, not a final balance decision."
+   ],
+   "sources": [
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 46: party_even_share_bonus"
+    },
+    {
+     "path": "conf/common/inter-server.conf",
+     "record": "line 34: party_share_level"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "party EXP eligibility and same-map check"
+    }
+   ]
+  },
+  {
+   "id": "death-and-recovery",
+   "category": "Progression",
+   "title": "Death penalty and recovery",
+   "summary": "Death-penalty rates and the Korangar recovery rule, sourced from effective configuration.",
+   "details": [
+    "Death penalty rates apply to EXP earned in the current level.",
+    "Configured base EXP penalty rate: 1.00% of current-level EXP.",
+    "Configured job EXP penalty rate: 1.00% of current-level EXP.",
+    "Configured Zeny death penalty rate: 0.00%.",
+    "Recovery enabled: yes.",
+    "When enabled, recovery returns 50% of measured EXP losses after 10 eligible same-map monster kills or arrival within 4 cells of the save point.",
+    "Map flags, class exemptions, or a zero actual loss can prevent a death penalty and therefore leave nothing to recover."
+   ],
+   "sources": [
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "line 97: death_penalty_type"
+    },
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "line 100: death_penalty_base"
+    },
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "line 103: death_penalty_job"
+    },
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "line 107: zeny_penalty"
+    },
+    {
+     "path": "npc/custom/korangar_death_recovery.txt",
+     "record": "OnInit recovery settings"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "death penalty calculation and map/job exemptions"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-earth",
+   "category": "Mechanics",
+   "title": "Earth element attack matchups",
+   "summary": "Configured damage adjustment against Earth defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 25%; Fire attacks 150%; Ghost attacks 100%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 90%.",
+    "Defense element level 2: Earth attacks 0%; Fire attacks 175%; Ghost attacks 75%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 75%; Water attacks 100%; Wind attacks 80%.",
+    "Defense element level 3: Earth attacks -25%; Fire attacks 200%; Ghost attacks 50%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 50%; Water attacks 100%; Wind attacks 70%.",
+    "Defense element level 4: Earth attacks -50%; Fire attacks 200%; Ghost attacks 25%; Holy attacks 75%; Neutral attacks 100%; Poison attacks 75%; Shadow attacks 75%; Undead attacks 25%; Water attacks 100%; Wind attacks 60%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Earth"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-fire",
+   "category": "Mechanics",
+   "title": "Fire element attack matchups",
+   "summary": "Configured damage adjustment against Fire defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 90%; Fire attacks 25%; Ghost attacks 100%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 100%; Water attacks 150%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 80%; Fire attacks 0%; Ghost attacks 75%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 75%; Water attacks 175%; Wind attacks 100%.",
+    "Defense element level 3: Earth attacks 70%; Fire attacks -25%; Ghost attacks 50%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 50%; Water attacks 200%; Wind attacks 100%.",
+    "Defense element level 4: Earth attacks 60%; Fire attacks -50%; Ghost attacks 25%; Holy attacks 75%; Neutral attacks 100%; Poison attacks 75%; Shadow attacks 75%; Undead attacks 25%; Water attacks 200%; Wind attacks 100%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Fire"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-ghost",
+   "category": "Mechanics",
+   "title": "Ghost element attack matchups",
+   "summary": "Configured damage adjustment against Ghost defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 100%; Ghost attacks 125%; Holy attacks 100%; Neutral attacks 70%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 100%; Fire attacks 100%; Ghost attacks 150%; Holy attacks 100%; Neutral attacks 50%; Poison attacks 75%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 3: Earth attacks 100%; Fire attacks 100%; Ghost attacks 175%; Holy attacks 100%; Neutral attacks 0%; Poison attacks 50%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 4: Earth attacks 100%; Fire attacks 100%; Ghost attacks 200%; Holy attacks 100%; Neutral attacks 0%; Poison attacks 25%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Ghost"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-holy",
+   "category": "Mechanics",
+   "title": "Holy element attack matchups",
+   "summary": "Configured damage adjustment against Holy defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 75%; Fire attacks 75%; Ghost attacks 75%; Holy attacks 0%; Neutral attacks 100%; Poison attacks 75%; Shadow attacks 125%; Undead attacks 100%; Water attacks 75%; Wind attacks 75%.",
+    "Defense element level 2: Earth attacks 50%; Fire attacks 50%; Ghost attacks 50%; Holy attacks -25%; Neutral attacks 100%; Poison attacks 50%; Shadow attacks 150%; Undead attacks 125%; Water attacks 50%; Wind attacks 50%.",
+    "Defense element level 3: Earth attacks 25%; Fire attacks 25%; Ghost attacks 25%; Holy attacks -50%; Neutral attacks 100%; Poison attacks 25%; Shadow attacks 175%; Undead attacks 150%; Water attacks 25%; Wind attacks 25%.",
+    "Defense element level 4: Earth attacks 0%; Fire attacks 0%; Ghost attacks 0%; Holy attacks -100%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks 200%; Undead attacks 175%; Water attacks 0%; Wind attacks 0%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Holy"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-neutral",
+   "category": "Mechanics",
+   "title": "Neutral element attack matchups",
+   "summary": "Configured damage adjustment against Neutral defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 100%; Ghost attacks 70%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 100%; Fire attacks 100%; Ghost attacks 50%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 3: Earth attacks 100%; Fire attacks 100%; Ghost attacks 0%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 4: Earth attacks 100%; Fire attacks 100%; Ghost attacks 0%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 100%; Wind attacks 100%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Neutral"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-poison",
+   "category": "Mechanics",
+   "title": "Poison element attack matchups",
+   "summary": "Configured damage adjustment against Poison defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 100%; Ghost attacks 100%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks 50%; Undead attacks 50%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 100%; Fire attacks 100%; Ghost attacks 75%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks 25%; Undead attacks 25%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 3: Earth attacks 100%; Fire attacks 100%; Ghost attacks 50%; Holy attacks 125%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks 0%; Undead attacks 0%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 4: Earth attacks 75%; Fire attacks 75%; Ghost attacks 25%; Holy attacks 125%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks -25%; Undead attacks -25%; Water attacks 75%; Wind attacks 75%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Poison"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-dark",
+   "category": "Mechanics",
+   "title": "Shadow element attack matchups",
+   "summary": "Configured damage adjustment against Shadow defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 100%; Ghost attacks 75%; Holy attacks 125%; Neutral attacks 100%; Poison attacks 50%; Shadow attacks 0%; Undead attacks 0%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 75%; Fire attacks 75%; Ghost attacks 50%; Holy attacks 150%; Neutral attacks 100%; Poison attacks 25%; Shadow attacks -25%; Undead attacks 0%; Water attacks 75%; Wind attacks 75%.",
+    "Defense element level 3: Earth attacks 50%; Fire attacks 50%; Ghost attacks 25%; Holy attacks 175%; Neutral attacks 100%; Poison attacks 0%; Shadow attacks -50%; Undead attacks 0%; Water attacks 50%; Wind attacks 50%.",
+    "Defense element level 4: Earth attacks 25%; Fire attacks 25%; Ghost attacks 0%; Holy attacks 200%; Neutral attacks 100%; Poison attacks -25%; Shadow attacks -100%; Undead attacks 0%; Water attacks 25%; Wind attacks 25%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Dark"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-undead",
+   "category": "Mechanics",
+   "title": "Undead element attack matchups",
+   "summary": "Configured damage adjustment against Undead defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 125%; Ghost attacks 100%; Holy attacks 150%; Neutral attacks 100%; Poison attacks -25%; Shadow attacks -25%; Undead attacks 0%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 2: Earth attacks 100%; Fire attacks 150%; Ghost attacks 125%; Holy attacks 175%; Neutral attacks 100%; Poison attacks -50%; Shadow attacks -50%; Undead attacks 0%; Water attacks 100%; Wind attacks 100%.",
+    "Defense element level 3: Earth attacks 100%; Fire attacks 175%; Ghost attacks 150%; Holy attacks 200%; Neutral attacks 100%; Poison attacks -75%; Shadow attacks -75%; Undead attacks 0%; Water attacks 125%; Wind attacks 100%.",
+    "Defense element level 4: Earth attacks 50%; Fire attacks 200%; Ghost attacks 175%; Holy attacks 200%; Neutral attacks 100%; Poison attacks -100%; Shadow attacks -100%; Undead attacks 0%; Water attacks 150%; Wind attacks 100%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Undead"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-water",
+   "category": "Mechanics",
+   "title": "Water element attack matchups",
+   "summary": "Configured damage adjustment against Water defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 100%; Fire attacks 90%; Ghost attacks 100%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 100%; Water attacks 25%; Wind attacks 175%.",
+    "Defense element level 2: Earth attacks 100%; Fire attacks 80%; Ghost attacks 75%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 75%; Shadow attacks 100%; Undead attacks 75%; Water attacks 0%; Wind attacks 175%.",
+    "Defense element level 3: Earth attacks 100%; Fire attacks 70%; Ghost attacks 50%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 50%; Shadow attacks 100%; Undead attacks 50%; Water attacks -25%; Wind attacks 200%.",
+    "Defense element level 4: Earth attacks 100%; Fire attacks 60%; Ghost attacks 25%; Holy attacks 75%; Neutral attacks 100%; Poison attacks 25%; Shadow attacks 75%; Undead attacks 25%; Water attacks -50%; Wind attacks 200%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Water"
+    }
+   ]
+  },
+  {
+   "id": "element-matchup-wind",
+   "category": "Mechanics",
+   "title": "Wind element attack matchups",
+   "summary": "Configured damage adjustment against Wind defenses by attacking element and defense level.",
+   "details": [
+    "Defense element level 1: Earth attacks 150%; Fire attacks 100%; Ghost attacks 100%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 100%; Water attacks 90%; Wind attacks 25%.",
+    "Defense element level 2: Earth attacks 175%; Fire attacks 100%; Ghost attacks 75%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 125%; Shadow attacks 100%; Undead attacks 75%; Water attacks 80%; Wind attacks 0%.",
+    "Defense element level 3: Earth attacks 200%; Fire attacks 100%; Ghost attacks 50%; Holy attacks 100%; Neutral attacks 100%; Poison attacks 100%; Shadow attacks 100%; Undead attacks 50%; Water attacks 70%; Wind attacks -25%.",
+    "Defense element level 4: Earth attacks 200%; Fire attacks 100%; Ghost attacks 25%; Holy attacks 75%; Neutral attacks 100%; Poison attacks 75%; Shadow attacks 75%; Undead attacks 25%; Water attacks 60%; Wind attacks -50%.",
+    "100% is the base elemental adjustment; values below or above 100% reduce or increase this table component of damage.",
+    "Final damage can also change through skill, card, equipment, status, map, and other server modifiers; this table alone is not a complete damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/attr_fix.conf",
+     "record": "Ele_Wind"
+    }
+   ]
+  },
+  {
+   "id": "weapon-size-adjustments",
+   "category": "Mechanics",
+   "title": "Weapon damage by target size",
+   "summary": "Configured size adjustments for the weapon damage component, by weapon type and target size.",
+   "details": [
+    "Small targets: Unarmed 100%; Knife 100%; 1H Sword 75%; 2H Sword 75%; 1H Spear 75%; 2H Spears 75%; 1H Axe 50%; 2H Axe 50%; Mace 75%; 2H Mace 75%; Staff 100%; Bow 100%; Knuckle 100%; Musical Instrument 75%; Whip 75%; Book 100%; Katar 75%; Revolver 100%; Rifle 100%; Shotgun 100%; Gatling Gun 100%; Grenade Launcher 100%; Fuuma Shuriken 75%; 2H Staff 100%.",
+    "Medium targets: Unarmed 100%; Knife 75%; 1H Sword 100%; 2H Sword 75%; 1H Spear 75%; 2H Spears 75%; 1H Axe 75%; 2H Axe 75%; Mace 100%; 2H Mace 100%; Staff 100%; Bow 100%; Knuckle 100%; Musical Instrument 100%; Whip 100%; Book 100%; Katar 100%; Revolver 100%; Rifle 100%; Shotgun 100%; Gatling Gun 100%; Grenade Launcher 100%; Fuuma Shuriken 75%; 2H Staff 100%.",
+    "Large targets: Unarmed 100%; Knife 50%; 1H Sword 75%; 2H Sword 100%; 1H Spear 100%; 2H Spears 100%; 1H Axe 100%; 2H Axe 100%; Mace 100%; 2H Mace 100%; Staff 100%; Bow 75%; Knuckle 75%; Musical Instrument 75%; Whip 50%; Book 50%; Katar 75%; Revolver 100%; Rifle 100%; Shotgun 100%; Gatling Gun 100%; Grenade Launcher 100%; Fuuma Shuriken 100%; 2H Staff 100%.",
+    "100% is full weapon-component damage; a lower value reduces that component.",
+    "This table is specifically the weapon size adjustment from size_fix.txt; it is not a universal multiplier for every skill or the complete final damage formula."
+   ],
+   "sources": [
+    {
+     "path": "db/re/size_fix.txt",
+     "record": "Small, Medium, and Large rows; documented weapon columns"
+    },
+    {
+     "path": "src/map/status.c",
+     "record": "status_read_job_db loads db/re/size_fix.txt"
+    },
+    {
+     "path": "src/map/battle.c",
+     "record": "weapon damage calculation uses target size adjustment"
+    }
+   ]
+  }
+ ]
+}

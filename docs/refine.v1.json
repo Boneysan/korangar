@@ -1,0 +1,78 @@
+{
+ "schema_version": 1,
+ "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+ "source_worktree_dirty": true,
+ "mode": "renewal",
+ "source": "db/re/refine_db.conf (WeaponLevel1-4.Rates), src/map/skill.c (skill_weaponrefine material list and formula)",
+ "scope": "WS_WEAPONREFINE self-refine only (packet 0x0222); the NPC-driven Refinery UI in the same file is disabled on this server",
+ "max_useful_refine_level": 10,
+ "job_level_bonus_per_job_level_from_50_per_mille": 5,
+ "mechanic_transcendent_flat_bonus_percent": 10,
+ "on_failure": "weapon is unequipped and destroyed",
+ "weapon_levels": [
+  {
+   "weapon_level": 1,
+   "material": "Phracon",
+   "base_chance_percent_by_target_level": {
+    "1": 100,
+    "2": 100,
+    "3": 100,
+    "4": 100,
+    "5": 100,
+    "6": 100,
+    "7": 100,
+    "8": 60,
+    "9": 40,
+    "10": 19
+   }
+  },
+  {
+   "weapon_level": 2,
+   "material": "Emveretarcon",
+   "base_chance_percent_by_target_level": {
+    "1": 100,
+    "2": 100,
+    "3": 100,
+    "4": 100,
+    "5": 100,
+    "6": 100,
+    "7": 60,
+    "8": 40,
+    "9": 20,
+    "10": 19
+   }
+  },
+  {
+   "weapon_level": 3,
+   "material": "Oridecon",
+   "base_chance_percent_by_target_level": {
+    "1": 100,
+    "2": 100,
+    "3": 100,
+    "4": 100,
+    "5": 100,
+    "6": 60,
+    "7": 50,
+    "8": 20,
+    "9": 20,
+    "10": 19
+   }
+  },
+  {
+   "weapon_level": 4,
+   "material": "Oridecon",
+   "base_chance_percent_by_target_level": {
+    "1": 100,
+    "2": 100,
+    "3": 100,
+    "4": 100,
+    "5": 60,
+    "6": 40,
+    "7": 40,
+    "8": 20,
+    "9": 20,
+    "10": 9
+   }
+  }
+ ]
+}

@@ -19,16 +19,23 @@ from typing import Any
 
 from export_job_skills import HERCULES, source_revision
 from export_skill_info import _parse_value, _strip_comments, _tokenize, parse_skill_db
+from generate_navigation_graph import loaded_script_files
 
 ROOT = Path(__file__).resolve().parent.parent
 QUEST_DB = HERCULES / "db/quest_db.conf"
 MOB_DB = HERCULES / "db/re/mob_db.conf"
 BESTIARY = ROOT / "docs/bestiary.v1.json"
+ITEMS = ROOT / "docs/items.v1.json"
 OUTPUT = ROOT / "docs/quests.v1.json"
 REVIEWED_NPC_ROUTES = ROOT / "tools/quest_npc_routes.json"
+REVIEWED_FLOW_REVIEWS = ROOT / "tools/quest_flow_reviews.json"
+NPC_MANIFEST = HERCULES / "npc/re/scripts_main.conf"
 NPC_QUEST_DIRS = (HERCULES / "npc/re/quests", HERCULES / "npc/custom")
-NPC_HEADER = re.compile(r"^\s*([A-Za-z0-9_]+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\s+script\s+([^\s,]+)\s+[^,\n]+,\s*\{")
-QUEST_CALL = re.compile(r"\b(setquest|questprogress|completequest|erasequest)\s*\(?\s*(\d+)")
+NPC_HEADER = re.compile(r"^\s*([A-Za-z0-9_]+),\s*(-?\d+),\s*(-?\d+),\s*(-?\d+)\s+script\s+(.+?)\s+([^\s,]+)\s*,\s*\{")
+QUEST_CALL = re.compile(r"\b(setquest|questprogress|completequest|erasequest|checkquest)\s*\(?\s*(\d+)")
+QUE_DIC_TURNIN = re.compile(r"\bque_dic\s*\(\s*0\s*,\s*(\d+)")
+QUE_DIC_REWARD = re.compile(r"\bque_dic\s*\(\s*0\s*,\s*(\d+)\s*,\s*(\d+)\s*,")
+ITEM_GRANT = re.compile(r"\bgetitem\s*\(?\s*([A-Za-z0-9_]+)\s*,\s*(\d+)\b", re.I)
 
 
 def read_quest_source() -> tuple[str, bool, str | None]:
@@ -62,6 +69,42 @@ def parse_rooted_quest_db(text: str) -> list[dict[str, Any]]:
     raise ValueError("quest_db root not found")
 
 
+def extract_reward_candidates(source_text: str, source_path: str, quest_ids: set[int], items_by_name: dict[str, dict[str, Any]]) -> dict[int, list[dict[str, Any]]]:
+    """Attach nearby literal item grants as review candidates, never verified rewards."""
+    lines = _strip_comments(source_text).splitlines()
+    result: dict[int, list[dict[str, Any]]] = {}
+    for line_index, line in enumerate(lines):
+        for call in QUEST_CALL.finditer(line):
+            if call.group(1) != "completequest":
+                continue
+            quest_id = int(call.group(2))
+            if quest_id not in quest_ids:
+                continue
+            for grant_index in range(max(0, line_index - 8), min(len(lines), line_index + 9)):
+                for grant in ITEM_GRANT.finditer(lines[grant_index]):
+                    token = grant.group(1)
+                    item = items_by_name.get(token.casefold())
+                    if item is None and token.isdigit():
+                        item = items_by_name.get(f"id{int(token)}")
+                    if item is None:
+                        continue
+                    candidate = {
+                        "item_id": item["id"],
+                        "item_name": item.get("name") or item["aegis_name"],
+                        "amount": int(grant.group(2)),
+                        "source_path": source_path,
+                        "source_line": grant_index + 1,
+                        "nearby_completequest_line": line_index + 1,
+                        "distance_lines": grant_index - line_index,
+                        "status": "unverified_nearby_grant_candidate",
+                    }
+                    result.setdefault(quest_id, []).append(candidate)
+    for candidates in result.values():
+        unique = {(entry["item_id"], entry["amount"], entry["source_path"], entry["source_line"]): entry for entry in candidates}
+        candidates[:] = sorted(unique.values(), key=lambda entry: (entry["source_path"], entry["source_line"], entry["item_id"]))
+    return result
+
+
 def extract_npc_quest_references(text: str, source_path: str, quest_ids: set[int]) -> dict[int, list[dict[str, Any]]]:
     """Map literal quest-state calls to their nearest static NPC declaration."""
     result: dict[int, list[dict[str, Any]]] = {}
@@ -72,7 +115,7 @@ def extract_npc_quest_references(text: str, source_path: str, quest_ids: set[int
         code = line
         header = NPC_HEADER.match(code)
         if header and depth == 0:
-            map_name, x, y, _direction, name = header.groups()
+            map_name, x, y, _direction, name, _sprite = header.groups()
             current_npc = {
                 "name": name,
                 "map_name": map_name,
@@ -97,6 +140,18 @@ def extract_npc_quest_references(text: str, source_path: str, quest_ids: set[int
                 use = call.group(1)
                 if use not in existing["uses"]:
                     existing["uses"].append(use)
+            for call in QUE_DIC_TURNIN.finditer(code):
+                quest_id = int(call.group(1))
+                if quest_id not in quest_ids:
+                    continue
+                record = result.setdefault(quest_id, [])
+                key = (current_npc["name"], current_npc["map_name"], current_npc["x"], current_npc["y"])
+                existing = next((npc for npc in record if (npc["name"], npc["map_name"], npc["x"], npc["y"]) == key), None)
+                if existing is None:
+                    existing = {**current_npc, "source_line": line_number, "uses": []}
+                    record.append(existing)
+                if "que_dic" not in existing["uses"]:
+                    existing["uses"].append("que_dic")
         in_string = False
         escaped = False
         for character in code:
@@ -128,7 +183,7 @@ def npc_identity_at_line(text: str, target_line: int) -> tuple[str, str, int, in
             return identity if npc_depth is not None and depth >= npc_depth else None
         header = NPC_HEADER.match(code)
         if header and depth == 0:
-            map_name, x, y, _direction, name = header.groups()
+            map_name, x, y, _direction, name, _sprite = header.groups()
             identity = (name, map_name, int(x), int(y))
             npc_depth = depth + 1
         in_string = False
@@ -169,6 +224,9 @@ def apply_reviewed_npc_routes(
             role = route["role"]
             source_lines = route["source_lines"]
             evidence = route["evidence"]
+            reward_exp = route.get("reward_exp")
+            reward_item_id = route.get("reward_item_id")
+            reward_item_amount = route.get("reward_item_amount")
         except (KeyError, TypeError) as error:
             raise ValueError(f"malformed reviewed quest NPC route: {route!r}") from error
         if not isinstance(quest_id, int) or quest_id not in quest_ids:
@@ -215,6 +273,18 @@ def apply_reviewed_npc_routes(
                 for call in QUEST_CALL.finditer(source_code[line_number - 1])
                 if int(call.group(2)) == quest_id
             )
+            observed_calls.update("que_dic" for call in QUE_DIC_TURNIN.finditer(source_code[line_number - 1]) if int(call.group(1)) == quest_id)
+        if role == "turn_in" and "que_dic" in observed_calls and not verifies_que_dic_turnin(source_text):
+            raise ValueError(f"quest {quest_id} uses que_dic but its shared turn-in helper no longer verifies")
+        if role == "turn_in" and "que_dic" in observed_calls:
+            raw_line = source_code[source_lines[0] - 1]
+            reward_call = next((call for call in QUE_DIC_REWARD.finditer(raw_line) if int(call.group(1)) == quest_id), None)
+            if reward_call is None or not isinstance(reward_exp, int) or int(reward_call.group(2)) != reward_exp:
+                raise ValueError(f"quest {quest_id} reviewed EXP reward no longer matches its que_dic call")
+            if (reward_item_id, reward_item_amount) != (6304, 1):
+                raise ValueError(f"quest {quest_id} reviewed item reward does not match verified que_dic helper")
+        if role == "turn_in":
+            required_calls.add("que_dic")
         if not observed_calls.intersection(required_calls):
             raise ValueError(f"quest {quest_id} reviewed NPC route no longer has its cited {role} call")
 
@@ -226,6 +296,122 @@ def apply_reviewed_npc_routes(
         matching["reviewed_role"] = role
         matching["reviewed_source_lines"] = source_lines
         matching["review_evidence"] = evidence
+        if role == "turn_in" and "que_dic" in observed_calls:
+            matching["verified_reward"] = {
+                "base_exp": reward_exp,
+                "item_id": reward_item_id,
+                "item_amount": reward_item_amount,
+                "status": "verified_static_helper_reward",
+            }
+
+
+def apply_reviewed_flow_reviews(
+    entries: list[dict[str, Any]],
+    reviews: list[dict[str, Any]],
+    quest_ids: set[int],
+    npc_source_texts: dict[str, str],
+    quest_db_text: str,
+    loaded_sources: set[str],
+) -> None:
+    """Attach reviewed shared flow details only while their source anchors hold."""
+    entries_by_id = {entry["id"]: entry for entry in entries}
+    seen_review_ids: set[str] = set()
+    for review in reviews:
+        review_id = review.get("id")
+        ids = review.get("quest_ids")
+        if not isinstance(review_id, str) or not review_id.strip() or review_id in seen_review_ids:
+            raise ValueError(f"invalid or duplicate reviewed quest-flow ID: {review_id!r}")
+        seen_review_ids.add(review_id)
+        if not isinstance(ids, list) or not ids or not all(isinstance(quest_id, int) and quest_id in quest_ids for quest_id in ids):
+            raise ValueError(f"reviewed quest flow {review_id} references an unknown quest ID")
+        if not isinstance(review.get("conditions"), list) or not review["conditions"]:
+            raise ValueError(f"reviewed quest flow {review_id} has no conditions or reviewed details")
+        if not all(isinstance(review.get(field), str) and review[field].strip() for field in ("title", "reviewed_by", "reviewed_on", "review_method")):
+            raise ValueError(f"reviewed quest flow {review_id} is missing title or review provenance")
+        source_refs = []
+        for source in review.get("sources", []):
+            path = source.get("path")
+            lines = source.get("lines")
+            if not isinstance(path, str) or not path or not isinstance(lines, list) or not lines:
+                raise ValueError(f"reviewed quest flow {review_id} has malformed source references")
+            if path == "db/quest_db.conf":
+                text = quest_db_text
+            elif path.startswith("db/"):
+                source_file = HERCULES / path
+                if not source_file.is_file():
+                    raise ValueError(f"reviewed quest-flow DB source is not available: {path}")
+                text = source_file.read_text(encoding="utf-8", errors="replace")
+            else:
+                if path not in loaded_sources:
+                    raise ValueError(f"reviewed quest-flow script source is not loaded: {path}")
+                text = npc_source_texts.get(path)
+            if text is None:
+                raise ValueError(f"reviewed quest-flow source is not available: {path}")
+            source_lines = text.splitlines()
+            if any(not isinstance(line, int) or line < 1 or line > len(source_lines) for line in lines):
+                raise ValueError(f"reviewed quest flow {review_id} cites a missing line in {path}")
+            for literal in source.get("required_source_literals", []):
+                if literal not in text:
+                    raise ValueError(f"reviewed quest flow {review_id} source anchor changed in {path}: {literal}")
+            source_refs.append({"path": path, "lines": lines})
+        if not source_refs:
+            raise ValueError(f"reviewed quest flow {review_id} has no source references")
+        flow = {
+            "id": review_id,
+            "title": review["title"],
+            "evidence_state": review.get("evidence_state", "verified"),
+            "reviewed_by": review["reviewed_by"],
+            "reviewed_on": review["reviewed_on"],
+            "review_method": review["review_method"],
+            "conditions": review["conditions"],
+            "sources": source_refs,
+        }
+        verified_rewards = review.get("verified_item_rewards", [])
+        if not isinstance(verified_rewards, list):
+            raise ValueError(f"reviewed quest flow {review_id} has malformed verified item rewards")
+        candidate_rows = [candidate for quest_id in ids for candidate in entries_by_id[quest_id].get("item_reward_candidates", [])]
+        normalized_rewards = []
+        for reward in verified_rewards:
+            if not isinstance(reward, dict):
+                raise ValueError(f"reviewed quest flow {review_id} has a malformed item reward")
+            matches = [candidate for candidate in candidate_rows if
+                candidate.get("item_id") == reward.get("item_id")
+                and candidate.get("amount") == reward.get("amount")
+                and candidate.get("source_path") == reward.get("source_path")
+                and candidate.get("source_line") == reward.get("source_line")]
+            if len(matches) != 1 or not isinstance(reward.get("explanation"), str) or not reward["explanation"].strip():
+                raise ValueError(f"reviewed quest flow {review_id} reward does not match exactly one indexed source clue")
+            normalized_rewards.append({**reward, "item_name": matches[0]["item_name"], "evidence_state": "verified"})
+        if normalized_rewards:
+            flow["verified_item_rewards"] = normalized_rewards
+        for quest_id in ids:
+            if entries_by_id[quest_id].get("flow_review"):
+                raise ValueError(f"quest {quest_id} has more than one reviewed flow record; merge the reviewed coverage explicitly")
+            entries_by_id[quest_id]["flow_review"] = flow
+
+
+def verifies_que_dic_turnin(source_text: str) -> bool:
+    """Verify the literal shared helper awards EXP/item, then erases its quest."""
+    cleaned = _strip_comments(source_text)
+    match = re.search(r"function\s+script\s+que_dic\s*\{", cleaned)
+    if not match:
+        return False
+    opening = cleaned.find("{", match.start())
+    depth = 1
+    cursor = opening + 1
+    while cursor < len(cleaned) and depth:
+        if cleaned[cursor] == "{":
+            depth += 1
+        elif cleaned[cursor] == "}":
+            depth -= 1
+        cursor += 1
+    body = cleaned[opening + 1:cursor - 1]
+    return all(re.search(pattern, body) for pattern in (
+        r"questprogress\s*\(\s*getarg\(1\)\s*,\s*HUNTING\s*\)\s*!=\s*2",
+        r"getexp\s+getarg\(2\)\s*,\s*0\s*;",
+        r"erasequest\s+getarg\(1\)\s*;",
+        r"getitem\s+6304\s*,\s*1\s*;",
+    ))
 
 
 def build() -> dict[str, object]:
@@ -235,9 +421,14 @@ def build() -> dict[str, object]:
     monsters = {int(row["id"]): row for row in bestiary["entries"]}
     mob_records = parse_skill_db(MOB_DB.read_text(encoding="utf-8", errors="replace"))
     mob_constants = {row["SpriteName"]: int(row["Id"]) for row in mob_records if "SpriteName" in row and "Id" in row}
+    item_payload = json.loads(ITEMS.read_text(encoding="utf-8"))
+    items_by_name = {str(item["aegis_name"]).casefold(): item for item in item_payload["entries"]}
+    items_by_name.update({f"id{item['id']}": item for item in item_payload["entries"]})
     quest_ids = {int(row["Id"]) for row in raw_quests if isinstance(row.get("Id"), int)}
     npc_references: dict[int, list[dict[str, Any]]] = {}
+    reward_candidates: dict[int, list[dict[str, Any]]] = {}
     npc_source_texts: dict[str, str] = {}
+    loaded_sources = {path.relative_to(HERCULES).as_posix() for path in loaded_script_files(HERCULES, NPC_MANIFEST)}
     for directory in NPC_QUEST_DIRS:
         if not directory.is_dir():
             continue
@@ -248,11 +439,18 @@ def build() -> dict[str, object]:
             references = extract_npc_quest_references(source_text, relative_path, quest_ids)
             for quest_id, records in references.items():
                 npc_references.setdefault(quest_id, []).extend(records)
+            if relative_path in loaded_sources:
+                candidates = extract_reward_candidates(source_text, relative_path, quest_ids, items_by_name)
+                for quest_id, records in candidates.items():
+                    reward_candidates.setdefault(quest_id, []).extend(records)
 
     reviewed_manifest = json.loads(REVIEWED_NPC_ROUTES.read_text(encoding="utf-8"))
     if reviewed_manifest.get("schema_version") != 1 or not isinstance(reviewed_manifest.get("entries"), list):
         raise ValueError("reviewed quest NPC route manifest has an unsupported schema")
     apply_reviewed_npc_routes(npc_references, reviewed_manifest["entries"], quest_ids, npc_source_texts)
+    flow_reviews = json.loads(REVIEWED_FLOW_REVIEWS.read_text(encoding="utf-8"))
+    if flow_reviews.get("schema_version") != 1 or not isinstance(flow_reviews.get("entries"), list):
+        raise ValueError("reviewed quest-flow manifest has an unsupported schema")
 
     entries = []
     seen: set[int] = set()
@@ -303,9 +501,11 @@ def build() -> dict[str, object]:
             "name": name,
             "targets": targets,
             "npc_references": npc_references.get(quest_id, []),
+            "item_reward_candidates": reward_candidates.get(quest_id, []),
             "source_record": f"quest {quest_id}",
         })
 
+    apply_reviewed_flow_reviews(entries, flow_reviews["entries"], quest_ids, npc_source_texts, quest_text, loaded_sources)
     entries.sort(key=lambda entry: (str(entry["name"]).casefold(), int(entry["id"])))
     revision, dirty = source_revision()
     return {
@@ -315,6 +515,13 @@ def build() -> dict[str, object]:
         "mode": "renewal",
         "source": "db/quest_db.conf",
         "npc_sources": ["npc/re/quests", "npc/custom"],
+        "reward_candidate_coverage": {
+            "loaded_script_files_scanned": len(loaded_sources),
+            "quests_with_nearby_literal_item_grants": sum(bool(entry["item_reward_candidates"]) for entry in entries),
+            "candidate_records": sum(len(entry["item_reward_candidates"]) for entry in entries),
+            "quests_with_reviewed_flow": sum(bool(entry.get("flow_review")) for entry in entries),
+            "review_status": "nearby literal item grants are candidates, not confirmed quest rewards",
+        },
         "source_file_available_in_worktree": QUEST_DB.is_file(),
         "used_tracked_head_fallback": used_head_fallback,
         "source_fallback_reason": fallback_reason,

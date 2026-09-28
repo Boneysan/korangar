@@ -83,6 +83,10 @@ struct SkillRow {
     cast_time: Option<Levelled>,
     #[serde(default, rename = "FixedCastTime")]
     fixed_cast_time: Option<Levelled>,
+    #[serde(default, rename = "AfterCastActDelay")]
+    after_cast_action_delay: Option<Levelled>,
+    #[serde(default, rename = "CoolDown")]
+    cooldown: Option<Levelled>,
     #[serde(default, rename = "NumberOfHits")]
     hits: Option<Levelled>,
     #[serde(default, rename = "SkillData1")]
@@ -186,6 +190,27 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
     }
     if !cost.is_empty() {
         lines.push(cost.join(" · "));
+    }
+
+    let mut timing = Vec::new();
+    if let Some(delay) = row
+        .after_cast_action_delay
+        .as_ref()
+        .and_then(|value| value.at(level))
+        .filter(|delay| *delay > 0)
+    {
+        timing.push(format!("Configured aftercast delay {:.1}s", delay as f32 / 1000.0));
+    }
+    if let Some(cooldown) = row
+        .cooldown
+        .as_ref()
+        .and_then(|value| value.at(level))
+        .filter(|cooldown| *cooldown > 0)
+    {
+        timing.push(format!("Configured cooldown {:.1}s", cooldown as f32 / 1000.0));
+    }
+    if !timing.is_empty() {
+        lines.push(timing.join(" · "));
     }
 
     // Effect: multi-hit, how long a ground field lasts, how much it covers.

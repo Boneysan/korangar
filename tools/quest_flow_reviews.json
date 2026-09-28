@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "dicastes_kalipo_daily_hunt_requests",
+      "reviewed_on": "2026-09-27",
+      "review_method": "Traced Kalipo and Hunting Dept. 2 Manager branches, the shared que_dic helper, the quest record timer, and required item definition.",
+      "title": "Kalipo request eligibility and repeat cycle",
+      "quest_ids": [
+        12106,
+        12107,
+        12108,
+        12109,
+        12110,
+        12111
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Kalipo checks weight capacity, requires the Ring of the Ancient Wise King (item 2782) to be equipped, requires ep13_3_invite to be at least 6, and requires Base Level 100 or higher.",
+        "A player can hold only one active Kalipo request record at a time. While quest record 12160 is active, Kalipo will not offer another request; the player must report the current request to the Hunting Dept. 2 Manager.",
+        "Quest record 12160 has a configured 82,800 second time limit (23 hours). After it expires, the player must speak with the Hunting Dept. 2 Manager, who clears any remaining request records, then return to Kalipo.",
+        "Kalipo selects among six requests with a Base-Level-dependent random value and threshold branches; the six offers are not equal-probability choices."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            474,
+            476,
+            496,
+            497,
+            499,
+            2730,
+            2734,
+            2738,
+            2745,
+            2749,
+            2754,
+            2760,
+            2795,
+            2796,
+            2797,
+            2798,
+            2810,
+            2822,
+            2834,
+            2846,
+            2858,
+            573,
+            574,
+            578,
+            582,
+            589,
+            593,
+            598,
+            607,
+            612,
+            616,
+            631,
+            632,
+            633,
+            634,
+            635,
+            636
+          ],
+          "required_source_literals": [
+            "if ((MaxWeight - Weight) < 1000)",
+            "if (ep13_3_invite < 6)",
+            "if (BaseLevel < 100)",
+            "if (questprogress(12160,PLAYTIME) == 2)",
+            ".@rand = rand(100,BaseLevel);",
+            "setquest 12106;",
+            "setquest 12107;",
+            "setquest 12108;",
+            "setquest 12109;",
+            "setquest 12110;",
+            "setquest 12111;",
+            "setquest 12160;",
+            "if (countitem(getarg(3)) < getarg(4))",
+            "getitem 6304,1;",
+            "que_dic(2,12106,12107,12108,12109,12110,12111,12160);",
+            "que_dic(0,12106,77000,.@s$);",
+            "que_dic(0,12111,42000,.@s$);"
+          ]
+        },
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            38114,
+            38115
+          ],
+          "required_source_literals": [
+            "Id: 2782",
+            "AegisName: \"Ring_Of_Wise_King\"",
+            "Name: \"Ring of the Ancient Wise King\""
+          ]
+        },
+        {
+          "path": "db/quest_db.conf",
+          "lines": [
+            10483,
+            10484,
+            10485
+          ],
+          "required_source_literals": [
+            "Id: 12160",
+            "Name: \"Quest record from Kalipo\"",
+            "TimeLimit: 82800"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eden_passing_grades_reward",
+      "title": "Passing Grades turn-in and item reward",
+      "quest_ids": [
+        4166
+      ],
+      "reviewed_on": "2026-09-27",
+      "reviewed_by": "Repository source review",
+      "review_method": "Traced the Tutorial Goal NPC declaration, the quest-progress branch, the inventory-weight gate, quest completion, and all subsequent item grants; cross-checked each item and amount against the indexed nearby-grant record.",
+      "evidence_state": "conditional",
+      "conditions": [
+        "The Tutorial Goal NPC at moc_para01 (32,179) enters this branch only while quest 4166 is in progress (questprogress(4166) == 1).",
+        "Before dialogue, the NPC requires enough inventory capacity for a checkweight test of seven Yggdrasil Seeds; when the check fails it stops and asks the player to make room.",
+        "After the dialogue, the script completes quest 4166 and grants the listed items. No repeat reward branch is present; the completed-quest branch contains dialogue only."
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 510,
+          "amount": 5,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 641,
+          "explanation": "Granted immediately after quest 4166 is completed."
+        },
+        {
+          "item_id": 511,
+          "amount": 5,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 642,
+          "explanation": "Granted immediately after quest 4166 is completed."
+        },
+        {
+          "item_id": 504,
+          "amount": 5,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 643,
+          "explanation": "Granted immediately after quest 4166 is completed."
+        },
+        {
+          "item_id": 608,
+          "amount": 1,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 644,
+          "explanation": "Granted immediately after quest 4166 is completed; the NPC applies an earlier inventory-capacity gate."
+        }
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            592,
+            593,
+            629,
+            640,
+            641,
+            642,
+            643,
+            644,
+            646
+          ],
+          "required_source_literals": [
+            "if (checkweight(Seed_Of_Yggdrasil,7) == 0)",
+            "else if (questprogress(4166) == 1)",
+            "completequest 4166;",
+            "getitem Blue_Herb,5;",
+            "getitem Green_Herb,5;",
+            "getitem White_Potion,5;",
+            "getitem Seed_Of_Yggdrasil,1;",
+            "else if (questprogress(4166) == 2)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brasilis_guarana_candy_reward",
+      "title": "Guarana quest candy turn-in reward",
+      "quest_ids": [
+        2200
+      ],
+      "reviewed_on": "2026-09-27",
+      "reviewed_by": "Repository source review",
+      "review_method": "Traced Candy Maker state 10 branch through Guarana Fruit validation/removal, quest completion, candy grant, and EXP award; checked the separate state 11 branch to avoid conflating the quest reward with later purchases.",
+      "evidence_state": "conditional",
+      "conditions": [
+        "This reviewed turn-in branch runs when the Candy Maker script variable brazil_gua equals 10 and the player has at least one Guarana Fruit; the NPC consumes one fruit.",
+        "The NPC declaration applies an inventory check before dialogue. On success, the branch changes brazil_gua to 11, completes quest 2200, grants one Guarana Candy, and awards 70,000 base EXP plus 10,000 job EXP.",
+        "The steps that bring a player to state 10 are not reviewed here. At state 11, the script also offers a separate candy purchase for 4,000 zeny; that is distinct from this quest reward."
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 12414,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_brasilis.txt",
+          "source_line": 468,
+          "explanation": "Granted after the script consumes one Guarana Fruit and completes quest 2200."
+        }
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            375,
+            376,
+            380,
+            441,
+            442,
+            446,
+            466,
+            467,
+            468,
+            469,
+            472
+          ],
+          "required_source_literals": [
+            "brasilis,187,162,5\tscript\tCandy Maker",
+            "if (!checkweight(Knife,1))",
+            "else if (brazil_gua == 10)",
+            "if (!countitem(Guarana_Fruit))",
+            "delitem Guarana_Fruit,1;",
+            "brazil_gua = 11;",
+            "completequest 2200;",
+            "getitem Guarana_Candy,1;",
+            "getexp 70000,10000;",
+            "else if (brazil_gua == 11)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dewata_jaty_crown_final_reward",
+      "title": "Jaty Crown finale turn-in rewards",
+      "quest_ids": [
+        9165
+      ],
+      "reviewed_on": "2026-09-27",
+      "reviewed_by": "Repository source review",
+      "review_method": "Traced Tribal Chief Paiko's stage-16 finale branch through its weight gate, stage update, item grants, quest completion, and record erase; cross-checked both item grant candidates and item database records.",
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tribal Chief Paiko runs this reward branch only when the character script variable dew_legend equals 16, after the final Satay delivery stage.",
+        "If checkweight(Jaty_C,1) fails, the NPC stops without advancing the stage or granting rewards; return after freeing capacity.",
+        "On success, the script sets dew_legend to 17, grants one Jaty Crown and five Satay, then completes and erases quest record 9165. The earlier Jaty Crown and delivery prerequisites are not reviewed here."
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 18520,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_dewata.txt",
+          "source_line": 497,
+          "explanation": "Granted after the stage-16 finale passes the Jaty Crown inventory check."
+        },
+        {
+          "item_id": 11533,
+          "amount": 5,
+          "source_path": "npc/re/quests/quests_dewata.txt",
+          "source_line": 498,
+          "explanation": "Five Satay are granted with the Jaty Crown reward."
+        }
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            471,
+            488,
+            495,
+            496,
+            497,
+            498,
+            499,
+            500
+          ],
+          "required_source_literals": [
+            "dew_in01,15,49,4\tscript\tTribal Chief Paiko#dew",
+            "} else if (dew_legend == 16) {",
+            "if (checkweight(Jaty_C,1) == 0)",
+            "dew_legend = 17;",
+            "getitem Jaty_C,1;",
+            "getitem Satay,5;",
+            "completequest 9165;",
+            "erasequest 9165;"
+          ]
+        },
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132918,
+            132919,
+            132920
+          ],
+          "required_source_literals": [
+            "Id: 18520",
+            "AegisName: \"Jaty_C\"",
+            "Name: \"Jaty Crown\""
+          ]
+        },
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            99727,
+            99728,
+            99729
+          ],
+          "required_source_literals": [
+            "Id: 11533",
+            "AegisName: \"Satay\"",
+            "Name: \"Satay\""
+          ]
+        }
+      ]
+    }
+  ]
+}

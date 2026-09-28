@@ -20,6 +20,14 @@ const JOB_SKILLS_JSON: &str = include_str!("../../../docs/job-skills.v1.json");
 const JOB_BONUSES_JSON: &str = include_str!("../../../docs/job-bonuses.v1.json");
 const STATUS_REFERENCE_JSON: &str = include_str!("../../../docs/status-effects.v1.json");
 const QUESTS_JSON: &str = include_str!("../../../docs/quests.v1.json");
+const REFINE_JSON: &str = include_str!("../../../docs/refine.v1.json");
+const SERVER_RULES_JSON: &str = include_str!("../../../docs/server-rules.v1.json");
+const NPCS_JSON: &str = include_str!("../../../docs/npcs.v1.json");
+const CRAFTING_JSON: &str = include_str!("../../../docs/crafting.v1.json");
+const ITEM_GRANTS_JSON: &str = include_str!("../../../docs/item-script-grants.v1.json");
+const MAP_FLAGS_JSON: &str = include_str!("../../../docs/map-flags.v1.json");
+const COVERAGE_JSON: &str = include_str!("../../../docs/encyclopedia-coverage.v1.json");
+const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -28,6 +36,63 @@ struct VersionedFile<T> {
     source_worktree_dirty: bool,
     mode: String,
     entries: Vec<T>,
+    #[serde(default)]
+    runtime_clues: Vec<ReferenceRuntimeMapFlagClue>,
+    #[serde(default)]
+    runtime_reviews: Vec<ReferenceRuntimeMapFlagReview>,
+}
+
+#[derive(Deserialize)]
+struct VersionedItemGrantFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceItemGrant>,
+    consumptions: Vec<ReferenceItemConsumption>,
+}
+
+#[derive(Deserialize)]
+struct VersionedItemExchangeFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceItemExchange>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EvidenceState {
+    Verified,
+    Conditional,
+    ConfiguredEstimate,
+    SourceClue,
+    NotReviewed,
+    Unknown,
+}
+
+impl EvidenceState {
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Verified => "verified",
+            Self::Conditional => "conditional",
+            Self::ConfiguredEstimate => "configured estimate",
+            Self::SourceClue => "source clue",
+            Self::NotReviewed => "not reviewed",
+            Self::Unknown => "unknown",
+        }
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceCoverageReport {
+    pub schema_version: u32,
+    pub source_revision: String,
+    pub mode: String,
+    pub evidence_states: HashMap<EvidenceState, String>,
+    pub categories: HashMap<String, serde_json::Value>,
+    pub counting_policy: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -57,7 +122,28 @@ pub struct ReferenceMonster {
     #[serde(default)]
     pub spawn_regions: Vec<ReferenceSpawnRegion>,
     #[serde(default)]
+    pub scripted_spawn_references: Vec<ReferenceScriptedSpawn>,
+    #[serde(default)]
     pub source: Option<ReferenceSource>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceScriptedSpawn {
+    pub spawn_kind: String,
+    #[serde(default)]
+    pub map: Option<String>,
+    #[serde(default)]
+    pub map_template: Option<String>,
+    #[serde(default)]
+    pub map_template_approximate: bool,
+    #[serde(default)]
+    pub map_expression: String,
+    #[serde(default)]
+    pub coordinates: Vec<Option<i32>>,
+    #[serde(default)]
+    pub amount: Option<u32>,
+    pub source: String,
+    pub availability: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -66,7 +152,23 @@ pub struct ReferenceSpawnRegion {
     pub kind: String,
     pub spawn_records: u32,
     #[serde(default)]
+    pub listed_monsters: u32,
+    #[serde(default)]
+    pub placements: Vec<ReferenceSpawnPlacement>,
+    #[serde(default)]
     pub source: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceSpawnPlacement {
+    pub x: i32,
+    pub y: i32,
+    #[serde(default)]
+    pub random_map_cell: bool,
+    pub x_spread: i32,
+    pub y_spread: i32,
+    pub amount: u32,
+    pub source: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -81,6 +183,26 @@ pub struct ReferenceMobSkill {
     pub level: u8,
     pub rate: i64,
     pub delay_ms: i64,
+    #[serde(default)]
+    pub skill_state: String,
+    #[serde(default)]
+    pub skill_target: String,
+    #[serde(default)]
+    pub cast_condition: String,
+    #[serde(default)]
+    pub condition_data: serde_json::Value,
+    #[serde(default)]
+    pub value0: serde_json::Value,
+    #[serde(default)]
+    pub cast_time_ms: i64,
+    #[serde(default)]
+    pub cancelable: bool,
+    #[serde(default)]
+    pub trigger_summary: String,
+    #[serde(default)]
+    pub target_summary: String,
+    #[serde(default)]
+    pub trigger_translation_status: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -106,6 +228,8 @@ pub struct ReferenceItem {
     #[serde(default)]
     pub buy: u32,
     #[serde(default)]
+    pub sell: Option<u32>,
+    #[serde(default)]
     pub weight: u32,
     #[serde(default)]
     pub atk: Option<i32>,
@@ -116,11 +240,261 @@ pub struct ReferenceItem {
     #[serde(default)]
     pub slots: Option<u8>,
     #[serde(default)]
+    pub job: HashMap<String, bool>,
+    #[serde(default)]
+    pub gender: Option<String>,
+    #[serde(default)]
+    pub loc: Option<serde_json::Value>,
+    #[serde(default, rename = "equiplv")]
+    pub equip_level: Option<serde_json::Value>,
+    #[serde(default)]
+    pub refine: Option<bool>,
+    #[serde(default, rename = "weaponlv")]
+    pub weapon_level: Option<u8>,
+    #[serde(default)]
     pub effect_status: String,
+    #[serde(default)]
+    pub effect_summary: Option<String>,
+    #[serde(default)]
+    pub combos: Vec<ReferenceItemCombo>,
+    #[serde(default)]
+    pub group_contents: Vec<ReferenceItemGroupEntry>,
+    #[serde(default)]
+    pub contained_in_groups: Vec<ReferenceItemGroupContainer>,
+    #[serde(default)]
+    pub shops: Vec<ReferenceItemShop>,
     #[serde(default)]
     pub source: Option<ReferenceSource>,
     #[serde(default)]
     pub drops_from: Vec<ReferenceItemDrop>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceCraftingRecipe {
+    pub kind: String,
+    pub output_id: u32,
+    pub output_name: String,
+    pub output_amount: u32,
+    #[serde(default)]
+    pub item_level: Option<u8>,
+    #[serde(default)]
+    pub skill_id: Option<u32>,
+    #[serde(default)]
+    pub skill_name: Option<String>,
+    #[serde(default)]
+    pub skill_level: Option<u8>,
+    pub materials: Vec<ReferenceCraftingMaterial>,
+    pub source: ReferenceSource,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceCraftingMaterial {
+    pub item_id: u32,
+    pub item_name: String,
+    pub amount: i32,
+    pub required: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemGrant {
+    pub item_id: u32,
+    pub item_name: String,
+    pub amount: u32,
+    pub grant_kind: String,
+    #[serde(default)]
+    pub npc_clue: Option<ReferenceGrantNpcClue>,
+    pub condition_status: String,
+    pub source: ReferenceScriptLocation,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemConsumption {
+    pub item_id: u32,
+    pub item_name: String,
+    pub amount: u32,
+    #[serde(default)]
+    pub npc_clue: Option<ReferenceGrantNpcClue>,
+    pub source: ReferenceScriptLocation,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemExchange {
+    pub id: String,
+    pub title: String,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub npc: ReferenceExchangeNpc,
+    #[serde(default)]
+    pub inputs: Vec<ReferenceExchangeItem>,
+    #[serde(default)]
+    pub input_selection: Option<String>,
+    pub outcomes: Vec<ReferenceExchangeOutcome>,
+    pub conditions: Vec<String>,
+    pub source: ReferenceExchangeSource,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExchangeNpc {
+    pub npc_id: u32,
+    pub name: String,
+    pub internal_name: String,
+    pub service_role: String,
+    pub map: String,
+    pub x: i32,
+    pub y: i32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExchangeItem {
+    pub item_id: u32,
+    pub amount: u32,
+    pub item_name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExchangeOutcome {
+    pub label: String,
+    pub item_ids: Vec<u32>,
+    pub amount: u32,
+    pub selection: String,
+    #[serde(default)]
+    pub condition: Option<String>,
+    pub items: Vec<ReferenceExchangeOutcomeItem>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExchangeOutcomeItem {
+    pub item_id: u32,
+    pub item_name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExchangeSource {
+    pub path: String,
+    pub lines: Vec<u32>,
+    pub reviewed_lines: Vec<u32>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceGrantNpcClue {
+    pub name: String,
+    pub internal_name: String,
+    pub map: String,
+    pub x: i32,
+    pub y: i32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceScriptLocation {
+    pub path: String,
+    pub line: u32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceMapFlag {
+    pub map: String,
+    pub flag: String,
+    #[serde(default)]
+    pub value: String,
+    pub description: String,
+    pub effective_static: bool,
+    #[serde(default)]
+    pub overridden_directive_count: Option<u32>,
+    pub source: ReferenceScriptLocation,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceRuntimeMapFlagClue {
+    pub operation: String,
+    pub map: Option<String>,
+    pub map_expression: String,
+    pub flag: String,
+    #[serde(default)]
+    pub value: String,
+    pub evidence_state: String,
+    pub source: ReferenceScriptLocation,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceRuntimeMapFlagReview {
+    pub id: String,
+    pub map: String,
+    pub title: String,
+    pub evidence_state: EvidenceState,
+    pub summary: String,
+    pub flags: Vec<String>,
+    pub conditions: Vec<String>,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub sources: Vec<ReferenceRuntimeMapFlagSource>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceRuntimeMapFlagSource {
+    pub path: String,
+    pub lines: Vec<u32>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemCombo {
+    pub members: Vec<ReferenceItemComboMember>,
+    pub effect_status: String,
+    #[serde(default)]
+    pub effect_summary: Option<String>,
+    pub source: ReferenceSource,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemComboMember {
+    pub id: u32,
+    pub aegis_name: String,
+    #[serde(default)]
+    pub name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemGroupEntry {
+    pub item: ReferenceItemGroupItem,
+    pub selection_weight: u32,
+    pub total_weight: u32,
+    pub selection_chance_percent: f32,
+    pub source: ReferenceSource,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemGroupContainer {
+    pub container: ReferenceItemGroupItem,
+    pub selection_weight: u32,
+    pub total_weight: u32,
+    pub selection_chance_percent: f32,
+    pub source: ReferenceSource,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemGroupItem {
+    pub id: u32,
+    pub aegis_name: String,
+    #[serde(default)]
+    pub name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemShop {
+    pub npc_name: String,
+    pub map: String,
+    pub x: i32,
+    pub y: i32,
+    pub currency: String,
+    pub shop_type: String,
+    #[serde(default)]
+    pub price: Option<u32>,
+    #[serde(default)]
+    pub uses_item_db_price: bool,
+    #[serde(default)]
+    pub quantity: Option<u32>,
+    pub source: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -175,6 +549,26 @@ pub struct ReferenceJobBonusLevel {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct ReferenceRefinement {
+    pub schema_version: u32,
+    pub source_revision: String,
+    pub source_worktree_dirty: bool,
+    pub mode: String,
+    pub max_useful_refine_level: u8,
+    pub job_level_bonus_per_job_level_from_50_per_mille: i16,
+    pub mechanic_transcendent_flat_bonus_percent: i16,
+    pub on_failure: String,
+    pub weapon_levels: Vec<ReferenceRefinementWeaponLevel>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceRefinementWeaponLevel {
+    pub weapon_level: u8,
+    pub material: String,
+    pub base_chance_percent_by_target_level: HashMap<String, u16>,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct ReferenceItemDrop {
     pub monster_id: u32,
     pub sprite_name: String,
@@ -196,6 +590,10 @@ impl ReferenceItem {
             || self.name.to_lowercase().contains(&query)
             || self.aegis_name.to_lowercase().contains(&query)
             || self.effect_status.to_lowercase().contains(&query)
+            || self
+                .effect_summary
+                .as_deref()
+                .is_some_and(|effect| effect.to_lowercase().contains(&query))
             || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(&query))
     }
 }
@@ -204,6 +602,55 @@ impl ReferenceItem {
 pub struct ReferenceSource {
     pub path: String,
     pub record: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceNpc {
+    pub id: u32,
+    pub name: String,
+    #[serde(default)]
+    pub display_name: String,
+    #[serde(default)]
+    pub internal_name: String,
+    pub map: String,
+    pub x: i32,
+    pub y: i32,
+    pub declared_type: String,
+    #[serde(default)]
+    pub sprite: String,
+    #[serde(default)]
+    pub map_known: bool,
+    pub source: ReferenceNpcSource,
+    #[serde(default)]
+    pub offers: Vec<ReferenceNpcOffer>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceNpcOffer {
+    pub item_id: u32,
+    pub item_name: String,
+    pub currency: String,
+    pub shop_type: String,
+    #[serde(default)]
+    pub price: Option<u32>,
+    pub uses_item_db_price: bool,
+    pub source: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceNpcSource {
+    pub path: String,
+    pub line: u32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceServerRule {
+    pub id: String,
+    pub category: String,
+    pub title: String,
+    pub summary: String,
+    pub details: Vec<String>,
+    pub sources: Vec<ReferenceSource>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -255,6 +702,53 @@ pub struct ReferenceQuest {
     pub targets: Vec<ReferenceQuestTarget>,
     #[serde(default)]
     pub npc_references: Vec<ReferenceQuestNpc>,
+    #[serde(default)]
+    pub item_reward_candidates: Vec<ReferenceQuestRewardCandidate>,
+    #[serde(default)]
+    pub flow_review: Option<ReferenceQuestFlowReview>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestFlowReview {
+    pub id: String,
+    pub title: String,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub conditions: Vec<String>,
+    pub sources: Vec<ReferenceQuestFlowSource>,
+    #[serde(default)]
+    pub verified_item_rewards: Vec<ReferenceQuestVerifiedItemReward>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestVerifiedItemReward {
+    pub item_id: u32,
+    pub item_name: String,
+    pub amount: u32,
+    pub explanation: String,
+    pub source_path: String,
+    pub source_line: u32,
+    pub evidence_state: EvidenceState,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestFlowSource {
+    pub path: String,
+    pub lines: Vec<u32>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestRewardCandidate {
+    pub item_id: u32,
+    pub item_name: String,
+    pub amount: u32,
+    pub source_path: String,
+    pub source_line: u32,
+    pub nearby_completequest_line: u32,
+    pub distance_lines: i32,
+    pub status: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -273,6 +767,16 @@ pub struct ReferenceQuestNpc {
     pub reviewed_source_lines: Vec<u32>,
     #[serde(default)]
     pub review_evidence: Option<String>,
+    #[serde(default)]
+    pub verified_reward: Option<ReferenceQuestVerifiedReward>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceQuestVerifiedReward {
+    pub base_exp: u32,
+    pub item_id: u32,
+    pub item_amount: u32,
+    pub status: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -288,14 +792,25 @@ pub struct ReferenceQuestTarget {
 pub struct ReferenceData {
     pub source_revision: String,
     pub mode: String,
+    pub coverage_report: ReferenceCoverageReport,
     pub monsters: Vec<ReferenceMonster>,
     pub items: Vec<ReferenceItem>,
     pub cards: Vec<ReferenceItem>,
     pub skills: Vec<ReferenceSkill>,
     pub job_skill_trees: Vec<ReferenceJobSkillTree>,
     pub job_bonuses: Vec<ReferenceJobBonuses>,
+    pub refinement: ReferenceRefinement,
+    pub server_rules: Vec<ReferenceServerRule>,
     pub statuses: Vec<ReferenceStatus>,
     pub quests: Vec<ReferenceQuest>,
+    pub npcs: Vec<ReferenceNpc>,
+    pub crafting_recipes: Vec<ReferenceCraftingRecipe>,
+    pub item_grants: Vec<ReferenceItemGrant>,
+    pub item_consumptions: Vec<ReferenceItemConsumption>,
+    pub item_exchanges: Vec<ReferenceItemExchange>,
+    pub map_flags: Vec<ReferenceMapFlag>,
+    pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
+    pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
     monsters_by_id: HashMap<u32, usize>,
     items_by_id: HashMap<u32, usize>,
     cards_by_id: HashMap<u32, usize>,
@@ -323,6 +838,22 @@ impl ReferenceData {
             serde_json::from_str(STATUS_REFERENCE_JSON).map_err(|error| format!("embedded status-effects.v1.json is invalid: {error}"))?;
         let quests: VersionedFile<ReferenceQuest> =
             serde_json::from_str(QUESTS_JSON).map_err(|error| format!("embedded quests.v1.json is invalid: {error}"))?;
+        let refinement: ReferenceRefinement =
+            serde_json::from_str(REFINE_JSON).map_err(|error| format!("embedded refine.v1.json is invalid: {error}"))?;
+        let server_rules: VersionedFile<ReferenceServerRule> =
+            serde_json::from_str(SERVER_RULES_JSON).map_err(|error| format!("embedded server-rules.v1.json is invalid: {error}"))?;
+        let npcs: VersionedFile<ReferenceNpc> =
+            serde_json::from_str(NPCS_JSON).map_err(|error| format!("embedded npcs.v1.json is invalid: {error}"))?;
+        let crafting: VersionedFile<ReferenceCraftingRecipe> =
+            serde_json::from_str(CRAFTING_JSON).map_err(|error| format!("embedded crafting.v1.json is invalid: {error}"))?;
+        let item_grants: VersionedItemGrantFile =
+            serde_json::from_str(ITEM_GRANTS_JSON).map_err(|error| format!("embedded item-script-grants.v1.json is invalid: {error}"))?;
+        let map_flags: VersionedFile<ReferenceMapFlag> =
+            serde_json::from_str(MAP_FLAGS_JSON).map_err(|error| format!("embedded map-flags.v1.json is invalid: {error}"))?;
+        let coverage_report: ReferenceCoverageReport =
+            serde_json::from_str(COVERAGE_JSON).map_err(|error| format!("embedded encyclopedia-coverage.v1.json is invalid: {error}"))?;
+        let item_exchanges: VersionedItemExchangeFile =
+            serde_json::from_str(ITEM_EXCHANGES_JSON).map_err(|error| format!("embedded item-exchanges.v1.json is invalid: {error}"))?;
 
         if bestiary.schema_version != 1
             || items.schema_version != 1
@@ -331,6 +862,14 @@ impl ReferenceData {
             || job_bonuses.schema_version != 1
             || status_reference.schema_version != 1
             || quests.schema_version != 1
+            || refinement.schema_version != 1
+            || server_rules.schema_version != 1
+            || npcs.schema_version != 1
+            || crafting.schema_version != 1
+            || item_grants.schema_version != 1
+            || map_flags.schema_version != 1
+            || coverage_report.schema_version != 1
+            || item_exchanges.schema_version != 1
         {
             return Err("unsupported embedded reference-data schema version".to_owned());
         }
@@ -340,6 +879,14 @@ impl ReferenceData {
             || job_skills.source_revision != job_bonuses.source_revision
             || job_bonuses.source_revision != status_reference.source_revision
             || status_reference.source_revision != quests.source_revision
+            || refinement.source_revision != quests.source_revision
+            || server_rules.source_revision != quests.source_revision
+            || npcs.source_revision != quests.source_revision
+            || crafting.source_revision != quests.source_revision
+            || item_grants.source_revision != quests.source_revision
+            || map_flags.source_revision != quests.source_revision
+            || coverage_report.source_revision != quests.source_revision
+            || item_exchanges.source_revision != quests.source_revision
         {
             return Err("embedded reference files come from different Hercules revisions".to_owned());
         }
@@ -349,6 +896,13 @@ impl ReferenceData {
             || job_skills.source_worktree_dirty != job_bonuses.source_worktree_dirty
             || job_bonuses.source_worktree_dirty != status_reference.source_worktree_dirty
             || status_reference.source_worktree_dirty != quests.source_worktree_dirty
+            || refinement.source_worktree_dirty != quests.source_worktree_dirty
+            || server_rules.source_worktree_dirty != quests.source_worktree_dirty
+            || npcs.source_worktree_dirty != quests.source_worktree_dirty
+            || crafting.source_worktree_dirty != quests.source_worktree_dirty
+            || item_grants.source_worktree_dirty != quests.source_worktree_dirty
+            || map_flags.source_worktree_dirty != quests.source_worktree_dirty
+            || item_exchanges.source_worktree_dirty != quests.source_worktree_dirty
         {
             return Err("embedded reference files disagree about source worktree status".to_owned());
         }
@@ -358,8 +912,19 @@ impl ReferenceData {
             || job_skills.mode != job_bonuses.mode
             || job_bonuses.mode != status_reference.mode
             || status_reference.mode != quests.mode
+            || refinement.mode != quests.mode
+            || server_rules.mode != quests.mode
+            || npcs.mode != quests.mode
+            || crafting.mode != quests.mode
+            || item_grants.mode != quests.mode
+            || map_flags.mode != quests.mode
+            || coverage_report.mode != quests.mode
+            || item_exchanges.mode != quests.mode
         {
             return Err("embedded reference files use different renewal modes".to_owned());
+        }
+        if coverage_report.evidence_states.len() != 6 {
+            return Err("encyclopedia coverage report has an incomplete evidence-state vocabulary".to_owned());
         }
 
         let monsters_by_id = unique_id_index(&bestiary.entries, "monster")?;
@@ -369,6 +934,29 @@ impl ReferenceData {
         let job_skill_trees_by_id = unique_job_id_index(&job_skills.entries)?;
         let job_bonuses_by_id = unique_job_bonus_id_index(&job_bonuses.entries)?;
         let quests_by_id = unique_quest_id_index(&quests.entries)?;
+        if server_rules.entries.is_empty()
+            || server_rules.entries.iter().any(|rule| {
+                rule.id.trim().is_empty()
+                    || rule.title.trim().is_empty()
+                    || rule.summary.trim().is_empty()
+                    || rule.details.is_empty()
+                    || rule.sources.is_empty()
+            })
+        {
+            return Err("embedded server-rule references are empty or invalid".to_owned());
+        }
+        if refinement.max_useful_refine_level == 0
+            || refinement.weapon_levels.len() != 4
+            || refinement.weapon_levels.iter().any(|row| {
+                row.weapon_level == 0
+                    || row.weapon_level > 4
+                    || row.base_chance_percent_by_target_level.len() != refinement.max_useful_refine_level as usize
+                    || (1..=refinement.max_useful_refine_level)
+                        .any(|level| !row.base_chance_percent_by_target_level.contains_key(&level.to_string()))
+            })
+        {
+            return Err("embedded refine reference rows are empty or invalid".to_owned());
+        }
         let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
@@ -394,6 +982,13 @@ impl ReferenceData {
                         != (npc.review_evidence.as_deref().is_some_and(|note| !note.trim().is_empty())
                             && !npc.reviewed_source_lines.is_empty()
                             && npc.reviewed_source_lines.iter().all(|line| *line > 0))
+                    || npc.verified_reward.as_ref().is_some_and(|reward| {
+                        reward.status != "verified_static_helper_reward"
+                            || reward.base_exp == 0
+                            || reward.item_amount == 0
+                            || !item_ids.contains(&reward.item_id)
+                            || npc.reviewed_role.as_deref() != Some("turn_in")
+                    })
             }) {
                 return Err(format!("quest {} has an invalid NPC script reference", quest.id));
             }
@@ -491,18 +1086,79 @@ impl ReferenceData {
         if monster_links != item_links {
             return Err("monster and item drop indexes do not reconcile".to_owned());
         }
+        for quest in &quests.entries {
+            for candidate in &quest.item_reward_candidates {
+                if !item_ids.contains(&candidate.item_id) || candidate.source_path.trim().is_empty() || candidate.source_line == 0 {
+                    return Err(format!("quest {} has an invalid item reward candidate", quest.id));
+                }
+            }
+        }
+        for npc in &npcs.entries {
+            if npc.name.trim().is_empty() || npc.map.trim().is_empty() || npc.source.path.trim().is_empty() || npc.source.line == 0 {
+                return Err(format!("NPC declaration {} has invalid provenance", npc.id));
+            }
+            for offer in &npc.offers {
+                if !item_ids.contains(&offer.item_id) || offer.source.trim().is_empty() {
+                    return Err(format!("NPC declaration {} links missing item {}", npc.id, offer.item_id));
+                }
+            }
+        }
+        for exchange in &item_exchanges.entries {
+            if exchange.id.trim().is_empty()
+                || exchange.title.trim().is_empty()
+                || exchange.source.path.trim().is_empty()
+                || exchange.source.lines.is_empty()
+                || exchange.source.lines.iter().any(|line| *line == 0)
+                || exchange.source.reviewed_lines != exchange.source.lines
+            {
+                return Err(format!("reviewed item exchange {} has invalid provenance", exchange.id));
+            }
+            if !npcs.entries.iter().any(|npc| {
+                npc.id == exchange.npc.npc_id
+                    && npc.map.eq_ignore_ascii_case(&exchange.npc.map)
+                    && npc.x == exchange.npc.x
+                    && npc.y == exchange.npc.y
+                    && (npc.internal_name == exchange.npc.internal_name || npc.name == exchange.npc.internal_name)
+            }) {
+                return Err(format!("reviewed item exchange {} links a missing NPC", exchange.id));
+            }
+            for item_id in exchange
+                .inputs
+                .iter()
+                .map(|item| item.item_id)
+                .chain(exchange.outcomes.iter().flat_map(|outcome| outcome.item_ids.iter().copied()))
+            {
+                if !item_ids.contains(&item_id) {
+                    return Err(format!("reviewed item exchange {} links missing item {item_id}", exchange.id));
+                }
+            }
+            if exchange.evidence_state == EvidenceState::Conditional && exchange.conditions.is_empty() {
+                return Err(format!("conditional item exchange {} has no listed conditions", exchange.id));
+            }
+        }
 
         Ok(Self {
             source_revision: bestiary.source_revision,
             mode: bestiary.mode,
+            coverage_report,
             monsters: bestiary.entries,
             items: items.entries,
             cards: cards.entries,
             skills,
             job_skill_trees: job_skills.entries,
             job_bonuses: job_bonuses.entries,
+            refinement,
+            server_rules: server_rules.entries,
             statuses,
             quests: quests.entries,
+            npcs: npcs.entries,
+            crafting_recipes: crafting.entries,
+            item_grants: item_grants.entries,
+            item_consumptions: item_grants.consumptions,
+            item_exchanges: item_exchanges.entries,
+            map_flags: map_flags.entries,
+            runtime_map_flag_clues: map_flags.runtime_clues,
+            runtime_map_flag_reviews: map_flags.runtime_reviews,
             monsters_by_id,
             items_by_id,
             cards_by_id,
@@ -593,6 +1249,27 @@ impl ReferenceData {
             })
             .collect();
         matches.sort_by_key(|quest| (quest.name.to_lowercase(), quest.id));
+        matches.truncate(limit);
+        matches
+    }
+
+    pub fn search_npcs(&self, query: &str, limit: usize) -> Vec<&ReferenceNpc> {
+        let query = query.to_lowercase();
+        let mut matches: Vec<_> = self
+            .npcs
+            .iter()
+            .filter(|npc| {
+                query.is_empty()
+                    || npc.id.to_string() == query
+                    || npc.display_name.to_lowercase().contains(&query)
+                    || npc.name.to_lowercase().contains(&query)
+                    || npc.internal_name.to_lowercase().contains(&query)
+                    || npc.map.to_lowercase().contains(&query)
+                    || npc.declared_type.to_lowercase().contains(&query)
+                    || (query == "shop" && matches!(npc.declared_type.as_str(), "trader" | "cashshop"))
+            })
+            .collect();
+        matches.sort_by_key(|npc| (npc.display_name.to_lowercase(), npc.map.to_lowercase(), npc.id));
         matches.truncate(limit);
         matches
     }
@@ -817,7 +1494,7 @@ mod tests {
         assert!(
             data.search_cards("scripted_not_translated", data.cards.len())
                 .iter()
-                .any(|card| card.id == 4001)
+                .any(|card| card.effect_status == "scripted_not_translated")
         );
         assert!(data.quest_by_id(3401).is_some_and(|quest| quest.name == "Animal Monster Hunt"));
         assert!(data.search_quests("animal monster hunt", 10).iter().any(|quest| quest.id == 3401));

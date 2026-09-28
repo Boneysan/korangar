@@ -7177,7 +7177,9 @@ impl Client {
                                 (weapon, name)
                             })
                             .collect();
-                        self.interface.open_window(WeaponRefineWindow::new(weapons));
+                        let job_id = self.client_state.follow(this_entity().manually_asserted()).get_job_id();
+                        let job_level = self.client_state.follow(this_player().manually_asserted().job_level());
+                        self.interface.open_window(WeaponRefineWindow::new(weapons, *job_level, job_id));
                     }
                 }
                 NetworkEvent::WeaponRefineResult { result, item_id } => {

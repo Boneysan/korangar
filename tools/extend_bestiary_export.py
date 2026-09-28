@@ -74,7 +74,7 @@ def parse_mob_db():
     return out
 
 
-def parse_mob_skill_db():
+def parse_mob_skill_db(include_triggers=False):
     """SpriteName -> [{Skill, Level, Rate, Delay}].
 
     Structure is `mob_skill_db:( { SPRITE: { SKILL: { fields } } } )` --
@@ -111,16 +111,30 @@ def parse_mob_skill_db():
             fm = re.match(r"(\w+):\s*(.+)", stripped)
             if fm:
                 key, val = fm.group(1), fm.group(2).strip('"')
-                if key in ("SkillLevel", "Rate", "Delay", "CastTime"):
+                if key in ("SkillLevel", "Rate", "Delay", "CastTime", "ConditionData", "val0"):
                     cur[key] = int(val) if val.lstrip("-").isdigit() else val
+                elif include_triggers and key in ("SkillState", "SkillTarget", "CastCondition", "Cancelable"):
+                    clean = val.strip('"')
+                    cur[key] = clean.lower() == "true" if key == "Cancelable" and clean.lower() in ("true", "false") else clean
             depth += opens - closes
             if depth == 2:  # skill block closed
-                out.setdefault(sprite, []).append({
+                row = {
                     "Skill": skill,
                     "Level": cur.get("SkillLevel", 1),
-                    "Rate": cur.get("Rate", 0),
+                    "Rate": cur.get("Rate", 1 if include_triggers else 0),
                     "Delay": cur.get("Delay", 0),
-                })
+                }
+                if include_triggers:
+                    row.update({
+                        "SkillState": cur.get("SkillState", "MSS_ANY"),
+                        "SkillTarget": cur.get("SkillTarget", "MST_TARGET"),
+                        "CastCondition": cur.get("CastCondition", "MSC_ALWAYS"),
+                        "ConditionData": cur.get("ConditionData", 0),
+                        "Value0": cur.get("val0", 0),
+                        "CastTime": cur.get("CastTime", 0),
+                        "Cancelable": cur.get("Cancelable", False),
+                    })
+                out.setdefault(sprite, []).append(row)
             continue
         else:
             depth += opens - closes

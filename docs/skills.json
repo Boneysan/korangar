@@ -104,6 +104,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Fire"
   },
@@ -120,6 +126,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -183,6 +192,20 @@
   },
   "FixedCastTime": {
    "flat": 100
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    1000,
+    1000,
+    1000,
+    900,
+    900,
+    800,
+    800,
+    700,
+    600,
+    500
+   ]
   },
   "Element": {
    "flat": "Ele_Ghost"
@@ -291,6 +314,9 @@
   "FixedCastTime": {
    "flat": 100
   },
+  "AfterCastActDelay": {
+   "flat": 1400
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -361,6 +387,9 @@
     1200
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1400
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -408,6 +437,9 @@
   },
   "FixedCastTime": {
    "flat": 160
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "Element": {
    "flat": "Ele_Water"
@@ -482,6 +514,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 700
   },
   "Element": {
    "flat": "Ele_Fire"
@@ -590,6 +625,9 @@
     1200
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1400
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -660,6 +698,9 @@
     1200
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1400
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -718,6 +759,20 @@
   },
   "FixedCastTime": {
    "flat": 1500
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000
+   ]
   },
   "NumberOfHits": {
    "levels": [
@@ -900,6 +955,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Holy"
   },
@@ -933,6 +991,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -979,6 +1040,9 @@
   "FixedCastTime": {
    "flat": 250
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     40000,
@@ -1021,6 +1085,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "flat": 10
   },
@@ -1038,6 +1105,9 @@
   "FixedCastTime": {
    "flat": 150
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SPCost": {
    "flat": 35
   },
@@ -1054,6 +1124,12 @@
   },
   "FixedCastTime": {
    "flat": 150
+  },
+  "AfterCastActDelay": {
+   "flat": 3500
+  },
+  "CoolDown": {
+   "flat": 30000
   },
   "SkillData1": {
    "levels": [
@@ -1138,6 +1214,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SPCost": {
    "flat": 15
@@ -1295,6 +1374,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 100
+  },
   "NumberOfHits": {
    "flat": 2
   },
@@ -1320,6 +1402,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 100
   },
   "SkillData1": {
    "flat": 100
@@ -1476,6 +1561,20 @@
     1
    ]
   },
+  "AfterCastActDelay": {
+   "levels": [
+    0,
+    1000,
+    2000,
+    3000,
+    4000,
+    5000,
+    6000,
+    7000,
+    8000,
+    9000
+   ]
+  },
   "Element": {
    "flat": "Ele_Holy"
   },
@@ -1528,6 +1627,12 @@
   },
   "FixedCastTime": {
    "flat": 350
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": -3
@@ -1582,6 +1687,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -1673,6 +1781,9 @@
   "FixedCastTime": {
    "flat": 350
   },
+  "CoolDown": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 1000
   },
@@ -1737,6 +1848,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
+  },
   "SkillData1": {
    "flat": 120000
   },
@@ -1771,6 +1888,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -1801,6 +1924,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -1977,6 +2103,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SPCost": {
    "flat": 5
   },
@@ -1996,6 +2125,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 120000
@@ -2028,6 +2160,9 @@
   "FixedCastTime": {
    "flat": 800
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     30000,
@@ -2055,6 +2190,9 @@
   "AttackType": "Magic",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -2086,6 +2224,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 3000
   },
   "NumberOfHits": {
    "flat": 0
@@ -2135,6 +2276,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
   "Element": {
    "flat": "Ele_Holy"
   },
@@ -2154,6 +2298,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 3000
   },
   "NumberOfHits": {
    "flat": 0
@@ -2180,6 +2327,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 6000
   },
   "NumberOfHits": {
    "levels": [
@@ -2271,6 +2424,9 @@
     48
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "levels": [
     -3,
@@ -2304,6 +2460,9 @@
   "AttackType": "Magic",
   "FixedCastTime": {
    "flat": 80
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 500
@@ -2341,6 +2500,23 @@
   },
   "FixedCastTime": {
    "flat": 1500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500,
+    6000,
+    6500,
+    7000
+   ]
   },
   "NumberOfHits": {
    "levels": [
@@ -2462,6 +2638,12 @@
   },
   "FixedCastTime": {
    "flat": 1500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -20
@@ -2618,6 +2800,9 @@
     96
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 200
+  },
   "Element": {
    "flat": "Ele_Water"
   },
@@ -2662,6 +2847,12 @@
   },
   "FixedCastTime": {
    "flat": 1500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 6000
   },
   "SkillData1": {
    "flat": 4600
@@ -2712,6 +2903,20 @@
     1800,
     2000,
     2200
+   ]
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700,
+    1800,
+    1900
    ]
   },
   "NumberOfHits": {
@@ -2773,6 +2978,9 @@
   "FixedCastTime": {
    "flat": 800
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -2823,6 +3031,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -3255,6 +3466,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     200000,
@@ -3468,6 +3682,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     25000,
@@ -3507,6 +3724,9 @@
   },
   "FixedCastTime": {
    "flat": 300
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -3614,6 +3834,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "levels": [
@@ -3764,6 +3987,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": -8
@@ -3942,6 +4171,20 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "CoolDown": {
+   "levels": [
+    11000,
+    10000,
+    9000,
+    8000,
+    7000,
+    6000,
+    5000,
+    4000,
+    3000,
+    2000
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -4125,6 +4368,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 100
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -4174,6 +4420,9 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "CoolDown": {
+   "flat": 30000
   },
   "SkillData1": {
    "flat": 300000
@@ -5051,6 +5300,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 500
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -5128,6 +5383,9 @@
     300
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     75000,
@@ -5194,6 +5452,9 @@
     300,
     300
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -5262,6 +5523,9 @@
     300
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     75000,
@@ -5328,6 +5592,9 @@
     300,
     300
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -5509,6 +5776,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     40000,
@@ -5549,6 +5819,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -5585,6 +5858,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "flat": 1
   },
@@ -5610,6 +5886,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -5647,6 +5926,9 @@
   "FixedCastTime": {
    "flat": 400
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "flat": 30000
   },
@@ -5669,6 +5951,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -5704,6 +5989,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     120000,
@@ -5738,6 +6026,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     120000,
@@ -5771,6 +6062,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -5942,6 +6236,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 700
+  },
   "SPCost": {
    "flat": 12
   },
@@ -6023,6 +6320,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 900
@@ -6109,6 +6412,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 800
   },
   "SkillData1": {
    "flat": 180000
@@ -6270,6 +6576,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "levels": [
     10,
@@ -6300,6 +6609,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": -5
@@ -6362,6 +6677,12 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "levels": [
@@ -6437,6 +6758,20 @@
     1000,
     1000,
     1000
+   ]
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    3000,
+    2500,
+    2000,
+    1500,
+    1000,
+    500,
+    1,
+    1,
+    1,
+    1
    ]
   },
   "SkillData1": {
@@ -6535,6 +6870,9 @@
   "AttackType": "Magic",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -7238,6 +7576,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 300000
+  },
   "SkillData1": {
    "flat": 180000
   },
@@ -7251,6 +7595,12 @@
   "Name": "BD_ENCORE",
   "Description": "Encore",
   "MaxLevel": 1,
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SPCost": {
    "flat": 1
   },
@@ -7267,6 +7617,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 15000
@@ -7288,6 +7644,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7308,6 +7670,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7327,6 +7695,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -7359,6 +7733,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7390,6 +7770,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 30000
   },
@@ -7409,6 +7795,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -7471,6 +7863,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
   "NumberOfHits": {
    "flat": 2
   },
@@ -7490,6 +7885,12 @@
   "AttackType": "Magic",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "Element": {
    "flat": "Ele_Neutral"
@@ -7519,6 +7920,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 4000
+  },
   "SPCost": {
    "levels": [
     12,
@@ -7546,6 +7953,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -7578,6 +7991,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7609,6 +8028,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7639,6 +8064,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -7684,6 +8115,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
   "NumberOfHits": {
    "flat": 2
   },
@@ -7703,6 +8137,12 @@
   "AttackType": "Misc",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -7743,6 +8183,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 4000
+  },
   "SPCost": {
    "levels": [
     12,
@@ -7770,6 +8213,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -7802,6 +8251,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7833,6 +8288,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -7863,6 +8324,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "flat": 60000
@@ -8467,6 +8934,9 @@
     1100
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     20000,
@@ -8508,6 +8978,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
   },
   "SkillData1": {
    "levels": [
@@ -8571,6 +9047,9 @@
   "FixedCastTime": {
    "flat": 60
   },
+  "AfterCastActDelay": {
+   "flat": 300
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -8618,6 +9097,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": -3
@@ -8688,6 +9170,9 @@
   "AttackType": "Weapon",
   "Range": {
    "flat": -2
+  },
+  "AfterCastActDelay": {
+   "flat": 300
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -8784,6 +9269,9 @@
   "Description": "Indulge",
   "MaxLevel": 5,
   "AttackType": "Magic",
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "levels": [
     1,
@@ -8828,6 +9316,20 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "levels": [
+    10000,
+    10000,
+    10000,
+    10000,
+    15000,
+    15000,
+    15000,
+    15000,
+    15000,
+    15000
+   ]
+  },
   "SPCost": {
    "levels": [
     80,
@@ -8859,6 +9361,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -8910,6 +9415,20 @@
   },
   "FixedCastTime": {
    "flat": 250
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    1000,
+    1200,
+    1400,
+    1600,
+    1800,
+    2000,
+    2200,
+    2400,
+    2600,
+    2800
+   ]
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -8973,6 +9492,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
   "SPCost": {
    "levels": [
     30,
@@ -9002,6 +9524,9 @@
    "flat": 500
   },
   "FixedCastTime": {
+   "flat": 500
+  },
+  "AfterCastActDelay": {
    "flat": 500
   },
   "Element": {
@@ -9056,6 +9581,9 @@
     1300,
     1400
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -9227,6 +9755,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1500
+  },
   "NumberOfHits": {
    "flat": -9
   },
@@ -9325,6 +9859,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 5
   },
@@ -9359,6 +9896,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -9378,6 +9918,20 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    800,
+    800,
+    800,
+    800,
+    1000,
+    1000,
+    1000,
+    1000,
+    1000,
+    1000
+   ]
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -9412,6 +9966,12 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "levels": [
@@ -9472,6 +10032,20 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    800,
+    900,
+    1000,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1600,
+    1700
+   ]
   },
   "SkillData1": {
    "flat": 30000
@@ -9567,6 +10141,9 @@
   "FixedCastTime": {
    "flat": 250
   },
+  "CoolDown": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -9593,6 +10170,9 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": 0
@@ -9692,6 +10272,9 @@
     0,
     0
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 300
   },
   "SkillData1": {
    "flat": 1000
@@ -11260,6 +11843,9 @@
   "FixedCastTime": {
    "flat": 20
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Endowed"
   },
@@ -11293,6 +11879,9 @@
   },
   "FixedCastTime": {
    "flat": 20
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "flat": 2000
@@ -11330,6 +11919,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "NumberOfHits": {
    "levels": [
@@ -11381,6 +11973,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -11449,6 +12044,9 @@
     200
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -11515,6 +12113,9 @@
     200,
     200
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -11591,6 +12192,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     75000,
@@ -11646,6 +12250,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 30
   },
@@ -11667,6 +12274,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -11704,6 +12314,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": -5
@@ -11778,6 +12391,9 @@
   "FixedCastTime": {
    "flat": 3000
   },
+  "AfterCastActDelay": {
+   "flat": 5000
+  },
   "SPCost": {
    "flat": 40
   },
@@ -11801,6 +12417,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "levels": [
@@ -11945,6 +12567,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
   "SPCost": {
    "flat": 40
   },
@@ -11960,6 +12585,9 @@
    "flat": 9
   },
   "FixedCastTime": {
+   "flat": 1000
+  },
+  "AfterCastActDelay": {
    "flat": 1000
   },
   "NumberOfHits": {
@@ -12179,6 +12807,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 100
+  },
   "NumberOfHits": {
    "flat": 2
   },
@@ -12268,6 +12899,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -12287,6 +12921,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 15000
@@ -12308,6 +12945,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 30000
   },
@@ -12324,6 +12964,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 60000
@@ -12361,6 +13004,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -12441,6 +13087,9 @@
     1500
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -12474,6 +13123,9 @@
   },
   "FixedCastTime": {
    "flat": 400
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 30000
@@ -12512,6 +13164,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -12543,6 +13198,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1500
+  },
   "NumberOfHits": {
    "flat": 5
   },
@@ -12573,6 +13231,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 1000
@@ -12610,6 +13271,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -12659,6 +13323,9 @@
   "FixedCastTime": {
    "flat": 300
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -12692,6 +13359,20 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    1200,
+    1400,
+    1600,
+    1800,
+    2000,
+    2200,
+    2400,
+    2600,
+    2800,
+    3000
+   ]
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -12754,6 +13435,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -12824,6 +13508,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 3
   },
@@ -12871,6 +13558,9 @@
   },
   "FixedCastTime": {
    "flat": 600
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "levels": [
@@ -12920,6 +13610,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 5000
+  },
   "SPCost": {
    "flat": 50
   },
@@ -12933,6 +13626,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 3000
@@ -12959,6 +13655,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -13004,6 +13703,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 10
   },
@@ -13044,6 +13746,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -13108,6 +13813,9 @@
     200,
     200
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -13258,6 +13966,9 @@
     300
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 20000
   },
@@ -13289,6 +14000,9 @@
   },
   "FixedCastTime": {
    "flat": 600
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "flat": 3
@@ -13400,6 +14114,9 @@
   "FixedCastTime": {
    "flat": 600
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     15000,
@@ -13484,6 +14201,9 @@
     800
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Water"
   },
@@ -13542,6 +14262,9 @@
     1000,
     1100
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "levels": [
@@ -14268,6 +14991,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 5000
+  },
   "SPCost": {
    "flat": 50
   },
@@ -14312,6 +15038,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 12000
+  },
   "SPCost": {
    "flat": 1
   },
@@ -14341,6 +15070,9 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 20000
   },
   "SPCost": {
    "flat": 1
@@ -14391,6 +15123,9 @@
   "AttackType": "Weapon",
   "Range": {
    "flat": 9
+  },
+  "CoolDown": {
+   "flat": 500
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -14515,6 +15250,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 1800000
   },
@@ -14558,6 +15296,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -14583,6 +15324,9 @@
   },
   "FixedCastTime": {
    "flat": 200
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "flat": 0
@@ -14657,6 +15401,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 600000
   },
@@ -14677,6 +15424,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -14696,6 +15446,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 1800000
@@ -14723,6 +15476,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 1800000
   },
@@ -14748,6 +15504,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 1800000
@@ -14816,6 +15575,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -14843,6 +15608,12 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 2000
@@ -14889,6 +15660,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -14911,6 +15688,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 15000
@@ -14945,6 +15725,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -15001,6 +15784,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 10000
   },
@@ -15031,6 +15817,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SkillData1": {
    "flat": 15000
   },
@@ -15055,6 +15844,9 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 180000
@@ -15163,6 +15955,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -15259,6 +16054,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "levels": [
+    3000,
+    2500,
+    2000,
+    1500,
+    1000,
+    500,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -15301,6 +16110,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "levels": [
+    2500,
+    2000,
+    1500,
+    1000,
+    500,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
   "NumberOfHits": {
    "flat": -7
   },
@@ -15334,6 +16157,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1500
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -15371,6 +16197,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "flat": 10
   },
@@ -15399,6 +16228,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -15438,6 +16270,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 180000
   },
@@ -15468,6 +16303,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -15500,6 +16338,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -15522,6 +16363,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -15551,6 +16395,9 @@
    "flat": 5
   },
   "FixedCastTime": {
+   "flat": 2000
+  },
+  "AfterCastActDelay": {
    "flat": 2000
   },
   "SkillData1": {
@@ -15584,6 +16431,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SPCost": {
    "flat": 45
   },
@@ -15597,6 +16447,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -15613,6 +16466,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 300000
   },
   "SkillData1": {
    "levels": [
@@ -15641,6 +16497,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 200
   },
   "SkillData1": {
    "flat": 3000
@@ -15676,6 +16535,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -15708,6 +16570,9 @@
    "flat": 2000
   },
   "FixedCastTime": {
+   "flat": 500
+  },
+  "AfterCastActDelay": {
    "flat": 500
   },
   "NumberOfHits": {
@@ -15744,6 +16609,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 30
   },
@@ -15763,6 +16631,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "flat": -10
@@ -15910,6 +16784,9 @@
     -1
    ]
   },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Holy"
   },
@@ -15955,6 +16832,12 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "levels": [
     18000,
@@ -15993,6 +16876,20 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "CoolDown": {
+   "levels": [
+    13000,
+    16000,
+    19000,
+    22000,
+    25000,
+    28000,
+    31000,
+    34000,
+    37000,
+    40000
+   ]
+  },
   "SkillData1": {
    "flat": 120000
   },
@@ -16023,6 +16920,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 30000
@@ -16058,6 +16958,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 3000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -16091,6 +16994,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 60000
@@ -16138,6 +17044,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "CoolDown": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 90000
   },
@@ -16163,6 +17072,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "Element": {
    "flat": "Ele_Holy"
@@ -16197,6 +17112,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SPCost": {
    "levels": [
@@ -16269,6 +17187,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -16346,6 +17267,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 15000
+  },
   "SkillData1": {
    "levels": [
     20000,
@@ -16390,6 +17314,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 4000
   },
   "SkillData1": {
    "levels": [
@@ -16436,6 +17363,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": -2
   },
@@ -16480,6 +17410,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 4000
   },
   "NumberOfHits": {
    "levels": [
@@ -16540,6 +17476,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -16588,6 +17527,23 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500,
+    6000,
+    6500,
+    7000
+   ]
+  },
   "SkillData1": {
    "flat": 30000
   },
@@ -16618,6 +17574,23 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    50000,
+    80000,
+    110000,
+    140000,
+    170000,
+    200000,
+    230000,
+    260000,
+    290000,
+    320000
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -16663,6 +17636,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "flat": 0
@@ -16724,6 +17700,23 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "levels": [
+    180000,
+    190000,
+    200000,
+    210000,
+    220000,
+    230000,
+    240000,
+    250000,
+    260000,
+    270000
+   ]
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -16769,6 +17762,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "CoolDown": {
+   "flat": 2000
+  },
   "SPCost": {
    "levels": [
     20,
@@ -16799,6 +17795,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -7
@@ -16838,6 +17840,9 @@
    "flat": 3000
   },
   "FixedCastTime": {
+   "flat": 1000
+  },
+  "AfterCastActDelay": {
    "flat": 1000
   },
   "SkillData1": {
@@ -16910,6 +17915,9 @@
     5500
    ]
   },
+  "CoolDown": {
+   "flat": 60000
+  },
   "NumberOfHits": {
    "flat": -20
   },
@@ -16960,6 +17968,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 100
@@ -17022,6 +18033,12 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "NumberOfHits": {
    "levels": [
@@ -17087,6 +18104,12 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "SkillData1": {
    "levels": [
@@ -17471,6 +18494,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "flat": 40
   },
@@ -17510,6 +18536,20 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "levels": [
+    5000,
+    4800,
+    4600,
+    4400,
+    4200,
+    4000,
+    3800,
+    3600,
+    3400,
+    3200
+   ]
   },
   "NumberOfHits": {
    "flat": -3
@@ -17594,6 +18634,9 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -17687,6 +18730,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 5
   },
@@ -17702,6 +18748,9 @@
   "MaxLevel": 3,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SPCost": {
    "flat": 2
@@ -17762,6 +18811,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "levels": [
+    4000,
+    6000,
+    8000,
+    10000,
+    12000,
+    14000,
+    16000,
+    18000,
+    20000,
+    22000
+   ]
+  },
   "SkillData1": {
    "levels": [
     1000,
@@ -17810,6 +18876,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
   "SPCost": {
    "flat": 12
   },
@@ -17852,6 +18921,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 15000
   },
@@ -17878,6 +18950,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 15000
@@ -17906,6 +18981,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 15000
   },
@@ -17932,6 +19010,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 15000
@@ -18066,6 +19147,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -18085,6 +19172,20 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    300,
+    200,
+    100,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -18134,6 +19235,20 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "levels": [
+    1500,
+    1000,
+    500,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
   "SkillData1": {
    "levels": [
     7000,
@@ -18174,6 +19289,20 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    1000,
+    2000,
+    3000,
+    4000,
+    5000,
+    6000,
+    7000,
+    8000,
+    9000,
+    10000
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -18247,6 +19376,20 @@
     1,
     1,
     1
+   ]
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    500,
+    1000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000,
+    2000
    ]
   },
   "Element": {
@@ -18340,6 +19483,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SPCost": {
    "flat": 5
   },
@@ -18355,6 +19501,9 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SPCost": {
    "flat": 5
@@ -18396,6 +19545,9 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "CoolDown": {
+   "flat": 300000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -18414,6 +19566,9 @@
   "Description": "Shape Shift",
   "MaxLevel": 4,
   "FixedCastTime": {
+   "flat": 2000
+  },
+  "AfterCastActDelay": {
    "flat": 2000
   },
   "SkillData1": {
@@ -18440,6 +19595,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SPCost": {
    "flat": 20
   },
@@ -18456,6 +19617,12 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "flat": 3000
@@ -18476,6 +19643,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 20000
   },
@@ -18494,6 +19664,20 @@
   "MaxLevel": 3,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "levels": [
+    20000,
+    15000,
+    10000,
+    5000,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -18536,6 +19720,20 @@
   "MaxLevel": 3,
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "levels": [
+    20000,
+    15000,
+    10000,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -18581,6 +19779,20 @@
   "MaxLevel": 3,
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "levels": [
+    20000,
+    15000,
+    10000,
+    5000,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -18656,6 +19868,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "levels": [
     25,
@@ -18719,6 +19934,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "levels": [
+    5000,
+    4500,
+    4000,
+    3500,
+    3000,
+    2500,
+    2000,
+    1500,
+    1000,
+    500
+   ]
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -18750,6 +19979,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 3000
   },
@@ -18780,6 +20012,23 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "levels": [
+    4000,
+    3500,
+    3000,
+    2500,
+    2000,
+    1500,
+    1000,
+    500,
+    1,
+    1
+   ]
   },
   "NumberOfHits": {
    "flat": -3
@@ -18953,6 +20202,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -18979,6 +20231,9 @@
   "MaxLevel": 10,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 60000
@@ -19062,6 +20317,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     30000,
@@ -19118,6 +20376,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": -3
   },
@@ -19147,6 +20408,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19193,6 +20460,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    20000,
+    30000,
+    40000,
+    50000,
+    60000,
+    70000,
+    80000,
+    90000,
+    100000,
+    110000
+   ]
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -19208,6 +20492,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19252,6 +20542,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19301,6 +20597,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -19348,6 +20650,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19397,6 +20705,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -19445,6 +20759,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -19492,6 +20812,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19542,6 +20868,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     60000,
@@ -19586,6 +20915,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19636,6 +20968,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     4000,
@@ -19684,6 +21019,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -19737,6 +21075,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "levels": [
     7000,
@@ -19788,6 +21129,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 180000
+  },
   "SkillData1": {
    "levels": [
     5000,
@@ -19837,6 +21184,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SkillData1": {
    "flat": 1000
   },
@@ -19874,6 +21224,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -19930,6 +21283,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "levels": [
     30,
@@ -19957,6 +21313,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -20022,6 +21381,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -20040,6 +21405,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 300000
@@ -20061,6 +21429,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20079,6 +21450,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "Element": {
    "levels": [
@@ -20114,6 +21491,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 300000
   },
@@ -20148,6 +21528,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20177,6 +21560,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "SkillData1": {
    "levels": [
@@ -20248,6 +21634,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    6000,
+    5000,
+    4000,
+    3000,
+    2000,
+    1000,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20292,6 +21695,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -7
@@ -20385,6 +21794,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    7000,
+    6000,
+    5000,
+    4000,
+    3000,
+    2000,
+    1000,
+    1,
+    1,
+    1
+   ]
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -20436,6 +21862,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 3000
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "NumberOfHits": {
    "flat": 3
   },
@@ -20468,6 +21900,23 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "levels": [
+    540000,
+    480000,
+    420000,
+    360000,
+    300000,
+    240000,
+    180000,
+    120000,
+    60000,
+    1
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -20545,6 +21994,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": -3
   },
@@ -20575,6 +22027,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "SkillData1": {
    "levels": [
@@ -20678,6 +22133,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20721,6 +22182,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20736,6 +22203,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -20763,6 +22236,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -20801,6 +22280,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -20855,6 +22340,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20886,6 +22374,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -20901,6 +22395,12 @@
   "MaxLevel": 10,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
   },
   "SkillData1": {
    "levels": [
@@ -20937,6 +22437,12 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SPCost": {
    "flat": 10
@@ -21016,6 +22522,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "levels": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    1000
+   ]
+  },
   "NumberOfHits": {
    "flat": -7
   },
@@ -21046,6 +22566,20 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "levels": [
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -21092,6 +22626,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500
+   ]
+  },
   "SPCost": {
    "levels": [
     40,
@@ -21130,6 +22681,9 @@
     5500
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 240000
   },
@@ -21162,6 +22716,23 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    200000,
+    180000,
+    160000,
+    140000,
+    120000,
+    100000,
+    80000,
+    60000,
+    40000,
+    20000
+   ]
   },
   "SkillData1": {
    "flat": 240000
@@ -21196,6 +22767,23 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    200000,
+    180000,
+    160000,
+    140000,
+    120000,
+    100000,
+    80000,
+    60000,
+    40000,
+    20000
+   ]
+  },
   "SkillData1": {
    "flat": 240000
   },
@@ -21225,6 +22813,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 60000
@@ -21256,6 +22847,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -21285,6 +22879,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 60000
@@ -21316,6 +22913,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -21345,6 +22945,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 60000
@@ -21378,6 +22981,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "flat": 60000
@@ -21432,6 +23041,23 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500,
+    6000,
+    6500
+   ]
   },
   "NumberOfHits": {
    "levels": [
@@ -21490,6 +23116,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -21561,6 +23190,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 10
   },
@@ -21590,6 +23222,23 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    5000,
+    5500,
+    6000,
+    6500,
+    7000,
+    7500,
+    8000,
+    8500,
+    9000,
+    9500
+   ]
   },
   "SkillData1": {
    "flat": 3400
@@ -21679,6 +23328,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SkillData1": {
    "levels": [
     15000,
@@ -21734,6 +23389,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "levels": [
     50,
@@ -21763,6 +23421,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -21805,6 +23469,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 15000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -21836,6 +23506,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "SPCost": {
    "levels": [
     40,
@@ -21865,6 +23541,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -21922,6 +23604,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SPCost": {
    "levels": [
     80,
@@ -21951,6 +23639,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 90000
   },
   "SkillData1": {
    "levels": [
@@ -22003,6 +23697,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 90000
   },
   "SkillData1": {
    "levels": [
@@ -22059,6 +23759,23 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    6000,
+    7000,
+    8000,
+    9000,
+    10000,
+    11000,
+    12000,
+    13000,
+    14000,
+    15000
+   ]
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -22099,6 +23816,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 180000
   },
   "SkillData1": {
    "levels": [
@@ -22141,6 +23864,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 180000
+  },
   "SkillData1": {
    "levels": [
     20000,
@@ -22181,6 +23910,12 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 180000
   },
   "SkillData1": {
    "levels": [
@@ -22223,6 +23958,12 @@
   "FixedCastTime": {
    "flat": 500
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 180000
+  },
   "SkillData1": {
    "levels": [
     20000,
@@ -22263,6 +24004,23 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    110000,
+    120000,
+    130000,
+    140000,
+    150000,
+    160000,
+    170000,
+    180000,
+    190000,
+    200000
+   ]
   },
   "SkillData1": {
    "levels": [
@@ -22306,6 +24064,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 12000
   },
@@ -22340,6 +24101,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 12000
   },
@@ -22369,6 +24133,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -22437,6 +24204,12 @@
     1
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "NumberOfHits": {
    "flat": -3
   },
@@ -22498,6 +24271,12 @@
     -1,
     -1
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -5
@@ -22561,6 +24340,12 @@
     -1
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Poison"
   },
@@ -22616,6 +24401,12 @@
     200,
     100
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -22684,6 +24475,12 @@
     -1
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SkillData1": {
    "levels": [
     8000,
@@ -22736,6 +24533,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 60000
@@ -22791,6 +24594,23 @@
     400,
     200,
     1
+   ]
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    35000,
+    40000,
+    45000,
+    50000,
+    55000,
+    60000,
+    65000,
+    70000,
+    75000,
+    80000
    ]
   },
   "SkillData1": {
@@ -22851,6 +24671,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -22919,6 +24745,12 @@
     1
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Wind"
   },
@@ -22975,6 +24807,23 @@
     -1
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    5000,
+    6000,
+    7000,
+    8000,
+    9000,
+    10000,
+    11000,
+    12000,
+    13000,
+    14000
+   ]
+  },
   "SkillData1": {
    "levels": [
     8000,
@@ -23019,6 +24868,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SPCost": {
    "flat": 10
   },
@@ -23045,6 +24897,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "SkillData1": {
    "levels": [
@@ -23105,6 +24960,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "levels": [
     600000,
@@ -23163,6 +25021,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "SkillData1": {
    "levels": [
@@ -23223,6 +25084,9 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "levels": [
     600000,
@@ -23270,6 +25134,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SPCost": {
    "flat": 50
@@ -23320,6 +25187,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SPCost": {
    "flat": 10
   },
@@ -23339,6 +25209,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "SkillData1": {
    "flat": 60000
@@ -23380,6 +25253,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -23420,6 +25296,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "CoolDown": {
+   "flat": 60000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -23459,6 +25338,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "SkillData1": {
    "flat": 60000
@@ -23512,6 +25394,23 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "levels": [
+    0,
+    500,
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500
+   ]
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -23560,6 +25459,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -23589,6 +25491,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "flat": 90000
@@ -23623,6 +25528,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SkillData1": {
    "levels": [
@@ -23672,6 +25580,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     20000,
@@ -23719,6 +25630,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SkillData1": {
    "levels": [
@@ -23770,6 +25687,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -1
@@ -23834,6 +25757,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "SPCost": {
    "levels": [
@@ -23900,6 +25829,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -23949,6 +25884,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "SPCost": {
    "levels": [
@@ -24086,6 +26024,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     14000,
@@ -24147,6 +26088,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SkillData1": {
    "levels": [
     10000,
@@ -24190,6 +26137,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "SPCost": {
    "flat": 4
@@ -24293,6 +26243,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "SkillData1": {
    "levels": [
     60000,
@@ -24348,6 +26301,9 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -24408,6 +26364,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -24452,6 +26411,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "flat": 300000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -24486,6 +26448,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 300000
   },
   "NumberOfHits": {
    "flat": 0
@@ -24553,6 +26518,12 @@
   "Name": "RL_RICHS_COIN",
   "Description": "Rich's Coin",
   "MaxLevel": 1,
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "SkillData1": {
    "flat": 600000
   },
@@ -24575,6 +26546,9 @@
   },
   "FixedCastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 120000
@@ -24617,6 +26591,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -24643,6 +26620,15 @@
     1200,
     800,
     400
+   ]
+  },
+  "AfterCastActDelay": {
+   "levels": [
+    2500,
+    2000,
+    1500,
+    1000,
+    500
    ]
   },
   "SkillData1": {
@@ -24715,6 +26701,9 @@
   "CastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     45000,
@@ -24779,6 +26768,9 @@
   "Description": "Fire Dance",
   "MaxLevel": 5,
   "AttackType": "Weapon",
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -24822,6 +26814,9 @@
    ]
   },
   "CastTime": {
+   "flat": 1000
+  },
+  "AfterCastActDelay": {
    "flat": 1000
   },
   "SkillData1": {
@@ -24909,6 +26904,9 @@
   "Description": "Round Trip",
   "MaxLevel": 5,
   "AttackType": "Weapon",
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -24951,6 +26949,9 @@
     3000
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -24985,6 +26986,9 @@
   "Range": {
    "flat": 3
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 100
   },
@@ -25006,6 +27010,9 @@
   "MaxLevel": 5,
   "CastTime": {
    "flat": 2000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 60000
@@ -25039,6 +27046,9 @@
    "flat": 2000
   },
   "FixedCastTime": {
+   "flat": 1000
+  },
+  "AfterCastActDelay": {
    "flat": 1000
   },
   "Element": {
@@ -25081,6 +27091,9 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -25117,6 +27130,9 @@
     15,
     16
    ]
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -25206,6 +27222,9 @@
   "Description": "Full Moon Kick",
   "MaxLevel": 10,
   "AttackType": "Weapon",
+  "CoolDown": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25276,6 +27295,9 @@
    "flat": 7
   },
   "CastTime": {
+   "flat": 1000
+  },
+  "CoolDown": {
    "flat": 1000
   },
   "NumberOfHits": {
@@ -25351,6 +27373,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25385,6 +27413,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "NumberOfHits": {
    "flat": 1
@@ -25471,6 +27505,12 @@
   "CastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25487,6 +27527,15 @@
   "Name": "SJ_BOOKOFDIMENSION",
   "Description": "Book Of Dimension",
   "MaxLevel": 5,
+  "CoolDown": {
+   "levels": [
+    150000,
+    120000,
+    90000,
+    60000,
+    30000
+   ]
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25512,6 +27561,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "NumberOfHits": {
    "flat": 1
@@ -25547,6 +27602,9 @@
   "Name": "SJ_DOCUMENT",
   "Description": "Document",
   "MaxLevel": 3,
+  "CoolDown": {
+   "flat": 60000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25605,6 +27663,9 @@
   "Description": "Solar Burst",
   "MaxLevel": 10,
   "AttackType": "Weapon",
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": -3
   },
@@ -25635,6 +27696,9 @@
   "AttackType": "Weapon",
   "Range": {
    "flat": 1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": 1
@@ -25693,6 +27757,9 @@
   "Range": {
    "flat": 9
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25724,6 +27791,9 @@
   "AttackType": "Magic",
   "Range": {
    "flat": 9
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "NumberOfHits": {
    "flat": 1
@@ -25757,6 +27827,9 @@
   "Range": {
    "flat": 9
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25789,6 +27862,9 @@
   "Range": {
    "flat": 9
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25816,6 +27892,12 @@
    "flat": 3000
   },
   "FixedCastTime": {
+   "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
    "flat": 1000
   },
   "NumberOfHits": {
@@ -25854,6 +27936,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": 1
@@ -25921,6 +28009,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -25962,6 +28056,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -25998,6 +28098,20 @@
   },
   "FixedCastTime": {
    "flat": 4000
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    0,
+    30000,
+    60000,
+    90000,
+    120000,
+    150000,
+    180000
+   ]
   },
   "NumberOfHits": {
    "flat": 1
@@ -26041,6 +28155,12 @@
   "FixedCastTime": {
    "flat": 1500
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -26071,6 +28191,9 @@
    "flat": 3000
   },
   "FixedCastTime": {
+   "flat": 1000
+  },
+  "CoolDown": {
    "flat": 1000
   },
   "NumberOfHits": {
@@ -26107,6 +28230,12 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "NumberOfHits": {
    "flat": 1
@@ -26161,6 +28290,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 60000
+  },
   "NumberOfHits": {
    "flat": 1
   },
@@ -26193,6 +28328,12 @@
   "AttackType": "Misc",
   "Range": {
    "flat": 7
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": 1
@@ -26267,6 +28408,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 5000
+  },
   "NumberOfHits": {
    "flat": -2
   },
@@ -26303,6 +28450,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 3000
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -26360,6 +28510,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -26393,6 +28549,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 500
   },
   "NumberOfHits": {
    "flat": 1
@@ -26430,6 +28589,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "NumberOfHits": {
    "flat": -10
@@ -26479,6 +28641,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "NumberOfHits": {
    "flat": -5
   },
@@ -26515,6 +28683,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -26560,6 +28731,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 10000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -26578,6 +28752,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": 0
@@ -26637,6 +28814,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -26694,6 +28877,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "NumberOfHits": {
    "flat": 0
@@ -26857,6 +29046,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 3
   },
@@ -26904,6 +29096,12 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -26930,6 +29128,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "NumberOfHits": {
    "flat": 0
@@ -27015,6 +29216,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 20000
   },
   "SkillData1": {
    "levels": [
@@ -27107,6 +29314,12 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
+  },
   "SkillData1": {
    "levels": [
     60000,
@@ -27150,6 +29363,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "SkillData1": {
    "levels": [
@@ -27217,6 +29433,12 @@
   "FixedCastTime": {
    "flat": 2000
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 30000
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -27261,6 +29483,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "flat": 5000
+  },
   "Target": "Ally"
  },
  {
@@ -27273,6 +29498,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "CoolDown": {
+   "flat": 5000
   },
   "Target": "Ally"
  },
@@ -27287,6 +29515,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "flat": 5000
+  },
   "Target": "Ally"
  },
  {
@@ -27300,6 +29531,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "CoolDown": {
+   "flat": 5000
+  },
   "Target": "Ally"
  },
  {
@@ -27309,6 +29543,9 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": 3000
+  },
+  "CoolDown": {
+   "flat": 300000
   },
   "Target": "Self"
  },
@@ -27323,6 +29560,12 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1500
+  },
+  "CoolDown": {
+   "flat": 60000
   },
   "NumberOfHits": {
    "flat": 3
@@ -27357,6 +29600,12 @@
   "FixedCastTime": {
    "flat": 1000
   },
+  "AfterCastActDelay": {
+   "flat": 500
+  },
+  "CoolDown": {
+   "flat": 300000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -27387,6 +29636,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "flat": 10000
@@ -27438,6 +29690,9 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 10000
@@ -27555,6 +29810,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 10000
+  },
   "SkillData1": {
    "flat": 10000
   },
@@ -27577,6 +29835,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 4000
+  },
   "SkillData1": {
    "flat": 4000
   },
@@ -27592,6 +29853,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "SkillData1": {
    "flat": 1000
@@ -27656,6 +29920,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "flat": 300000
+  },
   "SkillData1": {
    "flat": 60000
   },
@@ -27686,6 +29953,15 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "CoolDown": {
+   "levels": [
+    100000,
+    90000,
+    80000,
+    70000,
+    60000
+   ]
+  },
   "SkillData1": {
    "flat": 5000
   },
@@ -27712,6 +29988,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 1800000
   },
   "SkillData1": {
    "levels": [
@@ -27756,6 +30035,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -27771,6 +30053,12 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "SkillData1": {
    "flat": -1
@@ -27791,6 +30079,23 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    3000,
+    2000,
+    1000,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
   },
   "SkillData1": {
    "flat": 10000
@@ -27821,6 +30126,12 @@
   "MaxLevel": 1,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 15000
   },
   "SkillData1": {
    "flat": 6000
@@ -27854,6 +30165,23 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    2000,
+    4000,
+    6000,
+    8000,
+    10000,
+    12000,
+    14000,
+    16000,
+    18000,
+    20000
+   ]
   },
   "SPCost": {
    "levels": [
@@ -27904,6 +30232,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "flat": 10000
   },
@@ -27945,6 +30276,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [
@@ -27993,6 +30327,18 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    2000,
+    3000,
+    4000,
+    5000,
+    6000
+   ]
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -28036,6 +30382,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 3000
+  },
   "SkillData1": {
    "levels": [
     7000,
@@ -28075,6 +30427,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Poison"
   },
@@ -28106,6 +30461,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "flat": 9000
@@ -28144,6 +30502,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 5
   },
@@ -28175,6 +30536,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 5
   },
@@ -28196,6 +30560,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -28241,6 +30611,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 8000
   },
   "NumberOfHits": {
    "levels": [
@@ -28301,6 +30677,23 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "levels": [
+    8000,
+    10000,
+    12000,
+    14000,
+    16000,
+    18000,
+    20000,
+    22000,
+    24000,
+    26000
+   ]
+  },
   "SPCost": {
    "levels": [
     20,
@@ -28328,6 +30721,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 20000
+  },
   "SkillData1": {
    "flat": 30000
   },
@@ -28354,6 +30753,12 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 10000
   },
   "SkillData1": {
    "levels": [
@@ -28398,6 +30803,12 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
+  "CoolDown": {
+   "flat": 7000
   },
   "SkillData1": {
    "flat": 120000
@@ -28454,6 +30865,9 @@
   "Name": "CG_SPECIALSINGER",
   "Description": "Skilled Special Singer",
   "MaxLevel": 1,
+  "CoolDown": {
+   "flat": 60000
+  },
   "SPCost": {
    "flat": 1
   },
@@ -28470,6 +30884,9 @@
   },
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SPCost": {
    "levels": [
@@ -28497,6 +30914,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 35000
   },
   "SkillData1": {
    "levels": [
@@ -28545,6 +30965,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "levels": [
+    600000,
+    900000,
+    1200000,
+    1500000,
+    1800000,
+    2100000,
+    2400000,
+    2700000,
+    3000000,
+    3300000
+   ]
+  },
   "NumberOfHits": {
    "flat": 0
   },
@@ -28574,6 +31008,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "CoolDown": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": 0
@@ -28816,6 +31253,20 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "levels": [
+    1000,
+    1200,
+    1400,
+    1600,
+    1800,
+    2000,
+    2200,
+    2400,
+    2600,
+    2800
+   ]
+  },
   "NumberOfHits": {
    "levels": [
     1,
@@ -28853,6 +31304,9 @@
   "MaxLevel": 5,
   "FixedCastTime": {
    "flat": -1
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "NumberOfHits": {
    "flat": 0
@@ -29290,6 +31744,9 @@
   "FixedCastTime": {
    "flat": -1
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
   "NumberOfHits": {
    "flat": -6
   },
@@ -29343,6 +31800,9 @@
   },
   "FixedCastTime": {
    "flat": 500
+  },
+  "AfterCastActDelay": {
+   "flat": 5000
   },
   "NumberOfHits": {
    "flat": -6
@@ -30223,6 +32683,12 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 2000
+  },
+  "CoolDown": {
+   "flat": 2000
+  },
   "Element": {
    "flat": "Ele_Fire"
   },
@@ -30245,6 +32711,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 2500
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -30350,6 +32819,9 @@
   "FixedCastTime": {
    "flat": 0
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "NumberOfHits": {
    "flat": 2
   },
@@ -30375,6 +32847,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1200
   },
   "SkillData1": {
    "flat": 100
@@ -30546,6 +33021,9 @@
   "FixedCastTime": {
    "flat": 750
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -30568,6 +33046,9 @@
   },
   "FixedCastTime": {
    "flat": 1000
+  },
+  "AfterCastActDelay": {
+   "flat": 2500
   },
   "Element": {
    "flat": "Ele_Weapon"
@@ -30623,6 +33104,9 @@
   "FixedCastTime": {
    "flat": 350
   },
+  "AfterCastActDelay": {
+   "flat": 1200
+  },
   "Element": {
    "flat": "Ele_Weapon"
   },
@@ -30668,6 +33152,9 @@
     500
    ]
   },
+  "AfterCastActDelay": {
+   "flat": 2500
+  },
   "NumberOfHits": {
    "flat": 5
   },
@@ -30698,6 +33185,9 @@
   "AttackType": "Weapon",
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 800
   },
   "SkillData1": {
    "flat": 180000
@@ -30776,6 +33266,9 @@
   },
   "FixedCastTime": {
    "flat": 800
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "levels": [
@@ -30869,6 +33362,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "NumberOfHits": {
    "flat": 3
@@ -31021,6 +33517,9 @@
   "FixedCastTime": {
    "flat": 200
   },
+  "AfterCastActDelay": {
+   "flat": 1000
+  },
   "SkillData1": {
    "levels": [
     40000,
@@ -31078,6 +33577,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 3000
   },
   "NumberOfHits": {
    "flat": 0
@@ -31140,6 +33642,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 2000
   },
   "SkillData1": {
    "flat": 120000
@@ -31216,6 +33721,9 @@
   },
   "FixedCastTime": {
    "flat": 0
+  },
+  "AfterCastActDelay": {
+   "flat": 1000
   },
   "SkillData1": {
    "levels": [

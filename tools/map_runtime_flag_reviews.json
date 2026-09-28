@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "poring_war_battlefield_rules",
+      "map": "poring_w02",
+      "title": "Poring War battlefield rule cycle",
+      "evidence_state": "conditional",
+      "summary": "The Poring War script removes party-lock and PvP flags during initialization and reset, enables them when the match timer reaches 100 seconds, then removes them on a win or at the 700-second timeout.",
+      "flags": ["MF_PARTYLOCK", "MF_PVP", "MF_PVP_NOGUILD", "MF_PVP_NOCALCRANK"],
+      "conditions": [
+        "The match timer is started when both teams register; the first team waits for the opposing team before the master timer starts.",
+        "At timer 100 seconds, the script applies party lock, PvP, no-guild PvP, and no-calculation-rank flags.",
+        "The script removes these flags on a win, reset, or timer 700 seconds. These are source-defined event transitions, not a live observation of the map's current state."
+      ],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-27",
+      "review_method": "Traced the loaded Poring War NPC's team-registration callbacks, initialization/reset handlers, timed start, win handler, and timeout handler; validated every cited literal call against the active script.",
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [358, 359, 413, 414, 505, 506, 898, 899, 950, 951, 1014, 1016, 1028, 1030],
+          "required_source_literals": [
+            "OnInit:\n\tremovemapflag(\"poring_w02\", MF_PARTYLOCK);",
+            "donpcevent \"#wop_master::OnStart\";",
+            "OnReset:\n\tremovemapflag(\"poring_w02\", MF_PARTYLOCK);",
+            "OnDevilingWin:\n\tremovemapflag(\"poring_w02\", MF_PARTYLOCK);",
+            "OnTimer100000:\n\tmapannounce",
+            "setmapflag(\"poring_w02\", MF_PARTYLOCK);",
+            "OnTimer700000:\n\tmapannounce",
+            "removemapflag(\"poring_w02\", MF_PARTYLOCK);"
+          ]
+        }
+      ]
+    }
+  ]
+}

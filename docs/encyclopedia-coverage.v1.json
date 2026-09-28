@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+  "mode": "renewal",
+  "evidence_states": {
+    "verified": "Source or reviewed control flow establishes this claim for the exported server revision.",
+    "conditional": "The claim is supported and its known condition or branch is shown.",
+    "configured_estimate": "A configured value is shown with its runtime-modifier caveat.",
+    "source_clue": "A source reference suggests a relationship but its player-accessible path is unreviewed.",
+    "not_reviewed": "Relevant source exists, but its behavior has not been semantically reviewed.",
+    "unknown": "The value is unavailable, dynamic, or not extracted; give a reason when known."
+  },
+  "counting_policy": "Counts describe exported records or explicitly named subsets, not completeness of player-facing explanations. Clues, reviewed facts, configured values, and runtime observations are separate states.",
+  "categories": {
+    "monsters": {
+      "records": 1759,
+      "configured_skill_records": 10021,
+      "skill_trigger_translations": {
+        "observed": 10021,
+        "total": 10021,
+        "basis": "configured monster skill records with documented trigger state, condition, chance, and target semantics"
+      },
+      "skill_trigger_partial_records": 0,
+      "configured_drop_coverage": {
+        "observed": 1287,
+        "total": 1759,
+        "basis": "monster records with at least one configured drop row"
+      },
+      "static_spawn_coverage": {
+        "observed": 965,
+        "total": 1759,
+        "basis": "monster records with at least one loaded static spawn placement"
+      },
+      "script_spawn_coverage": {
+        "observed": 420,
+        "total": 1759,
+        "basis": "monster records with at least one indexed script-spawn clue"
+      },
+      "script_spawn_clues": 1217
+    },
+    "items": {
+      "records": 13183,
+      "translated_effects": {
+        "observed": 1976,
+        "total": 13183,
+        "basis": "records with a supported natural-language effect summary"
+      },
+      "noncard_records": 12171,
+      "noncard_translated_effects": {
+        "observed": 1529,
+        "total": 12171,
+        "basis": "non-card item records with a supported natural-language effect summary"
+      },
+      "drop_sources": {
+        "observed": 2196,
+        "total": 13183,
+        "basis": "records linked to at least one configured monster drop"
+      },
+      "literal_shop_sources": {
+        "observed": 366,
+        "total": 13183,
+        "basis": "records linked to at least one literal loaded shop offer"
+      },
+      "container_sources": {
+        "observed": 1899,
+        "total": 13183,
+        "basis": "records linked to at least one indexed container outcome"
+      },
+      "verified_quest_reward_sources": 7,
+      "script_grant_clues": 1956,
+      "script_consumption_clues": 2186,
+      "items_linked_to_reviewed_exchange": 13
+    },
+    "cards": {
+      "records": 1012,
+      "translated_effects": {
+        "observed": 447,
+        "total": 1012,
+        "basis": "card records with a supported natural-language effect summary"
+      },
+      "drop_sources": {
+        "observed": 565,
+        "total": 1012,
+        "basis": "records linked to at least one configured monster drop"
+      },
+      "combo_membership_links": 156
+    },
+    "combos_and_groups": {
+      "combos": 436,
+      "translated_combo_effects": {
+        "observed": 173,
+        "total": 436,
+        "basis": "distinct combo records with translated script summaries"
+      },
+      "item_groups": 57
+    },
+    "skills_and_jobs": {
+      "skill_records": 1170,
+      "job_skill_trees": 128,
+      "job_bonus_schedules": 147
+    },
+    "statuses": {
+      "icon_records": 700,
+      "icon_rows_linked_to_server_status": {
+        "observed": 540,
+        "total": 700,
+        "basis": "status icon rows with one or more server status mechanics linked"
+      },
+      "linked_server_statuses": 545,
+      "literal_call_site_clues": 114,
+      "statuses_with_call_sites": 75
+    },
+    "quests": {
+      "records": 3172,
+      "quest_records_with_hunt_targets": {
+        "observed": 454,
+        "total": 3172,
+        "basis": "quest records with at least one exported hunt target"
+      },
+      "hunt_target_rows": 468,
+      "npc_stage_relations": 1345,
+      "quests_with_reviewed_flow": {
+        "observed": 9,
+        "total": 3172,
+        "basis": "quest records with source-anchored reviewed flow notes"
+      },
+      "reviewed_npc_stage_relations": {
+        "observed": 14,
+        "total": 1345,
+        "basis": "NPC-stage relations with an authored reviewed role"
+      },
+      "verified_npc_rewards": 6,
+      "verified_quest_item_rewards": {
+        "observed": 7,
+        "total": 41,
+        "basis": "nearby literal item-grant candidates whose complete quest branch was manually reviewed"
+      },
+      "quests_with_verified_item_rewards": {
+        "observed": 3,
+        "total": 3172,
+        "basis": "quest records with at least one source-reviewed item reward"
+      },
+      "nearby_item_reward_clues": 41
+    },
+    "npcs_and_services": {
+      "declarations": 8348,
+      "map_known_declarations": {
+        "observed": 8348,
+        "total": 8348,
+        "basis": "declarations whose map identifier resolves in the static map index"
+      },
+      "literal_shop_offers": 1854,
+      "reviewed_exchange_records": 2,
+      "reviewed_service_roles": {
+        "count": 1,
+        "evidence_state": "conditional",
+        "basis": "distinct service roles cited by source-reviewed exchange records"
+      }
+    },
+    "maps_and_rules": {
+      "map_flag_directives": 3589,
+      "effective_static_map_flags": {
+        "observed": 3568,
+        "total": 3589,
+        "basis": "map/flag declarations selected as effective in loaded static file order"
+      },
+      "maps_with_flag_directives": 814,
+      "runtime_map_flag_call_clues": {
+        "observed": 20,
+        "total": 20,
+        "basis": "loaded-script setmapflag/removemapflag calls with a literal MF_ flag; call execution and conditions are unreviewed"
+      },
+      "runtime_map_flag_clues_with_literal_map": {
+        "observed": 20,
+        "total": 20,
+        "basis": "runtime call clues whose first argument is a literal map name"
+      },
+      "source_reviewed_runtime_map_flag_behaviors": {
+        "observed": 1,
+        "total": 1,
+        "basis": "runtime map-flag call groups whose loaded-script control flow and conditions were reviewed; live map state is not observed"
+      },
+      "server_rule_entries": 15,
+      "element_matchup_tables": {
+        "observed": 10,
+        "total": 10,
+        "basis": "complete defender-element tables with four defense levels and ten attacking elements"
+      },
+      "weapon_size_adjustment_tables": {
+        "observed": 1,
+        "total": 1,
+        "basis": "configured weapon damage size table covering three target sizes and documented weapon types"
+      }
+    },
+    "crafting_and_mechanics": {
+      "production_and_conversion_recipes": 483,
+      "refinement_weapon_levels": 4
+    }
+  }
+}

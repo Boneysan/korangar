@@ -1,0 +1,188 @@
+{
+  "reviewed_on": "2026-09-27",
+  "review_method": "Traced each exchange branch through the loaded NPC script and checked input removal, output grant, NPC declaration, and stated conditions.",
+  "entries": [
+    {
+      "id": "mora_keeper_relic_exchange",
+      "title": "Exchange Mora Coins for a selected relic category",
+      "npc": {
+        "name": "Keeper of Secrets#pa082",
+        "internal_name": "Keeper of Secrets#pa082",
+        "map": "mora",
+        "x": 88,
+        "y": 89,
+        "service_role": "Mora relic and coin exchange"
+      },
+      "inputs": [
+        {
+          "item_id": 6380,
+          "amount": 10
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Ring",
+          "item_ids": [
+            2864,
+            2865,
+            2866
+          ],
+          "amount": 1,
+          "selection": "uniform_random_one",
+          "condition": "Arch Bishop, Arch Bishop T, or Baby Bishop; cannot already carry any of the three listed rings."
+        },
+        {
+          "label": "Shoes",
+          "item_ids": [
+            2471,
+            2472
+          ],
+          "amount": 1,
+          "selection": "uniform_random_one"
+        },
+        {
+          "label": "Shawl",
+          "item_ids": [
+            2569,
+            2570
+          ],
+          "amount": 1,
+          "selection": "uniform_random_one"
+        },
+        {
+          "label": "Robe",
+          "item_ids": [
+            15029,
+            15030
+          ],
+          "amount": 1,
+          "selection": "uniform_random_one"
+        },
+        {
+          "label": "Shield",
+          "item_ids": [
+            2156
+          ],
+          "amount": 1,
+          "selection": "single_option"
+        },
+        {
+          "label": "Weapon",
+          "item_ids": [
+            1657,
+            16013
+          ],
+          "amount": 1,
+          "selection": "uniform_random_one"
+        }
+      ],
+      "conditions": [
+        "At least 10 Mora Coins are required before the exchange menu opens.",
+        "The player chooses a relic category; the script randomly selects one listed item in that category.",
+        "The Ring category is restricted to Arch Bishop, Arch Bishop T, and Baby Bishop, and is unavailable while carrying one of its three rings.",
+        "The NPC refuses the exchange if its weight checks fail: checkweight(Knife, 1) or less than 1000 weight capacity."
+      ],
+      "source": {
+        "path": "npc/re/merchants/enchan_mora.txt",
+        "lines": [
+          38,
+          39,
+          43,
+          48,
+          72,
+          83,
+          89,
+          94,
+          95,
+          103,
+          106,
+          109,
+          112,
+          115,
+          118,
+          119,
+          120
+        ]
+      },
+      "required_source_literals": [
+        "mora,88,89,5\tscript\tKeeper of Secrets#pa082",
+        "if (countitem(Mora_Coin) < 10)",
+        "switch(select(\"I'm not ready.\", \"Ring\", \"Shoes\", \"Shawl\", \"Robe\", \"Shield\", \"Weapon\"))",
+        ".@item = .@items[rand(getarraysize(.@items))];",
+        "delitem Mora_Coin,10;",
+        "getitem .@item,1;"
+      ]
+    },
+    {
+      "id": "mora_keeper_ring_to_coins",
+      "title": "Exchange one relic ring for Mora Coins",
+      "npc": {
+        "name": "Keeper of Secrets#pa082",
+        "internal_name": "Keeper of Secrets#pa082",
+        "map": "mora",
+        "x": 88,
+        "y": 89,
+        "service_role": "Mora relic and coin exchange"
+      },
+      "inputs": [
+        {
+          "item_id": 2864,
+          "amount": 1
+        },
+        {
+          "item_id": 2865,
+          "amount": 1
+        },
+        {
+          "item_id": 2866,
+          "amount": 1
+        }
+      ],
+      "input_selection": "first_owned_in_list",
+      "outcomes": [
+        {
+          "label": "Mora Coins",
+          "item_ids": [
+            6380
+          ],
+          "amount": 10,
+          "selection": "single_option"
+        }
+      ],
+      "conditions": [
+        "Arch Bishop, Arch Bishop T, and Baby Bishop characters are refused this exchange.",
+        "If more than one listed ring is carried, the script selects the first owned item in this order: Light of Cure, Seal of Cathedral, Ring of Archbishop.",
+        "The player must confirm the exchange; canceling consumes nothing.",
+        "The NPC refuses the exchange if its weight checks fail: checkweight(Knife, 1) or less than 1000 weight capacity."
+      ],
+      "source": {
+        "path": "npc/re/merchants/enchan_mora.txt",
+        "lines": [
+          38,
+          39,
+          43,
+          124,
+          125,
+          133,
+          134,
+          135,
+          142,
+          144,
+          149,
+          150,
+          151
+        ]
+      },
+      "required_source_literals": [
+        "mora,88,89,5\tscript\tKeeper of Secrets#pa082",
+        "if (Class == Job_Arch_Bishop || Class == Job_Arch_Bishop_T || Class == Job_Baby_Bishop)",
+        "if (countitem(Light_Of_Cure)) .@item = 2864;",
+        "else if (countitem(Seal_Of_Cathedral)) .@item = 2865;",
+        "else if (countitem(Ring_Of_Archbishop)) .@item = 2866;",
+        "delitem .@item,1;",
+        "getitem Mora_Coin,10;"
+      ]
+    }
+  ],
+  "reviewed_by": "Repository source review"
+}
