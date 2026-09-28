@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "weapon_skillratio_flat_and_level_scaled_bonus",
+      "title": "Standard weapon-skill damage ratio (battle_calc_weapon_attack default path)",
+      "skill_ids": [5, 8201, 7, 8202, 42, 499, 46, 8207, 148, 8214, 56, 8216, 8225, 58, 59, 62, 8203, 137, 139],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default control path (base ATK via GET_NORMAL_ATTACK, then a skillratio multiply via battle_calc_skillratio's BF_WEAPON switch) and read each named skill's literal skillratio expression from that switch.",
+      "evidence_state": "verified",
+      "formula": "For these skills battle_calc_weapon_attack (src/map/battle.c) takes the default branch of its main skill_id switch, which sets wd.damage to the character's normal weapon attack via GET_NORMAL_ATTACK (battle->calc_base_damage, RENEWAL mode). A second, separate switch(skill_id) then also falls to its own default, which does `wd.damage = wd.damage * calc_skillratio(BF_WEAPON, ...) / 100` (the ATK_RATE macro). calc_skillratio starts an internal `skillratio` at 100 (passed in from the caller, already 100 at this point) and, inside its `case BF_WEAPON:` switch, adds a skill-specific bonus to it before returning. So final ratio = 100 + skill-specific bonus, applied as a straight percentage multiplier on the normal-attack damage that was already computed. Defense reduction, card modifiers, and elemental adjustment are later, skill-independent pipeline stages not re-derived here.",
+      "per_skill": [
+        {"skill_id": 5, "skill_name": "SM_BASH", "ratio_expression": "skillratio += 30 * skill_lv", "notes": "Shared with MS_BASH (id 8201), the Baby Novice variant."},
+        {"skill_id": 8201, "skill_name": "MS_BASH", "ratio_expression": "skillratio += 30 * skill_lv", "notes": "Same case label and formula as SM_BASH."},
+        {"skill_id": 7, "skill_name": "SM_MAGNUM", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Shared with MS_MAGNUM (id 8202). Magnum Break also lays a ground fire field handled elsewhere; only the direct hit ratio is reviewed here."},
+        {"skill_id": 8202, "skill_name": "MS_MAGNUM", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Same case label and formula as SM_MAGNUM."},
+        {"skill_id": 42, "skill_name": "MC_MAMMONITE", "ratio_expression": "skillratio += 50 * skill_lv", "notes": "Mammonite additionally costs zeny on cast; that cost is a skill_db/skill.c requirement, not part of the damage ratio."},
+        {"skill_id": 499, "skill_name": "HT_POWER", "ratio_expression": "skillratio += -50 + 8 * status_get_str(src)", "notes": "Scales with the caster's current STR stat, not skill level; skill_lv is unused in this branch."},
+        {"skill_id": 46, "skill_name": "AC_DOUBLE", "ratio_expression": "skillratio += 10 * (skill_lv - 1)", "notes": "Shared with MA_DOUBLE (id 8207, Doram variant). At skill level 1 this adds 0 (pure 100% ratio)."},
+        {"skill_id": 8207, "skill_name": "MA_DOUBLE", "ratio_expression": "skillratio += 10 * (skill_lv - 1)", "notes": "Same case label and formula as AC_DOUBLE."},
+        {"skill_id": 148, "skill_name": "AC_CHARGEARROW", "ratio_expression": "skillratio += 50", "notes": "Shared with MA_CHARGEARROW (id 8214). Flat +50%, independent of skill level (Charge Arrow has no levels beyond 1 in this skill_db)."},
+        {"skill_id": 8214, "skill_name": "MA_CHARGEARROW", "ratio_expression": "skillratio += 50", "notes": "Same case label and formula as AC_CHARGEARROW."},
+        {"skill_id": 56, "skill_name": "KN_PIERCE", "ratio_expression": "skillratio += 10 * skill_lv", "notes": "Shared with ML_PIERCE (id 8216, Baby Knight variant)."},
+        {"skill_id": 8216, "skill_name": "ML_PIERCE", "ratio_expression": "skillratio += 10 * skill_lv", "notes": "Same case label and formula as KN_PIERCE."},
+        {"skill_id": 8225, "skill_name": "MER_CRASH", "ratio_expression": "skillratio += 10 * skill_lv", "notes": "A mercenary skill; source and target are the mercenary unit and its target, not the summoning player."},
+        {"skill_id": 58, "skill_name": "KN_SPEARSTAB", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Spear Stab also has a knockback/stun component handled by separate skill.c logic, not covered here."},
+        {"skill_id": 59, "skill_name": "KN_SPEARBOOMERANG", "ratio_expression": "skillratio += 50 * skill_lv", "notes": "Ranged spear-throw skill; the same flat ratio applies regardless of range within the skill's cast range."},
+        {"skill_id": 62, "skill_name": "KN_BOWLINGBASH", "ratio_expression": "skillratio += 40 * skill_lv", "notes": "Shared with MS_BOWLINGBASH (id 8203). This is only the per-target ratio; splash-target count/positioning is separate skill unit logic not covered here."},
+        {"skill_id": 8203, "skill_name": "MS_BOWLINGBASH", "ratio_expression": "skillratio += 40 * skill_lv", "notes": "Same case label and formula as KN_BOWLINGBASH."},
+        {"skill_id": 137, "skill_name": "AS_GRIMTOOTH", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Consumes a Grimtooth item charge per skill.c logic not reviewed here; only the damage ratio is covered."},
+        {"skill_id": 139, "skill_name": "AS_POISONREACT", "ratio_expression": "skillratio += 30 * skill_lv", "notes": "This ratio applies to Poison React's counter-attack hit; the trigger condition (being hit while the status is active) is separate status.c logic not reviewed here."}
+      ],
+      "worked_example": "SM_BASH at skill level 10 against a target with no special resistances: skillratio = 100 + 30*10 = 400, i.e. the hit deals 400% of the character's computed normal-attack damage (that normal-attack ATK value is a separate, unreviewed formula) before defense/card/element adjustment.",
+      "conditions": [
+        "This entry covers only the skillratio percentage multiplier. The base normal-attack ATK value it multiplies (weapon ATK, STR/DEX/LUK contributions, refine, size penalty, MAXIMIZEPOWER/WEAPONPERFECT flags via GET_NORMAL_ATTACK) is a separate formula not re-derived in this review.",
+        "Defense reduction, card fixes, and elemental attribute adjustment happen in later stages of battle_calc_weapon_attack / battle_calc_damage, outside calc_skillratio, and are not covered here.",
+        "Several of these skills (Magnum Break's fire field, Spear Stab's stun, Grimtooth's charge consumption, Poison React's trigger condition) have additional non-damage mechanics handled elsewhere in skill.c/status.c that this entry does not review.",
+        "AS_SONICBLOW uses the same calc_skillratio(BF_WEAPON, ...) mechanism but has its own conditional (target-HP-dependent) formula and is reviewed separately as weapon_skillratio_sonic_blow_renewal."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [1614, 2088, 2093, 2097, 2100, 2103, 2107, 2119, 2129, 2132, 2135, 2138, 2161, 2164, 2167, 5386, 5395, 5513, 5540, 5731, 5732],
+          "required_source_literals": [
+            "static int battle_calc_skillratio(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag)",
+            "case BF_WEAPON:",
+            "case SM_BASH:",
+            "case MS_BASH:",
+            "skillratio += 30 * skill_lv;",
+            "case SM_MAGNUM:",
+            "case MS_MAGNUM:",
+            "skillratio += 20 * skill_lv;",
+            "case MC_MAMMONITE:",
+            "skillratio += 50 * skill_lv;",
+            "case HT_POWER:",
+            "skillratio += -50 + 8 * status_get_str(src);",
+            "case AC_DOUBLE:",
+            "case MA_DOUBLE:",
+            "skillratio += 10 * (skill_lv-1);",
+            "case AC_CHARGEARROW:",
+            "case MA_CHARGEARROW:",
+            "skillratio += 50;",
+            "case KN_PIERCE:",
+            "case ML_PIERCE:",
+            "skillratio += 10 * skill_lv;",
+            "case MER_CRASH:",
+            "case KN_SPEARSTAB:",
+            "skillratio += 20 * skill_lv;",
+            "case KN_SPEARBOOMERANG:",
+            "skillratio += 50*skill_lv;",
+            "case KN_BOWLINGBASH:",
+            "case MS_BOWLINGBASH:",
+            "skillratio+= 40 * skill_lv;",
+            "case AS_GRIMTOOTH:",
+            "case AS_POISONREACT:",
+            "skillratio += 30 * skill_lv;",
+            "#define ATK_RATE( a ) do { int64 temp__ = (a); wd.damage= wd.damage*temp__/100 ; if(flag.lh) wd.damage2= wd.damage2*temp__/100; } while(0)",
+            "#define GET_NORMAL_ATTACK( f , s ) ( wd.damage = battle->calc_base_damage(src, target, s, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (f), wd.flag) )",
+            "GET_NORMAL_ATTACK( i, skill_id);",
+            "ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_sonic_blow_renewal",
+      "title": "Sonic Blow's target-HP-conditional damage ratio (Renewal)",
+      "skill_ids": [136],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the same battle_calc_weapon_attack default path as the standard weapon-skillratio entry, then read Sonic Blow's own RENEWAL-gated case in battle_calc_skillratio, including its target-HP conditional bonus.",
+      "evidence_state": "verified",
+      "formula": "AS_SONICBLOW (id 136) has its own case in battle_calc_skillratio's BF_WEAPON switch (src/map/battle.c). Under RENEWAL: let ratio = 200 + 100*skill_lv - 100; the function adds (ratio - 100) to skillratio, and if the target's current HP is less than half its max HP, it adds a further (ratio / 2). Combined with the starting skillratio of 100, the total multiplier is 100 + (ratio-100) [+ ratio/2 if target HP < 50%]. The pre-RENEWAL branch (skillratio += 300 + 40*skill_lv, compiled out under #ifdef RENEWAL) is not applicable on this server, which runs in RENEWAL mode.",
+      "worked_example": "Sonic Blow at skill level 10 against a target above half HP: ratio = 200 + 100*10 - 100 = 1100; skillratio = 100 + (1100-100) = 1100, i.e. 1100% of normal-attack damage. Against the same target below half HP: skillratio = 1100 + 1100/2 = 1650, i.e. 1650% of normal-attack damage.",
+      "conditions": [
+        "As with the standard weapon-skillratio entry, this covers only the percentage multiplier; the base normal-attack ATK, defense reduction, card fixes, and elemental adjustment are separate, unreviewed stages.",
+        "The target-HP check is evaluated at the moment damage is calculated, using status_get_hp/status_get_max_hp; it is a hit-time condition, not a cast-time one."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [1614, 2088, 2169, 2170, 2173, 2174, 2175, 2176, 2177, 5386, 5731, 5732],
+          "required_source_literals": [
+            "case AS_SONICBLOW:",
+            "int ratio = 200 + 100 * skill_lv - 100;",
+            "skillratio += ratio - 100;",
+            "if (status_get_hp(target) < status_get_max_hp(target) / 2)",
+            "skillratio += (ratio / 2);",
+            "ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "magic_bolt_hitcount_scaling_no_skillratio",
+      "title": "Fire/Cold/Lightning Bolt: damage does not scale via skillratio, only via hit count",
+      "skill_ids": [19, 14, 20],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_magic_attack's default path for these three skill IDs (base MATK via status->get_matk, then a skillratio multiply through calc_skillratio's BF_MAGIC switch) and confirmed that switch has no case for any of the three, so it falls to a no-op plugin hook that leaves skillratio unchanged at 100. Cross-checked the per-level hit count that instead drives their scaling against skill_db.conf.",
+      "evidence_state": "verified",
+      "formula": "MG_FIREBOLT (19), MG_COLDBOLT (14), and MG_LIGHTNINGBOLT (20) all take battle_calc_magic_attack's default branch (src/map/battle.c), which sets ad.damage to the caster's MATK (status->get_matk(src, 2)) then applies card fixes. A nested switch(skill_id) lists these three skill IDs only to handle an unrelated SC_SPELLFIST special case; absent that status, all three fall through to that nested switch's own default, which multiplies by calc_skillratio(BF_MAGIC, ...). calc_skillratio's BF_MAGIC case has no entry for any of the three skill IDs, so it falls to its own default, which calls battle_calc_skillratio_magic_unknown -- an empty function body (a no-op plugin hook) -- leaving skillratio at its unmodified value of 100. So the MATK_RATE multiply is effectively ×100/100 = unchanged. Instead, per-level scaling comes entirely from skill_db.conf's NumberOfHits field for each skill, which is 1:1 with skill level (Lv1=1 hit ... Lv10=10 hits, Hit type BDT_MULTIHIT): the skill fires one MATK-damage hit per level.",
+      "worked_example": "Fire Bolt at skill level 5 fires 5 hits (NumberOfHits Lv5: 5), each computed as the caster's MATK with no skillratio bonus (still ×100/100), before elemental attribute adjustment (Ele_Fire) and card fixes are applied per hit. This is a materially different scaling mechanism from the flat/level-scaled weapon-skillratio skills reviewed separately: the per-hit multiplier never changes, only the hit count does.",
+      "conditions": [
+        "The caster's MATK value itself (status->get_matk) is a separate, unreviewed formula (INT/DEX/LUK-derived stat and equipment matk).",
+        "The SC_SPELLFIST branch (a Spellfist Sage/Scholar combo state) overrides this entirely with a different formula and is not reviewed here.",
+        "This review does not establish whether per-hit damage is randomized/varied or identical across the multiple hits of one cast; only that no skillratio bonus is applied to any individual hit."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [3999, 4161, 4163, 4175, 4176, 4177, 4178, 4185, 4186, 4187, 1633, 2084, 3119, 3120, 3121],
+          "required_source_literals": [
+            "static struct Damage battle_calc_magic_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int mflag)",
+            "MATK_ADD( status->get_matk(src, 2) );",
+            "switch(skill_id){",
+            "case MG_FIREBOLT:",
+            "case MG_COLDBOLT:",
+            "case MG_LIGHTNINGBOLT:",
+            "/* Fall through */",
+            "default:",
+            "MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));",
+            "case BF_MAGIC:",
+            "battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);",
+            "static void battle_calc_skillratio_magic_unknown(int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag)"
+          ]
+        },
+        {
+          "path": "db/re/skill_db.conf",
+          "lines": [961, 962, 977, 978, 986, 703, 718, 719, 1032, 1047, 1048],
+          "required_source_literals": [
+            "Id: 19",
+            "Name: \"MG_FIREBOLT\"",
+            "NumberOfHits: {",
+            "Lv1: 1",
+            "Id: 14",
+            "Name: \"MG_COLDBOLT\"",
+            "Id: 20",
+            "Name: \"MG_LIGHTNINGBOLT\""
+          ]
+        }
+      ]
+    },
+    {
+      "id": "al_heal_renewal_formula",
+      "title": "Heal's Renewal healing formula",
+      "skill_ids": [28],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced skill_calc_heal's default branch (used by AL_HEAL) under the RENEWAL build flag, including the function's own doc comment restating the formula, and cross-checked the level cap against conf/map/battle/skill.conf.",
+      "evidence_state": "conditional",
+      "formula": "AL_HEAL (id 28) computes its healed HP via skill_calc_heal (src/map/skill.c), which falls to its default branch (Heal is not one of the specially-cased skills SU_TUNABELLY/BA_APPLEIDUN/PR_SANCTUARY/NPC_EVILLAND). Under RENEWAL that branch computes: hp = floor(floor((BaseLevel + INT) / 5) * 30 * skill_lv / 10), matching the function's own source comment ('(Base Level + INT) / 5, * 30, * (Heal Level / 10)'). Integer division truncates at each step in source order: BaseLevel+INT is divided by 5 first, multiplied by 30, multiplied by skill_lv, then divided by 10.",
+      "worked_example": "A level-99 caster with 60 INT casting Heal at skill level 10: floor((99+60)/5) = floor(31.8) = 31; 31*30 = 930; 930*10 = 9300; floor(9300/10) = 930 HP, before the HP_MEDITATIO/SU_POWEROFSEA bonuses and skillheal_bonus modifiers applied afterward in the same function.",
+      "conditions": [
+        "If skill_lv is at or above battle_config.max_heal_lv (conf/map/battle/skill.conf: max_heal_lv 11), the function instead returns the flat battle_config.max_heal value (9999) regardless of level/INT; AL_HEAL's own MaxLevel in skill_db.conf is 10, so this cap is only reachable via a level-10-plus bonus from an external source, not a bare cast.",
+        "After the base formula, skill_calc_heal applies further additive percentage bonuses (HP_MEDITATIO, homunculus HLIF_BRAIN, SU_POWEROFSEA/SU_TUNABELLY chain, pc->skillheal_bonus/skillheal2_bonus, SC_OFFERTORIUM) that are not derived in this review.",
+        "Casting on a mercenary target, or when the heal flag is false (used for undead-race damage instead of healing), the result is halved (hp >>= 1) after the base formula but before those bonus additions; that branch is noted but not separately worked out here.",
+        "This is a server-authored value from active source, but effective-config max_heal_lv/max_heal could change with server config; the values cited are the configured defaults checked against conf/map/battle/skill.conf on this revision."
+      ],
+      "sources": [
+        {
+          "path": "src/map/skill.c",
+          "lines": [1149, 1157, 1175, 1176, 1177, 1179, 1180, 1181, 1183],
+          "required_source_literals": [
+            "static int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal)",
+            "default:",
+            "if (skill_lv >= battle_config.max_heal_lv)",
+            "return battle_config.max_heal;",
+            "Renewal Heal Formula",
+            "hp = (status->get_lv(src) + status_get_int(src)) / 5 * 30  * skill_lv / 10;"
+          ]
+        },
+        {
+          "path": "conf/map/battle/skill.conf",
+          "lines": [251, 252],
+          "required_source_literals": [
+            "max_heal: 9999",
+            "max_heal_lv: 11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_ac_shower",
+      "title": "Arrow Shower damage ratio (Renewal)",
+      "skill_ids": [47, 8208],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON switch and read the RENEWAL branch for AC_SHOWER and MA_SHOWER.",
+      "evidence_state": "verified",
+      "formula": "Under RENEWAL (src/map/battle.c), AC_SHOWER (47) and MA_SHOWER (8208) add `50 + 10 * skill_lv` to the baseline skillratio of 100. Thus final skillratio = 150 + 10 * skill_lv, dealing 160% weapon attack damage at level 1 up to 250% at level 10.",
+      "per_skill": [
+        {"skill_id": 47, "skill_name": "AC_SHOWER", "ratio_expression": "skillratio += 50 + 10 * skill_lv", "notes": "Archer skill."},
+        {"skill_id": 8208, "skill_name": "MA_SHOWER", "ratio_expression": "skillratio += 50 + 10 * skill_lv", "notes": "Baby/Doram variant sharing the same formula."}
+      ],
+      "worked_example": "Arrow Shower Lv 10: skillratio = 100 + 50 + 10*10 = 250 (250% weapon attack damage per target in the area of effect).",
+      "conditions": [
+        "Ground knockback and area splash behavior are handled by skill unit logic outside this damage ratio formula.",
+        "Normal weapon attack ATK base, ammo ATK, and defense reduction are separate pipeline stages."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2109, 2110, 2112, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case AC_SHOWER:",
+            "case MA_SHOWER:",
+            "skillratio += 50 + 10 * skill_lv;",
+            "ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_sand_attack_cart_revolution",
+      "title": "Sand Attack and Cart Revolution damage ratios",
+      "skill_ids": [149, 153],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON switch for TF_SPRINKLESAND and MC_CARTREVOLUTION, including cart-weight scaling logic.",
+      "evidence_state": "conditional",
+      "formula": "In src/map/battle.c, TF_SPRINKLESAND (149) adds a flat +30 to skillratio (final ratio 130% of normal weapon attack). MC_CARTREVOLUTION (153) adds a base +50, and if the player character has a cart with weight, adds `100 * cart_weight / cart_weight_max` (i.e. +1% ratio per 1% of max cart weight used, reaching +100% at 100% capacity for a total ratio of 250%). Non-player casters unconditionally receive the full +100% cart weight bonus.",
+      "per_skill": [
+        {"skill_id": 149, "skill_name": "TF_SPRINKLESAND", "ratio_expression": "skillratio += 30", "notes": "Blind chance is evaluated separately in status.c."},
+        {"skill_id": 153, "skill_name": "MC_CARTREVOLUTION", "ratio_expression": "skillratio += 50 + 100 * cart_weight / cart_weight_max", "notes": "Knockback and splash targets handled separately."}
+      ],
+      "worked_example": "Cart Revolution with a cart loaded to 8,000 / 8,000 weight (100% full): skillratio = 100 + 50 + 100 = 250 (250% weapon attack damage). With an empty cart (0 weight): skillratio = 100 + 50 = 150 (150% weapon attack damage).",
+      "conditions": [
+        "Cart Revolution damage depends dynamically on current cart weight relative to max cart weight at the moment of calculation.",
+        "Sand Attack's elemental attribute and blind status chance are handled in status/skill logic outside this ratio."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2181, 2182, 2184, 2185, 2186, 2187, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case TF_SPRINKLESAND:",
+            "skillratio += 30;",
+            "case MC_CARTREVOLUTION:",
+            "skillratio += 50;",
+            "if( sd && sd->cart_weight )",
+            "skillratio += 100 * sd->cart_weight / sd->cart_weight_max; // +1% every 1% weight"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_second_job_physical",
+      "title": "Second-job physical skill damage ratios (Shield Charge, Intimidate, Triple Attack, Musical Strike, Throw Arrow, Venom Splasher)",
+      "skill_ids": [250, 219, 263, 316, 324, 141],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON switch for Crusader, Rogue, Monk, Bard/Dancer, and Assassin second-job physical skills.",
+      "evidence_state": "verified",
+      "formula": "In src/map/battle.c under BF_WEAPON: CR_SHIELDCHARGE (250) adds `20 * skill_lv` (ratio = 100 + 20*Lv, 120%-200%); RG_INTIMIDATE (219) adds `30 * skill_lv` (ratio = 100 + 30*Lv, 130%-250%); MO_TRIPLEATTACK (263) adds `20 * skill_lv` (ratio = 100 + 20*Lv, 120%-300%, triggering a 3-hit animation); BA_MUSICALSTRIKE (316) and DC_THROWARROW (324) under RENEWAL add `10 + 40 * skill_lv` (ratio = 110 + 40*Lv, 150%-310%); AS_SPLASHER (141) under RENEWAL adds `-100 + 400 + 100 * skill_lv` (ratio = 400 + 100*Lv, 500%-1400% on delayed detonation).",
+      "per_skill": [
+        {"skill_id": 250, "skill_name": "CR_SHIELDCHARGE", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Requires shield; knockback/stun handled in skill.c."},
+        {"skill_id": 219, "skill_name": "RG_INTIMIDATE", "ratio_expression": "skillratio += 30 * skill_lv", "notes": "Random teleportation of caster and target handled in skill.c."},
+        {"skill_id": 263, "skill_name": "MO_TRIPLEATTACK", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Passive trigger chance defined in skill_db.conf; fires 3 hits."},
+        {"skill_id": 316, "skill_name": "BA_MUSICALSTRIKE", "ratio_expression": "skillratio += 10 + 40 * skill_lv", "notes": "Instrument weapon skill."},
+        {"skill_id": 324, "skill_name": "DC_THROWARROW", "ratio_expression": "skillratio += 10 + 40 * skill_lv", "notes": "Whip weapon skill."},
+        {"skill_id": 141, "skill_name": "AS_SPLASHER", "ratio_expression": "skillratio += -100 + 400 + 100 * skill_lv", "notes": "Delayed explosion damage ratio upon target reaching detonation timer."}
+      ],
+      "worked_example": "Musical Strike Lv 5: skillratio = 100 + 10 + 40*5 = 310 (310% weapon attack damage). Venom Splasher Lv 10: skillratio = 100 - 100 + 400 + 100*10 = 1400 (1400% weapon attack damage).",
+      "conditions": [
+        "Triple Attack's proc chance on auto-attack is separate from this damage ratio formula.",
+        "Venom Splasher requires target HP threshold and poison status to plant, which are skill.c prerequisites."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2229, 2230, 2232, 2233, 2322, 2323, 2342, 2343, 2347, 2410, 2416, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case RG_INTIMIDATE:",
+            "skillratio += 30 * skill_lv;",
+            "case CR_SHIELDCHARGE:",
+            "skillratio += 20 * skill_lv;",
+            "case MO_TRIPLEATTACK:",
+            "skillratio += 20 * skill_lv;",
+            "case BA_MUSICALSTRIKE:",
+            "case DC_THROWARROW:",
+            "skillratio += 10 + 40 * skill_lv;",
+            "case AS_SPLASHER:",
+            "skillratio += -100 + 400 + 100 * skill_lv;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_holy_cross_renewal",
+      "title": "Holy Cross damage ratio and two-handed spear doubling (Renewal)",
+      "skill_ids": [253],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON CR_HOLYCROSS case in src/map/battle.c under RENEWAL.",
+      "evidence_state": "conditional",
+      "formula": "CR_HOLYCROSS (253) calculates ratio = 35 * skill_lv. Under RENEWAL, if the player is wielding a two-handed spear (sd != NULL && sd->weapontype == W_2HSPEAR), ratio is doubled (ratio *= 2). Finally skillratio += ratio. Since baseline skillratio is 100, the ratio is 100 + 35 * skill_lv with standard weapons (135% at Lv1 up to 450% at Lv10), or 100 + 70 * skill_lv with a two-handed spear (170% at Lv1 up to 800% at Lv10). The skill hits 2 times (NumberOfHits: 2 in skill_db.conf).",
+      "worked_example": "Holy Cross Lv 10 with a One-Handed Sword: ratio = 35*10 = 350; skillratio = 100 + 350 = 450%. With a Two-Handed Spear: ratio = (35*10)*2 = 700; skillratio = 100 + 700 = 800%.",
+      "conditions": [
+        "The 2x bonus ratio is conditional on equipping a Two-Handed Spear (W_2HSPEAR).",
+        "Holy Cross has Holy element forced by skill_db.conf and a chance to inflict Blind, handled in status/battle calculation."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2252, 2254, 2256, 2257, 2259, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case CR_HOLYCROSS:",
+            "int ratio = 35 * skill_lv;",
+            "if (sd != NULL && sd->weapontype == W_2HSPEAR)",
+            "ratio *= 2;",
+            "skillratio += ratio;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_brandish_spear_renewal",
+      "title": "Brandish Spear weapon damage ratio and STR scaling (Renewal)",
+      "skill_ids": [57],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON KN_BRANDISHSPEAR case in src/map/battle.c under RENEWAL.",
+      "evidence_state": "verified",
+      "formula": "Under RENEWAL in src/map/battle.c, KN_BRANDISHSPEAR (57) evaluates: `skillratio += 300 + 100 * skill_lv + status_get_str(src) * 5`. Combined with baseline skillratio of 100, final ratio = 400 + 100 * skill_lv + 5 * STR. Damage scales with both skill level and the caster's current total STR stat.",
+      "worked_example": "A Knight with 80 total STR casting Brandish Spear Lv 10: skillratio = 100 + 300 + 100*10 + 5*80 = 400 + 1000 + 400 = 1800% of normal weapon attack damage.",
+      "conditions": [
+        "Brandish Spear requires a spear weapon and riding a Peco Peco.",
+        "Area shape and knockback are handled by skill_unit logic; this entry reviews the damage multiplier."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2141, 2142, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case KN_BRANDISHSPEAR:",
+            "skillratio += 300 + 100 * skill_lv + status_get_str(src) * 5;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapon_skillratio_alchemist_biochem_skills",
+      "title": "Demonstration and Acid Terror damage ratios with Potion Research scaling (Renewal)",
+      "skill_ids": [229, 230],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_weapon_attack's default path to battle_calc_skillratio's BF_WEAPON AM_DEMONSTRATION and AM_ACIDTERROR cases under RENEWAL in src/map/battle.c.",
+      "evidence_state": "conditional",
+      "formula": "In src/map/battle.c under RENEWAL: AM_DEMONSTRATION (229) adds `-100 + 60 * skill_lv` plus `10 * pc->checkskill(sd, AM_LEARNINGPOTION)`. Combined with baseline 100, final skillratio = `60 * skill_lv + 10 * Potion_Research_Lv`. AM_ACIDTERROR (230) adds `-100 + 200 * skill_lv` plus `100 * pc->checkskill(sd, AM_LEARNINGPOTION)`. Combined with baseline 100, final skillratio = `200 * skill_lv + 100 * Potion_Research_Lv`.",
+      "per_skill": [
+        {"skill_id": 229, "skill_name": "AM_DEMONSTRATION", "ratio_expression": "skillratio = 60 * skill_lv + 10 * Potion_Research_Lv", "notes": "Weapon-break chance and ground-trap hit interval handled in skill.c."},
+        {"skill_id": 230, "skill_name": "AM_ACIDTERROR", "ratio_expression": "skillratio = 200 * skill_lv + 100 * Potion_Research_Lv", "notes": "Armor-break chance and bleeding status handled in skill.c."}
+      ],
+      "worked_example": "Acid Terror Lv 5 with Potion Research Lv 10: skillratio = 200*5 + 100*10 = 1000 + 1000 = 2000% weapon attack damage. Demonstration Lv 5 with Potion Research Lv 10: skillratio = 60*5 + 10*10 = 300 + 100 = 400% weapon attack damage.",
+      "conditions": [
+        "Potion Research (AM_LEARNINGPOTION) bonus is only evaluated when caster is a player character (sd != NULL).",
+        "Consumes catalyst items (Bottle Grenade / Acid Bottle) on cast per skill_db.conf/skill.c."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [2088, 2262, 2266, 2268, 2271, 2273, 2276, 5732],
+          "required_source_literals": [
+            "case BF_WEAPON:",
+            "case AM_DEMONSTRATION:",
+            "skillratio += -100 + 60 * skill_lv;",
+            "skillratio += 10 * pc->checkskill(sd, AM_LEARNINGPOTION);",
+            "case AM_ACIDTERROR:",
+            "skillratio += -100 + 200 * skill_lv;",
+            "skillratio += 100 * pc->checkskill(sd, AM_LEARNINGPOTION);"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "magic_skillratio_first_job_mage_acolyte",
+      "title": "First-job magic attack damage ratios (Napalm Beat, Fire Ball, Frost Diver, Fire Wall, Ruwach, Holy Light)",
+      "skill_ids": [11, 17, 15, 18, 24, 156],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_magic_attack to battle_calc_skillratio's BF_MAGIC switch in src/map/battle.c.",
+      "evidence_state": "conditional",
+      "formula": "In src/map/battle.c under BF_MAGIC: MG_NAPALMBEAT (11) adds `skill_lv * 10 - 30` (ratio = 70 + 10*Lv, 80%-170%, with splash damage distribution); MG_FIREBALL (17) under RENEWAL adds `20 * skill_lv` (ratio = 100 + 20*Lv, 120%-300%); MG_FROSTDIVER (15) adds `10 * skill_lv` (ratio = 100 + 10*Lv, 110%-200%); MG_FIREWALL (18) subtracts 50 (`skillratio -= 50`), setting each wall hit to exactly 50% MATK; AL_RUWACH (24) adds 45 (`skillratio += 45`), dealing 145% MATK; AL_HOLYLIGHT (156) adds 25 (`skillratio += 25`, 125% MATK), and if the caster has Priest Soul Link (SC_SOULLINK with SL_PRIEST), the ratio is multiplied by 5 (`skillratio *= 5`, dealing 625% MATK).",
+      "per_skill": [
+        {"skill_id": 11, "skill_name": "MG_NAPALMBEAT", "ratio_expression": "skillratio += 10 * skill_lv - 30", "notes": "Splash damage drops across multiple targets."},
+        {"skill_id": 17, "skill_name": "MG_FIREBALL", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Splash area damage around central target."},
+        {"skill_id": 15, "skill_name": "MG_FROSTDIVER", "ratio_expression": "skillratio += 10 * skill_lv", "notes": "Freeze chance evaluated separately in status.c."},
+        {"skill_id": 18, "skill_name": "MG_FIREWALL", "ratio_expression": "skillratio -= 50", "notes": "Deals 50% MATK per hit and knocks back target."},
+        {"skill_id": 24, "skill_name": "AL_RUWACH", "ratio_expression": "skillratio += 45", "notes": "Reveals hidden enemies and deals 145% MATK."},
+        {"skill_id": 156, "skill_name": "AL_HOLYLIGHT", "ratio_expression": "skillratio += 25 (x5 with Priest Soul Link)", "notes": "125% MATK base, 625% MATK under Soul Link."}
+      ],
+      "worked_example": "Fire Ball Lv 10: skillratio = 100 + 20*10 = 300 (300% MATK). Holy Light under Priest Soul Link: skillratio = (100 + 25) * 5 = 625 (625% MATK).",
+      "conditions": [
+        "Holy Light's 5x multiplier requires active status change SC_SOULLINK granted by a Soul Linker targeting a Priest.",
+        "Mage/Acolyte base MATK and elemental matchup tables are separate calculation stages."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [1633, 1634, 1635, 1636, 1638, 1640, 1654, 1655, 1665, 1666, 1668, 1669, 1670, 1671, 1673, 1674, 4187],
+          "required_source_literals": [
+            "case BF_MAGIC:",
+            "switch(skill_id){",
+            "case MG_NAPALMBEAT:",
+            "skillratio += skill_lv * 10 - 30;",
+            "case MG_FIREBALL:",
+            "skillratio += 20 * skill_lv;",
+            "case MG_FIREWALL:",
+            "skillratio -= 50;",
+            "case MG_FROSTDIVER:",
+            "skillratio += 10 * skill_lv;",
+            "case AL_HOLYLIGHT:",
+            "skillratio += 25;",
+            "case AL_RUWACH:",
+            "skillratio += 45;",
+            "MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "magic_skillratio_wizard_elemental_spells",
+      "title": "Wizard elemental magic damage ratios (Sightrasher, Water Ball, Storm Gust, Heaven's Drive, Meteor Storm, Lord of Vermilion)",
+      "skill_ids": [81, 86, 89, 91, 83, 85],
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced battle_calc_magic_attack to battle_calc_skillratio's BF_MAGIC switch for Wizard 2nd-job elemental attack spells under RENEWAL.",
+      "evidence_state": "verified",
+      "formula": "In src/map/battle.c under BF_MAGIC: WZ_SIGHTRASHER (81) adds `20 * skill_lv` (ratio = 100 + 20*Lv, 120%-300%); WZ_WATERBALL (86) adds `30 * skill_lv` (ratio = 100 + 30*Lv, 130%-400% per sphere hit); WZ_STORMGUST (89) under RENEWAL adds `-30 + 50 * skill_lv` (ratio = 70 + 50*Lv, 120%-570% per hit, freezing targets on third hit); WZ_HEAVENDRIVE (91) under RENEWAL adds a flat 25 (`skillratio += 25`, ratio = 125% MATK per hit); WZ_METEOR (83) under RENEWAL adds a flat 25 (`skillratio += 25`, ratio = 125% MATK per meteor hit); WZ_VERMILION (85) under RENEWAL adds `-100 + 400 + skill_lv * 100` (ratio = 400 + 100*Lv, 500%-1400% distributed over its multi-hit storm waves).",
+      "per_skill": [
+        {"skill_id": 81, "skill_name": "WZ_SIGHTRASHER", "ratio_expression": "skillratio += 20 * skill_lv", "notes": "Requires Ruwach active to cast."},
+        {"skill_id": 86, "skill_name": "WZ_WATERBALL", "ratio_expression": "skillratio += 30 * skill_lv", "notes": "Consumes water cells or Water Deluge."},
+        {"skill_id": 89, "skill_name": "WZ_STORMGUST", "ratio_expression": "skillratio += -30 + 50 * skill_lv", "notes": "Pushes back and freezes target after 3 hits."},
+        {"skill_id": 91, "skill_name": "WZ_HEAVENDRIVE", "ratio_expression": "skillratio += 25", "notes": "Hits up to 5 times depending on skill level."},
+        {"skill_id": 83, "skill_name": "WZ_METEOR", "ratio_expression": "skillratio += 25", "notes": "Each falling meteor deals 125% MATK in splash area."},
+        {"skill_id": 85, "skill_name": "WZ_VERMILION", "ratio_expression": "skillratio += -100 + 400 + skill_lv * 100", "notes": "4 waves of 10 hits each."}
+      ],
+      "worked_example": "Storm Gust Lv 10: skillratio = 100 - 30 + 50*10 = 570 (570% MATK per wave hit). Lord of Vermilion Lv 10: skillratio = 100 - 100 + 400 + 100*10 = 1400 (1400% MATK base total across storm waves).",
+      "conditions": [
+        "Water Ball requires standing on water cells or having Water Deluge active.",
+        "Storm Gust freeze status interaction is handled by status.c, which turns the target to Water element and stops further hits once frozen."
+      ],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [1633, 1714, 1715, 1717, 1718, 1720, 1724, 1799, 1800, 1801, 1803, 1804, 4187],
+          "required_source_literals": [
+            "case BF_MAGIC:",
+            "case WZ_SIGHTRASHER:",
+            "skillratio += 20 * skill_lv;",
+            "case WZ_WATERBALL:",
+            "skillratio += 30 * skill_lv;",
+            "case WZ_STORMGUST:",
+            "skillratio += -30 + 50 * skill_lv;",
+            "case WZ_HEAVENDRIVE:",
+            "case WZ_METEOR:",
+            "skillratio += 25;",
+            "case WZ_VERMILION:",
+            "skillratio += -100 + 400 + skill_lv * 100;",
+            "MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));"
+          ]
+        }
+      ]
+    }
+  ]
+}

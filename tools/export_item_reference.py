@@ -95,6 +95,64 @@ def _number(value: str) -> str | None:
     return f"{match.group(1)}–{match.group(2)}" if match else None
 
 
+# Equip slots whose refine level combos commonly scale a bonus by. Restricted to
+# slots with a single, unambiguous player-facing name; anything else is left
+# untranslated rather than guessed at.
+_REFINE_SLOT_LABELS = {
+    "EQI_HAND_R": "the weapon", "EQI_HAND_L": "the weapon (or shield/offhand)",
+    "EQI_HEAD_TOP": "the headgear", "EQI_ARMOR": "the armor", "EQI_SHOES": "the shoes",
+    "EQI_GARMENT": "the garment", "EQI_ACC_L": "the accessory", "EQI_ACC_R": "the accessory",
+}
+
+
+def _parse_refine_scaled_value(expr: str) -> tuple[int, int, str] | None:
+    """Recognize `<base> + (getequiprefinerycnt(<slot>) * <coef>)` and bare-refine forms.
+
+    Only literal integer base/coefficient forms against a known equip slot are
+    accepted; anything else (nested expressions, unknown slots, non-integer
+    coefficients) returns None so the caller leaves the script untranslated.
+    """
+    compact = expr.strip()
+    match = re.fullmatch(
+        r"(-?\d+)\s*\+\s*\(\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)",
+        compact, re.I,
+    )
+    if match:
+        base, slot, coef = match.groups()
+        slot_key = slot.upper()
+        return (int(base), int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+    match = re.fullmatch(
+        r"\(?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)?",
+        compact, re.I,
+    )
+    if match:
+        slot, coef = match.groups()
+        slot_key = slot.upper()
+        return (0, int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+    match = re.fullmatch(r"(-)?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)", compact, re.I)
+    if match:
+        neg, slot = match.groups()
+        slot_key = slot.upper()
+        return (0, -1 if neg else 1, slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+    return None
+
+
+def _refine_scaled_phrase(base: int, coef: int, slot_key: str) -> str | None:
+    """Render a parsed refine-scaled value, rejecting forms whose sign can flip
+    across the possible refine range (0-20), since that direction is not a
+    single unambiguous claim."""
+    if coef == 0:
+        return None
+    if base != 0 and ((base > 0) != (coef > 0)):
+        return None
+    slot_label = _REFINE_SLOT_LABELS[slot_key]
+    if base == 0:
+        direction = "increases" if coef >= 0 else "reduces"
+        return f"{direction} by {abs(coef)}% per refine level of {slot_label}"
+    direction = "increases" if base >= 0 else "reduces"
+    return f"{direction} by {abs(base)}%, plus {abs(coef)}% per refine level of {slot_label}"
+
+
 def translate_simple_effect(script: str) -> str | None:
     """Translate only complete scripts made of known unconditional commands."""
     body = _strip_comments(script).strip()
@@ -176,21 +234,88 @@ def translate_simple_effect(script: str) -> str | None:
                 return None
             effects.append(f"increases {label} by {amount} for each full {divisor} Base Levels above {threshold}")
             continue
-        match = re.fullmatch(r"bonus\s+(bAtkRate|bMatkRate|bStr|bAgi|bVit|bInt|bDex|bLuk|bAllStats|bMaxHP|bMaxSP|bMaxHPrate|bMaxSPrate|bHit|bFlee|bFlee2|bCritical|bAtk|bMatk|bDef|bMdef|bAspdRate)\s*,\s*(-?\d+)", statement, re.I)
+        match = re.fullmatch(r"bonus\s+(bAtkRate|bMatkRate|bStr|bAgi|bVit|bInt|bDex|bLuk|bAllStats|bMaxHP|bMaxSP|bMaxHPrate|bMaxSPrate|bHit|bFlee|bFlee2|bCritical|bAtk|bMatk|bDef|bMdef|bAspdRate|bCritAtkRate|bLongAtkRate|bSPrecovRate|bHPrecovRate|bUseSPrate|bDelayrate)\s*,\s*(-?\d+)", statement, re.I)
         if match:
             labels = {
                 "batkrate": "physical damage", "bmatkrate": "magic damage", "bstr": "STR", "bagi": "AGI",
                 "bvit": "VIT", "bint": "INT", "bdex": "DEX", "bluk": "LUK", "bmaxhp": "maximum HP",
                 "ballstats": "all six primary stats (STR, AGI, VIT, INT, DEX, and LUK)",
                 "bmaxsp": "maximum SP", "bmaxhprate": "maximum HP", "bmaxsprate": "maximum SP",
-                "bhit": "HIT", "bflee": "FLEE", "bflee2": "Perfect Dodge", "bcritical": "critical rate",
+                "bhit": "HIT", "bflee": "FLEE", "bflee2": "Perfect Dodge", "bcritical": "critical chance",
                 "batk": "ATK", "bmatk": "MATK", "bdef": "equipment DEF", "bmdef": "equipment MDEF",
-                "baspdrate": "attack speed",
+                "baspdrate": "attack speed", "bcritatkrate": "critical damage",
+                "blongatkrate": "ranged (long-range) physical damage", "bsprecovrate": "SP regeneration rate",
+                "bhprecovrate": "HP regeneration rate", "busesprate": "the SP cost of skills",
+                "bdelayrate": "attack delay",
             }
             key, value = match.group(1).lower(), int(match.group(2))
-            unit = "%" if key in {"batkrate", "bmatkrate", "bmaxhprate", "bmaxsprate", "baspdrate"} else ""
+            unit = "%" if key in {
+                "batkrate", "bmatkrate", "bmaxhprate", "bmaxsprate", "baspdrate", "bcritical",
+                "bcritatkrate", "blongatkrate", "bsprecovrate", "bhprecovrate", "busesprate", "bdelayrate",
+            } else ""
             direction = "increases" if value >= 0 else "reduces"
             effects.append(f"{direction} {labels[key]} by {abs(value)}{unit}")
+            continue
+        match = re.fullmatch(r"bonus\s+(bBreakWeaponRate|bBreakArmorRate)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            # rate is compared against rnd()%10000 in skill_break_equip (src/map/skill.c), so
+            # value/100 is the percent chance; the roll happens on a physical attack that hits.
+            bonus, raw_value = match.groups()
+            value = int(raw_value)
+            target = "the target's weapon" if bonus.lower() == "bbreakweaponrate" else "the target's armor"
+            chance = abs(value) / 100
+            if value >= 0:
+                effects.append(f"on a physical attack, has a {chance:g}% chance to break {target}")
+            else:
+                effects.append(f"reduces an existing chance to break {target} by {chance:g}%")
+            continue
+        match = re.fullmatch(r"bonus2\s+(bMagicAddRace|bExpAddRace)\s*,\s*(RC_[A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            bonus, race_constant, raw_value = match.groups()
+            race = race_constant[3:].replace("DemiPlayer", "player").replace("_", " ").lower()
+            value = int(raw_value)
+            direction = "increases" if value >= 0 else "reduces"
+            if bonus.lower() == "bmagicaddrace":
+                effects.append(f"{direction} magic damage against {race} targets by {abs(value)}%")
+            else:
+                effects.append(f"{direction} EXP gained from {race} targets by {abs(value)}%")
+            continue
+        match = re.fullmatch(r"bonus2\s+bSkillAtk\s*,\s*([A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            skill, raw_value = match.groups()
+            value = int(raw_value)
+            direction = "increases" if value >= 0 else "reduces"
+            effects.append(f"{direction} {_skill_display_name(skill)} damage by {abs(value)}%")
+            continue
+        match = re.fullmatch(r"bonus2\s+bSkillUseSP\s*,\s*([A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            skill, raw_value = match.groups()
+            value = int(raw_value)
+            direction = "reduces" if value >= 0 else "increases"
+            effects.append(f"{direction} the SP cost of {_skill_display_name(skill)} by {abs(value)}")
+            continue
+        match = re.fullmatch(r"bonus2\s+bSkillAtk\s*,\s*([A-Za-z0-9_]+)\s*,\s*(.+)", statement, re.I)
+        if match:
+            skill, raw_expr = match.groups()
+            parsed = _parse_refine_scaled_value(raw_expr)
+            phrase = _refine_scaled_phrase(*parsed) if parsed else None
+            if phrase is None:
+                return None
+            effects.append(f"{_skill_display_name(skill)} damage {phrase}")
+            continue
+        match = re.fullmatch(r"bonus\s+(bAtk|bMatk|bAspdRate|bAtkRate|bMatkRate|bCritAtkRate|bLongAtkRate)\s*,\s*(.+)", statement, re.I)
+        if match:
+            bonus_name, raw_expr = match.groups()
+            parsed = _parse_refine_scaled_value(raw_expr)
+            phrase = _refine_scaled_phrase(*parsed) if parsed else None
+            if phrase is None:
+                return None
+            labels = {
+                "batk": "ATK", "bmatk": "MATK", "baspdrate": "attack speed", "batkrate": "physical damage",
+                "bmatkrate": "magic damage", "bcritatkrate": "critical damage",
+                "blongatkrate": "ranged (long-range) physical damage",
+            }
+            effects.append(f"{labels[bonus_name.lower()]} {phrase}")
             continue
         match = re.fullmatch(r"bonus2\s+(bAddSize|bMagicAddSize|bSubSize)\s*,\s*(Size_[A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
         if match:

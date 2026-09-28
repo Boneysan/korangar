@@ -9,6 +9,21 @@ was added **failed `skills-professor`** and never reached that scenario — re-r
 suite before trusting the "163 green" figure. The
 July animation/live-pass notes below are historical context for effect work, not the active queue.
 
+**Encyclopedia (Adventure Guide) data work — active parallel thread, 2026-09-28.** A large
+multi-agent pass landed reviewed-data across six of the seven roadmap packages (E1–E6):
+74 item exchanges (285 items linked), including all six of Charles Orleans's randomly assigned cooking lessons, 107/107 indexed NPC service-call sites, 249/436 combo
+translations, 12 reviewed formula records covering 50 skills, 52 reviewed quest-flow entries
+covering 124/3,172 quests, 11 boss behaviors, and 43 scripted-spawn groups — all
+citation-validated against live Hercules source, full exporter pipeline and 424 Rust
+tests green. Start with [docs/plans/encyclopedia-roadmap.md](docs/plans/encyclopedia-roadmap.md)'s
+"Current baseline and immediate next slice" section for exact counts and what's open next
+(thousands of item-grant clues outside the reviewed set, quests with no anchor to review
+from, skill formulas beyond the 50 done, and — the next actual step — **E7's live
+client playtest, which has not happened yet**: none of this has been seen on screen).
+[docs/plans/encyclopedia-coverage.md](docs/plans/encyclopedia-coverage.md) has the
+field-by-field backlog. This is independent of the GDD v0.2 priority above; pick whichever
+thread the user is actively directing.
+
 Rust Ragnarok Online client (wgpu 29 + winit). This fork's goal is a usable
 custom UI for a friends group + DM campaign.
 

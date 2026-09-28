@@ -4,9 +4,3658 @@
   "source_worktree_dirty": true,
   "mode": "renewal",
   "reviewed_by": "Repository source review",
-  "reviewed_on": "2026-09-27",
+  "reviewed_on": "2026-09-28",
   "review_method": "Traced each exchange branch through the loaded NPC script and checked input removal, output grant, NPC declaration, and stated conditions.",
   "entries": [
+    {
+      "id": "airplane_01_meltz_apple_juice",
+      "title": "Meltz makes Apple Juice (second airship route)",
+      "npc": {
+        "name": "Apple Merchant#air01",
+        "internal_name": "Apple Merchant#air01",
+        "map": "airplane_01",
+        "x": 50,
+        "y": 66,
+        "service_role": "In-flight apple juice vendor",
+        "npc_id": 63
+      },
+      "inputs": [
+        {
+          "item_id": 512,
+          "amount": 3,
+          "item_name": "Apple"
+        },
+        {
+          "item_id": 713,
+          "amount": 1,
+          "item_name": "Empty Bottle"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Apple Juice",
+          "item_ids": [
+            531
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 531,
+              "item_name": "Apple Juice"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 3 Apple and 1 Empty Bottle; both are consumed and Apple Juice is granted.",
+        "This is the same Meltz service already reviewed at the airplane map (airplane_apple_merchant_juice), duplicated on this second airship route's map instance."
+      ],
+      "source": {
+        "path": "npc/airports/airships.txt",
+        "lines": [
+          949,
+          950,
+          951
+        ],
+        "reviewed_lines": [
+          949,
+          950,
+          951
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "airplane_apple_merchant_juice",
+      "title": "Apple Merchant presses apples into juice",
+      "npc": {
+        "name": "Apple Merchant#airplane",
+        "internal_name": "Apple Merchant#airplane",
+        "map": "airplane",
+        "x": 50,
+        "y": 66,
+        "service_role": "Airship apple-juice conversion (displayed in dialogue as Fruitz)",
+        "npc_id": 27
+      },
+      "inputs": [
+        {
+          "item_id": 512,
+          "amount": 3,
+          "item_name": "Apple"
+        },
+        {
+          "item_id": 713,
+          "amount": 1,
+          "item_name": "Empty Bottle"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Apple Juice",
+          "item_ids": [
+            531
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 531,
+              "item_name": "Apple Juice"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 3 Apple and 1 Empty Bottle in inventory before the exchange completes; failing the check only repeats the request.",
+        "An identical NPC (displayed as Meltz) offers the same exchange on the sister airship map airplane_01 at the same coordinates."
+      ],
+      "source": {
+        "path": "npc/airports/airships.txt",
+        "lines": [
+          478,
+          588,
+          589,
+          590
+        ],
+        "reviewed_lines": [
+          478,
+          588,
+          589,
+          590
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alberta_bebete_statue_of_baby_angel",
+      "title": "Bebete crafts the Statue of Baby Angel",
+      "npc": {
+        "name": "Bebete",
+        "internal_name": "Bebete#Baby_Angel_Status",
+        "map": "alberta",
+        "x": 151,
+        "y": 78,
+        "service_role": "Costume-item crafting",
+        "npc_id": 119
+      },
+      "inputs": [
+        {
+          "item_id": 916,
+          "amount": 500,
+          "item_name": "Feather of Birds"
+        },
+        {
+          "item_id": 523,
+          "amount": 1,
+          "item_name": "Holy Water"
+        },
+        {
+          "item_id": 7292,
+          "amount": 10,
+          "item_name": "Muscovite"
+        },
+        {
+          "item_id": 2282,
+          "amount": 1,
+          "item_name": "Halo"
+        },
+        {
+          "item_id": 640,
+          "amount": 1,
+          "item_name": "Shining Stone"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Statue of Baby Angel",
+          "item_ids": [
+            5443
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5443,
+              "item_name": "Statue Of Baby Angel"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 500 Feather of Birds, 1 Holy Water, 10 Muscovite, 1 Halo, and 1 Shining Stone; all five are consumed and the item is granted.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2010_headgears.txt",
+        "lines": [
+          433,
+          442,
+          443,
+          444,
+          445,
+          446,
+          447
+        ],
+        "reviewed_lines": [
+          433,
+          442,
+          443,
+          444,
+          445,
+          446,
+          447
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alberta_in_cherokee_evil_horn",
+      "title": "Cherokee trades an Antler for Evil Horns",
+      "npc": {
+        "name": "Cherokee",
+        "internal_name": "Cherokee",
+        "map": "alberta_in",
+        "x": 122,
+        "y": 53,
+        "service_role": "Horn-collector trade",
+        "npc_id": 190
+      },
+      "inputs": [
+        {
+          "item_id": 923,
+          "amount": 20,
+          "item_name": "Evil Horn"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Antler",
+          "item_ids": [
+            2284
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 2284,
+              "item_name": "Antlers"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 20 Evil Horn in inventory (countitem(Evil_Horn) > 19); no state flag is set, so the trade is repeatable."
+      ],
+      "source": {
+        "path": "npc/quests/quests_alberta.txt",
+        "lines": [
+          475,
+          495,
+          496,
+          500
+        ],
+        "reviewed_lines": [
+          475,
+          495,
+          496,
+          500
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alberta_in_grampa_tiger_footskin",
+      "title": "Grampa trades a Boy's Cap for Tiger's Footskin",
+      "npc": {
+        "name": "Grampa",
+        "internal_name": "Grampa",
+        "map": "alberta_in",
+        "x": 28,
+        "y": 145,
+        "service_role": "Novelty item trade",
+        "npc_id": 192
+      },
+      "inputs": [
+        {
+          "item_id": 1030,
+          "amount": 10,
+          "item_name": "Tiger's Footskin"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Boy's Cap",
+          "item_ids": [
+            5016
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5016,
+              "item_name": "Boy's Cap"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 10 Tiger's Footskin in inventory (countitem(Tiger_Footskin) > 9); no other state is checked or changed, so the trade is repeatable."
+      ],
+      "source": {
+        "path": "npc/quests/quests_alberta.txt",
+        "lines": [
+          399,
+          409,
+          426,
+          427
+        ],
+        "reviewed_lines": [
+          399,
+          409,
+          426,
+          427
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alberta_kafra_bunny_band_event",
+      "title": "Kafra Employee assembles a Bunny Band",
+      "npc": {
+        "name": "Kafra Employee",
+        "internal_name": "Kafra Employee#bunny",
+        "map": "alberta",
+        "x": 26,
+        "y": 229,
+        "service_role": "Bunny Band event crafting",
+        "npc_id": 144
+      },
+      "inputs": [
+        {
+          "item_id": 949,
+          "amount": 100,
+          "item_name": "Feather"
+        },
+        {
+          "item_id": 706,
+          "amount": 1,
+          "item_name": "Four Leaf Clover"
+        },
+        {
+          "item_id": 722,
+          "amount": 1,
+          "item_name": "Pearl"
+        },
+        {
+          "item_id": 2213,
+          "amount": 1,
+          "item_name": "Kitty Band"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Bunny Band",
+          "item_ids": [
+            2214
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 2214,
+              "item_name": "Bunny Band"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 100 Feather, 1 Four Leaf Clover, 1 Pearl, and 1 Kitty Band; all four are consumed and a Bunny Band is granted.",
+        "The branch resets the BUNYBND variable to 0 afterward; the steps that set BUNYBND to reach this branch are not reviewed here."
+      ],
+      "source": {
+        "path": "npc/quests/bunnyband.txt",
+        "lines": [
+          85,
+          86,
+          87,
+          88,
+          93
+        ],
+        "reviewed_lines": [
+          85,
+          86,
+          87,
+          88,
+          93
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alberta_kenny_magazine_cartridge",
+      "title": "Magazine Dealer Kenny packages bullets into cartridges and packs",
+      "npc": {
+        "name": "Magazine Dealer Kenny::mdk",
+        "internal_name": "mdk",
+        "map": "alberta",
+        "x": 118,
+        "y": 157,
+        "service_role": "Gunslinger bullet magazine and cartridge packaging",
+        "npc_id": 148
+      },
+      "inputs": [
+        {
+          "item_id": 13204,
+          "amount": 500,
+          "item_name": "Lightning Sphere"
+        },
+        {
+          "item_id": 13206,
+          "amount": 500,
+          "item_name": "Blind Sphere"
+        },
+        {
+          "item_id": 13205,
+          "amount": 500,
+          "item_name": "Poison Sphere"
+        },
+        {
+          "item_id": 13207,
+          "amount": 500,
+          "item_name": "Freezing Sphere"
+        },
+        {
+          "item_id": 13203,
+          "amount": 500,
+          "item_name": "Flare Sphere"
+        },
+        {
+          "item_id": 13200,
+          "amount": 500,
+          "item_name": "Bullet"
+        },
+        {
+          "item_id": 13202,
+          "amount": 500,
+          "item_name": "Bloody Shell"
+        },
+        {
+          "item_id": 13201,
+          "amount": 500,
+          "item_name": "Silver Bullet"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Wind Sphere Pack",
+          "item_ids": [
+            12144
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Wind Sphere + 500 zeny",
+          "items": [
+            {
+              "item_id": 12144,
+              "item_name": "Lightning Sphere Pack"
+            }
+          ]
+        },
+        {
+          "label": "Shadow Sphere Pack",
+          "item_ids": [
+            12145
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Shadow Sphere + 500 zeny",
+          "items": [
+            {
+              "item_id": 12145,
+              "item_name": "Blind Sphere Pack"
+            }
+          ]
+        },
+        {
+          "label": "Poison Sphere Pack",
+          "item_ids": [
+            12146
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Poison Sphere + 500 zeny",
+          "items": [
+            {
+              "item_id": 12146,
+              "item_name": "Poison Sphere Pack"
+            }
+          ]
+        },
+        {
+          "label": "Water Sphere Pack",
+          "item_ids": [
+            12147
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Water Sphere + 500 zeny",
+          "items": [
+            {
+              "item_id": 12147,
+              "item_name": "Freezing Sphere Pack"
+            }
+          ]
+        },
+        {
+          "label": "Fire Sphere Pack",
+          "item_ids": [
+            12148
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Fire Sphere + 500 zeny",
+          "items": [
+            {
+              "item_id": 12148,
+              "item_name": "Flare Sphere Pack"
+            }
+          ]
+        },
+        {
+          "label": "Cartridge",
+          "item_ids": [
+            12149
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Bullet + 500 zeny",
+          "items": [
+            {
+              "item_id": 12149,
+              "item_name": "Cartridge"
+            }
+          ]
+        },
+        {
+          "label": "Blood Cartridge",
+          "item_ids": [
+            12150
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Blood Shell + 500 zeny",
+          "items": [
+            {
+              "item_id": 12150,
+              "item_name": "Blood Cartridge"
+            }
+          ]
+        },
+        {
+          "label": "Silver Cartridge",
+          "item_ids": [
+            12151
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Silver Bullet + 500 zeny",
+          "items": [
+            {
+              "item_id": 12151,
+              "item_name": "Silver Cartridge"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Caster must be a Gunslinger class (BaseJob == Job_Gunslinger).",
+        "Requires 500 bullets of the selected type and 500 zeny per pack/cartridge.",
+        "Allows batch packaging up to a maximum of 50 packs/cartridges per transaction."
+      ],
+      "source": {
+        "path": "npc/merchants/ammo_boxes.txt",
+        "lines": [
+          42,
+          43,
+          51,
+          52,
+          86,
+          133,
+          134,
+          135
+        ],
+        "reviewed_lines": [
+          42,
+          43,
+          51,
+          52,
+          86,
+          133,
+          134,
+          135
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "alde_alche_muscle_man_alarm_mask",
+      "title": "Muscle Man trades an Alarm Mask for alarm clock parts",
+      "npc": {
+        "name": "Muscle Man#Alarm Mask",
+        "internal_name": "Muscle Man#Alarm Mask",
+        "map": "alde_alche",
+        "x": 88,
+        "y": 180,
+        "service_role": "Alarm Mask crafting trade",
+        "npc_id": 247
+      },
+      "inputs": [
+        {
+          "item_id": 1095,
+          "amount": 3000,
+          "item_name": "Needle of Alarm"
+        },
+        {
+          "item_id": 2288,
+          "amount": 1,
+          "item_name": "Mr. Scream"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Alarm Mask",
+          "item_ids": [
+            5086
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5086,
+              "item_name": "Alarm Mask"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 3000 Needle of Alarm and 1 Mr. Scream in inventory (countitem(Needle_Of_Alarm) > 2999 && countitem(Mr_Scream) > 0) before the confirmation prompt appears; no state flag is set."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2004_headgears.txt",
+        "lines": [
+          1906,
+          1935,
+          1946,
+          1947,
+          1948
+        ],
+        "reviewed_lines": [
+          1906,
+          1935,
+          1946,
+          1947,
+          1948
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "aldeba_in_trader_costume_exchange",
+      "title": "The Trader crafts one of four costume items",
+      "npc": {
+        "name": "Trader",
+        "internal_name": "Trader#01",
+        "map": "aldeba_in",
+        "x": 152,
+        "y": 166,
+        "service_role": "Costume-item crafting",
+        "npc_id": 327
+      },
+      "inputs": [
+        {
+          "item_id": 2275,
+          "amount": 1,
+          "item_name": "Red Bandana"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Doctor Band",
+          "item_ids": [
+            2273
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Red Bandana + 50 Iron + 1 3carat Diamond + 3,500 zeny",
+          "items": [
+            {
+              "item_id": 2273,
+              "item_name": "Doctor Band"
+            }
+          ]
+        },
+        {
+          "label": "Feather Bonnet",
+          "item_ids": [
+            5018
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Romantic Gent + 300 Feather of Birds + 500 zeny",
+          "items": [
+            {
+              "item_id": 5018,
+              "item_name": "Feather Bonnet"
+            }
+          ]
+        },
+        {
+          "label": "Opera Masque",
+          "item_ids": [
+            2281
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "20 Iron + 1 Singing Plant + 5,000 zeny",
+          "items": [
+            {
+              "item_id": 2281,
+              "item_name": "Opera Masque"
+            }
+          ]
+        },
+        {
+          "label": "Sakkat",
+          "item_ids": [
+            2280
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "120 Trunk + 10,000 zeny",
+          "items": [
+            {
+              "item_id": 2280,
+              "item_name": "Sakkat"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Four independent recipes selected via a menu; each consumes its own materials and zeny cost and grants one costume item.",
+        "Insufficient materials or zeny for a given option stops that branch with no consumption and no grant."
+      ],
+      "source": {
+        "path": "npc/quests/quests_aldebaran.txt",
+        "lines": [
+          61,
+          62,
+          63,
+          64,
+          65,
+          71,
+          83,
+          84,
+          85,
+          88,
+          99,
+          100,
+          101,
+          104,
+          113,
+          114,
+          115,
+          121
+        ],
+        "reviewed_lines": [
+          61,
+          62,
+          63,
+          64,
+          65,
+          71,
+          83,
+          84,
+          85,
+          88,
+          99,
+          100,
+          101,
+          104,
+          113,
+          114,
+          115,
+          121
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_fried_grasshopper_legs",
+      "title": "Learn the Fried Grasshopper Legs recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 940,
+          "amount": 5,
+          "item_name": "Grasshopper's Leg"
+        },
+        {
+          "item_id": 7031,
+          "amount": 1,
+          "item_name": "Old Frying Pan"
+        },
+        {
+          "item_id": 7457,
+          "amount": 1,
+          "item_name": "Cooking Oil"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Fried Grasshopper Legs",
+          "item_ids": [
+            12041
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12041,
+              "item_name": "Fried Grasshopper Legs"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 1; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          432,
+          465,
+          466,
+          467,
+          468,
+          469,
+          491,
+          548,
+          610,
+          670,
+          731
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          432,
+          465,
+          466,
+          467,
+          468,
+          469,
+          491,
+          548,
+          610,
+          670,
+          731
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_fried_monkey_tails",
+      "title": "Learn the Fried Monkey Tails recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 942,
+          "amount": 5,
+          "item_name": "Yoyo Tail"
+        },
+        {
+          "item_id": 7031,
+          "amount": 1,
+          "item_name": "Old Frying Pan"
+        },
+        {
+          "item_id": 7457,
+          "amount": 1,
+          "item_name": "Cooking Oil"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Fried Monkey Tails",
+          "item_ids": [
+            12066
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12066,
+              "item_name": "Fried Monkey Tails"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 6; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          670,
+          731,
+          732,
+          765,
+          766,
+          767,
+          768,
+          769
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          670,
+          731,
+          732,
+          765,
+          766,
+          767,
+          768,
+          769
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_frog_egg_squid_ink_soup",
+      "title": "Learn the Frog Egg and Squid Ink Soup recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 577,
+          "amount": 1,
+          "item_name": "Bag of Grain"
+        },
+        {
+          "item_id": 908,
+          "amount": 10,
+          "item_name": "Spawn"
+        },
+        {
+          "item_id": 1024,
+          "amount": 1,
+          "item_name": "Squid Ink"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Frog Egg and Squid Ink Soup",
+          "item_ids": [
+            12056
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12056,
+              "item_name": "Frog Egg Squid Ink Soup"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 4; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          611,
+          644,
+          645,
+          646,
+          647,
+          648,
+          670,
+          731
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          611,
+          644,
+          645,
+          646,
+          647,
+          648,
+          670,
+          731
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_grape_juice_herbal_tea",
+      "title": "Learn the Grape Juice Herbal Tea recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 514,
+          "amount": 3,
+          "item_name": "Grape"
+        },
+        {
+          "item_id": 501,
+          "amount": 2,
+          "item_name": "Red Potion"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Grape Juice Herbal Tea",
+          "item_ids": [
+            12046
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12046,
+              "item_name": "Grape Juice Herbal Tea"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 2; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          492,
+          523,
+          524,
+          525,
+          526,
+          548,
+          610,
+          670,
+          731
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          492,
+          523,
+          524,
+          525,
+          526,
+          548,
+          610,
+          670,
+          731
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_honey_grape_juice",
+      "title": "Learn the Honey Grape Juice recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 518,
+          "amount": 1,
+          "item_name": "Honey"
+        },
+        {
+          "item_id": 514,
+          "amount": 2,
+          "item_name": "Grape"
+        },
+        {
+          "item_id": 501,
+          "amount": 1,
+          "item_name": "Red Potion"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Honey Grape Juice",
+          "item_ids": [
+            12061
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12061,
+              "item_name": "Honey Grape Juice"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 3; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          549,
+          583,
+          584,
+          585,
+          586,
+          587,
+          610,
+          670,
+          731
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          549,
+          583,
+          584,
+          585,
+          586,
+          587,
+          610,
+          670,
+          731
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "charles_orleans_steamed_crab_nippers",
+      "title": "Learn the Steamed Crab Nippers recipe from Charles Orleans",
+      "npc": {
+        "name": "Charles Orleans#cook",
+        "internal_name": "Charles Orleans#cook",
+        "map": "prt_castle",
+        "x": 43,
+        "y": 30,
+        "service_role": "Cooking lesson and recipe ingredients exchange",
+        "npc_id": 6208
+      },
+      "inputs": [
+        {
+          "item_id": 960,
+          "amount": 10,
+          "item_name": "Nipper"
+        },
+        {
+          "item_id": 511,
+          "amount": 10,
+          "item_name": "Green Herb"
+        },
+        {
+          "item_id": 503,
+          "amount": 1,
+          "item_name": "Yellow Potion"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Steamed Crab Nippers",
+          "item_ids": [
+            12051
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12051,
+              "item_name": "Steamed Crab Nippers"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The character must already be assigned cooking lesson stage 5; a new lesson at cooking_q = 0 randomly assigns one of six recipes, so players cannot choose which of these recipes they receive.",
+        "The NPC only proceeds for non-Novice characters wearing item 5026 (Chef Hat) in the equipment slot checked by the script.",
+        "The script stops if fewer than 2000 weight units are free.",
+        "All listed ingredients must be present. On completion the inputs are removed, cooking_q advances to 7, and one dish is granted; this lesson recipe is taught once per character progression and has no random failure roll. If the character later loses the Bundle of Food during the follow-up stage and returns reporting it lost while still carrying the cookbook, Madeleine removes the cookbook and resets cooking_q to 0, allowing the lesson chain to restart."
+      ],
+      "source": {
+        "path": "npc/quests/cooking_quest.txt",
+        "lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          670,
+          671,
+          704,
+          705,
+          706,
+          707,
+          708,
+          731
+        ],
+        "reviewed_lines": [
+          40,
+          41,
+          90,
+          241,
+          329,
+          331,
+          348,
+          365,
+          381,
+          399,
+          415,
+          431,
+          491,
+          548,
+          610,
+          670,
+          671,
+          704,
+          705,
+          706,
+          707,
+          708,
+          731
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "comodo_hat_girl_hair_brush",
+      "title": "Hat Girl crafts a Hair Brush",
+      "npc": {
+        "name": "Hat Girl",
+        "internal_name": "Hat Girl#Hair_Brush",
+        "map": "comodo",
+        "x": 236,
+        "y": 164,
+        "service_role": "Costume-item crafting",
+        "npc_id": 1266
+      },
+      "inputs": [
+        {
+          "item_id": 974,
+          "amount": 1,
+          "item_name": "Mixture"
+        },
+        {
+          "item_id": 975,
+          "amount": 1,
+          "item_name": "Scarlet Dyestuffs"
+        },
+        {
+          "item_id": 943,
+          "amount": 50,
+          "item_name": "Solid Shell"
+        },
+        {
+          "item_id": 985,
+          "amount": 5,
+          "item_name": "Elunium"
+        },
+        {
+          "item_id": 1302,
+          "amount": 1,
+          "item_name": "Axe"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Hair Brush",
+          "item_ids": [
+            5444
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5444,
+              "item_name": "Hair Brush"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Mixture, 1 Scarlet Dyestuffs, 50 Solid Shell, 5 Elunium, and 1 Axe; all five are consumed and a Hair Brush is granted.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2010_headgears.txt",
+        "lines": [
+          330,
+          340,
+          341,
+          342,
+          343,
+          344,
+          345
+        ],
+        "reviewed_lines": [
+          330,
+          340,
+          341,
+          342,
+          343,
+          344,
+          345
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "dewata_dieting_lady_satay_taste",
+      "title": "Dieting Lady tastes a Satay and gives it right back",
+      "npc": {
+        "name": "Dieting Lady#dew",
+        "internal_name": "Dieting Lady#dew",
+        "map": "dewata",
+        "x": 204,
+        "y": 230,
+        "service_role": "Flavor-only zero-value trade",
+        "npc_id": 1350
+      },
+      "inputs": [
+        {
+          "item_id": 11533,
+          "amount": 1,
+          "item_name": "Satay"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Satay (returned)",
+          "item_ids": [
+            11533
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "The NPC takes a bite, decides to stay on her diet, and hands the same item back; there is no net material gain or loss.",
+          "items": [
+            {
+              "item_id": 11533,
+              "item_name": "Satay"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Purely a flavor interaction: the script takes one Satay and immediately grants one Satay back with no other effect."
+      ],
+      "source": {
+        "path": "npc/re/cities/dewata.txt",
+        "lines": [
+          1060,
+          1079,
+          1086
+        ],
+        "reviewed_lines": [
+          1060,
+          1079,
+          1086
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "eden_lime_evenor_mark_upgrade",
+      "title": "Secretary Lime Evenor exchanges an old Eden Group Mark for the new version",
+      "npc": {
+        "name": "Secretary Lime Evenor",
+        "internal_name": "Secretary Lime Evenor",
+        "map": "moc_para01",
+        "x": 27,
+        "y": 35,
+        "service_role": "Eden Group membership mark upgrade",
+        "npc_id": 4972
+      },
+      "inputs": [
+        {
+          "item_id": 6219,
+          "amount": 1,
+          "item_name": "Eden Group Mark"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Eden Group Mark (new version)",
+          "item_ids": [
+            22508
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 22508,
+              "item_name": "Eden Group Mark"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Offered only when the player is prompted and accepts; the script does not check for the old mark before consuming it (delitem on a mark the player does not hold is a no-op), so this is only meaningful while still holding the old Para Team Mark."
+      ],
+      "source": {
+        "path": "npc/re/quests/eden/eden_common.txt",
+        "lines": [
+          38,
+          56,
+          61,
+          62
+        ],
+        "reviewed_lines": [
+          38,
+          56,
+          61,
+          62
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "ein_in01_paul_spanner_process_ores",
+      "title": "Paul Spanner processes Rough Oridecon and Elunium",
+      "npc": {
+        "name": "Paul Spanner",
+        "internal_name": "Paul Spanner",
+        "map": "ein_in01",
+        "x": 38,
+        "y": 29,
+        "service_role": "Einbroch blacksmith supplier and ore processor",
+        "npc_id": 1821
+      },
+      "inputs": [
+        {
+          "item_id": 756,
+          "amount": 5,
+          "item_name": "Rough Oridecon"
+        },
+        {
+          "item_id": 757,
+          "amount": 5,
+          "item_name": "Rough Elunium"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Oridecon",
+          "item_ids": [
+            984
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "5 Rough Oridecon",
+          "items": [
+            {
+              "item_id": 984,
+              "item_name": "Oridecon"
+            }
+          ]
+        },
+        {
+          "label": "Elunium",
+          "item_ids": [
+            985
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "5 Rough Elunium",
+          "items": [
+            {
+              "item_id": 985,
+              "item_name": "Elunium"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires inventory weight check (checkweight(Knife, 1)) before speaking.",
+        "Option 4 ('Process Ores.') in Paul Spanner's workshop dialogue.",
+        "Requires exactly 5 rough stones of the chosen type per refined ore; no zeny fee."
+      ],
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "lines": [
+          319,
+          320,
+          333,
+          507,
+          512,
+          514,
+          520,
+          521,
+          527,
+          533,
+          534
+        ],
+        "reviewed_lines": [
+          319,
+          320,
+          333,
+          507,
+          512,
+          514,
+          520,
+          521,
+          527,
+          533,
+          534
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_baisulist_weapon_delivery_voucher",
+      "title": "Baisulist trades a Merchant Voucher for a delivered Arc Wand (Blacksmith job step)",
+      "npc": {
+        "name": "Baisulist#BLS",
+        "internal_name": "Baisulist#BLS",
+        "map": "geffen",
+        "x": 46,
+        "y": 164,
+        "service_role": "Blacksmith 2-1 job-change weapon-delivery step; four parallel branches exist for the same step: Bismarc/Ring Pommel Saber (hugel), Krongast/Tsurugi (lighthalzen), Wickebine/Gladius (morocc), and Talpiz/Arbalest (payon)",
+        "npc_id": 2097
+      },
+      "inputs": [
+        {
+          "item_id": 1610,
+          "amount": 1,
+          "item_name": "Arc Wand"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Merchant Voucher",
+          "item_ids": [
+            1073
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1073,
+              "item_name": "Voucher"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Reached after delivering the specific named weapon Geschupenschte ordered; consumes the weapon, sets the shared job-quest variable BSMITH_Q to 14, and grants one Merchant Voucher. This uses the older BSMITH_Q variable rather than the modern quest log, so it is not covered by the reviewed quest-flow records."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/blacksmith.txt",
+        "lines": [
+          950,
+          974,
+          975,
+          985
+        ],
+        "reviewed_lines": [
+          950,
+          974,
+          975,
+          985
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_in_blacksmith_welding_mask",
+      "title": "Blacksmith crafts a Welding Mask for Steel and Zeny",
+      "npc": {
+        "name": "Blacksmith",
+        "internal_name": "Blacksmith",
+        "map": "geffen_in",
+        "x": 144,
+        "y": 166,
+        "service_role": "Welding Mask crafting trade",
+        "npc_id": 2146
+      },
+      "inputs": [
+        {
+          "item_id": 999,
+          "amount": 50,
+          "item_name": "Steel"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Welding Mask",
+          "item_ids": [
+            2292
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Also costs 2000 Zeny, charged alongside the Steel; not representable as an item input.",
+          "items": [
+            {
+              "item_id": 2292,
+              "item_name": "Welding Mask"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 50 Steel and at least 2000 Zeny (countitem(Steel) > 49 && Zeny > 1999) before the script deducts both and grants the mask."
+      ],
+      "source": {
+        "path": "npc/quests/quests_geffen.txt",
+        "lines": [
+          41,
+          68,
+          72,
+          73,
+          74
+        ],
+        "reviewed_lines": [
+          41,
+          68,
+          72,
+          73,
+          74
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_in_christopher_rough_ores",
+      "title": "Christopher Guillenrow purifies Rough Oridecon and Elunium",
+      "npc": {
+        "name": "Christopher#1",
+        "internal_name": "Christopher#1",
+        "map": "geffen_in",
+        "x": 110,
+        "y": 172,
+        "service_role": "Blacksmith anvil/tool salesman and rough ore refiner",
+        "npc_id": 2149
+      },
+      "inputs": [
+        {
+          "item_id": 756,
+          "amount": 5,
+          "item_name": "Rough Oridecon"
+        },
+        {
+          "item_id": 757,
+          "amount": 5,
+          "item_name": "Rough Elunium"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Oridecon",
+          "item_ids": [
+            984
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "5 Rough Oridecon",
+          "items": [
+            {
+              "item_id": 984,
+              "item_name": "Oridecon"
+            }
+          ]
+        },
+        {
+          "label": "Elunium",
+          "item_ids": [
+            985
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "5 Rough Elunium",
+          "items": [
+            {
+              "item_id": 985,
+              "item_name": "Elunium"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Independent inline purification option in Christopher's dialogue menu (Purify Rough Ores).",
+        "Requires exactly 5 rough stones of the chosen type per refined ore; no zeny fee."
+      ],
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "lines": [
+          57,
+          62,
+          275,
+          279,
+          281,
+          287,
+          288,
+          294,
+          300,
+          301
+        ],
+        "reviewed_lines": [
+          57,
+          62,
+          275,
+          279,
+          281,
+          287,
+          288,
+          294,
+          300,
+          301
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_in_eric_headset_craft",
+      "title": "Eric crafts a Headset",
+      "npc": {
+        "name": "Eric",
+        "internal_name": "Eric",
+        "map": "geffen_in",
+        "x": 30,
+        "y": 71,
+        "service_role": "Headset crafting",
+        "npc_id": 2153
+      },
+      "inputs": [
+        {
+          "item_id": 999,
+          "amount": 40,
+          "item_name": "Steel"
+        },
+        {
+          "item_id": 984,
+          "amount": 1,
+          "item_name": "Oridecon"
+        },
+        {
+          "item_id": 970,
+          "amount": 1,
+          "item_name": "Alcohol"
+        },
+        {
+          "item_id": 1003,
+          "amount": 1,
+          "item_name": "Coal"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Headset",
+          "item_ids": [
+            5001
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5001,
+              "item_name": "Headset"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 40 Steel, 1 Oridecon, 1 Alcohol, and 1 Coal; all four are consumed and a Headset is granted."
+      ],
+      "source": {
+        "path": "npc/quests/quests_geffen.txt",
+        "lines": [
+          154,
+          155,
+          156,
+          157,
+          158
+        ],
+        "reviewed_lines": [
+          154,
+          155,
+          156,
+          157,
+          158
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_in_molgenstein_counteragent_mixture",
+      "title": "Chemist Molgenstein brews Counteragent or Mixture",
+      "npc": {
+        "name": "Chemist Molgenstein",
+        "internal_name": "Molgenstein#cm",
+        "map": "geffen_in",
+        "x": 141,
+        "y": 140,
+        "service_role": "Alchemist potion crafting",
+        "npc_id": 2189
+      },
+      "inputs": [
+        {
+          "item_id": 970,
+          "amount": 1,
+          "item_name": "Alcohol"
+        },
+        {
+          "item_id": 971,
+          "amount": 1,
+          "item_name": "Detrimindexta"
+        },
+        {
+          "item_id": 713,
+          "amount": 1,
+          "item_name": "Empty Bottle"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Counteragent",
+          "item_ids": [
+            973
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Alcohol + 1 Detrimindexta + 1 Empty Bottle + 3,000 zeny",
+          "items": [
+            {
+              "item_id": 973,
+              "item_name": "Counteragent"
+            }
+          ]
+        },
+        {
+          "label": "Mixture",
+          "item_ids": [
+            974
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Alcohol + 1 Karvodailnirol + 1 Empty Bottle + 4,000 zeny",
+          "items": [
+            {
+              "item_id": 974,
+              "item_name": "Mixture"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Two independent recipes selected via a menu; each consumes its own materials and zeny cost and grants one potion.",
+        "Insufficient materials or zeny for either recipe stops the branch with no consumption and no grant."
+      ],
+      "source": {
+        "path": "npc/quests/counteragent_mixture.txt",
+        "lines": [
+          484,
+          489,
+          490,
+          491,
+          492,
+          493,
+          518,
+          533,
+          534,
+          535,
+          536,
+          537
+        ],
+        "reviewed_lines": [
+          484,
+          489,
+          490,
+          491,
+          492,
+          493,
+          518,
+          533,
+          534,
+          535,
+          536,
+          537
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_ipore_mushroom_band",
+      "title": "Ipore trades a Mushroom Band for Mushroom Spores",
+      "npc": {
+        "name": "Ipore#1",
+        "internal_name": "Ipore#1",
+        "map": "geffen",
+        "x": 67,
+        "y": 87,
+        "service_role": "Mushroom Band crafting trade",
+        "npc_id": 2120
+      },
+      "inputs": [
+        {
+          "item_id": 921,
+          "amount": 300,
+          "item_name": "Mushroom Spore"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Mushroom Band",
+          "item_ids": [
+            5082
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5082,
+              "item_name": "Decorative Mushroom"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 300 Mushroom Spore in inventory before the script consumes them and grants the headgear; no state flag gates repeat visits."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2004_headgears.txt",
+        "lines": [
+          574,
+          615,
+          616
+        ],
+        "reviewed_lines": [
+          574,
+          615,
+          616
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "geffen_seth_tulip_hairpin",
+      "title": "Seth trades a Tulip Hairpin for Mr. Smile and Scarlet Dyestuffs",
+      "npc": {
+        "name": "Seth#1",
+        "internal_name": "Seth#1",
+        "map": "geffen",
+        "x": 83,
+        "y": 189,
+        "service_role": "Tulip Hairpin crafting trade",
+        "npc_id": 2136
+      },
+      "inputs": [
+        {
+          "item_id": 2278,
+          "amount": 1,
+          "item_name": "Mr. Smile"
+        },
+        {
+          "item_id": 975,
+          "amount": 1,
+          "item_name": "Scarlet Dyestuffs"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Tulip Hairpin",
+          "item_ids": [
+            5077
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5077,
+              "item_name": "Tulip Hairpin"
+            }
+          ]
+        },
+        {
+          "label": "Bonus Shell",
+          "item_ids": [
+            935
+          ],
+          "amount": 1,
+          "selection": "conditional_bonus",
+          "condition": "Granted in addition to the Tulip Hairpin only if the player's base job is Novice or Super Novice.",
+          "items": [
+            {
+              "item_id": 935,
+              "item_name": "Shell"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Consumes 1 Mr. Smile and 1 Scarlet Dyestuffs to grant one Tulip Hairpin; Novice/Super Novice characters additionally receive one Shell as 'leftovers'."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2004_headgears.txt",
+        "lines": [
+          1334,
+          1381,
+          1382,
+          1383,
+          1389,
+          1392
+        ],
+        "reviewed_lines": [
+          1334,
+          1381,
+          1382,
+          1383,
+          1389,
+          1392
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "glast_01_hugins_butler_temporal_boots_craft",
+      "title": "Hugin's Butler crafts Temporal Boots from a Temporal Crystal",
+      "npc": {
+        "name": "Hugin's Butler",
+        "internal_name": "Hugin's Butler",
+        "map": "glast_01",
+        "x": 210,
+        "y": 273,
+        "service_role": "Old Glast Heim instance boots crafting",
+        "npc_id": 2390
+      },
+      "inputs": [
+        {
+          "item_id": 6607,
+          "amount": 1,
+          "item_name": "Temporal Crystal"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Temporal Boots",
+          "item_ids": [
+            2499
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 2499,
+              "item_name": "Temporal Boots"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 1 Temporal Crystal in inventory (countitem(Temporal_Crystal) > 0).",
+        "The preceding dialogue line claims the boots are made 'with 5 Temporal Crystals', but the script only checks and consumes 1; the actual cost is 1 Temporal Crystal, not 5."
+      ],
+      "source": {
+        "path": "npc/re/instances/OldGlastHeim.txt",
+        "lines": [
+          2281,
+          2295,
+          2298,
+          2299
+        ],
+        "reviewed_lines": [
+          2281,
+          2295,
+          2298,
+          2299
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "glast_01_hugins_butler_temporal_boots_upgrade",
+      "title": "Hugin's Butler upgrades worn Temporal Boots into a stat variant",
+      "npc": {
+        "name": "Hugin's Butler",
+        "internal_name": "Hugin's Butler",
+        "map": "glast_01",
+        "x": 210,
+        "y": 273,
+        "service_role": "Old Glast Heim instance boots upgrade",
+        "npc_id": 2390
+      },
+      "inputs": [
+        {
+          "item_id": 6607,
+          "amount": 5,
+          "item_name": "Temporal Crystal"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Stat-variant Temporal Boots (player's choice of Str/Int/Agi/Vit/Dex/Luk)",
+          "item_ids": [
+            22000,
+            22001,
+            22002,
+            22003,
+            22004,
+            22005
+          ],
+          "amount": 1,
+          "selection": "player_choice",
+          "condition": "Player picks one of the six stat variants from a menu; the choice is confirmed with a 'no refund' warning.",
+          "items": [
+            {
+              "item_id": 22000,
+              "item_name": "Temporal STR Boots"
+            },
+            {
+              "item_id": 22001,
+              "item_name": "Temporal INT Boots"
+            },
+            {
+              "item_id": 22002,
+              "item_name": "Temporal AGI Boots"
+            },
+            {
+              "item_id": 22003,
+              "item_name": "Temporal VIT Boots"
+            },
+            {
+              "item_id": 22004,
+              "item_name": "Temporal DEX Boots"
+            },
+            {
+              "item_id": 22005,
+              "item_name": "Temporal LUK Boots"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires the player to have Temporal Boots equipped in the shoe slot and currently worn (getequipisequiped + isequipped checks), plus at least 5 Temporal Crystal.",
+        "On confirmation the worn Temporal Boots are destroyed (delequip) and 5 Temporal Crystal are consumed; the new stat-variant boots are granted as a fresh, unrefined item (getitem2 with refine 0), so any prior refine level on the original boots is lost."
+      ],
+      "source": {
+        "path": "npc/re/instances/OldGlastHeim.txt",
+        "lines": [
+          2281,
+          2307,
+          2312,
+          2317,
+          2342,
+          2345,
+          2346,
+          2347
+        ],
+        "reviewed_lines": [
+          2281,
+          2307,
+          2312,
+          2317,
+          2342,
+          2345,
+          2346,
+          2347
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "gonryun_han_ran_jiao_knife_heirloom",
+      "title": "Han Ran Jiao trades Blue Potions for a returned family Knife",
+      "npc": {
+        "name": "Han Ran Jiao#gon",
+        "internal_name": "Han Ran Jiao#gon",
+        "map": "gonryun",
+        "x": 237,
+        "y": 226,
+        "service_role": "Heirloom-return flavor trade",
+        "npc_id": 2555
+      },
+      "inputs": [
+        {
+          "item_id": 1201,
+          "amount": 1,
+          "item_name": "Knife"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Blue Potion",
+          "item_ids": [
+            505
+          ],
+          "amount": 2,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 505,
+              "item_name": "Blue Potion"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Gated by a dialogue choice ('Return the knife.') rather than an inventory check; if the player has no Knife the delitem call still fires with no effect described in the script beyond the normal delitem no-op on zero count. Sets the flavor variable nakha to 3; no quest record is used."
+      ],
+      "source": {
+        "path": "npc/quests/quests_gonryun.txt",
+        "lines": [
+          3720,
+          3773,
+          3774,
+          3775,
+          3781
+        ],
+        "reviewed_lines": [
+          3720,
+          3773,
+          3774,
+          3775,
+          3781
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "gonryun_yotang_flower_of_fairy",
+      "title": "Yotang crafts the Flower of Fairy",
+      "npc": {
+        "name": "Yotang",
+        "internal_name": "Yotang#Flower_Of_Fairy",
+        "map": "gonryun",
+        "x": 149,
+        "y": 189,
+        "service_role": "Fairy Flower crafting",
+        "npc_id": 2568
+      },
+      "inputs": [
+        {
+          "item_id": 7165,
+          "amount": 100,
+          "item_name": "Transparent Celestial Robe"
+        },
+        {
+          "item_id": 7166,
+          "amount": 100,
+          "item_name": "Soft Silk"
+        },
+        {
+          "item_id": 745,
+          "amount": 1,
+          "item_name": "Wedding Bouquet"
+        },
+        {
+          "item_id": 981,
+          "amount": 1,
+          "item_name": "Violet Dyestuffs"
+        },
+        {
+          "item_id": 2211,
+          "amount": 1,
+          "item_name": "Bandana"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Flower of Fairy",
+          "item_ids": [
+            5437
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5437,
+              "item_name": "Fairy Flower"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 100 Transparent Celestial Robe, 100 Soft Silk, 1 Wedding Bouquet, 1 Violet Dyestuffs, and 1 Bandana; all five are consumed and the Flower of Fairy is granted.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2010_headgears.txt",
+        "lines": [
+          105,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ],
+        "reviewed_lines": [
+          105,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "hugel_bismarc_blacksmith_delivery",
+      "title": "Bismarc accepts a custom weapon delivery for the Blacksmith job change (Merchant Voucher)",
+      "npc": {
+        "name": "Bismarc",
+        "internal_name": "Bismarc#BLS",
+        "map": "hugel",
+        "x": 168,
+        "y": 183,
+        "service_role": "Blacksmith 2-1 job-change weapon delivery",
+        "npc_id": 2708
+      },
+      "inputs": [
+        {
+          "item_id": 1122,
+          "amount": 1,
+          "item_name": "Ring Pommel Saber"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Merchant Voucher",
+          "item_ids": [
+            1073
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1073,
+              "item_name": "Voucher"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires the specific custom-made Ring Pommel Saber delivered for this NPC's job-change branch (BSMITH_Q reaches 14); the weapon is consumed and one Merchant Voucher is granted.",
+        "This is one of five parallel city delivery branches for the same Blacksmith 2-1 job-change step; the Geffen branch (Baisulist) is already reviewed as geffen_baisulist_weapon_delivery_voucher."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/blacksmith.txt",
+        "lines": [
+          1310,
+          1311,
+          1339
+        ],
+        "reviewed_lines": [
+          1310,
+          1311,
+          1339
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "izlude_locas_stone_refine",
+      "title": "Locas refines Rough Oridecon/Elunium into pure stones",
+      "npc": {
+        "name": "Locas#iz",
+        "internal_name": "Locas#iz",
+        "map": "izlude",
+        "x": 155,
+        "y": 132,
+        "service_role": "Novice Training Ground stone refine (one branch of a longer dialogue tree; other branches relate to unreviewed quest 5155 content)",
+        "npc_id": 3042
+      },
+      "inputs": [
+        {
+          "item_id": 756,
+          "amount": 5,
+          "item_name": "Rough Oridecon"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Oridecon",
+          "item_ids": [
+            984
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "A second 'Exchange all' option converts every complete group of 5 Rough Oridecon the player carries in one visit, at the same 5:1 rate.",
+          "items": [
+            {
+              "item_id": 984,
+              "item_name": "Oridecon"
+            }
+          ]
+        },
+        {
+          "label": "Elunium",
+          "item_ids": [
+            985
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Same mechanic via a separate menu option, consuming Rough Elunium instead; also has a bulk 'Exchange all' variant.",
+          "items": [
+            {
+              "item_id": 985,
+              "item_name": "Elunium"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 5 of the relevant rough stone (countitem > 4) before either single or bulk conversion; the bulk option computes the largest multiple of 5 available and converts all of it in one exchange."
+      ],
+      "source": {
+        "path": "npc/re/jobs/novice/academy.txt",
+        "lines": [
+          13278,
+          13440,
+          13441,
+          13442,
+          13472,
+          13474,
+          13475
+        ],
+        "reviewed_lines": [
+          13278,
+          13440,
+          13441,
+          13442,
+          13472,
+          13474,
+          13475
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "job_gun_auto_anvil_firearm",
+      "title": "Auto Anvil shapes Steel Artifacts into a firearm (Gunslinger, quest-gated)",
+      "npc": {
+        "name": "Auto Anvil#1",
+        "internal_name": "Auto Anvil#1",
+        "map": "job_gun",
+        "x": 214,
+        "y": 36,
+        "service_role": "Rebellion job-line firearm crafting, gated behind quest 12342",
+        "npc_id": 3316
+      },
+      "inputs": [
+        {
+          "item_id": 6747,
+          "amount": 5,
+          "item_name": "Steel Artifact"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Tiny Flame",
+          "item_ids": [
+            13118
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Only granted on a 40% chance (rand(1,10) > 6); on failure the 5 Steel Artifact are still consumed and nothing is granted.",
+          "items": [
+            {
+              "item_id": 13118,
+              "item_name": "Fading Flame"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Restricted to base class Gunslinger, requires not already holding a Tiny Flame, requires inventory room, requires the player to currently be transformed via getstatus(SC_MONSTER_TRANSFORM,1) into G_L_SHECIL, requires more than 4 Steel Artifact, and requires quest 12342 to be at progress state 1.",
+        "This is not a casual standing trade: every visit consumes 5 Steel Artifact regardless of outcome, and the transformation/quest-state prerequisites are not reviewed further here."
+      ],
+      "source": {
+        "path": "npc/re/jobs/2e/rebellion.txt",
+        "lines": [
+          113,
+          115,
+          118,
+          121,
+          124,
+          138,
+          141,
+          142
+        ],
+        "reviewed_lines": [
+          113,
+          115,
+          118,
+          121,
+          124,
+          138,
+          141,
+          142
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "lhz_in02_drunken_man_necktie",
+      "title": "The Drunken Man crafts a Necktie",
+      "npc": {
+        "name": "Drunken Man",
+        "internal_name": "Drunken Man#Necktie",
+        "map": "lhz_in02",
+        "x": 276,
+        "y": 281,
+        "service_role": "Necktie crafting",
+        "npc_id": 3865
+      },
+      "inputs": [
+        {
+          "item_id": 978,
+          "amount": 1,
+          "item_name": "Cobaltblue Dyestuffs"
+        },
+        {
+          "item_id": 7151,
+          "amount": 30,
+          "item_name": "Oil Paper"
+        },
+        {
+          "item_id": 1059,
+          "amount": 100,
+          "item_name": "Fabric"
+        },
+        {
+          "item_id": 7217,
+          "amount": 20,
+          "item_name": "Spool"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Necktie",
+          "item_ids": [
+            5442
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5442,
+              "item_name": "Necktie"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Cobaltblue Dyestuffs, 30 Oil Paper, 100 Fabric, and 20 Spool; all four are consumed and a Necktie is granted.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2010_headgears.txt",
+        "lines": [
+          231,
+          241,
+          242,
+          243,
+          244,
+          245
+        ],
+        "reviewed_lines": [
+          231,
+          241,
+          242,
+          243,
+          244,
+          245
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "lhz_in02_orimain_stone_refine",
+      "title": "Ori/Elu Refiners (orimain) purify Rough Oridecon and Elunium",
+      "npc": {
+        "name": "Fruel",
+        "internal_name": "Fruel",
+        "map": "lhz_in02",
+        "x": 281,
+        "y": 24,
+        "service_role": "Shared stone-refine service, also offered as Dietrich (prt_in), Hakhim (payon), Abdula (morocc_in), Xenophon Zolotas (alberta_in), Delight (yuno_in01), and Matestein (ein_in01), all calling the same orimain function",
+        "npc_id": 3867
+      },
+      "inputs": [
+        {
+          "item_id": 756,
+          "amount": 5,
+          "item_name": "Rough Oridecon"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Oridecon",
+          "item_ids": [
+            984
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 984,
+              "item_name": "Oridecon"
+            }
+          ]
+        },
+        {
+          "label": "Elunium",
+          "item_ids": [
+            985
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Same mechanic via a separate menu option, consuming 5 Rough Elunium instead.",
+          "items": [
+            {
+              "item_id": 985,
+              "item_name": "Elunium"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires an inventory-weight check (checkweight(Knife,1)) before any dialogue, then at least 5 of the relevant rough stone for the chosen conversion.",
+        "A third dialogue option ('Ask about Enchanted Stones') is lore text only and grants or consumes nothing.",
+        "All seven named NPCs across seven cities run the identical shared orimain function; only the displayed name and location differ."
+      ],
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "lines": [
+          994,
+          998,
+          1002,
+          1006,
+          1010,
+          1014,
+          1019,
+          1025,
+          1032,
+          1043,
+          1044,
+          1045,
+          1059,
+          1060,
+          1061
+        ],
+        "reviewed_lines": [
+          994,
+          998,
+          1002,
+          1006,
+          1010,
+          1014,
+          1019,
+          1025,
+          1032,
+          1043,
+          1044,
+          1045,
+          1059,
+          1060,
+          1061
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "lighthalzen_krongast_blacksmith_delivery",
+      "title": "Krongast accepts a custom weapon delivery for the Blacksmith job change (Merchant Voucher)",
+      "npc": {
+        "name": "Krongast",
+        "internal_name": "Krongast#BLS",
+        "map": "lighthalzen",
+        "x": 209,
+        "y": 80,
+        "service_role": "Blacksmith 2-1 job-change weapon delivery",
+        "npc_id": 4034
+      },
+      "inputs": [
+        {
+          "item_id": 1119,
+          "amount": 1,
+          "item_name": "Tsurugi"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Merchant Voucher",
+          "item_ids": [
+            1073
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1073,
+              "item_name": "Voucher"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires the specific custom-made Tsurugi delivered for this NPC's job-change branch (BSMITH_Q reaches 14); the weapon is consumed and one Merchant Voucher is granted.",
+        "This is one of five parallel city delivery branches for the same Blacksmith 2-1 job-change step; the Geffen branch (Baisulist) is already reviewed as geffen_baisulist_weapon_delivery_voucher."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/blacksmith.txt",
+        "lines": [
+          1152,
+          1153,
+          1168
+        ],
+        "reviewed_lines": [
+          1152,
+          1153,
+          1168
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "lou_in01_hao_chenryu_gunpowder",
+      "title": "Hao Chenryu crafts Gunpowder",
+      "npc": {
+        "name": "Gunpowder Expert",
+        "internal_name": "Gunpowder Expert",
+        "map": "lou_in01",
+        "x": 43,
+        "y": 147,
+        "service_role": "Gunpowder crafting",
+        "npc_id": 4118
+      },
+      "inputs": [
+        {
+          "item_id": 7068,
+          "amount": 1,
+          "item_name": "Burnt Tree"
+        },
+        {
+          "item_id": 7096,
+          "amount": 1,
+          "item_name": "Lava"
+        },
+        {
+          "item_id": 7004,
+          "amount": 1,
+          "item_name": "Mud Lump"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Gunpowder",
+          "item_ids": [
+            7204
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7204,
+              "item_name": "Gunpowder"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Burnt Tree, 1 Lava, and 1 Mud Lump; all three are consumed and Gunpowder is granted.",
+        "The branch also sets ch_make to 1, a flag used by other Louyang quest content not reviewed here."
+      ],
+      "source": {
+        "path": "npc/quests/quests_louyang.txt",
+        "lines": [
+          4906,
+          4907,
+          4908,
+          4911,
+          4912
+        ],
+        "reviewed_lines": [
+          4906,
+          4907,
+          4908,
+          4911,
+          4912
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "ma_fild01_tikbalang_expert_belt",
+      "title": "Tikbalang Expert crafts a Tikbalang Belt",
+      "npc": {
+        "name": "Tikbalang Expert#malaya",
+        "internal_name": "Tikbalang Expert#malaya",
+        "map": "ma_fild01",
+        "x": 238,
+        "y": 198,
+        "service_role": "Tikbalang-taming item crafting",
+        "npc_id": 4237
+      },
+      "inputs": [
+        {
+          "item_id": 6496,
+          "amount": 3,
+          "item_name": "Tikbalang's Thick Spine"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Tikbalang Belt",
+          "item_ids": [
+            12699
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12699,
+              "item_name": "Tikbalang Harness"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 3 Tikbalang's Thick Spine and, separately, at least 5 Lesser Agimat merely held in inventory as a proof-of-capability check; only the Thick Spine is actually consumed (delitem), the Lesser Agimat is not."
+      ],
+      "source": {
+        "path": "npc/re/quests/quests_malaya.txt",
+        "lines": [
+          3429,
+          3538,
+          3547,
+          3548
+        ],
+        "reviewed_lines": [
+          3429,
+          3538,
+          3547,
+          3548
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mal_dun01_star_candy_empty_bucket",
+      "title": "Star Candy pours out a Full Bucket and hands the empty one back",
+      "npc": {
+        "name": "Star Candy#mal",
+        "internal_name": "Star Candy#mal",
+        "map": "mal_dun01",
+        "x": 133,
+        "y": 125,
+        "service_role": "Reverse of the malangdo_1st_rate_point_fill_bucket water-carrying pair",
+        "npc_id": 4290
+      },
+      "inputs": [
+        {
+          "item_id": 6432,
+          "amount": 1,
+          "item_name": "All Filled Bucket"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Bucket",
+          "item_ids": [
+            6431
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 6431,
+              "item_name": "Bucket"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Also requires a Clean Brush in inventory (not consumed) and is reachable only while the story variable ma_tomas matches this NPC's assigned target index; the exact index values that select this target are not reviewed here.",
+        "Consumes 1 Full Bucket and grants back 1 empty Bucket as part of a cat-washing interaction."
+      ],
+      "source": {
+        "path": "npc/re/quests/quests_malangdo.txt",
+        "lines": [
+          2528,
+          2622,
+          2629,
+          2630
+        ],
+        "reviewed_lines": [
+          2528,
+          2622,
+          2629,
+          2630
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "malangdo_1st_rate_point_fill_bucket",
+      "title": "1st Rate Point fills an empty Bucket with water",
+      "npc": {
+        "name": "1st Rate Point",
+        "internal_name": "1st Rate Point",
+        "map": "malangdo",
+        "x": 246,
+        "y": 184,
+        "service_role": "Bucket-filling water source",
+        "npc_id": 4387
+      },
+      "inputs": [
+        {
+          "item_id": 6431,
+          "amount": 1,
+          "item_name": "Bucket"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Full Bucket",
+          "item_ids": [
+            6432
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 6432,
+              "item_name": "All Filled Bucket"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires an empty Bucket in inventory (countitem(Bucket) == 0 blocks it); repeatable on demand."
+      ],
+      "source": {
+        "path": "npc/re/quests/quests_malangdo.txt",
+        "lines": [
+          2490,
+          2507,
+          2519,
+          2520
+        ],
+        "reviewed_lines": [
+          2490,
+          2507,
+          2519,
+          2520
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "malangdo_pipielle_egrade_coin",
+      "title": "Pipielle pays EGrade Coin for Unidentified Fish specimens",
+      "npc": {
+        "name": "Pipielle",
+        "internal_name": "Pipielle",
+        "map": "malangdo",
+        "x": 137,
+        "y": 200,
+        "service_role": "Fish-specimen turn-in",
+        "npc_id": 4432
+      },
+      "inputs": [
+        {
+          "item_id": 6451,
+          "amount": 30,
+          "item_name": "Unidentified Fish"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "EGrade Coin",
+          "item_ids": [
+            6422
+          ],
+          "amount": 200,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 6422,
+              "item_name": "EClass Coin"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 30 Unidentified Fish in inventory (countitem(Unknown_Fish) > 29); no state flag is set on this branch, so the turn-in is repeatable each time the requirement is met again."
+      ],
+      "source": {
+        "path": "npc/re/quests/quests_malangdo.txt",
+        "lines": [
+          2772,
+          2851,
+          2853,
+          2896
+        ],
+        "reviewed_lines": [
+          2772,
+          2851,
+          2853,
+          2896
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "moc_para01_reno_energy_crystal_donation",
+      "title": "Reno converts donated Energy Crystals into a random remodeled headgear",
+      "npc": {
+        "name": "Reno",
+        "internal_name": "Reno#2012hat",
+        "map": "moc_para01",
+        "x": 41,
+        "y": 169,
+        "service_role": "Energy Crystal headgear donation",
+        "npc_id": 4970
+      },
+      "inputs": [
+        {
+          "item_id": 6623,
+          "amount": 300,
+          "item_name": "Rough Energy Crystal"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Remodeled headgear (Wizardry/Magician/Fox/Jester/Bunny Band/Munak/Bongun/Opera Mask hat)",
+          "item_ids": [
+            18760,
+            18761,
+            18762,
+            18763,
+            18764,
+            18769,
+            18770,
+            18771
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "300 Rough Energy Crystal donated; uniform 1-of-17-weighted roll across 8 items (weights 2/2/2/2/2/3/3/1)",
+          "items": [
+            {
+              "item_id": 18760,
+              "item_name": "Modified Mage Hat"
+            },
+            {
+              "item_id": 18761,
+              "item_name": "Modified Magician Hat"
+            },
+            {
+              "item_id": 18762,
+              "item_name": "Modified Kitsune Mask"
+            },
+            {
+              "item_id": 18763,
+              "item_name": "Modified Jester Hat"
+            },
+            {
+              "item_id": 18764,
+              "item_name": "Modified Bunny Hairband"
+            },
+            {
+              "item_id": 18769,
+              "item_name": "Modified Munak Hat"
+            },
+            {
+              "item_id": 18770,
+              "item_name": "Modified Bongun Hat"
+            },
+            {
+              "item_id": 18771,
+              "item_name": "Modified Opera Mask"
+            }
+          ]
+        },
+        {
+          "label": "Improved accessory (Binoculars/Fin Helm/Assassin Mask/Welding Mask/Safety Ring/Angel items)",
+          "item_ids": [
+            18772,
+            18773,
+            18774,
+            18775,
+            15068,
+            18766,
+            20710
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "600 Purified Energy Crystal donated; weighted 1-of-18 roll across 9 items",
+          "items": [
+            {
+              "item_id": 18772,
+              "item_name": "Modified Binoculars"
+            },
+            {
+              "item_id": 18773,
+              "item_name": "Modified Fin Helm"
+            },
+            {
+              "item_id": 18774,
+              "item_name": "Modified Assassin Mask"
+            },
+            {
+              "item_id": 18775,
+              "item_name": "Modified Welding Mask"
+            },
+            {
+              "item_id": 15068,
+              "item_name": "Advanced Angelic Protection"
+            },
+            {
+              "item_id": 18766,
+              "item_name": "Modified Helm of Angel"
+            },
+            {
+              "item_id": 20710,
+              "item_name": "Modified Angel's Cardigan"
+            }
+          ]
+        },
+        {
+          "label": "Enhanced item (Corsair/Bone Helm/Helm of Angel/Variant Shoes/Ring of Flame Lord/Ring of Resonance)",
+          "item_ids": [
+            18765,
+            18768,
+            18766,
+            22014
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "900 High Energy Crystal donated; weighted 1-of-33 roll across 6 items",
+          "items": [
+            {
+              "item_id": 18765,
+              "item_name": "Modified Corsair"
+            },
+            {
+              "item_id": 18768,
+              "item_name": "Modified Bone Helm"
+            },
+            {
+              "item_id": 18766,
+              "item_name": "Modified Helm of Angel"
+            },
+            {
+              "item_id": 22014,
+              "item_name": "Enhanced Variant Shoes"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Three independent donation tiers selected via a menu; each consumes only its own crystal type and amount (300/600/900) and grants one item from its own weighted table.",
+        "This NPC also offers a separate equipped-item upgrade service (Safety Ring and others, reached via a different menu case) that is not reviewed here."
+      ],
+      "source": {
+        "path": "npc/re/quests/newgears/2012_headgears.txt",
+        "lines": [
+          659,
+          660,
+          661,
+          676,
+          677,
+          678,
+          695,
+          696,
+          697
+        ],
+        "reviewed_lines": [
+          659,
+          660,
+          661,
+          676,
+          677,
+          678,
+          695,
+          696,
+          697
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "moc_ruins_alchemist_binoculars",
+      "title": "Alchemist (Marius) crafts Binoculars",
+      "npc": {
+        "name": "Alchemist",
+        "internal_name": "Alchemist",
+        "map": "moc_ruins",
+        "x": 118,
+        "y": 176,
+        "service_role": "Novelty item crafting",
+        "npc_id": 5021
+      },
+      "inputs": [
+        {
+          "item_id": 2243,
+          "amount": 1,
+          "item_name": "Geek Glasses"
+        },
+        {
+          "item_id": 999,
+          "amount": 100,
+          "item_name": "Steel"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Binoculars",
+          "item_ids": [
+            2296
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Also costs 50,000 Zeny, charged alongside the materials; not representable as an item input.",
+          "items": [
+            {
+              "item_id": 2296,
+              "item_name": "Binoculars"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Spinning Eyes (dialogue calls it 'Geek Glasses'), 100 Steel, and at least 50,000 Zeny before the script deducts all three and grants the item."
+      ],
+      "source": {
+        "path": "npc/quests/quests_morocc.txt",
+        "lines": [
+          91,
+          124,
+          130,
+          131,
+          132,
+          136
+        ],
+        "reviewed_lines": [
+          91,
+          124,
+          130,
+          131,
+          132,
+          136
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "moc_ruins_ponka_hontas_morocc_potion",
+      "title": "Mage Guildsman (Ponka-Hontas) bottles a Morocc Potion",
+      "npc": {
+        "name": "Ponka-Hontas",
+        "internal_name": "Ponka-Hontas",
+        "map": "moc_ruins",
+        "x": 91,
+        "y": 150,
+        "service_role": "Mage guild potion-bottling service",
+        "npc_id": 5055
+      },
+      "inputs": [
+        {
+          "item_id": 1092,
+          "amount": 1,
+          "item_name": "Empty Test Tube"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Morocc Potion",
+          "item_ids": [
+            1088
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Also costs 50 Zeny, charged alongside the Empty Test Tube; not representable as an item input.",
+          "items": [
+            {
+              "item_id": 1088,
+              "item_name": "Morroc Solution"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 50 Zeny and 1 Empty Test Tube (Empty_Cylinder) before the script deducts both and grants the potion."
+      ],
+      "source": {
+        "path": "npc/quests/mage_solution.txt",
+        "lines": [
+          59,
+          65,
+          69,
+          73,
+          74,
+          75
+        ],
+        "reviewed_lines": [
+          59,
+          65,
+          69,
+          73,
+          74,
+          75
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "moc_ruins_william_stop_post",
+      "title": "William crafts a Stop Post ornament",
+      "npc": {
+        "name": "William",
+        "internal_name": "William",
+        "map": "moc_ruins",
+        "x": 113,
+        "y": 181,
+        "service_role": "MacMillan's Workshop novelty crafting",
+        "npc_id": 5072
+      },
+      "inputs": [
+        {
+          "item_id": 1019,
+          "amount": 50,
+          "item_name": "Trunk"
+        },
+        {
+          "item_id": 983,
+          "amount": 1,
+          "item_name": "Black Dyestuffs"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Stop Post",
+          "item_ids": [
+            2272
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Also costs 91,100 Zeny, charged alongside the materials; not representable as an item input.",
+          "items": [
+            {
+              "item_id": 2272,
+              "item_name": "Stop Post"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 50 Wooden Block (dialogue calls it 'Trunk'), 1 Black Dyestuffs, and at least 91,100 Zeny before the script deducts all three and grants the item."
+      ],
+      "source": {
+        "path": "npc/quests/quests_morocc.txt",
+        "lines": [
+          47,
+          63,
+          64,
+          65,
+          66,
+          74
+        ],
+        "reviewed_lines": [
+          47,
+          63,
+          64,
+          65,
+          66,
+          74
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
     {
       "id": "mora_keeper_relic_exchange",
       "title": "Exchange Mora Coins for a selected relic category",
@@ -191,7 +3840,74 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-27",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mora_keeper_ring_to_coin_exchange",
+      "title": "Keeper of Secrets exchanges a relic ring back for Mora Coins",
+      "npc": {
+        "name": "Keeper of Secrets#pa082",
+        "internal_name": "Keeper of Secrets#pa082",
+        "map": "mora",
+        "x": 88,
+        "y": 89,
+        "service_role": "Reverse direction of the reviewed Mora relic exchange (mora_keeper_relic_exchange): trades a previously obtained relic ring back for Mora Coins instead of coins for a relic",
+        "npc_id": 5157
+      },
+      "inputs": [
+        {
+          "item_id": 2864,
+          "amount": 1,
+          "item_name": "Light Of Cure"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Mora Coin",
+          "item_ids": [
+            6380
+          ],
+          "amount": 10,
+          "selection": "single_option",
+          "condition": "The item actually consumed is whichever of the three Arch Bishop relic rings the player holds (Light of Cure, Seal of Cathedral, or Ring of Archbishop); only one is checked per visit in that priority order.",
+          "items": [
+            {
+              "item_id": 6380,
+              "item_name": "Mora Coin"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Restricted to Arch Bishop, Arch Bishop T, or Baby Bishop; other classes are told the exchange is unavailable to them.",
+        "The script checks for Light of Cure, then Seal of Cathedral, then Ring of Archbishop in that order and offers to trade whichever one it finds first for 10 Mora Coin."
+      ],
+      "source": {
+        "path": "npc/re/merchants/enchan_mora.txt",
+        "lines": [
+          38,
+          125,
+          133,
+          134,
+          135,
+          144,
+          150,
+          151
+        ],
+        "reviewed_lines": [
+          38,
+          125,
+          133,
+          134,
+          135,
+          144,
+          150,
+          151
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
       "evidence_state": "conditional"
     },
     {
@@ -280,7 +3996,2580 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-27",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mora_master_tailor_army_padding",
+      "title": "Master Tailor sells an Army Padding for Mora Coins",
+      "npc": {
+        "name": "Master Tailor#pa0829",
+        "internal_name": "Master Tailor#pa0829",
+        "map": "mora",
+        "x": 105,
+        "y": 176,
+        "service_role": "Mora coin shop",
+        "npc_id": 5164
+      },
+      "inputs": [
+        {
+          "item_id": 6380,
+          "amount": 1,
+          "item_name": "Mora Coin"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Army Padding",
+          "item_ids": [
+            15024
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 15024,
+              "item_name": "Army Padding"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 1 Mora Coin in inventory; the NPC offers this only after the player confirms they want to buy."
+      ],
+      "source": {
+        "path": "npc/re/merchants/enchan_mora.txt",
+        "lines": [
+          1521,
+          1536,
+          1548,
+          1549
+        ],
+        "reviewed_lines": [
+          1521,
+          1536,
+          1548,
+          1549
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "morocc_wickebine_blacksmith_delivery",
+      "title": "Wickebine accepts a custom weapon delivery for the Blacksmith job change (Merchant Voucher)",
+      "npc": {
+        "name": "Wickebine",
+        "internal_name": "Wickebine#BLS",
+        "map": "morocc",
+        "x": 27,
+        "y": 112,
+        "service_role": "Blacksmith 2-1 job-change weapon delivery",
+        "npc_id": 5270
+      },
+      "inputs": [
+        {
+          "item_id": 1219,
+          "amount": 1,
+          "item_name": "Gladius"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Merchant Voucher",
+          "item_ids": [
+            1073
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1073,
+              "item_name": "Voucher"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires the specific custom-made Gladius delivered for this NPC's job-change branch (BSMITH_Q reaches 14); the weapon is consumed and one Merchant Voucher is granted.",
+        "This is one of five parallel city delivery branches for the same Blacksmith 2-1 job-change step; the Geffen branch (Baisulist) is already reviewed as geffen_baisulist_weapon_delivery_voucher."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/blacksmith.txt",
+        "lines": [
+          1058,
+          1059,
+          1077
+        ],
+        "reviewed_lines": [
+          1058,
+          1059,
+          1077
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "moscovia_squirrel_acorn_gem_gamble",
+      "title": "The squirrel trades an Acorn offering for a random gem or jewel",
+      "npc": {
+        "name": "Acorn Dealer#mos",
+        "internal_name": "Acorn Dealer#mos",
+        "map": "moscovia",
+        "x": 208,
+        "y": 182,
+        "service_role": "Acorn-for-gem gambling",
+        "npc_id": 5350
+      },
+      "inputs": [
+        {
+          "item_id": 1026,
+          "amount": 20,
+          "item_name": "Acorn"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Common gem (Peridot/Agate/Citrin/Rose Quartz/Turquoise/Pyroxene/Phlogopite/Biotite/Muscovite)",
+          "item_ids": [
+            7289,
+            7291,
+            7295,
+            7293,
+            7294,
+            7296,
+            7290,
+            7297,
+            7292
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~89.9% combined outer band (cyworld in six disjoint 100-point-wide bands of 1000); the specific gem depends on a second 1-10 sub-roll within each band",
+          "items": [
+            {
+              "item_id": 7289,
+              "item_name": "Peridot"
+            },
+            {
+              "item_id": 7291,
+              "item_name": "Agate"
+            },
+            {
+              "item_id": 7295,
+              "item_name": "Citrin"
+            },
+            {
+              "item_id": 7293,
+              "item_name": "Rose Quartz"
+            },
+            {
+              "item_id": 7294,
+              "item_name": "Turquoise"
+            },
+            {
+              "item_id": 7296,
+              "item_name": "Pyroxene"
+            },
+            {
+              "item_id": 7290,
+              "item_name": "Phlogopite"
+            },
+            {
+              "item_id": 7297,
+              "item_name": "Biotite"
+            },
+            {
+              "item_id": 7292,
+              "item_name": "Muscovite"
+            }
+          ]
+        },
+        {
+          "label": "Precious/colored jewel via S_BS_1 (Dark Red/Violet/Skyblue/Azure/Scarlet/Cardinal/Red/Golden/Bluish Green Jewel)",
+          "item_ids": [
+            7288,
+            7287
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "within any of the six 100-point bands, an inner stworld roll 0-89 (of 150) routes to the S_BS_1 sub-table instead of the common gem",
+          "items": [
+            {
+              "item_id": 7288,
+              "item_name": "Engagement Ring"
+            },
+            {
+              "item_id": 7287,
+              "item_name": "Holier Threads"
+            }
+          ]
+        },
+        {
+          "label": "Crystal Jewel (uncarded)",
+          "item_ids": [
+            727
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~9.9% (cyworld exactly 100/300/500/700/900, stworld 90-99)",
+          "items": [
+            {
+              "item_id": 727,
+              "item_name": "Opal"
+            }
+          ]
+        },
+        {
+          "label": "White Jewel",
+          "item_ids": [
+            727
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~0.1% (cyworld exactly 1000)",
+          "items": [
+            {
+              "item_id": 727,
+              "item_name": "Opal"
+            }
+          ]
+        },
+        {
+          "label": "Precious stones (Garnet/Amethyst/Aquamarine/Emerald/Pearl/Ruby/Sardonyx/Topaz/Zircon)",
+          "item_ids": [
+            718,
+            719,
+            720,
+            721,
+            722,
+            723,
+            725,
+            728,
+            729
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "rare bands",
+          "items": [
+            {
+              "item_id": 718,
+              "item_name": "Garnet"
+            },
+            {
+              "item_id": 719,
+              "item_name": "Amethyst"
+            },
+            {
+              "item_id": 720,
+              "item_name": "Aquamarine"
+            },
+            {
+              "item_id": 721,
+              "item_name": "Emerald"
+            },
+            {
+              "item_id": 722,
+              "item_name": "Pearl"
+            },
+            {
+              "item_id": 723,
+              "item_name": "Ruby"
+            },
+            {
+              "item_id": 725,
+              "item_name": "Sardonyx"
+            },
+            {
+              "item_id": 728,
+              "item_name": "Topaz"
+            },
+            {
+              "item_id": 729,
+              "item_name": "Zircon"
+            }
+          ]
+        },
+        {
+          "label": "Diamonds (1/2/3 carat, Cracked)",
+          "item_ids": [
+            730,
+            731,
+            732,
+            733
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "rare bands",
+          "items": [
+            {
+              "item_id": 730,
+              "item_name": "1carat Diamond"
+            },
+            {
+              "item_id": 731,
+              "item_name": "2carat Diamond"
+            },
+            {
+              "item_id": 732,
+              "item_name": "3carat Diamond"
+            },
+            {
+              "item_id": 733,
+              "item_name": "Cracked Diamond"
+            }
+          ]
+        },
+        {
+          "label": "Cursed Ruby / Cardinal Jewel",
+          "item_ids": [
+            724
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "cyworld outside 1-1000's named bands (500-900 and above 900 fallback ranges)",
+          "items": [
+            {
+              "item_id": 724,
+              "item_name": "Cursed Ruby"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 20 Acorn, consumed unconditionally on each offering.",
+        "The reward is a nested weighted roll: an outer 1-1000 roll (cyworld) selects a band, most of which run an inner 1-150 roll (stworld) that either falls through to a common named gem, or (stworld<90) calls a shared S_BS_1 sub-function for a rarer colored jewel from its own 1-90 sub-table. This is documented at the level of visible branch structure; exact combined odds per specific item were not independently recomputed beyond the coded thresholds."
+      ],
+      "source": {
+        "path": "npc/quests/quests_moscovia.txt",
+        "lines": [
+          4067,
+          4068,
+          4069,
+          4070,
+          4113,
+          4114,
+          4115,
+          4139,
+          4140,
+          4141,
+          4142,
+          4143,
+          4144,
+          4145,
+          4146,
+          4147,
+          4148
+        ],
+        "reviewed_lines": [
+          4067,
+          4068,
+          4069,
+          4070,
+          4113,
+          4114,
+          4115,
+          4139,
+          4140,
+          4141,
+          4142,
+          4143,
+          4144,
+          4145,
+          4146,
+          4147,
+          4148
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "p_track01_medal_distributor_prize",
+      "title": "Medal Distributor exchanges a winning Monster Race ticket for Prize Medals",
+      "npc": {
+        "name": "Medal Distributor#single",
+        "internal_name": "Medal Distributor#single",
+        "map": "p_track01",
+        "x": 67,
+        "y": 45,
+        "service_role": "Monster Race single-race prize booth",
+        "npc_id": 5672
+      },
+      "inputs": [
+        {
+          "item_id": 7514,
+          "amount": 1,
+          "item_name": "Monster Ticket"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Marvelous Medal",
+          "item_ids": [
+            7515
+          ],
+          "amount": 4,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7515,
+              "item_name": "Prize Medal"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Only reachable while holding a winning Monster Ticket from that race; the NPC displays the correct exchange number on screen and then asks the player to type that same number back — a confirmation step, not a hidden check.",
+        "The sister two-race-format booth (p_track02, same coordinates) grants 15 Marvelous Medal per ticket instead of 4."
+      ],
+      "source": {
+        "path": "npc/other/monster_race.txt",
+        "lines": [
+          302,
+          383,
+          385
+        ],
+        "reviewed_lines": [
+          302,
+          383,
+          385
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "p_track02_medal_distributor_prize",
+      "title": "Medal Distributor redeems a winning Monster Race ticket (track 2)",
+      "npc": {
+        "name": "Medal Distributor",
+        "internal_name": "Medal Distributor#medal",
+        "map": "p_track02",
+        "x": 67,
+        "y": 45,
+        "service_role": "Monster Race prize redemption",
+        "npc_id": 5681
+      },
+      "inputs": [
+        {
+          "item_id": 7514,
+          "amount": 1,
+          "item_name": "Monster Ticket"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Prize Medal",
+          "item_ids": [
+            7515
+          ],
+          "amount": 15,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7515,
+              "item_name": "Prize Medal"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Monster Ticket, consumed for 15 Prize Medals; the branch also resets monster_race_2_1 and monster_race_2_2 to 7.",
+        "This is the same redemption service already reviewed at track 1 (p_track01_medal_distributor_prize), on this second race track's map."
+      ],
+      "source": {
+        "path": "npc/other/monster_race.txt",
+        "lines": [
+          1663,
+          1664,
+          1665,
+          1666
+        ],
+        "reviewed_lines": [
+          1663,
+          1664,
+          1665,
+          1666
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "pay_arche_dollshoi_payon_potion",
+      "title": "Mage Guildsman (Dollshoi) bottles a Payon Potion",
+      "npc": {
+        "name": "Dollshoi",
+        "internal_name": "Dollshoi",
+        "map": "pay_arche",
+        "x": 122,
+        "y": 100,
+        "service_role": "Mage guild potion-bottling service (Payon branch of the same mage_solution.txt pattern as Ponka-Hontas)",
+        "npc_id": 5692
+      },
+      "inputs": [
+        {
+          "item_id": 1092,
+          "amount": 1,
+          "item_name": "Empty Test Tube"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Payon Potion",
+          "item_ids": [
+            1089
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Also costs 50 Zeny, charged alongside the Empty Test Tube; not representable as an item input.",
+          "items": [
+            {
+              "item_id": 1089,
+              "item_name": "Payon Solution"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 50 Zeny and 1 Empty Test Tube (Empty_Cylinder) before the script deducts both and grants the potion."
+      ],
+      "source": {
+        "path": "npc/quests/mage_solution.txt",
+        "lines": [
+          38,
+          44,
+          48,
+          52,
+          53,
+          54
+        ],
+        "reviewed_lines": [
+          38,
+          44,
+          48,
+          52,
+          53,
+          54
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "pay_dun03_nine_tails_fox_mask",
+      "title": "Nine Tails trades a Mask of Fox for 999 Fox Tails",
+      "npc": {
+        "name": "Nine Tails#Kitsune Man",
+        "internal_name": "Nine Tails#Kitsune Man",
+        "map": "pay_dun03",
+        "x": 48,
+        "y": 84,
+        "service_role": "Novelty headgear trade",
+        "npc_id": 5711
+      },
+      "inputs": [
+        {
+          "item_id": 1022,
+          "amount": 999,
+          "item_name": "Nine Tails"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Mask of Fox",
+          "item_ids": [
+            5069
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5069,
+              "item_name": "Kitsune Mask"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires an inventory-weight check first, then at least 999 Fox Tail (countitem(Fox_Tail) > 998) before the trade is offered and confirmed."
+      ],
+      "source": {
+        "path": "npc/quests/newgears/2004_headgears.txt",
+        "lines": [
+          2514,
+          2524,
+          2528,
+          2529,
+          2530
+        ],
+        "reviewed_lines": [
+          2514,
+          2524,
+          2528,
+          2529,
+          2530
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_in01_granny_skirt_heirloom",
+      "title": "Granny trades a keepsake for Skirts of Virgin",
+      "npc": {
+        "name": "Granny",
+        "internal_name": "Granny",
+        "map": "payon_in01",
+        "x": 99,
+        "y": 72,
+        "service_role": "Heirloom-gift flavor trade",
+        "npc_id": 5911
+      },
+      "inputs": [
+        {
+          "item_id": 1049,
+          "amount": 4,
+          "item_name": "Skirt of Virgin"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Pretend Murdered (keepsake)",
+          "item_ids": [
+            2293
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 2293,
+              "item_name": "Pretend Murdered"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires an inventory-weight check first, then at least 4 Skirt of Virgin (countitem(Skirt_Of_Virgin) > 3) before the script consumes them and grants the keepsake item; no state flag is set, so it is repeatable while the requirement is met."
+      ],
+      "source": {
+        "path": "npc/quests/quests_payon.txt",
+        "lines": [
+          40,
+          45,
+          54,
+          65
+        ],
+        "reviewed_lines": [
+          40,
+          45,
+          54,
+          65
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_in01_jaax_quivers",
+      "title": "Inventor Jaax packages arrows into quivers",
+      "npc": {
+        "name": "Inventor Jaax",
+        "internal_name": "Inventor Jaax",
+        "map": "payon_in01",
+        "x": 5,
+        "y": 134,
+        "service_role": "Arrow Quiver packaging service",
+        "npc_id": 5913
+      },
+      "inputs": [
+        {
+          "item_id": 1750,
+          "amount": 500,
+          "item_name": "Arrow"
+        },
+        {
+          "item_id": 1770,
+          "amount": 500,
+          "item_name": "Iron Arrow"
+        },
+        {
+          "item_id": 1753,
+          "amount": 500,
+          "item_name": "Steel Arrow"
+        },
+        {
+          "item_id": 1765,
+          "amount": 500,
+          "item_name": "Oridecon Arrow"
+        },
+        {
+          "item_id": 1752,
+          "amount": 500,
+          "item_name": "Fire Arrow"
+        },
+        {
+          "item_id": 1751,
+          "amount": 500,
+          "item_name": "Silver Arrow"
+        },
+        {
+          "item_id": 1755,
+          "amount": 500,
+          "item_name": "Arrow of Wind"
+        },
+        {
+          "item_id": 1756,
+          "amount": 500,
+          "item_name": "Stone Arrow"
+        },
+        {
+          "item_id": 1754,
+          "amount": 500,
+          "item_name": "Crystal Arrow"
+        },
+        {
+          "item_id": 1767,
+          "amount": 500,
+          "item_name": "Arrow of Shadow"
+        },
+        {
+          "item_id": 1757,
+          "amount": 500,
+          "item_name": "Immaterial Arrow"
+        },
+        {
+          "item_id": 1762,
+          "amount": 500,
+          "item_name": "Rusty Arrow"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Quiver",
+          "item_ids": [
+            12004
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12004,
+              "item_name": "Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Iron Arrow Quiver",
+          "item_ids": [
+            12005
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Iron Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12005,
+              "item_name": "Iron Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Steel Arrow Quiver",
+          "item_ids": [
+            12006
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Steel Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12006,
+              "item_name": "Steel Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Oridecon Arrow Quiver",
+          "item_ids": [
+            12007
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Oridecon Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12007,
+              "item_name": "Oridecon Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Fire Arrow Quiver",
+          "item_ids": [
+            12008
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Fire Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12008,
+              "item_name": "Fire Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Silver Arrow Quiver",
+          "item_ids": [
+            12009
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Silver Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12009,
+              "item_name": "Silver Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Wind Arrow Quiver",
+          "item_ids": [
+            12010
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Arrow of Wind + 500 zeny",
+          "items": [
+            {
+              "item_id": 12010,
+              "item_name": "Wind Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Stone Arrow Quiver",
+          "item_ids": [
+            12011
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Stone Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12011,
+              "item_name": "Stone Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Crystal Arrow Quiver",
+          "item_ids": [
+            12012
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Crystal Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12012,
+              "item_name": "Crystal Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Shadow Arrow Quiver",
+          "item_ids": [
+            12013
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Arrow of Shadow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12013,
+              "item_name": "Shadow Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Immaterial Arrow Quiver",
+          "item_ids": [
+            12014
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Immaterial Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12014,
+              "item_name": "Immaterial Arrow Quiver"
+            }
+          ]
+        },
+        {
+          "label": "Rusty Arrow Quiver",
+          "item_ids": [
+            12015
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "500 Rusty Arrow + 500 zeny",
+          "items": [
+            {
+              "item_id": 12015,
+              "item_name": "Rusty Arrow Quiver"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 500 of the selected arrow type and 500 zeny per quiver packaged.",
+        "Can package either a single quiver or as many quivers as carried arrows and zeny allow in one transaction.",
+        "NPC warns that using a quiver is blocked when carried weight reaches 90% of maximum weight limit."
+      ],
+      "source": {
+        "path": "npc/merchants/quivers.txt",
+        "lines": [
+          38,
+          64,
+          65,
+          89,
+          90,
+          119,
+          120,
+          121,
+          149,
+          150,
+          151
+        ],
+        "reviewed_lines": [
+          38,
+          64,
+          65,
+          89,
+          90,
+          119,
+          120,
+          121,
+          149,
+          150,
+          151
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_in01_mystic_lady_ear_muffs",
+      "title": "Mystic Lady sells pre-made Ear Muffs",
+      "npc": {
+        "name": "Mystic Lady",
+        "internal_name": "Mystic Lady",
+        "map": "payon_in01",
+        "x": 18,
+        "y": 10,
+        "service_role": "Ear Muffs trade",
+        "npc_id": 5914
+      },
+      "inputs": [
+        {
+          "item_id": 724,
+          "amount": 1,
+          "item_name": "Cursed Ruby"
+        },
+        {
+          "item_id": 949,
+          "amount": 200,
+          "item_name": "Feather"
+        },
+        {
+          "item_id": 5001,
+          "amount": 1,
+          "item_name": "Headset"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Ear Muffs",
+          "item_ids": [
+            2283
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 2283,
+              "item_name": "Ear Muffs"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Cursed Ruby, 200 Feather, 1 Headset, and 5,000 zeny; all are consumed and Ear Muffs are granted."
+      ],
+      "source": {
+        "path": "npc/quests/quests_payon.txt",
+        "lines": [
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          112
+        ],
+        "reviewed_lines": [
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          112
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_in02_young_man_ora_ora_bug",
+      "title": "Young Man's Ora Ora trade grants its reward even when the cost check fails",
+      "npc": {
+        "name": "Boy",
+        "internal_name": "Boy",
+        "map": "payon_in02",
+        "x": 25,
+        "y": 71,
+        "service_role": "Ora Ora collection",
+        "npc_id": 5941
+      },
+      "inputs": [
+        {
+          "item_id": 701,
+          "amount": 5,
+          "item_name": "Ora Ora"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Oxygen Mask",
+          "item_ids": [
+            5004
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5004,
+              "item_name": "Oxygen Mask"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The branch only conditionally consumes 5 Ora Ora inside an `if (countitem(Ora_Ora) > 4)` check with no else, but the dialogue and the Oxygen Mask grant that follow are unconditional and run regardless of whether the player actually had 5 Ora Ora.",
+        "This is a source bug, not a documented feature: a player with fewer than 5 Ora Ora still receives the Oxygen Mask for free. Recorded as observed rather than as intended design."
+      ],
+      "source": {
+        "path": "npc/quests/quests_payon.txt",
+        "lines": [
+          161,
+          162,
+          163,
+          176
+        ],
+        "reviewed_lines": [
+          161,
+          162,
+          163,
+          176
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_in03_marx_hansen_fruit_juice",
+      "title": "Merchant Marx Hansen blends fresh fruit into juices",
+      "npc": {
+        "name": "Marx Hansen#juice",
+        "internal_name": "Marx Hansen#juice",
+        "map": "payon_in03",
+        "x": 188,
+        "y": 146,
+        "service_role": "Fruit juice processor",
+        "npc_id": 5974
+      },
+      "inputs": [
+        {
+          "item_id": 512,
+          "amount": 1,
+          "item_name": "Apple"
+        },
+        {
+          "item_id": 513,
+          "amount": 1,
+          "item_name": "Banana"
+        },
+        {
+          "item_id": 515,
+          "amount": 1,
+          "item_name": "Carrot"
+        },
+        {
+          "item_id": 514,
+          "amount": 1,
+          "item_name": "Grape"
+        },
+        {
+          "item_id": 713,
+          "amount": 1,
+          "item_name": "Empty Bottle"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Apple Juice",
+          "item_ids": [
+            531
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Apple + 1 Empty Bottle + 3 zeny",
+          "items": [
+            {
+              "item_id": 531,
+              "item_name": "Apple Juice"
+            }
+          ]
+        },
+        {
+          "label": "Banana Juice",
+          "item_ids": [
+            532
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Banana + 1 Empty Bottle + 3 zeny",
+          "items": [
+            {
+              "item_id": 532,
+              "item_name": "Banana Juice"
+            }
+          ]
+        },
+        {
+          "label": "Carrot Juice",
+          "item_ids": [
+            534
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Carrot + 1 Empty Bottle + 3 zeny",
+          "items": [
+            {
+              "item_id": 534,
+              "item_name": "Carrot Juice"
+            }
+          ]
+        },
+        {
+          "label": "Grape Juice",
+          "item_ids": [
+            533
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Grape + 1 Empty Bottle + 3 zeny",
+          "items": [
+            {
+              "item_id": 533,
+              "item_name": "Grape Juice"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires completing the Juice Maker introduction quest (MISC_QUEST & 1, by showing meat to Little Morrison and speaking to Marianne in Prontera).",
+        "Each juice requires 1 of the designated fruit, 1 Empty Bottle, and 3 zeny fee.",
+        "Can craft as many as inventory/zeny allow or a custom quantity up to 100 per transaction."
+      ],
+      "source": {
+        "path": "npc/quests/juice_maker.txt",
+        "lines": [
+          192,
+          201,
+          212,
+          213,
+          214,
+          215,
+          291,
+          292,
+          293,
+          294
+        ],
+        "reviewed_lines": [
+          192,
+          201,
+          212,
+          213,
+          214,
+          215,
+          291,
+          292,
+          293,
+          294
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_rurumuni_leather_bag",
+      "title": "RuRumuni crafts a Leather Bag of Infinity",
+      "npc": {
+        "name": "Bag Seller",
+        "internal_name": "Bag Seller",
+        "map": "payon",
+        "x": 91,
+        "y": 77,
+        "service_role": "Thief-guild crafting",
+        "npc_id": 5834
+      },
+      "inputs": [
+        {
+          "item_id": 952,
+          "amount": 1,
+          "item_name": "Cactus Needle"
+        },
+        {
+          "item_id": 1025,
+          "amount": 1,
+          "item_name": "Cobweb"
+        },
+        {
+          "item_id": 1055,
+          "amount": 1,
+          "item_name": "Earthworm Peeling"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Leather Bag of Infinity",
+          "item_ids": [
+            7042
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7042,
+              "item_name": "Leather Bag of Infinity"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Cactus Needle, 1 Cobweb, and 1 Earthworm Peeling; all three are consumed and a Leather Bag of Infinity is granted.",
+        "The branch also sets skill_thief_1 to 2, a flag consumed by a separate, unreviewed skill-learning step at the Thief guild's Alcouskou."
+      ],
+      "source": {
+        "path": "npc/quests/skills/thief_skills.txt",
+        "lines": [
+          493,
+          494,
+          495,
+          496,
+          497
+        ],
+        "reviewed_lines": [
+          493,
+          494,
+          495,
+          496,
+          497
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "payon_talpiz_blacksmith_delivery",
+      "title": "Talpiz accepts a custom weapon delivery for the Blacksmith job change (Merchant Voucher)",
+      "npc": {
+        "name": "Talpiz",
+        "internal_name": "Talpiz#BLS",
+        "map": "payon",
+        "x": 214,
+        "y": 79,
+        "service_role": "Blacksmith 2-1 job-change weapon delivery",
+        "npc_id": 5897
+      },
+      "inputs": [
+        {
+          "item_id": 1713,
+          "amount": 1,
+          "item_name": "Arbalest Bow"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Merchant Voucher",
+          "item_ids": [
+            1073
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1073,
+              "item_name": "Voucher"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires the specific custom-made Arbalest Bow delivered for this NPC's job-change branch (BSMITH_Q reaches 14); the weapon is consumed and one Merchant Voucher is granted.",
+        "This is one of five parallel city delivery branches for the same Blacksmith 2-1 job-change step; the Geffen branch (Baisulist) is already reviewed as geffen_baisulist_weapon_delivery_voucher."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/blacksmith.txt",
+        "lines": [
+          1229,
+          1230,
+          1242
+        ],
+        "reviewed_lines": [
+          1229,
+          1230,
+          1242
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "prontera_pet_enthusiast_spirit_liquor",
+      "title": "Pet Enthusiast converts liquor scraps into Spirit Liquor",
+      "npc": {
+        "name": "Pet Enthusiast",
+        "internal_name": "Pet Enthusiast",
+        "map": "prontera",
+        "x": 218,
+        "y": 218,
+        "service_role": "Wanderer pet-food conversion",
+        "npc_id": 6102
+      },
+      "inputs": [
+        {
+          "item_id": 7158,
+          "amount": 20,
+          "item_name": "Broken Liquor Jar"
+        },
+        {
+          "item_id": 970,
+          "amount": 1,
+          "item_name": "Alcohol"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Spirit Liquor",
+          "item_ids": [
+            7824
+          ],
+          "amount": 20,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7824,
+              "item_name": "Spirit Liquor"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires at least 20 Broken Liquor Jar and 1 Alcohol in inventory before the script consumes both and grants 20 Spirit Liquor for Wanderer-class pets."
+      ],
+      "source": {
+        "path": "npc/merchants/wander_pet_food.txt",
+        "lines": [
+          37,
+          54,
+          66,
+          67,
+          68
+        ],
+        "reviewed_lines": [
+          37,
+          54,
+          66,
+          67,
+          68
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "prt_castle_rebarev_doug_gleipnir",
+      "title": "Rebarev Doug crafts Gleipnir",
+      "npc": {
+        "name": "Rebarev Doug",
+        "internal_name": "Rebarev Doug",
+        "map": "prt_castle",
+        "x": 44,
+        "y": 151,
+        "service_role": "God-item crafting",
+        "npc_id": 6264
+      },
+      "inputs": [
+        {
+          "item_id": 7080,
+          "amount": 4,
+          "item_name": "Cat Tread"
+        },
+        {
+          "item_id": 7081,
+          "amount": 5,
+          "item_name": "Woman's Moustache"
+        },
+        {
+          "item_id": 7082,
+          "amount": 4,
+          "item_name": "Root of Stone"
+        },
+        {
+          "item_id": 7084,
+          "amount": 3,
+          "item_name": "Sputum of Bird"
+        },
+        {
+          "item_id": 7085,
+          "amount": 3,
+          "item_name": "Sinew of Bear"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Gleipnir",
+          "item_ids": [
+            7058
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7058,
+              "item_name": "Gleipnir"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 4 Cat Tread, 5 Woman's Moustache, 4 Root of Stone, 3 Sputum of Bird, and 3 Sinew of Bear; all five are consumed and Gleipnir is granted."
+      ],
+      "source": {
+        "path": "npc/quests/seals/megingard_seal.txt",
+        "lines": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65
+        ],
+        "reviewed_lines": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "prt_in_sir_gray_claymore_craft",
+      "title": "Sir Gray crafts a Claymore",
+      "npc": {
+        "name": "Sir Gray",
+        "internal_name": "Sir Gray#knt",
+        "map": "prt_in",
+        "x": 87,
+        "y": 92,
+        "service_role": "Weapon crafting",
+        "npc_id": 6522
+      },
+      "inputs": [
+        {
+          "item_id": 999,
+          "amount": 1,
+          "item_name": "Steel"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Claymore",
+          "item_ids": [
+            1163
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 1163,
+              "item_name": "Claymore"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Steel and 74,000 zeny; both are consumed and a Claymore is granted."
+      ],
+      "source": {
+        "path": "npc/jobs/2-1/knight.txt",
+        "lines": [
+          2058,
+          2059,
+          2060
+        ],
+        "reviewed_lines": [
+          2058,
+          2059,
+          2060
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "prt_in_teacher_phd_hat",
+      "title": "The Teacher trades four flowers for a Ph.D Hat",
+      "npc": {
+        "name": "Teacher",
+        "internal_name": "Teacher",
+        "map": "prt_in",
+        "x": 38,
+        "y": 108,
+        "service_role": "Ph.D Hat trade",
+        "npc_id": 6527
+      },
+      "inputs": [
+        {
+          "item_id": 710,
+          "amount": 1,
+          "item_name": "Illusion Flower"
+        },
+        {
+          "item_id": 703,
+          "amount": 1,
+          "item_name": "Hinalle"
+        },
+        {
+          "item_id": 704,
+          "amount": 1,
+          "item_name": "Aloe"
+        },
+        {
+          "item_id": 708,
+          "amount": 1,
+          "item_name": "Ment"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Ph.D Hat",
+          "item_ids": [
+            5012
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 5012,
+              "item_name": "Ph.D Hat"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 each of Illusion Flower, Hinalle, Aloe, and Ment; all four are consumed and a Ph.D Hat is granted."
+      ],
+      "source": {
+        "path": "npc/quests/quests_prontera.txt",
+        "lines": [
+          184,
+          185,
+          186,
+          187,
+          188,
+          189
+        ],
+        "reviewed_lines": [
+          184,
+          185,
+          186,
+          187,
+          188,
+          189
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "que_ng_gyo_ninja_armor_crafting",
+      "title": "Gyo crafts ninja armguards and armor",
+      "npc": {
+        "name": "Master Craftsman Gyo#arm",
+        "internal_name": "Master Craftsman Gyo#arm",
+        "map": "que_ng",
+        "x": 21,
+        "y": 72,
+        "service_role": "Ninja armor crafting",
+        "npc_id": 6970
+      },
+      "inputs": [
+        {
+          "item_id": 2171,
+          "amount": 1,
+          "item_name": "Fox Armguard"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Wolf Armguard",
+          "item_ids": [
+            2172
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Fox Armguard + 10 Blood of Wolf",
+          "items": [
+            {
+              "item_id": 2172,
+              "item_name": "Wolf Armguard"
+            }
+          ]
+        },
+        {
+          "label": "Crescent Armguard",
+          "item_ids": [
+            2173
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Fox Armguard + 100 Crystal Fragment",
+          "items": [
+            {
+              "item_id": 2173,
+              "item_name": "Crescent Armguard"
+            }
+          ]
+        },
+        {
+          "label": "Ninja Scale Armor",
+          "item_ids": [
+            15054
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "30 Fire Dragon Scale + 30 Ice Scale + 30 Darkred Scale Piece",
+          "items": [
+            {
+              "item_id": 15054,
+              "item_name": "Ninja Scale Armor"
+            }
+          ]
+        },
+        {
+          "label": "Tenebris Latitantes",
+          "item_ids": [
+            15055
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Special Ninja Suit + 10 Dark Piece",
+          "items": [
+            {
+              "item_id": 15055,
+              "item_name": "Tenebris Latitantes"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Four independent recipes selected via a menu variable (.@item_make); each consumes its own materials and grants one item.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/re/merchants/ninja_craftsman.txt",
+        "lines": [
+          142,
+          143,
+          144,
+          145,
+          156,
+          157,
+          158,
+          168,
+          169,
+          170,
+          171,
+          172,
+          182,
+          183,
+          184,
+          185
+        ],
+        "reviewed_lines": [
+          142,
+          143,
+          144,
+          145,
+          156,
+          157,
+          158,
+          168,
+          169,
+          170,
+          171,
+          172,
+          182,
+          183,
+          184,
+          185
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "que_ng_ki_ninja_weapon_crafting",
+      "title": "Ki crafts ninja weapons",
+      "npc": {
+        "name": "Master Craftsman Ki#weap",
+        "internal_name": "Master Craftsman Ki#weap",
+        "map": "que_ng",
+        "x": 23,
+        "y": 70,
+        "service_role": "Ninja weapon crafting",
+        "npc_id": 6971
+      },
+      "inputs": [
+        {
+          "item_id": 13013,
+          "amount": 1,
+          "item_name": "Murasame"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Raksasa Dagger",
+          "item_ids": [
+            13076
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Murasame + 1 Garnet",
+          "items": [
+            {
+              "item_id": 13076,
+              "item_name": "Raksasa Dagger"
+            }
+          ]
+        },
+        {
+          "label": "Mikatsuki",
+          "item_ids": [
+            13078
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Hakujin + 1 Opal",
+          "items": [
+            {
+              "item_id": 13078,
+              "item_name": "Mikatsuki"
+            }
+          ]
+        },
+        {
+          "label": "Huuma Swirling Petal",
+          "item_ids": [
+            13313
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Huuma Calm Mind + 100 Broken Shuriken",
+          "items": [
+            {
+              "item_id": 13313,
+              "item_name": "Huuma Swirling Petal"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Three independent recipes selected via a menu variable (.@item_make); each consumes its own materials and grants one item.",
+        "A prior checkweight gate stops the branch with no consumption if the player cannot carry the resulting item."
+      ],
+      "source": {
+        "path": "npc/re/merchants/ninja_craftsman.txt",
+        "lines": [
+          312,
+          313,
+          314,
+          315,
+          325,
+          326,
+          327,
+          328,
+          339,
+          340,
+          341,
+          342
+        ],
+        "reviewed_lines": [
+          312,
+          313,
+          314,
+          315,
+          325,
+          326,
+          327,
+          328,
+          339,
+          340,
+          341,
+          342
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "ra_temin_panno_lottery_ticket",
+      "title": "Priestess Panno redeems a Temple Lottery Ticket",
+      "npc": {
+        "name": "Priestess Panno",
+        "internal_name": "Panno#rachel",
+        "map": "ra_temin",
+        "x": 170,
+        "y": 46,
+        "service_role": "Rachel temple lottery redemption",
+        "npc_id": 7171
+      },
+      "inputs": [
+        {
+          "item_id": 7570,
+          "amount": 1,
+          "item_name": "Temple Lottery Ticket"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Old Card Album",
+          "item_ids": [
+            616
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~0.1% (bonus_donate==99 sub-roll 1-10 of 100)",
+          "items": [
+            {
+              "item_id": 616,
+              "item_name": "Old Card Album"
+            }
+          ]
+        },
+        {
+          "label": "Old Violet Box",
+          "item_ids": [
+            617
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~0.2% (bonus_donate==99 sub-roll 11-30 of 100)",
+          "items": [
+            {
+              "item_id": 617,
+              "item_name": "Old Purple Box"
+            }
+          ]
+        },
+        {
+          "label": "Old Blue Box",
+          "item_ids": [
+            603
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~0.3% (bonus_donate==99 sub-roll 31-60 of 100)",
+          "items": [
+            {
+              "item_id": 603,
+              "item_name": "Old Blue Box"
+            }
+          ]
+        },
+        {
+          "label": "Yggdrasil Berry",
+          "item_ids": [
+            607
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "combined ~0.4%+ (bonus_donate==99 fallback) plus a separate 12% band (bonus_donate 77-88)",
+          "items": [
+            {
+              "item_id": 607,
+              "item_name": "Yggdrasil Berry"
+            }
+          ]
+        },
+        {
+          "label": "Gift Box",
+          "item_ids": [
+            644
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "7% (bonus_donate 89-95)",
+          "items": [
+            {
+              "item_id": 644,
+              "item_name": "Gift Box"
+            }
+          ]
+        },
+        {
+          "label": "Blue Potion",
+          "item_ids": [
+            505
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "11% (bonus_donate 66-76)",
+          "items": [
+            {
+              "item_id": 505,
+              "item_name": "Blue Potion"
+            }
+          ]
+        },
+        {
+          "label": "Dead Branch",
+          "item_ids": [
+            604
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "8% (bonus_donate 58-65)",
+          "items": [
+            {
+              "item_id": 604,
+              "item_name": "Dead Branch"
+            }
+          ]
+        },
+        {
+          "label": "Yggdrasil Seed",
+          "item_ids": [
+            608
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "12% (bonus_donate 46-57)",
+          "items": [
+            {
+              "item_id": 608,
+              "item_name": "Yggdrasil Seed"
+            }
+          ]
+        },
+        {
+          "label": "Honey",
+          "item_ids": [
+            518
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "5% (bonus_donate 6-10)",
+          "items": [
+            {
+              "item_id": 518,
+              "item_name": "Honey"
+            }
+          ]
+        },
+        {
+          "label": "Royal Jelly",
+          "item_ids": [
+            526
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "5% (bonus_donate 1-5)",
+          "items": [
+            {
+              "item_id": 526,
+              "item_name": "Royal Jelly"
+            }
+          ]
+        },
+        {
+          "label": "Condensed White Potion",
+          "item_ids": [
+            547
+          ],
+          "amount": 1,
+          "selection": "weighted_random",
+          "condition": "~39% fallback (all remaining bonus_donate values)",
+          "items": [
+            {
+              "item_id": 547,
+              "item_name": "Condensed White Potion"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Temple Lottery Ticket, consumed unconditionally on redemption.",
+        "The reward is a single weighted roll (0-99) with the rarest tier (roll==99) itself sub-rolling a second 0-99 table for one of four rare prizes; percentages are taken directly from the script's own inline comments and verified against the coded thresholds."
+      ],
+      "source": {
+        "path": "npc/quests/quests_rachel.txt",
+        "lines": [
+          6716,
+          6717,
+          6718,
+          6719,
+          6720,
+          6721,
+          6722,
+          6723,
+          6725,
+          6726,
+          6727,
+          6728,
+          6729,
+          6730,
+          6731,
+          6732
+        ],
+        "reviewed_lines": [
+          6716,
+          6717,
+          6718,
+          6719,
+          6720,
+          6721,
+          6722,
+          6723,
+          6725,
+          6726,
+          6727,
+          6728,
+          6729,
+          6730,
+          6731,
+          6732
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "spl_in02_yoop_magical_stone_replacement",
+      "title": "Yoop replaces a lost Warlock magical stone",
+      "npc": {
+        "name": "Yoop",
+        "internal_name": "Yoop#Warlock",
+        "map": "spl_in02",
+        "x": 60,
+        "y": 231,
+        "service_role": "Warlock equipment replacement",
+        "npc_id": 7421
+      },
+      "inputs": [
+        {
+          "item_id": 732,
+          "amount": 1,
+          "item_name": "3carat Diamond"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Magical Stone (left)",
+          "item_ids": [
+            2796
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Granted only if the player has neither item 2796 equipped nor in inventory.",
+          "items": [
+            {
+              "item_id": 2796,
+              "item_name": "Magical Stone"
+            }
+          ]
+        },
+        {
+          "label": "Magical Stone (right)",
+          "item_ids": [
+            2797
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "Granted only if the player has neither item 2797 equipped nor in inventory.",
+          "items": [
+            {
+              "item_id": 2797,
+              "item_name": "Magical Stone"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 3carat Diamond, consumed regardless of which stone(s) are missing.",
+        "Each of the two Magical Stone items is granted independently and only if the player is missing that specific one (checked via isequipped and countitem); a player missing both receives both in the same visit."
+      ],
+      "source": {
+        "path": "npc/re/jobs/3-1/warlock.txt",
+        "lines": [
+          418,
+          419,
+          420,
+          421,
+          422
+        ],
+        "reviewed_lines": [
+          418,
+          419,
+          420,
+          421,
+          422
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "tur_dun01_flute_crafter_wolf_flute",
+      "title": "Expert Flute Crafter makes a Wolf Flute",
+      "npc": {
+        "name": "Expert Flute Crafter",
+        "internal_name": "Expert Flute Crafter",
+        "map": "tur_dun01",
+        "x": 89,
+        "y": 170,
+        "service_role": "Instrument crafting",
+        "npc_id": 7623
+      },
+      "inputs": [
+        {
+          "item_id": 7150,
+          "amount": 1,
+          "item_name": "Piece of Bamboo"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Wolf Flute",
+          "item_ids": [
+            6124
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 6124,
+              "item_name": "Wolf Flute"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Bamboo Cut and 100,000 zeny; both are consumed and a Wolf Flute is granted."
+      ],
+      "source": {
+        "path": "npc/re/merchants/flute.txt",
+        "lines": [
+          138,
+          139,
+          140
+        ],
+        "reviewed_lines": [
+          138,
+          139,
+          140
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "umbala_kotan_meat_exchange",
+      "title": "Kotan (and the unnamed villager) trade Meat for crafting materials",
+      "npc": {
+        "name": "Utan Kid#1",
+        "internal_name": "Utan Kid#1",
+        "map": "umbala",
+        "x": 59,
+        "y": 243,
+        "service_role": "Meat-for-materials trade",
+        "npc_id": 7745
+      },
+      "inputs": [
+        {
+          "item_id": 517,
+          "amount": 1,
+          "item_name": "Meat"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Jellopy + Fluff + Clover",
+          "item_ids": [
+            909,
+            914,
+            705
+          ],
+          "amount": 1,
+          "selection": "all_listed",
+          "items": [
+            {
+              "item_id": 909,
+              "item_name": "Jellopy"
+            },
+            {
+              "item_id": 914,
+              "item_name": "Fluff"
+            },
+            {
+              "item_id": 705,
+              "item_name": "Clover"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 1 Meat, consumed for 2 Jellopy, 2 Fluff, and 2 Clover together.",
+        "The same trade is offered twice in this script under two different display names (\"Kotan\" and an unnamed \"???\" villager) at the same map cell, both reachable depending on an unreviewed prior dialogue state; refusing without Meat costs the player HP via percentheal."
+      ],
+      "source": {
+        "path": "npc/cities/umbala.txt",
+        "lines": [
+          393,
+          398,
+          399,
+          400,
+          401,
+          431,
+          435,
+          436,
+          437,
+          438
+        ],
+        "reviewed_lines": [
+          393,
+          398,
+          399,
+          400,
+          401,
+          431,
+          435,
+          436,
+          437,
+          438
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "xmas_audi_snowman_donation_machine",
+      "title": "Audi's snowman machine converts materials into a random festive hat",
+      "npc": {
+        "name": "Vending Machine",
+        "internal_name": "Vending Machine",
+        "map": "xmas",
+        "x": 115,
+        "y": 297,
+        "service_role": "Festive item crafting machine",
+        "npc_id": 7945
+      },
+      "inputs": [
+        {
+          "item_id": 2213,
+          "amount": 1,
+          "item_name": "Kitty Band"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Smokie Hat",
+          "item_ids": [
+            5033
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Kitty Band + 20 Dragon Scale + 200 Tough Scalelike Stem + 300 Sea-otter Fur",
+          "items": [
+            {
+              "item_id": 5033,
+              "item_name": "Raccoon Hat"
+            }
+          ]
+        },
+        {
+          "label": "Spore Hat",
+          "item_ids": [
+            5029
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "850 Poison Spore + 300 Burnt Tree + 1 Tongue",
+          "items": [
+            {
+              "item_id": 5029,
+              "item_name": "Spore Hat"
+            }
+          ]
+        },
+        {
+          "label": "Wonder Nutshell",
+          "item_ids": [
+            5050
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Nut Shell + 500 Wing of Dragonfly",
+          "items": [
+            {
+              "item_id": 5050,
+              "item_name": "Wonder Nutshell"
+            }
+          ]
+        },
+        {
+          "label": "Rainbow Eggshell",
+          "item_ids": [
+            5039
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Egg Shell + 1 Cobaltblue Dyestuffs + 50 Claw of Desert Wolf",
+          "items": [
+            {
+              "item_id": 5039,
+              "item_name": "Rainbow Eggshell"
+            }
+          ]
+        },
+        {
+          "label": "Blush",
+          "item_ids": [
+            5040
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "100 Alice's Apron",
+          "items": [
+            {
+              "item_id": 5040,
+              "item_name": "Blush"
+            }
+          ]
+        },
+        {
+          "label": "Chef Hat",
+          "item_ids": [
+            5026
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "120 Piece of Cake + 1 White Dyestuffs + 330 Feather + 450 Dragon Scale",
+          "items": [
+            {
+              "item_id": 5026,
+              "item_name": "Chef Hat"
+            }
+          ]
+        },
+        {
+          "label": "Candle",
+          "item_ids": [
+            5028
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "1 Bomb Wick + 50 Matchstick + 100 Royal Jelly",
+          "items": [
+            {
+              "item_id": 5028,
+              "item_name": "Candle"
+            }
+          ]
+        },
+        {
+          "label": "Cake Hat",
+          "item_ids": [
+            5024
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "condition": "10 Candy + 5 Candy Cane + 15 Well-baked Cookie + 20 Piece of Cake + 10 Steel",
+          "items": [
+            {
+              "item_id": 5024,
+              "item_name": "Cake Hat"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Eight independent recipes selected via a menu; each consumes its own materials and grants one festive hat/item.",
+        "Insufficient materials for a given option leaves the branch with no consumption and no grant (the switch falls through with `break`)."
+      ],
+      "source": {
+        "path": "npc/quests/quests_lutie.txt",
+        "lines": [
+          185,
+          188,
+          189,
+          190,
+          191,
+          197,
+          207,
+          210,
+          211,
+          212,
+          219
+        ],
+        "reviewed_lines": [
+          185,
+          188,
+          189,
+          190,
+          191,
+          197,
+          207,
+          210,
+          211,
+          212,
+          219
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "yuno_gomer_pile_bunker_craft",
+      "title": "Gomer crafts a Pile Bunker and returns leftover Steel",
+      "npc": {
+        "name": "Gomer",
+        "internal_name": "Gomer",
+        "map": "yuno",
+        "x": 179,
+        "y": 174,
+        "service_role": "Two-handed weapon crafting",
+        "npc_id": 8016
+      },
+      "inputs": [
+        {
+          "item_id": 999,
+          "amount": 50,
+          "item_name": "Steel"
+        },
+        {
+          "item_id": 7325,
+          "amount": 30,
+          "item_name": "Flexible Tube"
+        },
+        {
+          "item_id": 1415,
+          "amount": 1,
+          "item_name": "Brocca"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Pile Bunker + Two-handed Axe",
+          "item_ids": [
+            1549,
+            1360
+          ],
+          "amount": 1,
+          "selection": "all_listed",
+          "items": [
+            {
+              "item_id": 1549,
+              "item_name": "Pile Bunker"
+            },
+            {
+              "item_id": 1360,
+              "item_name": "Two-handed Axe"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Requires 50 Steel, 30 Flexible Tube, and 1 Brocca; the NPC consumes all three and grants both a Pile Bunker and a Two-handed Axe together in the same branch."
+      ],
+      "source": {
+        "path": "npc/re/quests/pile_bunker.txt",
+        "lines": [
+          139,
+          138,
+          135,
+          137,
+          136
+        ],
+        "reviewed_lines": [
+          139,
+          138,
+          135,
+          137,
+          136
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
       "evidence_state": "conditional"
     }
   ]

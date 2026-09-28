@@ -1,0 +1,1849 @@
+{
+  "schema_version": 1,
+  "source_revision": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+  "source_worktree_dirty": true,
+  "mode": "renewal",
+  "loaded_script_files": 653,
+  "service_kinds_indexed": [
+    "cart_rental",
+    "divorce",
+    "guild_storage",
+    "kafra_cart_helper",
+    "kafra_menu",
+    "kafra_storage_helper",
+    "kafra_teleport_helper",
+    "navigation_trigger",
+    "refine_ui_access",
+    "repair_all",
+    "repair_shared_function",
+    "repair_single",
+    "skill_reset",
+    "stat_reset",
+    "storage"
+  ],
+  "call_site_counts_by_kind": {
+    "cart_rental": 3,
+    "divorce": 3,
+    "guild_storage": 1,
+    "kafra_cart_helper": 2,
+    "kafra_menu": 49,
+    "kafra_storage_helper": 4,
+    "kafra_teleport_helper": 2,
+    "navigation_trigger": 1,
+    "refine_ui_access": 5,
+    "repair_all": 1,
+    "repair_shared_function": 15,
+    "repair_single": 2,
+    "skill_reset": 2,
+    "stat_reset": 1,
+    "storage": 16
+  },
+  "entries": [
+    {
+      "service_kind": "cart_rental",
+      "call_text": "setcart",
+      "npc_clue": {
+        "map": "aldebaran",
+        "x": 54,
+        "y": 238,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "Kafra Employee#sn",
+        "declaration_line": 406
+      },
+      "source": {
+        "path": "npc/jobs/novice/supernovice.txt",
+        "line": 456
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "cart_rental",
+      "call_text": "setcart",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 415
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "cart_rental",
+      "call_text": "setcart",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 125,
+        "y": 208,
+        "declared_type": "script",
+        "display_name": "Peco Peco Remover",
+        "internal_name": "Peco Peco Remover",
+        "declaration_line": 140
+      },
+      "source": {
+        "path": "npc/re/merchants/renters.txt",
+        "line": 185
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "divorce",
+      "call_text": "divorce",
+      "npc_clue": {
+        "map": "nif_in",
+        "x": 190,
+        "y": 112,
+        "declared_type": "script",
+        "display_name": "Deviruchi",
+        "internal_name": "Deviruchi#divorce",
+        "declaration_line": 41
+      },
+      "source": {
+        "path": "npc/other/divorce.txt",
+        "line": 41
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "divorce",
+      "call_text": "divorce",
+      "npc_clue": {
+        "map": "nif_in",
+        "x": 190,
+        "y": 112,
+        "declared_type": "script",
+        "display_name": "Deviruchi",
+        "internal_name": "Deviruchi#divorce",
+        "declaration_line": 41
+      },
+      "source": {
+        "path": "npc/other/divorce.txt",
+        "line": 184
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "divorce",
+      "call_text": "divorce",
+      "npc_clue": {
+        "map": "nif_in",
+        "x": 190,
+        "y": 112,
+        "declared_type": "script",
+        "display_name": "Deviruchi",
+        "internal_name": "Deviruchi#divorce",
+        "declaration_line": 41
+      },
+      "source": {
+        "path": "npc/other/divorce.txt",
+        "line": 216
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "guild_storage",
+      "call_text": "guildopenstorage()",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 202
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_cart_helper",
+      "call_text": "callfunc \"F_KafCart\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/cool_event_corp.txt",
+        "line": 83
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_cart_helper",
+      "call_text": "callfunc(\"F_KafCart\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 172
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "bat_room",
+        "x": 148,
+        "y": 147,
+        "declared_type": "script",
+        "display_name": "Kafra Staff",
+        "internal_name": "kaf_bat",
+        "declaration_line": 328
+      },
+      "source": {
+        "path": "npc/battleground/bg_common.txt",
+        "line": 330
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "aldebaran",
+        "x": 143,
+        "y": 119,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_aldebaran",
+        "declaration_line": 129
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 137
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "geffen",
+        "x": 120,
+        "y": 62,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_geffen",
+        "declaration_line": 143
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 151
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "geffen",
+        "x": 203,
+        "y": 123,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "geffen2",
+        "declaration_line": 156
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 166
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "morocc",
+        "x": 156,
+        "y": 97,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_morocc",
+        "declaration_line": 172
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 180
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "morocc",
+        "x": 160,
+        "y": 258,
+        "declared_type": "script",
+        "display_name": "Kafra",
+        "internal_name": "kaf_morocc2",
+        "declaration_line": 185
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 195
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "payon",
+        "x": 181,
+        "y": 104,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_payon",
+        "declaration_line": 201
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 209
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "payon",
+        "x": 175,
+        "y": 226,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_payon2",
+        "declaration_line": 214
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 223
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "pay_arche",
+        "x": 55,
+        "y": 123,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_payon3",
+        "declaration_line": 228
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 237
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 152,
+        "y": 326,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_prontera",
+        "declaration_line": 243
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 253
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 151,
+        "y": 29,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_prontera2",
+        "declaration_line": 258
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 266
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 29,
+        "y": 207,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_prontera3",
+        "declaration_line": 271
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 279
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 282,
+        "y": 200,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_prontera4",
+        "declaration_line": 284
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 294
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prontera",
+        "x": 146,
+        "y": 89,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_prontera5",
+        "declaration_line": 299
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 308
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "yuno",
+        "x": 152,
+        "y": 187,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_yuno",
+        "declaration_line": 314
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 322
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "yuno",
+        "x": 327,
+        "y": 108,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_yuno2",
+        "declaration_line": 327
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 335
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "yuno",
+        "x": 277,
+        "y": 221,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_yuno3",
+        "declaration_line": 340
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 348
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "alberta",
+        "x": 28,
+        "y": 229,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_alberta",
+        "declaration_line": 354
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 363
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "alberta",
+        "x": 113,
+        "y": 60,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_alberta2",
+        "declaration_line": 368
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 378
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "comodo",
+        "x": 195,
+        "y": 150,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_comodo",
+        "declaration_line": 384
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 393
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "cmd_fild07",
+        "x": 136,
+        "y": 134,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_cmd_fild07",
+        "declaration_line": 398
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 407
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "cmd_fild07",
+        "x": 136,
+        "y": 134,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_cmd_fild07",
+        "declaration_line": 398
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 422
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "moscovia",
+        "x": 223,
+        "y": 191,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_mosk",
+        "declaration_line": 431
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 433
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "amatsu",
+        "x": 102,
+        "y": 149,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_amatsu",
+        "declaration_line": 439
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 447
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "ayothaya",
+        "x": 212,
+        "y": 169,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_ayothaya",
+        "declaration_line": 453
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 461
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "einbech",
+        "x": 181,
+        "y": 132,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_einbech",
+        "declaration_line": 467
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 474
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "einbroch",
+        "x": 242,
+        "y": 205,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_einbroch",
+        "declaration_line": 480
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 488
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "einbroch",
+        "x": 59,
+        "y": 203,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_einbroch2",
+        "declaration_line": 493
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 501
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "gonryun",
+        "x": 159,
+        "y": 122,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_gonryun",
+        "declaration_line": 507
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 515
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "lighthalzen",
+        "x": 164,
+        "y": 100,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_lighthalzen",
+        "declaration_line": 521
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 529
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "lighthalzen",
+        "x": 191,
+        "y": 320,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_lighthalzen2",
+        "declaration_line": 534
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 541
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "lhz_in02",
+        "x": 237,
+        "y": 284,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_lhz_in02",
+        "declaration_line": 546
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 553
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "louyang",
+        "x": 210,
+        "y": 104,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_louyang",
+        "declaration_line": 559
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 567
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "umbala",
+        "x": 87,
+        "y": 160,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_umbala",
+        "declaration_line": 573
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 582
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "niflheim",
+        "x": 202,
+        "y": 180,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_niflheim",
+        "declaration_line": 588
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 589
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "izlu2dun",
+        "x": 106,
+        "y": 58,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_izlu2dun",
+        "declaration_line": 596
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 609
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "prt_fild05",
+        "x": 290,
+        "y": 224,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "prt_fild05",
+        "declaration_line": 615
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 624
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "mjolnir_02",
+        "x": 83,
+        "y": 362,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_mjolnir_02",
+        "declaration_line": 630
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 638
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "moc_ruins",
+        "x": 59,
+        "y": 157,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "moc_ruins",
+        "declaration_line": 644
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 653
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "gef_fild10",
+        "x": 73,
+        "y": 340,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_gef_fild10",
+        "declaration_line": 659
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 667
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "alb2trea",
+        "x": 59,
+        "y": 69,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_alb2trea",
+        "declaration_line": 673
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 681
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "turbo_room",
+        "x": 130,
+        "y": 92,
+        "declared_type": "script",
+        "display_name": "Kafra Staff",
+        "internal_name": "Kafra Staff#tt",
+        "declaration_line": 3687
+      },
+      "source": {
+        "path": "npc/other/turbo_track.txt",
+        "line": 3696
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "brasilis",
+        "x": 197,
+        "y": 221,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_bra",
+        "declaration_line": 40
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 42
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "dewata",
+        "x": 202,
+        "y": 184,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_dewata",
+        "declaration_line": 48
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 50
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "moc_para01",
+        "x": 10,
+        "y": 185,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_eden",
+        "declaration_line": 56
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 62
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "glast_01",
+        "x": 200,
+        "y": 275,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_glast",
+        "declaration_line": 66
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 68
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "malaya",
+        "x": 71,
+        "y": 79,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_malaya1",
+        "declaration_line": 81
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 82
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "malaya",
+        "x": 234,
+        "y": 204,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_malaya2",
+        "declaration_line": 87
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 88
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_menu",
+      "call_text": "callfunc \"F_Kafra\"",
+      "npc_clue": {
+        "map": "job3_rune01",
+        "x": 92,
+        "y": 62,
+        "declared_type": "script",
+        "display_name": "Kafra Employee",
+        "internal_name": "kaf_rune",
+        "declaration_line": 94
+      },
+      "source": {
+        "path": "npc/re/kafras/kafras.txt",
+        "line": 97
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_storage_helper",
+      "call_text": "callfunc \"F_KafStor\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/cool_event_corp.txt",
+        "line": 73
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_storage_helper",
+      "call_text": "callfunc \"F_KafStor\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 148
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_storage_helper",
+      "call_text": "callfunc \"F_KafStor\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 150
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_storage_helper",
+      "call_text": "callfunc \"F_KafStor\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 181
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_teleport_helper",
+      "call_text": "callfunc \"F_KafTele\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/cool_event_corp.txt",
+        "line": 78
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "kafra_teleport_helper",
+      "call_text": "callfunc \"F_KafTele\"",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 155
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "navigation_trigger",
+      "call_text": "navigateto(",
+      "npc_clue": {
+        "map": "iz_int",
+        "x": 18,
+        "y": 26,
+        "declared_type": "script",
+        "display_name": "startpoint",
+        "internal_name": "startpoint",
+        "declaration_line": 44
+      },
+      "source": {
+        "path": "npc/re/jobs/novice/academy.txt",
+        "line": 47
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "refine_ui_access",
+      "call_text": "openrefineryui()",
+      "npc_clue": {
+        "map": "payon",
+        "x": 157,
+        "y": 146,
+        "declared_type": "script",
+        "display_name": "Suhnbi",
+        "internal_name": "Suhnbi#cash",
+        "declaration_line": 46
+      },
+      "source": {
+        "path": "npc/merchants/advanced_refiner.txt",
+        "line": 54
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "refine_ui_access",
+      "call_text": "openrefineryui()",
+      "npc_clue": {
+        "map": "lhz_in02",
+        "x": 282,
+        "y": 20,
+        "declared_type": "script",
+        "display_name": "Fulerr",
+        "internal_name": "Fulerr",
+        "declaration_line": 576
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 593
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "refine_ui_access",
+      "call_text": "openrefineryui()",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/re/merchants/hd_refiner.txt",
+        "line": 48
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "refine_ui_access",
+      "call_text": "openrefineryui()",
+      "npc_clue": {
+        "map": "payon_in01",
+        "x": 18,
+        "y": 132,
+        "declared_type": "script",
+        "display_name": "Vestri",
+        "internal_name": "Vestri#pay",
+        "declaration_line": 45
+      },
+      "source": {
+        "path": "npc/re/merchants/refine.txt",
+        "line": 65
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "refine_ui_access",
+      "call_text": "openrefineryui()",
+      "npc_clue": {
+        "map": "itemmall",
+        "x": 31,
+        "y": 76,
+        "declared_type": "script",
+        "display_name": "Shadow Blacksmith",
+        "internal_name": "Shadow Blacksmith#nomal",
+        "declaration_line": 36
+      },
+      "source": {
+        "path": "npc/re/merchants/shadow_refiner.txt",
+        "line": 47
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_all",
+      "call_text": "repairall",
+      "npc_clue": {
+        "map": "izlude",
+        "x": 158,
+        "y": 130,
+        "declared_type": "script",
+        "display_name": "Repair Man",
+        "internal_name": "Repair Man#iz",
+        "declaration_line": 14223
+      },
+      "source": {
+        "path": "npc/re/jobs/novice/academy.txt",
+        "line": 14258
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc(\"repairmain\"",
+      "npc_clue": {
+        "map": "bat_room",
+        "x": 138,
+        "y": 144,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#bg",
+        "declaration_line": 334
+      },
+      "source": {
+        "path": "npc/battleground/bg_common.txt",
+        "line": 335
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "alberta_in",
+        "x": 31,
+        "y": 65,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#alb",
+        "declaration_line": 1093
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1094
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "moc_ruins",
+        "x": 107,
+        "y": 94,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#moc",
+        "declaration_line": 1098
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1099
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "payon",
+        "x": 143,
+        "y": 165,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#pay",
+        "declaration_line": 1103
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1104
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "prt_in",
+        "x": 63,
+        "y": 54,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#prt",
+        "declaration_line": 1108
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1109
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "yuno_in01",
+        "x": 175,
+        "y": 28,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#juno",
+        "declaration_line": 1113
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1114
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "geffen_in",
+        "x": 34,
+        "y": 166,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#gef",
+        "declaration_line": 1118
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1119
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "aldeba_in",
+        "x": 38,
+        "y": 60,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#alde",
+        "declaration_line": 1123
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1124
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "lhz_in02",
+        "x": 284,
+        "y": 14,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#lhz",
+        "declaration_line": 1128
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1129
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "prt_gld",
+        "x": 139,
+        "y": 117,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#prt_gld",
+        "declaration_line": 1133
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1134
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "gef_fild13",
+        "x": 263,
+        "y": 117,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#gef_fild",
+        "declaration_line": 1138
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1139
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "pay_gld",
+        "x": 295,
+        "y": 183,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#pay_gld",
+        "declaration_line": 1143
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1144
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "alde_gld",
+        "x": 220,
+        "y": 152,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#alde_gld",
+        "declaration_line": 1148
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1149
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "aru_gld",
+        "x": 189,
+        "y": 336,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#aru_gld",
+        "declaration_line": 1153
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1154
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_shared_function",
+      "call_text": "callfunc \"repairmain\"",
+      "npc_clue": {
+        "map": "sch_gld",
+        "x": 340,
+        "y": 80,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#sch_gld",
+        "declaration_line": 1158
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1159
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_single",
+      "call_text": "repair(.@checkitem)",
+      "npc_clue": {
+        "map": "sch_gld",
+        "x": 340,
+        "y": 80,
+        "declared_type": "script",
+        "display_name": "Repairman",
+        "internal_name": "Repairman#sch_gld",
+        "declaration_line": 1158
+      },
+      "source": {
+        "path": "npc/merchants/refine.txt",
+        "line": 1222
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "repair_single",
+      "call_text": "repair(.@i)",
+      "npc_clue": {
+        "map": "ein_in01",
+        "x": 117,
+        "y": 80,
+        "declared_type": "script",
+        "display_name": "Unidentified Machine",
+        "internal_name": "Unidentified Machine#as",
+        "declaration_line": 1517
+      },
+      "source": {
+        "path": "npc/quests/quests_airship.txt",
+        "line": 1546
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "skill_reset",
+      "call_text": "resetskill",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/other/CashShop_Functions.txt",
+        "line": 76
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "skill_reset",
+      "call_text": "resetskill",
+      "npc_clue": {
+        "map": "izlude",
+        "x": 127,
+        "y": 175,
+        "declared_type": "script",
+        "display_name": "Hypnotist",
+        "internal_name": "Hypnotist#novice",
+        "declaration_line": 36
+      },
+      "source": {
+        "path": "npc/re/other/resetskill.txt",
+        "line": 144
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "stat_reset",
+      "call_text": "resetstatus",
+      "npc_clue": {
+        "map": "izlude",
+        "x": 127,
+        "y": 175,
+        "declared_type": "script",
+        "display_name": "Hypnotist",
+        "internal_name": "Hypnotist#novice",
+        "declaration_line": 36
+      },
+      "source": {
+        "path": "npc/re/other/resetskill.txt",
+        "line": 142
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/kafras/functions_kafras.txt",
+        "line": 296
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "aldeba_in",
+        "x": 96,
+        "y": 181,
+        "declared_type": "script",
+        "display_name": "Kafra Service",
+        "internal_name": "Kafra Service",
+        "declaration_line": 43
+      },
+      "source": {
+        "path": "npc/kafras/kafras.txt",
+        "line": 95
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/other/CashShop_Functions.txt",
+        "line": 49
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "mid_camp",
+        "x": 62,
+        "y": 125,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent",
+        "declaration_line": 7575
+      },
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "line": 7689
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "mid_camp",
+        "x": 62,
+        "y": 125,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent",
+        "declaration_line": 7575
+      },
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "line": 7736
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "mid_camp",
+        "x": 62,
+        "y": 125,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent",
+        "declaration_line": 7575
+      },
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "line": 7858
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "spl_fild02",
+        "x": 25,
+        "y": 211,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent#spl",
+        "declaration_line": 52
+      },
+      "source": {
+        "path": "npc/quests/quests_13_2.txt",
+        "line": 112
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "spl_fild02",
+        "x": 25,
+        "y": 211,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent#spl",
+        "declaration_line": 52
+      },
+      "source": {
+        "path": "npc/quests/quests_13_2.txt",
+        "line": 159
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "spl_fild02",
+        "x": 25,
+        "y": 211,
+        "declared_type": "script",
+        "display_name": "Cat Hand Agent",
+        "internal_name": "Cat Hand Agent#spl",
+        "declaration_line": 52
+      },
+      "source": {
+        "path": "npc/quests/quests_13_2.txt",
+        "line": 280
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "mora",
+        "x": 48,
+        "y": 128,
+        "declared_type": "script",
+        "display_name": "Drawer",
+        "internal_name": "Drawer#mora_warehouse",
+        "declaration_line": 1183
+      },
+      "source": {
+        "path": "npc/re/cities/mora.txt",
+        "line": 1197
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage()",
+      "npc_clue": {
+        "map": "job_gun",
+        "x": 216,
+        "y": 138,
+        "declared_type": "script",
+        "display_name": "Butler Karlex",
+        "internal_name": "Butler Karlex",
+        "declaration_line": 981
+      },
+      "source": {
+        "path": "npc/re/jobs/2e/rebellion.txt",
+        "line": 990
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "iz_ac01",
+        "x": 95,
+        "y": 46,
+        "declared_type": "script",
+        "display_name": "Kafra Guide Trainer",
+        "internal_name": "Kafra Guide Trainer#ac",
+        "declaration_line": 5348
+      },
+      "source": {
+        "path": "npc/re/jobs/novice/academy.txt",
+        "line": 5425
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage()",
+      "npc_clue": {
+        "map": "dali",
+        "x": 112,
+        "y": 95,
+        "declared_type": "script",
+        "display_name": "Logistics Manager",
+        "internal_name": "Logistics Manager",
+        "declaration_line": 123
+      },
+      "source": {
+        "path": "npc/re/other/dimensional_gap.txt",
+        "line": 140
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": null,
+      "source": {
+        "path": "npc/re/quests/eden/eden_service.txt",
+        "line": 68
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "dic_in01",
+        "x": 254,
+        "y": 119,
+        "declared_type": "script",
+        "display_name": "Item Storage",
+        "internal_name": "Item Storage#01",
+        "declaration_line": 427
+      },
+      "source": {
+        "path": "npc/re/quests/quests_dicastes.txt",
+        "line": 452
+      },
+      "status": "unreviewed_service_call_clue"
+    },
+    {
+      "service_kind": "storage",
+      "call_text": "openstorage",
+      "npc_clue": {
+        "map": "malangdo",
+        "x": 184,
+        "y": 139,
+        "declared_type": "script",
+        "display_name": "Storekeeper",
+        "internal_name": "Storekeeper#mal",
+        "declaration_line": 329
+      },
+      "source": {
+        "path": "npc/re/quests/quests_malangdo.txt",
+        "line": 374
+      },
+      "status": "unreviewed_service_call_clue"
+    }
+  ]
+}

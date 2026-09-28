@@ -36,18 +36,21 @@
         "total": 1759,
         "basis": "monster records with at least one indexed script-spawn clue"
       },
-      "script_spawn_clues": 1217
+      "script_spawn_clues": 1217,
+      "reviewed_boss_behavior_records": 11,
+      "reviewed_boss_summon_groups": 13,
+      "reviewed_scripted_spawn_groups": 43
     },
     "items": {
       "records": 13183,
       "translated_effects": {
-        "observed": 1976,
+        "observed": 2230,
         "total": 13183,
         "basis": "records with a supported natural-language effect summary"
       },
       "noncard_records": 12171,
       "noncard_translated_effects": {
-        "observed": 1529,
+        "observed": 1692,
         "total": 12171,
         "basis": "non-card item records with a supported natural-language effect summary"
       },
@@ -66,15 +69,15 @@
         "total": 13183,
         "basis": "records linked to at least one indexed container outcome"
       },
-      "verified_quest_reward_sources": 7,
+      "verified_quest_reward_sources": 40,
       "script_grant_clues": 1956,
       "script_consumption_clues": 2186,
-      "items_linked_to_reviewed_exchange": 13
+      "items_linked_to_reviewed_exchange": 285
     },
     "cards": {
       "records": 1012,
       "translated_effects": {
-        "observed": 447,
+        "observed": 538,
         "total": 1012,
         "basis": "card records with a supported natural-language effect summary"
       },
@@ -88,7 +91,7 @@
     "combos_and_groups": {
       "combos": 436,
       "translated_combo_effects": {
-        "observed": 173,
+        "observed": 249,
         "total": 436,
         "basis": "distinct combo records with translated script summaries"
       },
@@ -97,7 +100,9 @@
     "skills_and_jobs": {
       "skill_records": 1170,
       "job_skill_trees": 128,
-      "job_bonus_schedules": 147
+      "job_bonus_schedules": 147,
+      "reviewed_formula_records": 12,
+      "skills_covered_by_reviewed_formulas": 50
     },
     "statuses": {
       "icon_records": 700,
@@ -120,7 +125,7 @@
       "hunt_target_rows": 468,
       "npc_stage_relations": 1345,
       "quests_with_reviewed_flow": {
-        "observed": 9,
+        "observed": 124,
         "total": 3172,
         "basis": "quest records with source-anchored reviewed flow notes"
       },
@@ -131,12 +136,12 @@
       },
       "verified_npc_rewards": 6,
       "verified_quest_item_rewards": {
-        "observed": 7,
+        "observed": 40,
         "total": 41,
         "basis": "nearby literal item-grant candidates whose complete quest branch was manually reviewed"
       },
       "quests_with_verified_item_rewards": {
-        "observed": 3,
+        "observed": 28,
         "total": 3172,
         "basis": "quest records with at least one source-reviewed item reward"
       },
@@ -150,11 +155,17 @@
         "basis": "declarations whose map identifier resolves in the static map index"
       },
       "literal_shop_offers": 1854,
-      "reviewed_exchange_records": 2,
+      "reviewed_exchange_records": 74,
       "reviewed_service_roles": {
-        "count": 1,
+        "count": 68,
         "evidence_state": "conditional",
         "basis": "distinct service roles cited by source-reviewed exchange records"
+      },
+      "literal_service_call_clues": 107,
+      "reviewed_service_records": {
+        "count": 14,
+        "of_indexed_call_clues": 107,
+        "basis": "source-reviewed service records (storage/kafra/refine-UI/repair/divorce/reset/navigation); one record may cover several indexed call-site clues, e.g. the shared Kafra function"
       }
     },
     "maps_and_rules": {

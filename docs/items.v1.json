@@ -101072,7 +101072,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 30; increases attack speed by 8%; on attack, has a 0.1% chance to inflict Curse on the wearer",
+   "effect_summary": "increases critical chance by 30%; increases attack speed by 8%; on attack, has a 0.1% chance to inflict Curse on the wearer",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -101601,7 +101601,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 30; increases attack speed by 8%",
+   "effect_summary": "increases critical chance by 30%; increases attack speed by 8%",
    "type": "IT_WEAPON",
    "buy": 1,
    "atk": 204,
@@ -101686,7 +101686,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical chance by 10%; With STR at least 80: on a physical attack, has a 5% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 3500,
@@ -105577,7 +105578,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's weapon",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -105646,7 +105648,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -106981,7 +106984,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 90",
+   "effect_summary": "increases critical chance by 90%",
    "type": "IT_WEAPON",
    "buy": 120000,
    "weight": 550,
@@ -108664,7 +108667,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "ignores target DEF against player targets; reduces FLEE by 160; reduces Perfect Dodge by 160; reduces HP regeneration rate by 100%; reduces SP regeneration rate by 100%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -109371,7 +109375,8 @@
     "record": "Id=1283"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Sonic Blow damage by 25%; increases attack speed by 3%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 175,
@@ -109524,7 +109529,8 @@
        "name": "Assassin Handcuffs"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 40%; increases critical chance by 4%; reduces maximum HP by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[6]"
@@ -109811,7 +109817,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 2; reduces FLEE by 30; increases damage against player targets by 50%; increases Cross Impact damage by 30%",
    "type": "IT_WEAPON",
    "buy": 56000,
    "weight": 1500,
@@ -110014,7 +110021,8 @@
        "name": "Mobster Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[8]"
@@ -110033,7 +110041,8 @@
        "name": "Sedora Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[9]"
@@ -113327,7 +113336,8 @@
        "name": "Gigant Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "Cart Termination damage increases by 15%, plus 5% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[10]"
@@ -115686,7 +115696,8 @@
     "record": "Id=1427"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Magnum Break damage by 25%; increases STR by 2",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 160,
@@ -115889,7 +115900,8 @@
        "name": "Imperial Guard"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Grand Cross damage by 10%; increases Ray of Genesis damage by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[19]"
@@ -115918,7 +115930,8 @@
        "name": "Imperial Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of Grand Cross by 30; reduces the SP cost of Shield Press by 5; reduces the SP cost of Banishing Point by 15; reduces the SP cost of Cannon Spear by 10",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[20]"
@@ -115961,7 +115974,8 @@
        "name": "Imperial Spear"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Cannon Spear damage by 20%; increases Banishing Point damage by 20%; increases Shield Press damage by 20%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[295]"
@@ -117515,7 +117529,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 30; increases HIT by 10",
+   "effect_summary": "increases critical chance by 30%; increases HIT by 10",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 2500,
@@ -118329,7 +118343,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 30; increases HIT by 10",
+   "effect_summary": "increases critical chance by 30%; increases HIT by 10",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 2500,
@@ -121610,7 +121624,8 @@
        "name": "MasterSmith Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "on a physical attack, has a 9% chance to break the target's armor; on a physical attack, has a 9% chance to break the target's weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[30]"
@@ -122111,7 +122126,8 @@
     "record": "Id=1547"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Cart Revolution damage by 25%; increases STR by 2",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 150,
@@ -123358,7 +123374,8 @@
        "name": "Revised Encyclopedia"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "attack speed increases by 1% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[29]"
@@ -123676,7 +123693,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 3; increases SP regeneration rate by 5%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 300,
@@ -124360,7 +124378,8 @@
     "record": "Id=1591"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage against player targets by 40%; increases magic damage against player targets by 5%; increases healing from skills you cast on yourself by 5%; on attack, has a 10% chance to inflict Blindness",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 120,
@@ -126848,7 +126867,8 @@
        "name": "Magician Hat"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 2; increases INT by 2; increases SP regeneration rate by 5%; magic damage increases by 1% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[49]"
@@ -126979,7 +126999,8 @@
        "name": "Exorcism Bible"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Magnus Exorcismus damage by 20%; when hit by a direct attack, has a 2% chance to cast Turn Undead Lv 1 on the attacker",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[50]"
@@ -127213,7 +127234,8 @@
        "name": "Thornwood Band"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "MATK increases by 10% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[53]"
@@ -128433,7 +128455,8 @@
     "record": "Id=1667"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against player targets by 10%; increases healing from skills you cast on yourself by 5%; on attack, has a 10% chance to inflict Blindness",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 50,
@@ -128554,7 +128577,8 @@
     "record": "Id=1671"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage against demon targets by 10%; increases damage against undead targets by 10%; increases magic damage against demon targets by 10%; increases magic damage against undead targets by 10%; At refine level at least +9: increases magic damage by 5%; At refine level at least +12: increases magic damage by 7%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 800,
@@ -128660,7 +128684,8 @@
     "record": "Id=1684"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 5%; increases maximum HP by 200",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 200,
@@ -128708,7 +128733,8 @@
     "record": "Id=1686"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 8%; increases DEX by 1; increases maximum HP by 200; increases maximum SP by 100",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 300,
@@ -128944,7 +128970,8 @@
     "record": "Id=1699"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 3; increases INT by 3; increases ranged (long-range) physical damage by 5%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 120,
@@ -130046,7 +130073,8 @@
        "name": "Hunting Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[58]"
@@ -130410,7 +130438,8 @@
        "name": "Lunatic Brooch"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 1; increases maximum SP by 50; increases SP regeneration rate by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[59]"
@@ -130599,7 +130628,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 2; increases SP regeneration rate by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1700,
@@ -130637,7 +130667,8 @@
        "name": "Hunting Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[60]"
@@ -130721,7 +130752,8 @@
     "record": "Id=1728"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 20%",
    "type": "IT_WEAPON",
    "buy": 1,
    "atk": 194,
@@ -130803,7 +130835,8 @@
        "name": "Fire Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[61]"
@@ -130896,7 +130929,8 @@
        "name": "Crystal Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[62]"
@@ -130996,7 +131030,8 @@
        "name": "Stone Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%; on attack, has a 10% chance to inflict Stone Curse",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[63]"
@@ -131102,7 +131137,8 @@
        "name": "Arrow of Wind"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%; on a normal attack, has a 10% chance to cast Wind Blade Lv 5; With INT above 39: on a normal attack, has a 20% chance to cast Wind Blade Lv 5",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[64]"
@@ -131194,7 +131230,8 @@
        "name": "Steel Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[65]"
@@ -131634,7 +131671,8 @@
     "record": "Id=1744"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Double Strafe damage by 25%; increases DEX by 2",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 170,
@@ -131718,7 +131756,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Focused Arrow Strike damage by 10%; increases Double Strafe damage by 10%; increases Arrow Repel damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -131777,7 +131816,8 @@
        "name": "Elven Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[67]"
@@ -132639,7 +132679,8 @@
        "name": "Fire Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[61]"
@@ -132761,7 +132802,8 @@
        "name": "Steel Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[65]"
@@ -132858,7 +132900,8 @@
        "name": "Crystal Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[62]"
@@ -132942,7 +132985,8 @@
        "name": "Arrow of Wind"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%; on a normal attack, has a 10% chance to cast Wind Blade Lv 5; With INT above 39: on a normal attack, has a 20% chance to cast Wind Blade Lv 5",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[64]"
@@ -133040,7 +133084,8 @@
        "name": "Stone Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 25%; on attack, has a 10% chance to inflict Stone Curse",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[63]"
@@ -133524,7 +133569,8 @@
        "name": "Little Feather Hat"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[68]"
@@ -133562,7 +133608,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 20",
+   "effect_summary": "increases critical chance by 20%",
    "type": "IT_AMMO",
    "buy": 20,
    "weight": 3,
@@ -134089,7 +134135,8 @@
        "name": "Elven Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[67]"
@@ -134149,7 +134196,8 @@
        "name": "Hunting Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[58]"
@@ -134168,7 +134216,8 @@
        "name": "Hunting Arrow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[60]"
@@ -134227,7 +134276,8 @@
        "name": "Vellum CrossBow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 70%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[69]"
@@ -134273,7 +134323,8 @@
        "name": "Vellum CrossBow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 40%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[70]"
@@ -135769,7 +135820,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Raging Trifecta Blow damage by 15%; increases Raging Quadruple Blow damage by 15%; increases Raging Thrust damage by 20%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 500,
@@ -135913,7 +135965,8 @@
     "record": "Id=1828"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 2; increases Throw Spirit Sphere damage by 25%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 150,
@@ -137465,7 +137518,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Vulcan Arrow damage by 10%; increases Melody Strike damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1200,
@@ -137692,7 +137746,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Vulcan Arrow damage by 10%; increases Melody Strike damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1200,
@@ -138139,14 +138194,16 @@
        "name": "Oz's New Wing Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Vulcan Arrow damage by 200%; reduces the SP cost of Vulcan Arrow by 20",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[71]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases the SP cost of Windmill Rush Attack by 20",
    "type": "IT_WEAPON",
    "buy": 124000,
    "weight": 1000,
@@ -139118,7 +139175,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 5; increases FLEE by 10; increases Perfect Dodge by 2",
+   "effect_summary": "increases critical chance by 5%; increases FLEE by 10; increases Perfect Dodge by 2",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 700,
@@ -139390,7 +139447,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 20",
+   "effect_summary": "increases critical chance by 20%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 400,
@@ -139574,7 +139631,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Vulcan Arrow damage by 10%; increases Slinging Arrow damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1100,
@@ -140003,7 +140061,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Vulcan Arrow damage by 10%; increases Slinging Arrow damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1100,
@@ -140195,7 +140254,8 @@
     "record": "Id=1982"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 2; increases Slinging Arrow damage by 25%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 160,
@@ -140500,14 +140560,16 @@
        "name": "Bloody Floral Decoration Bracelet"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Vulcan Arrow damage by 200%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[72]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases the SP cost of Sheltering Bliss by 20",
    "type": "IT_WEAPON",
    "buy": 124000,
    "weight": 1000,
@@ -141073,7 +141135,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Wind element; increases INT by 3; increases Jupitel Thunder damage by 12%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141129,7 +141192,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Water element; increases INT by 3; increases Cold Bolt damage by 12%; increases Frost Diver damage by 12%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141185,7 +141249,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Fire element; increases INT by 3; increases Fire Bolt damage by 10%; increases Fire Ball damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141241,7 +141306,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Earth element; increases INT by 3; increases Earth Spike damage by 10%; increases Heaven's Drive damage by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141297,7 +141363,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Wind element; increases INT by 5; increases Jupitel Thunder damage by 30%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141353,7 +141420,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Water element; increases INT by 5; increases Cold Bolt damage by 30%; increases Frost Diver damage by 30%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141409,7 +141477,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Fire element; increases INT by 5; increases Fire Bolt damage by 30%; increases Fire Ball damage by 30%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141465,7 +141534,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's attacks the Earth element; increases INT by 5; increases Earth Spike damage by 30%; increases Heaven's Drive damage by 30%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -141617,7 +141687,8 @@
     "record": "Id=2019"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against player targets by 20%; increases healing from skills you cast on yourself by 5%; on attack, has a 10% chance to inflict Stun",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 50,
@@ -143101,7 +143172,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[83]"
@@ -143125,7 +143197,8 @@
        "name": "Pocket Watch"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[304]"
@@ -143764,7 +143837,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[87]"
@@ -144195,14 +144269,16 @@
        "name": "Exorcism Bible"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Magnus Exorcismus damage by 20%; when hit by a direct attack, has a 2% chance to cast Turn Undead Lv 1 on the attacker",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[50]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 3%; increases SP regeneration rate by 3%; increases INT by 1",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 600,
@@ -144231,7 +144307,8 @@
      "source_record": "db/re/mob_db.conf:Id=1919"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases STR by 1; increases Shield Chain damage by 30%; increases Shield Boomerang damage by 30%; increases the SP cost of skills by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 2000,
@@ -144577,7 +144654,8 @@
      "source_record": "db/re/mob_db.conf:Id=2882"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Shield Boomerang damage by 60%; reduces AGI by 1; increases maximum HP by 500",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1800,
@@ -145091,7 +145169,8 @@
        "name": "Imperial Guard"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Grand Cross damage by 10%; increases Ray of Genesis damage by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[19]"
@@ -145120,7 +145199,8 @@
        "name": "Imperial Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of Grand Cross by 30; reduces the SP cost of Shield Press by 5; reduces the SP cost of Banishing Point by 15; reduces the SP cost of Cannon Spear by 10",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[20]"
@@ -145163,7 +145243,8 @@
        "name": "Imperial Spear"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Cannon Spear damage by 20%; increases Banishing Point damage by 20%; increases Shield Press damage by 20%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[295]"
@@ -145381,7 +145462,8 @@
        "name": "Gigant Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "Cart Termination damage increases by 15%, plus 5% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[96]"
@@ -146245,7 +146327,8 @@
        "name": "Revised Encyclopedia"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "attack speed increases by 1% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[29]"
@@ -146253,7 +146336,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases MATK by 5; increases INT by 3; increases DEX by 2; increases critical rate by 3; At refine level above +6: increases critical rate by 2; At refine level above +8: increases MATK by 5",
+   "effect_summary": "increases MATK by 5; increases INT by 3; increases DEX by 2; increases critical chance by 3%; At refine level above +6: increases critical chance by 2%; At refine level above +8: increases MATK by 5",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1000,
@@ -149382,7 +149465,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[83]"
@@ -149406,7 +149490,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[87]"
@@ -150475,7 +150560,8 @@
        "name": "Bell Pigeon"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[103]"
@@ -152935,7 +153021,8 @@
        "name": "Skull Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[113]"
@@ -158266,7 +158353,8 @@
        "name": "Shinobi Sash"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 20%; increases maximum HP by 300",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[116]"
@@ -159164,7 +159252,8 @@
        "name": "Vali's Manteau"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases VIT by 5; increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[120]"
@@ -159183,7 +159272,8 @@
        "name": "Ulle's Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "With DEX above 69: reduces the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[121]"
@@ -159202,7 +159292,8 @@
        "name": "Ulle's Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "With DEX above 69: reduces the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[122]"
@@ -159221,7 +159312,8 @@
        "name": "Priest Sword"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum SP by 50; increases Bowling Bash damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[123]"
@@ -159569,7 +159661,8 @@
        "name": "Shinobi Sash"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 20%; increases maximum HP by 300",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[128]"
@@ -160178,7 +160271,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum SP by 150; increases equipment MDEF by 5; increases healing from skills you cast on yourself by 6%; reduces attack delay by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -160916,7 +161010,8 @@
      "source_record": "db/re/mob_db.conf:Id=1978"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases VIT by 2; increases equipment MDEF by 5; increases HP regeneration rate by 50%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 3500,
@@ -161018,7 +161113,8 @@
     "record": "Id=2395"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 600; increases SP regeneration rate by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "def": 10,
@@ -162838,7 +162934,8 @@
        "name": "Vali's Manteau"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases VIT by 5; increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[120]"
@@ -163247,7 +163344,8 @@
        "name": "Wool Scarf"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 5%; increases maximum HP by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[147]"
@@ -164118,7 +164216,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -164187,7 +164286,8 @@
     "record": "Id=2442"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases HP regeneration rate by 10%; increases SP regeneration rate by 10%; when hit by a direct attack, has a 3% chance to cast Quagmire Lv 3 on the attacker; increases equipment MDEF by 1",
    "type": "IT_ARMOR",
    "def": 18,
    "loc": "EQP_SHOES",
@@ -164499,7 +164599,8 @@
     "record": "Id=2455"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 1; increases maximum HP by 100; increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
    "type": "IT_ARMOR",
    "def": 17,
    "loc": "EQP_SHOES"
@@ -164513,7 +164614,8 @@
     "record": "Id=2456"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%; increases SP regeneration rate by 2%",
    "type": "IT_ARMOR",
    "def": 14,
    "loc": "EQP_SHOES",
@@ -164529,7 +164631,8 @@
     "record": "Id=2457"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 12%; increases SP regeneration rate by 4%",
    "type": "IT_ARMOR",
    "def": 16,
    "loc": "EQP_SHOES",
@@ -164545,7 +164648,8 @@
     "record": "Id=2458"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 14%; increases SP regeneration rate by 6%",
    "type": "IT_ARMOR",
    "def": 18,
    "loc": "EQP_SHOES",
@@ -164712,7 +164816,8 @@
      "source_record": "db/re/mob_db.conf:Id=2777"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases attack speed by 2%; reduces the SP cost of Swing Dance by 32",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -165187,7 +165292,8 @@
        "name": "Mace Of Judgement"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against undead targets by 15%; increases magic damage against undead targets by 15%; increases Adoramus damage by 100%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[156]"
@@ -165223,7 +165329,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Judex damage by 30%; increases the SP cost of Judex by 40; increases maximum SP by 150",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -165243,7 +165350,8 @@
     "record": "Id=2473"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases VIT by 1; increases HP regeneration rate by 28%; increases SP regeneration rate by 12%",
    "type": "IT_ARMOR",
    "def": 20,
    "loc": "EQP_SHOES",
@@ -165406,7 +165514,8 @@
        "name": "Sapha's Cloth"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical chance by 15%; increases FLEE by 10; increases critical damage by 40%; increases Cross Impact damage by 20%; increases the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[160]"
@@ -165519,7 +165628,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 2; reduces the SP cost of Aimed Bolt by 10",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 400,
@@ -166123,7 +166233,8 @@
     "record": "Id=2496"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 5; increases maximum HP by 150; increases maximum SP by 150; increases damage against player targets by 5%; increases magic damage against player targets by 5%; increases tolerance to Freeze by 25%",
    "type": "IT_ARMOR",
    "def": 5,
    "loc": "EQP_SHOES",
@@ -166164,7 +166275,8 @@
     "record": "Id=2498"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 5; increases maximum HP by 100; increases maximum SP by 200; increases magic damage against player targets by 5%; increases tolerance to Freeze by 25%",
    "type": "IT_ARMOR",
    "def": 5,
    "job": {
@@ -168080,7 +168192,8 @@
        "name": "Vali's Manteau"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases VIT by 5; increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[120]"
@@ -168373,7 +168486,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "buy": 10000,
    "weight": 400,
@@ -168804,7 +168918,8 @@
        "name": "Wool Scarf"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 5%; increases maximum HP by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[147]"
@@ -170536,7 +170651,8 @@
        "name": "Mace Of Judgement"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against undead targets by 15%; increases magic damage against undead targets by 15%; increases Adoramus damage by 100%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[156]"
@@ -170727,7 +170843,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases FLEE by 10; increases critical rate by 10",
+   "effect_summary": "increases FLEE by 10; increases critical chance by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 600,
@@ -170788,7 +170904,8 @@
        "name": "Sapha's Cloth"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical chance by 15%; increases FLEE by 10; increases critical damage by 40%; increases Cross Impact damage by 20%; increases the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[160]"
@@ -171410,14 +171527,16 @@
        "name": "Rose Cascade"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[172]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 3%",
    "type": "IT_ARMOR",
    "weight": 500,
    "def": 10,
@@ -172066,7 +172185,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[173]"
@@ -172085,7 +172205,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[174]"
@@ -172104,7 +172225,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[175]"
@@ -172237,7 +172359,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[176]"
@@ -172256,7 +172379,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[177]"
@@ -172275,7 +172399,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[178]"
@@ -173323,7 +173448,7 @@
       }
      ],
      "effect_status": "translated",
-     "effect_summary": "increases critical rate by 7",
+     "effect_summary": "increases critical chance by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[180]"
@@ -173361,7 +173486,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 5",
+   "effect_summary": "increases critical chance by 5%",
    "type": "IT_ARMOR",
    "buy": 75000,
    "weight": 100,
@@ -173584,7 +173709,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 3%",
    "type": "IT_ARMOR",
    "buy": 10000,
    "weight": 100,
@@ -174306,7 +174432,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[183]"
@@ -174325,7 +174452,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[184]"
@@ -174344,7 +174472,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[185]"
@@ -175081,7 +175210,8 @@
     "record": "Id=2644"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage against all targets by 5%; increases magic damage against all targets by 5%",
    "type": "IT_ARMOR",
    "buy": 2,
    "loc": "EQP_ACC",
@@ -175378,7 +175508,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases STR by 2; increases critical rate by 3",
+   "effect_summary": "increases STR by 2; increases critical chance by 3%",
    "type": "IT_ARMOR",
    "buy": 30000,
    "weight": 200,
@@ -175445,7 +175575,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6; on attack, has a 0.5% chance to inflict Curse on the wearer",
+   "effect_summary": "increases critical chance by 6%; on attack, has a 0.5% chance to inflict Curse on the wearer",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -175508,7 +175638,8 @@
        "name": "Shinobi Sash"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 20%; increases maximum HP by 300",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[116]"
@@ -175527,7 +175658,8 @@
        "name": "Shinobi Sash"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 20%; increases maximum HP by 300",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[128]"
@@ -176167,7 +176299,8 @@
     "record": "Id=2665"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 1; increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -176207,7 +176340,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 5; increases critical rate by 5; increases DEX by 1",
+   "effect_summary": "increases HIT by 5; increases critical chance by 5%; increases DEX by 1",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -176296,7 +176429,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 3%",
    "type": "IT_ARMOR",
    "buy": 10000,
    "weight": 100,
@@ -176507,7 +176641,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[173]"
@@ -176526,7 +176661,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[176]"
@@ -176545,7 +176681,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[183]"
@@ -176948,7 +177085,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 10",
+   "effect_summary": "increases critical chance by 10%",
    "type": "IT_ARMOR",
    "buy": 1,
    "job": {
@@ -177475,7 +177612,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 5%; increases the SP cost of skills by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 150,
@@ -177701,7 +177839,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[174]"
@@ -177720,7 +177859,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[177]"
@@ -177739,7 +177879,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[184]"
@@ -178027,7 +178168,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[83]"
@@ -178051,7 +178193,8 @@
        "name": "Monocle"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[87]"
@@ -178074,7 +178217,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -178127,7 +178271,8 @@
        "name": "Lunatic Brooch"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 1; increases maximum SP by 50; increases SP regeneration rate by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[59]"
@@ -178204,7 +178349,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Bash damage by 6%; increases Mammonite damage by 6%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 700,
@@ -178521,7 +178667,8 @@
        "name": "Bowman Scarf"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[195]"
@@ -178571,7 +178718,8 @@
        "name": "Bowman Scarf"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 25%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[195]"
@@ -178607,7 +178755,8 @@
      "source_record": "db/re/mob_db.conf:Id=1920"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a normal attack, has a 3% chance to cast Critical Wounds Lv 1; increases HIT by 10; increases HP regeneration rate by 20%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 50,
@@ -178756,7 +178905,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 5",
+   "effect_summary": "increases critical chance by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 50,
@@ -179236,7 +179385,8 @@
        "name": "Black Wing"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HIT by 5; increases MATK by 5; reduces the SP cost of Masquerade - Enervation by 20; reduces the SP cost of Masquerade - Gloomy by 20",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[197]"
@@ -179433,7 +179583,8 @@
     "record": "Id=2753"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from formless targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179447,7 +179598,8 @@
     "record": "Id=2754"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from undead targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179461,7 +179613,8 @@
     "record": "Id=2755"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from brute targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179475,7 +179628,8 @@
     "record": "Id=2756"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from plant targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179489,7 +179643,8 @@
     "record": "Id=2757"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from insect targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179503,7 +179658,8 @@
     "record": "Id=2758"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from fish targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179517,7 +179673,8 @@
     "record": "Id=2759"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from demon targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179531,7 +179688,8 @@
     "record": "Id=2760"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from player targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179545,7 +179703,8 @@
     "record": "Id=2761"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from angel targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179559,7 +179718,8 @@
     "record": "Id=2762"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from dragon targets by 15%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179669,7 +179829,8 @@
     "record": "Id=2768"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 1; For the Mage class: increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179713,7 +179874,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases STR by 1; For the Merchant class: increases critical rate by 5",
+   "effect_summary": "increases STR by 1; For the Merchant class: increases critical chance by 5%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "refine": false
@@ -179990,7 +180151,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -180263,7 +180425,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 2; increases maximum SP by 25",
+   "effect_summary": "increases critical chance by 2%; increases maximum SP by 25",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -180350,7 +180512,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[175]"
@@ -180369,7 +180532,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[178]"
@@ -180388,7 +180552,8 @@
        "name": "Spiritual Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Heal damage by 50%; increases Magnus Exorcismus damage by 30%; increases SP regeneration rate by 9%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[185]"
@@ -180549,7 +180714,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 1; increases FLEE by 4; With AGI at least 120: increases critical rate by 4",
+   "effect_summary": "increases AGI by 1; increases FLEE by 4; With AGI at least 120: increases critical chance by 4%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -182050,7 +182215,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 10",
+   "effect_summary": "increases critical chance by 10%",
    "type": "IT_ARMOR",
    "buy": 1,
    "job": {
@@ -182170,7 +182335,8 @@
     "record": "Id=2841"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 2; increases DEX by 2; increases equipment MDEF by 2; increases EXP gained from all targets by 10%",
    "type": "IT_ARMOR",
    "def": 2,
    "job": {
@@ -182278,7 +182444,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 10",
+   "effect_summary": "increases critical chance by 10%",
    "type": "IT_ARMOR",
    "buy": 1,
    "job": {
@@ -182427,7 +182593,8 @@
      "source_record": "db/re/mob_db.conf:Id=2875"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 1; increases INT by 3; increases maximum SP by 30; increases Soul Expansion damage by 10%; increases Psychic Wave damage by 10%; increases the SP cost of Soul Expansion by 50; increases the SP cost of Psychic Wave by 50",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -182515,7 +182682,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 7; increases attack speed by 3%; on attack, has a 0.1% chance to inflict Curse on the wearer",
+   "effect_summary": "increases critical chance by 7%; increases attack speed by 3%; on attack, has a 0.1% chance to inflict Curse on the wearer",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -182919,7 +183086,8 @@
     "record": "Id=2863"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 5%",
    "type": "IT_ARMOR",
    "def": 2,
    "loc": "EQP_ACC",
@@ -183409,7 +183577,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 2%; reduces the SP cost of Spiral Pierce by 5; reduces the SP cost of Hundred Spear by 5",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -183563,14 +183732,16 @@
        "name": "Sapha's Cloth"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical chance by 15%; increases FLEE by 10; increases critical damage by 40%; increases Cross Impact damage by 20%; increases the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[160]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical chance by 3%; reduces the SP cost of Dark Illusion by 5",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -183743,7 +183914,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 2; increases ranged (long-range) physical damage by 3%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -183871,7 +184043,8 @@
        "name": "Assassin Handcuffs"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 40%; increases critical chance by 4%; reduces maximum HP by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[6]"
@@ -183879,7 +184052,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases maximum SP by 20; increases critical rate by 3",
+   "effect_summary": "increases maximum SP by 20; increases critical chance by 3%",
    "type": "IT_ARMOR",
    "buy": 56000,
    "weight": 400,
@@ -183978,7 +184151,8 @@
     "record": "Id=2897"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage against all targets by 5%; increases magic damage by 5%; increases EXP gained from all targets by 1%",
    "type": "IT_ARMOR",
    "weight": 100,
    "loc": "EQP_ACC",
@@ -184127,7 +184301,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases STR by 2; increases critical rate by 3",
+   "effect_summary": "increases STR by 2; increases critical chance by 3%",
    "type": "IT_ARMOR",
    "buy": 30000,
    "weight": 200,
@@ -184762,7 +184936,8 @@
     "record": "Id=2945"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage against player targets by 5%; increases magic damage against player targets by 5%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "equiplv": 40,
@@ -184836,14 +185011,16 @@
        "name": "Mana Boots"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[201]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 10%",
    "type": "IT_ARMOR",
    "loc": "EQP_ACC",
    "equiplv": [
@@ -184996,7 +185173,8 @@
        "name": "Geffen Magic Robe"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 5%; increases tolerance against player targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[203]"
@@ -185036,7 +185214,8 @@
        "name": "Anti-Magic Suit"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 5%; increases tolerance against player targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[204]"
@@ -185176,14 +185355,16 @@
        "name": "Pocket Watch"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[304]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -185276,7 +185457,8 @@
        "name": "Oz's New Wing Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Vulcan Arrow damage by 200%; reduces the SP cost of Vulcan Arrow by 20",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[71]"
@@ -185319,7 +185501,8 @@
        "name": "Bloody Floral Decoration Bracelet"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Vulcan Arrow damage by 200%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[72]"
@@ -185889,7 +186072,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 1; increases critical rate by 1; increases Perfect Dodge by 1",
+   "effect_summary": "increases LUK by 1; increases critical chance by 1%; increases Perfect Dodge by 1",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -187834,7 +188017,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -188051,7 +188235,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 20%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -188650,7 +188835,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's defense the Ghost element; reduces HP regeneration rate by 25%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -190027,7 +190213,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases SP regeneration rate by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -191041,7 +191228,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9",
+   "effect_summary": "increases critical chance by 9%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -191376,7 +191563,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases STR by 1; increases critical rate by 4",
+   "effect_summary": "increases STR by 1; increases critical chance by 4%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -191549,7 +191736,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -191892,7 +192080,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum SP by 15%; increases SP regeneration rate by 3%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -193719,7 +193908,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 3; increases critical rate by 1",
+   "effect_summary": "increases AGI by 3; increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -194410,7 +194599,8 @@
      "source_record": "db/re/mob_db.conf:Id=1157"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -194601,7 +194791,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from plant targets by 20%; increases EXP gained from plant targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -195384,7 +195575,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases FLEE by 2; increases critical rate by 7; For the Swordman class: on a normal attack, has a 1% chance to cast Bowling Bash Lv 5",
+   "effect_summary": "increases FLEE by 2; increases critical chance by 7%; For the Swordman class: on a normal attack, has a 1% chance to cast Bowling Bash Lv 5",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -195437,7 +195628,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from fish targets by 20%; increases EXP gained from fish targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -196379,7 +196571,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases FLEE by 10; increases Double Strafe damage by 5%; increases Arrow Shower damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -197884,7 +198077,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -198158,7 +198352,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from brute targets by 20%; increases EXP gained from brute targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -198521,7 +198716,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum SP by 10%; increases Frost Diver damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -199236,7 +199432,8 @@
        "name": "Incubus Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 30%; increases SP regeneration rate by 30%; increases VIT by 4; increases INT by 4",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[239]"
@@ -199273,7 +199470,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces VIT by 3; reduces HP regeneration rate by 20%; increases maximum HP by 1000",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -199490,7 +199688,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from insect targets by 20%; increases EXP gained from insect targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -200564,7 +200763,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from angel targets by 20%; increases EXP gained from angel targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -200834,7 +201034,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from formless targets by 20%; increases EXP gained from formless targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -201218,7 +201419,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from player targets by 20%; increases EXP gained from player targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -201535,7 +201737,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from demon targets by 20%; increases EXP gained from demon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -202317,7 +202520,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment DEF by 1; increases HP regeneration rate by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -202772,7 +202976,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from dragon targets by 20%; increases EXP gained from dragon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -202891,7 +203096,8 @@
        "name": "Incubus Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 30%; increases SP regeneration rate by 30%; increases VIT by 4; increases INT by 4",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[239]"
@@ -202928,7 +203134,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces INT by 3; reduces SP regeneration rate by 20%; increases maximum SP by 150",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -203147,7 +203354,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 1; increases critical rate by 3",
+   "effect_summary": "increases AGI by 1; increases critical chance by 3%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -203353,7 +203560,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from undead targets by 20%; increases EXP gained from undead targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -203450,7 +203658,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases Melody Strike damage by 10%; increases Slinging Arrow damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -204584,7 +204793,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases Holy Light damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -205311,7 +205521,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment DEF by 2; increases Smite damage by 10%; increases Shield Boomerang damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -206230,7 +206441,8 @@
        "name": "Mobster Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[8]"
@@ -206253,7 +206465,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 15%; For the Thief class: increases critical chance by 4%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -206409,7 +206622,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 300; At refine level at least +9: increases Bash damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -206876,7 +207090,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases tolerance against formless targets by 15%; increases Napalm Beat damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -207159,7 +207374,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases FLEE by 15; increases critical rate by 1",
+   "effect_summary": "increases FLEE by 15; increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -207366,7 +207581,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 3; For the Swordman class: increases Perfect Dodge by 3",
+   "effect_summary": "increases critical chance by 3%; For the Swordman class: increases Perfect Dodge by 3",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -207655,7 +207870,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%; increases tolerance to Bleeding by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -208822,14 +209038,16 @@
        "name": "MasterSmith Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "on a physical attack, has a 9% chance to break the target's armor; on a physical attack, has a 9% chance to break the target's weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[30]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 10% chance to break the target's weapon; on a physical attack, has a 7% chance to break the target's armor",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -209323,7 +209541,8 @@
      "source_record": "db/re/mob_db.conf:Id=1630"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 30%; increases the SP cost of skills by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -209822,7 +210041,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 500; increases HP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -210656,7 +210876,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against angel targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -210834,7 +211055,8 @@
      "source_record": "db/re/mob_db.conf:Id=1734"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -210969,7 +211191,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against demon targets by 2%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -212200,7 +212423,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Fire Pillar damage by 40%; increases Meteor Storm damage by 40%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -212884,7 +213108,8 @@
      "source_record": "db/re/mob_db.conf:Id=2107"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage by 10%; reduces maximum SP by 50%; increases magic damage against angel targets by 50%; increases magic damage against player targets by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213427,7 +213652,8 @@
      "source_record": "db/re/mob_db.conf:Id=1956"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Napalm Beat damage by 30%; increases Soul Strike damage by 30%; increases Napalm Vulcan damage by 30%; increases Magical Bullet damage by 30%; increases Soul Expansion damage by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213552,7 +213778,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 4%; increases the SP cost of Heal by 15",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213737,7 +213964,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 20%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213854,7 +214082,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases STR by 2; For the Merchant class: increases Cart Revolution damage by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213943,7 +214172,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against fish targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -213989,7 +214219,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against plant targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214028,7 +214259,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against dragon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214074,7 +214306,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against brute targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214113,7 +214346,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against undead targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214159,7 +214393,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against player targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214198,7 +214433,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against formless targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214244,7 +214480,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against insect targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214283,7 +214520,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against demon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -214472,7 +214710,8 @@
     "record": "Id=4489"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -215234,7 +215473,8 @@
        "name": "Flying Galapagos"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases INT by 1; increases critical damage by 5%; For the Archer class: increases critical damage by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[256]"
@@ -215367,14 +215607,16 @@
        "name": "Sedora Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[9]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -215942,7 +216184,8 @@
     "record": "Id=4548"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Fire Pillar damage by 40%; increases Meteor Storm damage by 40%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -216583,7 +216826,8 @@
      "source_record": "db/re/mob_db.conf:Id=2249"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 30%; increases damage from all targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -217457,7 +217701,8 @@
      "source_record": "db/re/mob_db.conf:Id=3074"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage by 20%; increases the SP cost of skills by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -217480,7 +217725,8 @@
      "source_record": "db/re/mob_db.conf:Id=2916"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against formless targets by 5%; increases magic damage against demon targets by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -217637,7 +217883,8 @@
     "record": "Id=4633"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%; At Base Level above 99: increases ranged (long-range) physical damage by 2%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -217653,7 +217900,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9; At Base Level above 99: increases critical rate by 1",
+   "effect_summary": "increases critical chance by 9%; At Base Level above 99: increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -217806,7 +218053,8 @@
     "record": "Id=4641"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces SP regeneration rate by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -218103,7 +218351,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 100",
+   "effect_summary": "increases critical chance by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -218153,7 +218401,8 @@
     "record": "Id=4652"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against Shadow element targets by 50%; increases magic damage against Undead element targets by 50%; increases magic damage against demon targets by 50%; increases magic damage against undead targets by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -218245,7 +218494,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against brute targets by 5%; increases magic damage against undead targets by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -220407,7 +220657,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 5",
+   "effect_summary": "increases critical chance by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -220428,7 +220678,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 7",
+   "effect_summary": "increases critical chance by 7%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221245,7 +221495,8 @@
     "record": "Id=4804"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of Coluceo Heal by 30",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221487,7 +221738,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 12; increases HIT by 4",
+   "effect_summary": "increases critical chance by 12%; increases HIT by 4",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221508,7 +221759,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9; increases HIT by 3",
+   "effect_summary": "increases critical chance by 9%; increases HIT by 3",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221529,7 +221780,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6; increases HIT by 2",
+   "effect_summary": "increases critical chance by 6%; increases HIT by 2",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221810,7 +222061,8 @@
     "record": "Id=4832"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221830,7 +222082,8 @@
     "record": "Id=4833"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221850,7 +222103,8 @@
     "record": "Id=4834"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221870,7 +222124,8 @@
     "record": "Id=4835"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 8%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221890,7 +222145,8 @@
     "record": "Id=4836"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221910,7 +222166,8 @@
     "record": "Id=4837"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 12%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221930,7 +222187,8 @@
     "record": "Id=4838"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 14%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221950,7 +222208,8 @@
     "record": "Id=4839"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 16%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -221970,7 +222229,8 @@
     "record": "Id=4840"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 18%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222031,7 +222291,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 14; increases HIT by 5",
+   "effect_summary": "increases critical chance by 14%; increases HIT by 5",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222052,7 +222312,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 15; increases HIT by 6",
+   "effect_summary": "increases critical chance by 15%; increases HIT by 6",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222174,7 +222434,8 @@
     "record": "Id=4850"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 6%; increases the SP cost of skills by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222194,7 +222455,8 @@
     "record": "Id=4851"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 12%; increases the SP cost of skills by 10%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222214,7 +222476,8 @@
     "record": "Id=4852"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 20%; increases the SP cost of skills by 15%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222438,7 +222701,8 @@
     "record": "Id=4863"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 4%; increases critical chance by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222458,7 +222722,8 @@
     "record": "Id=4864"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 6%; increases critical chance by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222478,7 +222743,8 @@
     "record": "Id=4865"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 8%; increases critical chance by 3%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -222498,7 +222764,8 @@
     "record": "Id=4866"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 10%; increases critical chance by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -223654,7 +223921,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 1; increases critical rate by 1; reduces DEX by 1",
+   "effect_summary": "increases LUK by 1; increases critical chance by 1%; reduces DEX by 1",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -223676,7 +223943,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 2; increases critical rate by 2; reduces DEX by 2",
+   "effect_summary": "increases LUK by 2; increases critical chance by 2%; reduces DEX by 2",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -223698,7 +223965,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 4; increases critical rate by 4; reduces DEX by 4",
+   "effect_summary": "increases LUK by 4; increases critical chance by 4%; reduces DEX by 4",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -223720,7 +223987,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 1",
+   "effect_summary": "increases critical chance by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -223803,7 +224070,8 @@
     "record": "Id=4930"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -223990,7 +224258,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 2",
+   "effect_summary": "increases critical chance by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224011,7 +224279,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 4",
+   "effect_summary": "increases critical chance by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224032,7 +224300,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6",
+   "effect_summary": "increases critical chance by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224053,7 +224321,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 3",
+   "effect_summary": "increases critical chance by 3%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224115,7 +224383,8 @@
     "record": "Id=4945"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224135,7 +224404,8 @@
     "record": "Id=4946"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224155,7 +224425,8 @@
     "record": "Id=4947"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224175,7 +224446,8 @@
     "record": "Id=4948"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224195,7 +224467,8 @@
     "record": "Id=4949"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224215,7 +224488,8 @@
     "record": "Id=4950"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224376,7 +224650,8 @@
     "record": "Id=4958"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224396,7 +224671,8 @@
     "record": "Id=4959"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -224416,7 +224692,8 @@
     "record": "Id=4960"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -225603,7 +225880,8 @@
        "name": "Gossip Raven"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[266]"
@@ -226898,7 +227176,8 @@
        "name": "Flap Pope"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases SP regeneration rate by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[269]"
@@ -227083,7 +227362,8 @@
        "name": "Magician Hat"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 2; increases INT by 2; increases SP regeneration rate by 5%; magic damage increases by 1% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[49]"
@@ -229610,7 +229890,8 @@
        "name": "Ulle's Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "With DEX above 69: reduces the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[121]"
@@ -229765,7 +230046,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases SP regeneration rate by 3%",
    "type": "IT_ARMOR",
    "buy": 10000,
    "weight": 300,
@@ -231636,7 +231918,8 @@
        "name": "Captain's Pipe"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "ranged (long-range) physical damage increases by 1% per refine level of the headgear",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[276]"
@@ -233236,7 +233519,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases Perfect Dodge by 5; increases critical damage by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -233774,7 +234058,8 @@
     "record": "Id=5284"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 1; increases AGI by 1; increases equipment MDEF by 3; increases HP regeneration rate by 5%; increases SP regeneration rate by 3%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -234023,7 +234308,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 1; increases critical rate by 1",
+   "effect_summary": "increases AGI by 1; increases critical chance by 1%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -235047,7 +235332,8 @@
     "record": "Id=5345"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases tolerance against player targets by 5%; increases damage against undead targets by 5%; increases magic damage against undead targets by 5%",
    "type": "IT_ARMOR",
    "weight": 500,
    "def": 1,
@@ -235349,7 +235635,8 @@
     "record": "Id=5359"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 7%; increases maximum HP by 100",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -235592,7 +235879,8 @@
     "record": "Id=5372"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 1; reduces attack delay by 3%; increases magic damage by 3%; increases maximum SP by 3%; increases equipment MDEF by 3",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -236492,7 +236780,8 @@
     "record": "Id=5418"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases STR by 1; increases damage against all targets by 3%; increases the SP cost of skills by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 400,
@@ -236697,7 +236986,8 @@
     "record": "Id=5429"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 5%; increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -236958,7 +237248,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases VIT by 1; reduces HIT by 5; increases the SP cost of skills by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -236996,7 +237287,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6",
+   "effect_summary": "increases critical chance by 6%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -237044,7 +237335,8 @@
     "record": "Id=5447"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 1; increases damage against insect targets by 12%; increases magic damage against insect targets by 12%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -237245,7 +237537,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases VIT by 5; increases HP regeneration rate by 20%; increases SP regeneration rate by 15%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -237500,7 +237793,8 @@
        "name": "Darkness Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[280]"
@@ -237830,7 +238124,8 @@
     "record": "Id=5485"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases tolerance against brute targets by 5%; increases damage against brute targets by 5%; increases magic damage against brute targets by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1000,
@@ -237990,7 +238285,8 @@
        "name": "Ulle's Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "With DEX above 69: reduces the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[122]"
@@ -238328,7 +238624,8 @@
     "record": "Id=5511"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases SP regeneration rate by 8%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -238416,7 +238713,8 @@
     "record": "Id=5516"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 3%",
    "type": "IT_ARMOR",
    "buy": 10,
    "weight": 100,
@@ -238822,7 +239120,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases DEX by 3; increases critical rate by 5",
+   "effect_summary": "increases DEX by 3; increases critical chance by 5%",
    "type": "IT_ARMOR",
    "buy": 45000,
    "weight": 600,
@@ -239365,7 +239663,8 @@
     "record": "Id=5568"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 2; reduces attack delay by 3%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1000,
@@ -241076,7 +241375,8 @@
        "name": "Darkness Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[280]"
@@ -241168,7 +241468,8 @@
        "name": "Captain's Pipe"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "ranged (long-range) physical damage increases by 1% per refine level of the headgear",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[276]"
@@ -242913,7 +243214,8 @@
     "record": "Id=5751"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 1; increases LUK by 1; increases equipment MDEF by 5; increases ranged (long-range) physical damage by 4%; reduces the SP cost of Windmill Rush Attack by 10",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -243066,7 +243368,8 @@
     "record": "Id=5758"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 1; increases LUK by 1; increases equipment MDEF by 5; increases ranged (long-range) physical damage by 5%; reduces the SP cost of Swing Dance by 10; reduces the SP cost of Symphony of Lovers by 10",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -244103,7 +244406,8 @@
     "record": "Id=5805"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 15%; increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "weight": 150,
    "def": 2,
@@ -244410,7 +244714,8 @@
     "record": "Id=5821"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 5%",
    "type": "IT_ARMOR",
    "buy": 10,
    "weight": 100,
@@ -245220,7 +245525,7 @@
       }
      ],
      "effect_status": "translated",
-     "effect_summary": "increases critical rate by 7",
+     "effect_summary": "increases critical chance by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[180]"
@@ -245502,7 +245807,8 @@
     "record": "Id=5918"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical chance by 3%; increases critical damage by 3%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -245780,7 +246086,8 @@
        "name": "Flying Galapagos"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases INT by 1; increases critical damage by 5%; For the Archer class: increases critical damage by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[256]"
@@ -332534,7 +332841,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "ignores target DEF against dragon targets; increases EXP gained from dragon targets by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -332882,7 +333190,8 @@
     "record": "Id=13007"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 2% chance to break the target's weapon",
    "type": "IT_WEAPON",
    "buy": 20000,
    "weight": 400,
@@ -332920,7 +333229,8 @@
      "source_record": "db/re/mob_db.conf:Id=2185"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 2% chance to break the target's weapon",
    "type": "IT_WEAPON",
    "buy": 20000,
    "weight": 400,
@@ -332953,7 +333263,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "gives the player's attacks the Wind element; increases critical rate by 3; increases attack speed by 3%",
+   "effect_summary": "gives the player's attacks the Wind element; increases critical chance by 3%; increases attack speed by 3%",
    "type": "IT_WEAPON",
    "buy": 48000,
    "weight": 900,
@@ -333443,7 +333753,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 90",
+   "effect_summary": "increases critical chance by 90%",
    "type": "IT_WEAPON",
    "buy": 1,
    "atk": 209,
@@ -333490,7 +333800,8 @@
     "record": "Id=13024"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's weapon",
    "type": "IT_WEAPON",
    "buy": 2,
    "atk": 105,
@@ -333528,7 +333839,8 @@
     "record": "Id=13025"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 2,
    "atk": 105,
@@ -333805,7 +334117,8 @@
     "record": "Id=13030"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "ignores target DEF against dragon targets; increases EXP gained from dragon targets by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 900,
@@ -333846,7 +334159,8 @@
     "record": "Id=13031"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's weapon",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -333886,7 +334200,8 @@
     "record": "Id=13032"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 5% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -334215,7 +334530,8 @@
      "source_record": "db/re/mob_db.conf:Id=2820"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases STR by 1; increases AGI by 2; increases DEX by 1; when using Back Stab, has a 10% chance to cast Bash Lv 10; increases Back Stab damage by 20%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 700,
@@ -335135,7 +335451,8 @@
        "name": "Black Wing"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HIT by 5; increases MATK by 5; reduces the SP cost of Masquerade - Enervation by 20; reduces the SP cost of Masquerade - Gloomy by 20",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[197]"
@@ -336729,7 +337046,8 @@
      "source": "npc/re/merchants/shops.txt:550"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Desperado damage by 20%; increases Fallen Angel damage by 20%",
    "type": "IT_WEAPON",
    "buy": 1250000,
    "weight": 800,
@@ -336767,7 +337085,8 @@
      "source": "npc/re/merchants/shops.txt:551"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HIT by 5; increases attack delay by 10%; increases ranged (long-range) physical damage by 30%",
    "type": "IT_WEAPON",
    "buy": 1450000,
    "weight": 1000,
@@ -336789,7 +337108,8 @@
     "record": "Id=13124"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HIT by 5; increases attack delay by 10%; increases ranged (long-range) physical damage by 30%",
    "type": "IT_WEAPON",
    "buy": 1450000,
    "weight": 1000,
@@ -336987,7 +337307,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 10; increases critical rate by 10",
+   "effect_summary": "increases HIT by 10; increases critical chance by 10%",
    "type": "IT_WEAPON",
    "buy": 17500,
    "weight": 700,
@@ -337019,7 +337339,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 10; increases critical rate by 10",
+   "effect_summary": "increases HIT by 10; increases critical chance by 10%",
    "type": "IT_WEAPON",
    "buy": 17500,
    "weight": 700,
@@ -337065,7 +337385,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 10; increases critical rate by 10",
+   "effect_summary": "increases HIT by 10; increases critical chance by 10%",
    "type": "IT_WEAPON",
    "buy": 23500,
    "weight": 750,
@@ -337361,7 +337681,8 @@
      "source_record": "db/re/mob_db.conf:Id=1665"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 2% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 110000,
    "weight": 1200,
@@ -337398,7 +337719,8 @@
      "source_record": "db/re/mob_db.conf:Id=2895"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 2% chance to break the target's armor",
    "type": "IT_WEAPON",
    "buy": 110000,
    "weight": 1200,
@@ -337513,7 +337835,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 10; increases critical rate by 20; reduces attack speed by 3%; on a normal attack, has a 2% chance to cast Tracking Lv 5",
+   "effect_summary": "increases HIT by 10; increases critical chance by 20%; reduces attack speed by 3%; on a normal attack, has a 2% chance to cast Tracking Lv 5",
    "type": "IT_WEAPON",
    "buy": 40000,
    "weight": 1000,
@@ -337574,7 +337896,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 10; increases critical rate by 20; reduces attack speed by 3%; on a normal attack, has a 2% chance to cast Tracking Lv 5",
+   "effect_summary": "increases HIT by 10; increases critical chance by 20%; reduces attack speed by 3%; on a normal attack, has a 2% chance to cast Tracking Lv 5",
    "type": "IT_WEAPON",
    "buy": 40000,
    "weight": 1000,
@@ -337915,7 +338237,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 20; increases critical rate by 50; reduces attack speed by 5%",
+   "effect_summary": "increases HIT by 20; increases critical chance by 50%; reduces attack speed by 5%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 770,
@@ -338023,7 +338345,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases HIT by 20; increases critical rate by 50; reduces attack speed by 5%",
+   "effect_summary": "increases HIT by 20; increases critical chance by 50%; reduces attack speed by 5%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 170,
@@ -338379,7 +338701,8 @@
      "source": "npc/re/merchants/shops.txt:554"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 5%; reduces HIT by 50; reduces attack delay by 10%",
    "type": "IT_WEAPON",
    "buy": 1250000,
    "weight": 2000,
@@ -338416,7 +338739,8 @@
      "source": "npc/re/merchants/shops.txt:555"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces HIT by 10; reduces attack delay by 10%; on a normal attack, has a 50% chance to cast Thunderstorm Lv 5",
    "type": "IT_WEAPON",
    "buy": 1350000,
    "weight": 1800,
@@ -338590,7 +338914,8 @@
      "source": "npc/re/merchants/shops.txt:558"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces HIT by 25; increases critical chance by 10%; increases ranged (long-range) physical damage by 20%",
    "type": "IT_WEAPON",
    "buy": 2200000,
    "weight": 2500,
@@ -338613,7 +338938,8 @@
     "record": "Id=13199"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces HIT by 25; increases critical chance by 10%; increases ranged (long-range) physical damage by 20%",
    "type": "IT_WEAPON",
    "buy": 2200000,
    "weight": 2500,
@@ -341317,7 +341643,8 @@
     "record": "Id=13313"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases MATK by 50; gives the player's attacks the Fire element; increases Huuma Shuriken Ranka damage by 20%",
    "type": "IT_WEAPON",
    "buy": 100000,
    "weight": 1500,
@@ -341691,7 +342018,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 50",
+   "effect_summary": "increases critical chance by 50%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1500,
@@ -342502,7 +342829,8 @@
        "name": "Priest Sword"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum SP by 50; increases Bowling Bash damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[123]"
@@ -357994,7 +358322,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's defense the Holy element; increases equipment MDEF by 10; increases INT by 1; reduces the SP cost of Crementia by 50",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -358038,7 +358367,8 @@
        "name": "Mace Of Judgement"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against undead targets by 15%; increases magic damage against undead targets by 15%; increases Adoramus damage by 100%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[156]"
@@ -358369,7 +358699,8 @@
        "name": "Sapha's Cloth"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical chance by 15%; increases FLEE by 10; increases critical damage by 40%; increases Cross Impact damage by 20%; increases the SP cost of skills by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[160]"
@@ -359442,14 +359773,16 @@
        "name": "Mana Boots"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[201]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 10%",
    "type": "IT_ARMOR",
    "loc": "EQP_ARMOR",
    "equiplv": [
@@ -359598,7 +359931,8 @@
        "name": "Anti-Magic Suit"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 5%; increases tolerance against player targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[204]"
@@ -359638,7 +359972,8 @@
        "name": "Geffen Magic Robe"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 5%; increases tolerance against player targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[203]"
@@ -359959,7 +360294,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a normal attack, has a 2% chance to cast Wink of Charm Lv 1; At refine level above +4: increases critical damage by 4%; At refine level above +6: increases critical damage by 6%",
    "type": "IT_ARMOR",
    "buy": 10,
    "weight": 9000,
@@ -360015,7 +360351,8 @@
        "name": "Excellion Wing"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 10%; increases Perfect Dodge by 6; At Base Level above 130: reduces attack delay by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[290]"
@@ -360103,7 +360440,8 @@
        "name": "Aegir Cloak"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum HP by 1000; increases maximum SP by 100; increases EXP gained from fish targets by 20%; increases damage against fish targets by 50%; increases magic damage against fish targets by 50%; reduces damage from Water element attacks by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[309]"
@@ -360531,7 +360869,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Acid Terror damage by 20%; increases Bomb damage by 20%; increases maximum SP by 50; increases healing from skills you cast on yourself by 10%",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 500,
@@ -361070,7 +361409,8 @@
        "name": "Mace Of Judgement"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against undead targets by 15%; increases magic damage against undead targets by 15%; increases Adoramus damage by 100%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[156]"
@@ -367352,7 +367692,8 @@
     "record": "Id=18100"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 20%",
    "type": "IT_WEAPON",
    "buy": 1,
    "atk": 190,
@@ -367495,7 +367836,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases MATK by 100; increases INT by 4; reduces the SP cost of Severe Rainstorm by 10",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1700,
@@ -367920,7 +368262,8 @@
        "name": "Vellum CrossBow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 70%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[69]"
@@ -367939,7 +368282,8 @@
        "name": "Vellum CrossBow"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases ranged (long-range) physical damage by 40%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[70]"
@@ -368170,7 +368514,8 @@
     "record": "Id=18122"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 40%; reduces attack speed by 15%; reduces HIT by 50",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 3000,
@@ -368589,7 +368934,8 @@
        "name": "Skull Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[291]"
@@ -369403,7 +369749,8 @@
        "name": "Skull Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[113]"
@@ -369422,7 +369769,8 @@
        "name": "Skull Cap"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[291]"
@@ -369484,14 +369832,16 @@
        "name": "Little Feather Hat"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[68]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 2; increases critical damage by 10%; At refine level at least +7: increases critical damage by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 500,
@@ -369832,7 +370182,8 @@
     "record": "Id=18558"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from plant targets by 5%; increases damage from plant targets by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1000,
@@ -370772,7 +371123,8 @@
        "name": "Flap Pope"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases SP regeneration rate by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[292]"
@@ -371719,7 +372071,8 @@
     "record": "Id=18656"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment MDEF by 10; increases STR by 2; increases INT by 2; increases damage against undead targets by 15%; increases damage against demon targets by 15%; increases magic damage against undead targets by 15%; increases magic damage against demon targets by 15%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -372072,7 +372425,8 @@
        "name": "Flap Pope"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases SP regeneration rate by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[269]"
@@ -372091,7 +372445,8 @@
        "name": "Flap Pope"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases SP regeneration rate by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[292]"
@@ -372304,7 +372659,8 @@
     "record": "Id=18680"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases EXP gained from insect targets by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -372562,7 +372918,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 10",
+   "effect_summary": "increases critical chance by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -373816,7 +374172,8 @@
     "record": "Id=18763"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases equipment MDEF by 5; At refine level at least +7: increases critical damage by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -373838,7 +374195,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 2; At refine level at least +7: increases critical rate by 5",
+   "effect_summary": "increases LUK by 2; At refine level at least +7: increases critical chance by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -374035,7 +374392,8 @@
     "record": "Id=18772"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 1%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -374204,7 +374562,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases SP regeneration rate by 30%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 300,
@@ -374334,7 +374693,8 @@
     "record": "Id=18784"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases INT by 2; increases magic damage against player targets by 5%; At refine level above +6: increases magic damage against player targets by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 400,
@@ -374408,7 +374768,8 @@
     "record": "Id=18788"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 1; increases ranged (long-range) physical damage by 1%; At Base Level above 100: increases ranged (long-range) physical damage by 1%; At Base Level above 150: increases ranged (long-range) physical damage by 1%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -374696,14 +375057,16 @@
        "name": "Rose Cascade"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of skills by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[172]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 5%; With DEX at least 100: reduces the SP cost of skills by 5%; With DEX at least 120: reduces the SP cost of skills by 5%",
    "type": "IT_ARMOR",
    "weight": 500,
    "slots": 1,
@@ -374733,7 +375096,8 @@
        "name": "Thornwood Band"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "MATK increases by 10% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[53]"
@@ -374879,7 +375243,8 @@
     "record": "Id=18813"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 10%",
    "type": "IT_ARMOR",
    "weight": 100,
    "loc": "EQP_HEAD_MID",
@@ -375152,7 +375517,8 @@
        "name": "Imperial Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of Grand Cross by 30; reduces the SP cost of Shield Press by 5; reduces the SP cost of Banishing Point by 15; reduces the SP cost of Cannon Spear by 10",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[20]"
@@ -375195,7 +375561,8 @@
        "name": "Imperial Spear"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases Cannon Spear damage by 20%; increases Banishing Point damage by 20%; increases Shield Press damage by 20%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[295]"
@@ -375949,7 +376316,8 @@
        "name": "Pocket Watch"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 15%; increases SP regeneration rate by 15%; increases magic damage by 7%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[304]"
@@ -376352,7 +376720,8 @@
        "name": "Bell Pigeon"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[103]"
@@ -376390,7 +376759,8 @@
        "name": "Gossip Raven"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[266]"
@@ -376609,7 +376979,8 @@
     "record": "Id=18944"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases all six primary stats (STR, AGI, VIT, INT, DEX, and LUK) by 1; increases damage against demon targets by 1%; increases magic damage against demon targets by 1%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -376818,7 +377189,8 @@
        "name": "Gigant Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "Cart Termination damage increases by 15%, plus 5% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[10]"
@@ -376837,7 +377209,8 @@
        "name": "Gigant Helm"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "Cart Termination damage increases by 15%, plus 5% per refine level of the weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[96]"
@@ -377090,7 +377463,8 @@
        "name": "Aegir Cloak"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum HP by 1000; increases maximum SP by 100; increases EXP gained from fish targets by 20%; increases damage against fish targets by 50%; increases magic damage against fish targets by 50%; reduces damage from Water element attacks by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[309]"
@@ -377115,7 +377489,8 @@
     "record": "Id=19027"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against brute targets by 4%; increases tolerance against brute targets by 5%",
    "type": "IT_ARMOR",
    "weight": 200,
    "loc": "EQP_HEAD_MID",
@@ -377179,7 +377554,8 @@
     "record": "Id=19041"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases tolerance against demon targets by 5%; increases magic damage against demon targets by 4%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -377321,7 +377697,8 @@
     "record": "Id=19045"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against angel targets by 4%; increases tolerance against angel targets by 5%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 200,
@@ -381146,7 +381523,8 @@
     "record": "Id=19742"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 1%",
    "type": "IT_ARMOR",
    "loc": "EQP_COSTUME_HEAD_MID"
   },
@@ -388874,14 +389252,16 @@
        "name": "Mana Boots"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[201]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 10%",
    "type": "IT_ARMOR",
    "loc": "EQP_GARMENT",
    "equiplv": [
@@ -388973,7 +389353,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 50%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 400,
@@ -389717,7 +390098,8 @@
     "record": "Id=20733"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 10%; At refine level at least +7: reduces damage from Neutral element attacks by 10%; At refine level at least +9: reduces attack delay by 10%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 1500,
@@ -389946,7 +390328,8 @@
        "name": "Aegir Cloak"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum HP by 1000; increases maximum SP by 100; increases EXP gained from fish targets by 20%; increases damage against fish targets by 50%; increases magic damage against fish targets by 50%; reduces damage from Water element attacks by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[309]"
@@ -390118,7 +390501,8 @@
        "name": "Excellion Wing"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces attack delay by 10%; increases Perfect Dodge by 6; At Base Level above 130: reduces attack delay by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[290]"
@@ -390590,7 +390974,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 30; increases attack speed by 8%; on attack, has a 0.1% chance to inflict Curse on the wearer",
+   "effect_summary": "increases critical chance by 30%; increases attack speed by 8%; on attack, has a 0.1% chance to inflict Curse on the wearer",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 1000,
@@ -390954,7 +391338,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases the SP cost of Counter Attack by 2; increases the SP cost of Parrying by 25",
    "type": "IT_WEAPON",
    "buy": 20,
    "weight": 2200,
@@ -391925,14 +392310,16 @@
        "name": "Mana Boots"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from all targets by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[201]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 10%",
    "type": "IT_ARMOR",
    "loc": "EQP_SHOES",
    "equiplv": [
@@ -392399,7 +392786,8 @@
     "record": "Id=22044"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of Hovering by 15; At refine level at least +7: increases the SP cost of Hovering by 20",
    "type": "IT_ARMOR",
    "buy": 10,
    "weight": 1000,
@@ -392701,7 +393089,8 @@
        "name": "Aegir Cloak"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases maximum HP by 1000; increases maximum SP by 100; increases EXP gained from fish targets by 20%; increases damage against fish targets by 50%; increases magic damage against fish targets by 50%; reduces damage from Water element attacks by 50%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[309]"
@@ -398386,7 +398775,8 @@
        "name": "Bloody Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from player targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[352]"
@@ -398422,7 +398812,8 @@
        "name": "Liberation Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against boss targets by 5%; increases magic damage against boss targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[353]"
@@ -398458,7 +398849,8 @@
        "name": "Glamorous Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from brute targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[354]"
@@ -398494,7 +398886,8 @@
        "name": "Insecticide Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from insect targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[355]"
@@ -398530,7 +398923,8 @@
        "name": "Fisher Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from fish targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[356]"
@@ -398566,7 +398960,8 @@
        "name": "Dragoons Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from dragon targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[357]"
@@ -398602,7 +398997,8 @@
        "name": "Seraphim Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from angel targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[358]"
@@ -398638,7 +399034,8 @@
        "name": "Beholder Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from formless targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[359]"
@@ -398674,7 +399071,8 @@
        "name": "Divine Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from undead targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[360]"
@@ -398710,7 +399108,8 @@
        "name": "Chemical Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from plant targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[361]"
@@ -398746,7 +399145,8 @@
        "name": "Bloody Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from player targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[352]"
@@ -398781,7 +399181,8 @@
        "name": "Liberation Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases damage against boss targets by 5%; increases magic damage against boss targets by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[353]"
@@ -398816,7 +399217,8 @@
        "name": "Chemical Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from plant targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[361]"
@@ -398851,7 +399253,8 @@
        "name": "Glamorous Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from brute targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[354]"
@@ -398886,7 +399289,8 @@
        "name": "Insecticide Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from insect targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[355]"
@@ -398921,7 +399325,8 @@
        "name": "Fisher Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from fish targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[356]"
@@ -398956,7 +399361,8 @@
        "name": "Seraphim Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from angel targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[358]"
@@ -398991,7 +399397,8 @@
        "name": "Beholder Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from formless targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[359]"
@@ -399026,7 +399433,8 @@
        "name": "Divine Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from undead targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[360]"
@@ -399061,7 +399469,8 @@
        "name": "Dragoons Shadow Shoes"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases EXP gained from dragon targets by 3%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[357]"
@@ -399330,7 +399739,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 5%; At refine level at least +7: increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_WEAPON"
@@ -400950,7 +401360,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases the SP cost of skills by 1%; At refine level at least +7: increases SP regeneration rate by 5%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_SHOES"
@@ -401030,7 +401441,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases the SP cost of skills by 1%; At refine level at least +7: increases maximum SP by 1%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_SHIELD"
@@ -404693,7 +405105,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 1%",
    "type": "IT_ARMOR",
    "buy": 20,
    "weight": 100,
@@ -405852,7 +406265,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 1%; At refine level at least +7: reduces attack delay by 1%; At refine level at least +9: reduces attack delay by 1%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_SHOES"
@@ -405892,7 +406306,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 1%; At refine level at least +7: reduces attack delay by 1%; At refine level at least +9: reduces attack delay by 1%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_SHIELD"
@@ -405932,7 +406347,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 1%; At refine level at least +7: reduces attack delay by 1%; At refine level at least +9: reduces attack delay by 1%",
    "type": "IT_ARMOR",
    "buy": 10,
    "loc": "EQP_SHADOW_ARMOR"
@@ -410127,7 +410543,8 @@
     "record": "Id=26101"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases DEX by 5; increases INT by 5; increases ranged (long-range) physical damage by 7%",
    "type": "IT_WEAPON",
    "buy": 20,
    "atk": 150,
@@ -411507,7 +411924,8 @@
        "name": "Imperial Ring"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "reduces the SP cost of Grand Cross by 30; reduces the SP cost of Shield Press by 5; reduces the SP cost of Banishing Point by 15; reduces the SP cost of Cannon Spear by 10",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[20]"
@@ -412603,7 +413021,8 @@
     "record": "Id=29003"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "At refine level at least +7: increases DEX by 5; At refine level at least +10: increases ranged (long-range) physical damage by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -412663,7 +413082,8 @@
     "record": "Id=29006"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "At refine level at least +7: increases LUK by 5; At refine level at least +10: increases critical damage by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -413077,7 +413497,8 @@
     "record": "Id=29027"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",

@@ -505,7 +505,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 1; increases critical rate by 1; increases Perfect Dodge by 1",
+   "effect_summary": "increases LUK by 1; increases critical chance by 1%; increases Perfect Dodge by 1",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -2450,7 +2450,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -2667,7 +2668,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 20%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -3266,7 +3268,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "gives the player's defense the Ghost element; reduces HP regeneration rate by 25%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -4643,7 +4646,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases SP regeneration rate by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -5657,7 +5661,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9",
+   "effect_summary": "increases critical chance by 9%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -5992,7 +5996,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases STR by 1; increases critical rate by 4",
+   "effect_summary": "increases STR by 1; increases critical chance by 4%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -6165,7 +6169,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -6508,7 +6513,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum SP by 15%; increases SP regeneration rate by 3%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -8335,7 +8341,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 3; increases critical rate by 1",
+   "effect_summary": "increases AGI by 3; increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -9026,7 +9032,8 @@
      "source_record": "db/re/mob_db.conf:Id=1157"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -9217,7 +9224,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from plant targets by 20%; increases EXP gained from plant targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -10000,7 +10008,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases FLEE by 2; increases critical rate by 7; For the Swordman class: on a normal attack, has a 1% chance to cast Bowling Bash Lv 5",
+   "effect_summary": "increases FLEE by 2; increases critical chance by 7%; For the Swordman class: on a normal attack, has a 1% chance to cast Bowling Bash Lv 5",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -10053,7 +10061,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from fish targets by 20%; increases EXP gained from fish targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -10995,7 +11004,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases AGI by 1; increases FLEE by 10; increases Double Strafe damage by 5%; increases Arrow Shower damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -12500,7 +12510,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%; increases SP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -12774,7 +12785,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from brute targets by 20%; increases EXP gained from brute targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -13137,7 +13149,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum SP by 10%; increases Frost Diver damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -13852,7 +13865,8 @@
        "name": "Incubus Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 30%; increases SP regeneration rate by 30%; increases VIT by 4; increases INT by 4",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[239]"
@@ -13889,7 +13903,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces VIT by 3; reduces HP regeneration rate by 20%; increases maximum HP by 1000",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -14106,7 +14121,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from insect targets by 20%; increases EXP gained from insect targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -15180,7 +15196,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from angel targets by 20%; increases EXP gained from angel targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -15450,7 +15467,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from formless targets by 20%; increases EXP gained from formless targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -15834,7 +15852,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from player targets by 20%; increases EXP gained from player targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -16151,7 +16170,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from demon targets by 20%; increases EXP gained from demon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -16933,7 +16953,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment DEF by 1; increases HP regeneration rate by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -17388,7 +17409,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from dragon targets by 20%; increases EXP gained from dragon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -17507,7 +17529,8 @@
        "name": "Incubus Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases HP regeneration rate by 30%; increases SP regeneration rate by 30%; increases VIT by 4; increases INT by 4",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[239]"
@@ -17544,7 +17567,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces INT by 3; reduces SP regeneration rate by 20%; increases maximum SP by 150",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -17763,7 +17787,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases AGI by 1; increases critical rate by 3",
+   "effect_summary": "increases AGI by 1; increases critical chance by 3%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -17969,7 +17993,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases damage from undead targets by 20%; increases EXP gained from undead targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -18066,7 +18091,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases Melody Strike damage by 10%; increases Slinging Arrow damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -19200,7 +19226,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases LUK by 2; increases Holy Light damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -19927,7 +19954,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases equipment DEF by 2; increases Smite damage by 10%; increases Shield Boomerang damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -20846,7 +20874,8 @@
        "name": "Mobster Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[8]"
@@ -20869,7 +20898,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 15%; For the Thief class: increases critical chance by 4%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -21025,7 +21055,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 300; At refine level at least +9: increases Bash damage by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -21492,7 +21523,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases tolerance against formless targets by 15%; increases Napalm Beat damage by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -21775,7 +21807,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases FLEE by 15; increases critical rate by 1",
+   "effect_summary": "increases FLEE by 15; increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -21982,7 +22014,7 @@
     }
    ],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 3; For the Swordman class: increases Perfect Dodge by 3",
+   "effect_summary": "increases critical chance by 3%; For the Swordman class: increases Perfect Dodge by 3",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -22271,7 +22303,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 10%; increases tolerance to Bleeding by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -23438,14 +23471,16 @@
        "name": "MasterSmith Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "on a physical attack, has a 9% chance to break the target's armor; on a physical attack, has a 9% chance to break the target's weapon",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[30]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "on a physical attack, has a 10% chance to break the target's weapon; on a physical attack, has a 7% chance to break the target's armor",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -23939,7 +23974,8 @@
      "source_record": "db/re/mob_db.conf:Id=1630"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 30%; increases the SP cost of skills by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -24438,7 +24474,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases maximum HP by 500; increases HP regeneration rate by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -25272,7 +25309,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against angel targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -25450,7 +25488,8 @@
      "source_record": "db/re/mob_db.conf:Id=1734"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -25585,7 +25624,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against demon targets by 2%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -26816,7 +26856,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Fire Pillar damage by 40%; increases Meteor Storm damage by 40%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -27500,7 +27541,8 @@
      "source_record": "db/re/mob_db.conf:Id=2107"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage by 10%; reduces maximum SP by 50%; increases magic damage against angel targets by 50%; increases magic damage against player targets by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28043,7 +28085,8 @@
      "source_record": "db/re/mob_db.conf:Id=1956"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Napalm Beat damage by 30%; increases Soul Strike damage by 30%; increases Napalm Vulcan damage by 30%; increases Magical Bullet damage by 30%; increases Soul Expansion damage by 30%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28168,7 +28211,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 4%; increases the SP cost of Heal by 15",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28353,7 +28397,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 20%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28470,7 +28515,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases STR by 2; For the Merchant class: increases Cart Revolution damage by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28559,7 +28605,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against fish targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28605,7 +28652,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against plant targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28644,7 +28692,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against dragon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28690,7 +28739,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against brute targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28729,7 +28779,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against undead targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28775,7 +28826,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against player targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28814,7 +28866,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against formless targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28860,7 +28913,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against insect targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -28899,7 +28953,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against demon targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -29088,7 +29143,8 @@
     "record": "Id=4489"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -29850,7 +29906,8 @@
        "name": "Flying Galapagos"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases INT by 1; increases critical damage by 5%; For the Archer class: increases critical damage by 10%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[256]"
@@ -29983,14 +30040,16 @@
        "name": "Sedora Card"
       }
      ],
-     "effect_status": "scripted_not_translated",
+     "effect_status": "translated",
+     "effect_summary": "increases critical damage by 5%",
      "source": {
       "path": "db/re/item_combo_db.conf",
       "record": "combo_db[9]"
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 15%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -30558,7 +30617,8 @@
     "record": "Id=4548"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases Fire Pillar damage by 40%; increases Meteor Storm damage by 40%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -31199,7 +31259,8 @@
      "source_record": "db/re/mob_db.conf:Id=2249"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 30%; increases damage from all targets by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32073,7 +32134,8 @@
      "source_record": "db/re/mob_db.conf:Id=3074"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage by 20%; increases the SP cost of skills by 10%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32096,7 +32158,8 @@
      "source_record": "db/re/mob_db.conf:Id=2916"
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against formless targets by 5%; increases magic damage against demon targets by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32253,7 +32316,8 @@
     "record": "Id=4633"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%; At Base Level above 99: increases ranged (long-range) physical damage by 2%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32269,7 +32333,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9; At Base Level above 99: increases critical rate by 1",
+   "effect_summary": "increases critical chance by 9%; At Base Level above 99: increases critical chance by 1%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32422,7 +32486,8 @@
     "record": "Id=4641"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces SP regeneration rate by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32719,7 +32784,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 100",
+   "effect_summary": "increases critical chance by 100%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32769,7 +32834,8 @@
     "record": "Id=4652"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against Shadow element targets by 50%; increases magic damage against Undead element targets by 50%; increases magic damage against demon targets by 50%; increases magic damage against undead targets by 50%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -32861,7 +32927,8 @@
      }
     }
    ],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases magic damage against brute targets by 5%; increases magic damage against undead targets by 5%",
    "type": "IT_CARD",
    "buy": 20,
    "weight": 10,
@@ -35023,7 +35090,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 5",
+   "effect_summary": "increases critical chance by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -35044,7 +35111,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 7",
+   "effect_summary": "increases critical chance by 7%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -35861,7 +35928,8 @@
     "record": "Id=4804"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of Coluceo Heal by 30",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36103,7 +36171,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 12; increases HIT by 4",
+   "effect_summary": "increases critical chance by 12%; increases HIT by 4",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36124,7 +36192,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 9; increases HIT by 3",
+   "effect_summary": "increases critical chance by 9%; increases HIT by 3",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36145,7 +36213,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6; increases HIT by 2",
+   "effect_summary": "increases critical chance by 6%; increases HIT by 2",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36426,7 +36494,8 @@
     "record": "Id=4832"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36446,7 +36515,8 @@
     "record": "Id=4833"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36466,7 +36536,8 @@
     "record": "Id=4834"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36486,7 +36557,8 @@
     "record": "Id=4835"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 8%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36506,7 +36578,8 @@
     "record": "Id=4836"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 10%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36526,7 +36599,8 @@
     "record": "Id=4837"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 12%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36546,7 +36620,8 @@
     "record": "Id=4838"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 14%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36566,7 +36641,8 @@
     "record": "Id=4839"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 16%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36586,7 +36662,8 @@
     "record": "Id=4840"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 18%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36647,7 +36724,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 14; increases HIT by 5",
+   "effect_summary": "increases critical chance by 14%; increases HIT by 5",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36668,7 +36745,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 15; increases HIT by 6",
+   "effect_summary": "increases critical chance by 15%; increases HIT by 6",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36790,7 +36867,8 @@
     "record": "Id=4850"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 6%; increases the SP cost of skills by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36810,7 +36888,8 @@
     "record": "Id=4851"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 12%; increases the SP cost of skills by 10%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -36830,7 +36909,8 @@
     "record": "Id=4852"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases healing from skills you cast on yourself by 20%; increases the SP cost of skills by 15%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -37054,7 +37134,8 @@
     "record": "Id=4863"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 4%; increases critical chance by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -37074,7 +37155,8 @@
     "record": "Id=4864"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 6%; increases critical chance by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -37094,7 +37176,8 @@
     "record": "Id=4865"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 8%; increases critical chance by 3%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -37114,7 +37197,8 @@
     "record": "Id=4866"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases critical damage by 10%; increases critical chance by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38270,7 +38354,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 1; increases critical rate by 1; reduces DEX by 1",
+   "effect_summary": "increases LUK by 1; increases critical chance by 1%; reduces DEX by 1",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -38292,7 +38376,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 2; increases critical rate by 2; reduces DEX by 2",
+   "effect_summary": "increases LUK by 2; increases critical chance by 2%; reduces DEX by 2",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -38314,7 +38398,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases LUK by 4; increases critical rate by 4; reduces DEX by 4",
+   "effect_summary": "increases LUK by 4; increases critical chance by 4%; reduces DEX by 4",
    "type": "IT_CARD",
    "weight": 10,
    "loc": [
@@ -38336,7 +38420,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 1",
+   "effect_summary": "increases critical chance by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38419,7 +38503,8 @@
     "record": "Id=4930"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases HP regeneration rate by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38606,7 +38691,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 2",
+   "effect_summary": "increases critical chance by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38627,7 +38712,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 4",
+   "effect_summary": "increases critical chance by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38648,7 +38733,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 6",
+   "effect_summary": "increases critical chance by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38669,7 +38754,7 @@
    },
    "drops_from": [],
    "effect_status": "translated",
-   "effect_summary": "increases critical rate by 3",
+   "effect_summary": "increases critical chance by 3%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38731,7 +38816,8 @@
     "record": "Id=4945"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38751,7 +38837,8 @@
     "record": "Id=4946"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38771,7 +38858,8 @@
     "record": "Id=4947"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38791,7 +38879,8 @@
     "record": "Id=4948"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38811,7 +38900,8 @@
     "record": "Id=4949"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 4%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38831,7 +38921,8 @@
     "record": "Id=4950"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 6%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -38992,7 +39083,8 @@
     "record": "Id=4958"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces attack delay by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -39012,7 +39104,8 @@
     "record": "Id=4959"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases ranged (long-range) physical damage by 1%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -39032,7 +39125,8 @@
     "record": "Id=4960"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "reduces the SP cost of skills by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -40045,7 +40139,8 @@
     "record": "Id=29003"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "At refine level at least +7: increases DEX by 5; At refine level at least +10: increases ranged (long-range) physical damage by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -40105,7 +40200,8 @@
     "record": "Id=29006"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "At refine level at least +7: increases LUK by 5; At refine level at least +10: increases critical damage by 5%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",
@@ -40519,7 +40615,8 @@
     "record": "Id=29027"
    },
    "drops_from": [],
-   "effect_status": "scripted_not_translated",
+   "effect_status": "translated",
+   "effect_summary": "increases EXP gained from all targets by 2%",
    "type": "IT_CARD",
    "loc": [
     "EQP_HELM",

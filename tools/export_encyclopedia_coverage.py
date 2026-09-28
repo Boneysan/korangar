@@ -28,6 +28,11 @@ VERSIONED = {
     "item_grants": ROOT / "docs" / "item-script-grants.v1.json",
     "refine": ROOT / "docs" / "refine.v1.json",
     "server_rules": ROOT / "docs" / "server-rules.v1.json",
+    "npc_service_clues": ROOT / "docs" / "npc-service-clues.v1.json",
+    "npc_service_reviews": ROOT / "docs" / "npc-service-reviews.v1.json",
+    "boss_behavior": ROOT / "docs" / "boss-behavior.v1.json",
+    "skill_formula_reviews": ROOT / "docs" / "skill-formula-reviews.v1.json",
+    "scripted_spawn_reviews": ROOT / "docs" / "scripted-spawn-reviews.v1.json",
 }
 
 class EvidenceState(str, Enum):
@@ -92,6 +97,11 @@ def build_report() -> dict:
     job_bonuses = entries(data["job_bonuses"])
     rules = entries(data["server_rules"])
     refine = data["refine"]
+    npc_service_clues = entries(data["npc_service_clues"])
+    npc_service_reviews = entries(data["npc_service_reviews"])
+    boss_behaviors = entries(data["boss_behavior"])
+    skill_formula_reviews = entries(data["skill_formula_reviews"])
+    scripted_spawn_reviews = entries(data["scripted_spawn_reviews"])
 
     monster_spawn_rows = [entry for entry in monsters if entry.get("spawn_regions")]
     monster_script_rows = [entry for entry in monsters if entry.get("scripted_spawn_references")]
@@ -134,6 +144,9 @@ def build_report() -> dict:
             "static_spawn_coverage": dimension(len(monster_spawn_rows), len(monsters), "monster records with at least one loaded static spawn placement"),
             "script_spawn_coverage": dimension(len(monster_script_rows), len(monsters), "monster records with at least one indexed script-spawn clue"),
             "script_spawn_clues": sum(len(m.get("scripted_spawn_references", [])) for m in monsters),
+            "reviewed_boss_behavior_records": len(boss_behaviors),
+            "reviewed_boss_summon_groups": sum(len(b.get("summons", [])) for b in boss_behaviors),
+            "reviewed_scripted_spawn_groups": len(scripted_spawn_reviews),
         },
         "items": {
             "records": len(items),
@@ -163,6 +176,8 @@ def build_report() -> dict:
             "skill_records": len(skill_data) if isinstance(skill_data, list) else 0,
             "job_skill_trees": len(job_skills),
             "job_bonus_schedules": len(job_bonuses),
+            "reviewed_formula_records": len(skill_formula_reviews),
+            "skills_covered_by_reviewed_formulas": len({skill["skill_id"] for review in skill_formula_reviews for skill in review.get("skill_ids", [])}),
         },
         "statuses": {
             "icon_records": len(status_icons),
@@ -189,6 +204,8 @@ def build_report() -> dict:
             "literal_shop_offers": len(npc_offers),
             "reviewed_exchange_records": len(exchanges),
             "reviewed_service_roles": {"count": len(reviewed_service_roles), "evidence_state": "conditional", "basis": "distinct service roles cited by source-reviewed exchange records"},
+            "literal_service_call_clues": len(npc_service_clues),
+            "reviewed_service_records": {"count": len(npc_service_reviews), "of_indexed_call_clues": len(npc_service_clues), "basis": "source-reviewed service records (storage/kafra/refine-UI/repair/divorce/reset/navigation); one record may cover several indexed call-site clues, e.g. the shared Kafra function"},
         },
         "maps_and_rules": {
             "map_flag_directives": len(flags),

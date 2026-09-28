@@ -1,0 +1,462 @@
+{
+  "reviewed_by": "Repository source review",
+  "reviewed_on": "2026-09-28",
+  "review_method": "Parsed each boss's full db/re/mob_skill_db.conf block (including val0-val4, not just val0) and traced NPC_SUMMONMONSTER/NPC_SUMMONSLAVE handling through src/map/skill.c's case and src/map/mob.c's mob_summonslave to confirm which fields are the summon candidate list versus the summon amount, and cross-checked MSC_* cast-condition semantics against mob_use_skill/mob_use_skill_event in src/map/mob.c. Summon candidate and skill-trigger IDs were resolved against docs/bestiary.v1.json and db/re/skill_db.conf.",
+  "entries": [
+    {
+      "id": "amon_ra_summon_and_heal",
+      "monster_id": 1511,
+      "sprite_name": "AMON_RA",
+      "title": "Amon Ra's counter-summons and self-heal",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Hit by a long-range (non-magic) physical attack (MSC_LONGRANGEATTACKED), becoming the target of a cast (MSC_CASTTARGETED), or a player using Fire Wall/MG_FIREWALL, Storm Gust/WZ_STORMGUST, Heal/AL_HEAL, Magnus Exorcismus/PR_MAGNUS, or Meteor Storm/WZ_METEOR near it (MSC_SKILLUSED, skill IDs 18/89/28/79/83).",
+          "summon_candidates": [1474, 1477, 1438],
+          "summon_candidate_names": ["Mimic", "Arclouse", "Khalitzburg"],
+          "amount": 5,
+          "amount_explanation": "amount == the skill's SkillLevel (5); mob_summonslave rounds-robin the 3 valid candidates for `amount` iterations, so a single trigger spawns 5 adds: 2x Mimic, 2x Arclouse, 1x Khalitzburg.",
+          "rate_per_attempt": "50.00% (Rate: 5000/10000) per qualifying event, subject to a 10000ms cooldown for that skill entry (Delay)",
+          "source_lines": [24867, 24879, 24915, 24928, 24941, 24954, 24967, 24980]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 50, "effect": "Self-heals (server-configured heal formula, not derived here) once its own HP drops to 50% or below.", "source_line": 24807}
+      ],
+      "conditions": [
+        "NPC_SUMMONMONSTER routes through the same mob_summonslave() handler as NPC_SUMMONSLAVE (src/map/skill.c case NPC_SUMMONSLAVE/NPC_SUMMONMONSTER); val0-val2 are a candidate monster-ID list, not a numeric range, and the summon count comes from the skill's own SkillLevel field, not from any val slot.",
+        "mob_summonslave() only accepts a candidate ID that mob_db_checkid() resolves; it stops scanning val0..val4 at the first invalid/zero slot, so only the 3 populated IDs here are ever candidates.",
+        "Each of the 8 listed source blocks is functionally identical (same candidates/amount/rate) but differs by which single MSC_* condition triggers it; they are listed together rather than duplicated per-condition."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [24806, 24807, 24867, 24868, 24873, 24874, 24915, 24916, 24921, 24922],
+        "required_source_literals": [
+          "AMON_RA: {",
+          "AL_HEAL: {",
+          "CastCondition: \"MSC_MYHPLTMAXRATE\"",
+          "ConditionData: 50",
+          "NPC_SUMMONMONSTER: {",
+          "CastCondition: \"MSC_LONGRANGEATTACKED\"",
+          "val0: 1474",
+          "val1: 1477",
+          "val2: 1438",
+          "CastCondition: \"MSC_SKILLUSED\"",
+          "ConditionData: 18"
+        ]
+      }]
+    },
+    {
+      "id": "moonlight_flower_summon_and_defense",
+      "monster_id": 1150,
+      "sprite_name": "MOONLIGHT",
+      "title": "Moonlight Flower's Nine Tail summons and defensive kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Immediately on spawn/respawn (MSC_SPAWN).",
+          "summon_candidates": [1180],
+          "summon_candidate_names": ["Nine Tail"],
+          "amount": 3,
+          "amount_explanation": "Single candidate, amount == SkillLevel (3): spawns 3 Nine Tail adds once, at boss spawn.",
+          "source_lines": [7488]
+        },
+        {
+          "trigger": "Whenever it currently has 3 or fewer active slaves (MSC_SLAVELE, ConditionData 3), checked continuously in combat.",
+          "summon_candidates": [1471],
+          "summon_candidate_names": ["Nine Tail (G_NINE_TAIL variant)"],
+          "amount": 5,
+          "amount_explanation": "Single candidate, amount == SkillLevel (5): tops back up to 5 of this variant whenever its slave count falls to 3 or fewer.",
+          "source_lines": [7466]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 30, "effect": "Self-heals at 30% HP or below.", "source_line": 7419},
+        {"skill": "NPC_POWERUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs (NPC_POWERUP) at 30% HP or below.", "source_line": 7419},
+        {"skill": "NPC_WIDESILENCE", "target": "self", "threshold_pct": 80, "effect": "Casts an area silence centered on itself at 80% HP or below.", "source_line": 7419},
+        {"skill": "SA_LANDPROTECTOR", "target": "current target's cell", "threshold_pct": 80, "effect": "Drops Land Protector at 80% HP or below (suppresses ground-targeted magic near it).", "source_line": 7419}
+      ],
+      "conditions": [
+        "The two summon entries use different monster IDs (1180 = plain Nine Tail on spawn, 1471 = the G_NINE_TAIL boss-adds variant on the slave-count trigger); they are not the same add."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [7419, 7466, 7467, 7472, 7473, 7488, 7489, 7494, 7495],
+        "required_source_literals": [
+          "MOONLIGHT: {",
+          "NPC_SUMMONSLAVE: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 3",
+          "val0: 1471",
+          "CastCondition: \"MSC_SPAWN\"",
+          "val0: 1180",
+          "SkillLevel: 3"
+        ]
+      }]
+    },
+    {
+      "id": "detale_summon_and_fear",
+      "monster_id": 1719,
+      "sprite_name": "DETALE",
+      "title": "Detale's Ice Titan summons and Dragon Fear",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 0 active slaves (MSC_SLAVELE with no ConditionData, defaulting to 0).",
+          "summon_candidates": [1756],
+          "summon_candidate_names": ["Ice Titan"],
+          "amount": 1,
+          "amount_explanation": "Single candidate, amount == SkillLevel (1): replaces its single Ice Titan escort whenever it has none.",
+          "source_lines": [36790]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 30, "effect": "Self-heals at 30% HP or below.", "source_line": 36689},
+        {"skill": "NPC_DRAGONFEAR", "target": "self", "threshold_pct": 80, "effect": "Casts an area fear effect centered on itself at 80% HP or below.", "source_line": 36689},
+        {"skill": "NPC_POWERUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs at 30% HP or below.", "source_line": 36689}
+      ],
+      "conditions": [],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [36689, 36790, 36791, 36796, 36797],
+        "required_source_literals": [
+          "DETALE: {",
+          "NPC_SUMMONSLAVE: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "val0: 1756",
+          "NPC_DRAGONFEAR"
+        ]
+      }]
+    },
+    {
+      "id": "kiel_d01_summon_and_defense",
+      "monster_id": 1734,
+      "sprite_name": "KIEL_",
+      "title": "Kiel D-01's Alicel/Aliot summons and defensive kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 0 active slaves (MSC_SLAVELE, default ConditionData 0).",
+          "summon_candidates": [1739, 1740],
+          "summon_candidate_names": ["Alicel", "Aliot"],
+          "amount": 6,
+          "amount_explanation": "amount == SkillLevel (6), round-robin over 2 candidates: summons 3x Alicel and 3x Aliot whenever it has no active slaves.",
+          "source_lines": [37400]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 50, "effect": "Self-heals at 50% HP or below.", "source_line": 37353},
+        {"skill": "MG_SAFETYWALL", "target": "self", "threshold_pct": 30, "effect": "Drops Safety Wall on itself at 30% HP or below.", "source_line": 37353},
+        {"skill": "NPC_POWERUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs at 30% HP or below.", "source_line": 37353},
+        {"skill": "NPC_WIDESILENCE", "target": "self", "threshold_pct": 80, "effect": "Casts an area silence centered on itself at 80% HP or below.", "source_line": 37353}
+      ],
+      "conditions": [],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [37353, 37400, 37401, 37406, 37407],
+        "required_source_literals": [
+          "KIEL_: {",
+          "NPC_SUMMONSLAVE: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "val0: 1739",
+          "val1: 1740"
+        ]
+      }]
+    },
+    {
+      "id": "randgris_summon_and_defense",
+      "monster_id": 1751,
+      "sprite_name": "RANDGRIS",
+      "title": "Valkyrie Randgris's Valkyrie summons and buff kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Immediately on spawn/respawn (MSC_SPAWN).",
+          "summon_candidates": [1765],
+          "summon_candidate_names": ["Valkyrie (G_RANDGRIS variant)"],
+          "amount": 3,
+          "amount_explanation": "Single candidate, amount == SkillLevel (3): spawns 3 escort Valkyries once, at boss spawn.",
+          "source_lines": [38308]
+        },
+        {
+          "trigger": "Whenever it currently has 1 or fewer active slaves (MSC_SLAVELE, ConditionData 1).",
+          "summon_candidates": [1891],
+          "summon_candidate_names": ["Valkyrie (G_RANDGRIS_ variant)"],
+          "amount": 3,
+          "amount_explanation": "Single candidate, amount == SkillLevel (3): tops back up to 3 of this second Valkyrie variant whenever its escort count falls to 1 or fewer.",
+          "source_lines": [38275]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "HP_ASSUMPTIO", "target": "self", "threshold_pct": 60, "effect": "Casts Assumptio on itself at 60% HP or below.", "source_line": 38180},
+        {"skill": "KN_TWOHANDQUICKEN", "target": "self", "threshold_pct": 30, "effect": "Casts Two-Hand Quicken on itself at 30% HP or below.", "source_line": 38180},
+        {"skill": "NPC_AGIUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs AGI at 30% HP or below.", "source_line": 38180},
+        {"skill": "NPC_EARTHQUAKE", "target": "self", "threshold_pct": 30, "effect": "Casts an area Earthquake centered on itself at 30% HP or below.", "source_line": 38180},
+        {"skill": "NPC_POWERUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs at 30% HP or below.", "source_line": 38180}
+      ],
+      "conditions": [
+        "The spawn-time escort (1765, G_RANDGRIS) and the low-slave-count reinforcement (1891, G_RANDGRIS_) are different monster IDs/sprites despite the similar in-game name; they are not the same add."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [38180, 38275, 38276, 38281, 38282, 38308, 38309, 38314, 38315],
+        "required_source_literals": [
+          "RANDGRIS: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 1",
+          "val0: 1891",
+          "CastCondition: \"MSC_SPAWN\"",
+          "val0: 1765"
+        ]
+      }]
+    },
+    {
+      "id": "ktullanux_summon_and_defense",
+      "monster_id": 1779,
+      "sprite_name": "KTULLANUX",
+      "title": "Ktullanux's Ice Titan summons and defensive kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 3 or fewer active slaves (MSC_SLAVELE, ConditionData 3).",
+          "summon_candidates": [1788],
+          "summon_candidate_names": ["Ice Titan"],
+          "amount": 4,
+          "amount_explanation": "Single candidate, amount == SkillLevel (4): tops back up to 4 Ice Titans whenever its escort count falls to 3 or fewer.",
+          "source_lines": [40638]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 50, "effect": "Self-heals at 50% HP or below.", "source_line": 40583},
+        {"skill": "NPC_AGIUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs AGI at 30% HP or below.", "source_line": 40583},
+        {"skill": "NPC_POWERUP", "target": "self", "threshold_pct": 30, "effect": "Self-buffs at 30% HP or below.", "source_line": 40583},
+        {"skill": "NPC_WIDEFREEZE", "target": "self", "threshold_pct": 80, "effect": "Casts an area freeze centered on itself at 80% HP or below.", "source_line": 40583}
+      ],
+      "conditions": [],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [40583, 40638, 40639, 40644, 40645],
+        "required_source_literals": [
+          "KTULLANUX: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 3",
+          "val0: 1788"
+        ]
+      }]
+    },
+    {
+      "id": "necromancer_summon_and_fear",
+      "monster_id": 1870,
+      "sprite_name": "NECROMANCER",
+      "title": "Necromancer's Zombie Slaughter summon and Dragon Fear",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 0 active slaves (MSC_SLAVELE, default ConditionData 0).",
+          "summon_candidates": [1864],
+          "summon_candidate_names": ["Zombie Slaughter"],
+          "amount": 2,
+          "amount_explanation": "Single candidate, amount == SkillLevel (2): summons 2 Zombie Slaughter adds whenever it has none.",
+          "source_lines": [44892]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "NPC_DRAGONFEAR", "target": "self", "threshold_pct": 50, "effect": "Casts an area fear effect centered on itself at 50% HP or below.", "source_line": 44750}
+      ],
+      "conditions": [],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [44750, 44892, 44893, 44898, 44899],
+        "required_source_literals": [
+          "NECROMANCER: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "val0: 1864",
+          "NPC_DRAGONFEAR"
+        ]
+      }]
+    },
+    {
+      "id": "beelzebub_summon_and_flee",
+      "monster_id": 1874,
+      "sprite_name": "BEELZEBUB_",
+      "title": "Beelzebub's Hell Fly/Chonchon swarm and low-HP flee",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 5 or fewer active slaves (MSC_SLAVELE, ConditionData 5).",
+          "summon_candidates": [1872, 1872, 1011],
+          "summon_candidate_names": ["Hell Fly", "Hell Fly", "Chonchon"],
+          "amount": 10,
+          "amount_explanation": "amount == SkillLevel (10), round-robin over the 3-slot candidate list (Hell Fly appears twice, so it is weighted 2:1 over Chonchon): 10 adds are summoned per trigger, roughly 6-7 Hell Fly to 3-4 Chonchon depending on the round-robin start offset.",
+          "source_lines": [45802]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 99, "effect": "Self-heals whenever below 99% HP -- effectively an almost-always-on heal.", "source_line": 45652},
+        {"skill": "NPC_EVILLAND", "target": "self", "threshold_pct": 50, "effect": "Casts an area debuff field centered on itself at 50% HP or below.", "source_line": 45652},
+        {"skill": "NPC_RUN", "target": "self", "threshold_pct": 1, "effect": "Attempts to flee (walk 1 tile away, NPC_RUN skill_lv 1) at 1% HP or below.", "source_line": 45744},
+        {"skill": "NPC_STONESKIN", "target": "self", "threshold_pct": 5, "effect": "Self-buffs Stoneskin at 5% HP or below.", "source_line": 45652},
+        {"skill": "NPC_VAMPIRE_GIFT", "target": "self", "threshold_pct": 50, "effect": "Self-heals via life drain at 50% HP or below.", "source_line": 45652},
+        {"skill": "NPC_WIDESOULDRAIN", "target": "self", "threshold_pct": 50, "effect": "Casts an area soul-drain centered on itself at 50% HP or below.", "source_line": 45652},
+        {"skill": "NPC_WIDESTONE", "target": "self", "threshold_pct": 80, "effect": "Casts an area petrify centered on itself at 80% HP or below.", "source_line": 45652}
+      ],
+      "conditions": [
+        "NPC_RUN with a self target makes the caster walk directly away from its facing direction (src/map/skill.c case NPC_RUN); it is a flee attempt, not a teleport or invulnerability phase."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [45652, 45744, 45745, 45750, 45751, 45802, 45803, 45808, 45809],
+        "required_source_literals": [
+          "BEELZEBUB_: {",
+          "NPC_RUN: {",
+          "CastCondition: \"MSC_MYHPLTMAXRATE\"",
+          "ConditionData: 1",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 5",
+          "val0: 1872",
+          "val1: 1872",
+          "val2: 1011"
+        ]
+      }]
+    },
+    {
+      "id": "morroc_incarnation_summon_and_nuke_kit",
+      "monster_id": 1916,
+      "sprite_name": "MOROCC",
+      "title": "Satan Morroc's Incarnation-of-Morroc summons and nuke kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Immediately on spawn/respawn (MSC_SPAWN), and again whenever it currently has 1 or fewer active slaves (MSC_SLAVELE, ConditionData 1).",
+          "summon_candidates": [1922, 1923, 1924, 1925],
+          "summon_candidate_names": ["Incarnation of Morroc", "Incarnation of Morroc", "Incarnation of Morroc", "Incarnation of Morroc"],
+          "amount": 4,
+          "amount_explanation": "amount == SkillLevel (4), round-robin over 4 candidates: one of each Incarnation variant is summoned per trigger, both at spawn and again whenever escorts drop to 1 or fewer.",
+          "source_lines": [46997, 47027]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AL_HEAL", "target": "self", "threshold_pct": 45, "effect": "Self-heals at 45% HP or below.", "source_line": 46847},
+        {"skill": "MG_FIREBOLT", "target": "current target", "threshold_pct": 80, "effect": "Casts Fire Bolt at its target at 80% HP or below.", "source_line": 46847},
+        {"skill": "MG_FROSTDIVER", "target": "current target", "threshold_pct": 80, "effect": "Casts Frost Diver at its target at 80% HP or below.", "source_line": 46847},
+        {"skill": "MG_STONECURSE", "target": "current target", "threshold_pct": 80, "effect": "Casts Stone Curse at its target at 80% HP or below.", "source_line": 46847},
+        {"skill": "NPC_DRAGONFEAR", "target": "self", "threshold_pct": 5, "effect": "Casts an area fear centered on itself at 5% HP or below.", "source_line": 46847},
+        {"skill": "NPC_EARTHQUAKE", "target": "self", "threshold_pct": 30, "effect": "Casts an area Earthquake centered on itself at 30% HP or below.", "source_line": 46847},
+        {"skill": "NPC_EVILLAND", "target": "self", "threshold_pct": 50, "effect": "Casts an area debuff field centered on itself at 50% HP or below.", "source_line": 46847},
+        {"skill": "NPC_HELLJUDGEMENT", "target": "self", "threshold_pct": 60, "effect": "Casts an area judgement effect centered on itself at 60% HP or below.", "source_line": 46847},
+        {"skill": "NPC_HELLPOWER", "target": "current target", "threshold_pct": 60, "effect": "Applies Hell Power to its target at 60% HP or below.", "source_line": 46847},
+        {"skill": "NPC_PULSESTRIKE", "target": "self", "threshold_pct": 40, "effect": "Casts an area pulse-strike effect centered on itself at 40% HP or below.", "source_line": 46847},
+        {"skill": "NPC_VAMPIRE_GIFT", "target": "self", "threshold_pct": 50, "effect": "Self-heals via life drain at 50% HP or below.", "source_line": 46847},
+        {"skill": "NPC_WIDEHELLDIGNITY", "target": "self", "threshold_pct": 30, "effect": "Casts an area debuff centered on itself at 30% HP or below.", "source_line": 46847},
+        {"skill": "NPC_WIDESLEEP", "target": "self", "threshold_pct": 60, "effect": "Casts an area sleep centered on itself at 60% HP or below.", "source_line": 46847},
+        {"skill": "NPC_WIDESOULDRAIN", "target": "self", "threshold_pct": 50, "effect": "Casts an area soul-drain centered on itself at 50% HP or below.", "source_line": 46847},
+        {"skill": "NPC_WIDESTONE", "target": "self", "threshold_pct": 40, "effect": "Casts an area petrify centered on itself at 40% HP or below.", "source_line": 46847},
+        {"skill": "NPC_WIDESTUN", "target": "self", "threshold_pct": 30, "effect": "Casts an area stun centered on itself at 30% HP or below.", "source_line": 46847},
+        {"skill": "WZ_JUPITEL", "target": "current target", "threshold_pct": 80, "effect": "Casts Jupitel Thunder at its target at 80% HP or below.", "source_line": 46847},
+        {"skill": "WZ_METEOR", "target": "current target", "threshold_pct": 40, "effect": "Casts Meteor Storm at its target at 40% HP or below.", "source_line": 46847}
+      ],
+      "conditions": [
+        "This is Satan Morroc (MOROCC, id 1916), the un-injured form. The Wounded Morroc form (MOROCC_, id 1917) has an identical skill block (same summon candidates, amounts, triggers, and HP-threshold kit) at a lower HP pool; it is not reviewed as a separate entry here since every field matches."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [46847, 46997, 46998, 47003, 47004, 47027, 47028, 47033, 47034],
+        "required_source_literals": [
+          "MOROCC: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 1",
+          "val0: 1922",
+          "val1: 1923",
+          "val2: 1924",
+          "val3: 1925",
+          "CastCondition: \"MSC_SPAWN\""
+        ]
+      }]
+    },
+    {
+      "id": "baphomet_summon_and_dark_kit",
+      "monster_id": 1929,
+      "sprite_name": "BAPHOMET_I",
+      "title": "Great Demon Baphomet's Baphomet Jr. summon and dark kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Whenever it currently has 2 or fewer active slaves (MSC_SLAVELE, ConditionData 2).",
+          "summon_candidates": [1431],
+          "summon_candidate_names": ["Baphomet Jr."],
+          "amount": 6,
+          "amount_explanation": "Single candidate, amount == SkillLevel (6): tops back up to 6 Baphomet Jr. adds whenever its escort count falls to 2 or fewer.",
+          "source_lines": [48916]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "AS_SONICBLOW", "target": "current target", "threshold_pct": 30, "effect": "Casts Sonic Blow at its target at 30% HP or below.", "source_line": 48764},
+        {"skill": "NPC_ALLHEAL", "target": "self", "threshold_pct": 60, "effect": "Self-heals (full-strength heal variant) at 60% HP or below.", "source_line": 48764},
+        {"skill": "NPC_DARKNESSBREATH", "target": "current target", "threshold_pct": 50, "effect": "Breathes a darkness attack at its target at 50% HP or below.", "source_line": 48764},
+        {"skill": "NPC_EVILLAND", "target": "self", "threshold_pct": 70, "effect": "Casts an area debuff field centered on itself at 70% HP or below.", "source_line": 48764},
+        {"skill": "NPC_HELLJUDGEMENT", "target": "self", "threshold_pct": 50, "effect": "Casts an area judgement effect centered on itself at 50% HP or below.", "source_line": 48764}
+      ],
+      "conditions": [],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [48764, 48916, 48917, 48922, 48923],
+        "required_source_literals": [
+          "BAPHOMET_I: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 2",
+          "val0: 1431"
+        ]
+      }]
+    },
+    {
+      "id": "nidhoggr_shadow_summon_and_kit",
+      "monster_id": 2022,
+      "sprite_name": "S_NYDHOG",
+      "title": "Nidhoggr's Shadow's Dark Shadow summons and extensive HP-gated kit",
+      "evidence_state": "verified",
+      "summons": [
+        {
+          "trigger": "Immediately on spawn/respawn (MSC_SPAWN), and again whenever it currently has 3 or fewer active slaves (MSC_SLAVELE, ConditionData 3).",
+          "summon_candidates": [2027],
+          "summon_candidate_names": ["Dark Shadow"],
+          "amount": 5,
+          "amount_explanation": "Single candidate, amount == SkillLevel (5): summons 5 Dark Shadow adds at spawn, and tops back up to 5 whenever its escort count falls to 3 or fewer.",
+          "source_lines": [53652, 53674]
+        }
+      ],
+      "hp_threshold_behaviors": [
+        {"skill": "NPC_ALLHEAL", "target": "self", "threshold_pct": 60, "effect": "Self-heals (full-strength heal variant) at 60% HP or below.", "source_line": 53398},
+        {"skill": "NPC_CRITICALSLASH", "target": "current target", "threshold_pct": 95, "effect": "Uses a high-crit melee skill against its target below 95% HP.", "source_line": 53398},
+        {"skill": "NPC_CRITICALWOUND", "target": "current target", "threshold_pct": 70, "effect": "Applies a wound debuff to its target at 70% HP or below.", "source_line": 53398},
+        {"skill": "NPC_DARKNESSBREATH", "target": "current target", "threshold_pct": 50, "effect": "Breathes a darkness attack at its target at 50% HP or below.", "source_line": 53398},
+        {"skill": "NPC_EARTHQUAKE", "target": "self", "threshold_pct": 30, "effect": "Casts an area Earthquake centered on itself at 30% HP or below.", "source_line": 53398},
+        {"skill": "NPC_EVILLAND", "target": "self", "threshold_pct": 50, "effect": "Casts an area debuff field centered on itself at 50% HP or below (a second, lower-priority copy also exists at 15%).", "source_line": 53398},
+        {"skill": "NPC_FIREBREATH", "target": "current target", "threshold_pct": 75, "effect": "Breathes fire at its target at 75% HP or below.", "source_line": 53398},
+        {"skill": "NPC_HELLJUDGEMENT", "target": "self", "threshold_pct": 50, "effect": "Casts an area judgement effect centered on itself at 50% HP or below.", "source_line": 53398},
+        {"skill": "NPC_INVISIBLE", "target": "self", "threshold_pct": 40, "effect": "Turns itself invisible at 40% HP or below.", "source_line": 53398},
+        {"skill": "NPC_SLOWCAST", "target": "self", "threshold_pct": 70, "effect": "Applies a self slow-cast buff at 70% HP or below.", "source_line": 53398},
+        {"skill": "NPC_STONESKIN", "target": "self", "threshold_pct": 3, "effect": "Self-buffs Stoneskin at 3% HP or below.", "source_line": 53398},
+        {"skill": "NPC_WIDEBLEEDING", "target": "self", "threshold_pct": 40, "effect": "Casts an area bleed centered on itself at 40% HP or below.", "source_line": 53398},
+        {"skill": "NPC_WIDECURSE", "target": "self", "threshold_pct": 75, "effect": "Casts an area curse centered on itself at 75% HP or below.", "source_line": 53398},
+        {"skill": "NPC_WIDESLEEP", "target": "self", "threshold_pct": 95, "effect": "Casts an area sleep centered on itself at 95% HP or below -- effectively an early/opening-phase behavior.", "source_line": 53398},
+        {"skill": "NPC_WIDESTONE", "target": "self", "threshold_pct": 40, "effect": "Casts an area petrify centered on itself at 40% HP or below.", "source_line": 53398},
+        {"skill": "WZ_QUAGMIRE", "target": "current target", "threshold_pct": 28, "effect": "Casts Quagmire on its target at 28% HP or below.", "source_line": 53398}
+      ],
+      "conditions": [
+        "Invisibility (NPC_INVISIBLE) at 40% HP is a notable phase marker: it is the only reviewed boss here whose kit includes turning itself invisible rather than only buffing/summoning."
+      ],
+      "sources": [{
+        "path": "db/re/mob_skill_db.conf",
+        "lines": [53398, 53652, 53653, 53658, 53659, 53674, 53675, 53680, 53681],
+        "required_source_literals": [
+          "S_NYDHOG: {",
+          "CastCondition: \"MSC_SLAVELE\"",
+          "ConditionData: 3",
+          "val0: 2027",
+          "CastCondition: \"MSC_SPAWN\"",
+          "NPC_INVISIBLE"
+        ]
+      }]
+    }
+  ]
+}

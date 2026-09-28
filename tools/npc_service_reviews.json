@@ -1,0 +1,1244 @@
+{
+  "reviewed_by": "Repository source review",
+  "review_method": "Traced each service NPC or shared service function through its full script body against the currently loaded Hercules source, checking gating conditions, costs, and outcomes.",
+  "entries": [
+    {
+      "id": "airship_expert_repairman",
+      "title": "Unidentified Machine / Expert Repairman (Einbroch, airship quest): free repair with an off-by-one bug",
+      "service_kind": "repair_single",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "Hidden NPC at ein_in01, gated to only offer this branch once the airship-quest progression variable kain_ticket exceeds 12; otherwise it presents unrelated flavor dialogue.",
+        "Unlike every other reviewed repair service, this one is free: it reports the broken-item count via getbrokencount() and, on confirmation, repairs items with no Zeny charge at all.",
+        "Notable bug: the repair loop is `for (.@i = 1; .@i < .@mugi; ++.@i) repair(.@i);` where .@mugi is the broken-item count from getbrokencount(). This iterates .@i from 1 up to (but not including) .@mugi, so it calls repair() on only .@mugi - 1 of the .@mugi broken items -- the last broken slot is never repaired in this branch, unlike the repairmain shared function and Repair Man (Izlude), both of which use inclusive getbrokenid()-based loops that cover every broken slot."
+      ],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            1517,
+            1518,
+            1528,
+            1529,
+            1544,
+            1545,
+            1546
+          ],
+          "required_source_literals": [
+            "ein_in01,117,80,3\tscript\tUnidentified Machine#as\tHIDDEN_NPC,{//Official hidden name \"#ein\"",
+            "if (kain_ticket > 12) {",
+            ".@mugi = getbrokencount();",
+            "if (.@mugi == 0) {",
+            "if (.@mugi == getbrokencount()) {",
+            "for (.@i = 1; .@i < .@mugi; ++.@i)",
+            "repair(.@i);"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cashshop_item_triggered_functions",
+      "title": "Cash Shop item scripts: storage and skill/status reset triggered by consuming an item, not by an NPC",
+      "service_kind": "cashshop_item_trigger",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "F_CashStore (used by the Kafra Card item) simply calls openstorage with no cost, gate, or NPC context beyond the item's own use-restrictions defined in item_db.conf; it is not an NPC service and has no map/cell location.",
+        "F_CashReset (used by the Neuralizer item) requires Class != Job_Novice, Weight == 0, and no mount/falcon/cart/cash-mount equipped; on success it calls resetskill and sc_end SC_ALL (clearing all active status changes), then consumes one Neuralizer if the player still holds it.",
+        "Both are triggered by using a consumable item from the player's inventory, not by talking to an NPC; recorded here for completeness since they matched the literal storage/skill_reset scan, but they belong to the item-effect system rather than the NPC-service system the rest of this file covers."
+      ],
+      "sources": [
+        {
+          "path": "npc/other/CashShop_Functions.txt",
+          "lines": [
+            43,
+            49,
+            74,
+            75,
+            76,
+            77,
+            78
+          ],
+          "required_source_literals": [
+            "function\tscript\tF_CashStore\t{",
+            "openstorage;",
+            "function\tscript\tF_CashReset\t{",
+            "if (Class != Job_Novice && Weight == 0 && !checkmount() && !checkfalcon() && !checkcart() && !hascashmount()) {",
+            "resetskill;",
+            "sc_end SC_ALL;",
+            "if (countitem(Neuralizer)) delitem Neuralizer,1;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cool_event_corp_zonda_staff",
+      "title": "Cool Event Corp. Staff (Hugel/Rachel/Veins): reserve-points-exempt Kafra variant",
+      "service_kind": "kafra_suite",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "Three real NPCs (Hugel, Rachel, Veins) each call F_KafSet to populate the route table for their own map, then F_ZondaStaff with a menu-variant argument (0 at Hugel: no Teleport Service offered; 1 at Rachel/Veins: full menu including Teleport Service), then set a fixed savepoint on close.",
+        "This is the 'Zonda/Cool Event Corp.' variant already referenced in kafra_employee_core_services' fee-exemption notes: its Use Storage call passes exempt-code 6 with a flat 40 Zeny fee, its Rent a Pushcart call passes exempt-code 6 with a flat 800 Zeny fee, and its Teleport Service call passes exempt-code 6 -- in all three, code 6 means no Special Reserve Points are granted for the payment (F_KafStor/F_KafCart/F_KafTele's shared logic skips the RESRVPTS award only when their exempt-code argument equals 6).",
+        "Save, Storage, Pushcart, and Storage Password Service share the same gating/cost rules as the main F_KafStor/F_KafCart/F_SetKafCode helpers reviewed in kafra_employee_core_services; only the fee amounts and reserve-point exemption differ here."
+      ],
+      "sources": [
+        {
+          "path": "npc/kafras/cool_event_corp.txt",
+          "lines": [
+            44,
+            55,
+            58,
+            72,
+            73,
+            77,
+            78,
+            82,
+            83,
+            104,
+            105,
+            106,
+            113,
+            114,
+            115,
+            122,
+            123,
+            124
+          ],
+          "required_source_literals": [
+            "function\tscript\tF_ZondaStaff\t{",
+            "case 0: setarray @Z_Menu0$, \"Save\", \"Use Storage\", \"Rent a Pushcart\", \"Storage Password Service\", \"Cancel\"; break;",
+            "case 1: setarray @Z_Menu0$, \"Save\", \"Use Storage\", \"Teleport Service\", \"Rent a Pushcart\", \"Storage Password Service\", \"Cancel\"; break;",
+            "callfunc \"F_KafStor\",0,40,6,\"[Cool Event Corp. Staff]\";",
+            "callfunc \"F_KafTele\", 6, \"[Cool Event Corp. Staff]\";",
+            "callfunc \"F_KafCart\", 6, 800, \"[Cool Event Corp. Staff]\";",
+            "hugel,88,168,4\tscript\tCool Event Corp. Staff::CoolEventCorpStaffHugel\t4_M_ZONDAMAN,{",
+            "callfunc \"F_KafSet\";",
+            "callfunc \"F_ZondaStaff\", 0, \"in the village of Hugel.\";",
+            "rachel,109,138,5\tscript\tCool Event Corp. Staff::CoolEventCorpStaffRachel\t4_M_ZONDAMAN,{",
+            "callfunc \"F_ZondaStaff\", 1, \"in the town of Rachel.\";",
+            "veins,208,128,5\tscript\tCool Event Corp. Staff::CoolEventCorpStaffVeins\t4_M_ZONDAMAN,{",
+            "callfunc \"F_ZondaStaff\", 1, \"in the town of Veins.\";"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deviruchi_divorce_niflheim",
+      "title": "Deviruchi (Niflheim): paid divorce for married characters",
+      "service_kind": "divorce",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "npc": {
+        "internal_name": "Deviruchi#divorce",
+        "map": "nif_in",
+        "x": 190,
+        "y": 112
+      },
+      "conditions": [
+        "Requires the player to currently have a partner (getpartnerid() must be nonzero); unmarried characters only receive mocking dialogue and no service branch.",
+        "Costs a flat 2,500,000 Zeny, refused if the player's Zeny is 2,499,999 or lower.",
+        "On success the script clears wedding_sign, sets SP to 0 and HP to 1 (a scripted side-effect cost, not a Zeny fee), then calls divorce to end the marriage.",
+        "The player must actively opt in twice (an initial 'yes, divorce me' choice and a second 'give me a divorce right now' confirmation); declining either ends the dialogue without cost."
+      ],
+      "sources": [
+        {
+          "path": "npc/other/divorce.txt",
+          "lines": [
+            41,
+            58,
+            160,
+            168,
+            169,
+            184,
+            202,
+            210,
+            212,
+            213,
+            214,
+            215,
+            216
+          ],
+          "required_source_literals": [
+            "nif_in,190,112,5\tscript\tDeviruchi#divorce\t4_DEVIRUCHI,{",
+            "if (!getpartnerid()) {",
+            "if (select(\"No thanks, I am happy.\", \"Yes, please do.\") == 1) {",
+            "warp \"niflheim\",169,162;",
+            "if (select(\"...Give me some time to think.\", \"Any price will do, give me a divorce right now!\") == 1) {",
+            "if (Zeny > 2499999) {",
+            "wedding_sign = 0;",
+            "Zeny -= 2500000;",
+            "Sp = 0;",
+            "Hp = 1;",
+            "divorce;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hypnotist_stat_skill_reset_izlude",
+      "title": "Hypnotist (Izlude): free stat/skill reset for eligible low-level first classes",
+      "service_kind": "skill_stat_reset",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "npc": {
+        "internal_name": "Hypnotist#novice",
+        "map": "izlude",
+        "x": 127,
+        "y": 175
+      },
+      "conditions": [
+        "Eligibility is restricted to Swordman/Acolyte/Mage/Thief/Archer/Merchant through the base-class range check, plus Taekwon, Gunslinger, and Ninja classes explicitly, and requires Base Level under 50.",
+        "Before either reset, the player must have 0 carried inventory weight and no pushcart equipped (checkcart() must be false); the NPC explains both requirements and refuses to proceed otherwise.",
+        "The service is free (no Zeny or item cost) and offers unlimited resets as scripted (no cooldown or per-account counter observed in this branch); choosing 'Reset stats' calls resetstatus, choosing 'Reset skills' calls resetskill."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/other/resetskill.txt",
+          "lines": [
+            36,
+            49,
+            60,
+            102,
+            103,
+            111,
+            127,
+            141,
+            142,
+            144
+          ],
+          "required_source_literals": [
+            "izlude,127,175,3\tscript\tHypnotist#novice\t4_F_TELEPORTER,{",
+            "mes \"lower than ^FF0000Base Level 50^000000.\";",
+            "switch(select(\"^FF0000Stat/Skill Reset?\", \"Reset stats\", \"Reset skills^000000\", \"Cancel\")) {",
+            "if ((Class >= Job_Swordman && Class <= Job_Thief) || Class == Job_Taekwon || Class == Job_Gunslinger || Class == Job_Ninja) {",
+            "if (checkcart()) {",
+            "if (Weight != 0) {",
+            "if (BaseLevel >= 50) {",
+            "resetstatus;",
+            "resetskill;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iz_int_startpoint_navigation_trigger",
+      "title": "startpoint (Izlude training rooms): automatic first-touch navigation prompt, not a player-requested service",
+      "service_kind": "navigation_trigger",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "This is a HIDDEN_WARP_NPC OnTouch trigger covering the tile at (18,26)/(18,27) in the Izlude training rooms (iz_int and its 4 instanced duplicates iz_int01-04), not a menu-driven NPC a player interacts with.",
+        "On first touch per character (gated by the character variable izintspawn, set to 1 immediately so it fires only once), it calls navigateto(\"int_land\", NAV_NONE, 1) to open the client's navigation overlay pointing toward the training-room exit; it grants no item, currency, or persistent state beyond the one-time flag.",
+        "Recorded here for completeness since it matched the literal navigateto() scan, but it is explicitly not an NPC-provided service in the sense the rest of this file covers -- there is no cost, menu, or repeatable player request."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            44,
+            45,
+            46,
+            47,
+            48,
+            52,
+            53,
+            54,
+            55
+          ],
+          "required_source_literals": [
+            "iz_int,18,26,0\tscript\tstartpoint\tHIDDEN_WARP_NPC,1,1,{",
+            "OnTouch:",
+            "if (!izintspawn) {",
+            "navigateto(\"int_land\", NAV_NONE, 1); // individual map name not required",
+            "izintspawn = 1;",
+            "iz_int01,18,27,0\tduplicate(startpoint)\tstartpoint#01\tHIDDEN_WARP_NPC,1,1",
+            "iz_int02,18,27,0\tduplicate(startpoint)\tstartpoint#02\tHIDDEN_WARP_NPC,1,1",
+            "iz_int03,18,27,0\tduplicate(startpoint)\tstartpoint#03\tHIDDEN_WARP_NPC,1,1",
+            "iz_int04,18,27,0\tduplicate(startpoint)\tstartpoint#04\tHIDDEN_WARP_NPC,1,1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kafra_employee_core_services",
+      "title": "Kafra Employee: storage, guild storage, pushcart rental, teleport, and reserve points",
+      "service_kind": "kafra_suite",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "The shared F_Kafra menu function offers a subset of Save / Use Storage / Use Guild Storage / Rent a Pushcart / Use Teleport Service / Check Other Information, chosen per call site by a numbered menu-variant argument (case 1-10 in the source switch); most Kafra NPCs use variant 0 (the full default menu) or 5 (NPC supplies its own welcome text).",
+        "Use Storage requires Basic Skill level 6 or higher (waived for classes with SU_BASIC_SKILL) and either a Free Ticket for Kafra Storage (consumed if held) or the per-NPC storage fee in Zeny; each 5 Zeny of fee paid (except the Zonda/Cool Event Corp. variant) grants 1 Special Reserve Point.",
+        "Use Guild Storage is free but fails with a busy message if another guild member is already inside the guild storage; it is not gated by the Basic Skill check that regular storage uses.",
+        "Rent a Pushcart requires a Merchant-class base class and at least skill level 1 in Pushcart (MC_PUSHCART), refuses if a cart is already equipped, and otherwise consumes a Free Ticket for the Cart Service or charges the per-NPC cart fee in Zeny (48 Special Reserve Points on payment, except the Zonda/Cool Event Corp. variant).",
+        "Use Teleport Service lists destinations and per-destination Zeny prices fixed by the Kafra NPC's own map (see route_table); it is unavailable at the Einbroch-area menu variant (menu-variant 4), consumes a Free Ticket for Kafra Transportation if held, otherwise charges the listed fare and grants 1 Special Reserve Point per 16 Zeny paid (except the Zonda/Cool Event Corp. variant).",
+        "Check Other Information exposes the player's accumulated Special Reserve Points total, a storage password sub-service, and (outside Port Malaya/Rune Knight menu contexts) a minimap ping of nearby Kafra-related points of interest; it does not grant or consume anything by itself.",
+        "Guild Castle Kafra NPCs (menu-variant argument 0 combined with a separate 'called from guild castle' flag) override the menu to a free Storage/Guild Storage/Pushcart/Teleport set with no Zeny or ticket cost, per the getarg(0)==2 branch.",
+        "Each of the 49 indexed call sites in docs/npc-service-clues.v1.json under service_kind 'kafra_menu' instantiates this shared contract with its own menu-variant, storage fee, and cart fee taken directly from its callfunc argument list; this review does not re-verify each individual NPC's dialogue flavor text, only the shared mechanics."
+      ],
+      "route_table": [
+        {
+          "origin_map": "prontera",
+          "destinations": [
+            {
+              "name": "Izlude",
+              "fee": 600
+            },
+            {
+              "name": "Geffen",
+              "fee": 1200
+            },
+            {
+              "name": "Payon",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1200
+            },
+            {
+              "name": "Orc Dungeon",
+              "fee": 1200
+            },
+            {
+              "name": "Alberta",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "alberta",
+          "destinations": [
+            {
+              "name": "Payon",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1800
+            },
+            {
+              "name": "Prontera",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "aldebaran",
+          "destinations": [
+            {
+              "name": "Geffen",
+              "fee": 1200
+            },
+            {
+              "name": "Juno",
+              "fee": 1200
+            },
+            {
+              "name": "Izlude",
+              "fee": 1800
+            },
+            {
+              "name": "Mjolnir Dead Pit",
+              "fee": 1700
+            }
+          ]
+        },
+        {
+          "origin_map": "comodo",
+          "destinations": [
+            {
+              "name": "Morroc",
+              "fee": 1800
+            },
+            {
+              "name": "Comodo Pharos Beacon",
+              "fee": 1200
+            },
+            {
+              "name": "Umbala",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "cmd_fild07",
+          "destinations": [
+            {
+              "name": "Comodo",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1200
+            }
+          ]
+        },
+        {
+          "origin_map": "geffen",
+          "destinations": [
+            {
+              "name": "Prontera",
+              "fee": 1200
+            },
+            {
+              "name": "Al De Baran",
+              "fee": 1200
+            },
+            {
+              "name": "Orc Dungeon",
+              "fee": 1200
+            },
+            {
+              "name": "Mjolnir Dead Pit",
+              "fee": 1700
+            }
+          ]
+        },
+        {
+          "origin_map": "izlude",
+          "destinations": [
+            {
+              "name": "Geffen",
+              "fee": 1200
+            },
+            {
+              "name": "Payon",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1200
+            },
+            {
+              "name": "Al De Baran",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "morocc",
+          "destinations": [
+            {
+              "name": "Prontera",
+              "fee": 1200
+            },
+            {
+              "name": "Payon",
+              "fee": 1200
+            },
+            {
+              "name": "Alberta",
+              "fee": 1800
+            },
+            {
+              "name": "Comodo",
+              "fee": 1800
+            },
+            {
+              "name": "Comodo Pharos Beacon",
+              "fee": 1200
+            }
+          ]
+        },
+        {
+          "origin_map": "umbala",
+          "destinations": [
+            {
+              "name": "Comodo",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "payon",
+          "destinations": [
+            {
+              "name": "Prontera",
+              "fee": 1200
+            },
+            {
+              "name": "Alberta",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1200
+            }
+          ]
+        },
+        {
+          "origin_map": "yuno",
+          "destinations": [
+            {
+              "name": "Al De Baran",
+              "fee": 1200
+            }
+          ]
+        },
+        {
+          "origin_map": "job3_rune01",
+          "destinations": [
+            {
+              "name": "Izlude",
+              "fee": 600
+            },
+            {
+              "name": "Geffen",
+              "fee": 1200
+            },
+            {
+              "name": "Payon",
+              "fee": 1200
+            },
+            {
+              "name": "Morroc",
+              "fee": 1200
+            },
+            {
+              "name": "Alberta",
+              "fee": 1800
+            }
+          ]
+        },
+        {
+          "origin_map": "rachel",
+          "destinations": [
+            {
+              "name": "Veins",
+              "fee": 2200
+            }
+          ]
+        },
+        {
+          "origin_map": "veins",
+          "destinations": [
+            {
+              "name": "Rachel",
+              "fee": 2200
+            }
+          ]
+        }
+      ],
+      "route_table_note": "Any Kafra NPC on a map not listed here (or whose menu variant excludes teleport) offers no teleport destinations; the table is populated per-map by F_KafSet and is exhaustive for the maps it lists as of this review.",
+      "sources": [
+        {
+          "path": "npc/kafras/functions_kafras.txt",
+          "lines": [
+            61,
+            109,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            126,
+            127,
+            128,
+            130,
+            132,
+            133,
+            134,
+            136,
+            143,
+            145,
+            147,
+            148,
+            150,
+            152,
+            154,
+            155,
+            171,
+            172,
+            177,
+            178,
+            180,
+            181,
+            199,
+            202,
+            214,
+            240,
+            242,
+            243,
+            245,
+            263,
+            264,
+            265,
+            296,
+            307,
+            313,
+            314,
+            315,
+            316,
+            320,
+            321,
+            323,
+            333,
+            334,
+            335,
+            338,
+            339,
+            622,
+            623,
+            624,
+            627,
+            628,
+            629,
+            632,
+            633,
+            634,
+            635,
+            636,
+            637,
+            638,
+            639,
+            640,
+            641,
+            642,
+            643,
+            646,
+            647,
+            648,
+            649,
+            650,
+            651,
+            654,
+            655,
+            656,
+            657,
+            658,
+            659,
+            660,
+            661,
+            662,
+            665,
+            666,
+            667,
+            668,
+            669,
+            670,
+            671,
+            672,
+            673,
+            356,
+            364,
+            366,
+            375,
+            382,
+            393,
+            394,
+            401,
+            403,
+            411,
+            412,
+            413,
+            415
+          ],
+          "required_source_literals": [
+            "function\tscript\tF_Kafra\t{",
+            "case 1:\tsetarray @K_Menu0$[0],\"Save\",\"Use Storage\",\"Cancel\"; break;",
+            "case 5:\tsetarray @K_Menu0$[0],\"Use Storage\",\"Rent a Pushcart\",\"Check Other Information\",\"Cancel\"; break;",
+            "if(getarg(0) == 2)",
+            "setarray @K_Menu0$[0],\"Use Storage\",\"Use Guild Storage\",\"Rent a Pushcart\",\"Use Teleport Service\",\"Cancel\";",
+            "callfunc \"F_KafStor\",2,0,0,\"[Kafra Employee]\";",
+            "callfunc \"F_KafStor\",0,getarg(3),getarg(0),\"[Kafra Employee]\";",
+            "callfunc \"F_KafStor\",1,0,0,\"[Kafra Employee]\";",
+            "if (getarg(1) != 4) {",
+            "function\tscript\tF_KafStor\t{",
+            "if (basicskillcheck() && getskilllv(NV_BASIC) < 6 && getskilllv(SU_BASIC_SKILL) == 0) {",
+            "if (countitem(Cargo_Free_Ticket)) {",
+            "delitem Cargo_Free_Ticket, 1;",
+            "if (Zeny < getarg(1)) {",
+            "Zeny -= getarg(1);",
+            "if (getarg(2) != 6)",
+            "RESRVPTS += getarg(1) / 5;",
+            "openstorage;",
+            "if (guildopenstorage()) {",
+            "function\tscript\tF_KafTele\t{",
+            "if (countitem(Warp_Free_Ticket) > 0 && getarg(0) != 2) {",
+            "delitem Warp_Free_Ticket, 1;",
+            "if (Zeny < @wrpP[.@j]) {",
+            "Zeny -= @wrpP[.@j];",
+            "if (getarg(0) != 6)",
+            "RESRVPTS += @wrpP[.@j] / 16;",
+            "function\tscript\tF_KafCart\t{",
+            "if (BaseClass != Job_Merchant) {",
+            "if (getskilllv(MC_PUSHCART) == 0) {",
+            "if (checkcart() == 1) {",
+            "if (countitem(Cart_Free_Ticket) > 0 && getarg(0) != 2) {",
+            "if (Zeny < getarg(1)) {",
+            "Zeny -= getarg(1);",
+            "RESRVPTS += 48;",
+            "setcart;",
+            "setarray @wrpD$, \"Izlude\", \"Geffen\", \"Payon\", \"Morroc\", \"Orc Dungeon\", \"Alberta\";",
+            "setarray @wrpP, 600, 1200, 1200, 1200, 1200, 1800;",
+            "} else if (strnpcinfo(NPC_MAP) == \"rachel\") {",
+            "setarray @wrpD$, \"Veins\";",
+            "setarray @wrpP, 2200;",
+            "} else if (strnpcinfo(NPC_MAP) == \"veins\") {",
+            "setarray @wrpD$, \"Rachel\";"
+          ]
+        },
+        {
+          "path": "npc/kafras/functions_kafras.txt",
+          "lines": [
+            419,
+            423,
+            424,
+            428,
+            433,
+            441,
+            443,
+            449,
+            450
+          ],
+          "required_source_literals": [
+            "function\tscript\tF_KafInfo\t{",
+            "setarray .@m$, \"Check Special Reserve Points.\",\"Storage Password Service\",\"Kafra Employee Locations\",\"Cancel\";",
+            "if (getarg(0) == 2) deletearray .@m$[1],2;",
+            "mes RESRVPTS+ \" Special Reserve Points.\";",
+            "callfunc(\"F_SetKafCode\",\"[Kafra Employee]\",\"Kafra Services\");"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kafra_hq_leilah_standalone",
+      "title": "Kafra Leilah (Al De Baran HQ): standalone save/storage/cart menu",
+      "service_kind": "kafra_suite",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "npc": {
+        "internal_name": "Kafra Service",
+        "map": "aldeba_in",
+        "x": 96,
+        "y": 181
+      },
+      "conditions": [
+        "This NPC does not call the shared F_Kafra function; it is a standalone hand-written variant offering Save (fixed savepoint at aldeba_in 96,179), Use Storage, and Rent a Pushcart.",
+        "Use Storage costs a fixed 20 Zeny (1 Special Reserve Point per 5 Zeny, same rate as the shared helper) and checks the storage password via F_CheckKafCode, but does not apply the Basic Skill level 6 gate that the shared F_KafStor helper enforces elsewhere.",
+        "Rent a Pushcart at this NPC delegates to the shared F_KafCart helper, so its cost and class/skill gating match the reviewed kafra_employee_core_services conditions for that action."
+      ],
+      "sources": [
+        {
+          "path": "npc/kafras/kafras.txt",
+          "lines": [
+            43,
+            52,
+            60,
+            70,
+            85,
+            86,
+            93,
+            95
+          ],
+          "required_source_literals": [
+            "aldeba_in,96,181,4\tscript\tKafra Service\t4_F_KAFRA5,{",
+            "switch(select(\"Save\", \"Use Storage\", \"Rent a Pushcart\", \"Cancel\")) {",
+            "savepoint \"aldeba_in\",96,179;",
+            "if (Zeny < 20) {",
+            "Zeny -= 20;",
+            "RESRVPTS += (20/5);",
+            "callfunc(\"F_CheckKafCode\");",
+            "openstorage;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mado_gear_armorer_cart_rental",
+      "title": "Mado Gear Armorer (10 cities): pushcart rental, Mado Gear riding, and Mado Gear purchase/upgrade",
+      "service_kind": "cart_rental",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "The shared ::mgm function is duplicated by 10 real static NPCs named 'Mado Gear Armorer#<city>' across Prontera, Geffen, Payon, Aldebaran, Yuno, Rachel, Dicastes, Manuk, Splendide, and Mid Camp; every indexed clue at npc/re/merchants/renters.txt:185 under service_kind 'cart_rental' is this same shared function, but the automatic nearest-declaration scan in docs/npc-service-clues.v1.json mis-attributes it to 'Peco Peco Remover' (a different, earlier NPC in the same file with an unrelated dismount-only service) because the '-\tscript\t::mgm' duplicate-template header is not a map-anchored declaration the scanner recognizes. The real 10 locations are listed here directly.",
+        "Restricted to BaseClass Mechanic/Mechanic_T/Baby_Mechanic; other classes see a different menu (not reviewed here).",
+        "Rent a Pushcart: refuses if a cart is already equipped (checkcart()); otherwise calls setcart with no Zeny cost observed in this branch.",
+        "The same shared NPC also offers Ride a Mado Gear, Buy Emergency Mado Gear, and Upgrade Cooling Device menu options; this review covers only the pushcart-rental branch cited above."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/merchants/renters.txt",
+          "lines": [
+            140,
+            170,
+            172,
+            177,
+            179,
+            185,
+            281,
+            282,
+            283,
+            284,
+            285,
+            286,
+            287,
+            288,
+            289,
+            290
+          ],
+          "required_source_literals": [
+            "prontera,125,208,5\tscript\tPeco Peco Remover\t8W_SOLDIER,{",
+            "-\tscript\t::mgm\tFAKE_NPC,{",
+            "if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {",
+            "switch(select(\"Rent a Pushcart\", \"Ride a Mado Gear\", \"Buy Emergency Mado Gear\", \"Upgrade Cooling Device\", \"Cancel\")) {",
+            "if (checkcart()) {",
+            "setcart;",
+            "prontera,163,178,3\tduplicate(mgm)\tMado Gear Armorer#prt\t8W_SOLDIER",
+            "geffen,103,55,5\tduplicate(mgm)\tMado Gear Armorer#gef\t8W_SOLDIER",
+            "payon,166,106,5\tduplicate(mgm)\tMado Gear Armorer#pay\t8W_SOLDIER",
+            "aldebaran,133,112,5\tduplicate(mgm)\tMado Gear Armorer#alde\t8W_SOLDIER",
+            "yuno,167,187,3\tduplicate(mgm)\tMado Gear Armorer#yuno\t8W_SOLDIER",
+            "rachel,106,134,5\tduplicate(mgm)\tMado Gear Armorer#ra\t8W_SOLDIER",
+            "dicastes01,187,207,3\tduplicate(mgm)\tMado Gear Armorer#dic\t8W_SOLDIER",
+            "manuk,273,212,5\tduplicate(mgm)\tMado Gear Armorer#man\t8W_SOLDIER",
+            "splendide,180,174,5\tduplicate(mgm)\tMado Gear Armorer#spl\t8W_SOLDIER",
+            "mid_camp,242,243,3\tduplicate(mgm)\tMado Gear Armorer#mid\t8W_SOLDIER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "refiner_ui_access_points",
+      "title": "Weapon/armor refiners: classic dialogue-menu refining (refine UI disabled on this server)",
+      "service_kind": "refine",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "All five refiner NPCs indexed by the 'refine_ui_access' clue kind (Suhnbi#cash at payon, Fulerr at lhz_in02, MightyHammer#re, Vestri#pay at payon_in01, and Shadow Blacksmith#nomal at itemmall) gate the interactive openrefineryui() client dialog behind the server config flag conf/map/battle/feature.conf 'features/replace_refine_npcs', read via getbattleflag(\"features/replace_refine_npcs\").",
+        "That flag is 'false' in feature.conf and is not overridden anywhere under Hercules/conf/import on this server, so openrefineryui() is never reached; every refiner NPC falls through to its classic select()-menu refine flow instead. This is a configuration fact checked directly against the active conf tree, not an inference from the script alone.",
+        "The worked example, Suhnbi#cash, lists only the player's currently equipped gear, refuses items with getequipisenableref() false or already at +10, and branches its required material/cost by weapon level (level 1-4 weapons use different callsub S_RefineValidate cost tiers; non-weapon/level-0 gear uses a separate tier) using the same Enriched Oridecon/Elunium materials as the normal weapon-refine tables already exported in docs/refine.v1.json. This review does not re-derive those odds; it establishes that these NPCs are access points to that already-reviewed mechanic, not a separate one.",
+        "Fulerr, MightyHammer#re, and Vestri#pay route through shared refinemain/refinenew helper functions carrying the same getbattleflag gate and an equivalent equipped-item menu; Shadow Blacksmith#nomal is a distinct implementation with its own fixed 20,000 Zeny refining fee for Shadow equipment, separate from the normal refine material/cost tables."
+      ],
+      "sources": [
+        {
+          "path": "npc/merchants/advanced_refiner.txt",
+          "lines": [
+            46,
+            53,
+            54,
+            55,
+            76,
+            78,
+            83
+          ],
+          "required_source_literals": [
+            "payon,157,146,6\tscript\tSuhnbi#cash\t4_M_03,{",
+            "if (getbattleflag(\"features/replace_refine_npcs\") == 1) {",
+            "if (openrefineryui())",
+            "if (!getequipisenableref(.@part)) {",
+            "if (getequiprefinerycnt(.@part) >= 10) {"
+          ]
+        },
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            576,
+            577,
+            586,
+            592,
+            593
+          ],
+          "required_source_literals": [
+            "lhz_in02,282,20,7\tscript\tFulerr\t4_M_LGTMAN,{",
+            "callfunc \"refinemain\",\"Fulerr\",0;",
+            "function\tscript\trefinemain\t{",
+            "if (getbattleflag(\"features/replace_refine_npcs\") == 1) {"
+          ]
+        },
+        {
+          "path": "npc/re/merchants/hd_refiner.txt",
+          "lines": [
+            41,
+            47,
+            48
+          ],
+          "required_source_literals": [
+            "-\tscript\t::MightyHammer#re\tFAKE_NPC,{",
+            "if (getbattleflag(\"features/replace_refine_npcs\") == 1) {"
+          ]
+        },
+        {
+          "path": "npc/re/merchants/refine.txt",
+          "lines": [
+            45,
+            46,
+            58,
+            64,
+            65
+          ],
+          "required_source_literals": [
+            "payon_in01,18,132,3\tscript\tVestri#pay\t4_M_DWARF,{",
+            "callfunc \"refinenew\",\"Vestri\",0;",
+            "function\tscript\trefinenew\t{"
+          ]
+        },
+        {
+          "path": "npc/re/merchants/shadow_refiner.txt",
+          "lines": [
+            36,
+            40,
+            46,
+            47
+          ],
+          "required_source_literals": [
+            "itemmall,31,76,3\tscript\tShadow Blacksmith#nomal\t4_F_JOB_BLACKSMITH,{",
+            ".@zeny_cost = 20000;",
+            "if (getbattleflag(\"features/replace_refine_npcs\") == 1) {"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repair_man_izlude_academy",
+      "title": "Repair Man (Izlude): broken-equipment repair for 5000 Zeny per item",
+      "service_kind": "repair",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "npc": {
+        "internal_name": "Repair Man#iz",
+        "map": "izlude",
+        "x": 158,
+        "y": 130
+      },
+      "conditions": [
+        "Requires at least one broken equipment slot (getbrokencount() > 0); otherwise the NPC only says there is nothing to repair.",
+        "Cost is a flat 5000 Zeny per broken item, computed as 5000 * getbrokencount() and shown to the player before confirmation; the NPC refuses if Zeny is insufficient.",
+        "On success it calls repairall (not per-item repair), fixing every broken equipped item at once for the quoted total."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            14223,
+            14229,
+            14230,
+            14235,
+            14247,
+            14252,
+            14257,
+            14258
+          ],
+          "required_source_literals": [
+            "izlude,158,130,4\tscript\tRepair Man#iz\t4_M_04,{",
+            ".@broken = getbrokencount();",
+            ".@cost = 5000 * .@broken;",
+            "if (Zeny < .@cost) {",
+            "Zeny -= .@cost;",
+            "repairall;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repairmain_shared_function",
+      "title": "Repairman (shared function): flat-rate repair-all for broken equipped gear",
+      "service_kind": "repair_shared_function",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "The shared `repairmain` function (npc/merchants/refine.txt) is called by 15 static NPCs across 2 loaded script files, all named 'Repairman' in dialogue except the Prontera-inn variant, which speaks as 'Grendal'; each of the 15 indexed call sites under service_kind 'repair_shared_function' in docs/npc-service-clues.v1.json instantiates this same contract.",
+        "Cost is a flat 5000 Zeny per broken equipped item, computed as getbrokenid()-loop count times 5000 and quoted to the player before confirmation.",
+        "If the broken-item count has changed between the quote and the player confirming (re-counted via a second getbrokenid loop), the NPC refuses with a 'wait... equip the items you need to repair' message instead of repairing a stale count.",
+        "On success it repairs each broken item individually via repeated repair(<slot>) calls (not a single repairall() call, unlike the separately reviewed Repair Man in Izlude academy, which does use repairall).",
+        "If the player has no broken items, the NPC says so and ends without charging anything."
+      ],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            1093,
+            1094,
+            1164,
+            1165,
+            1173,
+            1174,
+            1177,
+            1178,
+            1180,
+            1182,
+            1183,
+            1199,
+            1201,
+            1203,
+            1205,
+            1211,
+            1213,
+            1218,
+            1219,
+            1220,
+            1221,
+            1222
+          ],
+          "required_source_literals": [
+            "alberta_in,31,65,4\tscript\tRepairman#alb\t4_M_04,{",
+            "callfunc \"repairmain\",\"Repairman\";",
+            "function\tscript\trepairmain\t{",
+            ".@repairprice = 5000;",
+            "switch(select(\"Actually, I do have some items...\", \"None at the moment.\")) {",
+            "if (getbrokenid(.@checkitem) == 0) {",
+            "--.@checkitem;",
+            "if (!.@checkitem) {",
+            ".@totalcost = .@repairprice*.@checkitem;",
+            "switch(select(\"Yes\", \"No\")) {",
+            "if (Zeny < .@totalcost) {",
+            ".@checkitem2 = 1;",
+            "if (.@checkitem == .@checkitem2) {",
+            "Zeny -= .@totalcost;",
+            "while (.@checkitem) {",
+            "repair(.@checkitem);"
+          ]
+        },
+        {
+          "path": "npc/battleground/bg_common.txt",
+          "lines": [
+            334,
+            335
+          ],
+          "required_source_literals": [
+            "bat_room,138,144,4\tscript\tRepairman#bg\t4_M_04,{",
+            "callfunc(\"repairmain\", _(\"Repairman\"));"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "standalone_storage_access_points",
+      "title": "Standalone paid/gated storage NPCs outside the Kafra network",
+      "service_kind": "storage",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "Logistics Manager (dali,112,95,4): requires Basic Skill level 6 or higher and 200 Zeny, deducted before calling openstorage(); an insufficient-Zeny or insufficient-skill message is shown instead of the charge.",
+        "Item Storage#01 (dic_in01,254,119,0), a locked safe: costs a flat 500 Zeny with no skill-level check, deducted before calling openstorage.",
+        "Storekeeper#mal (malangdo,184,139,4): requires Basic Skill level 6 or higher; price and currency depend on the character variable ep13_yong1 — 1 Malang Special Can or 1,500 Zeny once ep13_yong1 exceeds 999, otherwise 2 cans or 3,000 Zeny — payable in either Malang Special Cans or Zeny at the player's choice, deducted/consumed before calling openstorage.",
+        "Drawer#mora_warehouse (mora,48,128,0), a hidden NPC: requires Basic Skill level 6 or higher (via basicskillcheck()) and a flat 100 Zeny, deducted before calling openstorage.",
+        "Butler Karlex (job_gun,216,138,4): a free temporary storage offered only during the Rebellion class Advancement Test sequence, with no Zeny or skill-level check observed in this branch; scope limited to that test context.",
+        "None of these five NPCs route through the shared F_Kafra/F_KafStor helper reviewed in kafra_employee_core_services; each implements its own fee and gating logic independently, so a change to the shared Kafra storage fee/skill rule does not affect these.",
+        "Cat Hand Agent (mid_camp,62,125,4): requires Basic Skill level 6 or higher and a flat 60 Zeny, deducted before calling openstorage; the same offer recurs identically across three separate quest-stage dialogue branches in the same NPC script.",
+        "Cat Hand Agent#spl (spl_fild02,25,211,4): the same 60 Zeny / Basic Skill level 6 storage offer as the Cat Hand Agent above, independently implemented in a separate quest script and recurring across three quest-stage branches there too.",
+        "Kafra Guide Trainer#ac (iz_ac01,95,46,5), an Izlude Academy tutorial NPC: requires Basic Skill level 6 or higher, then either consumes a Cargo Free Ticket or charges 500 Zeny (granting 5 Special Reserve Points on the Zeny path) before calling openstorage; implemented independently of the shared F_KafStor helper despite matching its fee/reserve-point shape.",
+        "Goods Cabinet (moc_para01,173,120,0 and moc_para01,170,120,0, two hidden duplicate NPCs sharing one function): requires the player to hold a Para Team Mark (or its bound variant), Basic Skill level 6 or higher, and a flat 500 Zeny, deducted before calling openstorage; the skill-level check runs before the Zeny deduction, so a failed check does not charge the fee."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/other/dimensional_gap.txt",
+          "lines": [
+            123,
+            127,
+            132,
+            135,
+            139,
+            140
+          ],
+          "required_source_literals": [
+            "dali,112,95,4\tscript\tLogistics Manager\t4_M_MERCAT2,{",
+            "if (basicskillcheck() && getskilllv(NV_BASIC) < 6) {",
+            "} else if (Zeny < 200) {",
+            "Zeny -= 200;",
+            "openstorage();"
+          ]
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            427,
+            441,
+            446,
+            450,
+            452
+          ],
+          "required_source_literals": [
+            "dic_in01,254,119,0\tscript\tItem Storage#01\tCLEAR_NPC,{",
+            "if (Zeny < 500) {",
+            "Zeny -= 500;",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            329,
+            338,
+            347,
+            363,
+            368,
+            374
+          ],
+          "required_source_literals": [
+            "malangdo,184,139,4\tscript\tStorekeeper#mal\t4_CAT_ADV2,{",
+            "if (ep13_yong1 > 999) {",
+            "if (getskilllv(\"NV_BASIC\") < 6) {",
+            "if (Zeny < .@zeny) {",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/re/cities/mora.txt",
+          "lines": [
+            1183,
+            1184,
+            1192,
+            1196,
+            1197
+          ],
+          "required_source_literals": [
+            "mora,48,128,0\tscript\tDrawer#mora_warehouse\tHIDDEN_NPC,{",
+            "if(basicskillcheck() && getskilllv(\"NV_BASIC\") < 6) {",
+            "if (Zeny < 100) {",
+            "Zeny -= 100;",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            981,
+            985,
+            989,
+            990
+          ],
+          "required_source_literals": [
+            "job_gun,216,138,4\tscript\tButler Karlex\t1_M_01,{",
+            ".@select = select(\"Cancel\", \"Open the storage.\");",
+            "if (.@select == 2) {",
+            "openstorage();"
+          ]
+        },
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7575,
+            7682,
+            7683,
+            7689,
+            7729,
+            7730,
+            7736,
+            7851,
+            7852,
+            7858
+          ],
+          "required_source_literals": [
+            "mid_camp,62,125,4\tscript\tCat Hand Agent\t4_M_BOSSCAT,{",
+            "else if (Zeny >= 60) {",
+            "Zeny -= 60;",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            52,
+            106,
+            107,
+            112,
+            153,
+            154,
+            159,
+            274,
+            275,
+            280
+          ],
+          "required_source_literals": [
+            "spl_fild02,25,211,4\tscript\tCat Hand Agent#spl\t4_M_BOSSCAT,{",
+            "else if (Zeny >= 60) {",
+            "Zeny -= 60;",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            5348,
+            5410,
+            5413,
+            5414,
+            5415,
+            5417,
+            5418,
+            5425
+          ],
+          "required_source_literals": [
+            "iz_ac01,95,46,5\tscript\tKafra Guide Trainer#ac\t4_F_KAFRA1,{",
+            "if (getskilllv(\"NV_BASIC\") < 6) {",
+            "} else if (countitem(Cargo_Free_Ticket) || Zeny >= 500) {",
+            "delitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket",
+            "Zeny -= 500;",
+            "RESRVPTS += 5;",
+            "openstorage;"
+          ]
+        },
+        {
+          "path": "npc/re/quests/eden/eden_service.txt",
+          "lines": [
+            36,
+            53,
+            60,
+            61,
+            66,
+            68,
+            83,
+            84
+          ],
+          "required_source_literals": [
+            "-\tscript\tGoods Cabinet#00::pggc\tFAKE_NPC,{",
+            "if (countitem(Para_Team_Mark) > 0 || countitem(Para_Team_Mark_) > 0) {",
+            "if (Zeny > 499) {",
+            "if (getskilllv(\"NV_BASIC\") < 6) {",
+            "Zeny -= 500;",
+            "openstorage;",
+            "moc_para01,173,120,0\tduplicate(pggc)\tGoods Cabinet#01\tHIDDEN_NPC",
+            "moc_para01,170,120,0\tduplicate(pggc)\tGoods Cabinet#02\tHIDDEN_NPC"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "supernovice_kafra_cart_rental",
+      "title": "Kafra Employee#sn (Aldebaran): unofficial cart rental for Super Novices",
+      "service_kind": "cart_rental",
+      "reviewed_on": "2026-09-28",
+      "evidence_state": "conditional",
+      "conditions": [
+        "Gated to BaseJob == Job_SuperNovice; this is a dedicated Kafra Employee variant outside the shared F_KafCart helper, offered because ordinary Kafra Employees refuse to rent Super Novices a cart.",
+        "Requires no cart already equipped (checkcart()) and at least 1900 Zeny; charges a flat 1900 Zeny service fee and grants 190 Special Reserve Points.",
+        "Notable mismatch: the 1900 Zeny fee is charged and Reserve Points granted unconditionally once the Zeny check passes, but the actual `setcart` grant is separately gated behind `getskilllv(\"MC_PUSHCART\") > 0`. A Super Novice who has not learned Push Cart pays the full fee and receives no cart, with no refund path in this branch."
+      ],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            406,
+            407,
+            432,
+            434,
+            447,
+            448,
+            453,
+            454,
+            455,
+            456
+          ],
+          "required_source_literals": [
+            "aldebaran,54,238,5\tscript\tKafra Employee#sn\t4_F_KAFRA1,{",
+            "if (BaseJob == Job_SuperNovice) {",
+            "if (select(\"Rent a Cart.\", \"Cancel.\") == 1) {",
+            "if (checkcart()) {",
+            "if (Zeny >= 1899) {",
+            "RESRVPTS += 190;",
+            "Zeny -= 1900;",
+            "if (getskilllv(\"MC_PUSHCART\") > 0) setcart;"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -321,6 +321,2602 @@
           ]
         }
       ]
+    },
+    {
+      "id": "mora_daphne_supply_kit_delivery",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Jones' item hand-off, Daphrer's ring-gated turn-in branch, and the lost-item fallback branch that still completes the quest.",
+      "title": "Daphne delivery turn-in and lost-item fallback reward",
+      "quest_ids": [
+        11208
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Jones (mora,55,124,2) grants one Splendid Supply Kit and advances ep14_1_bs to 17 when the player's inventory has room; this is not itself a quest reward, only the delivery item.",
+        "Daphrer (splendide,121,260,4) requires the Ring of the Ancient Wise King (item 2782) equipped before any dialogue branch is reachable.",
+        "If the player still holds the Splendid Supply Kit and ep14_1_bs equals 17, Daphrer consumes the kit, completes quest 11208, and grants 500000 base EXP plus five Mora Coins.",
+        "If the player lost the kit along the way but ep14_1_bs still equals 17, Daphrer instead completes quest 11208 with a reduced reward of 200000 base EXP and two Mora Coins; no kit is consumed in this branch.",
+        "A third branch (holding the kit while ep14_1_bs is not 17) grants two Mora Coins without calling completequest; that grant is not tied to finishing this quest and is not counted as a verified reward here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1360,
+            1403,
+            1427,
+            1428,
+            1436,
+            1447,
+            1448,
+            1449,
+            1450,
+            1463,
+            1465,
+            1466
+          ],
+          "required_source_literals": [
+            "script\tJones#ep14_1_bs",
+            "getitem Splendid_Supply_Kit,1;",
+            "changequest 11207,11208;",
+            "script\tDaphrer#ep14_1_bs",
+            "if (!isequipped(2782)) {",
+            "if (countitem(Splendid_Supply_Kit)) {",
+            "if (ep14_1_bs == 17) {",
+            "completequest 11208;",
+            "getexp 0,500000;",
+            "getitem Mora_Coin,5;",
+            "getexp 0,200000;",
+            "getitem Mora_Coin,2;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6380,
+          "amount": 5,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 1448,
+          "explanation": "Granted when the player still holds the Splendid Supply Kit at turn-in; the kit is consumed and quest 11208 completes."
+        },
+        {
+          "item_id": 6380,
+          "amount": 2,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 1465,
+          "explanation": "Granted on the reduced fallback branch, when ep14_1_bs is still 17 but the player no longer holds the Splendid Supply Kit; quest 11208 still completes with lower EXP."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_cheshire_box_relay_7207",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Bradium Box relay from Cheshire#ep14_1_xq04 at the Crevice of Bifrost through its completion branch.",
+      "title": "Cheshire's Box relay turn-in at the Bifrost Crevice",
+      "quest_ids": [
+        7207
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Cheshire#ep14_1_xq04 (bif_fild01,335,168,3) requires the player to be carrying the Bradium Box picked up earlier in the relay (quest 7208/7210 chain) before this branch is reachable.",
+        "On turn-in the script consumes one Bradium Box, completes quest 7207, sets quest 7208 (the next relay stage), and grants one Sapha Certification plus 50000 base and 40000 job EXP.",
+        "The earlier steps that grant the Bradium Box (quests 7206/7208/7210) are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1589,
+            1767,
+            1768,
+            1769,
+            1770,
+            1771
+          ],
+          "required_source_literals": [
+            "script\tCheshire#ep14_1_xq04",
+            "delitem Bradium_Box,1;",
+            "completequest 7207;",
+            "setquest 7208;",
+            "getitem Sapa_Feat_Cert,1;",
+            "getexp 50000,40000;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6304,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 1770,
+          "explanation": "Granted after Cheshire#ep14_1_xq04 consumes the delivered Bradium Box and completes quest 7207."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_new_day_for_cheshire_7206",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Stacked Boxes of Goods interaction that completes quest 7206 and starts the 7207 relay stage.",
+      "title": "New Day for Cheshire box pickup and relay hand-off",
+      "quest_ids": [
+        7206
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Stacked Boxes of Goods (dic_dun01,274,114,0) requires inventory room (checkweight(Knife,1) and at least 1000 free weight) before any branch runs.",
+        "The completion branch is reached only while quest 7207 has not been started (!questprogress(7207)) and quest 7206 is in progress (questprogress(7206) is true).",
+        "On success the script completes quest 7206, sets quest 7207, and grants one Bradium Box, which is the item consumed later by the 7207 turn-in reviewed separately."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1535,
+            1536,
+            1564,
+            1565,
+            1573,
+            1574,
+            1575
+          ],
+          "required_source_literals": [
+            "script\tStacked Boxes of Goods",
+            "if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {",
+            "if (!questprogress(7207)) {",
+            "if (questprogress(7206)) {",
+            "completequest 7206;",
+            "setquest 7207;",
+            "getitem Bradium_Box,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6392,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 1575,
+          "explanation": "Granted immediately after quest 7206 completes, to be relayed onward in the 7207/7208/7210 chain."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_raffle_researcher_5028",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Raffle Researcher's farewell branch through its inventory gate to the quest completion and reward grant.",
+      "title": "Raffle Researcher farewell turn-in reward",
+      "quest_ids": [
+        5028
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Raffle Researcher (mora,31,138,6) requires at least 100 free weight and room for one Empty Cylinder before the reward branch can complete; failing the check ends the dialogue without granting anything.",
+        "On success the script sets ep14_1_muk to 15, completes quest 5028, and grants 1000000 base EXP, 4000000 job EXP, and 30 Mora Coins.",
+        "The steps that bring the player to this final dialogue state are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2539,
+            3324,
+            3338,
+            3339,
+            3340,
+            3341
+          ],
+          "required_source_literals": [
+            "script\tRaffle Researcher#ep14",
+            "if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,1) == 0) {",
+            "ep14_1_muk = 15;",
+            "completequest 5028;",
+            "getexp 1000000,4000000;",
+            "getitem Mora_Coin,30;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6380,
+          "amount": 30,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 3341,
+          "explanation": "Granted after the weight-capacity check passes and Raffle Researcher completes quest 5028."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_knights_head_clue_turnin_1118",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Knights Head#mo branch that requires 30 Clue of Lope, completes quest 1118, and grants its reward.",
+      "title": "Knights Head Lope's Clues turn-in",
+      "quest_ids": [
+        1118
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Knights Head#mo (mora,114,163,5) requires at least 30 Clue of Lope in inventory (countitem(Clue_Of_Lope) >= 30) before this branch completes; otherwise it only repeats a waiting line.",
+        "The branch is reached at ep14_1_rope == 12, itself set by an earlier dialogue choice at the same NPC (not reviewed here).",
+        "On success the script consumes 30 Clue of Lope, completes quest 1118, sets ep14_1_rope to 13, and grants 1000000 base and 1000000 job EXP plus two Mora Coins."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            5250,
+            5317,
+            5318,
+            5346,
+            5347,
+            5348,
+            5349,
+            5350
+          ],
+          "required_source_literals": [
+            "script\tKnights Head#mo",
+            "} else if (ep14_1_rope == 12) {",
+            "if (countitem(Clue_Of_Lope) < 30) {",
+            "completequest 1118;",
+            "delitem Clue_Of_Lope,30;",
+            "ep14_1_rope = 13;",
+            "getitem Mora_Coin,2;",
+            "getexp 1000000,1000000;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6380,
+          "amount": 2,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 5349,
+          "explanation": "Granted after Knights Head#mo consumes 30 Clue of Lope and completes quest 1118."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_black_shadow_fishee_5034",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Black Shadow#ep14_muk branch reached at questprogress(5034)==1 through its weight gate to quest completion and reward.",
+      "title": "Fishee (Black Shadow) family-news turn-in",
+      "quest_ids": [
+        5034
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Black Shadow#ep14_muk (mora,114,79,0), displayed in dialogue as Fishee, requires at least 100 free weight and room for one Fish Pin before this branch completes.",
+        "The branch is reached only while quest 5034 is at PLAYTIME/state 1 (questprogress(5034) == 1); the preceding steps that set this quest are not reviewed here.",
+        "On success the script completes quest 5034 and grants one Fish Pin with no explicit EXP call in this branch."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3478,
+            3599,
+            3600,
+            3622,
+            3623
+          ],
+          "required_source_literals": [
+            "script\tBlack Shadow#ep14_muk",
+            "} else if (questprogress(5034) == 1) {",
+            "if (MaxWeight - Weight < 100 || checkweight(Fish_Pin,1) == 0) {",
+            "completequest 5034;",
+            "getitem Fish_Pin,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 5792,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 3623,
+          "explanation": "Granted after Black Shadow#ep14_muk (Fishee) completes quest 5034 once inventory room is confirmed."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "mora_euridis_friend_1117",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Euridi's Friend#pa branch at ep14_1_rope==10 through its weight gate to quest completion and reward.",
+      "title": "Euridi's Friend closure turn-in",
+      "quest_ids": [
+        1117
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Euridi's Friend#pa (mora,115,68,3) requires room for one Mora Coin (checkweight(Mora_Coin,1)) before this branch completes.",
+        "The branch is reached at ep14_1_rope == 10; the steps that bring the player to this state are not reviewed here.",
+        "On success the script completes quest 1117, sets ep14_1_rope to 11, and grants 1000000 base and 2000000 job EXP plus ten Mora Coins."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2172,
+            2244,
+            2251,
+            2260,
+            2261,
+            2262,
+            2263
+          ],
+          "required_source_literals": [
+            "script\tEuridi's Friend#pa",
+            "} else if (ep14_1_rope == 10) {",
+            "if (checkweight(Mora_Coin,1) == 0) {",
+            "completequest 1117;",
+            "ep14_1_rope = 11;",
+            "getexp 1000000,2000000;",
+            "getitem Mora_Coin,10;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6380,
+          "amount": 10,
+          "source_path": "npc/re/quests/quests_mora.txt",
+          "source_line": 2263,
+          "explanation": "Granted after Euridi's Friend#pa completes quest 1117 once the weight-capacity check passes."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_eirinn_counterattack_4261",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Eirinn#nk's questprogress(4261)==1 branch through its material check to the item exchange and quest completion.",
+      "title": "Eirinn's prank-summoning-tool exchange (Counterattack)",
+      "quest_ids": [
+        4261
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Eirinn#nk (ecl_in02,160,36,4) requires the player to hold one Stem and one Green Herb before this branch completes; missing either repeats a waiting line.",
+        "On success the script consumes one Stem and one Green Herb, completes quest 4261, sets quest 4262 (the next stage), and grants one Weeds item."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            7974,
+            8132,
+            8133,
+            8147,
+            8148,
+            8149,
+            8150,
+            8151
+          ],
+          "required_source_literals": [
+            "script\tEirinn#nk",
+            "else if (questprogress(4261) == 1) {",
+            "if (!countitem(Stem) || !countitem(Green_Herb)) {",
+            "delitem Stem,1;",
+            "delitem Green_Herb,1;",
+            "completequest 4261;",
+            "setquest 4262;",
+            "getitem Weeds,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6563,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8151,
+          "explanation": "Granted after Eirinn#nk consumes the Stem and Green Herb materials and completes quest 4261."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_bourbon_counteroffensive_4263",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Bourbon#nk's material check for Rat Tail through the item exchange and quest completion.",
+      "title": "Bourbon's material-conversion exchange (Counteroffensive)",
+      "quest_ids": [
+        4263
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Bourbon#nk (ecl_in03,175,69,4) requires at least two Rat Tail in inventory (countitem(Rat_Tail) >= 2) before this branch completes.",
+        "On success the script consumes two Rat Tail, completes quest 4263, sets quest 4264 (the next stage), and grants one Tiny Mouse Tail."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8219,
+            8395,
+            8410,
+            8411,
+            8412,
+            8413
+          ],
+          "required_source_literals": [
+            "script\tBourbon#nk",
+            "if (countitem(Rat_Tail) < 2) {",
+            "delitem Rat_Tail,2;",
+            "completequest 4263;",
+            "setquest 4264;",
+            "getitem Tiny_Mouse_Tail,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6562,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8413,
+          "explanation": "Granted after Bourbon#nk consumes two Rat Tail and completes quest 4263."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_du_lian_dreaming_boy_11337",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced all four dialogue-choice endings of the Du Lian#ep14_2in2 storybook scene, each of which grants the same item and completes the quest.",
+      "title": "Du Lian storybook scene reward (Dreaming boy)",
+      "quest_ids": [
+        11337
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Du Lian#ep14_2in2 (ecl_in04,226,231,4) runs a scripted cutscene with several selectable reading-order branches; all four observed endings set ep14_2_oliver to 30, grant one Oliver Wolf Hood costume, and complete quest 11337.",
+        "No inventory or item cost is checked in any of the four endings reviewed; only dialogue selection determines which lines are shown before the identical reward.",
+        "The steps that start this quest and lead into the scene are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2698,
+            2813,
+            2814,
+            2815,
+            2955,
+            2956,
+            2957,
+            3100,
+            3101,
+            3102,
+            3236,
+            3237,
+            3238
+          ],
+          "required_source_literals": [
+            "script\tDu Lian#ep14_2in2",
+            "ep14_2_oliver = 30;",
+            "getitem(Oliver_Wolf_Hood, 1);",
+            "completequest 11337;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 19543,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 2814,
+          "explanation": "Granted at one of four equivalent story-branch endings in the Du Lian scene, all of which complete quest 11337 with the same reward."
+        },
+        {
+          "item_id": 19543,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 2956,
+          "explanation": "Granted at a second equivalent story-branch ending of the same Du Lian scene."
+        },
+        {
+          "item_id": 19543,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 3101,
+          "explanation": "Granted at a third equivalent story-branch ending of the same Du Lian scene."
+        },
+        {
+          "item_id": 19543,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 3237,
+          "explanation": "Granted at a fourth equivalent story-branch ending of the same Du Lian scene."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_eirinn_herb_delivery_4254",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Eirinn#nk's questprogress(4254)==1 branch through its material check to the four-item reward grant and quest completion.",
+      "title": "Eirinn's Green Herb delivery reward (Fairy with a stomache)",
+      "quest_ids": [
+        4254
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Eirinn#nk (ecl_in02,160,36,4) requires at least 10 Green Herb in inventory (countitem(Green_Herb) >= 10) before this branch completes; the player must also choose the 'Give Herbs' dialogue option.",
+        "On success the script consumes 10 Green Herb, completes quest 4254, grants 100000 base EXP, and grants one each of four items: Snow Flip, Peony Mommy, Slapping Herb, and Yggdrasil Dust."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            7974,
+            8017,
+            8023,
+            8026,
+            8033,
+            8034,
+            8035,
+            8036,
+            8037,
+            8038,
+            8039
+          ],
+          "required_source_literals": [
+            "else if (questprogress(4254) == 1) {",
+            "if (countitem(Green_Herb) < 10) {",
+            "delitem Green_Herb,10;",
+            "completequest 4254;",
+            "getexp 100000,0;",
+            "getitem Snow_Flip,1;",
+            "getitem Peony_Mommy,1;",
+            "getitem Slapping_Herb,1;",
+            "getitem Yggdrasil_Dust,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 12812,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8036,
+          "explanation": "Granted with the other three items after Eirinn#nk consumes 10 Green Herb and completes quest 4254."
+        },
+        {
+          "item_id": 12813,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8037,
+          "explanation": "Granted with the other three items after Eirinn#nk consumes 10 Green Herb and completes quest 4254."
+        },
+        {
+          "item_id": 12814,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8038,
+          "explanation": "Granted with the other three items after Eirinn#nk consumes 10 Green Herb and completes quest 4254."
+        },
+        {
+          "item_id": 12815,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8039,
+          "explanation": "Granted with the other three items after Eirinn#nk consumes 10 Green Herb and completes quest 4254."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_balumin_mystery_robbery_9262",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Balumin#eclage's closing dialogue branch through to the item and EXP grant that completes quest 9262.",
+      "title": "Balumin's apology reward (Mystery Robbery Incident 16)",
+      "quest_ids": [
+        9262
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Balumin#eclage (ecl_fild01,98,299,5) reaches this branch as the concluding dialogue of the incident chain; the exact prerequisite state that selects this branch is not reviewed here.",
+        "The branch has no additional item or weight check before granting the reward; it sets ep14_2_detect to 15, completes quest 9262, grants 20 Pile of Acorn, and grants 300000 base and 150000 job EXP."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6310,
+            6418,
+            6419,
+            6420,
+            6421
+          ],
+          "required_source_literals": [
+            "script\tBalumin#eclage",
+            "ep14_2_detect = 15;",
+            "completequest 9262;",
+            "getitem Pile_Of_Acorn,20;",
+            "getexp 300000,150000;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6558,
+          "amount": 20,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 6420,
+          "explanation": "Granted alongside EXP when Balumin#eclage completes quest 9262 at the end of the incident dialogue."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_bourbon_revenge_4255",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Bourbon#nk's questprogress(4255,HUNTING)==2 branch, reached after a 20-count hunt objective, through to its completion reward.",
+      "title": "Bourbon's hunting-task reward (Revenge!)",
+      "quest_ids": [
+        4255
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "The branch is reached only once the quest's built-in hunting counter (questprogress(4255,HUNTING)) reaches 2, i.e. the required kill count is met; no separate item or weight check gates this specific branch.",
+        "On success the script completes quest 4255, grants 100000 base EXP, and grants two Splendide Coin."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8219,
+            8279,
+            8293,
+            8294,
+            8295
+          ],
+          "required_source_literals": [
+            "else if (questprogress(4255,HUNTING) == 2) {",
+            "completequest 4255;",
+            "getexp 100000,0;",
+            "getitem Splendide_Coin,2;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6081,
+          "amount": 2,
+          "source_path": "npc/re/quests/quests_eclage.txt",
+          "source_line": 8295,
+          "explanation": "Granted after the quest's hunting objective reaches its required count and Bourbon#nk completes quest 4255."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eden_gelkah_brigan_collecting_13002",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Gelkah#1's material check for 50 Brigan through the item exchange and quest completion.",
+      "title": "Gelkah's Brigan-collection turn-in",
+      "quest_ids": [
+        13002
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Gelkah#1 (moc_para01,37,95,5) requires at least 50 Brigan in inventory (countitem(Brigan) > 49) before this branch completes.",
+        "On success the script consumes 50 Brigan, completes quest 13002, sets para_100lv01 to 2, and grants one Courtesy Ticket."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            42,
+            130,
+            160,
+            161,
+            162,
+            163
+          ],
+          "required_source_literals": [
+            "script\tGelkah#1",
+            "if (countitem(Brigan) > 49) {",
+            "delitem Brigan,50;",
+            "completequest 13002;",
+            "para_100lv01 = 2;",
+            "getitem Courtesy_Ticket,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6549,
+          "amount": 1,
+          "source_path": "npc/re/quests/eden/100-110.txt",
+          "source_line": 163,
+          "explanation": "Granted after Gelkah#1 consumes 50 Brigan and completes quest 13002."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eden_tutorial_instructor_enchant_9171",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Tutorial Instructor's Jellopy-gated enchant demonstration branch to its item grants and quest completion.",
+      "title": "Tutorial Instructor's enchant demonstration items",
+      "quest_ids": [
+        9171
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tutorial Instructor (moc_para01,34,178,3) requires enough inventory capacity and 10 Jellopy before this branch completes; an earlier weight check stops the dialogue if there is not enough room.",
+        "On success the script consumes 10 Jellopy, completes quest 9171, sets quest 9172, and grants a socketed demonstration item (getitem2 15033 with a fixed +3 STR card slot) plus one Tutorial_Mattle and one Tutorial_Mattle_ (undertranslated, non-tradeable demonstration copies).",
+        "The demonstration items are explicitly described as non-tradeable and expected to be returned to the instructor; this review does not establish whether they are later removed by script."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            35,
+            532,
+            533,
+            534,
+            535,
+            536,
+            537
+          ],
+          "required_source_literals": [
+            "script\tTutorial Instructor",
+            "delitem Jellopy,10;",
+            "completequest 9171;",
+            "setquest 9172;",
+            "getitem2 15033,1,1,0,0,0,0,0,4702;",
+            "getitem Tutorial_Mattle,1;",
+            "getitem Tutorial_Mattle_,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 15033,
+          "amount": 1,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 536,
+          "explanation": "Granted with a matching pair item after the Tutorial Instructor consumes 10 Jellopy and completes quest 9171; a socketed +3 STR copy of the same base item is also granted via getitem2 on the preceding line."
+        },
+        {
+          "item_id": 15034,
+          "amount": 1,
+          "source_path": "npc/re/quests/eden/eden_tutorial.txt",
+          "source_line": 537,
+          "explanation": "Granted alongside item 15033 as a second non-tradeable demonstration item when quest 9171 completes."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dicastes_frede_for_my_friends_11176",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Frede#13_3's completion branch, which requires all six prerequisite quests (11165-11170) to be finished, through to its reward grant.",
+      "title": "Frede's gratitude reward after the Bradium delivery chain",
+      "quest_ids": [
+        11176
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Frede#13_3 (dicastes01,117,262,0) requires enough inventory room and that quests 11165 through 11170 are all in progress or complete (questprogress true for each) before this branch runs.",
+        "On success the script completes quest 11176, sets ep13_3_bra to 9, grants one Bradium Earring, and erases quests 11165-11170.",
+        "The six prerequisite quests themselves are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5010,
+            5324,
+            5327,
+            5331,
+            5345,
+            5346,
+            5347,
+            5349
+          ],
+          "required_source_literals": [
+            "script\tFrede#13_3",
+            "setarray .@quest_id, 11165,11166,11167,11168,11169,11170;",
+            "if (!questprogress(.@quest_id[.@i])) {",
+            "if (!.@fail) {",
+            "completequest 11176;",
+            "ep13_3_bra = 9;",
+            "getitem Bradium_Earing,1;",
+            "erasequest .@quest_id[.@i];"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 2788,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_dicastes.txt",
+          "source_line": 5347,
+          "explanation": "Granted after Frede#13_3 verifies all six prerequisite quests and completes quest 11176."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dicastes_doha_final_report_7203",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Inspector Doha's report-turn-in branch, which consumes three investigation items, through to its completion and reward.",
+      "title": "Inspector Doha's final-report reward",
+      "quest_ids": [
+        7203
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Inspector Doha#ep133 (mid_campin,168,170,3) reaches this branch as the conclusion of the investigation dialogue; the prerequisite state that selects it is not reviewed here.",
+        "On success the script consumes one each of Solid Bloodstain, Frozen Skin Piece, and Suspicious Magic Stone, sets ep13_3_secret to 23, grants one Dragon Manteau, erases quest 7202, and completes quest 7203."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3404,
+            3648,
+            3649,
+            3650,
+            3651,
+            3652,
+            3653,
+            3654
+          ],
+          "required_source_literals": [
+            "script\tInspector Doha#ep133",
+            "delitem Solid_Bloodstain,1;",
+            "delitem Frozen_Skin_Piece,1;",
+            "delitem Suspicious_Magic_Stone,1;",
+            "ep13_3_secret = 23;",
+            "getitem Dragon_Manteau,1;",
+            "erasequest 7202;",
+            "completequest 7203;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 2553,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_dicastes.txt",
+          "source_line": 3652,
+          "explanation": "Granted after Inspector Doha consumes the three investigation items and completes quest 7203."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dicastes_registration_7184",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced the Adventurer Clerk (displayed as Clerk Rhawyne) registration branch, and cross-checked its ep13_3_invite assignment against the Kalipo daily-hunt eligibility gate.",
+      "title": "El Dicastes registration reward and Kalipo-eligibility flag",
+      "quest_ids": [
+        7184
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Adventurer Clerk#ep133 (dic_in01,42,264,3), displayed in dialogue as Clerk Rhawyne, registers the player as an El Dicastes resident on first visit; a second visit after registration shows a different 'already registered' line instead.",
+        "On success the script sets ep13_3_invite to 6, grants one Light of El Dicastes, and completes quest 7184.",
+        "ep13_3_invite reaching 6 here is the same flag the reviewed Kalipo daily-hunt cycle (dicastes_kalipo_daily_hunt_requests) requires to be at least 6; this quest is a practical prerequisite for that cycle, though no direct script call links the two."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6760,
+            6812,
+            6813,
+            6814
+          ],
+          "required_source_literals": [
+            "script\tAdventurer Clerk#ep133",
+            "ep13_3_invite = 6;",
+            "getitem El_Dicastes_Light,1;",
+            "completequest 7184;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 2844,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_dicastes.txt",
+          "source_line": 6813,
+          "explanation": "Granted as part of El Dicastes registration when quest 7184 completes."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "malangdo_rato_painting_gift_7259",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Expert Cat#nya_01's (displayed as Rato) Picture Piece exchange to its item reward and quest completion.",
+      "title": "Rato's painting-piece exchange (Gift from the Mew Bravery Team)",
+      "quest_ids": [
+        7259
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Expert Cat#nya_01 (malangdo,165,223,4), displayed in dialogue as Rato, reaches this branch as the conclusion of the painting-piece delivery; the prerequisite state is not reviewed here.",
+        "On success the script consumes six Picture Piece, sets nyadven to 14, grants 100 EGrade Coin, and completes quest 7259."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4664,
+            4791,
+            4792,
+            4793,
+            4794
+          ],
+          "required_source_literals": [
+            "script\tExpert Cat#nya_01",
+            "delitem Picture_Piece,6;",
+            "nyadven = 14;",
+            "getitem Egrade_Coin,100;",
+            "completequest 7259;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6422,
+          "amount": 100,
+          "source_path": "npc/re/quests/quests_malangdo.txt",
+          "source_line": 4793,
+          "explanation": "Granted after Expert Cat#nya_01 (Rato) consumes six Picture Piece and completes quest 7259."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "malangdo_geologist_mali_repair_11224",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Geologist Mali#mal's ma_tomas==17 branch to its quest completion, follow-on quests, and reward grant.",
+      "title": "Geologist Mali milestone reward (Repair of cracks, ma_tomas 17)",
+      "quest_ids": [
+        11224
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Geologist Mali#mal (mal_in02,179,57,1) reaches this branch at story state ma_tomas == 17; the steps that reach this state are not reviewed here.",
+        "On success the script advances ma_tomas to 18, completes quest 11224, sets quests 11225 and 11243, and grants 20 EGrade Coin."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            967,
+            1095,
+            1114,
+            1115,
+            1116,
+            1117,
+            1118
+          ],
+          "required_source_literals": [
+            "script\tGeologist Mali#mal",
+            "} else if (ma_tomas == 17) {",
+            "ma_tomas = 18;",
+            "completequest 11224;",
+            "setquest 11225;",
+            "setquest 11243;",
+            "getitem Egrade_Coin,20;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6422,
+          "amount": 20,
+          "source_path": "npc/re/quests/quests_malangdo.txt",
+          "source_line": 1118,
+          "explanation": "Granted after Geologist Mali#mal advances the story state and completes quest 11224."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "malangdo_tomas_repair_11237",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tomas#mal's ma_tomas==35 branch to its quest completion and reward grant.",
+      "title": "Village Chief Tomas milestone reward (Repair of cracks, ma_tomas 35)",
+      "quest_ids": [
+        11237
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tomas#mal (mal_in02,22,62,3), displayed in dialogue as Tomas, Village Chief, reaches this branch at story state ma_tomas == 35; the steps that reach this state are not reviewed here.",
+        "On success the script advances ma_tomas to 100, completes quest 11237, and grants 30 EGrade Coin, with no explicit EXP call in this branch."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            423,
+            618,
+            631,
+            632,
+            633,
+            634
+          ],
+          "required_source_literals": [
+            "script\tTomas#mal",
+            "} else if (ma_tomas == 35) {",
+            "ma_tomas = 100;",
+            "completequest 11237;",
+            "getitem Egrade_Coin,30;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6422,
+          "amount": 30,
+          "source_path": "npc/re/quests/quests_malangdo.txt",
+          "source_line": 634,
+          "explanation": "Granted after Tomas#mal (Village Chief) advances the story state and completes quest 11237."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_anori_purification_potion_4134",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Anori's material check for the three purification-potion ingredients through the crafting exchange and quest completion.",
+      "title": "Anori's purification-potion crafting turn-in (Iara)",
+      "quest_ids": [
+        4134
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Anori requires at least 20 Heart of Mermaid, 10 Leopard Talon, and 3 Lip of Ancient Fish in inventory before this branch completes.",
+        "On success the script sets quest 4135, erases quest 4133, sets and immediately completes quest 4134, consumes 20 Heart of Mermaid, 10 Leopard Talon, and 3 Lip of Ancient Fish, and grants two Purification Potion."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2834,
+            2845,
+            2846,
+            2847,
+            2848,
+            2849,
+            2850,
+            2851,
+            2852
+          ],
+          "required_source_literals": [
+            "if ((countitem(Heart_Of_Mermaid) > 19) && (countitem(Leopard_Talon) > 9) && (countitem(Lip_Of_Ancient_Fish) > 2)) {",
+            "setquest 4135;",
+            "erasequest 4133;",
+            "setquest 4134;",
+            "completequest 4134;",
+            "delitem Heart_Of_Mermaid,20;",
+            "delitem Leopard_Talon,10;",
+            "delitem Lip_Of_Ancient_Fish,3;",
+            "getitem Puri_Potion,2;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 11517,
+          "amount": 2,
+          "source_path": "npc/re/quests/quests_brasilis.txt",
+          "source_line": 2852,
+          "explanation": "Granted after Anori consumes the three crafting materials and completes quest 4134."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_lucia_hydra_ball_9028",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Lucia#brasilis's Mystic Leaf Cat Ball turn-in branch, its consumeitem calls, its reward grant, and the linked restart of quest 9029.",
+      "title": "Lucia's Hydra Ball turn-in and daily-cycle restart",
+      "quest_ids": [
+        9028
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Lucia#brasilis (brasilis,192,133,6) requires the player to hold at least one Mystic Leaf Cat Ball and have room for three Light Blue Potion before this branch completes.",
+        "On success the script consumes one Mystic Leaf Cat Ball, completes quest 9028, clears and restarts quest 9029 (the matched 24-hour cooldown quest), consumes one Yggdrasil Berry and one each of two named cooking dishes as an additional cost, and grants three Light Blue Potion.",
+        "This turn-in and the linked quest 9029 form a repeatable daily cycle; questprogress(9029,PLAYTIME) gates when Lucia will offer another Hydra Ball afterward, reviewed separately under quest 9029."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            166,
+            233,
+            234,
+            237,
+            242,
+            243,
+            245,
+            246,
+            247,
+            248,
+            249,
+            250,
+            251
+          ],
+          "required_source_literals": [
+            "script\tLucia#brasilis",
+            "else if (.@nQState == 1) {",
+            "if (countitem(Mystic_Leaf_Cat_Ball) > 0) {",
+            "if (checkweight(Light_Blue_Pot,3)) {",
+            "delitem Mystic_Leaf_Cat_Ball,1;",
+            "completequest 9028;",
+            "if (questprogress(9029)) erasequest 9029;",
+            "setquest 9029;",
+            "consumeitem 607;",
+            "getitem Light_Blue_Pot,3;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 11502,
+          "amount": 3,
+          "source_path": "npc/re/quests/quests_brasilis.txt",
+          "source_line": 251,
+          "explanation": "Granted after Lucia#brasilis consumes the turned-in Mystic Leaf Cat Ball and additional cooking-item costs, completing quest 9028 and restarting quest 9029."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_lucia_hydra_ball_9029",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Lucia#brasilis's post-cooldown branch (questprogress(9029,PLAYTIME) != 1) that completes quest 9029 and, on accepting another hunt, grants a fresh Hydra Ball.",
+      "title": "Lucia's next-day Hydra Ball hand-out",
+      "quest_ids": [
+        9029
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "This branch is reached once at least 24 hours have passed since quest 9029 was set (questprogress(9029,PLAYTIME) is no longer 1); before that time Lucia only tells the player to come back later.",
+        "The script re-erases quest 9028 if still active, completes quest 9029, and then asks whether the player wants another hunt; choosing 'Yes' sets quest 9028 again and grants one Leaf Cat Ball. Choosing 'No' or the info option still completes quest 9029 but does not grant the item.",
+        "This is the other half of the repeatable daily cycle reviewed under quest 9028; the Leaf Cat Ball granted here is the item consumed by that turn-in."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            166,
+            305,
+            308,
+            314,
+            316,
+            317,
+            320,
+            321,
+            322,
+            323
+          ],
+          "required_source_literals": [
+            "mes \"Oh, ^0000FF\"+strcharinfo(PC_NAME)+\"^000000 you're back.\";",
+            "if (questprogress(9029,PLAYTIME) == 1) {",
+            "if (.@nQState) erasequest 9028;",
+            "completequest 9029;",
+            "switch(select(\"Yes.\", \"No.\", \"^006400What is happening here?^000000\")) {",
+            "case 1:",
+            "setquest 9028;",
+            "getitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 12408,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_brasilis.txt",
+          "source_line": 323,
+          "explanation": "Granted only when the player accepts another hunt ('Yes.') immediately after Lucia#brasilis completes quest 9029; the other two dialogue choices complete the quest without this grant."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_sage_kasyapa_reward_9157",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Sage Kasyapa#dew's dew_legend==7 branch through its weight gate to the item grant and quest completion, and cross-checked dew_legend's continuation into the reviewed Jaty Crown finale.",
+      "title": "Sage Kasyapa's Cendrawasih feather reward",
+      "quest_ids": [
+        9157
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Sage Kasyapa#dew (dew_in01,22,48,3) reaches this branch at story state dew_legend == 7 and requires room for one Cendrawasih Shining Feather before completing.",
+        "On success the script advances dew_legend to 8, grants one Shining Cendrawasih Feather, completes quest 9157, and erases the quest record.",
+        "dew_legend continues to advance through the rest of the Dewata legend chain up to the stage-16 gate reviewed separately in dewata_jaty_crown_final_reward; the steps between state 8 and state 16 are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            107,
+            186,
+            193,
+            206,
+            207,
+            208,
+            209
+          ],
+          "required_source_literals": [
+            "script\tSage Kasyapa#dew",
+            "} else if (dew_legend == 7) {",
+            "if (checkweight(Cendrawasih_SF,1) == 0) {",
+            "dew_legend = 8;",
+            "getitem Cendrawasih_SF,1;",
+            "completequest 9157;",
+            "erasequest 9157;"
+          ]
+        }
+      ],
+      "verified_item_rewards": [
+        {
+          "item_id": 6406,
+          "amount": 1,
+          "source_path": "npc/re/quests/quests_dewata.txt",
+          "source_line": 207,
+          "explanation": "Granted after Sage Kasyapa#dew advances the legend story state and completes quest 9157."
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dicastes_laponte_hunting_requests",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Laponte's offer branch and Hunting Dept. 1 Manager's turn-in branch, both calling the shared que_dic helper (function defined at quests_dicastes.txt:474), and cross-checked the reward table against the literal que_dic(0,...) call sites.",
+      "title": "Laponte hunting-request eligibility, reward table, and repeat cycle",
+      "quest_ids": [
+        12099,
+        12100,
+        12101,
+        12102,
+        12103,
+        12104,
+        12105,
+        12159
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Laponte#pa0829 (dicastes01,187,230,5) requires the Ring of the Ancient Wise King (item 2782) equipped, ep13_3_invite at least 6, and Base Level 97 or higher before offering a request.",
+        "A player can hold only one active Laponte request record (quest 12159) at a time; while it is in progress but not yet turned in, Laponte declines to offer another.",
+        "Laponte selects among the seven requests (12099-12105) with a Base-Level-weighted random value (rand(97,BaseLevel)) and ascending threshold branches, so the seven offers are not equal-probability choices; higher Base Level favors the later, higher-reward requests.",
+        "Hunting Dept. 1 Manager (dic_in01,48,263,5) requires the same ring/invite gate and Base Level 97 or higher, and turns in the active request via the shared que_dic(0, quest_id, base_exp, message) call.",
+        "que_dic mode 0 only completes and rewards a request once its Hercules HUNTING objective is satisfied (questprogress(quest_id, HUNTING) == 2); otherwise it silently returns without reward.",
+        "On success que_dic's shared tail grants the request's base EXP (0 job EXP), completes and erases the quest record, and always grants one Sapha Certification (item 6304) regardless of which of the seven requests was active.",
+        "Quest record 12159 has a configured 82,800 second (23 hour) time limit; Hunting Dept. 1 Manager's PLAYTIME==2 branch calls que_dic(2, ...) to clear any expired remaining request record, matching the already-reviewed 12160/Kalipo cycle's expiry behavior."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            474,
+            475,
+            476,
+            496,
+            497,
+            499,
+            503,
+            512,
+            519,
+            523,
+            528,
+            537,
+            546,
+            561,
+            562,
+            563,
+            564,
+            565,
+            566,
+            567,
+            2871,
+            2880,
+            2887,
+            2891,
+            2896,
+            2901,
+            2943,
+            2944,
+            2945,
+            2946
+          ],
+          "required_source_literals": [
+            "function\tscript\tque_dic\t{",
+            "if (!getarg(0)) {",
+            "if (questprogress(getarg(1),HUNTING) != 2) return;",
+            "getexp getarg(2),0;",
+            "erasequest getarg(1);",
+            "getitem 6304,1;",
+            "script\tHunting Dept. 1 Manager",
+            "if (!isequipped(2782)) {",
+            "if (ep13_3_invite < 6) {",
+            "if (BaseLevel < 97) {",
+            "if (!questprogress(12159,PLAYTIME)) {",
+            "else if (questprogress(12159,PLAYTIME) == 2) {",
+            "que_dic(2,12099,12100,12101,12102,12103,12104,12105,12159);",
+            "que_dic(0,12099,4000,.@s$);",
+            "que_dic(0,12100,49000,.@s$);",
+            "que_dic(0,12101,18000,.@s$);",
+            "que_dic(0,12102,45000,.@s$);",
+            "que_dic(0,12103,4000,.@s$);",
+            "que_dic(0,12104,73000,.@s$);",
+            "que_dic(0,12105,59000,.@s$);",
+            "script\tLaponte#pa0829",
+            "if (BaseLevel < 97) {",
+            "if (questprogress(12159,PLAYTIME) && questprogress(12159,PLAYTIME) != 2) {",
+            "else if (questprogress(12159,PLAYTIME) == 2) {",
+            ".@rand = rand(97,BaseLevel);",
+            "setquest 12099;",
+            "setquest 12159;"
+          ]
+        },
+        {
+          "path": "db/quest_db.conf",
+          "lines": [
+            10478,
+            10479,
+            10480
+          ],
+          "required_source_literals": [
+            "Id: 12159",
+            "Name: \"Quest record from Laponte\"",
+            "TimeLimit: 82800"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dicastes_delivery_request_family",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced all four offering NPCs (Pura, Tragis, Calyon, Moltuka) and their matching turn-in managers (Supply Dept. 1/2, Transport Dept. 1/2), all of which call the same que_dic helper (function defined at quests_dicastes.txt:474) in its item-delivery mode (mode 1), and cross-checked each request's required item/quantity/EXP against its literal que_dic(1,...) call.",
+      "title": "Pura, Tragis, Calyon, and Moltuka item-delivery requests (Supply/Transport Depts.)",
+      "quest_ids": [
+        12117,
+        12118,
+        12119,
+        12120,
+        12121,
+        12122,
+        12123,
+        12124,
+        12125,
+        12126,
+        12161,
+        12127,
+        12128,
+        12129,
+        12130,
+        12131,
+        12132,
+        12133,
+        12134,
+        12135,
+        12136,
+        12162,
+        12137,
+        12138,
+        12139,
+        12140,
+        12141,
+        12142,
+        12143,
+        12144,
+        12145,
+        12146,
+        12147,
+        12163,
+        12148,
+        12149,
+        12150,
+        12151,
+        12152,
+        12153,
+        12154,
+        12155,
+        12156,
+        12157,
+        12158,
+        12164
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Each of the four offering NPCs requires the Ring of the Ancient Wise King (item 2782) equipped, ep13_3_invite at least 6, and Base Level 80 or higher: Pura#pa0829 (dicastes01,208,230,3) for the 10 requests 12117-12126 (record 12161), Tragis#pa0829 (dicastes01,225,211,3) for the 10 requests 12127-12136 (record 12162), Calyon#pa8029 (dicastes01,223,190,1) for the 11 requests 12137-12147 (record 12163), and Moltuka#pa0829 (dicastes01,211,178,2) for the 11 requests 12148-12158 (record 12164).",
+        "Each offering NPC selects one request uniformly at random from its own list (rand(1,N)) and sets both the specific request quest and its shared record quest (12161/12162/12163/12164); a player can hold only one active record per NPC at a time.",
+        "Each request's matching manager (Supply Dept. 1 Manager at dic_in01,51,270,7 for 12161; Supply Dept. 2 Manager at dic_in01,48,273,1 for 12162; Transport Dept. 1 Mgr at dic_in01,43,273,1 for 12163; Transport Dept. 2 Mgr at dic_in01,40,270,2 for 12164) requires the same ring/invite/Base-Level-80 gate.",
+        "que_dic mode 1 (getarg(0)==1) requires the record quest to still be active, then checks countitem(item_id) against the request's required quantity; if short, it stops without granting anything or consuming items.",
+        "On success que_dic mode 1 consumes the required item quantity via delitem, then falls through to the shared tail: grants the request's base EXP (0 job EXP), completes and erases the quest record, and always grants one Sapha Certification (item 6304), the same universal ticket item used by the hunting-mode requests.",
+        "All four record quests (12161, 12162, 12163, 12164) have a configured 82,800 second (23 hour) time limit; each manager's PLAYTIME==2 branch calls que_dic(2, ...) to clear an expired remaining request record before the NPC will offer or process a new one.",
+        "The reward table (per-request item ID, required quantity, and base EXP) is read directly from each manager's literal que_dic(1, quest_id, exp, item_id, qty, message) call and is cited in full in the source lines below."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            474,
+            479,
+            480,
+            481,
+            487,
+            496,
+            497,
+            499,
+            642,
+            667,
+            676,
+            683,
+            698,
+            699,
+            700,
+            701,
+            702,
+            703,
+            704,
+            705,
+            706,
+            707,
+            713,
+            738,
+            747,
+            751,
+            766,
+            767,
+            768,
+            769,
+            770,
+            771,
+            772,
+            773,
+            774,
+            775,
+            780,
+            789,
+            796,
+            800,
+            805,
+            814,
+            818,
+            833,
+            834,
+            835,
+            836,
+            837,
+            838,
+            839,
+            840,
+            841,
+            842,
+            843,
+            854,
+            880,
+            892,
+            907,
+            908,
+            909,
+            910,
+            911,
+            912,
+            913,
+            914,
+            915,
+            916,
+            917,
+            2332,
+            2341,
+            2348,
+            2353,
+            2357,
+            2360,
+            2388,
+            2391,
+            2392,
+            3042,
+            3061,
+            3068,
+            3072,
+            3109,
+            3112,
+            3113,
+            3233,
+            3252,
+            3259,
+            3263,
+            3280,
+            3283,
+            3284,
+            2505,
+            2524,
+            2531,
+            2535,
+            2561,
+            2564,
+            2565
+          ],
+          "required_source_literals": [
+            "function\tscript\tque_dic\t{",
+            "else if (getarg(0) == 1) {",
+            "if (!questprogress(getarg(1))) return;",
+            "if (countitem(getarg(3)) < getarg(4)) {",
+            "delitem getarg(3), getarg(4);",
+            "getexp getarg(2),0;",
+            "erasequest getarg(1);",
+            "getitem 6304,1;",
+            "script\tSupply Dept. 1 Manager",
+            "que_dic(2,12117,12118,12119,12120,12121,12122,12123,12124,12125,12126,12161);",
+            "que_dic(1,12117,26300,6086,6,.@s$);",
+            "que_dic(1,12126,37500,954,11,.@s$);",
+            "script\tSupply Dept. 2 Manager",
+            "que_dic(2,12127,12128,12129,12130,12131,12132,12133,12134,12135,12136,12162);",
+            "que_dic(1,12127,65300,6023,5,.@s$);",
+            "que_dic(1,12136,31000,518,2,.@s$);",
+            "script\tTransport Dept. 1 Mgr",
+            "if (!isequipped(2782)) {",
+            "if (ep13_3_invite < 6) {",
+            "if (BaseLevel < 80) {",
+            "if (!questprogress(12163,PLAYTIME)) {",
+            "else if (questprogress(12163,PLAYTIME) == 2) {",
+            "que_dic(2,12137,12138,12139,12140,12141,12142,12143,12144,12145,12146,12147,12163);",
+            "que_dic(1,12137,30000,7143,4,.@s$);",
+            "que_dic(1,12147,20800,910,40,.@s$);",
+            "script\tTransport Dept. 2 Mgr",
+            "que_dic(2,12148,12149,12150,12151,12152,12153,12154,12155,12156,12157,12158,12164);",
+            "que_dic(1,12148,23000,528,100,.@s$);",
+            "que_dic(1,12158,23000,6264,2,.@s$);",
+            "script\tCalyon#pa8029",
+            "if (BaseLevel < 80) {",
+            "if (questprogress(12163,PLAYTIME) == 2) {",
+            "else if (questprogress(12163,PLAYTIME)) {",
+            ".@calyonrequest = rand(1,11);",
+            "setquest 12139;",
+            "setquest 12163;",
+            "script\tPura#pa0829",
+            "script\tTragis#pa0829",
+            "script\tMoltuka#pa0829"
+          ]
+        },
+        {
+          "path": "db/quest_db.conf",
+          "lines": [
+            10488,
+            10489,
+            10490,
+            10493,
+            10494,
+            10495,
+            10498,
+            10499,
+            10500,
+            10503,
+            10504,
+            10505
+          ],
+          "required_source_literals": [
+            "Id: 12161",
+            "Name: \"Quest record from Pura\"",
+            "Id: 12162",
+            "Name: \"Quest record from Tragis\"",
+            "Id: 12163",
+            "Name: \"Quest record from Calyon\"",
+            "Id: 12164",
+            "Name: \"Quest record from Moltuka\"",
+            "TimeLimit: 82800"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "malaya_spiritual_protection_delivery",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced all six near-identical delivery branches (Pedro the Sailor, Old Man Nardo, Blacksmith Pandoi, Collection Dealer Woeon, Talah, and Romel), each gated behind its own prerequisite quest and consuming one Soul Protection, converging on the same follow-on quest once all six are delivered.",
+      "title": "Malaya Spiritual Protection deliveries (six sailors/villagers)",
+      "quest_ids": [
+        7382,
+        7383,
+        7384,
+        7385,
+        7386,
+        7387
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Each of the six NPCs requires quest 7374 (an unreviewed umbrella quest) in progress plus its own specific prerequisite quest complete before offering the delivery option: Pedro the Sailor (malaya,326,68,2) needs 7368, Old Man Nardo (malaya,181,353,5) needs 7369, Blacksmith Pandoi (malaya,119,217,3) needs 7370, Collection Dealer Woeon (malaya,295,171,3) needs 7371, Talah (malaya,223,267,5) needs 7372, and Romel (malaya,224,267,3) needs 7373.",
+        "Each branch requires at least one Soul Protection in inventory; without one the NPC states its current protection still works and stops.",
+        "On success each NPC consumes one Soul Protection, erases its own prerequisite quest, and sets its corresponding delivery quest (7368->7382, 7369->7383, 7370->7384, 7371->7385, 7372->7386, 7373->7387).",
+        "After each individual delivery, the script sums questprogress across all six of 7382-7387; once all six are present (sum > 5) it sets quest 7379 (unreviewed follow-on) and erases all six delivery quest records in the same branch, regardless of which NPC was visited last.",
+        "None of the six branches grants an item or EXP reward directly; the reward is solely progression to quest 7379. Quest 7374 and the six prerequisite quests 7368-7373 that gate these deliveries are not reviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            914,
+            1046,
+            1047,
+            1057,
+            1058,
+            1059,
+            1060,
+            1065,
+            1066,
+            1071,
+            1182,
+            1301,
+            1308,
+            1318,
+            1319,
+            1320,
+            1321,
+            1326,
+            1332,
+            1339,
+            1431,
+            1432,
+            1443,
+            1444,
+            1445,
+            1446,
+            1451,
+            1457,
+            1544,
+            1653,
+            1654,
+            1664,
+            1665,
+            1666,
+            1667,
+            1672,
+            1678,
+            1783,
+            1905,
+            1912,
+            1921,
+            1922,
+            1923,
+            1924,
+            1929,
+            1935,
+            2132,
+            2249,
+            2256,
+            2265,
+            2266,
+            2267,
+            2268,
+            2273,
+            2279
+          ],
+          "required_source_literals": [
+            "script\tOld Man Nardo#malaya",
+            "if (questprogress(7374) && questprogress(7369)) {",
+            "if (!countitem(Soul_Protection)) {",
+            "delitem Soul_Protection, 1;",
+            "erasequest 7369;",
+            "setquest 7383;",
+            "if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {",
+            "setquest 7379;",
+            "erasequest 7387;",
+            "script\tRomel#malaya",
+            "if (!questprogress(7374) || !questprogress(7373)) {",
+            "erasequest 7373;",
+            "setquest 7387;",
+            "script\tTalah#malaya",
+            "if (questprogress(7374) && questprogress(7372)) {",
+            "erasequest 7372;",
+            "setquest 7386;",
+            "script\tCollection Dealer Woeon",
+            "if (questprogress(7374) == 1 && questprogress(7371) == 1) {",
+            "erasequest 7371;",
+            "setquest 7385;",
+            "script\tBlacksmith Pandoi",
+            "if (!questprogress(7374) || !questprogress(7370)) {",
+            "erasequest 7370;",
+            "setquest 7384;",
+            "script\tPedro the Sailor",
+            "if (!questprogress(7374) || !questprogress(7368)) {",
+            "erasequest 7368;",
+            "setquest 7382;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eclage_cecilia_counterattack_investigation",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Cecilia#nk's branch requiring both 4254 and 4255 complete, through the 4257 completion, into the 4260 branch requiring a Dominic visit, to its own completion.",
+      "title": "Cecilia's book-theft investigation (Counterattack/Counteroffensive lead-in)",
+      "quest_ids": [
+        4257,
+        4260
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Cecilia#nk (ecl_in01,26,88,5) only offers this investigation once quest 4256 is at state 2 and both quest 4254 and quest 4255 are complete (their questprogress values sum to 4); these two prerequisites are reviewed separately as eclage_eirinn_herb_delivery_4254 and eclage_bourbon_revenge_4255.",
+        "Accepting sets three quests at once: 4257 (this investigation), plus sub-objectives 4258 and 4259 (asking Eirinn and Bourbon about recently read books); those two sub-objectives are not reviewed here.",
+        "Quest 4257 only completes once both 4258 and 4259 report progress (their sum equals 4); on success it grants 50000 base EXP with no job EXP and no item.",
+        "Once 4257 is complete, quest 4260 becomes available; its questprogress==1 branch (reached after visiting Dominic, not reviewed here) lets the player report back to Cecilia, who completes quest 4260 for 100000 base EXP with no job EXP and no item, and sets up the revenge-prank chain.",
+        "The already-reviewed material-exchange quests 4261 (eclage_eirinn_counterattack_4261) and 4263 (eclage_bourbon_counteroffensive_4263) are the next stage of this same prank storyline, though no direct script call links 4260's completion to them in the cited branch."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8485,
+            8621,
+            8622,
+            8623,
+            8624,
+            8653,
+            8654,
+            8655,
+            8658,
+            8659,
+            8660,
+            8685,
+            8686,
+            8693,
+            8694,
+            8705,
+            8735,
+            8736
+          ],
+          "required_source_literals": [
+            "script\tCecilia#nk",
+            "else if (questprogress(4256) == 2) {",
+            "if (questprogress(4257) == 0) {",
+            ".@que_ni = questprogress(4254) + questprogress(4255);",
+            "setquest 4257;",
+            "setquest 4258;",
+            "setquest 4259;",
+            "else if (questprogress(4257) == 1) {",
+            ".@que_san = questprogress(4258) + questprogress(4259);",
+            "completequest 4257;",
+            "getexp 50000,0;",
+            "else if (questprogress(4257) == 2) {",
+            "else if (questprogress(4260) == 1) {",
+            "completequest 4260;",
+            "getexp 100000,0;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2192_find_cherto",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Candy Maker's brazil_gua==0 offer and Cherto's brazil_gua 1 and 2 branches through to the changequest call that ends 2192.",
+      "title": "Candy Maker introduces the Guarana quest; Cherto's early lore",
+      "quest_ids": [
+        2192
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Candy Maker (brasilis,187,162,5) requires checkweight(Knife,1) before any dialogue. At brazil_gua == 0 he offers to help find guarana, sets brazil_gua to 1, and calls setquest 2192; declining any of the two nested menu choices ends the dialogue without setting the quest.",
+        "While quest 2192 is active, Cherto (bra_in01,95,179,3) gives lore-only dialogue at brazil_gua == 1 with no state change. At brazil_gua == 2 his dialogue reveals a 'guarana kid' rumor and advances brazil_gua to 3, completing the transition into quest 2193 via changequest 2192,2193.",
+        "No item cost or reward is granted at the offer or at either Cherto branch."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            375,
+            376,
+            380,
+            394,
+            402,
+            421,
+            422,
+            513,
+            538,
+            593,
+            596,
+            623,
+            624
+          ],
+          "required_source_literals": [
+            "script\tCandy Maker",
+            "if (!checkweight(Knife,1)) {",
+            "if (brazil_gua == 0) {",
+            "brazil_gua = 1;",
+            "setquest 2192;",
+            "script\tCherto",
+            "else if (brazil_gua == 1) {",
+            "brazil_gua = 2;",
+            "else if (brazil_gua == 2) {",
+            "brazil_gua = 3;",
+            "changequest 2192,2193;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2193_guarana_kid",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Cherto's brazil_gua==3 waiting line and Strange Kid#bra's brazil_gua==3 select loop through to the changequest call that ends 2193.",
+      "title": "Strange Kid's dialogue loop reveals the guarana kid",
+      "quest_ids": [
+        2193
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 2193 begins when Cherto's brazil_gua==2 branch advances the state (reviewed in brasilis_guarana_2192_find_cherto). While active, Cherto (bra_in01,95,179,3) at brazil_gua==3 only repeats a waiting line.",
+        "Strange Kid#bra (brasilis,203,64,3) requires selecting 'Try to talk.' (declining ends the dialogue), then loops a 4-option select menu; choosing the fourth option ('What are you doing?') advances brazil_gua to 4 and completes the transition into quest 2194 via changequest 2193,2194.",
+        "No item cost or reward is granted at this transition."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            627,
+            673,
+            679,
+            683,
+            690,
+            691,
+            710,
+            717,
+            718,
+            719
+          ],
+          "required_source_literals": [
+            "else if (brazil_gua == 3) {",
+            "script\tStrange Kid#bra",
+            "if(select(\"Try to talk.\", \"Pretend to pass by.\") == 2) {",
+            "while(1) {",
+            "case 4:",
+            "brazil_gua = 4;",
+            "changequest 2193,2194;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2194_note_to_paje",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Strange Kid#bra's brazil_gua==4 waiting line and Cherto's brazil_gua==4 branch through to the changequest call that ends 2194.",
+      "title": "Strange Kid's animal sounds send the player back to Cherto",
+      "quest_ids": [
+        2194
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 2194 begins from the 2193->2194 transition at Strange Kid#bra (reviewed in brasilis_guarana_2193_guarana_kid). While active, Strange Kid#bra (brasilis,203,64,3) at brazil_gua==4 only repeats a waiting line.",
+        "Returning to Cherto (bra_in01,95,179,3) at brazil_gua==4 advances brazil_gua to 5 and completes the transition into quest 2195 via changequest 2194,2195, directing the player to Mage Paje with a note.",
+        "No item cost or reward is granted at this transition."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            633,
+            657,
+            660,
+            662,
+            663,
+            724,
+            727
+          ],
+          "required_source_literals": [
+            "else if (brazil_gua == 4) {",
+            "In Brasilis there is an expert Mage.",
+            "brazil_gua = 5;",
+            "changequest 2194,2195;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2195_mage_paje",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Mage Paje#bra's unconditional cosmetic effect and its brazil_gua==5 gate through to the changequest call that ends 2195.",
+      "title": "Mage Paje directs the player to find a Toucan",
+      "quest_ids": [
+        2195
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Mage Paje#bra (brasilis,56,224,7) runs a cosmetic effect on every visit regardless of quest state (randomizing Poring#bra's displayed sprite), then closes immediately unless brazil_gua equals 5.",
+        "At brazil_gua == 5, talking to him advances brazil_gua to 6 and completes the transition into quest 2196 via changequest 2195,2196, teaching the player a spell and directing them to find a Toucan in the field.",
+        "No item cost or reward is granted at this transition."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            828,
+            829,
+            831,
+            834,
+            865,
+            869,
+            870
+          ],
+          "required_source_literals": [
+            "script\tMage Paje#bra",
+            "if (brazil_gua != 5) close;",
+            "brazil_gua = 6;",
+            "changequest 2195,2196;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2196_toucan_feather",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Toucan#bra's OnTouch label and brazil_gua==6 branch through to the changequest call and warp that end 2196.",
+      "title": "Toucan's OnTouch encounter sends the player to a Jaguar",
+      "quest_ids": [
+        2196
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Toucan#bra (bra_fild01,75,83,5) is triggered by walking into its area (OnTouch label), not by clicking; any other quest state shows only a generic idle line.",
+        "At brazil_gua == 6, the encounter advances brazil_gua to 7 and completes the transition into quest 2197 via changequest 2196,2197, then warps the player to bra_fild01 (68,146), directing them to find a Jaguar.",
+        "No item cost or reward is granted at this transition."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            879,
+            882,
+            883,
+            917,
+            924,
+            926,
+            927,
+            929,
+            930
+          ],
+          "required_source_literals": [
+            "script\tToucan#bra",
+            "OnTouch:",
+            "if (brazil_gua == 6) {",
+            "brazil_gua = 7;",
+            "changequest 2196,2197;",
+            "warp \"bra_fild01\",68,146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2197_jaguar_meat",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Jaguar#bra's OnTouch_ label and brazil_gua==7 branch through to the changequest call that ends 2197, and checked the trailing consumeitem call is not a hard requirement.",
+      "title": "Jaguar's OnTouch encounter sends the player to a Monkey",
+      "quest_ids": [
+        2197
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Jaguar#bra (bra_fild01,34,184,5) is triggered by walking into its area (OnTouch_ label, distinct from the ordinary OnTouch used elsewhere in this file); any other quest state shows only a generic idle line.",
+        "At brazil_gua == 7, the encounter advances brazil_gua to 8 and completes the transition into quest 2198 via changequest 2197,2198, directing the player to a Monkey. The script also unconditionally calls consumeitem 12016 (Speed Up Potion) afterward; Hercules' consumeitem does not fail or block progress if the item is absent, so this is not a required cost.",
+        "No item cost or reward is granted at this transition."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            941,
+            944,
+            945,
+            975,
+            991,
+            992,
+            994
+          ],
+          "required_source_literals": [
+            "script\tJaguar#bra",
+            "OnTouch_:",
+            "if (brazil_gua == 7) {",
+            "brazil_gua = 8;",
+            "changequest 2197,2198;",
+            "consumeitem 12016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2198_monkey_grapes",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Monkey#bra's brazil_gua==8 branch through to the changequest call that ends 2198.",
+      "title": "Monkey hands the player grapes for the guarana kid",
+      "quest_ids": [
+        2198
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Monkey#bra (bra_fild01,245,52,3) is an ordinary click NPC (unlike the OnTouch Toucan/Jaguar encounters). At brazil_gua == 8, talking to it advances brazil_gua to 9 and completes the transition into quest 2199 via changequest 2198,2199.",
+        "The grapes given to the guarana kid are narrative only; no getitem call grants an inventory item at this transition, and no item cost is charged."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1009,
+            1010,
+            1037,
+            1040,
+            1044,
+            1045
+          ],
+          "required_source_literals": [
+            "script\tMonkey#bra",
+            "if (brazil_gua == 8) {",
+            "brazil_gua = 9;",
+            "changequest 2198,2199;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "brasilis_guarana_2199_guarana_fruit_reward",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Strange Kid#bra's brazil_gua==9 closing scene through to the item grant and changequest call that end 2199, and checked the defensive re-grant at brazil_gua==10 is not a second reward instance.",
+      "title": "Strange Kid's closing scene grants the Guarana Fruit",
+      "quest_ids": [
+        2199
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Strange Kid#bra (brasilis,203,64,3) reaches this branch at brazil_gua == 9. The player gives the feather, meat, and grapes collected from the earlier NPCs; the scene plays out with no further selection or item check.",
+        "On completion the script advances brazil_gua to 10, completes the transition into quest 2200 via changequest 2199,2200, and grants one Guarana Fruit.",
+        "If the item is later found missing while brazil_gua remains 10 (the next branch, reviewed as part of the already-reviewed quest 2200 turn-in), the same NPC re-grants one Guarana Fruit defensively; this is not a second reward instance, just a safety net for the same acquisition.",
+        "Guarana Fruit (item 6237, amount 1) is granted at source line 810 when Strange Kid#bra completes this branch and advances the chain from quest 2199 into quest 2200; this grant sits near a changequest call rather than completequest, so it is not indexed as a nearby-grant candidate and cannot appear in verified_item_rewards, but the citation above still anchors it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            673,
+            735,
+            742,
+            794,
+            808,
+            809,
+            810,
+            813,
+            814,
+            817
+          ],
+          "required_source_literals": [
+            "else if (brazil_gua == 9) {",
+            "brazil_gua = 10;",
+            "changequest 2199,2200;",
+            "getitem Guarana_Fruit,1;",
+            "else if (brazil_gua == 10) {",
+            "if (!countitem(Guarana_Fruit)) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9155_gather_feathers",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tribal Chief Paiko#dew's dew_legend==4 offer branch through to the setquest call, and confirmed dew_legend states 0-4 carry no quest_db record of their own.",
+      "title": "Tribal Chief Paiko offers the 15-feather collection quest",
+      "quest_ids": [
+        9155
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tribal Chief Paiko#dew (dew_in01,15,49,4) offers this quest at dew_legend == 4, after the player selects 'Ok, I will help'; selecting 'I am sorry, I cannot help now.' ends the dialogue without setting the quest.",
+        "On acceptance the script sets dew_legend to 5 and calls setquest 9155, asking the player to bring 15 Cendrawasih Feather.",
+        "dew_legend == 4 is reached through states 0-4, which involve no quest_db record at all: only the #hideout_legend and #hidein_legend OnTouch triggers (dew_fild01,57,274,0 and dew_in01,15,33,0) and Sage Kasyapa#dew's dialogue advance the character variable, with no setquest/completequest/changequest call anywhere in that span. That portion of the story is not reviewable as a quest_db-anchored quest and is left unreviewed here."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            42,
+            44,
+            70,
+            76,
+            78,
+            101,
+            107,
+            240,
+            281,
+            300,
+            320,
+            321
+          ],
+          "required_source_literals": [
+            "script\t#hideout_legend",
+            "if (BaseLevel > 59 && dew_legend < 1) {",
+            "dew_legend = 1;",
+            "script\t#hidein_legend",
+            "if (dew_legend == 3) {",
+            "dew_legend = 4;",
+            "script\tSage Kasyapa#dew",
+            "script\tTribal Chief Paiko#dew",
+            "} else if (dew_legend == 4) {",
+            "if(select(\"Ok, I will help\", \"I am sorry, I cannot help now.\") == 2) {",
+            "dew_legend = 5;",
+            "setquest 9155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9156_craft_crown",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tribal Chief Paiko#dew's dew_legend==5 turn-in branch and dew_legend==6 waiting branch through to both changequest calls bounding 9156.",
+      "title": "Feather turn-in and the Jaty Crown crafting wait",
+      "quest_ids": [
+        9156
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tribal Chief Paiko#dew requires at least 15 Cendrawasih Feather (countitem(Cendrawasih_F) >= 15) at dew_legend == 5; on success he consumes all 15, advances dew_legend to 6, and completes the transition from quest 9155 into quest 9156.",
+        "Quest 9156 requires no further player action beyond returning: talking to Paiko again at dew_legend == 6 immediately advances dew_legend to 7 and completes the transition into quest 9157 (the reward for which is reviewed separately in dewata_sage_kasyapa_reward_9157, granted by Sage Kasyapa, not Paiko).",
+        "No item cost or reward is granted at either transition beyond the 15-feather consumption."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            323,
+            324,
+            333,
+            334,
+            335,
+            343,
+            353,
+            354
+          ],
+          "required_source_literals": [
+            "} else if (dew_legend == 5) {",
+            "if (countitem(Cendrawasih_F) < 15) {",
+            "dew_legend = 6;",
+            "delitem Cendrawasih_F,15;",
+            "changequest 9155,9156;",
+            "} else if (dew_legend == 6) {",
+            "dew_legend = 7;",
+            "changequest 9156,9157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9158_delivery_first_satay",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tribal Chief Paiko#dew's dew_legend==8 offer and Jaty Tribe Warrior#dew's delivery turn-in through to the item grant, cost, and changequest calls bounding 9158.",
+      "title": "Paiko's first Satay delivery task, to the Jaty Tribe Warrior",
+      "quest_ids": [
+        9158
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Tribal Chief Paiko#dew offers this delivery task at dew_legend == 8 (reached via the quest 9157 reward reviewed in dewata_sage_kasyapa_reward_9157); selecting 'Sorry, I am too busy to help.' ends the dialogue without setting the quest.",
+        "On acceptance the script sets dew_legend to 9, grants two Satay, and calls setquest 9158, directing the player to deliver Satay to the Jaty Tribe Warrior.",
+        "Jaty Tribe Warrior#dew (dew_fild01,78,288,6) requires dew_legend == 9 and at least one Satay in inventory; selecting the dialogue option consumes one Satay, advances dew_legend to 10, and completes the transition into quest 9159 via changequest 9158,9159.",
+        "Two Satay (item 11533) are granted at source line 400 when Tribal Chief Paiko#dew offers this task; the grant sits near a changequest/setquest call rather than completequest, so it is not indexed as a nearby-grant candidate and cannot appear in verified_item_rewards, but the citation above still anchors it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            360,
+            380,
+            399,
+            400,
+            401,
+            539,
+            543,
+            561,
+            562,
+            563,
+            564
+          ],
+          "required_source_literals": [
+            "} else if (dew_legend == 8) {",
+            "if(select(\"Of course, I can help\", \"Sorry, I am too busy to help.\") == 2) {",
+            "dew_legend = 9;",
+            "getitem Satay,2;",
+            "setquest 9158;",
+            "script\tJaty Tribe Warrior#dew",
+            "if (dew_legend != 9 || !countitem(Satay))",
+            "delitem Satay,1;",
+            "dew_legend = 10;",
+            "changequest 9158,9159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9159_back_to_paiko_first",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9159 begins at the Jaty Tribe Warrior turn-in (reviewed in dewata_9158_delivery_first_satay) and traced Tribal Chief Paiko#dew's dew_legend==10 branch through to the item grant and changequest call that end it.",
+      "title": "Return trip to Paiko after the first Satay delivery",
+      "quest_ids": [
+        9159
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9159 has no NPC or player action of its own beyond returning to Paiko; it begins automatically when quest 9158 completes at the Jaty Tribe Warrior (changequest 9158,9159, reviewed in dewata_9158_delivery_first_satay).",
+        "Tribal Chief Paiko#dew's dew_legend == 10 branch advances dew_legend to 11, grants two more Satay, and completes the transition into quest 9160 via changequest 9159,9160, directing the player to the Tribe Manager.",
+        "Two Satay (item 11533) are granted at source line 418 when Tribal Chief Paiko#dew closes out this quest and offers the next one; the grant sits near a changequest call rather than completequest, so it is not indexed as a nearby-grant candidate and cannot appear in verified_item_rewards, but the citation above still anchors it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            408,
+            410,
+            417,
+            418,
+            419
+          ],
+          "required_source_literals": [
+            "} else if (dew_legend == 10) {",
+            "dew_legend = 11;",
+            "getitem Satay,2;",
+            "changequest 9159,9160;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9160_delivery_second_satay",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9160 begins at the same Paiko dialogue that closes 9159 (reviewed in dewata_9159_back_to_paiko_first) and traced the Tribe Manager's delivery turn-in through to the cost and changequest call that end it.",
+      "title": "Paiko's second Satay delivery task, to the Tribe Manager",
+      "quest_ids": [
+        9160
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9160 begins from the same dew_legend==10 dialogue at Tribal Chief Paiko#dew that closes quest 9159 and grants the second batch of two Satay (reviewed in dewata_9159_back_to_paiko_first).",
+        "Tribe Manager#dew (dew_fild01,185,300,6) requires dew_legend == 11 and at least one Satay in inventory; selecting the dialogue option consumes one Satay, advances dew_legend to 12, and completes the transition into quest 9161 via changequest 9160,9161."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            577,
+            580,
+            590,
+            603,
+            604,
+            605
+          ],
+          "required_source_literals": [
+            "script\tTribe Manager#dew",
+            "if (dew_legend != 11 || !countitem(Satay)) {",
+            "delitem Satay,1;",
+            "dew_legend = 12;",
+            "changequest 9160,9161;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9161_back_to_paiko_second",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9161 begins at the Tribe Manager turn-in (reviewed in dewata_9160_delivery_second_satay) and traced Tribal Chief Paiko#dew's dew_legend==12 branch through to the item grant and changequest call that end it.",
+      "title": "Return trip to Paiko after the second Satay delivery",
+      "quest_ids": [
+        9161
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9161 has no NPC or player action of its own beyond returning to Paiko; it begins automatically when quest 9160 completes at the Tribe Manager (changequest 9160,9161, reviewed in dewata_9160_delivery_second_satay).",
+        "Tribal Chief Paiko#dew's dew_legend == 12 branch advances dew_legend to 13, grants two more Satay, and completes the transition into quest 9162 via changequest 9161,9162, directing the player to the Gatekeeper of Krakatau Volcano.",
+        "Two Satay (item 11533) are granted at source line 440 when Tribal Chief Paiko#dew closes out this quest and offers the next one; the grant sits near a changequest call rather than completequest, so it is not indexed as a nearby-grant candidate and cannot appear in verified_item_rewards, but the citation above still anchors it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            429,
+            432,
+            439,
+            440,
+            441
+          ],
+          "required_source_literals": [
+            "} else if (dew_legend == 12) {",
+            "dew_legend = 13;",
+            "getitem Satay,2;",
+            "changequest 9161,9162;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9162_delivery_third_satay",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9162 begins at the same Paiko dialogue that closes 9161 (reviewed in dewata_9161_back_to_paiko_second) and traced the Gatekeeper of Krakatau's dynamic delivery option through to the cost and changequest call that end it.",
+      "title": "Paiko's third Satay delivery task, to the Gatekeeper of Krakatau",
+      "quest_ids": [
+        9162
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9162 begins from the same dew_legend==12 dialogue at Tribal Chief Paiko#dew that closes quest 9161 and grants the third batch of two Satay (reviewed in dewata_9161_back_to_paiko_second).",
+        "Gatekeeper of Krakatau#1 (dewata,235,56,4) offers a third select option ('I don't want to go in:Tribal Chief Paiko') only when dew_legend == 13 and the player holds at least one Satay; this option is otherwise absent from the menu (the NPC's normal role is granting/denying passage into Krakatau Volcano, unrelated to this delivery).",
+        "Choosing that option consumes one Satay, advances dew_legend to 14, and completes the transition into quest 9163 via changequest 9162,9163."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            630,
+            636,
+            637,
+            638,
+            662,
+            673,
+            674,
+            675
+          ],
+          "required_source_literals": [
+            "script\tGatekeeper of Krakatau#1",
+            "if (dew_legend == 13 && countitem(Satay))",
+            ".@menu$ = \":^0000FFTribal Chief Paiko^000000\";",
+            "switch(select(\"Allow me through\", \"I don't want to go in\"+.@menu$)) {",
+            "delitem Satay,1;",
+            "dew_legend = 14;",
+            "changequest 9162,9163;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9163_back_to_paiko_third",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9163 begins at the Gatekeeper of Krakatau turn-in (reviewed in dewata_9162_delivery_third_satay) and traced Tribal Chief Paiko#dew's dew_legend==14 branch through to the item grant and changequest call that end it.",
+      "title": "Return trip to Paiko after the third Satay delivery",
+      "quest_ids": [
+        9163
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9163 has no NPC or player action of its own beyond returning to Paiko; it begins automatically when quest 9162 completes at the Gatekeeper of Krakatau (changequest 9162,9163, reviewed in dewata_9162_delivery_third_satay).",
+        "Tribal Chief Paiko#dew's dew_legend == 14 branch advances dew_legend to 15, grants two more Satay, and completes the transition into quest 9164 via changequest 9163,9164, directing the player to the Borobudur Temple Manager on Dewata Island.",
+        "Two Satay (item 11533) are granted at source line 460 when Tribal Chief Paiko#dew closes out this quest and offers the next one; the grant sits near a changequest call rather than completequest, so it is not indexed as a nearby-grant candidate and cannot appear in verified_item_rewards, but the citation above still anchors it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            240,
+            449,
+            452,
+            459,
+            460,
+            461
+          ],
+          "required_source_literals": [
+            "} else if (dew_legend == 14) {",
+            "dew_legend = 15;",
+            "getitem Satay,2;",
+            "changequest 9163,9164;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "dewata_9164_delivery_fourth_satay",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Confirmed quest 9164 begins at the same Paiko dialogue that closes 9163 (reviewed in dewata_9163_back_to_paiko_third) and traced the Borobudur Temple Manager's delivery turn-in through to the cost and changequest call that end it, which leads directly into the already-reviewed quest 9165 finale.",
+      "title": "Paiko's fourth Satay delivery task, to the Borobudur Temple Manager",
+      "quest_ids": [
+        9164
+      ],
+      "evidence_state": "conditional",
+      "conditions": [
+        "Quest 9164 begins from the same dew_legend==14 dialogue at Tribal Chief Paiko#dew that closes quest 9163 and grants the fourth and final batch of two Satay (reviewed in dewata_9163_back_to_paiko_third).",
+        "Borobudur Temple Manager (dewata,78,192,6) requires dew_legend == 15 and at least one Satay in inventory; selecting the dialogue option consumes one Satay, advances dew_legend to 16, and completes the transition into quest 9165 via changequest 9164,9165.",
+        "Quest 9165's own reward (Jaty Crown plus five Satay) is reviewed separately in dewata_jaty_crown_final_reward; this entry covers only the delivery step that unlocks it."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            717,
+            720,
+            727,
+            739,
+            740,
+            741
+          ],
+          "required_source_literals": [
+            "script\tBorobudur Temple Manager",
+            "if (dew_legend != 15 || !countitem(Satay))",
+            "delitem Satay,1;",
+            "dew_legend = 16;",
+            "changequest 9164,9165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Repository source review"
+    },
+    {
+      "id": "eden_experts_examination_journey",
+      "title": "Eden Group Experts examination journey (Siege, Party, Battleground, Memorial Dungeon, Map)",
+      "quest_ids": [
+        4161,
+        4162,
+        4163,
+        4164,
+        4165
+      ],
+      "evidence_state": "conditional",
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tutorial Goal and all five expert NPC declarations, dialogue progression, quiz question validation, and sequential setquest/completequest state transitions.",
+      "conditions": [
+        "Initiated by Tutorial Goal at moc_para01 (32,179); requires a non-Novice first, second, or third class character (Class != Job_Novice).",
+        "Each expert requires passing a 3-question multiple-choice quiz about core game systems before completing their respective stage and advancing to the next expert.",
+        "Stage 1 (4161): Siege Master at moc_para01 (24,175) covers War of Emperium castle ownership, schedule, and economy investment.",
+        "Stage 2 (4162): Party Recruiting Expert at moc_para01 (21,172) covers party creation, recruitment window, and booking.",
+        "Stage 3 (4163): Battleground Master at moc_para01 (12,179) covers battleground queueing, emblems, and Maroll officers.",
+        "Stage 4 (4164): Memorial Dungeon Expert at moc_para01 (28,167) covers instance creation, party leader role, and reservation limits.",
+        "Stage 5 (4165): Map Expert at moc_para01 (14,168) covers map coordinates, world map view, and navigation.",
+        "Passing all five stages sets quest 4166 (Passing Grades), whose final turn-in reward is reviewed separately."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            592,
+            653,
+            677,
+            686,
+            734,
+            797,
+            798,
+            859,
+            975,
+            976,
+            1041,
+            1149,
+            1150,
+            1221,
+            1333,
+            1334,
+            1399,
+            1513,
+            1514
+          ],
+          "required_source_literals": [
+            "script\tTutorial Goal\t4_F_KHELLY,{",
+            "setquest 4161;",
+            "script\tSiege Master\t4_M_JOB_KNIGHT2,{",
+            "completequest 4161;",
+            "setquest 4162;",
+            "script\tParty Recruiting Expert\t4_M_OILMAN,{",
+            "completequest 4162;",
+            "setquest 4163;",
+            "script\tBattleground Master\t4_M_KY_HEAD,{",
+            "completequest 4163;",
+            "setquest 4164;",
+            "script\tMemorial Dungeon Expert\t4_M_LGTGUARD,{",
+            "completequest 4164;",
+            "setquest 4165;",
+            "script\tMap Expert\t2_M_SAGE_OLD,{",
+            "completequest 4165;",
+            "setquest 4166;"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eden_tutorial_instructor_full_journey",
+      "title": "Tutorial Instructor feature training flow (Mercenary, Quest Window, Catalog, Return, Cooldown)",
+      "quest_ids": [
+        9167,
+        9168,
+        9169,
+        9170,
+        9172,
+        9173
+      ],
+      "evidence_state": "conditional",
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-28",
+      "review_method": "Traced Tutorial Instructor NPC dialogue branches, mercenary condition check, text input verification, catalog inventory checks, lent item turn-in, and 24-hour repeat timer.",
+      "conditions": [
+        "Initiated by Tutorial Instructor at moc_para01 (34,178); requires a non-Novice character (Class != Job_Novice).",
+        "Stage 1 (9167): Player must hire a mercenary from the Mercenary Guild in Prontera. Instructor checks getmercinfo(MERCINFO_CLASS) != 0 before completing 9167.",
+        "Stage 2 (9168): Player is prompted to consult the Quest Window for the item request and must type '10 Jellopy' exactly to pass the test.",
+        "Stage 3 (9169): Player must obtain a Universal Silver Catalog (Vending_Search_Scroll) from the Catalogue Wizard in South Prontera.",
+        "Stage 4 (9170): Player must use the Universal Silver Catalog; having zero remaining in inventory completes this stage.",
+        "Intermediary stage 9171 (trading 10 Jellopy for lent demonstration items) is reviewed separately under eden_tutorial_instructor_enchant_9171.",
+        "Stage 5 (9172): Player inspects the lent mantle items and returns them; the script removes Tutorial Mantle (15033 x2, 15034 x1), completes 9172, awards 5,000 Base EXP and 2,500 Job EXP, and sets cooldown quest 9173.",
+        "Stage 6 (9173): A 24-hour cooldown timer (86,400 seconds) during which the instructor offers Q&A lore. After 24 hours expire, the player may repeat the tutorial sequence."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            35,
+            36,
+            45,
+            221,
+            231,
+            288,
+            289,
+            323,
+            348,
+            349,
+            383,
+            422,
+            423,
+            426,
+            461,
+            462,
+            547,
+            571,
+            572,
+            573,
+            574,
+            575
+          ],
+          "required_source_literals": [
+            "script\tTutorial Instructor\t4_M_KHMAN,{",
+            "setquest 9167;",
+            "if (!getmercinfo(MERCINFO_CLASS)) {",
+            "completequest 9167;",
+            "setquest 9168;",
+            "if (.@inputstr$ == \"10 Jellopy\") {",
+            "completequest 9168;",
+            "setquest 9169;",
+            "if (countitem(Vending_Search_Scroll) == 0) {",
+            "completequest 9169;",
+            "setquest 9170;",
+            "completequest 9170;",
+            "setquest 9171;",
+            "delitem 15033,2;",
+            "delitem 15034,1;",
+            "completequest 9172;",
+            "setquest 9173;",
+            "getexp 5000,2500;"
+          ]
+        }
+      ]
     }
   ]
 }

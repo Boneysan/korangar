@@ -1,0 +1,1208 @@
+{
+  "schema_version": 1,
+  "reviewed_by": "Repository source review",
+  "reviewed_on": "2026-09-28",
+  "review_method": "For each monster()/areamonster() call previously indexed as an 'approximate instance-template association' (map_template_approximate=true in bestiary.v1.json, meaning the base exporter's unscoped nearest-preceding-assignment-within-1000-characters heuristic), re-derived the call's enclosing NPC-script label body (Hercules script labels reached via donpcevent/settimer/OnTouch each start a fresh script execution scope per doc/script_commands.txt's '.@' scope-variable description) and located every '.@map$ = instance_mapname(\"TEMPLATE\");' assignment within that same label body preceding the call. All 376 originally-approximate associations across 43 distinct (file, label, template) groups had exactly one same-scope preceding assignment, matching the original heuristic's guessed template in every case -- so this pass confirms rather than corrects those 376, but on a control-flow basis (same execution scope) instead of an unscoped proximity guess. No genuinely-unresolvable case was found in this batch; a stricter search (requiring the assignment to be in the literal same label, not merely within 1000 characters regardless of label boundaries) did not surface any group lacking a same-scope assignment. This does not resolve calls to a literal concrete map: instance_mapname() templates are bound to a dynamically-created per-instance map at runtime, which static source review cannot observe -- see each entry's note.",
+  "entries": [
+    {
+      "id": "endlesstower_onenable_5_at_tower",
+      "source_path": "npc/instances/EndlessTower.txt",
+      "label": "OnEnable",
+      "label_line": 1821,
+      "assignment_line": 1822,
+      "instance_template": "5@tower",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"5@tower\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1958,
+        1959,
+        1960,
+        1961
+      ],
+      "spawn_call_lines": [
+        1823,
+        1824,
+        1825,
+        1826,
+        1827,
+        1828,
+        1829,
+        1830,
+        1831,
+        1832,
+        1833,
+        1834,
+        1835,
+        1836,
+        1837
+      ],
+      "spawn_count": 15
+    },
+    {
+      "id": "endlesstower_ontimer10500_6_at_tower",
+      "source_path": "npc/instances/EndlessTower.txt",
+      "label": "OnTimer10500",
+      "label_line": 2005,
+      "assignment_line": 2006,
+      "instance_template": "6@tower",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer10500: label body resolves to the single instance_mapname(\"6@tower\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1132,
+        1263,
+        1956
+      ],
+      "spawn_call_lines": [
+        2009,
+        2010,
+        2044,
+        2045,
+        2079
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "endlesstower_ontimer20500_6_at_tower",
+      "source_path": "npc/instances/EndlessTower.txt",
+      "label": "OnTimer20500",
+      "label_line": 1970,
+      "assignment_line": 1971,
+      "instance_template": "6@tower",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer20500: label body resolves to the single instance_mapname(\"6@tower\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1152
+      ],
+      "spawn_call_lines": [
+        1974,
+        1975
+      ],
+      "spawn_count": 2
+    },
+    {
+      "id": "nydhoggsnest_onenable_1_at_nyd",
+      "source_path": "npc/instances/NydhoggsNest.txt",
+      "label": "OnEnable",
+      "label_line": 1701,
+      "assignment_line": 1702,
+      "instance_template": "1@nyd",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@nyd\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2020,
+        2021
+      ],
+      "spawn_call_lines": [
+        1703,
+        1704,
+        1705,
+        1706,
+        1707,
+        1708,
+        1709,
+        1710
+      ],
+      "spawn_count": 8
+    },
+    {
+      "id": "nydhoggsnest_onenable_2_at_nyd",
+      "source_path": "npc/instances/NydhoggsNest.txt",
+      "label": "OnEnable",
+      "label_line": 1888,
+      "assignment_line": 1890,
+      "instance_template": "2@nyd",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"2@nyd\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2020,
+        2021,
+        2022
+      ],
+      "spawn_call_lines": [
+        1891,
+        2082,
+        2083,
+        2084,
+        2085,
+        2086,
+        2088,
+        2089,
+        2090,
+        2091,
+        2092
+      ],
+      "spawn_count": 11
+    },
+    {
+      "id": "nydhoggsnest_oninstanceinit_1_at_nyd",
+      "source_path": "npc/instances/NydhoggsNest.txt",
+      "label": "OnInstanceInit",
+      "label_line": 1798,
+      "assignment_line": 1799,
+      "instance_template": "1@nyd",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnInstanceInit: label body resolves to the single instance_mapname(\"1@nyd\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2015,
+        2016,
+        2019,
+        2020,
+        2021
+      ],
+      "spawn_call_lines": [
+        1800,
+        1801,
+        1802,
+        1803,
+        1804
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "nydhoggsnest_oninstanceinit_2_at_nyd",
+      "source_path": "npc/instances/NydhoggsNest.txt",
+      "label": "OnInstanceInit",
+      "label_line": 2182,
+      "assignment_line": 2183,
+      "instance_template": "2@nyd",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnInstanceInit: label body resolves to the single instance_mapname(\"2@nyd\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2015,
+        2020,
+        2021,
+        2023
+      ],
+      "spawn_call_lines": [
+        2184,
+        2185,
+        2186,
+        2187
+      ],
+      "spawn_count": 4
+    },
+    {
+      "id": "orcsmemory_onenable_2_at_orcs",
+      "source_path": "npc/instances/OrcsMemory.txt",
+      "label": "OnEnable",
+      "label_line": 705,
+      "assignment_line": 706,
+      "instance_template": "2@orcs",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"2@orcs\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1087,
+        1981,
+        1982,
+        1983,
+        1984
+      ],
+      "spawn_call_lines": [
+        707,
+        740,
+        773,
+        817,
+        818
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "orcsmemory_onmymobdead_1_at_orcs",
+      "source_path": "npc/instances/OrcsMemory.txt",
+      "label": "OnMyMobDead",
+      "label_line": 192,
+      "assignment_line": 193,
+      "instance_template": "1@orcs",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnMyMobDead: label body resolves to the single instance_mapname(\"1@orcs\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1023,
+        1106,
+        1189,
+        1213,
+        1627
+      ],
+      "spawn_call_lines": [
+        198,
+        200,
+        204,
+        208,
+        250,
+        253,
+        280,
+        283,
+        289,
+        306
+      ],
+      "spawn_count": 10
+    },
+    {
+      "id": "orcsmemory_onmymobdead_2_at_orcs",
+      "source_path": "npc/instances/OrcsMemory.txt",
+      "label": "OnMyMobDead",
+      "label_line": 530,
+      "assignment_line": 531,
+      "instance_template": "2@orcs",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnMyMobDead: label body resolves to the single instance_mapname(\"2@orcs\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1152,
+        1189,
+        1213,
+        1627
+      ],
+      "spawn_call_lines": [
+        536,
+        538,
+        540,
+        544,
+        583,
+        587,
+        593,
+        614
+      ],
+      "spawn_count": 8
+    },
+    {
+      "id": "orcsmemory_ontimer4010_1_at_orcs",
+      "source_path": "npc/instances/OrcsMemory.txt",
+      "label": "OnTimer4010",
+      "label_line": 221,
+      "assignment_line": 222,
+      "instance_template": "1@orcs",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer4010: label body resolves to the single instance_mapname(\"1@orcs\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1278
+      ],
+      "spawn_call_lines": [
+        224
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "orcsmemory_ontimer4010_2_at_orcs",
+      "source_path": "npc/instances/OrcsMemory.txt",
+      "label": "OnTimer4010",
+      "label_line": 557,
+      "assignment_line": 558,
+      "instance_template": "2@orcs",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer4010: label body resolves to the single instance_mapname(\"2@orcs\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1475
+      ],
+      "spawn_call_lines": [
+        560
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "sealedshrine_onenable_1_at_cata",
+      "source_path": "npc/instances/SealedShrine.txt",
+      "label": "OnEnable",
+      "label_line": 445,
+      "assignment_line": 447,
+      "instance_template": "1@cata",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@cata\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1117,
+        1132,
+        1291,
+        1869
+      ],
+      "spawn_call_lines": [
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456,
+        457,
+        458,
+        459,
+        460
+      ],
+      "spawn_count": 13
+    },
+    {
+      "id": "sealedshrine_oninstanceinit_1_at_cata",
+      "source_path": "npc/instances/SealedShrine.txt",
+      "label": "OnInstanceInit",
+      "label_line": 1439,
+      "assignment_line": 1440,
+      "instance_template": "1@cata",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnInstanceInit: label body resolves to the single instance_mapname(\"1@cata\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1132,
+        1290,
+        1291,
+        1298,
+        1699,
+        1869
+      ],
+      "spawn_call_lines": [
+        1441,
+        1442,
+        1444,
+        1445,
+        1446,
+        1447,
+        1448,
+        1449,
+        1450,
+        1451,
+        1452,
+        1453,
+        1454,
+        1455,
+        1456,
+        1457
+      ],
+      "spawn_count": 16
+    },
+    {
+      "id": "sealedshrine_ontouch_2_at_cata",
+      "source_path": "npc/instances/SealedShrine.txt",
+      "label": "OnTouch",
+      "label_line": 988,
+      "assignment_line": 989,
+      "instance_template": "2@cata",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTouch: label body resolves to the single instance_mapname(\"2@cata\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1117,
+        1132,
+        1291,
+        1292,
+        1869
+      ],
+      "spawn_call_lines": [
+        991,
+        992,
+        993,
+        994,
+        995,
+        996,
+        997,
+        998,
+        999,
+        1000,
+        1001,
+        1002,
+        1003,
+        1015,
+        1016,
+        1017,
+        1018,
+        1019,
+        1020,
+        1021,
+        1022,
+        1023,
+        1024,
+        1025,
+        1026,
+        1027,
+        1039,
+        1040,
+        1041,
+        1042,
+        1043,
+        1044,
+        1045,
+        1046,
+        1047,
+        1048,
+        1049,
+        1050,
+        1051
+      ],
+      "spawn_count": 39
+    },
+    {
+      "id": "bakonawalake_onmobspawn_1_at_ma_b",
+      "source_path": "npc/re/instances/BakonawaLake.txt",
+      "label": "OnMobSpawn",
+      "label_line": 511,
+      "assignment_line": 513,
+      "instance_template": "1@ma_b",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnMobSpawn: label body resolves to the single instance_mapname(\"1@ma_b\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2334
+      ],
+      "spawn_call_lines": [
+        521
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "bakonawalake_onstart_1_at_ma_b",
+      "source_path": "npc/re/instances/BakonawaLake.txt",
+      "label": "OnStart",
+      "label_line": 179,
+      "assignment_line": 181,
+      "instance_template": "1@ma_b",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnStart: label body resolves to the single instance_mapname(\"1@ma_b\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2320,
+        2328
+      ],
+      "spawn_call_lines": [
+        183,
+        307,
+        308,
+        309,
+        310
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "bakonawalake_ontimer5000_1_at_ma_b",
+      "source_path": "npc/re/instances/BakonawaLake.txt",
+      "label": "OnTimer5000",
+      "label_line": 251,
+      "assignment_line": 254,
+      "instance_template": "1@ma_b",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer5000: label body resolves to the single instance_mapname(\"1@ma_b\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2337,
+        2343
+      ],
+      "spawn_call_lines": [
+        258,
+        260
+      ],
+      "spawn_count": 2
+    },
+    {
+      "id": "buwayacave_onenable_1_at_ma_c",
+      "source_path": "npc/re/instances/BuwayaCave.txt",
+      "label": "OnEnable",
+      "label_line": 266,
+      "assignment_line": 269,
+      "instance_template": "1@ma_c",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@ma_c\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2333
+      ],
+      "spawn_call_lines": [
+        270,
+        271
+      ],
+      "spawn_count": 2
+    },
+    {
+      "id": "buwayacave_oninstanceinit_1_at_ma_c",
+      "source_path": "npc/re/instances/BuwayaCave.txt",
+      "label": "OnInstanceInit",
+      "label_line": 464,
+      "assignment_line": 465,
+      "instance_template": "1@ma_c",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnInstanceInit: label body resolves to the single instance_mapname(\"1@ma_c\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2329,
+        2330,
+        2331
+      ],
+      "spawn_call_lines": [
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479
+      ],
+      "spawn_count": 14
+    },
+    {
+      "id": "buwayacave_ontimer60000_1_at_ma_c",
+      "source_path": "npc/re/instances/BuwayaCave.txt",
+      "label": "OnTimer60000",
+      "label_line": 425,
+      "assignment_line": 427,
+      "instance_template": "1@ma_c",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer60000: label body resolves to the single instance_mapname(\"1@ma_c\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2329,
+        2331
+      ],
+      "spawn_call_lines": [
+        432,
+        433
+      ],
+      "spawn_count": 2
+    },
+    {
+      "id": "buwayacave_ontimer65000_1_at_ma_c",
+      "source_path": "npc/re/instances/BuwayaCave.txt",
+      "label": "OnTimer65000",
+      "label_line": 374,
+      "assignment_line": 376,
+      "instance_template": "1@ma_c",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer65000: label body resolves to the single instance_mapname(\"1@ma_c\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2332
+      ],
+      "spawn_call_lines": [
+        377,
+        378,
+        379,
+        380
+      ],
+      "spawn_count": 4
+    },
+    {
+      "id": "hazyforest_oninstanceinit_1_at_mist",
+      "source_path": "npc/re/instances/HazyForest.txt",
+      "label": "OnInstanceInit",
+      "label_line": 481,
+      "assignment_line": 482,
+      "instance_template": "1@mist",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnInstanceInit: label body resolves to the single instance_mapname(\"1@mist\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2133,
+        2134,
+        2136,
+        2137
+      ],
+      "spawn_call_lines": [
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490
+      ],
+      "spawn_count": 8
+    },
+    {
+      "id": "hazyforest_onmymobdead_1_at_mist",
+      "source_path": "npc/re/instances/HazyForest.txt",
+      "label": "OnMyMobDead",
+      "label_line": 996,
+      "assignment_line": 997,
+      "instance_template": "1@mist",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnMyMobDead: label body resolves to the single instance_mapname(\"1@mist\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2132,
+        2133,
+        2134,
+        2136,
+        2137
+      ],
+      "spawn_call_lines": [
+        1000,
+        1013,
+        1026,
+        1039,
+        1052
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "malangdoculvert_onaddseaweed_1_at_pump",
+      "source_path": "npc/re/instances/MalangdoCulvert.txt",
+      "label": "OnAddSeaweed",
+      "label_line": 655,
+      "assignment_line": 656,
+      "instance_template": "1@pump",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnAddSeaweed: label body resolves to the single instance_mapname(\"1@pump\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2191
+      ],
+      "spawn_call_lines": [
+        657
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "malangdoculvert_onaddseaweed_2_at_pump",
+      "source_path": "npc/re/instances/MalangdoCulvert.txt",
+      "label": "OnAddSeaweed",
+      "label_line": 972,
+      "assignment_line": 973,
+      "instance_template": "2@pump",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnAddSeaweed: label body resolves to the single instance_mapname(\"2@pump\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2191
+      ],
+      "spawn_call_lines": [
+        974
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "malangdoculvert_onenable_1_at_pump",
+      "source_path": "npc/re/instances/MalangdoCulvert.txt",
+      "label": "OnEnable",
+      "label_line": 754,
+      "assignment_line": 757,
+      "instance_template": "1@pump",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@pump\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2174,
+        2175,
+        2176,
+        2177,
+        2178,
+        2179
+      ],
+      "spawn_call_lines": [
+        779,
+        780,
+        781,
+        782,
+        783,
+        784
+      ],
+      "spawn_count": 6
+    },
+    {
+      "id": "malangdoculvert_onenable_2_at_pump",
+      "source_path": "npc/re/instances/MalangdoCulvert.txt",
+      "label": "OnEnable",
+      "label_line": 1048,
+      "assignment_line": 1051,
+      "instance_template": "2@pump",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"2@pump\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2180,
+        2181,
+        2182
+      ],
+      "spawn_call_lines": [
+        1085,
+        1086,
+        1087
+      ],
+      "spawn_count": 3
+    },
+    {
+      "id": "oldglastheim_onenable_1_at_gl_k",
+      "source_path": "npc/re/instances/OldGlastHeim.txt",
+      "label": "OnEnable",
+      "label_line": 830,
+      "assignment_line": 832,
+      "instance_template": "1@gl_k",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@gl_k\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2464,
+        2465,
+        2466,
+        2468,
+        2469
+      ],
+      "spawn_call_lines": [
+        834,
+        835,
+        836,
+        837,
+        838,
+        932,
+        933,
+        934,
+        935,
+        1094,
+        1095,
+        1096,
+        1097,
+        1098,
+        1099,
+        1100,
+        1101
+      ],
+      "spawn_count": 17
+    },
+    {
+      "id": "oldglastheim_onenable_2_at_gl_k",
+      "source_path": "npc/re/instances/OldGlastHeim.txt",
+      "label": "OnEnable",
+      "label_line": 1508,
+      "assignment_line": 1510,
+      "instance_template": "2@gl_k",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"2@gl_k\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2468,
+        2469,
+        2470,
+        2471,
+        2472
+      ],
+      "spawn_call_lines": [
+        1512,
+        1513,
+        1514,
+        1515,
+        1516,
+        1636,
+        1637,
+        1638,
+        1639,
+        1640
+      ],
+      "spawn_count": 10
+    },
+    {
+      "id": "oldglastheim_onmymobdead_2_at_gl_k",
+      "source_path": "npc/re/instances/OldGlastHeim.txt",
+      "label": "OnMyMobDead",
+      "label_line": 1520,
+      "assignment_line": 1521,
+      "instance_template": "2@gl_k",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnMyMobDead: label body resolves to the single instance_mapname(\"2@gl_k\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2468,
+        2469,
+        2470,
+        2471,
+        2472
+      ],
+      "spawn_call_lines": [
+        1532,
+        1535,
+        1538,
+        1541,
+        1544,
+        1655,
+        1658,
+        1661,
+        1664,
+        1667
+      ],
+      "spawn_count": 10
+    },
+    {
+      "id": "oldglastheim_ontimer90000_2_at_gl_k",
+      "source_path": "npc/re/instances/OldGlastHeim.txt",
+      "label": "OnTimer90000",
+      "label_line": 1573,
+      "assignment_line": 1574,
+      "instance_template": "2@gl_k",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer90000: label body resolves to the single instance_mapname(\"2@gl_k\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2468,
+        2469,
+        2470,
+        2471,
+        2472
+      ],
+      "spawn_call_lines": [
+        1585,
+        1586,
+        1587,
+        1588,
+        1589
+      ],
+      "spawn_count": 5
+    },
+    {
+      "id": "oldglastheim_ontimer92000_1_at_gl_k",
+      "source_path": "npc/re/instances/OldGlastHeim.txt",
+      "label": "OnTimer92000",
+      "label_line": 501,
+      "assignment_line": 510,
+      "instance_template": "1@gl_k",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer92000: label body resolves to the single instance_mapname(\"1@gl_k\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2470,
+        2471
+      ],
+      "spawn_call_lines": [
+        512,
+        513,
+        514,
+        515,
+        516,
+        517,
+        518,
+        519,
+        520,
+        521,
+        522
+      ],
+      "spawn_count": 11
+    },
+    {
+      "id": "ghost_palace_onsummon_1_at_spa",
+      "source_path": "npc/re/instances/ghost_palace.txt",
+      "label": "OnSummon",
+      "label_line": 194,
+      "assignment_line": 196,
+      "instance_template": "1@spa",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnSummon: label body resolves to the single instance_mapname(\"1@spa\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2948,
+        2949,
+        2950,
+        2951,
+        2952,
+        2953,
+        2954,
+        2955,
+        2956,
+        2957
+      ],
+      "spawn_call_lines": [
+        197,
+        198,
+        271,
+        272,
+        273,
+        380,
+        381,
+        382,
+        446,
+        447,
+        618,
+        619,
+        620
+      ],
+      "spawn_count": 13
+    },
+    {
+      "id": "octopus_cave_oncall_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnCall",
+      "label_line": 641,
+      "assignment_line": 642,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnCall: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192,
+        2193
+      ],
+      "spawn_call_lines": [
+        647,
+        651
+      ],
+      "spawn_count": 2
+    },
+    {
+      "id": "octopus_cave_onenable_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnEnable",
+      "label_line": 193,
+      "assignment_line": 199,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnEnable: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1068,
+        2192,
+        2193
+      ],
+      "spawn_call_lines": [
+        200,
+        201,
+        202,
+        203,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        382,
+        383,
+        384,
+        385,
+        386,
+        387,
+        388,
+        389,
+        390
+      ],
+      "spawn_count": 34
+    },
+    {
+      "id": "octopus_cave_ontimer2000_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTimer2000",
+      "label_line": 464,
+      "assignment_line": 465,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer2000: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192
+      ],
+      "spawn_call_lines": [
+        466
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "octopus_cave_ontimer4000_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTimer4000",
+      "label_line": 469,
+      "assignment_line": 470,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer4000: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192
+      ],
+      "spawn_call_lines": [
+        471
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "octopus_cave_ontimer5000_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTimer5000",
+      "label_line": 298,
+      "assignment_line": 299,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer5000: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192
+      ],
+      "spawn_call_lines": [
+        305,
+        306,
+        309,
+        310,
+        313,
+        314,
+        317,
+        318
+      ],
+      "spawn_count": 8
+    },
+    {
+      "id": "octopus_cave_ontimer6000_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTimer6000",
+      "label_line": 474,
+      "assignment_line": 475,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer6000: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192
+      ],
+      "spawn_call_lines": [
+        476
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "octopus_cave_ontimer8000_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTimer8000",
+      "label_line": 479,
+      "assignment_line": 480,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTimer8000: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2192
+      ],
+      "spawn_call_lines": [
+        481
+      ],
+      "spawn_count": 1
+    },
+    {
+      "id": "octopus_cave_ontouch_1_at_cash",
+      "source_path": "npc/re/instances/octopus_cave.txt",
+      "label": "OnTouch",
+      "label_line": 431,
+      "assignment_line": 432,
+      "instance_template": "1@cash",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnTouch: label body resolves to the single instance_mapname(\"1@cash\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        1068,
+        2175,
+        2192
+      ],
+      "spawn_call_lines": [
+        433,
+        434,
+        435,
+        436,
+        437,
+        438,
+        439,
+        460,
+        500,
+        501,
+        502,
+        503,
+        504,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        535,
+        536,
+        537,
+        538,
+        539,
+        540
+      ],
+      "spawn_count": 26
+    },
+    {
+      "id": "saras_memory_onrespawn_1_at_sara",
+      "source_path": "npc/re/instances/saras_memory.txt",
+      "label": "OnRespawn",
+      "label_line": 711,
+      "assignment_line": 712,
+      "instance_template": "1@sara",
+      "evidence_state": "conditional",
+      "verdict": "confirmed_same_scope_assignment",
+      "note": "Every .@map$-argument monster()/areamonster() call inside this OnRespawn: label body resolves to the single instance_mapname(\"1@sara\") assignment at the top of the same label — script scope variables (.@) do not persist across separately-triggered labels (see doc/script_commands.txt's Scope variable description), so this is a same-execution-scope confirmation, not a guess across label boundaries. This identifies the governing instance MAP TEMPLATE, not a literal concrete map: instance_mapname() resolves the template to a dynamically-created, per-instance map name at runtime, which this static review cannot observe.",
+      "spawn_monster_ids": [
+        2467,
+        2542,
+        2543,
+        2544,
+        2545,
+        2546
+      ],
+      "spawn_call_lines": [
+        714,
+        715,
+        716,
+        717,
+        718,
+        719,
+        720,
+        722,
+        811,
+        812,
+        813,
+        815,
+        816,
+        817,
+        819,
+        820,
+        863,
+        864,
+        865,
+        866,
+        867,
+        868,
+        869,
+        870,
+        947,
+        948,
+        949,
+        950,
+        952,
+        953,
+        954,
+        955,
+        1103,
+        1105,
+        1107,
+        1109,
+        1111,
+        1113,
+        1147
+      ],
+      "spawn_count": 39
+    }
+  ]
+}

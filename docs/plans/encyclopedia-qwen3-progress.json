@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "plan": "docs/plans/encyclopedia-local-model-plan.md",
+  "scope": "Active Hercules configuration and loaded renewal scripts; see generated coverage and loaded-script manifest for exact denominators",
+  "status": "ready",
+  "model": {
+    "requested_family": "Qwen3",
+    "preferred_tag": "qwen3-coder:30b",
+    "fallback_tag": "qwen3:14b",
+    "actual_tag": null,
+    "quantization": null,
+    "ollama_version": null,
+    "num_ctx": null,
+    "offload": null,
+    "prompt_version": 1
+  },
+  "source_snapshot": {
+    "korangar_head": "a7a1357475e59a6fb1fa1248946e4bcbb8211fd1",
+    "hercules_head": "8a8ee10fb0c189260ee722c00cabd543352b1e2c",
+    "dirty_files_need_baseline_hashes": true,
+    "quest_db_policy": "When Hercules/db/quest_db.conf is dirty, quest exporter uses tracked HEAD snapshot"
+  },
+  "packages": {
+    "E0": "partial",
+    "E1": "partial",
+    "E2": "partial",
+    "E3": "partial",
+    "E4": "partial",
+    "E5": "partial",
+    "E6": "partial",
+    "E7": "partial"
+  },
+  "active_unit": null,
+  "queue": [
+    {
+      "id": "E0-loaded-source-manifest",
+      "package": "E0",
+      "state": "todo",
+      "scope": "Hercules npc/scripts.conf and the npc/scripts_*.conf includes actually loaded by the active server (renewal mode), plus dirty files in korangar/ and Hercules/",
+      "output": "Deterministic generated manifest (tools/ script + committed JSON) listing every loaded script file with path and sha256, plus sha256 of each dirty file in both repositories; ledger source_snapshot.dirty_files_need_baseline_hashes cleared",
+      "exit_check": "Manifest regenerates byte-identically; a --check mode fails when a loaded script or dirty file changes; unloaded scripts (pre-re, scripts_removed, disabled includes) are excluded and listed as out of scope"
+    },
+    {
+      "id": "E0-baseline-and-claim-audit",
+      "package": "E0",
+      "state": "todo",
+      "scope": "Current exports, Guide claim display, source and loaded-script manifests",
+      "output": "Baseline source digests, candidate inventory, claim-state gaps and first bounded fix",
+      "exit_check": "Coverage denominators and evidence states are recorded; any first fix is source-cited and exporter checked"
+    },
+    {
+      "id": "E7-live-journey-inventory",
+      "package": "E7",
+      "state": "todo",
+      "scope": "Fresh non-DM item, skill and quest journeys against the running client/server",
+      "output": "Dated access/precondition record and journey checklist",
+      "exit_check": "Live environment is available or precise blocker is recorded"
+    },
+    {
+      "id": "E1-loaded-grant-branch-queue",
+      "package": "E1",
+      "state": "todo",
+      "scope": "docs/item-script-grants.v1.json and tools/item_exchange_reviews.json",
+      "output": "Unreviewed loaded grant/removal branches grouped into bounded NPC/helper units",
+      "exit_check": "Every queued candidate has a source path, nearest declaration, item IDs and an exclusion or review reason"
+    },
+    {
+      "id": "E2-ordinary-stock-classification",
+      "package": "E2",
+      "state": "todo",
+      "scope": "Loaded shop/trader declarations and current NPC reference exports",
+      "output": "Bounded literal, conditional, barter, cash and runtime stock review units",
+      "exit_check": "Stock source and condition class are explicit for every queued declaration"
+    },
+    {
+      "id": "E3-untranslated-pattern-inventory",
+      "package": "E3",
+      "state": "todo",
+      "scope": "Unsupported item, card and combo scripts in active item reference data",
+      "output": "Pattern clusters ranked by number of affected entries and source semantics",
+      "exit_check": "Each cluster has examples, affected IDs and a specific review target"
+    },
+    {
+      "id": "E4-formula-status-gap-inventory",
+      "package": "E4",
+      "state": "todo",
+      "scope": "Skill/status exports, tools/skill_formula_reviews.json and active Hercules code/config",
+      "output": "Unreviewed formula/status families with source entry points",
+      "exit_check": "Each family has stable IDs, code path and an unresolved-field list"
+    },
+    {
+      "id": "E5-quest-family-queue",
+      "package": "E5",
+      "state": "todo",
+      "scope": "Quest reference export, tools/quest_flow_reviews.json and loaded script manifest",
+      "output": "Unreviewed quest families including those without nearby item grants",
+      "exit_check": "Each family names quest IDs, source scripts, helpers and likely giver/turn-in path or an explicit unknown"
+    },
+    {
+      "id": "E6-world-rule-queue",
+      "package": "E6",
+      "state": "todo",
+      "scope": "Spawn, boss, map flag, map-zone and navigation exports plus active code/config",
+      "output": "Bounded dynamic map-expression, override, boss and route review units",
+      "exit_check": "Each unit states configured, conditional or live evidence needed"
+    }
+  ],
+  "completed_unit_ids": [],
+  "blockers": [],
+  "accepted_outputs": [],
+  "last_checks": [],
+  "last_coverage_delta": null,
+  "next_action": "Install or connect Qwen3/Ollama, then run E0-loaded-source-manifest first, then expand E0-baseline-and-claim-audit into a bounded candidate queue",
+  "last_checkpoint_utc": null
+}
