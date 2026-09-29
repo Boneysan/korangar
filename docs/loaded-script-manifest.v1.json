@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "source_revision": {
-    "korangar": "16494f2def424b4f388b9d75fb411b6ebfbf8718",
+    "korangar": "8640a36cccca2312f6d4e4dd88d48950f8b53aa2",
     "hercules": "cc83ca152ff09132a047acad028a9e978bd90b89"
   },
-  "source_worktree_dirty": true,
+  "source_worktree_dirty": false,
   "mode": "renewal",
   "loaded_scripts": [
     {
@@ -2620,11 +2620,5 @@
       "sha256": "84b380a60bf58e93d6ef9aba77a23f7d46a6dd390a541d84d024bc976947e397"
     }
   ],
-  "dirty_files": [
-    {
-      "repo": "korangar",
-      "path": "tools/export_loaded_script_manifest.py",
-      "sha256": "35142ee28cf5cd7ffd484fa67a35464a65d00eadc07ebe4ad7af7a42845448df"
-    }
-  ]
+  "dirty_files": []
 }
