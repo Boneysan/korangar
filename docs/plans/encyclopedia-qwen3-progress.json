@@ -103,12 +103,13 @@
     {
       "id": "E3-untranslated-pattern-inventory",
       "package": "E3",
-      "state": "todo",
+      "state": "in_progress",
       "scope": "Unsupported item, card and combo scripts in active item reference data",
       "output": "Pattern clusters ranked by number of affected entries and source semantics",
       "exit_check": "Each cluster has examples, affected IDs and a specific review target",
-      "attempts": 0,
-      "kind": "planning"
+      "attempts": 1,
+      "kind": "planning",
+      "notes": "Inventory shows: 3968 items with scripted_not_translated status (no script field shown). Source analysis reveals: itemskill calls (itemskill AL_TELEPORT, etc.), bonus commands beyond allowlist patterns. Need to expand translator with these patterns and re-export."
     },
     {
       "id": "E4-formula-status-gap-inventory",
@@ -168,6 +169,6 @@
   ],
   "last_checks": [],
   "last_coverage_delta": null,
-  "next_action": "Begin E3-untranslated-pattern-inventory to identify unsupported script patterns in items, cards and combos",
-  "last_checkpoint_utc": "2026-09-29T00:00:00Z"
+  "next_action": "E3: Expand item script translator to support itemskill and additional bonus patterns, then re-export and verify coverage",
+  "last_checkpoint_utc": "2026-09-29T00:15:00Z"
 }
