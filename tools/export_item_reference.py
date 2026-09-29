@@ -456,13 +456,21 @@ def translate_simple_effect(script: str) -> str | None:
             direction = "increases" if value >= 0 else "reduces"
             effects.append(f"{direction} tolerance to {_effect_display_name(effect)} by {abs(value):g}%")
             continue
-        match = re.fullmatch(r"itemheal\s+([^,]+)\s*,\s*([^,]+)", statement, re.I)
+        # Match itemheal with literal values or rand(X,Y) expressions.
+        # The simple [^,]+ pattern doesn't work because rand() contains commas.
+        match = re.fullmatch(
+            r"itemheal\s+(rand\(\s*-?\d+\s*,\s*-?\d+\)|-?\d+)\s*,\s*(rand\(\s*-?\d+\s*,\s*-?\d+\)|-?\d+)",
+            statement,
+            re.I,
+        )
         if match:
             hp, sp = (_number(value) for value in match.groups())
             if hp is None or sp is None:
                 return None
-            if hp != "0": effects.append(f"Restores {hp} HP")
-            if sp != "0": effects.append(f"restores {sp} SP")
+            if hp != "0":
+                effects.append(f"Restores {hp} HP")
+            if sp != "0":
+                effects.append(f"restores {sp} SP")
             continue
         match = re.fullmatch(r"percentheal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
         if match:
@@ -573,7 +581,14 @@ def source_revision() -> tuple[str, bool]:
         revision = subprocess.check_output(
             ["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        # Use diff-index instead of status --porcelain to ignore untracked files.
+        # This ensures source_worktree_dirty reflects only tracked-source changes,
+        # not new tooling or other uncommitted untracked items.
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+            text=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False
@@ -824,6 +839,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         raise ValueError(f"could not safely delimit every combo script: {combo_starts} starts, {combo_scripts} complete values")
     combo_rows = parse_skill_db(scrubbed_combos)
     combos_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    belongs_to_combos_by_item: dict[int, list[str]] = defaultdict(list)
     # The database header includes a commented example entry with a Script
     # field; it is not returned by the config parser.
     if len(combo_raw_scripts) == len(combo_rows) + 1:
@@ -849,8 +865,10 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                if translate_simple_effect(combo_raw_scripts[index - 1]) else {}),
             "source": {"path": COMBO_SOURCE.relative_to(HERCULES).as_posix(), "record": f"combo_db[{index}]"},
         }
+        combo_name = "_".join(sorted(names))
         for member in members:
             combos_by_item[member["id"]].append(combo_link)
+            belongs_to_combos_by_item[member["id"]].append(combo_name)
 
     group_contents_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
     contained_in_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
@@ -934,6 +952,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             },
             "drops_from": sorted(drops_by_item[item_id], key=lambda drop: (drop["monster_id"], drop["kind"])),
             **({"combos": combos_by_item[item_id]} if item_id in combos_by_item else {}),
+            **({"belongs_to_combos": sorted(belongs_to_combos_by_item[item_id])} if item_id in belongs_to_combos_by_item else {}),
             **({"group_contents": group_contents_by_item[item_id]} if item_id in group_contents_by_item else {}),
             **({"contained_in_groups": contained_in_by_item[item_id]} if item_id in contained_in_by_item else {}),
             **({"shops": shops_by_item[item_id]} if item_id in shops_by_item else {}),
@@ -967,7 +986,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
 
 
 def render(payload: dict[str, Any]) -> str:
-    return json.dumps(payload, indent=1, ensure_ascii=False) + "\n"
+    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
 def main() -> int:
