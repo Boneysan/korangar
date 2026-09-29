@@ -15,7 +15,7 @@
     "prompt_version": 2
   },
   "source_snapshot": {
-    "korangar_head": "63879756",
+    "korangar_head": "4636b2c1",
     "hercules_head": "cc83ca152",
     "dirty_files_need_baseline_hashes": false,
     "quest_db_policy": "quest_db.conf committed at Hercules fa63cd8af; if dirty again, the quest exporter uses the tracked HEAD snapshot",
@@ -37,11 +37,12 @@
     {
       "id": "E0-loaded-source-manifest",
       "package": "E0",
-      "state": "todo",
+      "state": "done",
       "scope": "Hercules npc/scripts.conf and the npc/scripts_*.conf includes actually loaded by the active server (renewal mode), plus dirty files in korangar/ and Hercules/",
       "output": "Deterministic generated manifest (tools/ script + committed JSON) listing every loaded script file with path and sha256, plus sha256 of each dirty file in both repositories; ledger source_snapshot.dirty_files_need_baseline_hashes cleared",
       "exit_check": "Manifest regenerates byte-identically; a --check mode fails when a loaded script or dirty file changes; unloaded scripts (pre-re, scripts_removed, disabled includes) are excluded and listed as out of scope",
-      "attempts": 0
+      "attempts": 1,
+      "completed_at_utc": "2026-09-28T00:00:00Z"
     },
     {
       "id": "E0-baseline-and-claim-audit",
@@ -123,11 +124,11 @@
       "kind": "planning"
     }
   ],
-  "completed_unit_ids": [],
+  "completed_unit_ids": ["E0-loaded-source-manifest"],
   "blockers": [],
   "accepted_outputs": [],
   "last_checks": [],
   "last_coverage_delta": null,
-  "next_action": "Install or connect Qwen3/Ollama, then run E0-loaded-source-manifest first, then expand E0-baseline-and-claim-audit into a bounded candidate queue",
-  "last_checkpoint_utc": null
+  "next_action": "Run E0-baseline-and-claim-audit to establish coverage denominators and identify first bounded fix candidate",
+  "last_checkpoint_utc": "2026-09-28T00:00:00Z"
 }
