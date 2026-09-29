@@ -101,11 +101,40 @@ def ordered_script_files(root: Path, entry: Path) -> list[Path]:
     return sorted(scripts)
 
 
+def has_uncommitted_changes(root: Path, exclude_paths: list[str] | None = None) -> bool:
+    """Check if repository has uncommitted changes, optionally excluding paths."""
+    try:
+        status_cmd = ["git", "-C", str(root), "status", "--porcelain"]
+        output = subprocess.check_output(status_cmd, text=True).strip()
+        if not output:
+            return False
+        # Filter out excluded paths (e.g., this script and its output manifest)
+        for line in output.splitlines():
+            parts = line.split(maxsplit=1)
+            if len(parts) == 2:
+                path = parts[1]
+                if exclude_paths and path not in exclude_paths:
+                    return True
+        return False
+    except (OSError, subprocess.CalledProcessError):
+        return False
+
+
 def build_manifest(korangar: Path, hercules: Path) -> dict:
     """Build the complete manifest dictionary."""
-    # Get source revisions for both repos
-    korangar_rev, korangar_dirty = source_revision(korangar)
-    hercules_rev, hercules_dirty = source_revision(hercules)
+    # Paths to exclude from dirty detection (self-exclusion)
+    script_relpath = Path(__file__).resolve().relative_to(korangar).as_posix()
+    output_relpath = OUTPUT.relative_to(korangar).as_posix() if OUTPUT.is_relative_to(korangar) else None
+    exclude_paths = [script_relpath, output_relpath] if output_relpath else [script_relpath]
+
+    # Get source revisions for both repos (without self-exclusion)
+    korangar_rev, _ = source_revision(korangar)
+    hercules_rev, _ = source_revision(hercules)
+
+    # Check for dirty state with exclusion
+    korangar_dirty = has_uncommitted_changes(korangar, exclude_paths if output_relpath else [script_relpath])
+    hercules_dirty = has_uncommitted_changes(hercules)
+
     any_dirty = korangar_dirty or hercules_dirty
 
     # Collect loaded script files from Hercules
@@ -126,15 +155,15 @@ def build_manifest(korangar: Path, hercules: Path) -> dict:
     dirty_files = []
 
     if korangar_dirty:
-        korangar_status = subprocess.check_output(
-            ["git", "-C", str(korangar), "status", "--porcelain"],
-            text=True
-        ).strip()
         for line in korangar_status.splitlines():
             # Format: "XY path" where X=Y status chars (M=modified, A=added, D=deleted, etc.)
             # First char is index status, second is working tree status
             parts = line.split(maxsplit=1)
             if len(parts) == 2:
+                file_path = parts[1]
+                # Skip the output manifest and this script itself - they will always differ until committed
+                if file_path in (output_relpath, script_relpath):
+                    continue
                 status_code = parts[0]
                 file_status = status_code[1] if len(status_code) > 1 else status_code[0]
                 dirty_files.append({
