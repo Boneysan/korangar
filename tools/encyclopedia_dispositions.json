@@ -67576,6 +67576,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_mayshell_3rdgc03_branch_for_867_977",
+      "unit": "E1-job3_guil01_mayshell_3rdgc03_branch_for_867",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mayshell#3rdgc03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Key_Of_The_Mansion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            977
+          ],
+          "required_source_literals": [
+            "delitem Key_Of_The_Mansion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_mayshell_3rdgc03_branch_for_867_1077",
+      "unit": "E1-job3_guil01_mayshell_3rdgc03_branch_for_867",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mayshell#3rdgc03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Accessory_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            1077
+          ],
+          "required_source_literals": [
+            "getitem Accessory_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
