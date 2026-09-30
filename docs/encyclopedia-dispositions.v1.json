@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3250,
+    "E1_unknown": 3253,
     "E1_verified": 1
   },
   "entries": [
@@ -33454,6 +33454,81 @@
           ],
           "required_source_literals": [
             "getitem Ancient_Grudge,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_bob_mal_branch_for_1168_1202",
+      "unit": "E1-mal_in02_bob_mal_branch_for_1168",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bob#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fix_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1202
+          ],
+          "required_source_literals": [
+            "delitem Fix_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_bob_mal_branch_for_1168_1283",
+      "unit": "E1-mal_in02_bob_mal_branch_for_1168",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bob#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fix_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1283
+          ],
+          "required_source_literals": [
+            "getitem Fix_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_bob_mal_branch_for_1168_1315",
+      "unit": "E1-mal_in02_bob_mal_branch_for_1168",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bob#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fix_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1315
+          ],
+          "required_source_literals": [
+            "getitem Fix_Kit,1;"
           ]
         }
       ],
