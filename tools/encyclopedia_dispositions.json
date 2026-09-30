@@ -84976,6 +84976,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_lost_child_malaya01_branch_for_3115_3147",
+      "unit": "E1-ma_fild01_lost_child_malaya01_branch_for_3115",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lost Child#malaya01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Insideout_Shirt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3147
+          ],
+          "required_source_literals": [
+            "delitem Insideout_Shirt, 1; // Insideout_Shirt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
