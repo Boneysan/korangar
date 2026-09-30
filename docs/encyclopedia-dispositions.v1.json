@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 359,
+    "E1_unknown": 362,
     "E1_verified": 1
   },
   "entries": [
@@ -7079,6 +7079,81 @@
           ],
           "required_source_literals": [
             "getitem Bible,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_wedding_staff_w_branch_for_42_368",
+      "unit": "E1-prt_church_wedding_staff_w_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wedding Staff#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tuxedo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/marriage.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "delitem Tuxedo,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_wedding_staff_w_branch_for_42_378",
+      "unit": "E1-prt_church_wedding_staff_w_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wedding Staff#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wedding_Dress,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/marriage.txt",
+          "lines": [
+            378
+          ],
+          "required_source_literals": [
+            "delitem Wedding_Dress,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_wedding_staff_w_branch_for_42_380",
+      "unit": "E1-prt_church_wedding_staff_w_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wedding Staff#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Diamond_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/marriage.txt",
+          "lines": [
+            380
+          ],
+          "required_source_literals": [
+            "delitem Diamond_Ring,1;"
           ]
         }
       ],
