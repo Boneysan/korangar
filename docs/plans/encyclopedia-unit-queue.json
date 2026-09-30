@@ -49974,7 +49974,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bAutoSpell (expression)",
@@ -50169,7 +50169,25 @@
       ],
       "size_lines": 14,
       "reason": "14 item script(s) first stop at `bonus3 bAutoSpell (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:11:58Z activated",
+        "2026-09-30T20:11:58Z validated",
+        "2026-09-30T20:11:58Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:12:22Z accepted",
+        "2026-09-30T20:12:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "48bc80184913a35a7f57a095490725fe2cda1b461b3e26ba9a7b1e8787c76d29",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bcritical-expression",

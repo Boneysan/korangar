@@ -104276,6 +104276,384 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1541_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1541
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1541 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            14850
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,AL_CRUCIS,1+getrefine(),100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1562_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1562
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1562 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            15407
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,AL_BLESSING,3+(getskilllv(AL_BLESSING)>3)*(getskilllv(AL_BLESSING)-3),20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1736_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1736
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1736 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            19662
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAutoSpell,AC_DOUBLE,getskilllv(AC_DOUBLE),10; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4203_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4203
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4203 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            43807
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,MG_FIREBALL,3+2*(getskilllv(MG_FIREBALL)==10),50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4217_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4217 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            43969
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAutoSpell,AL_HEAL,1+9*(getskilllv(AL_HEAL)==10),20; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4264_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4264
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4264 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            44558
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAutoSpell,WZ_JUPITEL,3+7*(getskilllv(WZ_JUPITEL)==10),20; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4283_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4283
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4283 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            44787
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAutoSpell,MO_CALLSPIRITS,5,2+18*(BaseClass==Job_Acolyte); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5182_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5182 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            55936
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,PR_GLORIA,1,10+20*(readparam(bAgi)>=77);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5764_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5764
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5764 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            66193
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAutoSpell,PR_GLORIA,3,((readparam(bAgi)>=80)?30:10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5967_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5967
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5967 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            68321
+          ],
+          "required_source_literals": [
+            "bonus3(bAutoSpell, HT_BLITZBEAT, max(getskilllv(HT_BLITZBEAT), 1), 50 + (min(readparam(bLuk), 120) / 3) + (max(getskilllv(HT_BLITZBEAT), 1) * 2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13314_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13314
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13314 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            104883
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,NJ_HYOUSYOURAKU,max(getskilllv(NJ_HYOUSYOURAKU),1),30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13315_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13315
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13315 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            104908
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,NJ_RAIGEKISAI,max(getskilllv(NJ_RAIGEKISAI),1),30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15038_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15038 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125052
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,ASC_METEORASSAULT,max(getskilllv(ASC_METEORASSAULT),1),20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_16017_script_untranslated",
+      "unit": "E3-unknown-bonus3-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16017 is not summarized: the translator does not interpret the quoted statement (bonus3 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            126636
+          ],
+          "required_source_literals": [
+            "bonus3 bAutoSpell,WL_HELLINFERNO,1,max(getrefine(),1)*20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
