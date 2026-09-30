@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 532,
+    "E1_unknown": 538,
     "E1_verified": 1
   },
   "entries": [
@@ -5679,6 +5679,156 @@
           ],
           "required_source_literals": [
             "getitem Gladius,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_1003",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            1003
+          ],
+          "required_source_literals": [
+            "getitem Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_134",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Scimiter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            134
+          ],
+          "required_source_literals": [
+            "getitem Scimiter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_189",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Scimiter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            189
+          ],
+          "required_source_literals": [
+            "getitem Scimiter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_751",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            751
+          ],
+          "required_source_literals": [
+            "getitem Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_805",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            805
+          ],
+          "required_source_literals": [
+            "getitem Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_shurank_branch_for_41_895",
+      "unit": "E1-izlude_in_shurank_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shurank"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            895
+          ],
+          "required_source_literals": [
+            "getitem Muffler,1;"
           ]
         }
       ],
