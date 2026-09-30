@@ -70501,6 +70501,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_academy_student_0_branch_for_2324_2389",
+      "unit": "E1-izlude_academy_student_0_branch_for_2324",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Student#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2389
+          ],
+          "required_source_literals": [
+            "getitem(Red_Herb, 1); // Red_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
