@@ -15151,6 +15151,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_dun01_factory_b_area_door_branch_for_3443_3499",
+      "unit": "E1-kh_dun01_factory_b_area_door_branch_for_3443",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Factory B Area Door"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Steel_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3499
+          ],
+          "required_source_literals": [
+            "getitem Steel_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
