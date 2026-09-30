@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 128,
+    "E2_verified": 136,
     "E3_unknown": 973
   },
   "entries": [
@@ -89066,6 +89066,350 @@
             "sellitem Chain_Mail;",
             "sellitem Novice_Armlet;",
             "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1590",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#prt2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#prt2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1590,
+            1591,
+            1592,
+            1593,
+            1594,
+            1595,
+            1596,
+            1597,
+            1598,
+            1599,
+            1600,
+            1601
+          ],
+          "required_source_literals": [
+            "prt_in,171,140,0\ttrader\tWeapon Dealer#prt2\t1_M_01,{",
+            "OnInit:",
+            "sellitem Javelin;",
+            "sellitem Spear;",
+            "sellitem Pike;",
+            "sellitem Guisarme;",
+            "sellitem Glaive;",
+            "sellitem Partizan;",
+            "sellitem Trident;",
+            "sellitem Halberd;",
+            "sellitem Lance;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1603",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#prt3"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#prt3 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1603,
+            1604,
+            1605,
+            1606,
+            1607
+          ],
+          "required_source_literals": [
+            "prt_in,165,140,4\ttrader\tWeapon Dealer#prt3\t1_F_01,{",
+            "OnInit:",
+            "sellitem Town_Sword;",
+            "sellitem Cinquedea;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1609",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#prt4"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#prt4 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1609,
+            1610,
+            1611,
+            1612,
+            1613,
+            1614
+          ],
+          "required_source_literals": [
+            "prt_monk,135,263,5\ttrader\tWeapon Dealer#prt4\t4_F_JOB_BLACKSMITH,{",
+            "OnInit:",
+            "sellitem Waghnakh;",
+            "sellitem Knuckle_Duster;",
+            "sellitem Hora;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1617",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#ra"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1617,
+            1618,
+            1619,
+            1620,
+            1621,
+            1622,
+            1623,
+            1624,
+            1625,
+            1626,
+            1627,
+            1628,
+            1629
+          ],
+          "required_source_literals": [
+            "ra_in01,175,364,3\ttrader\tArmor Dealer#ra\t4_F_SHABBY,{",
+            "OnInit:",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Shoes;",
+            "sellitem Boots;",
+            "sellitem Muffler;",
+            "sellitem Silk_Robe;",
+            "sellitem Chain_Mail;",
+            "sellitem Coat;",
+            "sellitem Thief_Clothes;",
+            "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1631",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#ra"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1631,
+            1632,
+            1633,
+            1634,
+            1635,
+            1636,
+            1637,
+            1638,
+            1639,
+            1640,
+            1641,
+            1642,
+            1643,
+            1644,
+            1645
+          ],
+          "required_source_literals": [
+            "ra_in01,257,269,3\ttrader\tTool Dealer#ra\t4_F_SHABBY,{",
+            "OnInit:",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Booby_Trap;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1647",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#ra"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1647,
+            1648,
+            1649,
+            1650,
+            1651,
+            1652,
+            1653,
+            1654,
+            1655,
+            1656,
+            1657,
+            1658,
+            1659,
+            1660,
+            1661,
+            1662,
+            1663,
+            1664
+          ],
+          "required_source_literals": [
+            "ra_in01,176,389,3\ttrader\tWeapon Dealer#ra\t4_M_RACHMAN1,{",
+            "OnInit:",
+            "sellitem Knife;",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "sellitem Coward;",
+            "sellitem Rod;",
+            "sellitem Wand;",
+            "sellitem Staff;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1666",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#ra"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1666,
+            1667,
+            1668,
+            1669,
+            1670
+          ],
+          "required_source_literals": [
+            "ra_in01,254,300,3\ttrader\tFruit Gardener#ra\t4_M_RACHMAN1,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1590_1672",
+      "unit": "E2-npc-merchants-shops-txt-1590",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vegetable Gardener#ra"
+      },
+      "result": "verified",
+      "statement": "Vegetable Gardener#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1672,
+            1673,
+            1674,
+            1675,
+            1676,
+            1677
+          ],
+          "required_source_literals": [
+            "rachel,65,80,1\ttrader\tVegetable Gardener#ra\t4_F_SHABBY,{",
+            "OnInit:",
+            "sellitem Carrot;",
+            "sellitem Pumpkin;",
+            "sellitem Sweet_Potato;",
             "}"
           ]
         }
