@@ -6328,7 +6328,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kellion",
@@ -6347,7 +6347,25 @@
       ],
       "size_lines": 131,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:54:36Z activated",
+        "2026-09-30T14:54:36Z validated",
+        "2026-09-30T14:54:36Z verified: 3 claims supported",
+        "2026-09-30T14:55:00Z accepted",
+        "2026-09-30T14:55:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "19838cc0b7bb37e045fee563948367a2dbca499d1b50c4d29af6b309ba6c12fb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_aigie_branch_for_968",
