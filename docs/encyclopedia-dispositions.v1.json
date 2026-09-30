@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 78
+    "E5_unknown": 79
   },
   "entries": [
     {
@@ -105392,6 +105392,33 @@
           ],
           "required_source_literals": [
             "changequest 9010,9011;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9017_npc_jobs_2_1_wizard_txt_1572",
+      "unit": "E5-chain-9017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            1572
+          ],
+          "required_source_literals": [
+            "changequest 9017,9018;"
           ]
         }
       ],
