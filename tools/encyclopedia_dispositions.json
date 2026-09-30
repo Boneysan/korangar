@@ -45876,6 +45876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_larissa_mos_01_branch_for_3813_3831",
+      "unit": "E1-mosk_in_larissa_mos_01_branch_for_3813",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Larissa#mos_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jam_Pancake,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3831
+          ],
+          "required_source_literals": [
+            "getitem Jam_Pancake,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_larissa_mos_01_branch_for_3813_3832",
+      "unit": "E1-mosk_in_larissa_mos_01_branch_for_3813",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Larissa#mos_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Honey_Pancake,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3832
+          ],
+          "required_source_literals": [
+            "getitem Honey_Pancake,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
