@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 529,
+    "E1_unknown": 532,
     "E1_verified": 1
   },
   "entries": [
@@ -11204,6 +11204,81 @@
           ],
           "required_source_literals": [
             "case 8: delitem Scarlet_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_maos_branch_for_1264_1292",
+      "unit": "E1-prt_in_maos_branch_for_1264",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1292
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_maos_branch_for_1264_1327",
+      "unit": "E1-prt_in_maos_branch_for_1264",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1327
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_maos_branch_for_1264_1362",
+      "unit": "E1-prt_in_maos_branch_for_1264",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1362
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
           ]
         }
       ],
