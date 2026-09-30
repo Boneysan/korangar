@@ -66276,6 +66276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_receptionist_laphine_branch_for_47_72",
+      "unit": "E1-ecl_in02_receptionist_laphine_branch_for_47",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Receptionist#Laphine"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/cities/eclage.txt",
+          "lines": [
+            72
+          ],
+          "required_source_literals": [
+            "delitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
