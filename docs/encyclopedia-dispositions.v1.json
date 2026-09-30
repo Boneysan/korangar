@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 826,
+    "E1_unknown": 838,
     "E1_verified": 1
   },
   "entries": [
@@ -19704,6 +19704,306 @@
           ],
           "required_source_literals": [
             "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1782",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Bell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1782
+          ],
+          "required_source_literals": [
+            "delitem Golden_Bell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1783",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1783
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1784",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1784
+          ],
+          "required_source_literals": [
+            "delitem Gold,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1786",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Big_Golden_Bell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1786
+          ],
+          "required_source_literals": [
+            "getitem Big_Golden_Bell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1820",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Queens_Hair_Ornament,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1820
+          ],
+          "required_source_literals": [
+            "delitem Queens_Hair_Ornament,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1821",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1821
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1822",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1822
+          ],
+          "required_source_literals": [
+            "delitem Gold,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1824",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Headgear_Of_Queen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1824
+          ],
+          "required_source_literals": [
+            "getitem Headgear_Of_Queen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1870",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coronet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1870
+          ],
+          "required_source_literals": [
+            "delitem Coronet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1871",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1871
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1872",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1872
+          ],
+          "required_source_literals": [
+            "delitem Gold,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_nehris_1_branch_for_1742_1874",
+      "unit": "E1-yuno_in03_nehris_1_branch_for_1742",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nehris#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mistress_Crown,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1874
+          ],
+          "required_source_literals": [
+            "getitem Mistress_Crown,1;"
           ]
         }
       ],
