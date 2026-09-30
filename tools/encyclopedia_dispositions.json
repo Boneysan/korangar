@@ -10101,6 +10101,281 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1708",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1708
+          ],
+          "required_source_literals": [
+            "getitem Cookbook01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1715",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Outdoor_Cooking_Kits,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1715
+          ],
+          "required_source_literals": [
+            "getitem Outdoor_Cooking_Kits,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1779",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Str_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1779
+          ],
+          "required_source_literals": [
+            "delitem Str_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1780",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Int_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1780
+          ],
+          "required_source_literals": [
+            "delitem Int_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1781",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dex_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1781
+          ],
+          "required_source_literals": [
+            "delitem Dex_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1782",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Agi_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1782
+          ],
+          "required_source_literals": [
+            "delitem Agi_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1783",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vit_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1783
+          ],
+          "required_source_literals": [
+            "delitem Vit_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1784",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Luk_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1784
+          ],
+          "required_source_literals": [
+            "delitem Luk_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1786",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Food_Package,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1786
+          ],
+          "required_source_literals": [
+            "getitem Food_Package,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1881",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1881
+          ],
+          "required_source_literals": [
+            "delitem Cookbook01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_madeleine_chu_cook_branch_for_1495_1917",
+      "unit": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Madeleine Chu#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Indoor_Cooking_Kits,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1917
+          ],
+          "required_source_literals": [
+            "getitem Indoor_Cooking_Kits,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
