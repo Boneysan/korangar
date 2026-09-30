@@ -26165,7 +26165,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Fastidious-Looking Guy",
@@ -26184,7 +26184,25 @@
       ],
       "size_lines": 189,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:57:07Z activated",
+        "2026-09-30T17:57:07Z validated",
+        "2026-09-30T17:57:07Z verified: 2 claims supported",
+        "2026-09-30T17:57:31Z accepted",
+        "2026-09-30T17:57:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c9eed413a3ebb73eec89d33a3a5ef8516a39acb14c170faca71e4be75689af28",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_fastidious_old_man_branch_for_8022",

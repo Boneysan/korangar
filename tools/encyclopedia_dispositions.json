@@ -65226,6 +65226,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_fastidious_looking_guy_branch_for_7832_7966",
+      "unit": "E1-um_in_fastidious_looking_guy_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fastidious-Looking Guy"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worn_Out_Page,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7966
+          ],
+          "required_source_literals": [
+            "delitem Worn_Out_Page,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_fastidious_looking_guy_branch_for_7832_7968",
+      "unit": "E1-um_in_fastidious_looking_guy_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fastidious-Looking Guy"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ancient_Document,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7968
+          ],
+          "required_source_literals": [
+            "getitem Ancient_Document,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
