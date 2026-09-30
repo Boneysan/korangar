@@ -7342,7 +7342,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kiel Hyre#kh",
@@ -7361,7 +7361,25 @@
       ],
       "size_lines": 767,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:03:50Z activated",
+        "2026-09-30T15:03:50Z validated",
+        "2026-09-30T15:03:50Z verified: 12 claims supported",
+        "2026-09-30T15:04:13Z accepted",
+        "2026-09-30T15:04:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b7c1028db43e9b44b82de4d9f5d48f16b3f977058f1fe286ccfae59f0dfd549a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_old_lady_kh_branch_for_5002",

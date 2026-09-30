@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 602,
+    "E1_unknown": 614,
     "E1_verified": 1
   },
   "entries": [
@@ -6029,6 +6029,306 @@
           ],
           "required_source_literals": [
             "getitem Steel_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_3774",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3774
+          ],
+          "required_source_literals": [
+            "delitem Golden_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_3775",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Kiel_Button,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3775
+          ],
+          "required_source_literals": [
+            "delitem Kiel_Button,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_3787",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Set_Of_Taiming_Item,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3787
+          ],
+          "required_source_literals": [
+            "getitem Set_Of_Taiming_Item,1; //Taming_Gift_Set"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4127",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Family_Portrait,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4127
+          ],
+          "required_source_literals": [
+            "delitem Family_Portrait,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4128",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elysia_Portrait,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4128
+          ],
+          "required_source_literals": [
+            "delitem Elysia_Portrait,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4129",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Kyll_Hire_Letter2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4129
+          ],
+          "required_source_literals": [
+            "delitem Kyll_Hire_Letter2,1; //Kyll_Hyre_Letter2"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4130",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Memo_Of_James,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4130
+          ],
+          "required_source_literals": [
+            "delitem Piece_Memo_Of_James,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4131",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Man_Portrait,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4131
+          ],
+          "required_source_literals": [
+            "delitem Man_Portrait,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4311",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Toy_Motor,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4311
+          ],
+          "required_source_literals": [
+            "getitem Toy_Motor,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4398",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fancy_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4398
+          ],
+          "required_source_literals": [
+            "getitem Fancy_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4413",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Card_Album,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4413
+          ],
+          "required_source_literals": [
+            "getitem Old_Card_Album,1;  //Old Card Album"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_mansion_kiel_hyre_kh_branch_for_3660_4414",
+      "unit": "E1-kh_mansion_kiel_hyre_kh_branch_for_3660",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiel Hyre#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elysia_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            4414
+          ],
+          "required_source_literals": [
+            "delitem Elysia_Ring,1;"
           ]
         }
       ],
