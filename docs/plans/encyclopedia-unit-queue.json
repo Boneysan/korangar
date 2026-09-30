@@ -31630,7 +31630,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Master Craftsman Ki#weap",
@@ -31649,7 +31649,22 @@
       ],
       "size_lines": 154,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:47:37Z activated",
+        "2026-09-30T18:47:37Z validated",
+        "2026-09-30T18:47:37Z verified: 0 claims supported",
+        "2026-09-30T18:48:00Z accepted",
+        "2026-09-30T18:48:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1d4ad8d4aed6c23c0337674c6cd3b0b6bb09b6beae69445750b35f7a639a224e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prontera_peco_peco_remover_branch_for_140",
