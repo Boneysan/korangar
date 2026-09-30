@@ -70948,7 +70948,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -70972,7 +70972,25 @@
       ],
       "size_lines": 30,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:16:42Z activated",
+        "2026-09-30T22:16:42Z validated",
+        "2026-09-30T22:16:42Z verified: 1 claims supported",
+        "2026-09-30T22:17:06Z accepted",
+        "2026-09-30T22:17:06Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "79727e4d509dc93ed8daa9919d9e5f2abbd5f192c2faefb4773ebb697824892a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-wm-severe-rainstorm-melee",
