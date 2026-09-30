@@ -47026,6 +47026,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild02_lusalka_07russai_22_branch_for_8692_8757",
+      "unit": "E1-mosk_fild02_lusalka_07russai_22_branch_for_8692",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusalka#07russai_22"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lusalka_Hair,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8757
+          ],
+          "required_source_literals": [
+            "getitem Lusalka_Hair,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1876,
+    "E1_unknown": 1877,
     "E1_verified": 1
   },
   "entries": [
@@ -27554,6 +27554,31 @@
           ],
           "required_source_literals": [
             "getitem GUSLI, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild02_lusalka_07russai_22_branch_for_8692_8757",
+      "unit": "E1-mosk_fild02_lusalka_07russai_22_branch_for_8692",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusalka#07russai_22"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lusalka_Hair,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8757
+          ],
+          "required_source_literals": [
+            "getitem Lusalka_Hair,2;"
           ]
         }
       ],
