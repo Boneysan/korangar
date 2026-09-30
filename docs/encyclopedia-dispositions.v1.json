@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 120,
+    "E1_unknown": 121,
     "E1_verified": 1
   },
   "entries": [
@@ -3129,6 +3129,31 @@
           ],
           "required_source_literals": [
             "getitem Blue_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_rmimi_ravies_gq_fes01_branch_for_73_144",
+      "unit": "E1-yuno_rmimi_ravies_gq_fes01_branch_for_73",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rmimi Ravies#gq_fes01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Valkyrie_Gift,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/god_se_festival.txt",
+          "lines": [
+            144
+          ],
+          "required_source_literals": [
+            "delitem Valkyrie_Gift,1; //Valkyrie's_Gift"
           ]
         }
       ],
