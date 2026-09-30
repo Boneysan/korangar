@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3294,
+    "E1_unknown": 3302,
     "E1_verified": 1
   },
   "entries": [
@@ -34779,6 +34779,206 @@
           ],
           "required_source_literals": [
             "getitem Bravery_Card_B,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5270",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5270
+          ],
+          "required_source_literals": [
+            "delitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5272",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5272
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5282",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5282
+          ],
+          "required_source_literals": [
+            "delitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5308",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5308
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5309",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5309
+          ],
+          "required_source_literals": [
+            "getitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5343",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5343
+          ],
+          "required_source_literals": [
+            "delitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5390",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5390
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_roku_nya_10_branch_for_5223_5391",
+      "unit": "E1-malangdo_meow_team_roku_nya_10_branch_for_5223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Roku#nya_10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5391
+          ],
+          "required_source_literals": [
+            "getitem Bravery_Card_A,1;"
           ]
         }
       ],
