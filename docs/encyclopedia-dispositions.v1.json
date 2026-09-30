@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 620,
+    "E1_unknown": 621,
     "E1_verified": 1
   },
   "entries": [
@@ -14579,6 +14579,31 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_fild12_old_fisherman_branch_for_5441_5526",
+      "unit": "E1-yuno_fild12_old_fisherman_branch_for_5441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Slice,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5526
+          ],
+          "required_source_literals": [
+            "delitem Fish_Slice,10;"
           ]
         }
       ],
