@@ -45251,6 +45251,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_mr_ibanoff_npc_branch_for_288_489",
+      "unit": "E1-moscovia_mr_ibanoff_npc_branch_for_288",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Ibanoff#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystery_Iron_Bit,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            489
+          ],
+          "required_source_literals": [
+            "delitem Mystery_Iron_Bit,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_mr_ibanoff_npc_branch_for_288_490",
+      "unit": "E1-moscovia_mr_ibanoff_npc_branch_for_288",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Ibanoff#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Screw,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            490
+          ],
+          "required_source_literals": [
+            "delitem Screw,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_mr_ibanoff_npc_branch_for_288_491",
+      "unit": "E1-moscovia_mr_ibanoff_npc_branch_for_288",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Ibanoff#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tube,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            491
+          ],
+          "required_source_literals": [
+            "delitem Tube,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_mr_ibanoff_npc_branch_for_288_492",
+      "unit": "E1-moscovia_mr_ibanoff_npc_branch_for_288",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Ibanoff#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jubilee,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            492
+          ],
+          "required_source_literals": [
+            "delitem Jubilee,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
