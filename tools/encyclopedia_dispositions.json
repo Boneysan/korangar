@@ -49651,6 +49651,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_rogue_guild_agent_nd2_branch_for_12456_12649",
+      "unit": "E1-payon_rogue_guild_agent_nd2_branch_for_12456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12649
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_rogue_guild_agent_nd2_branch_for_12456_12690",
+      "unit": "E1-payon_rogue_guild_agent_nd2_branch_for_12456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12690
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_rogue_guild_agent_nd2_branch_for_12456_12719",
+      "unit": "E1-payon_rogue_guild_agent_nd2_branch_for_12456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12719
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_rogue_guild_agent_nd2_branch_for_12456_12798",
+      "unit": "E1-payon_rogue_guild_agent_nd2_branch_for_12456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Alchol,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12798
+          ],
+          "required_source_literals": [
+            "delitem Alchol,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_rogue_guild_agent_nd2_branch_for_12456_12821",
+      "unit": "E1-payon_rogue_guild_agent_nd2_branch_for_12456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Alchol,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12821
+          ],
+          "required_source_literals": [
+            "delitem Alchol,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

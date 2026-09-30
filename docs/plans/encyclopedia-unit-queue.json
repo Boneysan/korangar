@@ -20585,7 +20585,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Rogue Guild Agent#nd2",
@@ -20604,7 +20604,26 @@
       ],
       "size_lines": 481,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:05:43Z activated",
+        "2026-09-30T17:05:43Z validated",
+        "2026-09-30T17:05:43Z verified: 5 claims supported",
+        "2026-09-30T17:06:07Z accepted",
+        "2026-09-30T17:06:07Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "84f2033be17471dc63ae38ab6c63841df97f73fa6834c922681adc95ddfb1281",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
