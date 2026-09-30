@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 94
+    "E4_unknown": 95
   },
   "entries": [
     {
@@ -99899,6 +99899,33 @@
           ],
           "required_source_literals": [
             "case WL_FROSTMISTY: // MATK [{( Skill Level x 100 ) + 200 } x ( Caster's Base Level / 100 )] %"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wl_hellinferno_formula",
+      "unit": "E4-wl-hellinferno",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1882
+          ],
+          "required_source_literals": [
+            "case WL_HELLINFERNO:"
           ]
         }
       ],
