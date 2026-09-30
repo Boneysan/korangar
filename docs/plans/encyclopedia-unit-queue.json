@@ -28211,7 +28211,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dandelion#3rdgc12",
@@ -28230,7 +28230,25 @@
       ],
       "size_lines": 44,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T18:16:06Z activated",
+        "2026-09-30T18:16:06Z validated",
+        "2026-09-30T18:16:06Z verified: 1 claims supported",
+        "2026-09-30T18:16:29Z accepted",
+        "2026-09-30T18:16:29Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c5b7b5dd1a154ba447c33d020382627d8e4b9b154a040cc0fdf0efeb587019f4",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_guil01_bercasell_3rdgc16_branch_for_3621",
