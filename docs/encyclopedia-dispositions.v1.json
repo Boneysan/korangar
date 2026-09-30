@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 431,
+    "E1_unknown": 436,
     "E1_verified": 1
   },
   "entries": [
@@ -6029,6 +6029,131 @@
           ],
           "required_source_literals": [
             "getitem(Manuk_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_02_middle_aged_man_magum1_branch_for_41_172",
+      "unit": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Aged Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            172
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_02_middle_aged_man_magum1_branch_for_41_173",
+      "unit": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Aged Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tentacle,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "delitem Tentacle,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_02_middle_aged_man_magum1_branch_for_41_174",
+      "unit": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Aged Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            174
+          ],
+          "required_source_literals": [
+            "delitem Coal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_02_middle_aged_man_magum1_branch_for_41_175",
+      "unit": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Aged Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Amulet,25; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "delitem Amulet,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_02_middle_aged_man_magum1_branch_for_41_176",
+      "unit": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Aged Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Heart,1;"
           ]
         }
       ],
