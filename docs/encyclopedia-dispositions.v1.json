@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1845,
+    "E1_unknown": 1851,
     "E1_verified": 1
   },
   "entries": [
@@ -26454,6 +26454,156 @@
           ],
           "required_source_literals": [
             "getitem Acorn,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6588",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fox_Tail,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6588
+          ],
+          "required_source_literals": [
+            "delitem Fox_Tail,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6589",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yarn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6589
+          ],
+          "required_source_literals": [
+            "delitem Yarn,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6590",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Silk_Cloth,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6590
+          ],
+          "required_source_literals": [
+            "delitem Soft_Silk_Cloth,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6591",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sea_Otter_Leather,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6591
+          ],
+          "required_source_literals": [
+            "delitem Sea_Otter_Leather,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6592",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spool,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6592
+          ],
+          "required_source_literals": [
+            "delitem Spool,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_irina_edq_branch_for_6515_6593",
+      "unit": "E1-moscovia_irina_edq_branch_for_6515",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Irina#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chullos,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6593
+          ],
+          "required_source_literals": [
+            "getitem Chullos,1;"
           ]
         }
       ],
