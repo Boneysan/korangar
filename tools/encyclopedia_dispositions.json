@@ -41876,6 +41876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_laura_branch_for_8090_8501",
+      "unit": "E1-hu_in01_laura_branch_for_8090",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Laura"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rune_Of_Darkness,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            8501
+          ],
+          "required_source_literals": [
+            "delitem Rune_Of_Darkness,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_laura_branch_for_8090_8504",
+      "unit": "E1-hu_in01_laura_branch_for_8090",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Laura"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            8504
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
