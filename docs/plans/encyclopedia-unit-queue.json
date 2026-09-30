@@ -71463,7 +71463,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -71487,7 +71487,25 @@
       ],
       "size_lines": 33,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:21:08Z activated",
+        "2026-09-30T22:21:08Z validated",
+        "2026-09-30T22:21:08Z verified: 1 claims supported",
+        "2026-09-30T22:21:32Z accepted",
+        "2026-09-30T22:21:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "41c3fb71ae6388cbf6f0ec0654c657808d1f8f22d60962355a55564139bd6bd0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-rl-hammer-of-god",
