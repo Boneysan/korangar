@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 262
+    "E5_unknown": 270
   },
   "entries": [
     {
@@ -109739,6 +109739,222 @@
           ],
           "required_source_literals": [
             "completequest 7075;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3105",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7076
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7076; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3105
+          ],
+          "required_source_literals": [
+            "completequest 7076;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3142",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7077
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7077; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3142
+          ],
+          "required_source_literals": [
+            "erasequest 7077;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3143",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7078
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7078; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3143
+          ],
+          "required_source_literals": [
+            "setquest 7078;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3162",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7078
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7078; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3162
+          ],
+          "required_source_literals": [
+            "erasequest 7078;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3174",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7078
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7078; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3174
+          ],
+          "required_source_literals": [
+            "erasequest 7078;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3187",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7077
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7077; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3187
+          ],
+          "required_source_literals": [
+            "setquest 7077;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3212",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7077
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7077; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3212
+          ],
+          "required_source_literals": [
+            "setquest 7077;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7076_npc_quests_quests_13_2_txt_3256",
+      "unit": "E5-chain-7076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7076
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7076; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3256
+          ],
+          "required_source_literals": [
+            "setquest 7076;"
           ]
         }
       ],
