@@ -11146,7 +11146,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Nuria",
@@ -11165,7 +11165,25 @@
       ],
       "size_lines": 44,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:38:43Z activated",
+        "2026-09-30T15:38:43Z validated",
+        "2026-09-30T15:38:43Z verified: 1 claims supported",
+        "2026-09-30T15:39:07Z accepted",
+        "2026-09-30T15:39:07Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9df30cec5507da0d0ad261e9b32c292d0aec9937618b04fdfde868f9fb3efc16",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lhz_in01_gerhart_branch_for_10258",
