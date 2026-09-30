@@ -47076,6 +47076,681 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9761",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel_,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9761
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel_,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9762",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9762
+          ],
+          "required_source_literals": [
+            "delitem Gold,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9763",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9763
+          ],
+          "required_source_literals": [
+            "delitem Red_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9764",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lusalka_Hair,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9764
+          ],
+          "required_source_literals": [
+            "delitem Lusalka_Hair,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9765",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Thread,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9765
+          ],
+          "required_source_literals": [
+            "delitem Golden_Thread,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9873",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Book_Of_Magic,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9873
+          ],
+          "required_source_literals": [
+            "delitem Book_Of_Magic,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9958",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9958
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9975",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9975
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9990",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Babayaga_Silver_Spoon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9990
+          ],
+          "required_source_literals": [
+            "delitem Babayaga_Silver_Spoon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_9993",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9993
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10019",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10019
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10035",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10035
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10051",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10051
+          ],
+          "required_source_literals": [
+            "getitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10137",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10137
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10138",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Water_Of_Darkness,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10138
+          ],
+          "required_source_literals": [
+            "delitem Water_Of_Darkness,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10139",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10139
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10140",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaflet_Of_Hinal,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10140
+          ],
+          "required_source_literals": [
+            "delitem Leaflet_Of_Hinal,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10279",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Potion,.@redpotion_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10279
+          ],
+          "required_source_literals": [
+            "delitem Red_Potion,.@redpotion_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10280",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Cylinder,.@redtube_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10280
+          ],
+          "required_source_literals": [
+            "delitem Empty_Cylinder,.@redtube_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10281",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Medicine_Bowl,.@redcup_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10281
+          ],
+          "required_source_literals": [
+            "delitem Medicine_Bowl,.@redcup_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10282",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple,.@redapple_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10282
+          ],
+          "required_source_literals": [
+            "delitem Apple,.@redapple_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10284",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Slim_Potion,.@total_red01; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10284
+          ],
+          "required_source_literals": [
+            "getitem Red_Slim_Potion,.@total_red01;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10369",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Potion,.@yellpotion_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10369
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Potion,.@yellpotion_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10370",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Cylinder,.@yelltube_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10370
+          ],
+          "required_source_literals": [
+            "delitem Empty_Cylinder,.@yelltube_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10371",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Medicine_Bowl,.@yellcup_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10371
+          ],
+          "required_source_literals": [
+            "delitem Medicine_Bowl,.@yellcup_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10372",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Banana,.@yellbanana_send; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10372
+          ],
+          "required_source_literals": [
+            "delitem Banana,.@yellbanana_send;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun02_baba_yaga_rus32_branch_for_9667_10374",
+      "unit": "E1-mosk_dun02_baba_yaga_rus32_branch_for_9667",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba Yaga#rus32"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Slim_Potion,.@total_yell01; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10374
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Slim_Potion,.@total_yell01;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

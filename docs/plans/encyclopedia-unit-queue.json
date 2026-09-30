@@ -19310,7 +19310,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Baba Yaga#rus32",
@@ -19329,7 +19329,25 @@
       ],
       "size_lines": 750,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:54:09Z activated",
+        "2026-09-30T16:54:09Z validated",
+        "2026-09-30T16:54:09Z verified: 27 claims supported",
+        "2026-09-30T16:54:33Z accepted",
+        "2026-09-30T16:54:33Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1a22c34271811904802ac1bca343c0a5572cfdcd68ab47dcb550ace92b1f860e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mosk_dun02_noisy_coffin_rus36_branch_for_10707",
