@@ -8,6 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
+    "E2_verified": 8,
     "E3_unknown": 973
   },
   "entries": [
@@ -86730,6 +86731,388 @@
           ],
           "required_source_literals": [
             "getitem Forbidden_Secret_Art,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_105",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#alb2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#alb2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            105,
+            106,
+            107,
+            108,
+            109
+          ],
+          "required_source_literals": [
+            "alberta_in,175,97,4\ttrader\tWeapon Dealer#alb2\t4_KID01,{",
+            "OnInit:",
+            "sellitem Town_Sword;",
+            "sellitem Cinquedea;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_112",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#alde"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#alde is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126
+          ],
+          "required_source_literals": [
+            "aldeba_in,20,60,0\ttrader\tArmor Dealer#alde\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Helm;",
+            "sellitem Buckler;",
+            "sellitem Shield;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Padded_Armor;",
+            "sellitem Chain_Mail;",
+            "sellitem Plate_Armor;",
+            "sellitem Manteau;",
+            "sellitem Boots;",
+            "sellitem Novice_Armlet;",
+            "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_128",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#alde"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#alde is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138
+          ],
+          "required_source_literals": [
+            "aldeba_in,28,54,0\ttrader\tWeapon Dealer#alde\t1_M_03,{",
+            "OnInit:",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Dirk;",
+            "sellitem Dagger;",
+            "sellitem Stiletto;",
+            "sellitem Gladius;",
+            "sellitem Damascus;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_140",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#alde2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#alde2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            140,
+            141,
+            142,
+            143,
+            144
+          ],
+          "required_source_literals": [
+            "aldeba_in,22,47,4\ttrader\tWeapon Dealer#alde2\t4_M_06,{",
+            "OnInit:",
+            "sellitem Town_Sword;",
+            "sellitem Cinquedea;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_146",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#alde"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#alde is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159
+          ],
+          "required_source_literals": [
+            "aldeba_in,94,56,5\ttrader\tTool Dealer#alde\t4_M_01,{",
+            "OnInit:",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_53",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Item Collector#alb"
+      },
+      "result": "verified",
+      "statement": "Item Collector#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "required_source_literals": [
+            "alberta_in,165,96,0\ttrader\tItem Collector#alb\t1_F_MERCHANT_02,{",
+            "OnInit:",
+            "sellitem Scell;",
+            "sellitem Monsters_Feed;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_59",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#alb"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84
+          ],
+          "required_source_literals": [
+            "alberta_in,180,15,0\ttrader\tArmor Dealer#alb\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Boots;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Glasses;",
+            "sellitem Sunglasses;",
+            "sellitem Divers_Goggles;",
+            "sellitem Cap;",
+            "sellitem Cotton_Shirt;",
+            "sellitem Leather_Jacket;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Silver_Robe;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Padded_Armor;",
+            "sellitem Chain_Mail;",
+            "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_53_86",
+      "unit": "E2-npc-merchants-shops-txt-53",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#alb"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103
+          ],
+          "required_source_literals": [
+            "alberta_in,188,21,0\ttrader\tWeapon Dealer#alb\t1_M_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Sword;",
+            "sellitem Falchion;",
+            "sellitem Blade;",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Rod;",
+            "sellitem Bow;",
+            "sellitem Axe;",
+            "sellitem Battle_Axe;",
+            "sellitem Hammer;",
+            "sellitem Buster;",
+            "sellitem Two_Handed_Axe;",
+            "}"
           ]
         }
       ],
