@@ -26253,7 +26253,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#Valkyrie Warp",
@@ -26272,7 +26272,25 @@
       ],
       "size_lines": 53,
       "reason": "refused by the braced one-item prover: call",
-      "history": []
+      "history": [
+        "2026-09-30T17:57:55Z activated",
+        "2026-09-30T17:57:55Z validated",
+        "2026-09-30T17:57:55Z verified: 3 claims supported",
+        "2026-09-30T17:58:18Z accepted",
+        "2026-09-30T17:58:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "354d193bb4a711e9d39b90b717ee76f9e98488f295c49c3ff9c40016217a4289",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-himinn_valkyrie_sign_branch_for_8199",
