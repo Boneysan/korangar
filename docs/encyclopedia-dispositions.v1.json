@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1791,
+    "E1_unknown": 1795,
     "E1_verified": 1
   },
   "entries": [
@@ -44129,6 +44129,106 @@
           ],
           "required_source_literals": [
             "getitem Pass,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_suspicious_man_oliver_h_branch_for_3111_3185",
+      "unit": "E1-yuno_in04_suspicious_man_oliver_h_branch_for_3111",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#oliver_h"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mami_Photo_Album,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            3185
+          ],
+          "required_source_literals": [
+            "delitem Mami_Photo_Album,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_suspicious_man_oliver_h_branch_for_3111_3187",
+      "unit": "E1-yuno_in04_suspicious_man_oliver_h_branch_for_3111",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#oliver_h"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Author_Autograph,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            3187
+          ],
+          "required_source_literals": [
+            "getitem Author_Autograph,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_suspicious_man_oliver_h_branch_for_3111_3188",
+      "unit": "E1-yuno_in04_suspicious_man_oliver_h_branch_for_3111",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#oliver_h"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Author_Memo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            3188
+          ],
+          "required_source_literals": [
+            "getitem Author_Memo,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_suspicious_man_oliver_h_branch_for_3111_3189",
+      "unit": "E1-yuno_in04_suspicious_man_oliver_h_branch_for_3111",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#oliver_h"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            3189
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
           ]
         }
       ],
