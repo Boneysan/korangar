@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 194,
+    "E2_verified": 202,
     "E3_unknown": 973
   },
   "entries": [
@@ -95290,6 +95290,446 @@
             "sellitem Silver_Robe;",
             "sellitem Wooden_Mail;",
             "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_451",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#prt"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            458,
+            459,
+            460,
+            461
+          ],
+          "required_source_literals": [
+            "prt_fild05,290,221,2\ttrader\tTool Dealer#prt\t4_M_01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_463",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trap Specialist#prt"
+      },
+      "result": "verified",
+      "statement": "Trap Specialist#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            463,
+            464,
+            465,
+            466,
+            467
+          ],
+          "required_source_literals": [
+            "prt_in,109,68,4\ttrader\tTrap Specialist#prt\t1_F_01,{",
+            "OnInit:",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Special_Alloy_Trap_Box;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_469",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Marketeer#prt"
+      },
+      "result": "verified",
+      "statement": "Black Marketeer#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            469,
+            470,
+            471,
+            472,
+            473,
+            474,
+            475,
+            476,
+            477,
+            478,
+            479,
+            480,
+            481,
+            482,
+            483,
+            484,
+            485,
+            486,
+            487,
+            488,
+            489,
+            490,
+            491,
+            492,
+            493
+          ],
+          "required_source_literals": [
+            "prt_in,175,137,4\ttrader\tBlack Marketeer#prt\t1_M_03,{",
+            "OnInit:",
+            "sellitem Flame_Thrower;",
+            "sellitem Accelerator;",
+            "sellitem Hovering_Booster;",
+            "sellitem Suicidal_Device;",
+            "sellitem Shape_Shifter;",
+            "sellitem Cooling_Device;",
+            "sellitem Mag_Field_Generator;",
+            "sellitem Barrier_Builder;",
+            "sellitem Repair_Kit;",
+            "sellitem Cannon_Ball;",
+            "sellitem Holy_Cannon_Ball;",
+            "sellitem Dark_Cannon_Ball;",
+            "sellitem Soul_Cannon_Ball;",
+            "sellitem Iron_Cannon_Ball;",
+            "sellitem Vulcan_Bullet;",
+            "sellitem Magic_Gear_Fuel;",
+            "sellitem Liquid_Condensed_Bullet;",
+            "sellitem Monkey_Wrench;",
+            "sellitem Camouflage_Generator;",
+            "sellitem RepairA;",
+            "sellitem RepairB;",
+            "sellitem RepairC;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_495",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Part-Timer#sc_prt"
+      },
+      "result": "verified",
+      "statement": "Part-Timer#sc_prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            495,
+            496,
+            497,
+            498,
+            499
+          ],
+          "required_source_literals": [
+            "s_atelier,17,110,1\ttrader\tPart-Timer#sc_prt\t1_F_02,{",
+            "OnInit:",
+            "sellitem Surface_Paint;",
+            "sellitem Face_Paint;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_502",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Amatsu Trader#nin"
+      },
+      "result": "verified",
+      "statement": "Amatsu Trader#nin is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            502,
+            503,
+            504,
+            505,
+            506,
+            507,
+            508,
+            509,
+            510,
+            511,
+            512,
+            513,
+            514,
+            515,
+            516,
+            517,
+            518,
+            519,
+            520,
+            521,
+            522
+          ],
+          "required_source_literals": [
+            "prontera,178,244,3\ttrader\tAmatsu Trader#nin\t4_M_01,{",
+            "OnInit:",
+            "sellitem Shuriken;",
+            "sellitem Nimbus_Shuriken;",
+            "sellitem Flash_Shuriken;",
+            "sellitem Sharp_Leaf_Shuriken;",
+            "sellitem Thorn_Needle_Shuriken;",
+            "sellitem Explosive_Kunai;",
+            "sellitem Makibishi;",
+            "sellitem Arm_Guard;",
+            "sellitem Fox_Armguard;",
+            "sellitem Special_Ninja_Suit;",
+            "sellitem Flame_Stone;",
+            "sellitem Ice_Stone;",
+            "sellitem Wind_Stone;",
+            "sellitem Shadow_Orb;",
+            "sellitem Charm_Fire;",
+            "sellitem Charm_Ice;",
+            "sellitem Charm_Wind;",
+            "sellitem Charm_Earth;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_524",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#prt"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            524,
+            525,
+            526,
+            527,
+            528,
+            529,
+            530,
+            531,
+            532,
+            533,
+            534,
+            535,
+            536,
+            537,
+            538,
+            539,
+            540,
+            541,
+            542,
+            543,
+            544,
+            545,
+            546
+          ],
+          "required_source_literals": [
+            "prontera,218,211,4\ttrader\tPet Groomer#prt\t4_M_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_548",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Rebellion Weapon Vending"
+      },
+      "result": "verified",
+      "statement": "Rebellion Weapon Vending is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            548,
+            549,
+            550,
+            551,
+            552,
+            553,
+            554,
+            555,
+            556,
+            557,
+            558,
+            559,
+            560,
+            561
+          ],
+          "required_source_literals": [
+            "prontera,92,209,4\ttrader\tRebellion Weapon Vending\t2_VENDING_MACHINE1,{",
+            "OnInit:",
+            "sellitem H_FEATHER_H_FIRE;",
+            "sellitem ALTAIR_ARES;",
+            "sellitem COLORSCOPE;",
+            "sellitem RAG203;",
+            "sellitem DEATHFIRE;",
+            "sellitem R_THUNDER;",
+            "sellitem P_BREAKER;",
+            "sellitem MINIMAY;",
+            "sellitem TEMPEST;",
+            "sellitem END_OF_HORIZON;",
+            "sellitem Southern_Cross_R;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_451_563",
+      "unit": "E2-npc-re-merchants-shops-txt-451",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Rebellion Prop Vending"
+      },
+      "result": "verified",
+      "statement": "Rebellion Prop Vending is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            563,
+            564,
+            565,
+            566,
+            567,
+            568,
+            569,
+            570,
+            571,
+            572,
+            573,
+            574,
+            575,
+            576,
+            577,
+            578,
+            579,
+            580,
+            581,
+            582,
+            583,
+            584,
+            585,
+            586
+          ],
+          "required_source_literals": [
+            "prontera,96,209,4\ttrader\tRebellion Prop Vending\t2_VENDING_MACHINE1,{",
+            "OnInit:",
+            "sellitem Slug_Bullet_1;",
+            "sellitem Slug_Bullet_2;",
+            "sellitem Slug_Bullet_3;",
+            "sellitem Fullmetal_Jacket_Bullet;",
+            "sellitem Mine_Projectile;",
+            "sellitem Dragon_Tail_Missile;",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Bullet;",
+            "sellitem Silver_Bullet_;",
+            "sellitem Shell_Of_Blood_;",
+            "sellitem AP_Ammo;",
+            "sellitem Blaze_Bullet;",
+            "sellitem Freezing_Bullet;",
+            "sellitem Electric_Shock_Bullet;",
+            "sellitem Magical_Stone_Bullet;",
+            "sellitem Sanctified_Bullet;",
+            "sellitem Flare_Sphere_;",
+            "sellitem Lighting_Sphere_;",
+            "sellitem Poison_Sphere_;",
+            "sellitem Blind_Sphere_;",
+            "sellitem Freezing_Sphere_;",
             "}"
           ]
         }
