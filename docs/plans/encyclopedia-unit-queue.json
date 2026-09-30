@@ -28343,7 +28343,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Survival Instructor#jr01",
@@ -28362,7 +28362,25 @@
       ],
       "size_lines": 282,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:17:18Z activated",
+        "2026-09-30T18:17:18Z validated",
+        "2026-09-30T18:17:18Z verified: 3 claims supported",
+        "2026-09-30T18:17:41Z accepted",
+        "2026-09-30T18:17:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "99832b7699b69a5b7bcd740ebb47fd82850ca3c9e66cb055ab26f68a77d05e8d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-tur_dun01_test_instructor_jr02_branch_for_321",

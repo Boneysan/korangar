@@ -67776,6 +67776,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_survival_instructor_jr01_branch_for_38_212",
+      "unit": "E1-tur_dun01_survival_instructor_jr01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Survival Instructor#jr01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bow__,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            212
+          ],
+          "required_source_literals": [
+            "getitem Bow__,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_survival_instructor_jr01_branch_for_38_213",
+      "unit": "E1-tur_dun01_survival_instructor_jr01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Survival Instructor#jr01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Fly_Wing,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            213
+          ],
+          "required_source_literals": [
+            "getitem N_Fly_Wing,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_survival_instructor_jr01_branch_for_38_214",
+      "unit": "E1-tur_dun01_survival_instructor_jr01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Survival Instructor#jr01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arrow,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            214
+          ],
+          "required_source_literals": [
+            "getitem Arrow,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
