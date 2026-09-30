@@ -136785,6 +136785,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2179_npc_quests_quests_13_2_txt_4717",
+      "unit": "E5-chain-2179",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2182; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4717
+          ],
+          "required_source_literals": [
+            "erasequest 2182;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2179_npc_quests_quests_13_2_txt_4760",
+      "unit": "E5-chain-2179",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2179
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2179; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4760
+          ],
+          "required_source_literals": [
+            "setquest 2179+(atoi(.@rand_dayq$[2])-2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2179_npc_quests_quests_13_2_txt_4787",
+      "unit": "E5-chain-2179",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2179
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2179; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4787
+          ],
+          "required_source_literals": [
+            "changequest 2179+(ep13_2_tre-2),2182;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
