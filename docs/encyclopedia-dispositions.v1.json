@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 902
+    "E3_unknown": 905
   },
   "entries": [
     {
@@ -86980,6 +86980,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_12134_script_untranslated",
+      "unit": "E3-unknown-zeny",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12134 is not summarized: the translator does not interpret the quoted statement (Zeny).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            87556
+          ],
+          "required_source_literals": [
+            "Script: <\" Zeny += rand(1000,10000); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_12211_script_untranslated",
       "unit": "E3-unknown-control-callfunc",
       "package": "E3",
@@ -96774,6 +96801,33 @@
           ],
           "required_source_literals": [
             "Script: <\" callfunc(\"F_CashReduceStat\", bLuk, -1, LUK_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22876_script_untranslated",
+      "unit": "E3-unknown-zeny",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22876
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22876 is not summarized: the translator does not interpret the quoted statement (Zeny).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149613
+          ],
+          "required_source_literals": [
+            "Script: <\" Zeny += rand(500, 550); \">"
           ]
         }
       ],
@@ -111030,6 +111084,33 @@
           ],
           "required_source_literals": [
             "Script: <\" callfunc \"SetPalete\",2; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_668_script_untranslated",
+      "unit": "E3-unknown-zeny",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          668
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 668 is not summarized: the translator does not interpret the quoted statement (Zeny).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            1898
+          ],
+          "required_source_literals": [
+            "Script: <\" Zeny += rand(1000,10000); \">"
           ]
         }
       ],
