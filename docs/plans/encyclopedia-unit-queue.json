@@ -37600,7 +37600,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Romel#malaya",
@@ -37619,7 +37619,25 @@
       ],
       "size_lines": 156,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:42:39Z activated",
+        "2026-09-30T19:42:40Z validated",
+        "2026-09-30T19:42:40Z verified: 3 claims supported",
+        "2026-09-30T19:43:03Z accepted",
+        "2026-09-30T19:43:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "737ef5177fc0f8d7c89cbeface3cdf30c45d7e4f2a44be820c318e008c0bc417",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_talah_malaya_branch_for_1339",
