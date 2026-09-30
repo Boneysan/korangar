@@ -84726,6 +84726,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_ghost_diwata_branch_for_2490_2636",
+      "unit": "E1-ma_in01_ghost_diwata_branch_for_2490",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghost Diwata"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2636
+          ],
+          "required_source_literals": [
+            "delitem Offering_Bouquet, 1; // Memorial_Boquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_ghost_diwata_branch_for_2490_2729",
+      "unit": "E1-ma_in01_ghost_diwata_branch_for_2490",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghost Diwata"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2729
+          ],
+          "required_source_literals": [
+            "delitem Offering_Bouquet, 1; // Memorial_Boquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

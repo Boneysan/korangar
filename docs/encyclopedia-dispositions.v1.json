@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3384,
+    "E1_unknown": 3386,
     "E1_verified": 1
   },
   "entries": [
@@ -33479,6 +33479,56 @@
           ],
           "required_source_literals": [
             "getitem Sharp_Bamboo, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_ghost_diwata_branch_for_2490_2636",
+      "unit": "E1-ma_in01_ghost_diwata_branch_for_2490",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghost Diwata"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2636
+          ],
+          "required_source_literals": [
+            "delitem Offering_Bouquet, 1; // Memorial_Boquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_ghost_diwata_branch_for_2490_2729",
+      "unit": "E1-ma_in01_ghost_diwata_branch_for_2490",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghost Diwata"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2729
+          ],
+          "required_source_literals": [
+            "delitem Offering_Bouquet, 1; // Memorial_Boquet"
           ]
         }
       ],
