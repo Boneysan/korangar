@@ -3151,6 +3151,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_rhehe_ravies_gq_fes03_branch_for_454_529",
+      "unit": "E1-rachel_rhehe_ravies_gq_fes03_branch_for_454",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rhehe Ravies#gq_fes03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Valkyrie_Gift,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/god_se_festival.txt",
+          "lines": [
+            529
+          ],
+          "required_source_literals": [
+            "delitem Valkyrie_Gift,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

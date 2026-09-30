@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 121,
+    "E1_unknown": 122,
     "E1_verified": 1
   },
   "entries": [
@@ -2529,6 +2529,31 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_rhehe_ravies_gq_fes03_branch_for_454_529",
+      "unit": "E1-rachel_rhehe_ravies_gq_fes03_branch_for_454",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rhehe Ravies#gq_fes03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Valkyrie_Gift,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/god_se_festival.txt",
+          "lines": [
+            529
+          ],
+          "required_source_literals": [
+            "delitem Valkyrie_Gift,1;"
           ]
         }
       ],
