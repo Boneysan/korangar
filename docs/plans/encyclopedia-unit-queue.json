@@ -21068,7 +21068,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mystic Lady",
@@ -21087,7 +21087,22 @@
       ],
       "size_lines": 45,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:10:14Z activated",
+        "2026-09-30T17:10:14Z validated",
+        "2026-09-30T17:10:15Z verified: 0 claims supported",
+        "2026-09-30T17:10:38Z accepted",
+        "2026-09-30T17:10:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bbe09bcfb76a98d79351db5d0d639eef9c535fd24301bf4f8910b331e65aa83e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_in02_boy_branch_for_138",
