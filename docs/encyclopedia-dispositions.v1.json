@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2059,
+    "E1_unknown": 2062,
     "E1_verified": 1
   },
   "entries": [
@@ -47354,6 +47354,81 @@
           ],
           "required_source_literals": [
             "getitem Cotton_Shirt_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_strange_old_man_ve_branch_for_310_420",
+      "unit": "E1-ve_in_strange_old_man_ve_branch_for_310",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Old Man#ve"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            420
+          ],
+          "required_source_literals": [
+            "delitem Steel,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_strange_old_man_ve_branch_for_310_421",
+      "unit": "E1-ve_in_strange_old_man_ve_branch_for_310",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Old Man#ve"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Root_Of_Maneater,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            421
+          ],
+          "required_source_literals": [
+            "delitem Root_Of_Maneater,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_strange_old_man_ve_branch_for_310_422",
+      "unit": "E1-ve_in_strange_old_man_ve_branch_for_310",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Old Man#ve"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Heart,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            422
+          ],
+          "required_source_literals": [
+            "delitem Ice_Heart,2;"
           ]
         }
       ],
