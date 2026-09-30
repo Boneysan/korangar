@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1609,
+    "E1_unknown": 1610,
     "E1_verified": 1
   },
   "entries": [
@@ -12304,6 +12304,31 @@
           ],
           "required_source_literals": [
             "getitem Slate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gon_fild01_gonknife_branch_for_3815_3825",
+      "unit": "E1-gon_fild01_gonknife_branch_for_3815",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#gonknife"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3825
+          ],
+          "required_source_literals": [
+            "getitem Knife,1;"
           ]
         }
       ],

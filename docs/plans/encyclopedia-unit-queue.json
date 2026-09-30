@@ -15438,7 +15438,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#gonknife",
@@ -15457,7 +15457,25 @@
       ],
       "size_lines": 14,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:18:36Z activated",
+        "2026-09-30T16:18:36Z validated",
+        "2026-09-30T16:18:36Z verified: 1 claims supported",
+        "2026-09-30T16:18:59Z accepted",
+        "2026-09-30T16:18:59Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1d69dd53664c75894fd75d579d0279f27492e14d3ef55a80cf03a505e34d5182",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hu_in01_allen_schuwell_branch_for_40",
