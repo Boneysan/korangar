@@ -14851,6 +14851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_vila_vicious_dog_khp1_branch_for_2363_2390",
+      "unit": "E1-kh_vila_vicious_dog_khp1_branch_for_2363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vicious Dog#khp1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pet_Food,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            2390
+          ],
+          "required_source_literals": [
+            "delitem Pet_Food,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
