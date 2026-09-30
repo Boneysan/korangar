@@ -50751,6 +50751,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_in01_book_ra_in_branch_for_2623_2635",
+      "unit": "E1-ra_in01_book_ra_in_branch_for_2623",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Book#ra_in"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Diary_Of_Blue,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2635
+          ],
+          "required_source_literals": [
+            "getitem Diary_Of_Blue,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
