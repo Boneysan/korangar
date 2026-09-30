@@ -78851,6 +78851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_wuhuru_eclbig_branch_for_3851_3974",
+      "unit": "E1-ecl_in02_wuhuru_eclbig_branch_for_3851",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhuru#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Younger_Bro_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3974
+          ],
+          "required_source_literals": [
+            "delitem Younger_Bro_Letter,1; //Younger_Bro_Letter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
