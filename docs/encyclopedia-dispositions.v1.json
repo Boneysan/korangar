@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 362,
+    "E1_unknown": 364,
     "E1_verified": 1
   },
   "entries": [
@@ -7029,6 +7029,56 @@
           ],
           "required_source_literals": [
             "else getitem 504, 12;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_bishop_w_branch_for_564_696",
+      "unit": "E1-prt_church_bishop_w_branch_for_564",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bishop#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bride_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/marriage.txt",
+          "lines": [
+            696
+          ],
+          "required_source_literals": [
+            "getitem Bride_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_bishop_w_branch_for_564_700",
+      "unit": "E1-prt_church_bishop_w_branch_for_564",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bishop#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bridegroom_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/marriage.txt",
+          "lines": [
+            700
+          ],
+          "required_source_literals": [
+            "getitem Bridegroom_Ring,1;"
           ]
         }
       ],
