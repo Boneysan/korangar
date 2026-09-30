@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 104,
+    "E2_verified": 112,
     "E3_unknown": 973
   },
   "entries": [
@@ -88030,6 +88030,342 @@
             "sellitem Coat;",
             "sellitem Thief_Clothes;",
             "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1320",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#moc2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#moc2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1320,
+            1321,
+            1322,
+            1323,
+            1324
+          ],
+          "required_source_literals": [
+            "morocc_in,132,57,0\ttrader\tWeapon Dealer#moc2\t4W_M_03,{",
+            "OnInit:",
+            "sellitem Town_Sword;",
+            "sellitem Cinquedea;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1327",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#mosk"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#mosk is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1327,
+            1328,
+            1329,
+            1330,
+            1331,
+            1332,
+            1333,
+            1334,
+            1335,
+            1336,
+            1337,
+            1338,
+            1339,
+            1340,
+            1341
+          ],
+          "required_source_literals": [
+            "mosk_in,21,254,5\ttrader\tTool Dealer#mosk\t4_M_RUSMAN2,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem Arrow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1343",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#mosk"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#mosk is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1343,
+            1344,
+            1345,
+            1346,
+            1347,
+            1348,
+            1349,
+            1350,
+            1351,
+            1352,
+            1353,
+            1354,
+            1355
+          ],
+          "required_source_literals": [
+            "mosk_in,31,180,3\ttrader\tWeapon Dealer#mosk\t4_M_RUSMAN2,{",
+            "OnInit:",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1357",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#mosk"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#mosk is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1357,
+            1358,
+            1359,
+            1360,
+            1361,
+            1362,
+            1363,
+            1364,
+            1365,
+            1366,
+            1367,
+            1368,
+            1369,
+            1370,
+            1371
+          ],
+          "required_source_literals": [
+            "mosk_in,79,178,1\ttrader\tArmor Dealer#mosk\t4_F_RUSWOMAN3,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1373",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#mosk"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#mosk is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1373,
+            1374,
+            1375,
+            1376,
+            1377,
+            1378,
+            1379
+          ],
+          "required_source_literals": [
+            "moscovia,152,71,4\ttrader\tFruit Gardener#mosk\t4_M_RUSMAN2,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1381",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vendor from Milk Ranch#m"
+      },
+      "result": "verified",
+      "statement": "Vendor from Milk Ranch#m is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1381,
+            1382,
+            1383,
+            1384
+          ],
+          "required_source_literals": [
+            "moscovia,199,110,3\ttrader\tVendor from Milk Ranch#m\t4_F_RUSWOMAN1,{",
+            "OnInit:",
+            "sellitem Milk;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1387",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Axe Dealer#nif"
+      },
+      "result": "verified",
+      "statement": "Axe Dealer#nif is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1387,
+            1388,
+            1389,
+            1390,
+            1391,
+            1392,
+            1393,
+            1394
+          ],
+          "required_source_literals": [
+            "nif_in,37,93,1\ttrader\tAxe Dealer#nif\t4_NFCOFFIN,{",
+            "OnInit:",
+            "sellitem Axe;",
+            "sellitem Battle_Axe;",
+            "sellitem Hammer;",
+            "sellitem Buster;",
+            "sellitem Two_Handed_Axe;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1320_1396",
+      "unit": "E2-npc-merchants-shops-txt-1320",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#nif"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#nif is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1396,
+            1397,
+            1398,
+            1399,
+            1400,
+            1401,
+            1402,
+            1403,
+            1404
+          ],
+          "required_source_literals": [
+            "nif_in,37,84,1\ttrader\tArmor Dealer#nif\t4_NFCOFFIN,{",
+            "OnInit:",
+            "sellitem Hood;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Manteau;",
             "}"
           ]
         }
