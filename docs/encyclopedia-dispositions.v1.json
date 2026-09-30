@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2807,
+    "E1_unknown": 2810,
     "E1_verified": 1
   },
   "entries": [
@@ -19404,6 +19404,81 @@
           ],
           "required_source_literals": [
             "getitem N_Falchion,1; // N_Falchion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_information_staff_0_branch_for_1136_1436",
+      "unit": "E1-izlude_information_staff_0_branch_for_1136",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Information Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Fly_Wing,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1436
+          ],
+          "required_source_literals": [
+            "getitem(N_Fly_Wing, 20); // N_Fly_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_information_staff_0_branch_for_1136_1437",
+      "unit": "E1-izlude_information_staff_0_branch_for_1136",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Information Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Butterfly_Wing,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1437
+          ],
+          "required_source_literals": [
+            "getitem(N_Butterfly_Wing, 10); // N_Butterfly_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_information_staff_0_branch_for_1136_1438",
+      "unit": "E1-izlude_information_staff_0_branch_for_1136",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Information Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1438
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 20); // Novice_Potion"
           ]
         }
       ],
