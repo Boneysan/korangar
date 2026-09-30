@@ -69851,6 +69851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox03_branch_for_2092_2198",
+      "unit": "E1-job3_sha01_keybox03_branch_for_2092",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mirth_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2198
+          ],
+          "required_source_literals": [
+            "getitem Mirth_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
