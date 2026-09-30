@@ -111863,6 +111863,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1191_script_untranslated",
+      "unit": "E3-unknown-bonus-baspd-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1191
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1191 is not summarized: the translator does not interpret the quoted statement (bonus bAspd (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            6547
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAspd,(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_21004_script_untranslated",
+      "unit": "E3-unknown-bonus-baspd-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          21004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 21004 is not summarized: the translator does not interpret the quoted statement (bonus bAspd (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147838
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAspd,(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
