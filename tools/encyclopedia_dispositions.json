@@ -65551,6 +65551,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_pleasant_featured_lady_s_branch_for_9095_9215",
+      "unit": "E1-niflheim_pleasant_featured_lady_s_branch_for_9095",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pleasant-Featured Lady#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Serins_Gold_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9215
+          ],
+          "required_source_literals": [
+            "getitem Serins_Gold_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_pleasant_featured_lady_s_branch_for_9095_9559",
+      "unit": "E1-niflheim_pleasant_featured_lady_s_branch_for_9095",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pleasant-Featured Lady#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Serins_Gold_Ring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9559
+          ],
+          "required_source_literals": [
+            "delitem Serins_Gold_Ring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_pleasant_featured_lady_s_branch_for_9095_9737",
+      "unit": "E1-niflheim_pleasant_featured_lady_s_branch_for_9095",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pleasant-Featured Lady#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Serins_Gold_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9737
+          ],
+          "required_source_literals": [
+            "delitem Serins_Gold_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_pleasant_featured_lady_s_branch_for_9095_9747",
+      "unit": "E1-niflheim_pleasant_featured_lady_s_branch_for_9095",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pleasant-Featured Lady#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Serins_Gold_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9747
+          ],
+          "required_source_literals": [
+            "delitem Serins_Gold_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
