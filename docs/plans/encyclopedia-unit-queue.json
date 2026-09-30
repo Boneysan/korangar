@@ -52056,7 +52056,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bDex (expression)",
@@ -52173,7 +52173,25 @@
       ],
       "size_lines": 8,
       "reason": "8 item script(s) first stop at `bonus bDex (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:16:22Z activated",
+        "2026-09-30T20:16:22Z validated",
+        "2026-09-30T20:16:22Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:16:46Z accepted",
+        "2026-09-30T20:16:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "282f282e940991ca2063f51a7c9fa282a57edf50e6e137315b172c2f144bff71",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bmdef-expression",

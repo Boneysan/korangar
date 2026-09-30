@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 778
+    "E3_unknown": 786
   },
   "entries": [
     {
@@ -90112,6 +90112,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_15126_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15126
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15126 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125873
+          ],
+          "required_source_literals": [
+            "bonus bDex, getrefine() / 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_15128_script_untranslated",
       "unit": "E3-unknown-bonus-bmaxhprate-expression",
       "package": "E3",
@@ -90132,6 +90159,60 @@
           ],
           "required_source_literals": [
             "bonus bMaxHPrate,(getrefine()/3)*4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15129_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15129
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15129 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125910
+          ],
+          "required_source_literals": [
+            "bonus bDex, getrefine() / 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15156_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15156 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125986
+          ],
+          "required_source_literals": [
+            "bonus bDex, getrefine();"
           ]
         }
       ],
@@ -91131,6 +91212,87 @@
           ],
           "required_source_literals": [
             "bonus bMatkRate, 3 * (getrefine() / 2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1694_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1694
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1694 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18751
+          ],
+          "required_source_literals": [
+            "bonus bDex, (getrefine() / 3) * 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1695_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1695
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1695 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18775
+          ],
+          "required_source_literals": [
+            "bonus bDex, (getrefine() / 3) * 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1696_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1696
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1696 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18805
+          ],
+          "required_source_literals": [
+            "bonus bDex, (getrefine() / 2) * 3;"
           ]
         }
       ],
@@ -92724,6 +92886,33 @@
           ],
           "required_source_literals": [
             "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_19019_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          19019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 19019 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            139206
+          ],
+          "required_source_literals": [
+            "bonus bDex,(getrefine()/2);"
           ]
         }
       ],
@@ -102228,6 +102417,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()<=4) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4392_script_untranslated",
+      "unit": "E3-unknown-bonus-bdex-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4392
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4392 is not summarized: the translator does not interpret the quoted statement (bonus bDex (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46131
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bDex,readparam(bVit)/18; \">"
           ]
         }
       ],
