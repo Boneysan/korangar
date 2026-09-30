@@ -71651,6 +71651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_archer_teacher_ac_branch_for_8593_8752",
+      "unit": "E1-iz_ac02_archer_teacher_ac_branch_for_8593",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archer Teacher#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Archer_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8752
+          ],
+          "required_source_literals": [
+            "getitem(Archer_Manual, 1); // Archer_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

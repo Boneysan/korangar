@@ -30322,7 +30322,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Archer Teacher#ac",
@@ -30341,7 +30341,25 @@
       ],
       "size_lines": 309,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:35:26Z activated",
+        "2026-09-30T18:35:27Z validated",
+        "2026-09-30T18:35:27Z verified: 1 claims supported",
+        "2026-09-30T18:35:50Z accepted",
+        "2026-09-30T18:35:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "872df4547cc6d2d0c7cc727b62405eb4faf211589a1c5d8eb2fd1324a8145796",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-iz_ac02_swordman_trainer_ac_branch_for_8907",
