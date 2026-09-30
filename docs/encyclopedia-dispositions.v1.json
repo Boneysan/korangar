@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2375,
+    "E1_unknown": 2395,
     "E1_verified": 1
   },
   "entries": [
@@ -48879,6 +48879,506 @@
           ],
           "required_source_literals": [
             "else getitem Machoman_Glasses,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1052",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Webfoot,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1052
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Webfoot,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1055",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1055
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1058",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fin,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1058
+          ],
+          "required_source_literals": [
+            "delitem Fin,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1061",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gill,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1061
+          ],
+          "required_source_literals": [
+            "delitem Gill,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1064",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Scale,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1064
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Scale,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1067",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Nipper,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1067
+          ],
+          "required_source_literals": [
+            "delitem Nipper,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1070",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Conch,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1070
+          ],
+          "required_source_literals": [
+            "delitem Conch,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1073",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tentacle,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1073
+          ],
+          "required_source_literals": [
+            "delitem Tentacle,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1076",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sharp_Scale,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1076
+          ],
+          "required_source_literals": [
+            "delitem Sharp_Scale,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1079",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crap_Shell,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1079
+          ],
+          "required_source_literals": [
+            "delitem Crap_Shell,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1082",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clam_Shell,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1082
+          ],
+          "required_source_literals": [
+            "delitem Clam_Shell,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1085",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flesh_Of_Clam,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1085
+          ],
+          "required_source_literals": [
+            "delitem Flesh_Of_Clam,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1088",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1088
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1091",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chinese_Ink,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1091
+          ],
+          "required_source_literals": [
+            "delitem Chinese_Ink,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1094",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tendon,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1094
+          ],
+          "required_source_literals": [
+            "delitem Tendon,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1097",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Detonator,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1097
+          ],
+          "required_source_literals": [
+            "delitem Detonator,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1100",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Single_Cell,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1100
+          ],
+          "required_source_literals": [
+            "delitem Single_Cell,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1103",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tooth_Of_Ancient_Fish,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1103
+          ],
+          "required_source_literals": [
+            "delitem Tooth_Of_Ancient_Fish,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1106",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lip_Of_Ancient_Fish,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1106
+          ],
+          "required_source_literals": [
+            "delitem Lip_Of_Ancient_Fish,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_researcher_g3_branch_for_913_1109",
+      "unit": "E1-que_god01_researcher_g3_branch_for_913",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#G3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            1109
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,9;"
           ]
         }
       ],
