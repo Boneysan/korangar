@@ -114939,6 +114939,370 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_613",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Magical Item Seller#gef"
+      },
+      "result": "verified",
+      "statement": "Magical Item Seller#gef is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            613,
+            614,
+            615,
+            616,
+            617,
+            618,
+            619,
+            620,
+            621,
+            622,
+            623
+          ],
+          "required_source_literals": [
+            "geffen_in,77,173,0\ttrader\tMagical Item Seller#gef\t1_M_WIZARD,{",
+            "OnInit:",
+            "sellitem Blue_Gemstone;",
+            "sellitem Rod;",
+            "sellitem Wand;",
+            "sellitem Staff;",
+            "sellitem Arc_Wand;",
+            "sellitem Circlet;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_626",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#gon"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#gon is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            626,
+            627,
+            628,
+            629,
+            630,
+            631,
+            632,
+            633,
+            634,
+            635,
+            636,
+            637,
+            638,
+            639,
+            640,
+            641
+          ],
+          "required_source_literals": [
+            "gonryun,147,84,5\ttrader\tTool Dealer#gon\t4_M_TWOLDMAN,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Iron_Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_643",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#gon"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#gon is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            643,
+            644,
+            645,
+            646,
+            647,
+            648,
+            649,
+            650,
+            651,
+            652,
+            653,
+            654,
+            655
+          ],
+          "required_source_literals": [
+            "gonryun,174,101,3\ttrader\tWeapon Dealer#gon\t4_M_TWBOY,{",
+            "OnInit:",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_657",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#gon"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#gon is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            657,
+            658,
+            659,
+            660,
+            661,
+            662,
+            663,
+            664,
+            665,
+            666,
+            667,
+            668,
+            669,
+            670,
+            671
+          ],
+          "required_source_literals": [
+            "gonryun,173,84,3\ttrader\tArmor Dealer#gon\t4_F_TWGIRL,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_674",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vendor from Milk Ranch#h"
+      },
+      "result": "verified",
+      "statement": "Vendor from Milk Ranch#h is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            674,
+            675,
+            676,
+            677
+          ],
+          "required_source_literals": [
+            "hugel,105,169,5\ttrader\tVendor from Milk Ranch#h\t4_F_01,{",
+            "OnInit:",
+            "sellitem Milk;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_679",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vegetable Gardener#hu"
+      },
+      "result": "verified",
+      "statement": "Vegetable Gardener#hu is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            679,
+            680,
+            681,
+            682,
+            683,
+            684,
+            685,
+            686,
+            687
+          ],
+          "required_source_literals": [
+            "hugel,77,167,3\ttrader\tVegetable Gardener#hu\t4_F_HUGRANMA,{",
+            "OnInit:",
+            "sellitem Fruit_Of_Mastela;",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "sellitem Pumpkin;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_689",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#hu"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#hu is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            689,
+            690,
+            691,
+            692,
+            693,
+            694,
+            695,
+            696,
+            697,
+            698,
+            699,
+            700,
+            701,
+            702,
+            703
+          ],
+          "required_source_literals": [
+            "hu_in01,241,368,2\ttrader\tTool Dealer#hu\t1_M_INNKEEPER,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_613_705",
+      "unit": "E2-npc-merchants-shops-txt-613",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#hu2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#hu2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            705,
+            706,
+            707,
+            708,
+            709,
+            710,
+            711
+          ],
+          "required_source_literals": [
+            "hu_in01,252,368,3\ttrader\tTool Dealer#hu2\t4_F_01,{",
+            "OnInit:",
+            "sellitem Blue_Gemstone;",
+            "sellitem Sunglasses;",
+            "sellitem Garlet;",
+            "sellitem Monsters_Feed;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
