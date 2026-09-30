@@ -37247,7 +37247,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kuka#gamer",
@@ -37266,7 +37266,26 @@
       ],
       "size_lines": 321,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:39:27Z activated",
+        "2026-09-30T19:39:27Z validated",
+        "2026-09-30T19:39:27Z verified: 3 claims supported",
+        "2026-09-30T19:39:51Z accepted",
+        "2026-09-30T19:39:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "02598877a692cb00ed2bafd3c7d62eddc0cf64f12e9fbffd9b60d6df79c181ad",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in01_kungkung_gamer_branch_for_9507",

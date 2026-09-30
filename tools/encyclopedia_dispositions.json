@@ -83251,6 +83251,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_kuka_gamer_branch_for_9185_9357",
+      "unit": "E1-mal_in01_kuka_gamer_branch_for_9185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuka#gamer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,.@cans; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            9357
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can, .@cans;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_kuka_gamer_branch_for_9185_9358",
+      "unit": "E1-mal_in01_kuka_gamer_branch_for_9185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuka#gamer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Pocket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            9358
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Pocket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_kuka_gamer_branch_for_9185_9364",
+      "unit": "E1-mal_in01_kuka_gamer_branch_for_9185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuka#gamer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,.@cans; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            9364
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can, .@cans;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
