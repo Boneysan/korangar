@@ -33026,6 +33026,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_manuk_worker_ep13bs_branch_for_6612_6708",
+      "unit": "E1-manuk_worker_ep13bs_branch_for_6612",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Worker#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Hilsrion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6708
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Hilsrion,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_manuk_worker_ep13bs_branch_for_6612_6830",
+      "unit": "E1-manuk_worker_ep13bs_branch_for_6612",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Worker#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Hilsrion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6830
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Hilsrion,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
