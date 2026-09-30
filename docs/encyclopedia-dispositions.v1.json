@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 622
+    "E3_unknown": 636
   },
   "entries": [
     {
@@ -90112,6 +90112,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1640_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1640
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1640 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17489
+          ],
+          "required_source_literals": [
+            "bonus2 bIgnoreMdefRate,RC_DemiPlayer,25+((getrefine()>5)?5:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1641_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -95998,6 +96025,330 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_24168_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24168
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24168 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152666
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_NonBoss,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24169_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24169
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24169 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152675
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_NonBoss,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24170_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24170
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24170 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152684
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_DemiPlayer,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24171_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24171
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24171 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152693
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Demon,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24172_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24172
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24172 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152702
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Brute,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24173_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24173
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24173 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152711
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Insect,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24174_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24174
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24174 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152720
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Fish,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24175_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24175
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24175 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152729
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Dragon,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24176_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24176
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24176 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152738
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Angel,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24177_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24177
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24177 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152747
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Formless,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24178_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24178
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24178 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152756
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Undead,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24179_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24179
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24179 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152765
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bIgnoreMdefRate,RC_Plant,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_24183_script_untranslated",
       "unit": "E3-unknown-bonus-bmaxhp-expression",
       "package": "E3",
@@ -99393,6 +99744,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>14) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4503_script_untranslated",
+      "unit": "E3-unknown-bonus2-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4503
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4503 is not summarized: the translator does not interpret the quoted statement (bonus2 bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47575
+          ],
+          "required_source_literals": [
+            "bonus2 bIgnoreMdefRate,RC_Boss,((getrefine()>14)?25:15);"
           ]
         }
       ],

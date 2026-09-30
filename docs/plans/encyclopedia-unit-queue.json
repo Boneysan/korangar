@@ -49534,7 +49534,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bIgnoreMdefRate (expression)",
@@ -49729,7 +49729,25 @@
       ],
       "size_lines": 14,
       "reason": "14 item script(s) first stop at `bonus2 bIgnoreMdefRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:11:11Z activated",
+        "2026-09-30T20:11:11Z validated",
+        "2026-09-30T20:11:11Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:11:34Z accepted",
+        "2026-09-30T20:11:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d79d9c895b0e00e491d0b50876a99254c39530a609e155b8bb181e679cb15c14",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bsubele-expression",
