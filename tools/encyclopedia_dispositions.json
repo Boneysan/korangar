@@ -32376,6 +32376,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_rune_midgarts_magician_1_branch_for_4163_4269",
+      "unit": "E1-mid_camp_rune_midgarts_magician_1_branch_for_4163",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Midgarts Magician#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Jewel_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4269
+          ],
+          "required_source_literals": [
+            "delitem Red_Jewel_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_rune_midgarts_magician_1_branch_for_4163_4270",
+      "unit": "E1-mid_camp_rune_midgarts_magician_1_branch_for_4163",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Midgarts Magician#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Jewel_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4270
+          ],
+          "required_source_literals": [
+            "delitem Blue_Jewel_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_rune_midgarts_magician_1_branch_for_4163_4370",
+      "unit": "E1-mid_camp_rune_midgarts_magician_1_branch_for_4163",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Midgarts Magician#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unidentified_Mineral,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4370
+          ],
+          "required_source_literals": [
+            "delitem Unidentified_Mineral,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
