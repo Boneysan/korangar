@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 314
+    "E5_unknown": 316
   },
   "entries": [
     {
@@ -111224,6 +111224,60 @@
           ],
           "required_source_literals": [
             "changequest(8042, 8043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8081_npc_quests_quests_ein_txt_5638",
+      "unit": "E5-chain-8081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5638
+          ],
+          "required_source_literals": [
+            "changequest 8086,8087;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8081_npc_quests_quests_ein_txt_5653",
+      "unit": "E5-chain-8081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5653
+          ],
+          "required_source_literals": [
+            "changequest 8081,8082;"
           ]
         }
       ],
