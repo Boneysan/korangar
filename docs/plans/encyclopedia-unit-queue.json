@@ -21109,7 +21109,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Boy",
@@ -21128,7 +21128,22 @@
       ],
       "size_lines": 92,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:10:38Z activated",
+        "2026-09-30T17:10:38Z validated",
+        "2026-09-30T17:10:39Z verified: 0 claims supported",
+        "2026-09-30T17:11:02Z accepted",
+        "2026-09-30T17:11:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9532845a9bb4309281372822b7c0822f5038cdbf2c5ec0d58302df8dcf5b7bf2",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_recruiter_branch_for_53",
