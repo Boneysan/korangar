@@ -4401,6 +4401,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_chivalry_captain_knt_branch_for_44_438",
+      "unit": "E1-prt_in_chivalry_captain_knt_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chivalry Captain#knt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Awakening_Potion,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            438
+          ],
+          "required_source_literals": [
+            "getitem Awakening_Potion,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
