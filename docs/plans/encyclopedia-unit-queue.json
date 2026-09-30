@@ -38826,7 +38826,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Nurse#ma_n1",
@@ -38845,7 +38845,25 @@
       ],
       "size_lines": 575,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:54:04Z activated",
+        "2026-09-30T19:54:05Z validated",
+        "2026-09-30T19:54:05Z verified: 1 claims supported",
+        "2026-09-30T19:54:28Z accepted",
+        "2026-09-30T19:54:28Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "91cb7037ae3837703261d194a4f296672229a738e6b9caad731e523d7470fd26",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_bushes_ma_branch_for_7819",
