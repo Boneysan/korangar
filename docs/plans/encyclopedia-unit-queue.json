@@ -2997,7 +2997,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wandering Master#job_sta",
@@ -3016,7 +3016,25 @@
       ],
       "size_lines": 462,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:24:05Z activated",
+        "2026-09-30T14:24:06Z validated",
+        "2026-09-30T14:24:06Z verified: 4 claims supported",
+        "2026-09-30T14:24:29Z accepted",
+        "2026-09-30T14:24:29Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a71f73b01403670bb78c35c59728fe22c4d8a2b022acc7c9f25df0e713db044f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job_star_cheehee_job_star_branch_for_1435",

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 184,
+    "E1_unknown": 188,
     "E1_verified": 1
   },
   "entries": [
@@ -2279,6 +2279,106 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_master_job_sta_branch_for_375_503",
+      "unit": "E1-comodo_wandering_master_job_sta_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Master#job_sta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rough_Wind,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            503
+          ],
+          "required_source_literals": [
+            "delitem Rough_Wind,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_master_job_sta_branch_for_375_504",
+      "unit": "E1-comodo_wandering_master_job_sta_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Master#job_sta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Great_Nature,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            504
+          ],
+          "required_source_literals": [
+            "delitem Great_Nature,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_master_job_sta_branch_for_375_505",
+      "unit": "E1-comodo_wandering_master_job_sta_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Master#job_sta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mistic_Frozen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            505
+          ],
+          "required_source_literals": [
+            "delitem Mistic_Frozen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_master_job_sta_branch_for_375_506",
+      "unit": "E1-comodo_wandering_master_job_sta_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Master#job_sta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flame_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            506
+          ],
+          "required_source_literals": [
+            "delitem Flame_Heart,1;"
           ]
         }
       ],
