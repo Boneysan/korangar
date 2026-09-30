@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1833,
+    "E1_unknown": 1841,
     "E1_verified": 1
   },
   "entries": [
@@ -26754,6 +26754,206 @@
           ],
           "required_source_literals": [
             "getitem GUSLI, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4558",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4558
+          ],
+          "required_source_literals": [
+            "if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4559",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4559
+          ],
+          "required_source_literals": [
+            "else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4560",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel__,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4560
+          ],
+          "required_source_literals": [
+            "else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4654",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4654
+          ],
+          "required_source_literals": [
+            "if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4655",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4655
+          ],
+          "required_source_literals": [
+            "else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4656",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel__,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4656
+          ],
+          "required_source_literals": [
+            "else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4852",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Gourd_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4852
+          ],
+          "required_source_literals": [
+            "delitem Magic_Gourd_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_baba_branch_for_4248_4944",
+      "unit": "E1-mosk_in_baba_branch_for_4248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Baba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yaga_Secret_Medicine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4944
+          ],
+          "required_source_literals": [
+            "getitem(Yaga_Secret_Medicine, 1);"
           ]
         }
       ],

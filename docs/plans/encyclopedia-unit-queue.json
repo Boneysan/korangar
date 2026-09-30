@@ -18736,7 +18736,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Baba",
@@ -18755,7 +18755,25 @@
       ],
       "size_lines": 745,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:48:49Z activated",
+        "2026-09-30T16:48:50Z validated",
+        "2026-09-30T16:48:50Z verified: 8 claims supported",
+        "2026-09-30T16:49:13Z accepted",
+        "2026-09-30T16:49:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9b5e4047a9cf1c52cc4c1ca446e8fe6df1716a4244da1a8e4050f53e6d4a0061",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moscovia_nowinterplz_branch_for_5512",
