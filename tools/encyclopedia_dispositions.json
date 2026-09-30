@@ -76351,6 +76351,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_strange_kid_bra_branch_for_673_810",
+      "unit": "E1-brasilis_strange_kid_bra_branch_for_673",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Kid#bra"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guarana_Fruit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            810
+          ],
+          "required_source_literals": [
+            "getitem Guarana_Fruit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_strange_kid_bra_branch_for_673_817",
+      "unit": "E1-brasilis_strange_kid_bra_branch_for_673",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Kid#bra"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guarana_Fruit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            817
+          ],
+          "required_source_literals": [
+            "getitem Guarana_Fruit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
