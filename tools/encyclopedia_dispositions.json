@@ -112484,6 +112484,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22837_script_untranslated",
+      "unit": "E3-unknown-tmproulettebronze",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22837
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22837 is not summarized: the translator does not interpret the quoted statement (TmpRouletteBronze).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149597
+          ],
+          "required_source_literals": [
+            "Script: <\" TmpRouletteBronze += 1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
