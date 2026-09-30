@@ -62826,6 +62826,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t12_gold_religious_statue_tt_branch_for_1840_1853",
+      "unit": "E1-tha_t12_gold_religious_statue_tt_branch_for_1840",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gold Religious Statue#tt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Gem_Yellow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1853
+          ],
+          "required_source_literals": [
+            "delitem Magic_Gem_Yellow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
