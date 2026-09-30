@@ -19795,7 +19795,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Heap of Earth",
@@ -19814,7 +19814,22 @@
       ],
       "size_lines": 71,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:58:32Z activated",
+        "2026-09-30T16:58:32Z validated",
+        "2026-09-30T16:58:32Z verified: 0 claims supported",
+        "2026-09-30T16:58:55Z accepted",
+        "2026-09-30T16:58:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2f7e12d76c4fce6eb7a18a5afb291f71ee1d99d235cbb7ac4a18eeed1e0d189e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-izlude_in_strange_machine_branch_for_4282",
