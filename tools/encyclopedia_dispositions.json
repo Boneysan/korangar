@@ -84901,6 +84901,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_dhong_the_guard_branch_for_2849_2940",
+      "unit": "E1-ma_fild01_dhong_the_guard_branch_for_2849",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dhong the Guard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Purified_Bone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2940
+          ],
+          "required_source_literals": [
+            "delitem Purified_Bone, 10; // Purified_Bone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_dhong_the_guard_branch_for_2849_2944",
+      "unit": "E1-ma_fild01_dhong_the_guard_branch_for_2849",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dhong the Guard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2944
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
