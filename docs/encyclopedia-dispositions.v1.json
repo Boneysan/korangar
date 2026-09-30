@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1210,
+    "E1_unknown": 1211,
     "E1_verified": 1
   },
   "entries": [
@@ -26979,6 +26979,31 @@
           ],
           "required_source_literals": [
             "getitem Ordinary_Branch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_ep13_spl_fild03_mon_edq_branch_for_10342_10370",
+      "unit": "E1-spl_fild03_ep13_spl_fild03_mon_edq_branch_for_10342",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "ep13_spl_fild03_mon_edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Some_Of_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            10370
+          ],
+          "required_source_literals": [
+            "getitem Some_Of_Report,1;"
           ]
         }
       ],
