@@ -25945,7 +25945,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Knight#ss",
@@ -25964,7 +25964,25 @@
       ],
       "size_lines": 179,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:54:57Z activated",
+        "2026-09-30T17:54:57Z validated",
+        "2026-09-30T17:54:58Z verified: 1 claims supported",
+        "2026-09-30T17:55:21Z accepted",
+        "2026-09-30T17:55:21Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d13f2e2bdd82c36e65fcf95db46cfe1c2bff1a6a378bbe6a8b0bfde7a90b3ffe",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_in_lonely_looking_woman_branch_for_6928",

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2587,
+    "E1_unknown": 2588,
     "E1_verified": 1
   },
   "entries": [
@@ -63754,6 +63754,31 @@
           ],
           "required_source_literals": [
             "getitem Blue_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_knight_ss_branch_for_6747_6869",
+      "unit": "E1-yuno_knight_ss_branch_for_6747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight#ss"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6869
+          ],
+          "required_source_literals": [
+            "getitem Receipt_01,1;"
           ]
         }
       ],
