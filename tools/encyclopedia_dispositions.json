@@ -66176,6 +66176,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nif_in_kidniff_branch_for_11873_11926",
+      "unit": "E1-nif_in_kidniff_branch_for_11873",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#kidniff"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wing_Of_Crow,countitem(Wing_Of_Crow; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            11926
+          ],
+          "required_source_literals": [
+            "delitem Wing_Of_Crow,countitem(Wing_Of_Crow);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

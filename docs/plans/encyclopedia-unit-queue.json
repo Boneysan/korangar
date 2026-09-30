@@ -26650,7 +26650,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#kidniff",
@@ -26669,7 +26669,25 @@
       ],
       "size_lines": 100,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:01:32Z activated",
+        "2026-09-30T18:01:32Z validated",
+        "2026-09-30T18:01:32Z verified: 1 claims supported",
+        "2026-09-30T18:01:55Z accepted",
+        "2026-09-30T18:01:56Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9b41e9d6abd3933835f0ef6c37aef4d80329c49705a55cb7f4ff57139582a28d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-que_sign01_fountain_sign_branch_for_12195",
