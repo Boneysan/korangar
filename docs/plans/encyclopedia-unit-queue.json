@@ -12507,7 +12507,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dragon Egg#ep13_degg_2",
@@ -12526,7 +12526,25 @@
       ],
       "size_lines": 30,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:51:40Z activated",
+        "2026-09-30T15:51:41Z validated",
+        "2026-09-30T15:51:41Z verified: 1 claims supported",
+        "2026-09-30T15:52:04Z accepted",
+        "2026-09-30T15:52:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "541f638a5dddd89733812436fedd3527fca0f617a12a430999e5147ffebecbf1",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_schwartzvalt_mechanic_1_branch_for_3509",
