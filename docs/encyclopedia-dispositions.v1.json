@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 932,
+    "E1_unknown": 937,
     "E1_verified": 1
   },
   "entries": [
@@ -4054,6 +4054,131 @@
           ],
           "required_source_literals": [
             "getitem Indian_Headband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_old_man_thai_branch_for_1084_1441",
+      "unit": "E1-comodo_old_man_thai_branch_for_1084",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Brigan,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            1441
+          ],
+          "required_source_literals": [
+            "delitem Brigan,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_old_man_thai_branch_for_1084_1442",
+      "unit": "E1-comodo_old_man_thai_branch_for_1084",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clam_Shell,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            1442
+          ],
+          "required_source_literals": [
+            "delitem Clam_Shell,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_old_man_thai_branch_for_1084_1443",
+      "unit": "E1-comodo_old_man_thai_branch_for_1084",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crap_Shell,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            1443
+          ],
+          "required_source_literals": [
+            "delitem Crap_Shell,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_old_man_thai_branch_for_1084_1444",
+      "unit": "E1-comodo_old_man_thai_branch_for_1084",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            1444
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_old_man_thai_branch_for_1084_1447",
+      "unit": "E1-comodo_old_man_thai_branch_for_1084",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            1447
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
           ]
         }
       ],
