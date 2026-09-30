@@ -20051,6 +20051,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1214",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cap_Of_Concentration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1214
+          ],
+          "required_source_literals": [
+            "delitem Cap_Of_Concentration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1215",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Arrow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1215
+          ],
+          "required_source_literals": [
+            "delitem Arrow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1216",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Of_Archer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1216
+          ],
+          "required_source_literals": [
+            "getitem Apple_Of_Archer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1217",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1217
+          ],
+          "required_source_literals": [
+            "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1275",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple_Of_Archer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1275
+          ],
+          "required_source_literals": [
+            "delitem Apple_Of_Archer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1276",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1276
+          ],
+          "required_source_literals": [
+            "delitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1277",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cap_Of_Concentration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1277
+          ],
+          "required_source_literals": [
+            "getitem Cap_Of_Concentration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_nanhyang_1_branch_for_1174_1281",
+      "unit": "E1-payon_in03_nanhyang_1_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nanhyang#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arrow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1281
+          ],
+          "required_source_literals": [
+            "getitem Arrow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
