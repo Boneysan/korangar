@@ -11626,6 +11626,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_874",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            874
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_906",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            906
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_946",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            946
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

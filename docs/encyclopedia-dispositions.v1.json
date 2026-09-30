@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 460,
+    "E1_unknown": 463,
     "E1_verified": 1
   },
   "entries": [
@@ -8554,6 +8554,81 @@
           ],
           "required_source_literals": [
             "getitem Poring_Coin,1; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_874",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            874
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_906",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            906
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_clanux_heffron_hellion_branch_for_693_946",
+      "unit": "E1-prontera_clanux_heffron_hellion_branch_for_693",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clanux Heffron#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wheel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            946
+          ],
+          "required_source_literals": [
+            "getitem Wheel,1;"
           ]
         }
       ],
