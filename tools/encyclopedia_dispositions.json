@@ -85951,6 +85951,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_euridi_pa_branch_for_1986_2115",
+      "unit": "E1-mora_euridi_pa_branch_for_1986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Euridi#pa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clue_Of_Lope,((.@count > 30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2115
+          ],
+          "required_source_literals": [
+            "if (.@count) delitem Clue_Of_Lope,((.@count > 30)?30:.@count);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_euridi_pa_branch_for_1986_2161",
+      "unit": "E1-mora_euridi_pa_branch_for_1986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Euridi#pa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ring_Of_Lope,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2161
+          ],
+          "required_source_literals": [
+            "if (countitem(Ring_Of_Lope)) delitem Ring_Of_Lope,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
