@@ -36280,7 +36280,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Pipielle",
@@ -36299,7 +36299,22 @@
       ],
       "size_lines": 129,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:30:28Z activated",
+        "2026-09-30T19:30:28Z validated",
+        "2026-09-30T19:30:28Z verified: 0 claims supported",
+        "2026-09-30T19:30:52Z accepted",
+        "2026-09-30T19:30:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7440ac910c92d4820b02d26921c671062b5973d608c39f20b1f1cbe5821c68cd",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malangdo_gobonge_ml_branch_for_2903",
