@@ -63114,7 +63114,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -63133,7 +63133,25 @@
       ],
       "size_lines": 3,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:10:02Z activated",
+        "2026-09-30T21:10:02Z validated",
+        "2026-09-30T21:10:03Z verified: 1 claims supported",
+        "2026-09-30T21:10:26Z accepted",
+        "2026-09-30T21:10:26Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "568e634cd226b5b6441a810109441138d9288c80f3b74e86eabb5329ed6b0692",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-nj-huuma",
