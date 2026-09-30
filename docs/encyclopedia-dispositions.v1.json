@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 290,
+    "E1_unknown": 304,
     "E1_verified": 1
   },
   "entries": [
@@ -7176,6 +7176,356 @@
           "path": "npc/jobs/2-2/sage.txt",
           "lines": [
             1670
+          ],
+          "required_source_literals": [
+            "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2214",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2214
+          ],
+          "required_source_literals": [
+            "delitem Stone,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2223",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Crystal_Blue,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2223
+          ],
+          "required_source_literals": [
+            "getitem Crystal_Blue,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2224",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Live,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2224
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Live,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2225",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wind_Of_Verdure,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2225
+          ],
+          "required_source_literals": [
+            "getitem Wind_Of_Verdure,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2282",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Arrow,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2282
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Arrow,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2283",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone_Arrow,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2283
+          ],
+          "required_source_literals": [
+            "delitem Stone_Arrow,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2284",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Arrow_Of_Wind,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2284
+          ],
+          "required_source_literals": [
+            "delitem Arrow_Of_Wind,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2333",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2333
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2370",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather_Of_Birds,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2370
+          ],
+          "required_source_literals": [
+            "delitem Feather_Of_Birds,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2371",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Animals_Skin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2371
+          ],
+          "required_source_literals": [
+            "delitem Animals_Skin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2372",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wooden_Block,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2372
+          ],
+          "required_source_literals": [
+            "delitem Wooden_Block,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2373",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chinese_Ink,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2373
+          ],
+          "required_source_literals": [
+            "delitem Chinese_Ink,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2374",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2374
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_physics_professor_sa_branch_for_2137_2510",
+      "unit": "E1-yuno_in03_physics_professor_sa_branch_for_2137",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Physics Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2510
           ],
           "required_source_literals": [
             "getitem Book,1;"
