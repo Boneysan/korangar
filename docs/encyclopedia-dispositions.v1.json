@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3372,
+    "E1_unknown": 3379,
     "E1_verified": 1
   },
   "entries": [
@@ -35804,6 +35804,181 @@
           ],
           "required_source_literals": [
             "getitem Cat_Hard_Biscuit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_1863",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1863
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_1864",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1864
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_1921",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1921
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 1; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_1975",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silver_Bracelet,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1975
+          ],
+          "required_source_literals": [
+            "delitem Silver_Bracelet, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_1979",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1979
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_2120",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silver_Bracelet,.@amount * 2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2120
+          ],
+          "required_source_literals": [
+            "delitem Silver_Bracelet, .@amount * 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_blacksmith_pandoi_branch_for_1783_2121",
+      "unit": "E1-malaya_blacksmith_pandoi_branch_for_1783",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Pandoi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silver_Cross,.@amount; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2121
+          ],
+          "required_source_literals": [
+            "getitem Silver_Cross, .@amount; // Silver_Cross"
           ]
         }
       ],

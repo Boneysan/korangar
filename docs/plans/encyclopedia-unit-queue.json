@@ -37821,7 +37821,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Blacksmith Pandoi",
@@ -37840,7 +37840,25 @@
       ],
       "size_lines": 348,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:44:41Z activated",
+        "2026-09-30T19:44:41Z validated",
+        "2026-09-30T19:44:41Z verified: 7 claims supported",
+        "2026-09-30T19:45:05Z accepted",
+        "2026-09-30T19:45:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "05025362e1b49be15e4b848242070ed514449d16264cf6c960611bbdfec52ceb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_pedro_the_sailor_branch_for_2132",
