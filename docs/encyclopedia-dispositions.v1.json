@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2621,
+    "E1_unknown": 2633,
     "E1_verified": 1
   },
   "entries": [
@@ -55054,6 +55054,306 @@
           ],
           "required_source_literals": [
             "delitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10009",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Authority_Of_Nine_World,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10009
+          ],
+          "required_source_literals": [
+            "delitem Authority_Of_Nine_World,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10030",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Serins_Gold_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10030
+          ],
+          "required_source_literals": [
+            "delitem Serins_Gold_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10207",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10207
+          ],
+          "required_source_literals": [
+            "getitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10208",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Serins_Gold_Ring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10208
+          ],
+          "required_source_literals": [
+            "getitem Serins_Gold_Ring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10209",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seal_Of_Witch,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10209
+          ],
+          "required_source_literals": [
+            "getitem Seal_Of_Witch,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10243",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10243
+          ],
+          "required_source_literals": [
+            "getitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10244",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seal_Of_Witch,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10244
+          ],
+          "required_source_literals": [
+            "getitem Seal_Of_Witch,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10329",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Seal_Of_Witch,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10329
+          ],
+          "required_source_literals": [
+            "delitem Seal_Of_Witch,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10358",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Seal_Of_Witch,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10358
+          ],
+          "required_source_literals": [
+            "delitem Seal_Of_Witch,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10413",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Serins_Gold_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10413
+          ],
+          "required_source_literals": [
+            "if (countitem(Serins_Gold_Ring) > 0) delitem Serins_Gold_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_10414",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10414
+          ],
+          "required_source_literals": [
+            "if (countitem(Witchs_Potion) > 0) delitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_witch_s_branch_for_9761_9914",
+      "unit": "E1-que_sign01_witch_s_branch_for_9761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Witch#s"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Spell_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9914
+          ],
+          "required_source_literals": [
+            "delitem Witchs_Spell_Book,1;"
           ]
         }
       ],
