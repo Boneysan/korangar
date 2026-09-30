@@ -32232,7 +32232,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Blacksmith Thorn#2nd10",
@@ -32251,7 +32251,25 @@
       ],
       "size_lines": 327,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:53:13Z activated",
+        "2026-09-30T18:53:14Z validated",
+        "2026-09-30T18:53:14Z verified: 9 claims supported",
+        "2026-09-30T18:53:37Z accepted",
+        "2026-09-30T18:53:37Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "eae0429383ab50b40ad323a6afc7b7ab78dce51130dce85977e7f21c2778fbcf",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_para01_tutorial_instructor_branch_for_35",

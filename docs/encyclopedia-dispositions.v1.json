@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2980,
+    "E1_unknown": 2989,
     "E1_verified": 1
   },
   "entries": [
@@ -33654,6 +33654,231 @@
           ],
           "required_source_literals": [
             "getitem Para_Team_Manteau,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3899",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Dagger3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3899
+          ],
+          "required_source_literals": [
+            "getitem P_Dagger3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3907",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Staff3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3907
+          ],
+          "required_source_literals": [
+            "getitem P_Staff3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3925",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Bow3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3925
+          ],
+          "required_source_literals": [
+            "getitem P_Bow3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3942",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Dic1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3942
+          ],
+          "required_source_literals": [
+            "getitem P_Dic1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3949",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Revolver3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3949
+          ],
+          "required_source_literals": [
+            "getitem P_Revolver3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3959",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Hat2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3959
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Hat2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3960",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Manteau2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3960
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Manteau2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3961",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3961
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_blacksmith_thorn_2nd10_branch_for_3718_3962",
+      "unit": "E1-moc_para01_blacksmith_thorn_2nd10_branch_for_3718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Thorn#2nd10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Armor,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3962
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Armor,1;"
           ]
         }
       ],
