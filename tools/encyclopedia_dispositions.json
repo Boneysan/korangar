@@ -2376,6 +2376,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_681",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            681
+          ],
+          "required_source_literals": [
+            "getitem Candy,5; // Candy"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_690",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            690
+          ],
+          "required_source_literals": [
+            "getitem Candy,10; // Candy"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_698",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy_Striper,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            698
+          ],
+          "required_source_literals": [
+            "getitem Candy_Striper,5; // Candy_Striper"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_706",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy_Striper,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            706
+          ],
+          "required_source_literals": [
+            "getitem Candy_Striper,10; // Candy_Striper"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_714",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Cake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            714
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Cake,1; // Piece_Of_Cake"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_722",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Cake,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            722
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Cake,2; // Piece_Of_Cake"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_730",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            730
+          ],
+          "required_source_literals": [
+            "getitem Well_Baked_Cookie,5; // Well_Baked_Cookie"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_snowman_branch_for_472_738",
+      "unit": "E1-xmas_snowman_branch_for_472",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snowman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Baked_Cookie,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lutie.txt",
+          "lines": [
+            738
+          ],
+          "required_source_literals": [
+            "getitem Well_Baked_Cookie,10; // Well_Baked_Cookie"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
