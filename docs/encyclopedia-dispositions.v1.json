@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1597,
+    "E1_unknown": 1609,
     "E1_verified": 1
   },
   "entries": [
@@ -38279,6 +38279,306 @@
           ],
           "required_source_literals": [
             "delitem Fish_Slice,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3571",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3571
+          ],
+          "required_source_literals": [
+            "delitem Seed_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3572",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Aloe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3572
+          ],
+          "required_source_literals": [
+            "delitem Aloe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3573",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Starsand_Of_Witch,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3573
+          ],
+          "required_source_literals": [
+            "delitem Starsand_Of_Witch,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3574",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Heart,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3574
+          ],
+          "required_source_literals": [
+            "delitem Burning_Heart,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3575",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Piece,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3575
+          ],
+          "required_source_literals": [
+            "delitem Ice_Piece,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3632",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Seed_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3632
+          ],
+          "required_source_literals": [
+            "delitem Seed_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3633",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Aloe,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3633
+          ],
+          "required_source_literals": [
+            "delitem Aloe,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3634",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3634
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3635",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Starsand_Of_Witch,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3635
+          ],
+          "required_source_literals": [
+            "delitem Starsand_Of_Witch,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3636",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Heart,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3636
+          ],
+          "required_source_literals": [
+            "delitem Burning_Heart,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3637",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Piece,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3637
+          ],
+          "required_source_literals": [
+            "delitem Ice_Piece,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_doctor_gnbs_branch_for_3217_3639",
+      "unit": "E1-yuno_in01_doctor_gnbs_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#gnbs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Aloebera,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3639
+          ],
+          "required_source_literals": [
+            "getitem Aloebera,1;"
           ]
         }
       ],
