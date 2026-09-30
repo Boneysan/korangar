@@ -79776,6 +79776,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10301",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dark_Debris,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10301
+          ],
+          "required_source_literals": [
+            "delitem Dark_Debris,1; //Dark_Debris"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10302",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Gemstone,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10302
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Gemstone,2; //Yellow_Gemstone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10303",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Gemstone,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10303
+          ],
+          "required_source_literals": [
+            "delitem Red_Gemstone,2; //Red_Gemstone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10304",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10304
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone,2; //Blue_Gemstone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10710",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ettlang_Keepsake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10710
+          ],
+          "required_source_literals": [
+            "delitem Ettlang_Keepsake,1; //Ettlang_Keepsake"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_pa0829_branch_for_10086_10711",
+      "unit": "E1-ecl_in04_hiel_pa0829_branch_for_10086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendide_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10711
+          ],
+          "required_source_literals": [
+            "delitem Splendide_Coin,10; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
