@@ -81876,6 +81876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_captainroom3_branch_for_3969_4007",
+      "unit": "E1-mal_in02_captainroom3_branch_for_3969",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#CaptainRoom3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cat_Hard_Biscuit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4007
+          ],
+          "required_source_literals": [
+            "getitem Cat_Hard_Biscuit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_captainroom3_branch_for_3969_4037",
+      "unit": "E1-mal_in02_captainroom3_branch_for_3969",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#CaptainRoom3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cat_Hard_Biscuit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4037
+          ],
+          "required_source_literals": [
+            "getitem Cat_Hard_Biscuit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
