@@ -36410,7 +36410,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cleanyang",
@@ -36429,7 +36429,25 @@
       ],
       "size_lines": 384,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:31:40Z activated",
+        "2026-09-30T19:31:40Z validated",
+        "2026-09-30T19:31:41Z verified: 2 claims supported",
+        "2026-09-30T19:32:04Z accepted",
+        "2026-09-30T19:32:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5672176b9de03a89e3f5338837b096365ceada57aea149ef093098163bdea54c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in02_captainroom3_branch_for_3969",

@@ -81826,6 +81826,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_cleanyang_branch_for_3584_3828",
+      "unit": "E1-mal_in02_cleanyang_branch_for_3584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cleanyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3828
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_cleanyang_branch_for_3584_3941",
+      "unit": "E1-mal_in02_cleanyang_branch_for_3584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cleanyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3941
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
