@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3386,
+    "E1_unknown": 3391,
     "E1_verified": 1
   },
   "entries": [
@@ -33479,6 +33479,131 @@
           ],
           "required_source_literals": [
             "getitem Sharp_Bamboo, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_kiko_in_mumbaki_branch_for_2738_2790",
+      "unit": "E1-ma_fild01_kiko_in_mumbaki_branch_for_2738",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiko in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cast_Iron_Caldron,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2790
+          ],
+          "required_source_literals": [
+            "delitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_kiko_in_mumbaki_branch_for_2738_2791",
+      "unit": "E1-ma_fild01_kiko_in_mumbaki_branch_for_2738",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiko in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Soul_Protection,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2791
+          ],
+          "required_source_literals": [
+            "getitem Soul_Protection, 5; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_kiko_in_mumbaki_branch_for_2738_2834",
+      "unit": "E1-ma_fild01_kiko_in_mumbaki_branch_for_2738",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiko in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Evil_Bone,countitem(Evil_Bone; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2834
+          ],
+          "required_source_literals": [
+            "delitem Evil_Bone, countitem(Evil_Bone); // Evil_Bone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_kiko_in_mumbaki_branch_for_2738_2835",
+      "unit": "E1-ma_fild01_kiko_in_mumbaki_branch_for_2738",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiko in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2835
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_kiko_in_mumbaki_branch_for_2738_2836",
+      "unit": "E1-ma_fild01_kiko_in_mumbaki_branch_for_2738",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiko in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Purified_Bone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2836
+          ],
+          "required_source_literals": [
+            "getitem Purified_Bone, 10;"
           ]
         }
       ],
