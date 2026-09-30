@@ -28520,7 +28520,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Test Supervisor#jr_13",
@@ -28539,7 +28539,25 @@
       ],
       "size_lines": 118,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:18:53Z activated",
+        "2026-09-30T18:18:53Z validated",
+        "2026-09-30T18:18:53Z verified: 2 claims supported",
+        "2026-09-30T18:19:17Z accepted",
+        "2026-09-30T18:19:17Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "12fc6f515deccfa613eabac3f8709d27b8029f0a233ab48115fab5ad9316f99b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_rang01_ranger_master_jr_29_branch_for_1637",

@@ -68126,6 +68126,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_test_supervisor_jr_13_branch_for_1466_1490",
+      "unit": "E1-job3_rang02_test_supervisor_jr_13_branch_for_1466",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Supervisor#jr_13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Desert_Wolf_Babe_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1490
+          ],
+          "required_source_literals": [
+            "getitem Desert_Wolf_Babe_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_test_supervisor_jr_13_branch_for_1466_1517",
+      "unit": "E1-job3_rang02_test_supervisor_jr_13_branch_for_1466",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Supervisor#jr_13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Desert_Wolf_Babe_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1517
+          ],
+          "required_source_literals": [
+            "getitem Desert_Wolf_Babe_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
