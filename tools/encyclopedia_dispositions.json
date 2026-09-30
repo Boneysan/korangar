@@ -76451,6 +76451,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bra_dun02_water_lily_bra_branch_for_1842_1917",
+      "unit": "E1-bra_dun02_water_lily_bra_branch_for_1842",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Water lily#bra"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Banana,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1917
+          ],
+          "required_source_literals": [
+            "delitem Banana,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bra_dun02_water_lily_bra_branch_for_1842_1946",
+      "unit": "E1-bra_dun02_water_lily_bra_branch_for_1842",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Water lily#bra"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lotus_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1946
+          ],
+          "required_source_literals": [
+            "getitem Lotus_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
