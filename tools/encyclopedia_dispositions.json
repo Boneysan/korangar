@@ -48026,6 +48026,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_fild03_ishmael_em_branch_for_2672_2750",
+      "unit": "E1-ra_fild03_ishmael_em_branch_for_2672",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ishmael#em"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2750
+          ],
+          "required_source_literals": [
+            "delitem File02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_fild03_ishmael_em_branch_for_2672_2836",
+      "unit": "E1-ra_fild03_ishmael_em_branch_for_2672",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ishmael#em"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2836
+          ],
+          "required_source_literals": [
+            "delitem Red_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_fild03_ishmael_em_branch_for_2672_2838",
+      "unit": "E1-ra_fild03_ishmael_em_branch_for_2672",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ishmael#em"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2838
+          ],
+          "required_source_literals": [
+            "getitem File02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
