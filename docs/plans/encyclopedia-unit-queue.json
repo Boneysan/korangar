@@ -6196,7 +6196,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "New Mage Manager#M",
@@ -6215,7 +6215,25 @@
       ],
       "size_lines": 790,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:53:24Z activated",
+        "2026-09-30T14:53:24Z validated",
+        "2026-09-30T14:53:24Z verified: 2 claims supported",
+        "2026-09-30T14:53:47Z accepted",
+        "2026-09-30T14:53:48Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "05d4e53409d0065c4b98cdc8fe61bacb94ce7f5fe0a13ecdd70e712f09c05551",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_guarnien_branch_for_39",

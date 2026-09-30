@@ -12951,6 +12951,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_new_mage_manager_m_branch_for_46_713",
+      "unit": "E1-geffen_new_mage_manager_m_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Mage Manager#M"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wand,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_magician01.txt",
+          "lines": [
+            713
+          ],
+          "required_source_literals": [
+            "getitem Wand,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_new_mage_manager_m_branch_for_46_807",
+      "unit": "E1-geffen_new_mage_manager_m_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Mage Manager#M"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silk_Robe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_magician01.txt",
+          "lines": [
+            807
+          ],
+          "required_source_literals": [
+            "getitem Silk_Robe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
