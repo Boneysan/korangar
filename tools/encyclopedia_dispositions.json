@@ -50651,6 +50651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_curse_branch_for_3604_3640",
+      "unit": "E1-prt_in_librarian_curse_branch_for_3604",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#curse"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Several_Books,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            3640
+          ],
+          "required_source_literals": [
+            "getitem Several_Books,1; //Books"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
