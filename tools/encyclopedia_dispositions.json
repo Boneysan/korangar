@@ -52651,6 +52651,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_wagan_juno_branch_for_155_251",
+      "unit": "E1-yuno_in01_wagan_juno_branch_for_155",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wagan#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Gemstone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            251
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Gemstone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_wagan_juno_branch_for_155_260",
+      "unit": "E1-yuno_in01_wagan_juno_branch_for_155",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wagan#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Gemstone,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            260
+          ],
+          "required_source_literals": [
+            "getitem Blue_Gemstone,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

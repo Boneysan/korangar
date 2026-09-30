@@ -22908,7 +22908,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wagan#juno",
@@ -22927,7 +22927,25 @@
       ],
       "size_lines": 117,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:27:11Z activated",
+        "2026-09-30T17:27:11Z validated",
+        "2026-09-30T17:27:11Z verified: 2 claims supported",
+        "2026-09-30T17:27:34Z accepted",
+        "2026-09-30T17:27:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "eef1d66c4d13ec62def483c0b039c5d34300330a649228aee062e20d72eec9ce",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_in01_bain_juno_branch_for_439",
