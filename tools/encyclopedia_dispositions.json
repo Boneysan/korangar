@@ -136461,6 +136461,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7081_npc_quests_quests_13_2_txt_2944",
+      "unit": "E5-chain-7081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7082
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7082; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2944
+          ],
+          "required_source_literals": [
+            "erasequest 7082;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7081_npc_quests_quests_13_2_txt_2955",
+      "unit": "E5-chain-7081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2955
+          ],
+          "required_source_literals": [
+            "erasequest 7081;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7081_npc_quests_quests_13_2_txt_2956",
+      "unit": "E5-chain-7081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7082
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7082; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2956
+          ],
+          "required_source_literals": [
+            "setquest 7082;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7081_npc_quests_quests_13_2_txt_2997",
+      "unit": "E5-chain-7081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2997
+          ],
+          "required_source_literals": [
+            "setquest 7081;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
