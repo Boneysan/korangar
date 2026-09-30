@@ -70851,6 +70851,356 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4157",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clover,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4157
+          ],
+          "required_source_literals": [
+            "delitem(Clover, 1); // Clover"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4158",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4158
+          ],
+          "required_source_literals": [
+            "delitem(Green_Herb, 1); // Green_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4159",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4159
+          ],
+          "required_source_literals": [
+            "delitem(Red_Herb, 1); // Red_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4160",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Savory_Herb_Salad,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4160
+          ],
+          "required_source_literals": [
+            "getitem(Savory_Herb_Salad, 1); // Savory_Herb_Salad"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4178",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4178
+          ],
+          "required_source_literals": [
+            "delitem(Apple, 1); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4179",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Carrot,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4179
+          ],
+          "required_source_literals": [
+            "delitem(Carrot, 2); // Carrot"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4180",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Carrot_Salad,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4180
+          ],
+          "required_source_literals": [
+            "getitem(Apple_Carrot_Salad, 1); // Apple_Carrot_Salad"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4198",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4198
+          ],
+          "required_source_literals": [
+            "delitem(Jellopy, 1); // Jellopy"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4199",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fluff,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4199
+          ],
+          "required_source_literals": [
+            "delitem(Fluff, 1); // Fluff"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4200",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4200
+          ],
+          "required_source_literals": [
+            "delitem(Feather, 1); // Feather"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4201",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Casual_Stew,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4201
+          ],
+          "required_source_literals": [
+            "getitem(Casual_Stew, 1); // Casual_Stew"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4221",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4221
+          ],
+          "required_source_literals": [
+            "delitem(Apple, 1); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4222",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clover,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4222
+          ],
+          "required_source_literals": [
+            "delitem(Clover, 1); // Clover"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_dacquoise_ac_branch_for_3910_4223",
+      "unit": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dacquoise#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Roasted_Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4223
+          ],
+          "required_source_literals": [
+            "getitem(Golden_Roasted_Apple, 1); // Golden_Roasted_Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
