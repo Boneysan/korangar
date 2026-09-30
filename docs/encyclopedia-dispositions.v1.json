@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 12
+    "E4_unknown": 13
   },
   "entries": [
     {
@@ -97609,6 +97609,33 @@
           ],
           "required_source_literals": [
             "case EL_FIRE_WAVE:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_mh_eraser_cutter_formula",
+      "unit": "E4-mh-eraser-cutter",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          8024
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2040
+          ],
+          "required_source_literals": [
+            "case MH_ERASER_CUTTER:"
           ]
         }
       ],
