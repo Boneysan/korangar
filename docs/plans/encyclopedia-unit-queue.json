@@ -3394,7 +3394,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bijou#da",
@@ -3413,7 +3413,25 @@
       ],
       "size_lines": 482,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:27:50Z activated",
+        "2026-09-30T14:27:50Z validated",
+        "2026-09-30T14:27:50Z verified: 2 claims supported",
+        "2026-09-30T14:28:14Z accepted",
+        "2026-09-30T14:28:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "aa14499875c8199485bf26a4cb05a85279e265912ff667ae977fc7dc2a34f79e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-monk_in_sensei_moohae_mk_branch_for_349",

@@ -5826,6 +5826,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_duncer_bijou_da_branch_for_432_908",
+      "unit": "E1-job_duncer_bijou_da_branch_for_432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bijou#da"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Line_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            908
+          ],
+          "required_source_literals": [
+            "getitem Line_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_duncer_bijou_da_branch_for_432_910",
+      "unit": "E1-job_duncer_bijou_da_branch_for_432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bijou#da"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rope,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            910
+          ],
+          "required_source_literals": [
+            "getitem Rope,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
