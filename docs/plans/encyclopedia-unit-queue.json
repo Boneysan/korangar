@@ -65552,7 +65552,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -65571,7 +65571,25 @@
       ],
       "size_lines": 4,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:31:04Z activated",
+        "2026-09-30T21:31:04Z validated",
+        "2026-09-30T21:31:04Z verified: 1 claims supported",
+        "2026-09-30T21:31:27Z accepted",
+        "2026-09-30T21:31:28Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c8506ef6d9bc3753de8b96c60a23c4d445d1f1f70e74135881c1718e8c273143",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-nj-huujin",
