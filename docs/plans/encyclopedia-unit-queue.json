@@ -50608,7 +50608,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bMaxHPrate (expression)",
@@ -50790,7 +50790,25 @@
       ],
       "size_lines": 13,
       "reason": "13 item script(s) first stop at `bonus bMaxHPrate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:13:10Z activated",
+        "2026-09-30T20:13:10Z validated",
+        "2026-09-30T20:13:10Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:13:34Z accepted",
+        "2026-09-30T20:13:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "635b5b318bdb940d8e48e6c10592ff5bab845d5e91e35a49362c25736c5d2295",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-baddele-expression",
