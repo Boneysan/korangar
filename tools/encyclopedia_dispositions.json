@@ -33126,6 +33126,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_elle_cherno_branch_for_655_740",
+      "unit": "E1-ein_in01_elle_cherno_branch_for_655",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elle Cherno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Picture_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            740
+          ],
+          "required_source_literals": [
+            "getitem(Picture_Letter, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
