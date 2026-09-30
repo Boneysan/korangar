@@ -129386,6 +129386,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_rl_r_trip_formula",
+      "unit": "E4-rl-r-trip",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2565
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            3042
+          ],
+          "required_source_literals": [
+            "case RL_R_TRIP:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
