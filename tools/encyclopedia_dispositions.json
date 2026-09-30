@@ -48651,6 +48651,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_man_zgang_branch_for_9531_9717",
+      "unit": "E1-morocc_man_zgang_branch_for_9531",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man#zgang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Jewel,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            9717
+          ],
+          "required_source_literals": [
+            "delitem Scarlet_Jewel,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_man_zgang_branch_for_9531_9718",
+      "unit": "E1-morocc_man_zgang_branch_for_9531",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man#zgang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Zargon,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            9718
+          ],
+          "required_source_literals": [
+            "delitem Zargon,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_man_zgang_branch_for_9531_9719",
+      "unit": "E1-morocc_man_zgang_branch_for_9531",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man#zgang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mementos,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            9719
+          ],
+          "required_source_literals": [
+            "delitem Mementos,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
