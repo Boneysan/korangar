@@ -85226,6 +85226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_malaya_ma_fild01_mon_branch_for_5888_5913",
+      "unit": "E1-ma_fild01_malaya_ma_fild01_mon_branch_for_5888",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "malaya_ma_fild01_mon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lost_Belongings,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            5913
+          ],
+          "required_source_literals": [
+            "getitem Lost_Belongings,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
