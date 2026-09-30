@@ -80201,6 +80201,306 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13125",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13125
+          ],
+          "required_source_literals": [
+            "delitem Meat,10; //Meat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13126",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pile_Of_Acorn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13126
+          ],
+          "required_source_literals": [
+            "delitem Pile_Of_Acorn,10; //Pile_Of_Acorn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13131",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13131
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13214",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13214
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13282",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Bookmark,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13282
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Bookmark,20; //Leaf_Bookmark"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13285",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13285
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13375",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Bookmark,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13375
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Bookmark,20; //Leaf_Bookmark"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13382",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13382
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13481",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13481
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13550",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13550
+          ],
+          "required_source_literals": [
+            "delitem Meat,10; //Meat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13551",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pile_Of_Acorn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13551
+          ],
+          "required_source_literals": [
+            "delitem Pile_Of_Acorn,10; //Pile_Of_Acorn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun03_new_oz_1_branch_for_13028_13555",
+      "unit": "E1-ecl_tdun03_new_oz_1_branch_for_13028",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "New Oz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            13555
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
