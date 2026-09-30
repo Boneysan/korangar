@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 831
+    "E3_unknown": 837
   },
   "entries": [
     {
@@ -102613,6 +102613,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4181_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4181
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4181 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            43560
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Silence,300+600*(readparam(bVit)>=77); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4185_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -102660,6 +102687,33 @@
           ],
           "required_source_literals": [
             "Script: <\" if(BaseJob==Job_Novice||BaseJob==Job_SuperNovice) bonus3 bAutoSpellWhenHit,SM_ENDURE,1,200; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4194_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4194
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4194 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            43706
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Stun,300+600*(readparam(bDex)>=77); \">"
           ]
         }
       ],
@@ -103018,6 +103072,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4286_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4286
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4286 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            44820
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Confusion,300+600*(readparam(bStr)>=77); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4287_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -103099,6 +103180,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4300_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4300
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4300 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            44977
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Poison,300+600*(BaseJob==Job_Assassin); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4312_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -103119,6 +103227,33 @@
           ],
           "required_source_literals": [
             "if(BaseClass==Job_Acolyte) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4315_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4315
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4315 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45167
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Stone,300+600*(readparam(bInt)>=77); \">"
           ]
         }
       ],
@@ -104739,6 +104874,33 @@
           ],
           "required_source_literals": [
             ".@rate = (getrefine()>14)?350:250;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4543_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4543
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4543 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48089
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bAddEffWhenHit,Eff_Freeze,((getrefine()>14)?4000:2500); \">"
           ]
         }
       ],

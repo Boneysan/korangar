@@ -53011,7 +53011,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddEffWhenHit (expression)",
@@ -53102,7 +53102,25 @@
       ],
       "size_lines": 6,
       "reason": "6 item script(s) first stop at `bonus2 bAddEffWhenHit (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:19:09Z activated",
+        "2026-09-30T20:19:09Z validated",
+        "2026-09-30T20:19:09Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:19:32Z accepted",
+        "2026-09-30T20:19:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1ce209dd991671f589986890935d264358b5db1a4269a19d6a67ae9581722897",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bhealpower-expression",
