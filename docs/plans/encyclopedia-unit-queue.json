@@ -4276,7 +4276,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Fruel",
@@ -4295,7 +4295,22 @@
       ],
       "size_lines": 4,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:35:46Z activated",
+        "2026-09-30T14:35:47Z validated",
+        "2026-09-30T14:35:47Z verified: 0 claims supported",
+        "2026-09-30T14:36:10Z accepted",
+        "2026-09-30T14:36:10Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7e592fe0c33c690808dbf238daf84e03a19c51628eaa8d244c222e5d2ff68d1f",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prontera_pet_enthusiast_branch_for_37",
