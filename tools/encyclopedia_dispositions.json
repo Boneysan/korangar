@@ -137811,6 +137811,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8019_npc_quests_quests_ein_txt_2610",
+      "unit": "E5-chain-8019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2610
+          ],
+          "required_source_literals": [
+            "changequest 8019,8020;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
