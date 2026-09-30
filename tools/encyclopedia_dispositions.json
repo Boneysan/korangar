@@ -66426,6 +66426,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_glast_01_white_knight_1a_branch_for_2741_2769",
+      "unit": "E1-glast_01_white_knight_1a_branch_for_2741",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "White Knight#1a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem White_Knightage_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2769
+          ],
+          "required_source_literals": [
+            "getitem(White_Knightage_Card, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
