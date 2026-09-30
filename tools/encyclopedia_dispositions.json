@@ -5651,6 +5651,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_145",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1004,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            145
+          ],
+          "required_source_literals": [
+            "delitem 1004, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_146",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1009,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            146
+          ],
+          "required_source_literals": [
+            "delitem 1009, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_220",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Patriotism_Marks,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            220
+          ],
+          "required_source_literals": [
+            "delitem Patriotism_Marks, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_221",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sacred_Marks,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            221
+          ],
+          "required_source_literals": [
+            "delitem Sacred_Marks, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_320",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 504,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            320
+          ],
+          "required_source_literals": [
+            "if(.@Joblevel != 50) getitem 504, 6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_senior_crusader_branch_for_46_321",
+      "unit": "E1-prt_castle_senior_crusader_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Senior Crusader"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 504,12; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "else getitem 504, 12;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
