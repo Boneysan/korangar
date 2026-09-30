@@ -33701,6 +33701,281 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_529",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silk_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            529
+          ],
+          "required_source_literals": [
+            "delitem Silk_Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_530",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Voucher_Of_Orcish_Hero,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            530
+          ],
+          "required_source_literals": [
+            "delitem Voucher_Of_Orcish_Hero,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_535",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hair_Protector,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            535
+          ],
+          "required_source_literals": [
+            "getitem Hair_Protector,1; // Hair_Protector"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_546",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Hair_Pin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            546
+          ],
+          "required_source_literals": [
+            "delitem Heart_Hair_Pin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_547",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            547
+          ],
+          "required_source_literals": [
+            "delitem Steel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_554",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem First_Moon_Hair_Pin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            554
+          ],
+          "required_source_literals": [
+            "getitem First_Moon_Hair_Pin,1; // First_Moon_Hair_Pin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_565",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jack_A_Dandy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            565
+          ],
+          "required_source_literals": [
+            "delitem Jack_A_Dandy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_566",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            566
+          ],
+          "required_source_literals": [
+            "delitem Scarlet_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_570",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fashion_Sunglass,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            570
+          ],
+          "required_source_literals": [
+            "getitem Fashion_Sunglass,1; // Fashion_Sunglass"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_581",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,1200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            581
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,1200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_stylish_merchant_new30_branch_for_520_587",
+      "unit": "E1-alberta_stylish_merchant_new30_branch_for_520",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stylish Merchant#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Heart_Hair_Pin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            587
+          ],
+          "required_source_literals": [
+            "getitem Heart_Hair_Pin,1; // Heart_Hair_Pin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
