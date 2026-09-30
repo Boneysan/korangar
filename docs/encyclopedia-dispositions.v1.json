@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 162,
+    "E2_verified": 170,
     "E3_unknown": 973
   },
   "entries": [
@@ -93830,6 +93830,376 @@
             "sellitem(END_OF_HORIZON);",
             "sellitem(Southern_Cross_R);",
             "end;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_112",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Marketeer#ein"
+      },
+      "result": "verified",
+      "statement": "Black Marketeer#ein is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136
+          ],
+          "required_source_literals": [
+            "einbroch,122,250,4\ttrader\tBlack Marketeer#ein\t1_M_03,{",
+            "OnInit:",
+            "sellitem Flame_Thrower;",
+            "sellitem Accelerator;",
+            "sellitem Hovering_Booster;",
+            "sellitem Suicidal_Device;",
+            "sellitem Shape_Shifter;",
+            "sellitem Cooling_Device;",
+            "sellitem Mag_Field_Generator;",
+            "sellitem Barrier_Builder;",
+            "sellitem Repair_Kit;",
+            "sellitem Cannon_Ball;",
+            "sellitem Holy_Cannon_Ball;",
+            "sellitem Dark_Cannon_Ball;",
+            "sellitem Soul_Cannon_Ball;",
+            "sellitem Iron_Cannon_Ball;",
+            "sellitem Vulcan_Bullet;",
+            "sellitem Magic_Gear_Fuel;",
+            "sellitem Liquid_Condensed_Bullet;",
+            "sellitem Monkey_Wrench;",
+            "sellitem Camouflage_Generator;",
+            "sellitem RepairA;",
+            "sellitem RepairB;",
+            "sellitem RepairC;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_139",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Peddler#dic"
+      },
+      "result": "verified",
+      "statement": "Peddler#dic is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145
+          ],
+          "required_source_literals": [
+            "dic_in01,238,107,5\ttrader\tPeddler#dic\t4_M_HUMERCHANT,{",
+            "OnInit:",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_43",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tropic Fruit Dealer"
+      },
+      "result": "verified",
+      "statement": "Tropic Fruit Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            43,
+            44,
+            45,
+            46
+          ],
+          "required_source_literals": [
+            "comodo,106,213,5\ttrader\tTropic Fruit Dealer\t4_F_07,{",
+            "OnInit:",
+            "sellitem Comodo_Tropic_Fruit;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_48",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Harive#candy"
+      },
+      "result": "verified",
+      "statement": "Harive#candy is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            48,
+            49,
+            50,
+            51,
+            52
+          ],
+          "required_source_literals": [
+            "comodo,196,162,3\ttrader\tHarive#candy\t4_M_MINSTREL,{",
+            "OnInit:",
+            "sellitem Protect_Neck_Candy;",
+            "sellitem Heartbroken_Tears;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_55",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67
+          ],
+          "required_source_literals": [
+            "dewata,218,164,4\ttrader\tWeapon Dealer\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_69",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84
+          ],
+          "required_source_literals": [
+            "dewata,182,164,6\ttrader\tTool Dealer\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem One_Eyed_Glass;",
+            "sellitem Empty_Bottle;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_86",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93
+          ],
+          "required_source_literals": [
+            "dewata,145,267,6\ttrader\tFruit Gardener\t4_M_DEWOLDWOMAN,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "sellitem Pumpkin;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_43_95",
+      "unit": "E2-npc-re-merchants-shops-txt-43",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109
+          ],
+          "required_source_literals": [
+            "dewata,158,182,6\ttrader\tArmor Dealer\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
             "}"
           ]
         }
