@@ -55231,11 +55231,11 @@
       "commit": "committed"
     },
     {
-      "id": "E3-unknown-",
+      "id": "E3-unknown-line-comment",
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "//",
@@ -55274,7 +55274,25 @@
       ],
       "size_lines": 2,
       "reason": "2 item script(s) first stop at `//`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:29:18Z activated",
+        "2026-09-30T20:30:03Z validated",
+        "2026-09-30T20:30:03Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:30:32Z accepted",
+        "2026-09-30T20:30:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "81f1cd9ba6ac90ba42fd841d15ad622f365cd959a81a8860dc1c16f043888996",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-baspd-expression",
@@ -65651,7 +65669,7 @@
       "history": []
     },
     {
-      "id": "E4-lg-shieldspell",
+      "id": "E4-lg-shieldspell-b",
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
@@ -65765,7 +65783,7 @@
       "history": []
     },
     {
-      "id": "E4-lg-rayofgenesis",
+      "id": "E4-lg-rayofgenesis-b",
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
@@ -66381,7 +66399,7 @@
       "history": []
     },
     {
-      "id": "E4-so-varetyr-spear",
+      "id": "E4-so-varetyr-spear-b",
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",

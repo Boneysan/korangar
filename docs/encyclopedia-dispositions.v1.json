@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 929
+    "E3_unknown": 931
   },
   "entries": [
     {
@@ -86730,6 +86730,60 @@
           ],
           "required_source_literals": [
             "getitem Forbidden_Secret_Art,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e3_unknown_line_comment_item_22534_script_untranslated",
+      "unit": "E3-unknown-line-comment",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22534
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22534 is not summarized: the translator does not interpret the quoted statement (//).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149267
+          ],
+          "required_source_literals": [
+            "// getgroupitem(IG_Sealed_Mind_Box);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e3_unknown_line_comment_item_22537_script_untranslated",
+      "unit": "E3-unknown-line-comment",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22537
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22537 is not summarized: the translator does not interpret the quoted statement (//).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149278
+          ],
+          "required_source_literals": [
+            "// getrandgroupitem(IG_PrizeOfHero, 1);"
           ]
         }
       ],
