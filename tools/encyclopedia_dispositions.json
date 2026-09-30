@@ -13276,6 +13276,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_jayon_branch_for_1113_1145",
+      "unit": "E1-prontera_jayon_branch_for_1113",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jayon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1145
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_jayon_branch_for_1113_1191",
+      "unit": "E1-prontera_jayon_branch_for_1113",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jayon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1191
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_jayon_branch_for_1113_1238",
+      "unit": "E1-prontera_jayon_branch_for_1113",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jayon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1238
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
