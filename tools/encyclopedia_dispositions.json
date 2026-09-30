@@ -141672,6 +141672,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2140_npc_quests_quests_nameless_txt_3148",
+      "unit": "E5-chain-2140",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2140
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2140; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            3148
+          ],
+          "required_source_literals": [
+            "changequest 2140,2141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
