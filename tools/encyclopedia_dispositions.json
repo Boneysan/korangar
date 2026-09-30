@@ -119872,6 +119872,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_other_turbo_track_txt_3704_3704",
+      "unit": "E2-npc-other-turbo-track-txt-3704",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Turbo Track Merchant"
+      },
+      "result": "verified",
+      "statement": "Turbo Track Merchant is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/turbo_track.txt",
+          "lines": [
+            3704
+          ],
+          "required_source_literals": [
+            "turbo_room,124,86,0\tshop\tTurbo Track Merchant\t4_F_01,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,1065:-1,1750:-1"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
