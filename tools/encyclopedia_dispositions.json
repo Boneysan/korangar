@@ -31751,6 +31751,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_luik_ep13md16_branch_for_2188_2317",
+      "unit": "E1-man_in01_luik_ep13md16_branch_for_2188",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Luik#ep13md16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shaggy_Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2317
+          ],
+          "required_source_literals": [
+            "delitem Shaggy_Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_luik_ep13md16_branch_for_2188_2318",
+      "unit": "E1-man_in01_luik_ep13md16_branch_for_2188",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Luik#ep13md16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bradium_Fragments,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2318
+          ],
+          "required_source_literals": [
+            "delitem Bradium_Fragments,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
