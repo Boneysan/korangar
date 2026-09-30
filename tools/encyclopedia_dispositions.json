@@ -15576,6 +15576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_rossi_desk_khr3_branch_for_5299_5328",
+      "unit": "E1-kh_rossi_desk_khr3_branch_for_5299",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Desk#khr3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Kyll_Hire_Letter2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5328
+          ],
+          "required_source_literals": [
+            "getitem Kyll_Hire_Letter2,1; //Kyll_Hyre_Letter2"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
