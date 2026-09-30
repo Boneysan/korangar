@@ -39526,6 +39526,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_satra_ein_branch_for_5096_5186",
+      "unit": "E1-ein_in01_satra_ein_branch_for_5096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Satra#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5186
+          ],
+          "required_source_literals": [
+            "delitem Coal,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_satra_ein_branch_for_5096_5270",
+      "unit": "E1-ein_in01_satra_ein_branch_for_5096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Satra#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5270
+          ],
+          "required_source_literals": [
+            "delitem Coal,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_satra_ein_branch_for_5096_5352",
+      "unit": "E1-ein_in01_satra_ein_branch_for_5096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Satra#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5352
+          ],
+          "required_source_literals": [
+            "delitem Coal,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_satra_ein_branch_for_5096_5410",
+      "unit": "E1-ein_in01_satra_ein_branch_for_5096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Satra#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5410
+          ],
+          "required_source_literals": [
+            "delitem Coal,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

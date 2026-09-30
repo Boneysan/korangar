@@ -15050,7 +15050,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Satra#ein",
@@ -15069,7 +15069,25 @@
       ],
       "size_lines": 496,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:15:00Z activated",
+        "2026-09-30T16:15:00Z validated",
+        "2026-09-30T16:15:00Z verified: 4 claims supported",
+        "2026-09-30T16:15:23Z accepted",
+        "2026-09-30T16:15:23Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d93922c8cb5933ec0d7e5ffe4fedae9a3e324ea8ceb440ccb305acd0938a1545",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_in_blacksmith_branch_for_41",
