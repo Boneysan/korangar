@@ -645,7 +645,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Vintenar#bat_b02_bover",
@@ -664,7 +664,25 @@
       ],
       "size_lines": 79,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T14:01:40Z activated",
+        "2026-09-30T14:01:40Z validated",
+        "2026-09-30T14:01:41Z verified: 6 claims supported",
+        "2026-09-30T14:02:04Z accepted",
+        "2026-09-30T14:02:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "05033d49b4c0ac727eb4ae0ae7581eb5cca5cd9d1ad28b065fe9fdeb49e16986",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_a01_guillaume_blacksmith_a01_branch_for_315",
