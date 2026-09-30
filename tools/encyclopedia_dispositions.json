@@ -72276,6 +72276,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_locas_iz_branch_for_13278_13456",
+      "unit": "E1-izlude_locas_iz_branch_for_13278",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Locas#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Stone,.@ston_full; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13456
+          ],
+          "required_source_literals": [
+            "delitem(Oridecon_Stone, .@ston_full); // Oridecon_Stone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_locas_iz_branch_for_13278_13457",
+      "unit": "E1-izlude_locas_iz_branch_for_13278",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Locas#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon,.@ston_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13457
+          ],
+          "required_source_literals": [
+            "getitem(Oridecon, .@ston_max); // Oridecon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_locas_iz_branch_for_13278_13489",
+      "unit": "E1-izlude_locas_iz_branch_for_13278",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Locas#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium_Stone,.@ston_full; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13489
+          ],
+          "required_source_literals": [
+            "delitem(Elunium_Stone, .@ston_full); // Elunium_Stone"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_locas_iz_branch_for_13278_13490",
+      "unit": "E1-izlude_locas_iz_branch_for_13278",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Locas#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elunium,.@ston_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13490
+          ],
+          "required_source_literals": [
+            "getitem(Elunium, .@ston_max); // Elunium"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
