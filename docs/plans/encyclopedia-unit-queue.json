@@ -2133,7 +2133,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kuuga Gai#nq",
@@ -2152,7 +2152,25 @@
       ],
       "size_lines": 299,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:16:09Z activated",
+        "2026-09-30T14:16:09Z validated",
+        "2026-09-30T14:16:09Z verified: 3 claims supported",
+        "2026-09-30T14:16:32Z accepted",
+        "2026-09-30T14:16:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9e14e6f3c861e3efa123328dda50cfdb4a0d34669674f84fc03e8ed66d5ac7d5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-einbroch_suspicious_man_nq_branch_for_396",

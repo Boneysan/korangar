@@ -3576,6 +3576,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_kuuga_gai_nq_branch_for_96_357",
+      "unit": "E1-que_ng_kuuga_gai_nq_branch_for_96",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuuga Gai#nq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            357
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,5; // Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_kuuga_gai_nq_branch_for_96_358",
+      "unit": "E1-que_ng_kuuga_gai_nq_branch_for_96",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuuga Gai#nq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phracon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "delitem Phracon,1; // Phracon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_kuuga_gai_nq_branch_for_96_359",
+      "unit": "E1-que_ng_kuuga_gai_nq_branch_for_96",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kuuga Gai#nq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Asura,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            359
+          ],
+          "required_source_literals": [
+            "getitem Asura,1;\t// Asura"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
