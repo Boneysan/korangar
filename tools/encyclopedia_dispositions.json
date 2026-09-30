@@ -49776,6 +49776,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13135",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Str_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13135
+          ],
+          "required_source_literals": [
+            "getitem Str_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13138",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Agi_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13138
+          ],
+          "required_source_literals": [
+            "getitem Agi_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13141",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dex_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13141
+          ],
+          "required_source_literals": [
+            "getitem Dex_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13144",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Int_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13144
+          ],
+          "required_source_literals": [
+            "getitem Int_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13147",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vit_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13147
+          ],
+          "required_source_literals": [
+            "getitem Vit_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_rogue_guild_agent_nd3_branch_for_12938_13150",
+      "unit": "E1-comodo_rogue_guild_agent_nd3_branch_for_12938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Luk_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            13150
+          ],
+          "required_source_literals": [
+            "getitem Luk_Dish04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

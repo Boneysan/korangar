@@ -20630,7 +20630,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Rogue Guild Agent#nd3",
@@ -20649,7 +20649,25 @@
       ],
       "size_lines": 281,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:06:07Z activated",
+        "2026-09-30T17:06:07Z validated",
+        "2026-09-30T17:06:08Z verified: 6 claims supported",
+        "2026-09-30T17:06:31Z accepted",
+        "2026-09-30T17:06:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1df2394238cddd304ab6969ee3b04c00acf3d1afbfe1281de61572aab47dfa5a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-niflheim_alreg_nif_branch_for_46",
