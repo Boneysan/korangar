@@ -6857,7 +6857,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cute Student#kh",
@@ -6876,7 +6876,25 @@
       ],
       "size_lines": 543,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:59:29Z activated",
+        "2026-09-30T14:59:29Z validated",
+        "2026-09-30T14:59:29Z verified: 8 claims supported",
+        "2026-09-30T14:59:52Z accepted",
+        "2026-09-30T14:59:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "33dc7b1e8f6b426ca20b87e9ef892a23740caeb2a0a77e451053b8e49863aec0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-kh_school_elly_branch_for_1387",

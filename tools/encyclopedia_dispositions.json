@@ -14476,6 +14476,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_960",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            960
+          ],
+          "required_source_literals": [
+            "delitem Milk,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_961",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cheese,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            961
+          ],
+          "required_source_literals": [
+            "delitem Cheese,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_962",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cacao,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            962
+          ],
+          "required_source_literals": [
+            "delitem Cacao,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_963",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tavern_Wine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            963
+          ],
+          "required_source_literals": [
+            "delitem Tavern_Wine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_964",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Delivery_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            964
+          ],
+          "required_source_literals": [
+            "delitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_996",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            996
+          ],
+          "required_source_literals": [
+            "getitem Well_Baked_Cookie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_1088",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Villa_Spare_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1088
+          ],
+          "required_source_literals": [
+            "getitem Villa_Spare_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_cute_student_kh_branch_for_778_1142",
+      "unit": "E1-kh_school_cute_student_kh_branch_for_778",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cute Student#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Kyll_Hire_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1142
+          ],
+          "required_source_literals": [
+            "delitem Kyll_Hire_Letter,1; //Letter_to_Elly"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
