@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3238,
+    "E1_unknown": 3240,
     "E1_verified": 1
   },
   "entries": [
@@ -15829,6 +15829,56 @@
           ],
           "required_source_literals": [
             "delitem Birthday_Candle,128; //Birthday_Candle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_normal_yai_tllb_branch_for_18899_18962",
+      "unit": "E1-eclage_normal_yai_tllb_branch_for_18899",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Normal Yai#tllb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dustball,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            18962
+          ],
+          "required_source_literals": [
+            "delitem Dustball,10; //Dustball"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_normal_yai_tllb_branch_for_18899_18963",
+      "unit": "E1-eclage_normal_yai_tllb_branch_for_18899",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Normal Yai#tllb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Bookmark,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            18963
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Bookmark,10; //Leaf_Bookmark"
           ]
         }
       ],
