@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 558
+    "E3_unknown": 581
   },
   "entries": [
     {
@@ -86764,6 +86764,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_11536_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          11536
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 11536 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            85490
+          ],
+          "required_source_literals": [
+            ".@temp = rand(1,4);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_11537_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          11537
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 11537 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            85513
+          ],
+          "required_source_literals": [
+            ".@temp = rand(1,6);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1181_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87378,6 +87432,60 @@
           ],
           "required_source_literals": [
             "Script: <\" if(checkmount() == MOUNT_MADO) itemheal rand(400,500), 0; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12396_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12396
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12396 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            91347
+          ],
+          "required_source_literals": [
+            ".@temp = rand(1,10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12397_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12397
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12397 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            91371
+          ],
+          "required_source_literals": [
+            ".@temp = rand(1, 10);"
           ]
         }
       ],
@@ -89295,6 +89403,33 @@
           ],
           "required_source_literals": [
             "bonus bMaxHP,20*BaseLevel;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15040_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15040 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125086
+          ],
+          "required_source_literals": [
+            ".@rate = min(getrefine(), 10);"
           ]
         }
       ],
@@ -93244,6 +93379,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_22670_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22670
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22670 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149321
+          ],
+          "required_source_literals": [
+            ".@temp = rand(1,3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_22702_script_untranslated",
       "unit": "E3-unknown-control-callfunc",
       "package": "E3",
@@ -95053,6 +95215,276 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_24198_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24198
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24198 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152966
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24199_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24199
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24199 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152980
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24200_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24200
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24200 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152994
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24201_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24201
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24201 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153008
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24202_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24202
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24202 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153022
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24203_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24203
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24203 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153036
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24204_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24204
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24204 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153050
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24205_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24205
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24205 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153064
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24206_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24206
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24206 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153078
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24207_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24207
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24207 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153092
+          ],
+          "required_source_literals": [
+            ".@refine = getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_24216_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -95424,6 +95856,33 @@
           ],
           "required_source_literals": [
             "if(BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) bonus bFlee2,5+(getequiprefinerycnt(EQI_GARMENT)*2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2570_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2570
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2570 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            33865
+          ],
+          "required_source_literals": [
+            ".@val = max(getskilllv(AB_ORATIO), 2);"
           ]
         }
       ],
@@ -96099,6 +96558,33 @@
           ],
           "required_source_literals": [
             "autobonus \"{ bonus bAspd,2; }\",50,2000,BF_WEAPON|BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28374_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28374
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28374 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156422
+          ],
+          "required_source_literals": [
+            ".@lvl = min(BaseLevel/5,10);"
           ]
         }
       ],
@@ -97375,6 +97861,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4440_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4440
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4440 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46764
+          ],
+          "required_source_literals": [
+            ".@i = getiteminfo(getequipid(EQI_HAND_R),11);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4442_script_untranslated",
       "unit": "E3-unknown-bonus3-bsubdefele-expression",
       "package": "E3",
@@ -97753,6 +98266,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4482_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4482 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47299
+          ],
+          "required_source_literals": [
+            ".@rate = (getrefine()>14)?7:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4485_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4485 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47338
+          ],
+          "required_source_literals": [
+            ".@rate = (getrefine()>14)?30:20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4487_script_untranslated",
       "unit": "E3-unknown-bonus-bbaseatk-expression",
       "package": "E3",
@@ -98043,6 +98610,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>14) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4540_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4540
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4540 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48042
+          ],
+          "required_source_literals": [
+            ".@rate = (getrefine()>14)?350:250;"
           ]
         }
       ],
@@ -98394,6 +98988,33 @@
           ],
           "required_source_literals": [
             "if(BaseJob==Job_Dancer) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4574_script_untranslated",
+      "unit": "E3-unknown-control",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4574
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4574 is not summarized: the translator does not interpret the quoted statement (control:.@).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48532
+          ],
+          "required_source_literals": [
+            ".@equip = getiteminfo(getequipid(EQI_HAND_R), 11);"
           ]
         }
       ],
