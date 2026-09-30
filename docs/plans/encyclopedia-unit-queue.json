@@ -1739,7 +1739,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Pierrot Pier#sch_gd",
@@ -1758,7 +1758,26 @@
       ],
       "size_lines": 541,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:12:33Z activated",
+        "2026-09-30T14:12:33Z validated",
+        "2026-09-30T14:12:33Z verified: 5 claims supported",
+        "2026-09-30T14:12:57Z accepted",
+        "2026-09-30T14:12:57Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ef0e1a635a25844b4c141705d01df4d2319c6622ab05488bab17a3ad23c63a56",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_rmimi_ravies_gq_fes01_branch_for_73",
