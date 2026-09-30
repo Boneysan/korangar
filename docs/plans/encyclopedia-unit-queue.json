@@ -1124,7 +1124,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Party Supplies Shop",
@@ -1143,7 +1143,25 @@
       ],
       "size_lines": 30,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:06:01Z activated",
+        "2026-09-30T14:06:01Z validated",
+        "2026-09-30T14:06:01Z verified: 1 claims supported",
+        "2026-09-30T14:06:24Z accepted",
+        "2026-09-30T14:06:24Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "82e2f05abf3ed6a22047ad068ff789d7a3ddc7bdcd2d2f36dea2a31f279be420",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-jawaii_honeymoon_helper_jawaii_branch_for_391",

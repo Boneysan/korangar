@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 82,
+    "E1_unknown": 83,
     "E1_verified": 1
   },
   "entries": [
@@ -2079,6 +2079,31 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_party_supplies_shop_branch_for_150_169",
+      "unit": "E1-hu_in01_party_supplies_shop_branch_for_150",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Party Supplies Shop"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fire_Cracker,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/hugel.txt",
+          "lines": [
+            169
+          ],
+          "required_source_literals": [
+            "getitem Fire_Cracker,5;\t// Fire_Cracker"
           ]
         }
       ],
