@@ -15264,7 +15264,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Blacksmith#SaYumMoon",
@@ -15283,7 +15283,25 @@
       ],
       "size_lines": 587,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:16:59Z activated",
+        "2026-09-30T16:16:59Z validated",
+        "2026-09-30T16:16:59Z verified: 8 claims supported",
+        "2026-09-30T16:17:23Z accepted",
+        "2026-09-30T16:17:23Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4493a0e30dd4daa11bf1d5642b2af5e3ad87168e03d4e7973c12fbf11313b2f0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_in_girl_gnbs2_branch_for_3019",

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1588,
+    "E1_unknown": 1596,
     "E1_verified": 1
   },
   "entries": [
@@ -11554,6 +11554,206 @@
           ],
           "required_source_literals": [
             "getitem Stem,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2952",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2952
+          ],
+          "required_source_literals": [
+            "delitem Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2953",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Stone,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2953
+          ],
+          "required_source_literals": [
+            "delitem Oridecon_Stone,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2954",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vroken_Sword,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2954
+          ],
+          "required_source_literals": [
+            "delitem Vroken_Sword,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2955",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2955
+          ],
+          "required_source_literals": [
+            "delitem Steel,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2956",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Blacksmith,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2956
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Blacksmith,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2957",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Star_Crumb,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2957
+          ],
+          "required_source_literals": [
+            "delitem Star_Crumb,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_2958",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Live_Coal,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            2958
+          ],
+          "required_source_literals": [
+            "delitem Live_Coal,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_blacksmith_sayummoon_branch_for_2431_3000",
+      "unit": "E1-geffen_in_blacksmith_sayummoon_branch_for_2431",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith#SaYumMoon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Haedonggum,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            3000
+          ],
+          "required_source_literals": [
+            "getitem Haedonggum,1;"
           ]
         }
       ],
