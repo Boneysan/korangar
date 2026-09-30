@@ -48212,7 +48212,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "control:callfunc",
@@ -48563,7 +48563,25 @@
       ],
       "size_lines": 26,
       "reason": "26 item script(s) first stop at `control:callfunc`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:09:34Z activated",
+        "2026-09-30T20:09:34Z validated",
+        "2026-09-30T20:09:34Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:09:58Z accepted",
+        "2026-09-30T20:09:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a508fb6b24814057ce1086566deb560ea5f084da4aaed87eef5cce2b91d193b2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-control",

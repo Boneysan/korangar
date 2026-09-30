@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 532
+    "E3_unknown": 558
   },
   "entries": [
     {
@@ -86926,6 +86926,87 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_12211_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12211 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            88652
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashStore\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12212_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12212 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            88670
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashPartyCall\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12213_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12213 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            88687
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashReset\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_12258_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -86946,6 +87027,33 @@
           ],
           "required_source_literals": [
             "if(strcharinfo(PC_MAP)==\"job3_rang02\") {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12352_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12352
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12352 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            90702
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashDungeon\",3; \">"
           ]
         }
       ],
@@ -87270,6 +87378,33 @@
           ],
           "required_source_literals": [
             "Script: <\" if(checkmount() == MOUNT_MADO) itemheal rand(400,500), 0; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12444_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12444
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12444 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            91913
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashSiegeTele\"; \">"
           ]
         }
       ],
@@ -87702,6 +87837,168 @@
           ],
           "required_source_literals": [
             "bonus bBaseAtk,(getrefine()*5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12977_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12977
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12977 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98108
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12978_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12978
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12978 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98126
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",2; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12979_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12979
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12979 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98144
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",3; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12980_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12980
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12980 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98162
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",4; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12981_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12981
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12981 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98180
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",5; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12982_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12982
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12982 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            98198
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashTele\",6; \">"
           ]
         }
       ],
@@ -88674,6 +88971,195 @@
           ],
           "required_source_literals": [
             "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14527_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14527
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14527 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            122447
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashDungeon\",1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14581_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14581
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14581 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123499
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashDungeon\",2; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14582_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14582
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14582 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123516
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashCity\",1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14583_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14583
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14583 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123533
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashCity\",2; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14584_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14584
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14584 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123550
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashCity\",3; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14585_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14585
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14585 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123567
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashCity\",4; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_14591_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          14591
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 14591 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            123682
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"F_CashSiegeTele\"; \">"
           ]
         }
       ],
@@ -92751,6 +93237,168 @@
           ],
           "required_source_literals": [
             "bonus bMaxHP, 100 * getrefine() / 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22702_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22702
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22702 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149392
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bStr, -1, STR_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22703_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22703
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22703 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149400
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bAgi, -1, AGI_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22704_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22704
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22704 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149408
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bVit, -1, VIT_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22705_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22705
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22705 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149416
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bInt, -1, INT_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22706_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22706
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22706 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149424
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bDex, -1, DEX_Soul_Potion); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22707_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22707
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22707 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149432
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc(\"F_CashReduceStat\", bLuk, -1, LUK_Soul_Potion); \">"
           ]
         }
       ],
@@ -101040,6 +101688,60 @@
           ],
           "required_source_literals": [
             "if(BaseLevel<100) { bonus bVit,getrefine()/2; }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_6046_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          6046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 6046 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            68880
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"SetPalete\",1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_6047_script_untranslated",
+      "unit": "E3-unknown-control-callfunc",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          6047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 6047 is not summarized: the translator does not interpret the quoted statement (control:callfunc).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            68896
+          ],
+          "required_source_literals": [
+            "Script: <\" callfunc \"SetPalete\",2; \">"
           ]
         }
       ],
