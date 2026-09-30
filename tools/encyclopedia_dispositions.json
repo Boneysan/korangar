@@ -85751,6 +85751,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_dun01_stacked_boxes_of_goods_branch_for_1535_1555",
+      "unit": "E1-dic_dun01_stacked_boxes_of_goods_branch_for_1535",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stacked Boxes of Goods"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bradium_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1555
+          ],
+          "required_source_literals": [
+            "getitem Bradium_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_dun01_stacked_boxes_of_goods_branch_for_1535_1575",
+      "unit": "E1-dic_dun01_stacked_boxes_of_goods_branch_for_1535",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stacked Boxes of Goods"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bradium_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1575
+          ],
+          "required_source_literals": [
+            "getitem Bradium_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
