@@ -68326,6 +68326,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1514",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Runstone_Storm,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1514
+          ],
+          "required_source_literals": [
+            "getitem Runstone_Storm,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1515",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Runstone_Millennium,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1515
+          ],
+          "required_source_literals": [
+            "getitem Runstone_Millennium,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1538",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Crush,countitem(Runstone_Crush; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1538
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1539",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Storm,countitem(Runstone_Storm; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1539
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1540",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Millennium,countitem(Runstone_Millennium; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1540
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1562",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Crush,countitem(Runstone_Crush; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1562
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1563",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Storm,countitem(Runstone_Storm; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1563
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_velpino_branch_for_1441_1564",
+      "unit": "E1-job3_rune01_rune_knight_velpino_branch_for_1441",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Velpino"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Runstone_Millennium,countitem(Runstone_Millennium; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            1564
+          ],
+          "required_source_literals": [
+            "if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
