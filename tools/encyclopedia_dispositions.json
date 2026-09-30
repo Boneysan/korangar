@@ -116055,6 +116055,330 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_925",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Flower Girl#lhz"
+      },
+      "result": "verified",
+      "statement": "Flower Girl#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            925,
+            926,
+            927,
+            928,
+            929,
+            930
+          ],
+          "required_source_literals": [
+            "lighthalzen,112,44,0\ttrader\tFlower Girl#lhz\t4_F_01,{",
+            "OnInit:",
+            "sellitem Flower;",
+            "sellitem Bunch_Of_Flowers;",
+            "sellitem Witherless_Rose;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_932",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vegetable Gardener#lhz"
+      },
+      "result": "verified",
+      "statement": "Vegetable Gardener#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            932,
+            933,
+            934,
+            935,
+            936,
+            937
+          ],
+          "required_source_literals": [
+            "lighthalzen,124,129,0\ttrader\tVegetable Gardener#lhz\t4_F_02,{",
+            "OnInit:",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "sellitem Pumpkin;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_939",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vendor from Milk Ranch#l"
+      },
+      "result": "verified",
+      "statement": "Vendor from Milk Ranch#l is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            939,
+            940,
+            941,
+            942
+          ],
+          "required_source_literals": [
+            "lighthalzen,220,122,3\ttrader\tVendor from Milk Ranch#l\t4_F_01,{",
+            "OnInit:",
+            "sellitem Milk;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_944",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#lhz"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            944,
+            945,
+            946,
+            947,
+            948,
+            949,
+            950,
+            951,
+            952,
+            953,
+            954
+          ],
+          "required_source_literals": [
+            "lighthalzen,222,191,4\ttrader\tPet Groomer#lhz\t4_M_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Mojji;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_956",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Beginner's Merchant#lhz"
+      },
+      "result": "verified",
+      "statement": "Beginner's Merchant#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            956,
+            957,
+            958,
+            959,
+            960,
+            961,
+            962
+          ],
+          "required_source_literals": [
+            "lhz_in02,286,95,4\ttrader\tBeginner's Merchant#lhz\t1_M_SIZ,{",
+            "OnInit:",
+            "sellitem Super_Novice_Hat;",
+            "sellitem Novice_Shoes;",
+            "sellitem Novice_Shield;",
+            "sellitem Novice_Manteau;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_964",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#lhz"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            964,
+            965,
+            966,
+            967,
+            968,
+            969,
+            970,
+            971,
+            972,
+            973,
+            974,
+            975,
+            976
+          ],
+          "required_source_literals": [
+            "lhz_in02,271,99,5\ttrader\tArmor Dealer#lhz\t4_M_REPAIR,{",
+            "OnInit:",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Shoes;",
+            "sellitem Boots;",
+            "sellitem Muffler;",
+            "sellitem Silk_Robe;",
+            "sellitem Chain_Mail;",
+            "sellitem Coat;",
+            "sellitem Thief_Clothes;",
+            "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_978",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#lhz"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            978,
+            979,
+            980,
+            981,
+            982,
+            983,
+            984,
+            985,
+            986,
+            987,
+            988,
+            989,
+            990,
+            991,
+            992
+          ],
+          "required_source_literals": [
+            "lhz_in02,276,99,4\ttrader\tWeapon Dealer#lhz\t4_M_REPAIR,{",
+            "OnInit:",
+            "sellitem Knife;",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "sellitem Coward;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_925_994",
+      "unit": "E2-npc-merchants-shops-txt-925",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Wand Dealer#lhz"
+      },
+      "result": "verified",
+      "statement": "Wand Dealer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            994,
+            995,
+            996,
+            997,
+            998,
+            999,
+            1000,
+            1001
+          ],
+          "required_source_literals": [
+            "lhz_in02,273,35,4\ttrader\tWand Dealer#lhz\t4_M_EINMAN2,{",
+            "OnInit:",
+            "sellitem Rod;",
+            "sellitem Wand;",
+            "sellitem Staff;",
+            "sellitem Survival_Rod;",
+            "sellitem Survival_Rod2;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
