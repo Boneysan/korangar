@@ -69401,6 +69401,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_karian_job_min3_branch_for_1846_1901",
+      "unit": "E1-prt_in_karian_job_min3_branch_for_1846",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karian#job_min3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Minstrel_Song_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            1901
+          ],
+          "required_source_literals": [
+            "getitem Minstrel_Song_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_karian_job_min3_branch_for_1846_1902",
+      "unit": "E1-prt_in_karian_job_min3_branch_for_1846",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karian#job_min3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            1902
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
