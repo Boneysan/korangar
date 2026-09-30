@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 964
+    "E3_unknown": 965
   },
   "entries": [
     {
@@ -105468,6 +105468,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus2 bAddEffWhenHit,Eff_Stone,300+600*(readparam(bInt)>=77); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4326_script_untranslated",
+      "unit": "E3-unknown-bonus2-badditemhealrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4326
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4326 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddItemHealRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45294
+          ],
+          "required_source_literals": [
+            "bonus2(bAddItemHealRate, Shusi, 50);"
           ]
         }
       ],
