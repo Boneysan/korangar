@@ -86626,6 +86626,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_knights_boss_mo_branch_for_5188_5216",
+      "unit": "E1-mora_knights_boss_mo_branch_for_5188",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knights Boss#mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mysterious_Seed,200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            5216
+          ],
+          "required_source_literals": [
+            "delitem Mysterious_Seed,200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_knights_boss_mo_branch_for_5188_5217",
+      "unit": "E1-mora_knights_boss_mo_branch_for_5188",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knights Boss#mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            5217
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
