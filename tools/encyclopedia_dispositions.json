@@ -2726,6 +2726,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_dun01_dwarf_aru_gd_branch_for_81_175",
+      "unit": "E1-arug_dun01_dwarf_aru_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_dun01_dwarf_aru_gd_branch_for_81_307",
+      "unit": "E1-arug_dun01_dwarf_aru_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            307
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_dun01_dwarf_aru_gd_branch_for_81_450",
+      "unit": "E1-arug_dun01_dwarf_aru_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            450
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
