@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3240,
+    "E1_unknown": 3241,
     "E1_verified": 1
   },
   "entries": [
@@ -61904,6 +61904,31 @@
           ],
           "required_source_literals": [
             "delitem Invite_For_Duel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_avan01_desk_tl01_branch_for_19090_19275",
+      "unit": "E1-que_avan01_desk_tl01_branch_for_19090",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Desk#tl01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Avant_Research_Data,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            19275
+          ],
+          "required_source_literals": [
+            "getitem Avant_Research_Data,1; //Avant_Research_Data"
           ]
         }
       ],
