@@ -12422,7 +12422,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wanted Sign#ep13_2ect01",
@@ -12441,7 +12441,22 @@
       ],
       "size_lines": 40,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:50:51Z activated",
+        "2026-09-30T15:50:52Z validated",
+        "2026-09-30T15:50:52Z verified: 0 claims supported",
+        "2026-09-30T15:51:15Z accepted",
+        "2026-09-30T15:51:15Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f81111bab8f8f38f36beb56931169cc32a89a8c6d52296c8d1d772d444e13098",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-nyd_dun02_dragon_egg_ep13_degg_1_branch_for_3304",
