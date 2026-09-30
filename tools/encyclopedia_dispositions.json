@@ -131466,6 +131466,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8013_npc_jobs_2_1_priest_txt_707",
+      "unit": "E5-chain-8013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/priest.txt",
+          "lines": [
+            707
+          ],
+          "required_source_literals": [
+            "changequest 8013,8014;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8013_npc_jobs_2_1_priest_txt_826",
+      "unit": "E5-chain-8013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8014
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8014; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/priest.txt",
+          "lines": [
+            826
+          ],
+          "required_source_literals": [
+            "changequest 8014,8015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
