@@ -81026,6 +81026,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_contact_officer_tl_branch_for_18205_18238",
+      "unit": "E1-splendide_contact_officer_tl_branch_for_18205",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Contact Officer#tl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mail_Package,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            18238
+          ],
+          "required_source_literals": [
+            "getitem Mail_Package,1; //Mail_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_contact_officer_tl_branch_for_18205_18267",
+      "unit": "E1-splendide_contact_officer_tl_branch_for_18205",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Contact Officer#tl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mail_Package,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            18267
+          ],
+          "required_source_literals": [
+            "getitem Mail_Package,1; //Mail_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
