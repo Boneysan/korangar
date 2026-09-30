@@ -76926,6 +76926,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_borobudur_temple_manager_branch_for_717_739",
+      "unit": "E1-dewata_borobudur_temple_manager_branch_for_717",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Borobudur Temple Manager"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Satay,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            739
+          ],
+          "required_source_literals": [
+            "delitem Satay,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
