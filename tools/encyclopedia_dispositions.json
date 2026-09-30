@@ -64326,6 +64326,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_wealthy_looking_merchant_branch_for_5517_5655",
+      "unit": "E1-alberta_in_wealthy_looking_merchant_branch_for_5517",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wealthy-looking Merchant"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            5655
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
