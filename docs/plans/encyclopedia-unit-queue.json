@@ -31245,7 +31245,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Artifact Crafter#pa0829",
@@ -31264,7 +31264,25 @@
       ],
       "size_lines": 129,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:43:51Z activated",
+        "2026-09-30T18:43:51Z validated",
+        "2026-09-30T18:43:51Z verified: 1 claims supported",
+        "2026-09-30T18:44:15Z accepted",
+        "2026-09-30T18:44:15Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ac90bf7783716fac7623508b5d2b2d0e7ecc4d0b2a20361a23521d3a50a6abca",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_guardian_of_power_pa082_branch_for_541",
