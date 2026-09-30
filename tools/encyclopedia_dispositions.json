@@ -111728,6 +111728,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1377_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubsize-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1377
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1377 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubSize (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            10867
+          ],
+          "required_source_literals": [
+            "bonus2 bSubSize,Size_Medium,10+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24150_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubsize-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24150 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubSize (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152501
+          ],
+          "required_source_literals": [
+            "bonus2 bSubSize,Size_All,1+((getrefine()>=9)?2:(getrefine()>=7)?1:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24151_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubsize-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24151 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubSize (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152512
+          ],
+          "required_source_literals": [
+            "bonus2 bSubSize,Size_All,1+((getrefine()>=9)?2:(getrefine()>=7)?1:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
