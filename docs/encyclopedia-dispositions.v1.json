@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1638,
+    "E1_unknown": 1639,
     "E1_verified": 1
   },
   "entries": [
@@ -12579,6 +12579,31 @@
           ],
           "required_source_literals": [
             "getitem Crystal_Of_Feardoom,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_fild06_torpy_s_mom_branch_for_5074_5159",
+      "unit": "E1-hu_fild06_torpy_s_mom_branch_for_5074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Torpy's Mom"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dex_Dish05,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5159
+          ],
+          "required_source_literals": [
+            "getitem Dex_Dish05,3; //Green Salad"
           ]
         }
       ],

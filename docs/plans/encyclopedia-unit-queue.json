@@ -15879,7 +15879,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Torpy's Mom",
@@ -15898,7 +15898,25 @@
       ],
       "size_lines": 117,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:22:43Z activated",
+        "2026-09-30T16:22:44Z validated",
+        "2026-09-30T16:22:44Z verified: 1 claims supported",
+        "2026-09-30T16:23:07Z accepted",
+        "2026-09-30T16:23:07Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b6f1d7684b565ef3f8e333d43ca78d57715bd942e0e7887cd85c7275bbb273b6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hugel_suspicious_barrel_branch_for_5192",
