@@ -28751,6 +28751,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8150",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8150
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8170",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8170
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8191",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8191
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8211",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8211
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8233",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8233
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

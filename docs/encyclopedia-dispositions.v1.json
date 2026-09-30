@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1145,
+    "E1_unknown": 1150,
     "E1_verified": 1
   },
   "entries": [
@@ -10379,6 +10379,131 @@
           ],
           "required_source_literals": [
             "getitem Chocolate_Pie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8150",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8150
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8170",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8170
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8191",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8191
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8211",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8211
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ferocious_gorurug_branch_for_8105_8233",
+      "unit": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ferocious Gorurug"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Fish,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8233
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Fish,10;"
           ]
         }
       ],
