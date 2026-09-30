@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 961
+    "E3_unknown": 962
   },
   "entries": [
     {
@@ -109923,6 +109923,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus bHPrecovRate, (getrefine() >= 7) ? 100 : 50; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4981_script_untranslated",
+      "unit": "E3-unknown-bonus-bsprecovrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4981
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4981 is not summarized: the translator does not interpret the quoted statement (bonus bSPrecovRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52766
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bSPrecovRate, (getrefine() >= 7) ? 100 : 50; \">"
           ]
         }
       ],
