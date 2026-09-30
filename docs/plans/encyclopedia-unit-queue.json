@@ -65956,7 +65956,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -65975,7 +65975,25 @@
       ],
       "size_lines": 9,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:34:40Z activated",
+        "2026-09-30T21:34:40Z validated",
+        "2026-09-30T21:34:40Z verified: 1 claims supported",
+        "2026-09-30T21:35:03Z accepted",
+        "2026-09-30T21:35:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bf8f9352d7a22ea695a6fcb4895044379b67955e92a9ba15fd81dbfc0a1398bb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-wl-drainlife",
