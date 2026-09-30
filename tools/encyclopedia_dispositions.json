@@ -60726,6 +60726,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_spiteful_looking_bard_bs_branch_for_391_500",
+      "unit": "E1-morocc_in_spiteful_looking_bard_bs_branch_for_391",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Spiteful-Looking Bard#bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Munak_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            500
+          ],
+          "required_source_literals": [
+            "delitem Munak_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_spiteful_looking_bard_bs_branch_for_391_582",
+      "unit": "E1-morocc_in_spiteful_looking_bard_bs_branch_for_391",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Spiteful-Looking Bard#bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Egg,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            582
+          ],
+          "required_source_literals": [
+            "delitem Egg,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_spiteful_looking_bard_bs_branch_for_391_646",
+      "unit": "E1-morocc_in_spiteful_looking_bard_bs_branch_for_391",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Spiteful-Looking Bard#bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Egg,countitem(Egg; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            646
+          ],
+          "required_source_literals": [
+            "delitem Egg,countitem(Egg);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
