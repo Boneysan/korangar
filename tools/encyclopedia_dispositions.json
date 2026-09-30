@@ -85176,6 +85176,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_village_chief_bako2_branch_for_5643_5761",
+      "unit": "E1-malaya_village_chief_bako2_branch_for_5643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Village Chief#bako2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Insideout_Shirt,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            5761
+          ],
+          "required_source_literals": [
+            "getitem Insideout_Shirt,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_village_chief_bako2_branch_for_5643_5867",
+      "unit": "E1-malaya_village_chief_bako2_branch_for_5643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Village Chief#bako2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            5867
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
