@@ -61510,7 +61510,7 @@
       "package": "E2",
       "kind": "e2_stock",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "declarations": [
@@ -61534,7 +61534,25 @@
       ],
       "size_lines": 7,
       "reason": "1 stock declaration(s) not covered by the 107 literal service calls",
-      "history": []
+      "history": [
+        "2026-09-30T20:57:02Z activated",
+        "2026-09-30T20:57:02Z validated",
+        "2026-09-30T20:57:02Z verified: 1 claims supported",
+        "2026-09-30T20:57:25Z accepted",
+        "2026-09-30T20:57:25Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "52df928cd93e2ce52d7e862d6e56a20076689566ae4f88c6f99d4711c62cdd48",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E2-npc-re-other-grader-txt-34",

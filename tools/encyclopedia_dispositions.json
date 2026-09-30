@@ -123620,6 +123620,43 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_other_dimensional_gap_txt_115_115",
+      "unit": "E2-npc-re-other-dimensional-gap-txt-115",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Sundries Merchant"
+      },
+      "result": "verified",
+      "statement": "Sundries Merchant is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/other/dimensional_gap.txt",
+          "lines": [
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121
+          ],
+          "required_source_literals": [
+            "dali,109,94,4\ttrader\tSundries Merchant\t4_M_MERCAT2,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Arrow;",
+            "sellitem Booby_Trap;",
+            "end;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
