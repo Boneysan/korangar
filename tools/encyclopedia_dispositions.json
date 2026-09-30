@@ -131952,6 +131952,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2035_npc_jobs_2_2_alchemist_txt_1590",
+      "unit": "E5-chain-2035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1590
+          ],
+          "required_source_literals": [
+            "changequest 2035,2036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2035_npc_jobs_2_2_alchemist_txt_1701",
+      "unit": "E5-chain-2035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1701
+          ],
+          "required_source_literals": [
+            "changequest 2036,2037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
