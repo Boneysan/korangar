@@ -53436,7 +53436,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bSubRace (expression)",
@@ -53514,7 +53514,25 @@
       ],
       "size_lines": 5,
       "reason": "5 item script(s) first stop at `bonus2 bSubRace (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:20:45Z activated",
+        "2026-09-30T20:20:45Z validated",
+        "2026-09-30T20:20:45Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:21:08Z accepted",
+        "2026-09-30T20:21:08Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0c7e4c225cff709ab1a7477574496eb9f3ec25322924d707e40fbe8f177472cb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus3-baddele-expression",

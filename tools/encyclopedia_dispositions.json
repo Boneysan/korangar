@@ -109730,6 +109730,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2169_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2169
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2169 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25863
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubRace,RC_Boss,getrefine()/3; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2170_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2170
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2170 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25876
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubRace,RC_Boss,getrefine()/3; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5271_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5271
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5271 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            57453
+          ],
+          "required_source_literals": [
+            "bonus2 bSubRace,RC_Boss,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15051_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15051 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125330
+          ],
+          "required_source_literals": [
+            "bonus2 bSubRace,RC_Boss,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15052_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15052 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125345
+          ],
+          "required_source_literals": [
+            "bonus2 bSubRace,RC_Boss,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
