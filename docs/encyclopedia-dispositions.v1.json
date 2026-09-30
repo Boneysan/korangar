@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3287,
+    "E1_unknown": 3294,
     "E1_verified": 1
   },
   "entries": [
@@ -34604,6 +34604,181 @@
           ],
           "required_source_literals": [
             "delitem Silvervine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_4896",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glass_Bead,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4896
+          ],
+          "required_source_literals": [
+            "delitem Glass_Bead,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_4898",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4898
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_4942",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4942
+          ],
+          "required_source_literals": [
+            "getitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_5017",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5017
+          ],
+          "required_source_literals": [
+            "delitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_5032",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bravery_Card_A,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5032
+          ],
+          "required_source_literals": [
+            "delitem Bravery_Card_A,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_5034",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bravery_Card_B,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5034
+          ],
+          "required_source_literals": [
+            "getitem Bravery_Card_B,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_meow_team_charo_nya_11_branch_for_4824_5060",
+      "unit": "E1-malangdo_meow_team_charo_nya_11_branch_for_4824",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "[Meow Team] Charo#nya_11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bravery_Card_B,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            5060
+          ],
+          "required_source_literals": [
+            "getitem Bravery_Card_B,1;"
           ]
         }
       ],
