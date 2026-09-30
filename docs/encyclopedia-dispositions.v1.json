@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 943
+    "E3_unknown": 945
   },
   "entries": [
     {
@@ -92812,6 +92812,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18589_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddmonsterdropitem-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18589
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18589 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddMonsterDropItem (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            134028
+          ],
+          "required_source_literals": [
+            "bonus2 bAddMonsterDropItem,578,100+(10*getrefine());"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18595_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -93372,6 +93399,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>4) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18789_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddmonsterdropitem-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18789
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18789 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddMonsterDropItem (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            137305
+          ],
+          "required_source_literals": [
+            "bonus2 bAddMonsterDropItem,921,100+((getrefine()/2)*20); /* Custom - JRO */"
           ]
         }
       ],
