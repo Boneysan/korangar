@@ -36239,7 +36239,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Star Candy#mal",
@@ -36258,7 +36258,22 @@
       ],
       "size_lines": 77,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:30:04Z activated",
+        "2026-09-30T19:30:04Z validated",
+        "2026-09-30T19:30:04Z verified: 0 claims supported",
+        "2026-09-30T19:30:28Z accepted",
+        "2026-09-30T19:30:28Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "836e2f2812acaeee00d6f9f257031aea9c86133d7a0c1e86c2faa6829154b242",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malangdo_pipielle_branch_for_2772",
