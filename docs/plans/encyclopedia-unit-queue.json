@@ -32714,7 +32714,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Brasilis Girl#bra",
@@ -32733,7 +32733,25 @@
       ],
       "size_lines": 288,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:57:39Z activated",
+        "2026-09-30T18:57:39Z validated",
+        "2026-09-30T18:57:39Z verified: 1 claims supported",
+        "2026-09-30T18:58:02Z accepted",
+        "2026-09-30T18:58:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2632816aa772a561bd5cf2a0dfa94b4c397293813f907d110b503e30ee1e9ec9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bra_dun02_recluse_bra_branch_for_1718",
