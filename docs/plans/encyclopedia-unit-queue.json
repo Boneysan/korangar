@@ -27123,7 +27123,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mysterious Flower#ep14_1",
@@ -27142,7 +27142,25 @@
       ],
       "size_lines": 24,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:05:56Z activated",
+        "2026-09-30T18:05:56Z validated",
+        "2026-09-30T18:05:56Z verified: 1 claims supported",
+        "2026-09-30T18:06:20Z accepted",
+        "2026-09-30T18:06:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "80591e9ad40ed12cb84777fa84e81538e66d2735811398533399948371f95979",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-glast_01_hugin_ghinstance_branch_for_40",

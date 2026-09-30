@@ -66401,6 +66401,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_mysterious_flower_ep14_1_branch_for_1065_1075",
+      "unit": "E1-bif_fild01_mysterious_flower_ep14_1_branch_for_1065",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Flower#ep14_1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mysterious_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            1075
+          ],
+          "required_source_literals": [
+            "delitem(Mysterious_Seed, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
