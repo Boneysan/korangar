@@ -134814,6 +134814,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11087_npc_quests_quests_13_1_txt_3012",
+      "unit": "E5-chain-11087",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11087
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11087; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3012
+          ],
+          "required_source_literals": [
+            "setquest 11087;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11087_npc_quests_quests_13_1_txt_3039",
+      "unit": "E5-chain-11087",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11087
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11087; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3039
+          ],
+          "required_source_literals": [
+            "changequest 11087,11088;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11087_npc_quests_quests_13_1_txt_3099",
+      "unit": "E5-chain-11087",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11090; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3099
+          ],
+          "required_source_literals": [
+            "completequest 11090;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
