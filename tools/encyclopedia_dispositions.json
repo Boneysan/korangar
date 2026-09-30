@@ -85076,6 +85076,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_totoy_buwaya_branch_for_4007_4063",
+      "unit": "E1-ma_in01_totoy_buwaya_branch_for_4007",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Totoy#buwaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            4063
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_in01_totoy_buwaya_branch_for_4007_4276",
+      "unit": "E1-ma_in01_totoy_buwaya_branch_for_4007",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Totoy#buwaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            4276
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
