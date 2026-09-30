@@ -65951,6 +65951,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nif_in_witch_branch_for_10442_10485",
+      "unit": "E1-nif_in_witch_branch_for_10442",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Spell_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10485
+          ],
+          "required_source_literals": [
+            "delitem Witchs_Spell_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nif_in_witch_branch_for_10442_10487",
+      "unit": "E1-nif_in_witch_branch_for_10442",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wing_Of_Crow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10487
+          ],
+          "required_source_literals": [
+            "getitem Wing_Of_Crow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nif_in_witch_branch_for_10442_10520",
+      "unit": "E1-nif_in_witch_branch_for_10442",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wing_Of_Crow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10520
+          ],
+          "required_source_literals": [
+            "getitem Wing_Of_Crow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
