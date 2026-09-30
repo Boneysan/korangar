@@ -21076,6 +21076,506 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2144",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Circlet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2144
+          ],
+          "required_source_literals": [
+            "delitem Circlet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2145",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2145
+          ],
+          "required_source_literals": [
+            "delitem Black_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2146",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Kitty_Doll,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2146
+          ],
+          "required_source_literals": [
+            "delitem Black_Kitty_Doll,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2147",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2147
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2148",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Drooping_Kitty,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2148
+          ],
+          "required_source_literals": [
+            "getitem Drooping_Kitty,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2216",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoon_Leaf,600; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2216
+          ],
+          "required_source_literals": [
+            "delitem Raccoon_Leaf,600;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2217",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2217
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2218",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Headgear,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2218
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Headgear,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2291",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Acorn,1000; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2291
+          ],
+          "required_source_literals": [
+            "delitem Acorn,1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2292",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sea_Otter_Leather,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2292
+          ],
+          "required_source_literals": [
+            "delitem Sea_Otter_Leather,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2293",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoon_Leaf,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2293
+          ],
+          "required_source_literals": [
+            "delitem Raccoon_Leaf,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2294",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2294
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2295",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lazy_Raccoon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2295
+          ],
+          "required_source_literals": [
+            "getitem Lazy_Raccoon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2376",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Fish,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2376
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Fish,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2377",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Scale,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2377
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Scale,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2378",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shusi,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2378
+          ],
+          "required_source_literals": [
+            "delitem Shusi,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2379",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2379
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2380",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2380
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2381",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2381
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_educated_traveller_branch_for_2078_2382",
+      "unit": "E1-morocc_educated_traveller_branch_for_2078",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Educated Traveller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_On_Head,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            2382
+          ],
+          "required_source_literals": [
+            "getitem Fish_On_Head,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
