@@ -20762,7 +20762,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kuzkahina#nif",
@@ -20781,7 +20781,25 @@
       ],
       "size_lines": 32,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:07:19Z activated",
+        "2026-09-30T17:07:19Z validated",
+        "2026-09-30T17:07:19Z verified: 1 claims supported",
+        "2026-09-30T17:07:51Z accepted",
+        "2026-09-30T17:07:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c94121b1b8d2c12ebe77b01509b2abaf442988b9e4831a3accc1d897a40ce13f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-niflheim_graveyard1_branch_for_188",
