@@ -11976,6 +11976,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_buddha_statue_paypuzz6_branch_for_1811_1883",
+      "unit": "E1-pay_arche_buddha_statue_paypuzz6_branch_for_1811",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Buddha Statue#paypuzz6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Slate_2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1883
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Slate_2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

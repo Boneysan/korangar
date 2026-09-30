@@ -5799,7 +5799,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Buddha Statue#paypuzz6",
@@ -5818,7 +5818,25 @@
       ],
       "size_lines": 98,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:49:49Z activated",
+        "2026-09-30T14:49:49Z validated",
+        "2026-09-30T14:49:49Z verified: 1 claims supported",
+        "2026-09-30T14:50:12Z accepted",
+        "2026-09-30T14:50:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "22475a30b745e11db7f05d18941f2299eab31ae5202e73518a0fe03302607c46",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
