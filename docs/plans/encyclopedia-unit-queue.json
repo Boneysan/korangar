@@ -6019,7 +6019,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Veiner",
@@ -6038,7 +6038,25 @@
       ],
       "size_lines": 41,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T14:51:48Z activated",
+        "2026-09-30T14:51:48Z validated",
+        "2026-09-30T14:51:48Z verified: 1 claims supported",
+        "2026-09-30T14:52:12Z accepted",
+        "2026-09-30T14:52:12Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a4ce13dee522f28c669e93cb5a187de2c956f79bff89d368a4a22d94a434710e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_monk_weapon_merchant_tu_branch_for_1303",
