@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 282
+    "E5_unknown": 283
   },
   "entries": [
     {
@@ -106202,6 +106202,33 @@
           ],
           "required_source_literals": [
             "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2082_npc_quests_quests_airship_txt_1358",
+      "unit": "E5-chain-2082",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2082
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2082; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            1358
+          ],
+          "required_source_literals": [
+            "changequest(2082, 2083);"
           ]
         }
       ],
