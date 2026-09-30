@@ -33251,6 +33251,456 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_99",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            99
+          ],
+          "required_source_literals": [
+            "delitem Poring_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_115",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            115
+          ],
+          "required_source_literals": [
+            "getitem Candy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_144",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chonchon_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            144
+          ],
+          "required_source_literals": [
+            "delitem Chonchon_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_161",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy_Striper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            161
+          ],
+          "required_source_literals": [
+            "getitem Candy_Striper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_181",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stuffed_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            181
+          ],
+          "required_source_literals": [
+            "delitem Stuffed_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_196",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy_Striper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            196
+          ],
+          "required_source_literals": [
+            "getitem Candy_Striper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_213",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grasshopper_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            213
+          ],
+          "required_source_literals": [
+            "delitem Grasshopper_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_221",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana_Juice,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            221
+          ],
+          "required_source_literals": [
+            "getitem Banana_Juice,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_237",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spore_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            237
+          ],
+          "required_source_literals": [
+            "delitem Spore_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_247",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            247
+          ],
+          "required_source_literals": [
+            "getitem Well_Baked_Cookie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_271",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Osiris_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            271
+          ],
+          "required_source_literals": [
+            "delitem Osiris_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_283",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fruit_Of_Mastela,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            283
+          ],
+          "required_source_literals": [
+            "getitem Fruit_Of_Mastela,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_301",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Baphomet_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            301
+          ],
+          "required_source_literals": [
+            "delitem Baphomet_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_309",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Panacea,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            309
+          ],
+          "required_source_literals": [
+            "getitem Panacea,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_325",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoondog_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            325
+          ],
+          "required_source_literals": [
+            "delitem Raccoondog_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_336",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Cake,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            336
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Cake,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_353",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monkey_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            353
+          ],
+          "required_source_literals": [
+            "delitem Monkey_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_elin_branch_for_48_366",
+      "unit": "E1-alberta_elin_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            366
+          ],
+          "required_source_literals": [
+            "getitem Seed_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
