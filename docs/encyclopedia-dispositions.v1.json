@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3197,
+    "E1_unknown": 3198,
     "E1_verified": 1
   },
   "entries": [
@@ -14579,6 +14579,31 @@
           ],
           "required_source_literals": [
             "delitem Splendide_Coin,10; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_s_workshop_pa0829_branch_for_11771_11927",
+      "unit": "E1-ecl_in04_hiel_s_workshop_pa0829_branch_for_11771",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel's Workshop#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Leaf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11927
+          ],
+          "required_source_literals": [
+            "getitem Golden_Leaf,1; //Golden_Leaf"
           ]
         }
       ],

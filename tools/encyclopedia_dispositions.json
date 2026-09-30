@@ -80051,6 +80051,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_hiel_s_workshop_pa0829_branch_for_11771_11927",
+      "unit": "E1-ecl_in04_hiel_s_workshop_pa0829_branch_for_11771",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hiel's Workshop#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Leaf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11927
+          ],
+          "required_source_literals": [
+            "getitem Golden_Leaf,1; //Golden_Leaf"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
