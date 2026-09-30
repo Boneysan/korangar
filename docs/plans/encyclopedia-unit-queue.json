@@ -38785,7 +38785,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#bako6",
@@ -38804,7 +38804,22 @@
       ],
       "size_lines": 36,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:53:40Z activated",
+        "2026-09-30T19:53:41Z validated",
+        "2026-09-30T19:53:41Z verified: 0 claims supported",
+        "2026-09-30T19:54:04Z accepted",
+        "2026-09-30T19:54:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "50cc22da1e55b703becc1c3b25cbfeec524ce625add16f21623ade7862b132bc",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_nurse_ma_n1_branch_for_6881",
