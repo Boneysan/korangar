@@ -121199,6 +121199,364 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_355",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trap Specialist#pay"
+      },
+      "result": "verified",
+      "statement": "Trap Specialist#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            355,
+            356,
+            357,
+            358,
+            359
+          ],
+          "required_source_literals": [
+            "payon,123,109,4\ttrader\tTrap Specialist#pay\t1_F_01,{",
+            "OnInit:",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Special_Alloy_Trap_Box;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_362",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#ma"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#ma is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            362,
+            363,
+            364,
+            365,
+            366,
+            367,
+            368,
+            369,
+            370,
+            371,
+            372,
+            373,
+            374
+          ],
+          "required_source_literals": [
+            "ma_in01,73,22,3\ttrader\tWeapon Dealer#ma\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_376",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#ma"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#ma is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            376,
+            377,
+            378,
+            379,
+            380,
+            381,
+            382,
+            383,
+            384,
+            385,
+            386,
+            387,
+            388,
+            389,
+            390
+          ],
+          "required_source_literals": [
+            "ma_in01,22,23,3\ttrader\tTool Dealer#ma\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem One_Eyed_Glass;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_392",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#ma"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#ma is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            392,
+            393,
+            394,
+            395,
+            396,
+            397,
+            398,
+            399
+          ],
+          "required_source_literals": [
+            "malaya,150,261,3\ttrader\tFruit Gardener#ma\t4_M_DEWOLDWOMAN,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "sellitem Pumpkin;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_401",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#ma"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#ma is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            401,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408,
+            409,
+            410,
+            411,
+            412,
+            413,
+            414,
+            415,
+            417,
+            418
+          ],
+          "required_source_literals": [
+            "ma_in01,67,13,5\ttrader\tArmor Dealer#ma\t4_M_DEWMAN,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
+            "}",
+            "//== Prontera ==============================================",
+            "/*"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_419",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Stuff Gimme"
+      },
+      "result": "verified",
+      "statement": "Stuff Gimme is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            419,
+            420,
+            421,
+            422,
+            423
+          ],
+          "required_source_literals": [
+            "prontera,104,88,5\ttrader\tStuff Gimme\t4_M_MASKMAN,{",
+            "OnInit:",
+            "sellitem Old_Card_Album;",
+            "}",
+            "*/"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_425",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#prt1"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#prt1 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            425,
+            426,
+            427,
+            428,
+            429,
+            430,
+            431,
+            432,
+            433,
+            434,
+            435,
+            436,
+            437,
+            438,
+            439
+          ],
+          "required_source_literals": [
+            "prt_in,126,76,0\ttrader\tTool Dealer#prt1\t1_M_INNKEEPER,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_355_441",
+      "unit": "E2-npc-re-merchants-shops-txt-355",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Toy Supplier#prt"
+      },
+      "result": "verified",
+      "statement": "Toy Supplier#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            441,
+            442,
+            443,
+            444,
+            445,
+            446,
+            447,
+            448,
+            449
+          ],
+          "required_source_literals": [
+            "prt_in,117,79,5\ttrader\tToy Supplier#prt\t4_M_PIERROT,{",
+            "OnInit:",
+            "sellitem One_Eyed_Glass;",
+            "sellitem Sunglasses;",
+            "sellitem Spinning_Eyes;",
+            "sellitem Eye_Bandage;",
+            "sellitem Luxury_Sunglasses;",
+            "sellitem Granpa_Beard;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
