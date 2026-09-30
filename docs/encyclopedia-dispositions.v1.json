@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3125,
+    "E1_unknown": 3126,
     "E1_verified": 1
   },
   "entries": [
@@ -13579,6 +13579,31 @@
           ],
           "required_source_literals": [
             "delitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_fairy_carpenter_ep14_2_branch_for_504_810",
+      "unit": "E1-eclage_fairy_carpenter_ep14_2_branch_for_504",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fairy Carpenter#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Made_Wood,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            810
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Made_Wood,2; //Leaf_Made_Wood"
           ]
         }
       ],

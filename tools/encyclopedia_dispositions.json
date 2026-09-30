@@ -78251,6 +78251,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_fairy_carpenter_ep14_2_branch_for_504_810",
+      "unit": "E1-eclage_fairy_carpenter_ep14_2_branch_for_504",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fairy Carpenter#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Made_Wood,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            810
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Made_Wood,2; //Leaf_Made_Wood"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
