@@ -13471,7 +13471,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Grampa",
@@ -13490,7 +13490,22 @@
       ],
       "size_lines": 74,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:00:30Z activated",
+        "2026-09-30T16:00:30Z validated",
+        "2026-09-30T16:00:30Z verified: 0 claims supported",
+        "2026-09-30T16:00:53Z accepted",
+        "2026-09-30T16:00:53Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e22fae99df651592901ddd167a0c72915eb6ffdd549627a4b618fecd036b314f",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_cherokee_branch_for_475",
