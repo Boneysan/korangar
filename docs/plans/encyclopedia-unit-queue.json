@@ -16187,7 +16187,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Young Man#Hu_Quest",
@@ -16206,7 +16206,26 @@
       ],
       "size_lines": 236,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T16:25:31Z activated",
+        "2026-09-30T16:25:31Z validated",
+        "2026-09-30T16:25:31Z verified: 1 claims supported",
+        "2026-09-30T16:25:54Z accepted",
+        "2026-09-30T16:25:54Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "584c62c1c3bb78a851e2336a5344daecd08fc044b1bb3f2aeb7c195e699aaa10",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-hugel_kurupe_branch_for_6889",
