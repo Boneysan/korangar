@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 899
+    "E3_unknown": 902
   },
   "entries": [
     {
@@ -96565,6 +96565,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_22679_script_untranslated",
+      "unit": "E3-unknown-",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22679
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22679 is not summarized: the translator does not interpret the quoted statement (/*).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149361
+          ],
+          "required_source_literals": [
+            "Script: <\" /* ToDo */ \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22685_script_untranslated",
+      "unit": "E3-unknown-",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22685
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22685 is not summarized: the translator does not interpret the quoted statement (/*).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149376
+          ],
+          "required_source_literals": [
+            "Script: <\" /* ToDo GroupItem */ \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_22702_script_untranslated",
       "unit": "E3-unknown-control-callfunc",
       "package": "E3",
@@ -107142,6 +107196,33 @@
           ],
           "required_source_literals": [
             "bonus bDef,getequiprefinerycnt(EQI_ARMOR)*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4656_script_untranslated",
+      "unit": "E3-unknown-",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4656
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4656 is not summarized: the translator does not interpret the quoted statement (/*).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            49451
+          ],
+          "required_source_literals": [
+            "Script: <\" /* When physically and magically attacked, chance to cause Sleep to all targets on 11x11 cells. */ \">"
           ]
         }
       ],
