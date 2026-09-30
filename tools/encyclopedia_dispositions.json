@@ -77751,6 +77751,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1424",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Bloodstain,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1424
+          ],
+          "required_source_literals": [
+            "delitem Solid_Bloodstain,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1425",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Skin_Piece,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1425
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Skin_Piece,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1426",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Suspicious_Magic_Stone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1426
+          ],
+          "required_source_literals": [
+            "delitem Suspicious_Magic_Stone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1463",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Bloodstain,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1463
+          ],
+          "required_source_literals": [
+            "delitem Solid_Bloodstain,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1464",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Skin_Piece,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1464
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Skin_Piece,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1465",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Suspicious_Magic_Stone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1465
+          ],
+          "required_source_literals": [
+            "delitem Suspicious_Magic_Stone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_secret_adjutant_ep133_2_branch_for_1359_1467",
+      "unit": "E1-dic_in01_secret_adjutant_ep133_2_branch_for_1359",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secret Adjutant#ep133_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1467
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
