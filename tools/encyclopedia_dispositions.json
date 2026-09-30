@@ -138810,6 +138810,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11019_npc_quests_quests_juperos_txt_596",
+      "unit": "E5-chain-11019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            596
+          ],
+          "required_source_literals": [
+            "changequest(11019, 11020);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11019_npc_quests_quests_juperos_txt_673",
+      "unit": "E5-chain-11019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            673
+          ],
+          "required_source_literals": [
+            "changequest(11020, 11021);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11019_npc_quests_quests_juperos_txt_798",
+      "unit": "E5-chain-11019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11021
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11021; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            798
+          ],
+          "required_source_literals": [
+            "changequest(11021, 11022);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11019_npc_quests_quests_juperos_txt_896",
+      "unit": "E5-chain-11019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11022
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11022; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            896
+          ],
+          "required_source_literals": [
+            "completequest(11022);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
