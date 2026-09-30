@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1867,
+    "E1_unknown": 1873,
     "E1_verified": 1
   },
   "entries": [
@@ -26729,6 +26729,156 @@
           ],
           "required_source_literals": [
             "delitem Yaga_Secret_Medicine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8080",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Drink,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8080
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Drink,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8100",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8100
+          ],
+          "required_source_literals": [
+            "if (countitem(Witherless_Rose)) delitem Witherless_Rose,1; else delitem Frozen_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8276",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pointed_Wooden_Flute,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8276
+          ],
+          "required_source_literals": [
+            "delitem Pointed_Wooden_Flute,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8279",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8279
+          ],
+          "required_source_literals": [
+            "getitem Red_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8291",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8291
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_ryubaba_rus08_branch_for_8013_8304",
+      "unit": "E1-moscovia_ryubaba_rus08_branch_for_8013",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryubaba#rus08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8304
+          ],
+          "required_source_literals": [
+            "else getitem Yggdrasilberry,1;"
           ]
         }
       ],
