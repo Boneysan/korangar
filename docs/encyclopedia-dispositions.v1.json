@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 163,
+    "E1_unknown": 164,
     "E1_verified": 1
   },
   "entries": [
@@ -2279,6 +2279,31 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_blacksmith_guildsman_moc_branch_for_1375_1543",
+      "unit": "E1-ein_in01_blacksmith_guildsman_moc_branch_for_1375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blacksmith Guildsman#moc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hammer_Of_Blacksmith,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            1543
+          ],
+          "required_source_literals": [
+            "getitem Hammer_Of_Blacksmith,1;"
           ]
         }
       ],

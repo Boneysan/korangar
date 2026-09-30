@@ -2603,7 +2603,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Blacksmith Guildsman#moc",
@@ -2622,7 +2622,26 @@
       ],
       "size_lines": 221,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:20:30Z activated",
+        "2026-09-30T14:20:31Z validated",
+        "2026-09-30T14:20:31Z verified: 1 claims supported",
+        "2026-09-30T14:20:54Z accepted",
+        "2026-09-30T14:20:54Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "cd9ae7226d32cc9276221628a65f6b384afcfa7b60f09fa7f25dfd5e4035f370",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-hu_in01_hunter_guildsman_hnt_branch_for_68",
