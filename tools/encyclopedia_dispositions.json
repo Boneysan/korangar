@@ -63776,6 +63776,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_sir_jore_sign_branch_for_2585_2715",
+      "unit": "E1-aldeba_in_sir_jore_sign_branch_for_2585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sir Jore#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Cylinder,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            2715
+          ],
+          "required_source_literals": [
+            "delitem Empty_Cylinder,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_sir_jore_sign_branch_for_2585_2716",
+      "unit": "E1-aldeba_in_sir_jore_sign_branch_for_2585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sir Jore#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            2716
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_sir_jore_sign_branch_for_2585_2717",
+      "unit": "E1-aldeba_in_sir_jore_sign_branch_for_2585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sir Jore#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            2717
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_sir_jore_sign_branch_for_2585_2829",
+      "unit": "E1-aldeba_in_sir_jore_sign_branch_for_2585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sir Jore#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            2829
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
