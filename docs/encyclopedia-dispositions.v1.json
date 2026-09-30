@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 97
+    "E4_unknown": 98
   },
   "entries": [
     {
@@ -99926,6 +99926,33 @@
           ],
           "required_source_literals": [
             "case WL_DRAINLIFE:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wl_earthstrain_formula",
+      "unit": "E4-wl-earthstrain",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1924
+          ],
+          "required_source_literals": [
+            "case WL_EARTHSTRAIN:"
           ]
         }
       ],
