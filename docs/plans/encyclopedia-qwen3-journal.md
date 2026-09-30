@@ -95,3 +95,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
 - Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E1-bat_b02_guillaume_vintenar_b02_a_branch_for_411 — accepted
+
+- Kind e1_exchange, package E1, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 4 (e1_bat_b02_guillaume_vintenar_b02_a_branch_for_411_422, e1_bat_b02_guillaume_vintenar_b02_a_branch_for_411_430, e1_bat_b02_guillaume_vintenar_b02_a_branch_for_411_442, e1_bat_b02_guillaume_vintenar_b02_a_branch_for_411_450).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).
