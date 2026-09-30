@@ -31967,7 +31967,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dashia",
@@ -31986,7 +31986,26 @@
       ],
       "size_lines": 214,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:50:49Z activated",
+        "2026-09-30T18:50:49Z validated",
+        "2026-09-30T18:50:49Z verified: 18 claims supported",
+        "2026-09-30T18:51:13Z accepted",
+        "2026-09-30T18:51:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "62c776b20858a557b476d70d139e1c796dbddb41ba194dfafd9bb6cea7daacec",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_para01_mission_71_85_branch_for_37",

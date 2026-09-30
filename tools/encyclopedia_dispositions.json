@@ -73476,6 +73476,456 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_512",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Skel_Bone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            512
+          ],
+          "required_source_literals": [
+            "delitem Skel_Bone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_513",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            513
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_535",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            535
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_536",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bears_Foot,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            536
+          ],
+          "required_source_literals": [
+            "delitem Bears_Foot,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_537",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Animals_Skin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            537
+          ],
+          "required_source_literals": [
+            "delitem Animals_Skin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_560",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worm_Peelings,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            560
+          ],
+          "required_source_literals": [
+            "delitem Worm_Peelings,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_561",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Garlet,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            561
+          ],
+          "required_source_literals": [
+            "delitem Garlet,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_562",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            562
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_587",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yoyo_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            587
+          ],
+          "required_source_literals": [
+            "delitem Yoyo_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_588",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Acorn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            588
+          ],
+          "required_source_literals": [
+            "delitem Acorn,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_589",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoon_Leaf,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            589
+          ],
+          "required_source_literals": [
+            "delitem Raccoon_Leaf,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_590",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,150; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            590
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_616",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            616
+          ],
+          "required_source_literals": [
+            "delitem Well_Baked_Cookie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_617",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Cake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            617
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Cake,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_618",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,150; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            618
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_642",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Moustache_Of_Mole,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            642
+          ],
+          "required_source_literals": [
+            "delitem Moustache_Of_Mole,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_643",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Nail_Of_Mole,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            643
+          ],
+          "required_source_literals": [
+            "delitem Nail_Of_Mole,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_dashia_branch_for_479_644",
+      "unit": "E1-payon_dashia_branch_for_479",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dashia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,150; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            644
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
