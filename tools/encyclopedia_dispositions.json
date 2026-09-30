@@ -61751,6 +61751,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_test_monk_qsk_mo_branch_for_237_304",
+      "unit": "E1-monk_test_monk_qsk_mo_branch_for_237",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monk#qsk_mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stem,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/monk_skills.txt",
+          "lines": [
+            304
+          ],
+          "required_source_literals": [
+            "delitem Stem,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_test_monk_qsk_mo_branch_for_237_305",
+      "unit": "E1-monk_test_monk_qsk_mo_branch_for_237",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monk#qsk_mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shoot,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/monk_skills.txt",
+          "lines": [
+            305
+          ],
+          "required_source_literals": [
+            "delitem Shoot,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
