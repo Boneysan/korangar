@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 157,
+    "E1_unknown": 163,
     "E1_verified": 1
   },
   "entries": [
@@ -2279,6 +2279,156 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_671",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arc_Wand,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            671
+          ],
+          "required_source_literals": [
+            "getitem Arc_Wand,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_696",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gladius,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            696
+          ],
+          "required_source_literals": [
+            "getitem Gladius,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_721",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tsurugi,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            721
+          ],
+          "required_source_literals": [
+            "getitem Tsurugi,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_747",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arbalest,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            747
+          ],
+          "required_source_literals": [
+            "getitem Arbalest,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_771",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ring_Pommel_Saber,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            771
+          ],
+          "required_source_literals": [
+            "getitem Ring_Pommel_Saber,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_alberta_branch_for_295_868",
+      "unit": "E1-ein_in01_guildsman_alberta_branch_for_295",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#alberta"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Merchant_Voucher_1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            868
+          ],
+          "required_source_literals": [
+            "delitem Merchant_Voucher_1,1;"
           ]
         }
       ],
