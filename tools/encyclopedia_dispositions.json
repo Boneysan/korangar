@@ -42926,6 +42926,281 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1259",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Herb_Medicine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1259
+          ],
+          "required_source_literals": [
+            "delitem(Herb_Medicine, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1287",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Pill,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1287
+          ],
+          "required_source_literals": [
+            "getitem Gold_Pill,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1389",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Herb_Medicine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1389
+          ],
+          "required_source_literals": [
+            "delitem(Herb_Medicine, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1411",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Pill,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1411
+          ],
+          "required_source_literals": [
+            "getitem Gold_Pill,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1459",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leopard_Talon,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1459
+          ],
+          "required_source_literals": [
+            "delitem Leopard_Talon,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1460",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hard_Peach,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1460
+          ],
+          "required_source_literals": [
+            "delitem Hard_Peach,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1461",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Toads_Skin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1461
+          ],
+          "required_source_literals": [
+            "delitem Poison_Toads_Skin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1462",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Browny_Root,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1462
+          ],
+          "required_source_literals": [
+            "delitem Browny_Root,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1463",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Germinating_Sprout,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1463
+          ],
+          "required_source_literals": [
+            "delitem Germinating_Sprout,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1464",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Honey_Jar,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1464
+          ],
+          "required_source_literals": [
+            "delitem Honey_Jar,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_doctor_lyang_branch_for_1086_1467",
+      "unit": "E1-lou_in02_doctor_lyang_branch_for_1086",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Doctor#lyang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gold_Pill,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1467
+          ],
+          "required_source_literals": [
+            "getitem Gold_Pill,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
