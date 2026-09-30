@@ -62076,6 +62076,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_knight_de_thomas_branch_for_43_126",
+      "unit": "E1-izlude_in_knight_de_thomas_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight De Thomas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            126
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_knight_de_thomas_branch_for_43_127",
+      "unit": "E1-izlude_in_knight_de_thomas_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight De Thomas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wing_Of_Moth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            127
+          ],
+          "required_source_literals": [
+            "delitem Wing_Of_Moth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

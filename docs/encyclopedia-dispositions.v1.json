@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2478,
+    "E1_unknown": 2480,
     "E1_verified": 1
   },
   "entries": [
@@ -17304,6 +17304,56 @@
           ],
           "required_source_literals": [
             "getitem Cardinal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_knight_de_thomas_branch_for_43_126",
+      "unit": "E1-izlude_in_knight_de_thomas_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight De Thomas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            126
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_in_knight_de_thomas_branch_for_43_127",
+      "unit": "E1-izlude_in_knight_de_thomas_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight De Thomas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wing_Of_Moth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            127
+          ],
+          "required_source_literals": [
+            "delitem Wing_Of_Moth,1;"
           ]
         }
       ],
