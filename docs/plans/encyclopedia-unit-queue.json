@@ -15923,7 +15923,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Suspicious Barrel",
@@ -15942,7 +15942,25 @@
       ],
       "size_lines": 179,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:23:08Z activated",
+        "2026-09-30T16:23:08Z validated",
+        "2026-09-30T16:23:08Z verified: 2 claims supported",
+        "2026-09-30T16:23:31Z accepted",
+        "2026-09-30T16:23:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "dbb9fabae588c7a88cfd1a670d76d66101f6e6b53dc1fbb1b898e22b8142d1f6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hu_in01_cellette_lavit_branch_for_5459",

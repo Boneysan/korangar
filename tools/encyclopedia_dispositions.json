@@ -41101,6 +41101,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_suspicious_barrel_branch_for_5192_5259",
+      "unit": "E1-hugel_suspicious_barrel_branch_for_5192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Barrel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vit_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5259
+          ],
+          "required_source_literals": [
+            "delitem Vit_Dish01,1; //Steamed crab nippers"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_suspicious_barrel_branch_for_5192_5307",
+      "unit": "E1-hugel_suspicious_barrel_branch_for_5192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Barrel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vit_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5307
+          ],
+          "required_source_literals": [
+            "delitem Vit_Dish01,1; //Steamed crab nippers"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
