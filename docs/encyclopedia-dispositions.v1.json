@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3113,
+    "E1_unknown": 3117,
     "E1_verified": 1
   },
   "entries": [
@@ -33629,6 +33629,106 @@
           ],
           "required_source_literals": [
             "getitem First_Aid_Kit,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_inspector_doha_ep133_branch_for_3404_3648",
+      "unit": "E1-mid_campin_inspector_doha_ep133_branch_for_3404",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Inspector Doha#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Bloodstain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3648
+          ],
+          "required_source_literals": [
+            "delitem Solid_Bloodstain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_inspector_doha_ep133_branch_for_3404_3649",
+      "unit": "E1-mid_campin_inspector_doha_ep133_branch_for_3404",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Inspector Doha#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Skin_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3649
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Skin_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_inspector_doha_ep133_branch_for_3404_3650",
+      "unit": "E1-mid_campin_inspector_doha_ep133_branch_for_3404",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Inspector Doha#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Suspicious_Magic_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3650
+          ],
+          "required_source_literals": [
+            "delitem Suspicious_Magic_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_inspector_doha_ep133_branch_for_3404_3652",
+      "unit": "E1-mid_campin_inspector_doha_ep133_branch_for_3404",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Inspector Doha#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dragon_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3652
+          ],
+          "required_source_literals": [
+            "getitem Dragon_Manteau,1;"
           ]
         }
       ],

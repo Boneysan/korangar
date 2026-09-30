@@ -33640,7 +33640,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Inspector Doha#ep133",
@@ -33659,7 +33659,25 @@
       ],
       "size_lines": 279,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:06:12Z activated",
+        "2026-09-30T19:06:12Z validated",
+        "2026-09-30T19:06:12Z verified: 4 claims supported",
+        "2026-09-30T19:06:35Z accepted",
+        "2026-09-30T19:06:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ed812ac4cda32f641a644ad44be840ba7710a7b26f2450f0149bfdc55acdc866",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dic_fild01_bk_ep133_18_branch_for_4551",
