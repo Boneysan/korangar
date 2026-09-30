@@ -9626,6 +9626,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_angeling_guardian_wop_da_branch_for_1464_1476",
+      "unit": "E1-poring_w02_angeling_guardian_wop_da_branch_for_1464",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Angeling Guardian#wop_da"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem War_Badge,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1476
+          ],
+          "required_source_literals": [
+            "delitem War_Badge,1; // War_Badge"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
