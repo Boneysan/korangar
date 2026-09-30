@@ -23390,7 +23390,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tialfi",
@@ -23409,7 +23409,25 @@
       ],
       "size_lines": 344,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:31:34Z activated",
+        "2026-09-30T17:31:34Z validated",
+        "2026-09-30T17:31:35Z verified: 15 claims supported",
+        "2026-09-30T17:31:58Z accepted",
+        "2026-09-30T17:31:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "026882387862383986d79039a6240d403f08aecbada7e41ab9bac2330b3451b2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mjolnir_01_dwarf_blacksmith_west_branch_for_1866",

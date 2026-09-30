@@ -54526,6 +54526,381 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_145",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Stone,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            145
+          ],
+          "required_source_literals": [
+            "delitem Oridecon_Stone,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_146",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium_Stone,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            146
+          ],
+          "required_source_literals": [
+            "delitem Elunium_Stone,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_149",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hell_Fire,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            149
+          ],
+          "required_source_literals": [
+            "getitem Hell_Fire,1; // Hell_Fire"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_152",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slash,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            152
+          ],
+          "required_source_literals": [
+            "getitem Slash,1; // Slash"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_155",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bazerald,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            155
+          ],
+          "required_source_literals": [
+            "getitem Bazerald,1; // Bazerald"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_158",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slaughter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            158
+          ],
+          "required_source_literals": [
+            "getitem Slaughter,1; // Slaughter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_161",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Balistar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            161
+          ],
+          "required_source_literals": [
+            "getitem Balistar,1; // Balistar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_164",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem House_Auger,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "getitem House_Auger,1; // House_Auger"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_167",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Immaterial_Sword,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            167
+          ],
+          "required_source_literals": [
+            "getitem Immaterial_Sword,1; // Immaterial_Sword"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_170",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Kaiser_Knuckle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "getitem Kaiser_Knuckle,1; // Kaiser_Knuckle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_173",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Book_Of_The_Apocalypse,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "getitem Book_Of_The_Apocalypse,1; // Book_Of_The_Apocalypse"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_176",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Azoth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "getitem Azoth,1; // Azoth"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_179",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Weeder_Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "getitem Weeder_Knife,1; // Weeder_Knife"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_182",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Electronic_Guitar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            182
+          ],
+          "required_source_literals": [
+            "getitem Electronic_Guitar,1; // Electronic_Guitar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_tialfi_branch_for_41_185",
+      "unit": "E1-prontera_tialfi_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tialfi"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rapture_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/mjolnir_seal.txt",
+          "lines": [
+            185
+          ],
+          "required_source_literals": [
+            "getitem Rapture_Rose,1; // Rapture_Rose"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
