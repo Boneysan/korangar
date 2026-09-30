@@ -129008,6 +129008,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wm_severe_rainstorm_melee_formula",
+      "unit": "E4-wm-severe-rainstorm-melee",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2516
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2868
+          ],
+          "required_source_literals": [
+            "case WM_SEVERE_RAINSTORM_MELEE:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
