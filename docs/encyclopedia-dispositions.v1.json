@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1086,
+    "E1_unknown": 1094,
     "E1_verified": 1
   },
   "entries": [
@@ -10054,6 +10054,206 @@
           ],
           "required_source_literals": [
             "getitem(Manuk_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2273",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2273
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2306",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2306
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2565",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Letter_From_Lugen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2565
+          ],
+          "required_source_literals": [
+            "getitem Letter_From_Lugen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2626",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Letter_From_Lugen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2626
+          ],
+          "required_source_literals": [
+            "getitem Letter_From_Lugen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2641",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Letter_From_Lugen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2641
+          ],
+          "required_source_literals": [
+            "getitem Letter_From_Lugen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2696",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Letter_From_Otto,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2696
+          ],
+          "required_source_literals": [
+            "delitem Letter_From_Otto,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2698",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2698
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_instructor_ep13bs_branch_for_2135_2699",
+      "unit": "E1-mid_camp_instructor_ep13bs_branch_for_2135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2699
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,5;"
           ]
         }
       ],
