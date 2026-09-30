@@ -55001,6 +55001,4506 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_233",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guard_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            233
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 210) getitem Guard_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_234",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Buckler_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            234
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 420) getitem Buckler_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_235",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shield_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            235
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 630) getitem Shield_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_236",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mirror_Shield_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            236
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 840) getitem Mirror_Shield_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_237",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Memorize_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            237
+          ],
+          "required_source_literals": [
+            "else getitem Memorize_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_240",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fancy_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            240
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 48) getitem Fancy_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_241",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hair_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            241
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 96) getitem Hair_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_242",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cat_Hairband,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            242
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 150) getitem Cat_Hairband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_243",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Flower_Hairband,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            243
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 190) getitem Flower_Hairband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_244",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Biretta_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            244
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 238) getitem Biretta_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_245",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Turban_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            245
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 290) getitem Turban_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_246",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cap_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            246
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 340) getitem Cap_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_247",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Helm_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            247
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 348) getitem Helm_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_248",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gemmed_Sallet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            248
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Gemmed_Sallet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_249",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Circlet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 448) getitem Circlet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_250",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Santas_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            250
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 496) getitem Santas_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_251",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Big_Sis_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            251
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 544) getitem Big_Sis_Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_252",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sweet_Gents,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            252
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 592) getitem Sweet_Gents,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_253",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oldmans_Romance,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            253
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 640) getitem Oldmans_Romance,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_254",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Western_Grace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            254
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 688) getitem Western_Grace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_255",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fillet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            255
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 736) getitem Fillet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_256",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Holy_Bonnet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            256
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 784) getitem Holy_Bonnet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_257",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Star_Sparkling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            257
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 832) getitem Star_Sparkling,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_258",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sunflower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            258
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 880) getitem Sunflower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_259",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Snowy_Horn,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            259
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 940) getitem Snowy_Horn,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_260",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mini_Propeller,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            260
+          ],
+          "required_source_literals": [
+            "else getitem Mini_Propeller,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_263",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cigar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            263
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 160) getitem Cigar,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_264",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pierrot_Nose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            264
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 320) getitem Pierrot_Nose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_265",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gangster_Patch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            265
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 480) getitem Gangster_Patch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_266",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ganster_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            266
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 540) getitem Ganster_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_267",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Cane,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            267
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Iron_Cane,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_268",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mini_Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            268
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 800) getitem Mini_Glasses,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_269",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Centimental_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            269
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 900) getitem Centimental_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_270",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Centimental_Leaf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            270
+          ],
+          "required_source_literals": [
+            "else getitem Centimental_Leaf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_273",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Feeler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            273
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 70) getitem Green_Feeler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_274",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Bandana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            274
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 140) getitem Red_Bandana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_275",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Eagle_Eyes,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            275
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 210) getitem Eagle_Eyes,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_276",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nurse_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            276
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 280) getitem Nurse_Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_277",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bomb_Wick,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            277
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 350) getitem Bomb_Wick,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_278",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spirit_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            278
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 420) getitem Spirit_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_279",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Viking_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            279
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 490) getitem Viking_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_280",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pirate_Bandana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            280
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 560) getitem Pirate_Bandana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_281",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poo_Poo_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            281
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 630) getitem Poo_Poo_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_282",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Funeral_Costume,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            282
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Funeral_Costume,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_283",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Masquerade,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            283
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 770) getitem Masquerade,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_284",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Star_Dust,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            284
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 840) getitem Star_Dust,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_285",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blinker,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 900) getitem Blinker,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_286",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jack_A_Dandy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 950) getitem Jack_A_Dandy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_287",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Of_Archer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "else getitem Apple_Of_Archer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_290",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Adventureres_Suit_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            290
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 80) getitem Adventureres_Suit_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_291",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mantle_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            291
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 160) getitem Mantle_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_292",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            292
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 240) getitem Coat_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_293",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mink_Coat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            293
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 320) getitem Mink_Coat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_294",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Padded_Armor_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            294
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Padded_Armor_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_295",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chain_Mail_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            295
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 480) getitem Chain_Mail_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_296",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wooden_Mail_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            296
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 560) getitem Wooden_Mail_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_297",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Formal_Suit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            297
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 630) getitem Formal_Suit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_298",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silk_Robe_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            298
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Silk_Robe_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_299",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Scapulare_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            299
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 760) getitem Scapulare_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_300",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Saint_Robe_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            300
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 810) getitem Saint_Robe_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_301",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Full_Plate_Armor_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            301
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 850) getitem Full_Plate_Armor_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_302",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tights_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            302
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 900) getitem Tights_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_303",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silver_Robe_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            303
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 950) getitem Silver_Robe_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_304",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thief_Clothes_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            304
+          ],
+          "required_source_literals": [
+            "else getitem Thief_Clothes_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_307",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sandals_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            307
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 200) getitem Sandals_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_308",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shoes_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            308
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Shoes_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_309",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Boots_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            309
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 600) getitem Boots_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_310",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chrystal_Pumps,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            310
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 800) getitem Chrystal_Pumps,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_311",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spiky_Heel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            311
+          ],
+          "required_source_literals": [
+            "else getitem Spiky_Heel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_314",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hood_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            314
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 300) getitem Hood_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_315",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            315
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 550) getitem Muffler_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_316",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manteau_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            316
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 750) getitem Manteau_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_317",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ragamuffin_Cape,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            317
+          ],
+          "required_source_literals": [
+            "else getitem Ragamuffin_Cape,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_320",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            320
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 110) getitem Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_321",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Earring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 220) getitem Earring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_322",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Necklace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            322
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 330) getitem Necklace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_323",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Glove,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 440) getitem Glove,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_324",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Brooch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            324
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 550) getitem Brooch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_325",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Clip,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            325
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 660) getitem Clip,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_326",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rosary,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            326
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 770) getitem Rosary,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_327",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mitten_Of_Presbyter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            327
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 880) getitem Mitten_Of_Presbyter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_328",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Matyrs_Flea_Guard,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            328
+          ],
+          "required_source_literals": [
+            "else getitem Matyrs_Flea_Guard,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_331",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mr_Scream,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            331
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 150) getitem Mr_Scream,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_332",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblini_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            332
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 260) getitem Goblini_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_333",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            333
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 370) getitem Goblin_Mask_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_334",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            334
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 480) getitem Goblin_Mask_02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_335",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_03,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            335
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 590) getitem Goblin_Mask_03,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_336",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            336
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Goblin_Mask_04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_337",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bongun_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            337
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 810) getitem Bongun_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_338",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Munak_Turban,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            338
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 920) getitem Munak_Turban,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_339",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goggle_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            339
+          ],
+          "required_source_literals": [
+            "else getitem Goggle_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_343",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guard_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            343
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 210) getitem Guard_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_344",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Buckler_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            344
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 420) getitem Buckler_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_345",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shield_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            345
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 630) getitem Shield_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_346",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mirror_Shield_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            346
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 840) getitem Mirror_Shield_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_347",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Memorize_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            347
+          ],
+          "required_source_literals": [
+            "else getitem Memorize_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_350",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Angelic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            350
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 48) getitem Angelic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_351",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hair_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            351
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 96) getitem Hair_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_352",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cat_Hairband,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            352
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 150) getitem Cat_Hairband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_353",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satanic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            353
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 190) getitem Satanic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_354",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Biretta_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            354
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 238) getitem Biretta_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_355",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Turban_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            355
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 290) getitem Turban_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_356",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cap_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            356
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 340) getitem Cap_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_357",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Helm_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            357
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 348) getitem Helm_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_358",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gemmed_Sallet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Gemmed_Sallet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_359",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Circlet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            359
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 448) getitem Circlet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_360",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spinx_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            360
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 496) getitem Spinx_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_361",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Corsair,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            361
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 544) getitem Corsair,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_362",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sweet_Gents,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            362
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 592) getitem Sweet_Gents,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_363",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oldmans_Romance,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            363
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 640) getitem Oldmans_Romance,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_364",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Western_Grace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            364
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 688) getitem Western_Grace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_365",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spinx_Helm_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            365
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 736) getitem Spinx_Helm_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_366",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Holy_Bonnet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            366
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 784) getitem Holy_Bonnet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_367",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coronet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            367
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 832) getitem Coronet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_368",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Viking_Helm_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 880) getitem Viking_Helm_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_369",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Of_Archer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            369
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 940) getitem Apple_Of_Archer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_370",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Coif_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            370
+          ],
+          "required_source_literals": [
+            "else getitem Blue_Coif_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_373",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fin_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            373
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 160) getitem Fin_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_374",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gas_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            374
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 320) getitem Gas_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_375",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Assasin_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            375
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 480) getitem Assasin_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_376",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ganster_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            376
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 540) getitem Ganster_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_377",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Cane,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            377
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Iron_Cane,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_378",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mini_Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            378
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 800) getitem Mini_Glasses,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_379",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Angry_Mouth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            379
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 900) getitem Angry_Mouth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_383",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Centimental_Leaf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            383
+          ],
+          "required_source_literals": [
+            "getitem Centimental_Leaf,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_387",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elven_Ears,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            387
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 70) getitem Elven_Ears,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_388",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gemmed_Crown,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            388
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 140) getitem Gemmed_Crown,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_389",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Baseball_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 210) getitem Baseball_Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_390",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Biretta_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            390
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 280) getitem Biretta_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_391",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fedora_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            391
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 350) getitem Fedora_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_392",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Prontera_Army_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            392
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 420) getitem Prontera_Army_Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_393",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bone_Helm_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 490) getitem Bone_Helm_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_394",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Panda_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            394
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 560) getitem Panda_Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_395",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Bonnet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            395
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 630) getitem Red_Bonnet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_396",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lazy_Raccoon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            396
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Lazy_Raccoon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_397",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bongun_Hat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            397
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 770) getitem Bongun_Hat_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_398",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bunny_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            398
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 840) getitem Bunny_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_399",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blinker,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            399
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 900) getitem Blinker,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_400",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Munak_Turban_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            400
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 950) getitem Munak_Turban_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_401",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Feather_Bonnet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            401
+          ],
+          "required_source_literals": [
+            "else getitem Feather_Bonnet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_403",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            403
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 85) getitem Coat_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_404",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mink_Coat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            404
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 170) getitem Mink_Coat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_405",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Padded_Armor_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            405
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 255) getitem Padded_Armor_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_406",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Plate_Armor_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            406
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 340) getitem Plate_Armor_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_407",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Glittering_Clothes,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            407
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 425) getitem Glittering_Clothes,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_408",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Formal_Suit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            408
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 510) getitem Formal_Suit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_409",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silk_Robe_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            409
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 595) getitem Silk_Robe_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_410",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ninja_Suit_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            410
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 680) getitem Ninja_Suit_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_411",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Saint_Robe_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            411
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 765) getitem Saint_Robe_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_412",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Full_Plate_Armor_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            412
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 850) getitem Full_Plate_Armor_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_413",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tights_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            413
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 935) getitem Tights_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_414",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thief_Clothes_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            414
+          ],
+          "required_source_literals": [
+            "else getitem Thief_Clothes_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_417",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem High_Fashion_Sandals,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            417
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 200) getitem High_Fashion_Sandals,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_418",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shoes_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            418
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Shoes_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_419",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Boots_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            419
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 600) getitem Boots_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_420",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chrystal_Pumps,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            420
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 800) getitem Chrystal_Pumps,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_421",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grave_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            421
+          ],
+          "required_source_literals": [
+            "else getitem Grave_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_424",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Celestial_Robe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            424
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 200) getitem Celestial_Robe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_425",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            425
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 400) getitem Muffler_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_426",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manteau_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            426
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 600) getitem Manteau_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_427",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pauldron,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            427
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 800) getitem Pauldron,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_428",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ragamuffin_Cape,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            428
+          ],
+          "required_source_literals": [
+            "else getitem Ragamuffin_Cape,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_431",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ring_Pommel_Saber,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            431
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 110) getitem Ring_Pommel_Saber,1; //Ring_"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_432",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Earring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            432
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 220) getitem Earring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_433",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Necklace_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            433
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 330) getitem Necklace_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_434",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Glove_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            434
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 440) getitem Glove_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_435",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Brooch_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            435
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 550) getitem Brooch_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_436",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Clip,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            436
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 660) getitem Clip,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_437",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rosary_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            437
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 770) getitem Rosary_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_438",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mitten_Of_Presbyter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            438
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 880) getitem Mitten_Of_Presbyter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_439",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thimble_Of_Archer_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            439
+          ],
+          "required_source_literals": [
+            "else getitem Thimble_Of_Archer_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_442",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phantom_Of_Opera,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            442
+          ],
+          "required_source_literals": [
+            "if (.@god_treasure1 < 150) getitem Phantom_Of_Opera,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_443",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblini_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            443
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 260) getitem Goblini_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_444",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            444
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 370) getitem Goblin_Mask_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_445",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            445
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 480) getitem Goblin_Mask_02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_446",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_03,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            446
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 590) getitem Goblin_Mask_03,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_447",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Goblin_Mask_04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            447
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 700) getitem Goblin_Mask_04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_448",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Alarm_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            448
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 810) getitem Alarm_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_449",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Welding_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            449
+          ],
+          "required_source_literals": [
+            "else if (.@god_treasure1 < 920) getitem Welding_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_manager_g_branch_for_82_450",
+      "unit": "E1-que_god01_manager_g_branch_for_82",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manager#G"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Machoman_Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/sleipnir_seal.txt",
+          "lines": [
+            450
+          ],
+          "required_source_literals": [
+            "else getitem Machoman_Glasses,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
