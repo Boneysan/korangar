@@ -53925,7 +53925,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bHPrecovRate (expression)",
@@ -53990,7 +53990,25 @@
       ],
       "size_lines": 4,
       "reason": "4 item script(s) first stop at `bonus bHPrecovRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:22:55Z activated",
+        "2026-09-30T20:22:55Z validated",
+        "2026-09-30T20:22:55Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:23:18Z accepted",
+        "2026-09-30T20:23:18Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c6174dea98aa16e4aa759a080b0da5418afb57d7ae1cb3361e94eb6dc30a43fc",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bmaxsp-expression",

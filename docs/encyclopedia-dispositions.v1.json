@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 875
+    "E3_unknown": 879
   },
   "entries": [
     {
@@ -96160,6 +96160,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_22083_script_untranslated",
+      "unit": "E3-unknown-bonus-bhprecovrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22083 is not summarized: the translator does not interpret the quoted statement (bonus bHPrecovRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149110
+          ],
+          "required_source_literals": [
+            "bonus bHPrecovRate, getrefine() * 10 / 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22084_script_untranslated",
+      "unit": "E3-unknown-bonus-bhprecovrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22084
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22084 is not summarized: the translator does not interpret the quoted statement (bonus bHPrecovRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149131
+          ],
+          "required_source_literals": [
+            "bonus bHPrecovRate, 20 * getrefine() / 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_22085_script_untranslated",
       "unit": "E3-unknown-bonus-bmaxhp-expression",
       "package": "E3",
@@ -97449,6 +97503,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus bMaxHPrate,(getrefine()>=7?2:1); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24083_script_untranslated",
+      "unit": "E3-unknown-bonus-bhprecovrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24083 is not summarized: the translator does not interpret the quoted statement (bonus bHPrecovRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151705
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHPrecovRate,(getrefine()>=7?10:5); \">"
           ]
         }
       ],
@@ -107763,6 +107844,33 @@
           ],
           "required_source_literals": [
             "bonus3 bAddEle, Ele_Holy, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4980_script_untranslated",
+      "unit": "E3-unknown-bonus-bhprecovrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4980
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4980 is not summarized: the translator does not interpret the quoted statement (bonus bHPrecovRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52758
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHPrecovRate, (getrefine() >= 7) ? 100 : 50; \">"
           ]
         }
       ],
