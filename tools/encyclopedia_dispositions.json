@@ -50776,6 +50776,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sincere_follower_urstia_branch_for_2664_2806",
+      "unit": "E1-rachel_sincere_follower_urstia_branch_for_2664",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sincere Follower Urstia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Necklace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2806
+          ],
+          "required_source_literals": [
+            "getitem Magic_Necklace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sincere_follower_urstia_branch_for_2664_2843",
+      "unit": "E1-rachel_sincere_follower_urstia_branch_for_2664",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sincere Follower Urstia"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Necklace_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2843
+          ],
+          "required_source_literals": [
+            "delitem Magic_Necklace_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
