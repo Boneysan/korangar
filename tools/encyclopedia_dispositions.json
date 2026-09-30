@@ -226,6 +226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_fild12_toairplane_rachel_branch_for_34_44",
+      "unit": "E1-ra_fild12_toairplane_rachel_branch_for_34",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "toairplane#rachel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Free_Flying_Ship_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/airports/rachel.txt",
+          "lines": [
+            44
+          ],
+          "required_source_literals": [
+            "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
