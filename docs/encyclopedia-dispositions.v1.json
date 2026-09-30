@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3400,
+    "E1_unknown": 3401,
     "E1_verified": 1
   },
   "entries": [
@@ -37004,6 +37004,31 @@
           ],
           "required_source_literals": [
             "getitem Offering_Bouquet, 1; // Memorial_Bouquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_master_of_hunting_buwaya_branch_for_4318_4423",
+      "unit": "E1-malaya_master_of_hunting_buwaya_branch_for_4318",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master of Hunting#buwaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Collected_Sample,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            4423
+          ],
+          "required_source_literals": [
+            "delitem Collected_Sample,10;"
           ]
         }
       ],

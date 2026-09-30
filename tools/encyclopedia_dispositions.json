@@ -85126,6 +85126,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_master_of_hunting_buwaya_branch_for_4318_4423",
+      "unit": "E1-malaya_master_of_hunting_buwaya_branch_for_4318",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master of Hunting#buwaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Collected_Sample,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            4423
+          ],
+          "required_source_literals": [
+            "delitem Collected_Sample,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
