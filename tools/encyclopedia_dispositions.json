@@ -5151,6 +5151,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1893",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slim_Potion_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1893
+          ],
+          "required_source_literals": [
+            "getitem Slim_Potion_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1904",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Alcol_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1904
+          ],
+          "required_source_literals": [
+            "getitem Alcol_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1907",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem FireBottle_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1907
+          ],
+          "required_source_literals": [
+            "getitem FireBottle_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1910",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Acid_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1910
+          ],
+          "required_source_literals": [
+            "getitem Acid_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1913",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Plant_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1913
+          ],
+          "required_source_literals": [
+            "getitem Plant_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1916",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mine_Create_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1916
+          ],
+          "required_source_literals": [
+            "getitem Mine_Create_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_master_alchemist_am_branch_for_1767_1919",
+      "unit": "E1-alde_alche_master_alchemist_am_branch_for_1767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Alchemist#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Normal_Potion_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1919
+          ],
+          "required_source_literals": [
+            "getitem Normal_Potion_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
