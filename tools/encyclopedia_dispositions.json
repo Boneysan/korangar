@@ -18351,6 +18351,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_100",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            100
+          ],
+          "required_source_literals": [
+            "delitem Apple,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_101",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Animal_Blood,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            101
+          ],
+          "required_source_literals": [
+            "delitem Animal_Blood,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_102",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Monster_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            102
+          ],
+          "required_source_literals": [
+            "getitem Monster_Juice,1; // Monster_Juice"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_142",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Singing_Plant,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            142
+          ],
+          "required_source_literals": [
+            "delitem Singing_Plant,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_143",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Singing_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            143
+          ],
+          "required_source_literals": [
+            "getitem Singing_Flower,1; // Singing_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_179",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fancy_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "delitem Fancy_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_180",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clover,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            180
+          ],
+          "required_source_literals": [
+            "delitem Clover,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_monster_tamer_alb_branch_for_41_181",
+      "unit": "E1-alberta_in_monster_tamer_alb_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alb"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wild_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            181
+          ],
+          "required_source_literals": [
+            "getitem Wild_Flower,1; // Wild_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
