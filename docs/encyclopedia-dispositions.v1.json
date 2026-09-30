@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2569,
+    "E1_unknown": 2571,
     "E1_verified": 1
   },
   "entries": [
@@ -1779,6 +1779,56 @@
           ],
           "required_source_literals": [
             "delitem Red_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_maid_s10_branch_for_5697_5957",
+      "unit": "E1-alberta_in_maid_s10_branch_for_5697",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maid#s10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sister_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            5957
+          ],
+          "required_source_literals": [
+            "getitem Sister_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_maid_s10_branch_for_5697_5974",
+      "unit": "E1-alberta_in_maid_s10_branch_for_5697",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maid#s10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Panacea,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            5974
+          ],
+          "required_source_literals": [
+            "getitem Panacea,3;"
           ]
         }
       ],

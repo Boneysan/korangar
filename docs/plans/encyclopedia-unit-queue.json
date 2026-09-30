@@ -25768,7 +25768,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Maid#s10",
@@ -25787,7 +25787,25 @@
       ],
       "size_lines": 316,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:53:20Z activated",
+        "2026-09-30T17:53:20Z validated",
+        "2026-09-30T17:53:20Z verified: 2 claims supported",
+        "2026-09-30T17:53:43Z accepted",
+        "2026-09-30T17:53:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "118c7249f053e1bc43c917bc66f33e8ab9fc6115c44677850948861d34aa7924",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_castle_soldier_s11_branch_for_6014",
