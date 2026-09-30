@@ -125137,6 +125137,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_el_stone_hammer_formula",
+      "unit": "E4-el-stone-hammer",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          8439
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2952
+          ],
+          "required_source_literals": [
+            "case EL_STONE_HAMMER:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
