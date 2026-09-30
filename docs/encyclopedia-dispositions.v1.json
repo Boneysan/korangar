@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 920
+    "E3_unknown": 923
   },
   "entries": [
     {
@@ -102802,6 +102802,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2629_script_untranslated",
+      "unit": "E3-unknown-bonus-bstr-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2629
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2629 is not summarized: the translator does not interpret the quoted statement (bonus bStr (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34830
+          ],
+          "required_source_literals": [
+            "bonus bStr,40+BaseLevel/5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2682_script_untranslated",
       "unit": "E3-unknown-bonus3-bsubdefele-expression",
       "package": "E3",
@@ -104800,6 +104827,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4346_script_untranslated",
+      "unit": "E3-unknown-bonus-bstr-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4346
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4346 is not summarized: the translator does not interpret the quoted statement (bonus bStr (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45541
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bStr,readparam(bInt)/18; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4351_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -104874,6 +104928,33 @@
           ],
           "required_source_literals": [
             "if(readparam(bAgi)>=90) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4358_script_untranslated",
+      "unit": "E3-unknown-bonus-bstr-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4358
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4358 is not summarized: the translator does not interpret the quoted statement (bonus bStr (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45693
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bStr,getrefine()-6; \">"
           ]
         }
       ],
