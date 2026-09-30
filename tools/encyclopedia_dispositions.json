@@ -110675,6 +110675,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1587_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1587
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1587 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            16113
+          ],
+          "required_source_literals": [
+            "bonus2 bAddRace,RC_Player,80+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4494_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4494
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4494 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47449
+          ],
+          "required_source_literals": [
+            "bonus2 bAddRace, RC_All, (getrefine() > 14) ? 15 : 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4529_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4529
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4529 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47904
+          ],
+          "required_source_literals": [
+            "bonus2 bAddRace, RC_All, 2+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18114_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18114
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18114 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132134
+          ],
+          "required_source_literals": [
+            "bonus2 bAddRace,RC_Player,30+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
