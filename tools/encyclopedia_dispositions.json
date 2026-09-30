@@ -40426,6 +40426,281 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1544",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Detrimindexta,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1544
+          ],
+          "required_source_literals": [
+            "delitem Detrimindexta,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1545",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1545
+          ],
+          "required_source_literals": [
+            "delitem Coal,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1546",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unripe_Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1546
+          ],
+          "required_source_literals": [
+            "delitem Unripe_Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1547",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1547
+          ],
+          "required_source_literals": [
+            "delitem Red_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1548",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1548
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1549",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1549
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1; //White_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1550",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1550
+          ],
+          "required_source_literals": [
+            "delitem White_Herb,1; //Green_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1551",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1551
+          ],
+          "required_source_literals": [
+            "delitem Blue_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1552",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1552
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,5; //Brigan"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1553",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Brigan,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1553
+          ],
+          "required_source_literals": [
+            "delitem Brigan,5; //Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_dono_branch_for_1449_1554",
+      "unit": "E1-lighthalzen_dono_branch_for_1449",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dono"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shell,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1554
+          ],
+          "required_source_literals": [
+            "delitem Shell,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
