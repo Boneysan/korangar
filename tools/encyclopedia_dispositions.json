@@ -30326,6 +30326,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_gerhart_branch_for_10258_10270",
+      "unit": "E1-lhz_in01_gerhart_branch_for_10258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gerhart"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            10270
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
