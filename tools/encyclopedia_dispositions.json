@@ -43351,6 +43351,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_poison_king_lou_branch_for_2421_3170",
+      "unit": "E1-lou_in02_poison_king_lou_branch_for_2421",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poison King#lou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3170
+          ],
+          "required_source_literals": [
+            "delitem Poison_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
