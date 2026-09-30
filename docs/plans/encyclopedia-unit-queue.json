@@ -64605,7 +64605,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -64629,7 +64629,25 @@
       ],
       "size_lines": 29,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:23:03Z activated",
+        "2026-09-30T21:23:03Z validated",
+        "2026-09-30T21:23:03Z verified: 1 claims supported",
+        "2026-09-30T21:23:27Z accepted",
+        "2026-09-30T21:23:27Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "94c97a811a7921dfb2ddc88a6fe4319f4dcbf03153e0975860ae2b87881f0ea5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-sj-newmoonkick",
