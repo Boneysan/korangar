@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3083,
+    "E1_unknown": 3099,
     "E1_verified": 1
   },
   "entries": [
@@ -11779,6 +11779,406 @@
           ],
           "required_source_literals": [
             "delitem Flame_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_1894",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 6403,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1894
+          ],
+          "required_source_literals": [
+            "delitem 6403,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_1972",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Caress_H,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1972
+          ],
+          "required_source_literals": [
+            "getitem Caress_H,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2019",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Comodo_L,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2019
+          ],
+          "required_source_literals": [
+            "delitem Comodo_L,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2020",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2020
+          ],
+          "required_source_literals": [
+            "delitem Steel,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2021",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2021
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2022",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Caress_H,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2022
+          ],
+          "required_source_literals": [
+            "delitem Caress_H,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2023",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Caress,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2023
+          ],
+          "required_source_literals": [
+            "getitem Caress,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2055",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Comodo_L,70; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2055
+          ],
+          "required_source_literals": [
+            "delitem Comodo_L,70;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2056",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2056
+          ],
+          "required_source_literals": [
+            "delitem Steel,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2057",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2057
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2058",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Caress_H,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2058
+          ],
+          "required_source_literals": [
+            "delitem Caress_H,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2059",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Caress,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2059
+          ],
+          "required_source_literals": [
+            "getitem Caress,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2075",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Comodo_L,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2075
+          ],
+          "required_source_literals": [
+            "delitem Comodo_L,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2076",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Log,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2076
+          ],
+          "required_source_literals": [
+            "delitem Log,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2077",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Caress_H,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2077
+          ],
+          "required_source_literals": [
+            "getitem Caress_H,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_gatti_weapon_branch_for_1685_2222",
+      "unit": "E1-dew_fild01_gatti_weapon_branch_for_1685",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatti#weapon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Caress,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2222
+          ],
+          "required_source_literals": [
+            "delitem Caress,1;"
           ]
         }
       ],
