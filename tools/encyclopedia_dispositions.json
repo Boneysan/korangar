@@ -19351,6 +19351,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_nephia_1_branch_for_407_433",
+      "unit": "E1-prontera_nephia_1_branch_for_407",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nephia#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Big_Sis_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            433
+          ],
+          "required_source_literals": [
+            "delitem Big_Sis_Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_nephia_1_branch_for_407_434",
+      "unit": "E1-prontera_nephia_1_branch_for_407",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nephia#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ribbon_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            434
+          ],
+          "required_source_literals": [
+            "delitem Ribbon_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_nephia_1_branch_for_407_435",
+      "unit": "E1-prontera_nephia_1_branch_for_407",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nephia#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silk_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            435
+          ],
+          "required_source_literals": [
+            "delitem Silk_Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_nephia_1_branch_for_407_436",
+      "unit": "E1-prontera_nephia_1_branch_for_407",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nephia#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Tailed_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            436
+          ],
+          "required_source_literals": [
+            "getitem Red_Tailed_Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

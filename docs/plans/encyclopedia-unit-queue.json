@@ -8615,7 +8615,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Nephia#1",
@@ -8634,7 +8634,25 @@
       ],
       "size_lines": 112,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:15:29Z activated",
+        "2026-09-30T15:15:29Z validated",
+        "2026-09-30T15:15:29Z verified: 4 claims supported",
+        "2026-09-30T15:15:52Z accepted",
+        "2026-09-30T15:15:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b3bc8c25ca56c9bdf63d0e0190a32613c409554a4765af371ea40a90b1bd3d0e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-comodo_meruntei_1_branch_for_521",
