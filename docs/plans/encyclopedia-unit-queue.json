@@ -8483,7 +8483,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Neko Neko#1",
@@ -8502,7 +8502,25 @@
       ],
       "size_lines": 65,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:14:10Z activated",
+        "2026-09-30T15:14:10Z validated",
+        "2026-09-30T15:14:10Z verified: 4 claims supported",
+        "2026-09-30T15:14:41Z accepted",
+        "2026-09-30T15:14:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c9e1e965bcae42eb52da7b4594a655108d93814e8d67a04495d85f45abc8c61f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_argen_1_branch_for_123",

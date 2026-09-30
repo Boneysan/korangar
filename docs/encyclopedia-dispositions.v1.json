@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 750,
+    "E1_unknown": 754,
     "E1_verified": 1
   },
   "entries": [
@@ -12904,6 +12904,106 @@
           ],
           "required_source_literals": [
             "getitem Penetration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_neko_neko_1_branch_for_56_84",
+      "unit": "E1-payon_neko_neko_1_branch_for_56",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Neko Neko#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cat_Hairband,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            84
+          ],
+          "required_source_literals": [
+            "delitem Cat_Hairband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_neko_neko_1_branch_for_56_85",
+      "unit": "E1-payon_neko_neko_1_branch_for_56",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Neko Neko#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "delitem Black_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_neko_neko_1_branch_for_56_86",
+      "unit": "E1-payon_neko_neko_1_branch_for_56",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Neko Neko#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fluff,200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            86
+          ],
+          "required_source_literals": [
+            "delitem Fluff,200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_neko_neko_1_branch_for_56_88",
+      "unit": "E1-payon_neko_neko_1_branch_for_56",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Neko Neko#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ear_Of_Black_Cat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            88
+          ],
+          "required_source_literals": [
+            "getitem Ear_Of_Black_Cat,1;"
           ]
         }
       ],
