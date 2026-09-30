@@ -11631,7 +11631,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Rin#moc_room2_2",
@@ -11650,7 +11650,25 @@
       ],
       "size_lines": 311,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:43:06Z activated",
+        "2026-09-30T15:43:06Z validated",
+        "2026-09-30T15:43:06Z verified: 3 claims supported",
+        "2026-09-30T15:43:30Z accepted",
+        "2026-09-30T15:43:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "06414d13fb331d43b6f60b051c6da93f12d3607490b10bf7ccaa724ee127d7e8",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hu_fild04_heap_of_earth_mao2_01_branch_for_13367",

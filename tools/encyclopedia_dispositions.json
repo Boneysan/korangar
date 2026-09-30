@@ -31026,6 +31026,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_rin_moc_room2_2_branch_for_13033_13199",
+      "unit": "E1-que_job01_rin_moc_room2_2_branch_for_13033",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rin#moc_room2_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Morocc_Tracing_Log,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            13199
+          ],
+          "required_source_literals": [
+            "delitem Morocc_Tracing_Log,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_rin_moc_room2_2_branch_for_13033_13200",
+      "unit": "E1-que_job01_rin_moc_room2_2_branch_for_13033",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rin#moc_room2_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Of_Feardoom,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            13200
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Of_Feardoom,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_rin_moc_room2_2_branch_for_13033_13273",
+      "unit": "E1-que_job01_rin_moc_room2_2_branch_for_13033",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rin#moc_room2_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morocc_Tracing_Log,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            13273
+          ],
+          "required_source_literals": [
+            "getitem Morocc_Tracing_Log,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
