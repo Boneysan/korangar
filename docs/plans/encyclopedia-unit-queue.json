@@ -21588,7 +21588,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Katinshuell",
@@ -21607,7 +21607,25 @@
       ],
       "size_lines": 706,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:15:02Z activated",
+        "2026-09-30T17:15:03Z validated",
+        "2026-09-30T17:15:03Z verified: 2 claims supported",
+        "2026-09-30T17:15:26Z accepted",
+        "2026-09-30T17:15:26Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d1715643aa5ee0e656ff1a7efff9458f6658a779008f96c56b6ef26f59a7cb56",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ra_in01_book_ra_in_branch_for_2623",
