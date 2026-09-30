@@ -134301,6 +134301,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10062_npc_quests_quests_13_1_txt_647",
+      "unit": "E5-chain-10062",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10063
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10063; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            647
+          ],
+          "required_source_literals": [
+            "changequest 10063,10064;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10062_npc_quests_quests_13_1_txt_692",
+      "unit": "E5-chain-10062",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10062
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10062; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            692
+          ],
+          "required_source_literals": [
+            "changequest 10062,10064;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10062_npc_quests_quests_13_1_txt_709",
+      "unit": "E5-chain-10062",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10062
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10062; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            709
+          ],
+          "required_source_literals": [
+            "changequest 10062,10063;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
