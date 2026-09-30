@@ -62876,6 +62876,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t12_blue_angel_statue_tt_branch_for_1900_1913",
+      "unit": "E1-tha_t12_blue_angel_statue_tt_branch_for_1900",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blue Angel Statue#tt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Gem_Blue,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1913
+          ],
+          "required_source_literals": [
+            "delitem Magic_Gem_Blue,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
