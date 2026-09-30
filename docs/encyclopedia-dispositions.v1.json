@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 482
+    "E5_unknown": 486
   },
   "entries": [
     {
@@ -104798,6 +104798,114 @@
           ],
           "required_source_literals": [
             "completequest(11022);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11038_npc_quests_quests_niflheim_txt_368",
+      "unit": "E5-chain-11038",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "setquest 11038;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11038_npc_quests_quests_niflheim_txt_448",
+      "unit": "E5-chain-11038",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            448
+          ],
+          "required_source_literals": [
+            "completequest 11043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11038_npc_quests_quests_niflheim_txt_493",
+      "unit": "E5-chain-11038",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            493
+          ],
+          "required_source_literals": [
+            "completequest 11042;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11038_npc_quests_quests_niflheim_txt_557",
+      "unit": "E5-chain-11038",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            557
+          ],
+          "required_source_literals": [
+            "changequest 11038,11039;"
           ]
         }
       ],
