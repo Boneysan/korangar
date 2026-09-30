@@ -6107,7 +6107,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Reidin Corse#tu",
@@ -6126,7 +6126,26 @@
       ],
       "size_lines": 766,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:52:36Z activated",
+        "2026-09-30T14:52:36Z validated",
+        "2026-09-30T14:52:37Z verified: 9 claims supported",
+        "2026-09-30T14:53:00Z accepted",
+        "2026-09-30T14:53:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1771b2ce6deb05bf0fcbaa85a2b805cef73bf7d02f9aea0c3b20fe9e63a9915f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_fild18_trace_of_battle_15_branch_for_937",

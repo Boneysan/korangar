@@ -12576,6 +12576,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_762",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fire_Arrow,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            762
+          ],
+          "required_source_literals": [
+            "getitem Fire_Arrow,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_797",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fire_Arrow,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            797
+          ],
+          "required_source_literals": [
+            "getitem Fire_Arrow,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_835",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fire_Arrow,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            835
+          ],
+          "required_source_literals": [
+            "getitem Fire_Arrow,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_968",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grasshoppers_Leg,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            968
+          ],
+          "required_source_literals": [
+            "delitem Grasshoppers_Leg,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_970",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Great_Bow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            970
+          ],
+          "required_source_literals": [
+            "getitem Great_Bow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_1040",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wing_Of_Fly,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            1040
+          ],
+          "required_source_literals": [
+            "getitem Wing_Of_Fly,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_1041",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            1041
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_1042",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wing_Of_Butterfly,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            1042
+          ],
+          "required_source_literals": [
+            "getitem Wing_Of_Butterfly,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_reidin_corse_tu_branch_for_430_1104",
+      "unit": "E1-pay_arche_reidin_corse_tu_branch_for_430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reidin Corse#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Arrow,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_archer.txt",
+          "lines": [
+            1104
+          ],
+          "required_source_literals": [
+            "getitem Iron_Arrow,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
