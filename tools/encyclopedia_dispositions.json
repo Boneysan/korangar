@@ -40926,6 +40926,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in03_enquro_carson_branch_for_2898_3051",
+      "unit": "E1-lhz_in03_enquro_carson_branch_for_2898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Enquro Carson"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            3051
+          ],
+          "required_source_literals": [
+            "delitem Tropical_Sograt,1; //Tropical Sograt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in03_enquro_carson_branch_for_2898_3052",
+      "unit": "E1-lhz_in03_enquro_carson_branch_for_2898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Enquro Carson"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            3052
+          ],
+          "required_source_literals": [
+            "delitem Vermilion_The_Beach,1; //Vermilion on the Beach"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
