@@ -51301,6 +51301,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_pope_s_office_guard_rac_raofficeguard_branch_for_6761_6778",
+      "unit": "E1-ra_temin_pope_s_office_guard_rac_raofficeguard_branch_for_6761",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pope's Office Guard#rac::raofficeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Heart,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            6778
+          ],
+          "required_source_literals": [
+            "delitem Ice_Heart,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
