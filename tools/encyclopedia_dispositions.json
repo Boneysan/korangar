@@ -138783,6 +138783,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11008_npc_quests_quests_hugel_txt_9462",
+      "unit": "E5-chain-11008",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            9462
+          ],
+          "required_source_literals": [
+            "completequest 11008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
