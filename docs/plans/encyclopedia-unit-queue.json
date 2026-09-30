@@ -31844,7 +31844,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Zoologist",
@@ -31863,7 +31863,22 @@
       ],
       "size_lines": 64,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:49:37Z activated",
+        "2026-09-30T18:49:38Z validated",
+        "2026-09-30T18:49:38Z verified: 0 claims supported",
+        "2026-09-30T18:50:01Z accepted",
+        "2026-09-30T18:50:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "20cffc9ba2dfe791be11f659554461a977aa9cb00a1e5b70c4ef86a462caf702",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_fild03_entomologist_branch_for_349",
