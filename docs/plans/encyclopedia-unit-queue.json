@@ -9653,7 +9653,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Alonie#Solo_Play_Box",
@@ -9672,7 +9672,25 @@
       ],
       "size_lines": 280,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:25:01Z activated",
+        "2026-09-30T15:25:02Z validated",
+        "2026-09-30T15:25:02Z verified: 2 claims supported",
+        "2026-09-30T15:25:25Z accepted",
+        "2026-09-30T15:25:25Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2c0af26315647eb3dd767fa119f4f36805c4a10e1efa559545b1f0adbd9ef69d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_tourist_thai_branch_for_44",

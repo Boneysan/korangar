@@ -23201,6 +23201,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_alonie_solo_play_box_branch_for_851_1084",
+      "unit": "E1-alberta_alonie_solo_play_box_branch_for_851",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alonie#Solo_Play_Box"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Solo_Play_Box1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1084
+          ],
+          "required_source_literals": [
+            "getitem Solo_Play_Box1,1; //Solo_Play_Box1"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_alonie_solo_play_box_branch_for_851_1110",
+      "unit": "E1-alberta_alonie_solo_play_box_branch_for_851",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alonie#Solo_Play_Box"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Solo_Play_Box2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1110
+          ],
+          "required_source_literals": [
+            "getitem Solo_Play_Box2,1; //Solo_Play_Box2"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
