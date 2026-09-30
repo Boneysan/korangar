@@ -68090,7 +68090,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -68139,7 +68139,25 @@
       ],
       "size_lines": 165,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:52:20Z activated",
+        "2026-09-30T21:52:20Z validated",
+        "2026-09-30T21:52:21Z verified: 1 claims supported",
+        "2026-09-30T21:52:44Z accepted",
+        "2026-09-30T21:52:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "be2a445bc025d801821ee446645ab278b4247ad4bcee365050d502182aab8045",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-ws-carttermination",
