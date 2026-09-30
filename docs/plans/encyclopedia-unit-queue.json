@@ -61019,7 +61019,7 @@
       "package": "E2",
       "kind": "e2_stock",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "declarations": [
@@ -61141,7 +61141,25 @@
       ],
       "size_lines": 54,
       "reason": "8 stock declaration(s) not covered by the 107 literal service calls",
-      "history": []
+      "history": [
+        "2026-09-30T20:55:25Z activated",
+        "2026-09-30T20:55:25Z validated",
+        "2026-09-30T20:55:25Z verified: 8 claims supported",
+        "2026-09-30T20:55:49Z accepted",
+        "2026-09-30T20:55:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c8180ccc2891882bf757ac23644288e562ad58472eb1be37358e62ceb444fd06",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E2-npc-re-merchants-shops-txt-775",

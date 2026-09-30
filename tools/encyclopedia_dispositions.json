@@ -122411,6 +122411,298 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_712",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Item Collector#moc3"
+      },
+      "result": "verified",
+      "statement": "Item Collector#moc3 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            712,
+            713,
+            714,
+            715,
+            716,
+            717,
+            718
+          ],
+          "required_source_literals": [
+            "morocc,171,103,4\ttrader\tItem Collector#moc3\t4_M_03,{",
+            "OnInit:",
+            "sellitem Scell;",
+            "sellitem Monsters_Feed;",
+            "sellitem Animals_Skin;",
+            "sellitem Bill_Of_Birds;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_720",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Item Collector#moc4"
+      },
+      "result": "verified",
+      "statement": "Item Collector#moc4 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            720,
+            721,
+            722,
+            723,
+            724,
+            725,
+            726
+          ],
+          "required_source_literals": [
+            "morocc,205,247,2\ttrader\tItem Collector#moc4\t4_M_03,{",
+            "OnInit:",
+            "sellitem Scell;",
+            "sellitem Monsters_Feed;",
+            "sellitem Animals_Skin;",
+            "sellitem Bill_Of_Birds;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_728",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trader#moc6"
+      },
+      "result": "verified",
+      "statement": "Trader#moc6 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            728,
+            729,
+            730,
+            731
+          ],
+          "required_source_literals": [
+            "morocc,140,90,6\ttrader\tTrader#moc6\t4W_M_03,{",
+            "OnInit:",
+            "sellitem Banana;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_733",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Jeweler#moc4"
+      },
+      "result": "verified",
+      "statement": "Jeweler#moc4 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            733,
+            734,
+            735,
+            736,
+            737,
+            738,
+            739,
+            740
+          ],
+          "required_source_literals": [
+            "morocc,166,54,2\ttrader\tJeweler#moc4\t8_F,{",
+            "OnInit:",
+            "sellitem Azure_Jewel;",
+            "sellitem Cardinal_Jewel;",
+            "sellitem Blue_Jewel;",
+            "sellitem Golden_Jewel;",
+            "sellitem Bluish_Green_Jewel;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_742",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trader#moc7"
+      },
+      "result": "verified",
+      "statement": "Trader#moc7 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            742,
+            743,
+            744,
+            745
+          ],
+          "required_source_literals": [
+            "morocc,34,68,0\ttrader\tTrader#moc7\t4_F_04,{",
+            "OnInit:",
+            "sellitem Witherless_Rose;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_747",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trader#moc8"
+      },
+      "result": "verified",
+      "statement": "Trader#moc8 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            747,
+            748,
+            749,
+            750,
+            751,
+            752
+          ],
+          "required_source_literals": [
+            "morocc,269,193,4\ttrader\tTrader#moc8\t4_M_ORIENT02,{",
+            "OnInit:",
+            "sellitem Skul_Ring;",
+            "sellitem Sword_Mace;",
+            "sellitem Stunner;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_754",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trader#moc9"
+      },
+      "result": "verified",
+      "statement": "Trader#moc9 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            754,
+            755,
+            756,
+            757
+          ],
+          "required_source_literals": [
+            "morocc,256,191,5\ttrader\tTrader#moc9\t4_F_04,{",
+            "OnInit:",
+            "sellitem Flower_Ring;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_712_760",
+      "unit": "E2-npc-re-merchants-shops-txt-712",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#gef"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#gef is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            760,
+            761,
+            762,
+            763,
+            764,
+            765,
+            766,
+            767,
+            768,
+            769,
+            770,
+            771,
+            772,
+            773
+          ],
+          "required_source_literals": [
+            "geffen_in,77,167,0\ttrader\tTool Dealer#gef\t1_F_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
