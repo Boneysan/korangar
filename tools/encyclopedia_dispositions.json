@@ -73451,6 +73451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_dieshin_man_branch_for_200_280",
+      "unit": "E1-moc_ruins_dieshin_man_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dieshin Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Disin_Delivery_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            280
+          ],
+          "required_source_literals": [
+            "getitem Disin_Delivery_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
