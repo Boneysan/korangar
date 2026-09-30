@@ -13774,7 +13774,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Iromo#ep3_2",
@@ -13793,7 +13793,25 @@
       ],
       "size_lines": 418,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T16:03:25Z activated",
+        "2026-09-30T16:03:26Z validated",
+        "2026-09-30T16:03:26Z verified: 2 claims supported",
+        "2026-09-30T16:03:49Z accepted",
+        "2026-09-30T16:03:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ef12100ad7ef66a916338c34574c0efd2ac7e14a8ca67509bc79c752aad48367",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_little_boy_ep3_2_branch_for_2845",
