@@ -37556,7 +37556,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Old Man Nardo#malaya",
@@ -37575,7 +37575,25 @@
       ],
       "size_lines": 267,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:42:15Z activated",
+        "2026-09-30T19:42:16Z validated",
+        "2026-09-30T19:42:16Z verified: 6 claims supported",
+        "2026-09-30T19:42:39Z accepted",
+        "2026-09-30T19:42:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4dcf8f439bd584d5c00745ed4bd593038baa872860aa657c2aa63390fbcef1cb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_romel_malaya_branch_for_1182",

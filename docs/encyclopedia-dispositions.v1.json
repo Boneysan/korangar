@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3353,
+    "E1_unknown": 3359,
     "E1_verified": 1
   },
   "entries": [
@@ -36279,6 +36279,156 @@
           ],
           "required_source_literals": [
             "getitem Offering_Bouquet, 1; // Memorial_Bouquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_1057",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1057
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 1; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_1123",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1123
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 5; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_1127",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1127
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_1165",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cast_Iron_Caldron,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1165
+          ],
+          "required_source_literals": [
+            "getitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_989",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            989
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_old_man_nardo_malaya_branch_for_914_990",
+      "unit": "E1-malaya_old_man_nardo_malaya_branch_for_914",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man Nardo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            990
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1;"
           ]
         }
       ],
