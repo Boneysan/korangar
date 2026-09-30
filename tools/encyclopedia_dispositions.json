@@ -80851,6 +80851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_mayor_jun_kardui_tl01_branch_for_16323_17005",
+      "unit": "E1-ecl_in03_mayor_jun_kardui_tl01_branch_for_16323",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mayor Jun Kardui#tl01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Avant_Research_Data,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            17005
+          ],
+          "required_source_literals": [
+            "delitem Avant_Research_Data,1; //Avant_Research_Data"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
