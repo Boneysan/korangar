@@ -47745,7 +47745,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bMaxHP (expression)",
@@ -48187,7 +48187,25 @@
       ],
       "size_lines": 33,
       "reason": "33 item script(s) first stop at `bonus bMaxHP (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:09:10Z activated",
+        "2026-09-30T20:09:10Z validated",
+        "2026-09-30T20:09:10Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:09:34Z accepted",
+        "2026-09-30T20:09:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "54e1c9f88de35b8dca253411fb52a34a33a3e4d0ee5517ba6a752fd1750de294",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-control-callfunc",

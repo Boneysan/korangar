@@ -100199,6 +100199,897 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2383_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2383
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2383 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            29598
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,20*BaseLevel;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2386_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2386
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2386 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            29694
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,(BaseLevel*7);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2433_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2433
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2433 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            30749
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxHP,(BaseLevel*10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2499_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2499
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2499 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            32224
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2920_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2920
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2920 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40773
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,(readparam(bVit)/10)*50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2926_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2926
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2926 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40891
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,(readparam(bVit)/10)*50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4353_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4353
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4353 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45629
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,800-40*getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4589_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4589
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4589 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48751
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxHP,200*(readparam(bVit)/10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5395_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5395
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5395 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            59723
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,100+(getrefine()*20);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5590_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5590
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5590 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            63199
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,BaseLevel*2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15023_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15023
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15023 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            124704
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,20*BaseLevel;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18534_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18534
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18534 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            133178
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,0+(getrefine()*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18773_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18773
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18773 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            137028
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+(BaseLevel*10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18836_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18836
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18836 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138148
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,100+(getrefine()*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22000_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22000 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148255
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22001_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22001 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148273
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22002_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22002 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148294
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22003_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22003 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148312
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22004_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22004 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148329
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22005_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22005 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148350
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22006_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22006 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148372
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22007_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22007 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148391
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22008_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22008 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148409
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22009_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22009 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148431
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22010_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22010
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22010 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148453
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22011_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22011 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148472
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,300+((getrefine()/3)*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22085_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22085
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22085 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149152
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP, 100 * getrefine() / 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24013_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24013 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150798
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,getrefine()*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24014_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24014
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24014 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150810
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,getrefine()*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24015_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24015 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150822
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,getrefine()*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24016_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24016 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150834
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,getrefine()*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24017_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24017 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150846
+          ],
+          "required_source_literals": [
+            "bonus bMaxHP,getrefine()*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24183_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxhp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24183
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24183 is not summarized: the translator does not interpret the quoted statement (bonus bMaxHP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152801
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxHP,100+(10*(getrefine()/2)); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
