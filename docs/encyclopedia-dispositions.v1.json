@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1748,
+    "E1_unknown": 1753,
     "E1_verified": 1
   },
   "entries": [
@@ -19554,6 +19554,131 @@
           ],
           "required_source_literals": [
             "getitem Poison_Bottle,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_hermit_branch_for_4594_4754",
+      "unit": "E1-lou_in02_hermit_branch_for_4594",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hermit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Burn_Tree,8; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4754
+          ],
+          "required_source_literals": [
+            "getitem Burn_Tree,8;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_hermit_branch_for_4594_4755",
+      "unit": "E1-lou_in02_hermit_branch_for_4594",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hermit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cold_Magma,8; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4755
+          ],
+          "required_source_literals": [
+            "getitem Cold_Magma,8;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_hermit_branch_for_4594_4756",
+      "unit": "E1-lou_in02_hermit_branch_for_4594",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hermit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mud_Lump,8; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4756
+          ],
+          "required_source_literals": [
+            "getitem Mud_Lump,8;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_hermit_branch_for_4594_4824",
+      "unit": "E1-lou_in02_hermit_branch_for_4594",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hermit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7204,countitem(Gunpowder; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4824
+          ],
+          "required_source_literals": [
+            "delitem 7204,countitem(Gunpowder);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_hermit_branch_for_4594_4827",
+      "unit": "E1-lou_in02_hermit_branch_for_4594",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hermit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 668,8; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4827
+          ],
+          "required_source_literals": [
+            "getitem 668,8;"
           ]
         }
       ],
