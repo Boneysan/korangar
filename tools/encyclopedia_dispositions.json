@@ -123657,6 +123657,55 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_other_grader_txt_34_34",
+      "unit": "E2-npc-re-other-grader-txt-34",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Grade_Materials"
+      },
+      "result": "conditional",
+      "statement": "Grade_Materials is a stock declaration whose price or stock depends on a tradertype in the quoted lines.",
+      "conditions": [
+        "The declaration sets tradertype(NST_EXPANDED_BARTER);."
+      ],
+      "sources": [
+        {
+          "path": "npc/re/other/grader.txt",
+          "lines": [
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45
+          ],
+          "required_source_literals": [
+            "-\ttrader\tGrade_Materials\tFAKE_NPC,{",
+            "end;",
+            "OnInit:",
+            "tradertype(NST_EXPANDED_BARTER);",
+            "sellitem(Etel_Stone,         100000, -1,  Etel_Dust,  5, -1);",
+            "sellitem(Blessed_Etel_Dust,  100000, -1,  Etel_Dust,  5, -1, Blacksmith_Blessing, 1, -1);",
+            "sellitem(Etel_Skyblue_Jewel, 100000, -1, Etel_Stone,  3, -1,       Skyblue_Jewel, 1, -1);",
+            "sellitem(Etel_Topaz,         200000, -1, Etel_Stone,  6, -1,        Golden_Jewel, 1, -1);",
+            "sellitem(Etel_Violet_Jewel,  300000, -1, Etel_Stone, 10, -1,        Violet_Jewel, 1, -1);",
+            "sellitem(Etel_Amber,         500000, -1, Etel_Stone, 15, -1,               Amber, 1, -1);",
+            "end;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
