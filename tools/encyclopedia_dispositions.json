@@ -82026,6 +82026,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_understairs8_branch_for_4221_4241",
+      "unit": "E1-malangdo_understairs8_branch_for_4221",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#UnderStairs8"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cat_Hard_Biscuit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4241
+          ],
+          "required_source_literals": [
+            "getitem Cat_Hard_Biscuit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
