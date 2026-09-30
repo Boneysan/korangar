@@ -19045,7 +19045,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Vassili Grandpapa#rus07",
@@ -19064,7 +19064,25 @@
       ],
       "size_lines": 266,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:51:45Z activated",
+        "2026-09-30T16:51:45Z validated",
+        "2026-09-30T16:51:46Z verified: 4 claims supported",
+        "2026-09-30T16:52:09Z accepted",
+        "2026-09-30T16:52:09Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "54155cb718e599e3f458b9e8ed87f046242b22169079f6528f2c152542fd2a7b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moscovia_ryubaba_rus08_branch_for_8013",
