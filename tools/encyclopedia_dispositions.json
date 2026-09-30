@@ -68026,6 +68026,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_staff_rust_jr_09_branch_for_1185_1194",
+      "unit": "E1-job3_rang02_staff_rust_jr_09_branch_for_1185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Rust#jr_09"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bombring_Box,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1194
+          ],
+          "required_source_literals": [
+            "getitem Bombring_Box,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_staff_rust_jr_09_branch_for_1185_1202",
+      "unit": "E1-job3_rang02_staff_rust_jr_09_branch_for_1185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Rust#jr_09"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Approval_Report,(MaxWeight-Weight-2000; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1202
+          ],
+          "required_source_literals": [
+            "getitem Approval_Report, (MaxWeight-Weight-2000)/10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_staff_rust_jr_09_branch_for_1185_1203",
+      "unit": "E1-job3_rang02_staff_rust_jr_09_branch_for_1185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Rust#jr_09"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bombring_Box,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1203
+          ],
+          "required_source_literals": [
+            "getitem Bombring_Box,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang02_staff_rust_jr_09_branch_for_1185_1204",
+      "unit": "E1-job3_rang02_staff_rust_jr_09_branch_for_1185",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Rust#jr_09"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1204
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
