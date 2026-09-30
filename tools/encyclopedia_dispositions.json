@@ -22351,6 +22351,331 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_258",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Valkyrie_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            258
+          ],
+          "required_source_literals": [
+            "getitem Valkyrie_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_321",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sageworm_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "delitem Sageworm_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_322",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Argiope_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            322
+          ],
+          "required_source_literals": [
+            "delitem Argiope_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_323",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dryad_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "delitem Dryad_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_324",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wooden_Golem_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            324
+          ],
+          "required_source_literals": [
+            "delitem Wooden_Golem_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_325",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bon_Gun_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            325
+          ],
+          "required_source_literals": [
+            "delitem Bon_Gun_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_326",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pirate_Skel_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            326
+          ],
+          "required_source_literals": [
+            "delitem Pirate_Skel_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_327",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marduk_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            327
+          ],
+          "required_source_literals": [
+            "delitem Marduk_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_328",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hode_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            328
+          ],
+          "required_source_literals": [
+            "delitem Hode_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_329",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elder_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            329
+          ],
+          "required_source_literals": [
+            "delitem Elder_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_330",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Nightmare_Terror_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            330
+          ],
+          "required_source_literals": [
+            "delitem Nightmare_Terror_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_331",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rune_Of_Darkness,1000; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            331
+          ],
+          "required_source_literals": [
+            "delitem Rune_Of_Darkness,1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_ghenirhemin_branch_for_222_332",
+      "unit": "E1-hugel_ghenirhemin_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ghenirhemin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Rune,1000; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            332
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Rune,1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
