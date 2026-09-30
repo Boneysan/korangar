@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1120,
+    "E1_unknown": 1132,
     "E1_verified": 1
   },
   "entries": [
@@ -10179,6 +10179,306 @@
           ],
           "required_source_literals": [
             "getitem Chocolate_Pie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6102",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6102
+          ],
+          "required_source_literals": [
+            "delitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6156",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6156
+          ],
+          "required_source_literals": [
+            "getitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6232",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rough_File,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6232
+          ],
+          "required_source_literals": [
+            "delitem Rough_File,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6233",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fan,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6233
+          ],
+          "required_source_literals": [
+            "delitem Fan,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6234",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Frying_Pan,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6234
+          ],
+          "required_source_literals": [
+            "delitem Old_Frying_Pan,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6235",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flame_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6235
+          ],
+          "required_source_literals": [
+            "delitem Flame_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6236",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chinese_Ink,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6236
+          ],
+          "required_source_literals": [
+            "delitem Chinese_Ink,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6263",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Neat_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6263
+          ],
+          "required_source_literals": [
+            "getitem Neat_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6332",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Neat_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6332
+          ],
+          "required_source_literals": [
+            "getitem Neat_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6333",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pineapple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6333
+          ],
+          "required_source_literals": [
+            "getitem Pineapple_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6410",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fur,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6410
+          ],
+          "required_source_literals": [
+            "delitem Fur,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_hue_ep131_rhea02_branch_for_6047_6411",
+      "unit": "E1-mid_camp_hue_ep131_rhea02_branch_for_6047",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hue#ep131_rhea02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pineapple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6411
+          ],
+          "required_source_literals": [
+            "getitem Pineapple_Juice,1;"
           ]
         }
       ],
